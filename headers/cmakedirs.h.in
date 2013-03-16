@@ -1,0 +1,54 @@
+/****************************************************************************
+ * This file is part of Desktop Compositor.
+ *
+ * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ *
+ * Author(s):
+ *    Pier Luigi Fiorini
+ *
+ * $BEGIN_LICENSE:GPL3+$
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * $END_LICENSE$
+ ***************************************************************************/
+
+#ifndef CMAKEDIRS_H
+#define CMAKEDIRS_H
+
+// GNUInstallDirs
+#define INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
+#define INSTALL_BINDIR "@CMAKE_INSTALL_FULL_BINDIR@"
+#define INSTALL_SBINDIR "@CMAKE_INSTALL_FULL_SBINDIR@"
+#define INSTALL_LIBEXECDIR "@CMAKE_INSTALL_FULL_LIBEXECDIR@"
+#define INSTALL_SYSCONFDIR "@CMAKE_INSTALL_FULL_SYSCONFDIR@"
+#define INSTALL_SHAREDSTATEDIR "@CMAKE_INSTALL_FULL_SHAREDSTATEDIR@"
+#define INSTALL_LOCALSTATEDIR "@CMAKE_INSTALL_FULL_LOCALSTATEDIR@"
+#define INSTALL_LIBDIR "@CMAKE_INSTALL_FULL_LIBDIR@"
+#define INSTALL_INCLUDEDIR "@CMAKE_INSTALL_FULL_INCLUDEDIR@"
+#define INSTALL_OLDINCLUDEDIR "@CMAKE_INSTALL_FULL_OLDINCLUDEDIR@"
+#define INSTALL_DATAROOTDIR "@CMAKE_INSTALL_FULL_DATAROOTDIR@"
+#define INSTALL_DATADIR "@CMAKE_INSTALL_FULL_DATADIR@"
+#define INSTALL_INFODIR "@CMAKE_INSTALL_FULL_INFODIR@"
+#define INSTALL_LOCALEDIR "@CMAKE_INSTALL_FULL_LOCALEDIR@"
+#define INSTALL_MANDIR "@CMAKE_INSTALL_FULL_MANDIR@"
+#define INSTALL_DOCDIR "@CMAKE_INSTALL_FULL_DOCDIR@"
+
+// HawaiiInstallDirs
+#define INSTALL_PLUGINSDIR "@CMAKE_INSTALL_FULL_PLUGINSDIR@"
+#define INSTALL_QMLDIR "@CMAKE_INSTALL_FULL_QMLDIR@"
+#define INSTALL_APPLICATIONSDIR "@CMAKE_INSTALL_FULL_APPLICATIONSDIR@"
+#define INSTALL_SETTINGSDIR "@CMAKE_INSTALL_FULL_SETTINGSDIR@"
+
+#endif // CMAKEDIRS_H

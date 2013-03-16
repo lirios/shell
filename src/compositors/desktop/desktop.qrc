@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Compositor.qml</file>
+        <file>qml/CompositorLogic.js</file>
+        <file>qml/ContrastEffect.qml</file>
+        <file>qml/WindowChrome.qml</file>
+        <file>qml/WindowContainer.qml</file>
+    </qresource>
+</RCC>

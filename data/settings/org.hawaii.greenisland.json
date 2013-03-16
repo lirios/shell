@@ -1,0 +1,29 @@
+{
+    "schema": "org.hawaii.greenisland",
+    "groups": [
+        {
+            "name": "launcher",
+            "keys": {
+                "icon-size": {
+                    "type": "int",
+                    "summary": "Launcher Icon Size",
+                    "description": "Size of Launcher icons.",
+                    "default": 48
+                },
+                "alignment": {
+                    "type": "enum",
+                    "summary": "Launcher Alignment",
+                    "description": "Determines the Launcher alignment. Possible values are \"left\", \"right\" or \"bottom\".",
+                    "default": "bottom",
+                    "choices": ["left", "right", "bottom"]
+                },
+                "pinned-apps": {
+                    "type": "strings",
+                    "summary": "Pinned Applications",
+                    "description": "List of applications that Launcher will always show.",
+                    "default": ["swordfish.desktop", "hawaii-terminal.desktop", "hawaii-system-preferences.desktop"]
+                }
+            }
+        }
+    ]
+}
