@@ -25,11 +25,15 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import GreenIsland 1.0
 import FluidCore 1.0
 import FluidUi 1.0
 
-Item {
+PopupWindow {
     id: notification
+    width: defaultWidth
+    height: defaultHeight
+    visible: false
 
     property int identifier
     property string appName
@@ -51,6 +55,8 @@ Item {
 
     signal closed(int identifier)
 
+    onVisibleChanged: console.log("**************************", identifier, visible)
+
     onTimeoutChanged: {
         // If no timeout is specified, add two seconds to ensure the
         // notification last at least five seconds
@@ -58,49 +64,26 @@ Item {
             timeout = 2000 + Math.max(timeoutForText(summary + body), 3000);
     }
 
-    opacity: 0.0
-    z: 4
-    implicitWidth: defaultWidth
-    implicitHeight: defaultHeight
-
-    // Fade-in when the notification pops out
-    NumberAnimation {
-        id: openAnimation
-        target: notification
-        properties: "opacity"
-        to: normalOpacity
-        duration: 250
-        running: false
-    }
-
-    // Fade-out when closing
-    NumberAnimation {
-        id: closeAnimation
-        target: notification
-        properties: "opacity"
-        to: 0.0
-        duration: 500
-        running: false
-        onRunningChanged: {
-            // If the animation finished just emit the closed() signal so that
-            // the C++ backend will destroy the object
-            if (!running) {
-                //console.log("Close animation reached its end, emitting the closed() signal...");
-                notification.closed(identifier);
-            }
+    Timer {
+        id: timer
+        interval: timeout
+        running: visible
+        repeat: false
+        onRunningChanged: console.log("Timeout!!!!!!!!!!!!", identifier)
+        onTriggered: {
+            console.log("Closing notification", identifier, "...");
+            notification.closed(identifier)
         }
     }
 
-    NumberAnimation {
-        id: resizeAnimation
-        target: notification
-        properties: "height"
-        duration: 250
+    Behavior on height {
+        NumberAnimation { easing.type: Easing.InQuad }
     }
 
+    /*
     NumberAnimation {
         id: mouseOverAnimation
-        target: notification
+        target: container
         properties: "opacity"
         duration: 500
     }
@@ -114,6 +97,7 @@ Item {
             mouseOverAnimation.start();
         }
     }
+    */
 
     FrameSvgItem {
         id: frame
@@ -153,11 +137,9 @@ Item {
                 leftMargin: padding
             }
             font.weight: Font.Bold
-            /*
-            color: "white"
-            style: Text.Raised
-            styleColor: "black"
-            */
+            //color: "white"
+            //style: Text.Raised
+            //styleColor: "black"
             verticalAlignment: Text.AlignVCenter
         }
 
@@ -170,11 +152,9 @@ Item {
                 bottomMargin: padding
             }
             font.pointSize: summaryText.font.pointSize * 0.9
-            /*
-            color: "white"
-            style: Text.Raised
-            styleColor: "black"
-            */
+            //color: "white"
+            //style: Text.Raised
+            //styleColor: "black"
             textFormat: Text.StyledText
             maximumLineCount: 20
             wrapMode: Text.Wrap
@@ -184,38 +164,19 @@ Item {
                     visible = false;
                     summaryText.anchors.bottom = parent.bottom;
                     anchors.bottom = undefined;
-                    resizeAnimation.to = defaultHeight;
+                    height = defaultHeight;
                 } else {
                     visible = true;
                     summaryText.anchors.bottom = undefined;
                     anchors.bottom = parent.bottom;
-                    resizeAnimation.to = defaultHeight + paintedHeight;
+                    height = defaultHeight + paintedHeight;
                 }
-
-                resizeAnimation.start();
             }
         }
     }
 
-    // Close animation when the timeout is triggered, the duration is not
-    // added to the timeout
-    Timer {
-        id: timer
-        interval: timeout - closeAnimation.duration
-        running: false
-        repeat: false
-        onTriggered: {
-            console.log("Timeout triggered, starting the close animation...");
-            closeAnimation.start();
-        }
-    }
-
     function start() {
-        // This is called when the notification starts, all our properties
-        // are already set at this point. Here we start a nice fade-in
-        // animation and also start a timer that will fade-out the
-        // notification once it has reached the desired timeout.
-        openAnimation.start();
+        //notification.visible = true;
         timer.running = true;
     }
 

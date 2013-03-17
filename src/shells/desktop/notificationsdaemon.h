@@ -30,9 +30,9 @@
 #include <QList>
 #include <QDBusArgument>
 #include <QImage>
-#include <QQuickItem>
 
 class QAtomicInt;
+class NotificationWindow;
 
 class NotificationsDaemon : public QObject
 {
@@ -48,13 +48,9 @@ public:
     explicit NotificationsDaemon();
     ~NotificationsDaemon();
 
-    static NotificationsDaemon *instance() {
-        return self;
-    }
+    static NotificationsDaemon *instance();
 
     uint nextId();
-
-    bool connectOnDBus();
 
     uint Notify(const QString &appName, uint replacesId, const QString &iconName,
                 const QString &summary, const QString &body, const QStringList &actions,
@@ -66,36 +62,33 @@ public:
 
     QString GetServerInformation(QString &vendor, QString &version, QString &specVersion);
 
-signals:
+Q_SIGNALS:
     void NotificationClosed(uint id, uint reason);
     void ActionInvoked(uint id, const QString &actionKey);
 
-private:
-    static NotificationsDaemon *self;
+public Q_SLOTS:
+    bool connectOnDBus();
 
+private:
     QAtomicInt *m_idSeed;
-    QList<QQuickItem *> m_items;
-    Qt::Alignment m_alignment;
+    QList<NotificationWindow *> m_notifications;
 
-private:
-    QQuickItem *createNotificationItem(const QString &appName,
-                                       const QString &iconName,
-                                       const QString &summary,
-                                       const QString &body,
-                                       const QImage &image,
-                                       int timeout = 2000);
-    QQuickItem *findNotificationItem(const QString &appName,
-                                     const QString &summary);
+    NotificationWindow *createNotification(const QString &appName,
+                                           const QString &iconName,
+                                           const QString &summary,
+                                           const QString &body,
+                                           const QImage &image,
+                                           int timeout = 2000);
+    NotificationWindow *findNotification(const QString &appName,
+                                         const QString &summary);
+
+    void showNotification(NotificationWindow *notification);
 
     QString findImageFromPath(const QString &imagePath);
 
-    Qt::Alignment alignment() const;
-
-    QPointF position(QQuickItem *item);
-
-private slots:
+private Q_SLOTS:
     void notificationExpired(int id);
-    void slotNotificationsItemClosed(uint id, uint reason);
+    void notificationClosed(uint id, uint reason);
 };
 
 #endif // NOTIFICATIONSDAEMON_H

@@ -24,10 +24,12 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QGuiApplication>
 #include <QQuickWindow>
 
 #include "waylandintegration.h"
 #include "desktopshell.h"
+#include "notificationsdaemon.h"
 #include "shellui.h"
 
 Q_GLOBAL_STATIC(WaylandIntegration, s_waylandIntegration)
@@ -36,7 +38,7 @@ const struct wl_registry_listener WaylandIntegration::registryListener = {
     WaylandIntegration::handleGlobal
 };
 
-const struct desktop_shell_listener WaylandIntegration::listener = {
+const struct desktop_shell_listener WaylandIntegration::shellListener = {
     WaylandIntegration::handlePresent,
     WaylandIntegration::handlePrepareLockSurface,
     WaylandIntegration::handleGrabCursor
@@ -44,6 +46,7 @@ const struct desktop_shell_listener WaylandIntegration::listener = {
 
 WaylandIntegration::WaylandIntegration()
     : shell(0)
+    , notification(0)
 {
 }
 
@@ -60,16 +63,25 @@ void WaylandIntegration::handleGlobal(void *data,
 {
     Q_UNUSED(version);
 
-    if (strcmp(interface, "desktop_shell") == 0) {
-        WaylandIntegration *object = static_cast<WaylandIntegration *>(data);
-        Q_ASSERT(object);
+    WaylandIntegration *object = static_cast<WaylandIntegration *>(data);
 
+    if (strcmp(interface, "desktop_shell") == 0) {
+        // Bind interface and register listener
         object->shell = static_cast<struct desktop_shell *>(
                     wl_registry_bind(registry, id, &desktop_shell_interface, 1));
-        desktop_shell_add_listener(object->shell, &listener, data);
+        desktop_shell_add_listener(object->shell, &shellListener, data);
 
+        // Create shell surfaces
         DesktopShell *shell = DesktopShell::instance();
         QMetaObject::invokeMethod(shell, "create");
+    } else if (strcmp(interface, "wl_notification_daemon") == 0) {
+        // Bind interface
+        object->notification = static_cast<struct wl_notification_daemon *>(
+                    wl_registry_bind(registry, id, &wl_notification_daemon_interface, 1));
+
+        // Start the notifications daemon and connect to the session bus
+        NotificationsDaemon *daemon = NotificationsDaemon::instance();
+        QMetaObject::invokeMethod(daemon, "connectOnDBus");
     }
 }
 

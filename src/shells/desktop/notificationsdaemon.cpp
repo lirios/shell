@@ -26,47 +26,42 @@
 
 #include <QAtomicInt>
 #include <QDebug>
-#include <QCoreApplication>
-#include <QScreen>
+#include <QGuiApplication>
 #include <QDBusConnection>
-#include <QQmlEngine>
-#include <QQmlComponent>
+
+#include <qpa/qplatformnativeinterface.h>
 
 #include "notificationsadaptor.h"
 #include "notificationsdaemon.h"
 #include "notificationsimage.h"
-#include "desktopshell.h"
-#include "shellview.h"
+#include "notificationwindow.h"
+#include "waylandintegration.h"
 
 /*
  * Latest specifications:
  * http://people.gnome.org/~mccann/docs/notification-spec/notification-spec-latest.html
  */
 
-NotificationsDaemon *NotificationsDaemon::self = 0;
+Q_GLOBAL_STATIC(NotificationsDaemon, s_notificationsDaemon)
 
 NotificationsDaemon::NotificationsDaemon()
     : QObject()
 {
-    // Initialize the singleton
-    Q_ASSERT_X(!self, "NotificationsDaemon", "there should be only one notifications manager");
-    NotificationsDaemon::self = this;
-
     // Create the DBus adaptor
     new NotificationsAdaptor(this);
 
     // Create a seed for notifications identifiers, starting from 1
     m_idSeed = new QAtomicInt(1);
-
-    // Set default alignment
-    // TODO: from settings
-    m_alignment = Qt::AlignTop | Qt::AlignRight;
 }
 
 NotificationsDaemon::~NotificationsDaemon()
 {
-    self = 0;
     delete m_idSeed;
+}
+
+NotificationsDaemon *NotificationsDaemon::instance()
+{
+    return s_notificationsDaemon();
 }
 
 uint NotificationsDaemon::nextId()
@@ -74,28 +69,11 @@ uint NotificationsDaemon::nextId()
     return (uint)m_idSeed->fetchAndAddAcquire(1);
 }
 
-bool NotificationsDaemon::connectOnDBus()
-{
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    if (!connection.registerObject("/org/freedesktop/Notifications", this)) {
-        qWarning() << "Couldn't register object /org/freedesktop/Notifications";
-        return false;
-    }
-
-    if (!connection.registerService("org.freedesktop.Notifications")) {
-        qWarning() << "Couldn't register service for org.freedesktop.Notifications";
-        return false;
-    }
-
-    qDebug() << "Notifications service registered!";
-    return true;
-}
-
 uint NotificationsDaemon::Notify(const QString &appName, uint replacesId, const QString &_iconName,
                                  const QString &summary, const QString &body, const QStringList &actions,
                                  const QVariantMap &hints, int timeout)
 {
-    qDebug() << "New notification:" << appName << replacesId << _iconName << summary << body << actions << hints << timeout;
+    qDebug() << "Notification:" << appName << replacesId << _iconName << summary << body << actions << hints << timeout;
 
     QString iconName = _iconName;
 
@@ -107,16 +85,17 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId, const 
     bool changeCoords = (hints.contains("x") && hints.contains("y"));
 
     // Find an existing notification item
-    QQuickItem *item = findNotificationItem(appName, summary);
-    if (item && !body.isEmpty() && !changeCoords) {
-        qDebug() << "Found already created window, id" << item->property("identifier").toInt();
+    NotificationWindow *notification = findNotification(appName, summary);
+    if (notification && !body.isEmpty() && !changeCoords) {
+        QMetaObject::invokeMethod(notification->window(),
+                                  "appendToBody",
+                                  Q_ARG(QVariant, body),
+                                  Q_ARG(QVariant, timeout));
 
-        QMetaObject::invokeMethod(item, "appendToBody", Q_ARG(QVariant, body), Q_ARG(QVariant, timeout));
-        QMetaObject::invokeMethod(item, "start");
-
-        return item->property("identifier").toUInt();
+        return notification->window()->property("identifier").toUInt();
     }
 
+#if 0
     // Fetch the image hint
     QImage image;
     if (hints.contains(QLatin1String("image_data")) || hints.contains(QLatin1String("icon_data"))) {
@@ -146,111 +125,122 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId, const 
     } else if (hints.contains("image_path")) {
         iconName = findImageFromPath(hints["image_path"].toString());
     }
+#else
+    QImage image;
+#endif
 
     // Unless an URL is provided use an icon from the theme
     if (!iconName.startsWith("file:"))
         iconName = "image://desktoptheme/" + iconName;
 
-    // Create the notification item
-    item = createNotificationItem(appName, iconName, summary, body, image, timeout);
-    if (!item)
+    // Create the notification and put it into the queue
+    notification = createNotification(appName, iconName, summary, body, image, timeout);
+    if (!notification)
         return -1;
-    qDebug() << "Created a new notification, id" << item->property("identifier").toInt();
-    connect(item, SIGNAL(closed(int)), this, SLOT(notificationExpired(int)));
-    m_items << item;
+    m_notifications << notification;
 
-    // Notification item default position
-    QPointF pos = position(item);
+    // Show the notification if nothing is on the queue
+    if (m_notifications.size() == 1)
+        showNotification(notification);
 
+#if 0
     // Force coordinates
+    // TODO: Need to add something to the protocol
     if (changeCoords) {
         pos.setX(hints["x"].value<QVariant>().toReal());
         pos.setY(hints["y"].value<QVariant>().toReal());
     }
+#endif
 
-    // Set notification item position
-    item->setPosition(pos);
-
-    // Show the notification view
-    if (m_items.size() == 1)
-        QMetaObject::invokeMethod(item, "start");
-
-    return item->property("identifier").toUInt();
+    return notification->window()->property("identifier").toUInt();
 }
 
 void NotificationsDaemon::CloseNotification(uint id)
 {
-    slotNotificationsItemClosed(id, (uint)CloseReasonByApplication);
+    notificationClosed(id, (uint)CloseReasonByApplication);
 }
 
 QStringList NotificationsDaemon::GetCapabilities()
 {
     return QStringList()
-           << "body"
-           << "body-hyperlinks"
-           << "body-markup"
-           << "icon-static";
+            << "body"
+            << "body-hyperlinks"
+            << "body-markup"
+            << "icon-static";
 }
 
 QString NotificationsDaemon::GetServerInformation(QString &vendor, QString &version, QString &specVersion)
 {
-    vendor = QStringLiteral("Maui Project");
+    vendor = QStringLiteral("Hawaii");
     version = QCoreApplication::instance()->applicationVersion();
     specVersion = QStringLiteral("1.1");
 
     return QCoreApplication::instance()->applicationName();
 }
 
-QQuickItem *NotificationsDaemon::createNotificationItem(const QString &appName,
-                                                        const QString &iconName,
-                                                        const QString &summary,
-                                                        const QString &body,
-                                                        const QImage &image,
-                                                        int timeout)
+bool NotificationsDaemon::connectOnDBus()
 {
-    ShellView *view = DesktopShell::instance()->shellView();
-
-    // Create the component
-    QQmlComponent component(view->engine(), QUrl("qrc:///qml/NotificationItem.qml"),
-                            view->rootObject());
-
-    // Create the object
-    QObject *object = component.create(view->rootContext());
-    if (!object) {
-        qWarning() << "Couldn't create a NotificationItem object";
-        return 0;
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    if (!connection.registerObject("/org/freedesktop/Notifications", this)) {
+        qWarning() << "Couldn't register object /org/freedesktop/Notifications";
+        return false;
     }
 
-    // Cast it to a QQuickItem
-    QQuickItem *item = qobject_cast<QQuickItem *>(object);
-    if (!item) {
-        qWarning() << "Couldn't cast NotificationItem object to QQuickItem";
-        return 0;
+    if (!connection.registerService("org.freedesktop.Notifications")) {
+        qWarning() << "Couldn't register service for org.freedesktop.Notifications";
+        return false;
     }
 
-    // Set all the properties
-    item->setParentItem(view->rootObject());
-    item->setProperty("identifier", nextId());
-    item->setProperty("appName", appName);
-    item->setProperty("iconName", iconName);
-    item->setProperty("summary", summary);
-    item->setProperty("body", body);
-    item->setProperty("image", image);
-    item->setProperty("timeout", timeout);
-
-    return item;
+    qDebug() << "Notifications service registered!";
+    return true;
 }
 
-QQuickItem *NotificationsDaemon::findNotificationItem(const QString &appName, const QString &summary)
+NotificationWindow *NotificationsDaemon::createNotification(const QString &appName,
+                                                            const QString &iconName,
+                                                            const QString &summary,
+                                                            const QString &body,
+                                                            const QImage &image,
+                                                            int timeout)
 {
-    for (int i = 0; i < m_items.size(); i++) {
-        QQuickItem *item = m_items.at(i);
+    // Create notification window
+    NotificationWindow *notification = new NotificationWindow(this);
+    QQuickWindow *window = notification->window();
 
-        if (item->property("appName") == appName || item->property("summary") == summary)
-            return item;
+    // Set all the properties
+    window->setProperty("identifier", nextId());
+    window->setProperty("appName", appName);
+    window->setProperty("iconName", iconName);
+    window->setProperty("summary", summary);
+    window->setProperty("body", body);
+    window->setProperty("image", image);
+    window->setProperty("timeout", timeout);
+
+    // Handle expiration
+    connect(window, SIGNAL(closed(int)), this, SLOT(notificationExpired(int)));
+
+    return notification;
+}
+
+NotificationWindow *NotificationsDaemon::findNotification(const QString &appName, const QString &summary)
+{
+    for (int i = 0; i < m_notifications.size(); i++) {
+        NotificationWindow *notification = m_notifications.at(i);
+        QQuickWindow *window = notification->window();
+
+        if (window->property("appName") == appName || window->property("summary") == summary)
+            return notification;
     }
 
     return 0;
+}
+
+void NotificationsDaemon::showNotification(NotificationWindow *notification)
+{
+    // Show the notification (this will start the QML timer because its
+    // running property is bound to visible) and ask the compositor
+    // to add the surface to the "bubbles list"
+    notification->window()->show();
+    notification->addSurface();
 }
 
 QString NotificationsDaemon::findImageFromPath(const QString &imagePath)
@@ -263,68 +253,25 @@ QString NotificationsDaemon::findImageFromPath(const QString &imagePath)
     return imagePath;
 }
 
-Qt::Alignment NotificationsDaemon::alignment() const
-{
-    // TODO: Read from configuration
-    return m_alignment;
-}
-
-QPointF NotificationsDaemon::position(QQuickItem *item)
-{
-    if (!item)
-        return QPoint(0, 0);
-
-    ShellView *view = DesktopShell::instance()->shellView();
-    QQuickItem *lastItem = m_items.last();
-
-    QSize sh(item->width(), item->height());
-    QRectF rect = view->availableGeometry();
-
-    qreal left, top;
-
-    if (alignment() & Qt::AlignTop)
-        top = rect.top() + lastItem->position().y();
-    else if (alignment() & Qt::AlignVCenter)
-        top = rect.top() + lastItem->position().y() + (rect.height() - sh.height()) / 2;
-    else
-        top = rect.bottom() - lastItem->position().y() - sh.height();
-
-    if (alignment() & Qt::AlignLeft)
-        left = rect.left();
-    else if (alignment() & Qt::AlignHCenter)
-        left = rect.left() + (rect.width() - sh.width()) / 2;
-    else
-        left = rect.right() - sh.width();
-
-    return QPointF(left, top);
-}
-
 void NotificationsDaemon::notificationExpired(int id)
 {
-    slotNotificationsItemClosed((uint)id, (uint)CloseReasonExpired);
+    notificationClosed((uint)id, (uint)CloseReasonExpired);
 }
 
-void NotificationsDaemon::slotNotificationsItemClosed(uint id, uint reason)
+void NotificationsDaemon::notificationClosed(uint id, uint reason)
 {
     emit NotificationClosed(id, reason);
 
-    if (m_items.isEmpty()) {
-        qWarning() << "The list of notifications should not be empty!";
+    if (m_notifications.isEmpty())
         return;
-    }
 
-    QQuickItem *item = m_items.takeFirst();
-    item->deleteLater();
+    NotificationWindow *notification = m_notifications.takeFirst();
+    notification->window()->hide();
+    notification->window()->deleteLater();
 
-    if (!m_items.isEmpty()) {
-        item = m_items.first();
-
-        QPointF pt = item->position();
-        if (pt.isNull())
-            pt = position(item);
-
-        item->setPosition(pt);
-        QMetaObject::invokeMethod(item, "start");
+    if (!m_notifications.isEmpty()) {
+        notification = m_notifications.first();
+        showNotification(notification);
     }
 }
 

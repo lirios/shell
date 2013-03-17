@@ -12,13 +12,26 @@ set(SOURCES
     desktopshell.cpp
     shellui.cpp
     waylandintegration.cpp
+    notificationsdaemon.cpp
+    notificationsimage.cpp
+    notificationwindow.cpp
 )
 
-wayland_add_protocol_client(SOURCES ${CMAKE_SOURCE_DIR}/data/protocols/hawaii-desktop-shell.xml desktop-extension)
+wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/hawaii-desktop-shell.xml
+    desktop-extension
+)
+
+wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/notification-daemon.xml
+    notification-daemon
+)
 
 qt5_add_resources(RESOURCES desktop-shell.qrc)
-#qt5_add_dbus_adaptor(SOURCES ${CMAKE_SOURCE_DIR}/data/org.freedesktop.Notifications.xml
-#    notificationsdaemon.h NotificationsDaemon)
+
+qt5_add_dbus_adaptor(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/interfaces/org.freedesktop.Notifications.xml
+    notificationsdaemon.h NotificationsDaemon)
 
 add_executable(greenisland-desktop-shell ${SOURCES} ${RESOURCES})
 qt5_use_modules(greenisland-desktop-shell Quick Widgets AccountsService)

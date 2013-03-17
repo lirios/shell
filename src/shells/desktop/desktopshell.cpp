@@ -36,7 +36,7 @@
 #include "waylandintegration.h"
 #include "shellui.h"
 
-Q_GLOBAL_STATIC(DesktopShell, desktopShell)
+Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 
 DesktopShell::DesktopShell()
     : QObject()
@@ -83,7 +83,7 @@ DesktopShell::~DesktopShell()
 
 DesktopShell *DesktopShell::instance()
 {
-    return desktopShell();
+    return s_desktopShell();
 }
 
 void DesktopShell::create()

@@ -1,0 +1,23 @@
+<protocol name="notification">
+  <interface name="wl_notification_daemon" version="1">
+    <description summary="interface for implementing notification daemons">
+        Only one client can bind this interface at a time.
+
+        Notification surfaces are special surfaces that the user should
+        always be able to see. The compositor is in charge of displaying
+        them to be visible without disturbing the user workflow.
+
+        This interface must be bound by all notification daemons, ensuring
+        that only one can run at a time.
+    </description>
+
+    <request name="add_surface">
+      <description summary="add a notification surface">
+        This request is for daemons which use a list of surfaces.
+        Other mechanisms can be used and are not necessarily part of the
+        wl_notification_daemon interface.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+  </interface>
+</protocol>

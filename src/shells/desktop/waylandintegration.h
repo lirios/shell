@@ -28,6 +28,7 @@
 #define WAYLANDINTEGRATION_H
 
 #include "wayland-desktop-extension-client-protocol.h"
+#include "wayland-notification-daemon-client-protocol.h"
 
 class WaylandIntegration
 {
@@ -35,8 +36,6 @@ public:
     WaylandIntegration();
 
     static WaylandIntegration *instance();
-
-    struct desktop_shell *shell;
 
     static const struct wl_registry_listener registryListener;
 
@@ -46,7 +45,12 @@ public:
                              const char *interface,
                              uint32_t version);
 
-    static const struct desktop_shell_listener listener;
+    /*
+     * Desktop Shell Protocol
+     */
+
+    struct desktop_shell *shell;
+    static const struct desktop_shell_listener shellListener;
 
     static void handlePresent(void *data,
                               struct desktop_shell *desktop_shell,
@@ -58,6 +62,12 @@ public:
     static void handleGrabCursor(void *data,
                                  struct desktop_shell *desktop_shell,
                                  uint32_t cursor);
+
+    /*
+     * Notification Daemon Protocol
+     */
+
+    struct wl_notification_daemon *notification;
 };
 
 #endif // WAYLANDINTEGRATION_H
