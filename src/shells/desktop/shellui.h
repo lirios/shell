@@ -68,7 +68,7 @@ public:
     QRect panelGeometry() const;
 
     QQuickWindow *panelWindow() const {
-        return m_backgroundWindow;
+        return m_panelWindow;
     }
 
     struct wl_surface *panelSurface() const {
