@@ -51,13 +51,11 @@ QtObject {
 
     property var appChooser: AppChooser {
         objectName: "appChooser"
-        /*
         width: availableGeometry.width / 1.2
         height: availableGeometry.height / 1.2
-        */
     }
 
-/*
+    /*
     // Notifications panel
     NotificationsPanel {
         id: notificationsPanel

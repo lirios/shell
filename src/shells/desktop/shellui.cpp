@@ -151,6 +151,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
                qPrintable(screen->name()));
 
     // Set screen size and detect geometry changes
+    updateScreenGeometry(screen->geometry());
     connect(screen, SIGNAL(geometryChanged(QRect)),
             this, SLOT(updateScreenGeometry(QRect)));
 }
@@ -200,8 +201,29 @@ QRect ShellUi::launcherGeometry() const
 
 void ShellUi::updateScreenGeometry(const QRect &geometry)
 {
+    // Background window has the same geometry as the screen
     m_backgroundWindow->setGeometry(geometry);
+
+    // Update geometry property
     m_rootObject->setProperty("geometry", geometry);
+
+    // Calculate available geometry
+    QRect availableGeometry = geometry;
+    QString alignment = m_settings->value("launcher/alignment").toString();
+
+    availableGeometry.setY(panelSize());
+
+    if (alignment == QStringLiteral("left")) {
+        availableGeometry.setWidth(availableGeometry.width() - launcherSize());
+        availableGeometry.setX(availableGeometry.x() + launcherSize());
+    } else if (alignment == QStringLiteral("right")) {
+        availableGeometry.setWidth(availableGeometry.width() - launcherSize());
+    } else if (alignment == QStringLiteral("bottom")) {
+        availableGeometry.setHeight(availableGeometry.height() - launcherSize());
+    }
+
+    // Update available geometry property
+    m_rootObject->setProperty("availableGeometry", availableGeometry);
 }
 
 void ShellUi::sendPanelGeometry()
