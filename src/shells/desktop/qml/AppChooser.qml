@@ -31,7 +31,6 @@ import FluidCore 1.0
 import FluidUi 1.0
 
 PopupWindow {
-    modality: Qt.ApplicationModal
     width: 600
     height: 600
 
