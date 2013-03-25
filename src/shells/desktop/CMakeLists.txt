@@ -18,7 +18,7 @@ set(SOURCES
 )
 
 wayland_add_protocol_client(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/hawaii-desktop-shell.xml
+    ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
     desktop-extension
 )
 
