@@ -303,7 +303,7 @@ LauncherDropItem {
             iconSource: "view-grid-symbolic"
             width: tileSize
             height: width
-            onClicked: root.appChooser.visible = !root.appChooser.visible
+            onClicked: root.appChooser.visible = !root.appChooser.visible;
         }
     }
 

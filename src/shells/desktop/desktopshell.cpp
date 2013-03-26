@@ -26,8 +26,7 @@
 
 #include <QDebug>
 #include <QGuiApplication>
-#include <QQuickWindow>
-#include <QScreen>
+#include <QQmlComponent>
 
 #include <qpa/qplatformnativeinterface.h>
 
@@ -35,12 +34,16 @@
 #include "desktopshell.h"
 #include "waylandintegration.h"
 #include "shellui.h"
+#include "shellwindow.h"
 
 Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 
 DesktopShell::DesktopShell()
     : QObject()
 {
+    // Register QML types
+    qmlRegisterType<ShellWindow>("DesktopShell", 0, 1, "ShellWindow");
+
     // Set path so that programs will be found
     QByteArray path = qgetenv("PATH");
     if (!path.isEmpty())
@@ -88,19 +91,9 @@ DesktopShell *DesktopShell::instance()
 
 void DesktopShell::create()
 {
-    // Wayland integration
-    WaylandIntegration *object = WaylandIntegration::instance();
-
     foreach (QScreen *screen, QGuiApplication::screens()) {
         ShellUi *ui = new ShellUi(screen, this);
         m_windows.append(ui);
-
-        desktop_shell_set_background(object->shell, ui->output(),
-                                     ui->backgroundSurface());
-        desktop_shell_set_panel(object->shell, ui->output(),
-                                ui->panelSurface());
-        desktop_shell_set_launcher(object->shell, ui->output(),
-                                   ui->launcherSurface());
     }
 }
 

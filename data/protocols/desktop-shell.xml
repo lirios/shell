@@ -39,6 +39,13 @@
       <arg name="height" type="int"/>
     </request>
 
+    <request name="set_position">
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="x" type="int"/>
+      <arg name="y" type="int"/>
+    </request>
+
     <request name="set_lock_surface">
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>

@@ -36,6 +36,7 @@ const struct desktop_shell_interface DesktopShellServer::shell_interface = {
     DesktopShellServer::set_panel_geometry,
     DesktopShellServer::set_launcher,
     DesktopShellServer::set_launcher_geometry,
+    DesktopShellServer::set_position,
     DesktopShellServer::set_lock_surface,
     DesktopShellServer::unlock,
     DesktopShellServer::set_grab_surface
@@ -113,7 +114,6 @@ void DesktopShellServer::set_panel_geometry(struct wl_client *client,
     Q_UNUSED(client);
     Q_UNUSED(output);
 
-    DesktopShellServer *self = static_cast<DesktopShellServer *>(resource->data);
     QtWayland::Surface *surface = QtWayland::resolve<QtWayland::Surface>(surface_resource);
     surface->setPos(QPointF(x, y));
     surface->setSize(QSize(width, height));
@@ -143,10 +143,23 @@ void DesktopShellServer::set_launcher_geometry(struct wl_client *client,
     Q_UNUSED(client);
     Q_UNUSED(output);
 
-    DesktopShellServer *self = static_cast<DesktopShellServer *>(resource->data);
     QtWayland::Surface *surface = QtWayland::resolve<QtWayland::Surface>(surface_resource);
     surface->setPos(QPointF(x, y));
     surface->setSize(QSize(width, height));
+}
+
+void DesktopShellServer::set_position(struct wl_client *client,
+                                      struct wl_resource *resource,
+                                      struct wl_resource *output_resource,
+                                      struct wl_resource *surface_resource,
+                                      int32_t x, int32_t y)
+{
+    Q_UNUSED(client);
+    Q_UNUSED(resource);
+    Q_UNUSED(output_resource);
+
+    QtWayland::Surface *surface = QtWayland::resolve<QtWayland::Surface>(surface_resource);
+    surface->setPos(QPointF(x, y));
 }
 
 void DesktopShellServer::set_lock_surface(struct wl_client *client,

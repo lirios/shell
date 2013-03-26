@@ -27,10 +27,12 @@
 import QtQuick 2.0
 import QtQuick.Window 2.0
 import GreenIsland 1.0
+import DesktopShell 0.1
 import FluidCore 1.0
 import FluidUi 1.0
 
-PopupWindow {
+ShellWindow {
+    color: "transparent"
     width: 600
     height: 600
 

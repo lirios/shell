@@ -75,8 +75,12 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
         qFatal("Couldn't create component from Shell.qml!");
 
     // Tell QML the screen geometry
-    m_rootObject->setProperty("geometry", screen->geometry());
+    m_rootObject->setProperty("geometry", screen->availableGeometry());
 
+    // Wayland integration
+    WaylandIntegration *object = WaylandIntegration::instance();
+
+    // Surface format for all shell windows
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setAlphaBufferSize(8);
@@ -94,36 +98,40 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_backgroundWindow->setClearBeforeRendering(true);
             m_backgroundWindow->setScreen(screen);
             m_backgroundWindow->setFlags(Qt::CustomWindow);
-            m_backgroundWindow->setGeometry(screen->geometry());
             m_backgroundWindow->create();
+            m_backgroundWindow->setGeometry(screen->availableGeometry());
             m_backgroundSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_backgroundWindow));
+            desktop_shell_set_background(object->shell, m_output,
+                                         m_backgroundSurface);
 
             qDebug() << "Background for screen" << screen->name()
                      << "with geometry" << m_backgroundWindow->geometry();
         } else if (window->objectName() == QStringLiteral("panel")) {
             m_panelWindow = window;
             m_panelWindow->setFormat(format);
-            m_panelWindow->setClearBeforeRendering(true);
             m_panelWindow->setScreen(screen);
             m_panelWindow->setFlags(Qt::WindowStaysOnTopHint | Qt::CustomWindow);
-            m_panelWindow->setGeometry(panelGeometry());
             m_panelWindow->create();
+            m_panelWindow->setGeometry(panelGeometry());
             m_panelSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_panelWindow));
+            desktop_shell_set_panel(object->shell, m_output,
+                                    m_panelSurface);
 
             qDebug() << "Panel for screen" << screen->name()
                      << "with geometry" << m_panelWindow->geometry();
         } else if (window->objectName() == QStringLiteral("launcher")) {
             m_launcherWindow = window;
             m_launcherWindow->setFormat(format);
-            m_launcherWindow->setClearBeforeRendering(true);
             m_launcherWindow->setScreen(screen);
             m_launcherWindow->setFlags(Qt::WindowStaysOnTopHint | Qt::CustomWindow);
-            m_launcherWindow->setGeometry(launcherGeometry());
             m_launcherWindow->create();
+            m_launcherWindow->setGeometry(launcherGeometry());
             m_launcherSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_launcherWindow));
+            desktop_shell_set_launcher(object->shell, m_output,
+                                       m_launcherSurface);
 
             qDebug() << "Launcher for screen" << screen->name()
                      << "with geometry" << m_launcherWindow->geometry();

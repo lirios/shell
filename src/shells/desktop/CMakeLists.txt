@@ -10,6 +10,7 @@ include_directories(
 set(SOURCES
     main.cpp
     desktopshell.cpp
+    shellwindow.cpp
     shellui.cpp
     waylandintegration.cpp
     notificationsdaemon.cpp

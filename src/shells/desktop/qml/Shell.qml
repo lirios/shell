@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Window 2.0
 import GreenIsland 1.0
 
 QtObject {
@@ -36,6 +35,10 @@ QtObject {
 
     // Available screen geometry
     property rect availableGeometry
+
+    property var appChooser: AppChooser {
+        objectName: "appChooser"
+    }
 
     property var launcher: Launcher {
         objectName: "launcher"
@@ -49,10 +52,28 @@ QtObject {
         objectName: "background"
     }
 
-    property var appChooser: AppChooser {
-        objectName: "appChooser"
-        width: availableGeometry.width / 1.2
-        height: availableGeometry.height / 1.2
+    onAvailableGeometryChanged: {
+        // Resize AppChooser
+        //appChooser.width = availableGeometry.width * 0.8;
+        //appChooser.height = availableGeometry.height * 0.8;
+        console.log("******* RESIZE");
+
+        // Move AppChooser
+        switch (launcher.alignment) {
+        case LauncherAlignment.Left:
+            appChooser.x = availableGeometry.x;
+            appChooser.y = availableGeometry.y;
+            break;
+        case LauncherAlignment.Right:
+            appChooser.x = launcher.x - appChooser.width;
+            appChooser.y = availableGeometry.y;
+            break;
+        case LauncherAlignment.Bottom:
+            appChooser.x = launcher.x;
+            appChooser.y = launcher.y - appChooser.height;
+            break;
+        }
+        console.log("***** MOVE");
     }
 
     /*
