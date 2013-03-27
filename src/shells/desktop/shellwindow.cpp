@@ -63,7 +63,7 @@ void ShellWindow::afterRendering()
                 native->nativeResourceForWindow("surface", this));
 
     QPoint pos = position();
-    desktop_shell_set_position(object->shell, output, surface, pos.x(), pos.y());
+    hawaii_desktop_shell_set_position(object->shell, output, surface, pos.x(), pos.y());
 }
 
 #include "moc_shellwindow.cpp"

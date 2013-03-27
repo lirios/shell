@@ -38,7 +38,7 @@ const struct wl_registry_listener WaylandIntegration::registryListener = {
     WaylandIntegration::handleGlobal
 };
 
-const struct desktop_shell_listener WaylandIntegration::shellListener = {
+const struct hawaii_desktop_shell_listener WaylandIntegration::shellListener = {
     WaylandIntegration::handlePresent,
     WaylandIntegration::handlePrepareLockSurface,
     WaylandIntegration::handleGrabCursor
@@ -65,11 +65,11 @@ void WaylandIntegration::handleGlobal(void *data,
 
     WaylandIntegration *object = static_cast<WaylandIntegration *>(data);
 
-    if (strcmp(interface, "desktop_shell") == 0) {
+    if (strcmp(interface, "hawaii_desktop_shell") == 0) {
         // Bind interface and register listener
-        object->shell = static_cast<struct desktop_shell *>(
-                    wl_registry_bind(registry, id, &desktop_shell_interface, 1));
-        desktop_shell_add_listener(object->shell, &shellListener, data);
+        object->shell = static_cast<struct hawaii_desktop_shell *>(
+                    wl_registry_bind(registry, id, &hawaii_desktop_shell_interface, 1));
+        hawaii_desktop_shell_add_listener(object->shell, &shellListener, data);
 
         // Create shell surfaces
         DesktopShell *shell = DesktopShell::instance();
@@ -86,7 +86,7 @@ void WaylandIntegration::handleGlobal(void *data,
 }
 
 void WaylandIntegration::handlePresent(void *data,
-                                       struct desktop_shell *desktop_shell,
+                                       struct hawaii_desktop_shell *desktop_shell,
                                        struct wl_surface *surface)
 {
     Q_UNUSED(desktop_shell);
@@ -110,13 +110,16 @@ void WaylandIntegration::handlePresent(void *data,
 }
 
 void WaylandIntegration::handlePrepareLockSurface(void *data,
-                                                  struct desktop_shell *desktop_shell)
+                                                  struct hawaii_desktop_shell *desktop_shell)
 {
-    desktop_shell_unlock(desktop_shell);
+    hawaii_desktop_shell_unlock(desktop_shell);
 }
 
 void WaylandIntegration::handleGrabCursor(void *data,
-                                          struct desktop_shell *desktop_shell,
+                                          struct hawaii_desktop_shell *desktop_shell,
                                           uint32_t cursor)
 {
+    Q_UNUSED(data);
+    Q_UNUSED(desktop_shell);
+    Q_UNUSED(cursor);
 }

@@ -49,18 +49,18 @@ public:
      * Desktop Shell Protocol
      */
 
-    struct desktop_shell *shell;
-    static const struct desktop_shell_listener shellListener;
+    struct hawaii_desktop_shell *shell;
+    static const struct hawaii_desktop_shell_listener shellListener;
 
     static void handlePresent(void *data,
-                              struct desktop_shell *desktop_shell,
+                              struct hawaii_desktop_shell *desktop_shell,
                               struct wl_surface *surface);
 
     static void handlePrepareLockSurface(void *data,
-                                         struct desktop_shell *desktop_shell);
+                                         struct hawaii_desktop_shell *desktop_shell);
 
     static void handleGrabCursor(void *data,
-                                 struct desktop_shell *desktop_shell,
+                                 struct hawaii_desktop_shell *desktop_shell,
                                  uint32_t cursor);
 
     /*

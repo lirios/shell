@@ -95,7 +95,7 @@ private:
                                  struct wl_resource *resource,
                                  struct wl_resource *surface);
 
-    static const struct desktop_shell_interface shell_interface;
+    static const struct hawaii_desktop_shell_interface shell_interface;
 
     DesktopCompositor *m_compositor;
     QtWayland::Compositor *m_compositorHandle;

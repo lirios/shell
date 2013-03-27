@@ -30,7 +30,7 @@
 #include "desktopshellserver.h"
 #include "compositor.h"
 
-const struct desktop_shell_interface DesktopShellServer::shell_interface = {
+const struct hawaii_desktop_shell_interface DesktopShellServer::shell_interface = {
     DesktopShellServer::set_background,
     DesktopShellServer::set_panel,
     DesktopShellServer::set_panel_geometry,
@@ -50,7 +50,7 @@ DesktopShellServer::DesktopShellServer(DesktopCompositor *compositor, QtWayland:
     , m_compositorHandle(handle)
 {
     wl_display_add_global(handle->wl_display(),
-                          &desktop_shell_interface, this,
+                          &hawaii_desktop_shell_interface, this,
                           DesktopShellServer::bind_func);
 }
 
@@ -62,7 +62,9 @@ void DesktopShellServer::bind_func(wl_client *client, void *data, uint32_t versi
 {
     Q_UNUSED(version);
 
-    wl_resource *resource = wl_client_add_object(client, &desktop_shell_interface, &shell_interface, id, data);
+    wl_resource *resource = wl_client_add_object(client,
+                                                 &hawaii_desktop_shell_interface,
+                                                 &shell_interface, id, data);
     resource->destroy = destroy_resource;
 
     DesktopShellServer *self = static_cast<DesktopShellServer *>(resource->data);
@@ -87,7 +89,7 @@ void DesktopShellServer::set_background(struct wl_client *client,
     DesktopShellServer *self = static_cast<DesktopShellServer *>(resource->data);
     self->backgroundSurface = QtWayland::resolve<QtWayland::Surface>(surface);
 
-    desktop_shell_send_present(resource, surface);
+    hawaii_desktop_shell_send_present(resource, surface);
 }
 
 void DesktopShellServer::set_panel(struct wl_client *client,
@@ -101,7 +103,7 @@ void DesktopShellServer::set_panel(struct wl_client *client,
     DesktopShellServer *self = static_cast<DesktopShellServer *>(resource->data);
     self->panelSurface = QtWayland::resolve<QtWayland::Surface>(surface);
 
-    desktop_shell_send_present(resource, surface);
+    hawaii_desktop_shell_send_present(resource, surface);
 }
 
 void DesktopShellServer::set_panel_geometry(struct wl_client *client,
@@ -130,7 +132,7 @@ void DesktopShellServer::set_launcher(struct wl_client *client,
     DesktopShellServer *self = static_cast<DesktopShellServer *>(resource->data);
     self->launcherSurface = QtWayland::resolve<QtWayland::Surface>(surface);
 
-    desktop_shell_send_present(resource, surface);
+    hawaii_desktop_shell_send_present(resource, surface);
 }
 
 void DesktopShellServer::set_launcher_geometry(struct wl_client *client,
