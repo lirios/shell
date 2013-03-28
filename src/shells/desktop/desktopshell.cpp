@@ -35,6 +35,7 @@
 #include "waylandintegration.h"
 #include "shellui.h"
 #include "shellwindow.h"
+#include "notificationwindow.h"
 
 Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 
@@ -43,6 +44,7 @@ DesktopShell::DesktopShell()
 {
     // Register QML types
     qmlRegisterType<ShellWindow>("DesktopShell", 0, 1, "ShellWindow");
+    qmlRegisterType<NotificationWindow>("DesktopShell", 0, 1, "NotificationWindow");
 
     // Set path so that programs will be found
     QByteArray path = qgetenv("PATH");

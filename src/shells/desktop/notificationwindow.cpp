@@ -25,32 +25,26 @@
  ***************************************************************************/
 
 #include <QGuiApplication>
-#include <QQmlEngine>
-#include <QQmlComponent>
 
 #include <qpa/qplatformnativeinterface.h>
 
 #include "notificationwindow.h"
 #include "waylandintegration.h"
 
-NotificationWindow::NotificationWindow(QObject *parent)
-    : QObject(parent)
+NotificationWindow::NotificationWindow(QWindow *parent)
+    : QQuickWindow(parent)
 {
-    m_engine = new QQmlEngine(this);
-    m_component = new QQmlComponent(m_engine, this);
-    m_component->loadUrl(QUrl("qrc:///qml/NotificationItem.qml"));
-    if (!m_component->isReady())
-        qFatal("Failed to create a notification window: %s",
-               qPrintable(m_component->errorString()));
+    // Set custom surface format
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    format.setAlphaBufferSize(8);
+    setFormat(format);
 
-    QObject *topLevel = m_component->create();
-    m_window = qobject_cast<QQuickWindow *>(topLevel);
-    if (!m_window)
-        qFatal("NotificationItem's root item has to be a Window");
+    // Set custom window type
+    setFlags(Qt::CustomWindow);
 
-    // Create and show window
-    m_window->setFlags(Qt::CustomWindow);
-    //m_window->create();
+    // Create platform window
+    create();
 }
 
 void NotificationWindow::addSurface()
@@ -59,7 +53,7 @@ void NotificationWindow::addSurface()
     WaylandIntegration *integration = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
     struct wl_surface *surface = static_cast<struct wl_surface *>(
-                native->nativeResourceForWindow("surface", m_window));
+                native->nativeResourceForWindow("surface", this));
     wl_notification_daemon_add_surface(integration->notification, surface);
 }
 

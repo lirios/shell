@@ -26,14 +26,15 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0
+import DesktopShell 0.1
 import FluidCore 1.0
 import FluidUi 1.0
 
-PopupWindow {
+NotificationWindow {
     id: notification
+    color: "transparent"
     width: defaultWidth
     height: defaultHeight
-    visible: false
 
     property int identifier
     property string appName
@@ -55,8 +56,6 @@ PopupWindow {
 
     signal closed(int identifier)
 
-    onVisibleChanged: console.log("**************************", identifier, visible)
-
     onTimeoutChanged: {
         // If no timeout is specified, add two seconds to ensure the
         // notification last at least five seconds
@@ -69,11 +68,7 @@ PopupWindow {
         interval: timeout
         running: visible
         repeat: false
-        onRunningChanged: console.log("Timeout!!!!!!!!!!!!", identifier)
-        onTriggered: {
-            console.log("Closing notification", identifier, "...");
-            notification.closed(identifier)
-        }
+        onTriggered: notification.closed(identifier)
     }
 
     Behavior on height {

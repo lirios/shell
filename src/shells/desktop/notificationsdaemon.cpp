@@ -28,6 +28,8 @@
 #include <QDebug>
 #include <QGuiApplication>
 #include <QDBusConnection>
+#include <QQmlEngine>
+#include <QQmlComponent>
 
 #include <qpa/qplatformnativeinterface.h>
 
@@ -87,12 +89,12 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId, const 
     // Find an existing notification item
     NotificationWindow *notification = findNotification(appName, summary);
     if (notification && !body.isEmpty() && !changeCoords) {
-        QMetaObject::invokeMethod(notification->window(),
+        QMetaObject::invokeMethod(notification,
                                   "appendToBody",
                                   Q_ARG(QVariant, body),
                                   Q_ARG(QVariant, timeout));
 
-        return notification->window()->property("identifier").toUInt();
+        return notification->property("identifier").toUInt();
     }
 
 #if 0
@@ -152,7 +154,7 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId, const 
     }
 #endif
 
-    return notification->window()->property("identifier").toUInt();
+    return notification->property("identifier").toUInt();
 }
 
 void NotificationsDaemon::CloseNotification(uint id)
@@ -202,9 +204,17 @@ NotificationWindow *NotificationsDaemon::createNotification(const QString &appNa
                                                             const QImage &image,
                                                             int timeout)
 {
-    // Create notification window
-    NotificationWindow *notification = new NotificationWindow(this);
-    QQuickWindow *window = notification->window();
+    QQmlEngine *engine = new QQmlEngine(this);
+    QQmlComponent *component = new QQmlComponent(engine, this);
+    component->loadUrl(QUrl("qrc:///qml/NotificationItem.qml"));
+    if (!component->isReady())
+        qFatal("Failed to create a notification window: %s",
+               qPrintable(component->errorString()));
+
+    QObject *topLevel = component->create();
+    NotificationWindow *window = qobject_cast<NotificationWindow *>(topLevel);
+    if (!window)
+        qFatal("NotificationItem's root item has to be a NotificationWindow");
 
     // Set all the properties
     window->setProperty("identifier", nextId());
@@ -218,17 +228,16 @@ NotificationWindow *NotificationsDaemon::createNotification(const QString &appNa
     // Handle expiration
     connect(window, SIGNAL(closed(int)), this, SLOT(notificationExpired(int)));
 
-    return notification;
+    return window;
 }
 
 NotificationWindow *NotificationsDaemon::findNotification(const QString &appName, const QString &summary)
 {
     for (int i = 0; i < m_notifications.size(); i++) {
-        NotificationWindow *notification = m_notifications.at(i);
-        QQuickWindow *window = notification->window();
+        NotificationWindow *window = m_notifications.at(i);
 
         if (window->property("appName") == appName || window->property("summary") == summary)
-            return notification;
+            return window;
     }
 
     return 0;
@@ -238,8 +247,11 @@ void NotificationsDaemon::showNotification(NotificationWindow *notification)
 {
     // Show the notification (this will start the QML timer because its
     // running property is bound to visible) and ask the compositor
-    // to add the surface to the "bubbles list"
-    notification->window()->show();
+    // to add the surface to the "bubbles list". We process events between
+    // show and addSurfaces so that the buffer is created and the surface
+    // attached, otherwise the compositor will crash
+    notification->show();
+    QGuiApplication::processEvents();
     notification->addSurface();
 }
 
@@ -260,15 +272,16 @@ void NotificationsDaemon::notificationExpired(int id)
 
 void NotificationsDaemon::notificationClosed(uint id, uint reason)
 {
-    emit NotificationClosed(id, reason);
-
+    // It doesn't make sense to continue if we don't have any notification left
     if (m_notifications.isEmpty())
         return;
 
+    // Actually close the notification
     NotificationWindow *notification = m_notifications.takeFirst();
-    notification->window()->hide();
-    notification->window()->deleteLater();
+    notification->close();
+    emit NotificationClosed(id, reason);
 
+    // Show the next notification
     if (!m_notifications.isEmpty()) {
         notification = m_notifications.first();
         showNotification(notification);

@@ -29,26 +29,14 @@
 
 #include <QQuickWindow>
 
-class QQmlEngine;
-class QQmlComponent;
-
-class NotificationWindow : public QObject
+class NotificationWindow : public QQuickWindow
 {
     Q_OBJECT
 public:
-    explicit NotificationWindow(QObject *parent = 0);
-
-    QQuickWindow *window() const {
-        return m_window;
-    }
+    explicit NotificationWindow(QWindow *parent = 0);
 
 public Q_SLOTS:
     void addSurface();
-
-private:
-    QQmlEngine *m_engine;
-    QQmlComponent *m_component;
-    QQuickWindow *m_window;
 };
 
 #endif // NOTIFICATIONWINDOW_H
