@@ -25,27 +25,31 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import DesktopShell 0.1
 import FluidCore 1.0
 import FluidUi 1.0
 
-Item {
+ShellWindow {
     id: panelMenu
+    color: "transparent"
+    width: menu.width
+    height: menu.height
+    visible: status != DialogStatus.Closed
 
     default property alias content: menuContents.children
     property int status: DialogStatus.Closed
 
-    z: 3
-    width: 400
-    height: 400
-    state: "hidden"
-    enabled: status == DialogStatus.Open
-    visible: status != DialogStatus.Closed
+    Component.onCompleted: {
+        console.log("***", menu.width, menu.height);
+    }
 
     FrameSvgItem {
         id: menuContainer
         width: menu.width
         height: menu.height
         imagePath: "widgets/toolbar"
+        state: "hidden"
+        enabled: status == DialogStatus.Open
 
         Item {
             id: contentItem
@@ -95,75 +99,75 @@ Item {
                 }
             }
         }
+
+        states: [
+            State {
+                name: "visible"
+                when: status == DialogStatus.Opening || status == DialogStatus.Open
+                PropertyChanges {
+                    target: menuContainer
+                    //y: panelMenu.parent.parent.height + panelMenu.parent.y
+                    opacity: 1.0
+                }
+            },
+            State {
+                name: "hidden"
+                when: status == DialogStatus.Closing || status == DialogStatus.Closed
+                PropertyChanges {
+                    target: menuContainer
+                    //y: 0.0
+                    opacity: 0.0
+                }
+            }
+        ]
+
+        transitions: [
+            Transition {
+                from: "visible"
+                to: "hidden"
+
+                SequentialAnimation {
+                    ParallelAnimation {
+                        NumberAnimation {
+                            target: menuContainer
+                            property: "y"
+                            duration: 50
+                            easing.type: Easing.Linear
+                        }
+                        NumberAnimation {
+                            target: menuContainer
+                            property: "opacity"
+                            duration: 200
+                            easing.type: Easing.Linear
+                        }
+                    }
+                    PropertyAction { target: panelMenu; property: "status"; value: DialogStatus.Closed }
+                }
+            },
+            Transition {
+                from: "hidden"
+                to: "visible"
+
+                SequentialAnimation {
+                    ParallelAnimation {
+                        NumberAnimation {
+                            target: menuContainer
+                            property: "y"
+                            duration: 100
+                            easing.type: Easing.Linear
+                        }
+                        NumberAnimation {
+                            target: menuContainer
+                            property: "opacity"
+                            duration: 250
+                            easing.type: Easing.Linear
+                        }
+                    }
+                    PropertyAction { target: panelMenu; property: "status"; value: DialogStatus.Open }
+                }
+            }
+        ]
     }
-
-    states: [
-        State {
-            name: "visible"
-            when: status == DialogStatus.Opening || status == DialogStatus.Open
-            PropertyChanges {
-                target: menuContainer
-                y: panelMenu.parent.parent.height + panelMenu.parent.y
-                opacity: 1.0
-            }
-        },
-        State {
-            name: "hidden"
-            when: status == DialogStatus.Closing || status == DialogStatus.Closed
-            PropertyChanges {
-                target: menuContainer
-                y: 0.0
-                opacity: 0.0
-            }
-        }
-    ]
-
-    transitions: [
-        Transition {
-            from: "visible"
-            to: "hidden"
-
-            SequentialAnimation {
-                ParallelAnimation {
-                    NumberAnimation {
-                        target: menuContainer
-                        property: "y"
-                        duration: 50
-                        easing.type: Easing.Linear
-                    }
-                    NumberAnimation {
-                        target: menuContainer
-                        property: "opacity"
-                        duration: 200
-                        easing.type: Easing.Linear
-                    }
-                }
-                PropertyAction { target: panelMenu; property: "status"; value: DialogStatus.Closed }
-            }
-        },
-        Transition {
-            from: "hidden"
-            to: "visible"
-
-            SequentialAnimation {
-                ParallelAnimation {
-                    NumberAnimation {
-                        target: menuContainer
-                        property: "y"
-                        duration: 100
-                        easing.type: Easing.Linear
-                    }
-                    NumberAnimation {
-                        target: menuContainer
-                        property: "opacity"
-                        duration: 250
-                        easing.type: Easing.Linear
-                    }
-                }
-                PropertyAction { target: panelMenu; property: "status"; value: DialogStatus.Open }
-            }
-        }
-    ]
 
     function open() {
         if (status == DialogStatus.Open || status == DialogStatus.Opening)

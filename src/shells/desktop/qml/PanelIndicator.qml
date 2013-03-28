@@ -78,7 +78,6 @@ Item {
         }
         onClicked: {
             // If the indicator doesn't have a menu, it can handle the click
-            /*
             if (!menu) {
                 indicator.clicked();
                 return;
@@ -97,7 +96,6 @@ Item {
 
             PanelMenuManager.triggered = selected;
             PanelMenuManager.currentIndicator = indicator;
-            */
         }
     }
 
