@@ -54,9 +54,8 @@ QtObject {
 
     onAvailableGeometryChanged: {
         // Resize AppChooser
-        //appChooser.width = availableGeometry.width * 0.8;
-        //appChooser.height = availableGeometry.height * 0.8;
-        console.log("******* RESIZE");
+        appChooser.width = availableGeometry.width * 0.8;
+        appChooser.height = availableGeometry.height * 0.8;
 
         // Move AppChooser
         switch (launcher.alignment) {
@@ -73,7 +72,6 @@ QtObject {
             appChooser.y = launcher.y - appChooser.height;
             break;
         }
-        console.log("***** MOVE");
     }
 
     /*

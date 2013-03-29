@@ -24,7 +24,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
 #include <QGuiApplication>
 
 #include <qpa/qplatformnativeinterface.h>
@@ -42,17 +41,22 @@ ShellWindow::ShellWindow(QWindow *parent)
     setFormat(format);
 
     // Set custom window type
+    // TODO: Set to Qt::CustomWindow and call setSpecial()
     setFlags(Qt::Popup);
 
-    connect(this, SIGNAL(afterRendering()), this, SLOT(afterRendering()));
+    // Create platform window and inform the compositor about us
+    create();
 }
 
-void ShellWindow::showEvent(QShowEvent *event)
+void ShellWindow::exposeEvent(QExposeEvent *event)
 {
-    QQuickWindow::showEvent(event);
+    QQuickWindow::exposeEvent(event);
+
+    if (isExposed())
+        forcePosition();
 }
 
-void ShellWindow::afterRendering()
+void ShellWindow::setSpecial()
 {
     WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
@@ -62,8 +66,19 @@ void ShellWindow::afterRendering()
     struct wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
+    hawaii_desktop_shell_set_special(object->shell, output, surface);
+}
+
+void ShellWindow::forcePosition()
+{
+    WaylandIntegration *object = WaylandIntegration::instance();
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+
+    struct wl_surface *surface = static_cast<struct wl_surface *>(
+                native->nativeResourceForWindow("surface", this));
+
     QPoint pos = position();
-    hawaii_desktop_shell_set_position(object->shell, output, surface, pos.x(), pos.y());
+    hawaii_desktop_shell_set_position(object->shell, surface, pos.x(), pos.y());
 }
 
 #include "moc_shellwindow.cpp"

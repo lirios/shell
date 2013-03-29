@@ -36,10 +36,11 @@ public:
     explicit ShellWindow(QWindow *parent = 0);
 
 protected:
-    void showEvent(QShowEvent *event);
+    void exposeEvent(QExposeEvent *event);
 
 private Q_SLOTS:
-    void afterRendering();
+    void setSpecial();
+    void forcePosition();
 };
 
 #endif // SHELLWINDOW_H
