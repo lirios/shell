@@ -53,7 +53,6 @@ PanelIndicator {
             },
             PanelMenuItem {
                 text: qsTr("Network Settings")
-                onClicked: dialog.open()
             }
         ]
     }

@@ -39,10 +39,6 @@ ShellWindow {
     default property alias content: menuContents.children
     property int status: DialogStatus.Closed
 
-    Component.onCompleted: {
-        console.log("***", menu.width, menu.height);
-    }
-
     FrameSvgItem {
         id: menuContainer
         width: menu.width
