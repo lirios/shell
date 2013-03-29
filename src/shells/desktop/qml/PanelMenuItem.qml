@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import FluidCore 1.0
 import FluidUi 1.0
+import "PanelMenuManager.js" as PanelMenuManager
 
 Item {
     id: menuItem
@@ -45,7 +46,12 @@ Item {
     width: Math.max(implicitWidth, parent.width)
     enabled: !separator
 
-    Keys.onReturnPressed: menuItem.clicked()
+    Keys.onReturnPressed: {
+        PanelMenuManager.currentIndicator.selected = false;
+        PanelMenuManager.triggered = false;
+        PanelMenuManager.currentIndicator = null;
+        menuItem.clicked();
+    }
 
     onSeparatorChanged: {
         if (separator)
@@ -139,6 +145,11 @@ Item {
             label.color = theme.windowTextColor;
             container.prefix = "";
         }
-        onClicked: menuItem.clicked()
+        onClicked: {
+            PanelMenuManager.currentIndicator.selected = false;
+            PanelMenuManager.triggered = false;
+            PanelMenuManager.currentIndicator = null;
+            menuItem.clicked();
+        }
     }
 }

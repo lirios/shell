@@ -99,13 +99,6 @@ Item {
         }
     }
 
-    onMenuChanged: {
-        /*
-        if (menu)
-            menu.parent = root;
-        */
-    }
-
     FrameSvgItem {
         id: highlight
         anchors.fill: parent
@@ -151,6 +144,7 @@ Item {
                 left: iconItem.right
                 verticalCenter: iconItem.verticalCenter
                 leftMargin: spacing
+                topMargin: spacing
                 rightMargin: spacing
             }
             text: label
