@@ -88,15 +88,19 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     // Do we need to change the default coordinates?
     bool changeCoords = (hints.contains("x") && hints.contains("y"));
 
-    // Find an existing notification item
-    NotificationWindow *notification = findNotification(appName, summary);
-    if (notification && !body.isEmpty() && !changeCoords) {
-        QMetaObject::invokeMethod(notification,
-                                  "appendToBody",
-                                  Q_ARG(QVariant, body),
-                                  Q_ARG(QVariant, timeout));
+    // Find an existing notification item unless the application wants us to
+    // replace an existing bubble with a new one
+    NotificationWindow *notification = 0;
+    if (replacesId == 0) {
+        notification = findNotification(appName, summary);
+        if (notification && !body.isEmpty() && !changeCoords) {
+            QMetaObject::invokeMethod(notification,
+                                      "appendToBody",
+                                      Q_ARG(QVariant, body),
+                                      Q_ARG(QVariant, timeout));
 
-        return notification->property("identifier").toUInt();
+            return notification->property("identifier").toUInt();
+        }
     }
 
     // Fetch the image hint (we also support the obsolete icon_data hint which
@@ -116,10 +120,10 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
         iconName = QStringLiteral("image://desktoptheme/") + iconName;
 
     // Create the notification and put it into the queue
-    notification = createNotification(appName, iconName, summary,
+    notification = createNotification(replacesId, appName, iconName, summary,
                                       body, image, timeout);
     if (!notification)
-        return -1;
+        return 0;
     m_notifications << notification;
 
     // Show the notification if nothing is on the queue
@@ -178,7 +182,8 @@ bool NotificationsDaemon::connectOnDBus()
     return true;
 }
 
-NotificationWindow *NotificationsDaemon::createNotification(const QString &appName,
+NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
+                                                            const QString &appName,
                                                             const QString &iconName,
                                                             const QString &summary,
                                                             const QString &body,
@@ -198,7 +203,7 @@ NotificationWindow *NotificationsDaemon::createNotification(const QString &appNa
         qFatal("NotificationItem's root item has to be a NotificationWindow");
 
     // Set all the properties
-    window->setProperty("identifier", nextId());
+    window->setProperty("identifier", replacesId > 0 ? replacesId : nextId());
     window->setProperty("appName", appName);
     if (image.isNull())
         window->setProperty("iconName", iconName);
@@ -255,18 +260,23 @@ void NotificationsDaemon::notificationExpired(int id)
 
 void NotificationsDaemon::notificationClosed(uint id, uint reason)
 {
-    // It doesn't make sense to continue if we don't have any notification left
-    if (m_notifications.isEmpty())
-        return;
+    // Close the notification, if it's asked by the application it means that
+    // it wants to replace this notification with a new one so we return
+    // so that Notify will create a new bubble
+    for (int i = 0; i < m_notifications.size(); i++) {
+        NotificationWindow *notification = m_notifications.at(i);
+        if (notification->property("identifier").toInt() == (int)id) {
+            m_notifications.removeAt(i);
+            notification->close();
+            //notification->deleteLater();
+            emit NotificationClosed(id, reason);
+            return;
+        }
+    }
 
-    // Actually close the notification
-    NotificationWindow *notification = m_notifications.takeFirst();
-    notification->close();
-    emit NotificationClosed(id, reason);
-
-    // Show the next notification
+    // Show the next notification on the queue
     if (!m_notifications.isEmpty()) {
-        notification = m_notifications.first();
+        NotificationWindow *notification = m_notifications.takeFirst();
         showNotification(notification);
     }
 }

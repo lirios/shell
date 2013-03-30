@@ -73,7 +73,8 @@ private:
     QAtomicInt *m_idSeed;
     QList<NotificationWindow *> m_notifications;
 
-    NotificationWindow *createNotification(const QString &appName,
+    NotificationWindow *createNotification(uint replacesId,
+                                           const QString &appName,
                                            const QString &iconName,
                                            const QString &summary,
                                            const QString &body,
