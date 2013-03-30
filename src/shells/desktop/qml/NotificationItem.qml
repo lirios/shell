@@ -33,8 +33,8 @@ import FluidUi 1.0
 NotificationWindow {
     id: notification
     color: "transparent"
-    width: defaultWidth
-    height: defaultHeight
+    width: 240 + frame.margins.left + frame.margins.right + (padding * 2)
+    height: summaryText.paintedHeight + bodyText.paintedHeight + frame.margins.top + frame.margins.bottom + (padding * 3)
 
     property int identifier
     property string appName
@@ -44,8 +44,6 @@ NotificationWindow {
     property variant image
     property int timeout
 
-    property real defaultWidth: 240 + frame.margins.left + frame.margins.right + (padding * 2)
-    property real defaultHeight: 50 + frame.margins.top + frame.margins.bottom + (padding * 2)
     property real padding: 10
 
     property real normalOpacity: 0.8
@@ -154,25 +152,7 @@ NotificationWindow {
             maximumLineCount: 20
             wrapMode: Text.Wrap
             //elide: Text.ElideRight
-            onTextChanged: {
-                if (text == "") {
-                    visible = false;
-                    summaryText.anchors.bottom = parent.bottom;
-                    anchors.bottom = undefined;
-                    height = defaultHeight;
-                } else {
-                    visible = true;
-                    summaryText.anchors.bottom = undefined;
-                    anchors.bottom = parent.bottom;
-                    height = defaultHeight + paintedHeight;
-                }
-            }
         }
-    }
-
-    function start() {
-        //notification.visible = true;
-        timer.running = true;
     }
 
     function distance(value, min, max) {
@@ -205,8 +185,13 @@ NotificationWindow {
     }
 
     function appendToBody(text, timeout) {
+        // Append body, this will increase height automatically
         notification.body += "<br>" + text;
-        // TODO: Use timeout
+
+        // Reset timer
+        notification.timeout = Math.max(timeout, timeoutForText(text));
+        timer.interval = notification.timeout;
+        timer.restart();
     }
 
     function timeoutForText(text) {
