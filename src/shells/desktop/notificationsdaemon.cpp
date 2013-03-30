@@ -245,7 +245,7 @@ QString NotificationsDaemon::findImageFromPath(const QString &imagePath)
         return url.toLocalFile();
     }
 
-    return imagePath;
+    return QStringLiteral("file://") + imagePath;
 }
 
 void NotificationsDaemon::notificationExpired(int id)
