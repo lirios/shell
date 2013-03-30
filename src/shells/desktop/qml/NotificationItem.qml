@@ -147,6 +147,8 @@ NotificationWindow {
             //color: "white"
             //style: Text.Raised
             //styleColor: "black"
+            maximumLineCount: 2
+            wrapMode: Text.Wrap
             verticalAlignment: Text.AlignVCenter
         }
 
