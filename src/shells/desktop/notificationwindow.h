@@ -37,6 +37,9 @@ public:
 
 public Q_SLOTS:
     void addSurface();
+
+private:
+    bool m_surfaceAdded;
 };
 
 #endif // NOTIFICATIONWINDOW_H
