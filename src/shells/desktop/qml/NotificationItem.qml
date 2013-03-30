@@ -29,6 +29,7 @@ import GreenIsland 1.0
 import DesktopShell 0.1
 import FluidCore 1.0
 import FluidUi 1.0
+import FluidExtra 1.0
 
 NotificationWindow {
     id: notification
@@ -38,10 +39,10 @@ NotificationWindow {
 
     property int identifier
     property string appName
-    property string iconName
+    property alias iconName: icon.source
     property alias summary: summaryText.text
     property alias body: bodyText.text
-    property variant image
+    property alias picture: image.image
     property int timeout
 
     property real padding: 10
@@ -107,7 +108,7 @@ NotificationWindow {
             bottomMargin: frame.margins.bottom
         }
 
-        Image {
+        Item {
             id: iconImage
             anchors {
                 left: parent.left
@@ -115,10 +116,23 @@ NotificationWindow {
                 leftMargin: padding
                 topMargin: padding
             }
-            smooth: true
-            sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
-            source: iconName
-            onSourceChanged: visible = source != ""
+            width: theme.largeIconSize
+            height: theme.largeIconSize
+
+            Image {
+                id: icon
+                anchors.fill: parent
+                smooth: true
+                sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
+                visible: icon.source !== ""
+            }
+
+            ImageItem {
+                id: image
+                anchors.fill: parent
+                smooth: true
+                visible: !image.null
+            }
         }
 
         Label {

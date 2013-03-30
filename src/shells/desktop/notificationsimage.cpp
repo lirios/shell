@@ -43,9 +43,17 @@ inline void copyLineARGB32(QRgb *dst, const char *src, int width)
         * dst = qRgba(src[0], src[1], src[2], src[3]);
 }
 
-QImage decodeImageHint(int width, int height, int stride, int hasAlpha,
-                       int bitsPerSample, int channels, QByteArray pixels)
+QImage decodeImageHint(const QDBusArgument &arg)
 {
+    int width, height, stride, hasAlpha, bitsPerSample, channels;
+    QByteArray pixels;
+
+    // Decode hint
+    arg.beginStructure();
+    arg >> width >> height >> stride >> hasAlpha
+        >> bitsPerSample >> channels >> pixels;
+    arg.endStructure();
+
     char *ptr, *end;
 
     // Sanity check

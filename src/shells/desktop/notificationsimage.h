@@ -28,9 +28,9 @@
 #ifndef NOTIFICATIONSIMAGE_H
 #define NOTIFICATIONSIMAGE_H
 
+#include <QDBusArgument>
 #include <QImage>
 
-QImage decodeImageHint(int width, int height, int stride, int hasAlpha,
-                       int bitsPerSample, int channels, QByteArray pixels);
+QImage decodeImageHint(const QDBusArgument &arg);
 
 #endif // NOTIFICATIONSIMAGE_H

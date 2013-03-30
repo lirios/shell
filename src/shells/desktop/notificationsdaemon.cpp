@@ -71,8 +71,10 @@ uint NotificationsDaemon::nextId()
     return (uint)m_idSeed->fetchAndAddAcquire(1);
 }
 
-uint NotificationsDaemon::Notify(const QString &appName, uint replacesId, const QString &_iconName,
-                                 const QString &summary, const QString &body, const QStringList &actions,
+uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
+                                 const QString &_iconName,
+                                 const QString &summary, const QString &body,
+                                 const QStringList &actions,
                                  const QVariantMap &hints, int timeout)
 {
     qDebug() << "Notification:" << appName << replacesId << _iconName << summary << body << actions << hints << timeout;
@@ -97,46 +99,25 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId, const 
         return notification->property("identifier").toUInt();
     }
 
-#if 0
-    // Fetch the image hint
+    // Fetch the image hint (we also support the obsolete icon_data hint which
+    // is still used by applications compatible with the specification version
     QImage image;
-    if (hints.contains(QLatin1String("image_data")) || hints.contains(QLatin1String("icon_data"))) {
-        QDBusArgument arg;
-
-        if (hints.contains(QLatin1String("image_data")))
-            arg = hints["image_data"].value<QDBusArgument>();
-        else if (hints.contains(QLatin1String("icon_data"))) {
-            /*
-             * This hint was in use in version 1.0 of the specification and
-             * got replaced by image_data in version 1.1, we support it
-             * for applications that still rely on it.  Applications using
-             * our API won't never use it, but supporting it makes outdated
-             * applications working!
-             */
-            arg = hints["icon_data"].value<QDBusArgument>();
-        }
-
-        // Read image information from the argument
-        int width, height, stride, hasAlpha, bitsPerSample, channels;
-        QByteArray pixels;
-        arg.beginStructure();
-        arg >> width >> height >> stride >> hasAlpha >> bitsPerSample >> channels >> pixels;
-        arg.endStructure();
-
-        image = decodeImageHint(width, height, stride, hasAlpha, bitsPerSample, channels, pixels);
-    } else if (hints.contains("image_path")) {
+    if (hints.contains(QStringLiteral("image_data")) || hints.contains(QStringLiteral("icon_data"))) {
+        if (hints.contains(QStringLiteral("image_data")))
+            image = decodeImageHint(hints["image_data"].value<QDBusArgument>());
+        else if (hints.contains(QStringLiteral("icon_data")))
+            image = decodeImageHint(hints["icon_data"].value<QDBusArgument>());
+    } else if (hints.contains(QStringLiteral("image_path"))) {
         iconName = findImageFromPath(hints["image_path"].toString());
     }
-#else
-    QImage image;
-#endif
 
     // Unless an URL is provided use an icon from the theme
-    if (!iconName.startsWith("file:"))
-        iconName = "image://desktoptheme/" + iconName;
+    if (!iconName.startsWith(QStringLiteral("file:")))
+        iconName = QStringLiteral("image://desktoptheme/") + iconName;
 
     // Create the notification and put it into the queue
-    notification = createNotification(appName, iconName, summary, body, image, timeout);
+    notification = createNotification(appName, iconName, summary,
+                                      body, image, timeout);
     if (!notification)
         return -1;
     m_notifications << notification;
@@ -219,10 +200,12 @@ NotificationWindow *NotificationsDaemon::createNotification(const QString &appNa
     // Set all the properties
     window->setProperty("identifier", nextId());
     window->setProperty("appName", appName);
-    window->setProperty("iconName", iconName);
+    if (image.isNull())
+        window->setProperty("iconName", iconName);
     window->setProperty("summary", summary);
     window->setProperty("body", body);
-    window->setProperty("image", image);
+    if (!image.isNull())
+        window->setProperty("picture", image);
     window->setProperty("timeout", timeout);
 
     // Handle expiration
