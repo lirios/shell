@@ -31,6 +31,7 @@
 #include "compositor.h"
 
 const struct hawaii_desktop_shell_interface DesktopShellServer::shell_interface = {
+    DesktopShellServer::set_available_geometry,
     DesktopShellServer::set_background,
     DesktopShellServer::set_panel,
     DesktopShellServer::set_panel_geometry,
@@ -77,6 +78,21 @@ void DesktopShellServer::destroy_resource(wl_resource *resource)
     DesktopShellServer *self = static_cast<DesktopShellServer *>(resource->data);
     self->m_resources.removeOne(resource);
     free(resource);
+}
+
+void DesktopShellServer::set_available_geometry(struct wl_client *client,
+                                                struct wl_resource *resource,
+                                                struct wl_resource *output_resource,
+                                                int32_t x, int32_t y,
+                                                int32_t width, int32_t height)
+{
+    Q_UNUSED(client);
+    Q_UNUSED(resource);
+    Q_UNUSED(output_resource);
+    Q_UNUSED(x);
+    Q_UNUSED(y);
+    Q_UNUSED(width);
+    Q_UNUSED(height);
 }
 
 void DesktopShellServer::set_background(struct wl_client *client,

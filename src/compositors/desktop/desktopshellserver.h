@@ -51,6 +51,12 @@ private:
 
     static void destroy_resource(wl_resource *resource);
 
+    static void set_available_geometry(struct wl_client *client,
+                                       struct wl_resource *resource,
+                                       struct wl_resource *output_resource,
+                                       int32_t x, int32_t y,
+                                       int32_t width, int32_t height);
+
     static void set_background(struct wl_client *client,
                                struct wl_resource *resource,
                                struct wl_resource *output,
