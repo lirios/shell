@@ -94,7 +94,7 @@ void DesktopCompositor::runShell()
     connect(m_shellProcess, SIGNAL(aboutToClose()),
             this, SLOT(shellAboutToClose()));
     m_shellProcess->setProcessEnvironment(env);
-    m_shellProcess->start(QLatin1String(INSTALL_LIBEXECDIR "/greenisland-desktop-shell"),
+    m_shellProcess->start(QLatin1String(INSTALL_LIBEXECDIR "/hawaii-desktop-shell"),
                           QStringList(), QIODevice::ReadOnly);
 }
 

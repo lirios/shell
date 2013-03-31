@@ -34,13 +34,13 @@ qt5_add_dbus_adaptor(SOURCES
     ${CMAKE_SOURCE_DIR}/data/interfaces/org.freedesktop.Notifications.xml
     notificationsdaemon.h NotificationsDaemon)
 
-add_executable(greenisland-desktop-shell ${SOURCES} ${RESOURCES})
-qt5_use_modules(greenisland-desktop-shell Quick Widgets AccountsService)
-set_target_properties(greenisland-desktop-shell PROPERTIES
+add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
+qt5_use_modules(hawaii-desktop-shell Quick Widgets AccountsService)
+set_target_properties(hawaii-desktop-shell PROPERTIES
     COMPILE_FLAGS "-rdynamic"
     LINK_FLAGS "-L${WaylandClient_LIBDIR} -L${POLKITQT-1_LIB_DIR}"
 )
-target_link_libraries(greenisland-desktop-shell
+target_link_libraries(hawaii-desktop-shell
     ${VibeCore_LIBRARIES}
     ${GreenIsland_LIBRARIES}
     ${WaylandClient_LIBRARIES}
@@ -48,4 +48,4 @@ target_link_libraries(greenisland-desktop-shell
     ${POLKITQT-1_AGENT_LIBRARY}
 )
 
-install(TARGETS greenisland-desktop-shell DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
+install(TARGETS hawaii-desktop-shell DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
