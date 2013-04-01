@@ -156,8 +156,8 @@ ShellWindow {
 
                     onClicked: {
                         // Launch the application and close the AppChooser
-                        // TODO: Hide this window
                         appsModel.launchApplicationAt(visualIndex);
+                        root.appChooser.visible = false;
                     }
                 }
             }
