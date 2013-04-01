@@ -117,6 +117,9 @@ int main(int argc, char *argv[])
     // Set the hawaii desktop session
     setenv("DESKTOP_SESSION", "hawaii", 1);
 
+    // Enable GDK backend for Wayland
+    setenv("GDK_BACKEND", "wayland", 1);
+
     QApplication app(argc, argv);
 
     // Create the shell
