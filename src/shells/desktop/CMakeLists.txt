@@ -3,7 +3,6 @@ include_directories(
     ${VibeCore_INCLUDE_DIRS}
     ${GreenIsland_INCLUDE_DIRS}
     ${WaylandInclude_INCLUDE_DIRS}
-    ${POLKITQT-1_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}/headers
 )
 
@@ -38,14 +37,12 @@ add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
 qt5_use_modules(hawaii-desktop-shell Quick Widgets AccountsService)
 set_target_properties(hawaii-desktop-shell PROPERTIES
     COMPILE_FLAGS "-rdynamic"
-    LINK_FLAGS "-L${WaylandClient_LIBDIR} -L${POLKITQT-1_LIB_DIR}"
+    LINK_FLAGS "-L${WaylandClient_LIBDIR}"
 )
 target_link_libraries(hawaii-desktop-shell
     ${VibeCore_LIBRARIES}
     ${GreenIsland_LIBRARIES}
     ${WaylandClient_LIBRARIES}
-    ${POLKITQT-1_CORE_LIBRARY}
-    ${POLKITQT-1_AGENT_LIBRARY}
 )
 
 install(TARGETS hawaii-desktop-shell DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
