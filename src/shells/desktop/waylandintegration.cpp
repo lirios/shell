@@ -91,9 +91,6 @@ void WaylandIntegration::handlePresent(void *data,
 {
     Q_UNUSED(desktop_shell);
 
-    WaylandIntegration *object = static_cast<WaylandIntegration *>(data);
-    Q_ASSERT(object);
-
     DesktopShell *shell = DesktopShell::instance();
 
     foreach (ShellUi *shellUi, shell->windows()) {
