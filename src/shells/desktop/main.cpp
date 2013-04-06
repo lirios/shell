@@ -27,7 +27,6 @@
 #include <QApplication>
 
 #include "desktopshell.h"
-#include "policykitagent.h"
 
 #include <execinfo.h>
 #include <stdio.h>
@@ -124,11 +123,6 @@ int main(int argc, char *argv[])
 
     // Create the shell
     (void)DesktopShell::instance();
-
-#if 0
-    // Create the PolicyKit agent
-    (void)PolicyKitAgent::instance();
-#endif
 
     return app.exec();
 }
