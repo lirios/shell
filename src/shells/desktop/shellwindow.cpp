@@ -42,7 +42,7 @@ ShellWindow::ShellWindow(QWindow *parent)
 
     // Set custom window type
     // TODO: Set to Qt::CustomWindow and call setSpecial()
-    setFlags(Qt::Popup);
+    setFlags(Qt::Sheet);
 
     // Create platform window and inform the compositor about us
     create();

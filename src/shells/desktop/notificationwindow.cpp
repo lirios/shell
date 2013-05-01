@@ -42,7 +42,7 @@ NotificationWindow::NotificationWindow(QWindow *parent)
     setFormat(format);
 
     // Set custom window type
-    setFlags(Qt::CustomWindow);
+    setFlags(Qt::Sheet);
 
     // Create platform window
     create();
