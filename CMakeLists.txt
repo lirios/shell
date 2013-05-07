@@ -81,15 +81,28 @@ macro_log_feature(GreenIsland_FOUND "GreenIsland" "Green Island SDK" "http://www
 # Find pkg-config
 find_package(PkgConfig "0.22" REQUIRED)
 
-# Find EGL and GLESv2 libraries
-#pkg_check_modules(EGL egl REQUIRED)
-#pkg_check_modules(GLESV2 glesv2 REQUIRED)
-
 # Find Wayland libraries
 pkg_check_modules(WaylandClient wayland-client REQUIRED)
 pkg_check_modules(WaylandServer wayland-server REQUIRED)
 macro_log_feature(WaylandClient_FOUND "WaylandClient" "Support for Wayland clients" "http://wayland.freedesktop.org" "")
 macro_log_feature(WaylandServer_FOUND "WaylandServer" "Support for Wayland servers" "http://wayland.freedesktop.org" "")
+
+# Find pixman-1 (required for the Weston plugin)
+pkg_check_modules(Pixman pixman-1 REQUIRED)
+macro_log_feature(Pixman_FOUND "pixman-1" "Support for pixman" "http://pixman.org" "")
+
+# Find Weston SDK
+pkg_check_modules(Weston weston REQUIRED)
+macro_log_feature(Weston_FOUND "Weston" "Support for Weston SDK" "http://wayland.freedesktop.org" "")
+
+# Find Weston libdir
+execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=libdir weston
+    OUTPUT_VARIABLE CMAKE_INSTALL_WESTONLIBDIR
+    RESULT_VARIABLE _failed)
+if(_failed)
+    message(FATAL_ERROR "Cannot find libdir propery from weston: ${_failed}")
+endif(_failed)
+string(REGEX REPLACE "[ \t\n]+" "" CMAKE_INSTALL_WESTONLIBDIR "${CMAKE_INSTALL_WESTONLIBDIR}")
 
 # Find polkit-qt-1
 find_package(PolkitQt-1 REQUIRED)

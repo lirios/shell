@@ -2,7 +2,7 @@ include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${VibeCore_INCLUDE_DIRS}
     ${GreenIsland_INCLUDE_DIRS}
-    ${WaylandInclude_INCLUDE_DIRS}
+    ${WaylandClient_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}/headers
 )
 
