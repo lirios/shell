@@ -41,11 +41,15 @@ NotificationWindow::NotificationWindow(QWindow *parent)
     format.setAlphaBufferSize(8);
     setFormat(format);
 
-    // Set custom window type
+    // This is not a regular window
     setFlags(Qt::Sheet);
 
     // Create platform window
     create();
+
+    // Set custom window type
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+    native->setWindowProperty(handle(), "custom", true);
 }
 
 void NotificationWindow::addSurface()

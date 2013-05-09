@@ -42,7 +42,9 @@ ShellWindow::ShellWindow(QWindow *parent)
 
     // Set custom window type
     // TODO: Set to Qt::CustomWindow and call setSpecial()
-    setFlags(Qt::Sheet);
+    //QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+    //native->setWindowProperty(handle(), "custom", true);
+    setFlags(Qt::Popup);
 
     // Create platform window and inform the compositor about us
     create();

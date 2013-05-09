@@ -99,6 +99,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_backgroundWindow->setScreen(screen);
             m_backgroundWindow->setFlags(Qt::Desktop);
             m_backgroundWindow->create();
+            m_native->setWindowProperty(m_backgroundWindow->handle(), "custom", true);
             m_backgroundWindow->setGeometry(screen->availableGeometry());
             m_backgroundSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_backgroundWindow));
@@ -113,6 +114,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_panelWindow->setScreen(screen);
             m_panelWindow->setFlags(Qt::Sheet);
             m_panelWindow->create();
+            m_native->setWindowProperty(m_panelWindow->handle(), "custom", true);
             m_panelWindow->setGeometry(panelGeometry());
             m_panelSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_panelWindow));
@@ -127,6 +129,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_launcherWindow->setScreen(screen);
             m_launcherWindow->setFlags(Qt::Sheet);
             m_launcherWindow->create();
+            m_native->setWindowProperty(m_launcherWindow->handle(), "custom", true);
             m_launcherWindow->setGeometry(launcherGeometry());
             m_launcherSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_launcherWindow));
