@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# This file is part of Hawaii Shell.
+#
+# Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+#
+# Author(s):
+#    Pier Luigi Fiorini
+#
+# $BEGIN_LICENSE:GPL2+$
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# $END_LICENSE$
+#
+
+uxtype=$1
+shift
+
+test -n "$uxtype" || {
+    #echo "Unable to determine which UX to run" 1>&2
+    #exit 1
+    uxtype="desktop"
+}
+
+# Set the path for Qt plugins provided by us
+if test -n "$QT_PLUGIN_PATH"; then
+    QT_PLUGIN_PATH="$QT_PLUGIN_PATH:@CMAKE_INSTALL_FULL_PLUGINSDIR@"
+else
+    QT_PLUGIN_PATH="@CMAKE_INSTALL_FULL_PLUGINSDIR@"
+fi
+export QT_PLUGIN_PATH
+
+# Set the path for QML 2 imports provided by us
+if test -n "$QML2_IMPORT_PATH"; then
+    QML2_IMPORT_PATH="$QML2_IMPORT_PATH:@CMAKE_INSTALL_FULL_QMLDIR@"
+else
+    QML2_IMPORT_PATH="@CMAKE_INSTALL_FULL_QMLDIR@"
+fi
+export QML2_IMPORT_PATH
+
+# Make sure data directories are set
+if test -z "$XDG_DATA_DIRS"; then
+    export XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:/usr/share:/usr/local/share"
+fi
+
+# Launch a session bus instance
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && type dbus-launch >/dev/null; then
+    eval `dbus-launch --auto-syntax --exit-with-session`
+fi
+
+# Check whether D-Bus is OK
+if ! qdbus >/dev/null 2>/dev/null; then
+    echo "Could not start D-Bus session bus" 1>&2
+    exit 1
+fi
+
+# Start the right shell
+@CMAKE_INSTALL_FULL_LIBEXECDIR@/hawaii-${uxtype}-shell

@@ -111,6 +111,7 @@ macro_log_feature(PolkitQt-1_FOUND "PolkitQt-1" "Qt bindings for PolicyKit" "htt
 # Subdirectories
 add_subdirectory(data)
 add_subdirectory(headers)
+add_subdirectory(scripts)
 add_subdirectory(src)
 
 # Display featute log
