@@ -97,9 +97,8 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_backgroundWindow->setFormat(format);
             m_backgroundWindow->setClearBeforeRendering(true);
             m_backgroundWindow->setScreen(screen);
-            m_backgroundWindow->setFlags(Qt::Desktop);
+            m_backgroundWindow->setFlags(m_backgroundWindow->flags() | Qt::X11BypassWindowManagerHint);
             m_backgroundWindow->create();
-            m_native->setWindowProperty(m_backgroundWindow->handle(), "custom", true);
             m_backgroundWindow->setGeometry(screen->availableGeometry());
             m_backgroundSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_backgroundWindow));
@@ -112,9 +111,8 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_panelWindow = window;
             m_panelWindow->setFormat(format);
             m_panelWindow->setScreen(screen);
-            m_panelWindow->setFlags(Qt::Sheet);
+            m_panelWindow->setFlags(m_panelWindow->flags() | Qt::X11BypassWindowManagerHint);
             m_panelWindow->create();
-            m_native->setWindowProperty(m_panelWindow->handle(), "custom", true);
             m_panelWindow->setGeometry(panelGeometry());
             m_panelSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_panelWindow));
@@ -127,9 +125,8 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_launcherWindow = window;
             m_launcherWindow->setFormat(format);
             m_launcherWindow->setScreen(screen);
-            m_launcherWindow->setFlags(Qt::Sheet);
+            m_launcherWindow->setFlags(m_launcherWindow->flags() | Qt::X11BypassWindowManagerHint);
             m_launcherWindow->create();
-            m_native->setWindowProperty(m_launcherWindow->handle(), "custom", true);
             m_launcherWindow->setGeometry(launcherGeometry());
             m_launcherSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_launcherWindow));
