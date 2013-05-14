@@ -51,9 +51,12 @@ fi
 export QML2_IMPORT_PATH
 
 # Make sure data directories are set
-if test -z "$XDG_DATA_DIRS"; then
-    export XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:/usr/share:/usr/local/share"
+if test -n "$XDG_DATA_DIRS"; then
+    XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:$XDG_DATA_DIRS"
+else
+    XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:/usr/share:/usr/local/share"
 fi
+export XDG_DATA_DIRS
 
 # Launch a session bus instance
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && type dbus-launch >/dev/null; then
