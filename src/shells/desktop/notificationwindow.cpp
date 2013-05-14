@@ -35,12 +35,6 @@ NotificationWindow::NotificationWindow(QWindow *parent)
     : QQuickWindow(parent)
     , m_surfaceAdded(false)
 {
-    // Set custom surface format
-    QSurfaceFormat format;
-    format.setDepthBufferSize(24);
-    format.setAlphaBufferSize(8);
-    setFormat(format);
-
     // Avoid shell surface
     setFlags(flags() | Qt::X11BypassWindowManagerHint);
 

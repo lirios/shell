@@ -34,12 +34,6 @@
 ShellWindow::ShellWindow(QWindow *parent)
     : QQuickWindow(parent)
 {
-    // Set custom surface format
-    QSurfaceFormat format;
-    format.setDepthBufferSize(24);
-    format.setAlphaBufferSize(8);
-    setFormat(format);
-
     // Set custom window type
     // TODO: Also set Qt::BypassWindowManagerHint and call setSpecial()
     setFlags(Qt::Popup);
