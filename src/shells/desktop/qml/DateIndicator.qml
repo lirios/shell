@@ -30,7 +30,7 @@ PanelIndicator {
     // Settings
     // TODO: Read from settings
     property int format: Locale.LongFormat
-    property bool showSeconds: true
+    property bool showSeconds: false
 
     // Current date and time
     property date now
