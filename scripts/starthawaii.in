@@ -26,7 +26,6 @@
 #
 
 uxtype=$1
-shift
 
 test -n "$uxtype" || {
     #echo "Unable to determine which UX to run" 1>&2
