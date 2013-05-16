@@ -34,12 +34,9 @@
 ShellWindow::ShellWindow(QWindow *parent)
     : QQuickWindow(parent)
 {
-    // Set custom window type
-    // TODO: Also set Qt::BypassWindowManagerHint and call setSpecial()
-    setFlags(Qt::Popup);
-
-    // Create platform window and inform the compositor about us
+    setFlags(Qt::X11BypassWindowManagerHint);
     create();
+    setSpecial();
 }
 
 void ShellWindow::exposeEvent(QExposeEvent *event)
@@ -47,7 +44,9 @@ void ShellWindow::exposeEvent(QExposeEvent *event)
     QQuickWindow::exposeEvent(event);
 
     if (isExposed())
-        forcePosition();
+        setSurfacePosition(position());
+    else
+        hideSurface();
 }
 
 void ShellWindow::setSpecial()
@@ -63,7 +62,7 @@ void ShellWindow::setSpecial()
     hawaii_desktop_shell_set_special(object->shell, output, surface);
 }
 
-void ShellWindow::forcePosition()
+void ShellWindow::setSurfacePosition(const QPoint &pt)
 {
     WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
@@ -71,8 +70,19 @@ void ShellWindow::forcePosition()
     struct wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    QPoint pos = position();
-    hawaii_desktop_shell_set_position(object->shell, surface, pos.x(), pos.y());
+    hawaii_desktop_shell_set_position(object->shell, surface,
+                                      pt.x(), pt.y());
+}
+
+void ShellWindow::hideSurface()
+{
+    WaylandIntegration *object = WaylandIntegration::instance();
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+
+    struct wl_surface *surface = static_cast<struct wl_surface *>(
+                native->nativeResourceForWindow("surface", this));
+
+    hawaii_desktop_shell_hide_surface(object->shell, surface);
 }
 
 #include "moc_shellwindow.cpp"

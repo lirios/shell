@@ -40,7 +40,8 @@ protected:
 
 private Q_SLOTS:
     void setSpecial();
-    void forcePosition();
+    void setSurfacePosition(const QPoint &pt);
+    void hideSurface();
 };
 
 #endif // SHELLWINDOW_H
