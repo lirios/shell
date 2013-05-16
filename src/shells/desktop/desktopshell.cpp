@@ -46,13 +46,6 @@ DesktopShell::DesktopShell()
     qmlRegisterType<ShellWindow>("DesktopShell", 0, 1, "ShellWindow");
     qmlRegisterType<NotificationWindow>("DesktopShell", 0, 1, "NotificationWindow");
 
-    // Set path so that programs will be found
-    QByteArray path = qgetenv("PATH");
-    if (!path.isEmpty())
-        path += ":";
-    path += INSTALL_BINDIR;
-    setenv("PATH", qPrintable(path), 1);
-
     // Platform native interface
     QPlatformNativeInterface *native =
             QGuiApplication::platformNativeInterface();

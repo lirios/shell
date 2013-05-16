@@ -33,6 +33,14 @@ test -n "$uxtype" || {
     uxtype="desktop"
 }
 
+# Make sure we find Hawaii executables
+if test -n "$PATH"; then
+    PATH="@CMAKE_INSTALL_FULL_BINDIR@:$PATH"
+else
+    PATH="@CMAKE_INSTALL_FULL_BINDIR@:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin"
+fi
+export PATH
+
 # Set the path for Qt plugins provided by us
 if test -n "$QT_PLUGIN_PATH"; then
     QT_PLUGIN_PATH="$QT_PLUGIN_PATH:@CMAKE_INSTALL_FULL_PLUGINSDIR@"
