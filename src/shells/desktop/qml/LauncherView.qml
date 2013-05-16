@@ -304,6 +304,11 @@ LauncherDropItem {
             width: tileSize
             height: width
             onClicked: root.appChooser.visible = !root.appChooser.visible;
+
+            Connections {
+                target: root.appChooser
+                onVisibleChanged: checked = root.appChooser.visible
+            }
         }
     }
 
