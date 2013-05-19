@@ -80,7 +80,8 @@ GridDesktops::GridDesktops(Shell *shell)
     , m_grab(new Grab)
 {
     m_grab->effect = this;
-    m_binding = shell->bindKey(KEY_G, MODIFIER_CTRL, &GridDesktops::run, this);
+    // FIXME: Modifier from configuration
+    m_binding = shell->bindKey(KEY_G, MODIFIER_SUPER, &GridDesktops::run, this);
 }
 
 GridDesktops::~GridDesktops()
