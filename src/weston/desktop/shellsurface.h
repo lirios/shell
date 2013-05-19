@@ -51,6 +51,7 @@ public:
         Popup,
         Fullscreen
     };
+
     ShellSurface(Shell *shell, struct weston_surface *surface);
     ~ShellSurface();
 
@@ -99,6 +100,7 @@ public:
     Signal<ShellSurface *> pongSignal;
 
 private:
+    void setInitialPosition();
     void setFullscreen(uint32_t method, uint32_t framerate, struct weston_output *output);
     void unsetFullscreen();
     void unsetMaximized();

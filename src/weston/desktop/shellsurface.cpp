@@ -122,33 +122,45 @@ void ShellSurface::map(int32_t x, int32_t y, int32_t width, int32_t height)
     m_surface->geometry.height = height;
     weston_surface_geometry_dirty(m_surface);
 
+    // Initial positioning
     switch (m_type) {
-    case Type::Popup:
-        mapPopup();
+    case Type::TopLevel:
+        setInitialPosition();
         break;
     case Type::Fullscreen:
         centerOnOutput(m_fullscreen.output);
         break;
     case Type::Maximized: {
         IRect2D rect = m_shell->windowsArea(m_output);
-        x = rect.x;
-        y = rect.y;
+        weston_surface_set_position(m_surface, rect.x, rect.y);
     }
-    case Type::TopLevel:
+    case Type::Popup:
+        mapPopup();
+        break;
     case Type::None:
-        weston_surface_set_position(m_surface, x, y);
+        weston_surface_set_position(m_surface,
+                                    m_surface->geometry.x + x,
+                                    m_surface->geometry.y + y);
     default:
         break;
     }
 
-    printf("map %d %d %d %d - %d\n",x,y,width,height,m_type);
-
+    // Surface stacking order
+    switch (m_type) {
+    case Type::Popup:
+    case Type::Transient:
+        break;
+    case Type::Fullscreen:
+    case Type::None:
+        break;
+    default:
+        break;
+    }
 
     if (m_type != Type::None) {
         weston_surface_update_transform(m_surface);
-        if (m_type == Type::Maximized) {
+        if (m_type == Type::Maximized)
             m_surface->output = m_output;
-        }
     }
 }
 
@@ -274,6 +286,68 @@ ShellSurface *ShellSurface::topLevelParent()
 struct weston_surface *ShellSurface::transformParent() const
 {
     return m_surface->geometry.parent;
+}
+
+void ShellSurface::setInitialPosition()
+{
+    struct weston_compositor *compositor = m_shell->compositor();
+    int ix = 0, iy = 0;
+
+    // Place the window on the same output as the pointer, falling
+    // back to the output containing 0, 0
+    // TODO: Do something clever for touch too?
+    struct weston_seat *seat;
+    wl_list_for_each(seat, &compositor->seat_list, link) {
+        if (seat->has_pointer) {
+            ix = wl_fixed_to_int(seat->pointer.x);
+            iy = wl_fixed_to_int(seat->pointer.y);
+            break;
+        }
+    }
+
+    struct weston_output *output, *targetOutput = 0;
+    wl_list_for_each(output, &compositor->output_list, link) {
+        if (pixman_region32_contains_point(&output->region, ix, iy, 0)) {
+            targetOutput = output;
+            break;
+        }
+    }
+
+    if (!targetOutput) {
+        weston_surface_set_position(m_surface, 10 + random() % 400,
+                                    10 + random() % 400);
+        return;
+    }
+
+    // Identify a valid range where the surface will still be onscreen.
+    // If this is negative it means that the surface is bigger than
+    // output.
+    IRect2D area = m_shell->windowsArea(targetOutput);
+    int32_t ax = area.x;
+    if (ax < 0)
+        ax = targetOutput->width;
+    int32_t ay = area.y;
+    if (ay < 0)
+        ay = targetOutput->height;
+    int range_x = ax - m_surface->geometry.width;
+    int range_y = ay - m_surface->geometry.height;
+
+    int dx, dy, x, y;
+
+    if (range_x > 0)
+        dx = random() % range_x;
+    else
+        dx = 0;
+
+    if (range_y > 0)
+        dy = ay + random() % range_y;
+    else
+        dy = ay;
+
+    x = targetOutput->x + dx;
+    y = targetOutput->y + dy;
+
+    weston_surface_set_position(m_surface, x, y);
 }
 
 void ShellSurface::setFullscreen(uint32_t method, uint32_t framerate, struct weston_output *output)
