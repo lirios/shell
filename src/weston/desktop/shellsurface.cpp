@@ -1,19 +1,30 @@
-/*
- * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
+/****************************************************************************
+ * This file is part of Desktop Shell.
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013 Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * This library is distributed in the hope that it will be useful,
+ * Author(s):
+ *    Giulio Camuffo
+ *    Pier Luigi Fiorini
+ *
+ * $BEGIN_LICENSE:LGPL2.1+$
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- */
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * $END_LICENSE$
+ ***************************************************************************/
 
 #include <stdio.h>
 
@@ -26,14 +37,14 @@
 #include "wayland-desktop-shell-server-protocol.h"
 
 ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
-            : m_shell(shell)
-            , m_workspace(nullptr)
-            , m_surface(surface)
-            , m_type(Type::None)
-            , m_pendingType(Type::None)
-            , m_unresponsive(false)
-            , m_parent(nullptr)
-            , m_pingTimer(nullptr)
+    : m_shell(shell)
+    , m_workspace(nullptr)
+    , m_surface(surface)
+    , m_type(Type::None)
+    , m_pendingType(Type::None)
+    , m_unresponsive(false)
+    , m_parent(nullptr)
+    , m_pingTimer(nullptr)
 {
     m_popup.seat = nullptr;
     wl_list_init(&m_fullscreen.transform.link);
@@ -76,29 +87,29 @@ bool ShellSurface::updateType()
 {
     if (m_type != m_pendingType && m_pendingType != Type::None) {
         switch (m_type) {
-            case Type::Maximized:
-                unsetMaximized();
-                break;
-            case Type::Fullscreen:
-                unsetFullscreen();
-                break;
-            default:
-                break;
+        case Type::Maximized:
+            unsetMaximized();
+            break;
+        case Type::Fullscreen:
+            unsetFullscreen();
+            break;
+        default:
+            break;
         }
         m_type = m_pendingType;
         m_pendingType = Type::None;
 
         switch (m_type) {
-            case Type::Maximized:
-            case Type::Fullscreen:
-                m_savedX = x();
-                m_savedY = y();
-                break;
-            case Type::Transient:
-                weston_surface_set_position(m_surface, m_parent->geometry.x + m_transient.x, m_parent->geometry.y + m_transient.y);
-                break;
-            default:
-                break;
+        case Type::Maximized:
+        case Type::Fullscreen:
+            m_savedX = x();
+            m_savedY = y();
+            break;
+        case Type::Transient:
+            weston_surface_set_position(m_surface, m_parent->geometry.x + m_transient.x, m_parent->geometry.y + m_transient.y);
+            break;
+        default:
+            break;
         }
         return true;
     }
@@ -112,22 +123,22 @@ void ShellSurface::map(int32_t x, int32_t y, int32_t width, int32_t height)
     weston_surface_geometry_dirty(m_surface);
 
     switch (m_type) {
-        case Type::Popup:
-            mapPopup();
-            break;
-        case Type::Fullscreen:
-            centerOnOutput(m_fullscreen.output);
-            break;
-        case Type::Maximized: {
-            IRect2D rect = m_shell->windowsArea(m_output);
-            x = rect.x;
-            y = rect.y;
-        }
-        case Type::TopLevel:
-        case Type::None:
-            weston_surface_set_position(m_surface, x, y);
-        default:
-            break;
+    case Type::Popup:
+        mapPopup();
+        break;
+    case Type::Fullscreen:
+        centerOnOutput(m_fullscreen.output);
+        break;
+    case Type::Maximized: {
+        IRect2D rect = m_shell->windowsArea(m_output);
+        x = rect.x;
+        y = rect.y;
+    }
+    case Type::TopLevel:
+    case Type::None:
+        weston_surface_set_position(m_surface, x, y);
+    default:
+        break;
     }
 
     printf("map %d %d %d %d - %d\n",x,y,width,height,m_type);
@@ -337,7 +348,7 @@ void ShellSurface::ping(uint32_t serial)
         m_pingTimer->serial = serial;
         struct wl_event_loop *loop = wl_display_get_event_loop(m_surface->compositor->wl_display);
         m_pingTimer->source = wl_event_loop_add_timer(loop, [](void *data)
-                                                     { return static_cast<ShellSurface *>(data)->pingTimeout(); }, this);
+        { return static_cast<ShellSurface *>(data)->pingTimeout(); }, this);
         wl_event_source_timer_update(m_pingTimer->source, ping_timeout);
 
         wl_shell_surface_send_ping(&m_resource, serial);
@@ -424,12 +435,12 @@ void ShellSurface::move(struct wl_client *client, struct wl_resource *resource, 
     struct weston_seat *ws = static_cast<weston_seat *>(seat_resource->data);
 
     if (ws->seat.pointer->button_count == 0 || ws->seat.pointer->grab_serial != serial ||
-        ws->seat.pointer->focus != &m_surface->surface) {
+            ws->seat.pointer->focus != &m_surface->surface) {
         return;
     }
 
-//     if (shsurf->type == SHELL_SURFACE_FULLSCREEN)
-//         return 0;
+    //     if (shsurf->type == SHELL_SURFACE_FULLSCREEN)
+    //         return 0;
     dragMove(ws);
 }
 
@@ -514,7 +525,7 @@ void ShellSurface::resize(struct wl_client *client, struct wl_resource *resource
     struct weston_seat *ws = static_cast<weston_seat *>(seat_resource->data);
 
     if (ws->seat.pointer->button_count == 0 || ws->seat.pointer->grab_serial != serial ||
-        ws->seat.pointer->focus != &m_surface->surface) {
+            ws->seat.pointer->focus != &m_surface->surface) {
         return;
     }
 
@@ -542,12 +553,12 @@ void ShellSurface::dragResize(struct weston_seat *ws, uint32_t edges)
 
 void ShellSurface::setToplevel(struct wl_client *, struct wl_resource *)
 {
-printf("top\n");
+    printf("top\n");
     m_pendingType = Type::TopLevel;
 }
 
 void ShellSurface::setTransient(struct wl_client *client, struct wl_resource *resource,
-                  struct wl_resource *parent_resource, int x, int y, uint32_t flags)
+                                struct wl_resource *parent_resource, int x, int y, uint32_t flags)
 {
     m_parent = static_cast<struct weston_surface *>(parent_resource->data);
     m_transient.x = x;
@@ -559,14 +570,14 @@ void ShellSurface::setTransient(struct wl_client *client, struct wl_resource *re
 }
 
 void ShellSurface::setFullscreen(struct wl_client *client, struct wl_resource *resource, uint32_t method,
-                   uint32_t framerate, struct wl_resource *output_resource)
+                                 uint32_t framerate, struct wl_resource *output_resource)
 {
     struct weston_output *output = output_resource ? static_cast<struct weston_output *>(output_resource->data) : nullptr;
     setFullscreen(method, framerate, output);
 }
 
 void ShellSurface::setPopup(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
-              uint32_t serial, struct wl_resource *parent_resource, int32_t x, int32_t y, uint32_t flags)
+                            uint32_t serial, struct wl_resource *parent_resource, int32_t x, int32_t y, uint32_t flags)
 {
     m_parent = static_cast<struct weston_surface *>(parent_resource->data);
     m_popup.x = x;
