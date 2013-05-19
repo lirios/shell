@@ -31,6 +31,7 @@
 #include "workspace.h"
 #include "effect.h"
 #include "desktop-shell.h"
+#include "cmakedirs.h"
 
 Binding::Binding(struct weston_binding *binding)
        : m_binding(binding)
@@ -42,7 +43,6 @@ Binding::~Binding()
 {
     weston_binding_destroy(m_binding);
 }
-
 
 Shell::Shell(struct weston_compositor *ec)
             : m_compositor(ec)
@@ -504,6 +504,20 @@ static void configure_static_surface(struct weston_surface *es, Layer *layer, in
     }
 }
 
+static void configure_panel_surface(struct weston_surface *es, Layer *layer,
+                                    int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    if (width == 0)
+        return;
+
+    weston_surface_configure(es, x, y, width, height);
+
+    if (wl_list_empty(&es->layer_link)) {
+        layer->addSurface(es);
+        weston_compositor_schedule_repaint(es->compositor);
+    }
+}
+
 void Shell::backgroundConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
 {
     configure_static_surface(es, &m_backgroundLayer, width, height);
@@ -511,7 +525,7 @@ void Shell::backgroundConfigure(struct weston_surface *es, int32_t sx, int32_t s
 
 void Shell::panelConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
 {
-    configure_static_surface(es, &m_panelsLayer, width, height);
+    configure_panel_surface(es, &m_panelsLayer, es->geometry.x, es->geometry.y, width, height);
 }
 
 void Shell::setBackgroundSurface(struct weston_surface *surface, struct weston_output *output)
@@ -535,6 +549,22 @@ void Shell::addPanelSurface(struct weston_surface *surface, struct weston_output
     surface->output = output;
 }
 
+void Shell::addLauncherSurface(struct weston_surface *surface, struct weston_output *output)
+{
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        static_cast<Shell *>(es->configure_private)->panelConfigure(es, sx, sy, width, height); };;
+    surface->configure_private = this;
+    surface->output = output;
+}
+
+void Shell::addSpecialSurface(struct weston_surface *surface, struct weston_output *output)
+{
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        static_cast<Shell *>(es->configure_private)->panelConfigure(es, sx, sy, width, height); };;
+    surface->configure_private = this;
+    surface->output = output;
+}
+
 void Shell::showPanels()
 {
     m_panelsLayer.show();
@@ -543,17 +573,6 @@ void Shell::showPanels()
 void Shell::hidePanels()
 {
     m_panelsLayer.hide();
-}
-
-IRect2D Shell::windowsArea(struct weston_output *output) const
-{
-    int panelsHeight = 0;
-    for (const struct weston_surface *surface: m_panelsLayer) {
-        if (surface->output == output) {
-            panelsHeight = surface->geometry.height;
-        }
-    }
-    return IRect2D(output->x, output->y + panelsHeight, output->width, output->height - panelsHeight);
 }
 
 struct weston_output *Shell::getDefaultOutput() const
@@ -711,18 +730,22 @@ void Shell::sigchld(int status)
 
     m_child.deathcount++;
     if (m_child.deathcount > 5) {
-        weston_log("weston-desktop-shell died, giving up.\n");
+        weston_log("starthawaii died, giving up.\n");
         return;
     }
 
-    weston_log("weston-desktop-shell died, respawning...\n");
+    weston_log("starthawaii died, respawning...\n");
     launchShellProcess();
+}
+
+IRect2D Shell::windowsArea(struct weston_output *output)
+{
+    return m_windowsArea[output];
 }
 
 void Shell::launchShellProcess()
 {
-#define LIBEXECDIR "/opt/hawaii/libexec"
-    const char *shell_exe = LIBEXECDIR "/weston-desktop-shell";
+    const char *shell_exe = INSTALL_LIBEXECDIR "/starthawaii";
 
     m_child.client = weston_client_launch(m_compositor,
                                           &m_child.process,

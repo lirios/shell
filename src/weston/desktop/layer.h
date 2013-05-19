@@ -67,6 +67,10 @@ public:
 
     void addSurface(struct weston_surface *surf);
     void addSurface(ShellSurface *surf);
+
+    void removeSurface(struct weston_surface *surf);
+    void removeSurface(ShellSurface *surf);
+
     void restack(struct weston_surface *surf);
     void restack(ShellSurface *surf);
 

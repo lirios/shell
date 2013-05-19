@@ -49,6 +49,10 @@ public:
 public Q_SLOTS:
     void create();
 
+    void logout();
+    void reboot();
+    void powerOff();
+
 private:
     struct wl_display *m_display;
     int m_fd;

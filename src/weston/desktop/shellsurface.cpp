@@ -444,7 +444,7 @@ void ShellSurface::dragMove(struct weston_seat *ws)
     move->shsurf = this;
     move->grab.focus = &m_surface->surface;
 
-    m_shell->startGrab(move, &m_move_grab_interface, ws, DESKTOP_SHELL_CURSOR_MOVE);
+    m_shell->startGrab(move, &m_move_grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_MOVE);
     moveStartSignal(this);
 }
 

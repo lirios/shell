@@ -19,6 +19,7 @@
 #define SHELL_H
 
 #include <vector>
+#include <map>
 
 #include "utils.h"
 #include "layer.h"
@@ -60,6 +61,8 @@ public:
     static Shell *load(struct weston_compositor *ec);
     ~Shell();
 
+    virtual IRect2D windowsArea(struct weston_output *output);
+
     void launchShellProcess();
     ShellSurface *createShellSurface(struct weston_surface *surface, const struct weston_shell_client *client);
     ShellSurface *getShellSurface(struct wl_client *client, struct wl_resource *resource, uint32_t id, struct wl_resource *surface_resource);
@@ -83,6 +86,8 @@ public:
     void setBackgroundSurface(struct weston_surface *surface, struct weston_output *output);
     void setGrabSurface(struct weston_surface *surface);
     void addPanelSurface(struct weston_surface *surface, struct weston_output *output);
+    void addLauncherSurface(struct weston_surface *surface, struct weston_output *output);
+    void addSpecialSurface(struct weston_surface *surface, struct weston_output *output);
 
     void startGrab(ShellGrab *grab, const struct wl_pointer_grab_interface *interface,
                    struct weston_seat *seat, uint32_t cursor);
@@ -91,8 +96,6 @@ public:
     void showPanels();
     void hidePanels();
     bool isInFullscreen() const;
-
-    virtual IRect2D windowsArea(struct weston_output *output) const;
 
     inline struct weston_compositor *compositor() const { return m_compositor; }
     struct weston_output *getDefaultOutput() const;
@@ -125,11 +128,22 @@ protected:
     };
     Child m_child;
 
+    struct weston_compositor *m_compositor;
+    Layer m_backgroundLayer;
+    Layer m_panelsLayer;
+    Layer m_fullscreenLayer;
+    std::vector<Effect *> m_effects;
+    ShellSurfaceList m_surfaces;
+    std::vector<Workspace *> m_workspaces;
+    uint32_t m_currentWorkspace;
+    std::map<struct weston_output *, IRect2D> m_windowsArea;
+
 private:
     void bind(struct wl_client *client, uint32_t version, uint32_t id);
     void sigchld(int status);
     void backgroundConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
     void panelConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
+    void launcherConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
     void activateSurface(struct wl_seat *seat, uint32_t time, uint32_t button);
     void configureFullscreen(ShellSurface *surface);
     void stackFullscreen(ShellSurface *surface);
@@ -140,15 +154,6 @@ private:
     void pointerFocus(ShellSeat *shseat, struct wl_pointer *pointer);
     void pingTimeout(ShellSurface *shsurf);
     void pong(ShellSurface *shsurf);
-
-    struct weston_compositor *m_compositor;
-    Layer m_backgroundLayer;
-    Layer m_panelsLayer;
-    Layer m_fullscreenLayer;
-    std::vector<Effect *> m_effects;
-    ShellSurfaceList m_surfaces;
-    std::vector<Workspace *> m_workspaces;
-    uint32_t m_currentWorkspace;
 
     struct weston_surface *m_blackSurface;
     struct weston_surface *m_grabSurface;

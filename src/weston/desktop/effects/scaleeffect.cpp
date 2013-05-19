@@ -198,7 +198,7 @@ void ScaleEffect::run(struct weston_seat *ws)
     m_scaled = !m_scaled;
     if (m_scaled) {
         m_seat = ws;
-        shell()->startGrab(m_grab, &grab_interface, ws, DESKTOP_SHELL_CURSOR_ARROW);
+        shell()->startGrab(m_grab, &grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_ARROW);
         shell()->hidePanels();
         if (ws->pointer.current) {
             ShellSurface *s = Shell::getShellSurface(container_of(ws->pointer.current, struct weston_surface, surface));
