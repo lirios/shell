@@ -26,6 +26,7 @@
 
 #include <QDebug>
 #include <QGuiApplication>
+#include <QOpenGLContext>
 #include <QQmlEngine>
 #include <QQmlComponent>
 #include <QQmlContext>
@@ -79,6 +80,11 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
     // Wayland integration
     WaylandIntegration *object = WaylandIntegration::instance();
 
+    // Surface format for all shell windows
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    format.setAlphaBufferSize(8);
+
     // Setup all windows
     const QObjectList objects = m_rootObject->children();
     for (int i = 0; i < objects.size(); i++) {
@@ -88,6 +94,8 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
 
         if (window->objectName() == QStringLiteral("background")) {
             m_backgroundWindow = window;
+            m_backgroundWindow->setFormat(format);
+            m_backgroundWindow->setClearBeforeRendering(true);
             m_backgroundWindow->setScreen(screen);
             m_backgroundWindow->setFlags(m_backgroundWindow->flags() | Qt::BypassWindowManagerHint);
             m_backgroundWindow->create();
@@ -101,6 +109,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
                      << "with geometry" << m_backgroundWindow->geometry();
         } else if (window->objectName() == QStringLiteral("panel")) {
             m_panelWindow = window;
+            m_panelWindow->setFormat(format);
             m_panelWindow->setScreen(screen);
             m_panelWindow->setFlags(m_panelWindow->flags() | Qt::BypassWindowManagerHint);
             m_panelWindow->create();
@@ -114,6 +123,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
                      << "with geometry" << m_panelWindow->geometry();
         } else if (window->objectName() == QStringLiteral("launcher")) {
             m_launcherWindow = window;
+            m_launcherWindow->setFormat(format);
             m_launcherWindow->setScreen(screen);
             m_launcherWindow->setFlags(m_launcherWindow->flags() | Qt::BypassWindowManagerHint);
             m_launcherWindow->create();
