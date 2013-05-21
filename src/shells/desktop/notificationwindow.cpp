@@ -36,7 +36,7 @@ NotificationWindow::NotificationWindow(QWindow *parent)
     , m_surfaceAdded(false)
 {
     // Avoid shell surface
-    setFlags(flags() | Qt::X11BypassWindowManagerHint);
+    setFlags(flags() | Qt::BypassWindowManagerHint);
 
     // Create platform window
     create();

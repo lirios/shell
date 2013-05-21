@@ -89,7 +89,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
         if (window->objectName() == QStringLiteral("background")) {
             m_backgroundWindow = window;
             m_backgroundWindow->setScreen(screen);
-            m_backgroundWindow->setFlags(m_backgroundWindow->flags() | Qt::X11BypassWindowManagerHint);
+            m_backgroundWindow->setFlags(m_backgroundWindow->flags() | Qt::BypassWindowManagerHint);
             m_backgroundWindow->create();
             m_backgroundWindow->setGeometry(screen->availableGeometry());
             m_backgroundSurface = static_cast<struct wl_surface *>(
@@ -102,7 +102,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
         } else if (window->objectName() == QStringLiteral("panel")) {
             m_panelWindow = window;
             m_panelWindow->setScreen(screen);
-            m_panelWindow->setFlags(m_panelWindow->flags() | Qt::X11BypassWindowManagerHint);
+            m_panelWindow->setFlags(m_panelWindow->flags() | Qt::BypassWindowManagerHint);
             m_panelWindow->create();
             m_panelWindow->setGeometry(panelGeometry());
             m_panelSurface = static_cast<struct wl_surface *>(
@@ -115,7 +115,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
         } else if (window->objectName() == QStringLiteral("launcher")) {
             m_launcherWindow = window;
             m_launcherWindow->setScreen(screen);
-            m_launcherWindow->setFlags(m_launcherWindow->flags() | Qt::X11BypassWindowManagerHint);
+            m_launcherWindow->setFlags(m_launcherWindow->flags() | Qt::BypassWindowManagerHint);
             m_launcherWindow->create();
             m_launcherWindow->setGeometry(launcherGeometry());
             m_launcherSurface = static_cast<struct wl_surface *>(

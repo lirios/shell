@@ -34,7 +34,7 @@
 ShellWindow::ShellWindow(QWindow *parent)
     : QQuickWindow(parent)
 {
-    setFlags(Qt::X11BypassWindowManagerHint);
+    setFlags(flags() | Qt::BypassWindowManagerHint);
     create();
     setSpecial();
 }
