@@ -92,6 +92,9 @@ private:
                              struct wl_resource *resource,
                              struct wl_resource *surface,
                              int32_t x, int32_t y);
+    static void hide_surface(struct wl_client *client,
+                             struct wl_resource *resource,
+                             struct wl_resource *surface);
 
     static void set_lock_surface(struct wl_client *client,
                                  struct wl_resource *resource,

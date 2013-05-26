@@ -39,6 +39,7 @@ const struct hawaii_desktop_shell_interface DesktopShellServer::shell_interface 
     DesktopShellServer::set_launcher_geometry,
     DesktopShellServer::set_special,
     DesktopShellServer::set_position,
+    DesktopShellServer::hide_surface,
     DesktopShellServer::set_lock_surface,
     DesktopShellServer::unlock,
     DesktopShellServer::set_grab_surface
@@ -190,6 +191,17 @@ void DesktopShellServer::set_position(struct wl_client *client,
 
     QtWayland::Surface *surface = QtWayland::Surface::fromResource(surface_resource);
     surface->setPos(QPointF(x, y));
+}
+
+void DesktopShellServer::hide_surface(struct wl_client *client,
+                                      struct wl_resource *resource,
+                                      struct wl_resource *surface_resource)
+{
+    Q_UNUSED(client);
+    Q_UNUSED(resource);
+
+    QtWayland::Surface *surface = QtWayland::Surface::fromResource(surface_resource);
+    Q_UNUSED(surface);
 }
 
 void DesktopShellServer::set_lock_surface(struct wl_client *client,
