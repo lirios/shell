@@ -24,10 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
 import GreenIsland 1.0
-import FluidCore 1.0
-import FluidUi 1.0
+import FluidCore 1.0 as FluidCore
+import FluidUi 1.0 as FluidUi
 
 LauncherDropItem {
     id: launcher
@@ -47,7 +48,7 @@ LauncherDropItem {
     onApplicationDropped: visualModel.model.pinApplication(path)
     onUrlDropped: visualModel.model.pinUrl(url)
 
-    Settings {
+    FluidCore.Settings {
         id: settings
         schema: "org.hawaii.greenisland"
         group: "launcher"
@@ -141,7 +142,7 @@ LauncherDropItem {
                     }
                 }
 
-                BusyIndicator {
+                FluidUi.BusyIndicator {
                     id: busyIndicator
                     anchors {
                         fill: parent
@@ -220,7 +221,7 @@ LauncherDropItem {
                     }
                     visible: item.counterVisible && item.counter >= 0
 
-                    Text {
+                    Label {
                         id: counterText
 
                         anchors.centerIn: parent
@@ -300,7 +301,7 @@ LauncherDropItem {
 
         Button {
             checkable: true
-            iconSource: "view-grid-symbolic"
+            iconName: "view-grid-symbolic"
             width: tileSize
             height: width
             onClicked: root.appChooser.visible = !root.appChooser.visible;
