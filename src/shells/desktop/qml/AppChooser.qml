@@ -24,157 +24,111 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 import GreenIsland 1.0
 import DesktopShell 0.1
-import FluidCore 1.0
-import FluidUi 1.0
+import FluidCore 1.0 as FluidCore
+import FluidUi 1.0 as FluidUi
 
+//Dialog {
 ShellWindow {
+    id: appChooserWindow
     color: "transparent"
-    width: 600
-    height: 600
+    width: 320
+    height: 240
 
-    FrameSvgItem {
-        id: frame
+    Component {
+        id: itemDelegate
+
+        FluidUi.ListItem {
+            id: wrapper
+            checked: ListView.isCurrentItem
+            enabled: true
+
+            Label {
+                text: label
+                font.weight: Font.Bold
+            }
+        }
+    }
+
+    FluidCore.FrameSvgItem {
         anchors.fill: parent
         imagePath: "dialogs/background"
-    }
 
-    Item {
-        id: mainItem
-        anchors {
-            fill: frame
-            leftMargin: frame.margins.left + 8
-            topMargin: frame.margins.top + 8
-            rightMargin: frame.margins.right + 8
-            bottomMargin: frame.margins.bottom + 8
-        }
-    }
-
-    Item {
-        id: leftColumn
-        anchors {
-            left: mainItem.left
-            top: mainItem.top
-            bottom: mainItem.bottom
-        }
-        width: mainItem.width / 4
-
-        TextField {
-            id: searchField
+        ColumnLayout {
             anchors {
-                left: parent.left
-                top: parent.top
-                right: parent.right
+                fill: parent
+                leftMargin: parent.margins.left
+                topMargin: parent.margins.top
+                rightMargin: parent.margins.right
+                bottomMargin: parent.margins.bottom
             }
-            placeholderText: qsTr("Type to search...")
-        }
 
-        Component {
-            id: itemDelegate
+            TextField {
+                id: searchField
+                placeholderText: qsTr("Search...")
 
-            ListItem {
-                id: wrapper
-                checked: ListView.isCurrentItem
-                enabled: true
-
-                Label {
-                    text: label
-                    font.weight: Font.Bold
-                }
+                Layout.fillWidth: true
             }
-        }
 
-        ListView {
-            id: categoriesList
-            anchors {
-                left: searchField.left
-                top: searchField.bottom
-                right: categoriesScrollBar.visible ? categoriesScrollBar.left : parent.right
-                bottom: parent.bottom
-                topMargin: 16
-            }
-            orientation: ListView.Vertical
-            focus: true
-            clip: true
-            model: AppChooserCategoriesModel {}
-            delegate: itemDelegate
-            highlight: Highlight{}
-            highlightRangeMode: ListView.StrictlyEnforceRange
+            RowLayout {
+                ScrollView {
+                    ListView {
+                        id: categoriesList
+                        orientation: ListView.Vertical
+                        model: AppChooserCategoriesModel {}
+                        delegate: itemDelegate
+                        highlight: FluidUi.Highlight {}
+                        highlightRangeMode: ListView.StrictlyEnforceRange
 
-            Connections {
-                target: searchField
-                onTextChanged: {
-                    // TODO: Put searchField.text somewhere => categoriesList.model.setQuery(searchField.text);
-                }
-            }
-        }
-
-        ScrollBar {
-            id: categoriesScrollBar
-            anchors {
-                top: searchField.bottom
-                right: parent.right
-                bottom: parent.bottom
-            }
-            flickableItem: categoriesList
-        }
-    }
-
-    Item {
-        id: rightColumn
-        anchors {
-            left: leftColumn.right
-            top: mainItem.top
-            right: mainItem.right
-            bottom: mainItem.bottom
-        }
-
-        GridView {
-            id: grid
-            anchors {
-                left: parent.left
-                top: parent.top
-                right: gridScrollBar.visible ? gridScrollBar.left : parent.right
-                bottom: parent.bottom
-            }
-            cacheBuffer: 1000
-            cellWidth: theme.enormousIconSize
-            cellHeight: theme.enormousIconSize
-            clip: true
-            model: VisualDataModel {
-                id: visualModel
-
-                model: AvailableApplicationsModel {
-                    id: appsModel
-                }
-                delegate: AppChooserDelegate {
-                    visualIndex: VisualDataModel.itemsIndex
-                    icon: "image://desktoptheme/" + (iconName ? iconName : "unknown")
-                    label: name
-
-                    onClicked: {
-                        // Launch the application and close the AppChooser
-                        appsModel.launchApplicationAt(visualIndex);
-                        root.appChooser.visible = false;
+                        Connections {
+                            target: searchField
+                            onTextChanged: {
+                                // TODO: Put searchField.text somewhere => categoriesList.model.setQuery(searchField.text);
+                            }
+                        }
                     }
+
+                    Layout.fillHeight: true
+                }
+
+                ScrollView {
+                    GridView {
+                        id: grid
+                        cacheBuffer: 1000
+                        cellWidth: theme.enormousIconSize
+                        cellHeight: theme.enormousIconSize
+                        model: VisualDataModel {
+                            id: visualModel
+
+                            model: AvailableApplicationsModel {
+                                id: appsModel
+                            }
+                            delegate: AppChooserDelegate {
+                                visualIndex: VisualDataModel.itemsIndex
+                                icon: "image://desktoptheme/" + (iconName ? iconName : "unknown")
+                                label: name
+
+                                onClicked: {
+                                    // Launch the application and close the AppChooser
+                                    appsModel.launchApplicationAt(visualIndex);
+                                    root.appChooser.visible = false;
+                                }
+                            }
+                        }
+
+                        displaced: Transition {
+                            NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
+                        }
+                    }
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                 }
             }
-
-            displaced: Transition {
-                NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
-            }
-        }
-
-        ScrollBar {
-            id: gridScrollBar
-            anchors {
-                top: parent.top
-                right: parent.right
-                bottom: parent.bottom
-            }
-            flickableItem: grid
         }
     }
 }
