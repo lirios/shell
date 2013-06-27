@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Window 2.0
 import GreenIsland 1.0
-import FluidCore 1.0
+import FluidCore 1.0 as FluidCore
 
 Window {
     id: launcherContainer
@@ -44,95 +44,76 @@ Window {
     property alias orientation: launcherView.orientation
 
     // Size
-    property int size: {
-        switch (alignment) {
-        case LauncherAlignment.Left:
-            return tileSize + frame.margins.right + (padding * 2);
-        case LauncherAlignment.Right:
-            return tileSize + frame.margins.left + (padding * 2);
-        default:
-            return tileSize + frame.margins.top + (padding * 2);
-        }
-    }
+    property int size: tileSize + (padding * 2)
 
     // Number of items
     property alias count: launcherView.count
 
-    Settings {
+    FluidCore.Settings {
         id: settings
         schema: "org.hawaii.greenisland"
         group: "launcher"
         onValueChanged: loadSettings()
     }
 
-    FrameSvgItem {
-        id: frame
+    Rectangle {
         anchors.fill: parent
-        enabledBorders: {
-            switch (alignment) {
-            case LauncherAlignment.Left:
-                return FrameSvgItem.RightBorder;
-            case LauncherAlignment.Right:
-                return FrameSvgItem.LeftBorder;
-            case LauncherAlignment.Bottom:
-                return FrameSvgItem.LeftBorder | FrameSvgItem.TopBorder | FrameSvgItem.RightBorder;
-            }
-        }
-        imagePath: "widgets/background"
-    }
+        border.color: "#999"
+        color: "#f1f1f1"
 
-    Item {
-        id: launcher
-        anchors.fill: frame
-
-        LauncherView {
-            id: launcherView
+        Item {
+            id: launcher
             anchors.fill: parent
-            orientation: {
-                switch (alignment) {
-                case LauncherAlignment.Bottom:
-                    return ListView.Horizontal;
-                default:
-                    return ListView.Vertical;
+
+            LauncherView {
+                id: launcherView
+                anchors.fill: parent
+                orientation: {
+                    switch (alignment) {
+                    case LauncherAlignment.Bottom:
+                        return ListView.Horizontal;
+                    default:
+                        return ListView.Vertical;
+                    }
                 }
             }
+
+            states: [
+                State {
+                    name: "left"
+                    when: alignment === LauncherAlignment.Left
+
+                    PropertyChanges {
+                        target: launcherView
+                        anchors.topMargin: padding
+                        anchors.rightMargin: padding
+                        anchors.bottomMargin: padding
+                    }
+                },
+                State {
+                    name: "right"
+                    when: alignment === LauncherAlignment.Right
+
+                    PropertyChanges {
+                        target: launcherView
+                        anchors.leftMargin: padding
+                        anchors.topMargin: padding
+                        anchors.bottomMargin: padding
+                    }
+                },
+                State {
+                    name: "bottom"
+                    when: alignment === LauncherAlignment.Bottom
+
+                    PropertyChanges {
+                        target: launcherView
+                        anchors.leftMargin: padding
+                        anchors.topMargin: padding
+                        anchors.rightMargin: padding
+                    }
+                }
+            ]
         }
-
-        states: [
-            State {
-                name: "left"
-                when: alignment === LauncherAlignment.Left
-
-                PropertyChanges {
-                    target: launcherView
-                    anchors.topMargin: frame.margins.top + padding
-                    anchors.rightMargin: frame.margins.right + padding
-                    anchors.bottomMargin: frame.margins.top + padding
-                }
-            },
-            State {
-                name: "right"
-                when: alignment === LauncherAlignment.Right
-
-                PropertyChanges {
-                    target: launcherView
-                    anchors.leftMargin: frame.margins.left + padding
-                    anchors.topMargin: frame.margins.top + padding
-                    anchors.bottomMargin: frame.margins.top + padding
-                }
-            },
-            State {
-                name: "bottom"
-                when: alignment === LauncherAlignment.Bottom
-
-                PropertyChanges {
-                    target: launcherView
-                    anchors.leftMargin: frame.margins.left + padding
-                    anchors.topMargin: frame.margins.top + padding
-                    anchors.rightMargin: frame.margins.right + padding
-                }
-            }
-        ]
     }
 
     Component.onCompleted: loadSettings()

@@ -24,9 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import FluidCore 1.0
-import FluidUi 1.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
 import "PanelMenuManager.js" as PanelMenuManager
 
 Item {
@@ -40,7 +39,7 @@ Item {
     property PanelMenu menu
 
     // Icon size
-    property real iconSize: theme.smallIconSize
+    property real iconSize: 24
 
     // Spacing between icon and label
     property real spacing: iconSize / 4
@@ -53,6 +52,10 @@ Item {
     signal clicked()
 
     width: iconItem.width + labelItem.paintedWidth + (spacing * 4)
+
+    SystemPalette {
+        id: palette
+    }
 
     MouseArea {
         anchors.fill: parent
@@ -99,12 +102,10 @@ Item {
         }
     }
 
-    FrameSvgItem {
+    Rectangle {
         id: highlight
         anchors.fill: parent
-        imagePath: "widgets/menuitem"
-        prefix: hovered || selected ? "selected" : ""
-        opacity: hovered || selected ? 1.0 : 0.0
+        color: selected || hovered ? palette.highlight : "transparent"
 
         Behavior on opacity {
             NumberAnimation { duration: 200 }
@@ -114,10 +115,7 @@ Item {
     Item {
         anchors {
             fill: highlight
-            leftMargin: highlight.margins.left
-            topMargin: highlight.margins.top
-            rightMargin: highlight.margins.right
-            bottomMargin: highlight.margins.bottom
+            margins: 4
         }
 
         Image {
@@ -130,7 +128,10 @@ Item {
                 rightMargin: spacing
             }
             source: "image://desktoptheme/" + (iconName ? iconName : "unknown")
-            sourceSize: Qt.size(iconSize, iconSize)
+            sourceSize {
+                width: iconSize
+                height: iconSize
+            }
             width: iconSize
             height: iconSize
             smooth: true
@@ -151,7 +152,7 @@ Item {
             // TODO: Define a specific font in Fluid::Theme and use it here
             font.weight: Font.Bold
             font.pointSize: 9
-            color: hovered || selected ? theme.highlightedTextColor : theme.windowTextColor
+            color: selected || hovered ? palette.highlightedTextColor : palette.text
             visible: label != ""
         }
     }

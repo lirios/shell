@@ -24,9 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import FluidCore 1.0
-import FluidUi 1.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
 import "PanelMenuManager.js" as PanelMenuManager
 
 Item {
@@ -66,90 +65,89 @@ Item {
         property Item separatorItem
     }
 
+    SystemPalette {
+        id: palette
+    }
+
     Component {
         id: separatorComponent
 
-        FrameSvgItem {
+        Rectangle {
             anchors {
                 left: parent.left
                 right: parent.right
                 verticalCenter: parent.verticalCenter
             }
-            imagePath: "widgets/menuitem"
-            prefix: "separator"
-            height: margins.top + margins.bottom
+            height: 1
+            color: "#999"
         }
     }
 
-    FrameSvgItem {
+    Rectangle {
         id: container
         anchors.fill: parent
-        imagePath: "widgets/menuitem"
-        prefix: ""
-        opacity: separator ? 0.0 : prefix == "" ? 0.0 : 1.0
+        color: "transparent"
+        opacity: separator ? 0.0 : 1.0
 
         Behavior on opacity {
             NumberAnimation { duration: 200 }
         }
-    }
 
-    Item {
-        id: item
-
-        anchors {
-            fill: container
-            leftMargin: container.margins.left + padding
-            topMargin: container.margins.top
-            rightMargin: container.margins.right + padding
-            bottomMargin: container.margins.bottom
-        }
-
-        Label {
-            id: label
+        Item {
+            id: item
             anchors {
-                left: parent.left
-                verticalCenter: parent.verticalCenter
+                fill: parent
+                leftMargin: padding
+                rightMargin: padding
             }
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            visible: !separator
-        }
 
-        Row {
-            id: contentsItem
-            anchors {
-                right: parent.right
-                verticalCenter: parent.verticalCenter
+            Label {
+                id: label
+                anchors {
+                    left: parent.left
+                    verticalCenter: parent.verticalCenter
+                }
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
+                visible: !separator
             }
-            visible: children.length > 0
-            onChildrenChanged: {
-                // Trigger the clicked() signal for child items too
-                for (var i = 0; i < children.length; ++i) {
-                    if (children[i].clicked != undefined)
-                        children[i].clicked.connect(menuItem.clicked)
+
+            Row {
+                id: contentsItem
+                anchors {
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+                visible: children.length > 0
+                onChildrenChanged: {
+                    // Trigger the clicked() signal for child items too
+                    for (var i = 0; i < children.length; ++i) {
+                        if (children[i].clicked != undefined)
+                            children[i].clicked.connect(menuItem.clicked)
+                    }
                 }
             }
         }
-    }
 
-    MouseArea {
-        anchors.fill: item
-        hoverEnabled: true
-        preventStealing: true
-        onEntered: {
-            label.color = theme.highlightedTextColor;
-            container.prefix = "selected";
-        }
-        onExited: {
-            label.color = theme.windowTextColor;
-            container.prefix = "";
-        }
-        onClicked: {
-            PanelMenuManager.currentIndicator.selected = false;
-            PanelMenuManager.triggered = false;
-            PanelMenuManager.currentIndicator = null;
-            menuItem.clicked();
+        MouseArea {
+            anchors.fill: item
+            hoverEnabled: true
+            preventStealing: true
+            onEntered: {
+                label.color = palette.highlightedText;
+                container.color = palette.highlight;
+            }
+            onExited: {
+                label.color = palette.text;
+                container.color = "transparent";
+            }
+            onClicked: {
+                PanelMenuManager.currentIndicator.selected = false;
+                PanelMenuManager.triggered = false;
+                PanelMenuManager.currentIndicator = null;
+                menuItem.clicked();
+            }
         }
     }
 }

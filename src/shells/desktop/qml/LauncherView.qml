@@ -28,7 +28,6 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import GreenIsland 1.0
 import FluidCore 1.0 as FluidCore
-import FluidUi 1.0 as FluidUi
 
 LauncherDropItem {
     id: launcher
@@ -142,6 +141,7 @@ LauncherDropItem {
                     }
                 }
 
+                /*
                 FluidUi.BusyIndicator {
                     id: busyIndicator
                     anchors {
@@ -151,6 +151,7 @@ LauncherDropItem {
                     running: item.running && !item.active
                     visible: item.running && !item.active
                 }
+                */
 
                 Image {
                     id: runningIndicator

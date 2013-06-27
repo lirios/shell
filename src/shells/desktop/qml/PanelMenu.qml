@@ -24,74 +24,63 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
 import DesktopShell 0.1
-import FluidCore 1.0
-import FluidUi 1.0
 
 ShellWindow {
     id: panelMenu
     color: "transparent"
     width: menu.width
     height: menu.height
-    visible: status != DialogStatus.Closed
+    visible: false
 
     default property alias content: menuContents.children
-    property int status: DialogStatus.Closed
 
-    FrameSvgItem {
+    Rectangle {
         id: menuContainer
         width: menu.width
         height: menu.height
-        imagePath: "widgets/toolbar"
+        radius: 6
+        border.color: "#999"
+        color: "white"
         state: "hidden"
-        enabled: status == DialogStatus.Open
+        enabled: panelMenu.visible
 
         Item {
             id: contentItem
-            x: menuContainer.margins.left
-            y: menuContainer.margins.top
             width: Math.max(menuContents.width, theme.defaultFont.mSize.width * 12)
             height: Math.min(menuContents.height, theme.defaultFont.mSize.height * 25)
 
-            Flickable {
-                id: flickable
-                anchors.fill: parent
-                clip: true
+            ScrollView {
+                Flickable {
+                    id: flickable
+                    anchors.fill: parent
 
-                Column {
-                    id: menuContents
-                    spacing: 4
-                    onChildrenChanged: {
-                        // Close the popup menu when a menu item is clicked
-                        connectClickedSignal();
+                    Column {
+                        id: menuContents
+                        spacing: 4
+                        onChildrenChanged: {
+                            // Close the popup menu when a menu item is clicked
+                            connectClickedSignal();
 
-                        // Resize the popup menu accordingly to its items
-                        resizePopupMenu();
-                    }
-                    onChildrenRectChanged: resizePopupMenu()
+                            // Resize the popup menu accordingly to its items
+                            resizePopupMenu();
+                        }
+                        onChildrenRectChanged: resizePopupMenu()
 
-                    function connectClickedSignal() {
-                        for (var i = 0; i < children.length; ++i) {
-                            if (children[i].clicked != undefined)
-                                children[i].clicked.connect(panelMenu.close);
+                        function connectClickedSignal() {
+                            for (var i = 0; i < children.length; ++i) {
+                                if (children[i].clicked != undefined)
+                                    children[i].clicked.connect(panelMenu.close);
+                            }
+                        }
+
+                        function resizePopupMenu() {
+                            panelMenu.width = childrenRect.width;
+                            panelMenu.height = childrenRect.height;
                         }
                     }
-
-                    function resizePopupMenu() {
-                        panelMenu.width = childrenRect.width + menuContainer.margins.left + menuContainer.margins.right;
-                        panelMenu.height = childrenRect.height + menuContainer.margins.top + menuContainer.margins.bottom;
-                    }
-                }
-            }
-
-            ScrollBar {
-                id: scrollBar
-                flickableItem: flickable
-                visible: flickable.contentHeight > contentItem.height
-                anchors {
-                    top: flickable.top
-                    right: flickable.right
                 }
             }
         }
@@ -137,7 +126,7 @@ ShellWindow {
                             easing.type: Easing.Linear
                         }
                     }
-                    PropertyAction { target: panelMenu; property: "status"; value: DialogStatus.Closed }
+                    PropertyAction { target: panelMenu; property: "visible"; value: false }
                 }
             },
             Transition {
@@ -159,23 +148,17 @@ ShellWindow {
                             easing.type: Easing.Linear
                         }
                     }
-                    PropertyAction { target: panelMenu; property: "status"; value: DialogStatus.Open }
+                    PropertyAction { target: panelMenu; property: "visible"; value: true }
                 }
             }
         ]
     }
 
     function open() {
-        if (status == DialogStatus.Open || status == DialogStatus.Opening)
-            return;
-
-        status = DialogStatus.Opening;
+        visible = true;
     }
 
     function close() {
-        if (status == DialogStatus.Closed)
-            return;
-
-        status = DialogStatus.Closing;
+        visible = false;
     }
 }

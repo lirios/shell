@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidUi 1.0
 
 PanelIndicator {
     iconName: "network-offline-symbolic"
@@ -34,19 +33,23 @@ PanelIndicator {
         content: [
             PanelMenuItem {
                 text: qsTr("Wired")
+                /*
                 items: [
                     Switch {
                         id: wiredSwitch
                     }
                 ]
+                */
             },
             PanelMenuItem {
                 text: qsTr("Wireless")
+                /*
                 items: [
                     Switch {
                         id: wirelessSwitch
                     }
                 ]
+                */
             },
             PanelMenuItem {
                 separator: true

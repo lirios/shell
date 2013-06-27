@@ -24,32 +24,35 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import FluidCore 1.0
-import FluidUi 1.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 
-Item {
+ColumnLayout {
     property alias icon: icon.source
     property alias label: label.text
 
     Image {
         id: icon
-        anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
+        sourceSize {
+            width: 48
+            height: 48
         }
-        sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
+        width: 48
+        height: 48
         smooth: true
+
+        Layout.alignment: Qt.AlignCenter
     }
 
     Label {
         id: label
-        anchors {
-            top: icon.bottom
-            horizontalCenter: icon.horizontalCenter
-        }
+        horizontalAlignment: Qt.AlignHCenter
+        verticalAlignment: Qt.AlignTop
         wrapMode: Text.Wrap
-        width: parent.width
-        horizontalAlignment: Text.AlignHCenter
+        elide: Text.ElideRight
+
+        Layout.fillWidth: true
+        Layout.fillHeight: true
     }
 }

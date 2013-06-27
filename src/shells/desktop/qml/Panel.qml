@@ -24,8 +24,9 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.1
 import QtQuick.Window 2.0
+import QtQuick.Controls 1.0
 import FluidCore 1.0
 
 Window {
@@ -36,21 +37,27 @@ Window {
     property real padding: 2
 
     // Panel height
-    property int realSize: theme.smallIconSize + (padding * 2)
-    property int size: realSize + frame.margins.bottom
+    property int realSize: 24 + (padding * 2)
+    property int size: realSize
 
-    FrameSvgItem {
-        id: frame
+    Rectangle {
+        id: contents
         anchors.fill: parent
-        enabledBorders: FrameSvgItem.BottomBorder
-        imagePath: "widgets/toolbar"
-    }
+        color: "#f1f1f1"
 
-    PanelView {
-        anchors {
-            fill: frame
-            verticalCenter: frame.verticalCenter
-            bottomMargin: frame.margins.bottom
+        PanelView {
+            anchors {
+                left: parent.left
+                top: parent.top
+            }
+            width: parent.width
+            height: parent.height - 1
+        }
+
+        Rectangle {
+            id: border
+            color: "#999"
+            height: 1
         }
     }
 }

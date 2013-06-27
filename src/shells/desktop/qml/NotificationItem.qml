@@ -24,18 +24,17 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
 import GreenIsland 1.0
 import DesktopShell 0.1
-import FluidCore 1.0
-import FluidUi 1.0
-import FluidExtra 1.0
+import FluidExtra 1.0 as FluidExtra
 
 NotificationWindow {
     id: notification
     color: "transparent"
-    width: 240 + frame.margins.left + frame.margins.right + (padding * 2)
-    height: summaryText.paintedHeight + bodyText.paintedHeight + frame.margins.top + frame.margins.bottom + (padding * 3)
+    width: 240 + (padding * 2) + 2
+    height: summaryText.paintedHeight + bodyText.paintedHeight + (padding * 3) + 2
 
     property int identifier
     property string appName
@@ -93,20 +92,12 @@ NotificationWindow {
     }
     */
 
-    FrameSvgItem {
+    Rectangle {
         id: frame
         anchors.fill: parent
-        imagePath: "widgets/tooltip"
-    }
-
-    Item {
-        anchors {
-            fill: frame
-            leftMargin: frame.margins.left
-            topMargin: frame.margins.top
-            rightMargin: frame.margins.right
-            bottomMargin: frame.margins.bottom
-        }
+        radius: 6
+        border.color: "#999"
+        color: "white"
 
         Item {
             id: iconImage
@@ -127,7 +118,7 @@ NotificationWindow {
                 visible: icon.source !== ""
             }
 
-            ImageItem {
+            FluidExtra.ImageItem {
                 id: image
                 anchors.fill: parent
                 smooth: true

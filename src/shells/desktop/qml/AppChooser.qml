@@ -29,10 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import GreenIsland 1.0
 import DesktopShell 0.1
-import FluidCore 1.0 as FluidCore
-import FluidUi 1.0 as FluidUi
 
-//Dialog {
 ShellWindow {
     id: appChooserWindow
     color: "transparent"
@@ -42,29 +39,32 @@ ShellWindow {
     Component {
         id: itemDelegate
 
-        FluidUi.ListItem {
+        Item {
             id: wrapper
-            checked: ListView.isCurrentItem
-            enabled: true
+            //checked: ListView.isCurrentItem
+            //enabled: true
+            width: ListView.width
+            height: label.paintedHeight
 
             Label {
-                text: label
+                id: label
+                anchors.fill: parent
+                text: model.label
                 font.weight: Font.Bold
             }
         }
     }
 
-    FluidCore.FrameSvgItem {
+    Rectangle {
         anchors.fill: parent
-        imagePath: "dialogs/background"
+        radius: 6
+        border.color: "#999"
+        color: "#f1f1f1"
 
         ColumnLayout {
             anchors {
                 fill: parent
-                leftMargin: parent.margins.left
-                topMargin: parent.margins.top
-                rightMargin: parent.margins.right
-                bottomMargin: parent.margins.bottom
+                margins: 4
             }
 
             TextField {
@@ -81,7 +81,9 @@ ShellWindow {
                         orientation: ListView.Vertical
                         model: AppChooserCategoriesModel {}
                         delegate: itemDelegate
-                        highlight: FluidUi.Highlight {}
+                        highlight: Rectangle {
+                            color: "lightsteelblue"
+                        }
                         highlightRangeMode: ListView.StrictlyEnforceRange
 
                         Connections {
@@ -99,8 +101,8 @@ ShellWindow {
                     GridView {
                         id: grid
                         cacheBuffer: 1000
-                        cellWidth: theme.enormousIconSize
-                        cellHeight: theme.enormousIconSize
+                        cellWidth: 108
+                        cellHeight: 108
                         model: VisualDataModel {
                             id: visualModel
 

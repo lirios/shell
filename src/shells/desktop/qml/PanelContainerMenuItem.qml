@@ -24,9 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import FluidCore 1.0
-import FluidUi 1.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
 
 Item {
     id: contextMenuItem
