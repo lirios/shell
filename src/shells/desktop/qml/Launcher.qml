@@ -25,13 +25,11 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Window 2.0
 import GreenIsland 1.0
 import FluidCore 1.0 as FluidCore
 
-Window {
+Item {
     id: launcherContainer
-    color: "transparent"
 
     // TODO: Define margins and padding in Fluid::Theme
     property real padding: 4

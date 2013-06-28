@@ -19,6 +19,7 @@
         <file>qml/UserIndicator.qml</file>
         <file>qml/WorkspaceIndicator.qml</file>
 
+        <file>qml/LauncherWindow.qml</file>
         <file>qml/Launcher.qml</file>
         <file>qml/LauncherView.qml</file>
         <file>images/launcher_dot.png</file>

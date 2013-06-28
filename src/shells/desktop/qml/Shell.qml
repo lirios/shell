@@ -40,7 +40,7 @@ QtObject {
         objectName: "appChooser"
     }
 
-    property var launcher: Launcher {
+    property var launcher: LauncherWindow {
         objectName: "launcher"
     }
 
