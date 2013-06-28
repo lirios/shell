@@ -1,6 +1,7 @@
 if(Qt5Compositor_FOUND)
     add_subdirectory(compositors)
 endif()
+add_subdirectory(declarative)
 add_subdirectory(shells)
 add_subdirectory(platformthemes)
 add_subdirectory(weston)
