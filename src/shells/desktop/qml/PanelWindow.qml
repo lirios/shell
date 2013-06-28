@@ -25,34 +25,16 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Window 2.0
 
-Item {
-    // Padding
-    // TODO: Take it from parameters
-    property real padding: 2
+Window {
+    property alias realSize: panel.realSize
+    property alias size: panel.size
 
-    // Panel height
-    property int realSize: 24 + (padding * 2)
-    property int size: realSize
+    color: "transparent"
 
-    Rectangle {
-        id: contents
+    Panel {
+        id: panel
         anchors.fill: parent
-        color: "#f1f1f1"
-
-        PanelView {
-            anchors {
-                left: parent.left
-                top: parent.top
-            }
-            width: parent.width
-            height: parent.height - 1
-        }
-
-        Rectangle {
-            id: border
-            color: "#999"
-            height: 1
-        }
     }
 }

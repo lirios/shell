@@ -44,7 +44,7 @@ QtObject {
         objectName: "launcher"
     }
 
-    property var panel: Panel {
+    property var panel: PanelWindow {
         objectName: "panel"
     }
 
