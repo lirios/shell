@@ -46,6 +46,9 @@ Item {
     /*! \internal */
     property Item __panel: panelLoader.item
 
+    implicitWidth: __panel ? __panel.implicitWidth : 0
+    implicitHeight: __panel ? __panel.implicitHeight : 0
+
     Loader {
         id: panelLoader
         anchors.fill: parent
@@ -56,7 +59,7 @@ Item {
         }
 
         Loader {
-            property Item __control: root
+            property Item __item: root
 
             id: styleLoader
             sourceComponent: style

@@ -32,6 +32,8 @@ import QtQuick 2.0
     \inqmlmodule Hawaii.Shell.Styles 0.1
 */
 Item {
+    readonly property Item item: __item
+
     property var __syspal: SystemPalette {
     }
 
