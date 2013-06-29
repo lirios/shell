@@ -25,25 +25,17 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Shell.Styles 0.1
 
 /*!
     \qmltype Style
     \qmlabstract
     \inqmlmodule Hawaii.Shell.Styles 0.1
 */
-Item {
+
+AbstractStyle {
     readonly property Item item: __item
 
     property var __syspal: SystemPalette {
-    }
-
-    /*! \qmlproperty QtObject Style::padding
-        Padding around styled item.
-    */
-    property var padding: QtObject {
-        property int left: 0
-        property int top: 0
-        property int right: 0
-        property int bottom: 0
     }
 }

@@ -31,6 +31,7 @@ import QtQuick 2.0
     \qmlabstract
     \inqmlmodule Hawaii.Shell.Styles 0.1
 */
+
 Item {
     id: root
 
