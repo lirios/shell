@@ -29,5 +29,8 @@
         <file>qml/AppChooserItem.qml</file>
         <file>qml/AppChooserDelegate.qml</file>
         <file>qml/NotificationsPanel.qml</file>
+
+        <!-- Styles -->
+        <file>qml/PanelStyle.qml</file>
     </qresource>
 </RCC>

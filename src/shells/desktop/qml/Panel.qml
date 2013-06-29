@@ -25,34 +25,18 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Shell.Styles 0.1
 
-Item {
-    // Padding
-    // TODO: Take it from parameters
-    property real padding: 2
+StyledItem {
+    id: panel
 
     // Panel height
-    property int realSize: 24 + (padding * 2)
-    property int size: realSize
+    property int size: 25
 
-    Rectangle {
-        id: contents
+    style: Qt.createComponent("PanelStyle.qml", panel)
+
+    PanelView {
         anchors.fill: parent
-        color: "#f1f1f1"
-
-        PanelView {
-            anchors {
-                left: parent.left
-                top: parent.top
-            }
-            width: parent.width
-            height: parent.height - 1
-        }
-
-        Rectangle {
-            id: border
-            color: "#999"
-            height: 1
-        }
+        anchors.bottomMargin: parent.height - size
     }
 }
