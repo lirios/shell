@@ -173,13 +173,14 @@ ShellUi::~ShellUi()
 
 int ShellUi::panelSize() const
 {
-    return m_panelWindow->property("size").toInt();
+    return m_panelWindow->property("height").toInt();
 }
 
 QRect ShellUi::panelGeometry() const
 {
-    QRect screenGeometry = m_panelWindow->screen()->availableGeometry();
-    return QRect(QPoint(0, 0), QSize(screenGeometry.width(), panelSize()));
+    int width = m_panelWindow->property("width").toInt();
+    int height = m_panelWindow->property("height").toInt();
+    return QRect(QPoint(0, 0), QSize(width, height));
 }
 
 int ShellUi::launcherSize() const
