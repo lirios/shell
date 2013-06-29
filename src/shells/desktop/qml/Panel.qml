@@ -30,13 +30,18 @@ import Hawaii.Shell.Styles 0.1
 StyledItem {
     id: panel
 
-    // Panel height
-    property int size: 25
+    // Panel minimum height
+    property int size: 24
 
     style: Qt.createComponent("PanelStyle.qml", panel)
 
     PanelView {
-        anchors.fill: parent
-        anchors.bottomMargin: parent.height - size
+        anchors {
+            fill: parent
+            leftMargin: __style.padding.left
+            topMargin: __style.padding.top
+            rightMargin: __style.padding.right
+            bottomMargin: __style.padding.bottom
+        }
     }
 }

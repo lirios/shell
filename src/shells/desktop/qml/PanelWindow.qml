@@ -28,6 +28,8 @@ import QtQuick 2.0
 import QtQuick.Window 2.0
 
 Window {
+    property alias size: panel.size
+
     color: "transparent"
     width: Screen.width
     height: Math.max(panel.height, panel.implicitHeight)

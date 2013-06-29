@@ -29,22 +29,27 @@ import QtGraphicalEffects 1.0
 import Hawaii.Shell.Styles 0.1
 
 Style {
-    property Component panel: Item {
-        property int shadowSize: 8
-        property color panelColor: "#2d2d2d"
+    property int shadowSize: 8
+    property color panelColor: "#f2111111"
 
-        implicitHeight: __item.size + shadowSize
+    padding {
+        bottom: shadowSize
+    }
+
+    property Component panel: Item {
+        implicitHeight: __item.size + padding.bottom
 
         DropShadow {
-            anchors {
-                fill: border
-                bottomMargin: -shadowSize
-            }
-            source: border
+            anchors.fill: background
+            source: background
+            horizontalOffset: 2
+            verticalOffset: 2
             radius: shadowSize
-            samples: shadowSize * 2
+            samples: radius * 2
+            fast: true
+            spread: 0
             transparentBorder: true
-            color: Qt.rgba(0, 0, 0, 128)
+            color: Qt.rgba(0, 0, 0, 0.7)
         }
 
         Rectangle {
@@ -56,14 +61,6 @@ Style {
                 GradientStop { position: 1; color: panelColor }
             }
             color: panelColor
-        }
-
-        Rectangle {
-            id: border
-            y: background.height - 1
-            width: background.width
-            height: 1
-            color: Qt.darker(panelColor, 1.2)
             visible: false
         }
     }

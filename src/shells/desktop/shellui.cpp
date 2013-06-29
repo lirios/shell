@@ -173,7 +173,7 @@ ShellUi::~ShellUi()
 
 int ShellUi::panelSize() const
 {
-    return m_panelWindow->property("height").toInt();
+    return m_panelWindow->property("size").toInt();
 }
 
 QRect ShellUi::panelGeometry() const
