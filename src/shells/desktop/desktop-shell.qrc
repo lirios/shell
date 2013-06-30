@@ -32,5 +32,6 @@
 
         <!-- Styles -->
         <file>qml/PanelStyle.qml</file>
+        <file>qml/PanelIndicatorStyle.qml</file>
     </qresource>
 </RCC>

@@ -30,8 +30,8 @@ import Hawaii.Shell.Styles 0.1
 StyledItem {
     id: panel
 
-    // Panel minimum height
-    property int size: 24
+    // Minimum height
+    property int size: 24 * __style.dpiScaleFactor
 
     style: Qt.createComponent("PanelStyle.qml", panel)
 

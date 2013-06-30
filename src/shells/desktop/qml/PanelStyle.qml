@@ -25,43 +25,14 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtGraphicalEffects 1.0
 import Hawaii.Shell.Styles 0.1
 
 Style {
     property int shadowSize: 8
-    property color panelColor: "#f2111111"
+    property color panelColor: Qt.rgba(0, 0, 0, 0.7)
 
-    padding {
-        bottom: shadowSize
-    }
-
-    property Component panel: Item {
-        implicitHeight: __item.size + padding.bottom
-
-        DropShadow {
-            anchors.fill: background
-            source: background
-            horizontalOffset: 2
-            verticalOffset: 2
-            radius: shadowSize
-            samples: radius * 2
-            fast: true
-            spread: 0
-            transparentBorder: true
-            color: Qt.rgba(0, 0, 0, 0.7)
-        }
-
-        Rectangle {
-            id: background
-            width: parent.width
-            height: __item.size
-            gradient: Gradient {
-                GradientStop { position: 0; color: Qt.lighter(panelColor, 2.5) }
-                GradientStop { position: 1; color: panelColor }
-            }
-            color: panelColor
-            visible: false
-        }
+    property Component panel: Rectangle {
+        implicitHeight: __item.size
+        color: panelColor
     }
 }

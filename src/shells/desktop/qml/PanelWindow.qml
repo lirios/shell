@@ -36,8 +36,6 @@ Window {
 
     Panel {
         id: panel
-        x: 0
-        y: 0
-        width: parent.width
+        anchors.fill: parent
     }
 }

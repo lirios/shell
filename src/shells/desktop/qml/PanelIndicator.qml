@@ -24,11 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick 2.0
+import Hawaii.Shell.Styles 0.1
 import "PanelMenuManager.js" as PanelMenuManager
 
-Item {
+StyledItem {
     id: indicator
 
     // Label text and icon name
@@ -39,10 +39,7 @@ Item {
     property PanelMenu menu
 
     // Icon size
-    property real iconSize: 24
-
-    // Spacing between icon and label
-    property real spacing: iconSize / 4
+    property real iconSize: 20 * __style.dpiScaleFactor
 
     // Selected and hovered
     property bool selected: false
@@ -51,11 +48,7 @@ Item {
     // Emitted when the indicator is clicked and doesn't have a menu
     signal clicked()
 
-    width: iconItem.width + labelItem.paintedWidth + (spacing * 4)
-
-    SystemPalette {
-        id: palette
-    }
+    style: Qt.createComponent("PanelIndicatorStyle.qml", indicator)
 
     MouseArea {
         anchors.fill: parent
@@ -99,61 +92,6 @@ Item {
 
             PanelMenuManager.triggered = selected;
             PanelMenuManager.currentIndicator = indicator;
-        }
-    }
-
-    Rectangle {
-        id: highlight
-        anchors.fill: parent
-        color: selected || hovered ? palette.highlight : "transparent"
-
-        Behavior on opacity {
-            NumberAnimation { duration: 200 }
-        }
-    }
-
-    Item {
-        anchors {
-            fill: highlight
-            margins: 4
-        }
-
-        Image {
-            id: iconItem
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-                leftMargin: spacing
-                rightMargin: spacing
-            }
-            source: "image://desktoptheme/" + (iconName ? iconName : "unknown")
-            sourceSize {
-                width: iconSize
-                height: iconSize
-            }
-            width: iconSize
-            height: iconSize
-            smooth: true
-            fillMode: Image.PreserveAspectFit
-            visible: iconName != ""
-        }
-
-        Label {
-            id: labelItem
-            anchors {
-                left: iconItem.right
-                verticalCenter: iconItem.verticalCenter
-                leftMargin: spacing
-                topMargin: spacing
-                rightMargin: spacing
-            }
-            text: label
-            // TODO: Define a specific font in Fluid::Theme and use it here
-            font.weight: Font.Bold
-            font.pointSize: 9
-            color: selected || hovered ? palette.highlightedTextColor : palette.text
-            visible: label != ""
         }
     }
 }
