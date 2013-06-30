@@ -26,26 +26,26 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0
+import Hawaii.Shell.Styles 0.1
 import FluidCore 1.0 as FluidCore
 
-Item {
+StyledItem {
     id: launcherContainer
 
-    // TODO: Define margins and padding in Fluid::Theme
-    property real padding: 4
-
     // Tile size
-    property alias tileSize: launcherView.tileSize
+    property real tileSize: launcherView.tileSize
 
     // Alignment and orientation
     property int alignment: LauncherAlignment.Bottom
     property alias orientation: launcherView.orientation
 
     // Size
-    property int size: tileSize + (padding * 2)
+    property int size: tileSize + __style.padding.left + __style.padding.top + __style.padding.right + __style.padding.bottom
 
     // Number of items
     property alias count: launcherView.count
+
+    style: Qt.createComponent("LauncherStyle.qml", launcherContainer)
 
     FluidCore.Settings {
         id: settings
@@ -54,63 +54,22 @@ Item {
         onValueChanged: loadSettings()
     }
 
-    Rectangle {
-        anchors.fill: parent
-        border.color: "#999"
-        color: "#f1f1f1"
-
-        Item {
-            id: launcher
-            anchors.fill: parent
-
-            LauncherView {
-                id: launcherView
-                anchors.fill: parent
-                orientation: {
-                    switch (alignment) {
-                    case LauncherAlignment.Bottom:
-                        return ListView.Horizontal;
-                    default:
-                        return ListView.Vertical;
-                    }
-                }
+    LauncherView {
+        id: launcherView
+        anchors {
+            fill: parent
+            leftMargin: __style.padding.left
+            topMargin: __style.padding.top
+            rightMargin: __style.padding.right
+            bottomMargin: __style.padding.bottom
+        }
+        orientation: {
+            switch (alignment) {
+            case LauncherAlignment.Bottom:
+                return ListView.Horizontal;
+            default:
+                return ListView.Vertical;
             }
-
-            states: [
-                State {
-                    name: "left"
-                    when: alignment === LauncherAlignment.Left
-
-                    PropertyChanges {
-                        target: launcherView
-                        anchors.topMargin: padding
-                        anchors.rightMargin: padding
-                        anchors.bottomMargin: padding
-                    }
-                },
-                State {
-                    name: "right"
-                    when: alignment === LauncherAlignment.Right
-
-                    PropertyChanges {
-                        target: launcherView
-                        anchors.leftMargin: padding
-                        anchors.topMargin: padding
-                        anchors.bottomMargin: padding
-                    }
-                },
-                State {
-                    name: "bottom"
-                    when: alignment === LauncherAlignment.Bottom
-
-                    PropertyChanges {
-                        target: launcherView
-                        anchors.leftMargin: padding
-                        anchors.topMargin: padding
-                        anchors.rightMargin: padding
-                    }
-                }
-            ]
         }
     }
 
