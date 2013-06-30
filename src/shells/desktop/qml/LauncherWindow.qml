@@ -26,11 +26,49 @@
 
 import QtQuick 2.0
 import QtQuick.Window 2.0
+import GreenIsland 1.0
 
 Window {
     property alias size: launcher.size
+    property alias alignment: launcher.alignment
 
     color: "transparent"
+    x: {
+        switch (launcher.alignment) {
+        case LauncherAlignment.Left:
+        case LauncherAlignment.Bottom:
+            return 0;
+        default:
+            return Screen.width - launcher.size;
+        }
+    }
+    y: {
+        switch (launcher.alignment) {
+        case LauncherAlignment.Left:
+        case LauncherAlignment.Right:
+            return 24;
+        default:
+            return Screen.height - launcher.size;
+        }
+    }
+    width: {
+        switch (launcher.alignment) {
+        case LauncherAlignment.Left:
+        case LauncherAlignment.Right:
+            return launcher.size;
+        default:
+            return Screen.width;
+        }
+    }
+    height: {
+        switch (launcher.alignment) {
+        case LauncherAlignment.Left:
+        case LauncherAlignment.Left:
+            return Screen.height - 24;
+        default:
+            return launcher.size;
+        }
+    }
 
     Launcher {
         id: launcher
