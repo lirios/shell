@@ -42,6 +42,12 @@
     This grouped property holds the \c left, \c top, \c right, \c bottom padding.
 */
 
+/*!
+    \qmlproperty real AbstractStyle::dpiScaleFactor
+
+    DPI scale factor.
+*/
+
 AbstractStyle::AbstractStyle(QObject *parent)
     : QObject(parent)
 {
@@ -50,6 +56,13 @@ AbstractStyle::AbstractStyle(QObject *parent)
 Padding *AbstractStyle::padding()
 {
     return &m_padding;
+}
+
+extern Q_GUI_EXPORT int qt_defaultDpiX();
+
+qreal AbstractStyle::dpiScaleFactor() const
+{
+    return (qreal(qt_defaultDpiX()) / 96.0);
 }
 
 #include "moc_abstractstyle.cpp"

@@ -35,10 +35,13 @@ class AbstractStyle : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(Padding* padding READ padding CONSTANT)
+    Q_PROPERTY(qreal dpiScaleFactor READ dpiScaleFactor CONSTANT)
 public:
     explicit AbstractStyle(QObject *parent = 0);
     
     Padding *padding();
+
+    qreal dpiScaleFactor() const;
 
 private:
     Padding m_padding;
