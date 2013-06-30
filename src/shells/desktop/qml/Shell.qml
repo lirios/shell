@@ -42,6 +42,7 @@ QtObject {
 
     property var launcher: LauncherWindow {
         objectName: "launcher"
+        onAlignmentChanged: moveAppChooser()
     }
 
     property var panel: PanelWindow {
@@ -52,20 +53,15 @@ QtObject {
         objectName: "background"
     }
 
-    onAvailableGeometryChanged: {
-        // Resize AppChooser
-        appChooser.width = availableGeometry.width * 0.5;
-        appChooser.height = availableGeometry.height * 0.65;
-
-        // Move AppChooser
+    function moveAppChooser() {
         switch (launcher.alignment) {
         case LauncherAlignment.Left:
-            appChooser.x = availableGeometry.x;
-            appChooser.y = availableGeometry.y;
+            appChooser.x = launcher.width;
+            appChooser.y = panel.height;
             break;
         case LauncherAlignment.Right:
             appChooser.x = launcher.x - appChooser.width;
-            appChooser.y = availableGeometry.y;
+            appChooser.y = panel.height;
             break;
         case LauncherAlignment.Bottom:
             appChooser.x = launcher.x;
@@ -73,6 +69,8 @@ QtObject {
             break;
         }
     }
+
+    Component.onCompleted: moveAppChooser()
 
     /*
     // Notifications panel

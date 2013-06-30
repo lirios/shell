@@ -29,12 +29,12 @@ import GreenIsland 1.0
 import DesktopShell 0.1
 
 ShellWindow {
-    id: appChooserWindow
     color: "transparent"
-    width: 320
-    height: 240
+    width: Math.max(appChooser.width, appChooser.implicitWidth)
+    height: Math.max(appChooser.height, appChooser.implicitHeight)
 
     AppChooser {
+        id: appChooser
         anchors.fill: parent
     }
 }
