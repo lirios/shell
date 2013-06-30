@@ -27,106 +27,97 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Hawaii.Shell.Styles 0.1
 import GreenIsland 1.0
-import DesktopShell 0.1
 
-Item {
+StyledItem {
     id: root
+    style: Qt.createComponent("AppChooserStyle.qml", root)
 
-    Component {
-        id: itemDelegate
-
-        Item {
-            id: wrapper
-            //checked: ListView.isCurrentItem
-            //enabled: true
-            width: ListView.width
-            height: label.paintedHeight
-
-            Label {
-                id: label
-                anchors.fill: parent
-                text: model.label
-                font.weight: Font.Bold
-            }
+    ColumnLayout {
+        anchors {
+            fill: parent
+            leftMargin: __style.padding.left
+            topMargin: __style.padding.top
+            rightMargin: __style.padding.right
+            bottomMargin: __style.padding.bottom
         }
-    }
 
-    Rectangle {
-        anchors.fill: parent
-        radius: 6
-        border.color: "#999"
-        color: "#f1f1f1"
+        TextField {
+            id: searchField
+            placeholderText: qsTr("Search...")
 
-        ColumnLayout {
-            anchors {
-                fill: parent
-                margins: 4
+            Layout.fillWidth: true
+        }
+
+        RowLayout {
+            ScrollView {
+                ListView {
+                    id: categoriesList
+                    orientation: ListView.Vertical
+                    model: AppChooserCategoriesModel {}
+                    delegate: Item {
+                        id: wrapper
+                        //checked: ListView.isCurrentItem
+                        //enabled: true
+                        width: ListView.width
+                        height: label.paintedHeight
+
+                        Label {
+                            id: label
+                            anchors.fill: parent
+                            text: model.label
+                            font.weight: Font.Bold
+                        }
+                    }
+                    highlight: Rectangle {
+                        color: "lightsteelblue"
+                    }
+                    highlightRangeMode: ListView.StrictlyEnforceRange
+
+                    Connections {
+                        target: searchField
+                        onTextChanged: {
+                            // TODO: Put searchField.text somewhere => categoriesList.model.setQuery(searchField.text);
+                        }
+                    }
+                }
+
+                Layout.fillHeight: true
             }
 
-            TextField {
-                id: searchField
-                placeholderText: qsTr("Search...")
+            ScrollView {
+                GridView {
+                    id: grid
+                    cacheBuffer: 1000
+                    cellWidth: 108
+                    cellHeight: 108
+                    model: VisualDataModel {
+                        id: visualModel
+
+                        model: AvailableApplicationsModel {
+                            id: appsModel
+                        }
+                        delegate: AppChooserDelegate {
+                            visualIndex: VisualDataModel.itemsIndex
+                            icon: "image://desktoptheme/" + (iconName ? iconName : "unknown")
+                            label: name
+
+                            onClicked: {
+                                // Launch the application and close the AppChooser
+                                appsModel.launchApplicationAt(visualIndex);
+                                root.appChooser.visible = false;
+                            }
+                        }
+                    }
+
+                    displaced: Transition {
+                        NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
+                    }
+                }
 
                 Layout.fillWidth: true
-            }
-
-            RowLayout {
-                ScrollView {
-                    ListView {
-                        id: categoriesList
-                        orientation: ListView.Vertical
-                        model: AppChooserCategoriesModel {}
-                        delegate: itemDelegate
-                        highlight: Rectangle {
-                            color: "lightsteelblue"
-                        }
-                        highlightRangeMode: ListView.StrictlyEnforceRange
-
-                        Connections {
-                            target: searchField
-                            onTextChanged: {
-                                // TODO: Put searchField.text somewhere => categoriesList.model.setQuery(searchField.text);
-                            }
-                        }
-                    }
-
-                    Layout.fillHeight: true
-                }
-
-                ScrollView {
-                    GridView {
-                        id: grid
-                        cacheBuffer: 1000
-                        cellWidth: 108
-                        cellHeight: 108
-                        model: VisualDataModel {
-                            id: visualModel
-
-                            model: AvailableApplicationsModel {
-                                id: appsModel
-                            }
-                            delegate: AppChooserDelegate {
-                                visualIndex: VisualDataModel.itemsIndex
-                                icon: "image://desktoptheme/" + (iconName ? iconName : "unknown")
-                                label: name
-
-                                onClicked: {
-                                    // Launch the application and close the AppChooser
-                                    appsModel.launchApplicationAt(visualIndex);
-                                    root.appChooser.visible = false;
-                                }
-                            }
-                        }
-
-                        displaced: Transition {
-                            NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
-                        }
-                    }
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
+                Layout.fillHeight: true
             }
         }
     }
