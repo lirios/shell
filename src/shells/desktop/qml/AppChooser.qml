@@ -30,11 +30,8 @@ import QtQuick.Layouts 1.0
 import GreenIsland 1.0
 import DesktopShell 0.1
 
-ShellWindow {
-    id: appChooserWindow
-    color: "transparent"
-    width: 320
-    height: 240
+Item {
+    id: root
 
     Component {
         id: itemDelegate

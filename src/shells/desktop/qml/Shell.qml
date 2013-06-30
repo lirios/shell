@@ -36,7 +36,7 @@ QtObject {
     // Available screen geometry
     property rect availableGeometry
 
-    property var appChooser: AppChooser {
+    property var appChooser: AppChooserWindow {
         objectName: "appChooser"
     }
 
