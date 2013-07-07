@@ -49,7 +49,7 @@ QtObject {
         objectName: "panel"
     }
 
-    property var background: Background {
+    property var background: BackgroundWindow {
         objectName: "background"
     }
 

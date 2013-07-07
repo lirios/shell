@@ -1,9 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/Shell.qml</file>
-        <file>qml/Background.qml</file>
         <file>qml/NotificationItem.qml</file>
         <file>qml/AuthenticationDialog.qml</file>
+
+        <file>qml/BackgroundWindow.qml</file>
+        <file>qml/Background.qml</file>
 
         <file>qml/PanelWindow.qml</file>
         <file>qml/Panel.qml</file>
