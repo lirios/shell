@@ -59,7 +59,7 @@ Style {
                 verticalCenter: parent.verticalCenter
                 leftMargin: spacing
             }
-            name: __item.iconName ? __item.iconName : "unknown"
+            iconName: __item.iconName ? __item.iconName : "unknown"
             color: __item.selected || __item.hovered ? highlightedTextColor : textColor
             width: __item.iconSize
             height: __item.iconSize
