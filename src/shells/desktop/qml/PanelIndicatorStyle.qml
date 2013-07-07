@@ -29,7 +29,7 @@ import FluidUi 0.2
 import Hawaii.Shell.Styles 0.1
 
 Style {
-    property color textColor: "#cecece"
+    property color textColor: "#cccccc"
     property color highlightedTextColor: "white"
     property color highlightColor: "#48acea"
 
