@@ -42,7 +42,9 @@ PanelIndicator {
                     Image {
                         id: avatarImage
                         source: "image://desktoptheme/avatar-default-symbolic"
-                        sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
+                        sourceSize: Qt.size(48, 48)
+                        width: 48
+                        height: 48
                     },
                     Column {
                         Label {
@@ -55,7 +57,9 @@ PanelIndicator {
                         Row {
                             Image {
                                 source: "image://desktoptheme/" + iconName
-                                sourceSize: Qt.size(theme.smallIconSize, theme.smallIconSize)
+                                sourceSize: Qt.size(16, 16)
+                                width: 16
+                                height: 16
                             }
                             Label {
                                 text: userStatusText(userStatus)

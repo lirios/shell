@@ -28,7 +28,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import GreenIsland 1.0
 import DesktopShell 0.1
-import FluidExtra 1.0 as FluidExtra
+import FluidExtra 0.2 as FluidExtra
 
 NotificationWindow {
     id: notification
@@ -107,14 +107,14 @@ NotificationWindow {
                 leftMargin: padding
                 topMargin: padding
             }
-            width: theme.largeIconSize
-            height: theme.largeIconSize
+            width: 48
+            height: 48
 
             Image {
                 id: icon
                 anchors.fill: parent
                 smooth: true
-                sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
+                sourceSize: Qt.size(48, 48)
                 visible: icon.source !== ""
             }
 

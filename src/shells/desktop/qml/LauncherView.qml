@@ -27,7 +27,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import GreenIsland 1.0
-import FluidCore 1.0 as FluidCore
+import FluidCore 0.2 as FluidCore
 
 LauncherDropItem {
     id: launcher
@@ -56,7 +56,7 @@ LauncherDropItem {
             if (val)
                 iconSize = val;
             else
-                iconSize = theme.hugeIconSize;
+                iconSize = 64;
             tileSize = iconSize + (iconSize / 4);
         }
     }

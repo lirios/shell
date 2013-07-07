@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidCore 1.0
-import FluidUi 1.0
+import FluidCore 0.2
+import FluidUi 0.2
 
 Item {
     FrameSvgItem {

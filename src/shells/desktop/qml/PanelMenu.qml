@@ -49,8 +49,8 @@ ShellWindow {
 
         Item {
             id: contentItem
-            width: Math.max(menuContents.width, theme.defaultFont.mSize.width * 12)
-            height: Math.min(menuContents.height, theme.defaultFont.mSize.height * 25)
+            width: Math.max(menuContents.width, 8 * 12)
+            height: Math.min(menuContents.height, 8 * 25)
 
             ScrollView {
                 Flickable {

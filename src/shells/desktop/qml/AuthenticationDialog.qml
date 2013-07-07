@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidCore 1.0 as FluidCore
-import FluidUi 1.0 as FluidUi
+import FluidCore 0.2 as FluidCore
+import FluidUi 0.2 as FluidUi
 import GreenIsland 1.0
 
 ModalDialog {
