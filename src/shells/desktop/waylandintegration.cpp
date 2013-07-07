@@ -89,6 +89,7 @@ void WaylandIntegration::handlePresent(void *data,
                                        struct hawaii_desktop_shell *desktop_shell,
                                        struct wl_surface *surface)
 {
+    Q_UNUSED(data);
     Q_UNUSED(desktop_shell);
 
     DesktopShell *shell = DesktopShell::instance();

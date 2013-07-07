@@ -30,9 +30,6 @@ import GreenIsland 1.0
 QtObject {
     id: root
 
-    // Screen geometry
-    property rect geometry
-
     // Available screen geometry
     property rect availableGeometry
 
@@ -42,11 +39,18 @@ QtObject {
 
     property var launcher: LauncherWindow {
         objectName: "launcher"
-        onAlignmentChanged: moveAppChooser()
+        onAlignmentChanged: {
+            moveAppChooser();
+            recalculateAvailableGeometry();
+        }
+
+        Component.onCompleted: recalculateAvailableGeometry()
     }
 
     property var panel: PanelWindow {
         objectName: "panel"
+
+        Component.onCompleted: recalculateAvailableGeometry()
     }
 
     property var background: BackgroundWindow {
@@ -66,6 +70,24 @@ QtObject {
         case LauncherAlignment.Bottom:
             appChooser.x = launcher.x;
             appChooser.y = launcher.y - appChooser.height;
+            break;
+        }
+    }
+
+    function recalculateAvailableGeometry() {
+        root.availableGeometry = Qt.rect(0, 0, background.width, background.height);
+
+        root.availableGeometry.y = panel.height;
+
+        switch (launcher.alignment) {
+        case LauncherAlignment.Left:
+            root.availableGeometry.x = launcher.width;
+            break;
+        case LauncherAlignment.Right:
+            root.availableGeometry.width -= launcher.width;
+            break;
+        case LauncherAlignment.Bottom:
+            root.availableGeometry.height -= launcher.height;
             break;
         }
     }

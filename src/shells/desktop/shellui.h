@@ -65,8 +65,6 @@ public:
 
     int panelSize() const;
 
-    QRect panelGeometry() const;
-
     QQuickWindow *panelWindow() const {
         return m_panelWindow;
     }
@@ -79,8 +77,6 @@ public:
 
     int launcherSize() const;
 
-    QRect launcherGeometry() const;
-
     QQuickWindow *launcherWindow() const {
         return m_launcherWindow;
     }
@@ -90,7 +86,7 @@ public:
     }
 
 public Q_SLOTS:
-    void updateScreenGeometry(const QRect &geometry);
+    void updateScreenGeometry(const QRect &screenGeometry);
     void sendPanelGeometry();
     void sendLauncherGeometry();
 

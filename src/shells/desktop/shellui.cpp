@@ -74,9 +74,6 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
     if (!m_rootObject)
         qFatal("Couldn't create component from Shell.qml!");
 
-    // Tell QML the screen geometry
-    m_rootObject->setProperty("geometry", screen->availableGeometry());
-
     // Wayland integration
     WaylandIntegration *object = WaylandIntegration::instance();
 
@@ -86,7 +83,6 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
     format.setAlphaBufferSize(8);
 
     // Setup all windows
-    qDebug() << "Setting up shell windows for screen" << screen->name();
     const QObjectList objects = m_rootObject->children();
     for (int i = 0; i < objects.size(); i++) {
         QQuickWindow *window = qobject_cast<QQuickWindow *>(objects.at(i));
@@ -98,9 +94,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_backgroundWindow->setFormat(format);
             m_backgroundWindow->setClearBeforeRendering(true);
             m_backgroundWindow->setScreen(screen);
-            //m_backgroundWindow->setFlags(m_backgroundWindow->flags() | Qt::BypassWindowManagerHint);
             m_backgroundWindow->create();
-            //m_backgroundWindow->setGeometry(screen->availableGeometry());
             m_backgroundSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_backgroundWindow));
             hawaii_desktop_shell_set_background(object->shell, m_output,
@@ -114,7 +108,6 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_panelWindow->setScreen(screen);
             m_panelWindow->setFlags(m_panelWindow->flags() | Qt::BypassWindowManagerHint);
             m_panelWindow->create();
-            m_panelWindow->setGeometry(panelGeometry());
             m_panelSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_panelWindow));
             hawaii_desktop_shell_set_panel(object->shell, m_output,
@@ -128,7 +121,6 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_launcherWindow->setScreen(screen);
             m_launcherWindow->setFlags(m_launcherWindow->flags() | Qt::BypassWindowManagerHint);
             m_launcherWindow->create();
-            m_launcherWindow->setGeometry(launcherGeometry());
             m_launcherSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_launcherWindow));
             hawaii_desktop_shell_set_launcher(object->shell, m_output,
@@ -160,13 +152,16 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
                qPrintable(screen->name()));
 
     // Set screen size and detect geometry changes
-    updateScreenGeometry(screen->geometry());
     connect(screen, SIGNAL(geometryChanged(QRect)),
             this, SLOT(updateScreenGeometry(QRect)));
 }
 
 ShellUi::~ShellUi()
 {
+    m_panelWindow->close();
+    m_launcherWindow->close();
+    m_backgroundWindow->close();
+
     delete m_component;
     delete m_engine;
     delete m_settings;
@@ -177,92 +172,46 @@ int ShellUi::panelSize() const
     return m_panelWindow->property("size").toInt();
 }
 
-QRect ShellUi::panelGeometry() const
-{
-    int width = m_panelWindow->property("width").toInt();
-    int height = m_panelWindow->property("height").toInt();
-    return QRect(QPoint(0, 0), QSize(width, height));
-}
-
 int ShellUi::launcherSize() const
 {
     return m_launcherWindow->property("size").toInt();
 }
 
-QRect ShellUi::launcherGeometry() const
+void ShellUi::updateScreenGeometry(const QRect &screenGeometry)
 {
-    QString alignment = m_settings->value("launcher/alignment").toString();
-    QRect screenGeometry = m_launcherWindow->screen()->availableGeometry();
-    QPoint pt(0, 0);
-    QSize size;
-
-    if (alignment == QStringLiteral("left")) {
-        size = QSize(launcherSize(), screenGeometry.height());
-    } else if (alignment == QStringLiteral("right")) {
-        pt.setX(screenGeometry.width() - launcherSize());
-        size = QSize(launcherSize(), screenGeometry.height());
-    } else if (alignment == QStringLiteral("bottom")) {
-        pt.setY(screenGeometry.height() - launcherSize());
-        size = QSize(screenGeometry.width(), launcherSize());
-    }
-
-    return QRect(pt, size);
-}
-
-void ShellUi::updateScreenGeometry(const QRect &geometry)
-{
-    // Background window has the same geometry as the screen
-    m_backgroundWindow->setGeometry(geometry);
-
-    // Update geometry property
-    m_rootObject->setProperty("geometry", geometry);
-
-    // Calculate available geometry
-    QRect availableGeometry = geometry;
-    QString alignment = m_settings->value("launcher/alignment").toString();
-
-    availableGeometry.setY(panelSize());
-
-    if (alignment == QStringLiteral("left")) {
-        availableGeometry.setWidth(availableGeometry.width() - launcherSize());
-        availableGeometry.setX(availableGeometry.x() + launcherSize());
-    } else if (alignment == QStringLiteral("right")) {
-        availableGeometry.setWidth(availableGeometry.width() - launcherSize());
-    } else if (alignment == QStringLiteral("bottom")) {
-        availableGeometry.setHeight(availableGeometry.height() - launcherSize());
-    }
-
-    // Update available geometry property
-    m_rootObject->setProperty("availableGeometry", availableGeometry);
+    // Get available geometry
+    QRectF geo = m_rootObject->property("availableGeometry").toRectF();
 
     // Send available geometry to the compositor
     WaylandIntegration *object = WaylandIntegration::instance();
     hawaii_desktop_shell_set_available_geometry(
                 object->shell, m_output,
-                availableGeometry.x(), availableGeometry.y(),
-                availableGeometry.width(), availableGeometry.height());
+                int(geo.x()), int(geo.y()),
+                int(geo.width()), int(geo.height()));
 }
 
 void ShellUi::sendPanelGeometry()
 {
+    QRect geometry = m_panelWindow->geometry();
     WaylandIntegration *object = WaylandIntegration::instance();
     hawaii_desktop_shell_set_panel_geometry(object->shell, m_output,
                                             m_panelSurface,
-                                            panelGeometry().x(),
-                                            panelGeometry().y(),
-                                            panelGeometry().width(),
-                                            panelGeometry().height());
+                                            geometry.x(),
+                                            geometry.y(),
+                                            geometry.width(),
+                                            geometry.height());
 }
 
 void ShellUi::sendLauncherGeometry()
 {
+    QRect geometry = m_launcherWindow->geometry();
     WaylandIntegration *object = WaylandIntegration::instance();
     hawaii_desktop_shell_set_launcher_geometry(object->shell, m_output,
                                                m_launcherSurface,
-                                               launcherGeometry().x(),
-                                               launcherGeometry().y(),
-                                               launcherGeometry().width(),
-                                               launcherGeometry().height());
+                                               geometry.x(),
+                                               geometry.y(),
+                                               geometry.width(),
+                                               geometry.height());
 }
 
 #include "moc_shellui.cpp"
