@@ -86,6 +86,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
     format.setAlphaBufferSize(8);
 
     // Setup all windows
+    qDebug() << "Setting up shell windows for screen" << screen->name();
     const QObjectList objects = m_rootObject->children();
     for (int i = 0; i < objects.size(); i++) {
         QQuickWindow *window = qobject_cast<QQuickWindow *>(objects.at(i));
@@ -97,9 +98,9 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
             m_backgroundWindow->setFormat(format);
             m_backgroundWindow->setClearBeforeRendering(true);
             m_backgroundWindow->setScreen(screen);
-            m_backgroundWindow->setFlags(m_backgroundWindow->flags() | Qt::BypassWindowManagerHint);
+            //m_backgroundWindow->setFlags(m_backgroundWindow->flags() | Qt::BypassWindowManagerHint);
             m_backgroundWindow->create();
-            m_backgroundWindow->setGeometry(screen->availableGeometry());
+            //m_backgroundWindow->setGeometry(screen->availableGeometry());
             m_backgroundSurface = static_cast<struct wl_surface *>(
                         m_native->nativeResourceForWindow("surface", m_backgroundWindow));
             hawaii_desktop_shell_set_background(object->shell, m_output,

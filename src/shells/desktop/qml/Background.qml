@@ -29,7 +29,10 @@ import QtQuick.Window 2.0
 import FluidCore 1.0 as FluidCore
 
 Window {
+    flags: Qt.BypassWindowManagerHint
     color: "black"
+    width: Screen.width
+    height: Screen.height
 
     FluidCore.Settings {
         id: settings
