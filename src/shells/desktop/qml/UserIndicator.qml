@@ -71,8 +71,12 @@ PanelIndicator {
                 ]
             },
             PanelMenuItem {
-                text: qsTr("Disconnect")
-                onClicked: shell.disconnectUser()
+                text: qsTr("Shut Down")
+                onClicked: {
+                    var component = Qt.createComponent("ShutdownDialog.qml");
+                    var dialog = component.createObject();
+                    dialog.visible = true;
+                }
             }
         ]
     }

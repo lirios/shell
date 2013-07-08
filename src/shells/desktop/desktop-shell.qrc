@@ -9,6 +9,7 @@
         <!-- Dialogs -->
         <file>qml/Dialog.qml</file>
         <file>qml/AuthenticationDialog.qml</file>
+        <file>qml/ShutdownDialog.qml</file>
 
         <!-- Background -->
         <file>qml/BackgroundWindow.qml</file>
