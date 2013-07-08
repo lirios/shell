@@ -27,20 +27,16 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import FluidUi 0.2 as FluidUi
 
 ColumnLayout {
-    property alias icon: icon.source
+    property alias icon: icon.iconSource
     property alias label: label.text
 
-    Image {
+    FluidUi.Icon {
         id: icon
-        sourceSize {
-            width: 48
-            height: 48
-        }
         width: 48
         height: 48
-        smooth: true
 
         Layout.alignment: Qt.AlignCenter
     }
