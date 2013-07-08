@@ -1,12 +1,19 @@
 <RCC>
     <qresource prefix="/">
+        <!-- Main file -->
         <file>qml/Shell.qml</file>
+
+        <!-- Notifications -->
         <file>qml/NotificationItem.qml</file>
+
+        <!-- Dialogs -->
         <file>qml/AuthenticationDialog.qml</file>
 
+        <!-- Background -->
         <file>qml/BackgroundWindow.qml</file>
         <file>qml/Background.qml</file>
 
+        <!-- Panel -->
         <file>qml/PanelWindow.qml</file>
         <file>qml/Panel.qml</file>
         <file>qml/PanelView.qml</file>
@@ -16,12 +23,14 @@
         <file>qml/PanelContainerMenuItem.qml</file>
   	<file>qml/PanelMenuManager.js</file>
 
+        <!-- Indicators -->
         <file>qml/DateIndicator.qml</file>
         <file>qml/NetworkIndicator.qml</file>
         <file>qml/NotificationsIndicator.qml</file>
         <file>qml/UserIndicator.qml</file>
         <file>qml/WorkspaceIndicator.qml</file>
 
+        <!-- Launcher -->
         <file>qml/LauncherWindow.qml</file>
         <file>qml/Launcher.qml</file>
         <file>qml/LauncherView.qml</file>
