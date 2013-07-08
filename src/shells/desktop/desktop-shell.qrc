@@ -7,6 +7,7 @@
         <file>qml/NotificationItem.qml</file>
 
         <!-- Dialogs -->
+        <file>qml/Dialog.qml</file>
         <file>qml/AuthenticationDialog.qml</file>
 
         <!-- Background -->
@@ -47,6 +48,6 @@
         <file>qml/PanelStyle.qml</file>
         <file>qml/PanelIndicatorStyle.qml</file>
         <file>qml/LauncherStyle.qml</file>
-        <file>qml/AppChooserStyle.qml</file>
+        <file>qml/DialogStyle.qml</file>
     </qresource>
 </RCC>

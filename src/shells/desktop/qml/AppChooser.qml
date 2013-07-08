@@ -30,17 +30,12 @@ import QtQuick.Layouts 1.0
 import Hawaii.Shell.Styles 0.1
 import GreenIsland 1.0
 
-StyledItem {
+Item {
     id: root
-    style: Qt.createComponent("AppChooserStyle.qml", root)
 
     ColumnLayout {
         anchors {
             fill: parent
-            leftMargin: __style.padding.left
-            topMargin: __style.padding.top
-            rightMargin: __style.padding.right
-            bottomMargin: __style.padding.bottom
         }
 
         TextField {

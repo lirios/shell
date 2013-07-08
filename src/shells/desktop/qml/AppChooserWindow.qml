@@ -25,11 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0
-import DesktopShell 0.1
 
-ShellWindow {
-    color: "transparent"
+Dialog {
     width: Math.max(appChooser.width, appChooser.implicitWidth)
     height: Math.max(appChooser.height, appChooser.implicitHeight)
 
