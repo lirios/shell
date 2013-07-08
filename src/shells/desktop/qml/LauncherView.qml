@@ -33,7 +33,7 @@ LauncherDropItem {
     id: launcher
 
     // Icon size
-    property int iconSize: settings.value("icon-size")
+    property int iconSize: settings.iconSize
 
     // Tile size
     property int tileSize: iconSize + (iconSize / 4)
@@ -49,16 +49,9 @@ LauncherDropItem {
 
     FluidCore.Settings {
         id: settings
-        schema: "org.hawaii.greenisland"
-        group: "launcher"
-        onValueChanged: {
-            var val = settings.value("icon-size");
-            if (val)
-                iconSize = val;
-            else
-                iconSize = 64;
-            tileSize = iconSize + (iconSize / 4);
-        }
+        category: "launcher"
+
+        property int iconSize: 64
     }
 
     LauncherModel {

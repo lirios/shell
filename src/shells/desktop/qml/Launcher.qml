@@ -36,7 +36,7 @@ StyledItem {
     property real tileSize: launcherView.tileSize
 
     // Alignment and orientation
-    property int alignment: LauncherAlignment.Bottom
+    property int alignment: settings.alignment
     property alias orientation: launcherView.orientation
 
     // Size
@@ -49,9 +49,9 @@ StyledItem {
 
     FluidCore.Settings {
         id: settings
-        schema: "org.hawaii.greenisland"
-        group: "launcher"
-        onValueChanged: loadSettings()
+        category: "launcher"
+
+        property int alignment: LauncherAlignment.Bottom
     }
 
     LauncherView {
@@ -71,18 +71,5 @@ StyledItem {
                 return ListView.Vertical;
             }
         }
-    }
-
-    Component.onCompleted: loadSettings()
-
-    function loadSettings() {
-        var alignmentVal = settings.value("alignment");
-
-        if (alignmentVal === "left")
-            alignment = LauncherAlignment.Left;
-        else if (alignmentVal === "right")
-            alignment = LauncherAlignment.Right;
-        else
-            alignment = LauncherAlignment.Bottom;
     }
 }

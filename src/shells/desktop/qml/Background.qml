@@ -30,31 +30,57 @@ import FluidCore 0.2 as FluidCore
 Item {
     FluidCore.Settings {
         id: settings
-        schema: "org.hawaii.desktop"
-        group: "background"
-        onValueChanged: loadSettings()
+        category: "background"
+
+        property string backgroundType: "color"
+        property color primaryColor: "#336699"
+        property color secondaryColor: "#2e5d8c"
+        property string colorShadingType: "solid"
+        property url wallpaperUrl
+
+        onBackgroundTypeChanged: {
+            switch (backgroundType) {
+            case "color":
+                switch (colorShadingType) {
+                case "solid":
+                    solidAnimation.start();
+                    break;
+                case "horizontal":
+                case "vertical":
+                    gradientAnimation.start();
+                    break;
+                }
+                break;
+            case "wallpaper":
+                wallpaperAnimation.start();
+                break;
+            default:
+                blankAnimation.start();
+                break;
+            }
+        }
     }
 
     Rectangle {
         id: solid
         anchors.fill: parent
-        color: settings.value("primary-color")
-        opacity: 0.0
+        color: settings.primaryColor
+        opacity: settings.backgroundType == "color" ? 1.0 : 0.0
     }
 
     Rectangle {
         id: gradient
         anchors.fill: parent
-        opacity: 0.0
+        opacity: settings.backgroundType == "color" && settings.colorShadingType != "solid" ? 1.0 : 00
 
         Gradient {
             GradientStop {
                 position: 0.0
-                color: settings.value("primary-color")
+                color: settings.primaryColor
             }
             GradientStop {
                 position: 1.0
-                color: settings.value("secondary-color")
+                color: settings.secondaryColor
             }
         }
     }
@@ -62,9 +88,9 @@ Item {
     Image {
         id: wallpaper
         anchors.fill: parent
-        source: settings.value("wallpaper-uri")
+        source: settings.wallpaperUrl
         smooth: true
-        opacity: 0.0
+        opacity: settings.backgroundType == "wallpaper" ? 1.0 : 0.0
     }
 
     SequentialAnimation {
@@ -94,36 +120,4 @@ Item {
         NumberAnimation { target: gradient; property: "opacity"; to: 0.0; duration: 200 }
         NumberAnimation { target: wallpaper; property: "opacity"; to: 0.0; duration: 250 }
     }
-
-    function loadInitialSettings() {
-        var type = settings.value("type");
-
-        if (type === "color") {
-            var shadingType = settings.value("color-shading-type");
-
-            if (shadingType === "solid")
-                solid.opacity = 1.0;
-            else if (shadingType === "horizontal" || shadingType === "vertical")
-                gradient.opacity = 1.0;
-        } else if (type === "wallpaper")
-            wallpaper.opacity = 1.0;
-    }
-
-    function loadSettings() {
-        var type = settings.value("type");
-
-        if (type === "color") {
-            var shadingType = settings.value("color-shading-type");
-
-            if (shadingType === "solid")
-                solidAnimation.start();
-            else if (shadingType === "horizontal" || shadingType === "vertical")
-                gradientAnimation.start();
-        } else if (type === "wallpaper")
-            wallpaperAnimation.start();
-        else
-            blankAnimation.start();
-    }
-
-    Component.onCompleted: loadInitialSettings()
 }
