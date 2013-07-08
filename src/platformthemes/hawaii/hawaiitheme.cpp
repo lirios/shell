@@ -24,22 +24,20 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QFileInfo>
-#include <QEvent>
-#include <QDesktopServices>
-#include <QFont>
-#include <QVariant>
-#include <QStandardPaths>
-#include <QTextCharFormat>
-
-#include <VibeCore/VSettings>
-#include <VibeGui/VColorScheme>
+#include <QtCore/QEvent>
+#include <QtCore/QFileInfo>
+#include <QtCore/QVariant>
+#include <QtCore/QSettings>
+#include <QtCore/QStandardPaths>
+#include <QtGui/QFont>
+#include <QtGui/QPalette>
+#include <QtGui/QTextCharFormat>
 
 #include "hawaiitheme.h"
 
 HawaiiTheme::HawaiiTheme()
 {
-    m_settings = new VSettings("org.hawaii.desktop");
+    m_settings = new QSettings("Hawaii", "Desktop");
 }
 
 HawaiiTheme::~HawaiiTheme()
@@ -59,54 +57,41 @@ QPlatformDialogHelper *HawaiiTheme::createPlatformDialogHelper(DialogType type) 
 
 const QPalette *HawaiiTheme::palette(Palette type) const
 {
-#if 0
-    switch (type) {
-        case SystemPalette: {
-            QString colorSchemeName = m_settings->value("interface/color-scheme").toString();
-            if (colorSchemeName.isEmpty())
-                return QPlatformTheme::palette(type);
-
-            VColorScheme colorScheme(QString("%1/%2.colors").arg(path).arg(colorSchemeName));
-            return colorScheme.palette();
-        }
-        default:
-            break;
-    }
-#endif
-
     return new QPalette();
 }
 
 const QFont *HawaiiTheme::font(Font type) const
 {
-    QString fontNameKey = QLatin1String("interface/font-name");
-    QString fontSizeKey = QLatin1String("interface/font-size");
+    QString fontName = QStringLiteral("DejaVu");
+    int fontSize = 11;
 
     switch (type) {
-        case SmallFont:
-            fontNameKey = QLatin1String("interface/small-font-name");
-            fontSizeKey = QLatin1String("interface/small-font-size");
-            break;
-        case MiniFont:
-            fontNameKey = QLatin1String("interface/mini-font-name");
-            fontSizeKey = QLatin1String("interface/mini-font-size");
-            break;
-        default:
-            break;
+    case SystemFont:
+        fontName = m_settings->value("interface/font-name").toString();
+        fontSize = m_settings->value("interface/font-size").toInt();
+        break;
+    case SmallFont:
+        fontName = m_settings->value("interface/small-font-name").toString();
+        fontSize = m_settings->value("interface/small-font-size").toInt();
+        break;
+    case MiniFont:
+        fontName = m_settings->value("interface/mini-font-name").toString();
+        fontSize = m_settings->value("interface/mini-font-size").toInt();
+        break;
+    default:
+        break;
     }
 
-    QString fontName = m_settings->value(fontNameKey).toString();
-    int fontSize = m_settings->value(fontSizeKey).toInt();
     QFont *font = new QFont(fontName, fontSize);
 
     switch (type) {
-        case TitleBarFont:
-        case MdiSubWindowTitleFont:
-        case DockWidgetTitleFont:
-            font->setBold(true);
-            break;
-        default:
-            break;
+    case TitleBarFont:
+    case MdiSubWindowTitleFont:
+    case DockWidgetTitleFont:
+        font->setBold(true);
+        break;
+    default:
+        break;
     }
 
     return font;
@@ -115,66 +100,66 @@ const QFont *HawaiiTheme::font(Font type) const
 QVariant HawaiiTheme::themeHint(ThemeHint hint) const
 {
     switch (hint) {
-        case DropShadow:
-            return QVariant(true);
-        case ToolButtonStyle: {
-            QString val = m_settings->value("interface/toolbutton-style").toString();
+    case DropShadow:
+        return QVariant(true);
+    case ToolButtonStyle: {
+        QString val = m_settings->value("interface/toolbutton-style").toString();
 
-            if (val == "icon-only")
-                return QVariant(int(Qt::ToolButtonIconOnly));
-            else if (val == "text-only")
-                return QVariant(int(Qt::ToolButtonTextOnly));
-            else if (val == "text-beside-icon")
-                return QVariant(int(Qt::ToolButtonTextBesideIcon));
-            else if (val == "text-under-icon")
-                return QVariant(int(Qt::ToolButtonTextUnderIcon));
+        if (val == "icon-only")
+            return QVariant(int(Qt::ToolButtonIconOnly));
+        else if (val == "text-only")
+            return QVariant(int(Qt::ToolButtonTextOnly));
+        else if (val == "text-beside-icon")
+            return QVariant(int(Qt::ToolButtonTextBesideIcon));
+        else if (val == "text-under-icon")
+            return QVariant(int(Qt::ToolButtonTextUnderIcon));
 
-            return QVariant(int(Qt::ToolButtonFollowStyle));
-        }
-        case ToolBarIconSize:
-            return m_settings->value("interface/toolbar-icon-size");
-        case ItemViewActivateItemOnSingleClick:
-            return QVariant(false);
-        case SystemIconThemeName:
-            return m_settings->value("interface/icon-theme");
-        case SystemIconFallbackThemeName:
-            return QVariant("hicolor");
-        case IconThemeSearchPaths:
-            return QVariant(QStandardPaths::locateAll(
-                        QStandardPaths::GenericDataLocation,
-                        "icons", QStandardPaths::LocateDirectory));
-        case StyleNames: {
-            QStringList styles;
-            styles << m_settings->value("interface/style").toString();
-            return QVariant(styles);
-        }
-        case WindowAutoPlacement:
-            return QVariant(true);
-        case DialogButtonBoxLayout:
-            return QVariant(1); // QDialogButtonBox::MacLayout
-        case DialogButtonBoxButtonsHaveIcons:
-            return QVariant(false);
-        case UseFullScreenForPopupMenu:
-            return QVariant(true);
-        case KeyboardScheme:
-             // TODO: Use the Mac keyboard scheme only if an Apple keyboard is detected
-            //return QVariant(int(MacKeyboardScheme));
-            return QVariant(int(GnomeKeyboardScheme));
-        case UiEffects:
-            return AnimateMenuUiEffect | FadeMenuUiEffect |
-                   AnimateComboUiEffect | AnimateTooltipUiEffect |
-                   FadeTooltipUiEffect | AnimateToolBoxUiEffect;
-        case SpellCheckUnderlineStyle:
-            return QVariant(int(QTextCharFormat::SpellCheckUnderline));
-        case TabAllWidgets:
-            return QVariant(true);
-        case IconPixmapSizes: {
-            QList<int> list;
-            list << 16 << 22 << 24 << 32 << 48 << 64 << 128 << 256;
-            return QVariant::fromValue(list);
-        }
-        default:
-            break;
+        return QVariant(int(Qt::ToolButtonFollowStyle));
+    }
+    case ToolBarIconSize:
+        return m_settings->value("interface/toolbar-icon-size");
+    case ItemViewActivateItemOnSingleClick:
+        return QVariant(false);
+    case SystemIconThemeName:
+        return m_settings->value("interface/icon-theme");
+    case SystemIconFallbackThemeName:
+        return QVariant("hicolor");
+    case IconThemeSearchPaths:
+        return QVariant(QStandardPaths::locateAll(
+                            QStandardPaths::GenericDataLocation,
+                            "icons", QStandardPaths::LocateDirectory));
+    case StyleNames: {
+        QStringList styles;
+        styles << m_settings->value("interface/style").toString();
+        return QVariant(styles);
+    }
+    case WindowAutoPlacement:
+        return QVariant(true);
+    case DialogButtonBoxLayout:
+        return QVariant(1); // QDialogButtonBox::MacLayout
+    case DialogButtonBoxButtonsHaveIcons:
+        return QVariant(false);
+    case UseFullScreenForPopupMenu:
+        return QVariant(true);
+    case KeyboardScheme:
+        // TODO: Use the Mac keyboard scheme only if an Apple keyboard is detected
+        //return QVariant(int(MacKeyboardScheme));
+        return QVariant(int(GnomeKeyboardScheme));
+    case UiEffects:
+        return AnimateMenuUiEffect | FadeMenuUiEffect |
+                AnimateComboUiEffect | AnimateTooltipUiEffect |
+                FadeTooltipUiEffect | AnimateToolBoxUiEffect;
+    case SpellCheckUnderlineStyle:
+        return QVariant(int(QTextCharFormat::SpellCheckUnderline));
+    case TabAllWidgets:
+        return QVariant(true);
+    case IconPixmapSizes: {
+        QList<int> list;
+        list << 16 << 22 << 24 << 32 << 48 << 64 << 128 << 256;
+        return QVariant::fromValue(list);
+    }
+    default:
+        break;
     }
 
     return QPlatformTheme::themeHint(hint);

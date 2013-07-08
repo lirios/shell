@@ -29,7 +29,7 @@
 
 #include <qpa/qplatformtheme.h>
 
-class VSettings;
+class QSettings;
 
 class Q_GUI_EXPORT HawaiiTheme : public QPlatformTheme
 {
@@ -46,7 +46,7 @@ public:
     QVariant themeHint(ThemeHint hint) const;
 
 private:
-    VSettings *m_settings;
+    QSettings *m_settings;
 };
 
 #endif // HAWAIITHEME_H

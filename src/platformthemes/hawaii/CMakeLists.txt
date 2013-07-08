@@ -1,9 +1,4 @@
-include_directories(
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS}
-    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
-    ${VibeCore_INCLUDE_DIRS}
-)
+include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 
 set(SOURCES
     main.cpp
@@ -11,7 +6,8 @@ set(SOURCES
 )
 
 add_library(hawaii SHARED ${SOURCES})
+set_target_properties(hawaii PROPERTIES PREFIX "")
 qt5_use_modules(hawaii Gui)
-target_link_libraries(hawaii ${VibeCore_LIBRARIES})
 
-install(TARGETS hawaii LIBRARY DESTINATION ${CMAKE_INSTALL_PLUGINSDIR}/platformthemes)
+install(TARGETS hawaii LIBRARY
+    DESTINATION ${CMAKE_INSTALL_PLUGINSDIR}/platformthemes)
