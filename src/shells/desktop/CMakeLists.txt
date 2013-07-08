@@ -1,6 +1,5 @@
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
-    ${VibeCore_INCLUDE_DIRS}
     ${GreenIsland_INCLUDE_DIRS}
     ${WaylandClient_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}/headers
@@ -40,7 +39,6 @@ set_target_properties(hawaii-desktop-shell PROPERTIES
     LINK_FLAGS "-L${WaylandClient_LIBDIR}"
 )
 target_link_libraries(hawaii-desktop-shell
-    ${VibeCore_LIBRARIES}
     ${GreenIsland_LIBRARIES}
     ${WaylandClient_LIBRARIES}
 )

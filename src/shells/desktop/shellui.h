@@ -37,8 +37,6 @@ class QQmlEngine;
 class QQmlComponent;
 class QQuickWindow;
 
-class VSettings;
-
 class ShellUi : public QObject
 {
     Q_OBJECT
@@ -91,7 +89,6 @@ public Q_SLOTS:
     void sendLauncherGeometry();
 
 private:
-    VSettings *m_settings;
     QPlatformNativeInterface *m_native;
     QScreen *m_screen;
     struct wl_output *m_output;

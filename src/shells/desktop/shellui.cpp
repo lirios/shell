@@ -35,8 +35,6 @@
 
 #include <qpa/qplatformnativeinterface.h>
 
-#include <VibeCore/VSettings>
-
 #include "shellui.h"
 #include "waylandintegration.h"
 
@@ -50,9 +48,6 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
     , m_launcherWindow(0)
     , m_launcherSurface(0)
 {
-    // Settings
-    m_settings = new VSettings(QStringLiteral("org.hawaii.greenisland"));
-
     // Native platform interface
     m_native = QGuiApplication::platformNativeInterface();
 
@@ -164,7 +159,6 @@ ShellUi::~ShellUi()
 
     delete m_component;
     delete m_engine;
-    delete m_settings;
 }
 
 int ShellUi::panelSize() const
