@@ -32,20 +32,19 @@ Style {
     property int shadowSize: 8
 
     padding {
-        left: shadowSize + 4
-        top: shadowSize + 4
-        right: shadowSize + 4
-        bottom: shadowSize + 4
+        left: shadowSize
+        top: shadowSize
+        right: shadowSize
+        bottom: shadowSize
     }
 
     property Component panel: Item {
-        implicitWidth: 720
-        implicitHeight: 480
-
         Rectangle {
             id: border
-            anchors.fill: parent
-            anchors.margins: shadowSize
+            anchors {
+                fill: parent
+                margins: shadowSize
+            }
             border.color: "#999"
             radius: 6
             color: "#cecece"
