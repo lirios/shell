@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Desktop Shell.
+ * This file is part of Hawaii Shell.
  *
  * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *

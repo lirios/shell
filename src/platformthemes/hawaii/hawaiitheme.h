@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Vibe.
+ * This file is part of Hawaii Shell.
  *
  * Copyright (c) 2010-2012 Pier Luigi Fiorini
  *

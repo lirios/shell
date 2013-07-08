@@ -70,10 +70,6 @@ macro_log_feature(Qt5Quick_FOUND "Qt5Quick" "Support for Qt5Quick" "http://qt-pr
 macro_log_feature(Qt5Compositor_FOUND "Qt5Compositor" "Support for Qt5Compositor" "http://qt-project.org" "")
 macro_log_feature(Qt5AccountsService_FOUND "Qt5AccountsService" "Support for Qt5AccountsService" "http://qt-project.org" "")
 
-# Find Vibe libraries
-find_package(VibeCore REQUIRED)
-macro_log_feature(VibeCore_FOUND "VibeCore" "Support for VibeCore" "http://www.maui-project.org" "")
-
 # Find GreenIsland
 find_package(GreenIsland REQUIRED)
 macro_log_feature(GreenIsland_FOUND "GreenIsland" "Green Island SDK" "http://www.maui-project.org" "")
