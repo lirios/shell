@@ -47,17 +47,30 @@ Style {
             }
             border.color: "#999"
             radius: 6
-            color: "#cecece"
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: "#f4f4f4" }
+                GradientStop { position: 1.0; color: "#dcdcdc" }
+            }
             visible: false
+
+            Image {
+                anchors.fill: parent
+                anchors.margins: 3
+                source: "qrc:/images/noise.png"
+                sourceSize: Qt.size(100, 100)
+                fillMode: Image.Tile
+                opacity: 0.5
+            }
         }
 
         DropShadow {
             anchors.fill: border
             source: border
-            radius: shadowSize
-            samples: radius * 2
+            radius: 8
+            samples: 16
             fast: true
             spread: 0
+            color: Qt.rgba(0, 0, 0, 0.5)
             transparentBorder: true
         }
     }

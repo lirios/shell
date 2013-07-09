@@ -52,5 +52,6 @@
         <file>qml/LauncherStyle.qml</file>
         <file>qml/DialogStyle.qml</file>
         <file>qml/AppChooserButtonStyle.qml</file>
+        <file>images/noise.png</file>
     </qresource>
 </RCC>
