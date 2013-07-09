@@ -25,10 +25,11 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Window 2.0
 
 Dialog {
-    width: Math.max(appChooser.width, appChooser.implicitWidth)
-    height: Math.max(appChooser.height, appChooser.implicitHeight)
+    width: Math.max(Screen.width * 0.7, 640)
+    height: Math.max(Screen.height * 0.62, 480)
 
     AppChooser {
         id: appChooser
