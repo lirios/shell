@@ -28,6 +28,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import GreenIsland 1.0
 import FluidCore 0.2 as FluidCore
+import FluidUi 0.2 as FluidUi
 
 LauncherDropItem {
     id: launcher
@@ -81,8 +82,8 @@ LauncherDropItem {
             onClicked: {
                 if (mouse.button == Qt.LeftButton) {
                     item.activate();
-               } else if (mouse.button == Qt.MidButton)
-                   item.launchNewInstance();
+                } else if (mouse.button == Qt.MidButton)
+                    item.launchNewInstance();
             }
 
             states: [
@@ -270,14 +271,14 @@ LauncherDropItem {
 
                 onEntered: {
                     // FIXME: Look if the item has draggable = true instead
-/*
+                    /*
                     if (dragArea.VisualDataModel.itemsIndex == 0)
                         return;
 */
 
                     visualModel.items.move(
-                        drag.source.VisualDataModel.itemsIndex,
-                        dragArea.VisualDataModel.itemsIndex);
+                                drag.source.VisualDataModel.itemsIndex,
+                                dragArea.VisualDataModel.itemsIndex);
                 }
             }
         }
@@ -290,23 +291,6 @@ LauncherDropItem {
         delegate: dragDelegate
     }
 
-    Component {
-        id: appChooserIcon
-
-        Button {
-            checkable: true
-            iconName: "view-grid-symbolic"
-            width: tileSize
-            height: width
-            onClicked: root.appChooser.visible = !root.appChooser.visible;
-
-            Connections {
-                target: root.appChooser
-                onVisibleChanged: checked = root.appChooser.visible
-            }
-        }
-    }
-
     ListView {
         id: view
         anchors.fill: parent
@@ -315,7 +299,11 @@ LauncherDropItem {
         model: visualModel
         cacheBuffer: 10000
         interactive: false
-        header: appChooserIcon
+        header: AppChooserButton {
+            width: tileSize
+            height: tileSize
+            onCheckedChanged: root.appChooser.visible = checked
+        }
 
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 400 }

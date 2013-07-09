@@ -41,6 +41,7 @@
         <!-- AppChooser -->
         <file>qml/AppChooserWindow.qml</file>
         <file>qml/AppChooser.qml</file>
+        <file>qml/AppChooserButton.qml</file>
         <file>qml/AppChooserItem.qml</file>
         <file>qml/AppChooserDelegate.qml</file>
         <file>qml/NotificationsPanel.qml</file>
@@ -50,5 +51,6 @@
         <file>qml/PanelIndicatorStyle.qml</file>
         <file>qml/LauncherStyle.qml</file>
         <file>qml/DialogStyle.qml</file>
+        <file>qml/AppChooserButtonStyle.qml</file>
     </qresource>
 </RCC>
