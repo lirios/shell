@@ -31,6 +31,7 @@ import QtQuick.Layouts 1.0
 import FluidUi 0.2 as FluidUi
 
 Dialog {
+    id: shutdownDialog
     width: Screen.width * 0.4
     height: Screen.height * 0.3
 
@@ -76,6 +77,7 @@ Dialog {
         RowLayout {
             Button {
                 text: qsTr("Cancel")
+                onClicked: shutdownDialog.visible = false
             }
 
             Button {
