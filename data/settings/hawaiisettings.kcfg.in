@@ -4,6 +4,34 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
  <kcfgfile name="hawairc" />
+ <group name="launcher" >
+  <entry key="IconSize" type="Enum">
+   <label>Launcher Icon Size</label>
+   <whatsthis>Size of Launcher icons.</whatsthis>
+   <choices>
+     <choice name="Small" />
+     <choice name="Medium" />
+     <choice name="Large" />
+     <choice name="Huge" />
+   </choices>
+   <default>Medium</default>
+  </entry>
+  <entry key="Alignment" type="Enum">
+   <label>Launcher Alignment</label>
+   <whatsthis>Determines the Launcher alignment.</whatsthis>
+   <choices>
+     <choice name="Left" />
+     <choice name="Right" />
+     <choice name="Bottom" />
+   </choices>
+   <default>Bottom</default>
+  </entry>
+  <entry key="FavoriteApps" type="StringList">
+   <label>Favorite Applications</label>
+   <whatsthis>List of applications that Launcher will always show.</whatsthis>
+   <default>swordfish.desktop,hawaii-terminal.desktop,hawaii-system-preferences.desktop</default>
+  </entry>
+ </group>
  <group name="background" >
   <entry key="Type" type="Enum">
    <label>Background Type</label>
