@@ -104,6 +104,12 @@ string(REGEX REPLACE "[ \t\n]+" "" CMAKE_INSTALL_WESTONLIBDIR "${CMAKE_INSTALL_W
 find_package(PolkitQt-1 REQUIRED)
 macro_log_feature(PolkitQt-1_FOUND "PolkitQt-1" "Qt bindings for PolicyKit" "http://www.freedesktop.org/wiki/Software/polkit" "")
 
+# KCoreAddons and KConfig
+find_package(KCoreAddons REQUIRED)
+find_package(KConfig REQUIRED)
+macro_log_feature(KCoreAddons_FOUND "KCoreAddons" "KDE Frameworks 5 - KCoreAddons" "http://www.kde.org" "")
+macro_log_feature(KConfig_FOUND "KConfig" "KDE Frameworks 5 - KConfig" "http://www.kde.org" "")
+
 # Subdirectories
 add_subdirectory(data)
 add_subdirectory(headers)
