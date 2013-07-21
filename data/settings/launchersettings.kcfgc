@@ -1,0 +1,9 @@
+ClassName=LauncherSettings
+File=launchersettings.kcfg
+GlobalEnums=false
+Inherits=KCoreConfigSkeleton
+ItemAccessors=false
+MemberVariables=private
+Mutators=true
+SetUserTexts=false
+Singleton=true

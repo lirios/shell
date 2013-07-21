@@ -52,7 +52,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
 endif()
 
 # Find Qt5
-find_package(Qt5 5.1.0 REQUIRED COMPONENTS DBus Qml Quick AccountsService)
+find_package(Qt5 5.1.0 REQUIRED COMPONENTS DBus Qml Quick AccountsService Xdg)
 
 # Find GreenIsland
 find_package(GreenIsland)
