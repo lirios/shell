@@ -29,12 +29,20 @@
 
 #include <QtCore/QObject>
 
+#include "powermanagerbackend.h"
+
 class PowerManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(PowerCapabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
 public:
     explicit PowerManager(QObject *parent = 0);
     ~PowerManager();
+
+    PowerCapabilities capabilities() const;
+
+Q_SIGNALS:
+    void capabilitiesChanged();
 
 public Q_SLOTS:
     void powerOff();
@@ -42,6 +50,13 @@ public Q_SLOTS:
     void suspend();
     void hibernate();
     void hybridSleep();
+
+private Q_SLOTS:
+    void serviceRegistered(const QString &service);
+    void serviceUnregistered(const QString &service);
+
+private:
+    QList<PowerManagerBackend *> m_backends;
 };
 
 #endif // POWERMANAGER_H

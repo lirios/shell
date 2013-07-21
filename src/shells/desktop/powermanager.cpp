@@ -24,35 +24,131 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtDBus/QDBusConnectionInterface>
+
 #include "powermanager.h"
+#include "systemdpowerbackend.h"
+#include "upowerpowerbackend.h"
 
 PowerManager::PowerManager(QObject *parent)
     : QObject(parent)
 {
+    QDBusConnectionInterface *interface = QDBusConnection::systemBus().interface();
+
+    if (interface->isServiceRegistered(SystemdPowerBackend::service()))
+        m_backends.append(new SystemdPowerBackend());
+
+    if (interface->isServiceRegistered(UPowerPowerBackend::service()))
+        m_backends.append(new UPowerPowerBackend());
+
+    connect(interface, SIGNAL(serviceRegistered(QString)),
+            this, SLOT(serviceRegistered(QString)));
+    connect(interface, SIGNAL(serviceUnregistered(QString)),
+            this, SLOT(serviceUnregistered(QString)));
 }
 
 PowerManager::~PowerManager()
 {
+    while (!m_backends.isEmpty())
+        delete m_backends.takeFirst();
+}
+
+PowerCapabilities PowerManager::capabilities() const
+{
+    PowerCapabilities caps = PowerCapability::None;
+
+    foreach (PowerManagerBackend *backend, m_backends)
+        caps |= backend->capabilities();
+
+    return caps;
 }
 
 void PowerManager::powerOff()
 {
+    foreach (PowerManagerBackend *backend, m_backends) {
+        if (backend->capabilities() & PowerCapability::PowerOff) {
+            backend->powerOff();
+            return;
+        }
+    }
 }
 
 void PowerManager::restart()
 {
+    foreach (PowerManagerBackend *backend, m_backends) {
+        if (backend->capabilities() & PowerCapability::Restart) {
+            backend->restart();
+            return;
+        }
+    }
 }
 
 void PowerManager::suspend()
 {
+    foreach (PowerManagerBackend *backend, m_backends) {
+        if (backend->capabilities() & PowerCapability::Suspend) {
+            backend->suspend();
+            return;
+        }
+    }
 }
 
 void PowerManager::hibernate()
 {
+    foreach (PowerManagerBackend *backend, m_backends) {
+        if (backend->capabilities() & PowerCapability::Hibernate) {
+            backend->hibernate();
+            return;
+        }
+    }
 }
 
 void PowerManager::hybridSleep()
 {
+    foreach (PowerManagerBackend *backend, m_backends) {
+        if (backend->capabilities() & PowerCapability::HybridSleep) {
+            backend->hybridSleep();
+            return;
+        }
+    }
+}
+
+void PowerManager::serviceRegistered(const QString &service)
+{
+    // Just return if we already have all the backends registered
+    if (m_backends.size() == 2)
+        return;
+
+    // Otherwise add the most appropriate backend
+    if (service == SystemdPowerBackend::service()) {
+        m_backends.append(new SystemdPowerBackend());
+        Q_EMIT capabilitiesChanged();
+    } else if (service == UPowerPowerBackend::service()) {
+        m_backends.append(new UPowerPowerBackend());
+        Q_EMIT capabilitiesChanged();
+    }
+}
+
+void PowerManager::serviceUnregistered(const QString &service)
+{
+    // Just return if we don't have any backend already
+    if (m_backends.size() == 0)
+        return;
+
+    // Otherwise remove the backend corresponding to the service
+    for (int i = 0; i < m_backends.size(); i++) {
+        PowerManagerBackend *backend = m_backends.at(i);
+
+        if (service == SystemdPowerBackend::service() && backend->name() == QStringLiteral("systemd")) {
+            delete m_backends.takeAt(i);
+            Q_EMIT capabilitiesChanged();
+            return;
+        } else if (service == UPowerPowerBackend::service() && backend->name() == QStringLiteral("upower")) {
+            delete m_backends.takeAt(i);
+            Q_EMIT capabilitiesChanged();
+            return;
+        }
+    }
 }
 
 #include "moc_powermanager.cpp"
