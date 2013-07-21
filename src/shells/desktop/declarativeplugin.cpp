@@ -38,14 +38,16 @@
 
 void registerQmlTypes()
 {
-    qmlRegisterType<AppCategories>("Hawaii.Shell.Desktop", 0, 1, "XdgCategoriesModel");
-    qmlRegisterType<ApplicationsModelSorted>("Hawaii.Shell.Desktop", 0, 1, "ApplicationsModel");
-    qmlRegisterType<LauncherModel>("Hawaii.Shell.Desktop", 0, 1, "LauncherModel");
-    qmlRegisterUncreatableType<LauncherItem>("Hawaii.Shell.Desktop", 0, 1, "LauncherItem",
+    const char *uri = "Hawaii.Shell.Desktop";
+
+    qmlRegisterType<AppCategories>(uri, 0, 1, "XdgCategoriesModel");
+    qmlRegisterType<ApplicationsModelSorted>(uri, 0, 1, "ApplicationsModel");
+    qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
+    qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
-    qmlRegisterType<LauncherSettings>("Hawaii.Shell.Desktop", 0, 1, "LauncherSettings");
-    qmlRegisterUncreatableType<LauncherAlignment>("Hawaii.Shell.Desktop", 0, 1, "LauncherAlignment",
+    qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
+    qmlRegisterUncreatableType<LauncherAlignment>(uri, 0, 1, "LauncherAlignment",
                                                   QStringLiteral("Cannot create LauncherAlignment"));
-    qmlRegisterType<ShellWindow>("Hawaii.Shell.Desktop", 0, 1, "ShellWindow");
-    qmlRegisterType<NotificationWindow>("Hawaii.Shell.Desktop", 0, 1, "NotificationWindow");
+    qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
+    qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
 }
