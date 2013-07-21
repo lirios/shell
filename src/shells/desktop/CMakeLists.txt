@@ -25,6 +25,7 @@ set(SOURCES
     applicationsmodel.cpp
     powermanager.cpp
     powermanagerbackend.cpp
+    systemdpowerbackend.cpp
 )
 
 wayland_add_protocol_client(SOURCES
