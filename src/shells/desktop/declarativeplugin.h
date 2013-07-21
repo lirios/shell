@@ -24,36 +24,9 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
-import GreenIsland 1.0
-import Hawaii.Shell.Desktop 0.1
-import Hawaii.Shell.Styles 0.1
+#ifndef DECLARATIVEPLUGIN_H
+#define DECLARATIVEPLUGIN_H
 
-ShellWindow {
-    color: "transparent"
-    width: 450
-    height: 250
+void registerQmlTypes();
 
-    property bool modal: false
-
-    default property alias content: container.children
-
-    StyledItem {
-        id: root
-        anchors.fill: parent
-        style: Qt.createComponent(modal ? "ModalDialogStyle.qml" : "DialogStyle.qml", root)
-
-        Item {
-            id: container
-            anchors {
-                fill: parent
-                leftMargin: parent.__style.padding.left + 11
-                topMargin: parent.__style.padding.top + 11
-                rightMargin: parent.__style.padding.right + 11
-                bottomMargin: parent.__style.padding.bottom + 11
-            }
-        }
-    }
-}
+#endif // DECLARATIVEPLUGIN_H

@@ -32,6 +32,7 @@
 
 #include "cmakedirs.h"
 #include "desktopshell.h"
+#include "declarativeplugin.h"
 #include "waylandintegration.h"
 #include "shellui.h"
 #include "shellwindow.h"
@@ -43,8 +44,7 @@ DesktopShell::DesktopShell()
     : QObject()
 {
     // Register QML types
-    qmlRegisterType<ShellWindow>("DesktopShell", 0, 1, "ShellWindow");
-    qmlRegisterType<NotificationWindow>("DesktopShell", 0, 1, "NotificationWindow");
+    registerQmlTypes();
 
     // Platform native interface
     QPlatformNativeInterface *native =

@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0
 import Hawaii.Shell.Styles 0.1
 import FluidCore 0.2 as FluidCore
 

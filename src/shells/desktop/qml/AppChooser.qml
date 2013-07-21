@@ -28,7 +28,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Shell.Styles 0.1
-import GreenIsland 1.0
+import Hawaii.Shell.Desktop 0.1
 
 Item {
     id: root
@@ -50,7 +50,7 @@ Item {
                 ListView {
                     id: categoriesList
                     orientation: ListView.Vertical
-                    model: AppChooserCategoriesModel {}
+                    model: XdgCategoriesModel {}
                     delegate: Item {
                         id: wrapper
                         //checked: ListView.isCurrentItem
@@ -90,22 +90,21 @@ Item {
                     model: VisualDataModel {
                         id: visualModel
 
-                        model: AvailableApplicationsModel {
+                        model: ApplicationsModel {
                             id: appsModel
                         }
                         delegate: AppChooserDelegate {
                             visualIndex: VisualDataModel.itemsIndex
                             icon: "image://desktoptheme/" + (iconName ? iconName : "unknown")
                             label: name
-
                             onClicked: {
                                 // Launch the application and close the AppChooser
-                                appsModel.launchApplicationAt(visualIndex);
+                                var item = appsModel.get(visualIndex);
+                                item.launchNewInstance();
                                 root.appChooser.visible = false;
                             }
                         }
                     }
-
                     displaced: Transition {
                         NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
                     }

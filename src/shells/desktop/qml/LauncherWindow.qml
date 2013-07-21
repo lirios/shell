@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Window 2.0
-import GreenIsland 1.0
 
 Window {
     property alias size: launcher.size

@@ -8,6 +8,7 @@ include_directories(
 
 set(SOURCES
     main.cpp
+    declarativeplugin.cpp
     desktopshell.cpp
     shellwindow.cpp
     shellui.cpp

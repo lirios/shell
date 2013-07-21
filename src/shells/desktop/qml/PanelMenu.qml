@@ -26,7 +26,7 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
-import DesktopShell 0.1
+import Hawaii.Shell.Desktop 0.1
 
 ShellWindow {
     id: panelMenu
