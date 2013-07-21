@@ -17,14 +17,11 @@ set(HAWAII_VERSION_STRING "${HAWAII_VERSION_MAJOR}.${HAWAII_VERSION_MINOR}.${HAW
 # Installation directories
 include(GNUInstallDirs)
 
-# Log features
-include(MacroLogFeature)
+# Macro to print feature summary
+include(FeatureSummary)
 
 # Our CMake modules
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
-# Include Wayland macros
-include(Wayland)
 
 # Add custom uninstall target
 configure_file(
@@ -55,43 +52,27 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
 endif()
 
 # Find Qt5
-find_package(Qt5DBus REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Qml REQUIRED)
-find_package(Qt5Quick REQUIRED)
-find_package(Qt5Compositor)
-find_package(Qt5AccountsService REQUIRED)
-macro_log_feature(Qt5DBus_FOUND "Qt5DBus" "Support for Qt5DBus" "http://qt-project.org" "")
-macro_log_feature(Qt5Gui_FOUND "Qt5Gui" "Support for Qt5Gui" "http://qt-project.org" "")
-macro_log_feature(Qt5Widgets_FOUND "Qt5Widgets" "Support for Qt5Widgets" "http://qt-project.org" "")
-macro_log_feature(Qt5Qml_FOUND "Qt5Qml" "Support for Qt5Qml" "http://qt-project.org" "")
-macro_log_feature(Qt5Quick_FOUND "Qt5Quick" "Support for Qt5Quick" "http://qt-project.org" "")
-macro_log_feature(Qt5Compositor_FOUND "Qt5Compositor" "Support for Qt5Compositor" "http://qt-project.org" "")
-macro_log_feature(Qt5AccountsService_FOUND "Qt5AccountsService" "Support for Qt5AccountsService" "http://qt-project.org" "")
+find_package(Qt5 5.1.0 REQUIRED COMPONENTS DBus Qml Quick AccountsService)
 
 # Find GreenIsland
-if(Qt5Compositor_FOUND)
-    find_package(GreenIsland REQUIRED)
-    macro_log_feature(GreenIsland_FOUND "GreenIsland" "Green Island SDK" "http://www.maui-project.org" "")
+find_package(GreenIsland)
+if(GreenIsland_FOUND)
+    find_package(Qt5Compositor REQUIRED)
 endif()
 
 # Find pkg-config
 find_package(PkgConfig "0.22" REQUIRED)
 
 # Find Wayland libraries
+include(Wayland)
 pkg_check_modules(WaylandClient wayland-client REQUIRED)
 pkg_check_modules(WaylandServer wayland-server REQUIRED)
-macro_log_feature(WaylandClient_FOUND "WaylandClient" "Support for Wayland clients" "http://wayland.freedesktop.org" "")
-macro_log_feature(WaylandServer_FOUND "WaylandServer" "Support for Wayland servers" "http://wayland.freedesktop.org" "")
 
 # Find pixman-1 (required for the Weston plugin)
 pkg_check_modules(Pixman pixman-1 REQUIRED)
-macro_log_feature(Pixman_FOUND "pixman-1" "Support for pixman" "http://pixman.org" "")
 
 # Find Weston SDK
 pkg_check_modules(Weston weston REQUIRED)
-macro_log_feature(Weston_FOUND "Weston" "Support for Weston SDK" "http://wayland.freedesktop.org" "")
 
 # Find Weston libdir
 execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=libdir weston
@@ -104,13 +85,10 @@ string(REGEX REPLACE "[ \t\n]+" "" CMAKE_INSTALL_WESTONLIBDIR "${CMAKE_INSTALL_W
 
 # Find polkit-qt-1
 find_package(PolkitQt-1 REQUIRED)
-macro_log_feature(PolkitQt-1_FOUND "PolkitQt-1" "Qt bindings for PolicyKit" "http://www.freedesktop.org/wiki/Software/polkit" "")
 
 # KCoreAddons and KConfig
 find_package(KCoreAddons REQUIRED)
 find_package(KConfig REQUIRED)
-macro_log_feature(KCoreAddons_FOUND "KCoreAddons" "KDE Frameworks 5 - KCoreAddons" "http://www.kde.org" "")
-macro_log_feature(KConfig_FOUND "KConfig" "KDE Frameworks 5 - KConfig" "http://www.kde.org" "")
 
 # Subdirectories
 add_subdirectory(data)
@@ -118,5 +96,5 @@ add_subdirectory(headers)
 add_subdirectory(scripts)
 add_subdirectory(src)
 
-# Display featute log
-macro_display_feature_log()
+# Display featute summary
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
