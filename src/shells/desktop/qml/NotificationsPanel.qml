@@ -24,16 +24,14 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import FluidCore 0.2
-import FluidUi 0.2
+import QtQuick 2.1
+import QtQuick.Controls 1.0
 
 Item {
-    FrameSvgItem {
+    Rectangle {
         id: frame
         anchors.fill: parent
-        imagePath: "dialogs/background"
-        enabledBorders: "LeftBorder"
+        color: "black"
     }
 
     Label {
@@ -43,6 +41,7 @@ Item {
             leftMargin: frame.margins.left
         }
         text: qsTr("Notifications")
-        font.weight: Font.Bold
+        font.bold: true
+        color: "white"
     }
 }
