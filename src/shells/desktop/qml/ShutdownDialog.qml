@@ -34,6 +34,14 @@ Dialog {
     id: shutdownDialog
     width: Screen.width * 0.4
     height: Screen.height * 0.3
+    onVisibleChanged: {
+        if (visible) {
+            shutdownTimer.restart();
+            shutdownTimer.repeat = true;
+        }
+    }
+
+    property int timeRemaining: 60
 
     ColumnLayout {
         anchors.fill: parent
@@ -58,8 +66,25 @@ Dialog {
                     font.bold: true
                 }
 
+                Timer {
+                    id: shutdownTimer
+                    interval: 998
+                    triggeredOnStart: true
+                    repeat: true
+                    onTriggered: {
+                        timerLabel.text = qsTr("The system will power off automatically " +
+                                               "in %1 seconds.").arg(timeRemaining);
+                        timeRemaining--;
+
+                        if (timeRemaining == 0) {
+                            shutdownTimer.repeat = false;
+                            // TODO: Power off!
+                        }
+                    }
+                }
+
                 Label {
-                    text: qsTr("The system will be powered off within 60 seconds.")
+                    id: timerLabel
                     wrapMode: Text.WordWrap
 
                     Layout.fillWidth: true
