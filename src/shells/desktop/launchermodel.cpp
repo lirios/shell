@@ -117,6 +117,13 @@ int LauncherModel::rowCount(const QModelIndex &parent) const
     return m_list.size();
 }
 
+LauncherItem *LauncherModel::get(int index)
+{
+    if (index < 0 || index > m_list.size())
+        return 0;
+    return m_list.at(index);
+}
+
 void LauncherModel::pinApplication(const QString &fileName)
 {
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size());

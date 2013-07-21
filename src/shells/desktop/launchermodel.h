@@ -62,6 +62,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
 public Q_SLOTS:
+    LauncherItem *get(int index);
+
     void pinApplication(const QString &fileName);
     void pinUrl(const QUrl &url);
 
