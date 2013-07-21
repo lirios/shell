@@ -37,6 +37,8 @@ public:
     SystemdPowerBackend();
     ~SystemdPowerBackend();
 
+    static QString service();
+
     PowerCapabilities capabilities() const;
 
     void powerOff();

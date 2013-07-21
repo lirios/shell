@@ -37,6 +37,8 @@ public:
     UPowerPowerBackend();
     ~UPowerPowerBackend();
 
+    static QString service();
+
     PowerCapabilities capabilities() const;
 
     void powerOff();

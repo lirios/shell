@@ -32,6 +32,11 @@
 #define LOGIN1_PATH QStringLiteral("/org/freedesktop/login1")
 #define LOGIN1_OBJECT QStringLiteral("org.freedesktop.login1.Manager")
 
+QString SystemdPowerBackend::service()
+{
+    return LOGIN1_SERVICE;
+}
+
 SystemdPowerBackend::SystemdPowerBackend()
 {
     m_interface = new QDBusInterface(LOGIN1_SERVICE, LOGIN1_PATH,

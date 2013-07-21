@@ -33,6 +33,11 @@
 #define UPOWER_PATH QStringLiteral("/org/freedesktop/UPower")
 #define UPOWER_OBJECT QStringLiteral("org.freedesktop.UPower")
 
+QString UPowerPowerBackend::service()
+{
+    return UPOWER_SERVICE;
+}
+
 UPowerPowerBackend::UPowerPowerBackend()
 {
     m_interface = new QDBusInterface(UPOWER_SERVICE, UPOWER_PATH,
