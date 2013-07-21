@@ -71,8 +71,10 @@ macro_log_feature(Qt5Compositor_FOUND "Qt5Compositor" "Support for Qt5Compositor
 macro_log_feature(Qt5AccountsService_FOUND "Qt5AccountsService" "Support for Qt5AccountsService" "http://qt-project.org" "")
 
 # Find GreenIsland
-find_package(GreenIsland REQUIRED)
-macro_log_feature(GreenIsland_FOUND "GreenIsland" "Green Island SDK" "http://www.maui-project.org" "")
+if(Qt5Compositor_FOUND)
+    find_package(GreenIsland REQUIRED)
+    macro_log_feature(GreenIsland_FOUND "GreenIsland" "Green Island SDK" "http://www.maui-project.org" "")
+endif()
 
 # Find pkg-config
 find_package(PkgConfig "0.22" REQUIRED)
