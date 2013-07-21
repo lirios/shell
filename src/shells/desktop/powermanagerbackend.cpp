@@ -24,24 +24,14 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef POWERMANAGER_H
-#define POWERMANAGER_H
+#include "powermanagerbackend.h"
 
-#include <QtCore/QObject>
-
-class PowerManager : public QObject
+PowerManagerBackend::PowerManagerBackend()
 {
-    Q_OBJECT
-public:
-    explicit PowerManager(QObject *parent = 0);
-    ~PowerManager();
+}
 
-public Q_SLOTS:
-    void powerOff();
-    void restart();
-    void suspend();
-    void hibernate();
-    void hybridSleep();
-};
+PowerManagerBackend::~PowerManagerBackend()
+{
+}
 
-#endif // POWERMANAGER_H
+#include "moc_powermanagerbackend.cpp"

@@ -24,24 +24,36 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef POWERMANAGER_H
-#define POWERMANAGER_H
+#ifndef POWERMANAGERBACKEND_H
+#define POWERMANAGERBACKEND_H
 
-#include <QtCore/QObject>
+#include <QtCore/QtGlobal>
 
-class PowerManager : public QObject
-{
-    Q_OBJECT
-public:
-    explicit PowerManager(QObject *parent = 0);
-    ~PowerManager();
-
-public Q_SLOTS:
-    void powerOff();
-    void restart();
-    void suspend();
-    void hibernate();
-    void hybridSleep();
+enum PowerCapability {
+    None = 0x00,
+    PowerOff = 0x01,
+    Restart = 0x02,
+    Suspend = 0x04,
+    Hibernate = 0x08,
+    HybridSleep = 0x10
 };
 
-#endif // POWERMANAGER_H
+Q_DECLARE_FLAGS(PowerCapabilities, PowerCapability)
+Q_DECLARE_OPERATORS_FOR_FLAGS(PowerCapabilities)
+
+class PowerManagerBackend
+{
+public:
+    explicit PowerManagerBackend();
+    virtual ~PowerManagerBackend();
+
+    virtual PowerCapabilities capabilities() const = 0;
+
+    virtual void powerOff() = 0;
+    virtual void restart() = 0;
+    virtual void suspend() = 0;
+    virtual void hibernate() = 0;
+    virtual void hybridSleep() = 0;
+};
+
+#endif // POWERMANAGERBACKEND_H
