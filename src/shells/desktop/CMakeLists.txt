@@ -19,6 +19,7 @@ set(SOURCES
     launchermodel.cpp
     launcheritem.cpp
     appcategories.cpp
+    applicationsmodel.cpp
 )
 
 wayland_add_protocol_client(SOURCES
