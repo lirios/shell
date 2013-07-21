@@ -8,6 +8,7 @@ include_directories(
 
 set(SOURCES
     main.cpp
+    enums.cpp
     declarativeplugin.cpp
     desktopshell.cpp
     shellwindow.cpp
@@ -40,7 +41,6 @@ qt5_add_dbus_adaptor(SOURCES
     notificationsdaemon.h NotificationsDaemon)
 
 set(KCFG_FILES
-    ${CMAKE_SOURCE_DIR}/data/settings/launchersettings.kcfgc
     ${CMAKE_BINARY_DIR}/data/settings/hawaiisettings.kcfgc
 )
 kconfig_add_kcfg_files(SOURCES ${KCFG_FILES})

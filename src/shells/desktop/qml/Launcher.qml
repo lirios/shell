@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import Hawaii.Shell.Styles 0.1
-import FluidCore 0.2 as FluidCore
 
 StyledItem {
     id: launcherContainer
@@ -35,7 +34,7 @@ StyledItem {
     property real tileSize: launcherView.tileSize
 
     // Alignment and orientation
-    property int alignment: settings.alignment
+    property alias alignment: launcherView.alignment
     property alias orientation: launcherView.orientation
 
     // Size
@@ -45,13 +44,6 @@ StyledItem {
     property alias count: launcherView.count
 
     style: Qt.createComponent("LauncherStyle.qml", launcherContainer)
-
-    FluidCore.Settings {
-        id: settings
-        category: "launcher"
-
-        property int alignment: LauncherAlignment.Bottom
-    }
 
     LauncherView {
         id: launcherView

@@ -27,10 +27,12 @@
 #include <QtQml/QQmlComponent>
 
 #include "declarativeplugin.h"
+#include "enums.h"
 #include "appcategories.h"
 #include "applicationsmodel.h"
 #include "launchermodel.h"
 #include "launcheritem.h"
+#include "launchersettings.h"
 #include "shellwindow.h"
 #include "notificationwindow.h"
 
@@ -41,6 +43,9 @@ void registerQmlTypes()
     qmlRegisterType<LauncherModel>("Hawaii.Shell.Desktop", 0, 1, "LauncherModel");
     qmlRegisterUncreatableType<LauncherItem>("Hawaii.Shell.Desktop", 0, 1, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
+    qmlRegisterType<LauncherSettings>("Hawaii.Shell.Desktop", 0, 1, "LauncherSettings");
+    qmlRegisterUncreatableType<LauncherAlignment>("Hawaii.Shell.Desktop", 0, 1, "LauncherAlignment",
+                                                  QStringLiteral("Cannot create LauncherAlignment"));
     qmlRegisterType<ShellWindow>("Hawaii.Shell.Desktop", 0, 1, "ShellWindow");
     qmlRegisterType<NotificationWindow>("Hawaii.Shell.Desktop", 0, 1, "NotificationWindow");
 }

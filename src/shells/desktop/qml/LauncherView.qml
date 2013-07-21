@@ -34,12 +34,13 @@ Item {
     id: launcher
 
     // Icon size
-    property int iconSize: settings.iconSize
+    property alias iconSize: settings.iconSize
 
     // Tile size
     property int tileSize: iconSize + (iconSize / 4)
 
-    // Orientation
+    // Orientation and alignment
+    property alias alignment: settings.alignment
     property alias orientation: view.orientation
 
     // Number of items
@@ -50,11 +51,8 @@ Item {
     onUrlDropped: visualModel.model.pinUrl(url)
 */
 
-    FluidCore.Settings {
+    LauncherSettings {
         id: settings
-        category: "launcher"
-
-        property int iconSize: 64
     }
 
     LauncherModel {
@@ -288,7 +286,6 @@ Item {
 
     VisualDataModel {
         id: visualModel
-
         model: ListAggregatorModel { id: items }
         delegate: dragDelegate
     }
@@ -296,7 +293,6 @@ Item {
     ListView {
         id: view
         anchors.fill: parent
-
         focus: true
         model: visualModel
         cacheBuffer: 10000
@@ -306,12 +302,10 @@ Item {
             height: tileSize
             onCheckedChanged: root.appChooser.visible = checked
         }
-
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 400 }
             NumberAnimation { property: "scale"; from: 0.0; to: 1.0; duration: 400 }
         }
-
         displaced: Transition {
             NumberAnimation { properties: "x,y"; duration: 400; easing.type: Easing.OutBounce }
         }
