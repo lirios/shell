@@ -27,13 +27,23 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import Hawaii.Shell.Desktop 0.1
-import FluidUi 0.2 as FluidUi
 
 Item {
     id: launcher
 
     // Icon size
-    property alias iconSize: settings.iconSize
+    property int iconSize: {
+        switch (settings.iconSize) {
+        case LauncherSettings.SmallIconSize:
+            return 32;
+        case LauncherSettings.MediumIconSize:
+            return 48;
+        case LauncherSettings.LargeIconSize:
+            return 64;
+        case LauncherSettings.HugeIconSize:
+            return 96;
+        }
+    }
 
     // Tile size
     property int tileSize: iconSize + (iconSize / 4)
@@ -54,11 +64,6 @@ Item {
         id: settings
     }
 
-    LauncherModel {
-        id: launcherModel
-        objectName: "launcherModel"
-    }
-
     // Launcher view delegate
     Component {
         id: dragDelegate
@@ -75,13 +80,15 @@ Item {
             drag.target: held ? tile : undefined
             drag.axis: Drag.XandYAxis
 
-            onPressed: held = item.draggable
-            onPressAndHold: held = item.draggable
+            onPressed: held = model.draggable
+            onPressAndHold: held = model.draggable
             onReleased: held = false
             onClicked: {
-                if (mouse.button == Qt.LeftButton) {
+                var item = launcherModel.get(ListView.currentIndex);
+
+                if (mouse.button === Qt.LeftButton)
                     item.activate();
-                } else if (mouse.button == Qt.MidButton)
+                else if (mouse.button === Qt.MidButton)
                     item.launchNewInstance();
             }
 
@@ -108,22 +115,20 @@ Item {
 
             Item {
                 id: tile
-
                 anchors.fill: dragArea
                 opacity: dragArea.held ? 0.5 : 1.0
 
                 Image {
                     id: icon
-
                     anchors {
-                        top: parent.top
                         left: parent.left
-                        right: parent.right
+                        top: parent.top
+                        margins: (tileSize - iconSize) / 2
                     }
-                    anchors.margins: (tileSize - iconSize) / 2
-                    smooth: true
-                    source: "image://desktoptheme/" + (item.iconName ? item.iconName : "unknown")
-                    sourceSize: Qt.size(iconSize, iconSize)
+                    source: "image://desktoptheme/" + (model.iconName ? model.iconName : "unknown")
+                    sourceSize: Qt.size(width, height)
+                    width: iconSize
+                    height: iconSize
                     scale: 1.0
 
                     Behavior on width {
@@ -151,7 +156,7 @@ Item {
 
                     mirror: Qt.application.layoutDirection == Qt.RightToLeft
                     source: "qrc:///images/launcher_dot.png"
-                    visible: item.running && !dragArea.held
+                    visible: model.running && !dragArea.held
 
                     states: [
                         State {
@@ -213,7 +218,7 @@ Item {
                         GradientStop { position: 0.0; color: "#ffabab" }
                         GradientStop { position: 1.0; color: "#ff0000" }
                     }
-                    visible: item.counterVisible && item.counter >= 0
+                    visible: model.counterVisible && model.counter >= 0
 
                     Label {
                         id: counterText
@@ -227,7 +232,7 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         // TODO: Color from theme
                         color: "white"
-                        text: item.counter
+                        text: model.counter
                     }
 
                     Component.onCompleted: {
@@ -273,7 +278,7 @@ Item {
                     /*
                     if (dragArea.VisualDataModel.itemsIndex == 0)
                         return;
-*/
+                    */
 
                     visualModel.items.move(
                                 drag.source.VisualDataModel.itemsIndex,
@@ -285,7 +290,9 @@ Item {
 
     VisualDataModel {
         id: visualModel
-        model: ListAggregatorModel { id: items }
+        model: LauncherModel {
+            id: launcherModel
+        }
         delegate: dragDelegate
     }
 
@@ -302,15 +309,11 @@ Item {
             onCheckedChanged: root.appChooser.visible = checked
         }
         add: Transition {
-            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 400 }
-            NumberAnimation { property: "scale"; from: 0.0; to: 1.0; duration: 400 }
+            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
+            NumberAnimation { property: "scale"; from: 0.0; to: 1.0; duration: 150 }
         }
         displaced: Transition {
-            NumberAnimation { properties: "x,y"; duration: 400; easing.type: Easing.OutBounce }
+            NumberAnimation { properties: "x,y"; duration: 250; easing.type: Easing.OutBounce }
         }
-    }
-
-    Component.onCompleted: {
-        items.appendModel(launcherModel);
     }
 }
