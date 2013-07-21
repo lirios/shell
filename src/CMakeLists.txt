@@ -1,4 +1,4 @@
-if(GreenIsland_FOUND)
+if(GreenIsland_FOUND AND Qt5Compositor_FOUND)
     add_subdirectory(compositors)
 endif()
 add_subdirectory(declarative)

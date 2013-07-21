@@ -57,7 +57,7 @@ find_package(Qt5 5.1.0 REQUIRED COMPONENTS DBus Qml Quick AccountsService)
 # Find GreenIsland
 find_package(GreenIsland)
 if(GreenIsland_FOUND)
-    find_package(Qt5Compositor REQUIRED)
+    find_package(Qt5Compositor)
 endif()
 
 # Find pkg-config
