@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Window 1.0
+import Hawaii.Shell.Desktop 0.1
 
 QtObject {
     id: root
@@ -59,15 +60,15 @@ QtObject {
 
     function moveAppChooser() {
         switch (launcher.alignment) {
-        case LauncherAlignment.Left:
+        case LauncherSettings.LeftAlignment:
             appChooser.x = launcher.width;
             appChooser.y = panel.height;
             break;
-        case LauncherAlignment.Right:
+        case LauncherSettings.RightAlignment:
             appChooser.x = launcher.x - appChooser.width;
             appChooser.y = panel.height;
             break;
-        case LauncherAlignment.Bottom:
+        case LauncherSettings.BottomAlignment:
             appChooser.x = launcher.x;
             appChooser.y = launcher.y - appChooser.height;
             break;
@@ -80,13 +81,13 @@ QtObject {
         root.availableGeometry.y = panel.height;
 
         switch (launcher.alignment) {
-        case LauncherAlignment.Left:
+        case LauncherSettings.LeftAlignment:
             root.availableGeometry.x = launcher.width;
             break;
-        case LauncherAlignment.Right:
+        case LauncherSettings.RightAlignment:
             root.availableGeometry.width -= launcher.width;
             break;
-        case LauncherAlignment.Bottom:
+        case LauncherSettings.BottomAlignment:
             root.availableGeometry.height -= launcher.height;
             break;
         }

@@ -53,8 +53,6 @@ void registerQmlTypes()
     qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
 
     // Enums
-    qmlRegisterUncreatableType<LauncherAlignment>(uri, 0, 1, "LauncherAlignment",
-                                                  QStringLiteral("Cannot create LauncherAlignment"));
     qmlRegisterUncreatableType<UserStatus>(uri, 0, 1, "UserStatus",
                                            QStringLiteral("Cannot create UserStatus"));
 }

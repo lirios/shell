@@ -34,8 +34,8 @@ Window {
     color: "transparent"
     x: {
         switch (launcher.alignment) {
-        case LauncherAlignment.Left:
-        case LauncherAlignment.Bottom:
+        case LauncherSettings.LeftAlignment:
+        case LauncherSettings.BottomAlignment:
             return 0;
         default:
             return Screen.width - launcher.size;
@@ -43,8 +43,8 @@ Window {
     }
     y: {
         switch (launcher.alignment) {
-        case LauncherAlignment.Left:
-        case LauncherAlignment.Right:
+        case LauncherSettings.LeftAlignment:
+        case LauncherSettings.RightAlignment:
             return 24;
         default:
             return Screen.height - launcher.size;
@@ -52,8 +52,8 @@ Window {
     }
     width: {
         switch (launcher.alignment) {
-        case LauncherAlignment.Left:
-        case LauncherAlignment.Right:
+        case LauncherSettings.LeftAlignment:
+        case LauncherSettings.RightAlignment:
             return launcher.size;
         default:
             return Screen.width;
@@ -61,8 +61,8 @@ Window {
     }
     height: {
         switch (launcher.alignment) {
-        case LauncherAlignment.Left:
-        case LauncherAlignment.Left:
+        case LauncherSettings.LeftAlignment:
+        case LauncherSettings.LeftAlignment:
             return Screen.height - 24;
         default:
             return launcher.size;

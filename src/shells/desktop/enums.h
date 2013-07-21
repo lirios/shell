@@ -29,18 +29,6 @@
 
 #include <QtCore/QObject>
 
-class LauncherAlignment : public QObject
-{
-    Q_OBJECT
-    Q_ENUMS(Alignment)
-public:
-    enum Alignment {
-        Left = 0,
-        Right,
-        Bottom
-    };
-};
-
 class UserStatus : public QObject
 {
     Q_OBJECT

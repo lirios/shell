@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import Hawaii.Shell.Styles 0.1
+import Hawaii.Shell.Desktop 0.1
 
 StyledItem {
     id: launcherContainer
@@ -56,7 +57,7 @@ StyledItem {
         }
         orientation: {
             switch (alignment) {
-            case LauncherAlignment.Bottom:
+            case LauncherSettings.BottomAlignment:
                 return ListView.Horizontal;
             default:
                 return ListView.Vertical;
