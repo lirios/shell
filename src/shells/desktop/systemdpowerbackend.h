@@ -39,6 +39,8 @@ public:
 
     static QString service();
 
+    QString name() const;
+
     PowerCapabilities capabilities() const;
 
     void powerOff();

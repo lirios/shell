@@ -48,6 +48,11 @@ SystemdPowerBackend::~SystemdPowerBackend()
     delete m_interface;
 }
 
+QString SystemdPowerBackend::name() const
+{
+    return QStringLiteral("systemd");
+}
+
 PowerCapabilities SystemdPowerBackend::capabilities() const
 {
     PowerCapabilities caps = PowerCapability::None;

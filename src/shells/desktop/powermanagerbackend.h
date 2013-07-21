@@ -47,6 +47,8 @@ public:
     explicit PowerManagerBackend();
     virtual ~PowerManagerBackend();
 
+    virtual QString name() const = 0;
+
     virtual PowerCapabilities capabilities() const = 0;
 
     virtual void powerOff() = 0;

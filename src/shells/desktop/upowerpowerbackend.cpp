@@ -49,6 +49,11 @@ UPowerPowerBackend::~UPowerPowerBackend()
     delete m_interface;
 }
 
+QString UPowerPowerBackend::name() const
+{
+    return QStringLiteral("upower");
+}
+
 PowerCapabilities UPowerPowerBackend::capabilities() const
 {
     PowerCapabilities caps = PowerCapability::None;
