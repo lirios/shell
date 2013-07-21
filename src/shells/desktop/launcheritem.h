@@ -47,7 +47,7 @@ class LauncherItem : public QObject
     Q_PROPERTY(bool removable READ isRemovable NOTIFY removableChanged)
     Q_PROPERTY(bool counterVisible READ isCounterVisible NOTIFY counterVisibleChanged)
     Q_PROPERTY(int counter READ counter NOTIFY counterChanged)
-    Q_ENUMS(ItemType)
+    Q_ENUMS(Type)
 public:
     enum Type {
         ApplicationItem,

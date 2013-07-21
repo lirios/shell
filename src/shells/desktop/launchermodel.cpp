@@ -57,7 +57,7 @@ QHash<int, QByteArray> LauncherModel::roleNames() const
     roles[IsActiveRole] = "active";
     roles[IsRunningRole] = "running";
     roles[IsUrgenteRole] = "urgent";
-    roles[IsDraggableRole] = "drraggable";
+    roles[IsDraggableRole] = "draggable";
     roles[IsEditableRole] = "editable";
     roles[IsRemovableRole] = "removable";
     roles[IsCounterVisibleRole] = "counterVisible";
