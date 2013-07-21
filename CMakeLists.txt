@@ -15,7 +15,7 @@ set(HAWAII_VERSION_PATCH 90)
 set(HAWAII_VERSION_STRING "${HAWAII_VERSION_MAJOR}.${HAWAII_VERSION_MINOR}.${HAWAII_VERSION_PATCH}")
 
 # Installation directories
-include(HawaiiInstallDirs)
+include(GNUInstallDirs)
 
 # Log features
 include(MacroLogFeature)
