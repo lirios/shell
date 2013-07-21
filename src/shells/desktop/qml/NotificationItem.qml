@@ -26,7 +26,6 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
-import GreenIsland 1.0
 import Hawaii.Shell.Desktop 0.1
 import FluidExtra 0.2 as FluidExtra
 

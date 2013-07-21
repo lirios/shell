@@ -26,7 +26,6 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
-import GreenIsland 1.0
 import QtAccountsService 5.0
 
 PanelIndicator {

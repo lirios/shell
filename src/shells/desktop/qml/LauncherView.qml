@@ -26,11 +26,11 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
-import GreenIsland 1.0
+import Hawaii.Shell.Desktop 0.1
 import FluidCore 0.2 as FluidCore
 import FluidUi 0.2 as FluidUi
 
-LauncherDropItem {
+Item {
     id: launcher
 
     // Icon size
@@ -45,8 +45,10 @@ LauncherDropItem {
     // Number of items
     property alias count: view.count
 
+/*
     onApplicationDropped: visualModel.model.pinApplication(path)
     onUrlDropped: visualModel.model.pinUrl(url)
+*/
 
     FluidCore.Settings {
         id: settings

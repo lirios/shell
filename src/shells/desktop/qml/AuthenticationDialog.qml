@@ -27,7 +27,6 @@
 import QtQuick 2.0
 import FluidCore 0.2 as FluidCore
 import FluidUi 0.2 as FluidUi
-import GreenIsland 1.0
 
 ModalDialog {
     property string actionId
