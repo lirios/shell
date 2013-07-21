@@ -25,33 +25,24 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidCore 0.2 as FluidCore
 
 Item {
-    FluidCore.Settings {
+    BackgroundSettings {
         id: settings
-        category: "background"
-
-        property string backgroundType: "color"
-        property color primaryColor: "#336699"
-        property color secondaryColor: "#2e5d8c"
-        property string colorShadingType: "solid"
-        property url wallpaperUrl
-
-        onBackgroundTypeChanged: {
-            switch (backgroundType) {
-            case "color":
-                switch (colorShadingType) {
-                case "solid":
+        onTypeChanged: {
+            switch (type) {
+            case BackgroundSettings.ColorBackground:
+                switch (colorShading) {
+                case BackgroundSettings.SolidColorShading:
                     solidAnimation.start();
                     break;
-                case "horizontal":
-                case "vertical":
+                case BackgroundSettings.HorizontalColorShading:
+                case BackgroundSettings.VerticalColorShading:
                     gradientAnimation.start();
                     break;
                 }
                 break;
-            case "wallpaper":
+            case BackgroundSettings.WallpaperBackground:
                 wallpaperAnimation.start();
                 break;
             default:
@@ -65,13 +56,13 @@ Item {
         id: solid
         anchors.fill: parent
         color: settings.primaryColor
-        opacity: settings.backgroundType == "color" ? 1.0 : 0.0
+        opacity: settings.type == BackgroundSettings.ColorBackground ? 1.0 : 0.0
     }
 
     Rectangle {
         id: gradient
         anchors.fill: parent
-        opacity: settings.backgroundType == "color" && settings.colorShadingType != "solid" ? 1.0 : 00
+        opacity: settings.type == BackgroundSettings.ColorBackground && settings.colorShading != BackgroundSettings.SolidColorShading ? 1.0 : 00
 
         Gradient {
             GradientStop {
@@ -90,7 +81,7 @@ Item {
         anchors.fill: parent
         source: settings.wallpaperUrl
         smooth: true
-        opacity: settings.backgroundType == "wallpaper" ? 1.0 : 0.0
+        opacity: settings.type == BackgroundSettings.WallpaperBackground ? 1.0 : 0.0
     }
 
     SequentialAnimation {

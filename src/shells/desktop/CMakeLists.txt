@@ -18,6 +18,7 @@ set(SOURCES
     notificationsimage.cpp
     notificationwindow.cpp
     launchersettings.cpp
+    backgroundsettings.cpp
     launchermodel.cpp
     launcheritem.cpp
     appcategories.cpp

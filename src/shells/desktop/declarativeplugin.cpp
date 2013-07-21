@@ -33,6 +33,7 @@
 #include "launchermodel.h"
 #include "launcheritem.h"
 #include "launchersettings.h"
+#include "backgroundsettings.h"
 #include "shellwindow.h"
 #include "notificationwindow.h"
 
@@ -47,6 +48,7 @@ void registerQmlTypes()
     qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
     qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
+    qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
     qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
 
