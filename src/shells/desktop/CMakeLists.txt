@@ -38,7 +38,11 @@ qt5_add_dbus_adaptor(SOURCES
     ${CMAKE_SOURCE_DIR}/data/interfaces/org.freedesktop.Notifications.xml
     notificationsdaemon.h NotificationsDaemon)
 
-kconfig_add_kcfg_files(SOURCES ${CMAKE_SOURCE_DIR}/data/settings/launchersettings.kcfgc)
+set(KCFG_FILES
+    ${CMAKE_SOURCE_DIR}/data/settings/launchersettings.kcfgc
+    ${CMAKE_BINARY_DIR}/data/settings/hawaiisettings.kcfgc
+)
+kconfig_add_kcfg_files(SOURCES ${KCFG_FILES})
 
 add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
 qt5_use_modules(hawaii-desktop-shell Quick Widgets AccountsService Xdg)

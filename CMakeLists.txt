@@ -91,6 +91,7 @@ find_package(KCoreAddons REQUIRED)
 find_package(KConfig REQUIRED)
 
 # Subdirectories
+add_subdirectory(data)
 add_subdirectory(headers)
 add_subdirectory(scripts)
 add_subdirectory(src)
