@@ -40,14 +40,19 @@ void registerQmlTypes()
 {
     const char *uri = "Hawaii.Shell.Desktop";
 
+    // Types
     qmlRegisterType<AppCategories>(uri, 0, 1, "XdgCategoriesModel");
     qmlRegisterType<ApplicationsModelSorted>(uri, 0, 1, "ApplicationsModel");
     qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
     qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
     qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
-    qmlRegisterUncreatableType<LauncherAlignment>(uri, 0, 1, "LauncherAlignment",
-                                                  QStringLiteral("Cannot create LauncherAlignment"));
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
     qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
+
+    // Enums
+    qmlRegisterUncreatableType<LauncherAlignment>(uri, 0, 1, "LauncherAlignment",
+                                                  QStringLiteral("Cannot create LauncherAlignment"));
+    qmlRegisterUncreatableType<UserStatus>(uri, 0, 1, "UserStatus",
+                                           QStringLiteral("Cannot create UserStatus"));
 }

@@ -41,4 +41,21 @@ public:
     };
 };
 
+class UserStatus : public QObject
+{
+    Q_OBJECT
+    Q_ENUMS(Status)
+public:
+    enum Status {
+        Offline = 0,
+        Available,
+        Busy,
+        Invisible,
+        Away,
+        Idle,
+        Pending,
+        Locked
+    };
+};
+
 #endif // ENUMS_H
