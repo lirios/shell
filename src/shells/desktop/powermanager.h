@@ -29,17 +29,30 @@
 
 #include <QtCore/QObject>
 
-#include "powermanagerbackend.h"
+class PowerManagerBackend;
 
 class PowerManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(PowerCapabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
+    Q_ENUMS(Capability)
+    Q_PROPERTY(Capabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
 public:
+    enum Capability {
+        None = 0x00,
+        PowerOff = 0x01,
+        Restart = 0x02,
+        Suspend = 0x04,
+        Hibernate = 0x08,
+        HybridSleep = 0x10
+    };
+
+    Q_DECLARE_FLAGS(Capabilities, Capability)
+    Q_FLAGS(Capabilities)
+
     explicit PowerManager(QObject *parent = 0);
     ~PowerManager();
 
-    PowerCapabilities capabilities() const;
+    Capabilities capabilities() const;
 
 Q_SIGNALS:
     void capabilitiesChanged();
@@ -56,7 +69,12 @@ private Q_SLOTS:
     void serviceUnregistered(const QString &service);
 
 private:
+    Q_DISABLE_COPY(PowerManager)
+
     QList<PowerManagerBackend *> m_backends;
 };
+
+Q_DECLARE_METATYPE(PowerManager *)
+Q_DECLARE_OPERATORS_FOR_FLAGS(PowerManager::Capabilities)
 
 #endif // POWERMANAGER_H

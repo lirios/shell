@@ -41,7 +41,7 @@ public:
 
     QString name() const;
 
-    PowerCapabilities capabilities() const;
+    PowerManager::Capabilities capabilities() const;
 
     void powerOff();
     void restart();

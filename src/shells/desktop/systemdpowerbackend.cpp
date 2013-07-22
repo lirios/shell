@@ -53,31 +53,31 @@ QString SystemdPowerBackend::name() const
     return QStringLiteral("systemd");
 }
 
-PowerCapabilities SystemdPowerBackend::capabilities() const
+PowerManager::Capabilities SystemdPowerBackend::capabilities() const
 {
-    PowerCapabilities caps = PowerCapability::None;
+    PowerManager::Capabilities caps = PowerManager::None;
 
     QDBusReply<QString> reply;
 
     reply = m_interface->call(QStringLiteral("CanPowerOff"));
     if (reply.isValid() && reply.value() == QStringLiteral("yes"))
-        caps |= PowerCapability::PowerOff;
+        caps |= PowerManager::PowerOff;
 
     reply = m_interface->call(QStringLiteral("CanReboot"));
     if (reply.isValid() && reply.value() == QStringLiteral("yes"))
-        caps |= PowerCapability::Restart;
+        caps |= PowerManager::Restart;
 
     reply = m_interface->call(QStringLiteral("CanSuspend"));
     if (reply.isValid() && reply.value() == QStringLiteral("yes"))
-        caps |= PowerCapability::Suspend;
+        caps |= PowerManager::Suspend;
 
     reply = m_interface->call(QStringLiteral("CanHibernate"));
     if (reply.isValid() && reply.value() == QStringLiteral("yes"))
-        caps |= PowerCapability::Hibernate;
+        caps |= PowerManager::Hibernate;
 
     reply = m_interface->call(QStringLiteral("CanHybridSleep"));
     if (reply.isValid() && reply.value() == QStringLiteral("yes"))
-        caps |= PowerCapability::HybridSleep;
+        caps |= PowerManager::HybridSleep;
 
     return caps;
 }

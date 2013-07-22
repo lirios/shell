@@ -29,6 +29,7 @@ import QtQuick.Window 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import FluidUi 0.2 as FluidUi
+import Hawaii.Shell.Desktop 0.1
 
 Dialog {
     id: shutdownDialog
@@ -42,6 +43,8 @@ Dialog {
     }
 
     property int timeRemaining: 60
+
+    property var powerManager: PowerManager {}
 
     ColumnLayout {
         anchors.fill: parent
@@ -107,10 +110,12 @@ Dialog {
 
             Button {
                 text: qsTr("Restart")
+                enabled: powerManager.capabilities & PowerManager.Restart
             }
 
             Button {
                 text: qsTr("Power Off")
+                enabled: powerManager.capabilities & PowerManager.PowerOff
             }
 
             Layout.alignment: Qt.AlignCenter

@@ -54,19 +54,19 @@ QString UPowerPowerBackend::name() const
     return QStringLiteral("upower");
 }
 
-PowerCapabilities UPowerPowerBackend::capabilities() const
+PowerManager::Capabilities UPowerPowerBackend::capabilities() const
 {
-    PowerCapabilities caps = PowerCapability::None;
+    PowerManager::Capabilities caps = PowerManager::None;
 
     QDBusReply<QString> reply;
 
     reply = m_interface->call(QStringLiteral("SuspendAllowed"));
     if (reply.isValid() && reply.value() == QStringLiteral("yes"))
-        caps |= PowerCapability::Suspend;
+        caps |= PowerManager::Suspend;
 
     reply = m_interface->call(QStringLiteral("HibernateAllowed"));
     if (reply.isValid() && reply.value() == QStringLiteral("yes"))
-        caps |= PowerCapability::Hibernate;
+        caps |= PowerManager::Hibernate;
 
     return caps;
 }

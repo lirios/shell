@@ -33,5 +33,3 @@ PowerManagerBackend::PowerManagerBackend()
 PowerManagerBackend::~PowerManagerBackend()
 {
 }
-
-#include "moc_powermanagerbackend.cpp"

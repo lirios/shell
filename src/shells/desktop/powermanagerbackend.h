@@ -28,20 +28,11 @@
 #define POWERMANAGERBACKEND_H
 
 #include <QtCore/QtGlobal>
+#include <QtCore/QObject>
 
-enum PowerCapability {
-    None = 0x00,
-    PowerOff = 0x01,
-    Restart = 0x02,
-    Suspend = 0x04,
-    Hibernate = 0x08,
-    HybridSleep = 0x10
-};
+#include "powermanager.h"
 
-Q_DECLARE_FLAGS(PowerCapabilities, PowerCapability)
-Q_DECLARE_OPERATORS_FOR_FLAGS(PowerCapabilities)
-
-class PowerManagerBackend
+class PowerManagerBackend : public QObject
 {
 public:
     explicit PowerManagerBackend();
@@ -49,7 +40,7 @@ public:
 
     virtual QString name() const = 0;
 
-    virtual PowerCapabilities capabilities() const = 0;
+    virtual PowerManager::Capabilities capabilities() const = 0;
 
     virtual void powerOff() = 0;
     virtual void restart() = 0;

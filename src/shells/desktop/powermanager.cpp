@@ -53,9 +53,9 @@ PowerManager::~PowerManager()
         delete m_backends.takeFirst();
 }
 
-PowerCapabilities PowerManager::capabilities() const
+PowerManager::Capabilities PowerManager::capabilities() const
 {
-    PowerCapabilities caps = PowerCapability::None;
+    PowerManager::Capabilities caps = PowerManager::None;
 
     foreach (PowerManagerBackend *backend, m_backends)
         caps |= backend->capabilities();
@@ -66,7 +66,7 @@ PowerCapabilities PowerManager::capabilities() const
 void PowerManager::powerOff()
 {
     foreach (PowerManagerBackend *backend, m_backends) {
-        if (backend->capabilities() & PowerCapability::PowerOff) {
+        if (backend->capabilities() & PowerManager::PowerOff) {
             backend->powerOff();
             return;
         }
@@ -76,7 +76,7 @@ void PowerManager::powerOff()
 void PowerManager::restart()
 {
     foreach (PowerManagerBackend *backend, m_backends) {
-        if (backend->capabilities() & PowerCapability::Restart) {
+        if (backend->capabilities() & PowerManager::Restart) {
             backend->restart();
             return;
         }
@@ -86,7 +86,7 @@ void PowerManager::restart()
 void PowerManager::suspend()
 {
     foreach (PowerManagerBackend *backend, m_backends) {
-        if (backend->capabilities() & PowerCapability::Suspend) {
+        if (backend->capabilities() & PowerManager::Suspend) {
             backend->suspend();
             return;
         }
@@ -96,7 +96,7 @@ void PowerManager::suspend()
 void PowerManager::hibernate()
 {
     foreach (PowerManagerBackend *backend, m_backends) {
-        if (backend->capabilities() & PowerCapability::Hibernate) {
+        if (backend->capabilities() & PowerManager::Hibernate) {
             backend->hibernate();
             return;
         }
@@ -106,7 +106,7 @@ void PowerManager::hibernate()
 void PowerManager::hybridSleep()
 {
     foreach (PowerManagerBackend *backend, m_backends) {
-        if (backend->capabilities() & PowerCapability::HybridSleep) {
+        if (backend->capabilities() & PowerManager::HybridSleep) {
             backend->hybridSleep();
             return;
         }
