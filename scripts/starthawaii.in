@@ -33,6 +33,14 @@ test -n "$uxtype" || {
     uxtype="desktop"
 }
 
+# Make sure our library path is set
+if test -n "$LD_LIBRARY_PATH"; then
+    LD_LIBRARY_PATH="@CMAKE_INSTALL_FULL_LIBDIR@:$LD_LIBRARY_PATH"
+else
+    LD_LIBRARY_PATH="@CMAKE_INSTALL_FULL_LIBDIR@"
+fi
+export LD_LIBRARY_PATH
+
 # Make sure we find Hawaii executables
 if test -n "$PATH"; then
     PATH="@CMAKE_INSTALL_FULL_BINDIR@:$PATH"
