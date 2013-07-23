@@ -46,10 +46,14 @@ fi
 export LD_LIBRARY_PATH
 
 # Make sure we find Hawaii executables
+_bindir="@CMAKE_INSTALL_FULL_BINDIR@"
+if test -n "@ADDITIONAL_PATH@"; then
+    _bindir="$_bindir:@ADDITIONAL_PATH@"
+fi
 if test -n "$PATH"; then
-    PATH="@CMAKE_INSTALL_FULL_BINDIR@:$PATH"
+    PATH="$_bindir:$PATH"
 else
-    PATH="@CMAKE_INSTALL_FULL_BINDIR@:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin"
+    PATH="$_bindir:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin"
 fi
 export PATH
 

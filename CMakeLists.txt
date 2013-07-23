@@ -55,6 +55,9 @@ endif()
 # this is useful when Qt is installed in a special location
 set(ADDITIONAL_LDLIBPATH "" CACHE STRING "Additional library path that starthawaii will use")
 
+# Same for PATH
+set(ADDITIONAL_PATH "" CACHE STRING "Additional path that starthawaii will use")
+
 # Find Qt5
 find_package(Qt5 5.1.0 REQUIRED COMPONENTS DBus Qml Quick AccountsService Xdg)
 
