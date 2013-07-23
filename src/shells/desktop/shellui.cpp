@@ -37,6 +37,7 @@
 
 #include "shellui.h"
 #include "waylandintegration.h"
+#include "applicationiconprovider.h"
 
 ShellUi::ShellUi(QScreen *screen, QObject *parent)
     : QObject(parent)
@@ -57,6 +58,7 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
 
     // QML engine
     m_engine = new QQmlEngine(this);
+    m_engine->addImageProvider("appicon", new ApplicationIconProvider);
 
     // Load QML component
     m_component = new QQmlComponent(m_engine, this);

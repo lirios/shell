@@ -9,6 +9,7 @@ include_directories(
 set(SOURCES
     main.cpp
     enums.cpp
+    applicationiconprovider.cpp
     declarativeplugin.cpp
     desktopshell.cpp
     shellwindow.cpp
