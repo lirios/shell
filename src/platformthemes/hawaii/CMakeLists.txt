@@ -10,4 +10,4 @@ set_target_properties(hawaii PROPERTIES PREFIX "")
 qt5_use_modules(hawaii Gui)
 
 install(TARGETS hawaii LIBRARY
-    DESTINATION ${CMAKE_INSTALL_PLUGINSDIR}/platformthemes)
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/hawaii/plugins/platformthemes)

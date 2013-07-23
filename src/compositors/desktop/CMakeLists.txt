@@ -40,4 +40,4 @@ target_link_libraries(desktop
 )
 
 install(TARGETS desktop
-    DESTINATION ${CMAKE_INSTALL_PLUGINSDIR}/greenisland/compositors)
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/hawaii/plugins/greenisland/compositors)

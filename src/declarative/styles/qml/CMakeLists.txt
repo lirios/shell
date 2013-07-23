@@ -4,4 +4,4 @@ set(MODULE_FILES
     StyledItem.qml
 )
 install(FILES ${MODULE_FILES}
-    DESTINATION ${CMAKE_INSTALL_QMLDIR}/Hawaii/Shell/Styles)
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/hawaii/qml/Hawaii/Shell/Styles)
