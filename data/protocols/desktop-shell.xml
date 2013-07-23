@@ -1,5 +1,5 @@
 <protocol name="desktop">
-  <interface name="hawaii_desktop_shell" version="1">
+  <interface name="hawaii_desktop_shell" version="2">
     <description summary="create desktop widgets and helpers">
       Traditional user interfaces can rely on this interface to define the
       foundations of typical desktops. Currently it's possible to set up
@@ -83,6 +83,17 @@
 	the grab_cursor event sent just before the enter event.
       </description>
       <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
+    <request name="desktop_ready">
+      <description summary="desktop is ready to be shown">
+	Tell the server, that enough desktop elements have been drawn
+	to make the desktop look ready for use. During start-up, the
+	server can wait for this request with a black screen before
+	starting to fade in the desktop, for instance. If the client
+	parts of a desktop take a long time to initialize, we avoid
+	showing temporary garbage.
+      </description>
     </request>
 
     <event name="present">
