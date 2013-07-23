@@ -34,10 +34,14 @@ test -n "$uxtype" || {
 }
 
 # Make sure our library path is set
+_libdir="@CMAKE_INSTALL_FULL_LIBDIR@"
+if test -n "@ADDITIONAL_LDLIBPATH@"; then
+    _libdir="$_libdir:@ADDITIONAL_LDLIBPATH@"
+fi
 if test -n "$LD_LIBRARY_PATH"; then
-    LD_LIBRARY_PATH="@CMAKE_INSTALL_FULL_LIBDIR@:$LD_LIBRARY_PATH"
+    LD_LIBRARY_PATH="$_libdir:$LD_LIBRARY_PATH"
 else
-    LD_LIBRARY_PATH="@CMAKE_INSTALL_FULL_LIBDIR@"
+    LD_LIBRARY_PATH="$_libdir"
 fi
 export LD_LIBRARY_PATH
 
