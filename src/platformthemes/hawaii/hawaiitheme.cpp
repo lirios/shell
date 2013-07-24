@@ -62,7 +62,7 @@ const QPalette *HawaiiTheme::palette(Palette type) const
 
 const QFont *HawaiiTheme::font(Font type) const
 {
-    QString fontName = QStringLiteral("DejaVu");
+    QString fontName = QStringLiteral("DejaVu Sans");
     int fontSize = 11;
 
     switch (type) {
