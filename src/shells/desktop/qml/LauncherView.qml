@@ -84,7 +84,7 @@ Item {
             onPressAndHold: held = model.draggable
             onReleased: held = false
             onClicked: {
-                var item = launcherModel.get(ListView.currentIndex);
+                var item = launcherModel.get(index);
 
                 if (mouse.button === Qt.LeftButton)
                     item.activate();
