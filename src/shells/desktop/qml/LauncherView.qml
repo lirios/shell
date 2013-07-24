@@ -304,6 +304,11 @@ Item {
         cacheBuffer: 10000
         interactive: false
         header: AppChooserButton {
+            Connections {
+                target: root.appChooser
+                onVisibleChanged: checked = root.appChooser.visible
+            }
+
             width: tileSize
             height: tileSize
             onCheckedChanged: root.appChooser.visible = checked
