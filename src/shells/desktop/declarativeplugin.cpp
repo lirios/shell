@@ -44,7 +44,7 @@ void registerQmlTypes()
 
     // Types
     qmlRegisterType<AppCategories>(uri, 0, 1, "XdgCategoriesModel");
-    qmlRegisterType<ApplicationsModelSorted>(uri, 0, 1, "ApplicationsModel");
+    qmlRegisterType<ApplicationsModel>(uri, 0, 1, "ApplicationsModel");
     qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
     qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
