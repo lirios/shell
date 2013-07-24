@@ -26,6 +26,8 @@
 
 #include <QtQml/QQmlComponent>
 
+#include <QtXdg/QApplicationInfo>
+
 #include "declarativeplugin.h"
 #include "enums.h"
 #include "appcategories.h"
@@ -48,6 +50,8 @@ void registerQmlTypes()
     qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
     qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
+    qmlRegisterUncreatableType<QApplicationInfo>(uri, 0, 1, "ApplicationInfo",
+                                             QStringLiteral("Cannot create ApplicationInfo"));
     qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
     qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
     qmlRegisterType<PowerManager>(uri, 0, 1, "PowerManager");

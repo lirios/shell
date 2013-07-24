@@ -31,7 +31,7 @@ import Hawaii.Shell.Styles 0.1
 import Hawaii.Shell.Desktop 0.1
 
 Item {
-    id: root
+    id: appChooser
 
     ColumnLayout {
         anchors {
@@ -101,8 +101,8 @@ Item {
                             onClicked: {
                                 // Launch the application and close the AppChooser
                                 var item = appsModel.get(visualIndex);
-                                item.launchNewInstance();
                                 root.appChooser.visible = false;
+                                item.launch();
                             }
                         }
                     }
