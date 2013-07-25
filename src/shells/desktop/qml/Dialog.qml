@@ -24,35 +24,89 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
+import QtQuick 2.0
+import QtQuick.Window 2.0
 import Hawaii.Shell.Desktop 0.1
 import Hawaii.Shell.Styles 0.1
 
 ShellWindow {
+    id: dialogWindow
     color: "transparent"
-    width: 450
-    height: 250
-
-    property bool modal: false
 
     default property alias content: container.children
 
-    StyledItem {
+    Item {
         id: root
         anchors.fill: parent
-        style: Qt.createComponent(modal ? "ModalDialogStyle.qml" : "DialogStyle.qml", root)
+        opacity: dialogWindow.visible ? 1.0 : 0.0
 
-        Item {
-            id: container
-            anchors {
-                fill: parent
-                leftMargin: parent.__style.padding.left + 11
-                topMargin: parent.__style.padding.top + 11
-                rightMargin: parent.__style.padding.right + 11
-                bottomMargin: parent.__style.padding.bottom + 11
+        property Component style: Qt.createComponent("DialogStyle.qml", root)
+
+        property QtObject __style: styleLoader.item
+
+        Behavior on opacity {
+            NumberAnimation { duration: 250; easing.type: Easing.OutQuad }
+        }
+
+        Loader {
+            id: backgroundLoader
+            anchors.fill: parent
+            sourceComponent: root.__style ? root.__style.background : null
+            onStatusChanged: {
+                if (status === Loader.Error)
+                    console.error("Failed to load Style for", root);
+            }
+            onLoaded: item.z = -1
+
+            Loader {
+                property Item contentItem: container
+
+                id: dialogLoader
+                anchors.centerIn: parent
+                sourceComponent: root.__style ? root.__style.dialog : null
+                onStatusChanged: {
+                    if (status === Loader.Error)
+                        console.error("Failed to load Style for", root);
+                }
+                onLoaded: {
+                    item.z = 0;
+                    item.width = Math.max(container.implicitWidth, container.width) +
+                            root.__style.padding.left + root.__style.padding.right;
+                    item.height = Math.max(container.implicitHeight, container.height) +
+                            root.__style.padding.top + root.__style.padding.bottom;
+                }
+
+                Item {
+                    property Item layoutItem: container.children.length === 1 ? container.children[0] : null
+
+                    id: container
+                    anchors.fill: parent
+                    anchors.leftMargin: root.__style.padding.left
+                    anchors.topMargin: root.__style.padding.top
+                    anchors.rightMargin: root.__style.padding.right
+                    anchors.bottomMargin: root.__style.padding.bottom
+                    z: 1
+                    focus: true
+                    implicitWidth: container.childrenRect.width
+                    implicitHeight: container.childrenRect.height
+                }
+
+                Loader {
+                    property Item __item: root
+
+                    id: styleLoader
+                    sourceComponent: root.style
+                    onStatusChanged: {
+                        if (status === Loader.Error)
+                            console.error("Failed to load Style for", root);
+                    }
+                }
             }
         }
+    }
+
+    Component.onCompleted: {
+        dialogWindow.width = Screen.width;
+        dialogWindow.height = Screen.height;
     }
 }

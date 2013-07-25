@@ -32,8 +32,6 @@ import Hawaii.Shell.Desktop 0.1
 
 Dialog {
     id: shutdownDialog
-    width: 425
-    height: 220
     onVisibleChanged: {
         if (visible) {
             shutdownTimer.restart();
@@ -45,12 +43,11 @@ Dialog {
 
     property var powerManager: PowerManager {}
 
-    ColumnLayout {
-        anchors.fill: parent
+    property var palette: SystemPalette {}
 
-        SystemPalette {
-            id: palette
-        }
+    ColumnLayout {
+        width: Math.max(childrenRect.width, 320)
+        height: Math.max(childrenRect.height, 135)
 
         RowLayout {
             FluidUi.Icon {

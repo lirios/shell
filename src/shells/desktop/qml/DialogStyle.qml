@@ -30,21 +30,24 @@ import Hawaii.Shell.Styles 0.1
 
 Style {
     property int shadowSize: 8
+    property int borderSize: 4
 
     padding {
-        left: shadowSize
-        top: shadowSize
-        right: shadowSize
-        bottom: shadowSize
+        left: shadowSize + borderSize
+        top: shadowSize + borderSize
+        right: shadowSize + borderSize
+        bottom: shadowSize + borderSize
     }
 
-    property Component panel: Item {
+    property Component background: Rectangle {
+        color: "black"
+        opacity: 0.65
+    }
+
+    property Component dialog: Item {
         Rectangle {
             id: border
-            anchors {
-                fill: parent
-                margins: shadowSize
-            }
+            anchors.fill: parent
             border.color: "#999"
             radius: 6
             gradient: Gradient {
