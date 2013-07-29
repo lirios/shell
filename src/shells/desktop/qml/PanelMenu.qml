@@ -28,22 +28,18 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import Hawaii.Shell.Desktop 0.1
 
-ShellWindow {
+Popup {
     id: panelMenu
-    color: "transparent"
     width: menu.width
     height: menu.height
     visible: false
 
     default property alias content: menuContents.children
 
-    Rectangle {
+    Item {
         id: menuContainer
         width: menu.width
         height: menu.height
-        radius: 6
-        border.color: "#999"
-        color: "white"
         state: "hidden"
         enabled: panelMenu.visible
 
@@ -77,8 +73,8 @@ ShellWindow {
                         }
 
                         function resizePopupMenu() {
-                            panelMenu.width = childrenRect.width;
-                            panelMenu.height = childrenRect.height;
+                            panelMenu.width = childrenRect.width + 26;
+                            panelMenu.height = childrenRect.height + 26;
                         }
                     }
                 }
