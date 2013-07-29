@@ -107,11 +107,13 @@ Dialog {
             Button {
                 text: qsTr("Restart")
                 enabled: powerManager.capabilities & PowerManager.Restart
+                clicked: powerManager.restart()
             }
 
             Button {
                 text: qsTr("Power Off")
                 enabled: powerManager.capabilities & PowerManager.PowerOff
+                clicked: powerManager.powerOff()
             }
 
             Layout.alignment: Qt.AlignCenter
