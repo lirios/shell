@@ -35,14 +35,25 @@ ShellWindow {
 
     default property alias content: container.children
 
+    signal rejected()
+
+    onRejected: dialogWindow.visible = false
+
     Item {
         id: root
         anchors.fill: parent
         opacity: dialogWindow.visible ? 1.0 : 0.0
+        focus: true
 
         property Component style: Qt.createComponent("DialogStyle.qml", root)
 
         property QtObject __style: styleLoader.item
+
+        Keys.onReleased: {
+            // Emit the rejected signal automatically when ESC is released
+            if (event.key === Qt.Key_Escape)
+                dialogWindow.rejected();
+        }
 
         Behavior on opacity {
             NumberAnimation { duration: 250; easing.type: Easing.OutQuad }
