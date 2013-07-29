@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
+        <!-- Base components -->
+        <file>qml/Popup.qml</file>
+
         <!-- Main file -->
         <file>qml/Shell.qml</file>
 
@@ -51,6 +54,7 @@
         <file>qml/PanelIndicatorStyle.qml</file>
         <file>qml/LauncherStyle.qml</file>
         <file>qml/DialogStyle.qml</file>
+        <file>qml/PopupStyle.qml</file>
         <file>qml/AppChooserButtonStyle.qml</file>
         <file>images/noise.png</file>
     </qresource>
