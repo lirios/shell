@@ -24,26 +24,23 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick 2.0
 import Hawaii.Shell.Desktop 0.1
-import FluidExtra 0.2 as FluidExtra
+import Hawaii.Shell.Styles 0.1
 
 NotificationWindow {
     id: notification
     color: "transparent"
-    width: 240 + (padding * 2) + 2
-    height: summaryText.paintedHeight + bodyText.paintedHeight + (padding * 3) + 2
+    width: root.implicitWidth
+    height: root.implicitHeight
 
     property int identifier
     property string appName
-    property alias iconName: icon.source
-    property alias summary: summaryText.text
-    property alias body: bodyText.text
-    property alias picture: image.image
+    property string iconName
+    property string summary
+    property string body
+    property var picture: null
     property int timeout
-
-    property real padding: 10
 
     property real normalOpacity: 0.8
     property real fadeOpacity: 0.5
@@ -91,74 +88,9 @@ NotificationWindow {
     }
     */
 
-    Rectangle {
-        id: frame
-        anchors.fill: parent
-        radius: 6
-        border.color: "#999"
-        color: "white"
-
-        Item {
-            id: iconImage
-            anchors {
-                left: parent.left
-                top: parent.top
-                leftMargin: padding
-                topMargin: padding
-            }
-            width: 48
-            height: 48
-
-            Image {
-                id: icon
-                anchors.fill: parent
-                smooth: true
-                sourceSize: Qt.size(48, 48)
-                visible: icon.source !== ""
-            }
-
-            FluidExtra.ImageItem {
-                id: image
-                anchors.fill: parent
-                smooth: true
-                visible: !image.null
-            }
-        }
-
-        Label {
-            id: summaryText
-            anchors {
-                left: iconImage.right
-                top: iconImage.top
-                right: parent.right
-                leftMargin: padding
-            }
-            font.weight: Font.Bold
-            //color: "white"
-            //style: Text.Raised
-            //styleColor: "black"
-            maximumLineCount: 2
-            wrapMode: Text.Wrap
-            verticalAlignment: Text.AlignVCenter
-        }
-
-        Label {
-            id: bodyText
-            anchors {
-                left: summaryText.left
-                top: summaryText.bottom
-                right: parent.right
-                bottomMargin: padding
-            }
-            font.pointSize: summaryText.font.pointSize * 0.9
-            //color: "white"
-            //style: Text.Raised
-            //styleColor: "black"
-            textFormat: Text.StyledText
-            maximumLineCount: 20
-            wrapMode: Text.Wrap
-            //elide: Text.ElideRight
-        }
+    StyledItem {
+        id: root
+        style: Qt.createComponent("NotificationBubbleStyle.qml", root)
     }
 
     function distance(value, min, max) {
