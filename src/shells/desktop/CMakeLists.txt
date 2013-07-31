@@ -21,6 +21,7 @@ set(SOURCES
     notificationwindow.cpp
     launchersettings.cpp
     backgroundsettings.cpp
+    panelwindow.cpp
     launchermodel.cpp
     launcheritem.cpp
     appcategories.cpp

@@ -18,7 +18,6 @@
         <file>qml/Background.qml</file>
 
         <!-- Panel -->
-        <file>qml/PanelWindow.qml</file>
         <file>qml/Panel.qml</file>
         <file>qml/PanelView.qml</file>
         <file>qml/PanelIndicator.qml</file>

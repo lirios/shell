@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,18 +24,35 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Window 2.0
+#ifndef PANELWINDOW_H
+#define PANELWINDOW_H
 
-Window {
-    property alias size: panel.size
+#include <QtQuick/QQuickView>
 
-    color: "transparent"
-    width: Screen.width
-    height: Math.max(panel.height, panel.implicitHeight)
+#include <wayland-client.h>
 
-    Panel {
-        id: panel
-        anchors.fill: parent
-    }
-}
+class ShellUi;
+
+class PanelWindow : public QQuickView
+{
+    Q_OBJECT
+public:
+    PanelWindow(ShellUi *ui);
+
+    wl_surface *surface() const;
+
+public Q_SLOTS:
+    void sendGeometry();
+
+private Q_SLOTS:
+    void geometryChanged(const QRect &rect);
+    void availableGeometryChanged(const QRect &rect);
+    void resetGeometry();
+
+private:
+    wl_surface *m_surface;
+
+    void setWindowType();
+};
+
+#endif // PANELWINDOW_H

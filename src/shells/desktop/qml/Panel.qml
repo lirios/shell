@@ -31,7 +31,10 @@ StyledItem {
     id: panel
 
     // Minimum height
-    property int size: 24 * __style.dpiScaleFactor
+    property int size: 24
+
+    // Available screen geometry, set by C++
+    property rect availableGeometry
 
     style: Qt.createComponent("PanelStyle.qml", panel)
 
