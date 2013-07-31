@@ -44,6 +44,9 @@ StyledItem {
     // Number of items
     property alias count: launcherView.count
 
+    // Propagate window pointer to the view
+    property alias window: launcherView.window
+
     style: Qt.createComponent("LauncherStyle.qml", launcherContainer)
 
     LauncherView {

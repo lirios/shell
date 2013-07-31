@@ -55,13 +55,42 @@ Item {
     // Number of items
     property alias count: view.count
 
-/*
+    // Launcher window
+    property var window
+
+    // AppChooser
+    Component {
+        id: appChooserComponent
+
+        AppChooserWindow {}
+    }
+
+    Loader {
+        id: appChooserLoader
+        sourceComponent: appChooserComponent
+        onLoaded: moveAppChooser()
+    }
+
+    property alias appChooser: appChooserLoader.item
+
+    // AppChooser window follows the Launcher window when its geometry changes
+    Connections {
+        id: windowConnection
+        onXChanged: moveAppChooser()
+        onYChanged: moveAppChooser()
+        onWidthChanged: moveAppChooser()
+        onHeightChanged: moveAppChooser()
+    }
+
+    onWindowChanged: windowConnection.target = window
+    /*
     onApplicationDropped: visualModel.model.pinApplication(path)
     onUrlDropped: visualModel.model.pinUrl(url)
-*/
+    */
 
     LauncherSettings {
         id: settings
+        onAlignmentChanged: moveAppChooser()
     }
 
     // Launcher view delegate
@@ -305,13 +334,13 @@ Item {
         interactive: false
         header: AppChooserButton {
             Connections {
-                target: root.appChooser
-                onVisibleChanged: checked = root.appChooser.visible
+                target: appChooser
+                onVisibleChanged: checked = appChooser.visible
             }
 
             width: tileSize
             height: tileSize
-            onCheckedChanged: root.appChooser.visible = checked
+            onCheckedChanged: appChooser.visible = checked
         }
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
@@ -319,6 +348,26 @@ Item {
         }
         displaced: Transition {
             NumberAnimation { properties: "x,y"; duration: 250; easing.type: Easing.OutBounce }
+        }
+    }
+
+    function moveAppChooser() {
+        if (typeof(window) == "undefined")
+            return;
+
+        switch (alignment) {
+        case LauncherSettings.LeftAlignment:
+            appChooser.x = window.x + window.width;
+            appChooser.y = window.y;
+            break;
+        case LauncherSettings.RightAlignment:
+            appChooser.x = window.x - appChooser.width;
+            appChooser.y = window.y;
+            break;
+        case LauncherSettings.BottomAlignment:
+            appChooser.x = window.x;
+            appChooser.y = window.y - appChooser.height;
+            break;
         }
     }
 }

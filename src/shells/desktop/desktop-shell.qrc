@@ -34,7 +34,6 @@
         <file>qml/WorkspaceIndicator.qml</file>
 
         <!-- Launcher -->
-        <file>qml/LauncherWindow.qml</file>
         <file>qml/Launcher.qml</file>
         <file>qml/LauncherView.qml</file>
         <file>images/launcher_dot.png</file>

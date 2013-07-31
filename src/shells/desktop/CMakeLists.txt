@@ -24,6 +24,7 @@ set(SOURCES
     panelwindow.cpp
     launchermodel.cpp
     launcheritem.cpp
+    launcherwindow.cpp
     appcategories.cpp
     applicationsmodel.cpp
     powermanager.cpp
