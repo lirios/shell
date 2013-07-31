@@ -10,6 +10,7 @@ set(SOURCES
     main.cpp
     enums.cpp
     applicationiconprovider.cpp
+    backgroundwindow.cpp
     declarativeplugin.cpp
     desktopshell.cpp
     shellwindow.cpp

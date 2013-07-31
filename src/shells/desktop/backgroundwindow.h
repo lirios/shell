@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,16 +24,30 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Window 2.0
+#ifndef BACKGROUNDWINDOW_H
+#define BACKGROUNDWINDOW_H
 
-Window {
-    flags: Qt.BypassWindowManagerHint
-    color: "black"
-    width: Screen.width
-    height: Screen.height
+#include <QtQuick/QQuickView>
 
-    Background {
-        anchors.fill: parent
-    }
-}
+#include <wayland-client.h>
+
+class ShellUi;
+
+class BackgroundWindow : public QQuickView
+{
+    Q_OBJECT
+public:
+    BackgroundWindow(ShellUi *ui);
+
+    wl_surface *surface() const;
+
+private Q_SLOTS:
+    void geometryChanged(const QRect &rect);
+
+private:
+    wl_surface *m_surface;
+
+    void setWindowType();
+};
+
+#endif // BACKGROUNDWINDOW_H

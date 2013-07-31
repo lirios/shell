@@ -15,7 +15,6 @@
         <file>qml/ShutdownDialog.qml</file>
 
         <!-- Background -->
-        <file>qml/BackgroundWindow.qml</file>
         <file>qml/Background.qml</file>
 
         <!-- Panel -->
