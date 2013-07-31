@@ -24,25 +24,33 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
-#include <QGuiApplication>
-#include <QQmlComponent>
+#include <QtCore/QDebug>
+#include <QtGui/QGuiApplication>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlComponent>
 
 #include <qpa/qplatformnativeinterface.h>
 
+#include "applicationiconprovider.h"
 #include "cmakedirs.h"
-#include "desktopshell.h"
 #include "declarativeplugin.h"
+#include "desktopshell.h"
+#include "notificationwindow.h"
 #include "waylandintegration.h"
 #include "shellui.h"
 #include "shellwindow.h"
-#include "notificationwindow.h"
 
 Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 
 DesktopShell::DesktopShell()
     : QObject()
 {
+    // Create QML engine
+    m_engine = new QQmlEngine(this);
+
+    // Register image provider
+    m_engine->addImageProvider("appicon", new ApplicationIconProvider);
+
     // Register QML types
     registerQmlTypes();
 
@@ -77,6 +85,8 @@ DesktopShell::~DesktopShell()
         m_windows.removeOne(shellUi);
         delete shellUi;
     }
+
+    delete m_engine;
 }
 
 DesktopShell *DesktopShell::instance()

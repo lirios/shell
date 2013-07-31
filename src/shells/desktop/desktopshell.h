@@ -27,9 +27,9 @@
 #ifndef DESKTOPSHELL_H
 #define DESKTOPSHELL_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
-class QScreen;
+class QQmlEngine;
 
 class ShellUi;
 
@@ -57,6 +57,7 @@ private:
     struct wl_display *m_display;
     int m_fd;
     struct wl_registry *m_registry;
+    QQmlEngine *m_engine;
     QList<ShellUi *> m_windows;
 };
 

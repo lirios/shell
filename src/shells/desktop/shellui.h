@@ -27,14 +27,11 @@
 #ifndef SHELLUI_H
 #define SHELLUI_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 #include <wayland-client.h>
 
-class QPlatformNativeInterface;
 class QScreen;
-class QQmlEngine;
-class QQmlComponent;
 class QQuickWindow;
 
 class ShellUi : public QObject
@@ -44,63 +41,21 @@ public:
     explicit ShellUi(QScreen *screen, QObject *parent = 0);
     ~ShellUi();
 
-    // Wayland screen output
-    struct wl_output *output() const {
-        return m_output;
-    }
+    wl_output *output() const;
 
-    // Background
-
-    QQuickWindow *backgroundWindow() const {
-        return m_backgroundWindow;
-    }
-
-    struct wl_surface *backgroundSurface() const {
-        return m_backgroundSurface;
-    }
-
-    // Panel
-
-    int panelSize() const;
-
-    QQuickWindow *panelWindow() const {
-        return m_panelWindow;
-    }
-
-    struct wl_surface *panelSurface() const {
-        return m_panelSurface;
-    }
-
-    // Launcher
-
-    int launcherSize() const;
-
-    QQuickWindow *launcherWindow() const {
-        return m_launcherWindow;
-    }
-
-    struct wl_surface *launcherSurface() const {
-        return m_launcherSurface;
-    }
+    QQuickWindow *backgroundWindow() const;
+    QQuickWindow *panelWindow() const;
+    QQuickWindow *launcherWindow() const;
 
 public Q_SLOTS:
     void updateScreenGeometry(const QRect &screenGeometry);
-    void sendPanelGeometry();
-    void sendLauncherGeometry();
 
 private:
-    QPlatformNativeInterface *m_native;
     QScreen *m_screen;
-    struct wl_output *m_output;
-    QQmlEngine *m_engine;
-    QQmlComponent *m_component;
-    QObject *m_rootObject;
+    wl_output *m_output;
     QQuickWindow *m_backgroundWindow;
-    struct wl_surface *m_backgroundSurface;
     QQuickWindow *m_panelWindow;
-    struct wl_surface *m_panelSurface;
     QQuickWindow *m_launcherWindow;
-    struct wl_surface *m_launcherSurface;
 };
 
 #endif // SHELLUI_H
