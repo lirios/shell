@@ -95,14 +95,14 @@ void WaylandIntegration::handlePresent(void *data,
     DesktopShell *shell = DesktopShell::instance();
 
     foreach (ShellUi *shellUi, shell->windows()) {
-        if (surface == shellUi->backgroundSurface()) {
-            QMetaObject::invokeMethod(shellUi->backgroundWindow(), "show");
-        } else if (surface == shellUi->panelSurface()) {
+        if (surface == shellUi->backgroundWindow()->surface()) {
+            QMetaObject::invokeMethod(shellUi->backgroundWindow(), "showNormal");
+        } else if (surface == shellUi->panelWindow()->surface()) {
             QMetaObject::invokeMethod(shellUi->panelWindow(), "show");
-            QMetaObject::invokeMethod(shellUi, "sendPanelGeometry");
-        } else if (surface == shellUi->launcherSurface()) {
+            QMetaObject::invokeMethod(shellUi->panelWindow(), "sendGeometry");
+        } else if (surface == shellUi->launcherWindow()->surface()) {
             QMetaObject::invokeMethod(shellUi->launcherWindow(), "show");
-            QMetaObject::invokeMethod(shellUi, "sendLauncherGeometry");
+            QMetaObject::invokeMethod(shellUi->launcherWindow(), "sendGeometry");
         }
     }
 }

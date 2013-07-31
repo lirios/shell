@@ -27,15 +27,16 @@
 #include <QtCore/QDebug>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QScreen>
-#include <QtQuick/QQuickWindow>
+#include <QtQml/QQmlEngine>
 
 #include <qpa/qplatformnativeinterface.h>
 
 #include "shellui.h"
 #include "waylandintegration.h"
 
-ShellUi::ShellUi(QScreen *screen, QObject *parent)
+ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
     : QObject(parent)
+    , m_engine(engine)
     , m_screen(screen)
     , m_backgroundWindow(0)
     , m_panelWindow(0)
@@ -47,6 +48,22 @@ ShellUi::ShellUi(QScreen *screen, QObject *parent)
     // Get native wl_output for the current screen
     m_output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen));
+
+    // Create Background window
+    m_backgroundWindow = new BackgroundWindow(this);
+
+    // Create Panel window
+    m_panelWindow = new PanelWindow(this);
+
+    // Create Launcher window
+    m_launcherWindow = new LauncherWindow(this);
+
+    // React to screen size changes
+    connect(screen, SIGNAL(geometryChanged(QRect)),
+            this, SLOT(updateScreenGeometry(QRect)));
+
+    // Send available geometry to the compositor
+    updateScreenGeometry(screen->geometry());
 }
 
 ShellUi::~ShellUi()
@@ -56,39 +73,73 @@ ShellUi::~ShellUi()
     m_backgroundWindow->close();
 }
 
+QQmlEngine *ShellUi::engine() const
+{
+    return m_engine;
+}
+
+QScreen *ShellUi::screen() const
+{
+    return m_screen;
+}
+
 wl_output *ShellUi::output() const
 {
     return m_output;
 }
 
-QQuickWindow *ShellUi::backgroundWindow() const
+QRect ShellUi::availableGeometry() const
+{
+    return m_availableGeometry;
+}
+
+BackgroundWindow *ShellUi::backgroundWindow() const
 {
     return m_backgroundWindow;
 }
 
-QQuickWindow *ShellUi::panelWindow() const
+PanelWindow *ShellUi::panelWindow() const
 {
     return m_panelWindow;
 }
 
-QQuickWindow *ShellUi::launcherWindow() const
+LauncherWindow *ShellUi::launcherWindow() const
 {
     return m_launcherWindow;
 }
 
-void ShellUi::updateScreenGeometry(const QRect &screenGeometry)
+void ShellUi::updateScreenGeometry(const QRect &rect)
 {
-#if 0
-    // Get available geometry
-    QRectF geo = m_rootObject->property("availableGeometry").toRectF();
+    // Calculate available geometry
+    QRect geometry = rect;
+    geometry.setTop(m_panelWindow->geometry().top() +
+                    m_panelWindow->geometry().height());
+    switch (m_launcherWindow->settings()->alignment()) {
+    case LauncherSettings::LeftAlignment:
+        geometry.setLeft(m_launcherWindow->geometry().left() +
+                         m_launcherWindow->geometry().width());
+        break;
+    case LauncherSettings::RightAlignment:
+        geometry.setRight(m_launcherWindow->geometry().right() -
+                          m_launcherWindow->geometry().width());
+        break;
+    case LauncherSettings::BottomAlignment:
+        geometry.setBottom(rect.bottom() -
+                           m_launcherWindow->geometry().height());
+        break;
+    }
+
+    // Save it and notify observers
+    m_availableGeometry = geometry;
+    Q_EMIT availableGeometryChanged(geometry);
 
     // Send available geometry to the compositor
+    return;
     WaylandIntegration *object = WaylandIntegration::instance();
     hawaii_desktop_shell_set_available_geometry(
                 object->shell, m_output,
-                int(geo.x()), int(geo.y()),
-                int(geo.width()), int(geo.height()));
-#endif
+                geometry.x(), geometry.y(),
+                geometry.width(), geometry.height());
 }
 
 #include "moc_shellui.cpp"

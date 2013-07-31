@@ -31,31 +31,43 @@
 
 #include <wayland-client.h>
 
-class QScreen;
-class QQuickWindow;
+#include "backgroundwindow.h"
+#include "panelwindow.h"
+#include "launcherwindow.h"
 
 class ShellUi : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QRect availableGeometry READ availableGeometry NOTIFY availableGeometryChanged)
 public:
-    explicit ShellUi(QScreen *screen, QObject *parent = 0);
+    explicit ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent = 0);
     ~ShellUi();
 
+    QQmlEngine *engine() const;
+
+    QScreen *screen() const;
     wl_output *output() const;
 
-    QQuickWindow *backgroundWindow() const;
-    QQuickWindow *panelWindow() const;
-    QQuickWindow *launcherWindow() const;
+    QRect availableGeometry() const;
+
+    BackgroundWindow *backgroundWindow() const;
+    PanelWindow *panelWindow() const;
+    LauncherWindow *launcherWindow() const;
+
+Q_SIGNALS:
+    void availableGeometryChanged(const QRect &rect);
 
 public Q_SLOTS:
-    void updateScreenGeometry(const QRect &screenGeometry);
+    void updateScreenGeometry(const QRect &rect);
 
 private:
+    QQmlEngine *m_engine;
     QScreen *m_screen;
     wl_output *m_output;
-    QQuickWindow *m_backgroundWindow;
-    QQuickWindow *m_panelWindow;
-    QQuickWindow *m_launcherWindow;
+    QRect m_availableGeometry;
+    BackgroundWindow *m_backgroundWindow;
+    PanelWindow *m_panelWindow;
+    LauncherWindow *m_launcherWindow;
 };
 
 #endif // SHELLUI_H

@@ -26,6 +26,7 @@
 
 #include <QtCore/QDebug>
 #include <QtGui/QGuiApplication>
+#include <QtGui/QScreen>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlComponent>
 
@@ -82,8 +83,8 @@ DesktopShell::DesktopShell()
 DesktopShell::~DesktopShell()
 {
     foreach (ShellUi *shellUi, m_windows) {
-        m_windows.removeOne(shellUi);
-        delete shellUi;
+        if (m_windows.removeOne(shellUi))
+            delete shellUi;
     }
 
     delete m_engine;
@@ -97,7 +98,9 @@ DesktopShell *DesktopShell::instance()
 void DesktopShell::create()
 {
     foreach (QScreen *screen, QGuiApplication::screens()) {
-        ShellUi *ui = new ShellUi(screen, this);
+        qDebug() << "--- Screen" << screen->name() << screen->geometry();
+
+        ShellUi *ui = new ShellUi(m_engine, screen, this);
         m_windows.append(ui);
     }
 }
