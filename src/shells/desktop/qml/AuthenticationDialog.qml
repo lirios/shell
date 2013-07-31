@@ -24,9 +24,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
+import FluidUi 0.2 as FluidUi
+import Hawaii.Shell.Desktop 0.1
 
-ModalDialog {
+Dialog {
+    id: authenticationDialog
+
     property string actionId
     property alias message: messageText.text
     property string iconName
@@ -37,32 +43,35 @@ ModalDialog {
     property bool echo: false
     property alias response: passwordInput.text
 
+    property var palette: SystemPalette {}
+
     title: Item {
-        Image {
+        FluidUi.Icon {
             id: dialogIcon
             anchors {
                 left: parent.left
                 top: parent.top
             }
-            source: "image://desktoptheme/dialog-password-symbolic"
+            iconName: "dialog-password-symbolic"
+            color: palette.text
             sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
         }
 
-        FluidUi.Label {
+        Label {
             anchors {
                 left: dialogIcon.right
                 verticalCenter: dialogIcon.verticalCenter
                 leftMargin: 10
             }
             text: qsTr("Authentication Required")
-            font.weight: Font.Bold
+            font.bol: true
         }
     }
     content: Item {
         width: 320
         height: 260
 
-        FluidUi.Label {
+        Label {
             id: messageText
             anchors {
                 left: parent.left
@@ -84,14 +93,14 @@ ModalDialog {
             }
             model: identities
             delegate: FluidUi.ListItem {
-                Image {
+                FluidUi.Icon {
                     id: userImage
                     anchors {
                         left: parent.left
                         top: parent.top
                         rightMargin: 10
                     }
-                    source: "image://desktoptheme/" + modelData.iconFileName
+                    source: modelData.iconFileName
                     sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
                     onStatusChanged: {
                         // Fallback to a standard icon in case we can't load user's icon
@@ -113,7 +122,7 @@ ModalDialog {
             clip: true
         }
 
-        FluidUi.Label {
+        Label {
             id: promptLabel
             anchors {
                 left: parent.left
@@ -121,7 +130,7 @@ ModalDialog {
             }
         }
 
-        FluidUi.TextField {
+        TextField {
             id: passwordInput
             anchors {
                 left: promptLabel.right
@@ -134,7 +143,7 @@ ModalDialog {
         }
     }
     buttons: [
-        FluidUi.Button {
+        Button {
             id: cancelButton
             anchors {
                 left: parent.left
@@ -143,7 +152,7 @@ ModalDialog {
             text: qsTr("Cancel")
             onClicked: reject()
         },
-        FluidUi.Button {
+        Button {
             id: authenticateButton
             anchors {
                 top: parent.top
