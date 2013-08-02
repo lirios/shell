@@ -33,6 +33,8 @@ PanelIndicator {
     property variant userAccount: UserAccount {}
     property int userStatus: UserStatus.Offline
 
+    property var shutdownDialog
+
     iconName: userStatusIcon(userStatus)
     label: userAccount.displayName
     menu: PanelMenu {
@@ -73,9 +75,12 @@ PanelIndicator {
             PanelMenuItem {
                 text: qsTr("Shut Down")
                 onClicked: {
-                    var component = Qt.createComponent("ShutdownDialog.qml");
-                    var dialog = component.createObject();
-                    dialog.visible = true;
+                    if (typeof(shutdownDialog) == "undefined") {
+                        var component = Qt.createComponent("ShutdownDialog.qml");
+                        shutdownDialog = component.createObject();
+                    }
+
+                    shutdownDialog.visible = true;
                 }
             }
         ]
