@@ -82,7 +82,6 @@ StyledItem {
             selected = !selected;
 
             var pos = mapToItem(null, mouse.x, mouse.y);
-            // FIXME: We need the available geometry
             menu.x = Math.max(0, Math.min(pos.x - menu.width / 2, panel.availableGeometry.width - menu.width));
             menu.y = panel.availableGeometry.y;
 
