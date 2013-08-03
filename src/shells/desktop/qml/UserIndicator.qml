@@ -73,7 +73,7 @@ PanelIndicator {
                 ]
             },
             PanelMenuItem {
-                text: qsTr("Shut Down")
+                text: qsTr("Shutdown...")
                 onClicked: {
                     if (typeof(shutdownDialog) == "undefined") {
                         var component = Qt.createComponent("ShutdownDialog.qml");
