@@ -33,6 +33,8 @@ import Hawaii.Shell.Desktop 0.1
 Item {
     id: appChooser
 
+    property var window
+
     ColumnLayout {
         anchors {
             fill: parent
@@ -101,7 +103,7 @@ Item {
                             onClicked: {
                                 // Launch the application and close the AppChooser
                                 var item = appsModel.get(visualIndex);
-                                root.appChooser.visible = false;
+                                window.visible = false;
                                 item.launch();
                             }
                         }
