@@ -97,7 +97,6 @@ Item {
                         }
                         delegate: AppChooserDelegate {
                             visualIndex: VisualDataModel.itemsIndex
-                            //icon: "image://desktoptheme/" + (iconName ? iconName : "unknown")
                             icon: "image://appicon/" + iconName
                             label: name
                             onClicked: {
