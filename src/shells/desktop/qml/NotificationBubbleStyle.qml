@@ -27,23 +27,15 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import QtGraphicalEffects 1.0
 import Hawaii.Shell.Styles 0.1
 import FluidExtra 0.2 as FluidExtra
 
 Style {
-    property int spacing: 4
-    property color panelColor1: Qt.rgba(0.25, 0.25, 0.25, 0.7)
+    property int spacing: 8
+    property color panelColor1: Qt.rgba(0.13, 0.13, 0.13, 0.7)
     property color panelColor2: Qt.rgba(0, 0, 0, 0.7)
     property color textColor: "white"
     property color textShadowColor: Qt.rgba(0, 0, 0, 60)
-
-    padding {
-        left: 4
-        top: 4
-        right: 4
-        bottom: 4
-    }
 
     property Component summary: Text {
         text: __item.summary
@@ -98,31 +90,19 @@ Style {
         implicitWidth: 240 + padding.left + padding.right + (spacing * 3)
         implicitHeight: summaryLoader.height + bodyLoader.height + padding.top + padding.bottom + (spacing * 3)
 
-        DropShadow {
-            id: shadow
-            anchors.fill: background
-            source: background
-            radius: 8
-            samples: 16
-            fast: true
-            spread: 0
-            color: Qt.rgba(0, 0, 0, 0.5)
-            transparentBorder: true
-        }
-
         Rectangle {
             id: background
             x: padding.left
             y: padding.top
-            z: 1
             width: parent.width - padding.left - padding.right
             height: parent.height - padding.top - padding.bottom
+            border.color: Qt.rgba(0, 0, 0, 0.5)
             gradient: Gradient {
                 GradientStop { position: 0; color: panelColor1 }
                 GradientStop { position: 1; color: panelColor2 }
             }
             radius: 6
-            visible: false
+            antialiasing: true
 
             Loader {
                 id: imageLoader
