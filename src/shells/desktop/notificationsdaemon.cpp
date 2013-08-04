@@ -116,7 +116,7 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     }
 
     // Unless an URL is provided use an icon from the theme
-    if (!iconName.startsWith(QStringLiteral("file:")))
+    if (!iconName.startsWith(QStringLiteral("file:")) && !iconName.isEmpty())
         iconName = QStringLiteral("image://desktoptheme/") + iconName;
 
     // Create the notification and put it into the queue

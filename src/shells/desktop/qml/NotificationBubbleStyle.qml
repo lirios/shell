@@ -27,7 +27,6 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.0
 import Hawaii.Shell.Styles 0.1
-import FluidUi 0.2 as FluidUi
 import FluidExtra 0.2 as FluidExtra
 
 Style {
@@ -66,10 +65,11 @@ Style {
         implicitWidth: 48
         implicitHeight: 48
 
-        FluidUi.Icon {
+        Image {
             id: icon
             anchors.fill: parent
-            iconName: __item.iconName
+            source: __item.iconName
+            sourceSize: Qt.size(width, height)
             width: 48
             height: 48
             visible: iconName !== ""
