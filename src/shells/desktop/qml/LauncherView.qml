@@ -115,10 +115,13 @@ Item {
             onClicked: {
                 var item = launcherModel.get(index);
 
+                /*
                 if (mouse.button === Qt.LeftButton)
                     item.activate();
                 else if (mouse.button === Qt.MidButton)
                     item.launchNewInstance();
+                */
+                item.launchNewInstance();
             }
 
             states: [
