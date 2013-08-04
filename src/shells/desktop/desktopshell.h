@@ -42,6 +42,10 @@ public:
 
     static DesktopShell *instance();
 
+    QQmlEngine *engine() const {
+        return m_engine;
+    }
+
     QList<ShellUi *> windows() const {
         return m_windows;
     }
