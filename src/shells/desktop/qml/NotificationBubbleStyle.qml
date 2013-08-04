@@ -98,8 +98,9 @@ Style {
             height: parent.height - padding.top - padding.bottom
             border.color: Qt.rgba(0, 0, 0, 0.5)
             gradient: Gradient {
-                GradientStop { position: 0; color: panelColor1 }
-                GradientStop { position: 1; color: panelColor2 }
+                GradientStop { position: 0.0; color: panelColor1 }
+                GradientStop { position: 0.5; color: panelColor2 }
+                GradientStop { position: 1.0; color: panelColor2 }
             }
             radius: 6
             antialiasing: true
