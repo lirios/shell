@@ -211,7 +211,7 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
     window->setProperty("body", body);
     if (!image.isNull())
         window->setProperty("picture", image);
-    window->setProperty("timeout", timeout);
+    window->setProperty("expirationTimeout", timeout);
 
     // Handle expiration
     connect(window, SIGNAL(closed(int)), this, SLOT(notificationExpired(int)));

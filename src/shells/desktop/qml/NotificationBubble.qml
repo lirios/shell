@@ -40,7 +40,14 @@ NotificationWindow {
     property alias summary: root.summary
     property alias body: root.body
     property alias picture: root.picture
-    property int timeout
+    property int expirationTimeout
+    property int timeout: {
+        // If no timeout is specified, add two seconds to ensure the
+        // notification last at least five seconds
+        if (expirationTimeout < 0)
+            return 2000 + Math.max(timeoutForText(summary + body), 3000);
+        return expirationTimeout;
+    }
 
     property real normalOpacity: 0.8
     property real fadeOpacity: 0.5
@@ -49,13 +56,6 @@ NotificationWindow {
     property real mouseOverOpacityMin: 0.4
 
     signal closed(int identifier)
-
-    onTimeoutChanged: {
-        // If no timeout is specified, add two seconds to ensure the
-        // notification last at least five seconds
-        if (timeout < 0)
-            timeout = 2000 + Math.max(timeoutForText(summary + body), 3000);
-    }
 
     Timer {
         id: timer
