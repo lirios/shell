@@ -7,30 +7,31 @@ include_directories(
 )
 
 set(SOURCES
-    main.cpp
-    enums.cpp
+    appcategories.cpp
     applicationiconprovider.cpp
+    applicationsmodel.cpp
+    backgroundsettings.cpp
     backgroundwindow.cpp
     declarativeplugin.cpp
     desktopshell.cpp
-    shellwindow.cpp
-    shellui.cpp
-    waylandintegration.cpp
+    enums.cpp
+    launcheritem.cpp
+    launchermodel.cpp
+    launchersettings.cpp
+    launcherwindow.cpp
+    main.cpp
     notificationsdaemon.cpp
     notificationsimage.cpp
     notificationwindow.cpp
-    launchersettings.cpp
-    backgroundsettings.cpp
     panelwindow.cpp
-    launchermodel.cpp
-    launcheritem.cpp
-    launcherwindow.cpp
-    appcategories.cpp
-    applicationsmodel.cpp
-    powermanager.cpp
+
     powermanagerbackend.cpp
+    powermanager.cpp
+    shellui.cpp
+    shellwindow.cpp
     systemdpowerbackend.cpp
     upowerpowerbackend.cpp
+    waylandintegration.cpp
 )
 
 wayland_add_protocol_client(SOURCES

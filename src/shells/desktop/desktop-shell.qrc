@@ -1,13 +1,17 @@
 <RCC>
     <qresource prefix="/">
         <!-- Base components -->
+        <file>qml/Dialog.qml</file>
+        <file>qml/DialogStyle.qml</file>
         <file>qml/Popup.qml</file>
+        <file>qml/PopupStyle.qml</file>
 
         <!-- Notifications -->
         <file>qml/NotificationItem.qml</file>
+        <file>qml/NotificationBubbleStyle.qml</file>
+        <file>qml/NotificationsPanel.qml</file>
 
         <!-- Dialogs -->
-        <file>qml/Dialog.qml</file>
         <file>qml/AuthenticationDialog.qml</file>
         <file>qml/ShutdownDialog.qml</file>
 
@@ -16,6 +20,7 @@
 
         <!-- Panel -->
         <file>qml/Panel.qml</file>
+        <file>qml/PanelStyle.qml</file>
         <file>qml/PanelView.qml</file>
         <file>qml/PanelIndicator.qml</file>
         <file>qml/PanelMenu.qml</file>
@@ -24,6 +29,7 @@
   	<file>qml/PanelMenuManager.js</file>
 
         <!-- Indicators -->
+        <file>qml/PanelIndicatorStyle.qml</file>
         <file>qml/DateIndicator.qml</file>
         <file>qml/NetworkIndicator.qml</file>
         <file>qml/NotificationsIndicator.qml</file>
@@ -32,6 +38,7 @@
 
         <!-- Launcher -->
         <file>qml/Launcher.qml</file>
+        <file>qml/LauncherStyle.qml</file>
         <file>qml/LauncherView.qml</file>
         <file>images/launcher_dot.png</file>
 
@@ -39,18 +46,11 @@
         <file>qml/AppChooserWindow.qml</file>
         <file>qml/AppChooser.qml</file>
         <file>qml/AppChooserButton.qml</file>
+        <file>qml/AppChooserButtonStyle.qml</file>
         <file>qml/AppChooserItem.qml</file>
         <file>qml/AppChooserDelegate.qml</file>
-        <file>qml/NotificationsPanel.qml</file>
 
-        <!-- Styles -->
-        <file>qml/PanelStyle.qml</file>
-        <file>qml/PanelIndicatorStyle.qml</file>
-        <file>qml/LauncherStyle.qml</file>
-        <file>qml/DialogStyle.qml</file>
-        <file>qml/PopupStyle.qml</file>
-        <file>qml/AppChooserButtonStyle.qml</file>
-        <file>qml/NotificationBubbleStyle.qml</file>
+        <!-- Images -->
         <file>images/noise.png</file>
     </qresource>
 </RCC>
