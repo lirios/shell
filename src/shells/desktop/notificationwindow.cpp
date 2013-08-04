@@ -54,11 +54,12 @@ void NotificationWindow::addSurface()
     if (m_surfaceAdded)
         return;
 
-    // Add the surface
     WaylandIntegration *integration = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+
     struct wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
+
     wl_notification_daemon_add_surface(integration->notification, surface);
     m_surfaceAdded = true;
 }

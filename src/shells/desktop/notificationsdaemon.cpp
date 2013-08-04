@@ -235,11 +235,8 @@ void NotificationsDaemon::showNotification(NotificationWindow *notification)
 {
     // Show the notification (this will start the QML timer because its
     // running property is bound to visible) and ask the compositor
-    // to add the surface to the "bubbles list". We process events between
-    // show and addSurfaces so that the buffer is created and the surface
-    // attached, otherwise the compositor will crash
+    // to add the surface to the "bubbles list"
     notification->show();
-    QGuiApplication::processEvents();
     notification->addSurface();
 }
 
