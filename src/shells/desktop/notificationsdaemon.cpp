@@ -264,8 +264,8 @@ void NotificationsDaemon::notificationClosed(uint id, uint reason)
         NotificationWindow *notification = m_notifications.at(i);
         if (notification->property("identifier").toInt() == (int)id) {
             m_notifications.removeAt(i);
-            notification->close();
-            //notification->deleteLater();
+            notification->hide();
+            notification->deleteLater();
             emit NotificationClosed(id, reason);
             return;
         }
