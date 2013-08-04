@@ -103,7 +103,7 @@ static void deathSignal(int signum)
     // Print the stack trace when a segmentation fault occurs
     printBacktrace();
     signal(signum, SIG_DFL);
-    exit(3);
+    _exit(3);
 }
 
 int main(int argc, char *argv[])
