@@ -89,6 +89,11 @@ NotificationWindow {
     */
 
     StyledItem {
+        property string iconName
+        property string summary
+        property string body
+        property var picture
+
         id: root
         style: Qt.createComponent("NotificationBubbleStyle.qml", root)
     }

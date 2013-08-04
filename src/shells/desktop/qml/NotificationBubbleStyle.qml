@@ -39,10 +39,10 @@ Style {
     }
 
     property Component summary: Text {
-        text: item.summary
+        text: __item.summary
         color: "white"
         style: Text.Raised
-        styleColor: "#4000000"
+        styleColor: Qt.rgba(0, 0, 0, 127)
         renderType: Text.NativeRendering
         font.bold: true
         verticalAlignment: Text.AlignVCenter
@@ -51,10 +51,10 @@ Style {
     }
 
     property Component body: Text {
-        text: item.body
+        text: __item.body
         color: "white"
         style: Text.Raised
-        styleColor: "#4000000"
+        styleColor: Qt.rgba(0, 0, 0, 127)
         renderType: Text.NativeRendering
         verticalAlignment: Text.AlignVCenter
         maximumLineCount: 20
@@ -69,7 +69,7 @@ Style {
         FluidUi.Icon {
             id: icon
             anchors.fill: parent
-            iconName: item.iconName
+            iconName: __item.iconName
             width: 48
             height: 48
             visible: iconName !== ""
@@ -79,7 +79,7 @@ Style {
             id: image
             anchors.fill: parent
             smooth: true
-            image: item.picture
+            //image: __item.picture
             visible: !icon.visible
         }
     }
