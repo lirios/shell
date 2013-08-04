@@ -34,7 +34,7 @@
 #include <polkit-qt-1/polkitqt1-details.h>
 #include <polkit-qt-1/polkitqt1-agent-listener.h>
 
-class QQuickItem;
+class QQuickWindow;
 
 class PolicyKitAgent : public PolkitQt1::Agent::Listener
 {
@@ -66,9 +66,9 @@ private:
     bool m_progressing;
     PolkitQt1::Agent::Session *m_session;
     QHash<PolkitQt1::Agent::Session *, PolkitQt1::Identity> m_sessionIdentity;
-    QQuickItem *m_dialog;
+    QQuickWindow *m_dialog;
 
-    QQuickItem *createDialog(const QString &actionId,
+    QQuickWindow *createDialog(const QString &actionId,
                              const QString &message,
                              const QString &iconName,
                              const PolkitQt1::Details &details,

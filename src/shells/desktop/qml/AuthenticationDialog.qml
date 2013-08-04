@@ -28,13 +28,14 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import FluidUi 0.2 as FluidUi
+import FluidUi.ListItems 0.2 as ListItem
 import Hawaii.Shell.Desktop 0.1
 
 Dialog {
     id: authenticationDialog
 
     property string actionId
-    property alias message: messageText.text
+    property alias message: messageLabel.text
     property string iconName
     property variant details
     property variant defaultIdentity: null
@@ -45,121 +46,80 @@ Dialog {
 
     property var palette: SystemPalette {}
 
-    title: Item {
-        FluidUi.Icon {
-            id: dialogIcon
-            anchors {
-                left: parent.left
-                top: parent.top
-            }
-            iconName: "dialog-password-symbolic"
-            color: palette.text
-            sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
-        }
+    ColumnLayout {
+        width: Math.max(childrenRect.width, 320)
+        height: Math.max(childrenRect.height, 135)
 
-        Label {
-            anchors {
-                left: dialogIcon.right
-                verticalCenter: dialogIcon.verticalCenter
-                leftMargin: 10
-            }
-            text: qsTr("Authentication Required")
-            font.bol: true
-        }
-    }
-    content: Item {
-        width: 320
-        height: 260
+        RowLayout {
+            FluidUi.Icon {
+                iconName: "dialog-password-symbolic"
+                width: 24
+                height: 24
+                color: palette.text
 
-        Label {
-            id: messageText
-            anchors {
-                left: parent.left
-                top: parent.top
-                right: parent.right
-                topMargin: 35
+                Layout.alignment: Qt.AlignTop
             }
-            wrapMode: Text.Wrap
-            height: theme.defaultFont.mSize * 4
-        }
 
-        ListView {
-            id: usersView
-            anchors {
-                left: parent.left
-                top: messageText.bottom
-                right: parent.right
-                bottom: passwordInput.top
-            }
-            model: identities
-            delegate: FluidUi.ListItem {
-                FluidUi.Icon {
-                    id: userImage
+            ColumnLayout {
+                Label {
+                    text: qsTr("Authentication required")
+                    font.bold: true
+                }
+
+                Label {
+                    id: messageLabel
+                    wrapMode: Text.WordWrap
+
+                    Layout.fillWidth: true
+                }
+
+                ListView {
+                    id: usersView
+                    model: identities
+                    delegate: ListItem.Standard {
+                        // TODO: If it fails to load the icon fallback to avatar-default
+                        iconName: modelData.iconFileName
+                        text: modelData.displayName
+                    }
+                    clip: true
+                }
+
+                Label {
+                    id: promptLabel
                     anchors {
                         left: parent.left
-                        top: parent.top
-                        rightMargin: 10
-                    }
-                    source: modelData.iconFileName
-                    sourceSize: Qt.size(theme.largeIconSize, theme.largeIconSize)
-                    onStatusChanged: {
-                        // Fallback to a standard icon in case we can't load user's icon
-                        if (status == Image.Error)
-                            source = "image://desktoptheme/avatar-default";
+                        verticalCenter: passwordInput.verticalCenter
                     }
                 }
 
-                FluidUi.Label {
-                    id: userLabel
-                    anchors {
-                        left: userImage.right
-                        verticalCenter: userImage.verticalCenter
-                    }
-                    text: modelData.displayName
-                    font.weight: Font.Bold
+                TextField {
+                    id: passwordInput
+                    //echoMode: echo ? TextInput.Password : TextInput.Normal
+                    echoMode: TextInput.Password
                 }
             }
-            clip: true
+
+            Layout.fillHeight: true
         }
 
-        Label {
-            id: promptLabel
-            anchors {
-                left: parent.left
-                verticalCenter: passwordInput.verticalCenter
-            }
+        Item {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
         }
 
-        TextField {
-            id: passwordInput
-            anchors {
-                left: promptLabel.right
-                right: usersView.right
-                bottom: parent.bottom
-                bottomMargin: 12
+        RowLayout {
+            Button {
+                text: qsTr("Cancel")
+                onClicked: authenticationDialog.rejected()
             }
-            //echoMode: echo ? TextInput.Password : TextInput.Normal
-            echoMode: TextInput.Password
+
+            Button {
+                text: qsTr("Authenticate")
+                onClicked: authenticationDialog.accepted()
+            }
+
+            Layout.alignment: Qt.AlignCenter
+            Layout.fillWidth: true
         }
     }
-    buttons: [
-        Button {
-            id: cancelButton
-            anchors {
-                left: parent.left
-                top: parent.top
-            }
-            text: qsTr("Cancel")
-            onClicked: reject()
-        },
-        Button {
-            id: authenticateButton
-            anchors {
-                top: parent.top
-                right: parent.right
-            }
-            text: qsTr("Authenticate")
-            onClicked: accept()
-        }
-    ]
 }

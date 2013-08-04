@@ -1,5 +1,6 @@
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${POLKITQT-1_INCLUDE_DIR}
     ${KCoreAddons_INCLUDE_DIRS}
     ${KConfig_INCLUDE_DIRS}
     ${WaylandClient_INCLUDE_DIRS}
@@ -24,7 +25,7 @@ set(SOURCES
     notificationsimage.cpp
     notificationwindow.cpp
     panelwindow.cpp
-
+    policykitagent.cpp
     powermanagerbackend.cpp
     powermanager.cpp
     shellui.cpp
@@ -59,10 +60,12 @@ add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
 qt5_use_modules(hawaii-desktop-shell Quick Widgets AccountsService Xdg)
 set_target_properties(hawaii-desktop-shell PROPERTIES
     COMPILE_FLAGS "-rdynamic"
-    LINK_FLAGS "-L${WaylandClient_LIBDIR}"
+    LINK_FLAGS "-L${WaylandClient_LIBDIR} -L${POLKITQT-1_LIB_DIR}"
 )
 target_link_libraries(hawaii-desktop-shell
     ${WaylandClient_LIBRARIES}
+    ${POLKITQT-1_CORE_LIBRARY}
+    ${POLKITQT-1_AGENT_LIBRARY}
     ${KConfig_LIBRARIES}
 )
 

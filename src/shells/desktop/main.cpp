@@ -28,6 +28,7 @@
 
 #include "desktopshell.h"
 #include "notificationsdaemon.h"
+#include "policykitagent.h"
 
 #include <execinfo.h>
 #include <stdio.h>
@@ -127,6 +128,9 @@ int main(int argc, char *argv[])
 
     // Create the main shell object
     (void)DesktopShell::instance();
+
+    // Create the PolicyKit agent
+    (void)PolicyKitAgent::instance();
 
     return app.exec();
 }

@@ -24,17 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QCoreApplication>
-#include <QDebug>
-#include <QQmlEngine>
-#include <QQmlComponent>
-#include <QQuickItem>
+#include <QtCore/QDebug>
+#include <QtGui/QGuiApplication>
+#include <QtGui/QScreen>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlComponent>
+#include <QtQuick/QQuickWindow>
 
 #include <QtAccountsService/AccountsManager>
 #include <QtAccountsService/UserAccount>
 
 #include "policykitagent.h"
-#include "shellview.h"
+#include "desktopshell.h"
+#include "shellui.h"
 
 #include <polkit-qt-1/polkitqt1-subject.h>
 
@@ -47,7 +49,7 @@ PolicyKitAgent::PolicyKitAgent(QObject *parent)
     , m_dialog(0)
 {
     PolkitQt1::UnixSessionSubject session(
-        QCoreApplication::instance()->applicationPid());
+                QCoreApplication::instance()->applicationPid());
     registerListener(session, "/org/hawaii/PolicyKit1/AuthenticationAgent");
 }
 
@@ -92,7 +94,7 @@ void PolicyKitAgent::initiateAuthentication(const QString &actionId,
     for (int i = 0; i < identities.size(); i++) {
         PolkitQt1::Identity identity = identities.at(i);
         PolkitQt1::Agent::Session *session =
-            new PolkitQt1::Agent::Session(identity, cookie, result);
+                new PolkitQt1::Agent::Session(identity, cookie, result);
         Q_ASSERT(session);
         m_sessionIdentity[session] = identity;
         connect(session, SIGNAL(request(QString, bool)), this, SLOT(request(QString, bool)));
@@ -119,8 +121,8 @@ bool PolicyKitAgent::initiateAuthenticationFinish()
 void PolicyKitAgent::cancelAuthentication()
 {
     // Close modal dialog and delete it
-    QMetaObject::invokeMethod(m_dialog, "close");
-    delete m_dialog;
+    QMetaObject::invokeMethod(m_dialog, "hide", Qt::QueuedConnection);
+    m_dialog->deleteLater();
     m_dialog = 0;
 
     // Unset variables that keep track of the authorization session
@@ -146,7 +148,7 @@ void PolicyKitAgent::request(const QString &request, bool echo)
     if (identity.isValid()) {
         QtAddOn::AccountsService::AccountsManager manager;
         QtAddOn::AccountsService::UserAccount *account =
-            manager.findUserById(identity.toUnixUserIdentity().uid());
+                manager.findUserById(identity.toUnixUserIdentity().uid());
         m_dialog->setProperty("defaultIdentity", QVariant::fromValue(account));
         account->deleteLater();
     }
@@ -160,7 +162,7 @@ void PolicyKitAgent::request(const QString &request, bool echo)
     m_dialog->setProperty("echo", echo);
 
     // Open modal dialog
-    QMetaObject::invokeMethod(m_dialog, "open");
+    QMetaObject::invokeMethod(m_dialog, "show", Qt::QueuedConnection);
 }
 
 void PolicyKitAgent::completed(bool gainedAuthorization)
@@ -193,66 +195,71 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
 
 void PolicyKitAgent::showInfo(const QString &text)
 {
-    qDebug() << "INFO:" << text;
+    qDebug() << "PolicyKit-INFO:" << text;
 }
 
 void PolicyKitAgent::showError(const QString &text)
 {
-    qDebug() << "ERROR:" << text;
+    qDebug() << "PolicyKit-ERROR:" << text;
 }
 
-QQuickItem *PolicyKitAgent::createDialog(const QString &actionId,
-                                         const QString &message,
-                                         const QString &iconName,
-                                         const PolkitQt1::Details &details,
-                                         const PolkitQt1::Identity::List &identities)
+QQuickWindow *PolicyKitAgent::createDialog(const QString &actionId,
+                                           const QString &message,
+                                           const QString &iconName,
+                                           const PolkitQt1::Details &details,
+                                           const PolkitQt1::Identity::List &identities)
 {
-    ShellView *view = DesktopShell::instance()->shellView();
+    foreach (ShellUi *ui, DesktopShell::instance()->windows()) {
+        // We create the dialog only on the primary screen
+        if (ui->screen() != QGuiApplication::primaryScreen())
+            continue;
 
-    // Create the component
-    QQmlComponent component(view->engine(), QUrl("qrc:///qml/AuthenticationDialog.qml"),
-                            view->rootObject());
-    if (component.isError()) {
-        qWarning("Couldn't create AuthenticationDialog component: %s",
-                 component.errorString().toLocal8Bit().constData());
-        return 0;
+        // Create the component
+        QQmlComponent component(ui->engine());
+        component.loadUrl(QUrl("qrc:/qml/AuthenticationDialog.qml"));
+        if (!component.isReady()) {
+            qWarning("Couldn't create AuthenticationDialog component: %s",
+                     qPrintable(component.errorString()));
+            return 0;
+        }
+
+        // Create the top level object
+        QObject *topLevel = component.create();
+        if (!topLevel) {
+            qWarning() << "Couldn't create an AuthenticationDialog object";
+            return 0;
+        }
+
+        // Cast it to a window
+        QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
+        if (!window) {
+            qWarning() << "Couldn't cast AuthenticationDialog object to QQuickWindow";
+            return 0;
+        }
+
+        // Convert the identities list to a list of users
+        QtAddOn::AccountsService::AccountsManager manager;
+        QList<QVariant> users;
+        for (int i = 0; i < identities.size(); i++) {
+            PolkitQt1::Identity identity = identities.at(i);
+            users << QVariant::fromValue(manager.findUserById(identity.toUnixUserIdentity().uid()));
+        }
+
+        // Set all the properties
+        topLevel->setProperty("actionId", actionId);
+        topLevel->setProperty("message", message);
+        topLevel->setProperty("iconName", iconName);
+        //topLevel->setProperty("details", details);
+        topLevel->setProperty("identities", users);
+
+        // Connect dialog signals
+        connect(topLevel, SIGNAL(accepted()), this, SLOT(dialogAccepted()));
+        connect(topLevel, SIGNAL(rejected()), this, SLOT(dialogRejected()));
+
+        return window;
     }
 
-    // Create the object
-    QObject *object = component.create(view->rootContext());
-    if (!object) {
-        qWarning() << "Couldn't create an AuthenticationDialog object";
-        return 0;
-    }
-
-    // Cast it to a QQuickItem
-    QQuickItem *item = qobject_cast<QQuickItem *>(object);
-    if (!item) {
-        qWarning() << "Couldn't cast AuthenticationDialog object to QQuickItem";
-        return 0;
-    }
-
-    // Convert the identities list to a list of users
-    QtAddOn::AccountsService::AccountsManager manager;
-    QList<QVariant> users;
-    for (int i = 0; i < identities.size(); i++) {
-        PolkitQt1::Identity identity = identities.at(i);
-        users << QVariant::fromValue(manager.findUserById(identity.toUnixUserIdentity().uid()));
-    }
-
-    // Set all the properties
-    item->setParentItem(view->rootObject());
-    item->setProperty("actionId", actionId);
-    item->setProperty("message", message);
-    item->setProperty("iconName", iconName);
-    //item->setProperty("details", details);
-    item->setProperty("identities", users);
-
-    // Connect dialog signals
-    connect(object, SIGNAL(accepted()), this, SLOT(dialogAccepted()));
-    connect(object, SIGNAL(rejected()), this, SLOT(dialogRejected()));
-
-    return item;
+    return 0;
 }
 
 void PolicyKitAgent::dialogAccepted()
@@ -263,7 +270,7 @@ void PolicyKitAgent::dialogAccepted()
 
 void PolicyKitAgent::dialogRejected()
 {
-    m_session->setResponse(QLatin1String(""));
+    m_session->setResponse(QStringLiteral(""));
 }
 
 #include "moc_policykitagent.cpp"
