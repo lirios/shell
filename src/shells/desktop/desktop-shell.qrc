@@ -3,9 +3,6 @@
         <!-- Base components -->
         <file>qml/Popup.qml</file>
 
-        <!-- Main file -->
-        <file>qml/Shell.qml</file>
-
         <!-- Notifications -->
         <file>qml/NotificationItem.qml</file>
 
