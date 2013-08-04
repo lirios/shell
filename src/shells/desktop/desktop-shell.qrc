@@ -7,7 +7,7 @@
         <file>qml/PopupStyle.qml</file>
 
         <!-- Notifications -->
-        <file>qml/NotificationItem.qml</file>
+        <file>qml/NotificationBubble.qml</file>
         <file>qml/NotificationBubbleStyle.qml</file>
         <file>qml/NotificationsPanel.qml</file>
 

@@ -192,7 +192,7 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
 {
     QQmlEngine *engine = new QQmlEngine(this);
     QQmlComponent *component = new QQmlComponent(engine, this);
-    component->loadUrl(QUrl("qrc:///qml/NotificationItem.qml"));
+    component->loadUrl(QUrl("qrc:///qml/NotificationBubble.qml"));
     if (!component->isReady())
         qFatal("Failed to create a notification window: %s",
                qPrintable(component->errorString()));

@@ -36,10 +36,10 @@ NotificationWindow {
 
     property int identifier
     property string appName
-    property string iconName
-    property string summary
-    property string body
-    property var picture: null
+    property alias iconName: root.iconName
+    property alias summary: root.summary
+    property alias body: root.body
+    property alias picture: root.picture
     property int timeout
 
     property real normalOpacity: 0.8
