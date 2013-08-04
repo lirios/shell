@@ -30,18 +30,23 @@ import Hawaii.Shell.Styles 0.1
 import FluidExtra 0.2 as FluidExtra
 
 Style {
+    property int spacing: 4
     property color panelColor: Qt.rgba(0, 0, 0, 0.7)
+    property color textColor: "white"
+    property color textShadowColor: Qt.rgba(0, 0, 0, 60)
 
     padding {
         left: 2
         top: 2
+        right: 2
+        bottom: 2
     }
 
     property Component summary: Text {
         text: __item.summary
-        color: "white"
+        color: textColor
         style: Text.Raised
-        styleColor: Qt.rgba(0, 0, 0, 127)
+        styleColor: textShadowColor
         renderType: Text.NativeRendering
         font.bold: true
         verticalAlignment: Text.AlignVCenter
@@ -51,9 +56,9 @@ Style {
 
     property Component body: Text {
         text: __item.body
-        color: "white"
+        color: textColor
         style: Text.Raised
-        styleColor: Qt.rgba(0, 0, 0, 127)
+        styleColor: textShadowColor
         renderType: Text.NativeRendering
         verticalAlignment: Text.AlignVCenter
         maximumLineCount: 20
@@ -62,63 +67,73 @@ Style {
     }
 
     property Component image: Item {
-        implicitWidth: 48
-        implicitHeight: 48
-
         Image {
             id: icon
-            anchors.fill: parent
             source: __item.iconName
             sourceSize: Qt.size(width, height)
             width: 48
             height: 48
+            smooth: true
             visible: iconName !== ""
         }
 
         FluidExtra.ImageItem {
             id: image
-            anchors.fill: parent
-            smooth: true
             //image: __item.picture
+            width: 48
+            height: 48
+            smooth: true
             visible: !icon.visible
         }
     }
 
     property Component panel: Item {
-        implicitWidth: background.width + padding.left + padding.right
-        implicitHeight: background.height + padding.top + padding.bottom
+        implicitWidth: 240 + padding.left + padding.right + (spacing * 3)
+        implicitHeight: summaryLoader.height + bodyLoader.height + padding.top + padding.bottom + (spacing * 3)
 
         Rectangle {
             id: background
-            anchors {
-                fill: parent
-                leftMargin: padding.left
-                topMargin: padding.top
-                rightMargin: padding.right
-                bottomMargin: padding.bottom
-            }
+            x: padding.left
+            y: padding.top
+            width: parent.width - padding.left - padding.right
+            height: parent.height - padding.top - padding.bottom
             color: panelColor
             radius: 6
 
-            RowLayout {
-                anchors.fill: parent
-
-                Loader {
-                    id: imageLoader
-                    sourceComponent: image
+            Loader {
+                id: imageLoader
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                    leftMargin: spacing
+                    topMargin: spacing
                 }
+                sourceComponent: image
+                visible: item.visible
+            }
 
-                ColumnLayout {
-                    Loader {
-                        id: summaryLoader
-                        sourceComponent: summary
-                    }
-
-                    Loader {
-                        id: bodyLoader
-                        sourceComponent: body
-                    }
+            Loader {
+                id: summaryLoader
+                anchors {
+                    left: imageLoader.right
+                    top: imageLoader.top
+                    right: parent.right
+                    leftMargin: spacing
+                    rightMargin: spacing
                 }
+                sourceComponent: summary
+            }
+
+            Loader {
+                id: bodyLoader
+                anchors {
+                    left: imageLoader.right
+                    top: summaryLoader.bottom
+                    right: parent.right
+                    leftMargin: spacing
+                    rightMargin: spacing
+                }
+                sourceComponent: body
             }
         }
     }
