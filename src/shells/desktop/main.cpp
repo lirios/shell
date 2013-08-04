@@ -24,9 +24,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QApplication>
+#include <QtWidgets/QApplication>
 
 #include "desktopshell.h"
+#include "notificationsdaemon.h"
 
 #include <execinfo.h>
 #include <stdio.h>
@@ -121,7 +122,10 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    // Create the shell
+    // Create the notification daemon
+    (void)NotificationsDaemon::instance();
+
+    // Create the main shell object
     (void)DesktopShell::instance();
 
     return app.exec();
