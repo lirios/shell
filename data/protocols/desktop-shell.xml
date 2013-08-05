@@ -1,5 +1,5 @@
 <protocol name="desktop">
-  <interface name="hawaii_desktop_shell" version="2">
+  <interface name="hawaii_desktop_shell" version="1">
     <description summary="create desktop widgets and helpers">
       Traditional user interfaces can rely on this interface to define the
       foundations of typical desktops. Currently it's possible to set up
