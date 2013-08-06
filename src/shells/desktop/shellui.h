@@ -64,6 +64,7 @@ public Q_SLOTS:
     void updateScreenGeometry(const QRect &rect);
 
     void createLockScreenWindow();
+    void closeLockScreenWindow();
 
 private:
     QQmlEngine *m_engine;

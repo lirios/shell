@@ -24,8 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include "sessionmanager.h"
+#include "desktopshell.h"
+#include "lockscreenwindow.h"
 #include "waylandintegration.h"
+#include "sessionmanager.h"
+#include "shellui.h"
 
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
@@ -42,6 +45,11 @@ void SessionManager::unlock()
 {
     WaylandIntegration *object = WaylandIntegration::instance();
     hawaii_desktop_shell_unlock(object->shell);
+
+    // Close all lock screens, this will unmap the window and
+    // save some resources
+    foreach (ShellUi *ui, DesktopShell::instance()->windows())
+        ui->closeLockScreenWindow();
 }
 
 #include "moc_sessionmanager.cpp"

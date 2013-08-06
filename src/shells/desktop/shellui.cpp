@@ -157,4 +157,14 @@ void ShellUi::createLockScreenWindow()
     m_lockScreenWindow->setWindowType();
 }
 
+void ShellUi::closeLockScreenWindow()
+{
+    if (!m_lockScreenWindow)
+        return;
+
+    m_lockScreenWindow->hide();
+    m_lockScreenWindow->deleteLater();
+    m_lockScreenWindow = 0;
+}
+
 #include "moc_shellui.cpp"
