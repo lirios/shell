@@ -37,7 +37,7 @@ class DesktopShell : public QObject
 {
     Q_OBJECT
 public:
-    explicit DesktopShell();
+    DesktopShell();
     ~DesktopShell();
 
     static DesktopShell *instance();
@@ -52,10 +52,6 @@ public:
 
 public Q_SLOTS:
     void create();
-
-    void logout();
-    void reboot();
-    void powerOff();
 
 private:
     struct wl_display *m_display;

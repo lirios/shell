@@ -105,17 +105,4 @@ void DesktopShell::create()
     }
 }
 
-void DesktopShell::logout()
-{
-
-}
-
-void DesktopShell::reboot()
-{
-}
-
-void DesktopShell::powerOff()
-{
-}
-
 #include "moc_desktopshell.cpp"
