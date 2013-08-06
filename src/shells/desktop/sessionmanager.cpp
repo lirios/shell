@@ -35,6 +35,12 @@ SessionManager::SessionManager(QObject *parent)
 {
 }
 
+void SessionManager::logout()
+{
+    WaylandIntegration *object = WaylandIntegration::instance();
+    hawaii_desktop_shell_quit(object->shell);
+}
+
 void SessionManager::lock()
 {
     WaylandIntegration *object = WaylandIntegration::instance();

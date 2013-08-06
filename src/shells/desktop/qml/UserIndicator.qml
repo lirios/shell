@@ -75,6 +75,12 @@ PanelIndicator {
                 ]
             },
             PanelMenuItem {
+                text: qsTr("Logout")
+                onClicked: {
+                    sessionManager.logout();
+                }
+            },
+            PanelMenuItem {
                 text: qsTr("Lock...")
                 onClicked: {
                     sessionManager.lock();

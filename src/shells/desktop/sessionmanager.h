@@ -36,6 +36,8 @@ public:
     SessionManager(QObject *parent = 0);
 
 public Q_SLOTS:
+    void logout();
+
     void lock();
     void unlock();
 };

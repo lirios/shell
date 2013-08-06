@@ -73,6 +73,8 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
+    <request name="quit"/>
+
     <request name="lock"/>
     <request name="unlock"/>
 
