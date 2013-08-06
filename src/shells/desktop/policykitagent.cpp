@@ -38,7 +38,7 @@
 #include "desktopshell.h"
 #include "shellui.h"
 
-#include <polkit-qt-1/polkitqt1-subject.h>
+#include <polkitqt1-subject.h>
 
 Q_GLOBAL_STATIC(PolicyKitAgent, polkitAgent)
 

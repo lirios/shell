@@ -29,10 +29,10 @@
 
 #define POLKIT_AGENT_I_KNOW_API_IS_SUBJECT_TO_CHANGE 1
 
-#include <polkit-qt-1/polkitqt1-agent-session.h>
-#include <polkit-qt-1/polkitqt1-identity.h>
-#include <polkit-qt-1/polkitqt1-details.h>
-#include <polkit-qt-1/polkitqt1-agent-listener.h>
+#include <polkitqt1-agent-session.h>
+#include <polkitqt1-identity.h>
+#include <polkitqt1-details.h>
+#include <polkitqt1-agent-listener.h>
 
 class QQuickWindow;
 
