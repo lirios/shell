@@ -110,7 +110,23 @@ void WaylandIntegration::handlePresent(void *data,
 void WaylandIntegration::handlePrepareLockSurface(void *data,
                                                   struct hawaii_desktop_shell *desktop_shell)
 {
-    hawaii_desktop_shell_unlock(desktop_shell);
+    Q_UNUSED(data);
+
+    DesktopShell *shell = DesktopShell::instance();
+
+    // Create the lock screen only for the primary screen
+    // TODO: Actually we should create one for each screen but this
+    // requires protocol changes
+    foreach (ShellUi *shellUi, shell->windows()) {
+        if (shellUi->screen() == QGuiApplication::primaryScreen()) {
+            if (shellUi->lockScreenWindow())
+                QMetaObject::invokeMethod(shellUi->lockScreenWindow(), "setWindowType");
+            else
+                QMetaObject::invokeMethod(shellUi, "createLockScreenWindow");
+            QMetaObject::invokeMethod(shellUi->lockScreenWindow(), "show");
+            return;
+        }
+    }
 }
 
 void WaylandIntegration::handleGrabCursor(void *data,

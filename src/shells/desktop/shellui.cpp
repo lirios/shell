@@ -41,6 +41,7 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
     , m_backgroundWindow(0)
     , m_panelWindow(0)
     , m_launcherWindow(0)
+    , m_lockScreenWindow(0)
 {
     // Native platform interface
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
@@ -68,6 +69,7 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
 
 ShellUi::~ShellUi()
 {
+    m_lockScreenWindow->close();
     m_panelWindow->close();
     m_launcherWindow->close();
     m_backgroundWindow->close();
@@ -108,6 +110,11 @@ LauncherWindow *ShellUi::launcherWindow() const
     return m_launcherWindow;
 }
 
+LockScreenWindow *ShellUi::lockScreenWindow() const
+{
+    return m_lockScreenWindow;
+}
+
 void ShellUi::updateScreenGeometry(const QRect &rect)
 {
     // Calculate available geometry
@@ -140,6 +147,14 @@ void ShellUi::updateScreenGeometry(const QRect &rect)
                 object->shell, m_output,
                 geometry.x(), geometry.y(),
                 geometry.width(), geometry.height());
+}
+
+void ShellUi::createLockScreenWindow()
+{
+    if (!m_lockScreenWindow)
+        m_lockScreenWindow = new LockScreenWindow(this);
+    m_lockScreenWindow->show();
+    m_lockScreenWindow->setWindowType();
 }
 
 #include "moc_shellui.cpp"

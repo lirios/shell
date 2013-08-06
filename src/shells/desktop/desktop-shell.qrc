@@ -50,6 +50,9 @@
         <file>qml/AppChooserItem.qml</file>
         <file>qml/AppChooserDelegate.qml</file>
 
+        <!-- LockScreen -->
+        <file>qml/LockScreen.qml</file>
+
         <!-- Images -->
         <file>images/noise.png</file>
     </qresource>

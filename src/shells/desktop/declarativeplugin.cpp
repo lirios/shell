@@ -37,6 +37,7 @@
 #include "launchersettings.h"
 #include "backgroundsettings.h"
 #include "powermanager.h"
+#include "sessionmanager.h"
 #include "shellwindow.h"
 #include "notificationwindow.h"
 
@@ -55,6 +56,7 @@ void registerQmlTypes()
     qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
     qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
     qmlRegisterType<PowerManager>(uri, 0, 1, "PowerManager");
+    qmlRegisterType<SessionManager>(uri, 0, 1, "SessionManager");
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
     qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
 

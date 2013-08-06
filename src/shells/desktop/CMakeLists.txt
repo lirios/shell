@@ -20,6 +20,7 @@ set(SOURCES
     launchermodel.cpp
     launchersettings.cpp
     launcherwindow.cpp
+    lockscreenwindow.cpp
     main.cpp
     notificationsdaemon.cpp
     notificationsimage.cpp
@@ -28,6 +29,7 @@ set(SOURCES
     policykitagent.cpp
     powermanagerbackend.cpp
     powermanager.cpp
+    sessionmanager.cpp
     shellui.cpp
     shellwindow.cpp
     systemdpowerbackend.cpp

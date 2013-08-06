@@ -34,6 +34,7 @@
 #include "backgroundwindow.h"
 #include "panelwindow.h"
 #include "launcherwindow.h"
+#include "lockscreenwindow.h"
 
 class ShellUi : public QObject
 {
@@ -54,11 +55,15 @@ public:
     PanelWindow *panelWindow() const;
     LauncherWindow *launcherWindow() const;
 
+    LockScreenWindow *lockScreenWindow() const;
+
 Q_SIGNALS:
     void availableGeometryChanged(const QRect &rect);
 
 public Q_SLOTS:
     void updateScreenGeometry(const QRect &rect);
+
+    void createLockScreenWindow();
 
 private:
     QQmlEngine *m_engine;
@@ -68,6 +73,7 @@ private:
     BackgroundWindow *m_backgroundWindow;
     PanelWindow *m_panelWindow;
     LauncherWindow *m_launcherWindow;
+    LockScreenWindow *m_lockScreenWindow;
 };
 
 #endif // SHELLUI_H
