@@ -35,6 +35,8 @@ PanelIndicator {
 
     property var shutdownDialog
 
+    property var sessionManager: SessionManager {}
+
     iconName: userStatusIcon(userStatus)
     label: userAccount.displayName
     menu: PanelMenu {
@@ -71,6 +73,12 @@ PanelIndicator {
                         }
                     }
                 ]
+            },
+            PanelMenuItem {
+                text: qsTr("Lock...")
+                onClicked: {
+                    sessionManager.lock();
+                }
             },
             PanelMenuItem {
                 text: qsTr("Shutdown...")

@@ -73,6 +73,7 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
+    <request name="lock"/>
     <request name="unlock"/>
 
     <request name="set_grab_surface">

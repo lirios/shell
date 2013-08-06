@@ -34,6 +34,8 @@ SessionManager::SessionManager(QObject *parent)
 
 void SessionManager::lock()
 {
+    WaylandIntegration *object = WaylandIntegration::instance();
+    hawaii_desktop_shell_lock(object->shell);
 }
 
 void SessionManager::unlock()
