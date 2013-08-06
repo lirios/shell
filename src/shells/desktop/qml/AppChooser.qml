@@ -43,11 +43,13 @@ Item {
         TextField {
             id: searchField
             placeholderText: qsTr("Search...")
+            visible: false
 
             Layout.fillWidth: true
         }
 
         RowLayout {
+            /*
             ScrollView {
                 ListView {
                     id: categoriesList
@@ -82,6 +84,7 @@ Item {
 
                 Layout.fillHeight: true
             }
+            */
 
             ScrollView {
                 GridView {
