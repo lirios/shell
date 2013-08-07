@@ -27,6 +27,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import QtGraphicalEffects 1.0
 import Hawaii.Shell.Desktop 0.1
 
 Item {
@@ -34,30 +35,70 @@ Item {
         id: sessionManager
     }
 
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: {
+            dateText.text = Qt.formatDate(new Date(), Qt.locale().dateFormat(Locale.LongFormat));
+            timeText.text = Qt.formatTime(new Date(), Qt.locale().timeFormat(Locale.ShortFormat));
+        }
+    }
+
     Background {
+        id: background
         anchors.fill: parent
+        visible: false
+    }
 
-        ColumnLayout {
-            anchors.centerIn: parent
+    BrightnessContrast {
+        id: brightnessEffect
+        anchors.fill: background
+        source: background
+        brightness: -0.10
+    }
 
-            Text {
-                text: Qt.formatDate(new Date(), Qt.locale().dateFormat(Locale.LongFormat))
-                font.pointSize: 48
-                color: "white"
-                style: Text.Raised
-                styleColor: Qt.rgba(0, 0, 0, 0.7)
-            }
+    FastBlur {
+        anchors.fill: brightnessEffect
+        source: brightnessEffect
+        radius: 32
+    }
 
-            Item {
-                Layout.fillHeight: true
-            }
+    ColumnLayout {
+        anchors.centerIn: parent
 
-            Button {
-                text: qsTr("Unlock")
-                onClicked: sessionManager.unlock()
+        Text {
+            id: timeText
+            font.family: "Raleway [Medium]"
+            font.pointSize: 52
+            color: "white"
+            style: Text.Raised
+            styleColor: Qt.rgba(0, 0, 0, 0.7)
 
-                Layout.alignment: Qt.AlignCenter
-            }
+            Layout.alignment: Qt.AlignCenter
+        }
+
+        Text {
+            id: dateText
+            font.family: "Raleway [Thin]"
+            font.pointSize: 36
+            color: "white"
+            style: Text.Raised
+            styleColor: Qt.rgba(0, 0, 0, 0.7)
+
+            Layout.alignment: Qt.AlignCenter
+        }
+
+        Item {
+            Layout.fillHeight: true
+        }
+
+        Button {
+            text: qsTr("Unlock")
+            onClicked: sessionManager.unlock()
+
+            Layout.alignment: Qt.AlignCenter
         }
     }
 }
