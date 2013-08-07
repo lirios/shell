@@ -162,7 +162,7 @@ void ShellUi::closeLockScreenWindow()
     if (!m_lockScreenWindow)
         return;
 
-    m_lockScreenWindow->hide();
+    //m_lockScreenWindow->hide();
     m_lockScreenWindow->deleteLater();
     m_lockScreenWindow = 0;
 }
