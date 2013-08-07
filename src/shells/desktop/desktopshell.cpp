@@ -88,6 +88,11 @@ DesktopShell::~DesktopShell()
     }
 
     delete m_engine;
+
+    // Unbind interfaces
+    WaylandIntegration *integration = WaylandIntegration::instance();
+    wl_notification_daemon_destroy(integration->notification);
+    hawaii_desktop_shell_destroy(integration->shell);
 }
 
 DesktopShell *DesktopShell::instance()
