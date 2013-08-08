@@ -135,5 +135,52 @@ void WaylandIntegration::handleGrabCursor(void *data,
 {
     Q_UNUSED(data);
     Q_UNUSED(desktop_shell);
-    Q_UNUSED(cursor);
+
+    QCursor qcursor;
+
+    switch (cursor) {
+    case HAWAII_DESKTOP_SHELL_CURSOR_NONE:
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_BUSY:
+        qcursor.setShape(Qt::BusyCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_MOVE:
+        qcursor.setShape(Qt::DragMoveCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP:
+        qcursor.setShape(Qt::SizeVerCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM:
+        qcursor.setShape(Qt::SizeVerCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_LEFT:
+        qcursor.setShape(Qt::SizeHorCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_RIGHT:
+        qcursor.setShape(Qt::SizeHorCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP_LEFT:
+        qcursor.setShape(Qt::SizeFDiagCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP_RIGHT:
+        qcursor.setShape(Qt::SizeBDiagCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM_LEFT:
+        qcursor.setShape(Qt::SizeBDiagCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM_RIGHT:
+        qcursor.setShape(Qt::SizeFDiagCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_ARROW:
+    default:
+        qcursor.setShape(Qt::ArrowCursor);
+        break;
+    }
+
+    DesktopShell *shell = DesktopShell::instance();
+
+    foreach (ShellUi *shellUi, shell->windows())
+        QMetaObject::invokeMethod(shellUi->grabWindow(), "setGrabCursor",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(QCursor, qcursor));
 }

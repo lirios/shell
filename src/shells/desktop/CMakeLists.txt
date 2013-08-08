@@ -16,6 +16,7 @@ set(SOURCES
     declarativeplugin.cpp
     desktopshell.cpp
     enums.cpp
+    grabwindow.cpp
     launcheritem.cpp
     launchermodel.cpp
     launchersettings.cpp

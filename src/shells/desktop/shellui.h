@@ -31,6 +31,7 @@
 
 #include <wayland-client.h>
 
+#include "grabwindow.h"
 #include "backgroundwindow.h"
 #include "panelwindow.h"
 #include "launcherwindow.h"
@@ -50,6 +51,8 @@ public:
     wl_output *output() const;
 
     QRect availableGeometry() const;
+
+    GrabWindow *grabWindow() const;
 
     BackgroundWindow *backgroundWindow() const;
     PanelWindow *panelWindow() const;
@@ -71,6 +74,7 @@ private:
     QScreen *m_screen;
     wl_output *m_output;
     QRect m_availableGeometry;
+    GrabWindow *m_grabWindow;
     BackgroundWindow *m_backgroundWindow;
     PanelWindow *m_panelWindow;
     LauncherWindow *m_launcherWindow;

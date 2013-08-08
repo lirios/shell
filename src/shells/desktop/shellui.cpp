@@ -50,6 +50,10 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
     m_output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen));
 
+    // Create grab window
+    m_grabWindow = new GrabWindow(screen);
+    m_grabWindow->show();
+
     // Create Background window
     m_backgroundWindow = new BackgroundWindow(this);
 
@@ -93,6 +97,11 @@ wl_output *ShellUi::output() const
 QRect ShellUi::availableGeometry() const
 {
     return m_availableGeometry;
+}
+
+GrabWindow *ShellUi::grabWindow() const
+{
+    return m_grabWindow;
 }
 
 BackgroundWindow *ShellUi::backgroundWindow() const
