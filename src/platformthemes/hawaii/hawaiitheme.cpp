@@ -67,16 +67,16 @@ const QFont *HawaiiTheme::font(Font type) const
 
     switch (type) {
     case SystemFont:
-        fontName = m_settings->value("interface/font-name").toString();
-        fontSize = m_settings->value("interface/font-size").toInt();
+        fontName = m_settings->value("interface/font-name", fontName).toString();
+        fontSize = m_settings->value("interface/font-size", fontSize).toInt();
         break;
     case SmallFont:
-        fontName = m_settings->value("interface/small-font-name").toString();
-        fontSize = m_settings->value("interface/small-font-size").toInt();
+        fontName = m_settings->value("interface/small-font-name", fontName).toString();
+        fontSize = m_settings->value("interface/small-font-size", fontSize).toInt();
         break;
     case MiniFont:
-        fontName = m_settings->value("interface/mini-font-name").toString();
-        fontSize = m_settings->value("interface/mini-font-size").toInt();
+        fontName = m_settings->value("interface/mini-font-name", fontName).toString();
+        fontSize = m_settings->value("interface/mini-font-size", fontSize).toInt();
         break;
     default:
         break;
