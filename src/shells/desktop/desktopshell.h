@@ -59,6 +59,9 @@ private:
     struct wl_registry *m_registry;
     QQmlEngine *m_engine;
     QList<ShellUi *> m_windows;
+
+private Q_SLOTS:
+    void shellUiReady();
 };
 
 #endif // DESKTOPSHELL_H

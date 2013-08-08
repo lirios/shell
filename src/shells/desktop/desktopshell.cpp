@@ -107,6 +107,20 @@ void DesktopShell::create()
 
         ShellUi *ui = new ShellUi(m_engine, screen, this);
         m_windows.append(ui);
+        connect(ui, SIGNAL(ready()), this, SLOT(shellUiReady()));
+    }
+}
+
+void DesktopShell::shellUiReady()
+{
+    static int windowsReady = 0;
+    windowsReady++;
+
+    // Tell the compositor we're ready if all windows are created
+    if (windowsReady == m_windows.size()) {
+        WaylandIntegration *integration = WaylandIntegration::instance();
+        hawaii_desktop_shell_desktop_ready(integration->shell);
+        qDebug() << "Shell is now ready!";
     }
 }
 

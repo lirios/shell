@@ -98,10 +98,10 @@ void WaylandIntegration::handlePresent(void *data,
         if (surface == shellUi->backgroundWindow()->surface()) {
             QMetaObject::invokeMethod(shellUi->backgroundWindow(), "showNormal");
         } else if (surface == shellUi->panelWindow()->surface()) {
-            QMetaObject::invokeMethod(shellUi->panelWindow(), "show");
+            QMetaObject::invokeMethod(shellUi->panelWindow(), "showNormal");
             QMetaObject::invokeMethod(shellUi->panelWindow(), "sendGeometry");
         } else if (surface == shellUi->launcherWindow()->surface()) {
-            QMetaObject::invokeMethod(shellUi->launcherWindow(), "show");
+            QMetaObject::invokeMethod(shellUi->launcherWindow(), "showNormal");
             QMetaObject::invokeMethod(shellUi->launcherWindow(), "sendGeometry");
         }
     }
