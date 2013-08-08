@@ -157,7 +157,6 @@ void ShellUi::updateScreenGeometry(const QRect &rect)
     Q_EMIT availableGeometryChanged(geometry);
 
     // Send available geometry to the compositor
-    return;
     WaylandIntegration *object = WaylandIntegration::instance();
     hawaii_desktop_shell_set_available_geometry(
                 object->shell, m_output,

@@ -28,6 +28,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
+import FluidUi 0.2 as FluidUi
 import Hawaii.Shell.Desktop 0.1
 
 Item {
@@ -49,7 +50,6 @@ Item {
     Background {
         id: background
         anchors.fill: parent
-        visible: false
     }
 
     BrightnessContrast {
@@ -92,11 +92,28 @@ Item {
 
         Item {
             Layout.fillHeight: true
+            Layout.minimumHeight: 250
         }
 
-        Button {
-            text: qsTr("Unlock")
-            onClicked: sessionManager.unlock()
+        MouseArea {
+            width: 96
+            height: 96
+            onReleased: sessionManager.unlock()
+
+            Rectangle {
+                anchors.fill: parent
+                radius: height
+                color: "#80222222"
+                border.color: "#222"
+                antialiasing: true
+
+                FluidUi.Icon {
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    iconName: "changes-allow-symbolic"
+                    color: "white"
+                }
+            }
 
             Layout.alignment: Qt.AlignCenter
         }
