@@ -271,7 +271,7 @@ void PolicyKitAgent::dialogAccepted()
 void PolicyKitAgent::dialogRejected()
 {
     Q_ASSERT(m_dialog);
-    m_session->setResponse(QStringLiteral(""));
+    m_session->cancel();
 }
 
 #include "moc_policykitagent.cpp"
