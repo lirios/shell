@@ -48,7 +48,7 @@ Dialog {
 
     ColumnLayout {
         width: Math.max(childrenRect.width, 320)
-        height: Math.max(childrenRect.height, 135)
+        height: Math.max(childrenRect.height, 165)
 
         RowLayout {
             FluidUi.Icon {
@@ -96,6 +96,8 @@ Dialog {
                     id: passwordInput
                     //echoMode: echo ? TextInput.Password : TextInput.Normal
                     echoMode: TextInput.Password
+
+                    Layout.fillWidth: true
                 }
             }
 
