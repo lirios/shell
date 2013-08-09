@@ -40,10 +40,9 @@ ZoomEffect::~ZoomEffect()
     delete m_binding;
 }
 
-void ZoomEffect::run(struct wl_seat *seat, uint32_t time, uint32_t axis, wl_fixed_t value)
+void ZoomEffect::run(struct weston_seat *seat, uint32_t time, uint32_t axis, wl_fixed_t value)
 {
-    struct weston_seat *ws = wl_seat2weston_seat(seat);
-    struct weston_compositor *compositor = ws->compositor;
+    struct weston_compositor *compositor = seat->compositor;
     struct weston_output *output;
 
     wl_list_for_each(output, &compositor->output_list, link) {

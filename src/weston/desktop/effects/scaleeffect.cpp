@@ -32,6 +32,7 @@
 #include "shell.h"
 #include "animation.h"
 #include "animationcurve.h"
+#include "shellseat.h"
 
 #include "wayland-desktop-shell-server-protocol.h"
 
@@ -56,13 +57,25 @@ struct SurfaceTransform {
     int sy, ty, cy;
 };
 
-void ScaleEffect::grab_focus(struct wl_pointer_grab *base, struct wl_surface *surf, wl_fixed_t x, wl_fixed_t y)
+void ScaleEffect::grab_focus(struct weston_pointer_grab *base)
 {
     ShellGrab *shgrab = container_of(base, ShellGrab, grab);
     Grab *grab = static_cast<Grab *>(shgrab);
 
     Workspace *currWs = grab->shell->currentWorkspace();
-    struct weston_surface *surface = container_of(surf, struct weston_surface, surface);
+
+    wl_fixed_t sx, sy;
+    struct weston_surface *surface = weston_compositor_pick_surface(grab->pointer->seat->compositor,
+                                                                    grab->pointer->x, grab->pointer->y,
+                                                                    &sx, &sy);
+
+    if (grab->pointer->focus == surface) {
+        return;
+    }
+
+    grab->pointer->focus = surface;
+
+    printf("focus %p\n", surface);
     for (SurfaceTransform *tr: grab->effect->m_surfaces) {
         if (tr->surface->workspace() != currWs) {
             continue;
@@ -73,6 +86,7 @@ void ScaleEffect::grab_focus(struct wl_pointer_grab *base, struct wl_surface *su
         if (alpha == curr) {
             continue;
         }
+        printf("%p %f %f\n",tr->surface->weston_surface(),alpha,curr);
 
         tr->alphaAnim.setStart(curr);
         tr->alphaAnim.setTarget(alpha);
@@ -80,12 +94,12 @@ void ScaleEffect::grab_focus(struct wl_pointer_grab *base, struct wl_surface *su
     }
 }
 
-static void grab_button(struct wl_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state_w)
+static void grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state_w)
 {
     ShellGrab *shgrab = container_of(base, ShellGrab, grab);
     Grab *grab = static_cast<Grab *>(shgrab);
     if (state_w == WL_POINTER_BUTTON_STATE_PRESSED) {
-        struct weston_surface *surface = (struct weston_surface *) base->pointer->current;
+        struct weston_surface *surface = base->pointer->focus;
         ShellSurface *shsurf = grab->shell->getShellSurface(surface);
         if (shsurf) {
             grab->effect->end(shsurf);
@@ -93,20 +107,19 @@ static void grab_button(struct wl_pointer_grab *base, uint32_t time, uint32_t bu
     }
 }
 
-const struct wl_pointer_grab_interface ScaleEffect::grab_interface = {
+const struct weston_pointer_grab_interface ScaleEffect::grab_interface = {
     ScaleEffect::grab_focus,
-    [](struct wl_pointer_grab *grab, uint32_t time, wl_fixed_t x, wl_fixed_t y) {},
+    [](struct weston_pointer_grab *grab, uint32_t time) {},
     grab_button,
 };
 
 ScaleEffect::ScaleEffect(Shell *shell)
-    : Effect(shell)
-    , m_scaled(false)
-    , m_grab(new Grab)
+           : Effect(shell)
+           , m_scaled(false)
+           , m_grab(new Grab)
 {
     m_grab->effect = this;
-    // FIXME: Modifier from configuration
-    m_binding = shell->bindKey(KEY_E, MODIFIER_SUPER, &ScaleEffect::run, this);
+    m_binding = shell->bindKey(KEY_E, MODIFIER_CTRL, &ScaleEffect::run, this);
 }
 
 ScaleEffect::~ScaleEffect()
@@ -114,9 +127,9 @@ ScaleEffect::~ScaleEffect()
     delete m_binding;
 }
 
-void ScaleEffect::run(struct wl_seat *seat, uint32_t time, uint32_t key)
+void ScaleEffect::run(struct weston_seat *seat, uint32_t time, uint32_t key)
 {
-    run((struct weston_seat *)seat);
+    run(seat);
 }
 
 void ScaleEffect::run(struct weston_seat *ws)
@@ -209,10 +222,10 @@ void ScaleEffect::run(struct weston_seat *ws)
     m_scaled = !m_scaled;
     if (m_scaled) {
         m_seat = ws;
-        shell()->startGrab(m_grab, &grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_ARROW);
+        shell()->startGrab(m_grab, &grab_interface, ws, DESKTOP_SHELL_CURSOR_ARROW);
         shell()->hidePanels();
-        if (ws->pointer.current) {
-            ShellSurface *s = Shell::getShellSurface(container_of(ws->pointer.current, struct weston_surface, surface));
+        if (ws->pointer->focus) {
+            ShellSurface *s = Shell::getShellSurface(ws->pointer->focus);
             if (!s) {
                 return;
             }
@@ -235,7 +248,7 @@ void ScaleEffect::run(struct weston_seat *ws)
 
 void ScaleEffect::end(ShellSurface *surface)
 {
-    shell()->activateSurface(surface, m_seat);
+    ShellSeat::shellSeat(m_seat)->activate(surface);
     run(m_seat);
 }
 

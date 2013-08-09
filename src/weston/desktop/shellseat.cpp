@@ -29,9 +29,49 @@
 
 #include "shellseat.h"
 #include "shellsurface.h"
+#include "workspace.h"
+#include "shell.h"
+
+class FocusState {
+public:
+    FocusState(ShellSeat *seat)
+        : seat(seat)
+        , surface(nullptr)
+    {
+    }
+
+    void setFocus(ShellSurface *surf) {
+        if (surface) {
+            surface->destroyedSignal.disconnect(this, &FocusState::surfaceDestroyed);
+            surface->setActive(false);
+        }
+        if (surf) {
+            surf->destroyedSignal.connect(this, &FocusState::surfaceDestroyed);
+            surf->setActive(true);
+        }
+        surface = surf;
+    }
+
+    void surfaceDestroyed() {
+        for (const weston_surface *surf: surface->workspace()->layer()) {
+            if (surf != surface->weston_surface()) {
+                ShellSurface *shsurf = Shell::getShellSurface(surf);
+                if (shsurf) {
+                    seat->activate(shsurf);
+                    return;
+                }
+            }
+        }
+        surface = nullptr;
+    }
+
+    ShellSeat *seat;
+    ShellSurface *surface;
+};
 
 ShellSeat::ShellSeat(struct weston_seat *seat)
-    : m_seat(seat)
+         : m_seat(seat)
+         , m_focusState(new FocusState(this))
 {
     m_popupGrab.client = nullptr;
     m_popupGrab.seat = this;
@@ -40,9 +80,9 @@ ShellSeat::ShellSeat(struct weston_seat *seat)
     m_listeners.seatDestroy.notify = seatDestroyed;
     wl_signal_add(&seat->destroy_signal, &m_listeners.seatDestroy);
 
-    if (seat->seat.pointer) {
+    if (seat->pointer) {
         m_listeners.focus.notify = pointerFocus;
-        wl_signal_add(&seat->seat.pointer->focus_signal, &m_listeners.focus);
+        wl_signal_add(&seat->pointer->focus_signal, &m_listeners.focus);
     } else {
         wl_list_init(&m_listeners.focus.link);
     }
@@ -51,7 +91,7 @@ ShellSeat::ShellSeat(struct weston_seat *seat)
 ShellSeat::~ShellSeat()
 {
     if (m_popupGrab.client) {
-        wl_pointer_end_grab(m_popupGrab.grab.pointer);
+        weston_pointer_end_grab(m_popupGrab.grab.pointer);
     }
     wl_list_remove(&m_listeners.seatDestroy.link);
     wl_list_remove(&m_listeners.focus.link);
@@ -67,6 +107,30 @@ ShellSeat *ShellSeat::shellSeat(struct weston_seat *seat)
     return static_cast<Wrapper *>(container_of(listener, Wrapper, seatDestroy))->seat;
 }
 
+void ShellSeat::activate(ShellSurface *shsurf)
+{
+    if (shsurf) {
+        weston_surface_activate(shsurf->weston_surface(), m_seat);
+        shsurf->workspace()->restack(shsurf);
+    }
+    m_focusState->setFocus(shsurf);
+}
+
+void ShellSeat::activate(weston_surface *surf)
+{
+    weston_surface_activate(surf, m_seat);
+    ShellSurface *shsurf = Shell::getShellSurface(surf);
+    if (shsurf) {
+        shsurf->workspace()->restack(shsurf);
+    }
+    m_focusState->setFocus(shsurf);
+}
+
+ShellSurface *ShellSeat::currentFocus() const
+{
+    return  m_focusState->surface;
+}
+
 void ShellSeat::seatDestroyed(struct wl_listener *listener, void *data)
 {
     ShellSeat *shseat = static_cast<Wrapper *>(container_of(listener, Wrapper, seatDestroy))->seat;
@@ -76,32 +140,40 @@ void ShellSeat::seatDestroyed(struct wl_listener *listener, void *data)
 void ShellSeat::pointerFocus(struct wl_listener *listener, void *data)
 {
     ShellSeat *shseat = static_cast<Wrapper *>(container_of(listener, Wrapper, focus))->seat;
-    struct wl_pointer *pointer = static_cast<wl_pointer *>(data);
+    struct weston_pointer *pointer = static_cast<weston_pointer *>(data);
     shseat->pointerFocusSignal(shseat, pointer);
 }
 
-void ShellSeat::popup_grab_focus(struct wl_pointer_grab *grab, struct wl_surface *surface, wl_fixed_t x, wl_fixed_t y)
+void ShellSeat::popup_grab_focus(struct weston_pointer_grab *grab)
 {
-    struct wl_pointer *pointer = grab->pointer;
+    struct weston_pointer *pointer = grab->pointer;
     ShellSeat *shseat = static_cast<PopupGrab *>(container_of(grab, PopupGrab, grab))->seat;
 
-    if (surface && surface->resource.client == shseat->m_popupGrab.client) {
-        wl_pointer_set_focus(pointer, surface, x, y);
-        grab->focus = surface;
+    wl_fixed_t sx, sy;
+    struct weston_surface *surface = weston_compositor_pick_surface(pointer->seat->compositor,
+                                                                    pointer->x, pointer->y,
+                                                                    &sx, &sy);
+
+    if (surface && surface->resource->client == shseat->m_popupGrab.client) {
+        weston_pointer_set_focus(pointer, surface, sx, sy);
+        grab->pointer->focus = surface;
     } else {
-        wl_pointer_set_focus(pointer, NULL, wl_fixed_from_int(0), wl_fixed_from_int(0));
-        grab->focus = NULL;
+        weston_pointer_set_focus(pointer, NULL, wl_fixed_from_int(0), wl_fixed_from_int(0));
+        grab->pointer->focus = NULL;
     }
 }
 
-static void popup_grab_motion(struct wl_pointer_grab *grab,  uint32_t time, wl_fixed_t sx, wl_fixed_t sy)
+static void popup_grab_motion(struct weston_pointer_grab *grab,  uint32_t time)
 {
     struct wl_resource *resource = grab->pointer->focus_resource;
-    if (resource)
+    if (resource) {
+        wl_fixed_t sx, sy;
+        weston_surface_from_global_fixed(grab->pointer->focus, grab->pointer->x, grab->pointer->y, &sx, &sy);
         wl_pointer_send_motion(resource, time, sx, sy);
+    }
 }
 
-void ShellSeat::popup_grab_button(struct wl_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w)
+void ShellSeat::popup_grab_button(struct weston_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w)
 {
     ShellSeat *shseat = static_cast<PopupGrab *>(container_of(grab, PopupGrab, grab))->seat;
 
@@ -111,7 +183,7 @@ void ShellSeat::popup_grab_button(struct wl_pointer_grab *grab, uint32_t time, u
         uint32_t serial = wl_display_get_serial(display);
         wl_pointer_send_button(resource, serial, time, button, state_w);
     } else if (state_w == WL_POINTER_BUTTON_STATE_RELEASED &&
-               (shseat->m_popupGrab.initial_up || time - shseat->m_seat->pointer.grab_time > 500)) {
+              (shseat->m_popupGrab.initial_up || time - shseat->m_seat->pointer->grab_time > 500)) {
         shseat->endPopupGrab();
     }
 
@@ -119,7 +191,7 @@ void ShellSeat::popup_grab_button(struct wl_pointer_grab *grab, uint32_t time, u
         shseat->m_popupGrab.initial_up = 1;
 }
 
-const struct wl_pointer_grab_interface ShellSeat::popup_grab_interface = {
+const struct weston_pointer_grab_interface ShellSeat::popup_grab_interface = {
     ShellSeat::popup_grab_focus,
     popup_grab_motion,
     ShellSeat::popup_grab_button,
@@ -127,18 +199,18 @@ const struct wl_pointer_grab_interface ShellSeat::popup_grab_interface = {
 
 bool ShellSeat::addPopupGrab(ShellSurface *surface, uint32_t serial)
 {
-    if (serial == m_seat->pointer.grab_serial) {
+    if (serial == m_seat->pointer->grab_serial) {
         if (m_popupGrab.surfaces.empty()) {
             m_popupGrab.client = surface->client();
             m_popupGrab.grab.interface = &popup_grab_interface;
             /* We must make sure here that this popup was opened after
             * a mouse press, and not just by moving around with other
             * popups already open. */
-            if (m_seat->pointer.button_count > 0) {
+            if (m_seat->pointer->button_count > 0) {
                 m_popupGrab.initial_up = 0;
             }
 
-            wl_pointer_start_grab(m_seat->seat.pointer, &m_popupGrab.grab);
+            weston_pointer_start_grab(m_seat->pointer, &m_popupGrab.grab);
         }
         m_popupGrab.surfaces.push_back(surface);
 
@@ -153,16 +225,16 @@ void ShellSeat::removePopupGrab(ShellSurface *surface)
 {
     m_popupGrab.surfaces.remove(surface);
     if (m_popupGrab.surfaces.empty()) {
-        wl_pointer_end_grab(m_popupGrab.grab.pointer);
+        weston_pointer_end_grab(m_popupGrab.grab.pointer);
         m_popupGrab.client = nullptr;
     }
 }
 
 void ShellSeat::endPopupGrab()
 {
-    struct wl_pointer *pointer = m_popupGrab.grab.pointer;
+    struct weston_pointer *pointer = m_popupGrab.grab.pointer;
     if (m_popupGrab.client) {
-        wl_pointer_end_grab(pointer->grab->pointer);
+        weston_pointer_end_grab(pointer->grab->pointer);
         m_popupGrab.client = nullptr;
         /* Send the popup_done event to all the popups open */
         for (ShellSurface *shsurf: m_popupGrab.surfaces) {

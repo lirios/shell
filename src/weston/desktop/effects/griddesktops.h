@@ -42,7 +42,7 @@ public:
     GridDesktops(Shell *shell);
     ~GridDesktops();
 
-    virtual void run(struct wl_seat *seat, uint32_t time, uint32_t key);
+    virtual void run(struct weston_seat *seat, uint32_t time, uint32_t key);
     void end(ShellSurface *surface);
 
 private:
@@ -54,9 +54,9 @@ private:
     Binding *m_binding;
     int m_setWs;
 
-    static void grab_focus(struct wl_pointer_grab *grab, struct wl_surface *surface, wl_fixed_t x, wl_fixed_t y);
-    static void grab_button(struct wl_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state_w);
-    static const struct wl_pointer_grab_interface grab_interface;
+    static void grab_focus(struct weston_pointer_grab *grab);
+    static void grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state_w);
+    static const struct weston_pointer_grab_interface grab_interface;
 };
 
 #endif // GRIDDESKTOPS_H

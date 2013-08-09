@@ -40,12 +40,12 @@ struct Grab : public ShellGrab {
     GridDesktops *effect;
 };
 
-void GridDesktops::grab_focus(struct wl_pointer_grab *base, struct wl_surface *surf, wl_fixed_t x, wl_fixed_t y)
+void GridDesktops::grab_focus(struct weston_pointer_grab *base)
 {
 
 }
 
-void GridDesktops::grab_button(struct wl_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state_w)
+void GridDesktops::grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state_w)
 {
     ShellGrab *shgrab = container_of(base, ShellGrab, grab);
     Grab *grab = static_cast<Grab *>(shgrab);
@@ -68,20 +68,19 @@ void GridDesktops::grab_button(struct wl_pointer_grab *base, uint32_t time, uint
     }
 }
 
-const struct wl_pointer_grab_interface GridDesktops::grab_interface = {
+const struct weston_pointer_grab_interface GridDesktops::grab_interface = {
     GridDesktops::grab_focus,
-    [](struct wl_pointer_grab *grab, uint32_t time, wl_fixed_t x, wl_fixed_t y) {},
+    [](struct weston_pointer_grab *grab, uint32_t time) {},
     GridDesktops::grab_button,
 };
 
 GridDesktops::GridDesktops(Shell *shell)
-    : Effect(shell)
-    , m_scaled(false)
-    , m_grab(new Grab)
+           : Effect(shell)
+           , m_scaled(false)
+           , m_grab(new Grab)
 {
     m_grab->effect = this;
-    // FIXME: Modifier from configuration
-    m_binding = shell->bindKey(KEY_G, MODIFIER_SUPER, &GridDesktops::run, this);
+    m_binding = shell->bindKey(KEY_G, MODIFIER_CTRL, &GridDesktops::run, this);
 }
 
 GridDesktops::~GridDesktops()
@@ -89,9 +88,9 @@ GridDesktops::~GridDesktops()
     delete m_binding;
 }
 
-void GridDesktops::run(struct wl_seat *seat, uint32_t time, uint32_t key)
+void GridDesktops::run(struct weston_seat *seat, uint32_t time, uint32_t key)
 {
-    run((struct weston_seat *)seat);
+    run(seat);
 }
 
 void GridDesktops::run(struct weston_seat *ws)

@@ -30,8 +30,7 @@
 
 #include <weston/compositor.h>
 
-class Transform
-{
+class Transform {
 public:
     Transform();
 

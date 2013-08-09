@@ -35,8 +35,7 @@
 class ShellSurface;
 class AnimationCurve;
 
-class Animation
-{
+class Animation {
 public:
     enum class Flags {
         None = 0,

@@ -35,18 +35,23 @@
 #include "signal.h"
 
 class ShellSurface;
+class FocusState;
 
-class ShellSeat
-{
+class ShellSeat {
 public:
     ~ShellSeat();
     static ShellSeat *shellSeat(struct weston_seat *seat);
+
+    void activate(ShellSurface *shsurf);
+    void activate(weston_surface *surf);
 
     bool addPopupGrab(ShellSurface *surface, uint32_t serial);
     void removePopupGrab(ShellSurface *surface);
     void endPopupGrab();
 
-    Signal<ShellSeat *, struct wl_pointer *> pointerFocusSignal;
+    ShellSurface *currentFocus() const;
+
+    Signal<ShellSeat *, struct weston_pointer *> pointerFocusSignal;
 
 private:
     ShellSeat(struct weston_seat *seat);
@@ -54,6 +59,7 @@ private:
     static void pointerFocus(struct wl_listener *listener, void *data);
 
     struct weston_seat *m_seat;
+    FocusState *m_focusState;
     struct Wrapper {
         ShellSeat *seat;
         struct wl_listener seatDestroy;
@@ -62,15 +68,15 @@ private:
 
     struct PopupGrab {
         ShellSeat *seat;
-        struct wl_pointer_grab grab;
+        struct weston_pointer_grab grab;
         std::list<ShellSurface *> surfaces;
         struct wl_client *client;
         int32_t initial_up;
     } m_popupGrab;
 
-    static void popup_grab_focus(struct wl_pointer_grab *grab, struct wl_surface *surface, wl_fixed_t x, wl_fixed_t y);
-    static void popup_grab_button(struct wl_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w);
-    static const struct wl_pointer_grab_interface popup_grab_interface;
+    static void popup_grab_focus(struct weston_pointer_grab *grab);
+    static void popup_grab_button(struct weston_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w);
+    static const struct weston_pointer_grab_interface popup_grab_interface;
 };
 
 #endif // SHELLSEAT_H

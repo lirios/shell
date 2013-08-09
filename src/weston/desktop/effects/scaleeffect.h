@@ -42,7 +42,7 @@ public:
     ScaleEffect(Shell *shell);
     ~ScaleEffect();
 
-    virtual void run(struct wl_seat *seat, uint32_t time, uint32_t key);
+    virtual void run(struct weston_seat *seat, uint32_t time, uint32_t key);
     void end(ShellSurface *surface);
 
 protected:
@@ -58,8 +58,8 @@ private:
     struct Grab *m_grab;
     Binding *m_binding;
 
-    static void grab_focus(struct wl_pointer_grab *grab, struct wl_surface *surface, wl_fixed_t x, wl_fixed_t y);
-    static const struct wl_pointer_grab_interface grab_interface;
+    static void grab_focus(struct weston_pointer_grab *grab);
+    static const struct weston_pointer_grab_interface grab_interface;
 };
 
 #endif // SCALEEFFECT_H

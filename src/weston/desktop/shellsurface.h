@@ -40,8 +40,7 @@ class Shell;
 class ShellSeat;
 class Workspace;
 
-class ShellSurface
-{
+class ShellSurface {
 public:
     enum class Type {
         None,
@@ -51,11 +50,10 @@ public:
         Popup,
         Fullscreen
     };
-
     ShellSurface(Shell *shell, struct weston_surface *surface);
     ~ShellSurface();
 
-    void init(uint32_t id, Workspace *workspace);
+    void init(struct wl_client *client, uint32_t id, Workspace *workspace);
     bool updateType();
     void map(int32_t x, int32_t y, int32_t width, int32_t height);
     void unmapped();
@@ -66,10 +64,10 @@ public:
     void setAlpha(float alpha);
 
     inline Shell *shell() const { return m_shell; }
-    inline struct wl_resource *wl_resource() { return &m_resource; }
-    inline const struct wl_resource *wl_resource() const { return &m_resource; }
-    inline struct wl_client *client() const { return m_surface->surface.resource.client; }
-    inline struct wl_surface *wl_surface() const { return &m_surface->surface; }
+    inline struct wl_resource *wl_resource() { return m_resource; }
+    inline const struct wl_resource *wl_resource() const { return m_resource; }
+    inline struct wl_client *client() const { return m_surface->resource->client; }
+    inline struct weston_surface *weston_surface() const { return m_surface; }
 
     inline Type type() const { return m_type; }
     bool isMapped() const;
@@ -87,6 +85,8 @@ public:
     inline Workspace *workspace() const { return m_workspace; }
     struct weston_surface *transformParent() const;
 
+    inline std::string title() const { return m_title; }
+
     void dragMove(struct weston_seat *ws);
     void dragResize(struct weston_seat *ws, uint32_t edges);
     void popupDone();
@@ -94,13 +94,15 @@ public:
     void ping(uint32_t serial);
     bool isResponsive() const;
 
+    void setActive(bool active);
+
+    Signal<> destroyedSignal;
     Signal<ShellSurface *> moveStartSignal;
     Signal<ShellSurface *> moveEndSignal;
     Signal<ShellSurface *> pingTimeoutSignal;
     Signal<ShellSurface *> pongSignal;
 
 private:
-    void setInitialPosition();
     void setFullscreen(uint32_t method, uint32_t framerate, struct weston_output *output);
     void unsetFullscreen();
     void unsetMaximized();
@@ -109,10 +111,13 @@ private:
     void surfaceDestroyed();
     int pingTimeout();
     void destroyPingTimer();
+    void destroyWindow();
+    void sendState();
 
     Shell *m_shell;
     Workspace *m_workspace;
-    struct wl_resource m_resource;
+    struct wl_resource *m_resource;
+    struct wl_resource *m_windowResource;
     struct weston_surface *m_surface;
     WlListener m_surfaceDestroyListener;
     Type m_type;
@@ -123,6 +128,8 @@ private:
     struct weston_output *m_output;
     int32_t m_savedX, m_savedY;
     bool m_unresponsive;
+    int32_t m_state;
+    bool m_windowAdvertized;
 
     struct weston_surface *m_parent;
     struct {
@@ -152,16 +159,16 @@ private:
 
     void pong(struct wl_client *client, struct wl_resource *resource, uint32_t serial);
     void move(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
-              uint32_t serial);
+                                   uint32_t serial);
     void resize(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
-                uint32_t serial, uint32_t edges);
+                                     uint32_t serial, uint32_t edges);
     void setToplevel(struct wl_client *client, struct wl_resource *resource);
     void setTransient(struct wl_client *client, struct wl_resource *resource,
-                      struct wl_resource *parent_resource, int x, int y, uint32_t flags);
+                                            struct wl_resource *parent_resource, int x, int y, uint32_t flags);
     void setFullscreen(struct wl_client *client, struct wl_resource *resource, uint32_t method,
-                       uint32_t framerate, struct wl_resource *output_resource);
+                                             uint32_t framerate, struct wl_resource *output_resource);
     void setPopup(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
-                  uint32_t serial, struct wl_resource *parent_resource, int32_t x, int32_t y, uint32_t flags);
+                                        uint32_t serial, struct wl_resource *parent_resource, int32_t x, int32_t y, uint32_t flags);
     void setMaximized(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource);
     void setTitle(struct wl_client *client, struct wl_resource *resource, const char *title);
     void setClass(struct wl_client *client, struct wl_resource *resource, const char *className);
@@ -183,13 +190,16 @@ private:
     static void shell_surface_set_class(struct wl_client *client, struct wl_resource *resource, const char *className);
     static const struct wl_shell_surface_interface m_shell_surface_implementation;
 
-    static void move_grab_motion(struct wl_pointer_grab *grab, uint32_t time, wl_fixed_t x, wl_fixed_t y);
-    static void move_grab_button(struct wl_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w);
-    static const struct wl_pointer_grab_interface m_move_grab_interface;
+    static void move_grab_motion(struct weston_pointer_grab *grab, uint32_t time);
+    static void move_grab_button(struct weston_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w);
+    static const struct weston_pointer_grab_interface m_move_grab_interface;
 
-    static void resize_grab_motion(struct wl_pointer_grab *grab, uint32_t time, wl_fixed_t x, wl_fixed_t y);
-    static void resize_grab_button(struct wl_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w);
-    static const struct wl_pointer_grab_interface m_resize_grab_interface;
+    static void resize_grab_motion(struct weston_pointer_grab *grab, uint32_t time);
+    static void resize_grab_button(struct weston_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w);
+    static const struct weston_pointer_grab_interface m_resize_grab_interface;
+
+    static void set_state(struct wl_client *client, struct wl_resource *resource, int32_t state);
+    static const struct desktop_shell_window_interface m_window_implementation;
 
     friend class Shell;
     friend class Layer;
@@ -206,7 +216,7 @@ inline void ShellSurface::shell_surface_move(struct wl_client *client, struct wl
 }
 
 inline void ShellSurface::shell_surface_resize(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
-                                               uint32_t serial, uint32_t edges) {
+                                 uint32_t serial, uint32_t edges) {
     static_cast<ShellSurface *>(resource->data)->resize(client, resource, seat_resource, serial, edges);
 }
 
@@ -215,17 +225,17 @@ inline void ShellSurface::shell_surface_set_toplevel(struct wl_client *client, s
 }
 
 inline void ShellSurface::shell_surface_set_transient(struct wl_client *client, struct wl_resource *resource,
-                                                      struct wl_resource *parent_resource, int x, int y, uint32_t flags) {
+                                        struct wl_resource *parent_resource, int x, int y, uint32_t flags) {
     static_cast<ShellSurface *>(resource->data)->setTransient(client, resource, parent_resource, x, y, flags);
 }
 
 inline void ShellSurface::shell_surface_set_fullscreen(struct wl_client *client, struct wl_resource *resource, uint32_t method,
-                                                       uint32_t framerate, struct wl_resource *output_resource) {
+                                         uint32_t framerate, struct wl_resource *output_resource) {
     static_cast<ShellSurface *>(resource->data)->setFullscreen(client, resource, method, framerate, output_resource);
 }
 
 inline void ShellSurface::shell_surface_set_popup(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
-                                                  uint32_t serial, struct wl_resource *parent_resource, int32_t x, int32_t y, uint32_t flags) {
+                                    uint32_t serial, struct wl_resource *parent_resource, int32_t x, int32_t y, uint32_t flags) {
     static_cast<ShellSurface *>(resource->data)->setPopup(client, resource, seat_resource, serial, parent_resource, x, y, flags);
 }
 

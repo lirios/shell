@@ -33,8 +33,7 @@
 
 class Shell;
 
-class Workspace
-{
+class Workspace {
 public:
     Workspace(Shell *shell, int number);
     ~Workspace();
@@ -53,6 +52,8 @@ public:
     void insert(Layer *layer);
     void insert(struct weston_layer *layer);
     void remove();
+
+    inline const Layer &layer() const { return m_layer; }
 
 private:
     Shell *m_shell;

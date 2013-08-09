@@ -64,6 +64,4 @@ private:
     Wrapper m_listener;
 };
 
-inline struct weston_seat *wl_seat2weston_seat(struct wl_seat *s) { return container_of(s, struct weston_seat, seat); }
-
 #endif
