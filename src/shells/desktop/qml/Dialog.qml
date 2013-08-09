@@ -35,8 +35,10 @@ ShellWindow {
 
     default property alias content: container.children
 
+    signal accepted()
     signal rejected()
 
+    onAccepted: dialogWindow.visible = false
     onRejected: dialogWindow.visible = false
 
     Item {
