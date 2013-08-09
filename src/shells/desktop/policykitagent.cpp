@@ -181,11 +181,11 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
     // Authorization session complete
     session->result()->setCompleted();
     m_sessionIdentity.remove(session);
-    delete session;
+    session->deleteLater();
 
     // Close modal dialog and delete it
     QMetaObject::invokeMethod(m_dialog, "close");
-    delete m_dialog;
+    m_dialog->deleteLater();
     m_dialog = 0;
 
     // Unset variables that keep track of the authorization session
@@ -270,6 +270,7 @@ void PolicyKitAgent::dialogAccepted()
 
 void PolicyKitAgent::dialogRejected()
 {
+    Q_ASSERT(m_dialog);
     m_session->setResponse(QStringLiteral(""));
 }
 
