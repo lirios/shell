@@ -61,7 +61,7 @@ Dialog {
 
             ColumnLayout {
                 Label {
-                    text: qsTr("Shut Down")
+                    text: qsTr("Power Off")
                     font.bold: true
                 }
 
