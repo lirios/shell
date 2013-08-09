@@ -82,8 +82,10 @@ void PolicyKitAgent::initiateAuthentication(const QString &actionId,
     m_session = 0;
 
     // Create the dialog again
-    if (m_dialog)
-        delete m_dialog;
+    if (m_dialog) {
+        QMetaObject::invokeMethod(m_dialog, "hide", Qt::QueuedConnection);
+        m_dialog->deleteLater();
+    }
     m_dialog = createDialog(actionId, message, iconName, details, identities);
     if (!m_dialog) {
         cancelAuthentication();
@@ -107,9 +109,12 @@ void PolicyKitAgent::initiateAuthentication(const QString &actionId,
 
 bool PolicyKitAgent::initiateAuthenticationFinish()
 {
-    // Delete dialog
-    delete m_dialog;
-    m_dialog = 0;
+    if (m_dialog) {
+        // Hide the dialog and delete it
+        QMetaObject::invokeMethod(m_dialog, "hide", Qt::QueuedConnection);
+        m_dialog->deleteLater();
+        m_dialog = 0;
+    }
 
     // Unset variables that keep track of the authorization session
     m_progressing = false;
@@ -120,10 +125,14 @@ bool PolicyKitAgent::initiateAuthenticationFinish()
 
 void PolicyKitAgent::cancelAuthentication()
 {
-    // Close modal dialog and delete it
-    QMetaObject::invokeMethod(m_dialog, "hide", Qt::QueuedConnection);
-    m_dialog->deleteLater();
-    m_dialog = 0;
+    qDebug() << "Canceling authorization...";
+
+    if (m_dialog) {
+        // Hide modal dialog and delete it
+        QMetaObject::invokeMethod(m_dialog, "hide", Qt::QueuedConnection);
+        m_dialog->deleteLater();
+        m_dialog = 0;
+    }
 
     // Unset variables that keep track of the authorization session
     m_progressing = false;
@@ -161,7 +170,7 @@ void PolicyKitAgent::request(const QString &request, bool echo)
     m_dialog->setProperty("prompt", request);
     m_dialog->setProperty("echo", echo);
 
-    // Open modal dialog
+    // Show modal dialog
     QMetaObject::invokeMethod(m_dialog, "show", Qt::QueuedConnection);
 }
 
@@ -184,7 +193,7 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
     session->deleteLater();
 
     // Close modal dialog and delete it
-    QMetaObject::invokeMethod(m_dialog, "close");
+    QMetaObject::invokeMethod(m_dialog, "hide", Qt::QueuedConnection);
     m_dialog->deleteLater();
     m_dialog = 0;
 
@@ -265,12 +274,14 @@ QQuickWindow *PolicyKitAgent::createDialog(const QString &actionId,
 void PolicyKitAgent::dialogAccepted()
 {
     Q_ASSERT(m_dialog);
+    Q_ASSERT(m_session);
     m_session->setResponse(m_dialog->property("response").toString());
 }
 
 void PolicyKitAgent::dialogRejected()
 {
     Q_ASSERT(m_dialog);
+    Q_ASSERT(m_session);
     m_session->cancel();
 }
 
