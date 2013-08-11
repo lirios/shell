@@ -399,12 +399,22 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
 
 void PolicyKitAgent::showInfo(const QString &text)
 {
+    Q_D(PolicyKitAgent);
+
     qDebug() << "PolicyKit-INFO:" << text;
+
+    if (d->dialog)
+        d->dialog->setProperty("infoMessage", text);
 }
 
 void PolicyKitAgent::showError(const QString &text)
 {
+    Q_D(PolicyKitAgent);
+
     qDebug() << "PolicyKit-ERROR:" << text;
+
+    if (d->dialog)
+        d->dialog->setProperty("errorMessage", text);
 }
 
 #include "moc_policykitagent.cpp"

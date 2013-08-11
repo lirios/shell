@@ -44,6 +44,7 @@ Dialog {
     property alias prompt: promptLabel.text
     property bool echo: false
     property alias response: passwordInput.text
+    property alias infoMessage: infoLabel.text
     property alias errorMessage: errorLabel.text
 
     signal authenticate()
@@ -122,6 +123,16 @@ Dialog {
 
                         Layout.fillWidth: true
                     }
+                }
+
+                Label {
+                    id: infoLabel
+                    color: "green"
+                    font.bold: true
+                    wrapMode: Text.WordWrap
+                    visible: text != ""
+
+                    Layout.fillWidth: true
                 }
 
                 Label {
