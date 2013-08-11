@@ -27,6 +27,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import QtAccountsService 5.0
 import FluidUi 0.2 as FluidUi
 import FluidUi.ListItems 0.2 as ListItem
 import Hawaii.Shell.Desktop 0.1
@@ -38,17 +39,20 @@ Dialog {
     property alias message: messageLabel.text
     property string iconName
     property variant details
-    property variant defaultIdentity: null
-    property variant identities
+    property alias realName: avatarName.text
+    property string avatar
     property alias prompt: promptLabel.text
     property bool echo: false
     property alias response: passwordInput.text
+    property alias errorMessage: errorLabel.text
+
+    signal authenticate()
 
     property var palette: SystemPalette {}
 
     ColumnLayout {
         width: Math.max(childrenRect.width, 320)
-        height: Math.max(childrenRect.height, 165)
+        height: Math.max(childrenRect.height, 205)
 
         RowLayout {
             FluidUi.Icon {
@@ -73,15 +77,36 @@ Dialog {
                     Layout.fillWidth: true
                 }
 
-                ListView {
-                    id: usersView
-                    model: identities
-                    delegate: ListItem.Standard {
-                        // TODO: If it fails to load the icon fallback to avatar-default
-                        iconName: modelData.iconFileName
-                        text: modelData.displayName
+                RowLayout {
+                    Image {
+                        id: avatarImage
+                        source: {
+                            // Fallback to a default icon
+                            if (avatar == "")
+                                return "image://desktoptheme/avatar-default";
+
+                            // Prepend the file scheme if this is an absolute path,
+                            // this prevents QtQuick from searching the path from qrc
+                            if (avatar.indexOf("/") == 0)
+                                return "file://" + avatar;
+
+                            // Load from the icon theme
+                            return "image://desktoptheme/" + avatar;
+                        }
+                        sourceSize: Qt.size(width, height)
+                        width: 64
+                        height: 64
+                        smooth: true
                     }
-                    clip: true
+
+                    Label {
+                        id: avatarName
+
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillWidth: true
                 }
 
                 Label {
@@ -96,6 +121,16 @@ Dialog {
                     id: passwordInput
                     //echoMode: echo ? TextInput.Password : TextInput.Normal
                     echoMode: TextInput.Password
+
+                    Layout.fillWidth: true
+                }
+
+                Label {
+                    id: errorLabel
+                    color: "red"
+                    font.bold: true
+                    wrapMode: Text.WordWrap
+                    visible: text != ""
 
                     Layout.fillWidth: true
                 }
@@ -117,7 +152,7 @@ Dialog {
 
             Button {
                 text: qsTr("Authenticate")
-                onClicked: authenticationDialog.accepted()
+                onClicked: authenticationDialog.authenticate()
             }
 
             Layout.alignment: Qt.AlignCenter
