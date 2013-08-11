@@ -29,12 +29,9 @@
 
 #define POLKIT_AGENT_I_KNOW_API_IS_SUBJECT_TO_CHANGE 1
 
-#include <polkitqt1-agent-session.h>
-#include <polkitqt1-identity.h>
-#include <polkitqt1-details.h>
 #include <polkitqt1-agent-listener.h>
 
-class QQuickWindow;
+class PolicyKitAgentPrivate;
 
 class PolicyKitAgent : public PolkitQt1::Agent::Listener
 {
@@ -63,20 +60,11 @@ public slots:
     void showError(const QString &text);
 
 private:
-    bool m_progressing;
-    PolkitQt1::Agent::Session *m_session;
-    QHash<PolkitQt1::Agent::Session *, PolkitQt1::Identity> m_sessionIdentity;
-    QQuickWindow *m_dialog;
+    Q_DECLARE_PRIVATE(PolicyKitAgent)
+    PolicyKitAgentPrivate *d_ptr;
 
-    QQuickWindow *createDialog(const QString &actionId,
-                             const QString &message,
-                             const QString &iconName,
-                             const PolkitQt1::Details &details,
-                             const PolkitQt1::Identity::List &identities);
-
-private slots:
-    void dialogAccepted();
-    void dialogRejected();
+    Q_PRIVATE_SLOT(d_ptr, void dialogAccepted())
+    Q_PRIVATE_SLOT(d_ptr, void dialogRejected())
 };
 
 #endif // POLICYKITAGENT_H
