@@ -28,6 +28,7 @@
 #define DESKTOPSHELL_H
 
 #include <QtCore/QObject>
+#include <QtCore/QElapsedTimer>
 
 class QQmlEngine;
 
@@ -58,6 +59,7 @@ private:
     struct wl_display *m_display;
     int m_fd;
     struct wl_registry *m_registry;
+    QElapsedTimer m_elapsedTimer;
     QQmlEngine *m_engine;
     QList<ShellUi *> m_windows;
 };

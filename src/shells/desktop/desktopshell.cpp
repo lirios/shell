@@ -46,6 +46,9 @@ Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 DesktopShell::DesktopShell()
     : QObject()
 {
+    // Start counting how much time we need to start up :)
+    m_elapsedTimer.start();
+
     // Create QML engine
     m_engine = new QQmlEngine(this);
 
@@ -120,7 +123,7 @@ void DesktopShell::ready()
 {
     WaylandIntegration *integration = WaylandIntegration::instance();
     hawaii_desktop_shell_desktop_ready(integration->shell);
-    qDebug() << "Shell is now ready!";
+    qDebug() << "Shell is now ready and took" << m_elapsedTimer.elapsed() << "ms";
 }
 
 #include "moc_desktopshell.cpp"
