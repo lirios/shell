@@ -34,8 +34,8 @@ Dialog {
     id: shutdownDialog
     onVisibleChanged: {
         if (visible) {
+            timeRemaining = 60;
             shutdownTimer.restart();
-            shutdownTimer.repeat = true;
         }
     }
 
