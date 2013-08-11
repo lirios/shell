@@ -61,7 +61,6 @@ public:
     LockScreenWindow *lockScreenWindow() const;
 
 Q_SIGNALS:
-    void ready();
     void availableGeometryChanged(const QRect &rect);
 
 public Q_SLOTS:
@@ -74,16 +73,12 @@ private:
     QQmlEngine *m_engine;
     QScreen *m_screen;
     wl_output *m_output;
-    int m_paintedWindows;
     QRect m_availableGeometry;
     GrabWindow *m_grabWindow;
     BackgroundWindow *m_backgroundWindow;
     PanelWindow *m_panelWindow;
     LauncherWindow *m_launcherWindow;
     LockScreenWindow *m_lockScreenWindow;
-
-private Q_SLOTS:
-    void visibleChanged(bool visible);
 };
 
 #endif // SHELLUI_H

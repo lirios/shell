@@ -38,7 +38,6 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
     : QObject(parent)
     , m_engine(engine)
     , m_screen(screen)
-    , m_paintedWindows(0)
     , m_backgroundWindow(0)
     , m_panelWindow(0)
     , m_launcherWindow(0)
@@ -57,18 +56,12 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
 
     // Create Background window
     m_backgroundWindow = new BackgroundWindow(this);
-    connect(m_backgroundWindow, SIGNAL(visibleChanged(bool)),
-            this, SLOT(visibleChanged(bool)));
 
     // Create Panel window
     m_panelWindow = new PanelWindow(this);
-    connect(m_panelWindow, SIGNAL(visibleChanged(bool)),
-            this, SLOT(visibleChanged(bool)));
 
     // Create Launcher window
     m_launcherWindow = new LauncherWindow(this);
-    connect(m_launcherWindow, SIGNAL(visibleChanged(bool)),
-            this, SLOT(visibleChanged(bool)));
 
     // React to screen size changes
     connect(screen, SIGNAL(geometryChanged(QRect)),
@@ -180,23 +173,6 @@ void ShellUi::closeLockScreenWindow()
     //m_lockScreenWindow->hide();
     m_lockScreenWindow->deleteLater();
     m_lockScreenWindow = 0;
-}
-
-void ShellUi::visibleChanged(bool visible)
-{
-    // Just return if all shell windows were shown because
-    // our business is over
-    if (m_paintedWindows == 3)
-        return;
-
-    // Every time a window is shown we increment the counter,
-    // when we reach 3 (that is: Background, Panel and Launcher)
-    // we emit the ready() signal to inform DesktopShell the
-    // shell for this screen was painted
-    if (visible)
-        m_paintedWindows++;
-    if (m_paintedWindows == 3)
-        Q_EMIT ready();
 }
 
 #include "moc_shellui.cpp"

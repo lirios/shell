@@ -107,21 +107,20 @@ void DesktopShell::create()
 
         ShellUi *ui = new ShellUi(m_engine, screen, this);
         m_windows.append(ui);
-        connect(ui, SIGNAL(ready()), this, SLOT(shellUiReady()));
     }
+
+    // Wait until all user interface elements for all screens are ready,
+    // then tell the compositor to fade in
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
+    ready();
 }
 
-void DesktopShell::shellUiReady()
+void DesktopShell::ready()
 {
-    static int windowsReady = 0;
-    windowsReady++;
-
-    // Tell the compositor we're ready if all windows are created
-    if (windowsReady == m_windows.size()) {
-        WaylandIntegration *integration = WaylandIntegration::instance();
-        hawaii_desktop_shell_desktop_ready(integration->shell);
-        qDebug() << "Shell is now ready!";
-    }
+    WaylandIntegration *integration = WaylandIntegration::instance();
+    hawaii_desktop_shell_desktop_ready(integration->shell);
+    qDebug() << "Shell is now ready!";
 }
 
 #include "moc_desktopshell.cpp"
