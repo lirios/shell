@@ -67,13 +67,13 @@ Dialog {
 
                 Timer {
                     id: shutdownTimer
-                    interval: 998
+                    interval: 10000
+                    running: shutdownDialog.visible
                     triggeredOnStart: true
-                    repeat: true
                     onTriggered: {
                         timerLabel.text = qsTr("The system will power off automatically " +
                                                "in %1 seconds.").arg(timeRemaining);
-                        timeRemaining--;
+                        timeRemaining -= 10;
 
                         if (timeRemaining == 0) {
                             shutdownTimer.repeat = false;
