@@ -312,7 +312,10 @@ void PolicyKitAgent::request(const QString &request, bool echo)
     d->session = session;
 
     // Set the prompt and password echo
-    d->dialog->setProperty("prompt", request);
+    if (request == QStringLiteral("Password:") || request == QStringLiteral("Password: "))
+        d->dialog->setProperty("prompt", tr("Password:"));
+    else
+        d->dialog->setProperty("prompt", request);
     d->dialog->setProperty("echo", echo);
 
     // Show modal dialog
