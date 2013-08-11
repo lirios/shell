@@ -118,8 +118,7 @@ Dialog {
 
                     TextField {
                         id: passwordInput
-                        //echoMode: echo ? TextInput.Password : TextInput.Normal
-                        echoMode: TextInput.Password
+                        echoMode: echo ? TextInput.Normal : TextInput.Password
 
                         Layout.fillWidth: true
                     }
