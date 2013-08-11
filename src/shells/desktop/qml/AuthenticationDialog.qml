@@ -52,7 +52,7 @@ Dialog {
 
     ColumnLayout {
         width: Math.max(childrenRect.width, 320)
-        height: Math.max(childrenRect.height, 205)
+        height: Math.max(childrenRect.height, 255)
 
         RowLayout {
             FluidUi.Icon {
@@ -109,20 +109,20 @@ Dialog {
                     Layout.fillWidth: true
                 }
 
-                Label {
-                    id: promptLabel
-                    anchors {
-                        left: parent.left
-                        verticalCenter: passwordInput.verticalCenter
+                RowLayout {
+                    Label {
+                        id: promptLabel
+
+                        Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                     }
-                }
 
-                TextField {
-                    id: passwordInput
-                    //echoMode: echo ? TextInput.Password : TextInput.Normal
-                    echoMode: TextInput.Password
+                    TextField {
+                        id: passwordInput
+                        //echoMode: echo ? TextInput.Password : TextInput.Normal
+                        echoMode: TextInput.Password
 
-                    Layout.fillWidth: true
+                        Layout.fillWidth: true
+                    }
                 }
 
                 Label {
