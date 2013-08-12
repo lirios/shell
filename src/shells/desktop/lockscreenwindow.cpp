@@ -40,13 +40,6 @@ LockScreenWindow::LockScreenWindow(ShellUi *ui)
     : QQuickView(ui->engine(), new QWindow(ui->screen()))
     , m_surface(0)
 {
-    // Set custom surface format
-    QSurfaceFormat format;
-    format.setDepthBufferSize(24);
-    format.setAlphaBufferSize(8);
-    setFormat(format);
-    setColor(Qt::transparent);
-
     // Set custom window type
     setFlags(flags() | Qt::BypassWindowManagerHint);
 

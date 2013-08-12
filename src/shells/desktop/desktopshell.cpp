@@ -49,6 +49,9 @@ DesktopShell::DesktopShell()
     // Start counting how much time we need to start up :)
     m_elapsedTimer.start();
 
+    // We need windows with alpha buffer
+    QQuickWindow::setDefaultAlphaBuffer(true);
+
     // Create QML engine
     m_engine = new QQmlEngine(this);
 
