@@ -81,6 +81,10 @@ else
 fi
 export XDG_DATA_DIRS
 
+# Set desktop environment name for Qt platform themes detection,
+# XDG scripts and OnlyShowIn= implementation
+export XDG_CURRENT_DESKTOP=Hawaii
+
 # Launch a session bus instance
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && type dbus-launch >/dev/null; then
     eval `dbus-launch --auto-syntax --exit-with-session`

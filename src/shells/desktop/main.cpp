@@ -115,9 +115,6 @@ int main(int argc, char *argv[])
     // Force Wayland platform plugin
     setenv("QT_QPA_PLATFORM", "wayland", 1);
 
-    // Set the hawaii desktop session
-    setenv("DESKTOP_SESSION", "hawaii", 1);
-
     // Enable GDK backend for Wayland
     setenv("GDK_BACKEND", "wayland", 1);
 
