@@ -28,42 +28,23 @@ import QtQuick 2.0
 import Hawaii.Shell.Desktop 0.1
 
 Item {
-    BackgroundSettings {
-        id: settings
-        onTypeChanged: {
-            switch (type) {
-            case BackgroundSettings.ColorBackground:
-                switch (colorShading) {
-                case BackgroundSettings.SolidColorShading:
-                    solidAnimation.start();
-                    break;
-                case BackgroundSettings.HorizontalColorShading:
-                case BackgroundSettings.VerticalColorShading:
-                    gradientAnimation.start();
-                    break;
-                }
-                break;
-            case BackgroundSettings.WallpaperBackground:
-                wallpaperAnimation.start();
-                break;
-            default:
-                blankAnimation.start();
-                break;
-            }
-        }
-    }
+    property var settings: BackgroundSettings {}
 
     Rectangle {
         id: solid
         anchors.fill: parent
         color: settings.primaryColor
-        opacity: settings.type == BackgroundSettings.ColorBackground ? 1.0 : 0.0
+        opacity: settings.type === BackgroundSettings.ColorBackground ? 1.0 : 00
+
+        Behavior on opacity {
+            NumberAnimation { easing.type: Easing.InQuad; duration: 500 }
+        }
     }
 
     Rectangle {
         id: gradient
         anchors.fill: parent
-        opacity: settings.type == BackgroundSettings.ColorBackground && settings.colorShading != BackgroundSettings.SolidColorShading ? 1.0 : 00
+        opacity: settings.type === BackgroundSettings.ColorBackground && settings.colorShading !== BackgroundSettings.SolidColorShading ? 1.0 : 0.0
 
         Gradient {
             GradientStop {
@@ -75,6 +56,10 @@ Item {
                 color: settings.secondaryColor
             }
         }
+
+        Behavior on opacity {
+            NumberAnimation { easing.type: Easing.InQuad; duration: 500 }
+        }
     }
 
     Image {
@@ -82,34 +67,10 @@ Item {
         anchors.fill: parent
         source: settings.wallpaperUrl
         smooth: true
-        opacity: settings.type == BackgroundSettings.WallpaperBackground ? 1.0 : 0.0
-    }
+        opacity: settings.type === BackgroundSettings.WallpaperBackground
 
-    SequentialAnimation {
-        id: solidAnimation
-        NumberAnimation { target: gradient; property: "opacity"; to: 0.0; duration: 200 }
-        NumberAnimation { target: wallpaper; property: "opacity"; to: 0.0; duration: 200 }
-        NumberAnimation { target: solid; property: "opacity"; to: 1.0; duration: 250 }
-    }
-
-    SequentialAnimation {
-        id: gradientAnimation
-        NumberAnimation { target: solid; property: "opacity"; to: 0.0; duration: 200 }
-        NumberAnimation { target: wallpaper; property: "opacity"; to: 0.0; duration: 200 }
-        NumberAnimation { target: gradient; property: "opacity"; to: 1.0; duration: 250 }
-    }
-
-    SequentialAnimation {
-        id: wallpaperAnimation
-        NumberAnimation { target: solid; property: "opacity"; to: 0.0; duration: 200 }
-        NumberAnimation { target: gradient; property: "opacity"; to: 0.0; duration: 200 }
-        NumberAnimation { target: wallpaper; property: "opacity"; to: 1.0; duration: 250 }
-    }
-
-    SequentialAnimation {
-        id: blankAnimation
-        NumberAnimation { target: solid; property: "opacity"; to: 0.0; duration: 200 }
-        NumberAnimation { target: gradient; property: "opacity"; to: 0.0; duration: 200 }
-        NumberAnimation { target: wallpaper; property: "opacity"; to: 0.0; duration: 250 }
+        Behavior on opacity {
+            NumberAnimation { easing.type: Easing.InQuad; duration: 500 }
+        }
     }
 }
