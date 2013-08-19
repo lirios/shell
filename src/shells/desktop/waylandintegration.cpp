@@ -119,11 +119,7 @@ void WaylandIntegration::handlePrepareLockSurface(void *data,
     // requires protocol changes
     foreach (ShellUi *shellUi, shell->windows()) {
         if (shellUi->screen() == QGuiApplication::primaryScreen()) {
-            if (shellUi->lockScreenWindow())
-                QMetaObject::invokeMethod(shellUi->lockScreenWindow(), "setWindowType");
-            else
-                QMetaObject::invokeMethod(shellUi, "createLockScreenWindow");
-            QMetaObject::invokeMethod(shellUi->lockScreenWindow(), "show");
+            QMetaObject::invokeMethod(shellUi, "createLockScreenWindow");
             return;
         }
     }

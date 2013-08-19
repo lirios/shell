@@ -24,6 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QCoreApplication>
+
 #include "desktopshell.h"
 #include "lockscreenwindow.h"
 #include "waylandintegration.h"
@@ -56,6 +58,10 @@ void SessionManager::unlock()
     // save some resources
     foreach (ShellUi *ui, DesktopShell::instance()->windows())
         ui->closeLockScreenWindow();
+
+    // Synchronization
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
 }
 
 #include "moc_sessionmanager.cpp"

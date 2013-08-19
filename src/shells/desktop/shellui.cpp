@@ -161,8 +161,13 @@ void ShellUi::createLockScreenWindow()
 {
     if (!m_lockScreenWindow)
         m_lockScreenWindow = new LockScreenWindow(this);
-    m_lockScreenWindow->show();
+    m_lockScreenWindow->create();
     m_lockScreenWindow->setWindowType();
+    m_lockScreenWindow->show();
+
+    // Synchronization
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
 }
 
 void ShellUi::closeLockScreenWindow()
