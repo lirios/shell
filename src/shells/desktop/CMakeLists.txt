@@ -60,7 +60,7 @@ set(KCFG_FILES
 kconfig_add_kcfg_files(SOURCES ${KCFG_FILES})
 
 add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
-qt5_use_modules(hawaii-desktop-shell Quick Widgets AccountsService Xdg)
+qt5_use_modules(hawaii-desktop-shell Quick Widgets Configuration AccountsService Xdg)
 set_target_properties(hawaii-desktop-shell PROPERTIES
     COMPILE_FLAGS "-rdynamic"
     LINK_FLAGS "-L${WaylandClient_LIBDIR} -L${POLKITQT-1_LIB_DIR}"

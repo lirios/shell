@@ -119,6 +119,10 @@ int main(int argc, char *argv[])
     setenv("GDK_BACKEND", "wayland", 1);
 
     QApplication app(argc, argv);
+    app.setApplicationName("Desktop Shell");
+    app.setApplicationVersion("0.1.92");
+    app.setOrganizationDomain("hawaii.org");
+    app.setOrganizationName("Hawaii");
 
     // Create the notification daemon
     (void)NotificationsDaemon::instance();

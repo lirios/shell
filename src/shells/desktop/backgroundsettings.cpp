@@ -24,113 +24,93 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QStandardPaths>
+
 #include "backgroundsettings.h"
-#include "hawaiisettings.h"
+#include "cmakedirs.h"
 
 BackgroundSettings::BackgroundSettings(QObject *parent)
     : QObject(parent)
 {
-    m_oldType = type();
-    m_oldPrimaryColor = primaryColor();
-    m_oldSecondaryColor = secondaryColor();
-    m_oldShading = colorShading();
-    m_oldUrl = wallpaperUrl();
+    // Set default values
+    m_type = BackgroundSettings::WallpaperBackground;
+    m_primaryColor = QColor(51, 102, 153);
+    m_secondaryColor = QColor(46, 93, 140);
+    m_shading = BackgroundSettings::SolidColorShading;
+    m_url = QUrl::fromLocalFile(QStringLiteral("%1/backgrounds/hawaii/Also Calm.png")
+                                .arg(INSTALL_DATADIR));
 
-    connect(HawaiiSettings::self(), SIGNAL(configChanged()),
-            this, SLOT(configChanged()));
+    // Configuration
+    m_configuration = new QConfiguration(this, QStringLiteral("shell/background"));
+}
+
+BackgroundSettings::~BackgroundSettings()
+{
+    delete m_configuration;
 }
 
 BackgroundSettings::Type BackgroundSettings::type() const
 {
-    switch (HawaiiSettings::type()) {
-    case 0:
-        return BackgroundSettings::ColorBackground;
-    default:
-        break;
-    }
-
-    return BackgroundSettings::WallpaperBackground;
+    return m_type;
 }
 
 void BackgroundSettings::setType(Type value)
 {
-    HawaiiSettings::setType(value);
+    if (m_type != value) {
+        m_type = value;
+        Q_EMIT typeChanged(value);
+    }
 }
 
 QColor BackgroundSettings::primaryColor() const
 {
-    return HawaiiSettings::primaryColor();
+    return m_primaryColor;
 }
 
 void BackgroundSettings::setPrimaryColor(const QColor &value)
 {
-    HawaiiSettings::setPrimaryColor(value);
+    if (m_primaryColor != value) {
+        m_primaryColor = value;
+        Q_EMIT primaryColorChanged(value);
+    }
 }
 
 QColor BackgroundSettings::secondaryColor() const
 {
-    return HawaiiSettings::secondaryColor();
+    return m_secondaryColor;
 }
 
 void BackgroundSettings::setSecondaryColor(const QColor &value)
 {
-    HawaiiSettings::setSecondaryColor(value);
+    if (m_secondaryColor != value) {
+        m_secondaryColor = value;
+        Q_EMIT secondaryColorChanged(value);
+    }
 }
 
 BackgroundSettings::ColorShadingType BackgroundSettings::colorShading() const
 {
-    switch (HawaiiSettings::colorShadingType()) {
-    case 1:
-        return BackgroundSettings::HorizontalColorShading;
-    case 2:
-        return BackgroundSettings::VerticalColorShading;
-    default:
-        break;
-    }
-
-    return BackgroundSettings::SolidColorShading;
+    return m_shading;
 }
 
 void BackgroundSettings::setColorShading(BackgroundSettings::ColorShadingType value)
 {
-    HawaiiSettings::setColorShadingType(value);
+    if (m_shading != value) {
+        m_shading = value;
+        Q_EMIT colorShadingChanged(value);
+    }
 }
 
 QUrl BackgroundSettings::wallpaperUrl() const
 {
-    return HawaiiSettings::wallpaperUrl();
+    return m_url;
 }
 
 void BackgroundSettings::setWallpaperUrl(const QUrl &value)
 {
-    HawaiiSettings::setWallpaperUrl(value);
-}
-
-void BackgroundSettings::configChanged()
-{
-    if (m_oldType != type()) {
-        m_oldType = type();
-        Q_EMIT typeChanged();
-    }
-
-    if (m_oldPrimaryColor != primaryColor()) {
-        m_oldPrimaryColor = primaryColor();
-        Q_EMIT primaryColorChanged();
-    }
-
-    if (m_oldSecondaryColor != secondaryColor()) {
-        m_oldSecondaryColor = secondaryColor();
-        Q_EMIT secondaryColorChanged();
-    }
-
-    if (m_oldShading != colorShading()) {
-        m_oldShading = colorShading();
-        Q_EMIT colorShadingChanged();
-    }
-
-    if (m_oldUrl != wallpaperUrl()) {
-        m_oldUrl = wallpaperUrl();
-        Q_EMIT wallpaperUrlChanged();
+    if (m_url != value) {
+        m_url = value;
+        Q_EMIT wallpaperUrlChanged(value);
     }
 }
 

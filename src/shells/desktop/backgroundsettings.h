@@ -29,6 +29,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
+#include <QtConfiguration/QConfiguration>
 #include <QtGui/QColor>
 
 class BackgroundSettings : public QObject
@@ -52,7 +53,8 @@ public:
         VerticalColorShading
     };
 
-    explicit BackgroundSettings(QObject *parent = 0);
+    BackgroundSettings(QObject *parent = 0);
+    ~BackgroundSettings();
 
     Type type() const;
     void setType(Type value);
@@ -70,21 +72,19 @@ public:
     void setWallpaperUrl(const QUrl &value);
 
 Q_SIGNALS:
-    void typeChanged();
-    void primaryColorChanged();
-    void secondaryColorChanged();
-    void colorShadingChanged();
-    void wallpaperUrlChanged();
+    void typeChanged(const BackgroundSettings::Type &value);
+    void primaryColorChanged(const QColor &value);
+    void secondaryColorChanged(const QColor &value);
+    void colorShadingChanged(const BackgroundSettings::ColorShadingType &value);
+    void wallpaperUrlChanged(const QUrl &value);
 
 private:
-    BackgroundSettings::Type m_oldType;
-    QColor m_oldPrimaryColor;
-    QColor m_oldSecondaryColor;
-    BackgroundSettings::ColorShadingType m_oldShading;
-    QUrl m_oldUrl;
-
-private Q_SLOTS:
-    void configChanged();
+    QConfiguration *m_configuration;
+    BackgroundSettings::Type m_type;
+    QColor m_primaryColor;
+    QColor m_secondaryColor;
+    BackgroundSettings::ColorShadingType m_shading;
+    QUrl m_url;
 };
 
 #endif // BACKGROUNDSETTINGS_H
