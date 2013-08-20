@@ -63,7 +63,7 @@ LauncherWindow::LauncherWindow(ShellUi *ui)
     // React to screen size changes and alignment changes
     connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
             this, SLOT(geometryChanged(QRect)));
-    connect(m_settings, SIGNAL(alignmentChanged()),
+    connect(m_settings, SIGNAL(alignmentChanged(LauncherSettings::Alignment)),
             this, SLOT(resetGeometry()));
 
     // Make this window accessible from QML
