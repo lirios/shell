@@ -50,20 +50,23 @@ Item {
     Background {
         id: background
         anchors.fill: parent
+        visible: false
     }
 
     BrightnessContrast {
         id: brightnessEffect
-        anchors.fill: background
+        anchors.fill: parent
         source: background
         brightness: -0.10
+        visible: false
     }
 
     FastBlur {
         id: fastBlurEffect
-        anchors.fill: brightnessEffect
+        anchors.fill: parent
         source: brightnessEffect
         radius: 32
+        visible: false
     }
 
     EffectVignette {
