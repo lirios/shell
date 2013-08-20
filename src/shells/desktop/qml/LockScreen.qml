@@ -60,9 +60,15 @@ Item {
     }
 
     FastBlur {
+        id: fastBlurEffect
         anchors.fill: brightnessEffect
         source: brightnessEffect
         radius: 32
+    }
+
+    EffectVignette {
+        anchors.fill: fastBlurEffect
+        source: fastBlurEffect
     }
 
     ColumnLayout {
