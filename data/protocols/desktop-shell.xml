@@ -99,6 +99,19 @@
       </description>
     </request>
 
+    <request name="add_workspace">
+      <description summary="add workspace">
+        Tell the server to add a new workspace.
+      </description>
+    </request>
+
+    <request name="select_workspace">
+      <description summary="select workspace">
+        Tell the server to select the specified workspace.
+      </description>
+      <arg name="workspace" type="object" interface="hawaii_workspace"/>
+    </request>
+
     <event name="present">
       <arg name="surface" type="object" interface="wl_surface"/>
     </event>
@@ -130,6 +143,14 @@
       <arg name="title" type="string"/>
       <arg name="identifier" type="string"/>
       <arg name="state" type="int"/>
+    </event>
+
+    <event name="workspace_added">
+      <description summary="notify the client that a workspace was added">
+        This event will be sent immediately after a workspace is added.
+      </description>
+      <arg name="workspace" type="new_id" interface="hawaii_workspace"/>
+      <arg name="active" type="int"/>
     </event>
 
     <enum name="cursor">
@@ -219,6 +240,30 @@
       <description summary="window's surface was unmapped">
         This event will be sent immediately after the window is closed
         and its surface is unmapped.
+      </description>
+    </event>
+  </interface>
+
+  <interface name="hawaii_workspace" version="1">
+    <description summary="control and manager workspaces">
+      Each workspace can bind this interface.
+    </description>
+
+    <request name="remove">
+      <description summary="remove workspace">
+        Remove this workspace.
+      </description>
+    </request>
+
+    <event name="activated">
+      <description summary="workspace activated">
+        This event will be sent immediately after this workspace is activated.
+      </description>
+    </event>
+
+    <event name="deactivated">
+      <description summary="workspace deactivated">
+        This event will be sent immediately after this workspace is deactivated.
       </description>
     </event>
   </interface>

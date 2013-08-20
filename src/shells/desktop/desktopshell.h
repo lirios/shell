@@ -34,6 +34,7 @@ class QQmlEngine;
 
 class ShellUi;
 class Window;
+class Workspace;
 
 class DesktopShell : public QObject
 {
@@ -58,8 +59,15 @@ public:
 
     void appendWindow(Window *window);
 
+    void addWorkspace();
+    void removeWorkspace(int num);
+
+    void appendWorkspace(Workspace *workspace);
+
 Q_SIGNALS:
     void windowsChanged();
+    void workspaceAdded(int num);
+    void workspaceRemoved(int num);
 
 public Q_SLOTS:
     void create();
@@ -73,6 +81,7 @@ private:
     QQmlEngine *m_engine;
     QList<ShellUi *> m_shellWindows;
     QList<Window *> m_windows;
+    QList<Workspace *> m_workspaces;
 
 private Q_SLOTS:
     void windowUnmapped(Window *window);

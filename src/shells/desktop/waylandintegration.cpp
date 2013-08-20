@@ -33,6 +33,8 @@
 #include "shellui.h"
 #include "window.h"
 #include "window_p.h"
+#include "workspace.h"
+#include "workspace_p.h"
 
 Q_GLOBAL_STATIC(WaylandIntegration, s_waylandIntegration)
 
@@ -43,7 +45,9 @@ const struct wl_registry_listener WaylandIntegration::registryListener = {
 const struct hawaii_desktop_shell_listener WaylandIntegration::shellListener = {
     WaylandIntegration::handlePresent,
     WaylandIntegration::handlePrepareLockSurface,
-    WaylandIntegration::handleGrabCursor
+    WaylandIntegration::handleGrabCursor,
+    WaylandIntegration::handleWindowMapped,
+    WaylandIntegration::handleWorkspaceAdded
 };
 
 WaylandIntegration::WaylandIntegration()
@@ -202,4 +206,20 @@ void WaylandIntegration::handleWindowMapped(void *data,
     DesktopShell *shell = DesktopShell::instance();
     shell->appendWindow(w);
     w->moveToThread(QCoreApplication::instance()->thread());
+}
+
+void WaylandIntegration::handleWorkspaceAdded(void *data,
+                                              hawaii_desktop_shell *desktop_shell,
+                                              hawaii_workspace *ws,
+                                              int32_t num)
+{
+    Q_UNUSED(data);
+    Q_UNUSED(desktop_shell);
+
+    Workspace *workspace = new Workspace();
+    workspace->d_ptr->initialize(ws, num == 1);
+
+    DesktopShell *shell = DesktopShell::instance();
+    workspace->moveToThread(QCoreApplication::instance()->thread());
+    shell->appendWorkspace(workspace);
 }

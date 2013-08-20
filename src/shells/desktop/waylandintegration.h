@@ -70,6 +70,11 @@ public:
                                    const char *identifier,
                                    int32_t state);
 
+    static void handleWorkspaceAdded(void *data,
+                                     hawaii_desktop_shell *desktop_shell,
+                                     hawaii_workspace *ws,
+                                     int32_t num);
+
     /*
      * Notification Daemon Protocol
      */

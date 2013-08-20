@@ -69,6 +69,8 @@ public Q_SLOTS:
     void createLockScreenWindow();
     void closeLockScreenWindow();
 
+    void setNumWorkspaces(int num);
+
 private:
     QQmlEngine *m_engine;
     QScreen *m_screen;
@@ -79,6 +81,7 @@ private:
     PanelWindow *m_panelWindow;
     LauncherWindow *m_launcherWindow;
     LockScreenWindow *m_lockScreenWindow;
+    int m_numWorkspaces;
 };
 
 #endif // SHELLUI_H

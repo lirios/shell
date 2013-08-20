@@ -41,6 +41,7 @@
 #include "shellui.h"
 #include "shellwindow.h"
 #include "window.h"
+#include "workspace.h"
 
 Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 
@@ -89,11 +90,9 @@ DesktopShell::DesktopShell()
 
 DesktopShell::~DesktopShell()
 {
-    foreach (ShellUi *shellUi, m_shellWindows) {
-        if (m_shellWindows.removeOne(shellUi))
-            delete shellUi;
-    }
-
+    // Delete workspaces and shell windows
+    qDeleteAll(m_workspaces);
+    qDeleteAll(m_shellWindows);
     delete m_engine;
 
     // Unbind interfaces
@@ -109,6 +108,7 @@ DesktopShell *DesktopShell::instance()
 
 void DesktopShell::create()
 {
+    // Create shell windows
     foreach (QScreen *screen, QGuiApplication::screens()) {
         qDebug() << "--- Screen" << screen->name() << screen->geometry();
 
@@ -116,10 +116,19 @@ void DesktopShell::create()
         m_shellWindows.append(ui);
     }
 
-    // Wait until all user interface elements for all screens are ready,
-    // then tell the compositor to fade in
+    // Wait until all user interface elements for all screens are ready
     while (QCoreApplication::hasPendingEvents())
         QCoreApplication::processEvents();
+
+    // Add the first workspace
+    // TODO: Add as many workspaces as specified by the settings
+    addWorkspace();
+
+    // Process workspaces events
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
+
+    // Shell user interface is ready, tell the compositor to fade in
     ready();
 }
 
@@ -136,6 +145,27 @@ void DesktopShell::appendWindow(Window *window)
     connect(window, SIGNAL(unmapped(Window*)),
             this, SLOT(windowUnmapped(Window*)));
     Q_EMIT windowsChanged();
+}
+
+void DesktopShell::addWorkspace()
+{
+    WaylandIntegration *integration = WaylandIntegration::instance();
+    hawaii_desktop_shell_add_workspace(integration->shell);
+}
+
+void DesktopShell::removeWorkspace(int num)
+{
+    Workspace *workspace = m_workspaces.takeAt(num);
+    if (workspace) {
+        Q_EMIT workspaceRemoved(num);
+        delete workspace;
+    }
+}
+
+void DesktopShell::appendWorkspace(Workspace *workspace)
+{
+    m_workspaces.append(workspace);
+    Q_EMIT workspaceAdded(m_workspaces.indexOf(workspace));
 }
 
 void DesktopShell::windowUnmapped(Window *window)

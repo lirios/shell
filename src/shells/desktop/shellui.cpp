@@ -32,6 +32,7 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "shellui.h"
+#include "desktopshell.h"
 #include "waylandintegration.h"
 
 ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
@@ -42,6 +43,7 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
     , m_panelWindow(0)
     , m_launcherWindow(0)
     , m_lockScreenWindow(0)
+    , m_numWorkspaces(0)
 {
     // Native platform interface
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
@@ -178,6 +180,23 @@ void ShellUi::closeLockScreenWindow()
     //m_lockScreenWindow->hide();
     m_lockScreenWindow->deleteLater();
     m_lockScreenWindow = 0;
+}
+
+void ShellUi::setNumWorkspaces(int num)
+{
+    // At least one!
+    if (num <= 0) {
+        qWarning() << "Setting" << num << "workspaces doesn't make any sense, please set at least one";
+        return;
+    }
+
+    DesktopShell *shell = DesktopShell::instance();
+
+    // Add as many workspaces as needed
+    for (; m_numWorkspaces < num; ++m_numWorkspaces)
+        shell->addWorkspace();
+    while (m_numWorkspaces > num)
+        shell->removeWorkspace(--m_numWorkspaces);
 }
 
 #include "moc_shellui.cpp"

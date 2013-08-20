@@ -35,6 +35,7 @@ set(SOURCES
     upowerpowerbackend.cpp
     waylandintegration.cpp
     window.cpp
+    workspace.cpp
 )
 
 wayland_add_protocol_client(SOURCES
