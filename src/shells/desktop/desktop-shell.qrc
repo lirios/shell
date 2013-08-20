@@ -53,6 +53,9 @@
         <!-- LockScreen -->
         <file>qml/LockScreen.qml</file>
 
+        <!-- Effects -->
+        <file>qml/EffectVignette.qml</file>
+
         <!-- Images -->
         <file>images/noise.png</file>
     </qresource>
