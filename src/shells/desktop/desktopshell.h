@@ -33,6 +33,7 @@
 class QQmlEngine;
 
 class ShellUi;
+class Window;
 
 class DesktopShell : public QObject
 {
@@ -47,9 +48,18 @@ public:
         return m_engine;
     }
 
-    QList<ShellUi *> windows() const {
+    inline QList<ShellUi *> shellWindows() const {
+        return m_shellWindows;
+    }
+
+    inline QList<Window *> windows() const {
         return m_windows;
     }
+
+    void appendWindow(Window *window);
+
+Q_SIGNALS:
+    void windowsChanged();
 
 public Q_SLOTS:
     void create();
@@ -61,7 +71,11 @@ private:
     struct wl_registry *m_registry;
     QElapsedTimer m_elapsedTimer;
     QQmlEngine *m_engine;
-    QList<ShellUi *> m_windows;
+    QList<ShellUi *> m_shellWindows;
+    QList<Window *> m_windows;
+
+private Q_SLOTS:
+    void windowUnmapped(Window *window);
 };
 
 #endif // DESKTOPSHELL_H

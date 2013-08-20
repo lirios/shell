@@ -63,6 +63,13 @@ public:
                                  struct hawaii_desktop_shell *desktop_shell,
                                  uint32_t cursor);
 
+    static void handleWindowMapped(void *data,
+                                   hawaii_desktop_shell *desktop_shell,
+                                   hawaii_window *window,
+                                   const char *title,
+                                   const char *identifier,
+                                   int32_t state);
+
     /*
      * Notification Daemon Protocol
      */

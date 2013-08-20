@@ -71,7 +71,7 @@ void PolicyKitAgentPrivate::createDialog(const QString &actionId,
 {
     Q_Q(PolicyKitAgent);
 
-    foreach (ShellUi *ui, DesktopShell::instance()->windows()) {
+    foreach (ShellUi *ui, DesktopShell::instance()->shellWindows()) {
         // We create the dialog only on the primary screen
         if (ui->screen() != QGuiApplication::primaryScreen())
             continue;

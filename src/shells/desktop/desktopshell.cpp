@@ -40,6 +40,7 @@
 #include "waylandintegration.h"
 #include "shellui.h"
 #include "shellwindow.h"
+#include "window.h"
 
 Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 
@@ -88,8 +89,8 @@ DesktopShell::DesktopShell()
 
 DesktopShell::~DesktopShell()
 {
-    foreach (ShellUi *shellUi, m_windows) {
-        if (m_windows.removeOne(shellUi))
+    foreach (ShellUi *shellUi, m_shellWindows) {
+        if (m_shellWindows.removeOne(shellUi))
             delete shellUi;
     }
 
@@ -112,7 +113,7 @@ void DesktopShell::create()
         qDebug() << "--- Screen" << screen->name() << screen->geometry();
 
         ShellUi *ui = new ShellUi(m_engine, screen, this);
-        m_windows.append(ui);
+        m_shellWindows.append(ui);
     }
 
     // Wait until all user interface elements for all screens are ready,
@@ -127,6 +128,20 @@ void DesktopShell::ready()
     WaylandIntegration *integration = WaylandIntegration::instance();
     hawaii_desktop_shell_desktop_ready(integration->shell);
     qDebug() << "Shell is now ready and took" << m_elapsedTimer.elapsed() << "ms";
+}
+
+void DesktopShell::appendWindow(Window *window)
+{
+    m_windows.append(window);
+    connect(window, SIGNAL(unmapped(Window*)),
+            this, SLOT(windowUnmapped(Window*)));
+    Q_EMIT windowsChanged();
+}
+
+void DesktopShell::windowUnmapped(Window *window)
+{
+    m_windows.removeOne(window);
+    Q_EMIT windowsChanged();
 }
 
 #include "moc_desktopshell.cpp"

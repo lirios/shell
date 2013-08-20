@@ -31,6 +31,8 @@
 #include "desktopshell.h"
 #include "notificationsdaemon.h"
 #include "shellui.h"
+#include "window.h"
+#include "window_p.h"
 
 Q_GLOBAL_STATIC(WaylandIntegration, s_waylandIntegration)
 
@@ -94,7 +96,7 @@ void WaylandIntegration::handlePresent(void *data,
 
     DesktopShell *shell = DesktopShell::instance();
 
-    foreach (ShellUi *shellUi, shell->windows()) {
+    foreach (ShellUi *shellUi, shell->shellWindows()) {
         if (surface == shellUi->backgroundWindow()->surface()) {
             QMetaObject::invokeMethod(shellUi->backgroundWindow(), "showNormal");
         } else if (surface == shellUi->panelWindow()->surface()) {
@@ -117,7 +119,7 @@ void WaylandIntegration::handlePrepareLockSurface(void *data,
     // Create the lock screen only for the primary screen
     // TODO: Actually we should create one for each screen but this
     // requires protocol changes
-    foreach (ShellUi *shellUi, shell->windows()) {
+    foreach (ShellUi *shellUi, shell->shellWindows()) {
         if (shellUi->screen() == QGuiApplication::primaryScreen()) {
             QMetaObject::invokeMethod(shellUi, "createLockScreenWindow");
             return;
@@ -175,8 +177,29 @@ void WaylandIntegration::handleGrabCursor(void *data,
 
     DesktopShell *shell = DesktopShell::instance();
 
-    foreach (ShellUi *shellUi, shell->windows())
+    foreach (ShellUi *shellUi, shell->shellWindows())
         QMetaObject::invokeMethod(shellUi->grabWindow(), "setGrabCursor",
                                   Qt::QueuedConnection,
                                   Q_ARG(QCursor, qcursor));
+}
+
+void WaylandIntegration::handleWindowMapped(void *data,
+                                            hawaii_desktop_shell *desktop_shell,
+                                            hawaii_window *window,
+                                            const char *title,
+                                            const char *identifier,
+                                            int32_t state)
+{
+    Q_UNUSED(data);
+    Q_UNUSED(desktop_shell);
+
+    // Create a client window representation
+    Window *w = new Window(QString::fromUtf8(title),
+                           QString::fromUtf8(identifier),
+                           wlStateConvert(state));
+    w->d_ptr->initialize(window);
+
+    DesktopShell *shell = DesktopShell::instance();
+    shell->appendWindow(w);
+    w->moveToThread(QCoreApplication::instance()->thread());
 }

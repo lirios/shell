@@ -56,7 +56,7 @@ void SessionManager::unlock()
 
     // Close all lock screens, this will unmap the window and
     // save some resources
-    foreach (ShellUi *ui, DesktopShell::instance()->windows())
+    foreach (ShellUi *ui, DesktopShell::instance()->shellWindows())
         ui->closeLockScreenWindow();
 
     // Synchronization

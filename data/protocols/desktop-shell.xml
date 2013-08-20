@@ -121,6 +121,17 @@
       <arg name="cursor" type="uint"/>
     </event>
 
+    <event name="window_mapped">
+      <description summary="notify the client that a new window was created">
+        This event will be sent immediately after a new window is mapped.
+      </description>
+
+      <arg name="id" type="new_id" interface="hawaii_window"/>
+      <arg name="title" type="string"/>
+      <arg name="identifier" type="string"/>
+      <arg name="state" type="int"/>
+    </event>
+
     <enum name="cursor">
       <entry name="none" value="0"/>
 
@@ -141,6 +152,14 @@
 
       <entry name="busy" value="11"/>
     </enum>
+
+    <enum name="window_state">
+      <entry name="inactive" value="0"/>
+      <entry name="active" value="1"/>
+      <entry name="minimized" value="2"/>
+      <entry name="maximized" value="3"/>
+      <entry name="fullscreen" value="4"/>
+    </enum>
   </interface>
 
   <interface name="screensaver" version="1">
@@ -157,5 +176,50 @@
       <arg name="surface" type="object" interface="wl_surface"/>
       <arg name="output" type="object" interface="wl_output"/>
     </request>
+  </interface>
+
+  <interface name="hawaii_window" version="1">
+    <description summary="interface to control client windows">
+      Only one client can bind this interface at a time.
+    </description>
+
+    <request name="set_state">
+      <description summary="set client window state">
+        Set client window state.
+      </description>
+
+      <arg name="state" type="int"/>
+    </request>
+
+    <event name="title_changed">
+      <description summary="window title have been changed">
+        This event will be sent as soon as the window title is changed.
+      </description>
+
+      <arg name="title" type="string"/>
+    </event>
+
+    <event name="identifier_changed">
+      <description summary="window class have been changed">
+        This event will be sent as soon as the window class is changed.
+      </description>
+
+      <arg name="identifier" type="string"/>
+    </event>
+
+    <event name="state_changed">
+      <description summary="window state have been changed">
+        This event will be sent as soon as the window state changes.
+      </description>
+
+      <arg name="state" type="int"/>
+    </event>
+
+    <event name="unmapped">
+      <description summary="window's surface was unmapped">
+        This event will be sent immediately after the window is closed
+        and its surface is unmapped.
+      </description>
+    </event>
   </interface>
 </protocol>
