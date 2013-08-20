@@ -27,7 +27,7 @@
 #ifndef WAYLANDINTEGRATION_H
 #define WAYLANDINTEGRATION_H
 
-#include "wayland-desktop-extension-client-protocol.h"
+#include "wayland-desktop-shell-client-protocol.h"
 #include "wayland-notification-daemon-client-protocol.h"
 
 class WaylandIntegration

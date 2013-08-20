@@ -28,7 +28,7 @@
 #define WINDOW_P_H
 
 #include "window.h"
-#include "wayland-desktop-extension-client-protocol.h"
+#include "wayland-desktop-shell-client-protocol.h"
 
 struct hawaii_window;
 struct hawaii_window_listener;

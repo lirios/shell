@@ -40,7 +40,7 @@ set(SOURCES
 
 wayland_add_protocol_client(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
-    desktop-extension
+    desktop-shell
 )
 
 wayland_add_protocol_client(SOURCES
