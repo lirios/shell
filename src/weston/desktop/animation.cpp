@@ -29,7 +29,9 @@
 #include "animationcurve.h"
 
 Animation::Animation()
-    : m_curve(nullptr)
+         : updateSignal(new Signal<float>())
+         , doneSignal(new Signal<>())
+         , m_curve(nullptr)
 {
     m_animation.parent = this;
     wl_list_init(&m_animation.ani.link);
@@ -37,11 +39,14 @@ Animation::Animation()
         AnimWrapper *animation = container_of(base, AnimWrapper, ani);
         animation->parent->update(output, msecs);
     };
+
 }
 
 Animation::~Animation()
 {
     stop();
+    updateSignal->flush();
+    doneSignal->flush();
 }
 
 void Animation::setStart(float value)
@@ -58,12 +63,22 @@ void Animation::run(struct weston_output *output, uint32_t duration, Animation::
 {
     stop();
 
+    if (!output) {
+        (*updateSignal)(m_target);
+        if ((int)flags & (int)Flags::SendDone) {
+            (*doneSignal)();
+        }
+        return;
+    }
+
     m_duration = duration;
     m_runFlags = flags;
     m_animation.ani.frame_counter = 0;
 
     wl_list_insert(&output->animation_list, &m_animation.ani.link);
     weston_compositor_schedule_repaint(output->compositor);
+
+    (*updateSignal)(m_start);
 }
 
 void Animation::stop()
@@ -88,12 +103,12 @@ void Animation::update(struct weston_output *output, uint32_t msecs)
 
     uint32_t time = msecs - m_timestamp;
     if (time > m_duration) {
-        updateSignal(m_target);
-        if ((int)Flags::SendDone & (int)m_runFlags) {
-            doneSignal();
-        }
+        (*updateSignal)(m_target);
         stop();
         weston_compositor_schedule_repaint(output->compositor);
+        if ((int)Flags::SendDone & (int)m_runFlags) {
+            (*doneSignal)();
+        }
         return;
     }
 
@@ -101,7 +116,7 @@ void Animation::update(struct weston_output *output, uint32_t msecs)
     if (m_curve) {
         f = m_curve->value(f);
     }
-    updateSignal(m_target * f + m_start * (1.f - f));
+    (*updateSignal)(m_target * f + m_start * (1.f - f));
 
     weston_compositor_schedule_repaint(output->compositor);
 }

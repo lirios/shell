@@ -6,7 +6,6 @@
  *
  * Author(s):
  *    Giulio Camuffo
- *    Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
@@ -44,12 +43,14 @@
 #include "griddesktops.h"
 #include "fademovingeffect.h"
 #include "zoomeffect.h"
+#include "inoutsurfaceeffect.h"
 #include "inputpanel.h"
 #include "shellseat.h"
 #include "workspace.h"
+#include "minimizeeffect.h"
 
 DesktopShell::DesktopShell(struct weston_compositor *ec)
-    : Shell(ec)
+            : Shell(ec)
 {
 }
 
@@ -70,24 +71,30 @@ void DesktopShell::init()
     new GridDesktops(this);
     new FadeMovingEffect(this);
     new ZoomEffect(this);
+    new InOutSurfaceEffect(this);
+    new MinimizeEffect(this);
 
     m_inputPanel = new InputPanel(compositor()->wl_display);
 }
 
 void DesktopShell::setGrabCursor(uint32_t cursor)
 {
-    hawaii_desktop_shell_send_grab_cursor(m_child.desktop_shell, cursor);
+    desktop_shell_send_grab_cursor(m_child.desktop_shell, cursor);
 }
+
+struct BusyGrab : public ShellGrab {
+    ShellSurface *surface;
+};
 
 static void busy_cursor_grab_focus(struct weston_pointer_grab *base)
 {
-    ShellGrab *grab = container_of(base, ShellGrab, grab);
+    BusyGrab *grab = static_cast<BusyGrab *>(container_of(base, ShellGrab, grab));
     wl_fixed_t sx, sy;
     struct weston_surface *surface = weston_compositor_pick_surface(grab->pointer->seat->compositor,
                                                                     grab->pointer->x, grab->pointer->y,
                                                                     &sx, &sy);
 
-    if (grab->pointer->focus != surface) {
+    if (grab->surface->weston_surface() != surface) {
         Shell::endGrab(grab);
         delete grab;
     }
@@ -95,18 +102,16 @@ static void busy_cursor_grab_focus(struct weston_pointer_grab *base)
 
 static void busy_cursor_grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state)
 {
-    ShellGrab *grab = container_of(base, ShellGrab, grab);
+    BusyGrab *grab = static_cast<BusyGrab *>(container_of(base, ShellGrab, grab));
 
-    struct weston_surface *surface = grab->pointer->focus;
     struct weston_seat *seat = grab->pointer->seat;
 
-    ShellSurface *shsurf = Shell::getShellSurface(surface);
-    if (shsurf && button == BTN_LEFT && state) {
-        ShellSeat::shellSeat(seat)->activate(shsurf);
-        shsurf->dragMove(seat);
-    } else if (shsurf && button == BTN_RIGHT && state) {
-        ShellSeat::shellSeat(seat)->activate(shsurf);
-        //         surface_rotate(shsurf, &seat->seat);
+    if (grab->surface && button == BTN_LEFT && state) {
+        ShellSeat::shellSeat(seat)->activate(grab->surface);
+        grab->surface->dragMove(seat);
+    } else if (grab->surface && button == BTN_RIGHT && state) {
+        ShellSeat::shellSeat(seat)->activate(grab->surface);
+//         surface_rotate(grab->surface, &seat->seat);
     }
 }
 
@@ -118,12 +123,12 @@ static const struct weston_pointer_grab_interface busy_cursor_grab_interface = {
 
 void DesktopShell::setBusyCursor(ShellSurface *surface, struct weston_seat *seat)
 {
-    ShellGrab *grab = new ShellGrab;
+    BusyGrab *grab = new BusyGrab;
     if (!grab && grab->pointer)
         return;
 
     grab->pointer = seat->pointer;
-    grab->pointer->focus = surface->weston_surface();
+    grab->surface = surface;
     startGrab(grab, &busy_cursor_grab_interface, seat, DESKTOP_SHELL_CURSOR_BUSY);
 }
 
@@ -137,6 +142,23 @@ void DesktopShell::endBusyCursor(struct weston_seat *seat)
     }
 }
 
+void DesktopShell::sendInitEvents()
+{
+    for (uint i = 0; i < numWorkspaces(); ++i) {
+        workspace(i)->init(m_child.client);
+        workspaceAdded(workspace(i));
+    }
+
+    for (ShellSurface *shsurf: surfaces()) {
+        shsurf->advertize();
+    }
+}
+
+void DesktopShell::workspaceAdded(Workspace *ws)
+{
+    desktop_shell_send_workspace_added(m_child.desktop_shell, ws->resource(), ws->active());
+}
+
 void DesktopShell::bind(struct wl_client *client, uint32_t version, uint32_t id)
 {
     struct wl_resource *resource = wl_resource_create(client, &desktop_shell_interface, version, id);
@@ -145,6 +167,9 @@ void DesktopShell::bind(struct wl_client *client, uint32_t version, uint32_t id)
         wl_resource_set_implementation(resource, &m_desktop_shell_implementation, this,
                                        [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbind(resource); });
         m_child.desktop_shell = resource;
+
+        sendInitEvents();
+        desktop_shell_send_load(resource);
         return;
     }
 
@@ -175,21 +200,6 @@ void DesktopShell::moveBinding(struct weston_seat *seat, uint32_t time, uint32_t
     }
 }
 
-void DesktopShell::setAvailableGeometry(struct wl_client *client, struct wl_resource *resource,
-                                        struct wl_resource *output_resource,
-                                        int32_t x, int32_t y, int32_t width, int32_t height)
-{
-    struct weston_output *output = static_cast<weston_output *>(output_resource->data);
-
-    IRect2D area;
-    area.x = x;
-    area.y = y;
-    area.width = width;
-    area.height = height;
-
-    m_windowsArea[output] = area;
-}
-
 void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                                  struct wl_resource *surface_resource)
 {
@@ -202,19 +212,14 @@ void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *r
     }
 
     setBackgroundSurface(surface, static_cast<weston_output *>(output_resource->data));
-    hawaii_desktop_shell_send_present(resource, surface_resource);
+
+    desktop_shell_send_configure(resource, 0,
+                                 surface_resource,
+                                 surface->output->width,
+                                 surface->output->height);
 }
 
-static void panelAnimationDone(struct weston_surface_animation *,
-                               void *data)
-{
-    struct animation_coordinates *coords = static_cast<animation_coordinates *>(data);
-    weston_surface_set_position(coords->surface, coords->x, coords->y);
-    free(data);
-}
-
-void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resource,
-                            struct wl_resource *output_resource,
+void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                             struct wl_resource *surface_resource)
 {
     struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
@@ -227,138 +232,7 @@ void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resour
     }
 
     addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
-    hawaii_desktop_shell_send_present(resource, surface_resource);
-}
-
-void DesktopShell::setPanelGeometry(struct wl_client *client, struct wl_resource *resource,
-                                    struct wl_resource *output_resource,
-                                    struct wl_resource *surface_resource,
-                                    int32_t x, int32_t y, int32_t width, int32_t height)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-    struct weston_output *output = static_cast<struct weston_output *>(output_resource->data);
-
-    struct animation_coordinates *coords =
-            (struct animation_coordinates *)malloc(sizeof(struct animation_coordinates));
-            coords->surface = surface;
-            coords->x = x;
-            coords->y = y;
-
-            weston_slide_run(surface, -output->height, 0, panelAnimationDone, coords);
-}
-
-void DesktopShell::setLauncher(struct wl_client *client, struct wl_resource *resource,
-                               struct wl_resource *output_resource,
-                               struct wl_resource *surface_resource)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    if (surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role already assigned");
-        return;
-    }
-
-    addLauncherSurface(surface, static_cast<weston_output *>(output_resource->data));
-    hawaii_desktop_shell_send_present(resource, surface_resource);
-}
-
-void DesktopShell::setLauncherGeometry(struct wl_client *client, struct wl_resource *resource,
-                                       struct wl_resource *output_resource,
-                                       struct wl_resource *surface_resource,
-                                       int32_t x, int32_t y, int32_t width, int32_t height)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-    struct weston_output *output = static_cast<struct weston_output *>(output_resource->data);
-
-    struct animation_coordinates *coords =
-            (struct animation_coordinates *)malloc(sizeof(struct animation_coordinates));
-            coords->surface = surface;
-            coords->x = x;
-            coords->y = y;
-
-            weston_slide_run(surface, output->height, y, panelAnimationDone, coords);
-}
-
-void DesktopShell::setSpecial(struct wl_client *client, struct wl_resource *resource,
-                              struct wl_resource *output_resource,
-                              struct wl_resource *surface_resource)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    if (surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role already assigned");
-        return;
-    }
-
-    addSpecialSurface(surface, static_cast<weston_output *>(output_resource->data));
-}
-
-void DesktopShell::setPosition(struct wl_client *client, struct wl_resource *resource,
-                               struct wl_resource *surface_resource,
-                               int32_t x, int32_t y)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    if (!surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role not yet assigned");
-        return;
-    }
-
-    // When we hide a special surface we unmap and unlink it, so the next
-    // time set_position() is called we need to insert it into the
-    // panel layer again
-    bool found = false;
-    for (struct weston_surface *current: m_panelsLayer) {
-        if (current == surface) {
-            found = true;
-            break;
-        }
-    }
-    if (!found)
-        m_panelsLayer.addSurface(surface);
-
-#if 0
-    // Give focus to the special surface
-    if (!shell->locked) {
-        struct weston_seat *seat;
-
-        wl_list_for_each(seat, &compositor->seat_list, link)
-                weston_surface_activate(surface, seat);
-    }
-#else
-    struct weston_seat *seat;
-    wl_list_for_each(seat, &m_compositor->seat_list, link)
-            weston_surface_activate(surface, seat);
-#endif
-
-    // Set given position
-    weston_surface_set_position(surface, x, y);
-}
-
-void DesktopShell::hideSurface(struct wl_client *client, struct wl_resource *resource,
-                               struct wl_resource *surface_resource)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    if (!surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role not yet assigned");
-        return;
-    }
-
-    for (struct weston_surface *current: m_panelsLayer) {
-        if (current == surface) {
-            weston_surface_unmap(surface);
-            wl_list_remove(&surface->link);
-        }
-    }
+    desktop_shell_send_configure(resource, 0, surface_resource, surface->output->width, surface->output->height);
 }
 
 void DesktopShell::setLockSurface(struct wl_client *client, struct wl_resource *resource, struct wl_resource *surface_resource)
@@ -396,6 +270,11 @@ void DesktopShell::setGrabSurface(struct wl_client *client, struct wl_resource *
     this->Shell::setGrabSurface(static_cast<struct weston_surface *>(surface_resource->data));
 }
 
+void DesktopShell::desktopReady(struct wl_client *client, struct wl_resource *resource)
+{
+    fadeSplash();
+}
+
 void DesktopShell::addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers)
 {
     wl_resource *res = wl_resource_create(client, &desktop_shell_binding_interface, wl_resource_get_version(resource), id);
@@ -403,6 +282,7 @@ void DesktopShell::addKeyBinding(struct wl_client *client, struct wl_resource *r
 
     weston_compositor_add_key_binding(compositor(), key, (weston_keyboard_modifier)modifiers,
                                          [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
+
                                              desktop_shell_binding_send_triggered(static_cast<wl_resource *>(data));
                                          }, res);
 }
@@ -423,22 +303,37 @@ void DesktopShell::addOverlay(struct wl_client *client, struct wl_resource *reso
     pixman_region32_init_rect(&surface->pending.input, 0, 0, 0, 0);
 }
 
-void DesktopShell::requestFocus(wl_client *client, wl_resource *resource, wl_resource *surface_resource)
-{
-    weston_surface *surf = static_cast<weston_surface *>(surface_resource->data);
-    weston_seat *seat;
-    wl_list_for_each(seat, &compositor()->seat_list, link)
-        ShellSeat::shellSeat(seat)->activate(surf);
-}
-
 void DesktopShell::minimizeWindows(wl_client *client, wl_resource *resource)
 {
-    selectWorkspace(-1);
+    for (ShellSurface *shsurf: surfaces()) {
+        if (!shsurf->isMinimized()) {
+            shsurf->minimize();
+        }
+        shsurf->setAcceptNewState(false);
+    }
 }
 
 void DesktopShell::restoreWindows(wl_client *client, wl_resource *resource)
 {
-    selectWorkspace(currentWorkspace()->number());
+    for (ShellSurface *shsurf: surfaces()) {
+        if (!shsurf->isMinimized()) {
+            shsurf->unminimize();
+        }
+        shsurf->setAcceptNewState(true);
+    }
+}
+
+void DesktopShell::addWorkspace(wl_client *client, wl_resource *resource)
+{
+    Workspace *ws = new Workspace(this, numWorkspaces());
+    ws->init(client);
+    Shell::addWorkspace(ws);
+    workspaceAdded(ws);
+}
+
+void DesktopShell::selectWorkspace(wl_client *client, wl_resource *resource, wl_resource *workspace_resource)
+{
+    Shell::selectWorkspace(Workspace::fromResource(workspace_resource)->number());
 }
 
 class ClientGrab : public ShellGrab {
@@ -541,31 +436,19 @@ void DesktopShell::quit(wl_client *client, wl_resource *resource)
     Shell::quit();
 }
 
-static void
-desktop_shell_desktop_ready(struct wl_client *client,
-                            struct wl_resource *resource)
-{
-}
-
 const struct desktop_shell_interface DesktopShell::m_desktop_shell_implementation = {
-    DesktopShell::hawaii_desktop_shell_set_available_geometry,
-    DesktopShell::hawaii_desktop_shell_set_background,
-    DesktopShell::hawaii_desktop_shell_set_panel,
-    DesktopShell::hawaii_desktop_shell_set_panel_geometry,
-    DesktopShell::hawaii_desktop_shell_set_launcher,
-    DesktopShell::hawaii_desktop_shell_set_launcher_geometry,
-    DesktopShell::hawaii_desktop_shell_set_special,
-    DesktopShell::hawaii_desktop_shell_set_position,
-    DesktopShell::hawaii_desktop_shell_hide_surface,
-    DesktopShell::hawaii_desktop_shell_set_lock_surface,
-    DesktopShell::hawaii_desktop_shell_quit,
-    DesktopShell::hawaii_desktop_shell_lock,
-    DesktopShell::hawaii_desktop_shell_unlock,
-    DesktopShell::hawaii_desktop_shell_set_grab_surface
-    DesktopShell::desktop_shell_add_key_binding,
-    DesktopShell::desktop_shell_add_overlay,
-    DesktopShell::desktop_shell_request_focus,
-    DesktopShell::desktop_shell_minimize_windows,
-    DesktopShell::desktop_shell_restore_windows,
-    DesktopShell::desktop_shell_create_grab
+    wrapInterface(&DesktopShell::setBackground),
+    wrapInterface(&DesktopShell::setPanel),
+    wrapInterface(&DesktopShell::setLockSurface),
+    wrapInterface(&DesktopShell::unlock),
+    wrapInterface(&DesktopShell::setGrabSurface),
+    wrapInterface(&DesktopShell::desktopReady),
+    wrapInterface(&DesktopShell::addKeyBinding),
+    wrapInterface(&DesktopShell::addOverlay),
+    wrapInterface(&DesktopShell::minimizeWindows),
+    wrapInterface(&DesktopShell::restoreWindows),
+    wrapInterface(&DesktopShell::createGrab),
+    wrapInterface(&DesktopShell::addWorkspace),
+    wrapInterface(&DesktopShell::selectWorkspace),
+    wrapInterface(&DesktopShell::quit)
 };

@@ -6,7 +6,6 @@
  *
  * Author(s):
  *    Giulio Camuffo
- *    Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
@@ -30,14 +29,16 @@
 #include "shellsurface.h"
 
 Layer::Layer()
-    : m_below(nullptr)
+     : m_below(nullptr)
 {
     weston_layer_init(&m_layer, nullptr);
+    wl_list_init(&m_layer.link);
 }
 
 void Layer::insert(struct weston_layer *below)
 {
     if (below) {
+        wl_list_remove(&m_layer.link);
         wl_list_insert(&below->link, &m_layer.link);
         for (struct weston_surface *s: *this) {
             weston_surface_damage(s);
@@ -48,6 +49,7 @@ void Layer::insert(struct weston_layer *below)
 void Layer::insert(Layer *below)
 {
     if (below) {
+        wl_list_remove(&m_layer.link);
         wl_list_insert(&below->m_layer.link, &m_layer.link);
         for (struct weston_surface *s: *this) {
             weston_surface_damage(s);
@@ -102,17 +104,6 @@ void Layer::addSurface(ShellSurface *surf)
     addSurface(surf->m_surface);
 }
 
-void Layer::removeSurface(struct weston_surface *surf)
-{
-    wl_list_remove(&surf->layer_link);
-    wl_list_init(&surf->layer_link);
-}
-
-void Layer::removeSurface(ShellSurface *surf)
-{
-    removeSurface(surf->m_surface);
-}
-
 void Layer::stackAbove(struct weston_surface *surf, struct weston_surface *parent)
 {
     wl_list_remove(&surf->layer_link);
@@ -149,22 +140,17 @@ int Layer::numberOfSurfaces() const
     return wl_list_length(&m_layer.surface_list);
 }
 
-Layer::iterator Layer::begin()
+Layer::iterator Layer::begin() const
 {
-    return iterator(&m_layer.surface_list, m_layer.surface_list.next);
+    return iterator(&m_layer.surface_list, m_layer.surface_list.next, false);
 }
 
-Layer::const_iterator Layer::begin() const
+Layer::iterator Layer::rbegin() const
 {
-    return const_iterator(&m_layer.surface_list, m_layer.surface_list.next);
+    return iterator(&m_layer.surface_list, m_layer.surface_list.prev, true);
 }
 
-Layer::iterator Layer::end()
+Layer::iterator Layer::end() const
 {
-    return iterator(&m_layer.surface_list, &m_layer.surface_list);
-}
-
-Layer::const_iterator Layer::end() const
-{
-    return const_iterator(&m_layer.surface_list, &m_layer.surface_list);
+    return iterator(&m_layer.surface_list, &m_layer.surface_list, false);
 }

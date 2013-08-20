@@ -57,9 +57,10 @@ private:
     struct weston_seat *m_seat;
     struct Grab *m_grab;
     Binding *m_binding;
+    ShellSurface *m_chosenSurface;
 
     static void grab_focus(struct weston_pointer_grab *grab);
     static const struct weston_pointer_grab_interface grab_interface;
 };
 
-#endif // SCALEEFFECT_H
+#endif

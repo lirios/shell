@@ -43,6 +43,7 @@ public:
     };
     Animation();
     ~Animation();
+    void destroy();
 
     void setStart(float value);
     void setTarget(float value);
@@ -52,8 +53,8 @@ public:
     template<class T>
     void setCurve(const T &curve) { delete m_curve; m_curve = new T; *static_cast<T *>(m_curve) = curve; }
 
-    Signal<float> updateSignal;
-    Signal<> doneSignal;
+    Signal<float> *updateSignal;
+    Signal<> *doneSignal;
 
 private:
     void update(struct weston_output *output, uint32_t msecs);
@@ -75,4 +76,4 @@ inline Animation::Flags operator|(Animation::Flags a, Animation::Flags b) {
     return (Animation::Flags)(a | b);
 }
 
-#endif // ANIMATION_H
+#endif

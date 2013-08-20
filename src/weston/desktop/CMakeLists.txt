@@ -7,19 +7,22 @@ include_directories(
 )
 
 set(SOURCES
-    shell.cpp
-    layer.cpp
-    shellsurface.cpp
-    shellseat.cpp
-    workspace.cpp
-    effect.cpp
-    transform.cpp
     animation.cpp
     desktop-shell.cpp
-    effects/scaleeffect.cpp
-    effects/griddesktops.cpp
-    effects/zoomeffect.cpp
+    effect.cpp
+    inputpanel.cpp
+    layer.cpp
+    shell.cpp
+    shellseat.cpp
+    shellsurface.cpp
+    transform.cpp
+    workspace.cpp
     effects/fademovingeffect.cpp
+    effects/griddesktops.cpp
+    effects/inoutsurfaceeffect.cpp
+    effects/minimizeeffect.cpp
+    effects/scaleeffect.cpp
+    effects/zoomeffect.cpp
 )
 
 wayland_add_protocol_client(SOURCES
@@ -29,6 +32,15 @@ wayland_add_protocol_client(SOURCES
 wayland_add_protocol_server(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
     desktop-shell
+)
+
+wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/input-method.xml
+    input-method
+)
+wayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/input-method.xml
+    input-method
 )
 
 wayland_add_protocol_client(SOURCES

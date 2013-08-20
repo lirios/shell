@@ -1,19 +1,29 @@
-/*
- * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
+/****************************************************************************
+ * This file is part of Hawaii Shell.
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013 Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * This library is distributed in the hope that it will be useful,
+ * Author(s):
+ *    Giulio Camuffo
+ *
+ * $BEGIN_LICENSE:LGPL2.1+$
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- */
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * $END_LICENSE$
+ ***************************************************************************/
 
 #ifndef UTILS_H
 #define UTILS_H
@@ -31,7 +41,6 @@ public:
 template<typename T>
 class Rect2D {
 public:
-    inline Rect2D() : x(-1), y(-1), width(-1), height(-1) {}
     inline Rect2D(T a, T b, T w, T h) : x(a), y(b), width(w), height(h) {}
     T x;
     T y;
@@ -63,5 +72,20 @@ private:
     };
     Wrapper m_listener;
 };
+
+template<class T, class... Args>
+struct Wrapper {
+    template<void (T::*F)(wl_client *, wl_resource *, Args...)>
+    static void forward(wl_client *client, wl_resource *resource, Args... args) {
+        (static_cast<T *>(wl_resource_get_user_data(resource))->*F)(client,resource, args...);
+    }
+};
+
+template<class T, class... Args>
+constexpr static auto createWrapper(void (T::*func)(wl_client *client, wl_resource *resource, Args...)) -> Wrapper<T, Args...> {
+    return Wrapper<T, Args...>();
+}
+
+#define wrapInterface(method) createWrapper(method).forward<method>
 
 #endif

@@ -6,7 +6,6 @@
  *
  * Author(s):
  *    Giulio Camuffo
- *    Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
@@ -29,6 +28,7 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+#include <list>
 #include <vector>
 
 #include "utils.h"
@@ -39,8 +39,9 @@ struct ShellGrab;
 class Effect;
 class Workspace;
 class ShellSeat;
+class Animation;
 
-typedef std::vector<ShellSurface *> ShellSurfaceList;
+typedef std::list<ShellSurface *> ShellSurfaceList;
 
 class Shell;
 
@@ -70,7 +71,6 @@ public:
     template<class T>
     static Shell *load(struct weston_compositor *ec, char *client);
     virtual ~Shell();
-    virtual IRect2D windowsArea(struct weston_output *output);
 
     void launchShellProcess();
     ShellSurface *createShellSurface(struct weston_surface *surface, const struct weston_shell_client *client);
@@ -94,8 +94,6 @@ public:
     void setBackgroundSurface(struct weston_surface *surface, struct weston_output *output);
     void setGrabSurface(struct weston_surface *surface);
     void addPanelSurface(struct weston_surface *surface, struct weston_output *output);
-    void addLauncherSurface(struct weston_surface *surface, struct weston_output *output);
-    void addSpecialSurface(struct weston_surface *surface, struct weston_output *output);
     void addOverlaySurface(struct weston_surface *surface, struct weston_output *output);
 
     void startGrab(ShellGrab *grab, const struct weston_pointer_grab_interface *interface,
@@ -105,6 +103,8 @@ public:
     void showPanels();
     void hidePanels();
     bool isInFullscreen() const;
+
+    virtual IRect2D windowsArea(struct weston_output *output) const;
 
     inline struct weston_compositor *compositor() const { return m_compositor; }
     struct weston_output *getDefaultOutput() const;
@@ -129,6 +129,8 @@ protected:
     virtual void setGrabCursor(uint32_t cursor) {}
     virtual void setBusyCursor(ShellSurface *shsurf, struct weston_seat *seat) {}
     virtual void endBusyCursor(struct weston_seat *seat) {}
+    void fadeSplash();
+    void addWorkspace(Workspace *ws);
 
     struct Child {
         Shell *shell;
@@ -157,19 +159,24 @@ private:
     void pointerFocus(ShellSeat *shseat, struct weston_pointer *pointer);
     void pingTimeout(ShellSurface *shsurf);
     void pong(ShellSurface *shsurf);
+    weston_surface *createBlackSurface(int x, int y, int w, int h);
+    void workspaceRemoved(Workspace *ws);
 
     struct weston_compositor *m_compositor;
     WlListener m_destroyListener;
+    char *m_clientPath;
     Layer m_backgroundLayer;
     Layer m_panelsLayer;
     Layer m_fullscreenLayer;
     Layer m_overlayLayer;
+    Layer m_splashLayer;
     std::vector<Effect *> m_effects;
     ShellSurfaceList m_surfaces;
     std::vector<Workspace *> m_workspaces;
     uint32_t m_currentWorkspace;
 
-    struct weston_surface *m_blackSurface;
+    std::list<weston_surface *> m_blackSurfaces;
+    class Splash *m_splash;
     struct weston_surface *m_grabSurface;
 
     static const struct wl_shell_interface shell_implementation;
@@ -179,10 +186,11 @@ private:
 };
 
 template<class T>
-Shell *Shell::load(struct weston_compositor *ec)
+Shell *Shell::load(struct weston_compositor *ec, char *client)
 {
     Shell *shell = new T(ec);
     if (shell) {
+        shell->m_clientPath = client;
         shell->init();
     }
 
@@ -227,4 +235,4 @@ Binding *Shell::bindAxis(uint32_t axis, enum weston_keyboard_modifier modifier,
     return binding;
 }
 
-#endif // SHELL_H
+#endif

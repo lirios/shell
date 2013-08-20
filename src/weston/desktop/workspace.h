@@ -30,6 +30,7 @@
 
 #include "layer.h"
 #include "transform.h"
+#include "signal.h"
 
 class Shell;
 
@@ -37,6 +38,8 @@ class Workspace {
 public:
     Workspace(Shell *shell, int number);
     ~Workspace();
+
+    void init(wl_client *client);
 
     void addSurface(ShellSurface *surface);
     void restack(ShellSurface *surface);
@@ -47,20 +50,34 @@ public:
     inline int number() const { return m_number; }
     int numberOfSurfaces() const;
     struct weston_output *output() const;
+    wl_resource *resource() const { return m_resource; }
 
     void insert(Workspace *ws);
     void insert(Layer *layer);
     void insert(struct weston_layer *layer);
     void remove();
 
+    void setActive(bool active);
+    bool active() const { return m_active; }
+
     inline const Layer &layer() const { return m_layer; }
 
+    static Workspace *fromResource(wl_resource *res);
+
+    Signal<Workspace *> destroyedSignal;
+
 private:
+    void removed(wl_client *client, wl_resource *res);
+
     Shell *m_shell;
     int m_number;
+    wl_resource *m_resource;
     struct weston_surface *m_rootSurface;
     Transform m_transform;
     Layer m_layer;
+    bool m_active;
+
+    static const struct desktop_shell_workspace_interface s_implementation;
 };
 
-#endif // WORKSPACE_H
+#endif

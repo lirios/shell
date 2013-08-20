@@ -37,7 +37,7 @@ struct FadeMovingEffect::Surface {
 };
 
 FadeMovingEffect::FadeMovingEffect(Shell *shell)
-    : Effect(shell)
+                : Effect(shell)
 {
 }
 
@@ -73,7 +73,7 @@ void FadeMovingEffect::addedSurface(ShellSurface *surface)
 
     surface->moveStartSignal.connect(this, &FadeMovingEffect::start);
     surface->moveEndSignal.connect(this, &FadeMovingEffect::end);
-    surf->animation.updateSignal.connect(surface, &ShellSurface::setAlpha);
+    surf->animation.updateSignal->connect(surface, &ShellSurface::setAlpha);
 
     m_surfaces.push_back(surf);
 }

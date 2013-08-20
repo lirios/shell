@@ -43,4 +43,4 @@ private:
     Binding *m_binding;
 };
 
-#endif // ZOOMEFFECT_H
+#endif

@@ -1,19 +1,29 @@
-/*
- * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
+/****************************************************************************
+ * This file is part of Hawaii Shell.
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013 Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * This library is distributed in the hope that it will be useful,
+ * Author(s):
+ *    Giulio Camuffo
+ *
+ * $BEGIN_LICENSE:LGPL2.1+$
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- */
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * $END_LICENSE$
+ ***************************************************************************/
 
 #ifndef SIGNAL_H
 #define SIGNAL_H
@@ -26,15 +36,16 @@ class Functor;
 template<class... Args>
 class Signal {
 public:
-    Signal() : m_startAgain(false), m_flush(false) { }
+    Signal() : m_startAgain(false), m_flush(false), m_calling(false) { }
 
     template<class T> void connect(T *obj, void (T::*func)(Args...));
     template<class T> void disconnect(T *obj, void (T::*func)(Args...));
+    template<class T> void disconnect(T *obj);
     template<class T> bool isConnected(T *obj, void (T::*func)(Args...));
 
     void operator()(Args... args);
 
-    void flush() { m_flush = true; }
+    void flush() { m_flush = true; if (!m_calling) delete this;}
 
 private:
     void call(Args... args);
@@ -42,6 +53,7 @@ private:
     std::list<Functor<Args...> *> m_listeners;
     bool m_startAgain;
     bool m_flush;
+    bool m_calling;
 };
 
 // -- End of API --
@@ -91,6 +103,19 @@ void Signal<Args...>::disconnect(T *obj, void (T::*func)(Args...)) {
 }
 
 template<class... Args> template<class T>
+void Signal<Args...>::disconnect(T *obj) {
+    for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
+        MemberFunctor<T, Args...> *f = static_cast<MemberFunctor<T, Args...> *>(*i);
+        if (f->m_obj == obj) {
+            delete f;
+            m_listeners.erase(i);
+            m_startAgain = true;
+            return;
+        }
+    }
+}
+
+template<class... Args> template<class T>
 bool Signal<Args...>::isConnected(T *obj, void (T::*func)(Args...)) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
         MemberFunctor<T, Args...> *f = static_cast<MemberFunctor<T, Args...> *>(*i);
@@ -103,6 +128,7 @@ bool Signal<Args...>::isConnected(T *obj, void (T::*func)(Args...)) {
 
 template<class... Args>
 void Signal<Args...>::operator()(Args... args) {
+    m_calling = true;
     for (Functor<Args...> *f: m_listeners) {
         f->m_called = false;
     }
@@ -111,6 +137,7 @@ void Signal<Args...>::operator()(Args... args) {
     if (m_flush) {
         delete this;
     }
+    m_calling = false;
 }
 
 template<class... Args>

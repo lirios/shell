@@ -79,4 +79,4 @@ private:
     static const struct weston_pointer_grab_interface popup_grab_interface;
 };
 
-#endif // SHELLSEAT_H
+#endif

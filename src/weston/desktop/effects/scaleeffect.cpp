@@ -41,6 +41,7 @@ const int ALPHA_ANIM_DURATION = 200;
 
 struct Grab : public ShellGrab {
     ScaleEffect *effect;
+    weston_surface *surface;
 };
 
 struct SurfaceTransform {
@@ -51,6 +52,8 @@ struct SurfaceTransform {
     struct weston_transform transform;
     Animation animation;
     Animation alphaAnim;
+    bool wasMinimized;
+    bool minimize;
 
     float ss, ts, cs;
     int sx, tx, cx;
@@ -69,13 +72,12 @@ void ScaleEffect::grab_focus(struct weston_pointer_grab *base)
                                                                     grab->pointer->x, grab->pointer->y,
                                                                     &sx, &sy);
 
-    if (grab->pointer->focus == surface) {
+    if (grab->surface == surface) {
         return;
     }
 
-    grab->pointer->focus = surface;
+    grab->surface = surface;
 
-    printf("focus %p\n", surface);
     for (SurfaceTransform *tr: grab->effect->m_surfaces) {
         if (tr->surface->workspace() != currWs) {
             continue;
@@ -86,7 +88,6 @@ void ScaleEffect::grab_focus(struct weston_pointer_grab *base)
         if (alpha == curr) {
             continue;
         }
-        printf("%p %f %f\n",tr->surface->weston_surface(),alpha,curr);
 
         tr->alphaAnim.setStart(curr);
         tr->alphaAnim.setTarget(alpha);
@@ -99,8 +100,7 @@ static void grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_
     ShellGrab *shgrab = container_of(base, ShellGrab, grab);
     Grab *grab = static_cast<Grab *>(shgrab);
     if (state_w == WL_POINTER_BUTTON_STATE_PRESSED) {
-        struct weston_surface *surface = base->pointer->focus;
-        ShellSurface *shsurf = grab->shell->getShellSurface(surface);
+        ShellSurface *shsurf = grab->shell->getShellSurface(grab->surface);
         if (shsurf) {
             grab->effect->end(shsurf);
         }
@@ -163,6 +163,8 @@ void ScaleEffect::run(struct weston_seat *ws)
         }
 
         if (m_scaled) {
+            surf->minimize = surf->wasMinimized && surf->surface != m_chosenSurface;
+
             surf->ss = surf->cs;
             surf->ts = 1.f;
 
@@ -175,9 +177,14 @@ void ScaleEffect::run(struct weston_seat *ws)
             surf->animation.run(surf->surface->output(), ANIM_DURATION, Animation::Flags::SendDone);
 
             surf->alphaAnim.setStart(surf->surface->alpha());
-            surf->alphaAnim.setTarget(1.f);
+            surf->alphaAnim.setTarget(surf->minimize ? 0.f : 1.f);
             surf->alphaAnim.run(surf->surface->output(), ALPHA_ANIM_DURATION);
         } else {
+            surf->wasMinimized = surf->surface->isMinimized();
+            if (surf->wasMinimized) {
+                surf->surface->show();
+            }
+
             int cellW = surf->surface->output()->width / numCols;
             int cellH = surf->surface->output()->height / numRows;
 
@@ -208,7 +215,7 @@ void ScaleEffect::run(struct weston_seat *ws)
             surf->animation.setTarget(1.f);
             surf->animation.run(surf->surface->output(), ANIM_DURATION);
 
-            surf->alphaAnim.setStart(surf->surface->alpha());
+            surf->alphaAnim.setStart(surf->wasMinimized ? 0 : surf->surface->alpha());
             surf->alphaAnim.setTarget(INACTIVE_ALPHA);
             surf->alphaAnim.run(surf->surface->output(), ALPHA_ANIM_DURATION);
 
@@ -222,8 +229,10 @@ void ScaleEffect::run(struct weston_seat *ws)
     m_scaled = !m_scaled;
     if (m_scaled) {
         m_seat = ws;
+        m_chosenSurface = nullptr;
         shell()->startGrab(m_grab, &grab_interface, ws, DESKTOP_SHELL_CURSOR_ARROW);
         shell()->hidePanels();
+        m_grab->surface = nullptr;
         if (ws->pointer->focus) {
             ShellSurface *s = Shell::getShellSurface(ws->pointer->focus);
             if (!s) {
@@ -248,29 +257,32 @@ void ScaleEffect::run(struct weston_seat *ws)
 
 void ScaleEffect::end(ShellSurface *surface)
 {
+    m_chosenSurface = surface;
     ShellSeat::shellSeat(m_seat)->activate(surface);
     run(m_seat);
 }
 
 void ScaleEffect::addedSurface(ShellSurface *surface)
 {
-    SurfaceTransform *tr = new SurfaceTransform;
-    tr->surface = surface;
-    tr->animation.updateSignal.connect(tr, &SurfaceTransform::updateAnimation);
-    tr->animation.doneSignal.connect(tr, &SurfaceTransform::doneAnimation);
-    tr->alphaAnim.updateSignal.connect(surface, &ShellSurface::setAlpha);
-    tr->animation.setCurve(OutElasticCurve());
+    if (surface->type() == ShellSurface::Type::TopLevel || surface->type() == ShellSurface::Type::Maximized) {
+        SurfaceTransform *tr = new SurfaceTransform;
+        tr->surface = surface;
+        tr->animation.updateSignal->connect(tr, &SurfaceTransform::updateAnimation);
+        tr->animation.doneSignal->connect(tr, &SurfaceTransform::doneAnimation);
+        tr->alphaAnim.updateSignal->connect(surface, &ShellSurface::setAlpha);
+        tr->animation.setCurve(OutElasticCurve());
 
-    wl_list_init(&tr->transform.link);
+        wl_list_init(&tr->transform.link);
 
-    tr->cx = tr->cy = 0;
-    tr->cs = 1.f;
+        tr->cx = tr->cy = 0;
+        tr->cs = 1.f;
 
-    m_surfaces.push_back(tr);
+        m_surfaces.push_back(tr);
 
-    if (m_scaled) {
-        m_scaled = false;
-        run(m_seat);
+        if (m_scaled) {
+            m_scaled = false;
+            run(m_seat);
+        }
     }
 }
 
@@ -308,4 +320,9 @@ void SurfaceTransform::updateAnimation(float value)
 void SurfaceTransform::doneAnimation()
 {
     surface->removeTransform(&transform);
+
+    if (minimize) {
+        surface->hide();
+        surface->setAlpha(1);
+    }
 }

@@ -54,4 +54,4 @@ private:
     std::list<Surface *> m_surfaces;
 };
 
-#endif // FADEMOVINGEFFECT_H
+#endif

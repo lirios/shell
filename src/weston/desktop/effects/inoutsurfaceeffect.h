@@ -25,21 +25,29 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#ifndef INOUTSURFACEEFFECT_H
+#define INOUTSURFACEEFFECT_H
+
+#include <list>
+
 #include "effect.h"
-#include "shell.h"
 
-Effect::Effect(Shell *shell)
-      : m_shell(shell)
+class InOutSurfaceEffect : public Effect
 {
-    shell->registerEffect(this);
-}
+public:
+    InOutSurfaceEffect(Shell *shell);
+    ~InOutSurfaceEffect();
 
-void Effect::addSurface(ShellSurface *surf)
-{
-    addedSurface(surf);
-}
+protected:
+    virtual void addedSurface(ShellSurface *surf);
 
-void Effect::removeSurface(ShellSurface *surf)
-{
-    removedSurface(surf);
-}
+private:
+    struct Surface;
+    Surface *findSurface(ShellSurface *surf);
+
+    std::list<Surface *> m_surfaces;
+
+    friend Surface;
+};
+
+#endif

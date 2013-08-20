@@ -52,4 +52,4 @@ private:
 
 };
 
-#endif // EFFECT_H
+#endif

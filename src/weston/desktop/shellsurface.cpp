@@ -6,7 +6,6 @@
  *
  * Author(s):
  *    Giulio Camuffo
- *    Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
@@ -40,6 +39,7 @@
 ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
             : m_shell(shell)
             , m_workspace(nullptr)
+            , m_resource(nullptr)
             , m_windowResource(nullptr)
             , m_surface(surface)
             , m_type(Type::None)
@@ -47,6 +47,7 @@ ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
             , m_unresponsive(false)
             , m_state(DESKTOP_SHELL_WINDOW_STATE_INACTIVE)
             , m_windowAdvertized(false)
+            , m_acceptState(true)
             , m_parent(nullptr)
             , m_pingTimer(nullptr)
 {
@@ -54,7 +55,7 @@ ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
     wl_list_init(&m_fullscreen.transform.link);
     m_fullscreen.blackSurface = nullptr;
 
-    m_surfaceDestroyListener.listen(&surface->resource->destroy_signal);
+    m_surfaceDestroyListener.listen(&surface->destroy_signal);
     m_surfaceDestroyListener.signal->connect(this, &ShellSurface::surfaceDestroyed);
 }
 
@@ -68,46 +69,32 @@ ShellSurface::~ShellSurface()
     if (m_fullscreen.blackSurface) {
         weston_surface_destroy(m_fullscreen.blackSurface);
     }
+    m_surface->configure = nullptr;
     destroyWindow();
     destroyedSignal();
 }
 
+#define _this static_cast<ShellSurface *>(wl_resource_get_user_data(resource))
 void ShellSurface::set_state(struct wl_client *client, struct wl_resource *resource, int32_t state)
 {
-    ShellSurface *shsurf = static_cast<ShellSurface *>(resource->data);
-    if (shsurf->m_state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED && !(state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
-        shsurf->m_workspace->addSurface(shsurf);
-    } else if (state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED && !(shsurf->m_state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
-        wl_list_remove(&shsurf->m_surface->layer_link);
-        wl_list_init(&shsurf->m_surface->layer_link);
-    }
-    printf("%p %d %d\n",shsurf,shsurf->m_state,state);
-    if (state & DESKTOP_SHELL_WINDOW_STATE_ACTIVE && !(state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
-        weston_seat *seat = container_of(shsurf->weston_surface()->compositor->seat_list.next, weston_seat, link);
-        printf("act %p\n",shsurf);
-        ShellSeat::shellSeat(seat)->activate(shsurf);
-    }
-
-    shsurf->m_state = state;
-    shsurf->sendState();
+    ShellSurface *shsurf = _this;
+    shsurf->setState(state);
 }
 
 const struct desktop_shell_window_interface ShellSurface::m_window_implementation = {
     set_state
 };
 
-void ShellSurface::init(struct wl_client *client, uint32_t id, Workspace *workspace)
+void ShellSurface::init(struct wl_client *client, uint32_t id)
 {
     m_resource = wl_resource_create(client, &wl_shell_surface_interface, 1, id);
-    wl_resource_set_implementation(m_resource, &m_shell_surface_implementation, this, [](struct wl_resource *resource) { delete static_cast<ShellSurface *>(resource->data); });
+    wl_resource_set_implementation(m_resource, &m_shell_surface_implementation, this, [](struct wl_resource *resource) { delete _this; });
 
 //     m_resource.destroy = [](struct wl_resource *resource) { delete static_cast<ShellSurface *>(resource->data); };
 //     m_resource.object.id = id;
 //     m_resource.object.interface = &wl_shell_surface_interface;
 //     m_resource.object.implementation = &m_shell_surface_implementation;
 //     m_resource.data = this;
-
-    m_workspace = workspace;
 }
 
 void ShellSurface::destroyWindow()
@@ -121,11 +108,34 @@ void ShellSurface::destroyWindow()
 
 void ShellSurface::surfaceDestroyed()
 {
-    if (m_resource->client) {
+    if (m_resource && wl_resource_get_client(m_resource)) {
         wl_resource_destroy(m_resource);
     } else {
         delete this;
     }
+}
+
+void ShellSurface::setState(int state)
+{
+    if (!m_acceptState) {
+        return;
+    }
+
+    if (m_state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED && !(state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
+        unminimize();
+    } else if (state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED && !(m_state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
+        minimize();
+        if (isActive()) {
+            deactivate();
+        }
+    }
+
+    if (state & DESKTOP_SHELL_WINDOW_STATE_ACTIVE && !(state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
+        activate();
+    }
+
+    m_state = state;
+    sendState();
 }
 
 void ShellSurface::setActive(bool active)
@@ -138,11 +148,65 @@ void ShellSurface::setActive(bool active)
     sendState();
 }
 
+bool ShellSurface::isActive() const
+{
+    return m_state & DESKTOP_SHELL_WINDOW_STATE_ACTIVE;
+}
+
+bool ShellSurface::isMinimized() const
+{
+    return m_state & DESKTOP_SHELL_WINDOW_STATE_MINIMIZED;
+}
+
+void ShellSurface::activate()
+{
+    weston_seat *seat = container_of(weston_surface()->compositor->seat_list.next, weston_seat, link);
+    m_shell->selectWorkspace(m_workspace->number());
+    ShellSeat::shellSeat(seat)->activate(this);
+}
+
+void ShellSurface::deactivate()
+{
+    weston_seat *seat = container_of(weston_surface()->compositor->seat_list.next, weston_seat, link);
+    ShellSeat::shellSeat(seat)->activate((ShellSurface*)nullptr);
+}
+
+void ShellSurface::minimize()
+{
+    hide();
+    minimizedSignal(this);
+}
+
+void ShellSurface::unminimize()
+{
+    show();
+    unminimizedSignal(this);
+}
+
+void ShellSurface::show()
+{
+    m_workspace->addSurface(this);
+}
+
+void ShellSurface::hide()
+{
+    wl_list_remove(&m_surface->layer_link);
+    wl_list_init(&m_surface->layer_link);
+}
+
 void ShellSurface::sendState()
 {
     if (m_windowResource) {
         desktop_shell_window_send_state_changed(m_windowResource, m_state);
     }
+}
+
+void ShellSurface::advertize()
+{
+    m_windowResource = wl_resource_create(m_shell->shellClient(), &desktop_shell_window_interface, 1, 0);
+    wl_resource_set_implementation(m_windowResource, &m_window_implementation, this, 0);
+    desktop_shell_send_window_added(m_shell->shellClientResource(), m_windowResource, m_title.c_str(), m_state);
+    m_windowAdvertized = true;
 }
 
 bool ShellSurface::updateType()
@@ -170,16 +234,15 @@ bool ShellSurface::updateType()
             case Type::Transient:
                 weston_surface_set_position(m_surface, m_parent->geometry.x + m_transient.x, m_parent->geometry.y + m_transient.y);
                 break;
+            case Type::XWayland:
+                weston_surface_set_position(m_surface, m_transient.x, m_transient.y);
             default:
                 break;
         }
 
         if (m_type == Type::TopLevel || m_type == Type::Maximized || m_type == Type::Fullscreen) {
             if (!m_windowAdvertized) {
-                m_windowResource = wl_resource_create(m_shell->shellClient(), &desktop_shell_window_interface, 1, 0);
-                wl_resource_set_implementation(m_windowResource, &m_window_implementation, this, 0);
-                desktop_shell_send_window_added(m_shell->shellClientResource(), m_windowResource, m_title.c_str(), m_state);
-                m_windowAdvertized = true;
+                advertize();
             }
         } else {
             destroyWindow();
@@ -214,9 +277,6 @@ void ShellSurface::map(int32_t x, int32_t y, int32_t width, int32_t height)
             break;
     }
 
-    printf("map %d %d %d %d - %d\n",x,y,width,height,m_type);
-
-
     if (m_type != Type::None) {
         weston_surface_update_transform(m_surface);
         if (m_type == Type::Maximized) {
@@ -231,6 +291,31 @@ void ShellSurface::unmapped()
         m_popup.seat->removePopupGrab(this);
         m_popup.seat = nullptr;
     }
+}
+
+void ShellSurface::setTopLevel()
+{
+    m_pendingType = Type::TopLevel;
+}
+
+void ShellSurface::setTransient(struct weston_surface *parent, int x, int y, uint32_t flags)
+{
+    m_parent = parent;
+    m_transient.x = x;
+    m_transient.y = y;
+    m_transient.flags = flags;
+
+    m_pendingType = Type::Transient;
+}
+
+void ShellSurface::setXWayland(int x, int y, uint32_t flags)
+{
+    // reuse the transient fields for XWayland
+    m_transient.x = x;
+    m_transient.y = y;
+    m_transient.flags = flags;
+
+    m_pendingType = Type::XWayland;
 }
 
 void ShellSurface::mapPopup()
@@ -269,6 +354,7 @@ void ShellSurface::removeTransform(struct weston_transform *transform)
 void ShellSurface::damage()
 {
     weston_surface_geometry_dirty(m_surface);
+    weston_surface_update_transform(m_surface);
     weston_surface_damage(m_surface);
 }
 
@@ -280,7 +366,9 @@ void ShellSurface::setAlpha(float alpha)
 
 void ShellSurface::popupDone()
 {
-    wl_shell_surface_send_popup_done(m_resource);
+    if (m_resource) {
+        wl_shell_surface_send_popup_done(m_resource);
+    }
     m_popup.seat = nullptr;
 }
 
@@ -410,7 +498,7 @@ void ShellSurface::ping(uint32_t serial)
 {
     const int ping_timeout = 200;
 
-    if (!m_resource->client)
+    if (!m_resource || !wl_resource_get_client(m_resource))
         return;
 
     if (!m_pingTimer) {
@@ -505,7 +593,7 @@ const struct weston_pointer_grab_interface ShellSurface::m_move_grab_interface =
 void ShellSurface::move(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
                         uint32_t serial)
 {
-    struct weston_seat *ws = static_cast<weston_seat *>(seat_resource->data);
+    struct weston_seat *ws = static_cast<weston_seat *>(wl_resource_get_user_data(seat_resource));
 
     if (ws->pointer->button_count == 0 || ws->pointer->grab_serial != serial || ws->pointer->focus != m_surface) {
         return;
@@ -597,7 +685,7 @@ const struct weston_pointer_grab_interface ShellSurface::m_resize_grab_interface
 void ShellSurface::resize(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
                           uint32_t serial, uint32_t edges)
 {
-    struct weston_seat *ws = static_cast<weston_seat *>(seat_resource->data);
+    struct weston_seat *ws = static_cast<weston_seat *>(wl_resource_get_user_data(seat_resource));
 
     if (ws->pointer->button_count == 0 || ws->pointer->grab_serial != serial || ws->pointer->focus != m_surface) {
         return;
@@ -626,37 +714,30 @@ void ShellSurface::dragResize(struct weston_seat *ws, uint32_t edges)
 
 void ShellSurface::setToplevel(struct wl_client *, struct wl_resource *)
 {
-printf("top\n");
-    m_pendingType = Type::TopLevel;
+    setTopLevel();
 }
 
 void ShellSurface::setTransient(struct wl_client *client, struct wl_resource *resource,
                   struct wl_resource *parent_resource, int x, int y, uint32_t flags)
 {
-    m_parent = static_cast<struct weston_surface *>(parent_resource->data);
-    m_transient.x = x;
-    m_transient.y = y;
-    m_transient.flags = flags;
-
-    m_pendingType = Type::Transient;
-
+    setTransient(static_cast<struct weston_surface *>(wl_resource_get_user_data(parent_resource)), x, y, flags);
 }
 
 void ShellSurface::setFullscreen(struct wl_client *client, struct wl_resource *resource, uint32_t method,
                    uint32_t framerate, struct wl_resource *output_resource)
 {
-    struct weston_output *output = output_resource ? static_cast<struct weston_output *>(output_resource->data) : nullptr;
+    struct weston_output *output = output_resource ? static_cast<struct weston_output *>(wl_resource_get_user_data(output_resource)) : nullptr;
     setFullscreen(method, framerate, output);
 }
 
 void ShellSurface::setPopup(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,
               uint32_t serial, struct wl_resource *parent_resource, int32_t x, int32_t y, uint32_t flags)
 {
-    m_parent = static_cast<struct weston_surface *>(parent_resource->data);
+    m_parent = static_cast<struct weston_surface *>(wl_resource_get_user_data(parent_resource));
     m_popup.x = x;
     m_popup.y = y;
     m_popup.serial = serial;
-    m_popup.seat = ShellSeat::shellSeat(static_cast<struct weston_seat *>(seat_resource->data));
+    m_popup.seat = ShellSeat::shellSeat(static_cast<struct weston_seat *>(wl_resource_get_user_data(seat_resource)));
 
     m_pendingType = Type::Popup;
 }
@@ -666,7 +747,7 @@ void ShellSurface::setMaximized(struct wl_client *client, struct wl_resource *re
     /* get the default output, if the client set it as NULL
     c heck whether the ouput is available */
     if (output_resource) {
-        m_output = static_cast<struct weston_output *>(output_resource->data);
+        m_output = static_cast<struct weston_output *>(wl_resource_get_user_data(output_resource));
     } else if (m_surface->output) {
         m_output = m_surface->output;
     } else {
@@ -694,14 +775,14 @@ void ShellSurface::setClass(struct wl_client *client, struct wl_resource *resour
 }
 
 const struct wl_shell_surface_interface ShellSurface::m_shell_surface_implementation = {
-    ShellSurface::shell_surface_pong,
-    ShellSurface::shell_surface_move,
-    ShellSurface::shell_surface_resize,
-    ShellSurface::shell_surface_set_toplevel,
-    ShellSurface::shell_surface_set_transient,
-    ShellSurface::shell_surface_set_fullscreen,
-    ShellSurface::shell_surface_set_popup,
-    ShellSurface::shell_surface_set_maximized,
-    ShellSurface::shell_surface_set_title,
-    ShellSurface::shell_surface_set_class
+    wrapInterface(&ShellSurface::pong),
+    wrapInterface(&ShellSurface::move),
+    wrapInterface(&ShellSurface::resize),
+    wrapInterface(&ShellSurface::setToplevel),
+    wrapInterface(&ShellSurface::setTransient),
+    wrapInterface(&ShellSurface::setFullscreen),
+    wrapInterface(&ShellSurface::setPopup),
+    wrapInterface(&ShellSurface::setMaximized),
+    wrapInterface(&ShellSurface::setTitle),
+    wrapInterface(&ShellSurface::setClass)
 };

@@ -25,21 +25,26 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#ifndef MINIMIZEEFFECT_H
+#define MINIMIZEEFFECT_H
+
+#include <list>
+
 #include "effect.h"
-#include "shell.h"
 
-Effect::Effect(Shell *shell)
-      : m_shell(shell)
+class MinimizeEffect : public Effect
 {
-    shell->registerEffect(this);
-}
+public:
+    MinimizeEffect(Shell *shell);
+    ~MinimizeEffect();
 
-void Effect::addSurface(ShellSurface *surf)
-{
-    addedSurface(surf);
-}
+protected:
+    virtual void addedSurface(ShellSurface *surf) override;
+    virtual void removedSurface(ShellSurface *surf) override;
 
-void Effect::removeSurface(ShellSurface *surf)
-{
-    removedSurface(surf);
-}
+private:
+    struct Surface;
+    std::list<Surface *> m_surfaces;
+};
+
+#endif

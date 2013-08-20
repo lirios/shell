@@ -45,4 +45,4 @@ private:
     struct weston_transform m_transform;
 };
 
-#endif // TRANSFORM_H
+#endif

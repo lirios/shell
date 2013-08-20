@@ -59,4 +59,4 @@ private:
     static const struct weston_pointer_grab_interface grab_interface;
 };
 
-#endif // GRIDDESKTOPS_H
+#endif
