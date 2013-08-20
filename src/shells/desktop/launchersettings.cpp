@@ -24,74 +24,64 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtConfiguration/QConfiguration>
+
 #include "launchersettings.h"
-#include "hawaiisettings.h"
 
 LauncherSettings::LauncherSettings(QObject *parent)
     : QObject(parent)
 {
-    m_oldIconSize = iconSize();
-    m_oldAlignment = alignment();
-    m_oldFavApps = favoriteApps();
+    m_iconSize = MediumIconSize;
+    m_alignment = BottomAlignment;
+    m_favApps.append("swordfish.desktop");
+    m_favApps.append("hawaii-terminal.desktop");
+    m_favApps.append("hawaii-system-preferences.desktop");
 
-    connect(HawaiiSettings::self(), SIGNAL(configChanged()),
-            this, SLOT(configChanged()));
+    // Configuration
+    m_configuration = new QConfiguration(this, QStringLiteral("shell/launcher"));
+}
+
+LauncherSettings::~LauncherSettings()
+{
+    delete m_configuration;
 }
 
 LauncherSettings::IconSize LauncherSettings::iconSize() const
 {
-    return (LauncherSettings::IconSize)HawaiiSettings::self()->iconSize();
+    return m_iconSize;
 }
 
 void LauncherSettings::setIconSize(IconSize value)
 {
-    HawaiiSettings::setIconSize((int)value);
+    if (m_iconSize != value) {
+        m_iconSize = value;
+        Q_EMIT iconSizeChanged(value);
+    }
 }
 
 LauncherSettings::Alignment LauncherSettings::alignment() const
 {
-    switch (HawaiiSettings::alignment()) {
-    case 0:
-        return LauncherSettings::LeftAlignment;
-    case 1:
-        return LauncherSettings::RightAlignment;
-    default:
-        break;
-    }
-
-    return LauncherSettings::BottomAlignment;
+    return m_alignment;
 }
 
 void LauncherSettings::setAlignment(LauncherSettings::Alignment value)
 {
-    HawaiiSettings::setAlignment((int)value);
+    if (m_alignment != value) {
+        m_alignment = value;
+        Q_EMIT alignmentChanged(value);
+    }
 }
 
 QStringList LauncherSettings::favoriteApps() const
 {
-    return HawaiiSettings::favoriteApps();
+    return m_favApps;
 }
 
 void LauncherSettings::setFavoriteApps(const QStringList &value)
 {
-    HawaiiSettings::setFavoriteApps(value);
-}
-
-void LauncherSettings::configChanged()
-{
-    if (m_oldIconSize != iconSize()) {
-        m_oldIconSize = iconSize();
-        Q_EMIT iconSizeChanged();
-    }
-
-    if (m_oldAlignment != alignment()) {
-        m_oldAlignment = alignment();
-        Q_EMIT alignmentChanged();
-    }
-
-    if (m_oldFavApps != favoriteApps()) {
-        m_oldFavApps = favoriteApps();
-        Q_EMIT favoriteAppsChanged();
+    if (m_favApps != value) {
+        m_favApps = value;
+        Q_EMIT favoriteAppsChanged(value);
     }
 }
 

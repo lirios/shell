@@ -31,19 +31,27 @@
 #include <QtCore/QStringBuilder>
 
 #include "launchermodel.h"
-#include "hawaiisettings.h"
 #include "launcheritem.h"
+#include "launchersettings.h"
 
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    // Settings
+    m_settings = new LauncherSettings(this);
+
     // Load pinned applications
-    foreach(QString fileName, HawaiiSettings::favoriteApps()) {
+    foreach(QString fileName, m_settings->favoriteApps()) {
         QString fileNameFound = QStandardPaths::locate(QStandardPaths::ApplicationsLocation, fileName);
         QFileInfo fileInfo(fileNameFound);
         if (fileInfo.exists())
             pinApplication(fileInfo.filePath());
     }
+}
+
+LauncherModel::~LauncherModel()
+{
+    delete m_settings;
 }
 
 QHash<int, QByteArray> LauncherModel::roleNames() const

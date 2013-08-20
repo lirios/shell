@@ -1,8 +1,6 @@
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${POLKITQT-1_INCLUDE_DIR}
-    ${KCoreAddons_INCLUDE_DIRS}
-    ${KConfig_INCLUDE_DIRS}
     ${WaylandClient_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}/headers
 )
@@ -54,11 +52,6 @@ qt5_add_dbus_adaptor(SOURCES
     ${CMAKE_SOURCE_DIR}/data/interfaces/org.freedesktop.Notifications.xml
     notificationsdaemon.h NotificationsDaemon)
 
-set(KCFG_FILES
-    ${CMAKE_BINARY_DIR}/data/settings/hawaiisettings.kcfgc
-)
-kconfig_add_kcfg_files(SOURCES ${KCFG_FILES})
-
 add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
 qt5_use_modules(hawaii-desktop-shell Quick Widgets Configuration AccountsService Xdg)
 set_target_properties(hawaii-desktop-shell PROPERTIES
@@ -69,7 +62,6 @@ target_link_libraries(hawaii-desktop-shell
     ${WaylandClient_LIBRARIES}
     ${POLKITQT-1_CORE_LIBRARY}
     ${POLKITQT-1_AGENT_LIBRARY}
-    ${KConfig_LIBRARIES}
 )
 
 install(TARGETS hawaii-desktop-shell DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})

@@ -93,12 +93,7 @@ string(REGEX REPLACE "[ \t\n]+" "" CMAKE_INSTALL_WESTONLIBDIR "${CMAKE_INSTALL_W
 # Find polkit-qt-1
 find_package(PolkitQt-1 REQUIRED)
 
-# KCoreAddons and KConfig
-find_package(KCoreAddons REQUIRED)
-find_package(KConfig REQUIRED)
-
 # Subdirectories
-add_subdirectory(data)
 add_subdirectory(headers)
 add_subdirectory(scripts)
 add_subdirectory(src)

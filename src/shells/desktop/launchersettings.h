@@ -30,6 +30,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
+class QConfiguration;
+
 class LauncherSettings : public QObject
 {
     Q_OBJECT
@@ -51,7 +53,8 @@ public:
         BottomAlignment
     };
 
-    explicit LauncherSettings(QObject *parent = 0);
+    LauncherSettings(QObject *parent = 0);
+    ~LauncherSettings();
 
     IconSize iconSize() const;
     void setIconSize(IconSize value);
@@ -63,17 +66,15 @@ public:
     void setFavoriteApps(const QStringList &value);
 
 Q_SIGNALS:
-    void iconSizeChanged();
-    void alignmentChanged();
-    void favoriteAppsChanged();
-
-private Q_SLOTS:
-    void configChanged();
+    void iconSizeChanged(const LauncherSettings::IconSize &value);
+    void alignmentChanged(const LauncherSettings::Alignment &value);
+    void favoriteAppsChanged(const QStringList &list);
 
 private:
-    IconSize m_oldIconSize;
-    Alignment m_oldAlignment;
-    QStringList m_oldFavApps;
+    QConfiguration *m_configuration;
+    IconSize m_iconSize;
+    Alignment m_alignment;
+    QStringList m_favApps;
 };
 
 #endif // LAUNCHERSETTINGS_H

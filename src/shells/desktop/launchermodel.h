@@ -32,6 +32,7 @@
 
 class QUrl;
 
+class LauncherSettings;
 class LauncherItem;
 
 class LauncherModel : public QAbstractListModel
@@ -55,6 +56,7 @@ public:
     };
 
     LauncherModel(QObject *parent = 0);
+    ~LauncherModel();
 
     QHash<int, QByteArray> roleNames() const;
 
@@ -68,6 +70,7 @@ public Q_SLOTS:
     void pinUrl(const QUrl &url);
 
 private:
+    LauncherSettings *m_settings;
     QList<LauncherItem *> m_list;
 };
 
