@@ -40,6 +40,9 @@ PanelWindow::PanelWindow(ShellUi *ui)
     : QQuickView(ui->engine(), new QWindow(ui->screen()))
     , m_surface(0)
 {
+    // Set transparent color
+    setColor(Qt::transparent);
+
     // Set custom window type
     setFlags(flags() | Qt::BypassWindowManagerHint);
 
