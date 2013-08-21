@@ -237,6 +237,13 @@ void NotificationsDaemon::showNotification(NotificationWindow *notification)
     // running property is bound to visible) and ask the compositor
     // to add the surface to the "bubbles list"
     notification->show();
+
+    // We trigger a fake resize in order to have the buffer created
+    // and then syncronize and add the surface so that the compositor
+    // will be able to determine the buffer size
+    notification->resize(notification->size());
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
     notification->addSurface();
 }
 
