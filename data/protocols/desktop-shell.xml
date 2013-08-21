@@ -6,6 +6,15 @@
       background, panels and locking surfaces.
     </description>
 
+    <request name="add_key_binding">
+      <description summary="add key binding">
+        Bind a global shortcut.
+      </description>
+      <arg name="id" type="new_id" interface="hawaii_key_binding"/>
+      <arg name="key" type="uint"/>
+      <arg name="modifiers" type="uint"/>
+    </request>
+
     <request name="set_available_geometry">
       <description summary="set available geometry">
 	The available geometry is a portion of the output free of any
@@ -189,6 +198,19 @@
       <entry name="maximized" value="3"/>
       <entry name="fullscreen" value="4"/>
     </enum>
+  </interface>
+
+  <interface name="hawaii_key_binding" version="1">
+    <description summary="interface for key bindings">
+      This interface represents a key binding.
+    </description>
+
+    <event name="triggered">
+      <description summary="key binding was triggered">
+        This event will be sent when a registered key binding will be
+        triggered.
+      </description>
+    </event>
   </interface>
 
   <interface name="screensaver" version="1">
