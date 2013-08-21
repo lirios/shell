@@ -119,7 +119,7 @@ ScaleEffect::ScaleEffect(Shell *shell)
            , m_grab(new Grab)
 {
     m_grab->effect = this;
-    m_binding = shell->bindKey(KEY_E, MODIFIER_CTRL, &ScaleEffect::run, this);
+    m_binding = shell->bindKey(KEY_E, MODIFIER_SUPER, &ScaleEffect::run, this);
 }
 
 ScaleEffect::~ScaleEffect()
@@ -230,7 +230,7 @@ void ScaleEffect::run(struct weston_seat *ws)
     if (m_scaled) {
         m_seat = ws;
         m_chosenSurface = nullptr;
-        shell()->startGrab(m_grab, &grab_interface, ws, DESKTOP_SHELL_CURSOR_ARROW);
+        shell()->startGrab(m_grab, &grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_ARROW);
         shell()->hidePanels();
         m_grab->surface = nullptr;
         if (ws->pointer->focus) {

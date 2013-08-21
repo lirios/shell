@@ -41,6 +41,7 @@ public:
 template<typename T>
 class Rect2D {
 public:
+    inline Rect2D() : x(0), y(0), width(0), height(0) {}
     inline Rect2D(T a, T b, T w, T h) : x(a), y(b), width(w), height(h) {}
     T x;
     T y;
@@ -54,7 +55,11 @@ typedef Rect2D<int> IRect2D;
 class WlListener {
 public:
     WlListener() { m_listener.parent = this; signal = new Signal<>; }
+#if 0
     ~WlListener() { signal->flush(); wl_list_remove(&m_listener.listener.link); }
+#else
+    ~WlListener() { signal->flush(); }
+#endif
 
     void listen(struct wl_signal *signal) {
         m_listener.listener.notify = [](struct wl_listener *listener, void *data) {

@@ -71,7 +71,7 @@ Workspace::~Workspace()
 
 void Workspace::init(wl_client *client)
 {
-    m_resource = wl_resource_create(client, &desktop_shell_workspace_interface, 1, 0);
+    m_resource = wl_resource_create(client, &hawaii_workspace_interface, 1, 0);
     wl_resource_set_implementation(m_resource, &s_implementation, this, 0);
 }
 
@@ -134,14 +134,18 @@ void Workspace::remove()
     m_layer.remove();
 }
 
+void Workspace::reset()
+{
+    m_layer.reset();
+}
+
 void Workspace::setActive(bool active)
 {
     m_active = active;
-    if (active) {
-        desktop_shell_workspace_send_activated(m_resource);
-    } else {
-        desktop_shell_workspace_send_deactivated(m_resource);
-    }
+    if (active)
+        hawaii_workspace_send_activated(m_resource);
+    else
+        hawaii_workspace_send_deactivated(m_resource);
 }
 
 Workspace *Workspace::fromResource(wl_resource *res)
@@ -154,6 +158,6 @@ void Workspace::removed(wl_client *client, wl_resource *res)
     delete this;
 }
 
-const struct desktop_shell_workspace_interface Workspace::s_implementation = {
+const struct hawaii_workspace_interface Workspace::s_implementation = {
     wrapInterface(&Workspace::removed)
 };

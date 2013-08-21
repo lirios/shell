@@ -56,6 +56,10 @@ public:
     void insert(Layer *layer);
     void insert(struct weston_layer *layer);
     void remove();
+    void reset();
+
+    inline void show() { m_layer.show(); }
+    inline void hide() { m_layer.hide(); }
 
     void setActive(bool active);
     bool active() const { return m_active; }
@@ -77,7 +81,7 @@ private:
     Layer m_layer;
     bool m_active;
 
-    static const struct desktop_shell_workspace_interface s_implementation;
+    static const struct hawaii_workspace_interface s_implementation;
 };
 
 #endif

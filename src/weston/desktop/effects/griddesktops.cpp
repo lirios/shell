@@ -80,7 +80,7 @@ GridDesktops::GridDesktops(Shell *shell)
            , m_grab(new Grab)
 {
     m_grab->effect = this;
-    m_binding = shell->bindKey(KEY_G, MODIFIER_CTRL, &GridDesktops::run, this);
+    m_binding = shell->bindKey(KEY_G, MODIFIER_SUPER, &GridDesktops::run, this);
 }
 
 GridDesktops::~GridDesktops()
@@ -105,6 +105,8 @@ void GridDesktops::run(struct weston_seat *ws)
 
     if (m_scaled) {
         shell()->showPanels();
+        shell()->showNotifications();
+        shell()->showOverlays();
         shell()->resetWorkspaces();
         shell()->endGrab(m_grab);
         shell()->selectWorkspace(m_setWs);
@@ -117,7 +119,9 @@ void GridDesktops::run(struct weston_seat *ws)
     } else {
         shell()->showAllWorkspaces();
         shell()->hidePanels();
-        shell()->startGrab(m_grab, &grab_interface, ws, DESKTOP_SHELL_CURSOR_ARROW);
+        shell()->hideNotifications();
+        shell()->hideOverlays();
+        shell()->startGrab(m_grab, &grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_ARROW);
         m_setWs = shell()->currentWorkspace()->number();
         for (int i = 0; i < numWs; ++i) {
             Workspace *w = shell()->workspace(i);

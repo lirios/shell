@@ -44,6 +44,15 @@ wayland_add_protocol_server(SOURCES
 )
 
 wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/screensaver.xml
+    screensaver
+)
+wayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/screensaver.xml
+    screensaver
+)
+
+wayland_add_protocol_client(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/notification-daemon.xml
     notification-daemon
 )
@@ -55,4 +64,4 @@ wayland_add_protocol_server(SOURCES
 add_library(hawaii-desktop SHARED ${SOURCES})
 set_target_properties(hawaii-desktop PROPERTIES PREFIX "")
 
-install(TARGETS hawaii-desktop DESTINATION ${CMAKE_INSTALL_WESTONLIBDIR}/weston)
+install(TARGETS hawaii-desktop DESTINATION ${CMAKE_INSTALL_LIBDIR}/weston)

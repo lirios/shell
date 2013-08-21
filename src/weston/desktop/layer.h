@@ -72,12 +72,17 @@ public:
     void insert(struct weston_layer *below);
     void insert(Layer *below);
     void remove();
+    void reset();
     void hide();
     void show();
     bool isVisible() const;
 
     void addSurface(struct weston_surface *surf);
     void addSurface(ShellSurface *surf);
+
+    void prependSurface(struct weston_surface *surf);
+    void prependSurface(ShellSurface *surf);
+
     void restack(struct weston_surface *surf);
     void restack(ShellSurface *surf);
 

@@ -27,6 +27,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <linux/input.h>
 
 #include <wayland-server.h>
@@ -37,6 +38,8 @@
 
 #include "desktop-shell.h"
 #include "wayland-desktop-shell-server-protocol.h"
+#include "wayland-notification-daemon-server-protocol.h"
+#include "wayland-screensaver-server-protocol.h"
 #include "shellsurface.h"
 
 #include "scaleeffect.h"
@@ -49,29 +52,63 @@
 #include "workspace.h"
 #include "minimizeeffect.h"
 
+// TODO: Remove when this gets merged: http://lists.freedesktop.org/archives/wayland-devel/2013-August/010683.html
+#ifndef WESTON_VERSION_NUMBER
+#  define WESTON_VERSION_NUMBER ((WESTON_VERSION_MAJOR << 16) | (WESTON_VERSION_MINOR << 8) | WESTON_VERSION_MICRO)
+#endif
+#ifndef WESTON_VERSION_CHECK
+#  define WESTON_VERSION_CHECK(major, minor, micro) ((major<<16)|(minor<<8)|(micro))
+#endif
+
 DesktopShell::DesktopShell(struct weston_compositor *ec)
             : Shell(ec)
+            , m_screenSaverBinding(nullptr)
+            , m_screenSaverDuration(5*60*1000)
+            , m_inputPanel(nullptr)
+            , m_notificationsEdge(DesktopShell::EdgeRight)
+            , m_notificationsCornerAnchor(DesktopShell::CornerTopRight)
+            , m_notificationsOrder(DesktopShell::OrderNewestFirst)
+            , m_notificationsMargin(20)
+            , m_prepareEventSent(false)
+            , m_locked(false)
+            , m_lockSurface(nullptr)
 {
+    m_screenSaverChild.shell = this;
+    m_screenSaverChild.process.pid = 0;
 }
 
 void DesktopShell::init()
 {
     Shell::init();
 
-    if (!wl_global_create(compositor()->wl_display, &desktop_shell_interface, 1, this,
-        [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bind(client, version, id); }))
+    if (!wl_global_create(compositor()->wl_display, &wl_notification_daemon_interface, 1, this,
+                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindNotifications(client, version, id); }))
         return;
+
+    if (!wl_global_create(compositor()->wl_display, &hawaii_desktop_shell_interface, 1, this,
+                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShell(client, version, id); }))
+        return;
+
+    if (!wl_global_create(compositor()->wl_display, &screensaver_interface, 1, this,
+                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindScreenSaver(client, version, id); }))
+        return;
+
+    struct wl_event_loop *loop = wl_display_get_event_loop(m_compositor->wl_display);
+    m_screenSaverTimer = wl_event_loop_add_timer(loop, [](void *data) {
+        return static_cast<DesktopShell *>(data)->screenSaverTimeout(); }, this);
 
     weston_compositor_add_button_binding(compositor(), BTN_LEFT, MODIFIER_SUPER,
                                          [](struct weston_seat *seat, uint32_t time, uint32_t button, void *data) {
-                                             static_cast<DesktopShell *>(data)->moveBinding(seat, time, button);
-                                         }, this);
+        static_cast<DesktopShell *>(data)->moveBinding(seat, time, button);
+    }, this);
 
     new ScaleEffect(this);
     new GridDesktops(this);
     new FadeMovingEffect(this);
     new ZoomEffect(this);
+#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 2, 1))
     new InOutSurfaceEffect(this);
+#endif
     new MinimizeEffect(this);
 
     m_inputPanel = new InputPanel(compositor()->wl_display);
@@ -79,7 +116,7 @@ void DesktopShell::init()
 
 void DesktopShell::setGrabCursor(uint32_t cursor)
 {
-    desktop_shell_send_grab_cursor(m_child.desktop_shell, cursor);
+    hawaii_desktop_shell_send_grab_cursor(m_child.desktop_shell, cursor);
 }
 
 struct BusyGrab : public ShellGrab {
@@ -111,7 +148,7 @@ static void busy_cursor_grab_button(struct weston_pointer_grab *base, uint32_t t
         grab->surface->dragMove(seat);
     } else if (grab->surface && button == BTN_RIGHT && state) {
         ShellSeat::shellSeat(seat)->activate(grab->surface);
-//         surface_rotate(grab->surface, &seat->seat);
+        //         surface_rotate(grab->surface, &seat->seat);
     }
 }
 
@@ -129,7 +166,7 @@ void DesktopShell::setBusyCursor(ShellSurface *surface, struct weston_seat *seat
 
     grab->pointer = seat->pointer;
     grab->surface = surface;
-    startGrab(grab, &busy_cursor_grab_interface, seat, DESKTOP_SHELL_CURSOR_BUSY);
+    startGrab(grab, &busy_cursor_grab_interface, seat, HAWAII_DESKTOP_SHELL_CURSOR_BUSY);
 }
 
 void DesktopShell::endBusyCursor(struct weston_seat *seat)
@@ -156,30 +193,73 @@ void DesktopShell::sendInitEvents()
 
 void DesktopShell::workspaceAdded(Workspace *ws)
 {
-    desktop_shell_send_workspace_added(m_child.desktop_shell, ws->resource(), ws->active());
+    hawaii_desktop_shell_send_workspace_added(m_child.desktop_shell, ws->resource(), ws->active());
 }
 
-void DesktopShell::bind(struct wl_client *client, uint32_t version, uint32_t id)
+void DesktopShell::bindNotifications(wl_client *client, uint32_t version, uint32_t id)
 {
-    struct wl_resource *resource = wl_resource_create(client, &desktop_shell_interface, version, id);
+    struct wl_resource *resource = wl_resource_create(client, &wl_notification_daemon_interface, version, id);
 
-    if (client == m_child.client) {
-        wl_resource_set_implementation(resource, &m_desktop_shell_implementation, this,
-                                       [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbind(resource); });
-        m_child.desktop_shell = resource;
-
-        sendInitEvents();
-        desktop_shell_send_load(resource);
+    if (resource) {
+        wl_resource_set_implementation(resource, &m_notificationDaemonImpl, this,
+                                       [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindNotifications(resource); });
         return;
     }
 
-    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind desktop_shell denied");
+    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind wl_notification_daemon denied");
     wl_resource_destroy(resource);
 }
 
-void DesktopShell::unbind(struct wl_resource *resource)
+void DesktopShell::unbindNotifications(struct wl_resource *resource)
 {
+    free(resource);
+}
+
+void DesktopShell::bindDesktopShell(struct wl_client *client, uint32_t version, uint32_t id)
+{
+    struct wl_resource *resource = wl_resource_create(client, &hawaii_desktop_shell_interface, version, id);
+
+    if (client == m_child.client) {
+        wl_resource_set_implementation(resource, &m_desktopShellImpl, this,
+                                       [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindDesktopShell(resource); });
+        m_child.desktop_shell = resource;
+
+        sendInitEvents();
+        hawaii_desktop_shell_send_loaded(resource);
+        return;
+    }
+
+    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind hawaii_desktop_shell denied");
+    wl_resource_destroy(resource);
+}
+
+void DesktopShell::unbindDesktopShell(struct wl_resource *resource)
+{
+    if (m_locked)
+        resumeDesktop();
+
     m_child.desktop_shell = nullptr;
+    m_prepareEventSent = false;
+}
+
+void DesktopShell::bindScreenSaver(wl_client *client, uint32_t version, uint32_t id)
+{
+    struct wl_resource *resource = wl_resource_create(client, &screensaver_interface, version, id);
+
+    if (!m_screenSaverBinding) {
+        wl_resource_set_implementation(resource, &m_screenSaverImpl, this,
+                                       [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindScreenSaver(resource); });
+        m_screenSaverBinding = resource;
+        return;
+    }
+
+    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind wl_notification_daemon denied");
+    wl_resource_destroy(resource);
+}
+
+void DesktopShell::unbindScreenSaver(struct wl_resource *resource)
+{
+    m_screenSaverBinding = nullptr;
 }
 
 void DesktopShell::moveBinding(struct weston_seat *seat, uint32_t time, uint32_t button)
@@ -200,6 +280,106 @@ void DesktopShell::moveBinding(struct weston_seat *seat, uint32_t time, uint32_t
     }
 }
 
+void DesktopShell::addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers)
+{
+    wl_resource *res = wl_resource_create(client, &hawaii_key_binding_interface, wl_resource_get_version(resource), id);
+    wl_resource_set_implementation(res, nullptr, res, [](wl_resource *) {});
+
+    weston_compositor_add_key_binding(compositor(), key, (weston_keyboard_modifier)modifiers,
+                                      [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
+
+        hawaii_key_binding_send_triggered(static_cast<wl_resource *>(data));
+    }, res);
+}
+
+void DesktopShell::lockSession()
+{
+    if (m_locked) {
+        weston_compositor_sleep(m_compositor);
+        return;
+    }
+
+    m_locked = true;
+
+    // Hide all surfaces by removing all layers except for backgrounds,
+    // this way nothing else can show or receive input events while
+    // we are locked.
+    // We don't remove the backgrounds layer because currently we only
+    // show the lock screen on the default output so we need to show
+    // something on the other outputs as well as the default one.
+    // However this is safe because our background only shows a wallpaper
+    // so it won't do much with input events, in the future we need to
+    // show the lock screen on all outpus and remove the backgrounds
+    // layer as well.
+    // TODO: Proper multiscreen setup
+    m_lockLayer.show();
+    hideOverlays();
+    hideNotifications();
+    m_fullscreenLayer.hide();
+    hidePanels();
+    currentWorkspace()->hide();
+
+    launchScreenSaverProcess();
+
+    // TODO: Disable bindings that are not supposed to work while locked
+
+    // All this must be undone in resumeDesktop()
+}
+
+void DesktopShell::unlockSession()
+{
+    weston_log("unlocking session...\n");
+
+    if (!m_locked || m_lockSurface) {
+        fadeIn();
+        return;
+    }
+
+    // If the client has gone away, unlock immediately
+    if (!shellClientResource()) {
+        resumeDesktop();
+        return;
+    }
+
+    if (m_prepareEventSent)
+        return;
+
+    hawaii_desktop_shell_send_prepare_lock_surface(shellClientResource());
+    m_prepareEventSent = true;
+}
+
+void DesktopShell::resumeDesktop()
+{
+    terminateScreenSaverProcess();
+
+    showOverlays();
+    showNotifications();
+    m_fullscreenLayer.show();
+    showPanels();
+    currentWorkspace()->show();
+    m_lockLayer.hide();
+
+    m_locked = false;
+    fadeIn();
+    weston_compositor_damage_all(m_compositor);
+}
+
+void DesktopShell::lockSurfaceDestroy()
+{
+    weston_log("lock surface gone\n");
+    m_lockSurface = nullptr;
+}
+
+void DesktopShell::setAvailableGeometry(struct wl_client *client, struct wl_resource *resource,
+                                        struct wl_resource *output_resource,
+                                        int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    struct weston_output *output = static_cast<weston_output *>(output_resource->data);
+
+    IRect2D area(x, y, width, height);
+    m_windowsArea[output] = area;
+}
+
 void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                                  struct wl_resource *surface_resource)
 {
@@ -212,11 +392,7 @@ void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *r
     }
 
     setBackgroundSurface(surface, static_cast<weston_output *>(output_resource->data));
-
-    desktop_shell_send_configure(resource, 0,
-                                 surface_resource,
-                                 surface->output->width,
-                                 surface->output->height);
+    hawaii_desktop_shell_send_present(resource, surface_resource);
 }
 
 void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
@@ -232,62 +408,64 @@ void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resour
     }
 
     addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
-    desktop_shell_send_configure(resource, 0, surface_resource, surface->output->width, surface->output->height);
+    hawaii_desktop_shell_send_present(resource, surface_resource);
 }
 
-void DesktopShell::setLockSurface(struct wl_client *client, struct wl_resource *resource, struct wl_resource *surface_resource)
+void DesktopShell::setPanelGeometry(struct wl_client *client, struct wl_resource *resource,
+                                    struct wl_resource *output_resource,
+                                    struct wl_resource *surface_resource,
+                                    int32_t x, int32_t y, int32_t width, int32_t height)
 {
-//     struct desktop_shell *shell = resource->data;
-//     struct weston_surface *surface = surface_resource->data;
-//
-//     shell->prepare_event_sent = false;
-//
-//     if (!shell->locked)
-//         return;
-//
-//     shell->lock_surface = surface;
-//
-//     shell->lock_surface_listener.notify = handle_lock_surface_destroy;
-//     wl_signal_add(&surface_resource->destroy_signal,
-//                   &shell->lock_surface_listener);
-//
-//     surface->configure = lock_surface_configure;
-//     surface->configure_private = shell;
+    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
+
+    weston_log("Set Panel position to %d,%d\n", x, y);
+    weston_surface_set_position(surface, x, y);
 }
 
-void DesktopShell::unlock(struct wl_client *client, struct wl_resource *resource)
+void DesktopShell::setLauncher(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
+                               struct wl_resource *surface_resource)
 {
-//     struct desktop_shell *shell = resource->data;
-//
-//     shell->prepare_event_sent = false;
-//
-//     if (shell->locked)
-//         resume_desktop(shell);
+    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
+
+    if (surface->configure) {
+        wl_resource_post_error(surface_resource,
+                               WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "surface role already assigned");
+        return;
+    }
+
+    addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
+    hawaii_desktop_shell_send_present(resource, surface_resource);
 }
 
-void DesktopShell::setGrabSurface(struct wl_client *client, struct wl_resource *resource, struct wl_resource *surface_resource)
+void DesktopShell::setLauncherGeometry(struct wl_client *client, struct wl_resource *resource,
+                                       struct wl_resource *output_resource,
+                                       struct wl_resource *surface_resource,
+                                       int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    this->Shell::setGrabSurface(static_cast<struct weston_surface *>(surface_resource->data));
+    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
+
+    weston_log("Set Launcher position to %d,%d\n", x, y);
+    weston_surface_set_position(surface, x, y);
 }
 
-void DesktopShell::desktopReady(struct wl_client *client, struct wl_resource *resource)
+void DesktopShell::setSpecial(struct wl_client *client, struct wl_resource *resource,
+                              struct wl_resource *output_resource,
+                              struct wl_resource *surface_resource)
 {
-    fadeSplash();
+    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
+
+    if (surface->configure) {
+        wl_resource_post_error(surface_resource,
+                               WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "surface role already assigned");
+        return;
+    }
+
+    addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
 }
 
-void DesktopShell::addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers)
-{
-    wl_resource *res = wl_resource_create(client, &desktop_shell_binding_interface, wl_resource_get_version(resource), id);
-    wl_resource_set_implementation(res, nullptr, res, [](wl_resource *) {});
-
-    weston_compositor_add_key_binding(compositor(), key, (weston_keyboard_modifier)modifiers,
-                                         [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
-
-                                             desktop_shell_binding_send_triggered(static_cast<wl_resource *>(data));
-                                         }, res);
-}
-
-void DesktopShell::addOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource)
+void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource)
 {
     struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
     if (surface->configure) {
@@ -298,9 +476,119 @@ void DesktopShell::addOverlay(struct wl_client *client, struct wl_resource *reso
     }
 
     addOverlaySurface(surface, static_cast<weston_output *>(output_resource->data));
-    desktop_shell_send_configure(resource, 0, surface_resource, surface->output->width, surface->output->height);
     pixman_region32_fini(&surface->pending.input);
     pixman_region32_init_rect(&surface->pending.input, 0, 0, 0, 0);
+}
+
+void DesktopShell::setPosition(struct wl_client *client, struct wl_resource *resource,
+                               struct wl_resource *surface_resource,
+                               int32_t x, int32_t y)
+{
+    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
+
+    if (!surface->configure) {
+        wl_resource_post_error(surface_resource,
+                               WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "surface role not yet assigned");
+        return;
+    }
+
+    // When we hide a special surface we unmap and unlink it, so the next
+    // time set_position() is called we need to insert it into the
+    // panel layer again
+    bool found = false;
+    for (struct weston_surface *current: m_panelsLayer) {
+        if (current == surface) {
+            found = true;
+            break;
+        }
+    }
+    if (!found)
+        m_panelsLayer.addSurface(surface);
+
+#if 0
+    // Give focus to the special surface
+    if (!shell->locked) {
+        struct weston_seat *seat;
+
+        wl_list_for_each(seat, &compositor->seat_list, link)
+                weston_surface_activate(surface, seat);
+    }
+#else
+    struct weston_seat *seat;
+    wl_list_for_each(seat, &m_compositor->seat_list, link)
+            weston_surface_activate(surface, seat);
+#endif
+
+    // Set given position
+    weston_surface_set_position(surface, x, y);
+}
+
+void DesktopShell::lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
+{
+    if (width == 0)
+        return;
+
+    es->geometry.width = width;
+    es->geometry.height = height;
+
+    if (!weston_surface_is_mapped(es)) {
+        m_lockLayer.addSurface(es);
+        weston_surface_update_transform(es);
+        fadeIn();
+    }
+}
+
+void DesktopShell::setLockSurface(struct wl_client *client, struct wl_resource *resource, struct wl_resource *surface_resource)
+{
+    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
+
+    m_prepareEventSent = false;
+
+    if (!m_locked)
+        return;
+
+    m_lockSurface = surface;
+
+    m_lockSurfaceDestroyListener.listen(&surface->destroy_signal);
+    m_lockSurfaceDestroyListener.signal->connect(this, &DesktopShell::lockSurfaceDestroy);
+
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        static_cast<DesktopShell *>(es->configure_private)->lockSurfaceConfigure(es, sx, sy, width, height); };
+    surface->configure_private = this;
+}
+
+void DesktopShell::quit(wl_client *client, wl_resource *resource)
+{
+    Shell::quit();
+}
+
+void DesktopShell::lock(wl_client *client, wl_resource *resource)
+{
+    // Don't lock again if we are already locked
+    if (m_locked)
+        return;
+
+    fadeOut();
+    weston_compositor_damage_all(m_compositor);
+}
+
+void DesktopShell::unlock(struct wl_client *client, struct wl_resource *resource)
+{
+    m_prepareEventSent = false;
+
+    if (m_locked)
+        resumeDesktop();
+}
+
+void DesktopShell::setGrabSurface(struct wl_client *client, struct wl_resource *resource, struct wl_resource *surface_resource)
+{
+    this->Shell::setGrabSurface(static_cast<struct weston_surface *>(surface_resource->data));
+}
+
+void DesktopShell::desktopReady(struct wl_client *client, struct wl_resource *resource)
+{
+    fadeIn();
 }
 
 void DesktopShell::minimizeWindows(wl_client *client, wl_resource *resource)
@@ -353,7 +641,7 @@ static void client_grab_focus(struct weston_pointer_grab *base)
                                                                     &sx, &sy);
     if (cgrab->focus != surface) {
         cgrab->focus = surface;
-        desktop_shell_grab_send_focus(cgrab->resource, surface->resource, sx, sy);
+        hawaii_grab_send_focus(cgrab->resource, surface->resource, sx, sy);
     }
 }
 
@@ -368,7 +656,7 @@ static void client_grab_motion(struct weston_pointer_grab *base, uint32_t time)
         weston_surface_from_global_fixed(cgrab->focus, cgrab->pointer->x, cgrab->pointer->y, &sx, &sy);
     }
 
-    desktop_shell_grab_send_motion(cgrab->resource, time, sx, sy);
+    hawaii_grab_send_motion(cgrab->resource, time, sx, sy);
 }
 
 static void client_grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state)
@@ -382,7 +670,7 @@ static void client_grab_button(struct weston_pointer_grab *base, uint32_t time, 
         wl_pointer_send_button(grab->pointer->focus_resource, serial, time, button, state);
     }
 
-    desktop_shell_grab_send_button(cgrab->resource, time, button, state);
+    hawaii_grab_send_button(cgrab->resource, time, button, state);
 }
 
 static const struct weston_pointer_grab_interface client_grab_interface = {
@@ -398,16 +686,16 @@ void client_grab_end(wl_client *client, wl_resource *resource)
     weston_output_schedule_repaint(cg->pointer->focus->output);
 }
 
-static const struct desktop_shell_grab_interface desktop_shell_grab_implementation = {
+static const struct hawaii_grab_interface hawaii_grab_implementation = {
     client_grab_end
 };
 
 void DesktopShell::createGrab(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    wl_resource *res = wl_resource_create(client, &desktop_shell_grab_interface, wl_resource_get_version(resource), id);
+    wl_resource *res = wl_resource_create(client, &hawaii_grab_interface, wl_resource_get_version(resource), id);
 
     ClientGrab *grab = new ClientGrab;
-    wl_resource_set_implementation(res, &desktop_shell_grab_implementation, grab, [](wl_resource *) {});
+    wl_resource_set_implementation(res, &hawaii_grab_implementation, grab, [](wl_resource *) {});
 
     if (!grab)
         return;
@@ -425,30 +713,199 @@ void DesktopShell::createGrab(wl_client *client, wl_resource *resource, uint32_t
                                                                     &sx, &sy);
     weston_pointer_set_focus(grab->pointer, surface, sx, sy);
     grab->focus = surface;
-    desktop_shell_grab_send_focus(grab->resource, surface->resource, sx, sy);
+    hawaii_grab_send_focus(grab->resource, surface->resource, sx, sy);
 
     grab->grab.interface = &client_grab_interface;
     weston_pointer_start_grab(grab->pointer, &grab->grab);
 }
 
-void DesktopShell::quit(wl_client *client, wl_resource *resource)
-{
-    Shell::quit();
-}
-
-const struct desktop_shell_interface DesktopShell::m_desktop_shell_implementation = {
+const struct hawaii_desktop_shell_interface DesktopShell::m_desktopShellImpl = {
+    wrapInterface(&DesktopShell::addKeyBinding),
+    wrapInterface(&DesktopShell::setAvailableGeometry),
     wrapInterface(&DesktopShell::setBackground),
     wrapInterface(&DesktopShell::setPanel),
+    wrapInterface(&DesktopShell::setPanelGeometry),
+    wrapInterface(&DesktopShell::setLauncher),
+    wrapInterface(&DesktopShell::setLauncherGeometry),
+    wrapInterface(&DesktopShell::setSpecial),
+    wrapInterface(&DesktopShell::setOverlay),
+    wrapInterface(&DesktopShell::setPosition),
     wrapInterface(&DesktopShell::setLockSurface),
+    wrapInterface(&DesktopShell::quit),
+    wrapInterface(&DesktopShell::lock),
     wrapInterface(&DesktopShell::unlock),
     wrapInterface(&DesktopShell::setGrabSurface),
     wrapInterface(&DesktopShell::desktopReady),
-    wrapInterface(&DesktopShell::addKeyBinding),
-    wrapInterface(&DesktopShell::addOverlay),
     wrapInterface(&DesktopShell::minimizeWindows),
     wrapInterface(&DesktopShell::restoreWindows),
-    wrapInterface(&DesktopShell::createGrab),
     wrapInterface(&DesktopShell::addWorkspace),
     wrapInterface(&DesktopShell::selectWorkspace),
-    wrapInterface(&DesktopShell::quit)
+    wrapInterface(&DesktopShell::createGrab)
+};
+
+void DesktopShell::notificationConfigure(weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
+{
+    if (width == 0)
+        return;
+
+    es->geometry.width = weston_surface_buffer_width(es);
+    es->geometry.height = weston_surface_buffer_height(es);
+
+    mapNotificationSurfaces();
+
+    weston_compositor_schedule_repaint(m_compositor);
+}
+
+void DesktopShell::mapNotificationSurfaces()
+{
+    bool isRight = m_notificationsCornerAnchor & DesktopShell::EdgeRight;
+    bool isBottom = m_notificationsCornerAnchor & DesktopShell::EdgeBottom;
+
+    IRect2D availableGeometry = windowsArea(getDefaultOutput());
+    int32_t left = availableGeometry.x;
+    int32_t top = availableGeometry.y;
+    int32_t right = availableGeometry.x + availableGeometry.width;
+    int32_t bottom = availableGeometry.y + availableGeometry.height;
+    int32_t x, y;
+
+    if (isRight)
+        x = right - m_notificationsMargin;
+    else
+        x = left + m_notificationsMargin;
+    if (isBottom)
+        y = bottom - m_notificationsMargin;
+    else
+        y = top + m_notificationsMargin;
+
+    for (struct weston_surface *surface: m_notificationsLayer) {
+        if (isBottom)
+            y -= surface->geometry.height;
+        if (isRight)
+            x -= surface->geometry.width;
+        weston_surface_set_position(surface, x, y);
+        if (isRight)
+            x += surface->geometry.width;
+        if (isBottom)
+            y -= m_notificationsMargin;
+        else
+            y += surface->geometry.height + m_notificationsMargin;
+    }
+}
+
+void DesktopShell::addNotificationSurface(wl_client *client, wl_resource *resource,
+                                          wl_resource *surface_resource)
+{
+    struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
+    if (surface->configure) {
+        wl_resource_post_error(surface_resource,
+                               WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "surface role already assigned");
+        return;
+    }
+
+    surface->geometry.width = weston_surface_buffer_width(surface);
+    surface->geometry.height = weston_surface_buffer_height(surface);
+
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        static_cast<DesktopShell *>(es->configure_private)->notificationConfigure(es, sx, sy, width, height); };
+    surface->configure_private = this;
+    surface->output = getDefaultOutput();
+
+    if (m_notificationsOrder == DesktopShell::OrderNewestFirst)
+        m_notificationsLayer.addSurface(surface);
+    else
+        m_notificationsLayer.prependSurface(surface);
+    mapNotificationSurfaces();
+
+    weston_compositor_schedule_repaint(m_compositor);
+}
+
+const struct wl_notification_daemon_interface DesktopShell::m_notificationDaemonImpl = {
+    wrapInterface(&DesktopShell::addNotificationSurface)
+};
+
+int DesktopShell::screenSaverTimeout()
+{
+    fadeOut();
+    return 1;
+}
+
+void DesktopShell::screenSaverSigChild(int status)
+{
+    m_screenSaverChild.process.pid = 0;
+    m_screenSaverChild.client = nullptr; // already destroyed by wayland
+
+    if (m_locked)
+        weston_compositor_sleep(m_compositor);
+}
+
+void DesktopShell::launchScreenSaverProcess()
+{
+    if (m_screenSaverBinding)
+        return;
+
+    if (m_screenSaverPath.empty()) {
+        weston_compositor_sleep(m_compositor);
+        return;
+    }
+
+    if (m_screenSaverChild.process.pid != 0) {
+        weston_log("old screensaver still running\n");
+        return;
+    }
+
+    m_screenSaverChild.client = weston_client_launch(m_compositor,
+                                                     &m_screenSaverChild.process,
+                                                     m_screenSaverPath.c_str(),
+                                                     [](struct weston_process *process, int status) {
+        ScreenSaverChild *child = container_of(process, ScreenSaverChild, process);
+        child->shell->screenSaverSigChild(status);
+    });
+
+    if (!m_screenSaverChild.client)
+        weston_log("not able to start %s\n", m_screenSaverPath.c_str());
+}
+
+void DesktopShell::terminateScreenSaverProcess()
+{
+    if (m_screenSaverChild.process.pid == 0)
+        return;
+
+    //::kill(m_screenSaverChild.process.pid, SIGTERM);
+}
+
+void DesktopShell::screenSaverConfigure(weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
+{
+    if (width == 0)
+        return;
+
+    // Starting screensaver beforehand doesn't work
+    if (m_locked)
+        return;
+
+    centerSurfaceOnOutput(es, es->output);
+
+    if (wl_list_empty(&es->layer_link)) {
+        m_lockLayer.prependSurface(es);
+        weston_surface_update_transform(es);
+        wl_event_source_timer_update(m_screenSaverTimer, m_screenSaverDuration);
+        fadeIn();
+    }
+}
+
+void DesktopShell::setScreenSaverSurface(wl_client *client, wl_resource *resource,
+                                         wl_resource *surface_resource,
+                                         wl_resource *output_resource)
+{
+    struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
+    struct weston_output *output = static_cast<weston_output *>(output_resource->data);
+
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        static_cast<DesktopShell *>(es->configure_private)->screenSaverConfigure(es, sx, sy, width, height); };
+    surface->configure_private = this;
+    surface->output = output;
+}
+
+const struct screensaver_interface DesktopShell::m_screenSaverImpl = {
+    wrapInterface(&DesktopShell::setScreenSaverSurface)
 };

@@ -30,6 +30,7 @@
 
 #include <list>
 #include <vector>
+#include <map>
 
 #include "utils.h"
 #include "layer.h"
@@ -87,7 +88,14 @@ public:
     Binding *bindAxis(uint32_t axis, enum weston_keyboard_modifier modifier,
                       void (T::*func)(struct weston_seat *seat, uint32_t time, uint32_t axis, wl_fixed_t value), T *obj);
 
+    virtual void lockSession();
+    virtual void unlockSession();
+
+    void quit();
+
     void registerEffect(Effect *effect);
+
+    void centerSurfaceOnOutput(struct weston_surface *es, struct weston_output *output);
 
     void configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int32_t width, int32_t height);
 
@@ -102,9 +110,16 @@ public:
 
     void showPanels();
     void hidePanels();
+
+    void showNotifications();
+    void hideNotifications();
+
+    void showOverlays();
+    void hideOverlays();
+
     bool isInFullscreen() const;
 
-    virtual IRect2D windowsArea(struct weston_output *output) const;
+    virtual IRect2D windowsArea(struct weston_output *output);
 
     inline struct weston_compositor *compositor() const { return m_compositor; }
     struct weston_output *getDefaultOutput() const;
@@ -123,13 +138,15 @@ public:
 
 protected:
     Shell(struct weston_compositor *ec);
+
     virtual void init();
-    void quit();
+
     inline const ShellSurfaceList &surfaces() const { return m_surfaces; }
     virtual void setGrabCursor(uint32_t cursor) {}
     virtual void setBusyCursor(ShellSurface *shsurf, struct weston_seat *seat) {}
     virtual void endBusyCursor(struct weston_seat *seat) {}
-    void fadeSplash();
+    void fadeIn();
+    void fadeOut();
     void addWorkspace(Workspace *ws);
 
     struct Child {
@@ -143,12 +160,30 @@ protected:
     };
     Child m_child;
 
+    struct weston_compositor *m_compositor;
+    Layer m_backgroundLayer;
+    Layer m_panelsLayer;
+    Layer m_fullscreenLayer;
+    Layer m_overlayLayer;
+    Layer m_splashLayer;
+    Layer m_notificationsLayer;
+    Layer m_lockLayer;
+
+    std::map<struct weston_output *, IRect2D> m_windowsArea;
+
 private:
     void destroy();
+
+    void idle();
+    void wake();
+
     void bind(struct wl_client *client, uint32_t version, uint32_t id);
     void sigchld(int status);
+
     void backgroundConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
     void panelConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
+    void lockSurfaceConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
+
     void activateSurface(struct weston_seat *seat, uint32_t time, uint32_t button);
     void configureFullscreen(ShellSurface *surface);
     void stackFullscreen(ShellSurface *surface);
@@ -162,14 +197,10 @@ private:
     weston_surface *createBlackSurface(int x, int y, int w, int h);
     void workspaceRemoved(Workspace *ws);
 
-    struct weston_compositor *m_compositor;
     WlListener m_destroyListener;
+    WlListener m_idleListener;
+    WlListener m_wakeListener;
     char *m_clientPath;
-    Layer m_backgroundLayer;
-    Layer m_panelsLayer;
-    Layer m_fullscreenLayer;
-    Layer m_overlayLayer;
-    Layer m_splashLayer;
     std::vector<Effect *> m_effects;
     ShellSurfaceList m_surfaces;
     std::vector<Workspace *> m_workspaces;

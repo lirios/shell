@@ -46,7 +46,7 @@ void Layer::insert(struct weston_layer *below)
     }
 }
 
-void Layer::insert(Layer *below)
+void Layer:: insert(Layer *below)
 {
     if (below) {
         wl_list_remove(&m_layer.link);
@@ -60,6 +60,12 @@ void Layer::insert(Layer *below)
 void Layer::remove()
 {
     hide();
+    m_below = nullptr;
+}
+
+void Layer::reset()
+{
+    wl_list_remove(&m_layer.link);
     m_below = nullptr;
 }
 
@@ -102,6 +108,18 @@ void Layer::addSurface(struct weston_surface *surf)
 void Layer::addSurface(ShellSurface *surf)
 {
     addSurface(surf->m_surface);
+}
+
+void Layer::prependSurface(struct weston_surface *surf)
+{
+    if (surf->layer_link.prev)
+        wl_list_remove(&surf->layer_link);
+    wl_list_insert(m_layer.surface_list.prev, &surf->layer_link);
+}
+
+void Layer::prependSurface(ShellSurface *surf)
+{
+    prependSurface(surf->m_surface);
 }
 
 void Layer::stackAbove(struct weston_surface *surf, struct weston_surface *parent)
