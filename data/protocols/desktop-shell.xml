@@ -112,6 +112,14 @@
       <arg name="workspace" type="object" interface="hawaii_workspace"/>
     </request>
 
+    <event name="loaded">
+      <description summary="tell the client to create and set its surfaces">
+        Tell the shell we want it to create and set its surfaces such as
+        background and panels.  The client will emit desktop_ready when
+        all surfaces are ready.
+      </description>
+    </event>
+
     <event name="present">
       <arg name="surface" type="object" interface="wl_surface"/>
     </event>

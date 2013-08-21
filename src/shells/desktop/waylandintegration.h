@@ -52,6 +52,9 @@ public:
     struct hawaii_desktop_shell *shell;
     static const struct hawaii_desktop_shell_listener shellListener;
 
+    static void handleLoaded(void *data,
+                             struct hawaii_desktop_shell *desktop_shell);
+
     static void handlePresent(void *data,
                               struct hawaii_desktop_shell *desktop_shell,
                               struct wl_surface *surface);

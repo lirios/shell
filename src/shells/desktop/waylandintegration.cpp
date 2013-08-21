@@ -43,6 +43,7 @@ const struct wl_registry_listener WaylandIntegration::registryListener = {
 };
 
 const struct hawaii_desktop_shell_listener WaylandIntegration::shellListener = {
+    WaylandIntegration::handleLoaded,
     WaylandIntegration::handlePresent,
     WaylandIntegration::handlePrepareLockSurface,
     WaylandIntegration::handleGrabCursor,
@@ -76,10 +77,6 @@ void WaylandIntegration::handleGlobal(void *data,
         object->shell = static_cast<struct hawaii_desktop_shell *>(
                     wl_registry_bind(registry, id, &hawaii_desktop_shell_interface, 1));
         hawaii_desktop_shell_add_listener(object->shell, &shellListener, data);
-
-        // Create shell surfaces
-        DesktopShell *shell = DesktopShell::instance();
-        QMetaObject::invokeMethod(shell, "create");
     } else if (strcmp(interface, "wl_notification_daemon") == 0) {
         // Bind interface
         object->notification = static_cast<struct wl_notification_daemon *>(
@@ -89,6 +86,17 @@ void WaylandIntegration::handleGlobal(void *data,
         NotificationsDaemon *daemon = NotificationsDaemon::instance();
         QMetaObject::invokeMethod(daemon, "connectOnDBus");
     }
+}
+
+void WaylandIntegration::handleLoaded(void *data,
+                                      struct hawaii_desktop_shell *desktop_shell)
+{
+    Q_UNUSED(data);
+    Q_UNUSED(desktop_shell);
+
+    // Create shell surfaces
+    DesktopShell *shell = DesktopShell::instance();
+    QMetaObject::invokeMethod(shell, "create");
 }
 
 void WaylandIntegration::handlePresent(void *data,
