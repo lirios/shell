@@ -68,6 +68,16 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
+    <request name="set_overlay">
+      <description summary="set overlay role">
+        The surface set by this request will receive the overlay role.
+        Overlays are special surfaces that shows for a limited amount
+        of time.  Such surfaces are useful to display things like OSD.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
     <request name="set_position">
       <arg name="surface" type="object" interface="wl_surface"/>
       <arg name="x" type="int"/>
