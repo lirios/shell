@@ -123,6 +123,9 @@ void DesktopShell::create()
     // Add the first workspace
     // TODO: Add as many workspaces as specified by the settings
     addWorkspace();
+    addWorkspace();
+    addWorkspace();
+    addWorkspace();
 
     // Process workspaces events
     while (QCoreApplication::hasPendingEvents())
