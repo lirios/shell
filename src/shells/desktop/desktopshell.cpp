@@ -147,6 +147,18 @@ void DesktopShell::appendWindow(Window *window)
     Q_EMIT windowsChanged();
 }
 
+void DesktopShell::minimizeWindows()
+{
+    WaylandIntegration *integration = WaylandIntegration::instance();
+    hawaii_desktop_shell_minimize_windows(integration->shell);
+}
+
+void DesktopShell::restoreWindows()
+{
+    WaylandIntegration *integration = WaylandIntegration::instance();
+    hawaii_desktop_shell_restore_windows(integration->shell);
+}
+
 void DesktopShell::addWorkspace()
 {
     WaylandIntegration *integration = WaylandIntegration::instance();

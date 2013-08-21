@@ -59,6 +59,9 @@ public:
 
     void appendWindow(Window *window);
 
+    void minimizeWindows();
+    void restoreWindows();
+
     void addWorkspace();
     void removeWorkspace(int num);
 

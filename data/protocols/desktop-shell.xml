@@ -118,6 +118,18 @@
       </description>
     </request>
 
+    <request name="minimize_windows">
+      <description summary="minimize all windows">
+        Tell the server to minimize all windows.
+      </description>
+    </request>
+
+    <request name="restore_windows">
+      <description summary="restore all windows">
+        Tell the server to restore all windows.
+      </description>
+    </request>
+
     <request name="add_workspace">
       <description summary="add workspace">
         Tell the server to add a new workspace.
