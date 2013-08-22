@@ -40,6 +40,7 @@
 #include "sessionmanager.h"
 #include "shellwindow.h"
 #include "notificationwindow.h"
+#include "overlaywindow.h"
 
 void registerQmlTypes()
 {
@@ -59,6 +60,7 @@ void registerQmlTypes()
     qmlRegisterType<SessionManager>(uri, 0, 1, "SessionManager");
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
     qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
+    qmlRegisterType<OverlayWindow>(uri, 0, 1, "OverlayWindow");
 
     // Enums
     qmlRegisterUncreatableType<UserStatus>(uri, 0, 1, "UserStatus",

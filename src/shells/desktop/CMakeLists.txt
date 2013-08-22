@@ -24,6 +24,7 @@ set(SOURCES
     notificationsdaemon.cpp
     notificationsimage.cpp
     notificationwindow.cpp
+    overlaywindow.cpp
     panelwindow.cpp
     policykitagent.cpp
     powermanagerbackend.cpp
