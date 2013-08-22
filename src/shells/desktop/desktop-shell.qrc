@@ -56,6 +56,10 @@
         <!-- Effects -->
         <file>qml/EffectVignette.qml</file>
 
+        <!-- Overlays -->
+        <file>qml/Overlay.qml</file>
+        <file>qml/OverlayStyle.qml</file>
+
         <!-- Images -->
         <file>images/noise.png</file>
     </qresource>
