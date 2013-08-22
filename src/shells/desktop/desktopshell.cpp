@@ -43,6 +43,7 @@
 #include "window.h"
 #include "workspace.h"
 #include "keybinding.h"
+#include "servicefactory.h"
 
 Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 
@@ -94,6 +95,7 @@ DesktopShell::~DesktopShell()
     // Delete workspaces and shell windows
     qDeleteAll(m_workspaces);
     qDeleteAll(m_shellWindows);
+    qDeleteAll(m_services);
     delete m_engine;
 
     // Unbind interfaces
@@ -141,6 +143,19 @@ void DesktopShell::ready()
     WaylandIntegration *integration = WaylandIntegration::instance();
     hawaii_desktop_shell_desktop_ready(integration->shell);
     qDebug() << "Shell is now ready and took" << m_elapsedTimer.elapsed() << "ms";
+}
+
+QObject *DesktopShell::service(const QString &name)
+{
+    // Get an already created service
+    QObject *service = m_services.value(name);
+    if (service)
+        return service;
+
+    // If we can't find it just create it
+    service = ServiceFactory::createService(name);
+    m_services[name] = service;
+    return service;
 }
 
 void DesktopShell::appendWindow(Window *window)

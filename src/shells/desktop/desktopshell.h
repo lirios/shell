@@ -29,6 +29,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QElapsedTimer>
+#include <QtCore/QHash>
 
 class QQmlEngine;
 
@@ -45,6 +46,8 @@ public:
     ~DesktopShell();
 
     static DesktopShell *instance();
+
+    QObject *service(const QString &name);
 
     QQmlEngine *engine() const {
         return m_engine;
@@ -85,6 +88,7 @@ private:
     struct wl_registry *m_registry;
     QElapsedTimer m_elapsedTimer;
     QQmlEngine *m_engine;
+    QHash<QString, QObject *> m_services;
     QList<ShellUi *> m_shellWindows;
     QList<Window *> m_windows;
     QList<Workspace *> m_workspaces;

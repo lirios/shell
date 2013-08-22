@@ -2,6 +2,7 @@ include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${POLKITQT-1_INCLUDE_DIR}
     ${WaylandClient_INCLUDE_DIRS}
+    ${ALSA_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}/headers
 )
 
@@ -30,6 +31,7 @@ set(SOURCES
     policykitagent.cpp
     powermanagerbackend.cpp
     powermanager.cpp
+    servicefactory.cpp
     sessionmanager.cpp
     shellui.cpp
     shellwindow.cpp
