@@ -15,6 +15,7 @@ set(SOURCES
     desktopshell.cpp
     enums.cpp
     grabwindow.cpp
+    keybinding.cpp
     launcheritem.cpp
     launchermodel.cpp
     launchersettings.cpp
