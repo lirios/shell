@@ -1,0 +1,17 @@
+<protocol name="screensaver">
+  <interface name="screensaver" version="1">
+    <description summary="interface for implementing screensavers">
+      Only one client can bind this interface at a time.
+    </description>
+
+    <request name="set_surface">
+      <description summary="set the surface type as a screensaver">
+	A screensaver surface is normally hidden, and only visible after an
+        idle timeout.
+      </description>
+
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="output" type="object" interface="wl_output"/>
+    </request>
+  </interface>
+</protocol>
