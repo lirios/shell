@@ -42,6 +42,7 @@
 #include "shellwindow.h"
 #include "window.h"
 #include "workspace.h"
+#include "keybinding.h"
 
 Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
 
@@ -181,6 +182,13 @@ void DesktopShell::appendWorkspace(Workspace *workspace)
 {
     m_workspaces.append(workspace);
     Q_EMIT workspaceAdded(m_workspaces.indexOf(workspace));
+}
+
+KeyBinding *DesktopShell::addKeyBinding(quint32 key, quint32 modifiers)
+{
+    KeyBinding *keyBinding = new KeyBinding(key, modifiers, this);
+    m_keyBindings.append(keyBinding);
+    return keyBinding;
 }
 
 void DesktopShell::windowUnmapped(Window *window)

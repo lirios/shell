@@ -35,6 +35,7 @@ class QQmlEngine;
 class ShellUi;
 class Window;
 class Workspace;
+class KeyBinding;
 
 class DesktopShell : public QObject
 {
@@ -67,6 +68,8 @@ public:
 
     void appendWorkspace(Workspace *workspace);
 
+    KeyBinding *addKeyBinding(quint32 key, quint32 modifiers);
+
 Q_SIGNALS:
     void windowsChanged();
     void workspaceAdded(int num);
@@ -85,6 +88,7 @@ private:
     QList<ShellUi *> m_shellWindows;
     QList<Window *> m_windows;
     QList<Workspace *> m_workspaces;
+    QList<KeyBinding *> m_keyBindings;
 
 private Q_SLOTS:
     void windowUnmapped(Window *window);
