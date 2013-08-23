@@ -29,14 +29,6 @@
 #include "animation.h"
 #include "shellsurface.h"
 
-// TODO: Remove when this gets merged: http://lists.freedesktop.org/archives/wayland-devel/2013-August/010683.html
-#ifndef WESTON_VERSION_NUMBER
-#  define WESTON_VERSION_NUMBER ((WESTON_VERSION_MAJOR << 16) | (WESTON_VERSION_MINOR << 8) | WESTON_VERSION_MICRO)
-#endif
-#ifndef WESTON_VERSION_CHECK
-#  define WESTON_VERSION_CHECK(major, minor, micro) ((major<<16)|(minor<<8)|(micro))
-#endif
-
 const int ALPHA_ANIM_DURATION = 200;
 
 struct InOutSurfaceEffect::Surface {
@@ -90,12 +82,12 @@ void InOutSurfaceEffect::addedSurface(ShellSurface *surface)
     surf->surface = surface->weston_surface();
     surf->effect = this;
 
-#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 2, 1))
+#if 0
     ++surface->weston_surface()->ref_count;
-#endif
     surf->listener.parent = surf;
     surf->listener.destroyListener.notify = Surface::destroyed;
     wl_resource_add_destroy_listener(surf->surface->resource, &surf->listener.destroyListener);
+#endif
 
     surf->animation.updateSignal->connect(surf, &Surface::setAlpha);
     surf->animation.doneSignal->connect(surf, &Surface::done);
