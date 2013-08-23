@@ -33,7 +33,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "panelwindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
+#include "desktopshell_p.h"
 #include "shellui.h"
 
 PanelWindow::PanelWindow(ShellUi *ui)
@@ -75,18 +76,15 @@ wl_surface *PanelWindow::surface() const
 
 void PanelWindow::sendGeometry()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_output *output = static_cast<struct wl_output *>(
+    wl_output *output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
 
-    hawaii_desktop_shell_set_panel_geometry(object->shell, output,
-                                            m_surface,
-                                            geometry().x(),
-                                            geometry().y(),
-                                            geometry().width(),
-                                            geometry().height());
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_panel_geometry(output, m_surface,
+                              geometry().x(), geometry().y(),
+                              geometry().width(), geometry().height());
 }
 
 void PanelWindow::geometryChanged(const QRect &rect)
@@ -113,16 +111,16 @@ void PanelWindow::resetGeometry()
 
 void PanelWindow::setWindowType()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_output *output = static_cast<struct wl_output *>(
+    wl_output *output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
 
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    hawaii_desktop_shell_set_panel(object->shell, output, m_surface);
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_panel(output, m_surface);
 }
 
 #include "moc_panelwindow.cpp"

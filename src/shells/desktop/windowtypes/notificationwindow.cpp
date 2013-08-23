@@ -29,7 +29,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "notificationwindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
+#include "desktopshell_p.h"
 
 NotificationWindow::NotificationWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -48,13 +49,15 @@ void NotificationWindow::addSurface()
     if (m_surfaceAdded)
         return;
 
-    WaylandIntegration *integration = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_surface *surface = static_cast<struct wl_surface *>(
+    wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    wl_notification_daemon_add_surface(integration->notification, surface);
+    QtWayland::wl_notification_daemon *notifications =
+            DesktopShell::instance()->d_ptr->notifications;
+    notifications->add_surface(surface);
+
     m_surfaceAdded = true;
 }
 

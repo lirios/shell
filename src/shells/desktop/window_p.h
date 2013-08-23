@@ -27,11 +27,7 @@
 #ifndef WINDOW_P_H
 #define WINDOW_P_H
 
-#include "window.h"
-#include "wayland-desktop-shell-client-protocol.h"
-
-struct hawaii_window;
-struct hawaii_window_listener;
+#include "qwayland-desktop.h"
 
 /*!
     Converts a window state integer provided by the compositor
@@ -73,27 +69,25 @@ static int32_t stateConvert(Window::States state)
     return result;
 }
 
-class WindowPrivate
+class Window;
+
+class WindowPrivate : public QtWayland::hawaii_window
 {
     Q_DECLARE_PUBLIC(Window)
 public:
     WindowPrivate();
-
-    void initialize(hawaii_window *window);
+    ~WindowPrivate();
 
     Window *q_ptr;
-    hawaii_window *window;
     QString title;
     QString identifier;
     Window::States state;
 
-private:
-    void handleTitleChanged(hawaii_window *window, const char *title);
-    void handleIdentifierChanged(hawaii_window *window, const char *id);
-    void handleStateChanged(hawaii_window *window, int32_t state);
-    void handleUnmapped(hawaii_window *window);
-
-    static const hawaii_window_listener listener;
+protected:
+    void hawaii_window_title_changed(const QString &title);
+    void hawaii_window_identifier_changed(const QString &identifier);
+    void hawaii_window_state_changed(int32_t state);
+    void hawaii_window_unmapped();
 };
 
 #endif // WINDOW_P_H

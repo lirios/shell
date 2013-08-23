@@ -26,60 +26,51 @@
 
 #include "workspace.h"
 #include "workspace_p.h"
-#include "waylandintegration.h"
-#include "utils.h"
+#include "desktopshell.h"
 
 /*
  * WorkspacePrivate
  */
 
 WorkspacePrivate::WorkspacePrivate()
-    : q_ptr(0)
+    : QtWayland::hawaii_workspace()
+    , q_ptr(0)
     , active(false)
-    , workspace(0)
 {
 }
 
-void WorkspacePrivate::initialize(hawaii_workspace *workspace, bool active)
+WorkspacePrivate::~WorkspacePrivate()
 {
-    this->workspace = workspace;
-    this->active = active;
-    hawaii_workspace_add_listener(this->workspace, &m_listener, this);
+    hawaii_workspace_destroy(object());
 }
 
-void WorkspacePrivate::handleActivated(hawaii_workspace *workspace)
+void WorkspacePrivate::hawaii_workspace_activated()
 {
     Q_Q(Workspace);
-    Q_UNUSED(workspace);
 
     active = true;
     Q_EMIT q->activeChanged(active);
 }
 
-void WorkspacePrivate::handleDeactivated(hawaii_workspace *workspace)
+void WorkspacePrivate::hawaii_workspace_deactivated()
 {
     Q_Q(Workspace);
-    Q_UNUSED(workspace);
 
     active = false;
     Q_EMIT q->activeChanged(active);
 }
 
-const hawaii_workspace_listener WorkspacePrivate::m_listener = {
-    wrapInterface(&WorkspacePrivate::handleActivated),
-    wrapInterface(&WorkspacePrivate::handleDeactivated)
-};
-
 /*
  * Workspace
  */
 
-Workspace::Workspace(QObject *parent)
+Workspace::Workspace(bool active, QObject *parent)
     : QObject(parent)
     , d_ptr(new WorkspacePrivate())
 {
     Q_D(Workspace);
     d->q_ptr = this;
+    d->active = active;
 }
 
 bool Workspace::isActive() const
@@ -90,10 +81,7 @@ bool Workspace::isActive() const
 
 void Workspace::activate()
 {
-    Q_D(Workspace);
-
-    WaylandIntegration *integration = WaylandIntegration::instance();
-    hawaii_desktop_shell_select_workspace(integration->shell, d->workspace);
+    DesktopShell::instance()->selectWorkspace(this);
 }
 
 #include "moc_workspace.cpp"

@@ -27,10 +27,9 @@
 #ifndef KEYBINDING_P_H
 #define KEYBINDING_P_H
 
-struct hawaii_key_binding;
-struct hawaii_key_binding_listener;
+#include "qwayland-desktop.h"
 
-class KeyBindingPrivate
+class KeyBindingPrivate : public QtWayland::hawaii_key_binding
 {
     Q_DECLARE_PUBLIC(KeyBinding)
 public:
@@ -38,15 +37,11 @@ public:
     ~KeyBindingPrivate();
 
     KeyBinding *q_ptr;
-
-    hawaii_key_binding *binding;
     quint32 key;
     quint32 modifiers;
 
-    static const hawaii_key_binding_listener listener;
-
 private:
-    void handleTriggered(hawaii_key_binding *binding);
+    void hawaii_key_binding_triggered();
 };
 
 #endif // KEYBINDING_P_H

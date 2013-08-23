@@ -33,7 +33,6 @@
 
 #include "shellui.h"
 #include "desktopshell.h"
-#include "waylandintegration.h"
 
 ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
     : QObject(parent)
@@ -152,11 +151,7 @@ void ShellUi::updateScreenGeometry(const QRect &rect)
     Q_EMIT availableGeometryChanged(geometry);
 
     // Send available geometry to the compositor
-    WaylandIntegration *object = WaylandIntegration::instance();
-    hawaii_desktop_shell_set_available_geometry(
-                object->shell, m_output,
-                geometry.x(), geometry.y(),
-                geometry.width(), geometry.height());
+    DesktopShell::instance()->setAvailableGeometry(screen(), geometry);
 }
 
 void ShellUi::createLockScreenWindow()

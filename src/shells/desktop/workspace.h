@@ -29,7 +29,8 @@
 
 #include <QtCore/QObject>
 
-class WaylandIntegration;
+class DesktopShell;
+class DesktopShellImpl;
 class WorkspacePrivate;
 
 class Workspace : public QObject
@@ -39,7 +40,7 @@ class Workspace : public QObject
     Q_DISABLE_COPY(Workspace)
     Q_DECLARE_PRIVATE(Workspace)
 public:
-    Workspace(QObject *parent = 0);
+    Workspace(bool active, QObject *parent = 0);
 
     bool isActive() const;
 
@@ -50,7 +51,8 @@ public Q_SLOTS:
     void activate();
 
 private:
-    friend class WaylandIntegration;
+    friend class DesktopShell;
+    friend class DesktopShellImpl;
 
     WorkspacePrivate *const d_ptr;
 };

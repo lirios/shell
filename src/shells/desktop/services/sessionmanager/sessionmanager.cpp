@@ -27,8 +27,8 @@
 #include <QtCore/QCoreApplication>
 
 #include "desktopshell.h"
+#include "desktopshell_p.h"
 #include "lockscreenwindow.h"
-#include "waylandintegration.h"
 #include "sessionmanager.h"
 #include "shellui.h"
 
@@ -39,20 +39,17 @@ SessionManager::SessionManager(QObject *parent)
 
 void SessionManager::logout()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
-    hawaii_desktop_shell_quit(object->shell);
+    DesktopShell::instance()->d_ptr->shell->quit();;
 }
 
 void SessionManager::lock()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
-    hawaii_desktop_shell_lock(object->shell);
+    DesktopShell::instance()->d_ptr->shell->lock();;
 }
 
 void SessionManager::unlock()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
-    hawaii_desktop_shell_unlock(object->shell);
+    DesktopShell::instance()->d_ptr->shell->unlock();
 
     // Close all lock screens, this will unmap the window and
     // save some resources

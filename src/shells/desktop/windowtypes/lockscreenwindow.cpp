@@ -33,7 +33,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "lockscreenwindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
+#include "desktopshell_p.h"
 #include "shellui.h"
 
 LockScreenWindow::LockScreenWindow(ShellUi *ui)
@@ -66,13 +67,13 @@ wl_surface *LockScreenWindow::surface() const
 
 void LockScreenWindow::setWindowType()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    hawaii_desktop_shell_set_lock_surface(object->shell, m_surface);
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_lock_surface(m_surface);
 }
 
 void LockScreenWindow::geometryChanged(const QRect &rect)

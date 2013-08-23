@@ -27,28 +27,23 @@
 #ifndef WORKSPACE_P_H
 #define WORKSPACE_P_H
 
-struct hawaii_workspace;
-struct hawaii_workspace_listener;
+#include "qwayland-desktop.h"
 
 class Workspace;
 
-class WorkspacePrivate
+class WorkspacePrivate : public QtWayland::hawaii_workspace
 {
     Q_DECLARE_PUBLIC(Workspace)
 public:
     WorkspacePrivate();
-
-    void initialize(hawaii_workspace *workspace, bool active);
+    ~WorkspacePrivate();
 
     Workspace *q_ptr;
     bool active;
-    hawaii_workspace *workspace;
 
 private:
-    void handleActivated(hawaii_workspace *workspace);
-    void handleDeactivated(hawaii_workspace *workspace);
-
-    static const hawaii_workspace_listener m_listener;
+    void hawaii_workspace_activated();
+    void hawaii_workspace_deactivated();
 };
 
 #endif // WORKSPACE_P_H

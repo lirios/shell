@@ -60,6 +60,7 @@ set(ADDITIONAL_PATH "" CACHE STRING "Additional path that starthawaii will use")
 
 # Find Qt5
 find_package(Qt5 5.1.0 REQUIRED COMPONENTS DBus Qml Quick Configuration AccountsService Xdg)
+include(QtWayland)
 
 # Find GreenIsland
 find_package(GreenIsland)

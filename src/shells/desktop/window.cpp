@@ -26,50 +26,46 @@
 
 #include "window.h"
 #include "window_p.h"
-#include "utils.h"
 
 /*
  * WindowPrivate
  */
 
 WindowPrivate::WindowPrivate()
-    : q_ptr(0)
+    : QtWayland::hawaii_window()
+    , q_ptr(0)
     , state(Window::Inactive)
 {
 }
 
-void WindowPrivate::initialize(hawaii_window *window)
+WindowPrivate::~WindowPrivate()
 {
-    this->window = window;
-    hawaii_window_add_listener(this->window, &listener, this);
+    hawaii_window_destroy(object());
 }
 
-void WindowPrivate::handleTitleChanged(hawaii_window *window, const char *title)
+void WindowPrivate::hawaii_window_title_changed(const QString &title)
 {
     Q_Q(Window);
-    Q_UNUSED(window);
 
-    if (this->title != QString::fromUtf8(title)) {
-        this->title = QString::fromUtf8(title);
+    if (this->title != title) {
+        this->title = title;
         Q_EMIT q->titleChanged(this->title);
     }
 }
 
-void WindowPrivate::handleIdentifierChanged(hawaii_window *window, const char *id)
+void WindowPrivate::hawaii_window_identifier_changed(const QString &identifier)
 {
     Q_Q(Window);
-    Q_UNUSED(window);
 
-    if (this->identifier != QString::fromUtf8(id)) {
-        this->identifier = QString::fromUtf8(id);
+    if (this->identifier != identifier) {
+        this->identifier = identifier;
         Q_EMIT q->identifierChanged(this->identifier);
     }
 }
 
-void WindowPrivate::handleStateChanged(hawaii_window *window, int32_t state)
+void WindowPrivate::hawaii_window_state_changed(int32_t state)
 {
     Q_Q(Window);
-    Q_UNUSED(window);
 
     if (this->state != wlStateConvert(state)) {
         this->state = wlStateConvert(state);
@@ -77,21 +73,13 @@ void WindowPrivate::handleStateChanged(hawaii_window *window, int32_t state)
     }
 }
 
-void WindowPrivate::handleUnmapped(hawaii_window *window)
+void WindowPrivate::hawaii_window_unmapped()
 {
     Q_Q(Window);
-    Q_UNUSED(window);
 
     Q_EMIT q->unmapped(q);
     q->deleteLater();
 }
-
-const hawaii_window_listener WindowPrivate::listener = {
-    wrapInterface(&WindowPrivate::handleTitleChanged),
-    wrapInterface(&WindowPrivate::handleIdentifierChanged),
-    wrapInterface(&WindowPrivate::handleStateChanged),
-    wrapInterface(&WindowPrivate::handleUnmapped)
-};
 
 /*
  * Window
@@ -118,8 +106,6 @@ Window::Window(QObject *parent)
 
 Window::~Window()
 {
-    Q_D(Window);
-    hawaii_window_destroy(d->window);
     delete d_ptr;
 }
 
@@ -145,7 +131,7 @@ void Window::setState(const States &state)
 {
     Q_D(Window);
     d->state = state;
-    hawaii_window_set_state(d->window, stateConvert(d->state));
+    d->set_state(stateConvert(d->state));
 }
 
 void Window::activate()

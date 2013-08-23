@@ -32,7 +32,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "backgroundwindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
+#include "desktopshell_p.h"
 #include "shellui.h"
 
 BackgroundWindow::BackgroundWindow(ShellUi *ui)
@@ -75,16 +76,14 @@ void BackgroundWindow::geometryChanged(const QRect &rect)
 
 void BackgroundWindow::setWindowType()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_output *output = static_cast<struct wl_output *>(
+    wl_output *output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
-
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    hawaii_desktop_shell_set_background(object->shell, output, m_surface);
+    DesktopShell::instance()->d_ptr->shell->set_background(output, m_surface);
 }
 
 #include "moc_backgroundwindow.cpp"

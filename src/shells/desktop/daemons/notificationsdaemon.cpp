@@ -37,7 +37,7 @@
 #include "notificationsdaemon.h"
 #include "notificationsimage.h"
 #include "notificationwindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
 
 /*
  * Latest specifications:

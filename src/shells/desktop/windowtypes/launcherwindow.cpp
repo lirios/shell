@@ -33,7 +33,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "launcherwindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
+#include "desktopshell_p.h"
 #include "shellui.h"
 
 LauncherWindow::LauncherWindow(ShellUi *ui)
@@ -92,18 +93,15 @@ LauncherSettings *LauncherWindow::settings() const
 
 void LauncherWindow::sendGeometry()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_output *output = static_cast<struct wl_output *>(
+    wl_output *output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
 
-    hawaii_desktop_shell_set_launcher_geometry(object->shell, output,
-                                               m_surface,
-                                               geometry().x(),
-                                               geometry().y(),
-                                               geometry().width(),
-                                               geometry().height());
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_launcher_geometry(output, m_surface,
+                                 geometry().x(), geometry().y(),
+                                 geometry().width(), geometry().height());
 }
 
 void LauncherWindow::geometryChanged(const QRect &rect)
@@ -140,16 +138,16 @@ void LauncherWindow::resetGeometry()
 
 void LauncherWindow::setWindowType()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_output *output = static_cast<struct wl_output *>(
+    wl_output *output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
 
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    hawaii_desktop_shell_set_launcher(object->shell, output, m_surface);
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_launcher(output, m_surface);
 }
 
 #include "moc_launcherwindow.cpp"

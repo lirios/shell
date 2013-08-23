@@ -29,7 +29,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "grabwindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
+#include "desktopshell_p.h"
 
 GrabWindow::GrabWindow(QScreen *screen)
     : QWindow(screen)
@@ -49,13 +50,13 @@ void GrabWindow::setGrabCursor(const QCursor &cursor)
 
 void GrabWindow::setWindowType()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    hawaii_desktop_shell_set_grab_surface(object->shell, surface);
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_grab_surface(surface);
 }
 
 #include "moc_grabwindow.cpp"

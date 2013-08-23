@@ -26,7 +26,6 @@ set(SOURCES
     main.cpp
     registration.cpp
     shellui.cpp
-    waylandintegration.cpp
     window.cpp
     workspace.cpp
     daemons/notificationsdaemon.cpp
@@ -55,12 +54,20 @@ set(SOURCES
 
 wayland_add_protocol_client(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
-    desktop-shell
+    desktop
+)
+qtwayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
+    desktop
 )
 
 wayland_add_protocol_client(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/notification-daemon.xml
-    notification-daemon
+    notification
+)
+qtwayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/notification-daemon.xml
+    notification
 )
 
 qt5_add_resources(RESOURCES desktop-shell.qrc)

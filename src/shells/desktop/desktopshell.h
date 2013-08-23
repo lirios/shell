@@ -28,39 +28,49 @@
 #define DESKTOPSHELL_H
 
 #include <QtCore/QObject>
-#include <QtCore/QElapsedTimer>
 #include <QtCore/QHash>
 #include <QtQml/QQmlListProperty>
 
+class QScreen;
 class QQmlEngine;
 
+class DesktopShellImpl;
+class DesktopShellPrivate;
 class ShellUi;
 class Window;
 class Workspace;
 class KeyBinding;
+class BackgroundWindow;
+class PanelWindow;
+class LauncherWindow;
+class GrabWindow;
+class ShellWindow;
+class OverlayWindow;
+class LockScreenWindow;
+class NotificationWindow;
+class SessionManager;
 
 class DesktopShell : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QQmlListProperty<Window> windows READ windows NOTIFY windowsChanged)
     Q_PROPERTY(QQmlListProperty<Workspace> workspaces READ workspaces NOTIFY workspacesChanged)
+    Q_DECLARE_PRIVATE(DesktopShell)
 public:
     DesktopShell();
     ~DesktopShell();
 
     static DesktopShell *instance();
 
-    inline QQmlEngine *engine() const {
-        return m_engine;
-    }
+    QQmlEngine *engine() const;
 
     Q_INVOKABLE QObject *service(const QString &name);
 
     Q_INVOKABLE KeyBinding *addKeyBinding(quint32 key, quint32 modifiers);
 
-    inline QList<ShellUi *> shellWindows() const {
-        return m_shellWindows;
-    }
+    Q_INVOKABLE void setAvailableGeometry(QScreen *screen, const QRect &geometry);
+
+    QList<ShellUi *> shellWindows() const;
 
     QQmlListProperty<Window> windows();
     QQmlListProperty<Workspace> workspaces();
@@ -73,30 +83,27 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void create();
-    void ready();
 
     void minimizeWindows();
     void restoreWindows();
 
     void addWorkspace();
     void removeWorkspace(int num);
+    void selectWorkspace(Workspace *workspace);
 
 private:
-    friend class WaylandIntegration;
+    friend class DesktopShellImpl;
+    friend class BackgroundWindow;
+    friend class PanelWindow;
+    friend class LauncherWindow;
+    friend class GrabWindow;
+    friend class ShellWindow;
+    friend class OverlayWindow;
+    friend class LockScreenWindow;
+    friend class NotificationWindow;
+    friend class SessionManager;
 
-    struct wl_display *m_display;
-    int m_fd;
-    struct wl_registry *m_registry;
-    QElapsedTimer m_elapsedTimer;
-    QQmlEngine *m_engine;
-    QHash<QString, QObject *> m_services;
-    QList<ShellUi *> m_shellWindows;
-    QList<Window *> m_windows;
-    QList<Workspace *> m_workspaces;
-    QList<KeyBinding *> m_keyBindings;
-
-    void appendWindow(Window *window);
-    void appendWorkspace(Workspace *workspace);
+    DesktopShellPrivate *const d_ptr;
 
     static int windowsCount(QQmlListProperty<Window> *p);
     static Window *windowAt(QQmlListProperty<Window> *p, int index);

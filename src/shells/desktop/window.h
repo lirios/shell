@@ -29,7 +29,7 @@
 
 #include <QtCore/QObject>
 
-class WaylandIntegration;
+class DesktopShellImpl;
 class WindowPrivate;
 
 class Window : public QObject
@@ -77,7 +77,7 @@ public Q_SLOTS:
     void restore();
 
 private:
-    friend class WaylandIntegration;
+    friend class DesktopShellImpl;
 
     WindowPrivate *const d_ptr;
 };

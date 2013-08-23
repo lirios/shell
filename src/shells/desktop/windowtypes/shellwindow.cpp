@@ -29,7 +29,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "shellwindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
+#include "desktopshell_p.h"
 
 ShellWindow::ShellWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -52,27 +53,26 @@ void ShellWindow::exposeEvent(QExposeEvent *event)
 
 void ShellWindow::setSpecial()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_output *output = static_cast<struct wl_output *>(
+    wl_output *output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
-    struct wl_surface *surface = static_cast<struct wl_surface *>(
+    wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    hawaii_desktop_shell_set_special(object->shell, output, surface);
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_special(output, surface);
 }
 
 void ShellWindow::setSurfacePosition(const QPoint &pt)
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_surface *surface = static_cast<struct wl_surface *>(
+    wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    hawaii_desktop_shell_set_position(object->shell, surface,
-                                      pt.x(), pt.y());
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_position(surface, pt.x(), pt.y());
 }
 
 #include "moc_shellwindow.cpp"

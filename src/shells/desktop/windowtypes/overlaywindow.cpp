@@ -29,7 +29,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "overlaywindow.h"
-#include "waylandintegration.h"
+#include "desktopshell.h"
+#include "desktopshell_p.h"
 
 OverlayWindow::OverlayWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -47,15 +48,15 @@ OverlayWindow::OverlayWindow(QWindow *parent)
 
 void OverlayWindow::setWindowType()
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct wl_output *output = static_cast<struct wl_output *>(
+    wl_output *output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
-    struct wl_surface *surface = static_cast<struct wl_surface *>(
+    wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    hawaii_desktop_shell_set_overlay(object->shell, output, surface);
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_overlay(output, surface);
 }
 
 #include "moc_overlaywindow.cpp"

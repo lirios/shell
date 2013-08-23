@@ -37,32 +37,159 @@
 #include "cmakedirs.h"
 #include "registration.h"
 #include "desktopshell.h"
+#include "desktopshell_p.h"
+#include "notificationsdaemon.h"
 #include "notificationwindow.h"
-#include "waylandintegration.h"
 #include "shellui.h"
 #include "shellwindow.h"
 #include "window.h"
+#include "window_p.h"
 #include "workspace.h"
+#include "workspace_p.h"
 #include "keybinding.h"
+#include "keybinding_p.h"
 #include "servicefactory.h"
 
-Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
+/*
+ * ShellImpl
+ */
 
-DesktopShell::DesktopShell()
-    : QObject()
+DesktopShellImpl::DesktopShellImpl(DesktopShellPrivate *parent)
+    : QtWayland::hawaii_desktop_shell()
+    , m_parent(parent)
+{
+}
+
+void DesktopShellImpl::hawaii_desktop_shell_loaded()
+{
+    // Create shell windows
+    QMetaObject::invokeMethod(m_parent->q_ptr, "create");
+}
+
+void DesktopShellImpl::hawaii_desktop_shell_present(wl_surface *surface)
+{
+    // Setup shell windows
+    foreach (ShellUi *shellUi, m_parent->shellWindows) {
+        if (surface == shellUi->backgroundWindow()->surface()) {
+            QMetaObject::invokeMethod(shellUi->backgroundWindow(), "showNormal");
+        } else if (surface == shellUi->panelWindow()->surface()) {
+            QMetaObject::invokeMethod(shellUi->panelWindow(), "showNormal");
+            QMetaObject::invokeMethod(shellUi->panelWindow(), "sendGeometry");
+        } else if (surface == shellUi->launcherWindow()->surface()) {
+            QMetaObject::invokeMethod(shellUi->launcherWindow(), "showNormal");
+            QMetaObject::invokeMethod(shellUi->launcherWindow(), "sendGeometry");
+        }
+    }
+}
+
+void DesktopShellImpl::hawaii_desktop_shell_prepare_lock_surface()
+{
+    // Create the lock screen only for the primary screen
+    // TODO: Actually we should create one for each screen but this
+    // requires protocol changes
+    foreach (ShellUi *shellUi, m_parent->shellWindows) {
+        if (shellUi->screen() == QGuiApplication::primaryScreen()) {
+            QMetaObject::invokeMethod(shellUi, "createLockScreenWindow");
+            return;
+        }
+    }
+}
+
+void DesktopShellImpl::hawaii_desktop_shell_grab_cursor(uint32_t cursor)
+{
+    QCursor qcursor;
+
+    switch (cursor) {
+    case HAWAII_DESKTOP_SHELL_CURSOR_NONE:
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_BUSY:
+        qcursor.setShape(Qt::BusyCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_MOVE:
+        qcursor.setShape(Qt::DragMoveCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP:
+        qcursor.setShape(Qt::SizeVerCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM:
+        qcursor.setShape(Qt::SizeVerCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_LEFT:
+        qcursor.setShape(Qt::SizeHorCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_RIGHT:
+        qcursor.setShape(Qt::SizeHorCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP_LEFT:
+        qcursor.setShape(Qt::SizeFDiagCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP_RIGHT:
+        qcursor.setShape(Qt::SizeBDiagCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM_LEFT:
+        qcursor.setShape(Qt::SizeBDiagCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM_RIGHT:
+        qcursor.setShape(Qt::SizeFDiagCursor);
+        break;
+    case HAWAII_DESKTOP_SHELL_CURSOR_ARROW:
+    default:
+        qcursor.setShape(Qt::ArrowCursor);
+        break;
+    }
+
+    foreach (ShellUi *shellUi, m_parent->shellWindows)
+        QMetaObject::invokeMethod(shellUi->grabWindow(), "setGrabCursor",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(QCursor, qcursor));
+}
+
+void DesktopShellImpl::hawaii_desktop_shell_window_mapped(hawaii_desktop_shell *object,
+                                                   hawaii_window *id,
+                                                   const QString &title,
+                                                   const QString &identifier,
+                                                   int32_t state)
+{
+    // Create a client window representation
+    Window *window = new Window(title, identifier, wlStateConvert(state));
+    window->d_ptr->init(id);
+
+    window->moveToThread(QCoreApplication::instance()->thread());
+    m_parent->windows.append(window);
+    m_parent->emitWindowAdded(window);
+}
+
+void DesktopShellImpl::hawaii_desktop_shell_workspace_added(hawaii_desktop_shell *object,
+                                                     hawaii_workspace *id,
+                                                     int32_t active)
+{
+    Workspace *workspace = new Workspace(active != 0);
+    workspace->d_ptr->init(id);
+
+    workspace->moveToThread(QCoreApplication::instance()->thread());
+    m_parent->workspaces.append(workspace);
+    m_parent->emitWorkspaceAdded(m_parent->workspaces.indexOf(workspace));
+}
+
+/*
+ * DesktopShellPrivate
+ */
+
+DesktopShellPrivate::DesktopShellPrivate(DesktopShell *parent)
+    : q_ptr(parent)
 {
     // Start counting how much time we need to start up :)
-    m_elapsedTimer.start();
+    elapsedTimer.start();
 
     // We need windows with alpha buffer
     QQuickWindow::setDefaultAlphaBuffer(true);
 
     // Create QML engine
-    m_engine = new QQmlEngine(this);
-    m_engine->rootContext()->setContextProperty("Shell", this);
+    engine = new QQmlEngine(parent);
+    engine->rootContext()->setContextProperty("Shell", parent);
 
     // Register image provider
-    m_engine->addImageProvider("appicon", new ApplicationIconProvider);
+    engine->addImageProvider("appicon", new ApplicationIconProvider);
 
     // Register QML types and factories
     registerQmlTypes();
@@ -74,37 +201,99 @@ DesktopShell::DesktopShell()
     Q_ASSERT(native);
 
     // Get Wayland display
-    m_display = static_cast<struct wl_display *>(
+    display = static_cast<struct wl_display *>(
                 native->nativeResourceForIntegration("display"));
-    Q_ASSERT(m_display);
+    Q_ASSERT(display);
 
     // Display file descriptor
-    m_fd = wl_display_get_fd(m_display);
-    Q_ASSERT(m_fd > -1);
-    qDebug() << "Wayland display socket:" << m_fd;
+    int fd = wl_display_get_fd(display);
+    Q_ASSERT(fd > -1);
+    qDebug() << "Wayland display socket:" << fd;
 
     // Wayland registry
-    m_registry = wl_display_get_registry(m_display);
-    Q_ASSERT(m_registry);
+    registry = wl_display_get_registry(display);
+    Q_ASSERT(registry);
 
-    // Wayland integration
-    WaylandIntegration *integration = WaylandIntegration::instance();
-    wl_registry_add_listener(m_registry, &WaylandIntegration::registryListener,
-                             integration);
+    // Initialize interfaces
+    shell = new DesktopShellImpl(this);
+    notifications = new QtWayland::wl_notification_daemon();
+    wl_registry_add_listener(registry,
+                             &DesktopShellPrivate::registryListener,
+                             this);
+}
+
+DesktopShellPrivate::~DesktopShellPrivate()
+{
+    wl_notification_daemon_destroy(notifications->object());
+    delete notifications;
+
+    hawaii_desktop_shell_destroy(shell->object());
+    delete shell;
+
+    qDeleteAll(workspaces);
+    qDeleteAll(shellWindows);
+    qDeleteAll(services);
+}
+
+void DesktopShellPrivate::emitWindowAdded(Window *window)
+{
+    Q_Q(DesktopShell);
+    QObject::connect(window, SIGNAL(unmapped(Window*)),
+                     q, SLOT(windowUnmapped(Window*)));
+    Q_EMIT q->windowsChanged();
+}
+
+void DesktopShellPrivate::emitWorkspaceAdded(int num)
+{
+    Q_Q(DesktopShell);
+    Q_EMIT q->workspaceAdded(num);
+    Q_EMIT q->workspacesChanged();
+}
+
+void DesktopShellPrivate::handleGlobal(void *data,
+                                       wl_registry *registry,
+                                       uint32_t id,
+                                       const char *interface,
+                                       uint32_t version)
+{
+    Q_UNUSED(version);
+
+    DesktopShellPrivate *self = static_cast<DesktopShellPrivate *>(data);
+    if (!self) {
+        qWarning() << "Unable to cast data to DesktopShellPrivate pointer";
+        return;
+    }
+
+    if (strcmp(interface, "hawaii_desktop_shell") == 0) {
+        self->shell->init(registry, id);
+    } else if (strcmp(interface, "wl_notification_daemon") == 0) {
+        self->notifications->init(registry, id);
+
+        // Start the notifications daemon and connect to the session bus
+        NotificationsDaemon *daemon = NotificationsDaemon::instance();
+        QMetaObject::invokeMethod(daemon, "connectOnDBus");
+    }
+}
+
+const struct wl_registry_listener DesktopShellPrivate::registryListener = {
+    DesktopShellPrivate::handleGlobal
+};
+
+/*
+ * DesktopShell
+ */
+
+Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
+
+DesktopShell::DesktopShell()
+    : QObject()
+    , d_ptr(new DesktopShellPrivate(this))
+{
 }
 
 DesktopShell::~DesktopShell()
 {
-    // Delete workspaces and shell windows
-    qDeleteAll(m_workspaces);
-    qDeleteAll(m_shellWindows);
-    qDeleteAll(m_services);
-    delete m_engine;
-
-    // Unbind interfaces
-    WaylandIntegration *integration = WaylandIntegration::instance();
-    wl_notification_daemon_destroy(integration->notification);
-    hawaii_desktop_shell_destroy(integration->shell);
+    delete d_ptr;
 }
 
 DesktopShell *DesktopShell::instance()
@@ -114,12 +303,14 @@ DesktopShell *DesktopShell::instance()
 
 void DesktopShell::create()
 {
+    Q_D(DesktopShell);
+
     // Create shell windows
     foreach (QScreen *screen, QGuiApplication::screens()) {
         qDebug() << "--- Screen" << screen->name() << screen->geometry();
 
-        ShellUi *ui = new ShellUi(m_engine, screen, this);
-        m_shellWindows.append(ui);
+        ShellUi *ui = new ShellUi(d->engine, screen, this);
+        d->shellWindows.append(ui);
     }
 
     // Wait until all user interface elements for all screens are ready
@@ -138,34 +329,57 @@ void DesktopShell::create()
         QCoreApplication::processEvents();
 
     // Shell user interface is ready, tell the compositor to fade in
-    ready();
+    d->shell->desktop_ready();
+    qDebug() << "Shell is now ready and took" << d->elapsedTimer.elapsed() << "ms";
 }
 
-void DesktopShell::ready()
+QQmlEngine *DesktopShell::engine() const
 {
-    WaylandIntegration *integration = WaylandIntegration::instance();
-    hawaii_desktop_shell_desktop_ready(integration->shell);
-    qDebug() << "Shell is now ready and took" << m_elapsedTimer.elapsed() << "ms";
+    Q_D(const DesktopShell);
+    return d->engine;
 }
 
 QObject *DesktopShell::service(const QString &name)
 {
+    Q_D(DesktopShell);
+
     // Get an already created service
-    QObject *service = m_services.value(name);
+    QObject *service = d->services.value(name);
     if (service)
         return service;
 
     // If we can't find it just create it
     service = ServiceFactory::createService(name);
-    m_services[name] = service;
+    d->services[name] = service;
     return service;
 }
 
 KeyBinding *DesktopShell::addKeyBinding(quint32 key, quint32 modifiers)
 {
+    Q_D(DesktopShell);
+
     KeyBinding *keyBinding = new KeyBinding(key, modifiers, this);
-    m_keyBindings.append(keyBinding);
+    keyBinding->d_ptr->init(d->shell->add_key_binding(key, modifiers));
+    d->keyBindings.append(keyBinding);
     return keyBinding;
+}
+
+void DesktopShell::setAvailableGeometry(QScreen *screen, const QRect &geometry)
+{
+    Q_D(DesktopShell);
+
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+    wl_output *output = static_cast<struct wl_output *>(
+                native->nativeResourceForScreen("output", screen));
+    d->shell->set_available_geometry(output,
+                                     geometry.x(), geometry.y(),
+                                     geometry.width(), geometry.height());
+}
+
+QList<ShellUi *> DesktopShell::shellWindows() const
+{
+    Q_D(const DesktopShell);
+    return d->shellWindows;
 }
 
 QQmlListProperty<Window> DesktopShell::windows()
@@ -180,73 +394,68 @@ QQmlListProperty<Workspace> DesktopShell::workspaces()
 
 void DesktopShell::minimizeWindows()
 {
-    WaylandIntegration *integration = WaylandIntegration::instance();
-    hawaii_desktop_shell_minimize_windows(integration->shell);
+    Q_D(DesktopShell);
+    d->shell->minimize_windows();
 }
 
 void DesktopShell::restoreWindows()
 {
-    WaylandIntegration *integration = WaylandIntegration::instance();
-    hawaii_desktop_shell_restore_windows(integration->shell);
+    Q_D(DesktopShell);
+    d->shell->restore_windows();
 }
 
 void DesktopShell::addWorkspace()
 {
-    WaylandIntegration *integration = WaylandIntegration::instance();
-    hawaii_desktop_shell_add_workspace(integration->shell);
+    Q_D(DesktopShell);
+    d->shell->add_workspace();
 }
 
 void DesktopShell::removeWorkspace(int num)
 {
-    Workspace *workspace = m_workspaces.takeAt(num);
+    Q_D(DesktopShell);
+
+    Workspace *workspace = d->workspaces.takeAt(num);
     if (workspace) {
         Q_EMIT workspaceRemoved(num);
         delete workspace;
     }
 }
 
-void DesktopShell::appendWindow(Window *window)
+void DesktopShell::selectWorkspace(Workspace *workspace)
 {
-    m_windows.append(window);
-    connect(window, SIGNAL(unmapped(Window*)),
-            this, SLOT(windowUnmapped(Window*)));
-    Q_EMIT windowsChanged();
-}
-
-void DesktopShell::appendWorkspace(Workspace *workspace)
-{
-    m_workspaces.append(workspace);
-    Q_EMIT workspaceAdded(m_workspaces.indexOf(workspace));
-    Q_EMIT workspacesChanged();
+    Q_D(DesktopShell);
+    d->shell->select_workspace(workspace->d_ptr->object());
 }
 
 int DesktopShell::windowsCount(QQmlListProperty<Window> *p)
 {
     DesktopShell *shell = static_cast<DesktopShell *>(p->object);
-    return shell->m_windows.size();
+    return shell->d_ptr->windows.size();
 }
 
 Window *DesktopShell::windowAt(QQmlListProperty<Window> *p, int index)
 {
     DesktopShell *shell = static_cast<DesktopShell *>(p->object);
-    return shell->m_windows.at(index);
+    return shell->d_ptr->windows.at(index);
 }
 
 int DesktopShell::workspacesCount(QQmlListProperty<Workspace> *p)
 {
     DesktopShell *shell = static_cast<DesktopShell *>(p->object);
-    return shell->m_workspaces.size();
+    return shell->d_ptr->workspaces.size();
 }
 
 Workspace *DesktopShell::workspaceAt(QQmlListProperty<Workspace> *p, int index)
 {
     DesktopShell *shell = static_cast<DesktopShell *>(p->object);
-    return shell->m_workspaces.at(index);
+    return shell->d_ptr->workspaces.at(index);
 }
 
 void DesktopShell::windowUnmapped(Window *window)
 {
-    m_windows.removeOne(window);
+    Q_D(DesktopShell);
+
+    d->windows.removeOne(window);
     Q_EMIT windowsChanged();
 }
 

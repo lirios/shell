@@ -26,32 +26,27 @@
 
 #include "keybinding.h"
 #include "keybinding_p.h"
-#include "utils.h"
-#include "waylandintegration.h"
 
 /*
  * KeyBindingPrivate
  */
 
 KeyBindingPrivate::KeyBindingPrivate()
+    : QtWayland::hawaii_key_binding()
+    , q_ptr(0)
 {
 }
 
 KeyBindingPrivate::~KeyBindingPrivate()
 {
-    hawaii_key_binding_destroy(binding);
+    hawaii_key_binding_destroy(object());
 }
 
-void KeyBindingPrivate::handleTriggered(hawaii_key_binding *binding)
+void KeyBindingPrivate::hawaii_key_binding_triggered()
 {
     Q_Q(KeyBinding);
-    Q_UNUSED(binding);
     Q_EMIT q->triggered();
 }
-
-const hawaii_key_binding_listener KeyBindingPrivate::listener = {
-    wrapInterface(&KeyBindingPrivate::handleTriggered)
-};
 
 /*
  * KeyBinding
@@ -61,14 +56,10 @@ KeyBinding::KeyBinding(quint32 key, quint32 modifiers, QObject *parent)
     : QObject(parent)
     , d_ptr(new KeyBindingPrivate())
 {
-    WaylandIntegration *object = WaylandIntegration::instance();
-
     Q_D(KeyBinding);
     d->q_ptr = this;
     d->key = key;
     d->modifiers = modifiers;
-    d->binding = hawaii_desktop_shell_add_key_binding(object->shell, key, modifiers);
-    hawaii_key_binding_add_listener(d->binding, &d->listener, d);
 }
 
 KeyBinding::~KeyBinding()
