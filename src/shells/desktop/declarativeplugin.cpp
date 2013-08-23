@@ -41,9 +41,12 @@
 #include "shellwindow.h"
 #include "notificationwindow.h"
 #include "overlaywindow.h"
+#include "servicefactory.h"
+#include "volumecontrol.h"
 
 void registerQmlTypes()
 {
+    // @uri Hawaii.Shell.Desktop
     const char *uri = "Hawaii.Shell.Desktop";
 
     // Types
@@ -65,4 +68,7 @@ void registerQmlTypes()
     // Enums
     qmlRegisterUncreatableType<UserStatus>(uri, 0, 1, "UserStatus",
                                            QStringLiteral("Cannot create UserStatus"));
+
+    // Register service factories
+    ServiceFactory::registerFactory<VolumeControl>();
 }

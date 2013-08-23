@@ -59,6 +59,7 @@
         <!-- Overlays -->
         <file>qml/Overlay.qml</file>
         <file>qml/OverlayStyle.qml</file>
+        <file>qml/VolumeOverlay.qml</file>
 
         <!-- Images -->
         <file>images/noise.png</file>

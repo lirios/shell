@@ -1,3 +1,5 @@
+find_package(ALSA)
+
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${POLKITQT-1_INCLUDE_DIR}
@@ -37,6 +39,7 @@ set(SOURCES
     shellwindow.cpp
     systemdpowerbackend.cpp
     upowerpowerbackend.cpp
+    volumecontrol.cpp
     waylandintegration.cpp
     window.cpp
     workspace.cpp
@@ -68,6 +71,7 @@ target_link_libraries(hawaii-desktop-shell
     ${WaylandClient_LIBRARIES}
     ${POLKITQT-1_CORE_LIBRARY}
     ${POLKITQT-1_AGENT_LIBRARY}
+    ${ALSA_LIBRARIES}
 )
 
 install(TARGETS hawaii-desktop-shell DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
