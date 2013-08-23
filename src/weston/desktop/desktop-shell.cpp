@@ -52,14 +52,6 @@
 #include "workspace.h"
 #include "minimizeeffect.h"
 
-// TODO: Remove when this gets merged: http://lists.freedesktop.org/archives/wayland-devel/2013-August/010683.html
-#ifndef WESTON_VERSION_NUMBER
-#  define WESTON_VERSION_NUMBER ((WESTON_VERSION_MAJOR << 16) | (WESTON_VERSION_MINOR << 8) | WESTON_VERSION_MICRO)
-#endif
-#ifndef WESTON_VERSION_CHECK
-#  define WESTON_VERSION_CHECK(major, minor, micro) ((major<<16)|(minor<<8)|(micro))
-#endif
-
 DesktopShell::DesktopShell(struct weston_compositor *ec)
             : Shell(ec)
             , m_screenSaverBinding(nullptr)
@@ -106,9 +98,7 @@ void DesktopShell::init()
     new GridDesktops(this);
     new FadeMovingEffect(this);
     new ZoomEffect(this);
-#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 2, 1))
     new InOutSurfaceEffect(this);
-#endif
     new MinimizeEffect(this);
 
     m_inputPanel = new InputPanel(compositor()->wl_display);
