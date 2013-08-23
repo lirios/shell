@@ -52,19 +52,23 @@ void registerQmlTypes()
     // @uri Hawaii.Shell.Desktop
     const char *uri = "Hawaii.Shell.Desktop";
 
-    // Types
-    qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
-    qmlRegisterType<PowerManager>(uri, 0, 1, "PowerManager");
-    qmlRegisterType<SessionManager>(uri, 0, 1, "SessionManager");
+    // Window types
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
     qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
     qmlRegisterType<OverlayWindow>(uri, 0, 1, "OverlayWindow");
+
+    // Services
+    qmlRegisterType<PowerManager>(uri, 0, 1, "PowerManager");
+    qmlRegisterType<SessionManager>(uri, 0, 1, "SessionManager");
+
+    // Settings
+    qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
+    qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
 
     // Launcher stuff
     qmlRegisterType<AppCategories>(uri, 0, 1, "XdgCategoriesModel");
     qmlRegisterType<ApplicationsModel>(uri, 0, 1, "ApplicationsModel");
     qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
-    qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
     qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
     qmlRegisterUncreatableType<QApplicationInfo>(uri, 0, 1, "ApplicationInfo",

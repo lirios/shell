@@ -6,43 +6,51 @@ include_directories(
     ${WaylandClient_INCLUDE_DIRS}
     ${ALSA_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}/headers
+    ${CMAKE_CURRENT_SOURCE_DIR}/daemons
+    ${CMAKE_CURRENT_SOURCE_DIR}/launcher
+    ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
+    ${CMAKE_CURRENT_SOURCE_DIR}/services
+    ${CMAKE_CURRENT_SOURCE_DIR}/services/powermanager
+    ${CMAKE_CURRENT_SOURCE_DIR}/services/volumecontrol
+    ${CMAKE_CURRENT_SOURCE_DIR}/services/sessionmanager
+    ${CMAKE_CURRENT_SOURCE_DIR}/settings
 )
 
 set(SOURCES
     appcategories.cpp
     applicationiconprovider.cpp
     applicationsmodel.cpp
-    backgroundsettings.cpp
-    backgroundwindow.cpp
     desktopshell.cpp
     enums.cpp
-    grabwindow.cpp
     keybinding.cpp
-    launcheritem.cpp
-    launchermodel.cpp
-    launchersettings.cpp
-    launcherwindow.cpp
-    lockscreenwindow.cpp
     main.cpp
-    notificationsdaemon.cpp
-    notificationsimage.cpp
-    notificationwindow.cpp
-    overlaywindow.cpp
-    panelwindow.cpp
-    policykitagent.cpp
-    powermanagerbackend.cpp
-    powermanager.cpp
     registration.cpp
-    servicefactory.cpp
-    sessionmanager.cpp
     shellui.cpp
-    shellwindow.cpp
-    systemdpowerbackend.cpp
-    upowerpowerbackend.cpp
-    volumecontrol.cpp
     waylandintegration.cpp
     window.cpp
     workspace.cpp
+    daemons/notificationsdaemon.cpp
+    daemons/notificationsimage.cpp
+    daemons/policykitagent.cpp
+    launcher/launcheritem.cpp
+    launcher/launchermodel.cpp
+    services/servicefactory.cpp
+    services/powermanager/powermanagerbackend.cpp
+    services/powermanager/powermanager.cpp
+    services/powermanager/systemdpowerbackend.cpp
+    services/powermanager/upowerpowerbackend.cpp
+    services/volumecontrol/volumecontrol.cpp
+    services/sessionmanager/sessionmanager.cpp
+    settings/backgroundsettings.cpp
+    settings/launchersettings.cpp
+    windowtypes/backgroundwindow.cpp
+    windowtypes/grabwindow.cpp
+    windowtypes/launcherwindow.cpp
+    windowtypes/lockscreenwindow.cpp
+    windowtypes/notificationwindow.cpp
+    windowtypes/overlaywindow.cpp
+    windowtypes/panelwindow.cpp
+    windowtypes/shellwindow.cpp
 )
 
 wayland_add_protocol_client(SOURCES
