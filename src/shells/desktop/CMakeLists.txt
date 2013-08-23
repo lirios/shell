@@ -14,7 +14,6 @@ set(SOURCES
     applicationsmodel.cpp
     backgroundsettings.cpp
     backgroundwindow.cpp
-    declarativeplugin.cpp
     desktopshell.cpp
     enums.cpp
     grabwindow.cpp
@@ -33,6 +32,7 @@ set(SOURCES
     policykitagent.cpp
     powermanagerbackend.cpp
     powermanager.cpp
+    registration.cpp
     servicefactory.cpp
     sessionmanager.cpp
     shellui.cpp

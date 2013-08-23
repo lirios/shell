@@ -28,5 +28,6 @@
 #define DECLARATIVEPLUGIN_H
 
 void registerQmlTypes();
+void registerFactories();
 
 #endif // DECLARATIVEPLUGIN_H

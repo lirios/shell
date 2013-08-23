@@ -29,12 +29,13 @@
 #include <QtGui/QScreen>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlComponent>
+#include <QtQml/QQmlContext>
 
 #include <qpa/qplatformnativeinterface.h>
 
 #include "applicationiconprovider.h"
 #include "cmakedirs.h"
-#include "declarativeplugin.h"
+#include "registration.h"
 #include "desktopshell.h"
 #include "notificationwindow.h"
 #include "waylandintegration.h"
@@ -58,12 +59,14 @@ DesktopShell::DesktopShell()
 
     // Create QML engine
     m_engine = new QQmlEngine(this);
+    m_engine->rootContext()->setContextProperty("Shell", this);
 
     // Register image provider
     m_engine->addImageProvider("appicon", new ApplicationIconProvider);
 
-    // Register QML types
+    // Register QML types and factories
     registerQmlTypes();
+    registerFactories();
 
     // Platform native interface
     QPlatformNativeInterface *native =
@@ -158,12 +161,21 @@ QObject *DesktopShell::service(const QString &name)
     return service;
 }
 
-void DesktopShell::appendWindow(Window *window)
+KeyBinding *DesktopShell::addKeyBinding(quint32 key, quint32 modifiers)
 {
-    m_windows.append(window);
-    connect(window, SIGNAL(unmapped(Window*)),
-            this, SLOT(windowUnmapped(Window*)));
-    Q_EMIT windowsChanged();
+    KeyBinding *keyBinding = new KeyBinding(key, modifiers, this);
+    m_keyBindings.append(keyBinding);
+    return keyBinding;
+}
+
+QQmlListProperty<Window> DesktopShell::windows()
+{
+    return QQmlListProperty<Window>(this, 0, windowsCount, windowAt);
+}
+
+QQmlListProperty<Workspace> DesktopShell::workspaces()
+{
+    return QQmlListProperty<Workspace>(this, 0, workspacesCount, workspaceAt);
 }
 
 void DesktopShell::minimizeWindows()
@@ -193,17 +205,43 @@ void DesktopShell::removeWorkspace(int num)
     }
 }
 
+void DesktopShell::appendWindow(Window *window)
+{
+    m_windows.append(window);
+    connect(window, SIGNAL(unmapped(Window*)),
+            this, SLOT(windowUnmapped(Window*)));
+    Q_EMIT windowsChanged();
+}
+
 void DesktopShell::appendWorkspace(Workspace *workspace)
 {
     m_workspaces.append(workspace);
     Q_EMIT workspaceAdded(m_workspaces.indexOf(workspace));
+    Q_EMIT workspacesChanged();
 }
 
-KeyBinding *DesktopShell::addKeyBinding(quint32 key, quint32 modifiers)
+int DesktopShell::windowsCount(QQmlListProperty<Window> *p)
 {
-    KeyBinding *keyBinding = new KeyBinding(key, modifiers, this);
-    m_keyBindings.append(keyBinding);
-    return keyBinding;
+    DesktopShell *shell = static_cast<DesktopShell *>(p->object);
+    return shell->m_windows.size();
+}
+
+Window *DesktopShell::windowAt(QQmlListProperty<Window> *p, int index)
+{
+    DesktopShell *shell = static_cast<DesktopShell *>(p->object);
+    return shell->m_windows.at(index);
+}
+
+int DesktopShell::workspacesCount(QQmlListProperty<Workspace> *p)
+{
+    DesktopShell *shell = static_cast<DesktopShell *>(p->object);
+    return shell->m_workspaces.size();
+}
+
+Workspace *DesktopShell::workspaceAt(QQmlListProperty<Workspace> *p, int index)
+{
+    DesktopShell *shell = static_cast<DesktopShell *>(p->object);
+    return shell->m_workspaces.at(index);
 }
 
 void DesktopShell::windowUnmapped(Window *window)

@@ -30,6 +30,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QHash>
+#include <QtQml/QQmlListProperty>
 
 class QQmlEngine;
 
@@ -41,27 +42,38 @@ class KeyBinding;
 class DesktopShell : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QQmlListProperty<Window> windows READ windows NOTIFY windowsChanged)
+    Q_PROPERTY(QQmlListProperty<Workspace> workspaces READ workspaces NOTIFY workspacesChanged)
 public:
     DesktopShell();
     ~DesktopShell();
 
     static DesktopShell *instance();
 
-    QObject *service(const QString &name);
-
-    QQmlEngine *engine() const {
+    inline QQmlEngine *engine() const {
         return m_engine;
     }
+
+    Q_INVOKABLE QObject *service(const QString &name);
+
+    Q_INVOKABLE KeyBinding *addKeyBinding(quint32 key, quint32 modifiers);
 
     inline QList<ShellUi *> shellWindows() const {
         return m_shellWindows;
     }
 
-    inline QList<Window *> windows() const {
-        return m_windows;
-    }
+    QQmlListProperty<Window> windows();
+    QQmlListProperty<Workspace> workspaces();
 
-    void appendWindow(Window *window);
+Q_SIGNALS:
+    void windowsChanged();
+    void workspaceAdded(int num);
+    void workspaceRemoved(int num);
+    void workspacesChanged();
+
+public Q_SLOTS:
+    void create();
+    void ready();
 
     void minimizeWindows();
     void restoreWindows();
@@ -69,20 +81,9 @@ public:
     void addWorkspace();
     void removeWorkspace(int num);
 
-    void appendWorkspace(Workspace *workspace);
-
-    KeyBinding *addKeyBinding(quint32 key, quint32 modifiers);
-
-Q_SIGNALS:
-    void windowsChanged();
-    void workspaceAdded(int num);
-    void workspaceRemoved(int num);
-
-public Q_SLOTS:
-    void create();
-    void ready();
-
 private:
+    friend class WaylandIntegration;
+
     struct wl_display *m_display;
     int m_fd;
     struct wl_registry *m_registry;
@@ -93,6 +94,15 @@ private:
     QList<Window *> m_windows;
     QList<Workspace *> m_workspaces;
     QList<KeyBinding *> m_keyBindings;
+
+    void appendWindow(Window *window);
+    void appendWorkspace(Workspace *workspace);
+
+    static int windowsCount(QQmlListProperty<Window> *p);
+    static Window *windowAt(QQmlListProperty<Window> *p, int index);
+
+    static int workspacesCount(QQmlListProperty<Workspace> *p);
+    static Workspace *workspaceAt(QQmlListProperty<Workspace> *p, int index);
 
 private Q_SLOTS:
     void windowUnmapped(Window *window);

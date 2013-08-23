@@ -28,21 +28,24 @@
 
 #include <QtXdg/QApplicationInfo>
 
-#include "declarativeplugin.h"
-#include "enums.h"
 #include "appcategories.h"
 #include "applicationsmodel.h"
-#include "launchermodel.h"
-#include "launcheritem.h"
-#include "launchersettings.h"
 #include "backgroundsettings.h"
-#include "powermanager.h"
-#include "sessionmanager.h"
-#include "shellwindow.h"
+#include "enums.h"
+#include "registration.h"
+#include "keybinding.h"
+#include "launcheritem.h"
+#include "launchermodel.h"
+#include "launchersettings.h"
 #include "notificationwindow.h"
 #include "overlaywindow.h"
+#include "powermanager.h"
 #include "servicefactory.h"
+#include "sessionmanager.h"
+#include "shellwindow.h"
 #include "volumecontrol.h"
+#include "window.h"
+#include "workspace.h"
 
 void registerQmlTypes()
 {
@@ -50,14 +53,6 @@ void registerQmlTypes()
     const char *uri = "Hawaii.Shell.Desktop";
 
     // Types
-    qmlRegisterType<AppCategories>(uri, 0, 1, "XdgCategoriesModel");
-    qmlRegisterType<ApplicationsModel>(uri, 0, 1, "ApplicationsModel");
-    qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
-    qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
-                                             QStringLiteral("Cannot create LauncherItem"));
-    qmlRegisterUncreatableType<QApplicationInfo>(uri, 0, 1, "ApplicationInfo",
-                                             QStringLiteral("Cannot create ApplicationInfo"));
-    qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
     qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
     qmlRegisterType<PowerManager>(uri, 0, 1, "PowerManager");
     qmlRegisterType<SessionManager>(uri, 0, 1, "SessionManager");
@@ -65,10 +60,30 @@ void registerQmlTypes()
     qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
     qmlRegisterType<OverlayWindow>(uri, 0, 1, "OverlayWindow");
 
+    // Launcher stuff
+    qmlRegisterType<AppCategories>(uri, 0, 1, "XdgCategoriesModel");
+    qmlRegisterType<ApplicationsModel>(uri, 0, 1, "ApplicationsModel");
+    qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
+    qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
+    qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
+                                             QStringLiteral("Cannot create LauncherItem"));
+    qmlRegisterUncreatableType<QApplicationInfo>(uri, 0, 1, "ApplicationInfo",
+                                             QStringLiteral("Cannot create ApplicationInfo"));
+
+    // Shell types
+    qmlRegisterType<KeyBinding>();
+    qmlRegisterUncreatableType<Window>(uri, 0, 1, "Window",
+                                       QStringLiteral("Cannot create Window"));
+    qmlRegisterUncreatableType<Workspace>(uri, 0, 1, "Workspace",
+                                          QStringLiteral("Workspace"));
+
     // Enums
     qmlRegisterUncreatableType<UserStatus>(uri, 0, 1, "UserStatus",
                                            QStringLiteral("Cannot create UserStatus"));
+}
 
+void registerFactories()
+{
     // Register service factories
     ServiceFactory::registerFactory<VolumeControl>();
 }
