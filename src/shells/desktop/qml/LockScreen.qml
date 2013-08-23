@@ -32,9 +32,7 @@ import FluidUi 0.2 as FluidUi
 import Hawaii.Shell.Desktop 0.1
 
 Item {
-    SessionManager {
-        id: sessionManager
-    }
+    property variant sessionManager: Shell.service("SessionManager")
 
     Timer {
         interval: 1000

@@ -57,10 +57,6 @@ void registerQmlTypes()
     qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
     qmlRegisterType<OverlayWindow>(uri, 0, 1, "OverlayWindow");
 
-    // Services
-    qmlRegisterType<PowerManager>(uri, 0, 1, "PowerManager");
-    qmlRegisterType<SessionManager>(uri, 0, 1, "SessionManager");
-
     // Settings
     qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
     qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
@@ -89,5 +85,10 @@ void registerQmlTypes()
 void registerFactories()
 {
     // Register service factories
+    qmlRegisterUncreatableType<PowerManager>("Hawaii.Shell.Desktop", 0, 1,
+                                             "PowerManager",
+                                             QStringLiteral("Cannot create PowerManager"));
+    ServiceFactory::registerFactory<PowerManager>();
+    ServiceFactory::registerFactory<SessionManager>();
     ServiceFactory::registerFactory<VolumeControl>();
 }

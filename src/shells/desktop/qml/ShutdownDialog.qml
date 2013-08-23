@@ -41,7 +41,7 @@ Dialog {
 
     property int timeRemaining: 60
 
-    property var powerManager: PowerManager {}
+    property variant powerManager: Shell.service("PowerManager")
 
     property var palette: SystemPalette {}
 

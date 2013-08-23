@@ -35,7 +35,7 @@ PanelIndicator {
 
     property var shutdownDialog
 
-    property var sessionManager: SessionManager {}
+    property variant sessionManager: Shell.service("SessionManager")
 
     iconName: userStatusIcon(userStatus)
     label: userAccount.displayName
