@@ -85,6 +85,9 @@ export XDG_DATA_DIRS
 # XDG scripts and OnlyShowIn= implementation
 export XDG_CURRENT_DESKTOP=Hawaii
 
+# QtQuick Controls style
+export QT_QUICK_CONTROLS_STYLE=Aluminium
+
 # Launch a session bus instance
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && type dbus-launch >/dev/null; then
     eval `dbus-launch --auto-syntax --exit-with-session`
