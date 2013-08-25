@@ -458,12 +458,9 @@ void DesktopShell::setPosition(struct wl_client *client, struct wl_resource *res
         return;
     }
 
-#if 0
-    // When we hide a special surface we unmap and unlink it, so the next
-    // time set_position() is called we need to insert it into the
-    // panel layer again
+    // Make sure the surface is in the panels layer
     bool found = false;
-    for (struct weston_surface *current: m_panelsLayer) {
+    for (weston_surface *current: m_panelsLayer) {
         if (current == surface) {
             found = true;
             break;
@@ -471,21 +468,6 @@ void DesktopShell::setPosition(struct wl_client *client, struct wl_resource *res
     }
     if (!found)
         m_panelsLayer.addSurface(surface);
-
-#if 0
-    // Give focus to the special surface
-    if (!shell->locked) {
-        struct weston_seat *seat;
-
-        wl_list_for_each(seat, &compositor->seat_list, link)
-                weston_surface_activate(surface, seat);
-    }
-#else
-    struct weston_seat *seat;
-    wl_list_for_each(seat, &m_compositor->seat_list, link)
-            weston_surface_activate(surface, seat);
-#endif
-    #endif
 
     // Set given position
     weston_surface_set_position(surface, x, y);
