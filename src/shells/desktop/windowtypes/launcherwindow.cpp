@@ -61,10 +61,12 @@ LauncherWindow::LauncherWindow(ShellUi *ui)
     setResizeMode(QQuickView::SizeRootObjectToView);
     resetGeometry();
 
-    // React to screen size changes and alignment changes
+    // React to screen size changes, icon size and alignment changes
     connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
             this, SLOT(geometryChanged(QRect)));
     connect(m_settings, SIGNAL(alignmentChanged(LauncherSettings::Alignment)),
+            this, SLOT(resetGeometry()));
+    connect(rootObject(), SIGNAL(sizeChanged()),
             this, SLOT(resetGeometry()));
 
     // Make this window accessible from QML

@@ -30,9 +30,10 @@ import Hawaii.Shell.Desktop 0.1
 
 StyledItem {
     id: launcherContainer
+    style: Qt.createComponent("LauncherStyle.qml", launcherContainer)
 
     // Tile size
-    property real tileSize: launcherView.tileSize
+    property alias tileSize: launcherView.tileSize
 
     // Alignment and orientation
     property alias alignment: launcherView.alignment
@@ -46,8 +47,6 @@ StyledItem {
 
     // Propagate window pointer to the view
     property alias window: launcherView.window
-
-    style: Qt.createComponent("LauncherStyle.qml", launcherContainer)
 
     LauncherView {
         id: launcherView

@@ -32,18 +32,7 @@ Item {
     id: launcher
 
     // Icon size
-    property int iconSize: {
-        switch (settings.iconSize) {
-        case LauncherSettings.SmallIconSize:
-            return 32;
-        case LauncherSettings.MediumIconSize:
-            return 48;
-        case LauncherSettings.LargeIconSize:
-            return 64;
-        case LauncherSettings.HugeIconSize:
-            return 96;
-        }
-    }
+    property int iconSize: enumIconSizeToActualSize(settings.iconSize)
 
     // Tile size
     property int tileSize: iconSize + (iconSize / 4)
@@ -90,7 +79,10 @@ Item {
 
     LauncherSettings {
         id: settings
-        onAlignmentChanged: moveAppChooser()
+        onIconSizeChanged: {
+            launcher.iconSize = enumIconSizeToActualSize(settings.iconSize);
+            launcher.tileSize = launcher.iconSize + (launcher.iconSize / 4);
+        }
     }
 
     // Launcher view delegate
@@ -371,6 +363,19 @@ Item {
             appChooser.x = window.x;
             appChooser.y = window.y - appChooser.height;
             break;
+        }
+    }
+
+    function enumIconSizeToActualSize(value) {
+        switch (value) {
+        case LauncherSettings.SmallIconSize:
+            return 32;
+        case LauncherSettings.MediumIconSize:
+            return 48;
+        case LauncherSettings.LargeIconSize:
+            return 64;
+        case LauncherSettings.HugeIconSize:
+            return 96;
         }
     }
 }
