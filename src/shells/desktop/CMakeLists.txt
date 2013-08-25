@@ -26,6 +26,7 @@ set(SOURCES
     main.cpp
     registration.cpp
     shellui.cpp
+    shortcut.cpp
     window.cpp
     workspace.cpp
     daemons/notificationsdaemon.cpp

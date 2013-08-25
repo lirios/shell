@@ -43,6 +43,7 @@
 #include "servicefactory.h"
 #include "sessionmanager.h"
 #include "shellwindow.h"
+#include "shortcut.h"
 #include "volumecontrol.h"
 #include "window.h"
 #include "workspace.h"
@@ -72,6 +73,7 @@ void registerQmlTypes()
 
     // Shell types
     qmlRegisterType<KeyBinding>();
+    qmlRegisterType<Shortcut>(uri, 0, 1, "Shortcut");
     qmlRegisterUncreatableType<Window>(uri, 0, 1, "Window",
                                        QStringLiteral("Cannot create Window"));
     qmlRegisterUncreatableType<Workspace>(uri, 0, 1, "Workspace",
