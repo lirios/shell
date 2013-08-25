@@ -164,10 +164,10 @@ Item {
                     scale: 1.0
 
                     Behavior on width {
-                        NumberAnimation { easing.type: Easing.Linear; duration: 550 }
+                        NumberAnimation { easing.type: Easing.Linear; duration: 250 }
                     }
                     Behavior on height {
-                        NumberAnimation { easing.type: Easing.Linear; duration: 550 }
+                        NumberAnimation { easing.type: Easing.Linear; duration: 250 }
                     }
                 }
 
