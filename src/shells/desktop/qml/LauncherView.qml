@@ -376,6 +376,8 @@ Item {
             return 64;
         case LauncherSettings.HugeIconSize:
             return 96;
+        default:
+            return 48;
         }
     }
 }
