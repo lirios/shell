@@ -333,6 +333,11 @@ Item {
                 onVisibleChanged: checked = appChooser.visible
             }
 
+            Shortcut {
+                key: Qt.Key_Meta
+                onTriggered: checked = !checked
+            }
+
             width: tileSize
             height: tileSize
             onCheckedChanged: appChooser.visible = checked
