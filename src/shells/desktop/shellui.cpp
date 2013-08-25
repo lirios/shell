@@ -57,12 +57,15 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
 
     // Create Background window
     m_backgroundWindow = new BackgroundWindow(this);
+    m_backgroundWindow->show();
 
     // Create Panel window
     m_panelWindow = new PanelWindow(this);
+    m_panelWindow->show();
 
     // Create Launcher window
     m_launcherWindow = new LauncherWindow(this);
+    m_launcherWindow->show();
 
     // React to screen size changes
     connect(screen, SIGNAL(geometryChanged(QRect)),

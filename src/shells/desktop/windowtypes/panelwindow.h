@@ -29,7 +29,7 @@
 
 #include <QtQuick/QQuickView>
 
-#include <wayland-client.h>
+struct wl_surface;
 
 class ShellUi;
 
@@ -41,9 +41,6 @@ public:
 
     wl_surface *surface() const;
 
-public Q_SLOTS:
-    void sendGeometry();
-
 private Q_SLOTS:
     void geometryChanged(const QRect &rect);
     void availableGeometryChanged(const QRect &rect);
@@ -53,6 +50,7 @@ private:
     wl_surface *m_surface;
 
     void setWindowType();
+    void setSurfacePosition();
 };
 
 #endif // PANELWINDOW_H

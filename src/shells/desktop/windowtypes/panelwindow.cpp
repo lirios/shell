@@ -74,19 +74,6 @@ wl_surface *PanelWindow::surface() const
     return m_surface;
 }
 
-void PanelWindow::sendGeometry()
-{
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
-
-    wl_output *output = static_cast<struct wl_output *>(
-                native->nativeResourceForScreen("output", screen()));
-
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
-    shell->set_panel_geometry(output, m_surface,
-                              geometry().x(), geometry().y(),
-                              geometry().width(), geometry().height());
-}
-
 void PanelWindow::geometryChanged(const QRect &rect)
 {
     qDebug() << "Resizing Panel because screen"
@@ -107,6 +94,7 @@ void PanelWindow::resetGeometry()
     int size = rootObject()->property("size").toInt();
 
     setGeometry(QRect(rect.left(), rect.top(), rect.width(), size));
+    setSurfacePosition();
 }
 
 void PanelWindow::setWindowType()
@@ -121,6 +109,12 @@ void PanelWindow::setWindowType()
 
     DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
     shell->set_panel(output, m_surface);
+}
+
+void PanelWindow::setSurfacePosition()
+{
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_position(m_surface, geometry().x(), geometry().y());
 }
 
 #include "moc_panelwindow.cpp"

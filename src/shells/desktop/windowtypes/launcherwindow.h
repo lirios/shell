@@ -29,9 +29,9 @@
 
 #include <QtQuick/QQuickView>
 
-#include <wayland-client.h>
-
 #include "launchersettings.h"
+
+struct wl_surface;
 
 class ShellUi;
 
@@ -46,9 +46,6 @@ public:
 
     LauncherSettings *settings() const;
 
-public Q_SLOTS:
-    void sendGeometry();
-
 private Q_SLOTS:
     void geometryChanged(const QRect &rect);
     void resetGeometry();
@@ -58,6 +55,7 @@ private:
     LauncherSettings *m_settings;
 
     void setWindowType();
+    void setSurfacePosition();
 };
 
 #endif // LAUNCHERWINDOW_H

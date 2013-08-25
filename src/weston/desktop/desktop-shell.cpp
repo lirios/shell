@@ -382,7 +382,6 @@ void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *r
     }
 
     setBackgroundSurface(surface, static_cast<weston_output *>(output_resource->data));
-    hawaii_desktop_shell_send_present(resource, surface_resource);
 }
 
 void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
@@ -398,18 +397,6 @@ void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resour
     }
 
     addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
-    hawaii_desktop_shell_send_present(resource, surface_resource);
-}
-
-void DesktopShell::setPanelGeometry(struct wl_client *client, struct wl_resource *resource,
-                                    struct wl_resource *output_resource,
-                                    struct wl_resource *surface_resource,
-                                    int32_t x, int32_t y, int32_t width, int32_t height)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    weston_log("Set Panel position to %d,%d\n", x, y);
-    weston_surface_set_position(surface, x, y);
 }
 
 void DesktopShell::setLauncher(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
@@ -425,18 +412,6 @@ void DesktopShell::setLauncher(struct wl_client *client, struct wl_resource *res
     }
 
     addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
-    hawaii_desktop_shell_send_present(resource, surface_resource);
-}
-
-void DesktopShell::setLauncherGeometry(struct wl_client *client, struct wl_resource *resource,
-                                       struct wl_resource *output_resource,
-                                       struct wl_resource *surface_resource,
-                                       int32_t x, int32_t y, int32_t width, int32_t height)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    weston_log("Set Launcher position to %d,%d\n", x, y);
-    weston_surface_set_position(surface, x, y);
 }
 
 void DesktopShell::setSpecial(struct wl_client *client, struct wl_resource *resource,
@@ -483,6 +458,7 @@ void DesktopShell::setPosition(struct wl_client *client, struct wl_resource *res
         return;
     }
 
+#if 0
     // When we hide a special surface we unmap and unlink it, so the next
     // time set_position() is called we need to insert it into the
     // panel layer again
@@ -509,6 +485,7 @@ void DesktopShell::setPosition(struct wl_client *client, struct wl_resource *res
     wl_list_for_each(seat, &m_compositor->seat_list, link)
             weston_surface_activate(surface, seat);
 #endif
+    #endif
 
     // Set given position
     weston_surface_set_position(surface, x, y);
@@ -714,9 +691,7 @@ const struct hawaii_desktop_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::setAvailableGeometry),
     wrapInterface(&DesktopShell::setBackground),
     wrapInterface(&DesktopShell::setPanel),
-    wrapInterface(&DesktopShell::setPanelGeometry),
     wrapInterface(&DesktopShell::setLauncher),
-    wrapInterface(&DesktopShell::setLauncherGeometry),
     wrapInterface(&DesktopShell::setSpecial),
     wrapInterface(&DesktopShell::setOverlay),
     wrapInterface(&DesktopShell::setPosition),

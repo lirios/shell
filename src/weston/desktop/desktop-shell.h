@@ -99,18 +99,10 @@ private:
 
     void setPanel(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                   struct wl_resource *surface_resource);
-    void setPanelGeometry(struct wl_client *client, struct wl_resource *resource,
-                          struct wl_resource *output_resource,
-                          struct wl_resource *surface_resource,
-                          int32_t x, int32_t y, int32_t width, int32_t height);
 
     void setLauncher(struct wl_client *client, struct wl_resource *resource,
                      struct wl_resource *output_resource,
                      struct wl_resource *surface_resource);
-    void setLauncherGeometry(struct wl_client *client, struct wl_resource *resource,
-                             struct wl_resource *output_resource,
-                             struct wl_resource *surface_resource,
-                             int32_t x, int32_t y, int32_t width, int32_t height);
 
     void setSpecial(struct wl_client *client, struct wl_resource *resource,
                     struct wl_resource *output_resource,

@@ -93,19 +93,6 @@ LauncherSettings *LauncherWindow::settings() const
     return m_settings;
 }
 
-void LauncherWindow::sendGeometry()
-{
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
-
-    wl_output *output = static_cast<struct wl_output *>(
-                native->nativeResourceForScreen("output", screen()));
-
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
-    shell->set_launcher_geometry(output, m_surface,
-                                 geometry().x(), geometry().y(),
-                                 geometry().width(), geometry().height());
-}
-
 void LauncherWindow::geometryChanged(const QRect &rect)
 {
     qDebug() << "Resizing Launcher because screen"
@@ -136,6 +123,7 @@ void LauncherWindow::resetGeometry()
     }
 
     setGeometry(rect);
+    setSurfacePosition();
 }
 
 void LauncherWindow::setWindowType()
@@ -150,6 +138,12 @@ void LauncherWindow::setWindowType()
 
     DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
     shell->set_launcher(output, m_surface);
+}
+
+void LauncherWindow::setSurfacePosition()
+{
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_position(m_surface, geometry().x(), geometry().y());
 }
 
 #include "moc_launcherwindow.cpp"
