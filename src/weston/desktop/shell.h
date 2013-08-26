@@ -133,6 +133,9 @@ public:
     void showAllWorkspaces();
     void resetWorkspaces();
 
+    void minimizeWindows();
+    void restoreWindows();
+
     struct wl_client *shellClient() { return m_child.client; }
     struct wl_resource *shellClientResource() { return m_child.desktop_shell; }
 
@@ -205,6 +208,7 @@ private:
     ShellSurfaceList m_surfaces;
     std::vector<Workspace *> m_workspaces;
     uint32_t m_currentWorkspace;
+    bool m_windowsMinimized;
 
     std::list<weston_surface *> m_blackSurfaces;
     class Splash *m_splash;
