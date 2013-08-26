@@ -63,7 +63,11 @@ Item {
 
     Component.onCompleted: {
         // Initialize the first renderer with settings
-        updateSettings(renderer1, settings);
+        updateSettings(currentRenderer, settings);
+
+        // Unload the wallpaper on the second render since we
+        // are not showing it anyway
+        nextRenderer.unloadBackground();
     }
 
     function updateSettings(renderer, from) {
@@ -81,6 +85,7 @@ Item {
         nextRenderer = currentRenderer;
         currentRenderer = r;
         nextRenderer.opacity = 0.0;
+        nextRenderer.unloadBackground()
     }
 
     function isItChanged(from, to) {

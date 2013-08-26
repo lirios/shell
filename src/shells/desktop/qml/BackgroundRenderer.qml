@@ -34,6 +34,12 @@ Item {
     property int colorShading
     property url wallpaperUrl
 
+    onWallpaperUrlChanged: {
+        // When a renderer is hidden we unload the wallpaper so every time
+        // this property is changed we need to set the wallpaper again
+        wallpaper.source = wallpaperUrl
+    }
+
     Rectangle {
         id: solid
         anchors.fill: parent
@@ -64,5 +70,9 @@ Item {
         source: wallpaperUrl
         smooth: true
         visible: type === BackgroundSettings.WallpaperBackground
+    }
+
+    function unloadBackground() {
+        wallpaper.source = "";
     }
 }
