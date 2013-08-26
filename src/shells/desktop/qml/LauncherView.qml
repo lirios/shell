@@ -26,6 +26,7 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import QtGraphicalEffects 1.0
 import Hawaii.Shell.Desktop 0.1
 
 Item {
@@ -97,10 +98,13 @@ Item {
 
             width: tileSize
             height: tileSize
+            hoverEnabled: true
 
             drag.target: held ? tile : undefined
             drag.axis: Drag.XandYAxis
 
+            onEntered: glow.opacity = 1.0
+            onExited: glow.opacity = 0.0
             onPressed: held = model.draggable
             onPressAndHold: held = model.draggable
             onReleased: held = false
@@ -153,12 +157,24 @@ Item {
                     sourceSize: Qt.size(width, height)
                     width: iconSize
                     height: iconSize
-                    scale: 1.0
 
                     Behavior on width {
                         NumberAnimation { easing.type: Easing.Linear; duration: 250 }
                     }
                     Behavior on height {
+                        NumberAnimation { easing.type: Easing.Linear; duration: 250 }
+                    }
+                }
+
+                BrightnessContrast {
+                    id: glow
+                    anchors.fill: icon
+                    source: icon
+                    brightness: 0.3
+                    opacity: 0.0
+                    cached: true
+
+                    Behavior on opacity {
                         NumberAnimation { easing.type: Easing.Linear; duration: 250 }
                     }
                 }
