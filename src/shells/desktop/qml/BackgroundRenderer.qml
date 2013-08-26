@@ -35,6 +35,8 @@ Item {
     property url wallpaperUrl
     property int fillMode
 
+    property alias fillColor: fillColorRect.color
+
     onWallpaperUrlChanged: {
         // When a renderer is hidden we unload the wallpaper so every time
         // this property is changed we need to set the wallpaper again
@@ -65,14 +67,20 @@ Item {
         }
     }
 
-    Image {
-        id: wallpaper
+    Rectangle {
+        id: fillColorRect
         anchors.fill: parent
-        sourceSize: Qt.size(width, height)
-        smooth: true
-        cache: false
-        clip: wallpaper.fillMode == Image.PreserveAspectCrop
+        color: primaryColor
         visible: type == BackgroundSettings.WallpaperBackground
+
+        Image {
+            id: wallpaper
+            anchors.fill: parent
+            sourceSize: Qt.size(width, height)
+            smooth: true
+            cache: false
+            clip: wallpaper.fillMode == Image.PreserveAspectCrop
+        }
     }
 
     onFillModeChanged: wallpaper.fillMode = convertFillMode(fillMode)
