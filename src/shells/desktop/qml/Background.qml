@@ -28,49 +28,95 @@ import QtQuick 2.0
 import Hawaii.Shell.Desktop 0.1
 
 Item {
-    property var settings: BackgroundSettings {}
+    property var settings: BackgroundSettings {
+        onTypeChanged: performChanges(currentRenderer, settings)
+        onColorShadingChanged: performChanges(currentRenderer, settings)
+        onPrimaryColorChanged: performChanges(currentRenderer, settings)
+        onSecondaryColorChanged: performChanges(currentRenderer, settings)
+        onWallpaperUrlChanged: performChanges(currentRenderer, settings)
+    }
 
-    Rectangle {
-        id: solid
+    property int fadeDuration: 500
+
+    property var currentRenderer: renderer1
+    property var nextRenderer: renderer2
+
+    BackgroundRenderer {
+        id: renderer1
         anchors.fill: parent
-        color: settings.primaryColor
-        opacity: settings.type === BackgroundSettings.ColorBackground ? 1.0 : 00
+        opacity: 1.0
 
         Behavior on opacity {
-            NumberAnimation { easing.type: Easing.InQuad; duration: 500 }
+            NumberAnimation { easing.type: Easing.OutQuad; duration: fadeDuration }
         }
     }
 
-    Rectangle {
-        id: gradient
+    BackgroundRenderer {
+        id: renderer2
         anchors.fill: parent
-        opacity: settings.type === BackgroundSettings.ColorBackground && settings.colorShading !== BackgroundSettings.SolidColorShading ? 1.0 : 0.0
-
-        Gradient {
-            GradientStop {
-                position: 0.0
-                color: settings.primaryColor
-            }
-            GradientStop {
-                position: 1.0
-                color: settings.secondaryColor
-            }
-        }
+        opacity: 0.0
 
         Behavior on opacity {
-            NumberAnimation { easing.type: Easing.InQuad; duration: 500 }
+            NumberAnimation { easing.type: Easing.OutQuad; duration: fadeDuration }
         }
     }
 
-    Image {
-        id: wallpaper
-        anchors.fill: parent
-        source: settings.wallpaperUrl
-        smooth: true
-        opacity: settings.type === BackgroundSettings.WallpaperBackground
+    Component.onCompleted: {
+        // Initialize the first renderer with settings
+        updateSettings(renderer1, settings);
+    }
 
-        Behavior on opacity {
-            NumberAnimation { easing.type: Easing.InQuad; duration: 500 }
+    function updateSettings(renderer, from) {
+        renderer.type = from.type
+        renderer.primaryColor = from.primaryColor;
+        renderer.secondaryColor = from.secondaryColor;
+        renderer.colorShading = from.colorShading;
+        renderer.wallpaperUrl = from.wallpaperUrl;
+    }
+
+    function swapRenderers() {
+        updateSettings(nextRenderer, settings);
+        nextRenderer.opacity = 1.0;
+        var r = nextRenderer;
+        nextRenderer = currentRenderer;
+        currentRenderer = r;
+        nextRenderer.opacity = 0.0;
+    }
+
+    function isItChanged(from, to) {
+        if (from.type != to.type)
+            return true;
+
+        var needChanges = false;
+
+        switch (to.type) {
+        case BackgroundSettings.ColorBackground:
+            switch (to.colorShading) {
+            case BackgroundSettings.SolidColorShading:
+                if (from.primaryColor != to.primaryColor)
+                    needChanges = true;
+                break;
+            case BackgroundSettings.HorizontalColorShading:
+            case BackgroundSettings.VerticalColorShading:
+                if ((from.primaryColor != to.primaryColor) || (from.secondaryColor != to.secondaryColor))
+                    needChanges = true;
+                break;
+            }
+            break;
+        case BackgroundSettings.WallpaperBackground:
+            if (from.wallpaperUrl != to.wallpaperUrl)
+                needChanges = true;
+            break;
+        default:
+            break;
         }
+
+        return needChanges;
+    }
+
+    function performChanges(from, to) {
+        // If something changed swap the two background renderers
+        if (isItChanged(from, to))
+            swapRenderers();
     }
 }

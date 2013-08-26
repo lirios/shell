@@ -17,6 +17,7 @@
 
         <!-- Background -->
         <file>qml/Background.qml</file>
+        <file>qml/BackgroundRenderer.qml</file>
 
         <!-- Panel -->
         <file>qml/Panel.qml</file>
