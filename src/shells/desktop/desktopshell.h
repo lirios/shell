@@ -86,6 +86,7 @@ public Q_SLOTS:
 
     void minimizeWindows();
     void restoreWindows();
+    void toggleWindows();
 
     void addWorkspace();
     void removeWorkspace(int num);

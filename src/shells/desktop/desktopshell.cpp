@@ -177,6 +177,7 @@ void DesktopShellImpl::hawaii_desktop_shell_workspace_added(hawaii_desktop_shell
 
 DesktopShellPrivate::DesktopShellPrivate(DesktopShell *parent)
     : q_ptr(parent)
+    , windowsMinimized(false)
 {
     // Start counting how much time we need to start up :)
     elapsedTimer.start();
@@ -402,6 +403,15 @@ void DesktopShell::restoreWindows()
 {
     Q_D(DesktopShell);
     d->shell->restore_windows();
+}
+
+void DesktopShell::toggleWindows()
+{
+    Q_D(DesktopShell);
+    if (d->windowsMinimized)
+        restoreWindows();
+    else
+        minimizeWindows();
 }
 
 void DesktopShell::addWorkspace()

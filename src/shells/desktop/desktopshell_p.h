@@ -78,6 +78,8 @@ public:
     QList<Workspace *> workspaces;
     QList<KeyBinding *> keyBindings;
 
+    bool windowsMinimized;
+
     void emitWindowAdded(Window *window);
     void emitWorkspaceAdded(int num);
 
