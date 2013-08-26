@@ -42,18 +42,19 @@ Item {
         // this property is changed we need to set the wallpaper again
         wallpaper.source = wallpaperUrl
     }
+    onFillModeChanged: wallpaper.fillMode = convertFillMode(fillMode)
 
     Rectangle {
         id: solid
         anchors.fill: parent
         color: primaryColor
-        visible: type === BackgroundSettings.ColorBackground && colorShading === BackgroundSettings.SolidColorShading
+        visible: type == BackgroundSettings.ColorBackground && colorShading == BackgroundSettings.SolidColorShading
     }
 
     Rectangle {
         id: gradient
         anchors.fill: parent
-        visible: type === BackgroundSettings.ColorBackground && colorShading !== BackgroundSettings.SolidColorShading
+        visible: type == BackgroundSettings.ColorBackground && colorShading != BackgroundSettings.SolidColorShading
 
         Gradient {
             GradientStop {
@@ -82,8 +83,6 @@ Item {
             clip: wallpaper.fillMode == Image.PreserveAspectCrop
         }
     }
-
-    onFillModeChanged: wallpaper.fillMode = convertFillMode(fillMode)
 
     function unloadBackground() {
         wallpaper.source = "";
