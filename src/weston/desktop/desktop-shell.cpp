@@ -540,16 +540,6 @@ void DesktopShell::desktopReady(struct wl_client *client, struct wl_resource *re
     fadeIn();
 }
 
-void DesktopShell::minimizeWindows(wl_client *client, wl_resource *resource)
-{
-    Shell::minimizeWindows();
-}
-
-void DesktopShell::restoreWindows(wl_client *client, wl_resource *resource)
-{
-    Shell::restoreWindows();
-}
-
 void DesktopShell::addWorkspace(wl_client *client, wl_resource *resource)
 {
     Workspace *ws = new Workspace(this, numWorkspaces());
@@ -673,8 +663,8 @@ const struct hawaii_desktop_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::unlock),
     wrapInterface(&DesktopShell::setGrabSurface),
     wrapInterface(&DesktopShell::desktopReady),
-    wrapInterface(&DesktopShell::minimizeWindows),
-    wrapInterface(&DesktopShell::restoreWindows),
+    wrapInterface(&Shell::minimizeWindows),
+    wrapInterface(&Shell::restoreWindows),
     wrapInterface(&DesktopShell::addWorkspace),
     wrapInterface(&DesktopShell::selectWorkspace),
     wrapInterface(&DesktopShell::createGrab)

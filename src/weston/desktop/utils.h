@@ -84,10 +84,19 @@ struct Wrapper {
     static void forward(wl_client *client, wl_resource *resource, Args... args) {
         (static_cast<T *>(wl_resource_get_user_data(resource))->*F)(client,resource, args...);
     }
+    template<void (T::*F)(Args...)>
+    static void forward(wl_client *client, wl_resource *resource, Args... args) {
+        (static_cast<T *>(wl_resource_get_user_data(resource))->*F)(args...);
+    }
 };
 
 template<class T, class... Args>
 constexpr static auto createWrapper(void (T::*func)(wl_client *client, wl_resource *resource, Args...)) -> Wrapper<T, Args...> {
+    return Wrapper<T, Args...>();
+}
+
+template<class T, class... Args>
+constexpr static auto createWrapper(void (T::*func)(Args...)) -> Wrapper<T, Args...> {
     return Wrapper<T, Args...>();
 }
 

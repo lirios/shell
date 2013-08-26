@@ -126,9 +126,6 @@ private:
 
     void desktopReady(struct wl_client *client, struct wl_resource *resource);
 
-    void minimizeWindows(wl_client *client, wl_resource *resource);
-    void restoreWindows(wl_client *client, wl_resource *resource);
-
     void addWorkspace(wl_client *client, wl_resource *resource);
     void selectWorkspace(wl_client *client, wl_resource *resource, wl_resource *workspace_resource);
 
