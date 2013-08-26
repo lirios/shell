@@ -29,11 +29,13 @@ import Hawaii.Shell.Desktop 0.1
 
 Item {
     property var settings: BackgroundSettings {
+        id: settings
         onTypeChanged: performChanges(currentRenderer, settings)
         onColorShadingChanged: performChanges(currentRenderer, settings)
         onPrimaryColorChanged: performChanges(currentRenderer, settings)
         onSecondaryColorChanged: performChanges(currentRenderer, settings)
         onWallpaperUrlChanged: performChanges(currentRenderer, settings)
+        onFillModeChanged: performChanges(currentRenderer, settings)
     }
 
     property int fadeDuration: 500
@@ -76,52 +78,65 @@ Item {
         renderer.secondaryColor = from.secondaryColor;
         renderer.colorShading = from.colorShading;
         renderer.wallpaperUrl = from.wallpaperUrl;
+        renderer.fillMode = from.fillMode;
     }
 
-    function swapRenderers() {
-        updateSettings(nextRenderer, settings);
-        nextRenderer.opacity = 1.0;
-        var r = nextRenderer;
-        nextRenderer = currentRenderer;
-        currentRenderer = r;
-        nextRenderer.opacity = 0.0;
-        nextRenderer.unloadBackground()
+    function changeRenderer(swap) {
+        if (swap) {
+            updateSettings(nextRenderer, settings);
+            nextRenderer.opacity = 1.0;
+            var r = nextRenderer;
+            nextRenderer = currentRenderer;
+            currentRenderer = r;
+            nextRenderer.opacity = 0.0;
+            nextRenderer.unloadBackground()
+        } else {
+            updateSettings(currentRenderer, settings);
+        }
     }
 
-    function isItChanged(from, to) {
+    function isChanged(from, to) {
+        /*
+         * This method returns:
+         *  - 0: no changes
+         *  - 1: changes (swap renderers)
+         *  - 2: changes (don't swap renderers)
+         */
+
         if (from.type != to.type)
-            return true;
-
-        var needChanges = false;
+            return 1;
 
         switch (to.type) {
         case BackgroundSettings.ColorBackground:
             switch (to.colorShading) {
             case BackgroundSettings.SolidColorShading:
                 if (from.primaryColor != to.primaryColor)
-                    needChanges = true;
+                    return 1;
                 break;
             case BackgroundSettings.HorizontalColorShading:
             case BackgroundSettings.VerticalColorShading:
                 if ((from.primaryColor != to.primaryColor) || (from.secondaryColor != to.secondaryColor))
-                    needChanges = true;
+                    return 1;
                 break;
             }
             break;
         case BackgroundSettings.WallpaperBackground:
             if (from.wallpaperUrl != to.wallpaperUrl)
-                needChanges = true;
+                return 1;
+            else if (from.fillMode != to.fillMode)
+                return 2;
             break;
         default:
             break;
         }
 
-        return needChanges;
+        return 0;
     }
 
     function performChanges(from, to) {
         // If something changed swap the two background renderers
-        if (isItChanged(from, to))
-            swapRenderers();
+        var changed = isChanged(from, to);
+        if (changed > 0)
+            changeRenderer(changed == 1);
     }
 }

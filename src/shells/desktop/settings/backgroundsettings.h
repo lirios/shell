@@ -40,7 +40,8 @@ class BackgroundSettings : public QObject
     Q_PROPERTY(QColor secondaryColor READ secondaryColor WRITE setSecondaryColor NOTIFY secondaryColorChanged)
     Q_PROPERTY(BackgroundSettings::ColorShadingType colorShading READ colorShading WRITE setColorShading NOTIFY colorShadingChanged)
     Q_PROPERTY(QUrl wallpaperUrl READ wallpaperUrl WRITE setWallpaperUrl NOTIFY wallpaperUrlChanged)
-    Q_ENUMS(Type ColorShadingType)
+    Q_PROPERTY(BackgroundSettings::FillMode fillMode READ fillMode WRITE setFillMode NOTIFY fillModeChanged)
+    Q_ENUMS(Type ColorShadingType FillMode)
 public:
     enum Type {
         ColorBackground = 0,
@@ -51,6 +52,14 @@ public:
         SolidColorShading = 0,
         HorizontalColorShading,
         VerticalColorShading
+    };
+
+    enum FillMode {
+        Stretched = 0,
+        Scaled,
+        Cropped,
+        Centered,
+        Tiled
     };
 
     BackgroundSettings(QObject *parent = 0);
@@ -71,12 +80,16 @@ public:
     QUrl wallpaperUrl() const;
     void setWallpaperUrl(const QUrl &value);
 
+    FillMode fillMode() const;
+    void setFillMode(FillMode value);
+
 Q_SIGNALS:
     void typeChanged(const BackgroundSettings::Type &value);
     void primaryColorChanged(const QColor &value);
     void secondaryColorChanged(const QColor &value);
     void colorShadingChanged(const BackgroundSettings::ColorShadingType &value);
     void wallpaperUrlChanged(const QUrl &value);
+    void fillModeChanged(const BackgroundSettings::FillMode &value);
 
 private:
     QConfiguration *m_configuration;
@@ -85,6 +98,7 @@ private:
     QColor m_secondaryColor;
     BackgroundSettings::ColorShadingType m_shading;
     QUrl m_url;
+    BackgroundSettings::FillMode m_fillMode;
 };
 
 #endif // BACKGROUNDSETTINGS_H

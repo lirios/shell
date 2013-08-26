@@ -33,6 +33,7 @@ Item {
     property color secondaryColor
     property int colorShading
     property url wallpaperUrl
+    property int fillMode
 
     onWallpaperUrlChanged: {
         // When a renderer is hidden we unload the wallpaper so every time
@@ -44,7 +45,7 @@ Item {
         id: solid
         anchors.fill: parent
         color: primaryColor
-        visible: type === BackgroundSettings.ColorBackground
+        visible: type === BackgroundSettings.ColorBackground && colorShading === BackgroundSettings.SolidColorShading
     }
 
     Rectangle {
@@ -67,12 +68,30 @@ Item {
     Image {
         id: wallpaper
         anchors.fill: parent
-        source: wallpaperUrl
         smooth: true
-        visible: type === BackgroundSettings.WallpaperBackground
+        cache: false
+        clip: wallpaper.fillMode == Image.PreserveAspectCrop
+        visible: type == BackgroundSettings.WallpaperBackground
     }
+
+    onFillModeChanged: wallpaper.fillMode = convertFillMode(fillMode)
 
     function unloadBackground() {
         wallpaper.source = "";
+    }
+
+    function convertFillMode(value) {
+        switch (value) {
+        case BackgroundSettings.Scaled:
+            return Image.PreserveAspectFit;
+        case BackgroundSettings.Cropped:
+            return Image.PreserveAspectCrop;
+        case BackgroundSettings.Centered:
+            return Image.Pad;
+        case BackgroundSettings.Tiled:
+            return Image.Tile;
+        default:
+            return Image.Stretch;
+        }
     }
 }

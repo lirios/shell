@@ -39,6 +39,7 @@ BackgroundSettings::BackgroundSettings(QObject *parent)
     m_shading = BackgroundSettings::SolidColorShading;
     m_url = QUrl::fromLocalFile(QStringLiteral("%1/backgrounds/hawaii/Also Calm.png")
                                 .arg(INSTALL_DATADIR));
+    m_fillMode = BackgroundSettings::Scaled;
 
     // Configuration
     m_configuration = new QConfiguration(this, QStringLiteral("shell/background"));
@@ -111,6 +112,19 @@ void BackgroundSettings::setWallpaperUrl(const QUrl &value)
     if (m_url != value) {
         m_url = value;
         Q_EMIT wallpaperUrlChanged(value);
+    }
+}
+
+BackgroundSettings::FillMode BackgroundSettings::fillMode() const
+{
+    return m_fillMode;
+}
+
+void BackgroundSettings::setFillMode(BackgroundSettings::FillMode value)
+{
+    if (m_fillMode != value) {
+        m_fillMode = value;
+        Q_EMIT fillModeChanged(value);
     }
 }
 
