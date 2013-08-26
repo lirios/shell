@@ -38,7 +38,7 @@ Item {
         onFillModeChanged: performChanges(currentRenderer, settings)
     }
 
-    property int fadeDuration: 500
+    property int fadeDuration: 400
 
     property var currentRenderer: renderer1
     property var nextRenderer: renderer2
@@ -47,20 +47,12 @@ Item {
         id: renderer1
         anchors.fill: parent
         opacity: 1.0
-
-        Behavior on opacity {
-            NumberAnimation { easing.type: Easing.OutQuad; duration: fadeDuration }
-        }
     }
 
     BackgroundRenderer {
         id: renderer2
         anchors.fill: parent
         opacity: 0.0
-
-        Behavior on opacity {
-            NumberAnimation { easing.type: Easing.OutQuad; duration: fadeDuration }
-        }
     }
 
     Component.onCompleted: {
@@ -81,17 +73,37 @@ Item {
         renderer.fillMode = from.fillMode;
     }
 
-    function changeRenderer(swap) {
-        if (swap) {
-            updateSettings(nextRenderer, settings);
-            nextRenderer.opacity = 1.0;
-            var r = nextRenderer;
-            nextRenderer = currentRenderer;
-            currentRenderer = r;
-            nextRenderer.opacity = 0.0;
-            nextRenderer.unloadBackground()
-        } else {
-            updateSettings(currentRenderer, settings);
+    SequentialAnimation {
+        id: swapAnimation
+
+        ScriptAction {
+            script: updateSettings(nextRenderer, settings)
+        }
+
+        ParallelAnimation {
+            NumberAnimation {
+                target: nextRenderer
+                property: "opacity"
+                easing.type: Easing.Linear
+                to: 1.0
+                duration: fadeDuration
+            }
+            NumberAnimation {
+                target: currentRenderer
+                property: "opacity"
+                easing.type: Easing.Linear
+                to: 0.0
+                duration: fadeDuration
+            }
+        }
+
+        ScriptAction {
+            script: {
+                var saved = nextRenderer;
+                nextRenderer = currentRenderer;
+                currentRenderer = saved;
+                nextRenderer.unloadBackground();
+            }
         }
     }
 
@@ -136,7 +148,9 @@ Item {
     function performChanges(from, to) {
         // If something changed swap the two background renderers
         var changed = isChanged(from, to);
-        if (changed > 0)
-            changeRenderer(changed == 1);
+        if (changed == 1)
+            swapAnimation.start();
+        else if (changed == 2)
+            updateSettings(currentRenderer, settings);
     }
 }

@@ -35,8 +35,6 @@ Item {
     property url wallpaperUrl
     property int fillMode
 
-    property alias fillColor: fillColorRect.color
-
     onWallpaperUrlChanged: {
         // When a renderer is hidden we unload the wallpaper so every time
         // this property is changed we need to set the wallpaper again
