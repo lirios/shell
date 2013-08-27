@@ -57,7 +57,7 @@ VolumeControlPrivate::VolumeControlPrivate()
     muteBinding = DesktopShell::instance()->addKeyBinding(KEY_MUTE, 0);
 }
 
-void VolumeControlPrivate::upTriggered()
+void VolumeControlPrivate::_q_upTriggered()
 {
     Q_Q(VolumeControl);
 
@@ -69,7 +69,7 @@ void VolumeControlPrivate::upTriggered()
         q->setMute(false);
 }
 
-void VolumeControlPrivate::downTriggered()
+void VolumeControlPrivate::_q_downTriggered()
 {
     Q_Q(VolumeControl);
 
@@ -81,7 +81,7 @@ void VolumeControlPrivate::downTriggered()
         q->setMute(false);
 }
 
-void VolumeControlPrivate::muteTriggered()
+void VolumeControlPrivate::_q_muteTriggered()
 {
     Q_Q(VolumeControl);
 
@@ -99,9 +99,12 @@ VolumeControl::VolumeControl(QObject *parent)
     Q_D(VolumeControl);
     d->q_ptr = this;
 
-    connect(d->upBinding, SIGNAL(triggered()), this, SLOT(upTriggered()));
-    connect(d->downBinding, SIGNAL(triggered()), this, SLOT(downTriggered()));
-    connect(d->muteBinding, SIGNAL(triggered()), this, SLOT(muteTriggered()));
+    connect(d->upBinding, SIGNAL(triggered()),
+            this, SLOT(_q_upTriggered()));
+    connect(d->downBinding, SIGNAL(triggered()),
+            this, SLOT(_q_downTriggered()));
+    connect(d->muteBinding, SIGNAL(triggered()),
+            this, SLOT(_q_muteTriggered()));
 }
 
 VolumeControl::~VolumeControl()

@@ -50,9 +50,9 @@ public:
     KeyBinding *downBinding;
     KeyBinding *muteBinding;
 
-    void upTriggered();
-    void downTriggered();
-    void muteTriggered();
+    void _q_upTriggered();
+    void _q_downTriggered();
+    void _q_muteTriggered();
 };
 
 #endif // VOLUMECONTROL_P_H

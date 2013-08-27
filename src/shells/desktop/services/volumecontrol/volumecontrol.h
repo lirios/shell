@@ -54,9 +54,9 @@ Q_SIGNALS:
     void volumeChanged(int value);
 
 private:
-    Q_PRIVATE_SLOT(d_func(), void upTriggered())
-    Q_PRIVATE_SLOT(d_func(), void downTriggered())
-    Q_PRIVATE_SLOT(d_func(), void muteTriggered())
+    Q_PRIVATE_SLOT(d_func(), void _q_upTriggered())
+    Q_PRIVATE_SLOT(d_func(), void _q_downTriggered())
+    Q_PRIVATE_SLOT(d_func(), void _q_muteTriggered())
 
     VolumeControlPrivate *const d_ptr;
 };
