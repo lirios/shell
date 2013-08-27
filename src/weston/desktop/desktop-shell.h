@@ -6,6 +6,7 @@
  *
  * Author(s):
  *    Giulio Camuffo
+ *    Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
