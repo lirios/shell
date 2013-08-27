@@ -75,7 +75,8 @@ Item {
         Image {
             id: wallpaper
             anchors.fill: parent
-            sourceSize: Qt.size(width, height)
+            sourceSize.width: width
+            sourceSize.height: height
             smooth: true
             cache: false
             clip: wallpaper.fillMode == Image.PreserveAspectCrop
