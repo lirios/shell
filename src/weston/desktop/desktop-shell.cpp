@@ -94,6 +94,11 @@ void DesktopShell::init()
         static_cast<DesktopShell *>(data)->moveBinding(seat, time, button);
     }, this);
 
+    weston_compositor_add_button_binding(compositor(), BTN_MIDDLE, MODIFIER_SUPER,
+                                         [](struct weston_seat *seat, uint32_t time, uint32_t button, void *data) {
+        static_cast<DesktopShell *>(data)->resizeBinding(seat, time, button);
+    }, this);
+
     new ScaleEffect(this);
     new GridDesktops(this);
     new FadeMovingEffect(this);
@@ -267,6 +272,51 @@ void DesktopShell::moveBinding(struct weston_seat *seat, uint32_t time, uint32_t
     shsurf = shsurf->topLevelParent();
     if (shsurf) {
         shsurf->dragMove(seat);
+    }
+}
+
+void DesktopShell::resizeBinding(weston_seat *seat, uint32_t time, uint32_t button)
+{
+    weston_surface *surface = weston_surface_get_main_surface(seat->pointer->focus);
+    if (!surface) {
+        return;
+    }
+
+    ShellSurface *shsurf = getShellSurface(surface);
+    if (!shsurf || shsurf->type() == ShellSurface::Type::Fullscreen || shsurf->type() == ShellSurface::Type::Maximized) {
+        return;
+    }
+
+    shsurf = shsurf->topLevelParent();
+    if (shsurf) {
+        int32_t x, y;
+        weston_surface_from_global(surface, wl_fixed_to_int(seat->pointer->grab_x), wl_fixed_to_int(seat->pointer->grab_y), &x, &y);
+
+        pixman_box32_t *bbox = pixman_region32_extents(&surface->input);
+
+        uint32_t edges = 0;
+        int32_t w = surface->geometry.width / 3;
+        if (w > 20) w = 20;
+        w += bbox->x1;
+
+        if (x < w)
+            edges |= WL_SHELL_SURFACE_RESIZE_LEFT;
+        else if (x < surface->geometry.width - w)
+            edges |= 0;
+        else
+            edges |= WL_SHELL_SURFACE_RESIZE_RIGHT;
+
+        int32_t h = surface->geometry.height / 3;
+        if (h > 20) h = 20;
+        h += bbox->y1;
+        if (y < h)
+            edges |= WL_SHELL_SURFACE_RESIZE_TOP;
+        else if (y < surface->geometry.height - h)
+            edges |= 0;
+        else
+            edges |= WL_SHELL_SURFACE_RESIZE_BOTTOM;
+
+        shsurf->dragResize(seat, edges);
     }
 }
 

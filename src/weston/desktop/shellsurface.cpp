@@ -48,6 +48,7 @@ ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
             , m_state(HAWAII_DESKTOP_SHELL_WINDOW_STATE_INACTIVE)
             , m_windowAdvertized(false)
             , m_acceptState(true)
+            , m_runningGrab(nullptr)
             , m_parent(nullptr)
             , m_pingTimer(nullptr)
 {
@@ -61,6 +62,10 @@ ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
 
 ShellSurface::~ShellSurface()
 {
+    if (m_runningGrab) {
+        Shell::endGrab(m_runningGrab);
+        delete m_runningGrab;
+    }
     if (m_popup.seat) {
         m_popup.seat->removePopupGrab(this);
     }
@@ -583,6 +588,7 @@ void ShellSurface::move_grab_button(struct weston_pointer_grab *grab, uint32_t t
     if (pointer->button_count == 0 && state == WL_POINTER_BUTTON_STATE_RELEASED) {
         Shell::endGrab(shell_grab);
         move->shsurf->moveEndSignal(move->shsurf);
+        move->shsurf->m_runningGrab = nullptr;
         delete shell_grab;
     }
 }
@@ -609,6 +615,9 @@ void ShellSurface::move(struct wl_client *client, struct wl_resource *resource, 
 
 void ShellSurface::dragMove(struct weston_seat *ws)
 {
+    if (m_runningGrab)
+        return;
+
     if (m_type == ShellSurface::Type::Fullscreen) {
         return;
     }
@@ -620,6 +629,7 @@ void ShellSurface::dragMove(struct weston_seat *ws)
     move->dx = wl_fixed_from_double(m_surface->geometry.x) - ws->pointer->grab_x;
     move->dy = wl_fixed_from_double(m_surface->geometry.y) - ws->pointer->grab_y;
     move->shsurf = this;
+    m_runningGrab = move;
 
     m_shell->startGrab(move, &m_move_grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_MOVE);
     moveStartSignal(this);
@@ -675,6 +685,7 @@ void ShellSurface::resize_grab_button(struct weston_pointer_grab *grab, uint32_t
 
     if (grab->pointer->button_count == 0 && state_w == WL_POINTER_BUTTON_STATE_RELEASED) {
         Shell::endGrab(resize);
+        resize->shsurf->m_runningGrab = nullptr;
         delete resize;
     }
 }
@@ -699,6 +710,9 @@ void ShellSurface::resize(struct wl_client *client, struct wl_resource *resource
 
 void ShellSurface::dragResize(struct weston_seat *ws, uint32_t edges)
 {
+    if (m_runningGrab)
+        return;
+
     ResizeGrab *grab = new ResizeGrab;
     if (!grab)
         return;
@@ -711,6 +725,7 @@ void ShellSurface::dragResize(struct weston_seat *ws, uint32_t edges)
     grab->width = m_surface->geometry.width;
     grab->height = m_surface->geometry.height;
     grab->shsurf = this;
+    m_runningGrab = grab;
 
     m_shell->startGrab(grab, &m_resize_grab_interface, ws, edges);
 }

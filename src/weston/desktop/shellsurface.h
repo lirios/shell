@@ -38,6 +38,7 @@
 class Shell;
 class ShellSeat;
 class Workspace;
+class ShellGrab;
 
 class ShellSurface {
 public:
@@ -150,6 +151,7 @@ private:
     int32_t m_state;
     bool m_windowAdvertized;
     bool m_acceptState;
+    ShellGrab *m_runningGrab;
 
     struct weston_surface *m_parent;
     struct {
