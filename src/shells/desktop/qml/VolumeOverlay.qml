@@ -26,28 +26,91 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
-import QtQuick.Layout 1.0
+import QtQuick.Layouts 1.0
 import Hawaii.Shell.Desktop 0.1
 import Hawaii.Shell.Styles 0.1
 import FluidUi 0.2 as FluidUi
 
-Overlay {
+Item {
     width: 400
-    height: 400
+    height: 300
+    opacity: 0.0
 
-    ColumnLayout {
-        anchors.fill: parent
+    property var control: Shell.service("VolumeControl")
 
-        FluidUi.Icon {
-            iconName: "audio-volume-high-symbolic"
-            color: "white"
+    Behavior on opacity {
+        NumberAnimation { duration: 250 }
+    }
+
+    Timer {
+        id: timer
+        repeat: false
+        interval: 2000
+        onTriggered: opacity = 0.0
+    }
+
+    Binding {
+        target: progressBar
+        property: "value"
+        value: control.muted ? 0 : control.volume
+    }
+
+    Binding {
+        target: icon
+        property: "iconName"
+        value: {
+            if (control.muted)
+                return "audio-volume-muted-symbolic";
+
+            var n = Math.floor(3 * control.volume / 100) + 1;
+            if (n < 2)
+                return "audio-volume-low-symbolic";
+            if (n >= 3)
+                return "audio-volume-high-symbolic"
+            return "audio-volume-medium-symbolic";
         }
+    }
 
-        ProgressBar {
-            minimumValue: 0.5
-            maximumValue: 1.0
+    Connections {
+        target: control
+        onVolumeChanged: {
+            opacity = 1.0;
+            timer.restart();
+        }
+    }
 
-            Layout.fillWidth: true
+    StyledItem {
+        id: styledItem
+        anchors.fill: parent
+        style: Qt.createComponent("OverlayStyle.qml", styledItem)
+
+        ColumnLayout {
+            anchors {
+                fill: parent
+                margins: 20
+            }
+
+            FluidUi.Icon {
+                id: icon
+                color: "white"
+                width: 192
+                height: 192
+
+                Layout.alignment: Qt.AlignCenter
+            }
+
+            ProgressBar {
+                id: progressBar
+                minimumValue: 0
+                maximumValue: 100
+
+                Behavior on value {
+                    NumberAnimation { duration: 250 }
+                }
+
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+            }
         }
     }
 }
