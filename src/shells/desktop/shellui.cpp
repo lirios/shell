@@ -41,6 +41,7 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
     , m_backgroundWindow(0)
     , m_panelWindow(0)
     , m_launcherWindow(0)
+    , m_overlayWindow(0)
     , m_lockScreenWindow(0)
     , m_numWorkspaces(0)
 {
@@ -67,6 +68,10 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
     m_launcherWindow = new LauncherWindow(this);
     m_launcherWindow->show();
 
+    // Create Overlay window
+    m_overlayWindow = new OverlayWindow(this);
+    m_overlayWindow->show();
+
     // React to screen size changes
     connect(screen, SIGNAL(geometryChanged(QRect)),
             this, SLOT(updateScreenGeometry(QRect)));
@@ -78,6 +83,7 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
 ShellUi::~ShellUi()
 {
     m_lockScreenWindow->close();
+    m_overlayWindow->close();
     m_panelWindow->close();
     m_launcherWindow->close();
     m_backgroundWindow->close();
@@ -121,6 +127,11 @@ PanelWindow *ShellUi::panelWindow() const
 LauncherWindow *ShellUi::launcherWindow() const
 {
     return m_launcherWindow;
+}
+
+OverlayWindow *ShellUi::overlayWindow() const
+{
+    return m_overlayWindow;
 }
 
 LockScreenWindow *ShellUi::lockScreenWindow() const

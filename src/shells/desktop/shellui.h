@@ -36,6 +36,7 @@
 #include "panelwindow.h"
 #include "launcherwindow.h"
 #include "lockscreenwindow.h"
+#include "overlaywindow.h"
 
 class ShellUi : public QObject
 {
@@ -57,6 +58,7 @@ public:
     BackgroundWindow *backgroundWindow() const;
     PanelWindow *panelWindow() const;
     LauncherWindow *launcherWindow() const;
+    OverlayWindow *overlayWindow() const;
 
     LockScreenWindow *lockScreenWindow() const;
 
@@ -80,6 +82,7 @@ private:
     BackgroundWindow *m_backgroundWindow;
     PanelWindow *m_panelWindow;
     LauncherWindow *m_launcherWindow;
+    OverlayWindow *m_overlayWindow;
     LockScreenWindow *m_lockScreenWindow;
     int m_numWorkspaces;
 };

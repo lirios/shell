@@ -27,16 +27,27 @@
 #ifndef OVERLAYWINDOW_H
 #define OVERLAYWINDOW_H
 
-#include <QtQuick/QQuickWindow>
+#include <QtQuick/QQuickView>
 
-class OverlayWindow : public QQuickWindow
+struct wl_surface;
+class ShellUi;
+
+class OverlayWindow : public QQuickView
 {
     Q_OBJECT
 public:
-    OverlayWindow(QWindow *parent = 0);
+    OverlayWindow(ShellUi *ui);
+
+    wl_surface *surface() const;
+
+private Q_SLOTS:
+    void geometryChanged(const QRect &rect);
 
 private:
+    wl_surface *m_surface;
+
     void setWindowType();
+    void setSurfacePosition(const QPoint &pt);
 };
 
 #endif // OVERLAYWINDOW_H

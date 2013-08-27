@@ -26,14 +26,9 @@
 
 import QtQuick 2.0
 import Hawaii.Shell.Desktop 0.1
-import Hawaii.Shell.Styles 0.1
 
-OverlayWindow {
-    width: 320
-    height: 240
-
-    StyledItem {
-        id: root
-        style: Qt.createComponent("OverlayStyle.qml", root)
+Item {
+    VolumeOverlay {
+        anchors.centerIn: parent
     }
 }

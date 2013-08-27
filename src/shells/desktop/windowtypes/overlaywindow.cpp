@@ -24,16 +24,21 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QDebug>
 #include <QtGui/QGuiApplication>
+#include <QtGui/QWindow>
+#include <QtGui/QScreen>
 
 #include <qpa/qplatformnativeinterface.h>
 
 #include "overlaywindow.h"
 #include "desktopshell.h"
 #include "desktopshell_p.h"
+#include "shellui.h"
 
-OverlayWindow::OverlayWindow(QWindow *parent)
-    : QQuickWindow(parent)
+OverlayWindow::OverlayWindow(ShellUi *ui)
+    : QQuickView(ui->engine(), new QWindow(ui->screen()))
+    , m_surface(0)
 {
     // Set transparent color
     setColor(Qt::transparent);
@@ -44,6 +49,35 @@ OverlayWindow::OverlayWindow(QWindow *parent)
     // Set Wayland window type
     create();
     setWindowType();
+
+    // Load QML component
+    setSource(QUrl("qrc:/qml/Overlay.qml"));
+
+    // Resize view to actual size and thus resize the root object
+    setResizeMode(QQuickView::SizeRootObjectToView);
+    setGeometry(ui->screen()->geometry());
+
+    // React to screen size changes
+    connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
+            this, SLOT(geometryChanged(QRect)));
+
+    // Debugging message
+    qDebug() << "-> Created Overlay with geometry"
+             << geometry();
+}
+
+wl_surface *OverlayWindow::surface() const
+{
+    return m_surface;
+}
+
+void OverlayWindow::geometryChanged(const QRect &rect)
+{
+    // Resize view to actual size
+    setGeometry(rect);
+
+    // Set surface position
+    setSurfacePosition(position());
 }
 
 void OverlayWindow::setWindowType()
@@ -57,6 +91,17 @@ void OverlayWindow::setWindowType()
 
     DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
     shell->set_overlay(output, surface);
+}
+
+void OverlayWindow::setSurfacePosition(const QPoint &pt)
+{
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+
+    wl_surface *surface = static_cast<struct wl_surface *>(
+                native->nativeResourceForWindow("surface", this));
+
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    shell->set_position(surface, pt.x(), pt.y());
 }
 
 #include "moc_overlaywindow.cpp"
