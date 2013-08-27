@@ -661,7 +661,7 @@ void Shell::endGrab(ShellGrab *grab)
     weston_pointer_end_grab(grab->pointer);
 }
 
-static void configure_panel_surface(struct weston_surface *es, Layer *layer, int32_t width, int32_t height)
+static void configure_static_surface(struct weston_surface *es, Layer *layer, int32_t width, int32_t height)
 {
     if (width == 0)
         return;
@@ -674,27 +674,14 @@ static void configure_panel_surface(struct weston_surface *es, Layer *layer, int
     }
 }
 
-static void configure_static_surface(struct weston_surface *es, Layer *layer, int32_t width, int32_t height)
-{
-    if (width == 0)
-        return;
-
-    weston_surface_configure(es, es->output->x, es->output->y, width, height);
-
-    if (wl_list_empty(&es->layer_link)) {
-        layer->addSurface(es);
-        weston_compositor_schedule_repaint(es->compositor);
-    }
-}
-
 void Shell::backgroundConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
 {
-    configure_static_surface(es, &m_backgroundLayer, width, height);
+    configure_static_surface(es, &static_cast<Shell *>(es->configure_private)->m_backgroundLayer, width, height);
 }
 
 void Shell::panelConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
 {
-    configure_panel_surface(es, &m_panelsLayer, width, height);
+    configure_static_surface(es, &static_cast<Shell *>(es->configure_private)->m_panelsLayer, width, height);
 }
 
 void Shell::setBackgroundSurface(struct weston_surface *surface, struct weston_output *output)
