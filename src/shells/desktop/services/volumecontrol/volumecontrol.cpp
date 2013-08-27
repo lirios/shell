@@ -96,12 +96,31 @@ VolumeControl::~VolumeControl()
     delete d_ptr;
 }
 
+bool VolumeControl::isMute() const
+{
+    Q_D(const VolumeControl);
+
+    int mute = 0;
+    snd_mixer_selem_get_playback_switch(d->selem, SND_MIXER_SCHN_UNKNOWN, &mute);
+    return !mute;
+}
+
+void VolumeControl::setMute(bool value)
+{
+    Q_D(VolumeControl);
+
+    if (isMute() != value) {
+        snd_mixer_selem_set_playback_switch_all(d->selem, !value);
+        Q_EMIT muteChanged(value);
+    }
+}
+
 int VolumeControl::volume() const
 {
     Q_D(const VolumeControl);
 
     long value;
-    snd_mixer_selem_get_playback_volume(d->selem, SND_MIXER_SCHN_FRONT_LEFT, &value);
+    snd_mixer_selem_get_playback_volume(d->selem, SND_MIXER_SCHN_UNKNOWN, &value);
     value *= 100.f / (float)d->max;
     return value;
 }

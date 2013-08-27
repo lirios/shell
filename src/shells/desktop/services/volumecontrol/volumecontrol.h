@@ -34,6 +34,7 @@ class VolumeControlPrivate;
 class VolumeControl : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool muted READ isMute WRITE setMute NOTIFY muteChanged)
     Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged)
     Q_DECLARE_PRIVATE(VolumeControl)
 public:
@@ -42,10 +43,14 @@ public:
 
     constexpr static const char *name() { return "VolumeControl"; }
 
+    bool isMute() const;
+    void setMute(bool value);
+
     int volume() const;
     void setVolume(int value);
 
 Q_SIGNALS:
+    void muteChanged(bool value);
     void volumeChanged(int value);
 
 private:
