@@ -314,10 +314,6 @@ void DesktopShell::create()
         d->shellWindows.append(ui);
     }
 
-    // Wait until all user interface elements for all screens are ready
-    while (QCoreApplication::hasPendingEvents())
-        QCoreApplication::processEvents();
-
     // Add the first workspace
     // TODO: Add as many workspaces as specified by the settings
     addWorkspace();
@@ -325,7 +321,7 @@ void DesktopShell::create()
     addWorkspace();
     addWorkspace();
 
-    // Process workspaces events
+    // Wait until all user interface elements for all screens are ready
     while (QCoreApplication::hasPendingEvents())
         QCoreApplication::processEvents();
 
