@@ -60,19 +60,32 @@ VolumeControlPrivate::VolumeControlPrivate()
 void VolumeControlPrivate::upTriggered()
 {
     Q_Q(VolumeControl);
-    q->setVolume(q->volume() + 5);
+
+    int value = q->volume() + 5;
+    q->setVolume(value);
+    Q_EMIT q->volumeChanged(value);
+
+    if (value > 0)
+        q->setMute(false);
 }
 
 void VolumeControlPrivate::downTriggered()
 {
     Q_Q(VolumeControl);
-    q->setVolume(q->volume() - 5);
+
+    int value = q->volume() - 5;
+    q->setVolume(value);
+    Q_EMIT q->volumeChanged(value);
+
+    if (value > 0)
+        q->setMute(false);
 }
 
 void VolumeControlPrivate::muteTriggered()
 {
     Q_Q(VolumeControl);
-    q->setVolume(0);
+
+    q->setMute(!q->isMute());
 }
 
 /*
