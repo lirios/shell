@@ -333,8 +333,12 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int3
         switch (surface->m_type) {
         case ShellSurface::Type::Transient:
         case ShellSurface::Type::Popup:
-            surface->m_workspace->addSurface(surface);
-            surface->m_workspace->stackAbove(surface->m_surface, surface->m_parent);
+            if (ShellSurface *p = getShellSurface(surface->m_parent))
+                surface->m_workspace = p->m_workspace;
+            else
+                surface->m_workspace = 0;
+            surface->m_surface->output = surface->m_parent->output;
+            wl_list_insert(surface->m_parent->layer_link.prev, &surface->m_surface->layer_link);
             break;
         case ShellSurface::Type::Fullscreen:
             stackFullscreen(surface);
@@ -674,13 +678,6 @@ static void configure_static_surface(struct weston_surface *es, Layer *layer, in
 {
     if (width == 0)
         return;
-
-    for (struct weston_surface *s: *layer) {
-        if (s->output == es->output && s != es) {
-            weston_surface_unmap(s);
-            s->configure = NULL;
-        }
-    }
 
     weston_surface_configure(es, es->output->x, es->output->y, width, height);
 
