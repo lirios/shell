@@ -77,7 +77,10 @@ Item {
         id: swapAnimation
 
         ScriptAction {
-            script: updateSettings(nextRenderer, settings)
+            script: {
+                // Update next renderer settings
+                updateSettings(nextRenderer, settings);
+            }
         }
 
         ParallelAnimation {
@@ -99,9 +102,12 @@ Item {
 
         ScriptAction {
             script: {
+                // Swap renderers
                 var saved = nextRenderer;
                 nextRenderer = currentRenderer;
                 currentRenderer = saved;
+
+                // Unload next renderer wallpaper to save some memory
                 nextRenderer.unloadBackground();
             }
         }
