@@ -66,11 +66,21 @@ Item {
         }
     }
 
-    Rectangle {
-        id: fillColorRect
+    Item {
         anchors.fill: parent
-        color: primaryColor
-        visible: type == BackgroundSettings.WallpaperBackground
+
+        // The fill color rectangle is hidden during the transition
+        // between two background renderers otherwise it is visible
+        // and that's ugly
+        Rectangle {
+            id: fillColorRect
+            anchors.fill: parent
+            color: primaryColor
+            visible: type == BackgroundSettings.WallpaperBackground &&
+                      ((fillMode == BackgroundSettings.Scaled) ||
+                       (fillMode == BackgroundSettings.Centered))
+            z: 0
+        }
 
         Image {
             id: wallpaper
@@ -80,6 +90,8 @@ Item {
             smooth: true
             cache: false
             clip: wallpaper.fillMode == Image.PreserveAspectCrop
+            visible: type == BackgroundSettings.WallpaperBackground
+            z: 1
         }
     }
 
