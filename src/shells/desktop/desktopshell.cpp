@@ -393,12 +393,14 @@ void DesktopShell::minimizeWindows()
 {
     Q_D(DesktopShell);
     d->shell->minimize_windows();
+    d->windowsMinimized = true;
 }
 
 void DesktopShell::restoreWindows()
 {
     Q_D(DesktopShell);
     d->shell->restore_windows();
+    d->windowsMinimized = false;
 }
 
 void DesktopShell::toggleWindows()
