@@ -64,6 +64,10 @@ Style {
             width: __item.iconSize
             height: __item.iconSize
             visible: __item.iconName !== ""
+
+            Behavior on color {
+                ColorAnimation { easing.type: Easing.Linear; duration: 250 }
+            }
         }
 
         Text {
@@ -79,6 +83,10 @@ Style {
             font.pointSize: 9 * __style.dpiScaleFactor
             color: __item.selected || __item.hovered ? highlightedTextColor : textColor
             visible: __item.label !== ""
+
+            Behavior on color {
+                ColorAnimation { easing.type: Easing.Linear; duration: 250 }
+            }
         }
     }
 }

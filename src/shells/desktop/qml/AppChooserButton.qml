@@ -41,6 +41,10 @@ StyledItem {
         anchors.fill: parent
         iconName: "view-grid-symbolic"
         color: hover || checked ? __style.highlightedColor : __style.color
+
+        Behavior on color {
+            ColorAnimation { easing.type: Easing.Linear; duration: 250 }
+        }
     }
 
     MouseArea {
