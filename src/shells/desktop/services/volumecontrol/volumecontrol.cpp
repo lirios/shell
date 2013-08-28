@@ -24,6 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QDebug>
+#include <QtCore/QtMath>
 #include <linux/input.h>
 
 #include "volumecontrol.h"
@@ -37,6 +39,8 @@
  */
 
 VolumeControlPrivate::VolumeControlPrivate()
+    : min(0)
+    , max(0)
 {
     // Open mixer
     snd_mixer_open(&mixer, 0);
@@ -57,28 +61,37 @@ VolumeControlPrivate::VolumeControlPrivate()
     muteBinding = DesktopShell::instance()->addKeyBinding(KEY_MUTE, 0);
 }
 
+long VolumeControlPrivate::rawVolume() const
+{
+    long vol;
+    snd_mixer_selem_get_playback_volume(selem, SND_MIXER_SCHN_FRONT_LEFT, &vol);
+    return vol;
+}
+
+void VolumeControlPrivate::setRawVolume(long value)
+{
+    // Volume must be in range
+    if (value < min)
+        value = min;
+    if (value > max)
+        value = max;
+
+    snd_mixer_selem_set_playback_volume(selem, SND_MIXER_SCHN_FRONT_LEFT, value);
+    snd_mixer_selem_set_playback_volume(selem, SND_MIXER_SCHN_FRONT_RIGHT, value);
+}
+
 void VolumeControlPrivate::_q_upTriggered()
 {
     Q_Q(VolumeControl);
 
-    int value = q->volume() + 5;
-    q->setVolume(value);
-    Q_EMIT q->volumeChanged(value);
-
-    if (value > 0)
-        q->setMute(false);
+    q->setVolume(q->volume() + 5);
 }
 
 void VolumeControlPrivate::_q_downTriggered()
 {
     Q_Q(VolumeControl);
 
-    int value = q->volume() - 5;
-    q->setVolume(value);
-    Q_EMIT q->volumeChanged(value);
-
-    if (value > 0)
-        q->setMute(false);
+    q->setVolume(q->volume() - 5);
 }
 
 void VolumeControlPrivate::_q_muteTriggered()
@@ -117,7 +130,7 @@ bool VolumeControl::isMute() const
     Q_D(const VolumeControl);
 
     int mute = 0;
-    snd_mixer_selem_get_playback_switch(d->selem, SND_MIXER_SCHN_UNKNOWN, &mute);
+    snd_mixer_selem_get_playback_switch(d->selem, SND_MIXER_SCHN_FRONT_LEFT, &mute);
     return !mute;
 }
 
@@ -134,24 +147,16 @@ void VolumeControl::setMute(bool value)
 int VolumeControl::volume() const
 {
     Q_D(const VolumeControl);
-
-    long value;
-    snd_mixer_selem_get_playback_volume(d->selem, SND_MIXER_SCHN_UNKNOWN, &value);
-    value *= 100.f / (float)d->max;
-    return value;
+    long vol = d->rawVolume();
+    int v = 100.f * vol / d->max;
+    return v;
 }
 
 void VolumeControl::setVolume(int value)
 {
-    // Volume is in [0:100] range
-    if (value < 0)
-        value = 0;
-    if (value > 100)
-        value = 100;
-
     Q_D(VolumeControl);
-    snd_mixer_selem_set_playback_volume_all(d->selem, value * d->max / 100.f);
-
+    long vol = value * d->max / 100;
+    d->setRawVolume(vol);
     Q_EMIT volumeChanged(value);
 }
 

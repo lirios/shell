@@ -50,6 +50,9 @@ public:
     KeyBinding *downBinding;
     KeyBinding *muteBinding;
 
+    long rawVolume() const;
+    void setRawVolume(long value);
+
     void _q_upTriggered();
     void _q_downTriggered();
     void _q_muteTriggered();
