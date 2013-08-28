@@ -82,11 +82,6 @@ ShellUi::ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent)
 
 ShellUi::~ShellUi()
 {
-    m_lockScreenWindow->close();
-    m_overlayWindow->close();
-    m_panelWindow->close();
-    m_launcherWindow->close();
-    m_backgroundWindow->close();
 }
 
 QQmlEngine *ShellUi::engine() const
