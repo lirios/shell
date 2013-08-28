@@ -42,6 +42,7 @@
 #include "notificationwindow.h"
 #include "shellui.h"
 #include "shellwindow.h"
+#include "shortcut_p.h"
 #include "window.h"
 #include "window_p.h"
 #include "workspace.h"
@@ -305,6 +306,12 @@ DesktopShell *DesktopShell::instance()
 void DesktopShell::create()
 {
     Q_D(DesktopShell);
+
+    // Bind Meta-D to toggle windows
+    KeyBinding *binding = addKeyBinding(KEY_D, MODIFIER_SUPER);
+    connect(binding, &KeyBinding::triggered, []() {
+        DesktopShell::instance()->toggleWindows();
+    });
 
     // Create shell windows
     foreach (QScreen *screen, QGuiApplication::screens()) {
