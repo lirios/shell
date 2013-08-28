@@ -280,8 +280,11 @@ void ShellSurface::map(int32_t x, int32_t y, int32_t width, int32_t height)
             y = rect.y;
         }
         case Type::TopLevel:
-        case Type::None:
-            weston_surface_set_position(m_surface, x, y);
+        case Type::None: {
+            int sx, sy;
+            calculateInitialPosition(sx, sy);
+            weston_surface_set_position(m_surface, sx, sy);
+        }
         default:
             break;
     }
@@ -325,6 +328,52 @@ void ShellSurface::setXWayland(int x, int y, uint32_t flags)
     m_transient.flags = flags;
 
     m_pendingType = Type::XWayland;
+}
+
+void ShellSurface::calculateInitialPosition(int &x, int &y)
+{
+    // As a heuristic place the new window on the same output as the
+    // pointer. Falling back to the output containing 0,0.
+    // TODO: Do something clever for touch too
+    int ix = 0, iy = 0;
+    weston_seat *seat = container_of(weston_surface()->compositor->seat_list.next, weston_seat, link);
+    if (seat && seat->pointer) {
+        ix = wl_fixed_to_int(seat->pointer->x);
+        iy = wl_fixed_to_int(seat->pointer->y);
+    }
+
+    // Find the target output (the one where the coordinates are in)
+    weston_output *targetOutput = 0;
+    weston_output *output = container_of(weston_surface()->compositor->output_list.next, weston_output, link);
+    if (output && pixman_region32_contains_point(&output->region, ix, iy, 0))
+        targetOutput = output;
+
+    // Just move the surface to a random position if we can't find a target output
+    if (!targetOutput) {
+        x = 10 + random() % 400;
+        y = 10 + random() % 400;
+        return;
+    }
+
+    // Valid range within output where the surface will still be onscreen.
+    // If this is negative it means that the surface is bigger than
+    // output in this case we fallback to 0,0 in available geometry space.
+    int rangeX = m_shell->windowsArea(targetOutput).width -
+            weston_surface()->geometry.width;
+    int rangeY = m_shell->windowsArea(targetOutput).height -
+            weston_surface()->geometry.height;
+
+    int dx = 0, dy = 0;
+    if (rangeX > 0)
+        dx = random() % rangeX;
+    if (rangeY > 0)
+        dy = random() % rangeY;
+    dx += m_shell->windowsArea(targetOutput).x;
+    dy += m_shell->windowsArea(targetOutput).y;
+
+    // Set surface position
+    x = targetOutput->x + dx;
+    y = targetOutput->y + dy;
 }
 
 void ShellSurface::mapPopup()

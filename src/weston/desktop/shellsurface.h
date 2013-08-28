@@ -66,6 +66,8 @@ public:
     void setFullscreen(uint32_t method, uint32_t framerate, weston_output *output);
     void setXWayland(int x, int y, uint32_t flags);
 
+    void calculateInitialPosition(int &x, int &y);
+
     void addTransform(struct weston_transform *transform);
     void removeTransform(struct weston_transform *transform);
     void damage();

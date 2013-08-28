@@ -319,13 +319,7 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int3
     bool changedType = surface->updateType();
 
     if (!surface->isMapped()) {
-        switch (surface->m_type) {
-        case ShellSurface::Type::TopLevel:
-            surface->map(10 + random() % 400, 10 + random() % 400, width, height);
-            break;
-        default:
-            surface->map(surface->m_surface->geometry.x + sx, surface->m_surface->geometry.y + sy, width, height);
-        }
+        surface->map(sx, sy, width, height);
 
         for (Effect *e: m_effects) {
             e->addSurface(surface);
