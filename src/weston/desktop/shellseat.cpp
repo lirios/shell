@@ -225,7 +225,8 @@ void ShellSeat::removePopupGrab(ShellSurface *surface)
 {
     m_popupGrab.surfaces.remove(surface);
     if (m_popupGrab.surfaces.empty()) {
-        weston_pointer_end_grab(m_popupGrab.grab.pointer);
+        if (m_popupGrab.client)
+            weston_pointer_end_grab(m_popupGrab.grab.pointer);
         m_popupGrab.client = nullptr;
     }
 }
