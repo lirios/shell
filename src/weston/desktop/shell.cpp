@@ -219,10 +219,9 @@ void Shell::init()
                                          [](struct weston_seat *seat, uint32_t time, uint32_t button, void *data) {
         static_cast<Shell *>(data)->activateSurface(seat, time, button); }, this);
 
-    // FIXME: Turn modifier into MODIFIER_SUPER as soon as we don't test on X
-    bindKey(KEY_LEFT, MODIFIER_CTRL, [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
+    bindKey(KEY_LEFT, MODIFIER_SUPER, [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
         static_cast<Shell *>(data)->selectPreviousWorkspace(); }, this);
-    bindKey(KEY_RIGHT, MODIFIER_CTRL, [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
+    bindKey(KEY_RIGHT, MODIFIER_SUPER, [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
         static_cast<Shell *>(data)->selectNextWorkspace(); }, this);
 }
 
