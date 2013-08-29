@@ -39,7 +39,7 @@ BackgroundSettings::BackgroundSettings(QObject *parent)
     m_shading = BackgroundSettings::SolidColorShading;
     m_url = QUrl::fromLocalFile(QStringLiteral("%1/backgrounds/hawaii/Also Calm.png")
                                 .arg(INSTALL_DATADIR));
-    m_fillMode = BackgroundSettings::Scaled;
+    m_fillMode = BackgroundSettings::Stretched;
 
     // Configuration
     m_configuration = new QConfiguration(this, QStringLiteral("shell/background"));
