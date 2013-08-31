@@ -55,7 +55,7 @@ OverlayWindow::OverlayWindow(ShellUi *ui)
 
     // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);
-    setGeometry(ui->screen()->geometry());
+    geometryChanged(ui->screen()->geometry());
 
     // React to screen size changes
     connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
