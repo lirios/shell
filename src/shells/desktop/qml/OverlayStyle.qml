@@ -31,7 +31,7 @@ Style {
     property color panelColor1: Qt.rgba(0.13, 0.13, 0.13, 0.7)
     property color panelColor2: Qt.rgba(0, 0, 0, 0.7)
     property color textColor: "white"
-    property color textShadowColor: Qt.rgba(0, 0, 0, 60)
+    property color textShadowColor: Qt.rgba(0, 0, 0, 0.7)
 
     property Component panel: Rectangle {
         id: background
