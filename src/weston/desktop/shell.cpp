@@ -116,6 +116,13 @@ Shell::Shell(struct weston_compositor *ec)
     m_child.shell = this;
     m_child.process.pid = 0;
     m_child.deathstamp = 0;
+
+    // Ctrl+Alt+Backspace terminate the display
+    weston_compositor_add_key_binding(compositor(), KEY_BACKSPACE, (weston_keyboard_modifier)(MODIFIER_CTRL | MODIFIER_ALT),
+                                      [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
+        weston_compositor *compositor = static_cast<weston_compositor *>(data);
+        wl_display_terminate(compositor->wl_display);
+    }, compositor());
 }
 
 ShellGrab::ShellGrab()
