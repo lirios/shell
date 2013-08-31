@@ -21,6 +21,7 @@ set(SOURCES
     effects/griddesktops.cpp
     effects/inoutsurfaceeffect.cpp
     effects/minimizeeffect.cpp
+    effects/opacityeffect.cpp
     effects/scaleeffect.cpp
     effects/zoomeffect.cpp
 )

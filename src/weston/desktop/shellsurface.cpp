@@ -52,6 +52,7 @@ ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
             , m_runningGrab(nullptr)
             , m_parent(nullptr)
             , m_pingTimer(nullptr)
+            , m_maximumAlpha(1.f)
 {
     m_popup.seat = nullptr;
     wl_list_init(&m_fullscreen.transform.link);
@@ -416,6 +417,11 @@ void ShellSurface::damage()
     weston_surface_damage(m_surface);
 }
 
+void ShellSurface::setMaximumAlpha(float alpha)
+{
+    m_maximumAlpha = alpha;
+}
+
 void ShellSurface::setAlpha(float alpha)
 {
     m_surface->alpha = alpha;
@@ -465,6 +471,11 @@ int32_t ShellSurface::transformedHeight() const
 {
     pixman_box32_t *box = pixman_region32_extents(&m_surface->transform.boundingbox);
     return box->y2 - box->y1;
+}
+
+float ShellSurface::maximumAlpha() const
+{
+    return m_maximumAlpha;
 }
 
 float ShellSurface::alpha() const

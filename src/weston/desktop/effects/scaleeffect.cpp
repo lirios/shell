@@ -178,7 +178,7 @@ void ScaleEffect::run(struct weston_seat *ws)
             surf->animation.run(surf->surface->output(), ANIM_DURATION, Animation::Flags::SendDone);
 
             surf->alphaAnim.setStart(surf->surface->alpha());
-            surf->alphaAnim.setTarget(surf->minimize ? 0.f : 1.f);
+            surf->alphaAnim.setTarget(surf->minimize ? 0.f : surf->surface->maximumAlpha());
             surf->alphaAnim.run(surf->surface->output(), ALPHA_ANIM_DURATION);
         } else {
             surf->wasMinimized = surf->surface->isMinimized();
@@ -243,7 +243,7 @@ void ScaleEffect::run(struct weston_seat *ws)
             for (SurfaceTransform *tr: m_surfaces) {
                 if (tr->surface == s) {
                     tr->alphaAnim.setStart(tr->surface->alpha());
-                    tr->alphaAnim.setTarget(1.0);
+                    tr->alphaAnim.setTarget(s->maximumAlpha());
                     tr->alphaAnim.run(tr->surface->output(), ALPHA_ANIM_DURATION);
                     break;
                 }

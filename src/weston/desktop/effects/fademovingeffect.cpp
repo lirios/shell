@@ -62,7 +62,7 @@ void FadeMovingEffect::end(ShellSurface *surface)
 {
     Surface *surf = findSurface(surface);
     surf->animation.setStart(surface->alpha());
-    surf->animation.setTarget(1.0);
+    surf->animation.setTarget(surface->maximumAlpha());
     surf->animation.run(surface->output(), ALPHA_ANIM_DURATION);
 }
 

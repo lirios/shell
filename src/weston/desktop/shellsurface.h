@@ -71,6 +71,7 @@ public:
     void addTransform(struct weston_transform *transform);
     void removeTransform(struct weston_transform *transform);
     void damage();
+    void setMaximumAlpha(float alpha);
     void setAlpha(float alpha);
 
     inline Shell *shell() const { return m_shell; }
@@ -87,6 +88,7 @@ public:
     int32_t height() const;
     int32_t transformedWidth() const;
     int32_t transformedHeight() const;
+    float maximumAlpha() const;
     float alpha() const;
     inline bool is(struct weston_surface *s) const { return s == m_surface; }
     bool isPopup() const;
@@ -181,6 +183,8 @@ private:
         uint32_t serial;
     };
     PingTimer *m_pingTimer;
+
+    float m_maximumAlpha;
 
     void pong(struct wl_client *client, struct wl_resource *resource, uint32_t serial);
     void move(struct wl_client *client, struct wl_resource *resource, struct wl_resource *seat_resource,

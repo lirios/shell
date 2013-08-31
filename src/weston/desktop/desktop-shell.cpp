@@ -48,6 +48,7 @@
 #include "fademovingeffect.h"
 #include "zoomeffect.h"
 #include "inoutsurfaceeffect.h"
+#include "opacityeffect.h"
 #include "inputpanel.h"
 #include "shellseat.h"
 #include "workspace.h"
@@ -103,6 +104,7 @@ void DesktopShell::init()
     new ScaleEffect(this);
     new GridDesktops(this);
     new FadeMovingEffect(this);
+    new OpacityEffect(this);
     new ZoomEffect(this);
     new InOutSurfaceEffect(this);
     new MinimizeEffect(this);
