@@ -144,6 +144,8 @@ static const quint32 keyTable[] = {
     Qt::Key_Hangul, KEY_HANGEUL,
     Qt::Key_yen, KEY_YEN,
     Qt::Key_Meta, KEY_LEFTMETA,
+    Qt::Key_Super_L, KEY_LEFTMETA,
+    Qt::Key_Super_R, KEY_RIGHTMETA,
     Qt::Key_Stop, KEY_STOP,
     Qt::Key_Copy, KEY_COPY,
     Qt::Key_OpenUrl, KEY_OPEN,
