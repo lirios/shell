@@ -29,6 +29,30 @@
 #include "desktopshell.h"
 #include "keybinding.h"
 
+#define CHECK_MODIFIER(encoded, decoded, qtmod) \
+    if ((encoded & qtmod) == qtmod) { \
+        decoded |= qtModifier2Wayland(qtmod); \
+        encoded &= ~qtmod; \
+    }
+
+static int qtModifier2Wayland(int modifier)
+{
+    switch (modifier) {
+    case Qt::ControlModifier:
+        return MODIFIER_CTRL;
+    case Qt::AltModifier:
+        return MODIFIER_ALT;
+    case Qt::MetaModifier:
+        return MODIFIER_SUPER;
+    case Qt::ShiftModifier:
+        return MODIFIER_SHIFT;
+    default:
+        break;
+    }
+
+    return 0;
+}
+
 /*
  * ShortcutPrivate
  */
@@ -51,30 +75,20 @@ void ShortcutPrivate::qtSequence2Wayland(const QKeySequence &s, quint32 *keys, q
     quint32 decodedKeys = 0;
     quint32 decodedMods = 0;
 
+    // TODO: We should create a binding for each sequence
     for (int i = 0; i < s.count(); i++) {
         int seq = s[i];
 
-        switch (seq) {
-        case Qt::ControlModifier:
-            decodedMods |= MODIFIER_CTRL;
-            break;
-        case Qt::AltModifier:
-            decodedMods |= MODIFIER_ALT;
-            break;
-        case Qt::MetaModifier:
-            decodedMods |= MODIFIER_SUPER;
-            break;
-        case Qt::ShiftModifier:
-            decodedMods |= MODIFIER_SHIFT;
-            break;
-        }
-        if (decodedMods > 0)
-            continue;
+        CHECK_MODIFIER(seq, decodedMods, Qt::ControlModifier);
+        CHECK_MODIFIER(seq, decodedMods, Qt::AltModifier);
+        CHECK_MODIFIER(seq, decodedMods, Qt::MetaModifier);
+        CHECK_MODIFIER(seq, decodedMods, Qt::ShiftModifier);
 
         int k = 0;
         while (keyTable[k]) {
-            if (seq == (int)keyTable[k]) {
+            if ((seq & (int)keyTable[k]) == (int)keyTable[k]) {
                 decodedKeys |= keyTable[k + 1];
+                seq &= ~(int)keyTable[k];
                 break;
             }
             k += 2;
