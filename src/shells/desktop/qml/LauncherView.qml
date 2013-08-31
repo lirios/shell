@@ -350,7 +350,7 @@ Item {
             }
 
             Shortcut {
-                key: Qt.Key_Meta
+                key: Qt.CtrlModifier | Qt.Key_Escape
                 onTriggered: checked = !checked
             }
 
