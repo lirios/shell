@@ -509,17 +509,6 @@ void DesktopShell::setPosition(struct wl_client *client, struct wl_resource *res
         return;
     }
 
-    // Make sure the surface is in the panels layer
-    bool found = false;
-    for (weston_surface *current: m_panelsLayer) {
-        if (current == surface) {
-            found = true;
-            break;
-        }
-    }
-    if (!found)
-        m_panelsLayer.addSurface(surface);
-
     // Set given position
     weston_surface_set_position(surface, x, y);
 }

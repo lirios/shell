@@ -662,7 +662,7 @@ static void configure_static_surface(struct weston_surface *es, Layer *layer, in
 
     weston_surface_configure(es, es->geometry.x, es->geometry.y, width, height);
 
-    if (wl_list_empty(&es->layer_link)) {
+    if (wl_list_empty(&es->layer_link) || !weston_surface_is_mapped(es)) {
         layer->addSurface(es);
         weston_compositor_schedule_repaint(es->compositor);
     }
