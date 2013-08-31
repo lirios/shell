@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.1
+import QtQuick.Window 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Shell.Desktop 0.1
@@ -32,11 +33,12 @@ import Hawaii.Shell.Styles 0.1
 import FluidUi 0.2 as FluidUi
 
 Item {
-    width: 400
-    height: 300
+    width: Math.min(Math.max(mainLayout.implicitWidth, Screen.width * 0.25) + 2 * margin, Screen.width)
+    height: Math.min(Math.max(mainLayout.implicitHeight, Screen.height * 0.25) + 2 * margin, Screen.height)
     opacity: 0.0
 
     property var control: Shell.service("VolumeControl")
+    property int margin: 20
 
     Behavior on opacity {
         NumberAnimation { duration: 250 }
@@ -85,9 +87,10 @@ Item {
         style: Qt.createComponent("OverlayStyle.qml", styledItem)
 
         ColumnLayout {
+            id: mainLayout
             anchors {
                 fill: parent
-                margins: 20
+                margins: margin
             }
 
             FluidUi.Icon {
