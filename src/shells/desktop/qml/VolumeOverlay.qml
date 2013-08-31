@@ -59,7 +59,7 @@ Item {
         target: icon
         property: "iconName"
         value: {
-            if (control.muted)
+            if (control.muted || control.volume === 0)
                 return "audio-volume-muted-symbolic";
 
             var n = Math.floor(3 * control.volume / 100) + 1;
