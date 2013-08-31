@@ -48,6 +48,7 @@ private:
     wl_surface *m_surface;
 
     void setWindowType();
+    void setSurfacePosition();
 };
 
 #endif // BACKGROUNDWINDOW_H

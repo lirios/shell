@@ -52,7 +52,7 @@ BackgroundWindow::BackgroundWindow(ShellUi *ui)
 
     // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);
-    setGeometry(ui->screen()->geometry());
+    geometryChanged(ui->screen()->geometry());
 
     // React to screen size changes
     connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
@@ -72,6 +72,9 @@ void BackgroundWindow::geometryChanged(const QRect &rect)
 {
     // Resize view to actual size
     setGeometry(rect);
+
+    // Set surface position
+    setSurfacePosition();
 }
 
 void BackgroundWindow::setWindowType()
@@ -84,6 +87,13 @@ void BackgroundWindow::setWindowType()
                 native->nativeResourceForWindow("surface", this));
 
     DesktopShell::instance()->d_ptr->shell->set_background(output, m_surface);
+}
+
+void BackgroundWindow::setSurfacePosition()
+{
+    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    qDebug() << geometry();
+    shell->set_position(m_surface, geometry().x(), geometry().y());
 }
 
 #include "moc_backgroundwindow.cpp"
