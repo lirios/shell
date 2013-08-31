@@ -140,6 +140,9 @@ public:
     struct wl_client *shellClient() { return m_child.client; }
     struct wl_resource *shellClientResource() { return m_child.desktop_shell; }
 
+    weston_surface *createBlackSurface(int x, int y, int w, int h);
+    weston_surface *createBlackSurface(ShellSurface *fs_surface, float x, float y, int w, int h);
+
 protected:
     Shell(struct weston_compositor *ec);
 
@@ -149,7 +152,7 @@ protected:
     virtual void setGrabCursor(uint32_t cursor) {}
     virtual void setBusyCursor(ShellSurface *shsurf, struct weston_seat *seat) {}
     virtual void endBusyCursor(struct weston_seat *seat) {}
-    void fadeIn();
+    void fadeIn(bool lock = false);
     void fadeOut();
     void addWorkspace(Workspace *ws);
 
@@ -169,7 +172,6 @@ protected:
     Layer m_panelsLayer;
     Layer m_fullscreenLayer;
     Layer m_overlayLayer;
-    Layer m_splashLayer;
     Layer m_notificationsLayer;
     Layer m_lockLayer;
 
@@ -191,14 +193,12 @@ private:
     void activateSurface(struct weston_seat *seat, uint32_t time, uint32_t button);
     void configureFullscreen(ShellSurface *surface);
     void stackFullscreen(ShellSurface *surface);
-    struct weston_surface *createBlackSurface(ShellSurface *fs_surface, float x, float y, int w, int h);
     static void sendConfigure(struct weston_surface *surface, uint32_t edges, int32_t width, int32_t height);
     bool surfaceIsTopFullscreen(ShellSurface *surface);
     void activateWorkspace(Workspace *old);
     void pointerFocus(ShellSeat *shseat, struct weston_pointer *pointer);
     void pingTimeout(ShellSurface *shsurf);
     void pong(ShellSurface *shsurf);
-    weston_surface *createBlackSurface(int x, int y, int w, int h);
     void workspaceRemoved(Workspace *ws);
 
     WlListener m_destroyListener;

@@ -46,53 +46,102 @@
 #include "cmakedirs.h"
 #include "wayland-desktop-shell-server-protocol.h"
 
-class Splash {
+class Splash
+{
 public:
-    Splash() {}
-    void addOutput(Shell *shell, weston_surface *s)
+    enum FadeType {
+        FadeUnknown = 0,
+        FadeIn,
+        FadeOut,
+        FadeOutLock
+    };
+
+    Splash(Shell *shell)
+        : m_shell(shell)
+        , m_surface(nullptr)
     {
-        Animation *a = new Animation;
-        splash spl{shell, s, a};
-        splashes.push_back(spl);
-        a->updateSignal->connect(&splashes.back(), &splash::setAlpha);
-        a->doneSignal->connect(&splashes.back(), &splash::done);
+        m_surface = createSurface();
+
+        m_splash.type = FadeUnknown;
+        m_splash.parent = this;
+        m_splash.fadeAnimation = new Animation();
+        m_splash.fadeAnimation->updateSignal->connect(&m_splash, &splash::setAlpha);
+        m_splash.fadeAnimation->doneSignal->connect(&m_splash, &splash::done);
     }
+
+    ~Splash()
+    {
+        delete m_splash.fadeAnimation;
+
+        if (m_surface)
+            weston_surface_destroy(m_surface);
+    }
+
+    weston_surface *createSurface(float alpha = 1.f)
+    {
+        // Create a surface big enough to cover all screens
+        weston_surface *surface =
+                m_shell->createBlackSurface(0, 0, 8192, 8192);
+        surface->alpha = alpha;
+        weston_surface_update_transform(surface);
+        wl_list_insert(&m_shell->compositor()->fade_layer.surface_list,
+                       &surface->layer_link);
+        return surface;
+    }
+
     void fadeIn()
     {
-        for (splash &s: splashes) {
-            s.fadeAnimation->setStart(0.f);
-            s.fadeAnimation->setTarget(1.f);
-            s.fadeAnimation->run(s.surface->output, 250, Animation::Flags::SendDone);
-        }
+        if (!m_surface)
+            m_surface = createSurface(0.f);
+
+        m_splash.type = FadeIn;
+        m_splash.fadeAnimation->setStart(0.f);
+        m_splash.fadeAnimation->setTarget(1.f);
+        m_splash.fadeAnimation->run(m_surface->output, 250, Animation::Flags::SendDone);
     }
-    void fadeOut()
+
+    void fadeOut(bool lock = false)
     {
-        for (splash &s: splashes) {
-            s.fadeAnimation->setStart(1.f);
-            s.fadeAnimation->setTarget(0.f);
-            s.fadeAnimation->run(s.surface->output, 250);
-        }
+        m_splash.type = lock ? FadeOutLock : FadeOut;
+        m_splash.fadeAnimation->setStart(1.f);
+        m_splash.fadeAnimation->setTarget(0.f);
+        m_splash.fadeAnimation->run(m_surface->output, 250, Animation::Flags::SendDone);
     }
 
 private:
     struct splash {
-        Shell *shell;
-        weston_surface *surface;
+        Splash::FadeType type;
+        Splash *parent;
         Animation *fadeAnimation;
 
         void setAlpha(float a)
         {
-            surface->alpha = a;
-            weston_surface_geometry_dirty(surface);
-            weston_surface_damage(surface);
+            parent->m_surface->alpha = a;
+            weston_surface_geometry_dirty(parent->m_surface);
+            weston_surface_damage(parent->m_surface);
         }
 
         void done()
         {
-            shell->lockSession();
+            switch (type) {
+            case Splash::FadeOut:
+                weston_surface_destroy(parent->m_surface);
+                parent->m_surface = 0;
+                break;
+            case Splash::FadeOutLock:
+                parent->m_shell->lockSession();
+                break;
+            default:
+                break;
+            }
         }
     };
-    std::list<splash> splashes;
+
+    friend class splash;
+
+    Shell *m_shell;
+    weston_surface *m_surface;
+    splash m_splash;
 };
 
 Binding::Binding(struct weston_binding *binding)
@@ -194,8 +243,7 @@ void Shell::init()
         shseat->pointerFocusSignal.connect(this, &Shell::pointerFocus);
     }
 
-    m_splashLayer.insert(&m_compositor->cursor_layer);
-    m_lockLayer.insert(&m_splashLayer);
+    m_lockLayer.insert(&m_compositor->cursor_layer);
     m_overlayLayer.insert(&m_lockLayer);
     m_notificationsLayer.insert(&m_overlayLayer);
     m_fullscreenLayer.insert(&m_notificationsLayer);
@@ -203,7 +251,7 @@ void Shell::init()
     m_backgroundLayer.insert(&m_panelsLayer);
 
     m_currentWorkspace = 0;
-    m_splash = new Splash;
+    m_splash = new Splash(this);
 
     struct weston_output *out;
     wl_list_for_each(out, &m_compositor->output_list, link) {
@@ -213,10 +261,6 @@ void Shell::init()
         weston_surface *blackSurface = createBlackSurface(x, y, w, h);
         m_backgroundLayer.addSurface(blackSurface);
         m_blackSurfaces.push_back(blackSurface);
-
-        weston_surface *splashSurface = createBlackSurface(x, y, w, h);
-        m_splashLayer.addSurface(splashSurface);
-        m_splash->addOutput(this, splashSurface);
     }
 
     struct wl_event_loop *loop = wl_display_get_event_loop(m_compositor->wl_display);
@@ -268,20 +312,6 @@ void Shell::workspaceRemoved(Workspace *ws)
     }
 
     activateWorkspace(nullptr);
-}
-
-weston_surface *Shell::createBlackSurface(int x, int y, int w, int h)
-{
-    weston_surface *surface = weston_surface_create(m_compositor);
-
-    surface->configure = black_surface_configure;
-    surface->configure_private = 0;
-    weston_surface_configure(surface, x, y, w, h);
-    weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1);
-    pixman_region32_fini(&surface->input);
-    pixman_region32_init_rect(&surface->input, 0, 0, 0, 0);
-
-    return surface;
 }
 
 void Shell::lockSession()
@@ -406,26 +436,6 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int3
             }
         }
     }
-}
-
-struct weston_surface *Shell::createBlackSurface(ShellSurface *fs_surface, float x, float y, int w, int h)
-{
-    struct weston_surface *surface = weston_surface_create(m_compositor);
-    if (!surface) {
-        weston_log("no memory\n");
-        return nullptr;
-    }
-
-    surface->configure = black_surface_configure;
-    surface->configure_private = fs_surface;
-    weston_surface_configure(surface, x, y, w, h);
-    weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1);
-    pixman_region32_fini(&surface->opaque);
-    pixman_region32_init_rect(&surface->opaque, 0, 0, w, h);
-    pixman_region32_fini(&surface->input);
-    pixman_region32_init_rect(&surface->input, 0, 0, w, h);
-
-    return surface;
 }
 
 void Shell::configureFullscreen(ShellSurface *shsurf)
@@ -880,6 +890,40 @@ void Shell::restoreWindows()
     m_windowsMinimized = false;
 }
 
+weston_surface *Shell::createBlackSurface(int x, int y, int w, int h)
+{
+    weston_surface *surface = weston_surface_create(m_compositor);
+
+    surface->configure = black_surface_configure;
+    surface->configure_private = 0;
+    weston_surface_configure(surface, x, y, w, h);
+    weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1);
+    pixman_region32_fini(&surface->input);
+    pixman_region32_init_rect(&surface->input, 0, 0, 0, 0);
+
+    return surface;
+}
+
+weston_surface *Shell::createBlackSurface(ShellSurface *fs_surface, float x, float y, int w, int h)
+{
+    struct weston_surface *surface = weston_surface_create(m_compositor);
+    if (!surface) {
+        weston_log("no memory\n");
+        return nullptr;
+    }
+
+    surface->configure = black_surface_configure;
+    surface->configure_private = fs_surface;
+    weston_surface_configure(surface, x, y, w, h);
+    weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1);
+    pixman_region32_fini(&surface->opaque);
+    pixman_region32_init_rect(&surface->opaque, 0, 0, w, h);
+    pixman_region32_fini(&surface->input);
+    pixman_region32_init_rect(&surface->input, 0, 0, w, h);
+
+    return surface;
+}
+
 void Shell::pointerFocus(ShellSeat *, struct weston_pointer *pointer)
 {
     struct weston_surface *surface = pointer->focus;
@@ -923,9 +967,9 @@ void Shell::pong(ShellSurface *shsurf)
     }
 }
 
-void Shell::fadeIn()
+void Shell::fadeIn(bool lock)
 {
-    m_splash->fadeOut();
+    m_splash->fadeOut(lock);
 }
 
 void Shell::fadeOut()

@@ -403,7 +403,7 @@ void DesktopShell::resumeDesktop()
     m_lockLayer.hide();
 
     m_locked = false;
-    fadeIn();
+    fadeIn(true);
     weston_compositor_damage_all(m_compositor);
 }
 
