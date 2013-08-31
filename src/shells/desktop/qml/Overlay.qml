@@ -28,7 +28,13 @@ import QtQuick 2.0
 import Hawaii.Shell.Desktop 0.1
 
 Item {
+    ShortcutsOverlay {
+        anchors.centerIn: parent
+        z: 0
+    }
+
     VolumeOverlay {
         anchors.centerIn: parent
+        z: 1
     }
 }
