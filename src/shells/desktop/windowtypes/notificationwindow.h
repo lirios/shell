@@ -29,16 +29,22 @@
 
 #include <QQuickWindow>
 
+class QQuickItem;
+
 class NotificationWindow : public QQuickWindow
 {
     Q_OBJECT
 public:
     explicit NotificationWindow(QWindow *parent = 0);
 
+    QQuickItem *item() const;
+    void setItem(QQuickItem *item);
+
 public Q_SLOTS:
     void addSurface();
 
 private:
+    QQuickItem *m_item;
     bool m_surfaceAdded;
 };
 

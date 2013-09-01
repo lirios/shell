@@ -37,7 +37,6 @@
 #include "launcheritem.h"
 #include "launchermodel.h"
 #include "launchersettings.h"
-#include "notificationwindow.h"
 #include "powermanager.h"
 #include "servicefactory.h"
 #include "sessionmanager.h"
@@ -54,7 +53,6 @@ void registerQmlTypes()
 
     // Window types
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
-    qmlRegisterType<NotificationWindow>(uri, 0, 1, "NotificationWindow");
 
     // Settings
     qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");

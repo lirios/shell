@@ -201,19 +201,19 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
                qPrintable(component->errorString()));
 
     QObject *topLevel = component->create();
-    NotificationWindow *window = qobject_cast<NotificationWindow *>(topLevel);
-    if (!window)
-        qFatal("Can't get notification bubble window");
+    QQuickItem *item = qobject_cast<QQuickItem *>(topLevel);
+    if (!item)
+        qFatal("Can't get notification bubble item");
 
     // Calculate identifier
     uint id = replacesId > 0 ? replacesId : nextId();
 
     // Set properties
-    window->setProperty("identifier", id);
-    window->setProperty("appName", appName);
-    window->setProperty("summary", summary);
-    window->setProperty("body", body);
-    window->setProperty("expirationTimeout", timeout);
+    item->setProperty("identifier", id);
+    item->setProperty("appName", appName);
+    item->setProperty("summary", summary);
+    item->setProperty("body", body);
+    item->setProperty("expirationTimeout", timeout);
 
     // Set icon name
     QString icon = iconName;
@@ -224,7 +224,14 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
     item->setProperty("iconName", icon);
 
     // Handle expiration
-    connect(window, SIGNAL(closed(int)), this, SLOT(notificationExpired(int)));
+    connect(item, SIGNAL(closed(int)), this, SLOT(notificationExpired(int)));
+
+    // Create a window
+    NotificationWindow *window = new NotificationWindow();
+    window->setItem(item);
+    window->setScreen(QGuiApplication::primaryScreen());
+    window->setWidth(item->width());
+    window->setHeight(item->height());
 
     return window;
 }
@@ -243,10 +250,10 @@ NotificationWindow *NotificationsDaemon::findNotification(const QString &appName
 
 void NotificationsDaemon::showNotification(NotificationWindow *notification)
 {
-    // Show the notification (this will start the QML timer because its
-    // running property is bound to visible) and ask the compositor
-    // to add the surface to the "bubbles list"
+    // Show the notification and start the timer that will automatically
+    // close the bubble
     notification->show();
+    notification->item()->setProperty("running", true);
 
     // We trigger a fake resize in order to have the buffer created
     // and then syncronize and add the surface so that the compositor
@@ -254,6 +261,8 @@ void NotificationsDaemon::showNotification(NotificationWindow *notification)
     notification->resize(notification->size());
     while (QCoreApplication::hasPendingEvents())
         QCoreApplication::processEvents();
+
+    // Ask the compositor to add the surface to the "bubbles list"
     notification->addSurface();
 }
 

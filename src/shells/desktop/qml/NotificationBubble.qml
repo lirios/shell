@@ -28,7 +28,7 @@ import QtQuick 2.0
 import Hawaii.Shell.Desktop 0.1
 import Hawaii.Shell.Styles 0.1
 
-NotificationWindow {
+Item {
     id: notification
     width: root.implicitWidth
     height: root.implicitHeight
@@ -53,12 +53,13 @@ NotificationWindow {
     property int mouseOverMargin: 48
     property real mouseOverOpacityMin: 0.4
 
+    property alias running: timer.running
+
     signal closed(int identifier)
 
     Timer {
         id: timer
         interval: timeout
-        running: visible
         repeat: false
         onTriggered: notification.closed(identifier)
     }

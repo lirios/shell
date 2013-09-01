@@ -73,7 +73,7 @@ Style {
             width: 48
             height: 48
             smooth: true
-            visible: iconName !== ""
+            visible: source !== ""
         }
     }
 

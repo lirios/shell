@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 #include <QGuiApplication>
+#include <QtQuick/QQuickItem>
 
 #include <qpa/qplatformnativeinterface.h>
 
@@ -34,13 +35,34 @@
 
 NotificationWindow::NotificationWindow(QWindow *parent)
     : QQuickWindow(parent)
+    , m_item(0)
     , m_surfaceAdded(false)
 {
+    // Set transparent color
+    setColor(Qt::transparent);
+
     // Avoid shell surface
     setFlags(flags() | Qt::BypassWindowManagerHint);
 
     // Create platform window
     create();
+}
+
+QQuickItem *NotificationWindow::item() const
+{
+    return m_item;
+}
+
+void NotificationWindow::setItem(QQuickItem *item)
+{
+    m_item = item;
+    m_item->setParentItem(contentItem());
+    connect(m_item, &QQuickItem::widthChanged, [=]() {
+        this->setWidth(m_item->width());
+    });
+    connect(m_item, &QQuickItem::heightChanged, [=]() {
+        this->setHeight(m_item->height());
+    });
 }
 
 void NotificationWindow::addSurface()
