@@ -30,6 +30,7 @@
 #include <QDBusConnection>
 #include <QQmlEngine>
 #include <QQmlComponent>
+#include <QtQuick/QQuickItem>
 
 #include <qpa/qplatformnativeinterface.h>
 
@@ -37,6 +38,7 @@
 #include "notificationsdaemon.h"
 #include "notificationsimage.h"
 #include "notificationwindow.h"
+#include "notificationimageprovider.h"
 #include "desktopshell.h"
 
 /*
@@ -49,6 +51,7 @@ Q_GLOBAL_STATIC(NotificationsDaemon, s_notificationsDaemon)
 NotificationsDaemon::NotificationsDaemon()
     : QObject()
 {
+
     // Create the DBus adaptor
     new NotificationsAdaptor(this);
 
@@ -190,28 +193,35 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
                                                             const QImage &image,
                                                             int timeout)
 {
-    QQmlEngine *engine = new QQmlEngine(this);
+    QQmlEngine *engine = DesktopShell::instance()->engine();
     QQmlComponent *component = new QQmlComponent(engine, this);
     component->loadUrl(QUrl("qrc:///qml/NotificationBubble.qml"));
     if (!component->isReady())
-        qFatal("Failed to create a notification window: %s",
+        qFatal("Failed to create a notification bubble: %s",
                qPrintable(component->errorString()));
 
     QObject *topLevel = component->create();
     NotificationWindow *window = qobject_cast<NotificationWindow *>(topLevel);
     if (!window)
-        qFatal("NotificationItem's root item has to be a NotificationWindow");
+        qFatal("Can't get notification bubble window");
 
-    // Set all the properties
-    window->setProperty("identifier", replacesId > 0 ? replacesId : nextId());
+    // Calculate identifier
+    uint id = replacesId > 0 ? replacesId : nextId();
+
+    // Set properties
+    window->setProperty("identifier", id);
     window->setProperty("appName", appName);
-    if (image.isNull())
-        window->setProperty("iconName", iconName);
     window->setProperty("summary", summary);
     window->setProperty("body", body);
-    if (!image.isNull())
-        window->setProperty("picture", image);
     window->setProperty("expirationTimeout", timeout);
+
+    // Set icon name
+    QString icon = iconName;
+    if (!image.isNull()) {
+        cacheImage(QString::number(id), image);
+        icon = QStringLiteral("image://notifications/") + QString::number(id);
+    }
+    item->setProperty("iconName", icon);
 
     // Handle expiration
     connect(window, SIGNAL(closed(int)), this, SLOT(notificationExpired(int)));
@@ -257,6 +267,26 @@ QString NotificationsDaemon::findImageFromPath(const QString &imagePath)
     return QStringLiteral("file://") + imagePath;
 }
 
+void NotificationsDaemon::cacheImage(const QString &key, const QImage &image)
+{
+    QQmlImageProviderBase *base =
+            DesktopShell::instance()->engine()->imageProvider("notifications");
+    NotificationImageProvider *provider =
+            static_cast<NotificationImageProvider *>(base);
+    if (provider)
+        provider->insertPixmap(key, QPixmap::fromImage(image));
+}
+
+void NotificationsDaemon::uncacheImage(const QString &key)
+{
+    QQmlImageProviderBase *base =
+            DesktopShell::instance()->engine()->imageProvider("notifications");
+    NotificationImageProvider *provider =
+            static_cast<NotificationImageProvider *>(base);
+    if (provider)
+        provider->removePixmap(key);
+}
+
 void NotificationsDaemon::notificationExpired(int id)
 {
     notificationClosed((uint)id, (uint)CloseReasonExpired);
@@ -269,10 +299,12 @@ void NotificationsDaemon::notificationClosed(uint id, uint reason)
     // so that Notify will create a new bubble
     for (int i = 0; i < m_notifications.size(); i++) {
         NotificationWindow *notification = m_notifications.at(i);
-        if (notification->property("identifier").toInt() == (int)id) {
+        uint notificationId = notification->property("identifier").toUInt();
+        if (notificationId != id) {
             m_notifications.removeAt(i);
             notification->hide();
             notification->deleteLater();
+            uncacheImage(QString::number(notificationId));
             emit NotificationClosed(id, reason);
             return;
         }

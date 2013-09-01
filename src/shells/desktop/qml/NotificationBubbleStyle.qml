@@ -28,7 +28,6 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Shell.Styles 0.1
-import FluidExtra 0.2 as FluidExtra
 
 Style {
     property int spacing: 8
@@ -64,25 +63,17 @@ Style {
     property Component image: Item {
         width: visible ? 48 : 0
         height: visible ? 48 : 0
-        visible: icon.visible || image.visible
+        visible: icon.visible
 
         Image {
             id: icon
             source: __item.iconName
-            sourceSize: Qt.size(width, height)
+            sourceSize.width: icon.width
+            sourceSize.height: icon.height
             width: 48
             height: 48
             smooth: true
             visible: iconName !== ""
-        }
-
-        FluidExtra.ImageItem {
-            id: image
-            //image: __item.picture
-            width: 48
-            height: 48
-            smooth: true
-            visible: !icon.visible
         }
     }
 

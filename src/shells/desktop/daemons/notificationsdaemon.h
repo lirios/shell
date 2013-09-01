@@ -87,6 +87,9 @@ private:
 
     QString findImageFromPath(const QString &imagePath);
 
+    void cacheImage(const QString &key, const QImage &image);
+    void uncacheImage(const QString &key);
+
 private Q_SLOTS:
     void notificationExpired(int id);
     void notificationClosed(uint id, uint reason);

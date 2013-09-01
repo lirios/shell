@@ -29,6 +29,7 @@ set(SOURCES
     shortcut.cpp
     window.cpp
     workspace.cpp
+    daemons/notificationimageprovider.cpp
     daemons/notificationsdaemon.cpp
     daemons/notificationsimage.cpp
     daemons/policykitagent.cpp

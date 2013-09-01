@@ -40,6 +40,7 @@
 #include "desktopshell_p.h"
 #include "notificationsdaemon.h"
 #include "notificationwindow.h"
+#include "notificationimageprovider.h"
 #include "shellui.h"
 #include "shellwindow.h"
 #include "shortcut_p.h"
@@ -190,8 +191,9 @@ DesktopShellPrivate::DesktopShellPrivate(DesktopShell *parent)
     engine = new QQmlEngine(parent);
     engine->rootContext()->setContextProperty("Shell", parent);
 
-    // Register image provider
+    // Register image providers
     engine->addImageProvider("appicon", new ApplicationIconProvider);
+    engine->addImageProvider("notifications", new NotificationImageProvider);
 
     // Register QML types and factories
     registerQmlTypes();

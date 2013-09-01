@@ -30,7 +30,6 @@ import Hawaii.Shell.Styles 0.1
 
 NotificationWindow {
     id: notification
-    color: "transparent"
     width: root.implicitWidth
     height: root.implicitHeight
 
@@ -39,7 +38,6 @@ NotificationWindow {
     property alias iconName: root.iconName
     property alias summary: root.summary
     property alias body: root.body
-    property alias picture: root.picture
     property int expirationTimeout
     property int timeout: {
         // If no timeout is specified, add two seconds to ensure the
@@ -92,7 +90,6 @@ NotificationWindow {
         property string iconName
         property string summary
         property string body
-        property var picture
 
         id: root
         style: Qt.createComponent("NotificationBubbleStyle.qml", root)
