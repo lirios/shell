@@ -48,10 +48,6 @@ Item {
         onTriggered: active = !active
     }
 
-    Item {
-        onVisibleChanged: childrenRect
-    }
-
     StyledItem {
         id: styledItem
         anchors.fill: parent
