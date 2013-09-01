@@ -152,7 +152,7 @@ protected:
     virtual void setGrabCursor(uint32_t cursor) {}
     virtual void setBusyCursor(ShellSurface *shsurf, struct weston_seat *seat) {}
     virtual void endBusyCursor(struct weston_seat *seat) {}
-    void fadeIn(bool lock = false);
+    void fadeIn();
     void fadeOut();
     void addWorkspace(Workspace *ws);
 

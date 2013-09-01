@@ -39,7 +39,8 @@ Layer::Layer()
 void Layer::insert(struct weston_layer *below)
 {
     if (below) {
-        wl_list_remove(&m_layer.link);
+        if (m_layer.link.prev && m_layer.link.next)
+            wl_list_remove(&m_layer.link);
         wl_list_insert(&below->link, &m_layer.link);
         for (struct weston_surface *s: *this) {
             weston_surface_damage(s);
@@ -50,7 +51,8 @@ void Layer::insert(struct weston_layer *below)
 void Layer:: insert(Layer *below)
 {
     if (below) {
-        wl_list_remove(&m_layer.link);
+        if (m_layer.link.prev && m_layer.link.next)
+            wl_list_remove(&m_layer.link);
         wl_list_insert(&below->m_layer.link, &m_layer.link);
         for (struct weston_surface *s: *this) {
             weston_surface_damage(s);

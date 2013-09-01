@@ -52,15 +52,14 @@ public:
     enum FadeType {
         FadeUnknown = 0,
         FadeIn,
-        FadeOut,
-        FadeOutLock
+        FadeOut
     };
 
     Splash(Shell *shell)
         : m_shell(shell)
         , m_surface(nullptr)
     {
-        m_surface = createSurface();
+        m_surface = createSurface(1.f);
 
         m_splash.type = FadeUnknown;
         m_splash.parent = this;
@@ -100,9 +99,12 @@ public:
         m_splash.fadeAnimation->run(m_surface->output, 250, Animation::Flags::SendDone);
     }
 
-    void fadeOut(bool lock = false)
+    void fadeOut()
     {
-        m_splash.type = lock ? FadeOutLock : FadeOut;
+        if (!m_surface)
+            return;
+
+        m_splash.type = FadeOut;
         m_splash.fadeAnimation->setStart(1.f);
         m_splash.fadeAnimation->setTarget(0.f);
         m_splash.fadeAnimation->run(m_surface->output, 250, Animation::Flags::SendDone);
@@ -124,12 +126,12 @@ private:
         void done()
         {
             switch (type) {
+            case Splash::FadeIn:
+                parent->m_shell->lockSession();
+                break;
             case Splash::FadeOut:
                 weston_surface_destroy(parent->m_surface);
                 parent->m_surface = 0;
-                break;
-            case Splash::FadeOutLock:
-                parent->m_shell->lockSession();
                 break;
             default:
                 break;
@@ -243,8 +245,7 @@ void Shell::init()
         shseat->pointerFocusSignal.connect(this, &Shell::pointerFocus);
     }
 
-    m_lockLayer.insert(&m_compositor->cursor_layer);
-    m_overlayLayer.insert(&m_lockLayer);
+    m_overlayLayer.insert(&m_compositor->cursor_layer);
     m_notificationsLayer.insert(&m_overlayLayer);
     m_fullscreenLayer.insert(&m_notificationsLayer);
     m_panelsLayer.insert(&m_fullscreenLayer);
@@ -967,9 +968,9 @@ void Shell::pong(ShellSurface *shsurf)
     }
 }
 
-void Shell::fadeIn(bool lock)
+void Shell::fadeIn()
 {
-    m_splash->fadeOut(lock);
+    m_splash->fadeOut();
 }
 
 void Shell::fadeOut()

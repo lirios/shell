@@ -355,12 +355,12 @@ void DesktopShell::lockSession()
     // show the lock screen on all outpus and remove the backgrounds
     // layer as well.
     // TODO: Proper multiscreen setup
-    m_lockLayer.show();
-    hideOverlays();
-    hideNotifications();
-    m_fullscreenLayer.hide();
-    hidePanels();
-    currentWorkspace()->hide();
+    m_panelsLayer.reset();
+    m_fullscreenLayer.reset();
+    m_notificationsLayer.reset();
+    m_overlayLayer.reset();
+    currentWorkspace()->reset();
+    m_lockLayer.insert(&compositor()->cursor_layer);
 
     launchScreenSaverProcess();
 
@@ -395,15 +395,15 @@ void DesktopShell::resumeDesktop()
 {
     terminateScreenSaverProcess();
 
-    showOverlays();
-    showNotifications();
-    m_fullscreenLayer.show();
-    showPanels();
-    currentWorkspace()->show();
-    m_lockLayer.hide();
+    m_lockLayer.reset();
+    m_overlayLayer.insert(&m_compositor->cursor_layer);
+    m_notificationsLayer.insert(&m_overlayLayer);
+    m_fullscreenLayer.insert(&m_notificationsLayer);
+    m_panelsLayer.insert(&m_fullscreenLayer);
+    currentWorkspace()->insert(&m_panelsLayer);
 
     m_locked = false;
-    fadeIn(true);
+    fadeIn();
     weston_compositor_damage_all(m_compositor);
 }
 
