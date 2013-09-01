@@ -53,66 +53,115 @@ Item {
         anchors.fill: parent
         style: Qt.createComponent("OverlayStyle.qml", styledItem)
 
-        ColumnLayout {
+        RowLayout {
             id: mainLayout
             anchors {
                 fill: parent
                 margins: margin
             }
+            spacing: margin
 
             ColumnLayout {
+                spacing: margin
+
                 Text {
-                    text: "<h2>AppChooser</h2><br>" +
-                          "<p><strong>Super + A</strong> - Opens AppChooser, hitting this again closes it</p>"
+                    text: "<h2>AppChooser</h2>" +
+                          "<table border='0' cellspacing='10'>" +
+                          "<tr><td><strong>Super + A</strong></td><td>Opens AppChooser, hitting this again closes it</td></tr>" +
+                          "</table>"
                     color: styledItem.__style.textColor
                     style: Text.Raised
                     styleColor: styledItem.__style.textShadowColor
-                    textFormat: Text.StyledText
+                    textFormat: Text.RichText
+                }
+
+                Rectangle {
+                    color: styledItem.__style.textColor
+                    height: 1
+
+                    Layout.fillWidth: true
                 }
 
                 Text {
-                    text: "<h2>Window Management</h2><br>" +
-                          "<p><strong>Alt + Tab</strong> - Switch between windows in the current workspace</p>" +
-                          "<p><strong>Super + E</strong> - Expo mode for all windows in the current workspace</p>"
+                    text: "<h2>Window Management</h2>" +
+                          "<table border='0' cellspacing='10'>" +
+                          "<tr><td><strong>Alt + Tab</strong></td><td>Switch between windows in the current workspace</td></tr>" +
+                          "<tr><td><strong>Super + E</strong></td><td>Expo mode for all windows in the current workspace</td></tr>" +
+                          "</table>"
                     color: styledItem.__style.textColor
                     style: Text.Raised
                     styleColor: styledItem.__style.textShadowColor
-                    textFormat: Text.StyledText
+                    textFormat: Text.RichText
+                }
+
+                Rectangle {
+                    color: styledItem.__style.textColor
+                    height: 1
+
+                    Layout.fillWidth: true
                 }
 
                 Text {
-                    text: "<h2>Workspace Management</h2><br>" +
-                          "<p><strong>Super + G</strong> - Zooms out on all the workspaces and lets you manage windows (incomplete feature)" +
-                          "<p><strong>Super + Left</strong> - Go to previous workspace" +
-                          "<p><strong>Super + Right</strong> - Go to next workspace"
+                    text: "<h2>Workspace Management</h2>" +
+                          "<table border='0' cellspacing='10'>" +
+                          "<tr><td><strong>Super + G</strong></td><td>Zooms out on all the workspaces and<br>lets you manage windows (incomplete feature)</td></tr>" +
+                          "<tr><td><strong>Super + Left</strong></td><td>Go to previous workspace</td></tr>" +
+                          "<tr><td><strong>Super + Right</strong></td><td>Go to next workspace</td></tr>" +
+                          "</table>"
                     color: styledItem.__style.textColor
                     style: Text.Raised
                     styleColor: styledItem.__style.textShadowColor
-                    textFormat: Text.StyledText
+                    textFormat: Text.RichText
                 }
 
-                Text {
-                    text: "<h2>Screenshots</h2><br>" +
-                          "<p><strong>Super + S</strong> - Take a screenshot to the current workspace</p>"
-                    color: styledItem.__style.textColor
-                    style: Text.Raised
-                    styleColor: styledItem.__style.textShadowColor
-                    textFormat: Text.StyledText
-                }
-
-                Text {
-                    text: "<h2>Miscellaneous</h2><br>" +
-                          "<p><strong>Ctrl + Alt + H</strong> - This screen</p>" +
-                          "<p><strong>Ctrl + Alt + Backspace</strong> - Terminate session immediately (unsafe, use as last resort)</p>"
-                    color: styledItem.__style.textColor
-                    style: Text.Raised
-                    styleColor: styledItem.__style.textShadowColor
-                    textFormat: Text.StyledText
+                Item {
+                    Layout.fillHeight: true
                 }
             }
 
-            Item {
+            Rectangle {
+                color: styledItem.__style.textColor
+                width: 1
+
                 Layout.fillHeight: true
+            }
+
+            ColumnLayout {
+                spacing: margin
+
+                Text {
+                    text: "<h2>Screenshots</h2>" +
+                          "<table border='0' cellspacing='10'>" +
+                          "<tr><td><strong>Super + S</strong></td><td>Take a screenshot to the current workspace</td></tr>" +
+                          "</table>"
+                    color: styledItem.__style.textColor
+                    style: Text.Raised
+                    styleColor: styledItem.__style.textShadowColor
+                    textFormat: Text.RichText
+                }
+
+                Rectangle {
+                    color: styledItem.__style.textColor
+                    height: 1
+
+                    Layout.fillWidth: true
+                }
+
+                Text {
+                    text: "<h2>Miscellaneous</h2>" +
+                          "<table border='0' cellspacing='10'>" +
+                          "<tr><td><strong>Ctrl + Alt + H</strong></td><td>This screen</td></tr>" +
+                          "<tr><td><strong>Ctrl + Alt + Backspace</strong></td><td>Terminate session immediately<br>(unsafe, use as last resort)</td></tr>" +
+                          "</table>"
+                    color: styledItem.__style.textColor
+                    style: Text.Raised
+                    styleColor: styledItem.__style.textShadowColor
+                    textFormat: Text.RichText
+                }
+
+                Item {
+                    Layout.fillHeight: true
+                }
             }
         }
     }
