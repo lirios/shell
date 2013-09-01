@@ -5,6 +5,7 @@
         <file>qml/DialogStyle.qml</file>
         <file>qml/Popup.qml</file>
         <file>qml/PopupStyle.qml</file>
+        <file>qml/BaseItem.qml</file>
 
         <!-- Notifications -->
         <file>qml/NotificationBubble.qml</file>
@@ -62,6 +63,10 @@
         <file>qml/OverlayStyle.qml</file>
         <file>qml/ShortcutsOverlay.qml</file>
         <file>qml/VolumeOverlay.qml</file>
+
+        <!-- Tooltips -->
+        <file>qml/Tooltip.qml</file>
+        <file>qml/TooltipStyle.qml</file>
 
         <!-- Images -->
         <file>images/noise.png</file>

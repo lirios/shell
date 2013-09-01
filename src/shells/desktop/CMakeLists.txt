@@ -52,6 +52,7 @@ set(SOURCES
     windowtypes/overlaywindow.cpp
     windowtypes/panelwindow.cpp
     windowtypes/shellwindow.cpp
+    windowtypes/tooltipwindow.cpp
 )
 
 wayland_add_protocol_client(SOURCES

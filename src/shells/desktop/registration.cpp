@@ -42,6 +42,7 @@
 #include "sessionmanager.h"
 #include "shellwindow.h"
 #include "shortcut.h"
+#include "tooltipwindow.h"
 #include "volumecontrol.h"
 #include "window.h"
 #include "workspace.h"
@@ -53,6 +54,7 @@ void registerQmlTypes()
 
     // Window types
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
+    qmlRegisterType<TooltipWindow>(uri, 0, 1, "TooltipWindow");
 
     // Settings
     qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
