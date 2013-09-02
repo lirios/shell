@@ -62,6 +62,7 @@
         <file>qml/OverlayStyle.qml</file>
         <file>qml/ShortcutsOverlay.qml</file>
         <file>qml/VolumeOverlay.qml</file>
+        <file>qml/WorkspacesOverlay.qml</file>
 
         <!-- Tooltips -->
         <file>qml/Tooltip.qml</file>

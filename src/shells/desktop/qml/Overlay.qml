@@ -37,4 +37,9 @@ Item {
         anchors.centerIn: parent
         z: 1
     }
+
+    WorkspacesOverlay {
+        anchors.centerIn: parent
+        z: 1
+    }
 }
