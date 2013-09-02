@@ -106,8 +106,8 @@ if ! qdbus >/dev/null 2>/dev/null; then
 fi
 
 # Start the right shell
+args=""
 if test -n "$HAWAII_SHELL_DEBUG_PORT"; then
-    $executable -qmljsdebugger=port:${HAWAII_SHELL_DEBUG_PORT},block
-else
-    $executable
+    args="-qmljsdebugger=port:${HAWAII_SHELL_DEBUG_PORT},block"
 fi
+exec $executable $args
