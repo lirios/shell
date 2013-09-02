@@ -68,22 +68,6 @@ void DesktopShellImpl::hawaii_desktop_shell_loaded()
     QMetaObject::invokeMethod(m_parent->q_ptr, "create");
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_present(wl_surface *surface)
-{
-    // Setup shell windows
-    foreach (ShellUi *shellUi, m_parent->shellWindows) {
-        if (surface == shellUi->backgroundWindow()->surface()) {
-            QMetaObject::invokeMethod(shellUi->backgroundWindow(), "showNormal");
-        } else if (surface == shellUi->panelWindow()->surface()) {
-            QMetaObject::invokeMethod(shellUi->panelWindow(), "showNormal");
-            QMetaObject::invokeMethod(shellUi->panelWindow(), "sendGeometry");
-        } else if (surface == shellUi->launcherWindow()->surface()) {
-            QMetaObject::invokeMethod(shellUi->launcherWindow(), "showNormal");
-            QMetaObject::invokeMethod(shellUi->launcherWindow(), "sendGeometry");
-        }
-    }
-}
-
 void DesktopShellImpl::hawaii_desktop_shell_prepare_lock_surface()
 {
     // Create the lock screen only for the primary screen

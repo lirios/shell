@@ -40,7 +40,6 @@ public:
 
 protected:
     void hawaii_desktop_shell_loaded();
-    void hawaii_desktop_shell_present(wl_surface *surface);
     void hawaii_desktop_shell_prepare_lock_surface();
     void hawaii_desktop_shell_grab_cursor(uint32_t cursor);
     void hawaii_desktop_shell_window_mapped(hawaii_desktop_shell *object,
