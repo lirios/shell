@@ -89,7 +89,10 @@ public Q_SLOTS:
     void toggleWindows();
 
     void addWorkspace();
+    void addWorkspaces(int num);
+
     void removeWorkspace(int num);
+
     void selectWorkspace(Workspace *workspace);
 
 private:

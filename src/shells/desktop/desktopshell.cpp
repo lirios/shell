@@ -293,6 +293,10 @@ void DesktopShell::create()
 {
     Q_D(DesktopShell);
 
+    // Add configured workspaces
+    // TODO: Add as many workspaces as specified by the settings
+    addWorkspaces(4);
+
     // Bind Meta-D to toggle windows
     KeyBinding *binding = addKeyBinding(KEY_D, MODIFIER_SUPER);
     connect(binding, &KeyBinding::triggered, []() {
@@ -306,13 +310,6 @@ void DesktopShell::create()
         ShellUi *ui = new ShellUi(d->engine, screen, this);
         d->shellWindows.append(ui);
     }
-
-    // Add the first workspace
-    // TODO: Add as many workspaces as specified by the settings
-    addWorkspace();
-    addWorkspace();
-    addWorkspace();
-    addWorkspace();
 
     // Wait until all user interface elements for all screens are ready
     while (QCoreApplication::hasPendingEvents())
@@ -409,6 +406,14 @@ void DesktopShell::addWorkspace()
 {
     Q_D(DesktopShell);
     d->shell->add_workspace();
+}
+
+void DesktopShell::addWorkspaces(int num)
+{
+    Q_D(DesktopShell);
+
+    while (num--)
+        d->shell->add_workspace();
 }
 
 void DesktopShell::removeWorkspace(int num)
