@@ -80,6 +80,7 @@ Q_SIGNALS:
     void workspaceAdded(int num);
     void workspaceRemoved(int num);
     void workspacesChanged();
+    void workspaceSwitched(Workspace *workspace);
 
 public Q_SLOTS:
     void create();

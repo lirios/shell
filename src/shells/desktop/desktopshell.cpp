@@ -234,8 +234,14 @@ void DesktopShellPrivate::emitWindowAdded(Window *window)
 void DesktopShellPrivate::emitWorkspaceAdded(int num)
 {
     Q_Q(DesktopShell);
+
     Q_EMIT q->workspaceAdded(num);
     Q_EMIT q->workspacesChanged();
+
+    Workspace *workspace = workspaces.at(num);
+    q->connect(workspace, &Workspace::activeChanged, [=](bool active){
+        Q_EMIT q->workspaceSwitched(workspace);
+    });
 }
 
 void DesktopShellPrivate::handleGlobal(void *data,
