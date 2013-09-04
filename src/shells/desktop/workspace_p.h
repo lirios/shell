@@ -41,9 +41,9 @@ public:
     Workspace *q_ptr;
     bool active;
 
-private:
-    void hawaii_workspace_activated();
-    void hawaii_workspace_deactivated();
+protected:
+    virtual void hawaii_workspace_activated();
+    virtual void hawaii_workspace_deactivated();
 };
 
 #endif // WORKSPACE_P_H

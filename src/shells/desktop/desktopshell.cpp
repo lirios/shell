@@ -130,11 +130,11 @@ void DesktopShellImpl::hawaii_desktop_shell_grab_cursor(uint32_t cursor)
                                   Q_ARG(QCursor, qcursor));
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_window_mapped(hawaii_desktop_shell *object,
-                                                   hawaii_window *id,
-                                                   const QString &title,
-                                                   const QString &identifier,
-                                                   int32_t state)
+void DesktopShellImpl::hawaii_desktop_shell_window_mapped(struct ::hawaii_desktop_shell *object,
+                                                          struct ::hawaii_window *id,
+                                                          const QString &title,
+                                                          const QString &identifier,
+                                                          int32_t state)
 {
     // Create a client window representation
     Window *window = new Window(title, identifier, wlStateConvert(state));
@@ -145,9 +145,9 @@ void DesktopShellImpl::hawaii_desktop_shell_window_mapped(hawaii_desktop_shell *
     m_parent->emitWindowAdded(window);
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_workspace_added(hawaii_desktop_shell *object,
-                                                     hawaii_workspace *id,
-                                                     int32_t active)
+void DesktopShellImpl::hawaii_desktop_shell_workspace_added(struct ::hawaii_desktop_shell *object,
+                                                            struct ::hawaii_workspace *id,
+                                                            int32_t active)
 {
     Workspace *workspace = new Workspace(active != 0);
     workspace->d_ptr->init(id);

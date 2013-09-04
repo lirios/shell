@@ -40,8 +40,8 @@ public:
     quint32 key;
     quint32 modifiers;
 
-private:
-    void hawaii_key_binding_triggered();
+protected:
+    virtual void hawaii_key_binding_triggered();
 };
 
 #endif // KEYBINDING_P_H

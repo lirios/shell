@@ -84,10 +84,10 @@ public:
     Window::States state;
 
 protected:
-    void hawaii_window_title_changed(const QString &title);
-    void hawaii_window_identifier_changed(const QString &identifier);
-    void hawaii_window_state_changed(int32_t state);
-    void hawaii_window_unmapped();
+    virtual void hawaii_window_title_changed(const QString &title);
+    virtual void hawaii_window_identifier_changed(const QString &identifier);
+    virtual void hawaii_window_state_changed(int32_t state);
+    virtual void hawaii_window_unmapped();
 };
 
 #endif // WINDOW_P_H
