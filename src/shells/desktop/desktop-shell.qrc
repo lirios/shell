@@ -36,7 +36,6 @@
         <file>qml/NetworkIndicator.qml</file>
         <file>qml/NotificationsIndicator.qml</file>
         <file>qml/UserIndicator.qml</file>
-        <file>qml/WorkspaceIndicator.qml</file>
 
         <!-- Launcher -->
         <file>qml/Launcher.qml</file>

@@ -41,16 +41,6 @@ Item {
             bottom: parent.bottom
         }
         width: Math.min(childrenRect.width, parent.width / 3)
-
-        WorkspaceIndicator {
-            id: workspaceIndicator
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-                rightMargin: spacing
-            }
-        }
     }
 
     Item {
