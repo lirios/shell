@@ -43,6 +43,14 @@ Item {
         NumberAnimation { duration: 250 }
     }
 
+    Connections {
+        target: Shell
+        onWorkspaceSwitched: {
+            opacity = 1.0;
+            timer.start();
+        }
+    }
+
     Timer {
         id: timer
         repeat: false
