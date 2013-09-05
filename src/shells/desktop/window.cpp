@@ -24,8 +24,65 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QDebug>
+#include <QtCore/QStandardPaths>
+
+#include <QtXdg/QApplicationInfo>
+
 #include "window.h"
 #include "window_p.h"
+
+class AppInfoPropertyMap : public QQmlPropertyMap
+{
+public:
+    AppInfoPropertyMap(const QString &identifier, QObject *parent = 0)
+        : QQmlPropertyMap(parent)
+    {
+        QString fileName = QStandardPaths::locate(
+                    QStandardPaths::ApplicationsLocation,
+                    identifier);
+        m_appInfo = new QApplicationInfo(fileName);
+    }
+
+    ~AppInfoPropertyMap()
+    {
+        delete m_appInfo;
+    }
+
+    bool contains(const QString &key)
+    {
+        if (key == QStringLiteral("appInfo"))
+            return true;
+        return false;
+    }
+
+    int count() const
+    {
+        return 1;
+    }
+
+    int size() const
+    {
+        return count();
+    }
+
+    void insert(const QString &key, const QVariant &value)
+    {
+    }
+
+    bool isEmpty() const
+    {
+        return m_appInfo->isValid();
+    }
+
+    QStringList keys() const
+    {
+        return QStringList() << QStringLiteral("appInfo");
+    }
+
+private:
+    QApplicationInfo *m_appInfo;
+};
 
 /*
  * WindowPrivate
@@ -34,6 +91,7 @@
 WindowPrivate::WindowPrivate()
     : QtWayland::hawaii_window()
     , q_ptr(0)
+    , appInfoMap(0)
     , state(Window::Inactive)
 {
 }
@@ -60,6 +118,10 @@ void WindowPrivate::hawaii_window_identifier_changed(const QString &identifier)
     if (this->identifier != identifier) {
         this->identifier = identifier;
         Q_EMIT q->identifierChanged(this->identifier);
+
+        delete this->appInfoMap;
+        this->appInfoMap = new AppInfoPropertyMap(identifier, q);
+        Q_EMIT q->appInfoChanged();
     }
 }
 
@@ -93,6 +155,7 @@ Window::Window(const QString &title, const QString &identifier, States state, QO
     d->q_ptr = this;
     d->title = title;
     d->identifier = identifier;
+    d->appInfoMap = new AppInfoPropertyMap(identifier, this);
     d->state = state;
 }
 
@@ -172,6 +235,14 @@ void Window::restore()
 
     if (d->state & Window::Maximized)
         setState(d->state & ~Window::Maximized);
+}
+
+QQmlPropertyMap *Window::qmlAttachedProperties(QObject *object)
+{
+    Window *window = qobject_cast<Window *>(object);
+    if (window)
+        return window->d_ptr->appInfoMap;
+    return 0;
 }
 
 #include "moc_window.cpp"

@@ -28,7 +28,10 @@
 #define WINDOW_H
 
 #include <QtCore/QObject>
+#include <QtQml/QQmlComponent>
+#include <QtQml/QQmlPropertyMap>
 
+class QApplicationInfo;
 class DesktopShellImpl;
 class WindowPrivate;
 
@@ -63,9 +66,12 @@ public:
     States state() const;
     void setState(const States &state);
 
+    static QQmlPropertyMap *qmlAttachedProperties(QObject *);
+
 Q_SIGNALS:
     void titleChanged(const QString &value);
     void identifierChanged(const QString &value);
+    void appInfoChanged();
     void stateChanged(const Window::States &value);
     void unmapped(Window *window);
 
@@ -81,5 +87,7 @@ private:
 
     WindowPrivate *const d_ptr;
 };
+
+QML_DECLARE_TYPEINFO(Window, QML_HAS_ATTACHED_PROPERTIES)
 
 #endif // WINDOW_H
