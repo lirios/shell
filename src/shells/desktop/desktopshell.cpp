@@ -226,9 +226,14 @@ DesktopShellPrivate::~DesktopShellPrivate()
 void DesktopShellPrivate::emitWindowAdded(Window *window)
 {
     Q_Q(DesktopShell);
+
     QObject::connect(window, SIGNAL(unmapped(Window*)),
                      q, SLOT(windowUnmapped(Window*)));
     Q_EMIT q->windowsChanged();
+
+    q->connect(window, &Window::activeChanged, [=](bool active) {
+        Q_EMIT q->windowActivated(window);
+    });
 }
 
 void DesktopShellPrivate::emitWorkspaceAdded(int num)

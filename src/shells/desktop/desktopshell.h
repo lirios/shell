@@ -77,6 +77,8 @@ public:
 
 Q_SIGNALS:
     void windowsChanged();
+    void windowActivated(Window *window);
+
     void workspaceAdded(int num);
     void workspaceRemoved(int num);
     void workspacesChanged();

@@ -40,6 +40,7 @@ class Window : public QObject
     Q_OBJECT
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString identifier READ identifier NOTIFY identifierChanged)
+    Q_PROPERTY(bool activate READ isActive NOTIFY activeChanged)
     Q_PROPERTY(States state READ state WRITE setState NOTIFY stateChanged)
     Q_DISABLE_COPY(Window)
     Q_DECLARE_PRIVATE(Window)
@@ -63,6 +64,8 @@ public:
 
     QString identifier() const;
 
+    bool isActive() const;
+
     States state() const;
     void setState(const States &state);
 
@@ -71,6 +74,7 @@ public:
 Q_SIGNALS:
     void titleChanged(const QString &value);
     void identifierChanged(const QString &value);
+    void activeChanged(bool value);
     void appInfoChanged();
     void stateChanged(const Window::States &value);
     void unmapped(Window *window);

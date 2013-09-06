@@ -184,6 +184,12 @@ QString Window::identifier() const
     return d->identifier;
 }
 
+bool Window::isActive() const
+{
+    Q_D(const Window);
+    return d->state & Window::Active;
+}
+
 Window::States Window::state() const
 {
     Q_D(const Window);
@@ -201,40 +207,50 @@ void Window::activate()
 {
     Q_D(Window);
 
-    if (!(d->state & Window::Active))
+    if (!(d->state & Window::Active)) {
         setState(d->state | Window::Active);
+        Q_EMIT activeChanged(true);
+    }
 }
 
 void Window::minimize()
 {
     Q_D(Window);
 
-    if (!(d->state & Window::Minimized))
+    if (!(d->state & Window::Minimized)) {
         setState(d->state | Window::Minimized);
+        Q_EMIT activeChanged(false);
+    }
 }
 
 void Window::unminimize()
 {
     Q_D(Window);
 
-    if (d->state & Window::Minimized)
+    if (d->state & Window::Minimized) {
         setState(d->state & ~Window::Minimized);
+        Q_EMIT activeChanged(isActive());
+    }
 }
 
 void Window::maximize()
 {
     Q_D(Window);
 
-    if (!(d->state & Window::Maximized))
+    if (!(d->state & Window::Maximized)) {
         setState(d->state | Window::Maximized);
+        Q_EMIT activeChanged(isActive());
+    }
 }
 
 void Window::restore()
 {
     Q_D(Window);
 
-    if (d->state & Window::Maximized)
+    if (d->state & Window::Maximized) {
         setState(d->state & ~Window::Maximized);
+        Q_EMIT activeChanged(isActive());
+    }
 }
 
 QQmlPropertyMap *Window::qmlAttachedProperties(QObject *object)
