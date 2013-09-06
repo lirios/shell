@@ -38,6 +38,11 @@ Item {
         z: 1
     }
 
+    WindowsSwitcherOverlay {
+        anchors.centerIn: parent
+        z: 1
+    }
+
     WorkspacesOverlay {
         anchors.centerIn: parent
         z: 1
