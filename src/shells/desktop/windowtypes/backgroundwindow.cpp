@@ -92,7 +92,6 @@ void BackgroundWindow::setWindowType()
 void BackgroundWindow::setSurfacePosition()
 {
     DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
-    qDebug() << geometry();
     shell->set_position(m_surface, geometry().x(), geometry().y());
 }
 
