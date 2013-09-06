@@ -664,8 +664,9 @@ void ShellSurface::move(struct wl_client *client, struct wl_resource *resource, 
                         uint32_t serial)
 {
     struct weston_seat *ws = static_cast<weston_seat *>(wl_resource_get_user_data(seat_resource));
+    struct weston_surface *surface = weston_surface_get_main_surface(ws->pointer->focus);
 
-    if (ws->pointer->button_count == 0 || ws->pointer->grab_serial != serial || ws->pointer->focus != m_surface) {
+    if (ws->pointer->button_count == 0 || ws->pointer->grab_serial != serial || surface != m_surface) {
         return;
     }
 
@@ -761,8 +762,9 @@ void ShellSurface::resize(struct wl_client *client, struct wl_resource *resource
                           uint32_t serial, uint32_t edges)
 {
     struct weston_seat *ws = static_cast<weston_seat *>(wl_resource_get_user_data(seat_resource));
+    struct weston_surface *surface = weston_surface_get_main_surface(ws->pointer->focus);
 
-    if (ws->pointer->button_count == 0 || ws->pointer->grab_serial != serial || ws->pointer->focus != m_surface) {
+    if (ws->pointer->button_count == 0 || ws->pointer->grab_serial != serial || surface != m_surface) {
         return;
     }
 
