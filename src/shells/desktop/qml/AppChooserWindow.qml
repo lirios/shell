@@ -29,8 +29,8 @@ import QtQuick.Window 2.0
 
 Popup {
     id: appChooserWindow
-    width: Math.max(Screen.width * 0.7, 640)
-    height: Math.max(Screen.height * 0.62, 480)
+    width: Math.min(appChooser.itemSize * 5, Screen.width / 2)
+    height: Math.min(appChooser.itemSize * 4, Screen.height / 2)
 
     AppChooser {
         id: appChooser

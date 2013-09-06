@@ -34,6 +34,7 @@ Item {
     id: appChooser
 
     property var window
+    readonly property int itemSize: 128
 
     ColumnLayout {
         anchors {
@@ -89,9 +90,9 @@ Item {
             ScrollView {
                 GridView {
                     id: grid
-                    cacheBuffer: 1000
-                    cellWidth: 108
-                    cellHeight: 108
+                    cacheBuffer: 100
+                    cellWidth: itemSize
+                    cellHeight: itemSize
                     model: VisualDataModel {
                         id: visualModel
 
