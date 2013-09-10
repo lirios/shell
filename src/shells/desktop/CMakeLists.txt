@@ -3,9 +3,9 @@ find_package(ALSA)
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${POLKITQT-1_INCLUDE_DIR}
-    ${QTXDG_INCLUDE_DIRS}
     ${WaylandClient_INCLUDE_DIRS}
     ${ALSA_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/daemons
     ${CMAKE_CURRENT_SOURCE_DIR}/launcher
@@ -18,6 +18,7 @@ include_directories(
 )
 
 set(SOURCES
+    ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg/xdgdesktopfile.cpp
     appcategories.cpp
     appinfo.cpp
     applicationiconprovider.cpp
@@ -91,7 +92,6 @@ target_link_libraries(hawaii-desktop-shell
     ${WaylandClient_LIBRARIES}
     ${POLKITQT-1_CORE_LIBRARY}
     ${POLKITQT-1_AGENT_LIBRARY}
-    ${QTXDG_LIBRARIES}
     ${ALSA_LIBRARIES}
 )
 

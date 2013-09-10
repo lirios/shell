@@ -29,7 +29,7 @@
 
 #include <QtCore/QObject>
 
-#include <qt5xdg/XdgDesktopFile>
+#include "xdgdesktopfile.h"
 
 class AppInfo : public QObject, public XdgDesktopFile
 {

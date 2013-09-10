@@ -68,9 +68,6 @@ if(GreenIsland_FOUND)
     find_package(Qt5Compositor)
 endif()
 
-# Find libqtxdg
-find_package(qt5xdg REQUIRED)
-
 # Find pkg-config
 find_package(PkgConfig "0.22" REQUIRED)
 

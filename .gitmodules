@@ -1,0 +1,3 @@
+[submodule "3rdparty/libqtxdg"]
+	path = 3rdparty/libqtxdg
+	url = https://github.com/plfiorini/libqtxdg.git
