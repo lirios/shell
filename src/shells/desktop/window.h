@@ -31,7 +31,7 @@
 #include <QtQml/QQmlComponent>
 #include <QtQml/QQmlPropertyMap>
 
-class QApplicationInfo;
+class AppInfo;
 class DesktopShellImpl;
 class WindowPrivate;
 

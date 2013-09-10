@@ -24,40 +24,37 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef LAUNCHERITEM_P_H
-#define LAUNCHERITEM_P_H
+#ifndef APPINFO_H
+#define APPINFO_H
 
-#include "launcheritem.h"
-#include "appinfo.h"
+#include <QtCore/QObject>
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Hawaii Shell API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
+#include <qt5xdg/XdgDesktopFile>
 
-class LauncherItemPrivate
+class AppInfo : public QObject, public XdgDesktopFile
 {
+    Q_OBJECT
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(QString genericName READ genericName NOTIFY genericNameChanged)
+    Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
+    Q_PROPERTY(QString comment READ comment NOTIFY commentChanged)
 public:
-    LauncherItemPrivate();
-    ~LauncherItemPrivate();
+    AppInfo(QObject *parent = 0);
 
-    LauncherItem::Type type;
-    AppInfo *appInfo;
-    QUrl url;
-    bool isActive;
-    bool isRunning;
-    bool isUrgent;
-    bool isDraggable;
-    bool isEditable;
-    bool isRemovable;
-    bool isCounterVisible;
-    int counter;
+    QString genericName() const;
+    QStringList categories() const;
+
+    bool isExecutable() const;
+    bool isHidden() const;
+
+Q_SIGNALS:
+    void nameChanged(const QString &value);
+    void genericNameChanged(const QString &value);
+    void iconNameChanged(const QString &value);
+    void commentChanged(const QString &value);
+
+public Q_SLOTS:
+    void launch();
 };
 
-#endif // LAUNCHERITEM_P_H
+#endif // APPINFO_H

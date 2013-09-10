@@ -32,9 +32,8 @@
 #include <QtCore/QSortFilterProxyModel>
 #include <QtQml/QQmlComponent>
 
-#include <QtXdg/QApplicationInfo>
-
 class QFileSystemWatcher;
+class AppInfo;
 
 class ApplicationsModel : public QAbstractListModel
 {
@@ -55,10 +54,10 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
 public Q_SLOTS:
-    QApplicationInfo *get(int index);
+    AppInfo *get(int index);
 
 private:
-    QList<QApplicationInfo *> m_apps;
+    QList<AppInfo *> m_apps;
     QFileSystemWatcher *m_watcher;
     QSet<QString> m_categories;
 

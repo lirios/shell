@@ -31,6 +31,7 @@
 #include <QtGui/QIcon>
 
 #include "applicationsmodel.h"
+#include "appinfo.h"
 
 /*
  * ApplicationsModel
@@ -64,19 +65,19 @@ QVariant ApplicationsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    QApplicationInfo *info = m_apps.at(index.row());
+    AppInfo *info = m_apps.at(index.row());
 
     switch (role) {
-        case NameRole:
-            return info->name();
-        case CommentRole:
-            return info->comment();
-        case IconNameRole:
-            return info->iconName();
-        case CategoriesRole:
-            return info->categories();
-        default:
-            break;
+    case NameRole:
+        return info->name();
+    case CommentRole:
+        return info->comment();
+    case IconNameRole:
+        return info->iconName();
+    case CategoriesRole:
+        return info->categories();
+    default:
+        break;
     }
 
     return QVariant();
@@ -89,7 +90,7 @@ int ApplicationsModel::rowCount(const QModelIndex &parent) const
     return m_apps.size();
 }
 
-QApplicationInfo *ApplicationsModel::get(int index)
+AppInfo *ApplicationsModel::get(int index)
 {
     if (index < 0 || index > m_apps.size())
         return 0;
@@ -117,7 +118,7 @@ void ApplicationsModel::directoryChanged(const QString &path)
 {
     // Remove items from this path
     for (int i = 0; i < m_apps.size(); i++) {
-        QApplicationInfo *info = m_apps.at(i);
+        AppInfo *info = m_apps.at(i);
 
         if (info->fileName().startsWith(path)) {
             beginRemoveRows(QModelIndex(), i, i);
@@ -137,15 +138,17 @@ void ApplicationsModel::directoryChanged(const QString &path)
             QString fullPath = walker.fileInfo().absoluteFilePath();
 
             // Add this item (only if it can be displayed)
-            QApplicationInfo *info = new QApplicationInfo(fullPath);
-            if (info->isValid() && !info->isHidden() && info->isExecutable()) {
-                // Append item to the model
-                beginInsertRows(QModelIndex(), m_apps.size(), m_apps.size());
-                m_apps.append(info);
-                endInsertRows();
+            AppInfo *info = new AppInfo();
+            if (info->load(fullPath)) {
+                if (info->isHidden() && info->isExecutable()) {
+                    // Append item to the model
+                    beginInsertRows(QModelIndex(), m_apps.size(), m_apps.size());
+                    m_apps.append(info);
+                    endInsertRows();
 
-                // Save categories
-                m_categories += QSet<QString>::fromList(info->categories());
+                    // Save categories
+                    m_categories += QSet<QString>::fromList(info->categories());
+                }
             }
         }
     }

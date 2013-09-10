@@ -60,7 +60,8 @@ LauncherItem::LauncherItem(const QString &fileName)
     , d_ptr(new LauncherItemPrivate())
 {
     d_ptr->type = LauncherItem::ApplicationItem;
-    d_ptr->appInfo = new QApplicationInfo(fileName);
+    d_ptr->appInfo = new AppInfo();
+    d_ptr->appInfo->load(fileName);
 
     connect(d_ptr->appInfo, SIGNAL(nameChanged(QString)),
             this, SIGNAL(labelChanged(QString)));
@@ -180,7 +181,7 @@ void LauncherItem::activate()
         return;
     }
 
-    if (d->appInfo->launch(QStringList())) {
+    if (d->appInfo->startDetached(QStringList())) {
         d->isRunning = true;
         Q_EMIT runningChanged(true);
     }
@@ -191,7 +192,7 @@ void LauncherItem::launchNewInstance()
     Q_D(LauncherItem);
 
     if (d->type == LauncherItem::ApplicationItem)
-        d->appInfo->launch(QStringList());
+        d->appInfo->startDetached(QStringList());
     else
         QDesktopServices::openUrl(d->url);
 }

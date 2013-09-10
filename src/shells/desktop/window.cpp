@@ -24,13 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
 #include <QtCore/QStandardPaths>
-
-#include <QtXdg/QApplicationInfo>
 
 #include "window.h"
 #include "window_p.h"
+#include "appinfo.h"
 
 class AppInfoPropertyMap : public QQmlPropertyMap
 {
@@ -41,7 +39,8 @@ public:
         QString fileName = QStandardPaths::locate(
                     QStandardPaths::ApplicationsLocation,
                     identifier);
-        m_appInfo = new QApplicationInfo(fileName);
+        m_appInfo = new AppInfo();
+        m_appInfo->load(fileName);
     }
 
     ~AppInfoPropertyMap()
@@ -81,7 +80,7 @@ public:
     }
 
 private:
-    QApplicationInfo *m_appInfo;
+    AppInfo *m_appInfo;
 };
 
 /*

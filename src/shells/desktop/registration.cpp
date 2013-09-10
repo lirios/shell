@@ -26,9 +26,8 @@
 
 #include <QtQml/QQmlComponent>
 
-#include <QtXdg/QApplicationInfo>
-
 #include "appcategories.h"
+#include "appinfo.h"
 #include "applicationsmodel.h"
 #include "backgroundsettings.h"
 #include "enums.h"
@@ -66,8 +65,8 @@ void registerQmlTypes()
     qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
     qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
-    qmlRegisterUncreatableType<QApplicationInfo>(uri, 0, 1, "ApplicationInfo",
-                                             QStringLiteral("Cannot create ApplicationInfo"));
+    qmlRegisterUncreatableType<AppInfo>(uri, 0, 1, "AppInfo",
+                                        QStringLiteral("Cannot create AppInfo"));
 
     // Shell types
     qmlRegisterType<KeyBinding>();

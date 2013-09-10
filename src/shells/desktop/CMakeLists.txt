@@ -3,6 +3,7 @@ find_package(ALSA)
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${POLKITQT-1_INCLUDE_DIR}
+    ${QTXDG_INCLUDE_DIRS}
     ${WaylandClient_INCLUDE_DIRS}
     ${ALSA_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}/headers
@@ -18,6 +19,7 @@ include_directories(
 
 set(SOURCES
     appcategories.cpp
+    appinfo.cpp
     applicationiconprovider.cpp
     applicationsmodel.cpp
     desktopshell.cpp
@@ -80,7 +82,7 @@ qt5_add_dbus_adaptor(SOURCES
     notificationsdaemon.h NotificationsDaemon)
 
 add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
-qt5_use_modules(hawaii-desktop-shell Quick Widgets Configuration AccountsService Xdg)
+qt5_use_modules(hawaii-desktop-shell Quick Widgets Configuration AccountsService)
 set_target_properties(hawaii-desktop-shell PROPERTIES
     COMPILE_FLAGS "-rdynamic"
     LINK_FLAGS "-L${WaylandClient_LIBDIR} -L${POLKITQT-1_LIB_DIR}"
@@ -89,6 +91,7 @@ target_link_libraries(hawaii-desktop-shell
     ${WaylandClient_LIBRARIES}
     ${POLKITQT-1_CORE_LIBRARY}
     ${POLKITQT-1_AGENT_LIBRARY}
+    ${QTXDG_LIBRARIES}
     ${ALSA_LIBRARIES}
 )
 
