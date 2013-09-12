@@ -145,7 +145,7 @@ void ApplicationsModel::directoryChanged(const QString &path)
             // Add this item (only if it can be displayed)
             AppInfo *info = new AppInfo();
             if (info->load(fullPath)) {
-                if (info->isHidden() && info->isExecutable()) {
+                if (info->isShow(QStringLiteral("Hawaii"))) {
                     // Append item to the model
                     beginInsertRows(QModelIndex(), m_apps.size(), m_apps.size());
                     m_apps.append(info);
