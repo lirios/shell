@@ -78,7 +78,6 @@ void DesktopShellServer::destroy_resource(wl_resource *resource)
 {
     DesktopShellServer *self = static_cast<DesktopShellServer *>(resource->data);
     self->m_resources.removeOne(resource);
-    free(resource);
 }
 
 void DesktopShellServer::set_available_geometry(struct wl_client *client,
