@@ -50,6 +50,11 @@ ApplicationsModel::ApplicationsModel(QObject *parent)
     populate();
 }
 
+ApplicationsModel::~ApplicationsModel()
+{
+    qDeleteAll(m_apps);
+}
+
 QHash<int, QByteArray> ApplicationsModel::roleNames() const
 {
     QHash<int, QByteArray> names;

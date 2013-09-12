@@ -47,6 +47,7 @@ public:
     };
 
     ApplicationsModel(QObject *parent = 0);
+    ~ApplicationsModel();
 
     QHash<int, QByteArray> roleNames() const;
 
