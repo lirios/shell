@@ -142,11 +142,13 @@ void Workspace::reset()
 
 void Workspace::setActive(bool active)
 {
-    m_active = active;
-    if (active)
-        hawaii_workspace_send_activated(m_resource);
-    else
-        hawaii_workspace_send_deactivated(m_resource);
+    if (m_active != active) {
+        m_active = active;
+        if (active)
+            hawaii_workspace_send_activated(m_resource);
+        else
+            hawaii_workspace_send_deactivated(m_resource);
+    }
 }
 
 Workspace *Workspace::fromResource(wl_resource *res)
