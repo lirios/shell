@@ -231,40 +231,32 @@ void Window::minimize()
 {
     Q_D(Window);
 
-    if (!(d->state & Window::Minimized)) {
+    if (!(d->state & Window::Minimized))
         setState(d->state | Window::Minimized);
-        Q_EMIT activeChanged(false);
-    }
 }
 
 void Window::unminimize()
 {
     Q_D(Window);
 
-    if (d->state & Window::Minimized) {
+    if (d->state & Window::Minimized)
         setState(d->state & ~Window::Minimized);
-        Q_EMIT activeChanged(isActive());
-    }
 }
 
 void Window::maximize()
 {
     Q_D(Window);
 
-    if (!(d->state & Window::Maximized)) {
+    if (!(d->state & Window::Maximized))
         setState(d->state | Window::Maximized);
-        Q_EMIT activeChanged(isActive());
-    }
 }
 
 void Window::restore()
 {
     Q_D(Window);
 
-    if (d->state & Window::Maximized) {
+    if (d->state & Window::Maximized)
         setState(d->state & ~Window::Maximized);
-        Q_EMIT activeChanged(isActive());
-    }
 }
 
 QQmlPropertyMap *Window::qmlAttachedProperties(QObject *object)
