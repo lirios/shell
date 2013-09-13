@@ -45,6 +45,7 @@ Item {
 
     Connections {
         target: Shell
+        onWindowActivated: opacity = 0.0
         onWorkspaceSwitched: {
             opacity = 1.0;
             timer.start();
