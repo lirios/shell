@@ -219,6 +219,14 @@ void Window::activate()
         setState(d->state | Window::Active);
 }
 
+void Window::deactivate()
+{
+    Q_D(Window);
+
+    if (isActive())
+        setState(d->state & ~Window::Active);
+}
+
 void Window::minimize()
 {
     Q_D(Window);

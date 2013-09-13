@@ -81,8 +81,11 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void activate();
+    void deactivate();
+
     void minimize();
     void unminimize();
+
     void maximize();
     void restore();
 
