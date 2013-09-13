@@ -40,7 +40,7 @@ class Window : public QObject
     Q_OBJECT
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString identifier READ identifier NOTIFY identifierChanged)
-    Q_PROPERTY(bool activate READ isActive NOTIFY activeChanged)
+    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
     Q_PROPERTY(States state READ state WRITE setState NOTIFY stateChanged)
     Q_DISABLE_COPY(Window)
     Q_DECLARE_PRIVATE(Window)
