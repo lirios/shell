@@ -128,13 +128,13 @@ void WindowPrivate::hawaii_window_state_changed(int32_t state)
 {
     Q_Q(Window);
 
-    bool wasActive = this->state & Window::Active;
-
     if (this->state != wlStateConvert(state)) {
+        bool wasActive = this->state & Window::Active;
+        bool isActive = state & Window::Active;
+
         this->state = wlStateConvert(state);
         Q_EMIT q->stateChanged(this->state);
 
-        bool isActive = this->state & Window::Active;
         if (wasActive != isActive)
             Q_EMIT q->activeChanged(isActive);
     }
@@ -204,6 +204,7 @@ Window::States Window::state() const
 void Window::setState(const States &state)
 {
     Q_D(Window);
+
     if (state != d->state) {
         d->state = state;
         d->set_state(stateConvert(d->state));
@@ -214,10 +215,8 @@ void Window::activate()
 {
     Q_D(Window);
 
-    if (!(d->state & Window::Active)) {
+    if (!isActive())
         setState(d->state | Window::Active);
-        Q_EMIT activeChanged(true);
-    }
 }
 
 void Window::minimize()
