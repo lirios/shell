@@ -128,9 +128,15 @@ void WindowPrivate::hawaii_window_state_changed(int32_t state)
 {
     Q_Q(Window);
 
+    bool wasActive = this->state & Window::Active;
+
     if (this->state != wlStateConvert(state)) {
         this->state = wlStateConvert(state);
         Q_EMIT q->stateChanged(this->state);
+
+        bool isActive = this->state & Window::Active;
+        if (wasActive != isActive)
+            Q_EMIT q->activeChanged(isActive);
     }
 }
 
