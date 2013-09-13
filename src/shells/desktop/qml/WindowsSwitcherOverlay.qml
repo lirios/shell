@@ -40,6 +40,12 @@ Item {
     readonly property int itemSize: 192
     readonly property int iconSize: 128
 
+    QtObject {
+        id: privobj
+
+        property int currentWindowIndex: -1
+    }
+
     Behavior on opacity {
         NumberAnimation { duration: 250 }
     }
@@ -50,6 +56,22 @@ Item {
 
     Behavior on height {
         NumberAnimation { duration: 100 }
+    }
+
+    Shortcut {
+        key: Qt.ControlModifier | Qt.Key_A
+        onTriggered: {
+            if (Shell.windows.length == 0)
+                return;
+
+            if (privobj.currentWindowIndex >= 0)
+                Shell.windows[privobj.currentWindowIndex].deactivate();
+
+            privobj.currentWindowIndex++;
+            if (privobj.currentWindowIndex > Shell.windows.length - 1)
+                privobj.currentWindowIndex = 0;
+            Shell.windows[privobj.currentWindowIndex].activate();
+        }
     }
 
     Connections {
