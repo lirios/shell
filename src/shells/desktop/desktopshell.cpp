@@ -229,11 +229,11 @@ void DesktopShellPrivate::emitWindowAdded(Window *window)
 
     QObject::connect(window, SIGNAL(unmapped(Window*)),
                      q, SLOT(windowUnmapped(Window*)));
-    Q_EMIT q->windowsChanged();
-
-    q->connect(window, &Window::activeChanged, [=](bool active) {
+    QObject::connect(window, &Window::activeChanged, [=](bool active) {
         Q_EMIT q->windowActivated(window);
     });
+
+    Q_EMIT q->windowsChanged();
 }
 
 void DesktopShellPrivate::emitWorkspaceAdded(int num)
