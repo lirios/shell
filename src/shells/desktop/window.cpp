@@ -204,8 +204,10 @@ Window::States Window::state() const
 void Window::setState(const States &state)
 {
     Q_D(Window);
-    d->state = state;
-    d->set_state(stateConvert(d->state));
+    if (state != d->state) {
+        d->state = state;
+        d->set_state(stateConvert(d->state));
+    }
 }
 
 void Window::activate()
