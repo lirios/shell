@@ -34,7 +34,7 @@ Item {
     id: windowsSwitcher
     width: Math.min(mainLayout.implicitWidth, Screen.width) + 2 * margin
     height: Math.min(mainLayout.implicitHeight, Screen.height) + 2 * margin
-    opacity: width > 0 ? 1.0 : 0.0
+    opacity: 0.0
 
     readonly property int margin: 20
     readonly property int itemSize: 192
@@ -63,6 +63,9 @@ Item {
         onTriggered: {
             if (Shell.windows.length == 0)
                 return;
+
+            opacity = 1.0;
+            timer.start();
 
             if (privobj.currentWindowIndex >= 0)
                 Shell.windows[privobj.currentWindowIndex].deactivate();
