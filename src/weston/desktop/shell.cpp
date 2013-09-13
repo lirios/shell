@@ -812,7 +812,7 @@ void Shell::selectWorkspace(int32_t id)
         return;
     }
     m_currentWorkspace = id;
-    activateWorkspace(old);
+    activateWorkspace(id == (int32_t)m_currentWorkspace ? nullptr : old);
 }
 
 void Shell::activateWorkspace(Workspace *old)
