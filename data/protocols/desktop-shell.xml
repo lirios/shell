@@ -198,8 +198,8 @@
       <entry name="inactive" value="0"/>
       <entry name="active" value="1"/>
       <entry name="minimized" value="2"/>
-      <entry name="maximized" value="3"/>
-      <entry name="fullscreen" value="4"/>
+      <entry name="maximized" value="4"/>
+      <entry name="fullscreen" value="8"/>
     </enum>
   </interface>
 

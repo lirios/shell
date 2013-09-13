@@ -46,11 +46,11 @@ class Window : public QObject
     Q_DECLARE_PRIVATE(Window)
 public:
     enum State {
-        Inactive = 0,
-        Active,
-        Minimized,
-        Maximized,
-        Fullscreen
+        Inactive = 0x00,
+        Active = 0x01,
+        Minimized = 0x02,
+        Maximized = 0x04,
+        Fullscreen = 0x08
     };
     Q_ENUMS(State)
     Q_DECLARE_FLAGS(States, State)
