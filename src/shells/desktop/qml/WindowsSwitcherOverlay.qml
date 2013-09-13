@@ -85,6 +85,11 @@ Item {
                 else
                     windowTitle.text = qsTr("Untitled");
             }
+            onWindowsChanged: {
+                // Clear window title when there are no more windows
+                if (Shell.windows.length == 0)
+                    windowTitle.text = "";
+            }
         }
 
         ColumnLayout {
