@@ -92,10 +92,6 @@ Item {
             if (Shell.windows.length == 0)
                 windowTitle.text = "";
         }
-        onWorkspaceSwitched: {
-            opacity = 1.0;
-            timer.start();
-        }
     }
 
     Timer {
