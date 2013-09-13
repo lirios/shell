@@ -54,6 +54,19 @@ Item {
 
     Connections {
         target: Shell
+        onWindowActivated: {
+            if (window.title)
+                windowTitle.text = window.title;
+            else if (window.appInfo && window.appInfo.name)
+                windowTitle.text = window.appInfo.name;
+            else
+                windowTitle.text = qsTr("Untitled");
+        }
+        onWindowsChanged: {
+            // Clear window title when there are no more windows
+            if (Shell.windows.length == 0)
+                windowTitle.text = "";
+        }
         onWorkspaceSwitched: {
             opacity = 1.0;
             timer.start();
@@ -74,23 +87,6 @@ Item {
             margins: margin
         }
         style: Qt.createComponent("OverlayStyle.qml", styledItem)
-
-        Connections {
-            target: Shell
-            onWindowActivated: {
-                if (window.title)
-                    windowTitle.text = window.title;
-                else if (window.appInfo && window.appInfo.name)
-                    windowTitle.text = window.appInfo.name;
-                else
-                    windowTitle.text = qsTr("Untitled");
-            }
-            onWindowsChanged: {
-                // Clear window title when there are no more windows
-                if (Shell.windows.length == 0)
-                    windowTitle.text = "";
-            }
-        }
 
         ColumnLayout {
             id: mainLayout
