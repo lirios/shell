@@ -130,14 +130,7 @@ Item {
                     Image {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
-                        source: {
-                            var name = "application-x-executable";
-
-                            if (modelData.appInfo && modelData.appInfo.iconName)
-                                name = modelData.appInfo.iconName;
-
-                            return "image://appicon/" + name;
-                        }
+                        source: "image://appicon/" + model.appInfo.iconName
                         sourceSize.width: width
                         sourceSize.height: height
                         width: iconSize

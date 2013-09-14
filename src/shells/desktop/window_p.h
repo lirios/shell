@@ -81,8 +81,8 @@ public:
     Window *q_ptr;
     QString title;
     QString identifier;
-    QQmlPropertyMap *appInfoMap;
     Window::States state;
+    AppInfo *appInfo;
 
 protected:
     virtual void hawaii_window_title_changed(const QString &title);

@@ -42,6 +42,7 @@ class Window : public QObject
     Q_PROPERTY(QString identifier READ identifier NOTIFY identifierChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
     Q_PROPERTY(States state READ state WRITE setState NOTIFY stateChanged)
+    Q_PROPERTY(AppInfo *appInfo READ appInfo NOTIFY appInfoChanged)
     Q_DISABLE_COPY(Window)
     Q_DECLARE_PRIVATE(Window)
 public:
@@ -69,14 +70,16 @@ public:
     States state() const;
     void setState(const States &state);
 
+    AppInfo *appInfo() const;
+
     static QQmlPropertyMap *qmlAttachedProperties(QObject *);
 
 Q_SIGNALS:
     void titleChanged(const QString &value);
     void identifierChanged(const QString &value);
     void activeChanged(bool value);
-    void appInfoChanged();
     void stateChanged(const Window::States &value);
+    void appInfoChanged();
     void unmapped(Window *window);
 
 public Q_SLOTS:
@@ -94,7 +97,5 @@ private:
 
     WindowPrivate *const d_ptr;
 };
-
-QML_DECLARE_TYPEINFO(Window, QML_HAS_ATTACHED_PROPERTIES)
 
 #endif // WINDOW_H
