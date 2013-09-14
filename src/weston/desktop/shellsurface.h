@@ -79,6 +79,7 @@ public:
     inline const struct wl_resource *wl_resource() const { return m_resource; }
     inline struct wl_client *client() const { return wl_resource_get_client(m_surface->resource); }
     inline struct weston_surface *weston_surface() const { return m_surface; }
+    inline struct wl_resource *windowResource() { return m_windowResource; }
 
     inline Type type() const { return m_type; }
     bool isMapped() const;

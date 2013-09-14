@@ -47,6 +47,9 @@ protected:
                                                     const QString &title,
                                                     const QString &identifier,
                                                     int32_t state);
+    virtual void hawaii_desktop_shell_window_switching_started();
+    virtual void hawaii_desktop_shell_window_switching_finished();
+    virtual void hawaii_desktop_shell_window_switched(struct ::hawaii_window *window);
     virtual void hawaii_desktop_shell_workspace_added(struct ::hawaii_desktop_shell *object,
                                                       struct ::hawaii_workspace *workspace,
                                                       int32_t active);
@@ -80,6 +83,8 @@ public:
     bool windowsMinimized;
 
     void emitWindowAdded(Window *window);
+    void emitWindowSwitching(bool started);
+    void emitWindowSwitchingNext(Window *window);
     void emitWorkspaceAdded(int num);
 
     static void handleGlobal(void *data, wl_registry *registry,

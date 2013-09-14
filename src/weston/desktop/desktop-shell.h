@@ -78,6 +78,8 @@ private:
     void moveBinding(struct weston_seat *seat, uint32_t time, uint32_t button);
     void resizeBinding(weston_seat *seat, uint32_t time, uint32_t button);
 
+    void switcherBinding(weston_seat *seat, uint32_t time, uint32_t button);
+
     void addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers);
 
     void lockSession();

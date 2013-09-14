@@ -142,6 +142,7 @@ public:
 
     weston_surface *createBlackSurface(int x, int y, int w, int h);
     weston_surface *createBlackSurface(ShellSurface *fs_surface, float x, float y, int w, int h);
+    bool isBlackSurface(weston_surface *es, weston_surface **fs_surface);
 
 protected:
     Shell(struct weston_compositor *ec);

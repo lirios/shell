@@ -78,6 +78,9 @@ public:
 Q_SIGNALS:
     void windowsChanged();
     void windowActivated(Window *window);
+    void windowSwitchingStarted();
+    void windowSwitchingFinished();
+    void windowSwitchingNext(Window *window);
 
     void workspaceAdded(int num);
     void workspaceRemoved(int num);

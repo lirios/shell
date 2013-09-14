@@ -101,6 +101,11 @@ void DesktopShell::init()
         static_cast<DesktopShell *>(data)->resizeBinding(seat, time, button);
     }, this);
 
+    weston_compositor_add_key_binding(compositor(), KEY_TAB, MODIFIER_SUPER,
+                                      [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
+        static_cast<DesktopShell *>(data)->switcherBinding(seat, time, key);
+    }, this);
+
     new ScaleEffect(this);
     new GridDesktops(this);
     new FadeMovingEffect(this);
@@ -321,6 +326,142 @@ void DesktopShell::resizeBinding(weston_seat *seat, uint32_t time, uint32_t butt
 
         shsurf->dragResize(seat, edges);
     }
+}
+
+class Switcher
+{
+public:
+    Switcher()
+    {
+    }
+
+    void destroy()
+    {
+        weston_keyboard *keyboard = grab.keyboard;
+
+        for (weston_surface *surface: shell->currentWorkspace()->layer()) {
+            surface->alpha = 1.f;
+            weston_surface_damage(surface);
+        }
+
+        if (current) {
+            ShellSurface *shsurf = shell->getShellSurface(current);
+            if (shsurf)
+                shsurf->activate();
+        }
+        wl_list_remove(&listener.link);
+        weston_keyboard_end_grab(keyboard);
+        if (keyboard->input_method_resource)
+            keyboard->grab = &keyboard->input_method_grab;
+
+        hawaii_desktop_shell_send_window_switching_finished(shell->shellClientResource());
+    }
+
+    void switchNext()
+    {
+        hawaii_desktop_shell_send_window_switching_started(shell->shellClientResource());
+
+        weston_surface *first = nullptr, *prev = nullptr, *next = nullptr;
+
+        for (weston_surface *surface: shell->currentWorkspace()->layer()) {
+            ShellSurface *shsurf = shell->getShellSurface(surface);
+            if (!shsurf)
+                continue;
+
+            switch (shsurf->type()) {
+            case ShellSurface::Type::TopLevel:
+            case ShellSurface::Type::Fullscreen:
+            case ShellSurface::Type::Maximized:
+                if (!first)
+                    first = surface;
+                if (prev == current)
+                    next = surface;
+                prev = surface;
+                surface->alpha = 0.25f;
+                weston_surface_geometry_dirty(surface);
+                weston_surface_damage(surface);
+                break;
+            default:
+                break;
+            }
+
+            if (shell->isBlackSurface(surface, nullptr)) {
+                surface->alpha = 0.25f;
+                weston_surface_geometry_dirty(surface);
+                weston_surface_damage(surface);
+            }
+        }
+
+        if (!next)
+            next = first;
+        if (!next)
+            return;
+
+        wl_list_remove(&listener.link);
+        wl_signal_add(&next->destroy_signal, &listener);
+
+        current = next;
+        next->alpha = 1.f;
+
+        ShellSurface *shsurf = shell->getShellSurface(next);
+        if (shsurf)
+            hawaii_desktop_shell_send_window_switched(shell->shellClientResource(),
+                                                      shsurf->windowResource());
+    }
+
+    static void handleSurfaceDestroy(wl_listener *l, void *data)
+    {
+        Switcher *switcher = container_of(l, Switcher, listener);
+        switcher->switchNext();
+    }
+
+    DesktopShell *shell;
+    weston_surface *current;
+    wl_listener listener;
+    weston_keyboard_grab grab;
+};
+
+static void switcherKey(weston_keyboard_grab *grab,
+                        uint32_t time, uint32_t key, uint32_t state_w)
+{
+    Switcher *switcher = container_of(grab, Switcher, grab);
+    enum wl_keyboard_key_state state = (enum wl_keyboard_key_state)state_w;
+
+    if (key == KEY_TAB && state == WL_KEYBOARD_KEY_STATE_PRESSED)
+        switcher->switchNext();
+}
+
+static void switcherModifier(weston_keyboard_grab *grab,
+                             uint32_t serial, uint32_t mods_depressed,
+                             uint32_t mods_latched, uint32_t mods_locked,
+                             uint32_t group)
+{
+    Switcher *switcher = container_of(grab, Switcher, grab);
+    weston_seat *seat = grab->keyboard->seat;
+
+    if ((seat->modifier_state & MODIFIER_SUPER) == 0) {
+        switcher->destroy();
+        delete switcher;
+    }
+}
+
+static const struct weston_keyboard_grab_interface switcherGrab = {
+    switcherKey,
+    switcherModifier
+};
+
+void DesktopShell::switcherBinding(weston_seat *seat, uint32_t time, uint32_t button)
+{
+    Switcher *switcher = new Switcher();
+    switcher->shell = this;
+    switcher->current = nullptr;
+    switcher->listener.notify = Switcher::handleSurfaceDestroy;
+    wl_list_init(&switcher->listener.link);
+
+    switcher->grab.interface = &switcherGrab;
+    weston_keyboard_start_grab(seat->keyboard, &switcher->grab);
+    weston_keyboard_set_focus(seat->keyboard, nullptr);
+    switcher->switchNext();
 }
 
 void DesktopShell::addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers)

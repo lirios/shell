@@ -165,6 +165,27 @@
       <arg name="state" type="int"/>
     </event>
 
+    <event name="window_switching_started">
+      <description summary="tell client to show the window switching overlay">
+        This event will be sent immediately after window switching is started.
+      </description>
+    </event>
+
+    <event name="window_switching_finished">
+      <description summary="tell client to hide the window switching overlay">
+        This event will be sent immediately after window switching finished.
+      </description>
+    </event>
+
+    <event name="window_switched">
+      <description summary="notify the client that the server switched to a window">
+        Windows switching is handled by the server.
+        The client provides a nice user interface that shows which window the server
+        switched to. This event notifies the client which window the server switched to.
+      </description>
+      <arg name="window" type="object" interface="hawaii_window"/>
+    </event>
+
     <event name="workspace_added">
       <description summary="notify the client that a workspace was added">
         This event will be sent immediately after a workspace is added.

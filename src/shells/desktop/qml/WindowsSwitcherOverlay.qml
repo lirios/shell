@@ -59,28 +59,20 @@ Item {
         NumberAnimation { duration: 100 }
     }
 
-    Shortcut {
-        key: Qt.ControlModifier | Qt.Key_A
-        onTriggered: {
-            if (Shell.windows.length == 0)
-                return;
-
-            opacity = 1.0;
-            timer.start();
-
-            if (privobj.currentWindowIndex >= 0)
-                Shell.windows[privobj.currentWindowIndex].deactivate();
-
-            privobj.currentWindowIndex++;
-            if (privobj.currentWindowIndex > Shell.windows.length - 1)
-                privobj.currentWindowIndex = 0;
-            Shell.windows[privobj.currentWindowIndex].activate();
-        }
-    }
-
     Connections {
         target: Shell
-        onWindowActivated: {
+        onWindowSwitchingStarted: opacity = 1.0
+        onWindowSwitchingFinished: opacity = 0.0
+        onWindowSwitchingNext: {
+            // Find current index
+            for (var i = 0; i < Shell.windows.length; i++) {
+                if (Shell.windows[i] === window) {
+                    privobj.currentWindowIndex = i;
+                    break;
+                }
+            }
+
+            // Show current window title
             if (window.title)
                 privobj.windowTitle = window.title;
             else if (window.appInfo && window.appInfo.name)
@@ -93,13 +85,6 @@ Item {
             if (Shell.windows.length == 0)
                 privobj.windowTitle = "";
         }
-    }
-
-    Timer {
-        id: timer
-        repeat: false
-        interval: 1200
-        onTriggered: opacity = 0.0
     }
 
     StyledItem {

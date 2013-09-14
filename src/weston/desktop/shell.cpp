@@ -812,7 +812,7 @@ void Shell::selectWorkspace(int32_t id)
         return;
     }
     m_currentWorkspace = id;
-    activateWorkspace(id == (int32_t)m_currentWorkspace ? nullptr : old);
+    activateWorkspace(old);
 }
 
 void Shell::activateWorkspace(Workspace *old)
@@ -923,6 +923,17 @@ weston_surface *Shell::createBlackSurface(ShellSurface *fs_surface, float x, flo
     pixman_region32_init_rect(&surface->input, 0, 0, w, h);
 
     return surface;
+}
+
+bool Shell::isBlackSurface(weston_surface *es, weston_surface **fs_surface)
+{
+    if (es->configure == black_surface_configure) {
+        if (fs_surface)
+            *fs_surface = static_cast<weston_surface *>(es->configure_private);
+        return true;
+    }
+
+    return false;
 }
 
 void Shell::pointerFocus(ShellSeat *, struct weston_pointer *pointer)

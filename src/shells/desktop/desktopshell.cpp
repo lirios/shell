@@ -145,6 +145,27 @@ void DesktopShellImpl::hawaii_desktop_shell_window_mapped(struct ::hawaii_deskto
     m_parent->emitWindowAdded(window);
 }
 
+void DesktopShellImpl::hawaii_desktop_shell_window_switching_started()
+{
+    m_parent->emitWindowSwitching(true);
+}
+
+void DesktopShellImpl::hawaii_desktop_shell_window_switching_finished()
+{
+    m_parent->emitWindowSwitching(false);
+}
+
+void DesktopShellImpl::hawaii_desktop_shell_window_switched(struct ::hawaii_window *window)
+{
+    for (int i = 0; i < m_parent->windows.size(); i++) {
+        Window *w = m_parent->windows.at(i);
+        if (w->d_ptr->object() == window) {
+            m_parent->emitWindowSwitchingNext(w);
+            break;
+        }
+    }
+}
+
 void DesktopShellImpl::hawaii_desktop_shell_workspace_added(struct ::hawaii_desktop_shell *object,
                                                             struct ::hawaii_workspace *id,
                                                             int32_t active)
@@ -234,6 +255,22 @@ void DesktopShellPrivate::emitWindowAdded(Window *window)
     });
 
     Q_EMIT q->windowsChanged();
+}
+
+void DesktopShellPrivate::emitWindowSwitching(bool started)
+{
+    Q_Q(DesktopShell);
+
+    if (started)
+        Q_EMIT q->windowSwitchingStarted();
+    else
+        Q_EMIT q->windowSwitchingFinished();
+}
+
+void DesktopShellPrivate::emitWindowSwitchingNext(Window *window)
+{
+    Q_Q(DesktopShell);
+    Q_EMIT q->windowSwitchingNext(window);
 }
 
 void DesktopShellPrivate::emitWorkspaceAdded(int num)
