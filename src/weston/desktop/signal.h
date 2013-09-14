@@ -134,10 +134,10 @@ void Signal<Args...>::operator()(Args... args) {
     }
     m_startAgain = false;
     call(args...);
+    m_calling = false;
     if (m_flush) {
         delete this;
     }
-    m_calling = false;
 }
 
 template<class... Args>
