@@ -37,17 +37,18 @@ Item {
     opacity: 0.0
 
     readonly property int margin: 20
-    readonly property int itemSize: 192
+    readonly property int itemSize: iconSize + 2 * margin
     readonly property int iconSize: 128
 
     QtObject {
         id: privobj
 
         property int currentWindowIndex: -1
+        property string windowTitle
     }
 
     Behavior on opacity {
-        NumberAnimation { duration: 250 }
+        NumberAnimation { duration: 150 }
     }
 
     Behavior on width {
@@ -81,23 +82,23 @@ Item {
         target: Shell
         onWindowActivated: {
             if (window.title)
-                windowTitle.text = window.title;
+                privobj.windowTitle = window.title;
             else if (window.appInfo && window.appInfo.name)
-                windowTitle.text = window.appInfo.name;
+                privobj.windowTitle = window.appInfo.name;
             else
-                windowTitle.text = qsTr("Untitled");
+                privobj.windowTitle = qsTr("Untitled");
         }
         onWindowsChanged: {
             // Clear window title when there are no more windows
             if (Shell.windows.length == 0)
-                windowTitle.text = "";
+                privobj.windowTitle = "";
         }
     }
 
     Timer {
         id: timer
         repeat: false
-        interval: 2000
+        interval: 1200
         onTriggered: opacity = 0.0
     }
 
@@ -111,59 +112,68 @@ Item {
 
         ColumnLayout {
             id: mainLayout
-            spacing: margin / 2
+            spacing: margin
 
-            Grid {
-                rows: Math.min(Math.ceil(Shell.windows.length / columns), 5)
-                columns: Math.min(Shell.windows.length, 7)
-                spacing: margin / 2
+            GridView {
+                readonly property int rows: Math.min(Math.ceil(Shell.windows.length / columns), 5)
+                readonly property int columns: Math.min(Shell.windows.length, 7)
 
-                Repeater {
-                    model: Shell.windows
+                id: grid
+                cellWidth: itemSize
+                cellHeight: itemSize
+                model: Shell.windows
+                currentIndex: privobj.currentWindowIndex
+                delegate: Item {
+                    width: itemSize
+                    height: itemSize
 
-                    Column {
-                        Rectangle {
-                            color: modelData.active
-                                   ? Qt.lighter(styledItem.__style.panelColor, 2)
-                                   : "transparent"
-                            radius: 6
-                            z: 0
+                    Image {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        source: {
+                            var name = "application-x-executable";
+
+                            if (modelData.appInfo && modelData.appInfo.iconName)
+                                name = modelData.appInfo.iconName;
+
+                            return "image://appicon/" + name;
                         }
-
-                        Image {
-                            source: {
-                                var name = "application-x-executable";
-
-                                if (modelData.appInfo && modelData.appInfo.iconName)
-                                    name = modelData.appInfo.iconName;
-
-                                return "image://appicon/" + name;
-                            }
-                            sourceSize.width: width
-                            sourceSize.height: height
-                            width: iconSize
-                            height: iconSize
-                            smooth: true
-                            z: 1
-                        }
+                        sourceSize.width: width
+                        sourceSize.height: height
+                        width: iconSize
+                        height: iconSize
+                        smooth: true
                     }
                 }
+                highlight: Item {
+                    width: itemSize
+                    height: itemSize
+
+                    Rectangle {
+                        anchors.fill: parent
+                        anchors.margins: margin / 2
+                        color: Qt.lighter(styledItem.__style.panelColor1, 2)
+                        radius: 6
+                    }
+                }
+
+                Layout.minimumWidth: columns * cellWidth
+                Layout.minimumHeight: rows * cellHeight
+                Layout.maximumWidth: columns * cellWidth
+                Layout.maximumHeight: rows * cellHeight
             }
 
             Text {
-                id: windowTitle
+                text: privobj.windowTitle
                 color: styledItem.__style.textColor
                 style: Text.Raised
                 styleColor: styledItem.__style.textShadowColor
                 renderType: Text.NativeRendering
                 font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.Wrap
                 elide: Text.ElideRight
-                maximumLineCount: 2
 
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-                Layout.fillHeight: true
+                Layout.preferredWidth: grid.columns * grid.cellWidth - 2 * margin
+                Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
             }
         }
     }
