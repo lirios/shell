@@ -41,10 +41,14 @@ class Window : public QObject
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString identifier READ identifier NOTIFY identifierChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
-    Q_PROPERTY(States state READ state WRITE setState NOTIFY stateChanged)
+    Q_PROPERTY(bool minimized READ isMinimized NOTIFY minimizedChanged)
+    Q_PROPERTY(bool maximized READ isMaximized NOTIFY maximizedChanged)
+    Q_PROPERTY(bool fullscreen READ isFullscreen NOTIFY fullscreenChanged)
     Q_PROPERTY(AppInfo *appInfo READ appInfo NOTIFY appInfoChanged)
     Q_DISABLE_COPY(Window)
     Q_DECLARE_PRIVATE(Window)
+    Q_ENUMS(State)
+    Q_FLAGS(States)
 public:
     enum State {
         Inactive = 0x00,
@@ -53,9 +57,7 @@ public:
         Maximized = 0x04,
         Fullscreen = 0x08
     };
-    Q_ENUMS(State)
     Q_DECLARE_FLAGS(States, State)
-    Q_FLAGS(States)
 
     explicit Window(const QString &title, const QString &identifier, States state, QObject *parent = 0);
     Window(QObject *parent = 0);
@@ -66,6 +68,9 @@ public:
     QString identifier() const;
 
     bool isActive() const;
+    bool isMinimized() const;
+    bool isMaximized() const;
+    bool isFullscreen() const;
 
     States state() const;
     void setState(const States &state);
@@ -78,6 +83,9 @@ Q_SIGNALS:
     void titleChanged(const QString &value);
     void identifierChanged(const QString &value);
     void activeChanged(bool value);
+    void minimizedChanged(bool value);
+    bool maximizedChanged(bool value);
+    bool fullscreenChanged(bool value);
     void stateChanged(const Window::States &value);
     void appInfoChanged();
     void unmapped(Window *window);

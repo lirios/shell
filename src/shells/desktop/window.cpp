@@ -86,12 +86,24 @@ void WindowPrivate::hawaii_window_state_changed(int32_t state)
     if (this->state != wlStateConvert(state)) {
         bool wasActive = this->state & Window::Active;
         bool isActive = state & Window::Active;
+        bool wasMinimized = this->state & Window::Minimized;
+        bool isMinimized = state & Window::Minimized;
+        bool wasMaximized = this->state & Window::Maximized;
+        bool isMaximized = state & Window::Maximized;
+        bool wasFullscreen = this->state & Window::Fullscreen;
+        bool isFullscreen = state & Window::Fullscreen;
 
         this->state = wlStateConvert(state);
         Q_EMIT q->stateChanged(this->state);
 
         if (wasActive != isActive)
             Q_EMIT q->activeChanged(isActive);
+        if (wasMinimized != isMinimized)
+            Q_EMIT q->minimizedChanged(isMinimized);
+        if (wasMaximized != isMaximized)
+            Q_EMIT q->maximizedChanged(isMaximized);
+        if (wasFullscreen != isFullscreen)
+            Q_EMIT q->fullscreenChanged(isFullscreen);
     }
 }
 
@@ -154,6 +166,24 @@ bool Window::isActive() const
 {
     Q_D(const Window);
     return d->state & Window::Active;
+}
+
+bool Window::isMinimized() const
+{
+    Q_D(const Window);
+    return d->state & Window::Minimized;
+}
+
+bool Window::isMaximized() const
+{
+    Q_D(const Window);
+    return d->state & Window::Maximized;
+}
+
+bool Window::isFullscreen() const
+{
+    Q_D(const Window);
+    return d->state & Window::Fullscreen;
 }
 
 Window::States Window::state() const
