@@ -162,6 +162,7 @@ Item {
                 style: Text.Raised
                 styleColor: styledItem.__style.textShadowColor
                 renderType: Text.NativeRendering
+                horizontalAlignment: Qt.AlignHCenter
                 font.bold: true
                 elide: Text.ElideRight
 
