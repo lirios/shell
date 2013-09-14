@@ -48,43 +48,42 @@ public:
     void flush() { m_flush = true; if (!m_calling) delete this;}
 
 private:
+    class Functor {
+    public:
+        virtual ~Functor() {}
+        virtual void call(Args...) = 0;
+
+        bool m_called;
+        bool m_toDelete;
+    };
+
+    template<class T>
+    class MemberFunctor : public Functor {
+    public:
+        typedef void (T::*Func)(Args...);
+        MemberFunctor(T *obj, Func func) : m_obj(obj), m_func(func) {}
+
+        virtual void call(Args... args) {
+            (m_obj->*m_func)(args...);
+        }
+
+        T *m_obj;
+        Func m_func;
+    };
+
     void call(Args... args);
 
-    std::list<Functor<Args...> *> m_listeners;
+    std::list<Functor *> m_listeners;
     bool m_flush;
     bool m_calling;
 };
 
 // -- End of API --
 
-template<class... Args>
-class Functor {
-public:
-    virtual ~Functor() {}
-    virtual void call(Args...) = 0;
-
-    bool m_called;
-    bool m_toDelete;
-};
-
-template<class T, class... Args>
-class MemberFunctor : public Functor<Args...> {
-public:
-    typedef void (T::*Func)(Args...);
-    MemberFunctor(T *obj, Func func) : m_obj(obj), m_func(func) {}
-
-    virtual void call(Args... args) {
-        (m_obj->*m_func)(args...);
-    }
-
-    T *m_obj;
-    Func m_func;
-};
-
 template<class... Args> template<class T>
 void Signal<Args...>::connect(T *obj, void (T::*func)(Args...)) {
     if (!isConnected(obj, func)) {
-        Functor<Args...> *f = new MemberFunctor<T, Args...>(obj, func);
+        Functor *f = new MemberFunctor<T>(obj, func);
         m_listeners.push_back(f);
     }
 }
@@ -92,7 +91,7 @@ void Signal<Args...>::connect(T *obj, void (T::*func)(Args...)) {
 template<class... Args> template<class T>
 void Signal<Args...>::disconnect(T *obj, void (T::*func)(Args...)) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
-        MemberFunctor<T, Args...> *f = static_cast<MemberFunctor<T, Args...> *>(*i);
+        MemberFunctor<T> *f = static_cast<MemberFunctor<T> *>(*i);
         if (f->m_obj == obj && f->m_func == func) {
             f->m_toDelete = true;
             m_listeners.erase(i);
@@ -104,7 +103,7 @@ void Signal<Args...>::disconnect(T *obj, void (T::*func)(Args...)) {
 template<class... Args> template<class T>
 void Signal<Args...>::disconnect(T *obj) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
-        MemberFunctor<T, Args...> *f = static_cast<MemberFunctor<T, Args...> *>(*i);
+        MemberFunctor<T> *f = static_cast<MemberFunctor<T> *>(*i);
         if (f->m_obj == obj) {
             f->m_toDelete = true;
             m_listeners.erase(i);
@@ -116,7 +115,7 @@ void Signal<Args...>::disconnect(T *obj) {
 template<class... Args> template<class T>
 bool Signal<Args...>::isConnected(T *obj, void (T::*func)(Args...)) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
-        MemberFunctor<T, Args...> *f = static_cast<MemberFunctor<T, Args...> *>(*i);
+        MemberFunctor<T> *f = static_cast<MemberFunctor<T> *>(*i);
         if (f->m_obj == obj && f->m_func == func) {
             return true;
         }
@@ -127,7 +126,7 @@ bool Signal<Args...>::isConnected(T *obj, void (T::*func)(Args...)) {
 template<class... Args>
 void Signal<Args...>::operator()(Args... args) {
     m_calling = true;
-    for (Functor<Args...> *f: m_listeners) {
+    for (Functor *f: m_listeners) {
         f->m_called = false;
     }
     call(args...);
@@ -139,7 +138,7 @@ void Signal<Args...>::operator()(Args... args) {
 
 template<class... Args>
 void Signal<Args...>::call(Args... args) {
-    for (Functor<Args...> *f: m_listeners) {
+    for (Functor *f: m_listeners) {
         if (!f->m_called) {
             f->m_toDelete = false;
             f->call(args...);
