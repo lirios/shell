@@ -44,7 +44,6 @@ struct InOutSurfaceEffect::Surface {
     void setAlpha(float alpha)
     {
         surface->alpha = alpha;
-        weston_surface_geometry_dirty(surface);
         weston_surface_damage(surface);
     }
     void done()
