@@ -36,7 +36,7 @@ class Functor;
 template<class... Args>
 class Signal {
 public:
-    Signal() : m_startAgain(false), m_flush(false), m_calling(false) { }
+    Signal() : m_flush(false), m_calling(false) { }
 
     template<class T> void connect(T *obj, void (T::*func)(Args...));
     template<class T> void disconnect(T *obj, void (T::*func)(Args...));
@@ -51,7 +51,6 @@ private:
     void call(Args... args);
 
     std::list<Functor<Args...> *> m_listeners;
-    bool m_startAgain;
     bool m_flush;
     bool m_calling;
 };
@@ -65,6 +64,7 @@ public:
     virtual void call(Args...) = 0;
 
     bool m_called;
+    bool m_toDelete;
 };
 
 template<class T, class... Args>
@@ -94,9 +94,8 @@ void Signal<Args...>::disconnect(T *obj, void (T::*func)(Args...)) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
         MemberFunctor<T, Args...> *f = static_cast<MemberFunctor<T, Args...> *>(*i);
         if (f->m_obj == obj && f->m_func == func) {
-            delete f;
+            f->m_toDelete = true;
             m_listeners.erase(i);
-            m_startAgain = true;
             return;
         }
     }
@@ -107,9 +106,8 @@ void Signal<Args...>::disconnect(T *obj) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
         MemberFunctor<T, Args...> *f = static_cast<MemberFunctor<T, Args...> *>(*i);
         if (f->m_obj == obj) {
-            delete f;
+            f->m_toDelete = true;
             m_listeners.erase(i);
-            m_startAgain = true;
             return;
         }
     }
@@ -132,7 +130,6 @@ void Signal<Args...>::operator()(Args... args) {
     for (Functor<Args...> *f: m_listeners) {
         f->m_called = false;
     }
-    m_startAgain = false;
     call(args...);
     m_calling = false;
     if (m_flush) {
@@ -144,10 +141,11 @@ template<class... Args>
 void Signal<Args...>::call(Args... args) {
     for (Functor<Args...> *f: m_listeners) {
         if (!f->m_called) {
+            f->m_toDelete = false;
             f->call(args...);
             f->m_called = true;
-            if (m_startAgain) {
-                m_startAgain = false;
+            if (f->m_toDelete) {
+                delete f;
                 call(args...);
                 return;
             }
