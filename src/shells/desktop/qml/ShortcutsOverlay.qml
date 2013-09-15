@@ -85,7 +85,7 @@ Item {
                 Text {
                     text: "<h2>Window Management</h2>" +
                           "<table border='0' cellspacing='10'>" +
-                          "<tr><td><strong>Alt + Tab</strong></td><td>Switch between windows in the current workspace</td></tr>" +
+                          "<tr><td><strong>Super + Tab</strong></td><td>Switch between windows in the current workspace</td></tr>" +
                           "<tr><td><strong>Super + E</strong></td><td>Expo mode for all windows in the current workspace</td></tr>" +
                           "</table>"
                     color: styledItem.__style.textColor
@@ -104,7 +104,8 @@ Item {
                 Text {
                     text: "<h2>Workspace Management</h2>" +
                           "<table border='0' cellspacing='10'>" +
-                          "<tr><td><strong>Super + G</strong></td><td>Zooms out on all the workspaces and<br>lets you manage windows (incomplete feature)</td></tr>" +
+                          "<tr><td><strong>Super + G</strong></td><td>Zooms out on all the workspaces and<br>" +
+                          "lets you manage windows (disabled)</td></tr>" +
                           "<tr><td><strong>Super + Left</strong></td><td>Go to previous workspace</td></tr>" +
                           "<tr><td><strong>Super + Right</strong></td><td>Go to next workspace</td></tr>" +
                           "</table>"
@@ -133,6 +134,7 @@ Item {
                     text: "<h2>Screenshots</h2>" +
                           "<table border='0' cellspacing='10'>" +
                           "<tr><td><strong>Super + S</strong></td><td>Take a screenshot to the current workspace</td></tr>" +
+                          "<tr><td><strong>Super + R</strong></td><td>Take a video of the current workspace</td></tr>" +
                           "</table>"
                     color: styledItem.__style.textColor
                     style: Text.Raised
@@ -152,6 +154,7 @@ Item {
                           "<table border='0' cellspacing='10'>" +
                           "<tr><td><strong>Ctrl + Alt + H</strong></td><td>This screen</td></tr>" +
                           "<tr><td><strong>Ctrl + Alt + Backspace</strong></td><td>Terminate session immediately<br>(unsafe, use as last resort)</td></tr>" +
+                          "<tr><td><strong>Super + Vertical Scroll</strong></td><td>Zoom in and out</td></tr>" +
                           "</table>"
                     color: styledItem.__style.textColor
                     style: Text.Raised
