@@ -107,7 +107,7 @@ void DesktopShell::init()
     }, this);
 
     new ScaleEffect(this);
-    new GridDesktops(this);
+    //new GridDesktops(this);
     new FadeMovingEffect(this);
     new OpacityEffect(this);
     new ZoomEffect(this);
