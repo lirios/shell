@@ -101,4 +101,8 @@ target_link_libraries(hawaii-desktop-shell
     ${ALSA_LIBRARIES}
 )
 
+# Git revision
+include(GetGitRevision)
+create_git_head_revision_file(gitsha1.h hawaii-desktop-shell)
+
 install(TARGETS hawaii-desktop-shell DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})

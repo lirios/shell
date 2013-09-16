@@ -24,12 +24,14 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QDebug>
 #include <QtWidgets/QApplication>
 
 #include "desktopshell.h"
 #include "notificationsdaemon.h"
 #include "policykitagent.h"
 #include "config.h"
+#include "gitsha1.h"
 
 #include <execinfo.h>
 #include <stdio.h>
@@ -124,6 +126,13 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(HAWAII_SHELL_VERSION_STRING);
     app.setOrganizationDomain("hawaii.org");
     app.setOrganizationName("Hawaii");
+
+    // Print version information
+    qDebug() << qPrintable(QStringLiteral("== Hawaii Shell v%1 ==\n").arg(HAWAII_SHELL_VERSION_STRING))
+             << "** http://www.maui-project.org\n"
+             << "** Bug reports to: https://github.com/hawaii-desktop/shell/issues\n"
+             << qPrintable(QStringLiteral("** Build: %1-%2")
+                           .arg(HAWAII_SHELL_VERSION_STRING).arg(GIT_REV));
 
     // Create the notification daemon
     (void)NotificationsDaemon::instance();
