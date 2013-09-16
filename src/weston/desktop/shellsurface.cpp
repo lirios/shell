@@ -337,17 +337,20 @@ void ShellSurface::calculateInitialPosition(int &x, int &y)
     // pointer. Falling back to the output containing 0,0.
     // TODO: Do something clever for touch too
     int ix = 0, iy = 0;
-    weston_seat *seat = container_of(weston_surface()->compositor->seat_list.next, weston_seat, link);
-    if (seat && seat->pointer) {
-        ix = wl_fixed_to_int(seat->pointer->x);
-        iy = wl_fixed_to_int(seat->pointer->y);
+    weston_seat *seat = 0;
+    wl_list_for_each(seat, &weston_surface()->compositor->seat_list, link) {
+        if (seat->pointer) {
+            ix = wl_fixed_to_int(seat->pointer->x);
+            iy = wl_fixed_to_int(seat->pointer->y);
+        }
     }
 
     // Find the target output (the one where the coordinates are in)
-    weston_output *targetOutput = 0;
-    weston_output *output = container_of(weston_surface()->compositor->output_list.next, weston_output, link);
-    if (output && pixman_region32_contains_point(&output->region, ix, iy, 0))
-        targetOutput = output;
+    weston_output *output = 0, *targetOutput = 0;
+    wl_list_for_each(output, &weston_surface()->compositor->output_list, link) {
+        if (pixman_region32_contains_point(&output->region, ix, iy, 0))
+            targetOutput = output;
+    }
 
     // Just move the surface to a random position if we can't find a target output
     if (!targetOutput) {
@@ -369,12 +372,10 @@ void ShellSurface::calculateInitialPosition(int &x, int &y)
         dx = random() % rangeX;
     if (rangeY > 0)
         dy = random() % rangeY;
-    dx += m_shell->windowsArea(targetOutput).x;
-    dy += m_shell->windowsArea(targetOutput).y;
 
     // Set surface position
-    x = targetOutput->x + dx;
-    y = targetOutput->y + dy;
+    x = m_shell->windowsArea(targetOutput).x + dx;
+    y = m_shell->windowsArea(targetOutput).y + dy;
 }
 
 void ShellSurface::mapPopup()
