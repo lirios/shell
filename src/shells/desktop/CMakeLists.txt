@@ -17,6 +17,12 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/settings
 )
 
+# Create the config.h header file
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY
+)
+
 set(SOURCES
     ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg/xdgdesktopfile.cpp
     appcategories.cpp

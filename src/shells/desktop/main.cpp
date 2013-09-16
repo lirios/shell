@@ -29,6 +29,7 @@
 #include "desktopshell.h"
 #include "notificationsdaemon.h"
 #include "policykitagent.h"
+#include "config.h"
 
 #include <execinfo.h>
 #include <stdio.h>
@@ -119,8 +120,8 @@ int main(int argc, char *argv[])
     setenv("GDK_BACKEND", "wayland", 1);
 
     QApplication app(argc, argv);
-    app.setApplicationName("Desktop Shell");
-    app.setApplicationVersion("0.1.92");
+    app.setApplicationName("Hawaii Shell");
+    app.setApplicationVersion(HAWAII_SHELL_VERSION_STRING);
     app.setOrganizationDomain("hawaii.org");
     app.setOrganizationName("Hawaii");
 
