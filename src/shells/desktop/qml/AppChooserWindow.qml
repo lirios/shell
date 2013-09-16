@@ -29,13 +29,15 @@ import QtQuick.Window 2.0
 
 Popup {
     id: appChooserWindow
-    width: Math.min(appChooser.itemSize * 5, Screen.width / 2)
-    height: Math.min(appChooser.itemSize * 4, Screen.height / 2)
+    width: Math.min(appChooser.implicitWidth, Screen.width / 2) + 5 * 8
+    height: Math.min(appChooser.implicitHeight, Screen.height / 2) + 5 * 8
 
     AppChooser {
         id: appChooser
-        anchors.fill: parent
-        anchors.margins: 4
+        anchors {
+            fill: parent
+            margins: 8
+        }
         window: appChooserWindow
     }
 }

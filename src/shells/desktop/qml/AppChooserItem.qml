@@ -35,8 +35,8 @@ ColumnLayout {
 
     FluidUi.Icon {
         id: icon
-        width: 48
-        height: 48
+        width: 64
+        height: 64
 
         Layout.alignment: Qt.AlignCenter
     }

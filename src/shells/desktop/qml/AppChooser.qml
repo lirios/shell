@@ -32,92 +32,90 @@ import Hawaii.Shell.Desktop 0.1
 
 Item {
     id: appChooser
+    implicitWidth: mainLayout.implicitWidth
+    implicitHeight: mainLayout.implicitHeight
 
     property var window
     readonly property int itemSize: 128
+    readonly property int numRows: 4
+    readonly property int numColumns: 4
+    readonly property int numItemsPerPage: numRows * numColumns
+    readonly property int numPages: Math.ceil(grid.count / numItemsPerPage)
+    property int currentPage: 0
+    property var palette: SystemPalette {}
+
+    Connections {
+        target: window
+        onVisibleChanged: {
+            currentPage = 0;
+            grid.currentIndex = 0;
+        }
+    }
 
     ColumnLayout {
-        anchors {
-            fill: parent
-        }
+        id: mainLayout
+        anchors.fill: parent
 
-        TextField {
-            id: searchField
-            placeholderText: qsTr("Search...")
-            visible: false
-
-            Layout.fillWidth: true
-        }
-
-        RowLayout {
-            /*
-            ScrollView {
-                ListView {
-                    id: categoriesList
-                    orientation: ListView.Vertical
-                    model: XdgCategoriesModel {}
-                    delegate: Item {
-                        id: wrapper
-                        //checked: ListView.isCurrentItem
-                        //enabled: true
-                        width: ListView.width
-                        height: label.paintedHeight
-
-                        Label {
-                            id: label
-                            anchors.fill: parent
-                            text: model.label
-                            font.weight: Font.Bold
-                        }
-                    }
-                    highlight: Rectangle {
-                        color: "lightsteelblue"
-                    }
-                    highlightRangeMode: ListView.StrictlyEnforceRange
-
-                    Connections {
-                        target: searchField
-                        onTextChanged: {
-                            // TODO: Put searchField.text somewhere => categoriesList.model.setQuery(searchField.text);
-                        }
+        GridView {
+            id: grid
+            cacheBuffer: numItemsPerPage
+            cellWidth: itemSize
+            cellHeight: itemSize
+            width: itemSize * numRows
+            height: itemSize * numColumns
+            clip: true
+            snapMode: GridView.SnapOneRow
+            flow: GridView.TopToBottom
+            interactive: false
+            preferredHighlightBegin: 0
+            preferredHighlightEnd: 0
+            highlightRangeMode: GridView.StrictlyEnforceRange
+            highlightFollowsCurrentItem: true
+            model: VisualDataModel {
+                id: visualModel
+                model: ApplicationsModel {
+                    id: appsModel
+                }
+                delegate: AppChooserDelegate {
+                    icon: "image://appicon/" + iconName
+                    label: name
+                    onClicked: {
+                        // Launch the application and close the AppChooser
+                        var item = appsModel.get(VisualDataModel.itemsIndex);
+                        window.visible = false;
+                        item.launch();
                     }
                 }
-
-                Layout.fillHeight: true
             }
-            */
+        }
 
-            ScrollView {
-                GridView {
-                    id: grid
-                    cacheBuffer: 100
-                    cellWidth: itemSize
-                    cellHeight: itemSize
-                    model: VisualDataModel {
-                        id: visualModel
+        Item {
+            id: pageIndicator
+            width: grid.width
+            height: 16
 
-                        model: ApplicationsModel {
-                            id: appsModel
-                        }
-                        delegate: AppChooserDelegate {
-                            visualIndex: VisualDataModel.itemsIndex
-                            icon: "image://appicon/" + iconName
-                            label: name
+            Row {
+                anchors.fill: parent
+
+                Repeater {
+                    id: repeater
+                    model: numPages
+                    delegate: Rectangle {
+                        width: pageIndicator.width / numPages
+                        height: pageIndicator.height
+                        color: currentPage === index ? palette.highlight : "#40000000"
+                        radius: 6
+                        antialiasing: true
+
+                        MouseArea {
+                            anchors.fill: parent
                             onClicked: {
-                                // Launch the application and close the AppChooser
-                                var item = appsModel.get(visualIndex);
-                                window.visible = false;
-                                item.launch();
+                                grid.currentIndex = index * numItemsPerPage + 1;
+                                currentPage = index;
                             }
                         }
                     }
-                    displaced: Transition {
-                        NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
-                    }
                 }
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
             }
         }
     }

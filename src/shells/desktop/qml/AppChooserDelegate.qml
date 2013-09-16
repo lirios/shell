@@ -30,59 +30,14 @@ import QtQuick.Controls 1.0
 MouseArea {
     id: delegateRoot
 
-    property int visualIndex
-
     property alias icon: content.icon
     property alias label: content.label
 
     width: grid.cellWidth
     height: grid.cellHeight
 
-    drag.target: theItem
-
-    Item {
-        id: theItem
-
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-        }
-
-        width: delegateRoot.width
-        height: delegateRoot.height
- 
-        AppChooserItem {
-            id: content
-            anchors.fill: parent
-        }
-
-        Drag.active: delegateRoot.drag.active
-        Drag.source: delegateRoot
-        Drag.hotSpot.x: width / 2
-        Drag.hotSpot.y: height/ 2
-
-        states: [
-            State {
-                when: delegateRoot.drag.active
-
-                ParentChange {
-                    target: theItem
-                    parent: grid
-                }
-                AnchorChanges {
-                    target: theItem
-                    anchors.horizontalCenter: undefined
-                    anchors.verticalCenter: undefined
-                }
-            }
-        ]
-    }
-
-    DropArea {
-        anchors {
-            fill: parent
-            margins: 15
-        }
-        onEntered: visualModel.items.move(drag.source.visualIndex, delegateRoot.visualIndex)
+    AppChooserItem {
+        id: content
+        anchors.fill: parent
     }
 }
