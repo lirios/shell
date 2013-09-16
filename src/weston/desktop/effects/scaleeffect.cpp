@@ -186,8 +186,8 @@ void ScaleEffect::run(struct weston_seat *ws)
                 surf->surface->show();
             }
 
-            int cellW = surf->surface->output()->width / numCols;
-            int cellH = surf->surface->output()->height / numRows;
+            int cellW = (surf->surface->output()->width - 100) / numCols;
+            int cellH = (surf->surface->output()->height - 100) / numRows;
 
             float rx = (float)cellW / (float)surf->surface->transformedWidth();
             float ry = (float)cellH / (float)surf->surface->transformedHeight();
@@ -209,8 +209,8 @@ void ScaleEffect::run(struct weston_seat *ws)
             surf->sy = surf->cy;
 
             surf->ts = rx * surf->cs;
-            surf->tx = x;
-            surf->ty = y;
+            surf->tx = x + 50;
+            surf->ty = y + 50;
 
             surf->animation.setStart(0.f);
             surf->animation.setTarget(1.f);
