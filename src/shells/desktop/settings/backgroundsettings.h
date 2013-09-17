@@ -45,7 +45,8 @@ class BackgroundSettings : public QObject
 public:
     enum Type {
         ColorBackground = 0,
-        WallpaperBackground
+        WallpaperBackground,
+        AnimatedWallpaperBackground
     };
 
     enum ColorShadingType {
