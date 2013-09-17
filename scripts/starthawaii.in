@@ -91,7 +91,7 @@ export XDG_CURRENT_DESKTOP=Hawaii
 export QT_QUICK_CONTROLS_STYLE=Aluminium
 
 # Cursor theme
-export XCURSOR_THEME=Hawaii
+export XCURSOR_THEME=hawaii
 export XCURSOR_SIZE=16
 
 # Launch a session bus instance
