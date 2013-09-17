@@ -49,8 +49,10 @@ public:
 private Q_SLOTS:
     void geometryChanged(const QRect &rect);
     void resetGeometry();
+    void resized();
 
 private:
+    ShellUi *m_shellUi;
     wl_surface *m_surface;
     LauncherSettings *m_settings;
 

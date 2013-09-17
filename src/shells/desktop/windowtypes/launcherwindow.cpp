@@ -39,6 +39,7 @@
 
 LauncherWindow::LauncherWindow(ShellUi *ui)
     : QQuickView(ui->engine(), new QWindow(ui->screen()))
+    , m_shellUi(ui)
     , m_surface(0)
 {
     // Set transparent color
@@ -65,9 +66,9 @@ LauncherWindow::LauncherWindow(ShellUi *ui)
     connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
             this, SLOT(geometryChanged(QRect)));
     connect(m_settings, SIGNAL(alignmentChanged(LauncherSettings::Alignment)),
-            this, SLOT(resetGeometry()));
+            this, SLOT(resized()));
     connect(rootObject(), SIGNAL(sizeChanged()),
-            this, SLOT(resetGeometry()));
+            this, SLOT(resized()));
 
     // Make this window accessible from QML
     rootObject()->setProperty("window", QVariant::fromValue(
@@ -124,6 +125,12 @@ void LauncherWindow::resetGeometry()
 
     setGeometry(rect);
     setSurfacePosition();
+}
+
+void LauncherWindow::resized()
+{
+    resetGeometry();
+    m_shellUi->updateScreenGeometry(screen()->geometry());
 }
 
 void LauncherWindow::setWindowType()
