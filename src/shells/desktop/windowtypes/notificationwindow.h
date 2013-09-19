@@ -41,6 +41,7 @@ public:
     void setItem(QQuickItem *item);
 
 public Q_SLOTS:
+    void setInputRegion(const QRect &region);
     void addSurface();
 
 private:

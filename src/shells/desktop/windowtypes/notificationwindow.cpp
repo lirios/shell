@@ -65,6 +65,21 @@ void NotificationWindow::setItem(QQuickItem *item)
     });
 }
 
+void NotificationWindow::setInputRegion(const QRect &region)
+{
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+
+    wl_compositor *compositor = static_cast<wl_compositor *>(
+                native->nativeResourceForIntegration("compositor"));
+    wl_surface *surface = static_cast<struct wl_surface *>(
+                native->nativeResourceForWindow("surface", this));
+
+    wl_region *r = wl_compositor_create_region(compositor);
+    wl_region_add(r, region.x(), region.y(), region.width(), region.height());
+    wl_surface_set_input_region(surface, r);
+    wl_region_destroy(r);
+}
+
 void NotificationWindow::addSurface()
 {
     // Don't add the surface twice
