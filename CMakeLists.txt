@@ -39,7 +39,7 @@ set(CPACK_SET_DESTDIR FALSE)
 include(CPack)
 
 # Build flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wno-unused-parameter -std=c++0x")
 
 # Assume release build by default
 if(NOT CMAKE_BUILD_TYPE)
