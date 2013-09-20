@@ -31,10 +31,10 @@ import Hawaii.Shell.Styles 0.1
 
 Style {
     property int spacing: 8
-    property color panelColor1: Qt.rgba(0.13, 0.13, 0.13, 0.7)
-    property color panelColor2: Qt.rgba(0, 0, 0, 0.7)
+    property color panelColor1: Qt.rgba(0.13, 0.13, 0.13, 1)
+    property color panelColor2: Qt.rgba(0, 0, 0, 1)
     property color textColor: "white"
-    property color textShadowColor: Qt.rgba(0, 0, 0, 60)
+    property color textShadowColor: Qt.rgba(0, 0, 0, 0.7)
 
     property Component summary: Text {
         text: __item.summary
@@ -94,8 +94,12 @@ Style {
                 GradientStop { position: 1.0; color: panelColor2 }
             }
             radius: 6
+            opacity: 0.7
             antialiasing: true
+        }
 
+        Item {
+            anchors.fill: background
             Loader {
                 id: imageLoader
                 anchors {

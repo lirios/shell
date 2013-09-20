@@ -46,13 +46,6 @@ Item {
             return 2000 + Math.max(timeoutForText(summary + body), 3000);
         return expirationTimeout;
     }
-
-    property real normalOpacity: 0.8
-    property real fadeOpacity: 0.5
-
-    property int mouseOverMargin: 48
-    property real mouseOverOpacityMin: 0.4
-
     property alias running: timer.running
 
     signal closed(int identifier)
@@ -68,24 +61,9 @@ Item {
         NumberAnimation { easing.type: Easing.InQuad }
     }
 
-    /*
-    NumberAnimation {
-        id: mouseOverAnimation
-        target: container
-        properties: "opacity"
-        duration: 500
+    Behavior on opacity {
+        NumberAnimation { easing.type: Easing.InOutQuad; duration: 250 }
     }
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        onEntered: setOpacityFromPosition(mouseX, mouseY)
-        onExited: {
-            mouseOverAnimation.to = notification.normalOpacity;
-            mouseOverAnimation.start();
-        }
-    }
-    */
 
     StyledItem {
         property string iconName
@@ -94,35 +72,14 @@ Item {
 
         id: root
         style: Qt.createComponent("NotificationBubbleStyle.qml", root)
-    }
 
-    function distance(value, min, max) {
-        if (value <= min)
-            return min - value;
-        if (value >= max)
-            return value - max;
-        return 0;
-    }
-
-    function opacityFromPosition(mouseX, mouseY) {
-        var distanceX = distance(mouseX, left, right);
-        if (distanceX >= mouseOverMargin)
-            return normalOpacity;
-
-        var distanceY = distance(mouseY, top, bottom);
-        if (distanceY >= mouseOverMargin)
-            return normalOpacity;
-
-        var d = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-        if (d >= mouseOverMargin)
-            return normalOpacity;
-
-        return mouseOverOpacityMin + (normalOpacity - mouseOverOpacityMin) * d / mouseOverMargin;
-    }
-
-    function setOpacityFromPosition(mouseX, mouseY) {
-        mouseOverAnimation.to = opacityFromPosition(mouseX, mouseY);
-        mouseOverAnimation.start();
+        MouseArea {
+            id: mouse
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: notification.opacity = 0.5
+            onExited: notification.opacity = 1.0
+        }
     }
 
     function appendToBody(text, timeout) {
