@@ -264,6 +264,7 @@ void NotificationsDaemon::showNotification(NotificationWindow *notification)
 
     // Ask the compositor to add the surface to the "bubbles list"
     notification->addSurface();
+    notification->setInputRegion(QRect(0, 0, 0, 0));
 }
 
 QString NotificationsDaemon::findImageFromPath(const QString &imagePath)
