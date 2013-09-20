@@ -50,6 +50,8 @@ public:
     KeyBinding *downBinding;
     KeyBinding *muteBinding;
 
+    void initialize();
+
     long rawVolume() const;
     void setRawVolume(long value);
 

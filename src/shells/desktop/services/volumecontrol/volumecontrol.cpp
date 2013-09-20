@@ -39,21 +39,14 @@
  */
 
 VolumeControlPrivate::VolumeControlPrivate()
-    : min(0)
+    : mixer(0)
+    , selemId(0)
+    , selem(0)
+    , min(0)
     , max(0)
 {
-    // Open mixer
-    snd_mixer_open(&mixer, 0);
-    snd_mixer_attach(mixer, "default");
-    snd_mixer_selem_register(mixer, 0, 0);
-    snd_mixer_load(mixer);
-
-    // Master element
-    snd_mixer_selem_id_alloca(&selemId);
-    snd_mixer_selem_id_set_index(selemId, 0);
-    snd_mixer_selem_id_set_name(selemId, "Master");
-    selem = snd_mixer_find_selem(mixer, selemId);
-    snd_mixer_selem_get_playback_volume_range(selem, &min, &max);
+    // Initialize
+    initialize();
 
     // Bind volume keys
     upBinding = DesktopShell::instance()->addKeyBinding(KEY_VOLUMEUP, 0);
@@ -61,8 +54,38 @@ VolumeControlPrivate::VolumeControlPrivate()
     muteBinding = DesktopShell::instance()->addKeyBinding(KEY_MUTE, 0);
 }
 
+void VolumeControlPrivate::initialize()
+{
+    do {
+        // Open mixer
+        if (snd_mixer_open(&mixer, 0) < 0)
+            break;
+        snd_mixer_attach(mixer, "default");
+        snd_mixer_selem_register(mixer, 0, 0);
+        snd_mixer_load(mixer);
+
+        // Master element
+        snd_mixer_selem_id_alloca(&selemId);
+        snd_mixer_selem_id_set_index(selemId, 0);
+        snd_mixer_selem_id_set_name(selemId, "Master");
+        selem = snd_mixer_find_selem(mixer, selemId);
+        if (!selem)
+            break;
+        snd_mixer_selem_get_playback_volume_range(selem, &min, &max);
+
+        return;
+    } while (0);
+
+    mixer = 0;
+    selemId = 0;
+    selem = 0;
+}
+
 long VolumeControlPrivate::rawVolume() const
 {
+    if (!selem)
+        return 0;
+
     long vol;
     snd_mixer_selem_get_playback_volume(selem, SND_MIXER_SCHN_FRONT_LEFT, &vol);
     return vol;
@@ -70,6 +93,9 @@ long VolumeControlPrivate::rawVolume() const
 
 void VolumeControlPrivate::setRawVolume(long value)
 {
+    if (!selem)
+        return;
+
     // Volume must be in range
     if (value < min)
         value = min;
@@ -129,6 +155,9 @@ bool VolumeControl::isMute() const
 {
     Q_D(const VolumeControl);
 
+    if (!d->selem)
+        return true;
+
     int mute = 0;
     snd_mixer_selem_get_playback_switch(d->selem, SND_MIXER_SCHN_FRONT_LEFT, &mute);
     return !mute;
@@ -137,6 +166,9 @@ bool VolumeControl::isMute() const
 void VolumeControl::setMute(bool value)
 {
     Q_D(VolumeControl);
+
+    if (!d->selem)
+        return;
 
     if (isMute() != value) {
         snd_mixer_selem_set_playback_switch_all(d->selem, !value);
