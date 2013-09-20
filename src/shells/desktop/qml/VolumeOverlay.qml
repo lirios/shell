@@ -33,8 +33,8 @@ import Hawaii.Shell.Styles 0.1
 import FluidUi 0.2 as FluidUi
 
 Item {
-    width: Math.min(Math.max(mainLayout.implicitWidth, Screen.width * 0.25) + 2 * margin, Screen.width)
-    height: Math.min(Math.max(mainLayout.implicitHeight, Screen.height * 0.25) + 2 * margin, Screen.height)
+    width: mainLayout.implicitWidth + 2 * margin
+    height: mainLayout.implicitHeight + 2 * margin
     opacity: 0.0
 
     property var control: Shell.service("VolumeControl")
