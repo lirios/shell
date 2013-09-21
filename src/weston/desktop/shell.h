@@ -212,7 +212,6 @@ private:
     uint32_t m_currentWorkspace;
     bool m_windowsMinimized;
 
-    std::list<weston_surface *> m_blackSurfaces;
     class Splash *m_splash;
     struct weston_surface *m_grabSurface;
 

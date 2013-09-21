@@ -254,16 +254,6 @@ void Shell::init()
     m_currentWorkspace = 0;
     m_splash = new Splash(this);
 
-    struct weston_output *out;
-    wl_list_for_each(out, &m_compositor->output_list, link) {
-        int x = out->x, y = out->y;
-        int w = out->width, h = out->height;
-
-        weston_surface *blackSurface = createBlackSurface(x, y, w, h);
-        m_backgroundLayer.addSurface(blackSurface);
-        m_blackSurfaces.push_back(blackSurface);
-    }
-
     struct wl_event_loop *loop = wl_display_get_event_loop(m_compositor->wl_display);
     wl_event_loop_add_idle(loop, [](void *data) { static_cast<Shell *>(data)->launchShellProcess(); }, this);
 
