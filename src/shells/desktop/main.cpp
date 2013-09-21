@@ -115,12 +115,6 @@ int main(int argc, char *argv[])
     // Handle a segmentation fault nicely
     signal(SIGSEGV, deathSignal);
 
-    // Force Wayland platform plugin
-    setenv("QT_QPA_PLATFORM", "wayland", 1);
-
-    // Enable GDK backend for Wayland
-    setenv("GDK_BACKEND", "wayland", 1);
-
     QApplication app(argc, argv);
     app.setApplicationName("Hawaii Shell");
     app.setApplicationVersion(HAWAII_SHELL_VERSION_STRING);
