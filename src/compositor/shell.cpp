@@ -26,7 +26,7 @@
 
 #include "shell.h"
 
-Shell::Shell()
-    : QtWaylandServer::wl_hawaii_shell()
+Shell::Shell(struct ::wl_display *display)
+    : QtWaylandServer::wl_hawaii_shell(display)
 {
 }

@@ -32,7 +32,7 @@
 class Notifications : public QtWaylandServer::wl_notification_daemon
 {
 public:
-    Notifications();
+    Notifications(struct ::wl_display *display);
 };
 
 #endif // NOTIFICATIONS_H

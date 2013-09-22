@@ -32,7 +32,7 @@
 class Shell : public QtWaylandServer::wl_hawaii_shell
 {
 public:
-    Shell();
+    Shell(struct ::wl_display *display);
 };
 
 #endif // SHELL_H

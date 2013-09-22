@@ -26,7 +26,7 @@
 
 #include "notifications.h"
 
-Notifications::Notifications()
-    : QtWaylandServer::wl_notification_daemon()
+Notifications::Notifications(wl_display *display)
+    : QtWaylandServer::wl_notification_daemon(display)
 {
 }

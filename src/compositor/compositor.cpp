@@ -47,10 +47,6 @@ Compositor::Compositor(const QRect &geometry)
     // Set initial geometry
     setGeometry(geometry);
 
-    // Desktop shell protocol
-    m_shell = new Shell();
-    m_notifications = new Notifications();
-
     // Allow QML to access this compositor
     rootContext()->setContextProperty("compositor", this);
 
@@ -70,6 +66,10 @@ Compositor::Compositor(const QRect &geometry)
             this, SLOT(sceneGraphInitialized()), Qt::DirectConnection);
     connect(this, SIGNAL(frameSwapped()),
             this, SLOT(frameSwapped()));
+
+    // Protocols
+    m_shell = new Shell(waylandDisplay());
+    m_notifications = new Notifications(waylandDisplay());
 }
 
 Compositor::~Compositor()
@@ -129,7 +129,7 @@ void Compositor::destroyWindow(QVariant window)
 void Compositor::destroyClientForWindow(QVariant window)
 {
     QWaylandSurface *surface = qobject_cast<QWaylandSurfaceItem *>(
-                                  qvariant_cast<QObject *>(window))->surface();
+                qvariant_cast<QObject *>(window))->surface();
     destroyClientForSurface(surface);
 }
 
@@ -150,25 +150,25 @@ void Compositor::shellStarted()
 void Compositor::shellFailed(QProcess::ProcessError error)
 {
     switch (error) {
-        case QProcess::FailedToStart:
-            qWarning("The shell process failed to start.\n"
-                     "Either the invoked program is missing, or you may have insufficient permissions to run it.");
-            break;
-        case QProcess::Crashed:
-            qWarning("The shell process crashed some time after starting successfully.");
-            break;
-        case QProcess::Timedout:
-            qWarning("The shell process timedout.\n");
-            break;
-        case QProcess::WriteError:
-            qWarning("An error occurred when attempting to write to the shell process.");
-            break;
-        case QProcess::ReadError:
-            qWarning("An error occurred when attempting to read from the shell process.");
-            break;
-        case QProcess::UnknownError:
-            qWarning("Unknown error starting the shell process!");
-            break;
+    case QProcess::FailedToStart:
+        qWarning("The shell process failed to start.\n"
+                 "Either the invoked program is missing, or you may have insufficient permissions to run it.");
+        break;
+    case QProcess::Crashed:
+        qWarning("The shell process crashed some time after starting successfully.");
+        break;
+    case QProcess::Timedout:
+        qWarning("The shell process timedout.\n");
+        break;
+    case QProcess::WriteError:
+        qWarning("An error occurred when attempting to write to the shell process.");
+        break;
+    case QProcess::ReadError:
+        qWarning("An error occurred when attempting to read from the shell process.");
+        break;
+    case QProcess::UnknownError:
+        qWarning("Unknown error starting the shell process!");
+        break;
     }
 
     // Don't need it anymore because it failed
