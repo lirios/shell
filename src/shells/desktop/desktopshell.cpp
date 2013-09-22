@@ -57,18 +57,18 @@
  */
 
 DesktopShellImpl::DesktopShellImpl(DesktopShellPrivate *parent)
-    : QtWayland::hawaii_desktop_shell()
+    : QtWayland::wl_hawaii_shell()
     , m_parent(parent)
 {
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_loaded()
+void DesktopShellImpl::hawaii_shell_loaded()
 {
     // Create shell windows
     QMetaObject::invokeMethod(m_parent->q_ptr, "create");
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_prepare_lock_surface()
+void DesktopShellImpl::hawaii_shell_prepare_lock_surface()
 {
     // Create the lock screen only for the primary screen
     // TODO: Actually we should create one for each screen but this
@@ -81,44 +81,44 @@ void DesktopShellImpl::hawaii_desktop_shell_prepare_lock_surface()
     }
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_grab_cursor(uint32_t cursor)
+void DesktopShellImpl::hawaii_shell_grab_cursor(uint32_t cursor)
 {
     QCursor qcursor;
 
     switch (cursor) {
-    case HAWAII_DESKTOP_SHELL_CURSOR_NONE:
+    case WL_HAWAII_SHELL_CURSOR_NONE:
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_BUSY:
+    case WL_HAWAII_SHELL_CURSOR_BUSY:
         qcursor.setShape(Qt::BusyCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_MOVE:
+    case WL_HAWAII_SHELL_CURSOR_MOVE:
         qcursor.setShape(Qt::DragMoveCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP:
+    case WL_HAWAII_SHELL_CURSOR_RESIZE_TOP:
         qcursor.setShape(Qt::SizeVerCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM:
+    case WL_HAWAII_SHELL_CURSOR_RESIZE_BOTTOM:
         qcursor.setShape(Qt::SizeVerCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_LEFT:
+    case WL_HAWAII_SHELL_CURSOR_RESIZE_LEFT:
         qcursor.setShape(Qt::SizeHorCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_RIGHT:
+    case WL_HAWAII_SHELL_CURSOR_RESIZE_RIGHT:
         qcursor.setShape(Qt::SizeHorCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP_LEFT:
+    case WL_HAWAII_SHELL_CURSOR_RESIZE_TOP_LEFT:
         qcursor.setShape(Qt::SizeFDiagCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_TOP_RIGHT:
+    case WL_HAWAII_SHELL_CURSOR_RESIZE_TOP_RIGHT:
         qcursor.setShape(Qt::SizeBDiagCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM_LEFT:
+    case WL_HAWAII_SHELL_CURSOR_RESIZE_BOTTOM_LEFT:
         qcursor.setShape(Qt::SizeBDiagCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_RESIZE_BOTTOM_RIGHT:
+    case WL_HAWAII_SHELL_CURSOR_RESIZE_BOTTOM_RIGHT:
         qcursor.setShape(Qt::SizeFDiagCursor);
         break;
-    case HAWAII_DESKTOP_SHELL_CURSOR_ARROW:
+    case WL_HAWAII_SHELL_CURSOR_ARROW:
     default:
         qcursor.setShape(Qt::ArrowCursor);
         break;
@@ -130,11 +130,11 @@ void DesktopShellImpl::hawaii_desktop_shell_grab_cursor(uint32_t cursor)
                                   Q_ARG(QCursor, qcursor));
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_window_mapped(struct ::hawaii_desktop_shell *object,
-                                                          struct ::hawaii_window *id,
-                                                          const QString &title,
-                                                          const QString &identifier,
-                                                          int32_t state)
+void DesktopShellImpl::hawaii_shell_window_mapped(struct ::wl_hawaii_shell *object,
+                                                  struct ::wl_hawaii_window *id,
+                                                  const QString &title,
+                                                  const QString &identifier,
+                                                  int32_t state)
 {
     // Create a client window representation
     Window *window = new Window(title, identifier, wlStateConvert(state));
@@ -145,17 +145,17 @@ void DesktopShellImpl::hawaii_desktop_shell_window_mapped(struct ::hawaii_deskto
     m_parent->emitWindowAdded(window);
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_window_switching_started()
+void DesktopShellImpl::hawaii_shell_window_switching_started()
 {
     m_parent->emitWindowSwitching(true);
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_window_switching_finished()
+void DesktopShellImpl::hawaii_shell_window_switching_finished()
 {
     m_parent->emitWindowSwitching(false);
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_window_switched(struct ::hawaii_window *window)
+void DesktopShellImpl::hawaii_shell_window_switched(struct ::wl_hawaii_window *window)
 {
     for (int i = 0; i < m_parent->windows.size(); i++) {
         Window *w = m_parent->windows.at(i);
@@ -166,9 +166,9 @@ void DesktopShellImpl::hawaii_desktop_shell_window_switched(struct ::hawaii_wind
     }
 }
 
-void DesktopShellImpl::hawaii_desktop_shell_workspace_added(struct ::hawaii_desktop_shell *object,
-                                                            struct ::hawaii_workspace *id,
-                                                            int32_t active)
+void DesktopShellImpl::hawaii_shell_workspace_added(struct ::wl_hawaii_shell *object,
+                                                    struct ::wl_hawaii_workspace *id,
+                                                    int32_t active)
 {
     Workspace *workspace = new Workspace(active != 0);
     workspace->d_ptr->init(id);
@@ -236,7 +236,7 @@ DesktopShellPrivate::~DesktopShellPrivate()
     wl_notification_daemon_destroy(notifications->object());
     delete notifications;
 
-    hawaii_desktop_shell_destroy(shell->object());
+    wl_hawaii_shell_destroy(shell->object());
     delete shell;
 
     qDeleteAll(workspaces);
@@ -300,7 +300,7 @@ void DesktopShellPrivate::handleGlobal(void *data,
         return;
     }
 
-    if (strcmp(interface, "hawaii_desktop_shell") == 0) {
+    if (strcmp(interface, "wl_hawaii_shell") == 0) {
         self->shell->init(registry, id);
     } else if (strcmp(interface, "wl_notification_daemon") == 0) {
         self->notifications->init(registry, id);

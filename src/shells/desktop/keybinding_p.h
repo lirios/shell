@@ -27,9 +27,9 @@
 #ifndef KEYBINDING_P_H
 #define KEYBINDING_P_H
 
-#include "qwayland-desktop.h"
+#include "qwayland-hawaii.h"
 
-class KeyBindingPrivate : public QtWayland::hawaii_key_binding
+class KeyBindingPrivate : public QtWayland::wl_hawaii_key_binding
 {
     Q_DECLARE_PUBLIC(KeyBinding)
 public:

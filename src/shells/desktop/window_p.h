@@ -27,7 +27,7 @@
 #ifndef WINDOW_P_H
 #define WINDOW_P_H
 
-#include "qwayland-desktop.h"
+#include "qwayland-hawaii.h"
 
 /*!
     Converts a window state integer provided by the compositor
@@ -37,13 +37,13 @@ static Window::States wlStateConvert(int32_t state)
 {
     Window::States result = Window::Inactive;
 
-    if (state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_ACTIVE)
+    if (state & WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE)
         result |= Window::Active;
-    if (state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)
+    if (state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED)
         result |= Window::Minimized;
-    if (state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_MAXIMIZED)
+    if (state & WL_HAWAII_SHELL_WINDOW_STATE_MAXIMIZED)
         result |= Window::Maximized;
-    if (state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_FULLSCREEN)
+    if (state & WL_HAWAII_SHELL_WINDOW_STATE_FULLSCREEN)
         result |= Window::Fullscreen;
 
     return result;
@@ -55,23 +55,23 @@ static Window::States wlStateConvert(int32_t state)
 */
 static int32_t stateConvert(Window::States state)
 {
-    int32_t result = HAWAII_DESKTOP_SHELL_WINDOW_STATE_INACTIVE;
+    int32_t result = WL_HAWAII_SHELL_WINDOW_STATE_INACTIVE;
 
     if (state & Window::Active)
-        result |= HAWAII_DESKTOP_SHELL_WINDOW_STATE_ACTIVE;
+        result |= WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE;
     if (state & Window::Minimized)
-        result |= HAWAII_DESKTOP_SHELL_WINDOW_STATE_MINIMIZED;
+        result |= WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED;
     if (state & Window::Maximized)
-        result |= HAWAII_DESKTOP_SHELL_WINDOW_STATE_MAXIMIZED;
+        result |= WL_HAWAII_SHELL_WINDOW_STATE_MAXIMIZED;
     if (state & Window::Fullscreen)
-        result |= HAWAII_DESKTOP_SHELL_WINDOW_STATE_FULLSCREEN;
+        result |= WL_HAWAII_SHELL_WINDOW_STATE_FULLSCREEN;
 
     return result;
 }
 
 class Window;
 
-class WindowPrivate : public QtWayland::hawaii_window
+class WindowPrivate : public QtWayland::wl_hawaii_window
 {
     Q_DECLARE_PUBLIC(Window)
 public:

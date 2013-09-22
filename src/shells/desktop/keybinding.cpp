@@ -32,14 +32,14 @@
  */
 
 KeyBindingPrivate::KeyBindingPrivate()
-    : QtWayland::hawaii_key_binding()
+    : QtWayland::wl_hawaii_key_binding()
     , q_ptr(0)
 {
 }
 
 KeyBindingPrivate::~KeyBindingPrivate()
 {
-    hawaii_key_binding_destroy(object());
+    wl_hawaii_key_binding_destroy(object());
 }
 
 void KeyBindingPrivate::hawaii_key_binding_triggered()

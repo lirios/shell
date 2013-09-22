@@ -30,29 +30,29 @@
 #include <QtCore/QElapsedTimer>
 
 #include "desktopshell.h"
-#include "qwayland-desktop.h"
+#include "qwayland-hawaii.h"
 #include "qwayland-notification.h"
 
-class DesktopShellImpl : public QtWayland::hawaii_desktop_shell
+class DesktopShellImpl : public QtWayland::wl_hawaii_shell
 {
 public:
     DesktopShellImpl(DesktopShellPrivate *parent);
 
 protected:
-    virtual void hawaii_desktop_shell_loaded();
-    virtual void hawaii_desktop_shell_prepare_lock_surface();
-    virtual void hawaii_desktop_shell_grab_cursor(uint32_t cursor);
-    virtual void hawaii_desktop_shell_window_mapped(struct ::hawaii_desktop_shell *object,
-                                                    struct ::hawaii_window *id,
-                                                    const QString &title,
-                                                    const QString &identifier,
-                                                    int32_t state);
-    virtual void hawaii_desktop_shell_window_switching_started();
-    virtual void hawaii_desktop_shell_window_switching_finished();
-    virtual void hawaii_desktop_shell_window_switched(struct ::hawaii_window *window);
-    virtual void hawaii_desktop_shell_workspace_added(struct ::hawaii_desktop_shell *object,
-                                                      struct ::hawaii_workspace *workspace,
-                                                      int32_t active);
+    virtual void hawaii_shell_loaded();
+    virtual void hawaii_shell_prepare_lock_surface();
+    virtual void hawaii_shell_grab_cursor(uint32_t cursor);
+    virtual void hawaii_shell_window_mapped(struct ::wl_hawaii_shell *object,
+                                            struct ::wl_hawaii_window *id,
+                                            const QString &title,
+                                            const QString &identifier,
+                                            int32_t state);
+    virtual void hawaii_shell_window_switching_started();
+    virtual void hawaii_shell_window_switching_finished();
+    virtual void hawaii_shell_window_switched(struct ::wl_hawaii_window *window);
+    virtual void hawaii_shell_workspace_added(struct ::wl_hawaii_shell *object,
+                                              struct ::wl_hawaii_workspace *workspace,
+                                              int32_t active);
 
 private:
     DesktopShellPrivate *m_parent;

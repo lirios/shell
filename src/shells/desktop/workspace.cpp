@@ -33,7 +33,7 @@
  */
 
 WorkspacePrivate::WorkspacePrivate()
-    : QtWayland::hawaii_workspace()
+    : QtWayland::wl_hawaii_workspace()
     , q_ptr(0)
     , active(false)
 {
@@ -41,7 +41,7 @@ WorkspacePrivate::WorkspacePrivate()
 
 WorkspacePrivate::~WorkspacePrivate()
 {
-    hawaii_workspace_destroy(object());
+    wl_hawaii_workspace_destroy(object());
 }
 
 void WorkspacePrivate::hawaii_workspace_activated()

@@ -37,7 +37,7 @@
  */
 
 WindowPrivate::WindowPrivate()
-    : QtWayland::hawaii_window()
+    : QtWayland::wl_hawaii_window()
     , q_ptr(0)
     , state(Window::Inactive)
     , appInfo(0)
@@ -47,7 +47,7 @@ WindowPrivate::WindowPrivate()
 WindowPrivate::~WindowPrivate()
 {
     delete appInfo;
-    hawaii_window_destroy(object());
+    wl_hawaii_window_destroy(object());
 }
 
 void WindowPrivate::hawaii_window_title_changed(const QString &title)

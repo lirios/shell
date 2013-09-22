@@ -27,11 +27,11 @@
 #ifndef WORKSPACE_P_H
 #define WORKSPACE_P_H
 
-#include "qwayland-desktop.h"
+#include "qwayland-hawaii.h"
 
 class Workspace;
 
-class WorkspacePrivate : public QtWayland::hawaii_workspace
+class WorkspacePrivate : public QtWayland::wl_hawaii_workspace
 {
     Q_DECLARE_PUBLIC(Workspace)
 public:
