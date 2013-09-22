@@ -39,13 +39,13 @@
 #include "grab.h"
 #include "notifications.h"
 
-class DesktopCompositor : public QQuickView, public VCompositor
+class Compositor : public QQuickView, public VCompositor
 {
     Q_OBJECT
     Q_PROPERTY(QWaylandSurface *currentSurface READ currentSurface WRITE setCurrentSurface NOTIFY currentSurfaceChanged)
 public:
-    explicit DesktopCompositor(const QRect &geometry);
-    ~DesktopCompositor();
+    explicit Compositor(const QRect &geometry);
+    ~Compositor();
 
     void runShell();
     void closeShell();

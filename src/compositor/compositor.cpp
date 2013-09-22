@@ -36,7 +36,7 @@
 #include "compositor.h"
 #include "cmakedirs.h"
 
-DesktopCompositor::DesktopCompositor(const QRect &geometry)
+Compositor::Compositor(const QRect &geometry)
     : VCompositor(this)
     , m_currentSurface(0)
     , m_shellProcess(0)
@@ -72,7 +72,7 @@ DesktopCompositor::DesktopCompositor(const QRect &geometry)
             this, SLOT(frameSwapped()));
 }
 
-DesktopCompositor::~DesktopCompositor()
+Compositor::~Compositor()
 {
     qDeleteAll(m_keyBindings);
     qDeleteAll(m_clientWindows);
@@ -81,7 +81,7 @@ DesktopCompositor::~DesktopCompositor()
     delete m_shell;
 }
 
-void DesktopCompositor::runShell()
+void Compositor::runShell()
 {
     // Run the shell client process
     m_shellProcess = new QProcess(this);
@@ -99,13 +99,13 @@ void DesktopCompositor::runShell()
                           QStringList(), QIODevice::ReadOnly);
 }
 
-void DesktopCompositor::closeShell()
+void Compositor::closeShell()
 {
     m_shellProcess->close();
     delete m_shellProcess;
 }
 
-void DesktopCompositor::surfaceCreated(QWaylandSurface *surface)
+void Compositor::surfaceCreated(QWaylandSurface *surface)
 {
     // Connect surface signals
     connect(surface, SIGNAL(destroyed(QObject *)),
@@ -116,24 +116,24 @@ void DesktopCompositor::surfaceCreated(QWaylandSurface *surface)
             this, SLOT(surfaceUnmapped()));
 }
 
-void DesktopCompositor::surfaceAboutToBeDestroyed(QWaylandSurface *surface)
+void Compositor::surfaceAboutToBeDestroyed(QWaylandSurface *surface)
 {
     // TODO:
 }
 
-void DesktopCompositor::destroyWindow(QVariant window)
+void Compositor::destroyWindow(QVariant window)
 {
     qvariant_cast<QObject *>(window)->deleteLater();
 }
 
-void DesktopCompositor::destroyClientForWindow(QVariant window)
+void Compositor::destroyClientForWindow(QVariant window)
 {
     QWaylandSurface *surface = qobject_cast<QWaylandSurfaceItem *>(
                                   qvariant_cast<QObject *>(window))->surface();
     destroyClientForSurface(surface);
 }
 
-void DesktopCompositor::setCurrentSurface(QWaylandSurface *surface)
+void Compositor::setCurrentSurface(QWaylandSurface *surface)
 {
     if (surface == m_currentSurface)
         return;
@@ -141,13 +141,13 @@ void DesktopCompositor::setCurrentSurface(QWaylandSurface *surface)
     emit currentSurfaceChanged();
 }
 
-void DesktopCompositor::shellStarted()
+void Compositor::shellStarted()
 {
     if (m_shellProcess)
         qDebug() << "Shell is ready!";
 }
 
-void DesktopCompositor::shellFailed(QProcess::ProcessError error)
+void Compositor::shellFailed(QProcess::ProcessError error)
 {
     switch (error) {
         case QProcess::FailedToStart:
@@ -177,24 +177,24 @@ void DesktopCompositor::shellFailed(QProcess::ProcessError error)
     m_shellProcess = 0;
 }
 
-void DesktopCompositor::shellReadyReadStandardOutput()
+void Compositor::shellReadyReadStandardOutput()
 {
     if (m_shellProcess)
         printf("%s", m_shellProcess->readAllStandardOutput().constData());
 }
 
-void DesktopCompositor::shellReadyReadStandardError()
+void Compositor::shellReadyReadStandardError()
 {
     if (m_shellProcess)
         fprintf(stderr, "%s", m_shellProcess->readAllStandardError().constData());
 }
 
-void DesktopCompositor::shellAboutToClose()
+void Compositor::shellAboutToClose()
 {
     qDebug() << "Shell is about to close...";
 }
 
-void DesktopCompositor::surfaceMapped()
+void Compositor::surfaceMapped()
 {
     QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
 
@@ -217,7 +217,7 @@ void DesktopCompositor::surfaceMapped()
     emit windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
 }
 
-void DesktopCompositor::surfaceUnmapped()
+void Compositor::surfaceUnmapped()
 {
     // Set to 0 the current surface if it was unmapped
     QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
@@ -232,7 +232,7 @@ void DesktopCompositor::surfaceUnmapped()
         emit windowDestroyed(QVariant::fromValue(item));
 }
 
-void DesktopCompositor::surfaceDestroyed(QObject *object)
+void Compositor::surfaceDestroyed(QObject *object)
 {
     // Set to 0 the current surface if it was destroyed
     QWaylandSurface *surface = static_cast<QWaylandSurface *>(object);
@@ -245,17 +245,17 @@ void DesktopCompositor::surfaceDestroyed(QObject *object)
         emit windowDestroyed(QVariant::fromValue(item));
 }
 
-void DesktopCompositor::sceneGraphInitialized()
+void Compositor::sceneGraphInitialized()
 {
     showGraphicsInfo();
 }
 
-void DesktopCompositor::frameSwapped()
+void Compositor::frameSwapped()
 {
     frameFinished();
 }
 
-void DesktopCompositor::resizeEvent(QResizeEvent *event)
+void Compositor::resizeEvent(QResizeEvent *event)
 {
     // Scale compositor output to window's size
     QQuickView::resizeEvent(event);

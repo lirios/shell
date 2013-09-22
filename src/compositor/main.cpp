@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     geometry.setWidth(1024);
     geometry.setHeight(640);
 
-    DesktopCompositor compositor(geometry);
+    Compositor compositor(geometry);
     compositor.runShell();
     compositor.show();
 
