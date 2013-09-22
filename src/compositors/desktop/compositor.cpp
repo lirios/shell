@@ -34,7 +34,6 @@
 #include <QtCompositor/QWaylandInputDevice>
 
 #include "compositor.h"
-#include "desktopshellserver.h"
 #include "cmakedirs.h"
 
 DesktopCompositor::DesktopCompositor(const QRect &geometry)
@@ -46,7 +45,8 @@ DesktopCompositor::DesktopCompositor(const QRect &geometry)
     setGeometry(geometry);
 
     // Desktop shell protocol
-    m_desktopShell = new DesktopShellServer(this, QWaylandCompositor::handle());
+    m_shell = new Shell();
+    m_notifications = new Notifications();
 
     // Allow QML to access this compositor
     rootContext()->setContextProperty("compositor", this);
@@ -67,6 +67,15 @@ DesktopCompositor::DesktopCompositor(const QRect &geometry)
             this, SLOT(sceneGraphInitialized()), Qt::DirectConnection);
     connect(this, SIGNAL(frameSwapped()),
             this, SLOT(frameSwapped()));
+}
+
+DesktopCompositor::~DesktopCompositor()
+{
+    qDeleteAll(m_keyBindings);
+    qDeleteAll(m_clientWindows);
+    qDeleteAll(m_workspaces);
+    delete m_notifications;
+    delete m_shell;
 }
 
 void DesktopCompositor::runShell()
@@ -196,18 +205,9 @@ void DesktopCompositor::surfaceMapped()
 
     qDebug() << "Surface" << surface->title() << "mapped";
 
-    bool isShell = ((surface->handle() == m_desktopShell->backgroundSurface)
-            || (surface->handle() == m_desktopShell->panelSurface));
-
-    // A surface without a shell surface is not a window
-    if (!surface->hasShellSurface() && !isShell)
+    // A surface without a shell surface is not a client side window
+    if (!surface->hasShellSurface())
         return;
-
-    // Set a custom property for shell windows
-    if (surface->handle() == m_desktopShell->backgroundSurface)
-        surface->setWindowProperty("background", true);
-    else if (surface->handle() == m_desktopShell->panelSurface)
-        surface->setWindowProperty("launcher", true);
 
     QWaylandSurfaceItem *item = surface->surfaceItem();
 

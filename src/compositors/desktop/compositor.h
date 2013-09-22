@@ -32,7 +32,12 @@
 
 #include <VCompositor>
 
-class DesktopShellServer;
+#include "shell.h"
+#include "keybinding.h"
+#include "clientwindow.h"
+#include "workspace.h"
+#include "grab.h"
+#include "notifications.h"
 
 class DesktopCompositor : public QQuickView, public VCompositor
 {
@@ -40,6 +45,7 @@ class DesktopCompositor : public QQuickView, public VCompositor
     Q_PROPERTY(QWaylandSurface *currentSurface READ currentSurface WRITE setCurrentSurface NOTIFY currentSurfaceChanged)
 public:
     explicit DesktopCompositor(const QRect &geometry);
+    ~DesktopCompositor();
 
     void runShell();
     void closeShell();
@@ -80,8 +86,12 @@ protected:
     void resizeEvent(QResizeEvent *event);
 
 private:
+    Shell *m_shell;
+    QList<KeyBinding *> m_keyBindings;
+    QList<ClientWindow *> m_clientWindows;
+    QList<Workspace *> m_workspaces;
+    Notifications *m_notifications;
     QWaylandSurface *m_currentSurface;
-    DesktopShellServer *m_desktopShell;
     QProcess *m_shellProcess;
 };
 

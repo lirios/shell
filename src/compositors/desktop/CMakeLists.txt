@@ -14,16 +14,30 @@ add_definitions(
 set(SOURCES
     main.cpp
     compositor.cpp
-    desktopshellserver.cpp
+    shell.cpp
+    keybinding.cpp
+    clientwindow.cpp
+    workspace.cpp
+    grab.cpp
+    notifications.cpp
 )
 
 wayland_add_protocol_server(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
-    desktop-shell
+    ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
+    hawaii
 )
-wayland_add_protocol_client(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
-    desktop-shell
+qtwayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
+    hawaii
+)
+
+wayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/notification-daemon.xml
+    notification
+)
+qtwayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/notification-daemon.xml
+    notification
 )
 
 qt5_add_resources(RESOURCES desktop.qrc)
