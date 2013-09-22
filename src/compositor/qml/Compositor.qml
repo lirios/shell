@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidCore 1.0
 import "CompositorLogic.js" as CompositorLogic
 
 Rectangle {
