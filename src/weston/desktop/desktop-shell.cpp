@@ -38,7 +38,7 @@
 // #include <weston/config-parser.h>
 
 #include "desktop-shell.h"
-#include "wayland-desktop-shell-server-protocol.h"
+#include "wayland-hawaii-server-protocol.h"
 #include "wayland-notification-daemon-server-protocol.h"
 #include "wayland-screensaver-server-protocol.h"
 #include "shellsurface.h"
@@ -79,7 +79,7 @@ void DesktopShell::init()
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindNotifications(client, version, id); }))
         return;
 
-    if (!wl_global_create(compositor()->wl_display, &hawaii_desktop_shell_interface, 1, this,
+    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShell(client, version, id); }))
         return;
 
@@ -119,7 +119,7 @@ void DesktopShell::init()
 
 void DesktopShell::setGrabCursor(uint32_t cursor)
 {
-    hawaii_desktop_shell_send_grab_cursor(m_child.desktop_shell, cursor);
+    wl_hawaii_shell_send_grab_cursor(m_child.desktop_shell, cursor);
 }
 
 struct BusyGrab : public ShellGrab {
@@ -169,7 +169,7 @@ void DesktopShell::setBusyCursor(ShellSurface *surface, struct weston_seat *seat
 
     grab->pointer = seat->pointer;
     grab->surface = surface;
-    startGrab(grab, &busy_cursor_grab_interface, seat, HAWAII_DESKTOP_SHELL_CURSOR_BUSY);
+    startGrab(grab, &busy_cursor_grab_interface, seat, WL_HAWAII_SHELL_CURSOR_BUSY);
 }
 
 void DesktopShell::endBusyCursor(struct weston_seat *seat)
@@ -196,7 +196,7 @@ void DesktopShell::sendInitEvents()
 
 void DesktopShell::workspaceAdded(Workspace *ws)
 {
-    hawaii_desktop_shell_send_workspace_added(m_child.desktop_shell, ws->resource(), ws->active());
+    wl_hawaii_shell_send_workspace_added(m_child.desktop_shell, ws->resource(), ws->active());
 }
 
 void DesktopShell::bindNotifications(wl_client *client, uint32_t version, uint32_t id)
@@ -220,7 +220,7 @@ void DesktopShell::unbindNotifications(struct wl_resource *resource)
 
 void DesktopShell::bindDesktopShell(struct wl_client *client, uint32_t version, uint32_t id)
 {
-    struct wl_resource *resource = wl_resource_create(client, &hawaii_desktop_shell_interface, version, id);
+    struct wl_resource *resource = wl_resource_create(client, &wl_hawaii_shell_interface, version, id);
 
     if (client == m_child.client) {
         wl_resource_set_implementation(resource, &m_desktopShellImpl, this,
@@ -228,11 +228,11 @@ void DesktopShell::bindDesktopShell(struct wl_client *client, uint32_t version, 
         m_child.desktop_shell = resource;
 
         sendInitEvents();
-        hawaii_desktop_shell_send_loaded(resource);
+        wl_hawaii_shell_send_loaded(resource);
         return;
     }
 
-    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind hawaii_desktop_shell denied");
+    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind wl_hawaii_shell denied");
     wl_resource_destroy(resource);
 }
 
@@ -354,12 +354,12 @@ public:
         if (keyboard->input_method_resource)
             keyboard->grab = &keyboard->input_method_grab;
 
-        hawaii_desktop_shell_send_window_switching_finished(shell->shellClientResource());
+        wl_hawaii_shell_send_window_switching_finished(shell->shellClientResource());
     }
 
     void switchNext()
     {
-        hawaii_desktop_shell_send_window_switching_started(shell->shellClientResource());
+        wl_hawaii_shell_send_window_switching_started(shell->shellClientResource());
 
         weston_surface *first = nullptr, *prev = nullptr, *next = nullptr;
 
@@ -405,8 +405,8 @@ public:
 
         ShellSurface *shsurf = shell->getShellSurface(next);
         if (shsurf)
-            hawaii_desktop_shell_send_window_switched(shell->shellClientResource(),
-                                                      shsurf->windowResource());
+            wl_hawaii_shell_send_window_switched(shell->shellClientResource(),
+                                                 shsurf->windowResource());
     }
 
     static void handleSurfaceDestroy(wl_listener *l, void *data)
@@ -466,13 +466,13 @@ void DesktopShell::switcherBinding(weston_seat *seat, uint32_t time, uint32_t bu
 
 void DesktopShell::addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers)
 {
-    wl_resource *res = wl_resource_create(client, &hawaii_key_binding_interface, wl_resource_get_version(resource), id);
+    wl_resource *res = wl_resource_create(client, &wl_hawaii_key_binding_interface, wl_resource_get_version(resource), id);
     wl_resource_set_implementation(res, nullptr, res, [](wl_resource *) {});
 
     weston_compositor_add_key_binding(compositor(), key, (weston_keyboard_modifier)modifiers,
                                       [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
 
-        hawaii_key_binding_send_triggered(static_cast<wl_resource *>(data));
+        wl_hawaii_key_binding_send_triggered(static_cast<wl_resource *>(data));
     }, res);
 }
 
@@ -528,7 +528,7 @@ void DesktopShell::unlockSession()
     if (m_prepareEventSent)
         return;
 
-    hawaii_desktop_shell_send_prepare_lock_surface(shellClientResource());
+    wl_hawaii_shell_send_prepare_lock_surface(shellClientResource());
     m_prepareEventSent = true;
 }
 
@@ -753,7 +753,7 @@ static void client_grab_focus(struct weston_pointer_grab *base)
                                                                     &sx, &sy);
     if (cgrab->focus != surface) {
         cgrab->focus = surface;
-        hawaii_grab_send_focus(cgrab->resource, surface->resource, sx, sy);
+        wl_hawaii_grab_send_focus(cgrab->resource, surface->resource, sx, sy);
     }
 }
 
@@ -768,7 +768,7 @@ static void client_grab_motion(struct weston_pointer_grab *base, uint32_t time)
         weston_surface_from_global_fixed(cgrab->focus, cgrab->pointer->x, cgrab->pointer->y, &sx, &sy);
     }
 
-    hawaii_grab_send_motion(cgrab->resource, time, sx, sy);
+    wl_hawaii_grab_send_motion(cgrab->resource, time, sx, sy);
 }
 
 static void client_grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state)
@@ -782,7 +782,7 @@ static void client_grab_button(struct weston_pointer_grab *base, uint32_t time, 
         wl_pointer_send_button(grab->pointer->focus_resource, serial, time, button, state);
     }
 
-    hawaii_grab_send_button(cgrab->resource, time, button, state);
+    wl_hawaii_grab_send_button(cgrab->resource, time, button, state);
 }
 
 static const struct weston_pointer_grab_interface client_grab_interface = {
@@ -798,13 +798,13 @@ void client_grab_end(wl_client *client, wl_resource *resource)
     weston_output_schedule_repaint(cg->pointer->focus->output);
 }
 
-static const struct hawaii_grab_interface hawaii_grab_implementation = {
+static const struct wl_hawaii_grab_interface hawaii_grab_implementation = {
     client_grab_end
 };
 
 void DesktopShell::createGrab(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    wl_resource *res = wl_resource_create(client, &hawaii_grab_interface, wl_resource_get_version(resource), id);
+    wl_resource *res = wl_resource_create(client, &wl_hawaii_grab_interface, wl_resource_get_version(resource), id);
 
     ClientGrab *grab = new ClientGrab;
     wl_resource_set_implementation(res, &hawaii_grab_implementation, grab, [](wl_resource *) {});
@@ -825,13 +825,13 @@ void DesktopShell::createGrab(wl_client *client, wl_resource *resource, uint32_t
                                                                     &sx, &sy);
     weston_pointer_set_focus(grab->pointer, surface, sx, sy);
     grab->focus = surface;
-    hawaii_grab_send_focus(grab->resource, surface->resource, sx, sy);
+    wl_hawaii_grab_send_focus(grab->resource, surface->resource, sx, sy);
 
     grab->grab.interface = &client_grab_interface;
     weston_pointer_start_grab(grab->pointer, &grab->grab);
 }
 
-const struct hawaii_desktop_shell_interface DesktopShell::m_desktopShellImpl = {
+const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::addKeyBinding),
     wrapInterface(&DesktopShell::setAvailableGeometry),
     wrapInterface(&DesktopShell::setBackground),

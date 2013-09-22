@@ -90,7 +90,7 @@ private:
     void lockSurfaceDestroy();
 
     /*
-     * hawaii_desktop_shell
+     * wl_hawaii_shell
      */
 
     void setAvailableGeometry(struct wl_client *client, struct wl_resource *resource,
@@ -162,7 +162,7 @@ private:
                                wl_resource *surface_resource,
                                wl_resource *output_resource);
 
-    static const struct hawaii_desktop_shell_interface m_desktopShellImpl;
+    static const struct wl_hawaii_shell_interface m_desktopShellImpl;
     static const struct wl_notification_daemon_interface m_notificationDaemonImpl;
     static const struct screensaver_interface m_screenSaverImpl;
 

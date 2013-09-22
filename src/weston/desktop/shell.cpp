@@ -44,7 +44,7 @@
 #include "desktop-shell.h"
 #include "animation.h"
 #include "cmakedirs.h"
-#include "wayland-desktop-shell-server-protocol.h"
+#include "wayland-hawaii-server-protocol.h"
 
 class Splash
 {

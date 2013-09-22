@@ -82,7 +82,7 @@ private:
     Layer m_layer;
     bool m_active;
 
-    static const struct hawaii_workspace_interface s_implementation;
+    static const struct wl_hawaii_workspace_interface s_implementation;
 };
 
 #endif

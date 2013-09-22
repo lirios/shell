@@ -35,7 +35,7 @@
 #include "workspace.h"
 #include "transform.h"
 
-#include "wayland-desktop-shell-server-protocol.h"
+#include "wayland-hawaii-server-protocol.h"
 
 struct Grab : public ShellGrab {
     GridDesktops *effect;
@@ -122,7 +122,7 @@ void GridDesktops::run(struct weston_seat *ws)
         shell()->hidePanels();
         shell()->hideNotifications();
         shell()->hideOverlays();
-        shell()->startGrab(m_grab, &grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_ARROW);
+        shell()->startGrab(m_grab, &grab_interface, ws, WL_HAWAII_SHELL_CURSOR_ARROW);
         m_setWs = shell()->currentWorkspace()->number();
         for (int i = 0; i < numWs; ++i) {
             Workspace *w = shell()->workspace(i);

@@ -29,7 +29,7 @@
 #include "workspace.h"
 #include "shell.h"
 #include "shellsurface.h"
-#include "wayland-desktop-shell-server-protocol.h"
+#include "wayland-hawaii-server-protocol.h"
 #include "utils.h"
 
 Workspace::Workspace(Shell *shell, int number)
@@ -72,7 +72,7 @@ Workspace::~Workspace()
 
 void Workspace::init(wl_client *client)
 {
-    m_resource = wl_resource_create(client, &hawaii_workspace_interface, 1, 0);
+    m_resource = wl_resource_create(client, &wl_hawaii_workspace_interface, 1, 0);
     wl_resource_set_implementation(m_resource, &s_implementation, this, 0);
 }
 
@@ -145,9 +145,9 @@ void Workspace::setActive(bool active)
     if (m_active != active) {
         m_active = active;
         if (active)
-            hawaii_workspace_send_activated(m_resource);
+            wl_hawaii_workspace_send_activated(m_resource);
         else
-            hawaii_workspace_send_deactivated(m_resource);
+            wl_hawaii_workspace_send_deactivated(m_resource);
     }
 }
 
@@ -161,6 +161,6 @@ void Workspace::removed(wl_client *client, wl_resource *res)
     delete this;
 }
 
-const struct hawaii_workspace_interface Workspace::s_implementation = {
+const struct wl_hawaii_workspace_interface Workspace::s_implementation = {
     wrapInterface(&Workspace::removed)
 };

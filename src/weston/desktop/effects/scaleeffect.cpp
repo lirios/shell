@@ -35,7 +35,7 @@
 #include "animationcurve.h"
 #include "shellseat.h"
 
-#include "wayland-desktop-shell-server-protocol.h"
+#include "wayland-hawaii-server-protocol.h"
 
 const float INACTIVE_ALPHA = 0.8;
 const int ALPHA_ANIM_DURATION = 200;
@@ -231,7 +231,7 @@ void ScaleEffect::run(struct weston_seat *ws)
     if (m_scaled) {
         m_seat = ws;
         m_chosenSurface = nullptr;
-        shell()->startGrab(m_grab, &grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_ARROW);
+        shell()->startGrab(m_grab, &grab_interface, ws, WL_HAWAII_SHELL_CURSOR_ARROW);
         shell()->hidePanels();
         m_grab->surface = nullptr;
         if (ws->pointer->focus) {

@@ -27,12 +27,12 @@ set(SOURCES
 )
 
 wayland_add_protocol_client(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
-    desktop-shell
+    ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
+    hawaii
 )
 wayland_add_protocol_server(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/desktop-shell.xml
-    desktop-shell
+    ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
+    hawaii
 )
 
 wayland_add_protocol_client(SOURCES

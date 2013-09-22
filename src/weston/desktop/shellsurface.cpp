@@ -35,7 +35,7 @@
 #include "shellseat.h"
 #include "workspace.h"
 
-#include "wayland-desktop-shell-server-protocol.h"
+#include "wayland-hawaii-server-protocol.h"
 
 ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
             : m_shell(shell)
@@ -46,7 +46,7 @@ ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
             , m_type(Type::None)
             , m_pendingType(Type::None)
             , m_unresponsive(false)
-            , m_state(HAWAII_DESKTOP_SHELL_WINDOW_STATE_INACTIVE)
+            , m_state(WL_HAWAII_SHELL_WINDOW_STATE_INACTIVE)
             , m_windowAdvertized(false)
             , m_acceptState(true)
             , m_runningGrab(nullptr)
@@ -88,7 +88,7 @@ void ShellSurface::set_state(struct wl_client *client, struct wl_resource *resou
     shsurf->setState(state);
 }
 
-const struct hawaii_window_interface ShellSurface::m_window_implementation = {
+const struct wl_hawaii_window_interface ShellSurface::m_window_implementation = {
     set_state
 };
 
@@ -107,7 +107,7 @@ void ShellSurface::init(struct wl_client *client, uint32_t id)
 void ShellSurface::destroyWindow()
 {
     if (m_windowResource) {
-        hawaii_window_send_unmapped(m_windowResource);
+        wl_hawaii_window_send_unmapped(m_windowResource);
         wl_resource_destroy(m_windowResource);
         m_windowResource = nullptr;
     }
@@ -128,16 +128,16 @@ void ShellSurface::setState(int state)
         return;
     }
 
-    if (m_state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_MINIMIZED && !(state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
+    if (m_state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED && !(state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED)) {
         unminimize();
-    } else if (state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_MINIMIZED && !(m_state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
+    } else if (state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED && !(m_state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED)) {
         minimize();
         if (isActive()) {
             deactivate();
         }
     }
 
-    if (state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_ACTIVE && !(state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_MINIMIZED)) {
+    if (state & WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE && !(state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED)) {
         activate();
     }
 
@@ -148,21 +148,21 @@ void ShellSurface::setState(int state)
 void ShellSurface::setActive(bool active)
 {
     if (active) {
-        m_state |= HAWAII_DESKTOP_SHELL_WINDOW_STATE_ACTIVE;
+        m_state |= WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE;
     } else {
-        m_state &= ~HAWAII_DESKTOP_SHELL_WINDOW_STATE_ACTIVE;
+        m_state &= ~WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE;
     }
     sendState();
 }
 
 bool ShellSurface::isActive() const
 {
-    return m_state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_ACTIVE;
+    return m_state & WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE;
 }
 
 bool ShellSurface::isMinimized() const
 {
-    return m_state & HAWAII_DESKTOP_SHELL_WINDOW_STATE_MINIMIZED;
+    return m_state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED;
 }
 
 void ShellSurface::activate()
@@ -204,18 +204,18 @@ void ShellSurface::hide()
 void ShellSurface::sendState()
 {
     if (m_windowResource) {
-        hawaii_window_send_state_changed(m_windowResource, m_state);
+        wl_hawaii_window_send_state_changed(m_windowResource, m_state);
     }
 }
 
 void ShellSurface::advertize()
 {
-    m_windowResource = wl_resource_create(m_shell->shellClient(), &hawaii_window_interface, 1, 0);
+    m_windowResource = wl_resource_create(m_shell->shellClient(), &wl_hawaii_window_interface, 1, 0);
     wl_resource_set_implementation(m_windowResource, &m_window_implementation, this, 0);
-    hawaii_desktop_shell_send_window_mapped(m_shell->shellClientResource(),
-                                            m_windowResource,
-                                            m_title.c_str(), m_class.c_str(),
-                                            m_state);
+    wl_hawaii_shell_send_window_mapped(m_shell->shellClientResource(),
+                                       m_windowResource,
+                                       m_title.c_str(), m_class.c_str(),
+                                       m_state);
     m_windowAdvertized = true;
 }
 
@@ -694,7 +694,7 @@ void ShellSurface::dragMove(struct weston_seat *ws)
     move->shsurf = this;
     m_runningGrab = move;
 
-    m_shell->startGrab(move, &m_move_grab_interface, ws, HAWAII_DESKTOP_SHELL_CURSOR_MOVE);
+    m_shell->startGrab(move, &m_move_grab_interface, ws, WL_HAWAII_SHELL_CURSOR_MOVE);
     moveStartSignal(this);
 }
 
@@ -847,14 +847,14 @@ void ShellSurface::setTitle(struct wl_client *client, struct wl_resource *resour
 {
     m_title = title;
     if (m_windowResource)
-        hawaii_window_send_title_changed(m_windowResource, title);
+        wl_hawaii_window_send_title_changed(m_windowResource, title);
 }
 
 void ShellSurface::setClass(struct wl_client *client, struct wl_resource *resource, const char *className)
 {
     m_class = className;
     if (m_windowResource)
-        hawaii_window_send_identifier_changed(m_windowResource, className);
+        wl_hawaii_window_send_identifier_changed(m_windowResource, className);
 }
 
 const struct wl_shell_surface_interface ShellSurface::m_shell_surface_implementation = {

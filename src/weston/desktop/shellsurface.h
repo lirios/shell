@@ -214,7 +214,7 @@ private:
     static const struct weston_pointer_grab_interface m_resize_grab_interface;
 
     static void set_state(struct wl_client *client, struct wl_resource *resource, int32_t state);
-    static const struct hawaii_window_interface m_window_implementation;
+    static const struct wl_hawaii_window_interface m_window_implementation;
 
     friend class Shell;
     friend class Layer;
