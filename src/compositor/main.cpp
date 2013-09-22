@@ -24,25 +24,27 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <GreenIsland/VCompositorPlugin>
+#include <QtGui/QGuiApplication>
+#include <QtGui/QScreen>
 
 #include "compositor.h"
+#include "config.h"
 
-class GREENISLAND_EXPORT DesktopCompositorPlugin : public VCompositorPlugin
+int main(int argc, char *argv[])
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.hawaii.GreenIsland.VCompositorFactoryInterface" FILE "desktop.json")
-public:
-    QStringList keys() const {
-        return QStringList() << "desktop";
-    }
+    QGuiApplication app(argc, argv);
+    app.setApplicationName("Hawaii Compositor");
+    app.setApplicationVersion(HAWAII_SHELL_VERSION_STRING);
+    app.setOrganizationDomain("hawaii.org");
+    app.setOrganizationName("Hawaii");
 
-    VCompositor *create(const QString &key, const QRect &geometry) {
-        if (key.toLower() == "desktop")
-            return new DesktopCompositor(geometry);
+    QRect geometry = QGuiApplication::primaryScreen()->availableGeometry();
+    geometry.setWidth(1024);
+    geometry.setHeight(640);
 
-        return 0;
-    }
-};
+    DesktopCompositor compositor(geometry);
+    compositor.runShell();
+    compositor.show();
 
-#include "main.moc"
+    return app.exec();
+}

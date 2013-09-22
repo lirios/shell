@@ -41,6 +41,9 @@ DesktopCompositor::DesktopCompositor(const QRect &geometry)
     , m_currentSurface(0)
     , m_shellProcess(0)
 {
+    // Set title
+    setTitle(QStringLiteral("Hawaii Shell"));
+
     // Set initial geometry
     setGeometry(geometry);
 
