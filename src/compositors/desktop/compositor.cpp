@@ -45,9 +45,6 @@ DesktopCompositor::DesktopCompositor(const QRect &geometry)
     // Set initial geometry
     setGeometry(geometry);
 
-    // Enable the subsurface extension
-    enableSubSurfaceExtension();
-
     // Desktop shell protocol
     m_desktopShell = new DesktopShellServer(this, QWaylandCompositor::handle());
 
