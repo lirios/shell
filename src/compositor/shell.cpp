@@ -30,3 +30,12 @@ Shell::Shell(struct ::wl_display *display)
     : QtWaylandServer::wl_hawaii_shell(display)
 {
 }
+
+void Shell::hawaii_shell_bind_resource(Resource *resource)
+{
+    send_loaded(resource->handle);
+}
+
+void Shell::hawaii_shell_desktop_ready(Resource *resource)
+{
+}

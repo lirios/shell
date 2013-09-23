@@ -27,12 +27,18 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+#include <QtCore/qglobal.h>
+
 #include "qwayland-server-hawaii.h"
 
 class Shell : public QtWaylandServer::wl_hawaii_shell
 {
 public:
     Shell(struct ::wl_display *display);
+
+private:
+    void hawaii_shell_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
+    void hawaii_shell_desktop_ready(Resource *resource) Q_DECL_OVERRIDE;
 };
 
 #endif // SHELL_H

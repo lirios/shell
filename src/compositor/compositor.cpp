@@ -143,8 +143,6 @@ void Compositor::setCurrentSurface(QWaylandSurface *surface)
 
 void Compositor::shellStarted()
 {
-    if (m_shellProcess)
-        qDebug() << "Shell is ready!";
 }
 
 void Compositor::shellFailed(QProcess::ProcessError error)
