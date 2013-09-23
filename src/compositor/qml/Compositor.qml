@@ -27,10 +27,8 @@
 import QtQuick 2.0
 import "CompositorLogic.js" as CompositorLogic
 
-Rectangle {
+Item {
     id: root
-    color: "black"
-    opacity: 0.0
 
     // Currently selected window
     property variant selectedWindow: null
@@ -41,28 +39,6 @@ Rectangle {
     // Relayout windows
     onWidthChanged: CompositorLogic.relayout()
     onHeightChanged: CompositorLogic.relayout()
-
-    states: [
-        State {
-            name: "shown"
-            when: opacity == 1.0
-        },
-        State {
-            name: "hidden"
-            when: opacity == 0.0
-        }
-    ]
-
-    transitions: [
-        Transition {
-            to: "shown"
-            NumberAnimation { properties: "opacity"; duration: 7000 }
-        },
-        Transition {
-            to: "hidden"
-            NumberAnimation { properties: "opacity"; duration: 7000 }
-        }
-    ]
 
     function windowAdded(window) {
         CompositorLogic.windowAdded(window);
@@ -79,6 +55,4 @@ Rectangle {
     function removeWindow(window) {
         CompositorLogic.windowRemoved(compositor, window);
     }
-
-    Component.onCompleted: opacity = 1.0
 }
