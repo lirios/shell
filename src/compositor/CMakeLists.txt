@@ -1,5 +1,6 @@
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${Qt5Compositor_PRIVATE_INCLUDE_DIRS}
     ${GreenIsland_INCLUDE_DIRS}
     ${WaylandServer_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}/headers
@@ -24,6 +25,19 @@ set(SOURCES
     workspace.cpp
     grab.cpp
     notifications.cpp
+)
+
+wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/wayland.xml
+    wayland
+)
+wayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/wayland.xml
+    wayland
+)
+qtwayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/wayland.xml
+    wayland
 )
 
 wayland_add_protocol_client(SOURCES
