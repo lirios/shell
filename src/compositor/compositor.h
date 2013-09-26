@@ -30,20 +30,29 @@
 #include <QProcess>
 #include <QQuickView>
 
-#include <VCompositor>
+#include <GreenIsland/VCompositor>
 
-#include "shell.h"
-#include "keybinding.h"
-#include "clientwindow.h"
-#include "workspace.h"
-#include "grab.h"
-#include "notifications.h"
+class Shell;
+class KeyBinding;
+class ClientWindow;
+class Workspace;
+class Grab;
+class Notifications;
 
 class Compositor : public QQuickView, public VCompositor
 {
     Q_OBJECT
     Q_PROPERTY(QWaylandSurface *currentSurface READ currentSurface WRITE setCurrentSurface NOTIFY currentSurfaceChanged)
+    Q_ENUMS(ShellWindowRole)
 public:
+    enum ShellWindowRole {
+        BackgroundWindowRole = 0,
+        PanelWindowRole,
+        LauncherWindowRole,
+        SpecialWindowRole,
+        OverlayWindowRole
+    };
+
     explicit Compositor(const QRect &geometry);
     ~Compositor();
 
@@ -58,9 +67,12 @@ public:
     void surfaceAboutToBeDestroyed(QWaylandSurface *surface);
 
 Q_SIGNALS:
+    void shellWindowAdded(QVariant window);
+
     void windowAdded(QVariant window);
     void windowDestroyed(QVariant window);
     void windowResized(QVariant window);
+
     void currentSurfaceChanged();
 
 public Q_SLOTS:

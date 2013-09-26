@@ -27,7 +27,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <QtCore/qglobal.h>
+#include <QtCore/QList>
+#include <QtCompositor/QWaylandSurface>
 
 #include "qwayland-server-hawaii.h"
 
@@ -36,8 +37,33 @@ class Shell : public QtWaylandServer::wl_hawaii_shell
 public:
     Shell(struct ::wl_display *display);
 
+    bool hasSurface(QWaylandSurface *surface) const;
+
 private:
+    QList<QWaylandSurface *> m_surfaces;
+
     void hawaii_shell_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_set_background(Resource *resource,
+                                     struct ::wl_resource *output,
+                                     struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+    void hawaii_shell_set_panel(Resource *resource,
+                                struct ::wl_resource *output,
+                                struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+    void hawaii_shell_set_launcher(Resource *resource,
+                                   struct ::wl_resource *output,
+                                   struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+    void hawaii_shell_set_special(Resource *resource,
+                                  struct ::wl_resource *output,
+                                  struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+    void hawaii_shell_set_overlay(Resource *resource,
+                                  struct ::wl_resource *output,
+                                  struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_set_position(Resource *resource,
+                                   struct ::wl_resource *surface,
+                                   int32_t x, int32_t y) Q_DECL_OVERRIDE;
+
     void hawaii_shell_desktop_ready(Resource *resource) Q_DECL_OVERRIDE;
 };
 

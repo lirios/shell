@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <QGuiApplication>
 #include <QScreen>
+#include <QtCore/QVariantMap>
 #include <QQmlContext>
 #include <QQuickItem>
 #include <QtCompositor/QWaylandSurface>
@@ -34,6 +35,12 @@
 #include <QtCompositor/QWaylandInputDevice>
 
 #include "compositor.h"
+#include "shell.h"
+#include "keybinding.h"
+#include "clientwindow.h"
+#include "workspace.h"
+#include "grab.h"
+#include "notifications.h"
 #include "cmakedirs.h"
 
 Compositor::Compositor(const QRect &geometry)
@@ -49,6 +56,8 @@ Compositor::Compositor(const QRect &geometry)
 
     // Allow QML to access this compositor
     rootContext()->setContextProperty("compositor", this);
+    qmlRegisterUncreatableType<Compositor>("Hawaii.Shell", 0, 1, "Compositor",
+                                           QStringLiteral("Cannot create Compositor"));
 
     // Load the QML code
     setSource(QUrl("qrc:///qml/Compositor.qml"));
@@ -56,6 +65,8 @@ Compositor::Compositor(const QRect &geometry)
     setColor(Qt::black);
     winId();
 
+    connect(this, SIGNAL(shellWindowAdded(QVariant)),
+            rootObject(), SLOT(shellWindowAdded(QVariant)));
     connect(this, SIGNAL(windowAdded(QVariant)),
             rootObject(), SLOT(windowAdded(QVariant)));
     connect(this, SIGNAL(windowDestroyed(QVariant)),
@@ -198,8 +209,12 @@ void Compositor::surfaceMapped()
 
     qDebug() << "Surface" << surface->title() << "mapped";
 
+    // Shell user interface surfaces don't have a shell surface just
+    // like application windows but we must draw them
+    bool isShell = m_shell->hasSurface(surface);
+
     // A surface without a shell surface is not a client side window
-    if (!surface->hasShellSurface())
+    if (!surface->hasShellSurface() && !isShell)
         return;
 
     QWaylandSurfaceItem *item = surface->surfaceItem();
@@ -212,7 +227,10 @@ void Compositor::surfaceMapped()
     }
 
     // Announce a window was added
-    emit windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
+    if (isShell)
+        emit shellWindowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
+    else
+        emit windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
 }
 
 void Compositor::surfaceUnmapped()

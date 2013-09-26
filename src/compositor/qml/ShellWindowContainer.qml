@@ -25,38 +25,21 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import "CompositorLogic.js" as CompositorLogic
+import QtQuick.Window 2.0
 
 Item {
-    id: root
+    id: container
 
-    // Currently selected window
-    property variant selectedWindow: null
+    property variant child: null
+    property int index
 
-    // True if we're using the normal layout
-    property bool normalLayout: true
-
-    // Relayout windows
-    onWidthChanged: CompositorLogic.relayout()
-    onHeightChanged: CompositorLogic.relayout()
-
-    function shellWindowAdded(window) {
-        CompositorLogic.shellWindowAdded(window);
-    }
-
-    function windowAdded(window) {
-        CompositorLogic.windowAdded(window);
-    }
-
-    function windowResized(window) {
-        CompositorLogic.windowResized(window);
-    }
-
-    function windowDestroyed(window) {
-        CompositorLogic.windowDestroyed(window);
-    }
-
-    function removeWindow(window) {
-        CompositorLogic.windowRemoved(compositor, window);
+    // This effect is used just to invert Y when necessary
+    ContrastEffect {
+        id: effect
+        source: child
+        anchors.fill: child
+        opacity: 1.0
+        blend: 0.0
+        z: 1
     }
 }

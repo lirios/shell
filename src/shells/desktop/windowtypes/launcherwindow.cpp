@@ -46,7 +46,7 @@ LauncherWindow::LauncherWindow(ShellUi *ui)
     setColor(Qt::transparent);
 
     // Set custom window type
-    setFlags(flags() | Qt::BypassWindowManagerHint);
+    setFlags(Qt::BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
 
     // Set Wayland window type
     create();
