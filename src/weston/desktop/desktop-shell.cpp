@@ -503,9 +503,10 @@ void DesktopShell::lockSession()
     currentWorkspace()->reset();
     m_lockLayer.insert(&compositor()->cursor_layer);
 
-    launchScreenSaverProcess();
-
     // TODO: Disable bindings that are not supposed to work while locked
+
+    // Run screensaver or sleep
+    launchScreenSaverProcess();
 
     // All this must be undone in resumeDesktop()
 }
@@ -528,6 +529,8 @@ void DesktopShell::unlockSession()
     if (m_prepareEventSent)
         return;
 
+    weston_log("preparing lock surface...\n");
+    weston_compositor_damage_all(m_compositor);
     wl_hawaii_shell_send_prepare_lock_surface(shellClientResource());
     m_prepareEventSent = true;
 }
@@ -664,10 +667,13 @@ void DesktopShell::lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t 
     es->geometry.width = width;
     es->geometry.height = height;
 
+    fadeIn();
+    //weston_compositor_damage_all(m_compositor);
+
     if (!weston_surface_is_mapped(es)) {
         m_lockLayer.addSurface(es);
         weston_surface_update_transform(es);
-        fadeIn();
+        //fadeIn();
     }
 }
 
