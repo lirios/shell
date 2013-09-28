@@ -567,6 +567,19 @@ void DesktopShell::setAvailableGeometry(struct wl_client *client, struct wl_reso
     m_windowsArea[output] = area;
 }
 
+static void configure_static_surface(struct weston_surface *es, Layer *layer, int32_t width, int32_t height)
+{
+    if (width == 0)
+        return;
+
+    weston_surface_configure(es, es->geometry.x, es->geometry.y, width, height);
+
+    if (wl_list_empty(&es->layer_link) || !weston_surface_is_mapped(es)) {
+        layer->addSurface(es);
+        weston_compositor_schedule_repaint(es->compositor);
+    }
+}
+
 void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                                  struct wl_resource *surface_resource)
 {
@@ -578,7 +591,10 @@ void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *r
         return;
     }
 
-    setBackgroundSurface(surface, static_cast<weston_output *>(output_resource->data));
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_backgroundLayer, width, height); };
+    surface->configure_private = this;
+    surface->output = static_cast<weston_output *>(output_resource->data);
 }
 
 void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
@@ -593,7 +609,10 @@ void DesktopShell::setPanel(struct wl_client *client, struct wl_resource *resour
         return;
     }
 
-    addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_panelsLayer, width, height); };
+    surface->configure_private = this;
+    surface->output = static_cast<weston_output *>(output_resource->data);
 }
 
 void DesktopShell::setLauncher(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
@@ -608,7 +627,10 @@ void DesktopShell::setLauncher(struct wl_client *client, struct wl_resource *res
         return;
     }
 
-    addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_panelsLayer, width, height); };
+    surface->configure_private = this;
+    surface->output = static_cast<weston_output *>(output_resource->data);
 }
 
 void DesktopShell::setSpecial(struct wl_client *client, struct wl_resource *resource,
@@ -624,7 +646,10 @@ void DesktopShell::setSpecial(struct wl_client *client, struct wl_resource *reso
         return;
     }
 
-    addPanelSurface(surface, static_cast<weston_output *>(output_resource->data));
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_panelsLayer, width, height); };
+    surface->configure_private = this;
+    surface->output = static_cast<weston_output *>(output_resource->data);
 }
 
 void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource)
@@ -637,7 +662,11 @@ void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *reso
         return;
     }
 
-    addOverlaySurface(surface, static_cast<weston_output *>(output_resource->data));
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_overlayLayer, width, height); };
+    surface->configure_private = this;
+    surface->output = static_cast<weston_output *>(output_resource->data);
+
     pixman_region32_fini(&surface->pending.input);
     pixman_region32_init_rect(&surface->pending.input, 0, 0, 0, 0);
 }

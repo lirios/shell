@@ -100,10 +100,7 @@ public:
 
     void configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int32_t width, int32_t height);
 
-    void setBackgroundSurface(struct weston_surface *surface, struct weston_output *output);
     void setGrabSurface(struct weston_surface *surface);
-    void addPanelSurface(struct weston_surface *surface, struct weston_output *output);
-    void addOverlaySurface(struct weston_surface *surface, struct weston_output *output);
 
     void startGrab(ShellGrab *grab, const struct weston_pointer_grab_interface *interface,
                    struct weston_seat *seat, uint32_t cursor);
@@ -186,10 +183,6 @@ private:
 
     void bind(struct wl_client *client, uint32_t version, uint32_t id);
     void sigchld(int status);
-
-    void backgroundConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
-    void panelConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
-    void lockSurfaceConfigure(struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
 
     void activateSurface(struct weston_seat *seat, uint32_t time, uint32_t button);
     void configureFullscreen(ShellSurface *surface);
