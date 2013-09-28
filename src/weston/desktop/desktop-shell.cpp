@@ -696,13 +696,10 @@ void DesktopShell::lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t 
     es->geometry.width = width;
     es->geometry.height = height;
 
-    fadeIn();
-    //weston_compositor_damage_all(m_compositor);
-
-    if (!weston_surface_is_mapped(es)) {
+    if (wl_list_empty(&es->layer_link) || !weston_surface_is_mapped(es)) {
         m_lockLayer.addSurface(es);
         weston_surface_update_transform(es);
-        //fadeIn();
+        fadeIn();
     }
 }
 
