@@ -496,12 +496,9 @@ void DesktopShell::lockSession()
     // show the lock screen on all outpus and remove the backgrounds
     // layer as well.
     // TODO: Proper multiscreen setup
-    m_panelsLayer.reset();
-    m_fullscreenLayer.reset();
-    m_notificationsLayer.reset();
-    m_overlayLayer.reset();
     currentWorkspace()->reset();
     m_lockLayer.insert(&compositor()->cursor_layer);
+    m_backgroundLayer.insert(&m_lockLayer);
 
     // TODO: Disable bindings that are not supposed to work while locked
 
@@ -544,6 +541,7 @@ void DesktopShell::resumeDesktop()
     m_notificationsLayer.insert(&m_overlayLayer);
     m_fullscreenLayer.insert(&m_notificationsLayer);
     m_panelsLayer.insert(&m_fullscreenLayer);
+    m_backgroundLayer.insert(&m_panelsLayer);
     currentWorkspace()->insert(&m_panelsLayer);
 
     m_locked = false;
