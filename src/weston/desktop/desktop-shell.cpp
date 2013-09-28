@@ -572,7 +572,7 @@ static void configure_static_surface(struct weston_surface *es, Layer *layer, in
 
     weston_surface_configure(es, es->geometry.x, es->geometry.y, width, height);
 
-    if (wl_list_empty(&es->layer_link) || !weston_surface_is_mapped(es)) {
+    if (wl_list_empty(&es->layer_link) || es->layer_link.next == es->layer_link.prev) {
         layer->addSurface(es);
         weston_compositor_schedule_repaint(es->compositor);
     }
@@ -694,7 +694,7 @@ void DesktopShell::lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t 
     es->geometry.width = width;
     es->geometry.height = height;
 
-    if (wl_list_empty(&es->layer_link) || !weston_surface_is_mapped(es)) {
+    if (wl_list_empty(&es->layer_link) || es->layer_link.next == es->layer_link.prev) {
         m_lockLayer.addSurface(es);
         weston_surface_update_transform(es);
         fadeIn();
