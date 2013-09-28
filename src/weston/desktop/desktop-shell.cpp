@@ -707,8 +707,7 @@ void DesktopShell::lock(wl_client *client, wl_resource *resource)
     if (m_locked)
         return;
 
-    fadeOut();
-    weston_compositor_damage_all(m_compositor);
+    wl_signal_emit(&m_compositor->idle_signal, nullptr);
 }
 
 void DesktopShell::unlock(struct wl_client *client, struct wl_resource *resource)
