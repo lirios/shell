@@ -733,7 +733,7 @@ void DesktopShell::quit(wl_client *client, wl_resource *resource)
 void DesktopShell::lock(wl_client *client, wl_resource *resource)
 {
     // Don't lock again if we are already locked
-    if (m_locked)
+    if (m_locked || m_lockSurface)
         return;
 
     wl_signal_emit(&m_compositor->idle_signal, nullptr);
