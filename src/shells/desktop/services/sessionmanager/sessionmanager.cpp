@@ -51,6 +51,10 @@ void SessionManager::unlock()
 {
     DesktopShell::instance()->d_ptr->shell->unlock();
 
+    // Synchronization
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
+
     // Close all lock screens, this will unmap the window and
     // save some resources
     foreach (ShellUi *ui, DesktopShell::instance()->shellWindows())
