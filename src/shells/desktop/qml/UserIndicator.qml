@@ -33,8 +33,6 @@ PanelIndicator {
     property variant userAccount: UserAccount {}
     property int userStatus: UserStatus.Offline
 
-    property var shutdownDialog
-
     property variant sessionManager: Shell.service("SessionManager")
 
     iconName: userStatusIcon(userStatus)
@@ -89,11 +87,8 @@ PanelIndicator {
             PanelMenuItem {
                 text: qsTr("Power Off...")
                 onClicked: {
-                    if (typeof(shutdownDialog) == "undefined") {
-                        var component = Qt.createComponent("ShutdownDialog.qml");
-                        shutdownDialog = component.createObject();
-                    }
-
+                    var component = Qt.createComponent("ShutdownDialog.qml");
+                    var shutdownDialog = component.createObject();
                     shutdownDialog.visible = true;
                 }
             }

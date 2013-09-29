@@ -51,6 +51,7 @@
 #include "opacityeffect.h"
 #include "inputpanel.h"
 #include "shellseat.h"
+#include "shellwindow.h"
 #include "workspace.h"
 #include "minimizeeffect.h"
 
@@ -537,7 +538,8 @@ void DesktopShell::resumeDesktop()
     terminateScreenSaverProcess();
 
     m_lockLayer.reset();
-    m_overlayLayer.insert(&m_compositor->cursor_layer);
+    m_dialogsLayer.insert(&m_compositor->cursor_layer);
+    m_overlayLayer.insert(&m_dialogsLayer);
     m_notificationsLayer.insert(&m_overlayLayer);
     m_fullscreenLayer.insert(&m_notificationsLayer);
     m_panelsLayer.insert(&m_fullscreenLayer);
@@ -667,6 +669,52 @@ void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *reso
 
     pixman_region32_fini(&surface->pending.input);
     pixman_region32_init_rect(&surface->pending.input, 0, 0, 0, 0);
+}
+
+void DesktopShell::setDialog(struct wl_client *client, struct wl_resource *resource,
+                             struct wl_resource *output_resource,
+                             struct wl_resource *surface_resource)
+{
+    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
+
+    if (surface->configure) {
+        wl_resource_post_error(surface_resource,
+                               WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "surface role already assigned");
+        return;
+    }
+
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        if (width == 0)
+            return;
+
+        ShellWindow *window = static_cast<ShellWindow *>(es->configure_private);
+
+        window->shell()->centerSurfaceOnOutput(es, es->output);
+
+        if (wl_list_empty(&es->layer_link) || es->layer_link.next == es->layer_link.prev) {
+            // Create a black translucent surface to prevent underlying layers to get input events
+            if (!window->dimmedSurface()) {
+                window->createDimmedSurface();
+                window->shell()->m_dialogsLayer.addSurface(window->dimmedSurface());
+            }
+
+            // Add the dialog surface and stack it above the dimmed surface
+            window->shell()->m_dialogsLayer.addSurface(es);
+            window->shell()->m_dialogsLayer.stackAbove(es, window->dimmedSurface());
+
+            // Give focus to the dialog
+            weston_seat *seat = container_of(es->compositor->seat_list.next, weston_seat, link);
+            weston_surface_activate(es, seat);
+        }
+
+        weston_compositor_schedule_repaint(es->compositor);
+    };
+    surface->output = static_cast<weston_output *>(output_resource->data);
+
+    ShellWindow *window = new ShellWindow(this);
+    window->connectSignal(&surface->destroy_signal);
+    surface->configure_private = window;
 }
 
 void DesktopShell::setPosition(struct wl_client *client, struct wl_resource *resource,
@@ -868,6 +916,7 @@ const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::setLauncher),
     wrapInterface(&DesktopShell::setSpecial),
     wrapInterface(&DesktopShell::setOverlay),
+    wrapInterface(&DesktopShell::setDialog),
     wrapInterface(&DesktopShell::setPosition),
     wrapInterface(&DesktopShell::setLockSurface),
     wrapInterface(&DesktopShell::quit),

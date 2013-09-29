@@ -30,6 +30,7 @@
 #include "appinfo.h"
 #include "applicationsmodel.h"
 #include "backgroundsettings.h"
+#include "dialogwindow.h"
 #include "enums.h"
 #include "registration.h"
 #include "keybinding.h"
@@ -52,6 +53,7 @@ void registerQmlTypes()
     const char *uri = "Hawaii.Shell.Desktop";
 
     // Window types
+    qmlRegisterType<DialogWindow>(uri, 0, 1, "DialogWindow");
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
     qmlRegisterType<TooltipWindow>(uri, 0, 1, "TooltipWindow");
 

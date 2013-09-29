@@ -139,6 +139,7 @@ public:
 
     weston_surface *createBlackSurface(int x, int y, int w, int h);
     weston_surface *createBlackSurface(ShellSurface *fs_surface, float x, float y, int w, int h);
+    weston_surface *createBlackSurfaceWithInput(int x, int y, int w, int h, float a = 1.0);
     bool isBlackSurface(weston_surface *es, weston_surface **fs_surface);
 
 protected:
@@ -171,6 +172,7 @@ protected:
     Layer m_fullscreenLayer;
     Layer m_overlayLayer;
     Layer m_notificationsLayer;
+    Layer m_dialogsLayer;
     Layer m_lockLayer;
 
     std::map<struct weston_output *, IRect2D> m_windowsArea;

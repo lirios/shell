@@ -46,9 +46,6 @@ Dialog {
     property var palette: SystemPalette {}
 
     ColumnLayout {
-        width: Math.max(childrenRect.width, 320)
-        height: Math.max(childrenRect.height, 135)
-
         RowLayout {
             FluidUi.Icon {
                 iconName: "system-shutdown-symbolic"

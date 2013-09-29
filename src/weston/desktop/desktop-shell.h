@@ -114,6 +114,10 @@ private:
 
     void setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource);
 
+    void setDialog(struct wl_client *client, struct wl_resource *resource,
+                   struct wl_resource *output_resource,
+                   struct wl_resource *surface_resource);
+
     void setPosition(struct wl_client *client, struct wl_resource *resource,
                      struct wl_resource *surface_resource,
                      int32_t x, int32_t y);

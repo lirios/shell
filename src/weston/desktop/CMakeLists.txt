@@ -15,6 +15,7 @@ set(SOURCES
     shell.cpp
     shellseat.cpp
     shellsurface.cpp
+    shellwindow.cpp
     transform.cpp
     workspace.cpp
     effects/fademovingeffect.cpp

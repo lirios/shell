@@ -24,15 +24,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QGuiApplication>
+#include <QtGui/QGuiApplication>
 
 #include <qpa/qplatformnativeinterface.h>
 
-#include "shellwindow.h"
+#include "dialogwindow.h"
 #include "desktopshell.h"
 #include "desktopshell_p.h"
 
-ShellWindow::ShellWindow(QWindow *parent)
+DialogWindow::DialogWindow(QWindow *parent)
     : QQuickWindow(parent)
 {
     // Transparent color
@@ -43,39 +43,36 @@ ShellWindow::ShellWindow(QWindow *parent)
 
     // Create platform window and inform the compositor about us
     create();
-    setSpecial();
+    setWindowType();
+
+    // Hide the dialog when it's accepted or rejected
+    connect(this, &DialogWindow::accepted, [=]() {
+        this->deleteLater();
+    });
+    connect(this, &DialogWindow::rejected, [=]() {
+        this->deleteLater();
+    });
 }
 
-void ShellWindow::exposeEvent(QExposeEvent *event)
+void DialogWindow::keyReleaseEvent(QKeyEvent *event)
 {
-    QQuickWindow::exposeEvent(event);
+    QQuickWindow::keyReleaseEvent(event);
 
-    if (isExposed())
-        setSurfacePosition(position());
+    if (event->key() == Qt::Key_Escape)
+        Q_EMIT rejected();
 }
 
-void ShellWindow::setSpecial()
+void DialogWindow::setWindowType()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
     wl_output *output = static_cast<struct wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
-    wl_surface *surface = static_cast<struct wl_surface *>(
+    wl_surface *surface = static_cast<wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
     DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
-    shell->set_special(output, surface);
+    shell->set_dialog(output, surface);
 }
 
-void ShellWindow::setSurfacePosition(const QPoint &pt)
-{
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
-
-    wl_surface *surface = static_cast<struct wl_surface *>(
-                native->nativeResourceForWindow("surface", this));
-
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
-    shell->set_position(surface, pt.x(), pt.y());
-}
-
-#include "moc_shellwindow.cpp"
+#include "moc_dialogwindow.cpp"

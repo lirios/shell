@@ -60,6 +60,15 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
+    <request name="set_dialog">
+      <description summary="set dialog role">
+        The surface set by this request will receive the dialog role.
+        Dialogs have a modal behavior which interrupts user's workflow.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
     <request name="set_position">
       <arg name="surface" type="object" interface="wl_surface"/>
       <arg name="x" type="int"/>

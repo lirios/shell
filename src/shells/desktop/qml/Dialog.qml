@@ -24,102 +24,41 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Window 2.0
+import QtQuick 2.1
+import QtQuick.Window 2.1
+import QtQuick.Layouts 1.0
 import Hawaii.Shell.Desktop 0.1
 import Hawaii.Shell.Styles 0.1
 
-ShellWindow {
+DialogWindow {
     id: dialogWindow
-    color: "transparent"
+    width: styledItem.width
+    height: styledItem.height
 
-    default property alias content: container.children
+    default property alias content: mainLayout.children
 
-    signal accepted()
-    signal rejected()
+    StyledItem {
+        id: styledItem
+        style: Qt.createComponent("DialogStyle.qml", styledItem)
+        width: mainLayout.implicitWidth + __style.padding.left + __style.padding.right
+        height: mainLayout.implicitHeight + __style.padding.top + __style.padding.bottom
 
-    onAccepted: dialogWindow.visible = false
-    onRejected: dialogWindow.visible = false
-
-    Item {
-        id: root
-        anchors.fill: parent
-        opacity: dialogWindow.visible ? 1.0 : 0.0
-        focus: true
-
-        property Component style: Qt.createComponent("DialogStyle.qml", root)
-
-        property QtObject __style: styleLoader.item
-
-        Keys.onReleased: {
-            // Emit the rejected signal automatically when ESC is released
-            if (event.key === Qt.Key_Escape)
-                dialogWindow.rejected();
-        }
-
-        Behavior on opacity {
-            NumberAnimation { duration: 250; easing.type: Easing.OutQuad }
-        }
-
-        Loader {
-            id: backgroundLoader
-            anchors.fill: parent
-            sourceComponent: root.__style ? root.__style.background : null
-            onStatusChanged: {
-                if (status === Loader.Error)
-                    console.error("Failed to load Style for", root);
+        Item {
+            anchors {
+                fill: parent
+                margins: 11
             }
-            onLoaded: item.z = -1
 
-            Loader {
-                property Item contentItem: container
-
-                id: dialogLoader
-                anchors.centerIn: parent
-                sourceComponent: root.__style ? root.__style.dialog : null
-                onStatusChanged: {
-                    if (status === Loader.Error)
-                        console.error("Failed to load Style for", root);
-                }
-                onLoaded: {
-                    item.z = 0;
-                    item.width = Math.max(container.implicitWidth, container.width) +
-                            root.__style.padding.left + root.__style.padding.right;
-                    item.height = Math.max(container.implicitHeight, container.height) +
-                            root.__style.padding.top + root.__style.padding.bottom;
-                }
-
-                Item {
-                    property Item layoutItem: container.children.length === 1 ? container.children[0] : null
-
-                    id: container
-                    anchors.fill: parent
-                    anchors.leftMargin: root.__style.padding.left
-                    anchors.topMargin: root.__style.padding.top
-                    anchors.rightMargin: root.__style.padding.right
-                    anchors.bottomMargin: root.__style.padding.bottom
-                    z: 1
-                    focus: true
-                    implicitWidth: container.childrenRect.width
-                    implicitHeight: container.childrenRect.height
-                }
-
-                Loader {
-                    property Item __item: root
-
-                    id: styleLoader
-                    sourceComponent: root.style
-                    onStatusChanged: {
-                        if (status === Loader.Error)
-                            console.error("Failed to load Style for", root);
-                    }
+            ColumnLayout {
+                id: mainLayout
+                anchors {
+                    fill: parent
+                    leftMargin: __style.padding.left
+                    topMargin: __style.padding.top
+                    rightMargin: __style.padding.right
+                    bottomMargin: __style.padding.bottom
                 }
             }
         }
-    }
-
-    Component.onCompleted: {
-        dialogWindow.width = Screen.width;
-        dialogWindow.height = Screen.height;
     }
 }

@@ -54,6 +54,7 @@ set(SOURCES
     settings/backgroundsettings.cpp
     settings/launchersettings.cpp
     windowtypes/backgroundwindow.cpp
+    windowtypes/dialogwindow.cpp
     windowtypes/grabwindow.cpp
     windowtypes/launcherwindow.cpp
     windowtypes/lockscreenwindow.cpp

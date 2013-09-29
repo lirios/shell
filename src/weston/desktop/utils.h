@@ -31,6 +31,8 @@
 
 #include "signal.h"
 
+#include <weston/compositor.h>
+
 template<typename T>
 class Vector2D {
 public:

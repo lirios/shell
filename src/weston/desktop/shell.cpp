@@ -245,7 +245,8 @@ void Shell::init()
         shseat->pointerFocusSignal.connect(this, &Shell::pointerFocus);
     }
 
-    m_overlayLayer.insert(&m_compositor->cursor_layer);
+    m_dialogsLayer.insert(&m_compositor->cursor_layer);
+    m_overlayLayer.insert(&m_dialogsLayer);
     m_notificationsLayer.insert(&m_overlayLayer);
     m_fullscreenLayer.insert(&m_notificationsLayer);
     m_panelsLayer.insert(&m_fullscreenLayer);
@@ -841,7 +842,7 @@ weston_surface *Shell::createBlackSurface(int x, int y, int w, int h)
     surface->configure = black_surface_configure;
     surface->configure_private = 0;
     weston_surface_configure(surface, x, y, w, h);
-    weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1);
+    weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1.0);
     pixman_region32_fini(&surface->input);
     pixman_region32_init_rect(&surface->input, 0, 0, 0, 0);
 
@@ -859,11 +860,23 @@ weston_surface *Shell::createBlackSurface(ShellSurface *fs_surface, float x, flo
     surface->configure = black_surface_configure;
     surface->configure_private = fs_surface;
     weston_surface_configure(surface, x, y, w, h);
-    weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1);
+    weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1.0);
     pixman_region32_fini(&surface->opaque);
     pixman_region32_init_rect(&surface->opaque, 0, 0, w, h);
     pixman_region32_fini(&surface->input);
     pixman_region32_init_rect(&surface->input, 0, 0, w, h);
+
+    return surface;
+}
+
+weston_surface *Shell::createBlackSurfaceWithInput(int x, int y, int w, int h, float a)
+{
+    weston_surface *surface = weston_surface_create(m_compositor);
+
+    surface->configure = black_surface_configure;
+    surface->configure_private = 0;
+    weston_surface_configure(surface, x, y, w, h);
+    weston_surface_set_color(surface, 0.0, 0.0, 0.0, a);
 
     return surface;
 }

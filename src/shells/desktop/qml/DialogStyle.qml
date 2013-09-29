@@ -39,12 +39,7 @@ Style {
         bottom: shadowSize + borderSize
     }
 
-    property Component background: Rectangle {
-        color: "black"
-        opacity: 0.65
-    }
-
-    property Component dialog: Item {
+    property Component panel: Item {
         Rectangle {
             id: border
             anchors.fill: parent
