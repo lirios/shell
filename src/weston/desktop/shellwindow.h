@@ -49,10 +49,15 @@ public:
     void createDimmedSurface(weston_output *output);
     void destroyDimmedSurface();
 
+    void animateDialog(weston_surface *surface);
+
 private:
+    struct DialogAnimation;
+
     DesktopShell *m_shell;
     weston_surface *m_dimmedSurface;
     Animation m_dimmedAnimation;
+    DialogAnimation *m_dialogAnimation;
     WlListener m_destroyListener;
 
     void setDimmedSurfaceAlpha(float alpha);

@@ -26,9 +26,41 @@
 
 #include "shellwindow.h"
 
+struct ShellWindow::DialogAnimation
+{
+    Animation animation;
+    weston_surface *surface;
+    weston_transform transform;
+    float targetX;
+    float targetY;
+
+    void animate(float value)
+    {
+        weston_matrix *matrix = &transform.matrix;
+        weston_matrix_init(matrix);
+        weston_matrix_scale(matrix, value, value, 1.0);
+        weston_matrix_translate(matrix, targetX * (1.0 - value),
+                                targetY * (1.0 - value), 0);
+        weston_surface_update_transform(surface);
+        weston_surface_damage(surface);
+    }
+
+    void done()
+    {
+        if (!wl_list_empty(&transform.link)) {
+            wl_list_remove(&transform.link);
+            wl_list_init(&transform.link);
+
+            weston_surface_update_transform(surface);
+            weston_surface_damage(surface);
+        }
+    }
+};
+
 ShellWindow::ShellWindow(DesktopShell *shell)
     : m_shell(shell)
     , m_dimmedSurface(nullptr)
+    , m_dialogAnimation(nullptr)
 {
 }
 
@@ -36,6 +68,7 @@ ShellWindow::~ShellWindow()
 {
     if (m_dimmedSurface)
         weston_surface_destroy(m_dimmedSurface);
+    delete m_dialogAnimation;
 }
 
 void ShellWindow::connectSignal(wl_signal *signal)
@@ -65,6 +98,32 @@ void ShellWindow::destroyDimmedSurface()
     if (m_dimmedSurface)
         weston_surface_destroy(m_dimmedSurface);
     m_dimmedSurface = nullptr;
+}
+
+void ShellWindow::animateDialog(weston_surface *surface)
+{
+    if (m_dialogAnimation)
+        return;
+
+    m_dialogAnimation = new DialogAnimation;
+    m_dialogAnimation->surface = surface;
+    m_dialogAnimation->targetX = weston_surface_buffer_width(surface) / 2.0;
+    m_dialogAnimation->targetY = weston_surface_buffer_height(surface) / 2.0;
+    wl_list_init(&m_dialogAnimation->transform.link);
+
+    m_dialogAnimation->animation.updateSignal->connect(
+                m_dialogAnimation, &DialogAnimation::animate);
+    m_dialogAnimation->animation.doneSignal->connect(
+                m_dialogAnimation, &DialogAnimation::done);
+
+    weston_matrix *matrix = &m_dialogAnimation->transform.matrix;
+    weston_matrix_init(matrix);
+    weston_matrix_scale(matrix, 0.01, 0.01, 1.0);
+    wl_list_insert(&surface->geometry.transformation_list, &m_dialogAnimation->transform.link);
+
+    m_dialogAnimation->animation.setStart(0.01);
+    m_dialogAnimation->animation.setTarget(1.0);
+    m_dialogAnimation->animation.run(surface->output, 200, Animation::Flags::SendDone);
 }
 
 void ShellWindow::setDimmedSurfaceAlpha(float alpha)
