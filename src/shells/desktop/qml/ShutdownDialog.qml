@@ -32,12 +32,6 @@ import Hawaii.Shell.Desktop 0.1
 
 Dialog {
     id: shutdownDialog
-    onVisibleChanged: {
-        if (visible) {
-            timeRemaining = 60;
-            shutdownTimer.restart();
-        }
-    }
 
     property int timeRemaining: 60
 
@@ -65,17 +59,16 @@ Dialog {
                 Timer {
                     id: shutdownTimer
                     interval: 10000
-                    running: shutdownDialog.visible
+                    running: timeRemaining > 0
+                    repeat: timeRemaining > 0
                     triggeredOnStart: true
                     onTriggered: {
                         timerLabel.text = qsTr("The system will power off automatically " +
                                                "in %1 seconds.").arg(timeRemaining);
                         timeRemaining -= 10;
 
-                        if (timeRemaining == 0) {
-                            shutdownTimer.repeat = false;
-                            // TODO: Power off!
-                        }
+                        if (timeRemaining == 0)
+                            powerManager.powerOff()
                     }
                 }
 
