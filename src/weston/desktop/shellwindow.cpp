@@ -26,6 +26,18 @@
 
 #include "shellwindow.h"
 
+struct ShellWindow::DialogOverlayAnimation
+{
+    Animation animation;
+    weston_surface *surface;
+
+    void animate(float value)
+    {
+        surface->alpha = value;
+        weston_surface_damage(surface);
+    }
+};
+
 struct ShellWindow::DialogAnimation
 {
     Animation animation;
@@ -60,6 +72,7 @@ struct ShellWindow::DialogAnimation
 ShellWindow::ShellWindow(DesktopShell *shell)
     : m_shell(shell)
     , m_dimmedSurface(nullptr)
+    , m_dialogOverlayAnimation(nullptr)
     , m_dialogAnimation(nullptr)
 {
 }
@@ -68,6 +81,7 @@ ShellWindow::~ShellWindow()
 {
     if (m_dimmedSurface)
         weston_surface_destroy(m_dimmedSurface);
+    delete m_dialogOverlayAnimation;
     delete m_dialogAnimation;
 }
 
@@ -87,10 +101,15 @@ void ShellWindow::createDimmedSurface(weston_output *output)
     m_dimmedSurface = m_shell->createBlackSurfaceWithInput(0, 0, 8192, 8192, 0.7);
 
     // Animation
-    m_dimmedAnimation.updateSignal->connect(this, &ShellWindow::setDimmedSurfaceAlpha);
-    m_dimmedAnimation.setStart(0.0);
-    m_dimmedAnimation.setTarget(0.7);
-    m_dimmedAnimation.run(output, 250);
+    m_dialogOverlayAnimation = new DialogOverlayAnimation;
+    m_dialogOverlayAnimation->surface = m_dimmedSurface;
+
+    m_dialogOverlayAnimation->animation.updateSignal->connect(
+                m_dialogOverlayAnimation, &DialogOverlayAnimation::animate);
+
+    m_dialogOverlayAnimation->animation.setStart(0.0);
+    m_dialogOverlayAnimation->animation.setTarget(0.7);
+    m_dialogOverlayAnimation->animation.run(output, 250);
 }
 
 void ShellWindow::destroyDimmedSurface()
@@ -124,15 +143,6 @@ void ShellWindow::animateDialog(weston_surface *surface)
     m_dialogAnimation->animation.setStart(0.01);
     m_dialogAnimation->animation.setTarget(1.0);
     m_dialogAnimation->animation.run(surface->output, 200, Animation::Flags::SendDone);
-}
-
-void ShellWindow::setDimmedSurfaceAlpha(float alpha)
-{
-    if (!m_dimmedSurface)
-        return;
-
-    m_dimmedSurface->alpha = alpha;
-    weston_surface_damage(m_dimmedSurface);
 }
 
 void ShellWindow::surfaceDestroyed()

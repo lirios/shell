@@ -52,11 +52,12 @@ public:
     void animateDialog(weston_surface *surface);
 
 private:
+    struct DialogOverlayAnimation;
     struct DialogAnimation;
 
     DesktopShell *m_shell;
     weston_surface *m_dimmedSurface;
-    Animation m_dimmedAnimation;
+    DialogOverlayAnimation *m_dialogOverlayAnimation;
     DialogAnimation *m_dialogAnimation;
     WlListener m_destroyListener;
 
