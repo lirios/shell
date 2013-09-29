@@ -28,8 +28,7 @@
 #define SHELLWINDOW_H
 
 #include "desktop-shell.h"
-
-class DesktopShell;
+#include "animation.h"
 
 class ShellWindow
 {
@@ -47,13 +46,16 @@ public:
 
     void connectSignal(wl_signal *signal);
 
-    void createDimmedSurface();
+    void createDimmedSurface(weston_output *output);
     void destroyDimmedSurface();
 
 private:
     DesktopShell *m_shell;
     weston_surface *m_dimmedSurface;
+    Animation m_dimmedAnimation;
     WlListener m_destroyListener;
+
+    void setDimmedSurfaceAlpha(float alpha);
 
     void surfaceDestroyed();
 };

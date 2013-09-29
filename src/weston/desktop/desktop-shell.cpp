@@ -695,7 +695,7 @@ void DesktopShell::setDialog(struct wl_client *client, struct wl_resource *resou
         if (wl_list_empty(&es->layer_link) || es->layer_link.next == es->layer_link.prev) {
             // Create a black translucent surface to prevent underlying layers to get input events
             if (!window->dimmedSurface()) {
-                window->createDimmedSurface();
+                window->createDimmedSurface(es->output);
                 window->shell()->m_dialogsLayer.addSurface(window->dimmedSurface());
             }
 
@@ -707,8 +707,6 @@ void DesktopShell::setDialog(struct wl_client *client, struct wl_resource *resou
             weston_seat *seat = container_of(es->compositor->seat_list.next, weston_seat, link);
             weston_surface_activate(es, seat);
         }
-
-        weston_compositor_schedule_repaint(es->compositor);
     };
     surface->output = static_cast<weston_output *>(output_resource->data);
 

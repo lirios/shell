@@ -44,7 +44,7 @@ void ShellWindow::connectSignal(wl_signal *signal)
     m_destroyListener.signal->connect(this, &ShellWindow::surfaceDestroyed);
 }
 
-void ShellWindow::createDimmedSurface()
+void ShellWindow::createDimmedSurface(weston_output *output)
 {
     // Can't continue if we already created the surface
     if (m_dimmedSurface)
@@ -52,6 +52,12 @@ void ShellWindow::createDimmedSurface()
 
     // Create surface
     m_dimmedSurface = m_shell->createBlackSurfaceWithInput(0, 0, 8192, 8192, 0.7);
+
+    // Animation
+    m_dimmedAnimation.updateSignal->connect(this, &ShellWindow::setDimmedSurfaceAlpha);
+    m_dimmedAnimation.setStart(0.0);
+    m_dimmedAnimation.setTarget(0.7);
+    m_dimmedAnimation.run(output, 250);
 }
 
 void ShellWindow::destroyDimmedSurface()
@@ -59,6 +65,15 @@ void ShellWindow::destroyDimmedSurface()
     if (m_dimmedSurface)
         weston_surface_destroy(m_dimmedSurface);
     m_dimmedSurface = nullptr;
+}
+
+void ShellWindow::setDimmedSurfaceAlpha(float alpha)
+{
+    if (!m_dimmedSurface)
+        return;
+
+    m_dimmedSurface->alpha = alpha;
+    weston_surface_damage(m_dimmedSurface);
 }
 
 void ShellWindow::surfaceDestroyed()
