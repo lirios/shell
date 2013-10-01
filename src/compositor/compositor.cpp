@@ -211,7 +211,7 @@ void Compositor::surfaceMapped()
 
     // Shell user interface surfaces don't have a shell surface just
     // like application windows but we must draw them
-    bool isShell = m_shell->hasSurface(surface);
+    bool isShell = surface->windowFlags() & QWaylandSurface::BypassWindowManager;
 
     // A surface without a shell surface is not a client side window
     if (!surface->hasShellSurface() && !isShell)
