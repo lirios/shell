@@ -1,0 +1,72 @@
+#!/bin/bash
+#
+# This file is part of Hawaii Shell.
+#
+# Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+#
+# Author(s):
+#    Pier Luigi Fiorini
+#
+# $BEGIN_LICENSE:GPL2+$
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# $END_LICENSE$
+#
+
+weston=$(which weston)
+westonlaunch=$(which weston-launch)
+
+if [ "x$weston" = "x" ]; then
+    echo
+    echo "Hawaii needs the Weston compositor, but it hasn't been found."
+    echo "Please install the weston package."
+    echo
+    exit 1
+fi
+
+verstr=$(${weston} --version | sed -e 's,^weston ,,g')
+
+IFS=. read -a v <<<"${verstr}"
+if [ ${#v[@]} -lt 3 ]; then
+    echo "Error parsing Weston version!"
+    exit 1
+fi
+
+major=$((${v[0]} << 16))
+minor=$((${v[1]} << 8))
+micro=${v[2]}
+version=$((${major} | ${minor} | ${micro}))
+
+tmajor=$((1<<16))
+tminor=$((3<<8))
+tmicro=0
+tversion=$((${tmajor} | ${tminor} | ${tmicro}))
+
+if [ ${version} -ge ${tversion} ]; then
+    args="-- --shell=@CMAKE_INSTALL_FULL_LIBDIR@/weston/hawaii-desktop.so"
+else
+    echo
+    echo "Make sure you configured ~/.config/weston.ini to the following module:"
+    echo "@CMAKE_INSTALL_FULL_LIBDIR@/weston/hawaii-desktop.so"
+    echo
+    echo "Consult Hawaii documentation for more details."
+    echo
+fi
+
+if [ -z "$DISPLAY" ]; then
+    exec ${westonlaunch} ${args}
+else
+    exec ${weston} ${args}
+fi
