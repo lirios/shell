@@ -75,6 +75,9 @@ Q_SIGNALS:
 
     void currentSurfaceChanged();
 
+Q_SIGNALS:
+    void ready();
+
 public Q_SLOTS:
     void destroyWindow(QVariant window);
     void destroyClientForWindow(QVariant window);

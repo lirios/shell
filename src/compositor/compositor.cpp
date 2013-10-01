@@ -80,6 +80,8 @@ Compositor::Compositor(const QRect &geometry)
 
     // Protocols
     m_shell = new Shell(waylandDisplay());
+    connect(m_shell, SIGNAL(ready()),
+            this, SIGNAL(ready()));
     m_notifications = new Notifications(waylandDisplay());
 }
 

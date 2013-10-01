@@ -40,6 +40,32 @@ Item {
     onWidthChanged: CompositorLogic.relayout()
     onHeightChanged: CompositorLogic.relayout()
 
+    // Bind compositor signals
+    Connections {
+        target: compositor
+        onReady: splash.opacity = 0.0
+    }
+
+    // Black rectangle for fade-in and fade-out effects
+    Rectangle {
+        id: splash
+        color: "black"
+        x: 0
+        y: 0
+        z: 1000
+        width: 8192
+        height: 8192
+        opacity: 1.0
+
+        Behavior on opacity {
+            NumberAnimation { duration: 250 }
+        }
+    }
+
+    /*
+     * Slots
+     */
+
     function shellWindowAdded(window) {
         CompositorLogic.shellWindowAdded(window);
     }

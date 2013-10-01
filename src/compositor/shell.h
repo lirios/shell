@@ -28,16 +28,22 @@
 #define SHELL_H
 
 #include <QtCore/QList>
+#include <QtCore/QObject>
 #include <QtCompositor/QWaylandSurface>
 
 #include "qwayland-server-hawaii.h"
 
-class Shell : public QtWaylandServer::wl_hawaii_shell
+class Shell : public QObject,
+        public QtWaylandServer::wl_hawaii_shell
 {
+    Q_OBJECT
 public:
     Shell(struct ::wl_display *display);
 
     bool hasSurface(QWaylandSurface *surface) const;
+
+Q_SIGNALS:
+    void ready();
 
 private:
     QList<QWaylandSurface *> m_surfaces;

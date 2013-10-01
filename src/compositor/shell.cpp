@@ -30,7 +30,8 @@
 #include "compositor.h"
 
 Shell::Shell(struct ::wl_display *display)
-    : QtWaylandServer::wl_hawaii_shell(display)
+    : QObject()
+    , QtWaylandServer::wl_hawaii_shell(display)
 {
 }
 
@@ -127,4 +128,8 @@ void Shell::hawaii_shell_set_position(Resource *resource,
 
 void Shell::hawaii_shell_desktop_ready(Resource *resource)
 {
+    Q_UNUSED(resource);
+    Q_EMIT ready();
 }
+
+#include "moc_shell.cpp"
