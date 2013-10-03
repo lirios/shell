@@ -60,6 +60,27 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
+    <request name="set_popup">
+      <description summary="make the surface a popup surface">
+	Map the surface as a popup.
+
+	A popup surface is a surface with an added pointer grab.
+
+	An existing implicit grab will be changed to owner-events mode,
+	and the popup grab will continue after the implicit grab ends
+	(i.e. releasing the mouse button does not cause the popup to
+	be unmapped).
+
+	The popup grab continues until the window is destroyed or a
+	mouse button is pressed in any other window.
+      </description>
+      <arg name="id" type="new_id" interface="wl_hawaii_shell_surface"/>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="x" type="int"/>
+      <arg name="y" type="int"/>
+    </request>
+
     <request name="set_dialog">
       <description summary="set dialog role">
         The surface set by this request will receive the dialog role.
@@ -231,6 +252,14 @@
       <entry name="maximized" value="4"/>
       <entry name="fullscreen" value="8"/>
     </enum>
+  </interface>
+
+  <interface name="wl_hawaii_shell_surface" version="1">
+    <description summary="popup interaction is done">
+    The popup_done event is sent out when a popup grab is broken,
+    that is, when the users clicks on a different surface.
+    </description>
+    <event name="popup_done"/>
   </interface>
 
   <interface name="wl_hawaii_key_binding" version="1">
