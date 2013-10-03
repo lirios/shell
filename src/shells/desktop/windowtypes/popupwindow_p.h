@@ -24,33 +24,23 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Window 2.0
-import Hawaii.Shell.Desktop 0.1
-import Hawaii.Shell.Styles 0.1
+#ifndef POPUPWINDOW_P_H
+#define POPUPWINDOW_P_H
 
-PopupWindow {
-    id: popupWindow
+#include "qwayland-hawaii.h"
 
-    default property alias content: container.children
+class PopupWindow;
 
-    StyledItem {
-        id: root
-        anchors {
-            fill: parent
-            leftMargin: __style.padding.left
-            topMargin: __style.padding.top
-            rightMargin: __style.padding.right
-            bottomMargin: __style.padding.bottom
-        }
-        style: Qt.createComponent("PopupStyle.qml", root)
+class PopupWindowPrivate : public QtWayland::wl_hawaii_shell_surface
+{
+    Q_DECLARE_PUBLIC(PopupWindow)
+public:
+    PopupWindowPrivate(PopupWindow *parent);
 
-        Item {
-            id: container
-            anchors {
-                fill: parent
-                margins: 6
-            }
-        }
-    }
-}
+    PopupWindow *q_ptr;
+
+protected:
+    void hawaii_shell_surface_popup_done();
+};
+
+#endif // POPUPWINDOW_P_H

@@ -61,6 +61,7 @@ set(SOURCES
     windowtypes/notificationwindow.cpp
     windowtypes/overlaywindow.cpp
     windowtypes/panelwindow.cpp
+    windowtypes/popupwindow.cpp
     windowtypes/shellwindow.cpp
     windowtypes/tooltipwindow.cpp
 )

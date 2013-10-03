@@ -37,6 +37,7 @@
 #include "launcheritem.h"
 #include "launchermodel.h"
 #include "launchersettings.h"
+#include "popupwindow.h"
 #include "powermanager.h"
 #include "servicefactory.h"
 #include "sessionmanager.h"
@@ -55,6 +56,7 @@ void registerQmlTypes()
     // Window types
     qmlRegisterType<DialogWindow>(uri, 0, 1, "DialogWindow");
     qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
+    qmlRegisterType<PopupWindow>(uri, 0, 1, "PopupWindow");
     qmlRegisterType<TooltipWindow>(uri, 0, 1, "TooltipWindow");
 
     // Settings
