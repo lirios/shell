@@ -60,8 +60,10 @@ class PopupGrab : public ShellGrab
 public:
     weston_surface *surface;
     wl_resource *shsurfResource;
+    bool inside;
 
-    void end() {
+    void end()
+    {
         wl_hawaii_shell_surface_send_popup_done(shsurfResource);
         Shell::endGrab(this);
         wl_resource *res = shsurfResource;
@@ -74,13 +76,16 @@ public:
 static void shell_surface_focus(struct weston_pointer_grab *base)
 {
     ShellGrab *grab = container_of(base, ShellGrab, grab);
+    PopupGrab *cgrab = static_cast<PopupGrab *>(grab);
 
     wl_fixed_t sx, sy;
     struct weston_surface *surface = weston_compositor_pick_surface(grab->pointer->seat->compositor,
                                                                     grab->pointer->x, grab->pointer->y,
                                                                     &sx, &sy);
 
-    weston_pointer_set_focus(grab->pointer, surface, sx, sy);
+    cgrab->inside = surface == cgrab->surface;
+    if (cgrab->inside)
+        weston_pointer_set_focus(grab->pointer, surface, sx, sy);
 }
 
 static void shell_surface_motion(struct weston_pointer_grab *base, uint32_t time)
@@ -100,16 +105,15 @@ static void shell_surface_button(struct weston_pointer_grab *base, uint32_t time
     ShellGrab *grab = container_of(base, ShellGrab, grab);
     PopupGrab *cgrab = static_cast<PopupGrab *>(grab);
 
-    if (grab->pointer->focus == cgrab->surface) {
-        struct wl_resource *resource = grab->pointer->focus_resource;
-        if (resource) {
-            struct wl_display *display = wl_client_get_display(wl_resource_get_client(resource));
-            uint32_t serial = wl_display_get_serial(display);
-            wl_pointer_send_button(resource, serial, time, button, state);
-        }
-    } else if (state == WL_POINTER_BUTTON_STATE_RELEASED) {
-        cgrab->end();
+    struct wl_resource *resource = grab->pointer->focus_resource;
+    if (resource) {
+        struct wl_display *display = wl_client_get_display(wl_resource_get_client(resource));
+        uint32_t serial = wl_display_get_serial(display);
+        wl_pointer_send_button(resource, serial, time, button, state);
     }
+
+    if (!cgrab->inside && state == WL_POINTER_BUTTON_STATE_RELEASED)
+        cgrab->end();
 }
 
 static const struct weston_pointer_grab_interface shell_surface_interface = {
