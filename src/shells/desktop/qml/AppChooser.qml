@@ -82,7 +82,7 @@ Item {
                     onClicked: {
                         // Launch the application and close the AppChooser
                         var item = appsModel.get(VisualDataModel.itemsIndex);
-                        //window.visible = false;
+                        window.visible = false;
                         item.launch();
                     }
                 }
