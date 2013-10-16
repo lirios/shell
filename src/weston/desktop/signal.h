@@ -50,11 +50,13 @@ public:
 private:
     class Functor {
     public:
+        Functor() : m_calling(false) {}
         virtual ~Functor() {}
         virtual void call(Args...) = 0;
 
         bool m_called;
         bool m_toDelete;
+        bool m_calling;
     };
 
     template<class T>
@@ -93,7 +95,10 @@ void Signal<Args...>::disconnect(T *obj, void (T::*func)(Args...)) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
         MemberFunctor<T> *f = static_cast<MemberFunctor<T> *>(*i);
         if (f->m_obj == obj && f->m_func == func) {
-            f->m_toDelete = true;
+            if (f->m_calling)
+                f->m_toDelete = true;
+            else
+                delete f;
             m_listeners.erase(i);
             return;
         }
@@ -105,7 +110,10 @@ void Signal<Args...>::disconnect(T *obj) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
         MemberFunctor<T> *f = static_cast<MemberFunctor<T> *>(*i);
         if (f->m_obj == obj) {
-            f->m_toDelete = true;
+            if (f->m_calling)
+                f->m_toDelete = true;
+            else
+                delete f;
             m_listeners.erase(i);
             return;
         }
@@ -141,7 +149,9 @@ void Signal<Args...>::call(Args... args) {
     for (Functor *f: m_listeners) {
         if (!f->m_called) {
             f->m_toDelete = false;
+            f->m_calling = true;
             f->call(args...);
+            f->m_calling = false;
             f->m_called = true;
             if (f->m_toDelete) {
                 delete f;
