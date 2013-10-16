@@ -433,7 +433,8 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int3
             break;
         case ShellSurface::Type::Maximized: {
             IRect2D rect = windowsArea(surface->output());
-            weston_surface_set_position(surface->m_surface, rect.x, rect.y);
+            IRect2D bbox = surface->surfaceTreeBoundingBox();
+            weston_surface_set_position(surface->m_surface, rect.x - bbox.x, rect.y - bbox.y);
         } break;
         default:
             if (!m_windowsMinimized)

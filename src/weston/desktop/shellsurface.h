@@ -90,6 +90,7 @@ public:
     int32_t height() const;
     int32_t transformedWidth() const;
     int32_t transformedHeight() const;
+    IRect2D surfaceTreeBoundingBox() const;
     float maximumAlpha() const;
     float alpha() const;
     inline bool is(struct weston_surface *s) const { return s == m_surface; }
