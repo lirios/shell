@@ -389,9 +389,8 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int3
         switch (surface->m_type) {
         case ShellSurface::Type::XWayland:
         case ShellSurface::Type::Transient:
-            if (surface->m_transient.flags == WL_SHELL_SURFACE_TRANSIENT_INACTIVE) {
+            if (surface->m_transient.flags == WL_SHELL_SURFACE_TRANSIENT_INACTIVE)
                 break;
-            }
         case ShellSurface::Type::TopLevel:
         case ShellSurface::Type::Maximized: {
             struct weston_seat *seat;
@@ -403,8 +402,17 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int3
             break;
         }
 
-        if (m_windowsMinimized)
-            surface->hide();
+        if (m_windowsMinimized) {
+            switch (surface->m_type) {
+            case ShellSurface::Type::Transient:
+            case ShellSurface::Type::Popup:
+                if (surface->m_transient.flags == WL_SHELL_SURFACE_TRANSIENT_INACTIVE)
+                    break;
+            default:
+                surface->hide();
+                break;
+            }
+        }
     } else if (changedType || sx != 0 || sy != 0 || surface->width() != width || surface->height() != height) {
         float from_x, from_y;
         float to_x, to_y;
@@ -435,9 +443,8 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy, int3
         if (surface->m_surface->output) {
             weston_surface_update_transform(surface->m_surface);
 
-            if (surface->m_type == ShellSurface::Type::Maximized) {
+            if (surface->m_type == ShellSurface::Type::Maximized)
                 surface->m_surface->output = surface->m_output;
-            }
         }
     }
 }
@@ -835,10 +842,16 @@ void Shell::resetWorkspaces()
 void Shell::minimizeWindows()
 {
     for (ShellSurface *shsurf: surfaces()) {
-        if (!shsurf->isMinimized()) {
-            shsurf->minimize();
+        switch (shsurf->m_type) {
+        case ShellSurface::Type::Transient:
+        case ShellSurface::Type::Popup:
+            if (shsurf->m_transient.flags == WL_SHELL_SURFACE_TRANSIENT_INACTIVE)
+                break;
+        default:
+            if (!shsurf->isMinimized())
+                shsurf->minimize();
+            shsurf->setAcceptNewState(false);
         }
-        shsurf->setAcceptNewState(false);
     }
     m_windowsMinimized = true;
 }
@@ -846,10 +859,16 @@ void Shell::minimizeWindows()
 void Shell::restoreWindows()
 {
     for (ShellSurface *shsurf: surfaces()) {
-        if (!shsurf->isMinimized()) {
-            shsurf->unminimize();
+        switch (shsurf->m_type) {
+        case ShellSurface::Type::Transient:
+        case ShellSurface::Type::Popup:
+            if (shsurf->m_transient.flags == WL_SHELL_SURFACE_TRANSIENT_INACTIVE)
+                break;
+        default:
+            if (!shsurf->isMinimized())
+                shsurf->unminimize();
+            shsurf->setAcceptNewState(true);
         }
-        shsurf->setAcceptNewState(true);
     }
     m_windowsMinimized = false;
 }
