@@ -190,8 +190,8 @@ void ShellSeat::popup_grab_button(struct weston_pointer_grab *grab, uint32_t tim
 #else
     struct wl_resource *resource = grab->pointer->focus_resource;
     if (resource) {
-        struct wl_display *display = wl_client_get_display(wl_resource_get_client(resource));
 #endif
+        struct wl_display *display = wl_client_get_display(wl_resource_get_client(resource));
         uint32_t serial = wl_display_get_serial(display);
 #if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
         wl_resource_for_each(resource, resource_list)
