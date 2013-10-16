@@ -225,6 +225,9 @@ void Shell::init()
     m_compositor->shell_interface.resize = [](shell_surface *shsurf, weston_seat *ws, uint32_t edges) { _this->dragResize(ws, edges); return 0; };
     m_compositor->shell_interface.move = [](shell_surface *shsurf, weston_seat *ws) { _this->dragMove(ws); return 0; };
     m_compositor->shell_interface.set_xwayland = [](shell_surface *shsurf, int x, int y, uint32_t flags) { _this->setXWayland(x, y, flags); };
+#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
+    m_compositor->shell_interface.set_title = [](shell_surface *shsurf, const char *title) { _this->setWindowTitle(title); };
+#endif
 #undef _this
 
     m_destroyListener.listen(&m_compositor->destroy_signal);

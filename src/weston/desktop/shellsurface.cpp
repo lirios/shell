@@ -331,6 +331,11 @@ void ShellSurface::setXWayland(int x, int y, uint32_t flags)
     m_pendingType = Type::XWayland;
 }
 
+void ShellSurface::setWindowTitle(const char *title)
+{
+    setTitle(nullptr, nullptr, title);
+}
+
 void ShellSurface::calculateInitialPosition(int &x, int &y)
 {
     // As a heuristic place the new window on the same output as the

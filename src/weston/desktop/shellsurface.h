@@ -65,6 +65,7 @@ public:
     void setTransient(weston_surface *parent, int x, int y, uint32_t flags);
     void setFullscreen(uint32_t method, uint32_t framerate, weston_output *output);
     void setXWayland(int x, int y, uint32_t flags);
+    void setWindowTitle(const char *title);
 
     void calculateInitialPosition(int &x, int &y);
 
