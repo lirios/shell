@@ -64,6 +64,15 @@ public:
     bool inside;
     uint32_t creationTime;
 
+    PopupGrab()
+        : ShellGrab()
+        , surface(0)
+        , shsurfResource(0)
+        , inside(false)
+        , creationTime(0)
+    {
+    }
+
     void end()
     {
         wl_hawaii_shell_surface_send_popup_done(shsurfResource);
@@ -139,6 +148,10 @@ static const struct weston_pointer_grab_interface shell_surface_interface = {
 static void shell_surface_destroyed(wl_resource *res)
 {
     PopupGrab *grab = static_cast<PopupGrab *>(wl_resource_get_user_data(res));
+    if (grab->surface) {
+        ShellWindow *window = static_cast<ShellWindow *>(grab->surface->configure_private);
+        window->setPopupGrab(nullptr);
+    }
     if (grab->shsurfResource) {
         Shell::endGrab(grab);
         delete grab;
@@ -768,24 +781,17 @@ void DesktopShell::setPopup(struct wl_client *client, struct wl_resource *resour
                             int32_t x, int32_t y)
 {
     struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-    if (!surface->configure) {
-        surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
-            configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_panelsLayer, width, height); };
-        surface->configure_private = this;
-        surface->output = static_cast<weston_output *>(output_resource->data);
-    }
 
-    weston_surface_set_position(surface, x, y);
-
+    ShellWindow *window = new ShellWindow(this);
     PopupGrab *grab = new PopupGrab;
-    if (!grab)
-        return;
+    window->setPopupGrab(grab);
 
     grab->shsurfResource = wl_resource_create(client, &wl_hawaii_shell_surface_interface, wl_resource_get_version(resource), id);
     wl_resource_set_destructor(grab->shsurfResource, shell_surface_destroyed);
     wl_resource_set_user_data(grab->shsurfResource, grab);
 
     weston_seat *seat = container_of(compositor()->seat_list.next, weston_seat, link);
+    grab->shell = this;
     grab->pointer = seat->pointer;
     grab->surface = surface;
     grab->creationTime = grab->pointer->grab_time;
@@ -798,6 +804,21 @@ void DesktopShell::setPopup(struct wl_client *client, struct wl_resource *resour
 
     grab->grab.interface = &shell_surface_interface;
     weston_pointer_start_grab(grab->pointer, &grab->grab);
+
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        ShellWindow *window = static_cast<ShellWindow *>(es->configure_private);
+
+        configure_static_surface(es, &window->shell()->m_panelsLayer, width, height);
+
+        // Hidden popup windows are expected to end the grab, this saves us from
+        // having an explicit request to dismiss popup windows
+        if (window->popupGrab() && window->popupGrab()->inside && !weston_surface_is_mapped(es))
+            window->popupGrab()->end();
+    };
+    surface->configure_private = window;
+    surface->output = static_cast<weston_output *>(output_resource->data);
+
+    weston_surface_set_position(surface, x, y);
 }
 
 void DesktopShell::setDialog(struct wl_client *client, struct wl_resource *resource,
