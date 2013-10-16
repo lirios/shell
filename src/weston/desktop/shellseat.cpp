@@ -31,6 +31,7 @@
 #include "shellsurface.h"
 #include "workspace.h"
 #include "shell.h"
+#include "weston-version.h"
 
 class FocusState {
 public:
@@ -165,8 +166,13 @@ void ShellSeat::popup_grab_focus(struct weston_pointer_grab *grab)
 
 static void popup_grab_motion(struct weston_pointer_grab *grab,  uint32_t time)
 {
+#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
+    struct wl_resource *resource;
+    wl_resource_for_each(resource, &grab->pointer->focus_resource_list) {
+#else
     struct wl_resource *resource = grab->pointer->focus_resource;
     if (resource) {
+#endif
         wl_fixed_t sx, sy;
         weston_surface_from_global_fixed(grab->pointer->focus, grab->pointer->x, grab->pointer->y, &sx, &sy);
         wl_pointer_send_motion(resource, time, sx, sy);
@@ -177,11 +183,22 @@ void ShellSeat::popup_grab_button(struct weston_pointer_grab *grab, uint32_t tim
 {
     ShellSeat *shseat = static_cast<PopupGrab *>(container_of(grab, PopupGrab, grab))->seat;
 
+#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
+    struct wl_list *resource_list = &grab->pointer->focus_resource_list;
+    if (!wl_list_empty(resource_list)) {
+        struct wl_resource *resource;
+#else
     struct wl_resource *resource = grab->pointer->focus_resource;
     if (resource) {
         struct wl_display *display = wl_client_get_display(wl_resource_get_client(resource));
+#endif
         uint32_t serial = wl_display_get_serial(display);
+#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
+        wl_resource_for_each(resource, resource_list)
+            wl_pointer_send_button(resource, serial, time, button, state_w);
+#else
         wl_pointer_send_button(resource, serial, time, button, state_w);
+#endif
     } else if (state_w == WL_POINTER_BUTTON_STATE_RELEASED &&
               (shseat->m_popupGrab.initial_up || time - shseat->m_seat->pointer->grab_time > 500)) {
         shseat->endPopupGrab();
