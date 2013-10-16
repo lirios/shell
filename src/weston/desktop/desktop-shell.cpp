@@ -62,6 +62,7 @@ public:
     weston_surface *surface;
     wl_resource *shsurfResource;
     bool inside;
+    uint32_t creationTime;
 
     void end()
     {
@@ -123,7 +124,9 @@ static void shell_surface_button(struct weston_pointer_grab *base, uint32_t time
         wl_pointer_send_button(resource, serial, time, button, state);
     }
 
-    if (!cgrab->inside && state == WL_POINTER_BUTTON_STATE_RELEASED)
+    // Make sure windows don't get shown or hidden too fast because of a QQuickWindow bug
+    // that hangs the client process
+    if (!cgrab->inside && state == WL_POINTER_BUTTON_STATE_RELEASED && time - cgrab->creationTime > 500)
         cgrab->end();
 }
 
@@ -785,6 +788,7 @@ void DesktopShell::setPopup(struct wl_client *client, struct wl_resource *resour
     weston_seat *seat = container_of(compositor()->seat_list.next, weston_seat, link);
     grab->pointer = seat->pointer;
     grab->surface = surface;
+    grab->creationTime = grab->pointer->grab_time;
 
     ShellSeat::shellSeat(seat)->endPopupGrab();
 
