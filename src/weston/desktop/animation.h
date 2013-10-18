@@ -30,7 +30,7 @@
 
 #include <weston/compositor.h>
 
-#include "signal.h"
+#include "shellsignal.h"
 
 class ShellSurface;
 class AnimationCurve;

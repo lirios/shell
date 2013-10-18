@@ -32,7 +32,7 @@
 
 #include <wayland-server.h>
 
-#include "signal.h"
+#include "shellsignal.h"
 
 class ShellSurface;
 class FocusState;

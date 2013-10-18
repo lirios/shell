@@ -29,7 +29,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "signal.h"
+#include "shellsignal.h"
 
 #include <weston/compositor.h>
 

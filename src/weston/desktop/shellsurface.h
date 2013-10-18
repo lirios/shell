@@ -33,7 +33,7 @@
 
 #include <wayland-server.h>
 
-#include "signal.h"
+#include "shellsignal.h"
 #include "utils.h"
 
 class Shell;

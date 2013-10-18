@@ -25,8 +25,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SIGNAL_H
-#define SIGNAL_H
+#ifndef SHELLSIGNAL_H
+#define SHELLSIGNAL_H
 
 #include <list>
 
