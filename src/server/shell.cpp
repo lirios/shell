@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <sys/time.h>
 #include <linux/input.h>
 
@@ -168,6 +169,7 @@ Shell::Shell(struct weston_compositor *ec)
     m_child.shell = this;
     m_child.process.pid = 0;
     m_child.deathstamp = 0;
+    m_child.quitting = false;
 
     // Ctrl+Alt+Backspace terminate the display
     weston_compositor_add_key_binding(compositor(), KEY_BACKSPACE, (weston_keyboard_modifier)(MODIFIER_CTRL | MODIFIER_ALT),
@@ -189,8 +191,12 @@ Shell::~Shell()
         m_workspaces.erase(i);
 
     free(m_clientPath);
-    if (m_child.client)
-        wl_client_destroy(m_child.client);
+    if (m_child.client) {
+        // Kill the shell client (resource was already destroyed)
+        pid_t pid;
+        wl_client_get_credentials(m_child.client, &pid, nullptr, nullptr);
+        ::kill(pid, SIGTERM);
+    }
 }
 
 void Shell::destroy()
@@ -321,6 +327,17 @@ void Shell::unlockSession()
 
 void Shell::quit()
 {
+    // This will avoid the shell client from being respawned
+    m_child.quitting = true;
+
+    if (m_child.client) {
+        // Kill the shell client in order to make sure it exits cleanly
+        pid_t pid;
+        wl_client_get_credentials(m_child.client, &pid, nullptr, nullptr);
+        ::kill(pid, SIGTERM);
+    }
+
+    // Terminate display
     wl_display_terminate(compositor()->wl_display);
 }
 
@@ -1004,6 +1021,10 @@ void Shell::sigchld(int status)
 
     m_child.process.pid = 0;
     m_child.client = nullptr; /* already destroyed by wayland */
+
+    // Don't respawn the shell client when we are quitting
+    if (m_child.quitting)
+        return;
 
     /* if starthawaii dies more than 5 times in 30 seconds, give up */
     time = weston_compositor_get_time();

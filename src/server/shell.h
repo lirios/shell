@@ -163,6 +163,7 @@ protected:
 
         unsigned deathcount;
         uint32_t deathstamp;
+        bool quitting;
     };
     Child m_child;
 
