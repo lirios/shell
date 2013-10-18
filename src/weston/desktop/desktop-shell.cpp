@@ -1214,7 +1214,7 @@ void DesktopShell::terminateScreenSaverProcess()
     if (m_screenSaverChild.process.pid == 0)
         return;
 
-    //::kill(m_screenSaverChild.process.pid, SIGTERM);
+    ::kill(m_screenSaverChild.process.pid, SIGTERM);
 }
 
 void DesktopShell::screenSaverConfigure(weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
