@@ -37,7 +37,7 @@ BackgroundSettings::BackgroundSettings(QObject *parent)
     m_primaryColor = QColor(51, 102, 153);
     m_secondaryColor = QColor(46, 93, 140);
     m_shading = BackgroundSettings::SolidColorShading;
-    m_url = QUrl::fromLocalFile(QStringLiteral("%1/backgrounds/hawaii/Also Calm.png")
+    m_url = QUrl::fromLocalFile(QStringLiteral("%1/backgrounds/hawaii/Also_Calm.png")
                                 .arg(INSTALL_DATADIR));
     m_fillMode = BackgroundSettings::Stretched;
 
