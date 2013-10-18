@@ -8,7 +8,7 @@ include_directories(
 
 # Create the config.h header file
 configure_file(
-    "${CMAKE_SOURCE_DIR}/src/shells/desktop/config.h.in"
+    "${CMAKE_SOURCE_DIR}/src/client/config.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY
 )
 
