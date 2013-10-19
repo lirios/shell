@@ -30,9 +30,10 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringBuilder>
 
+#include <libhawaiicore/settings/launchersettings.h>
+
 #include "launchermodel.h"
 #include "launcheritem.h"
-#include "launchersettings.h"
 
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)

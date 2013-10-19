@@ -29,7 +29,7 @@
 
 #include <QtQuick/QQuickView>
 
-#include "launchersettings.h"
+#include <libhawaiicore/settings/launchersettings.h>
 
 struct wl_surface;
 

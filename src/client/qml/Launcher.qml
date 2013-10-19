@@ -26,8 +26,8 @@
 
 import QtQuick 2.0
 import Hawaii.Shell 0.2
+import Hawaii.Shell.Settings 0.2
 import Hawaii.Shell.Styles 0.1
-import Hawaii.Shell 0.2
 
 Element {
     id: launcherContainer
@@ -55,7 +55,7 @@ Element {
     StyledItem {
         id: styledItem
         anchors.fill: parent
-        style: Qt.createComponent("LauncherStyle.qml", launcherContainer)
+        style: Qt.createComponent(StyleSettings.path + "/LauncherStyle.qml", launcherContainer)
 
         LauncherView {
             id: launcherView

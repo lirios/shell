@@ -84,7 +84,7 @@ Item {
     StyledItem {
         id: styledItem
         anchors.fill: parent
-        style: Qt.createComponent("OverlayStyle.qml", styledItem)
+        style: Qt.createComponent(StyleSettings.path + "/OverlayStyle.qml", styledItem)
 
         ColumnLayout {
             id: mainLayout

@@ -29,7 +29,6 @@
 #include "appcategories.h"
 #include "appinfo.h"
 #include "applicationsmodel.h"
-#include "backgroundsettings.h"
 #include "dialogwindow.h"
 #include "element.h"
 #include "enums.h"
@@ -37,7 +36,6 @@
 #include "keybinding.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
-#include "launchersettings.h"
 #include "popupwindow.h"
 #include "powermanager.h"
 #include "servicefactory.h"
@@ -49,49 +47,52 @@
 #include "window.h"
 #include "workspace.h"
 
-#define PLUGIN_URI "Hawaii.Shell"
-#define PLUGIN_VERSION 0, 2
-
-void registerQmlTypes()
+void Registration::registerQmlTypes()
 {
-    // Window types
-    qmlRegisterType<DialogWindow>(PLUGIN_URI, PLUGIN_VERSION, "DialogWindow");
-    qmlRegisterType<ShellWindow>(PLUGIN_URI, PLUGIN_VERSION, "ShellWindow");
-    qmlRegisterType<PopupWindow>(PLUGIN_URI, PLUGIN_VERSION, "PopupWindow");
-    qmlRegisterType<TooltipWindow>(PLUGIN_URI, PLUGIN_VERSION, "TooltipWindow");
+    // @uri Hawaii.Shell
+    const char *uri = "Hawaii.Shell";
+    const int major = 0;
+    const int minor = 2;
 
-    // Settings
-    qmlRegisterType<BackgroundSettings>(PLUGIN_URI, PLUGIN_VERSION, "BackgroundSettings");
-    qmlRegisterType<LauncherSettings>(PLUGIN_URI, PLUGIN_VERSION, "LauncherSettings");
+    // Window types
+    qmlRegisterType<DialogWindow>(uri, major, minor, "DialogWindow");
+    qmlRegisterType<ShellWindow>(uri, major, minor, "ShellWindow");
+    qmlRegisterType<PopupWindow>(uri, major, minor, "PopupWindow");
+    qmlRegisterType<TooltipWindow>(uri, major, minor, "TooltipWindow");
 
     // Launcher stuff
-    qmlRegisterType<AppCategories>(PLUGIN_URI, PLUGIN_VERSION, "XdgCategoriesModel");
-    qmlRegisterType<ApplicationsModel>(PLUGIN_URI, PLUGIN_VERSION, "ApplicationsModel");
-    qmlRegisterType<LauncherModel>(PLUGIN_URI, PLUGIN_VERSION, "LauncherModel");
-    qmlRegisterUncreatableType<LauncherItem>(PLUGIN_URI, PLUGIN_VERSION, "LauncherItem",
-                                             QStringLiteral("Cannot create LauncherItem"));
-    qmlRegisterUncreatableType<AppInfo>(PLUGIN_URI, PLUGIN_VERSION, "AppInfo",
-                                        QStringLiteral("Cannot create AppInfo"));
+    qmlRegisterType<AppCategories>(uri, major, minor, "XdgCategoriesModel");
+    qmlRegisterType<ApplicationsModel>(uri, major, minor, "ApplicationsModel");
+    qmlRegisterType<LauncherModel>(uri, major, minor, "LauncherModel");
+    qmlRegisterUncreatableType<LauncherItem>(uri, major, minor, "LauncherItem",
+                                             QStringLiteral("Do not create LauncherItem"));
+    qmlRegisterUncreatableType<AppInfo>(uri, major, minor, "AppInfo",
+                                        QStringLiteral("Do not create AppInfo"));
 
     // Shell types
-    qmlRegisterType<Shortcut>(PLUGIN_URI, PLUGIN_VERSION, "Shortcut");
-    qmlRegisterUncreatableType<Window>(PLUGIN_URI, PLUGIN_VERSION, "Window",
+    qmlRegisterType<Shortcut>(uri, major, minor, "Shortcut");
+    qmlRegisterUncreatableType<Window>(uri, major, minor, "Window",
                                        QStringLiteral("Cannot create Window"));
-    qmlRegisterUncreatableType<Workspace>(PLUGIN_URI, PLUGIN_VERSION, "Workspace",
+    qmlRegisterUncreatableType<Workspace>(uri, major, minor, "Workspace",
                                           QStringLiteral("Workspace"));
-    qmlRegisterType<Element>(PLUGIN_URI, PLUGIN_VERSION, "Element");
+    qmlRegisterType<Element>(uri, major, minor, "Element");
 
     // Enums
-    qmlRegisterUncreatableType<UserStatus>(PLUGIN_URI, PLUGIN_VERSION, "UserStatus",
-                                           QStringLiteral("Cannot create UserStatus"));
+    qmlRegisterUncreatableType<UserStatus>(uri, major, minor, "UserStatus",
+                                           QStringLiteral("Do not create UserStatus"));
 }
 
-void registerFactories()
+void Registration::registerFactories()
 {
+    // @uri Hawaii.Shell
+    const char *uri = "Hawaii.Shell";
+    const int major = 0;
+    const int minor = 2;
+
     // Register service factories
-    qmlRegisterUncreatableType<PowerManager>(PLUGIN_URI, PLUGIN_VERSION,
+    qmlRegisterUncreatableType<PowerManager>(uri, major, minor,
                                              "PowerManager",
-                                             QStringLiteral("Cannot create PowerManager"));
+                                             QStringLiteral("Do not create PowerManager"));
     ServiceFactory::registerFactory<PowerManager>();
     ServiceFactory::registerFactory<SessionManager>();
     ServiceFactory::registerFactory<VolumeControl>();

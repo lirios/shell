@@ -28,6 +28,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
 import Hawaii.Shell 0.2
+import Hawaii.Shell.Settings 0.2
 
 Item {
     id: launcher

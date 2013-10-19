@@ -34,7 +34,7 @@ TooltipWindow {
 
     StyledItem {
         id: styledItem
-        style: Qt.createComponent("TooltipStyle.qml", styledItem)
+        style: Qt.createComponent(StyleSettings.path + "/TooltipStyle.qml", styledItem)
         width: mainLayout.implicitWidth + __style.padding.left + __style.padding.right
         height: mainLayout.implicitHeight + __style.padding.top + __style.padding.bottom
 

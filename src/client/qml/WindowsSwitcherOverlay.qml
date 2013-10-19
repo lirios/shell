@@ -93,7 +93,7 @@ Item {
             fill: parent
             margins: margin
         }
-        style: Qt.createComponent("OverlayStyle.qml", styledItem)
+        style: Qt.createComponent(StyleSettings.path + "/OverlayStyle.qml", styledItem)
 
         ColumnLayout {
             id: mainLayout

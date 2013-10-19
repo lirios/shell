@@ -24,32 +24,51 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import Hawaii.Shell 0.2
-import Hawaii.Shell.Styles 0.1
+#include <QtConfiguration/QConfiguration>
 
-Element {
-    id: panel
+#include "shellsettings.h"
+#include "shellsettings_p.h"
 
-    // Minimum height
-    property int size: 24
+/*
+ * ShellSettingsPrivate
+ */
 
-    // Available screen geometry, set by C++
-    property rect availableGeometry
+ShellSettingsPrivate::ShellSettingsPrivate()
+{
+}
 
-    StyledItem {
-        id: styledItem
-        anchors.fill: parent
-        style: Qt.createComponent(StyleSettings.path + "/PanelStyle.qml", panel)
+/*
+ * ShellSettings
+ */
 
-        PanelView {
-            anchors {
-                fill: parent
-                leftMargin: styledItem.__style.padding.left
-                topMargin: styledItem.__style.padding.top
-                rightMargin: styledItem.__style.padding.right
-                bottomMargin: styledItem.__style.padding.bottom
-            }
-        }
+ShellSettings::ShellSettings(QObject *parent)
+    : QObject(parent)
+    , d_ptr(new ShellSettingsPrivate())
+{
+    Q_D(ShellSettings);
+    d->style = QStringLiteral("Aluminium");
+    d->configuration = new QConfiguration(this, "shell");
+}
+
+ShellSettings::~ShellSettings()
+{
+    delete d_ptr;
+}
+
+QString ShellSettings::style() const
+{
+    Q_D(const ShellSettings);
+    return d->style;
+}
+
+void ShellSettings::setStyle(const QString &style)
+{
+    Q_D(ShellSettings);
+
+    if (style != d->style) {
+        d->style = style;
+        Q_EMIT styleChanged();
     }
 }
+
+#include "moc_shellsettings.cpp"

@@ -43,7 +43,7 @@ PopupWindow {
             rightMargin: __style.padding.right
             bottomMargin: __style.padding.bottom
         }
-        style: Qt.createComponent("PopupStyle.qml", root)
+        style: Qt.createComponent(StyleSettings.path + "/PopupStyle.qml", root)
 
         Item {
             id: container

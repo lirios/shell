@@ -195,8 +195,8 @@ HawaiiShellPrivate::HawaiiShellPrivate(HawaiiShell *parent)
     engine->addImageProvider("notifications", new NotificationImageProvider);
 
     // Register QML types and factories
-    registerQmlTypes();
-    registerFactories();
+    Registration::registerQmlTypes();
+    Registration::registerFactories();
 
     // Search elements
     ElementFactory::searchElements();

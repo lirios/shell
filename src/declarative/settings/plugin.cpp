@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -27,35 +27,24 @@
 #include <QtQml/QQmlExtensionPlugin>
 #include <QtQml/QQmlComponent>
 
-#include "abstractstyle.h"
-#include "padding.h"
-#include "stylesettings.h"
+#include <libhawaiicore/settings/backgroundsettings.h>
+#include <libhawaiicore/settings/launchersettings.h>
+#include <libhawaiicore/settings/shellsettings.h>
 
-class HawaiiShellStylesPlugin : public QQmlExtensionPlugin
+class HawaiiShellSettingsPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface/1.0")
 public:
     void registerTypes(const char *uri);
-
-    static QObject *styleSettingsProvider(QQmlEngine *engine, QJSEngine *jsEngine);
 };
 
-void HawaiiShellStylesPlugin::registerTypes(const char *uri)
+void HawaiiShellSettingsPlugin::registerTypes(const char *uri)
 {
-    // @uri Hawaii.Shell.Styles
-    qmlRegisterType<AbstractStyle>(uri, 0, 1, "AbstractStyle");
-    qmlRegisterType<Padding>();
-    qmlRegisterSingletonType<StyleSettings>(uri, 0, 1, "StyleSettings",
-                                            HawaiiShellStylesPlugin::styleSettingsProvider);
-}
-
-QObject *HawaiiShellStylesPlugin::styleSettingsProvider(QQmlEngine *engine, QJSEngine *jsEngine)
-{
-    Q_UNUSED(engine);
-    Q_UNUSED(jsEngine);
-
-    return new StyleSettings();
+    // @uri Hawaii.Shell.Settings
+    qmlRegisterType<BackgroundSettings>(uri, 0, 2, "BackgroundSettings");
+    qmlRegisterType<LauncherSettings>(uri, 0, 2, "LauncherSettings");
+    qmlRegisterType<ShellSettings>(uri, 0, 2, "ShellSettings");
 }
 
 #include "plugin.moc"

@@ -24,32 +24,32 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import Hawaii.Shell 0.2
-import Hawaii.Shell.Styles 0.1
+#ifndef SHELLSETTINGS_H
+#define SHELLSETTINGS_H
 
-Element {
-    id: panel
+#include <QtCore/QObject>
 
-    // Minimum height
-    property int size: 24
+#include <libhawaiicore/hawaiicoreglobal.h>
 
-    // Available screen geometry, set by C++
-    property rect availableGeometry
+class ShellSettingsPrivate;
 
-    StyledItem {
-        id: styledItem
-        anchors.fill: parent
-        style: Qt.createComponent(StyleSettings.path + "/PanelStyle.qml", panel)
+class HAWAIICORE_EXPORT ShellSettings : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString style READ style WRITE setStyle NOTIFY styleChanged)
+    Q_DECLARE_PRIVATE(ShellSettings)
+public:
+    explicit ShellSettings(QObject *parent = 0);
+    ~ShellSettings();
 
-        PanelView {
-            anchors {
-                fill: parent
-                leftMargin: styledItem.__style.padding.left
-                topMargin: styledItem.__style.padding.top
-                rightMargin: styledItem.__style.padding.right
-                bottomMargin: styledItem.__style.padding.bottom
-            }
-        }
-    }
-}
+    QString style() const;
+    void setStyle(const QString &style);
+
+Q_SIGNALS:
+    void styleChanged();
+
+private:
+    ShellSettingsPrivate *const d_ptr;
+};
+
+#endif // SHELLSETTINGS_H

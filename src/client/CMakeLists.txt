@@ -6,6 +6,7 @@ include_directories(
     ${WaylandClient_INCLUDE_DIRS}
     ${ALSA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
+    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/daemons
     ${CMAKE_CURRENT_SOURCE_DIR}/launcher
@@ -14,11 +15,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/services/powermanager
     ${CMAKE_CURRENT_SOURCE_DIR}/services/volumecontrol
     ${CMAKE_CURRENT_SOURCE_DIR}/services/sessionmanager
-    ${CMAKE_CURRENT_SOURCE_DIR}/settings
 )
-
-# Create the cmakedirs.h header file
-configure_file(cmakedirs.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmakedirs.h)
 
 # Create the config.h header file
 configure_file(
@@ -57,8 +54,6 @@ set(SOURCES
     services/powermanager/upowerpowerbackend.cpp
     services/volumecontrol/volumecontrol.cpp
     services/sessionmanager/sessionmanager.cpp
-    settings/backgroundsettings.cpp
-    settings/launchersettings.cpp
     windowtypes/backgroundwindow.cpp
     windowtypes/dialogwindow.cpp
     windowtypes/grabwindow.cpp
@@ -97,7 +92,7 @@ qt5_add_dbus_adaptor(SOURCES
     notificationsdaemon.h NotificationsDaemon)
 
 add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
-qt5_use_modules(hawaii-desktop-shell Quick Widgets Configuration AccountsService)
+qt5_use_modules(hawaii-desktop-shell Quick Widgets AccountsService)
 set_target_properties(hawaii-desktop-shell PROPERTIES
     COMPILE_FLAGS "-rdynamic"
     LINK_FLAGS "-L${WaylandClient_LIBDIR} -L${POLKITQT-1_LIB_DIR}"
@@ -107,6 +102,7 @@ target_link_libraries(hawaii-desktop-shell
     ${POLKITQT-1_CORE_LIBRARY}
     ${POLKITQT-1_AGENT_LIBRARY}
     ${ALSA_LIBRARIES}
+    HawaiiCore
 )
 
 # Git revision

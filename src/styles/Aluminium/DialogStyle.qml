@@ -54,7 +54,7 @@ Style {
             Image {
                 anchors.fill: parent
                 anchors.margins: 3
-                source: "qrc:/images/noise.png"
+                source: StyleSettings.path + "/images/noise.png"
                 sourceSize: Qt.size(100, 100)
                 fillMode: Image.Tile
                 opacity: 0.5

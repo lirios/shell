@@ -48,7 +48,7 @@ StyledItem {
     // Emitted when the indicator is clicked and doesn't have a menu
     signal clicked()
 
-    style: Qt.createComponent("PanelIndicatorStyle.qml", indicator)
+    style: Qt.createComponent(StyleSettings.path + "/PanelIndicatorStyle.qml", indicator)
 
     MouseArea {
         anchors.fill: parent

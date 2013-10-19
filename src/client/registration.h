@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,10 +24,16 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef DECLARATIVEPLUGIN_H
-#define DECLARATIVEPLUGIN_H
+#ifndef REGISTRATION_H
+#define REGISTRATION_H
 
-void registerQmlTypes();
-void registerFactories();
+#include <QtQml/QQmlEngine>
 
-#endif // DECLARATIVEPLUGIN_H
+class Registration
+{
+public:
+    static void registerQmlTypes();
+    static void registerFactories();
+};
+
+#endif // REGISTRATION_H

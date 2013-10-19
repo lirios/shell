@@ -71,7 +71,7 @@ Item {
         property string body
 
         id: root
-        style: Qt.createComponent("NotificationBubbleStyle.qml", root)
+        style: Qt.createComponent(StyleSettings.path + "/NotificationBubbleStyle.qml", root)
 
         MouseArea {
             id: mouse

@@ -30,13 +30,15 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
+#include <libhawaiicore/hawaiicoreglobal.h>
+
 class QConfiguration;
 
-class LauncherSettings : public QObject
+class HAWAIICORE_EXPORT LauncherSettings : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(LauncherSettings::IconSize iconSize READ iconSize WRITE setIconSize NOTIFY iconSizeChanged)
-    Q_PROPERTY(LauncherSettings::Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
+    Q_PROPERTY(IconSize iconSize READ iconSize WRITE setIconSize NOTIFY iconSizeChanged)
+    Q_PROPERTY(Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
     Q_PROPERTY(QStringList favoriteApps READ favoriteApps WRITE setFavoriteApps NOTIFY favoriteAppsChanged)
     Q_ENUMS(IconSize Alignment)
 public:

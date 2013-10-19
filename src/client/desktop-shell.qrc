@@ -2,14 +2,11 @@
     <qresource prefix="/">
         <!-- Base components -->
         <file>qml/Dialog.qml</file>
-        <file>qml/DialogStyle.qml</file>
         <file>qml/Popup.qml</file>
-        <file>qml/PopupStyle.qml</file>
         <file>qml/BaseItem.qml</file>
 
         <!-- Notifications -->
         <file>qml/NotificationBubble.qml</file>
-        <file>qml/NotificationBubbleStyle.qml</file>
         <file>qml/NotificationsPanel.qml</file>
 
         <!-- Dialogs -->
@@ -22,7 +19,6 @@
 
         <!-- Panel -->
         <file>qml/Panel.qml</file>
-        <file>qml/PanelStyle.qml</file>
         <file>qml/PanelView.qml</file>
         <file>qml/PanelIndicator.qml</file>
         <file>qml/PanelMenu.qml</file>
@@ -31,7 +27,6 @@
   	<file>qml/PanelMenuManager.js</file>
 
         <!-- Indicators -->
-        <file>qml/PanelIndicatorStyle.qml</file>
         <file>qml/DateIndicator.qml</file>
         <file>qml/NetworkIndicator.qml</file>
         <file>qml/NotificationsIndicator.qml</file>
@@ -39,7 +34,6 @@
 
         <!-- Launcher -->
         <file>qml/Launcher.qml</file>
-        <file>qml/LauncherStyle.qml</file>
         <file>qml/LauncherView.qml</file>
         <file>images/launcher_dot.png</file>
 
@@ -47,7 +41,6 @@
         <file>qml/AppChooserWindow.qml</file>
         <file>qml/AppChooser.qml</file>
         <file>qml/AppChooserButton.qml</file>
-        <file>qml/AppChooserButtonStyle.qml</file>
         <file>qml/AppChooserItem.qml</file>
         <file>qml/AppChooserDelegate.qml</file>
 
@@ -59,7 +52,6 @@
 
         <!-- Overlays -->
         <file>qml/Overlay.qml</file>
-        <file>qml/OverlayStyle.qml</file>
         <file>qml/ShortcutsOverlay.qml</file>
         <file>qml/VolumeOverlay.qml</file>
         <file>qml/WindowsSwitcherOverlay.qml</file>
@@ -67,9 +59,5 @@
 
         <!-- Tooltips -->
         <file>qml/Tooltip.qml</file>
-        <file>qml/TooltipStyle.qml</file>
-
-        <!-- Images -->
-        <file>images/noise.png</file>
     </qresource>
 </RCC>

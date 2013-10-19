@@ -32,7 +32,9 @@
 #include <QtConfiguration/QConfiguration>
 #include <QtGui/QColor>
 
-class BackgroundSettings : public QObject
+#include <libhawaiicore/hawaiicoreglobal.h>
+
+class HAWAIICORE_EXPORT BackgroundSettings : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(BackgroundSettings::Type type READ type WRITE setType NOTIFY typeChanged)

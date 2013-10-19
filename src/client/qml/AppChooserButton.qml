@@ -34,7 +34,7 @@ StyledItem {
     property bool hover: false
     property bool checked: false
 
-    style: Qt.createComponent("AppChooserButtonStyle.qml", root)
+    style: Qt.createComponent(StyleSettings.path + "/AppChooserButtonStyle.qml", root)
 
     FluidUi.Icon {
         id: icon

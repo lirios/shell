@@ -17,6 +17,10 @@ set(HAWAII_SHELL_VERSION_STRING "${HAWAII_SHELL_VERSION_MAJOR}.${HAWAII_SHELL_VE
 # Installation directories
 include(GNUInstallDirs)
 
+# Define additional paths
+set(CMAKE_INSTALL_STYLESDIR "${CMAKE_INSTALL_DATADIR}/hawaii/styles")
+set(CMAKE_INSTALL_FULL_STYLESDIR "${CMAKE_INSTALL_FULL_DATADIR}/hawaii/styles")
+
 # Macro to print feature summary
 include(FeatureSummary)
 
