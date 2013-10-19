@@ -51,34 +51,32 @@ void Registration::registerQmlTypes()
 {
     // @uri Hawaii.Shell
     const char *uri = "Hawaii.Shell";
-    const int major = 0;
-    const int minor = 2;
 
     // Window types
-    qmlRegisterType<DialogWindow>(uri, major, minor, "DialogWindow");
-    qmlRegisterType<ShellWindow>(uri, major, minor, "ShellWindow");
-    qmlRegisterType<PopupWindow>(uri, major, minor, "PopupWindow");
-    qmlRegisterType<TooltipWindow>(uri, major, minor, "TooltipWindow");
+    qmlRegisterType<DialogWindow>(uri, 1, 0, "DialogWindow");
+    qmlRegisterType<ShellWindow>(uri, 1, 0, "ShellWindow");
+    qmlRegisterType<PopupWindow>(uri, 1, 0, "PopupWindow");
+    qmlRegisterType<TooltipWindow>(uri, 1, 0, "TooltipWindow");
 
     // Launcher stuff
-    qmlRegisterType<AppCategories>(uri, major, minor, "XdgCategoriesModel");
-    qmlRegisterType<ApplicationsModel>(uri, major, minor, "ApplicationsModel");
-    qmlRegisterType<LauncherModel>(uri, major, minor, "LauncherModel");
-    qmlRegisterUncreatableType<LauncherItem>(uri, major, minor, "LauncherItem",
+    qmlRegisterType<AppCategories>(uri, 1, 0, "XdgCategoriesModel");
+    qmlRegisterType<ApplicationsModel>(uri, 1, 0, "ApplicationsModel");
+    qmlRegisterType<LauncherModel>(uri, 1, 0, "LauncherModel");
+    qmlRegisterUncreatableType<LauncherItem>(uri, 1, 0, "LauncherItem",
                                              QStringLiteral("Do not create LauncherItem"));
-    qmlRegisterUncreatableType<AppInfo>(uri, major, minor, "AppInfo",
+    qmlRegisterUncreatableType<AppInfo>(uri, 1, 0, "AppInfo",
                                         QStringLiteral("Do not create AppInfo"));
 
     // Shell types
-    qmlRegisterType<Shortcut>(uri, major, minor, "Shortcut");
-    qmlRegisterUncreatableType<Window>(uri, major, minor, "Window",
+    qmlRegisterType<Shortcut>(uri, 1, 0, "Shortcut");
+    qmlRegisterUncreatableType<Window>(uri, 1, 0, "Window",
                                        QStringLiteral("Cannot create Window"));
-    qmlRegisterUncreatableType<Workspace>(uri, major, minor, "Workspace",
+    qmlRegisterUncreatableType<Workspace>(uri, 1, 0, "Workspace",
                                           QStringLiteral("Workspace"));
-    qmlRegisterType<Element>(uri, major, minor, "Element");
+    qmlRegisterType<Element>(uri, 1, 0, "Element");
 
     // Enums
-    qmlRegisterUncreatableType<UserStatus>(uri, major, minor, "UserStatus",
+    qmlRegisterUncreatableType<UserStatus>(uri, 1, 0, "UserStatus",
                                            QStringLiteral("Do not create UserStatus"));
 }
 
@@ -86,11 +84,9 @@ void Registration::registerFactories()
 {
     // @uri Hawaii.Shell
     const char *uri = "Hawaii.Shell";
-    const int major = 0;
-    const int minor = 2;
 
     // Register service factories
-    qmlRegisterUncreatableType<PowerManager>(uri, major, minor,
+    qmlRegisterUncreatableType<PowerManager>(uri, 1, 0,
                                              "PowerManager",
                                              QStringLiteral("Do not create PowerManager"));
     ServiceFactory::registerFactory<PowerManager>();

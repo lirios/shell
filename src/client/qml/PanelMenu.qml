@@ -26,7 +26,7 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
-import Hawaii.Shell 0.2
+import Hawaii.Shell 1.0
 
 Popup {
     id: panelMenu

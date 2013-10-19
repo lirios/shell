@@ -27,7 +27,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import Hawaii.Shell.Styles 0.1
+import Hawaii.Shell.Styles 1.0
 
 Style {
     property int spacing: 8

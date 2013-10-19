@@ -29,7 +29,7 @@ import QtQuick 2.0
 /*!
     \qmltype StyledItem
     \qmlabstract
-    \inqmlmodule Hawaii.Shell.Styles 0.1
+    \inqmlmodule Hawaii.Shell.Styles 1.0
 */
 
 Item {

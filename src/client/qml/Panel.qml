@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell 0.2
-import Hawaii.Shell.Styles 0.1
+import Hawaii.Shell 1.0
+import Hawaii.Shell.Styles 1.0
 
 Element {
     id: panel

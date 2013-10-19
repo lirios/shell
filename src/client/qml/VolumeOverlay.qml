@@ -28,9 +28,9 @@ import QtQuick 2.1
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import Hawaii.Shell 0.2
-import Hawaii.Shell.Styles 0.1
 import FluidUi 0.2 as FluidUi
+import Hawaii.Shell 1.0
+import Hawaii.Shell.Styles 1.0
 
 Item {
     width: mainLayout.implicitWidth + 2 * margin

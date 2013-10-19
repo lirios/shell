@@ -25,12 +25,12 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Styles 0.1
+import Hawaii.Shell.Styles 1.0
 
 /*!
     \qmltype Style
     \qmlabstract
-    \inqmlmodule Hawaii.Shell.Styles 0.1
+    \inqmlmodule Hawaii.Shell.Styles 1.0
 */
 
 AbstractStyle {

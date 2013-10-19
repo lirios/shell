@@ -29,7 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 import FluidUi 0.2 as FluidUi
-import Hawaii.Shell 0.2
+import Hawaii.Shell 1.0
 
 Item {
     property variant sessionManager: Shell.service("SessionManager")

@@ -27,7 +27,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtAccountsService 5.0
-import Hawaii.Shell 0.2
+import Hawaii.Shell 1.0
 
 PanelIndicator {
     property variant userAccount: UserAccount {}

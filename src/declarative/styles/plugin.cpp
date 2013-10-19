@@ -44,9 +44,9 @@ public:
 void HawaiiShellStylesPlugin::registerTypes(const char *uri)
 {
     // @uri Hawaii.Shell.Styles
-    qmlRegisterType<AbstractStyle>(uri, 0, 1, "AbstractStyle");
+    qmlRegisterType<AbstractStyle>(uri, 1, 0, "AbstractStyle");
     qmlRegisterType<Padding>();
-    qmlRegisterSingletonType<StyleSettings>(uri, 0, 1, "StyleSettings",
+    qmlRegisterSingletonType<StyleSettings>(uri, 1, 0, "StyleSettings",
                                             HawaiiShellStylesPlugin::styleSettingsProvider);
 }
 

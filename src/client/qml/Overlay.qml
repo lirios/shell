@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell 0.2
+import Hawaii.Shell 1.0
 
 Item {
     ShortcutsOverlay {

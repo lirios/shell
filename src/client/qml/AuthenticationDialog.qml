@@ -30,7 +30,7 @@ import QtQuick.Layouts 1.0
 import QtAccountsService 5.0
 import FluidUi 0.2 as FluidUi
 import FluidUi.ListItems 0.2 as ListItem
-import Hawaii.Shell 0.2
+import Hawaii.Shell 1.0
 
 Dialog {
     id: authenticationDialog

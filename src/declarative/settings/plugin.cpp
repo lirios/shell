@@ -42,9 +42,9 @@ public:
 void HawaiiShellSettingsPlugin::registerTypes(const char *uri)
 {
     // @uri Hawaii.Shell.Settings
-    qmlRegisterType<BackgroundSettings>(uri, 0, 2, "BackgroundSettings");
-    qmlRegisterType<LauncherSettings>(uri, 0, 2, "LauncherSettings");
-    qmlRegisterType<ShellSettings>(uri, 0, 2, "ShellSettings");
+    qmlRegisterType<BackgroundSettings>(uri, 1, 0, "BackgroundSettings");
+    qmlRegisterType<LauncherSettings>(uri, 1, 0, "LauncherSettings");
+    qmlRegisterType<ShellSettings>(uri, 1, 0, "ShellSettings");
 }
 
 #include "plugin.moc"

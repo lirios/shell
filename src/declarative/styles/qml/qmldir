@@ -1,4 +1,4 @@
 module Hawaii.Shell.Styles
 plugin hawaiishellstylesplugin
-Style 0.1 Style.qml
-StyledItem 0.1 StyledItem.qml
+Style 1.0 Style.qml
+StyledItem 1.0 StyledItem.qml
