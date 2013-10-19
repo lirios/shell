@@ -36,7 +36,7 @@
 
 #include "policykitagent.h"
 #include "policykitagent_p.h"
-#include "desktopshell.h"
+#include "hawaiishell.h"
 #include "shellui.h"
 
 #include <polkitqt1-subject.h>
@@ -71,50 +71,45 @@ void PolicyKitAgentPrivate::createDialog(const QString &actionId,
 {
     Q_Q(PolicyKitAgent);
 
-    foreach (ShellUi *ui, DesktopShell::instance()->shellWindows()) {
-        // We create the dialog only on the primary screen
-        if (ui->screen() != QGuiApplication::primaryScreen())
-            continue;
-
-        // Create the component
-        QQmlComponent component(ui->engine());
-        component.loadUrl(QUrl("qrc:/qml/AuthenticationDialog.qml"));
-        if (!component.isReady()) {
-            qWarning("Couldn't create AuthenticationDialog component: %s",
-                     qPrintable(component.errorString()));
-            return;
-        }
-
-        // Create the top level object
-        QObject *topLevel = component.create();
-        if (!topLevel) {
-            qWarning() << "Couldn't create an AuthenticationDialog object";
-            return;
-        }
-
-        // Cast it to a window
-        QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
-        if (!window) {
-            qWarning() << "Couldn't cast AuthenticationDialog object to QQuickWindow";
-            return;
-        }
-
-        // Set all the properties
-        topLevel->setProperty("actionId", actionId);
-        topLevel->setProperty("message", message);
-        topLevel->setProperty("iconName", iconName);
-        //topLevel->setProperty("details", details);
-        topLevel->setProperty("errorMessage", QStringLiteral(""));
-
-        // Connect dialog signals
-        QObject::connect(topLevel, SIGNAL(authenticate()),
-                         q, SLOT(dialogAccepted()));
-        QObject::connect(topLevel, SIGNAL(rejected()),
-                         q, SLOT(dialogRejected()));
-
-        // Save pointer to the dialog
-        dialog = window;
+    // Create the component
+    QQmlComponent component(HawaiiShell::instance()->engine());
+    component.loadUrl(QUrl("qrc:/qml/AuthenticationDialog.qml"));
+    if (!component.isReady()) {
+        qWarning("Couldn't create AuthenticationDialog component: %s",
+                 qPrintable(component.errorString()));
+        return;
     }
+
+    // Create the top level object
+    QObject *topLevel = component.create();
+    if (!topLevel) {
+        qWarning() << "Couldn't create an AuthenticationDialog object";
+        return;
+    }
+
+    // Cast it to a window
+    dialog = qobject_cast<QQuickWindow *>(topLevel);
+    if (!dialog) {
+        qWarning() << "Couldn't cast AuthenticationDialog object to QQuickWindow";
+        dialog = 0;
+        return;
+    }
+
+    // Make sure the window will be shown on the primary screen
+    dialog->setScreen(QGuiApplication::primaryScreen());
+
+    // Set all the properties
+    topLevel->setProperty("actionId", actionId);
+    topLevel->setProperty("message", message);
+    topLevel->setProperty("iconName", iconName);
+    //topLevel->setProperty("details", details);
+    topLevel->setProperty("errorMessage", QStringLiteral(""));
+
+    // Connect dialog signals
+    QObject::connect(topLevel, SIGNAL(authenticate()),
+                     q, SLOT(dialogAccepted()));
+    QObject::connect(topLevel, SIGNAL(rejected()),
+                     q, SLOT(dialogRejected()));
 }
 
 void PolicyKitAgentPrivate::dialogAccepted()

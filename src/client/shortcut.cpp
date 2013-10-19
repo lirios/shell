@@ -26,7 +26,7 @@
 
 #include "shortcut.h"
 #include "shortcut_p.h"
-#include "desktopshell.h"
+#include "hawaiishell.h"
 #include "keybinding.h"
 
 #define CHECK_MODIFIER(encoded, decoded, qtmod) \
@@ -137,7 +137,7 @@ void Shortcut::setKey(const QVariant &value)
 
         // Create a key binding
         delete d->binding;
-        d->binding = DesktopShell::instance()->addKeyBinding(keys, modifiers);
+        d->binding = HawaiiShell::instance()->addKeyBinding(keys, modifiers);
         connect(d->binding, SIGNAL(triggered()), this, SIGNAL(triggered()));
 
         Q_EMIT keyChanged();

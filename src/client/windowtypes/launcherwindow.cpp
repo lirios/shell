@@ -33,13 +33,13 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "launcherwindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
-#include "shellui.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
+#include "shellscreen.h"
 
-LauncherWindow::LauncherWindow(ShellUi *ui)
-    : QQuickView(ui->engine(), new QWindow(ui->screen()))
-    , m_shellUi(ui)
+LauncherWindow::LauncherWindow(ShellScreen *screen)
+    : QQuickView(HawaiiShell::instance()->engine(), new QWindow(screen->screen()))
+    , m_shellScreen(screen)
     , m_surface(0)
 {
     // Set transparent color
@@ -63,7 +63,7 @@ LauncherWindow::LauncherWindow(ShellUi *ui)
     resetGeometry();
 
     // React to screen size changes, icon size and alignment changes
-    connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
+    connect(screen->screen(), SIGNAL(geometryChanged(QRect)),
             this, SLOT(geometryChanged(QRect)));
     connect(m_settings, SIGNAL(alignmentChanged(LauncherSettings::Alignment)),
             this, SLOT(resized()));
@@ -130,7 +130,7 @@ void LauncherWindow::resetGeometry()
 void LauncherWindow::resized()
 {
     resetGeometry();
-    m_shellUi->updateScreenGeometry(screen()->geometry());
+    m_shellScreen->updateScreenGeometry(screen()->geometry());
 }
 
 void LauncherWindow::setWindowType()
@@ -143,13 +143,13 @@ void LauncherWindow::setWindowType()
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_launcher(output, m_surface);
 }
 
 void LauncherWindow::setSurfacePosition()
 {
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_position(m_surface, geometry().x(), geometry().y());
 }
 

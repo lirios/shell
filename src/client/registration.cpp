@@ -31,6 +31,7 @@
 #include "applicationsmodel.h"
 #include "backgroundsettings.h"
 #include "dialogwindow.h"
+#include "element.h"
 #include "enums.h"
 #include "registration.h"
 #include "keybinding.h"
@@ -48,47 +49,47 @@
 #include "window.h"
 #include "workspace.h"
 
+#define PLUGIN_URI "Hawaii.Shell"
+#define PLUGIN_VERSION 0, 2
+
 void registerQmlTypes()
 {
-    // @uri Hawaii.Shell.Desktop
-    const char *uri = "Hawaii.Shell.Desktop";
-
     // Window types
-    qmlRegisterType<DialogWindow>(uri, 0, 1, "DialogWindow");
-    qmlRegisterType<ShellWindow>(uri, 0, 1, "ShellWindow");
-    qmlRegisterType<PopupWindow>(uri, 0, 1, "PopupWindow");
-    qmlRegisterType<TooltipWindow>(uri, 0, 1, "TooltipWindow");
+    qmlRegisterType<DialogWindow>(PLUGIN_URI, PLUGIN_VERSION, "DialogWindow");
+    qmlRegisterType<ShellWindow>(PLUGIN_URI, PLUGIN_VERSION, "ShellWindow");
+    qmlRegisterType<PopupWindow>(PLUGIN_URI, PLUGIN_VERSION, "PopupWindow");
+    qmlRegisterType<TooltipWindow>(PLUGIN_URI, PLUGIN_VERSION, "TooltipWindow");
 
     // Settings
-    qmlRegisterType<BackgroundSettings>(uri, 0, 1, "BackgroundSettings");
-    qmlRegisterType<LauncherSettings>(uri, 0, 1, "LauncherSettings");
+    qmlRegisterType<BackgroundSettings>(PLUGIN_URI, PLUGIN_VERSION, "BackgroundSettings");
+    qmlRegisterType<LauncherSettings>(PLUGIN_URI, PLUGIN_VERSION, "LauncherSettings");
 
     // Launcher stuff
-    qmlRegisterType<AppCategories>(uri, 0, 1, "XdgCategoriesModel");
-    qmlRegisterType<ApplicationsModel>(uri, 0, 1, "ApplicationsModel");
-    qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
-    qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
+    qmlRegisterType<AppCategories>(PLUGIN_URI, PLUGIN_VERSION, "XdgCategoriesModel");
+    qmlRegisterType<ApplicationsModel>(PLUGIN_URI, PLUGIN_VERSION, "ApplicationsModel");
+    qmlRegisterType<LauncherModel>(PLUGIN_URI, PLUGIN_VERSION, "LauncherModel");
+    qmlRegisterUncreatableType<LauncherItem>(PLUGIN_URI, PLUGIN_VERSION, "LauncherItem",
                                              QStringLiteral("Cannot create LauncherItem"));
-    qmlRegisterUncreatableType<AppInfo>(uri, 0, 1, "AppInfo",
+    qmlRegisterUncreatableType<AppInfo>(PLUGIN_URI, PLUGIN_VERSION, "AppInfo",
                                         QStringLiteral("Cannot create AppInfo"));
 
     // Shell types
-    qmlRegisterType<KeyBinding>();
-    qmlRegisterType<Shortcut>(uri, 0, 1, "Shortcut");
-    qmlRegisterUncreatableType<Window>(uri, 0, 1, "Window",
+    qmlRegisterType<Shortcut>(PLUGIN_URI, PLUGIN_VERSION, "Shortcut");
+    qmlRegisterUncreatableType<Window>(PLUGIN_URI, PLUGIN_VERSION, "Window",
                                        QStringLiteral("Cannot create Window"));
-    qmlRegisterUncreatableType<Workspace>(uri, 0, 1, "Workspace",
+    qmlRegisterUncreatableType<Workspace>(PLUGIN_URI, PLUGIN_VERSION, "Workspace",
                                           QStringLiteral("Workspace"));
+    qmlRegisterType<Element>(PLUGIN_URI, PLUGIN_VERSION, "Element");
 
     // Enums
-    qmlRegisterUncreatableType<UserStatus>(uri, 0, 1, "UserStatus",
+    qmlRegisterUncreatableType<UserStatus>(PLUGIN_URI, PLUGIN_VERSION, "UserStatus",
                                            QStringLiteral("Cannot create UserStatus"));
 }
 
 void registerFactories()
 {
     // Register service factories
-    qmlRegisterUncreatableType<PowerManager>("Hawaii.Shell.Desktop", 0, 1,
+    qmlRegisterUncreatableType<PowerManager>(PLUGIN_URI, PLUGIN_VERSION,
                                              "PowerManager",
                                              QStringLiteral("Cannot create PowerManager"));
     ServiceFactory::registerFactory<PowerManager>();

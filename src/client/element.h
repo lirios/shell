@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,37 +24,40 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef WORKSPACE_H
-#define WORKSPACE_H
+#ifndef ELEMENT_H
+#define ELEMENT_H
 
-#include <QtCore/QObject>
+#include <QtQuick/QQuickItem>
 
+class ElementFactory;
 class HawaiiShell;
-class HawaiiShellImpl;
-class WorkspacePrivate;
 
-class Workspace : public QObject
+class Element : public QQuickItem
 {
     Q_OBJECT
-    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
-    Q_DISABLE_COPY(Workspace)
-    Q_DECLARE_PRIVATE(Workspace)
+    Q_PROPERTY(Location location READ location NOTIFY locationChanged)
+    Q_ENUMS(Location)
 public:
-    Workspace(bool active, QObject *parent = 0);
+    enum Location {
+        LeftSide = 0,
+        TopSide,
+        RightSide,
+        BottomSide,
+        Floating
+    };
 
-    bool isActive() const;
+    explicit Element(Element *parent = 0);
+
+    Location location() const;
 
 Q_SIGNALS:
-    void activeChanged(bool value);
-
-public Q_SLOTS:
-    void activate();
+    void locationChanged();
 
 private:
-    friend class HawaiiShell;
-    friend class HawaiiShellImpl;
+    friend class ElementFactory;
 
-    WorkspacePrivate *const d_ptr;
+    HawaiiShell *m_shell;
+    Location m_location;
 };
 
-#endif // WORKSPACE_H
+#endif // ELEMENT_H

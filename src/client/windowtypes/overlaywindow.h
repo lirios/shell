@@ -30,13 +30,14 @@
 #include <QtQuick/QQuickView>
 
 struct wl_surface;
-class ShellUi;
+
+class ShellScreen;
 
 class OverlayWindow : public QQuickView
 {
     Q_OBJECT
 public:
-    OverlayWindow(ShellUi *ui);
+    OverlayWindow(ShellScreen *screen);
 
     wl_surface *surface() const;
 

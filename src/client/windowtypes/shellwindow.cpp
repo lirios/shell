@@ -29,8 +29,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "shellwindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
 
 ShellWindow::ShellWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -63,7 +63,7 @@ void ShellWindow::setSpecial()
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_special(output, surface);
 }
 
@@ -74,7 +74,7 @@ void ShellWindow::setSurfacePosition(const QPoint &pt)
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_position(surface, pt.x(), pt.y());
 }
 

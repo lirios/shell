@@ -33,12 +33,12 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "panelwindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
-#include "shellui.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
+#include "shellscreen.h"
 
-PanelWindow::PanelWindow(ShellUi *ui)
-    : QQuickView(ui->engine(), new QWindow(ui->screen()))
+PanelWindow::PanelWindow(ShellScreen *screen)
+    : QQuickView(HawaiiShell::instance()->engine(), new QWindow(screen->screen()))
     , m_surface(0)
 {
     // Set transparent color
@@ -59,9 +59,9 @@ PanelWindow::PanelWindow(ShellUi *ui)
     resetGeometry();
 
     // React to screen size changes
-    connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
+    connect(screen->screen(), SIGNAL(geometryChanged(QRect)),
             this, SLOT(geometryChanged(QRect)));
-    connect(ui, SIGNAL(availableGeometryChanged(QRect)),
+    connect(screen, SIGNAL(availableGeometryChanged(QRect)),
             this, SLOT(availableGeometryChanged(QRect)));
 
     // Debugging message
@@ -107,13 +107,13 @@ void PanelWindow::setWindowType()
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_panel(output, m_surface);
 }
 
 void PanelWindow::setSurfacePosition()
 {
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_position(m_surface, geometry().x(), geometry().y());
 }
 

@@ -30,8 +30,8 @@
 
 #include "popupwindow.h"
 #include "popupwindow_p.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
 
 /*
  * PopupWindowPrivate
@@ -105,7 +105,7 @@ void PopupWindow::setWindowType()
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     wl_hawaii_shell_surface *shsurf = shell->set_popup(output, surface, x(), y());
 
     Q_D(PopupWindow);

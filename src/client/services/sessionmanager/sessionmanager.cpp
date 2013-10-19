@@ -26,8 +26,8 @@
 
 #include <QtCore/QCoreApplication>
 
-#include "desktopshell.h"
-#include "desktopshell_p.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
 #include "lockscreenwindow.h"
 #include "sessionmanager.h"
 #include "shellui.h"
@@ -39,26 +39,25 @@ SessionManager::SessionManager(QObject *parent)
 
 void SessionManager::logout()
 {
-    DesktopShell::instance()->d_ptr->shell->quit();;
+    HawaiiShell::instance()->d_ptr->shell->quit();;
 }
 
 void SessionManager::lock()
 {
-    DesktopShell::instance()->d_ptr->shell->lock();;
+    HawaiiShell::instance()->d_ptr->shell->lock();;
 }
 
 void SessionManager::unlock()
 {
-    DesktopShell::instance()->d_ptr->shell->unlock();
+    HawaiiShell::instance()->d_ptr->shell->unlock();
 
     // Synchronization
     while (QCoreApplication::hasPendingEvents())
         QCoreApplication::processEvents();
 
-    // Close all lock screens, this will unmap the window and
+    // Close the lock screen, this will unmap the window and
     // save some resources
-    foreach (ShellUi *ui, DesktopShell::instance()->shellWindows())
-        ui->closeLockScreenWindow();
+    HawaiiShell::instance()->uiController()->closeLockScreenWindow();
 
     // Synchronization
     while (QCoreApplication::hasPendingEvents())

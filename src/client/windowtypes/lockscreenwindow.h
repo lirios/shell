@@ -31,13 +31,13 @@
 
 #include <wayland-client.h>
 
-class ShellUi;
+class ShellScreen;
 
 class LockScreenWindow : public QQuickView
 {
     Q_OBJECT
 public:
-    LockScreenWindow(ShellUi *ui);
+    LockScreenWindow();
 
     wl_surface *surface() const;
 

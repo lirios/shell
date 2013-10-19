@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,37 +24,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef WORKSPACE_H
-#define WORKSPACE_H
+#ifndef ELEMENTFACTORY_H
+#define ELEMENTFACTORY_H
 
-#include <QtCore/QObject>
+#include <QtCore/QHash>
 
+class QPluginLoader;
+class Element;
 class HawaiiShell;
-class HawaiiShellImpl;
-class WorkspacePrivate;
 
-class Workspace : public QObject
+class ElementFactory
 {
-    Q_OBJECT
-    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
-    Q_DISABLE_COPY(Workspace)
-    Q_DECLARE_PRIVATE(Workspace)
 public:
-    Workspace(bool active, QObject *parent = 0);
+    static void searchElements();
+    static void cleanupElements();
 
-    bool isActive() const;
-
-Q_SIGNALS:
-    void activeChanged(bool value);
-
-public Q_SLOTS:
-    void activate();
+    static Element *createElement(const QString &name, HawaiiShell *shell);
 
 private:
-    friend class HawaiiShell;
-    friend class HawaiiShellImpl;
-
-    WorkspacePrivate *const d_ptr;
+    QHash<QString, QPluginLoader *> m_factories;
 };
 
-#endif // WORKSPACE_H
+#endif // ELEMENTFACTORY_H

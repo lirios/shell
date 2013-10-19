@@ -17,6 +17,9 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/settings
 )
 
+# Create the cmakedirs.h header file
+configure_file(cmakedirs.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmakedirs.h)
+
 # Create the config.h header file
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
@@ -29,12 +32,15 @@ set(SOURCES
     appinfo.cpp
     applicationiconprovider.cpp
     applicationsmodel.cpp
-    desktopshell.cpp
+    element.cpp
+    elementfactory.cpp
     enums.cpp
     keybinding.cpp
+    hawaiishell.cpp
     main.cpp
     registration.cpp
     shellui.cpp
+    shellscreen.cpp
     shortcut.cpp
     window.cpp
     workspace.cpp

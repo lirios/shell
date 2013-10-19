@@ -28,7 +28,7 @@ import QtQuick 2.1
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import Hawaii.Shell.Desktop 0.1
+import Hawaii.Shell 0.2
 import Hawaii.Shell.Styles 0.1
 
 Item {

@@ -30,8 +30,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "notificationwindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
 
 NotificationWindow::NotificationWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -92,7 +92,7 @@ void NotificationWindow::addSurface()
                 native->nativeResourceForWindow("surface", this));
 
     QtWayland::wl_notification_daemon *notifications =
-            DesktopShell::instance()->d_ptr->notifications;
+            HawaiiShell::instance()->d_ptr->notifications;
     notifications->add_surface(surface);
 
     m_surfaceAdded = true;

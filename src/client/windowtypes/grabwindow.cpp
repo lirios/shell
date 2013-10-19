@@ -29,11 +29,11 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "grabwindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
 
-GrabWindow::GrabWindow(QScreen *screen)
-    : QWindow(screen)
+GrabWindow::GrabWindow()
+    : QWindow()
 {
     // Set window type and resize
     setFlags(flags() | Qt::BypassWindowManagerHint);
@@ -55,7 +55,7 @@ void GrabWindow::setWindowType()
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_grab_surface(surface);
 }
 

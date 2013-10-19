@@ -29,8 +29,8 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "dialogwindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
 
 DialogWindow::DialogWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -71,7 +71,7 @@ void DialogWindow::setWindowType()
     wl_surface *surface = static_cast<wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_dialog(output, surface);
 }
 

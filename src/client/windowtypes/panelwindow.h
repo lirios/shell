@@ -31,13 +31,13 @@
 
 struct wl_surface;
 
-class ShellUi;
+class ShellScreen;
 
 class PanelWindow : public QQuickView
 {
     Q_OBJECT
 public:
-    PanelWindow(ShellUi *ui);
+    PanelWindow(ShellScreen *screen);
 
     wl_surface *surface() const;
 

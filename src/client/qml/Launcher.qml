@@ -25,12 +25,12 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Shell 0.2
 import Hawaii.Shell.Styles 0.1
-import Hawaii.Shell.Desktop 0.1
+import Hawaii.Shell 0.2
 
-StyledItem {
+Element {
     id: launcherContainer
-    style: Qt.createComponent("LauncherStyle.qml", launcherContainer)
 
     // Tile size
     property alias tileSize: launcherView.tileSize
@@ -40,7 +40,11 @@ StyledItem {
     property alias orientation: launcherView.orientation
 
     // Size
-    property int size: tileSize + __style.padding.left + __style.padding.top + __style.padding.right + __style.padding.bottom
+    property int size: tileSize +
+                       styledItem.__style.padding.left +
+                       styledItem.__style.padding.top +
+                       styledItem.__style.padding.right +
+                       styledItem.__style.padding.bottom
 
     // Number of items
     property alias count: launcherView.count
@@ -48,21 +52,27 @@ StyledItem {
     // Propagate window pointer to the view
     property alias window: launcherView.window
 
-    LauncherView {
-        id: launcherView
-        anchors {
-            fill: parent
-            leftMargin: __style.padding.left
-            topMargin: __style.padding.top
-            rightMargin: __style.padding.right
-            bottomMargin: __style.padding.bottom
-        }
-        orientation: {
-            switch (alignment) {
-            case LauncherSettings.BottomAlignment:
-                return ListView.Horizontal;
-            default:
-                return ListView.Vertical;
+    StyledItem {
+        id: styledItem
+        anchors.fill: parent
+        style: Qt.createComponent("LauncherStyle.qml", launcherContainer)
+
+        LauncherView {
+            id: launcherView
+            anchors {
+                fill: parent
+                leftMargin: styledItem.__style.padding.left
+                topMargin: styledItem.__style.padding.top
+                rightMargin: styledItem.__style.padding.right
+                bottomMargin: styledItem.__style.padding.bottom
+            }
+            orientation: {
+                switch (alignment) {
+                case LauncherSettings.BottomAlignment:
+                    return ListView.Horizontal;
+                default:
+                    return ListView.Vertical;
+                }
             }
         }
     }

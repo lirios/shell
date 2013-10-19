@@ -25,9 +25,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Desktop 0.1
+import Hawaii.Shell 0.2
+import Hawaii.Shell 0.2
 
-Item {
+Element {
     property var settings: BackgroundSettings {
         id: settings
         onTypeChanged: performChanges(currentRenderer, settings)

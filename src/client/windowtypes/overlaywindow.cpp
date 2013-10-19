@@ -32,12 +32,12 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "overlaywindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
-#include "shellui.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
+#include "shellscreen.h"
 
-OverlayWindow::OverlayWindow(ShellUi *ui)
-    : QQuickView(ui->engine(), new QWindow(ui->screen()))
+OverlayWindow::OverlayWindow(ShellScreen *screen)
+    : QQuickView(HawaiiShell::instance()->engine(), new QWindow(screen->screen()))
     , m_surface(0)
 {
     // Set transparent color
@@ -55,10 +55,10 @@ OverlayWindow::OverlayWindow(ShellUi *ui)
 
     // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);
-    geometryChanged(ui->screen()->geometry());
+    geometryChanged(screen->screen()->geometry());
 
     // React to screen size changes
-    connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
+    connect(screen->screen(), SIGNAL(geometryChanged(QRect)),
             this, SLOT(geometryChanged(QRect)));
 
     // Debugging message
@@ -89,7 +89,7 @@ void OverlayWindow::setWindowType()
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_overlay(output, surface);
 }
 
@@ -100,7 +100,7 @@ void OverlayWindow::setSurfacePosition(const QPoint &pt)
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_position(surface, pt.x(), pt.y());
 }
 

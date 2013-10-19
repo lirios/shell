@@ -33,12 +33,12 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "lockscreenwindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
-#include "shellui.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
+#include "shellscreen.h"
 
-LockScreenWindow::LockScreenWindow(ShellUi *ui)
-    : QQuickView(ui->engine(), new QWindow(ui->screen()))
+LockScreenWindow::LockScreenWindow()
+    : QQuickView(HawaiiShell::instance()->engine(), new QWindow(QGuiApplication::primaryScreen()))
     , m_surface(0)
 {
     // Set custom window type
@@ -49,10 +49,10 @@ LockScreenWindow::LockScreenWindow(ShellUi *ui)
 
     // Resizing the view resizes the root object
     setResizeMode(QQuickView::SizeRootObjectToView);
-    setGeometry(ui->screen()->geometry());
+    setGeometry(screen()->geometry());
 
     // React to screen size changes and alignment changes
-    connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
+    connect(screen(), SIGNAL(geometryChanged(QRect)),
             this, SLOT(geometryChanged(QRect)));
 
     // Debugging message
@@ -72,7 +72,7 @@ void LockScreenWindow::setWindowType()
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_lock_surface(m_surface);
 }
 

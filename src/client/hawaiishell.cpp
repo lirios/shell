@@ -35,12 +35,16 @@
 
 #include "applicationiconprovider.h"
 #include "cmakedirs.h"
-#include "registration.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
+#include "elementfactory.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
 #include "notificationsdaemon.h"
 #include "notificationwindow.h"
 #include "notificationimageprovider.h"
+#include "keybinding.h"
+#include "keybinding_p.h"
+#include "registration.h"
+#include "servicefactory.h"
 #include "shellui.h"
 #include "shellwindow.h"
 #include "shortcut_p.h"
@@ -48,40 +52,30 @@
 #include "window_p.h"
 #include "workspace.h"
 #include "workspace_p.h"
-#include "keybinding.h"
-#include "keybinding_p.h"
-#include "servicefactory.h"
 
 /*
  * ShellImpl
  */
 
-DesktopShellImpl::DesktopShellImpl(DesktopShellPrivate *parent)
+HawaiiShellImpl::HawaiiShellImpl(HawaiiShellPrivate *parent)
     : QtWayland::wl_hawaii_shell()
     , m_parent(parent)
 {
 }
 
-void DesktopShellImpl::hawaii_shell_loaded()
+void HawaiiShellImpl::hawaii_shell_loaded()
 {
     // Create shell windows
     QMetaObject::invokeMethod(m_parent->q_ptr, "create");
 }
 
-void DesktopShellImpl::hawaii_shell_prepare_lock_surface()
+void HawaiiShellImpl::hawaii_shell_prepare_lock_surface()
 {
-    // Create the lock screen only for the primary screen
-    // TODO: Actually we should create one for each screen but this
-    // requires protocol changes
-    foreach (ShellUi *shellUi, m_parent->shellWindows) {
-        if (shellUi->screen() == QGuiApplication::primaryScreen()) {
-            QMetaObject::invokeMethod(shellUi, "createLockScreenWindow");
-            return;
-        }
-    }
+    // Create the lock screen
+    QMetaObject::invokeMethod(m_parent->uiController, "createLockScreenWindow");
 }
 
-void DesktopShellImpl::hawaii_shell_grab_cursor(uint32_t cursor)
+void HawaiiShellImpl::hawaii_shell_grab_cursor(uint32_t cursor)
 {
     QCursor qcursor;
 
@@ -124,17 +118,16 @@ void DesktopShellImpl::hawaii_shell_grab_cursor(uint32_t cursor)
         break;
     }
 
-    foreach (ShellUi *shellUi, m_parent->shellWindows)
-        QMetaObject::invokeMethod(shellUi->grabWindow(), "setGrabCursor",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(QCursor, qcursor));
+    QMetaObject::invokeMethod(m_parent->uiController->grabWindow(), "setGrabCursor",
+                              Qt::QueuedConnection,
+                              Q_ARG(QCursor, qcursor));
 }
 
-void DesktopShellImpl::hawaii_shell_window_mapped(struct ::wl_hawaii_shell *object,
-                                                  struct ::wl_hawaii_window *id,
-                                                  const QString &title,
-                                                  const QString &identifier,
-                                                  int32_t state)
+void HawaiiShellImpl::hawaii_shell_window_mapped(struct ::wl_hawaii_shell *object,
+                                                 struct ::wl_hawaii_window *id,
+                                                 const QString &title,
+                                                 const QString &identifier,
+                                                 int32_t state)
 {
     // Create a client window representation
     Window *window = new Window(title, identifier, wlStateConvert(state));
@@ -145,17 +138,17 @@ void DesktopShellImpl::hawaii_shell_window_mapped(struct ::wl_hawaii_shell *obje
     m_parent->emitWindowAdded(window);
 }
 
-void DesktopShellImpl::hawaii_shell_window_switching_started()
+void HawaiiShellImpl::hawaii_shell_window_switching_started()
 {
     m_parent->emitWindowSwitching(true);
 }
 
-void DesktopShellImpl::hawaii_shell_window_switching_finished()
+void HawaiiShellImpl::hawaii_shell_window_switching_finished()
 {
     m_parent->emitWindowSwitching(false);
 }
 
-void DesktopShellImpl::hawaii_shell_window_switched(struct ::wl_hawaii_window *window)
+void HawaiiShellImpl::hawaii_shell_window_switched(struct ::wl_hawaii_window *window)
 {
     for (int i = 0; i < m_parent->windows.size(); i++) {
         Window *w = m_parent->windows.at(i);
@@ -166,9 +159,9 @@ void DesktopShellImpl::hawaii_shell_window_switched(struct ::wl_hawaii_window *w
     }
 }
 
-void DesktopShellImpl::hawaii_shell_workspace_added(struct ::wl_hawaii_shell *object,
-                                                    struct ::wl_hawaii_workspace *id,
-                                                    int32_t active)
+void HawaiiShellImpl::hawaii_shell_workspace_added(struct ::wl_hawaii_shell *object,
+                                                   struct ::wl_hawaii_workspace *id,
+                                                   int32_t active)
 {
     Workspace *workspace = new Workspace(active != 0);
     workspace->d_ptr->init(id);
@@ -179,11 +172,12 @@ void DesktopShellImpl::hawaii_shell_workspace_added(struct ::wl_hawaii_shell *ob
 }
 
 /*
- * DesktopShellPrivate
+ * HawaiiShellPrivate
  */
 
-DesktopShellPrivate::DesktopShellPrivate(DesktopShell *parent)
+HawaiiShellPrivate::HawaiiShellPrivate(HawaiiShell *parent)
     : q_ptr(parent)
+    , uiController(0)
     , windowsMinimized(false)
 {
     // Start counting how much time we need to start up :)
@@ -203,6 +197,9 @@ DesktopShellPrivate::DesktopShellPrivate(DesktopShell *parent)
     // Register QML types and factories
     registerQmlTypes();
     registerFactories();
+
+    // Search elements
+    ElementFactory::searchElements();
 
     // Platform native interface
     QPlatformNativeInterface *native =
@@ -224,14 +221,14 @@ DesktopShellPrivate::DesktopShellPrivate(DesktopShell *parent)
     Q_ASSERT(registry);
 
     // Initialize interfaces
-    shell = new DesktopShellImpl(this);
+    shell = new HawaiiShellImpl(this);
     notifications = new QtWayland::wl_notification_daemon();
     wl_registry_add_listener(registry,
-                             &DesktopShellPrivate::registryListener,
+                             &HawaiiShellPrivate::registryListener,
                              this);
 }
 
-DesktopShellPrivate::~DesktopShellPrivate()
+HawaiiShellPrivate::~HawaiiShellPrivate()
 {
     wl_notification_daemon_destroy(notifications->object());
     delete notifications;
@@ -240,13 +237,14 @@ DesktopShellPrivate::~DesktopShellPrivate()
     delete shell;
 
     qDeleteAll(workspaces);
-    qDeleteAll(shellWindows);
     qDeleteAll(services);
+
+    ElementFactory::cleanupElements();
 }
 
-void DesktopShellPrivate::emitWindowAdded(Window *window)
+void HawaiiShellPrivate::emitWindowAdded(Window *window)
 {
-    Q_Q(DesktopShell);
+    Q_Q(HawaiiShell);
 
     QObject::connect(window, SIGNAL(unmapped(Window*)),
                      q, SLOT(windowUnmapped(Window*)));
@@ -257,9 +255,9 @@ void DesktopShellPrivate::emitWindowAdded(Window *window)
     Q_EMIT q->windowsChanged();
 }
 
-void DesktopShellPrivate::emitWindowSwitching(bool started)
+void HawaiiShellPrivate::emitWindowSwitching(bool started)
 {
-    Q_Q(DesktopShell);
+    Q_Q(HawaiiShell);
 
     if (started)
         Q_EMIT q->windowSwitchingStarted();
@@ -267,15 +265,15 @@ void DesktopShellPrivate::emitWindowSwitching(bool started)
         Q_EMIT q->windowSwitchingFinished();
 }
 
-void DesktopShellPrivate::emitWindowSwitchingNext(Window *window)
+void HawaiiShellPrivate::emitWindowSwitchingNext(Window *window)
 {
-    Q_Q(DesktopShell);
+    Q_Q(HawaiiShell);
     Q_EMIT q->windowSwitchingNext(window);
 }
 
-void DesktopShellPrivate::emitWorkspaceAdded(int num)
+void HawaiiShellPrivate::emitWorkspaceAdded(int num)
 {
-    Q_Q(DesktopShell);
+    Q_Q(HawaiiShell);
 
     Q_EMIT q->workspaceAdded(num);
     Q_EMIT q->workspacesChanged();
@@ -286,17 +284,17 @@ void DesktopShellPrivate::emitWorkspaceAdded(int num)
     });
 }
 
-void DesktopShellPrivate::handleGlobal(void *data,
-                                       wl_registry *registry,
-                                       uint32_t id,
-                                       const char *interface,
-                                       uint32_t version)
+void HawaiiShellPrivate::handleGlobal(void *data,
+                                      wl_registry *registry,
+                                      uint32_t id,
+                                      const char *interface,
+                                      uint32_t version)
 {
     Q_UNUSED(version);
 
-    DesktopShellPrivate *self = static_cast<DesktopShellPrivate *>(data);
+    HawaiiShellPrivate *self = static_cast<HawaiiShellPrivate *>(data);
     if (!self) {
-        qWarning() << "Unable to cast data to DesktopShellPrivate pointer";
+        qWarning() << "Unable to cast data to HawaiiShellPrivate pointer in handleGlobal";
         return;
     }
 
@@ -311,35 +309,51 @@ void DesktopShellPrivate::handleGlobal(void *data,
     }
 }
 
-const struct wl_registry_listener DesktopShellPrivate::registryListener = {
-    DesktopShellPrivate::handleGlobal
+void HawaiiShellPrivate::handleGlobalRemove(void *data,
+                                            wl_registry *registry,
+                                            uint32_t name)
+{
+    Q_UNUSED(name);
+
+    HawaiiShellPrivate *self = static_cast<HawaiiShellPrivate *>(data);
+    if (!self) {
+        qWarning() << "Unable to cast data to HawaiiShellPrivate pointer in handleGlobalRemove";
+        return;
+    }
+
+    // TODO: Delete objects
+}
+
+const struct wl_registry_listener HawaiiShellPrivate::registryListener = {
+    HawaiiShellPrivate::handleGlobal,
+    HawaiiShellPrivate::handleGlobalRemove
 };
 
 /*
- * DesktopShell
+ * HawaiiShell
  */
 
-Q_GLOBAL_STATIC(DesktopShell, s_desktopShell)
+Q_GLOBAL_STATIC(HawaiiShell, s_desktopShell)
 
-DesktopShell::DesktopShell()
+HawaiiShell::HawaiiShell()
     : QObject()
-    , d_ptr(new DesktopShellPrivate(this))
+    , d_ptr(new HawaiiShellPrivate(this))
 {
 }
 
-DesktopShell::~DesktopShell()
+HawaiiShell::~HawaiiShell()
 {
     delete d_ptr;
 }
 
-DesktopShell *DesktopShell::instance()
+HawaiiShell *HawaiiShell::instance()
 {
     return s_desktopShell();
 }
 
-void DesktopShell::create()
+void HawaiiShell::create()
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
 
     // Add configured workspaces
     // TODO: Add as many workspaces as specified by the settings
@@ -348,15 +362,17 @@ void DesktopShell::create()
     // Bind Meta-D to toggle windows
     KeyBinding *binding = addKeyBinding(KEY_D, MODIFIER_SUPER);
     connect(binding, &KeyBinding::triggered, []() {
-        DesktopShell::instance()->toggleWindows();
+        HawaiiShell::instance()->toggleWindows();
     });
 
-    // Create shell windows
+    // Create the UI controller
+    d->uiController = new ShellUi(d->engine, this);
+    d->engine->rootContext()->setContextProperty("Ui", d->uiController);
+
+    // Create shell screens
     foreach (QScreen *screen, QGuiApplication::screens()) {
         qDebug() << "--- Screen" << screen->name() << screen->geometry();
-
-        ShellUi *ui = new ShellUi(d->engine, screen, this);
-        d->shellWindows.append(ui);
+        d->uiController->loadScreen(screen);
     }
 
     // Wait until all user interface elements for all screens are ready
@@ -365,18 +381,18 @@ void DesktopShell::create()
 
     // Shell user interface is ready, tell the compositor to fade in
     d->shell->desktop_ready();
-    qDebug() << "Shell is now ready and took" << d->elapsedTimer.elapsed() << "ms";
+    qDebug() << "Shell is now ready, elapsed time:" << d->elapsedTimer.elapsed() << "ms";
 }
 
-QQmlEngine *DesktopShell::engine() const
+QQmlEngine *HawaiiShell::engine() const
 {
-    Q_D(const DesktopShell);
+    Q_D(const HawaiiShell);
     return d->engine;
 }
 
-QObject *DesktopShell::service(const QString &name)
+QObject *HawaiiShell::service(const QString &name)
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
 
     // Get an already created service
     QObject *service = d->services.value(name);
@@ -389,9 +405,9 @@ QObject *DesktopShell::service(const QString &name)
     return service;
 }
 
-KeyBinding *DesktopShell::addKeyBinding(quint32 key, quint32 modifiers)
+KeyBinding *HawaiiShell::addKeyBinding(quint32 key, quint32 modifiers)
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
 
     KeyBinding *keyBinding = new KeyBinding(key, modifiers, this);
     keyBinding->d_ptr->init(d->shell->add_key_binding(key, modifiers));
@@ -399,9 +415,9 @@ KeyBinding *DesktopShell::addKeyBinding(quint32 key, quint32 modifiers)
     return keyBinding;
 }
 
-void DesktopShell::setAvailableGeometry(QScreen *screen, const QRect &geometry)
+void HawaiiShell::setAvailableGeometry(QScreen *screen, const QRect &geometry)
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
 
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
     wl_output *output = static_cast<struct wl_output *>(
@@ -411,62 +427,62 @@ void DesktopShell::setAvailableGeometry(QScreen *screen, const QRect &geometry)
                                      geometry.width(), geometry.height());
 }
 
-QList<ShellUi *> DesktopShell::shellWindows() const
+ShellUi *HawaiiShell::uiController() const
 {
-    Q_D(const DesktopShell);
-    return d->shellWindows;
+    Q_D(const HawaiiShell);
+    return d->uiController;
 }
 
-QQmlListProperty<Window> DesktopShell::windows()
+QQmlListProperty<Window> HawaiiShell::windows()
 {
     return QQmlListProperty<Window>(this, 0, windowsCount, windowAt);
 }
 
-QQmlListProperty<Workspace> DesktopShell::workspaces()
+QQmlListProperty<Workspace> HawaiiShell::workspaces()
 {
     return QQmlListProperty<Workspace>(this, 0, workspacesCount, workspaceAt);
 }
 
-void DesktopShell::minimizeWindows()
+void HawaiiShell::minimizeWindows()
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
     d->shell->minimize_windows();
     d->windowsMinimized = true;
 }
 
-void DesktopShell::restoreWindows()
+void HawaiiShell::restoreWindows()
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
     d->shell->restore_windows();
     d->windowsMinimized = false;
 }
 
-void DesktopShell::toggleWindows()
+void HawaiiShell::toggleWindows()
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
     if (d->windowsMinimized)
         restoreWindows();
     else
         minimizeWindows();
 }
 
-void DesktopShell::addWorkspace()
+void HawaiiShell::addWorkspace()
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
     d->shell->add_workspace();
 }
 
-void DesktopShell::addWorkspaces(int num)
+void HawaiiShell::addWorkspaces(int num)
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
 
     while (num--)
         d->shell->add_workspace();
 }
 
-void DesktopShell::removeWorkspace(int num)
+void HawaiiShell::removeWorkspace(int num)
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
 
     Workspace *workspace = d->workspaces.takeAt(num);
     if (workspace) {
@@ -475,42 +491,42 @@ void DesktopShell::removeWorkspace(int num)
     }
 }
 
-void DesktopShell::selectWorkspace(Workspace *workspace)
+void HawaiiShell::selectWorkspace(Workspace *workspace)
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
     d->shell->select_workspace(workspace->d_ptr->object());
 }
 
-int DesktopShell::windowsCount(QQmlListProperty<Window> *p)
+int HawaiiShell::windowsCount(QQmlListProperty<Window> *p)
 {
-    DesktopShell *shell = static_cast<DesktopShell *>(p->object);
+    HawaiiShell *shell = static_cast<HawaiiShell *>(p->object);
     return shell->d_ptr->windows.size();
 }
 
-Window *DesktopShell::windowAt(QQmlListProperty<Window> *p, int index)
+Window *HawaiiShell::windowAt(QQmlListProperty<Window> *p, int index)
 {
-    DesktopShell *shell = static_cast<DesktopShell *>(p->object);
+    HawaiiShell *shell = static_cast<HawaiiShell *>(p->object);
     return shell->d_ptr->windows.at(index);
 }
 
-int DesktopShell::workspacesCount(QQmlListProperty<Workspace> *p)
+int HawaiiShell::workspacesCount(QQmlListProperty<Workspace> *p)
 {
-    DesktopShell *shell = static_cast<DesktopShell *>(p->object);
+    HawaiiShell *shell = static_cast<HawaiiShell *>(p->object);
     return shell->d_ptr->workspaces.size();
 }
 
-Workspace *DesktopShell::workspaceAt(QQmlListProperty<Workspace> *p, int index)
+Workspace *HawaiiShell::workspaceAt(QQmlListProperty<Workspace> *p, int index)
 {
-    DesktopShell *shell = static_cast<DesktopShell *>(p->object);
+    HawaiiShell *shell = static_cast<HawaiiShell *>(p->object);
     return shell->d_ptr->workspaces.at(index);
 }
 
-void DesktopShell::windowUnmapped(Window *window)
+void HawaiiShell::windowUnmapped(Window *window)
 {
-    Q_D(DesktopShell);
+    Q_D(HawaiiShell);
 
     d->windows.removeOne(window);
     Q_EMIT windowsChanged();
 }
 
-#include "moc_desktopshell.cpp"
+#include "moc_hawaiishell.cpp"

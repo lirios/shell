@@ -33,7 +33,7 @@ class GrabWindow : public QWindow
 {
     Q_OBJECT
 public:
-    GrabWindow(QScreen *screen = 0);
+    explicit GrabWindow();
 
 public Q_SLOTS:
     void setGrabCursor(const QCursor &cursor);

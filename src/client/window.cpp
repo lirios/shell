@@ -30,7 +30,7 @@
 #include "window.h"
 #include "window_p.h"
 #include "appinfo.h"
-#include "desktopshell.h"
+#include "hawaiishell.h"
 
 /*
  * WindowPrivate
@@ -73,7 +73,7 @@ void WindowPrivate::hawaii_window_identifier_changed(const QString &identifier)
                     identifier);
         delete this->appInfo;
         this->appInfo = new AppInfo();
-        this->appInfo->moveToThread(DesktopShell::instance()->engine()->thread());
+        this->appInfo->moveToThread(HawaiiShell::instance()->engine()->thread());
         this->appInfo->load(fileName);
         Q_EMIT q->appInfoChanged();
     }
@@ -133,7 +133,7 @@ Window::Window(const QString &title, const QString &identifier, States state, QO
                 QStandardPaths::ApplicationsLocation,
                 identifier);
     d->appInfo = new AppInfo();
-    d->appInfo->moveToThread(DesktopShell::instance()->engine()->thread());
+    d->appInfo->moveToThread(HawaiiShell::instance()->engine()->thread());
     d->appInfo->load(fileName);
 }
 

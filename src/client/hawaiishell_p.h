@@ -24,19 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef DESKTOPSHELL_P_H
-#define DESKTOPSHELL_P_H
+#ifndef HAWAIISHELL_P_H
+#define HAWAIISHELL_P_H
 
 #include <QtCore/QElapsedTimer>
 
-#include "desktopshell.h"
+#include "hawaiishell.h"
 #include "qwayland-hawaii.h"
 #include "qwayland-notification.h"
 
-class DesktopShellImpl : public QtWayland::wl_hawaii_shell
+class HawaiiShellImpl : public QtWayland::wl_hawaii_shell
 {
 public:
-    DesktopShellImpl(DesktopShellPrivate *parent);
+    HawaiiShellImpl(HawaiiShellPrivate *parent);
 
 protected:
     virtual void hawaii_shell_loaded();
@@ -55,27 +55,27 @@ protected:
                                               int32_t active);
 
 private:
-    DesktopShellPrivate *m_parent;
+    HawaiiShellPrivate *m_parent;
 };
 
-class DesktopShellPrivate
+class HawaiiShellPrivate
 {
-    Q_DECLARE_PUBLIC(DesktopShell)
+    Q_DECLARE_PUBLIC(HawaiiShell)
 public:
-    DesktopShellPrivate(DesktopShell *parent);
-    ~DesktopShellPrivate();
+    HawaiiShellPrivate(HawaiiShell *parent);
+    ~HawaiiShellPrivate();
 
-    DesktopShell *q_ptr;
+    HawaiiShell *q_ptr;
 
     wl_display *display;
     wl_registry *registry;
-    DesktopShellImpl *shell;
+    HawaiiShellImpl *shell;
     QtWayland::wl_notification_daemon *notifications;
 
     QElapsedTimer elapsedTimer;
     QQmlEngine *engine;
     QHash<QString, QObject *> services;
-    QList<ShellUi *> shellWindows;
+    ShellUi *uiController;
     QList<Window *> windows;
     QList<Workspace *> workspaces;
     QList<KeyBinding *> keyBindings;
@@ -90,8 +90,11 @@ public:
     static void handleGlobal(void *data, wl_registry *registry,
                              uint32_t id, const char *interface,
                              uint32_t version);
+    static void handleGlobalRemove(void *data,
+                                   wl_registry *registry,
+                                   uint32_t name);
 
     static const struct wl_registry_listener registryListener;
 };
 
-#endif // DESKTOPSHELL_P_H
+#endif // HAWAIISHELL_P_H

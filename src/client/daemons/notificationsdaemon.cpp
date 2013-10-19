@@ -39,7 +39,7 @@
 #include "notificationsimage.h"
 #include "notificationwindow.h"
 #include "notificationimageprovider.h"
-#include "desktopshell.h"
+#include "hawaiishell.h"
 
 /*
  * Latest specifications:
@@ -193,7 +193,7 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
                                                             const QImage &image,
                                                             int timeout)
 {
-    QQmlEngine *engine = DesktopShell::instance()->engine();
+    QQmlEngine *engine = HawaiiShell::instance()->engine();
     QQmlComponent *component = new QQmlComponent(engine, this);
     component->loadUrl(QUrl("qrc:///qml/NotificationBubble.qml"));
     if (!component->isReady())
@@ -280,7 +280,7 @@ QString NotificationsDaemon::findImageFromPath(const QString &imagePath)
 void NotificationsDaemon::cacheImage(const QString &key, const QImage &image)
 {
     QQmlImageProviderBase *base =
-            DesktopShell::instance()->engine()->imageProvider("notifications");
+            HawaiiShell::instance()->engine()->imageProvider("notifications");
     NotificationImageProvider *provider =
             static_cast<NotificationImageProvider *>(base);
     if (provider)
@@ -290,7 +290,7 @@ void NotificationsDaemon::cacheImage(const QString &key, const QImage &image)
 void NotificationsDaemon::uncacheImage(const QString &key)
 {
     QQmlImageProviderBase *base =
-            DesktopShell::instance()->engine()->imageProvider("notifications");
+            HawaiiShell::instance()->engine()->imageProvider("notifications");
     NotificationImageProvider *provider =
             static_cast<NotificationImageProvider *>(base);
     if (provider)

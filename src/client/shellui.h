@@ -29,45 +29,27 @@
 
 #include <QtCore/QObject>
 
-#include <wayland-client.h>
-
 #include "grabwindow.h"
-#include "backgroundwindow.h"
-#include "panelwindow.h"
-#include "launcherwindow.h"
 #include "lockscreenwindow.h"
-#include "overlaywindow.h"
+
+class ShellScreen;
 
 class ShellUi : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QRect availableGeometry READ availableGeometry NOTIFY availableGeometryChanged)
 public:
-    explicit ShellUi(QQmlEngine *engine, QScreen *screen, QObject *parent = 0);
+    explicit ShellUi(QQmlEngine *engine, QObject *parent = 0);
     ~ShellUi();
 
     QQmlEngine *engine() const;
 
-    QScreen *screen() const;
-    wl_output *output() const;
-
-    QRect availableGeometry() const;
-
     GrabWindow *grabWindow() const;
-
-    BackgroundWindow *backgroundWindow() const;
-    PanelWindow *panelWindow() const;
-    LauncherWindow *launcherWindow() const;
-    OverlayWindow *overlayWindow() const;
 
     LockScreenWindow *lockScreenWindow() const;
 
-Q_SIGNALS:
-    void availableGeometryChanged(const QRect &rect);
+    void loadScreen(QScreen *screen);
 
 public Q_SLOTS:
-    void updateScreenGeometry(const QRect &rect);
-
     void createLockScreenWindow();
     void closeLockScreenWindow();
 
@@ -75,16 +57,10 @@ public Q_SLOTS:
 
 private:
     QQmlEngine *m_engine;
-    QScreen *m_screen;
-    wl_output *m_output;
-    QRect m_availableGeometry;
     GrabWindow *m_grabWindow;
-    BackgroundWindow *m_backgroundWindow;
-    PanelWindow *m_panelWindow;
-    LauncherWindow *m_launcherWindow;
-    OverlayWindow *m_overlayWindow;
     LockScreenWindow *m_lockScreenWindow;
     int m_numWorkspaces;
+    QList<ShellScreen *> m_screens;
 };
 
 #endif // SHELLUI_H

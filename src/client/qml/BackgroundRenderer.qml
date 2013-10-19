@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Desktop 0.1
+import Hawaii.Shell 0.2
 
 Item {
     property int type

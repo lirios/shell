@@ -29,7 +29,7 @@
 
 #include <QtCore/QObject>
 
-class DesktopShell;
+class HawaiiShell;
 class KeyBindingPrivate;
 
 class KeyBinding : public QObject
@@ -44,7 +44,7 @@ Q_SIGNALS:
     void triggered();
 
 private:
-    friend class DesktopShell;
+    friend class HawaiiShell;
 
     KeyBinding(quint32 key, quint32 modifiers, QObject *parent = 0);
 

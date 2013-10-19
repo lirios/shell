@@ -27,7 +27,7 @@
 #include <QtCore/QDebug>
 #include <QtWidgets/QApplication>
 
-#include "desktopshell.h"
+#include "hawaiishell.h"
 #include "notificationsdaemon.h"
 #include "policykitagent.h"
 #include "config.h"
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
     (void)NotificationsDaemon::instance();
 
     // Create the main shell object
-    (void)DesktopShell::instance();
+    (void)HawaiiShell::instance();
 
     // Create the PolicyKit agent
     (void)PolicyKitAgent::instance();

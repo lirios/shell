@@ -33,13 +33,13 @@
 
 struct wl_surface;
 
-class ShellUi;
+class ShellScreen;
 
 class LauncherWindow : public QQuickView
 {
     Q_OBJECT
 public:
-    LauncherWindow(ShellUi *ui);
+    LauncherWindow(ShellScreen *screen);
     ~LauncherWindow();
 
     wl_surface *surface() const;
@@ -52,7 +52,7 @@ private Q_SLOTS:
     void resized();
 
 private:
-    ShellUi *m_shellUi;
+    ShellScreen *m_shellScreen;
     wl_surface *m_surface;
     LauncherSettings *m_settings;
 

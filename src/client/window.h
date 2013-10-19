@@ -32,7 +32,7 @@
 #include <QtQml/QQmlPropertyMap>
 
 class AppInfo;
-class DesktopShellImpl;
+class HawaiiShellImpl;
 class WindowPrivate;
 
 class Window : public QObject
@@ -101,7 +101,7 @@ public Q_SLOTS:
     void restore();
 
 private:
-    friend class DesktopShellImpl;
+    friend class HawaiiShellImpl;
 
     WindowPrivate *const d_ptr;
 };

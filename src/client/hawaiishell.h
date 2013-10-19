@@ -24,8 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef DESKTOPSHELL_H
-#define DESKTOPSHELL_H
+#ifndef HAWAIISHELL_H
+#define HAWAIISHELL_H
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
@@ -34,8 +34,8 @@
 class QScreen;
 class QQmlEngine;
 
-class DesktopShellImpl;
-class DesktopShellPrivate;
+class HawaiiShellImpl;
+class HawaiiShellPrivate;
 class ShellUi;
 class Window;
 class Workspace;
@@ -52,17 +52,17 @@ class LockScreenWindow;
 class NotificationWindow;
 class SessionManager;
 
-class DesktopShell : public QObject
+class HawaiiShell : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QQmlListProperty<Window> windows READ windows NOTIFY windowsChanged)
     Q_PROPERTY(QQmlListProperty<Workspace> workspaces READ workspaces NOTIFY workspacesChanged)
-    Q_DECLARE_PRIVATE(DesktopShell)
+    Q_DECLARE_PRIVATE(HawaiiShell)
 public:
-    DesktopShell();
-    ~DesktopShell();
+    HawaiiShell();
+    ~HawaiiShell();
 
-    static DesktopShell *instance();
+    static HawaiiShell *instance();
 
     QQmlEngine *engine() const;
 
@@ -72,7 +72,7 @@ public:
 
     Q_INVOKABLE void setAvailableGeometry(QScreen *screen, const QRect &geometry);
 
-    QList<ShellUi *> shellWindows() const;
+    ShellUi *uiController() const;
 
     QQmlListProperty<Window> windows();
     QQmlListProperty<Workspace> workspaces();
@@ -104,7 +104,7 @@ public Q_SLOTS:
     void selectWorkspace(Workspace *workspace);
 
 private:
-    friend class DesktopShellImpl;
+    friend class HawaiiShellImpl;
     friend class BackgroundWindow;
     friend class PanelWindow;
     friend class LauncherWindow;
@@ -117,7 +117,7 @@ private:
     friend class NotificationWindow;
     friend class SessionManager;
 
-    DesktopShellPrivate *const d_ptr;
+    HawaiiShellPrivate *const d_ptr;
 
     static int windowsCount(QQmlListProperty<Window> *p);
     static Window *windowAt(QQmlListProperty<Window> *p, int index);
@@ -129,4 +129,4 @@ private Q_SLOTS:
     void windowUnmapped(Window *window);
 };
 
-#endif // DESKTOPSHELL_H
+#endif // HAWAIISHELL_H

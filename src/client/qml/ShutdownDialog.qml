@@ -28,7 +28,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import FluidUi 0.2 as FluidUi
-import Hawaii.Shell.Desktop 0.1
+import Hawaii.Shell 0.2
 
 Dialog {
     id: shutdownDialog

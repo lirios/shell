@@ -32,12 +32,12 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "backgroundwindow.h"
-#include "desktopshell.h"
-#include "desktopshell_p.h"
-#include "shellui.h"
+#include "hawaiishell.h"
+#include "hawaiishell_p.h"
+#include "shellscreen.h"
 
-BackgroundWindow::BackgroundWindow(ShellUi *ui)
-    : QQuickView(ui->engine(), new QWindow(ui->screen()))
+BackgroundWindow::BackgroundWindow(ShellScreen *screen)
+    : QQuickView(HawaiiShell::instance()->engine(), new QWindow(screen->screen()))
     , m_surface(0)
 {
     // Set custom window type
@@ -52,10 +52,10 @@ BackgroundWindow::BackgroundWindow(ShellUi *ui)
 
     // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);
-    geometryChanged(ui->screen()->geometry());
+    geometryChanged(screen->screen()->geometry());
 
     // React to screen size changes
-    connect(ui->screen(), SIGNAL(geometryChanged(QRect)),
+    connect(screen->screen(), SIGNAL(geometryChanged(QRect)),
             this, SLOT(geometryChanged(QRect)));
 
     // Debugging message
@@ -86,12 +86,12 @@ void BackgroundWindow::setWindowType()
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    DesktopShell::instance()->d_ptr->shell->set_background(output, m_surface);
+    HawaiiShell::instance()->d_ptr->shell->set_background(output, m_surface);
 }
 
 void BackgroundWindow::setSurfacePosition()
 {
-    DesktopShellImpl *shell = DesktopShell::instance()->d_ptr->shell;
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
     shell->set_position(m_surface, geometry().x(), geometry().y());
 }
 
