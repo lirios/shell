@@ -76,6 +76,13 @@ PopupWindow::~PopupWindow()
     delete d_ptr;
 }
 
+void PopupWindow::dismiss()
+{
+    Q_D(PopupWindow);
+    d->dismiss();
+    QMetaObject::invokeMethod(this, "hide");
+}
+
 void PopupWindow::showEvent(QShowEvent *event)
 {
     QQuickWindow::showEvent(event);

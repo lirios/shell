@@ -74,7 +74,6 @@ ShellWindow::ShellWindow(DesktopShell *shell)
     , m_dimmedSurface(nullptr)
     , m_dialogOverlayAnimation(nullptr)
     , m_dialogAnimation(nullptr)
-    , m_popupGrab(nullptr)
 {
 }
 
@@ -144,16 +143,6 @@ void ShellWindow::animateDialog(weston_surface *surface)
     m_dialogAnimation->animation.setStart(0.01);
     m_dialogAnimation->animation.setTarget(1.0);
     m_dialogAnimation->animation.run(surface->output, 200, Animation::Flags::SendDone);
-}
-
-PopupGrab *ShellWindow::popupGrab() const
-{
-    return m_popupGrab;
-}
-
-void ShellWindow::setPopupGrab(PopupGrab *grab)
-{
-    m_popupGrab = grab;
 }
 
 void ShellWindow::surfaceDestroyed()

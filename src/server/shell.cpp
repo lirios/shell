@@ -180,9 +180,8 @@ Shell::Shell(struct weston_compositor *ec)
 }
 
 ShellGrab::ShellGrab()
-    : shell(0)
-    , pointer(0)
 {
+
 }
 
 Shell::~Shell()

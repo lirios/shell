@@ -30,8 +30,6 @@
 #include "desktop-shell.h"
 #include "animation.h"
 
-class PopupGrab;
-
 class ShellWindow
 {
 public:
@@ -53,9 +51,6 @@ public:
 
     void animateDialog(weston_surface *surface);
 
-    PopupGrab *popupGrab() const;
-    void setPopupGrab(PopupGrab *grab);
-
 private:
     struct DialogOverlayAnimation;
     struct DialogAnimation;
@@ -65,7 +60,6 @@ private:
     DialogOverlayAnimation *m_dialogOverlayAnimation;
     DialogAnimation *m_dialogAnimation;
     WlListener m_destroyListener;
-    PopupGrab *m_popupGrab;
 
     void setDimmedSurfaceAlpha(float alpha);
 

@@ -259,6 +259,14 @@
     The popup_done event is sent out when a popup grab is broken,
     that is, when the users clicks on a different surface.
     </description>
+
+    <request name="dismiss">
+      <description summary="break popup grab">
+        Explicitely break the popup grab. Clients should hide the
+        popup surface after calling this method.
+      </description>
+    </request>
+
     <event name="popup_done"/>
   </interface>
 

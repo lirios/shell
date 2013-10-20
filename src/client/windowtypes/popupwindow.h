@@ -39,6 +39,9 @@ public:
     PopupWindow(QWindow *parent = 0);
     ~PopupWindow();
 
+public Q_SLOTS:
+    void dismiss();
+
 protected:
     void showEvent(QShowEvent *event);
     void hideEvent(QHideEvent *event);

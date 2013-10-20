@@ -155,6 +155,6 @@ Popup {
     }
 
     function close() {
-        visible = false;
+        dismiss();
     }
 }
