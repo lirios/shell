@@ -183,24 +183,6 @@ HawaiiShellPrivate::HawaiiShellPrivate(HawaiiShell *parent)
     // Start counting how much time we need to start up :)
     elapsedTimer.start();
 
-    // We need windows with alpha buffer
-    QQuickWindow::setDefaultAlphaBuffer(true);
-
-    // Create QML engine
-    engine = new QQmlEngine(parent);
-    engine->rootContext()->setContextProperty("Shell", parent);
-
-    // Register image providers
-    engine->addImageProvider("appicon", new ApplicationIconProvider);
-    engine->addImageProvider("notifications", new NotificationImageProvider);
-
-    // Register QML types and factories
-    Registration::registerQmlTypes();
-    Registration::registerFactories();
-
-    // Search elements
-    ElementFactory::searchElements();
-
     // Platform native interface
     QPlatformNativeInterface *native =
             QGuiApplication::platformNativeInterface();
@@ -364,6 +346,24 @@ void HawaiiShell::create()
     connect(binding, &KeyBinding::triggered, []() {
         HawaiiShell::instance()->toggleWindows();
     });
+
+    // We need windows with alpha buffer
+    QQuickWindow::setDefaultAlphaBuffer(true);
+
+    // Create QML engine
+    d->engine = new QQmlEngine(this);
+    d->engine->rootContext()->setContextProperty("Shell", this);
+
+    // Register image providers
+    d->engine->addImageProvider("appicon", new ApplicationIconProvider);
+    d->engine->addImageProvider("notifications", new NotificationImageProvider);
+
+    // Register QML types and factories
+    Registration::registerQmlTypes();
+    Registration::registerFactories();
+
+    // Search elements
+    ElementFactory::searchElements();
 
     // Create the UI controller
     d->uiController = new ShellUi(d->engine, this);
