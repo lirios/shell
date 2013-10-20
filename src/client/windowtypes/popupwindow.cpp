@@ -40,6 +40,7 @@
 PopupWindowPrivate::PopupWindowPrivate(PopupWindow *parent)
     : QtWayland::wl_hawaii_shell_surface()
     , q_ptr(parent)
+    , dismissing(false)
 {
 }
 
@@ -79,8 +80,8 @@ PopupWindow::~PopupWindow()
 void PopupWindow::dismiss()
 {
     Q_D(PopupWindow);
-    d->dismiss();
-    QMetaObject::invokeMethod(this, "hide");
+    d->dismissing = true;
+    hide();
 }
 
 void PopupWindow::showEvent(QShowEvent *event)
@@ -96,8 +97,13 @@ void PopupWindow::hideEvent(QHideEvent *event)
     QQuickWindow::hideEvent(event);
 
     Q_D(PopupWindow);
-    if (d->isInitialized() && !isVisible())
+    if (d->isInitialized() && !isVisible()) {
+        if (d->dismissing) {
+            d->dismiss();
+            d->dismissing = false;
+        }
         wl_hawaii_shell_surface_destroy(d->object());
+    }
 }
 
 void PopupWindow::setWindowType()

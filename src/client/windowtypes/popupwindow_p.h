@@ -38,6 +38,7 @@ public:
     PopupWindowPrivate(PopupWindow *parent);
 
     PopupWindow *q_ptr;
+    bool dismissing;
 
 protected:
     void hawaii_shell_surface_popup_done();
