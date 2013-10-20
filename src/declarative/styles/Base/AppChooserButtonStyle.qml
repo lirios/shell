@@ -25,16 +25,16 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Styles.Base 1.0
+import Hawaii.Shell.Styles 1.0
 
-AppChooserButtonStyle {
-    color: "#cdcdcd"
-    highlightedColor: "white"
+Style {
+    property color color: "#cdcdcd"
+    property color highlightedColor: "white"
 
-    panel: Rectangle {
+    property Component panel: Rectangle {
         gradient: Gradient {
-            GradientStop { position: 0.0; color: __item.checked ? "#000000" : "transparent" }
-            GradientStop { position: 1.0; color: __item.checked ? "#444444" : "transparent" }
+            GradientStop { position: 0.0; color: __item.checked ? "#000000" : "#444444" }
+            GradientStop { position: 1.0; color: __item.checked ? "#444444" : "#000000" }
         }
         radius: 6
         border.color: __item.checked ? "#555" : "transparent"

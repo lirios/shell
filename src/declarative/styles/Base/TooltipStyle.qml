@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -25,19 +25,19 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Styles.Base 1.0
+import Hawaii.Shell.Styles 1.0
 
-AppChooserButtonStyle {
-    color: "#cdcdcd"
-    highlightedColor: "white"
+Style {
+    property color panelColor1: Qt.rgba(0.13, 0.13, 0.13, 0.8)
+    property color panelColor2: Qt.rgba(0, 0, 0, 0.8)
+    property color textColor: "white"
+    property color textShadowColor: Qt.rgba(0, 0, 0, 0.7)
 
-    panel: Rectangle {
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: __item.checked ? "#000000" : "transparent" }
-            GradientStop { position: 1.0; color: __item.checked ? "#444444" : "transparent" }
-        }
+    property Component panel: Rectangle {
+        border.color: Qt.rgba(0, 0, 0, 0.5)
+        color: "black"
+        opacity: 0.7
         radius: 6
-        border.color: __item.checked ? "#555" : "transparent"
         antialiasing: true
     }
 }

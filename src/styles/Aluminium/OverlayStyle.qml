@@ -25,15 +25,15 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Styles.Base 1.0
 
-Style {
-    property color panelColor1: Qt.rgba(0.13, 0.13, 0.13, 0.7)
-    property color panelColor2: Qt.rgba(0, 0, 0, 0.7)
-    property color textColor: "white"
-    property color textShadowColor: Qt.rgba(0, 0, 0, 0.7)
+OverlayStyle {
+    panelColor1: Qt.rgba(0.13, 0.13, 0.13, 0.7)
+    panelColor2: Qt.rgba(0, 0, 0, 0.7)
+    textColor: "white"
+    textShadowColor: Qt.rgba(0, 0, 0, 0.7)
 
-    property Component panel: Rectangle {
+    panel: Rectangle {
         id: background
         anchors.fill: parent
         border.color: Qt.rgba(0, 0, 0, 0.5)

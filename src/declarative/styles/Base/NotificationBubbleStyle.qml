@@ -27,16 +27,16 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import Hawaii.Shell.Styles.Base 1.0
+import Hawaii.Shell.Styles 1.0
 
-NotificationBubbleStyle {
-    spacing: 8
-    panelColor1: Qt.rgba(0.13, 0.13, 0.13, 1)
-    panelColor2: Qt.rgba(0, 0, 0, 1)
-    textColor: "white"
-    textShadowColor: Qt.rgba(0, 0, 0, 0.7)
+Style {
+    property int spacing: 8
+    property color panelColor1: Qt.rgba(0.13, 0.13, 0.13, 1)
+    property color panelColor2: Qt.rgba(0, 0, 0, 1)
+    property color textColor: "white"
+    property color textShadowColor: Qt.rgba(0, 0, 0, 0.7)
 
-    summary: Text {
+    property Component summary: Text {
         text: __item.summary
         color: textColor
         style: Text.Raised
@@ -48,7 +48,7 @@ NotificationBubbleStyle {
         wrapMode: Text.Wrap
     }
 
-    body: Text {
+    property Component body: Text {
         text: __item.body
         color: textColor
         style: Text.Raised
@@ -60,7 +60,7 @@ NotificationBubbleStyle {
         textFormat: Text.StyledText
     }
 
-    image: Item {
+    property Component image: Item {
         width: visible ? 48 : 0
         height: visible ? 48 : 0
         visible: icon.visible
@@ -77,7 +77,7 @@ NotificationBubbleStyle {
         }
     }
 
-    panel: Item {
+    property Component panel: Item {
         implicitWidth: 240 + padding.left + padding.right + (spacing * 3)
         implicitHeight: summaryLoader.height + bodyLoader.height + padding.top + padding.bottom + (spacing * 3)
 
@@ -87,13 +87,9 @@ NotificationBubbleStyle {
             y: padding.top
             width: parent.width - padding.left - padding.right
             height: parent.height - padding.top - padding.bottom
-            border.color: Qt.rgba(0, 0, 0, 0.5)
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: panelColor1 }
-                GradientStop { position: 0.5; color: panelColor2 }
-                GradientStop { position: 1.0; color: panelColor2 }
-            }
-            radius: 6
+            border.color: "#999"
+            color: "black"
+            radius: 10
             opacity: 0.7
             antialiasing: true
         }

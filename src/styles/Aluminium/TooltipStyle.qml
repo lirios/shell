@@ -25,14 +25,14 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Styles.Base 1.0
 
-Style {
+TooltipStyle {
     property int spacing: 8
-    property color panelColor1: Qt.rgba(0.13, 0.13, 0.13, 0.8)
-    property color panelColor2: Qt.rgba(0, 0, 0, 0.8)
-    property color textColor: "white"
-    property color textShadowColor: Qt.rgba(0, 0, 0, 0.7)
+    panelColor1: Qt.rgba(0.13, 0.13, 0.13, 0.8)
+    panelColor2: Qt.rgba(0, 0, 0, 0.8)
+    textColor: "white"
+    textShadowColor: Qt.rgba(0, 0, 0, 0.7)
 
     padding {
         left: spacing
@@ -41,7 +41,7 @@ Style {
         bottom: spacing
     }
 
-    property Component panel: Item {
+    panel: Item {
         Rectangle {
             id: background
             anchors.fill: parent

@@ -26,14 +26,14 @@
 
 import QtQuick 2.0
 import FluidUi 0.2
-import Hawaii.Shell.Styles.Base 1.0
+import Hawaii.Shell.Styles 1.0
 
-PanelIndicatorStyle {
-    textColor: "#cccccc"
-    highlightedTextColor: "white"
-    highlightColor: "#48acea"
+Style {
+    property color textColor: "#cccccc"
+    property color highlightedTextColor: "white"
+    property color highlightColor: "#48acea"
 
-    panel: Item {
+    property Component panel: Item {
         property real spacing: 4 * __style.dpiScaleFactor
         property int spacingMult: __item.label ? 4 : 3
 

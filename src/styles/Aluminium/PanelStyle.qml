@@ -25,13 +25,12 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Styles.Base 1.0
 
-Style {
-    property int shadowSize: 8
-    property color panelColor: Qt.rgba(0, 0, 0, 0.7)
+PanelStyle {
+    panelColor: Qt.rgba(0, 0, 0, 0.7)
 
-    property Component panel: Rectangle {
+    panel: Rectangle {
         implicitHeight: __item.size
         color: panelColor
     }

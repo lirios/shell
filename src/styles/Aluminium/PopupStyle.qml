@@ -27,8 +27,9 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Styles.Base 1.0
 
-Style {
+PopupStyle {
     property int shadowSize: 8
 
     padding {
@@ -38,7 +39,7 @@ Style {
         bottom: shadowSize
     }
 
-    property Component panel: Item {
+   panel: Item {
         Rectangle {
             id: border
             anchors.fill: parent

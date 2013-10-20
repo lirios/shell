@@ -25,17 +25,17 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Styles.Base 1.0
 
-Style {
-    property color panelColor: Qt.rgba(0, 0, 0, 0.7)
+LauncherStyle {
+    panelColor: Qt.rgba(0, 0, 0, 0.7)
 
     padding {
         left: 2
         top: 2
     }
 
-    property Component panel: Rectangle {
+    panel: Rectangle {
         color: panelColor
     }
 }
