@@ -91,6 +91,12 @@ export XDG_CURRENT_DESKTOP=Hawaii
 export QT_QUICK_CONTROLS_STYLE=Aluminium
 
 # Cursor theme
+if test -n "$XCURSOR_PATH"; then
+    XCURSOR_PATH="$XCURSOR_PATH:@CMAKE_INSTALL_FULL_DATADIR@/icons"
+else
+    XCURSOR_PATH="~/.icons:/usr/share/icons:/usr/share/pixmaps:~/.cursors:/usr/share/cursors/xorg-x11:@CMAKE_INSTALL_FULL_DATADIR@/icons"
+fi
+export XCURSOR_PATH
 export XCURSOR_THEME=hawaii
 export XCURSOR_SIZE=16
 
