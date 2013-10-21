@@ -33,6 +33,8 @@
 #include "qwayland-hawaii.h"
 #include "qwayland-notification.h"
 
+class QQmlComponent;
+
 class HawaiiShellImpl : public QtWayland::wl_hawaii_shell
 {
 public:
@@ -75,6 +77,7 @@ public:
     QElapsedTimer elapsedTimer;
     QQmlEngine *engine;
     QHash<QString, QObject *> services;
+    QQmlComponent *registrar;
     ShellUi *uiController;
     QList<Window *> windows;
     QList<Workspace *> workspaces;

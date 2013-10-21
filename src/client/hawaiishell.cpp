@@ -177,6 +177,7 @@ void HawaiiShellImpl::hawaii_shell_workspace_added(struct ::wl_hawaii_shell *obj
 
 HawaiiShellPrivate::HawaiiShellPrivate(HawaiiShell *parent)
     : q_ptr(parent)
+    , registrar(0)
     , uiController(0)
     , windowsMinimized(false)
 {
@@ -219,7 +220,6 @@ HawaiiShellPrivate::~HawaiiShellPrivate()
     delete shell;
 
     qDeleteAll(workspaces);
-    qDeleteAll(services);
 
     ElementFactory::cleanupElements();
 }
@@ -364,6 +364,13 @@ void HawaiiShell::create()
 
     // Search elements
     ElementFactory::searchElements();
+
+    // Register daemons and singletons
+    d->registrar = new QQmlComponent(d->engine, QUrl("qrc:/qml/Registrar.qml"), this);
+    if (d->registrar->status() != QQmlComponent::Ready)
+        qFatal("Unable to register daemons and singletons: %s",
+               qPrintable(d->registrar->errorString()));
+    (void)d->registrar->create();
 
     // Create the UI controller
     d->uiController = new ShellUi(d->engine, this);

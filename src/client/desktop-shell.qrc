@@ -63,5 +63,6 @@
         <!-- Other files -->
         <file>qml/qmldir</file>
         <file>qml/DialogsSingleton.qml</file>
+        <file>qml/Registrar.qml</file>
     </qresource>
 </RCC>

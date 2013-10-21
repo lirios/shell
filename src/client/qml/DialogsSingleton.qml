@@ -29,42 +29,67 @@ pragma Singleton
 import QtQuick 2.0
 
 Item {
-    property var authenticationDialog: AuthenticationDialog {}
     property var shutdownDialog: ShutdownDialog {}
 
+    QtObject {
+        id: __priv
+
+        property var authenticationDialog: null
+    }
+
     Connections {
-        target: Shell.service("PolicyKitAgent")
+        id: polkitAgentConnections
+        target: null
         onAuthenticationInitiated: {
-            console.log(actionId, message, iconName, realName, avatar);
-            // Hide the dialog
-            authenticationDialog.visible = false;
+            // Create the dialog
+            var component = Qt.createComponent(Qt.resolvedUrl("AuthenticationDialog.qml"));
+            __priv.authenticationDialog = component.createObject();
+            __priv.authenticationDialog.visible = false;
 
             // Fill the properties
-            authenticationDialog.actionId = actionId;
-            authenticationDialog.message = message;
-            authenticationDialog.iconName = iconName;
-            authenticationDialog.details = details;
-            //authenticationDialog.identities = identities;
-            authenticationDialog.realName = realName;
-            authenticationDialog.avatar = avatar;
-
-            // Reset the UI
-            authenticationDialog.echo = false;
-            authenticationDialog.response = "";
-            authenticationDialog.infoMessage = "";
-            authenticationDialog.errorMessage = "";
+            __priv.authenticationDialog.actionId = actionId;
+            __priv.authenticationDialog.message = message;
+            __priv.authenticationDialog.iconName = iconName;
+            __priv.authenticationDialog.realName = realName;
+            __priv.authenticationDialog.avatar = avatar;
         }
         onAuthenticationRequested: {
             // Change authentication prompt and echo mode
-            authenticationDialog.prompt = prompt;
-            authenticationDialog.echo = echo;
+            __priv.authenticationDialog.prompt = prompt;
+            __priv.authenticationDialog.echo = echo;
 
-            // And show the dialog
-            authenticationDialog.visible = true;
+            // Show the dialog
+            __priv.authenticationDialog.visible = true;
         }
-        onAuthenticationFinished: authenticationDialog.visible = false
-        onAuthenticationCanceled: authenticationDialog.visible = false
-        onInfoMessage: authenticationDialog.infoMessage = message
-        onErrorMessage: authenticationDialog.errorMessage = message
+        onAuthorized: {
+            console.log("********AAAAAAAAAAAAAA***");
+            __priv.authenticationDialog.accepted();
+            //__priv.authenticationDialog.destroy();
+            //__priv.authenticationDialog = null;
+        }
+        onAuthenticationCanceled: {
+            __priv.authenticationDialog.visible = false;
+            __priv.authenticationDialog.destroy();
+            __priv.authenticationDialog = null;
+        }
+        onInfoMessage: {
+            if (__priv.authenticationDialog)
+                __priv.authenticationDialog.infoMessage = message
+        }
+        onErrorMessage: {
+            if (__priv.authenticationDialog)
+                __priv.authenticationDialog.errorMessage = message;
+        }
+    }
+
+    Connections {
+        id: polkitDialogConnections
+        target: __priv.authenticationDialog
+        onAuthenticationStarted: polkitAgentConnections.target.authenticate(response)
+        onRejected: polkitAgentConnections.target.abortAuthentication()
+    }
+
+    function register() {
+        polkitAgentConnections.target = Shell.service("PolicyKitAgent");
     }
 }

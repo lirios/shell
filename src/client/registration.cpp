@@ -87,10 +87,15 @@ void Registration::registerFactories()
     // @uri Hawaii.Shell
     const char *uri = "Hawaii.Shell";
 
-    // Register service factories
+    // Register some services as types for using on QML
     qmlRegisterUncreatableType<PowerManager>(uri, 1, 0,
                                              "PowerManager",
                                              QStringLiteral("Do not create PowerManager"));
+    qmlRegisterUncreatableType<PolicyKitAgent>(uri, 1, 0,
+                                               "PolicyKitAgent",
+                                               QStringLiteral("Do not create PolicyKitAgent"));
+
+    // Register service factories
     ServiceFactory::registerFactory<PowerManager>();
     ServiceFactory::registerFactory<SessionManager>();
     ServiceFactory::registerFactory<VolumeControl>();
