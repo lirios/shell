@@ -10,6 +10,7 @@
         <file>qml/NotificationsPanel.qml</file>
 
         <!-- Dialogs -->
+        <file>qml/Dialogs.qml</file>
         <file>qml/AuthenticationDialog.qml</file>
         <file>qml/ShutdownDialog.qml</file>
 
