@@ -407,7 +407,7 @@ QObject *HawaiiShell::service(const QString &name)
         return service;
 
     // If we can't find it just create it
-    service = ServiceFactory::createService(name);
+    service = ServiceFactory::createService(name, this);
     d->services[name] = service;
     return service;
 }

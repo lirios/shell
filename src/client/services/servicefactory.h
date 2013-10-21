@@ -35,13 +35,13 @@ class ServiceFactory
 public:
     template<class T> static void registerFactory();
 
-    static QObject *createService(const QString &name);
+    static QObject *createService(const QString &name, QObject *parent = 0);
 
 private:
-    typedef QObject *(*Factory)();
+    typedef QObject *(*Factory)(QObject *parent);
 
     static void registerNamedFactory(const QString &name, Factory factory);
-    template<class T> static QObject *createFactory() { return new T(); }
+    template<class T> static QObject *createFactory(QObject *parent) { return new T(parent); }
 
     QHash<QString, Factory> m_factories;
 };

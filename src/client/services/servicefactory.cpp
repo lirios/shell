@@ -30,14 +30,14 @@
 
 Q_GLOBAL_STATIC(ServiceFactory, s_serviceFactory)
 
-QObject *ServiceFactory::createService(const QString &name)
+QObject *ServiceFactory::createService(const QString &name, QObject *parent)
 {
     // Is the factory registered?
     if (!s_serviceFactory->m_factories.contains(name))
         return 0;
 
     Factory factory = s_serviceFactory->m_factories.value(name);
-    return factory();
+    return factory(parent);
 }
 
 void ServiceFactory::registerNamedFactory(const QString &name, Factory factory)
