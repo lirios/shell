@@ -86,11 +86,7 @@ PanelIndicator {
             },
             PanelMenuItem {
                 text: qsTr("Power Off...")
-                onClicked: {
-                    var component = Qt.createComponent("ShutdownDialog.qml");
-                    var shutdownDialog = component.createObject();
-                    shutdownDialog.visible = true;
-                }
+                onClicked: Dialogs.shutdownDialog.visible = true
             }
         ]
     }

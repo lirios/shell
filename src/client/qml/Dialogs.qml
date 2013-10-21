@@ -33,6 +33,10 @@ QtObject {
         id: authenticationDialog
     }
 
+    ShutdownDialog {
+        id: shutdownDialog
+    }
+
     Connections {
         target: Shell.service("PolicyKitAgent")
         onAuthenticationInitiated: {
