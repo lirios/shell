@@ -28,6 +28,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtAccountsService 5.0
 import Hawaii.Shell 1.0
+import "."
 
 PanelIndicator {
     property variant userAccount: UserAccount {}
@@ -86,7 +87,7 @@ PanelIndicator {
             },
             PanelMenuItem {
                 text: qsTr("Power Off...")
-                onClicked: Dialogs.shutdownDialog.visible = true
+                onClicked: DialogsSingleton.shutdownDialog.visible = true
             }
         ]
     }

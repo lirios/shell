@@ -10,7 +10,6 @@
         <file>qml/NotificationsPanel.qml</file>
 
         <!-- Dialogs -->
-        <file>qml/Dialogs.qml</file>
         <file>qml/AuthenticationDialog.qml</file>
         <file>qml/ShutdownDialog.qml</file>
 
@@ -60,5 +59,9 @@
 
         <!-- Tooltips -->
         <file>qml/Tooltip.qml</file>
+
+        <!-- Other files -->
+        <file>qml/qmldir</file>
+        <file>qml/DialogsSingleton.qml</file>
     </qresource>
 </RCC>

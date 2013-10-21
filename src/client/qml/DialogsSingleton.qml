@@ -28,18 +28,14 @@ pragma Singleton
 
 import QtQuick 2.0
 
-QtObject {
-    AuthenticationDialog {
-        id: authenticationDialog
-    }
-
-    ShutdownDialog {
-        id: shutdownDialog
-    }
+Item {
+    property var authenticationDialog: AuthenticationDialog {}
+    property var shutdownDialog: ShutdownDialog {}
 
     Connections {
         target: Shell.service("PolicyKitAgent")
         onAuthenticationInitiated: {
+            console.log(actionId, message, iconName, realName, avatar);
             // Hide the dialog
             authenticationDialog.visible = false;
 
@@ -71,6 +67,4 @@ QtObject {
         onInfoMessage: authenticationDialog.infoMessage = message
         onErrorMessage: authenticationDialog.errorMessage = message
     }
-
-    Component.onCompleted: console.log("************SINGLE*****")
 }
