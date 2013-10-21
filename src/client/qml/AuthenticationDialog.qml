@@ -52,9 +52,6 @@ Dialog {
     property var palette: SystemPalette {}
 
     ColumnLayout {
-        width: Math.max(childrenRect.width, 320)
-        height: Math.max(childrenRect.height, 255)
-
         RowLayout {
             FluidUi.Icon {
                 iconName: "dialog-password-symbolic"
