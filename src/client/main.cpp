@@ -29,7 +29,6 @@
 
 #include "hawaiishell.h"
 #include "notificationsdaemon.h"
-#include "policykitagent.h"
 #include "config.h"
 #include "gitsha1.h"
 
@@ -133,9 +132,6 @@ int main(int argc, char *argv[])
 
     // Create the main shell object
     (void)HawaiiShell::instance();
-
-    // Create the PolicyKit agent
-    (void)PolicyKitAgent::instance();
 
     return app.exec();
 }

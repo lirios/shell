@@ -34,9 +34,11 @@
 #include "enums.h"
 #include "registration.h"
 #include "keybinding.h"
+#include "hawaiishell.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
 #include "popupwindow.h"
+#include "policykitagent.h"
 #include "powermanager.h"
 #include "servicefactory.h"
 #include "sessionmanager.h"
@@ -92,4 +94,5 @@ void Registration::registerFactories()
     ServiceFactory::registerFactory<PowerManager>();
     ServiceFactory::registerFactory<SessionManager>();
     ServiceFactory::registerFactory<VolumeControl>();
+    ServiceFactory::registerFactory<PolicyKitAgent>();
 }

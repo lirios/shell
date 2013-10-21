@@ -38,16 +38,15 @@ Dialog {
     property string actionId
     property alias message: messageLabel.text
     property string iconName
-    property variant details
     property alias realName: avatarName.text
     property string avatar
     property alias prompt: promptLabel.text
     property bool echo: false
-    property alias response: passwordInput.text
     property alias infoMessage: infoLabel.text
     property alias errorMessage: errorLabel.text
 
-    signal authenticate()
+    signal authenticationStarted(string response)
+    signal authenticationAborted()
 
     property var palette: SystemPalette {}
 
@@ -159,7 +158,7 @@ Dialog {
 
             Button {
                 text: qsTr("Authenticate")
-                onClicked: authenticationDialog.authenticate()
+                onClicked: authenticationDialog.authenticationStarted(passwordInput.text)
             }
 
             Layout.alignment: Qt.AlignCenter

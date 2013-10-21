@@ -27,8 +27,6 @@
 #ifndef POLICYKITAGENT_H
 #define POLICYKITAGENT_H
 
-#define POLKIT_AGENT_I_KNOW_API_IS_SUBJECT_TO_CHANGE 1
-
 #include <polkitqt1-agent-listener.h>
 
 class PolicyKitAgentPrivate;
@@ -40,9 +38,24 @@ public:
     explicit PolicyKitAgent(QObject *parent = 0);
     ~PolicyKitAgent();
 
-    static PolicyKitAgent *instance();
+    constexpr static const char *name() { return "PolicyKitAgent"; }
 
-public slots:
+Q_SIGNALS:
+    void authenticationInitiated(const QString &actionId,
+                                 const QString &message,
+                                 const QString &iconName,
+                                 const QString &realName,
+                                 const QString &avatar);
+    void authenticationRequested(const QString &prompt, bool echo);
+    void authenticationFinished();
+    void authenticationCanceled();
+
+    void authorized();
+
+    void infoMessage(const QString &message);
+    void errorMessage(const QString &message);
+
+public Q_SLOTS:
     void initiateAuthentication(const QString &actionId,
                                 const QString &message,
                                 const QString &iconName,
@@ -59,12 +72,13 @@ public slots:
     void showInfo(const QString &text);
     void showError(const QString &text);
 
+    void authenticate(const QString &response);
+    void abortAuthentication();
+
 private:
+    Q_DISABLE_COPY(PolicyKitAgent)
     Q_DECLARE_PRIVATE(PolicyKitAgent)
     PolicyKitAgentPrivate *d_ptr;
-
-    Q_PRIVATE_SLOT(d_ptr, void dialogAccepted())
-    Q_PRIVATE_SLOT(d_ptr, void dialogRejected())
 };
 
 #endif // POLICYKITAGENT_H

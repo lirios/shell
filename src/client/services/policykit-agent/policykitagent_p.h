@@ -31,20 +31,12 @@
 #include <polkitqt1-details.h>
 #include <polkitqt1-identity.h>
 
-class QQuickWindow;
 class PolicyKitAgent;
 
 class PolicyKitAgentPrivate
 {
 public:
     PolicyKitAgentPrivate(PolicyKitAgent *self);
-    ~PolicyKitAgentPrivate();
-
-    void createDialog(const QString &actionId,
-                      const QString &message,
-                      const QString &iconName,
-                      const PolkitQt1::Details &details,
-                      const PolkitQt1::Identity::List &identities);
 
     bool progressing;
     bool canceled;
@@ -52,11 +44,6 @@ public:
     PolkitQt1::UnixUserIdentity identity;
     QString cookie;
     PolkitQt1::Agent::Session *session;
-    QQuickWindow *dialog;
-
-public Q_SLOTS:
-    void dialogAccepted();
-    void dialogRejected();
 
 private:
     Q_DECLARE_PUBLIC(PolicyKitAgent)

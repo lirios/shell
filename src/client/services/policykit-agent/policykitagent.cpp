@@ -53,88 +53,13 @@ PolicyKitAgentPrivate::PolicyKitAgentPrivate(PolicyKitAgent *self)
     : progressing(false)
     , canceled(false)
     , session(0)
-    , dialog()
     , q_ptr(self)
 {
-}
-
-PolicyKitAgentPrivate::~PolicyKitAgentPrivate()
-{
-    delete dialog;
-}
-
-void PolicyKitAgentPrivate::createDialog(const QString &actionId,
-                                         const QString &message,
-                                         const QString &iconName,
-                                         const PolkitQt1::Details &details,
-                                         const PolkitQt1::Identity::List &identities)
-{
-    Q_Q(PolicyKitAgent);
-
-    // Create the component
-    QQmlComponent component(HawaiiShell::instance()->engine());
-    component.loadUrl(QUrl("qrc:/qml/AuthenticationDialog.qml"));
-    if (!component.isReady()) {
-        qWarning("Couldn't create AuthenticationDialog component: %s",
-                 qPrintable(component.errorString()));
-        return;
-    }
-
-    // Create the top level object
-    QObject *topLevel = component.create();
-    if (!topLevel) {
-        qWarning() << "Couldn't create an AuthenticationDialog object";
-        return;
-    }
-
-    // Cast it to a window
-    dialog = qobject_cast<QQuickWindow *>(topLevel);
-    if (!dialog) {
-        qWarning() << "Couldn't cast AuthenticationDialog object to QQuickWindow";
-        dialog = 0;
-        return;
-    }
-
-    // Make sure the window will be shown on the primary screen
-    dialog->setScreen(QGuiApplication::primaryScreen());
-
-    // Set all the properties
-    topLevel->setProperty("actionId", actionId);
-    topLevel->setProperty("message", message);
-    topLevel->setProperty("iconName", iconName);
-    //topLevel->setProperty("details", details);
-    topLevel->setProperty("errorMessage", QStringLiteral(""));
-
-    // Connect dialog signals
-    QObject::connect(topLevel, SIGNAL(authenticate()),
-                     q, SLOT(dialogAccepted()));
-    QObject::connect(topLevel, SIGNAL(rejected()),
-                     q, SLOT(dialogRejected()));
-}
-
-void PolicyKitAgentPrivate::dialogAccepted()
-{
-    Q_ASSERT(dialog);
-    Q_ASSERT(session);
-
-    canceled = false;
-    session->setResponse(dialog->property("response").toString());
-}
-
-void PolicyKitAgentPrivate::dialogRejected()
-{
-    Q_ASSERT(dialog);
-    Q_ASSERT(session);
-
-    canceled = true;
-    session->cancel();
 }
 
 /*
  * PolicyKitAgent
  */
-
-Q_GLOBAL_STATIC(PolicyKitAgent, polkitAgent)
 
 PolicyKitAgent::PolicyKitAgent(QObject *parent)
     : PolkitQt1::Agent::Listener(parent)
@@ -149,11 +74,6 @@ PolicyKitAgent::PolicyKitAgent(QObject *parent)
 PolicyKitAgent::~PolicyKitAgent()
 {
     delete d_ptr;
-}
-
-PolicyKitAgent *PolicyKitAgent::instance()
-{
-    return polkitAgent();
 }
 
 void PolicyKitAgent::initiateAuthentication(const QString &actionId,
@@ -176,17 +96,6 @@ void PolicyKitAgent::initiateAuthentication(const QString &actionId,
     d->progressing = true;
     d->canceled = false;
     d->session = 0;
-
-    // Create the dialog again
-    if (d->dialog) {
-        QMetaObject::invokeMethod(d->dialog, "hide", Qt::QueuedConnection);
-        d->dialog->deleteLater();
-    }
-    d->createDialog(actionId, message, iconName, details, identities);
-    if (!d->dialog) {
-        cancelAuthentication();
-        return;
-    }
 
     // Cache cookie: we might need to reused it (to athenticated again
     // upon failure)
@@ -237,10 +146,6 @@ void PolicyKitAgent::initiateAuthentication(const QString &actionId,
     if (account->userName() == QStringLiteral("root"))
         d->realName = tr("Administrator");
 
-    // Set user identity on the dialog
-    d->dialog->setProperty("realName", d->realName);
-    d->dialog->setProperty("avatar", account->iconFileName());
-
     // Identity to authenticate
     d->identity = PolkitQt1::UnixUserIdentity(account->userId());
 
@@ -252,17 +157,19 @@ void PolicyKitAgent::initiateAuthentication(const QString &actionId,
     connect(session, SIGNAL(showInfo(QString)), this, SLOT(showInfo(QString)));
     connect(session, SIGNAL(showError(QString)), this, SLOT(showError(QString)));
     session->initiate();
+
+    // Initiate authentication sequence
+    Q_EMIT authenticationInitiated(actionId, message, iconName,
+                                   d->realName, account->iconFileName());
 }
 
 bool PolicyKitAgent::initiateAuthenticationFinish()
 {
     Q_D(PolicyKitAgent);
 
-    if (d->dialog && !d->progressing) {
-        // Hide the dialog and delete it
-        QMetaObject::invokeMethod(d->dialog, "hide", Qt::QueuedConnection);
-        d->dialog->deleteLater();
-        d->dialog = 0;
+    if (!d->progressing) {
+        // Inform the dialog that the authentication sequence has finished
+        Q_EMIT authenticationFinished();
     }
 
     return true;
@@ -274,12 +181,8 @@ void PolicyKitAgent::cancelAuthentication()
 
     qDebug() << "Canceling authorization...";
 
-    if (d->dialog) {
-        // Hide modal dialog and delete it
-        QMetaObject::invokeMethod(d->dialog, "hide", Qt::QueuedConnection);
-        d->dialog->deleteLater();
-        d->dialog = 0;
-    }
+    // Inform the dialog the authentication was canceled by the user
+    Q_EMIT authenticationCanceled();
 
     // Unset variables that keep track of the authorization session
     d->progressing = false;
@@ -290,10 +193,6 @@ void PolicyKitAgent::cancelAuthentication()
 void PolicyKitAgent::request(const QString &request, bool echo)
 {
     Q_D(PolicyKitAgent);
-
-    // We need a dialog to continue, fail silently if it doesn't exist
-    if (!d->dialog)
-        return;
 
     // We also need a session, which is the object that emits the signal
     PolkitQt1::Agent::Session *session = qobject_cast<PolkitQt1::Agent::Session *>(sender());
@@ -307,14 +206,10 @@ void PolicyKitAgent::request(const QString &request, bool echo)
     d->session = session;
 
     // Set the prompt and password echo
+    QString prompt = request;
     if (request == QStringLiteral("Password:") || request == QStringLiteral("Password: "))
-        d->dialog->setProperty("prompt", tr("Password:"));
-    else
-        d->dialog->setProperty("prompt", request);
-    d->dialog->setProperty("echo", echo);
-
-    // Show modal dialog
-    QMetaObject::invokeMethod(d->dialog, "show", Qt::QueuedConnection);
+        prompt = tr("Password:");
+    Q_EMIT authenticationRequested(prompt, echo);
 }
 
 void PolicyKitAgent::completed(bool gainedAuthorization)
@@ -332,13 +227,8 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
     PolkitQt1::Agent::AsyncResult *result = d->session->result();
 
     if (gainedAuthorization) {
-        // Authorization ok
-        if (d->dialog) {
-            // Hide modal dialog and delete it
-            QMetaObject::invokeMethod(d->dialog, "hide", Qt::QueuedConnection);
-            d->dialog->deleteLater();
-            d->dialog = 0;
-        }
+        // Authorization completed
+        Q_EMIT authorized();
     } else {
         // Authorization failed
         qDebug() << "Authorization failed!";
@@ -346,8 +236,7 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
         if (!d->canceled) {
             // The user didn't cancel the dialog, this is an actual
             // authentication failure
-            d->dialog->setProperty("errorMessage",
-                                   tr("Sorry, that didn't work. Please try again."));
+            Q_EMIT errorMessage(tr("Sorry, that didn't work. Please try again."));
 
             // Cancel current session
             disconnect(session, SIGNAL(request(QString, bool)),
@@ -394,22 +283,30 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
 
 void PolicyKitAgent::showInfo(const QString &text)
 {
-    Q_D(PolicyKitAgent);
-
-    qDebug() << "PolicyKit-INFO:" << text;
-
-    if (d->dialog)
-        d->dialog->setProperty("infoMessage", text);
+    Q_EMIT infoMessage(text);
 }
 
 void PolicyKitAgent::showError(const QString &text)
 {
+    Q_EMIT errorMessage(text);
+}
+
+void PolicyKitAgent::authenticate(const QString &response)
+{
     Q_D(PolicyKitAgent);
 
-    qDebug() << "PolicyKit-ERROR:" << text;
+    Q_ASSERT(d->session);
+    d->canceled = false;
+    d->session->setResponse(response);
+}
 
-    if (d->dialog)
-        d->dialog->setProperty("errorMessage", text);
+void PolicyKitAgent::abortAuthentication()
+{
+    Q_D(PolicyKitAgent);
+
+    Q_ASSERT(d->session);
+    d->canceled = true;
+    d->session->cancel();
 }
 
 #include "moc_policykitagent.cpp"

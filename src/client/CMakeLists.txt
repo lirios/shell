@@ -12,6 +12,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/launcher
     ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
     ${CMAKE_CURRENT_SOURCE_DIR}/services
+    ${CMAKE_CURRENT_SOURCE_DIR}/services/policykit-agent
     ${CMAKE_CURRENT_SOURCE_DIR}/services/powermanager
     ${CMAKE_CURRENT_SOURCE_DIR}/services/volumecontrol
     ${CMAKE_CURRENT_SOURCE_DIR}/services/sessionmanager
@@ -44,10 +45,10 @@ set(SOURCES
     daemons/notificationimageprovider.cpp
     daemons/notificationsdaemon.cpp
     daemons/notificationsimage.cpp
-    daemons/policykitagent.cpp
     launcher/launcheritem.cpp
     launcher/launchermodel.cpp
     services/servicefactory.cpp
+    services/policykit-agent/policykitagent.cpp
     services/powermanager/powermanagerbackend.cpp
     services/powermanager/powermanager.cpp
     services/powermanager/systemdpowerbackend.cpp
