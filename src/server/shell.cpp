@@ -189,13 +189,10 @@ Shell::~Shell()
     for (auto i = m_workspaces.begin(); i != m_workspaces.end(); ++i)
         m_workspaces.erase(i);
 
+    // Free client path and kill the shell client (resource was already destroyed)
     free(m_clientPath);
-    if (m_child.client) {
-        // Kill the shell client (resource was already destroyed)
-        pid_t pid;
-        wl_client_get_credentials(m_child.client, &pid, nullptr, nullptr);
-        ::kill(pid, SIGTERM);
-    }
+    if (m_child.client)
+        ::kill(m_child.process.pid, SIGKILL);
 }
 
 void Shell::destroy()
@@ -329,12 +326,9 @@ void Shell::quit()
     // This will avoid the shell client from being respawned
     m_child.quitting = true;
 
-    if (m_child.client) {
-        // Kill the shell client in order to make sure it exits cleanly
-        pid_t pid;
-        wl_client_get_credentials(m_child.client, &pid, nullptr, nullptr);
-        ::kill(pid, SIGTERM);
-    }
+    // Kill the shell client in order to make sure it exits cleanly
+    if (m_child.client)
+        ::kill(m_child.process.pid, SIGTERM);
 
     // Terminate display
     wl_display_terminate(compositor()->wl_display);
