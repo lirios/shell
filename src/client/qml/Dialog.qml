@@ -38,15 +38,17 @@ DialogWindow {
     default property alias content: mainLayout.children
 
     StyledItem {
+        readonly property int margin: 11
+
         id: styledItem
         style: Qt.createComponent(StyleSettings.path + "/DialogStyle.qml", styledItem)
-        width: mainLayout.implicitWidth + __style.padding.left + __style.padding.right
-        height: mainLayout.implicitHeight + __style.padding.top + __style.padding.bottom
+        width: mainLayout.implicitWidth + __style.padding.left + __style.padding.right + (2 * margin)
+        height: mainLayout.implicitHeight + __style.padding.top + __style.padding.bottom + (2 * margin)
 
         Item {
             anchors {
                 fill: parent
-                margins: 11
+                margins: margin
             }
 
             ColumnLayout {
