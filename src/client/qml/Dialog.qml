@@ -35,7 +35,7 @@ DialogWindow {
     width: styledItem.width
     height: styledItem.height
 
-    default property alias content: mainLayout.children
+    default property alias content: mainLayout.data
 
     StyledItem {
         readonly property int margin: 11
