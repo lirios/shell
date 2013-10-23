@@ -46,7 +46,6 @@ Dialog {
     property alias errorMessage: errorLabel.text
 
     signal authenticationStarted(string response)
-    signal authenticationAborted()
 
     property var palette: SystemPalette {}
 
