@@ -33,7 +33,7 @@ import Hawaii.Shell 1.0
 Dialog {
     id: shutdownDialog
 
-    property int timeRemaining: 60
+    property int timeRemaining: 70
 
     property variant powerManager: Shell.service("PowerManager")
 
@@ -63,12 +63,12 @@ Dialog {
                     repeat: timeRemaining > 0
                     triggeredOnStart: true
                     onTriggered: {
+                        timeRemaining -= 10;
                         timerLabel.text = qsTr("The system will power off automatically " +
                                                "in %1 seconds.").arg(timeRemaining);
-                        timeRemaining -= 10;
 
-                        if (timeRemaining == 0)
-                            powerManager.powerOff()
+                        if (timeRemaining <= 0)
+                            powerManager.powerOff();
                     }
                 }
 
