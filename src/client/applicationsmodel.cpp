@@ -71,6 +71,8 @@ QVariant ApplicationsModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     AppInfo *info = m_apps.at(index.row());
+    if (!info)
+        return QVariant();
 
     switch (role) {
     case NameRole:
