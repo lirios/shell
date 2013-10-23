@@ -83,11 +83,6 @@ Dialog {
             Layout.fillHeight: true
         }
 
-        Item {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-        }
-
         RowLayout {
             Button {
                 text: qsTr("Cancel")
