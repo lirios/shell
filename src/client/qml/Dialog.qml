@@ -45,21 +45,14 @@ DialogWindow {
         width: mainLayout.implicitWidth + __style.padding.left + __style.padding.right + (2 * margin)
         height: mainLayout.implicitHeight + __style.padding.top + __style.padding.bottom + (2 * margin)
 
-        Item {
+        ColumnLayout {
+            id: mainLayout
             anchors {
                 fill: parent
-                margins: margin
-            }
-
-            ColumnLayout {
-                id: mainLayout
-                anchors {
-                    fill: parent
-                    leftMargin: styledItem.__style.padding.left
-                    topMargin: styledItem.__style.padding.top
-                    rightMargin: styledItem.__style.padding.right
-                    bottomMargin: styledItem.__style.padding.bottom
-                }
+                leftMargin: styledItem.__style.padding.left + styledItem.margin
+                topMargin: styledItem.__style.padding.top + styledItem.margin
+                rightMargin: styledItem.__style.padding.right + styledItem.margin
+                bottomMargin: styledItem.__style.padding.bottom + styledItem.margin
             }
         }
     }
