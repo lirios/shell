@@ -64,9 +64,8 @@ PopupWindow::PopupWindow(QWindow *parent)
     // Set custom window type
     setFlags(Qt::BypassWindowManagerHint);
 
-    // Create platform window and inform the compositor about us
+    // Create platform window
     create();
-    setWindowType();
 }
 
 PopupWindow::~PopupWindow()
