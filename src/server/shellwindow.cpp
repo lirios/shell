@@ -53,6 +53,7 @@ struct ShellWindow::DialogAnimation
         weston_matrix_scale(matrix, value, value, 1.0);
         weston_matrix_translate(matrix, targetX * (1.0 - value),
                                 targetY * (1.0 - value), 0);
+        weston_surface_geometry_dirty(surface);
         weston_surface_update_transform(surface);
         weston_surface_damage(surface);
     }
@@ -63,6 +64,7 @@ struct ShellWindow::DialogAnimation
             wl_list_remove(&transform.link);
             wl_list_init(&transform.link);
 
+            weston_surface_geometry_dirty(surface);
             weston_surface_update_transform(surface);
             weston_surface_damage(surface);
         }
