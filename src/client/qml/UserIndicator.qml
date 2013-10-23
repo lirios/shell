@@ -87,7 +87,7 @@ PanelIndicator {
             },
             PanelMenuItem {
                 text: qsTr("Power Off...")
-                onClicked: DialogsSingleton.shutdownDialog.visible = true
+                onClicked: DialogsSingleton.showShutdownDialog()
             }
         ]
     }

@@ -29,8 +29,6 @@ pragma Singleton
 import QtQuick 2.0
 
 Item {
-    property var shutdownDialog: ShutdownDialog {}
-
     QtObject {
         id: __priv
 
@@ -62,7 +60,6 @@ Item {
             __priv.authenticationDialog.visible = true;
         }
         onAuthorized: {
-            console.log("********AAAAAAAAAAAAAA***");
             __priv.authenticationDialog.accepted();
             //__priv.authenticationDialog.destroy();
             //__priv.authenticationDialog = null;
@@ -87,6 +84,12 @@ Item {
         target: __priv.authenticationDialog
         onAuthenticationStarted: polkitAgentConnections.target.authenticate(response)
         onRejected: polkitAgentConnections.target.abortAuthentication()
+    }
+
+    function showShutdownDialog() {
+        var component = Qt.createComponent(Qt.resolvedUrl("ShutdownDialog.qml"));
+        var dialog = component.createObject();
+        dialog.visible = true;
     }
 
     function register() {
