@@ -29,6 +29,7 @@
 #include "inoutsurfaceeffect.h"
 #include "animation.h"
 #include "shellsurface.h"
+#include "weston-version.h"
 
 const int ALPHA_ANIM_DURATION = 200;
 
@@ -82,7 +83,7 @@ void InOutSurfaceEffect::addedSurface(ShellSurface *surface)
     surf->surface = surface->weston_surface();
     surf->effect = this;
 
-#if 0
+#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
     ++surface->weston_surface()->ref_count;
     surf->listener.parent = surf;
     surf->listener.destroyListener.notify = Surface::destroyed;
