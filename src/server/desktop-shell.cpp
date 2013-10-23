@@ -832,8 +832,10 @@ void DesktopShell::setDialog(struct wl_client *client, struct wl_resource *resou
 
         ShellWindow *window = static_cast<ShellWindow *>(es->configure_private);
         window->shell()->centerSurfaceOnOutput(es, es->output);
+#if 0
         if (weston_surface_is_mapped(es))
             window->animateDialog(es);
+#endif
 
         if (wl_list_empty(&es->layer_link) || es->layer_link.next == es->layer_link.prev) {
             // Create a black translucent surface to prevent underlying layers to get input events
