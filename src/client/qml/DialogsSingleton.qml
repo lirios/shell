@@ -42,7 +42,6 @@ Item {
             // Create the dialog
             var component = Qt.createComponent(Qt.resolvedUrl("AuthenticationDialog.qml"));
             __priv.authenticationDialog = component.createObject();
-            __priv.authenticationDialog.visible = false;
 
             // Fill the properties
             __priv.authenticationDialog.actionId = actionId;
@@ -59,16 +58,8 @@ Item {
             // Show the dialog
             __priv.authenticationDialog.visible = true;
         }
-        onAuthorized: {
-            __priv.authenticationDialog.accepted();
-            //__priv.authenticationDialog.destroy();
-            //__priv.authenticationDialog = null;
-        }
-        onAuthenticationCanceled: {
-            __priv.authenticationDialog.visible = false;
-            __priv.authenticationDialog.destroy();
-            __priv.authenticationDialog = null;
-        }
+        onAuthorized: __priv.authenticationDialog.accept()
+        onAuthenticationCanceled: {console.log("****CANC***");__priv.authenticationDialog.reject();}
         onInfoMessage: {
             if (__priv.authenticationDialog)
                 __priv.authenticationDialog.infoMessage = message
@@ -82,8 +73,10 @@ Item {
     Connections {
         id: polkitDialogConnections
         target: __priv.authenticationDialog
-        onAuthenticationStarted: polkitAgentConnections.target.authenticate(response)
-        onRejected: polkitAgentConnections.target.abortAuthentication()
+        onAuthenticationReady: polkitAgentConnections.target.authenticate(response)
+        onAuthenticationCanceled: polkitAgentConnections.target.abortAuthentication()
+        onAccepted: __priv.authenticationDialog = null
+        onRejected: {console.log("***REJ****");__priv.authenticationDialog = null;}
     }
 
     function showShutdownDialog() {

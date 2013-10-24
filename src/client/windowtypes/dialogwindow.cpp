@@ -44,14 +44,20 @@ DialogWindow::DialogWindow(QWindow *parent)
     // Create platform window and inform the compositor about us
     create();
     setWindowType();
+}
 
-    // Hide the dialog when it's accepted or rejected
-    connect(this, &DialogWindow::accepted, [=]() {
-        this->deleteLater();
-    });
-    connect(this, &DialogWindow::rejected, [=]() {
-        this->deleteLater();
-    });
+void DialogWindow::accept()
+{
+    QMetaObject::invokeMethod(this, "accepted", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, "close", Qt::QueuedConnection);
+    deleteLater();
+}
+
+void DialogWindow::reject()
+{
+    QMetaObject::invokeMethod(this, "rejected", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, "close", Qt::QueuedConnection);
+    deleteLater();
 }
 
 void DialogWindow::keyReleaseEvent(QKeyEvent *event)

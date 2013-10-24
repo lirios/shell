@@ -35,6 +35,10 @@ class DialogWindow : public QQuickWindow
 public:
     DialogWindow(QWindow *parent = 0);
 
+public Q_SLOTS:
+    void accept();
+    void reject();
+
 Q_SIGNALS:
     void accepted();
     void rejected();

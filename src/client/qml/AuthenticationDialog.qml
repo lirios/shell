@@ -45,7 +45,8 @@ Dialog {
     property alias infoMessage: infoLabel.text
     property alias errorMessage: errorLabel.text
 
-    signal authenticationStarted(string response)
+    signal authenticationReady(string response)
+    signal authenticationCanceled()
 
     property var palette: SystemPalette {}
 
@@ -152,12 +153,12 @@ Dialog {
         RowLayout {
             Button {
                 text: qsTr("Cancel")
-                onClicked: authenticationDialog.rejected()
+                onClicked: authenticationDialog.authenticationCanceled()
             }
 
             Button {
                 text: qsTr("Authenticate")
-                onClicked: authenticationDialog.authenticationStarted(passwordInput.text)
+                onClicked: authenticationDialog.authenticationReady(passwordInput.text)
             }
 
             Layout.alignment: Qt.AlignCenter

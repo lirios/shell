@@ -86,7 +86,7 @@ Dialog {
         RowLayout {
             Button {
                 text: qsTr("Cancel")
-                onClicked: shutdownDialog.rejected()
+                onClicked: shutdownDialog.reject()
             }
 
             Button {
