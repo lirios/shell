@@ -357,7 +357,12 @@ Item {
 
             width: tileSize
             height: tileSize
-            onCheckedChanged: appChooser.visible = checked
+            onClicked: {
+                if (appChooser.visible)
+                    appChooser.dismiss();
+                else
+                    appChooser.show();
+            }
         }
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }

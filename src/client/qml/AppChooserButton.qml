@@ -34,6 +34,8 @@ StyledItem {
     property bool hover: false
     property bool checked: false
 
+    signal clicked()
+
     style: Qt.createComponent(StyleSettings.path + "/AppChooserButtonStyle.qml", root)
 
     FluidUi.Icon {
@@ -54,5 +56,6 @@ StyledItem {
         onEntered: hover = true
         onExited: hover = checked
         onReleased: checked = !checked
+        onClicked: root.clicked()
     }
 }
