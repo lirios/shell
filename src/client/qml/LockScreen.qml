@@ -62,6 +62,7 @@ Item {
     EffectVignette {
         anchors.fill: fastBlurEffect
         source: fastBlurEffect
+        radius: 8
     }
 
     ColumnLayout {

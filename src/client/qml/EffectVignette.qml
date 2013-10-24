@@ -27,7 +27,7 @@
 import QtQuick 2.0
 
 Item {
-    id: rootItem
+    id: root
 
     /*!
         This property defines the source item that is going to be used as source
@@ -35,46 +35,48 @@ Item {
     */
     property variant source
 
+    /*!
+        This property defines the vignette radius.
+    */
+    property alias radius: effect.radius
+
+    /*!
+        This property defines how much brightness will be used.
+    */
+    property alias brightness: effect.brightness
+
     ShaderEffect {
+        id: effect
+        anchors.fill: parent
+
         property variant source: ShaderEffectSource {
-            sourceItem: rootItem.source
+            sourceItem: root.source
             sourceRect: Qt.rect(0, 0, 0, 0)
             hideSource: false
             smooth: true
             visible: false
         }
 
-        property real dividerValue: 1.0
+        property real radius: 16
+        property real brightness: 0.1
 
-        anchors.fill: parent
-
-        // Based on http://kodemongki.blogspot.com/2011/06/kameraku-custom-shader-effects-example.html
         fragmentShader: "
-varying highp vec2 qt_TexCoord0;
-uniform highp float qt_Opacity;
-uniform highp float dividerValue;
-uniform lowp sampler2D source;
+            varying highp vec2 qt_TexCoord0;
+            uniform highp float qt_Opacity;
+            uniform highp float radius;
+            uniform highp float brightness;
+            uniform lowp sampler2D source;
 
-void main()
-{
-    highp vec2 uv = qt_TexCoord0.xy;
-    lowp vec4 orig = texture2D(source, uv);
+            void main() {
+                highp vec2 uv = qt_TexCoord0.xy;
+                highp vec2 coord = qt_TexCoord0 - 0.5;
+                lowp vec4 orig = texture2D(source, uv);
 
-    highp float cr = pow(0.1, 2.0);
-    highp float pt = pow(uv.x - 0.5, 2.0) + pow(uv.y - 0.5, 2.0);
-    highp float d = pt - cr;
-    highp float cf = 1.0;
+                highp float vignette = 1.0 - dot(coord, coord);
 
-    if (d > 0.0)
-        cf = 1.0 - 2.0 * d;
+                lowp vec3 col = orig.rgb * clamp(pow(vignette, radius) + brightness, 0.0, 1.0);
 
-    lowp vec3 col = cf * orig.rgb;
-
-    if (uv.x < dividerValue)
-        gl_FragColor = qt_Opacity * vec4(col, 1.0);
-    else
-        gl_FragColor = qt_Opacity * orig;
-}
-"
+                gl_FragColor = vec4(col, 1.0);
+            }"
     }
 }
