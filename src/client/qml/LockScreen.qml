@@ -51,18 +51,10 @@ Item {
         visible: false
     }
 
-    BrightnessContrast {
-        id: brightnessEffect
-        anchors.fill: parent
-        source: background
-        brightness: -0.10
-        visible: false
-    }
-
     FastBlur {
         id: fastBlurEffect
         anchors.fill: parent
-        source: brightnessEffect
+        source: background
         radius: 32
         visible: false
     }
