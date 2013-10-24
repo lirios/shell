@@ -33,11 +33,33 @@ import Hawaii.Shell 1.0
 Dialog {
     id: shutdownDialog
 
-    property int timeRemaining: 70
-
     property variant powerManager: Shell.service("PowerManager")
-
     property var palette: SystemPalette {}
+
+    onVisibleChanged: shutdownTimer.timeRemaining = 60
+    onAccepted: visible = false
+    onRejected: visible = false
+
+    Timer {
+        property int timeRemaining: 60
+
+        id: shutdownTimer
+        interval: 10000
+        running: shutdownDialog.visible && timeRemaining > 0
+        repeat: shutdownDialog.visible && timeRemaining > 0
+        onTriggered: {
+            timeRemaining -= 10;
+            updateLabel();
+
+            if (timeRemaining <= 0)
+                shutdownDialog.powerManager.powerOff();
+        }
+
+        function updateLabel() {
+            timerLabel.text = qsTr("The system will power off automatically " +
+                                   "in %1 seconds.").arg(timeRemaining);
+        }
+    }
 
     ColumnLayout {
         RowLayout {
@@ -56,22 +78,6 @@ Dialog {
                     font.bold: true
                 }
 
-                Timer {
-                    id: shutdownTimer
-                    interval: 10000
-                    running: timeRemaining > 0
-                    repeat: timeRemaining > 0
-                    triggeredOnStart: true
-                    onTriggered: {
-                        timeRemaining -= 10;
-                        timerLabel.text = qsTr("The system will power off automatically " +
-                                               "in %1 seconds.").arg(timeRemaining);
-
-                        if (timeRemaining <= 0)
-                            powerManager.powerOff();
-                    }
-                }
-
                 Label {
                     id: timerLabel
                     wrapMode: Text.WordWrap
@@ -86,7 +92,7 @@ Dialog {
         RowLayout {
             Button {
                 text: qsTr("Cancel")
-                onClicked: shutdownDialog.reject()
+                onClicked: shutdownDialog.visible = false
             }
 
             Button {
@@ -105,4 +111,6 @@ Dialog {
             Layout.fillWidth: true
         }
     }
+
+    Component.onCompleted: shutdownTimer.updateLabel()
 }

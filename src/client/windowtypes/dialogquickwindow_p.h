@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,43 +24,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef DIALOGWINDOW_H
-#define DIALOGWINDOW_H
+#ifndef DIALOGQUICKWINDOW_P_H
+#define DIALOGQUICKWINDOW_P_H
 
-#include <QtCore/QObject>
+#include <QtQuick/QQuickWindow>
 
-class QQuickItem;
-class DialogWindowPrivate;
-
-class DialogWindow : public QObject
+class DialogQuickWindow : public QQuickWindow
 {
     Q_OBJECT
-    Q_PROPERTY(QQuickItem *content READ contentItem WRITE setContentItem NOTIFY contentChanged)
-    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
-    Q_CLASSINFO("DefaultProperty", "content")
 public:
-    DialogWindow(QObject *parent = 0);
-    ~DialogWindow();
-
-    QQuickItem *contentItem() const;
-    void setContentItem(QQuickItem *item);
-
-    bool isVisible() const;
-    void setVisible(bool value);
-
-public Q_SLOTS:
-    void show();
-    void hide();
+    DialogQuickWindow(QWindow *parent = 0);
 
 Q_SIGNALS:
-    void accepted();
     void rejected();
-    void contentChanged();
-    void visibleChanged();
+
+protected:
+    void keyReleaseEvent(QKeyEvent *event);
 
 private:
-    Q_DECLARE_PRIVATE(DialogWindow)
-    DialogWindowPrivate *const d_ptr;
+    void setWindowType();
 };
 
-#endif // DIALOGWINDOW_H
+#endif // DIALOGQUICKWINDOW_P_H

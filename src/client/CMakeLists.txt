@@ -57,6 +57,7 @@ set(SOURCES
     services/sessionmanager/sessionmanager.cpp
     windowtypes/backgroundwindow.cpp
     windowtypes/dialogwindow.cpp
+    windowtypes/dialogquickwindow_p.cpp
     windowtypes/grabwindow.cpp
     windowtypes/launcherwindow.cpp
     windowtypes/lockscreenwindow.cpp

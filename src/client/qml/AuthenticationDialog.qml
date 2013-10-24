@@ -44,11 +44,12 @@ Dialog {
     property bool echo: false
     property alias infoMessage: infoLabel.text
     property alias errorMessage: errorLabel.text
+    property var palette: SystemPalette {}
 
     signal authenticationReady(string response)
     signal authenticationCanceled()
 
-    property var palette: SystemPalette {}
+    onRejected: authenticationCanceled()
 
     ColumnLayout {
         RowLayout {
@@ -164,5 +165,14 @@ Dialog {
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
         }
+    }
+
+    function initialize() {
+        // Initialization
+        prompt = "";
+        passwordInput.text = "";
+        echo = false;
+        infoMessage = "";
+        errorMessage = "";
     }
 }

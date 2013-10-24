@@ -32,8 +32,6 @@ import Hawaii.Shell.Styles 1.0
 
 DialogWindow {
     id: dialogWindow
-    width: styledItem.width
-    height: styledItem.height
 
     default property alias content: mainLayout.data
 

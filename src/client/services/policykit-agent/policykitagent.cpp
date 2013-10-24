@@ -179,15 +179,13 @@ void PolicyKitAgent::cancelAuthentication()
 {
     Q_D(PolicyKitAgent);
 
-    qDebug() << "Canceling authorization...";
+    qDebug() << "Canceling authentication...";
 
-    // Inform the dialog the authentication was canceled by the user
-    Q_EMIT authenticationCanceled();
-
-    // Unset variables that keep track of the authorization session
+    // Close current session
     d->progressing = false;
-    d->canceled = false;
+    d->canceled = true;
     d->session = 0;
+    Q_EMIT authenticationCanceled();
 }
 
 void PolicyKitAgent::request(const QString &request, bool echo)
@@ -216,12 +214,8 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
 {
     Q_D(PolicyKitAgent);
 
-    // We also need a session, which is the object that emits the signal
-    PolkitQt1::Agent::Session *session = qobject_cast<PolkitQt1::Agent::Session *>(sender());
-    if (!session) {
-        qWarning("The request() signal was emitted by an invalid session object!");
-        return;
-    }
+    qDebug() << "Authorization complete - result:" << gainedAuthorization
+             << "canceled:" << d->canceled;
 
     // Cache async result, will be reused in case of retry
     PolkitQt1::Agent::AsyncResult *result = d->session->result();
@@ -233,51 +227,55 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
         // Authorization failed
         qDebug() << "Authorization failed!";
 
-        if (!d->canceled) {
+        if (d->canceled) {
+            // Inform the dialog the authentication was canceled by the user
+            result->setCompleted();
+            Q_EMIT authenticationCanceled();
+        } else {
             // The user didn't cancel the dialog, this is an actual
             // authentication failure
             Q_EMIT errorMessage(tr("Sorry, that didn't work. Please try again."));
 
             // Cancel current session
-            disconnect(session, SIGNAL(request(QString, bool)),
+            disconnect(d->session, SIGNAL(request(QString, bool)),
                        this, SLOT(request(QString, bool)));
-            disconnect(session, SIGNAL(completed(bool)),
+            disconnect(d->session, SIGNAL(completed(bool)),
                        this, SLOT(completed(bool)));
-            disconnect(session, SIGNAL(showInfo(QString)),
+            disconnect(d->session, SIGNAL(showInfo(QString)),
                        this, SLOT(showInfo(QString)));
-            disconnect(session, SIGNAL(showError(QString)),
+            disconnect(d->session, SIGNAL(showError(QString)),
                        this, SLOT(showError(QString)));
-            session->cancel();
-            session->deleteLater();
-            d->session = 0;
+            d->session->cancel();
         }
+
+        d->session->deleteLater();
+        d->session = 0;
     }
 
     // Complete session only if authorization went fine, otherwise
     // we keep the dialog open and wait for the user to type a good password
-    if (gainedAuthorization || d->canceled) {
+    if (gainedAuthorization && !d->canceled) {
         // Unset variables that keep track of the authorization session
         d->progressing = false;
-        d->session = 0;
 
         // Complete session
-        session->result()->setCompleted();
-        session->deleteLater();
+        d->session->result()->setCompleted();
+        d->session->deleteLater();
+        d->session = 0;
     }
 
     // Try again if there was an authentication error
     if (!gainedAuthorization && !d->canceled) {
-        session = new PolkitQt1::Agent::Session(d->identity, d->cookie, result);
-        connect(session, SIGNAL(request(QString, bool)),
+        d->session = new PolkitQt1::Agent::Session(d->identity, d->cookie, result);
+        connect(d->session, SIGNAL(request(QString, bool)),
                 this, SLOT(request(QString, bool)));
-        connect(session, SIGNAL(completed(bool)),
+        connect(d->session, SIGNAL(completed(bool)),
                 this, SLOT(completed(bool)));
-        connect(session, SIGNAL(showInfo(QString)),
+        connect(d->session, SIGNAL(showInfo(QString)),
                 this, SLOT(showInfo(QString)));
-        connect(session, SIGNAL(showError(QString)),
+        connect(d->session, SIGNAL(showError(QString)),
                 this, SLOT(showError(QString)));
-        d->session = session;
-        session->initiate();
+        d->session->initiate();
     }
 }
 
@@ -304,7 +302,13 @@ void PolicyKitAgent::abortAuthentication()
 {
     Q_D(PolicyKitAgent);
 
+    qDebug() << "Aborting authentication...";
+
     Q_ASSERT(d->session);
+
+    // Delete session and inform the dialog that the
+    // authentication was canceled so it can be hidden
+    d->progressing = false;
     d->canceled = true;
     d->session->cancel();
 }

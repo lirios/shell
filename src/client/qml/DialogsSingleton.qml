@@ -29,60 +29,40 @@ pragma Singleton
 import QtQuick 2.0
 
 Item {
-    QtObject {
-        id: __priv
-
-        property var authenticationDialog: null
-    }
+    property var authenticationDialog: AuthenticationDialog {}
+    property var shutdownDialog: ShutdownDialog {}
 
     Connections {
         id: polkitAgentConnections
         target: null
         onAuthenticationInitiated: {
-            // Create the dialog
-            var component = Qt.createComponent(Qt.resolvedUrl("AuthenticationDialog.qml"));
-            __priv.authenticationDialog = component.createObject();
-
-            // Fill the properties
-            __priv.authenticationDialog.actionId = actionId;
-            __priv.authenticationDialog.message = message;
-            __priv.authenticationDialog.iconName = iconName;
-            __priv.authenticationDialog.realName = realName;
-            __priv.authenticationDialog.avatar = avatar;
+            // Fill the properties and initialize
+            authenticationDialog.actionId = actionId;
+            authenticationDialog.message = message;
+            authenticationDialog.iconName = iconName;
+            authenticationDialog.realName = realName;
+            authenticationDialog.avatar = avatar;
+            authenticationDialog.initialize();
         }
         onAuthenticationRequested: {
             // Change authentication prompt and echo mode
-            __priv.authenticationDialog.prompt = prompt;
-            __priv.authenticationDialog.echo = echo;
+            authenticationDialog.prompt = prompt;
+            authenticationDialog.echo = echo;
 
             // Show the dialog
-            __priv.authenticationDialog.visible = true;
+            authenticationDialog.visible = true;
         }
-        onAuthorized: __priv.authenticationDialog.accept()
-        onAuthenticationCanceled: {console.log("****CANC***");__priv.authenticationDialog.reject();}
-        onInfoMessage: {
-            if (__priv.authenticationDialog)
-                __priv.authenticationDialog.infoMessage = message
-        }
-        onErrorMessage: {
-            if (__priv.authenticationDialog)
-                __priv.authenticationDialog.errorMessage = message;
-        }
+        onAuthorized: authenticationDialog.visible = false
+        onAuthenticationCanceled: authenticationDialog.visible = false
+        onInfoMessage: authenticationDialog.infoMessage = message
+        onErrorMessage: authenticationDialog.errorMessage = message
     }
 
     Connections {
         id: polkitDialogConnections
-        target: __priv.authenticationDialog
+        target: authenticationDialog
         onAuthenticationReady: polkitAgentConnections.target.authenticate(response)
         onAuthenticationCanceled: polkitAgentConnections.target.abortAuthentication()
-        onAccepted: __priv.authenticationDialog = null
-        onRejected: {console.log("***REJ****");__priv.authenticationDialog = null;}
-    }
-
-    function showShutdownDialog() {
-        var component = Qt.createComponent(Qt.resolvedUrl("ShutdownDialog.qml"));
-        var dialog = component.createObject();
-        dialog.visible = true;
     }
 
     function register() {

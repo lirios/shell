@@ -29,56 +29,104 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "dialogwindow.h"
+#include "dialogwindow_p.h"
 #include "hawaiishell.h"
 #include "hawaiishell_p.h"
 
-DialogWindow::DialogWindow(QWindow *parent)
-    : QQuickWindow(parent)
+/*
+ * DialogWindowPrivate
+ */
+
+DialogWindowPrivate::DialogWindowPrivate()
+    : window(0)
+    , content(0)
 {
-    // Transparent color
-    setColor(Qt::transparent);
-
-    // Set custom window type
-    setFlags(Qt::BypassWindowManagerHint);
-
-    // Create platform window and inform the compositor about us
-    create();
-    setWindowType();
 }
 
-void DialogWindow::accept()
+DialogWindowPrivate::~DialogWindowPrivate()
 {
-    QMetaObject::invokeMethod(this, "accepted", Qt::QueuedConnection);
-    QMetaObject::invokeMethod(this, "close", Qt::QueuedConnection);
-    deleteLater();
+    if (window)
+        window->deleteLater();
 }
 
-void DialogWindow::reject()
+/*
+ * DialogWindow
+ */
+
+DialogWindow::DialogWindow(QObject *parent)
+    : QObject(parent)
+    , d_ptr(new DialogWindowPrivate())
 {
-    QMetaObject::invokeMethod(this, "rejected", Qt::QueuedConnection);
-    QMetaObject::invokeMethod(this, "close", Qt::QueuedConnection);
-    deleteLater();
 }
 
-void DialogWindow::keyReleaseEvent(QKeyEvent *event)
+DialogWindow::~DialogWindow()
 {
-    QQuickWindow::keyReleaseEvent(event);
-
-    if (event->key() == Qt::Key_Escape)
-        Q_EMIT rejected();
+    delete d_ptr;
 }
 
-void DialogWindow::setWindowType()
+QQuickItem *DialogWindow::contentItem() const
 {
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+    Q_D(const DialogWindow);
+    return d->content;
+}
 
-    wl_output *output = static_cast<struct wl_output *>(
-                native->nativeResourceForScreen("output", screen()));
-    wl_surface *surface = static_cast<wl_surface *>(
-                native->nativeResourceForWindow("surface", this));
+void DialogWindow::setContentItem(QQuickItem *item)
+{
+    Q_D(DialogWindow);
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_dialog(output, surface);
+    if (d->content != item) {
+        d->content = item;
+        Q_EMIT contentChanged();
+    }
+}
+
+bool DialogWindow::isVisible() const
+{
+    Q_D(const DialogWindow);
+    return d->window && d->window->isVisible() ? true : false;
+}
+
+void DialogWindow::setVisible(bool value)
+{
+    QMetaObject::invokeMethod(this, value ? "show" : "hide", Qt::QueuedConnection);
+}
+
+void DialogWindow::show()
+{
+    Q_D(DialogWindow);
+
+    // Just return if it's already visible or there's no content item
+    if (isVisible() || !d->content)
+        return;
+
+    // Create the window
+    if (!d->window) {
+        d->window = new DialogQuickWindow();
+        connect(d->window, SIGNAL(rejected()), this, SIGNAL(rejected()));
+    }
+
+    // Set window size according to content size
+    d->window->setWidth(d->content->width());
+    d->window->setHeight(d->content->height());
+
+    // Set screen and repare content item
+    d->window->setScreen(QGuiApplication::primaryScreen());
+    d->content->setParentItem(d->window->contentItem());
+
+    // Show the window
+    d->window->show();
+    Q_EMIT visibleChanged();
+}
+
+void DialogWindow::hide()
+{
+    Q_D(DialogWindow);
+
+    if (isVisible()) {
+        d->window->deleteLater();
+        d->window = 0;
+        Q_EMIT visibleChanged();
+    }
 }
 
 #include "moc_dialogwindow.cpp"
