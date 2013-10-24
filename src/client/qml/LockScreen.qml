@@ -104,7 +104,7 @@ Item {
                 anchors.fill: parent
                 radius: height
                 color: "#80222222"
-                border.color: "#222"
+                border.color: "#44000000"
                 antialiasing: true
 
                 FluidUi.Icon {
