@@ -61,7 +61,7 @@ public:
         : m_shell(shell)
         , m_surface(nullptr)
     {
-        m_surface = createSurface(1.f);
+        m_surface = createSurface();
 
         m_splash.type = FadeUnknown;
         m_splash.parent = this;
@@ -78,27 +78,29 @@ public:
             weston_surface_destroy(m_surface);
     }
 
-    weston_surface *createSurface(float alpha = 1.f)
+    weston_surface *createSurface()
     {
         // Create a surface big enough to cover all screens
-        weston_surface *surface =
-                m_shell->createBlackSurface(0, 0, 8192, 8192);
-        surface->alpha = alpha;
-        weston_surface_update_transform(surface);
+        weston_surface *surface = weston_surface_create(m_shell->compositor());
+        if (!surface)
+            return nullptr;
+        weston_surface_configure(surface, 0, 0, 8192, 8192);
+        weston_surface_set_color(surface, 0.0, 0.0, 0.0, 1.0);
         wl_list_insert(&m_shell->compositor()->fade_layer.surface_list,
                        &surface->layer_link);
+        pixman_region32_init(&surface->input);
         return surface;
     }
 
     void fadeIn()
     {
         if (!m_surface)
-            m_surface = createSurface(0.f);
+            m_surface = createSurface();
 
         m_splash.type = FadeIn;
         m_splash.fadeAnimation->setStart(0.f);
         m_splash.fadeAnimation->setTarget(1.f);
-        m_splash.fadeAnimation->run(m_surface->output, 250, Animation::Flags::SendDone);
+        m_splash.fadeAnimation->run(m_shell->getDefaultOutput(), 250, Animation::Flags::SendDone);
     }
 
     void fadeOut()
@@ -109,7 +111,7 @@ public:
         m_splash.type = FadeOut;
         m_splash.fadeAnimation->setStart(1.f);
         m_splash.fadeAnimation->setTarget(0.f);
-        m_splash.fadeAnimation->run(m_surface->output, 250, Animation::Flags::SendDone);
+        m_splash.fadeAnimation->run(m_shell->getDefaultOutput(), 250, Animation::Flags::SendDone);
     }
 
 private:
@@ -122,6 +124,7 @@ private:
         {
             parent->m_surface->alpha = a;
             weston_surface_geometry_dirty(parent->m_surface);
+            weston_surface_update_transform(parent->m_surface);
             weston_surface_damage(parent->m_surface);
         }
 
@@ -133,7 +136,7 @@ private:
                 break;
             case Splash::FadeOut:
                 weston_surface_destroy(parent->m_surface);
-                parent->m_surface = 0;
+                parent->m_surface = nullptr;
                 break;
             default:
                 break;
