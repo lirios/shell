@@ -58,7 +58,7 @@ Item {
 
         GridView {
             id: grid
-            cacheBuffer: numItemsPerPage
+            cacheBuffer: 100
             cellWidth: itemSize
             cellHeight: itemSize
             width: itemSize * numRows
