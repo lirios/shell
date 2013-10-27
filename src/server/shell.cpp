@@ -205,11 +205,13 @@ void Shell::destroy()
 
 void Shell::idle()
 {
+    weston_log("idle...\n");
     fadeOut();
 }
 
 void Shell::wake()
 {
+    weston_log("wake...\n");
     unlockSession();
 }
 

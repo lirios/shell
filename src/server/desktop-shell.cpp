@@ -1162,6 +1162,7 @@ const struct wl_notification_daemon_interface DesktopShell::m_notificationDaemon
 
 int DesktopShell::screenSaverTimeout()
 {
+    weston_log("screensaver timeout...\n");
     fadeOut();
     return 1;
 }
