@@ -37,8 +37,8 @@ Item {
 
     property var window
     readonly property int itemSize: 128
-    readonly property int numRows: 4
-    readonly property int numColumns: 4
+    readonly property int numRows: 5
+    readonly property int numColumns: 3
     readonly property int numItemsPerPage: numRows * numColumns
     readonly property int numPages: Math.ceil(grid.count / numItemsPerPage)
     property int currentPage: 0
@@ -92,7 +92,7 @@ Item {
         Item {
             id: pageIndicator
             width: grid.width
-            height: 24
+            height: 20
 
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -112,6 +112,7 @@ Item {
                             anchors.centerIn: parent
                             text: index + 1
                             color: "white"
+                            font.pixelSize: pageIndicator.height * 0.7
                             visible: currentPage === index
                         }
 
