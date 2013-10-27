@@ -92,20 +92,28 @@ Item {
         Item {
             id: pageIndicator
             width: grid.width
-            height: 16
+            height: 24
 
             Row {
-                anchors.fill: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 8
 
                 Repeater {
                     id: repeater
                     model: numPages
                     delegate: Rectangle {
-                        width: pageIndicator.width / numPages
+                        width: pageIndicator.height
                         height: pageIndicator.height
                         color: currentPage === index ? palette.highlight : "#40000000"
-                        radius: 6
+                        radius: width
                         antialiasing: true
+
+                        Label {
+                            anchors.centerIn: parent
+                            text: index + 1
+                            color: "white"
+                            visible: currentPage === index
+                        }
 
                         MouseArea {
                             anchors.fill: parent
