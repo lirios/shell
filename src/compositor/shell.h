@@ -33,44 +33,73 @@
 
 #include "qwayland-server-hawaii.h"
 
+typedef QList<QWaylandSurface *> Layer;
+
 class Shell : public QObject,
         public QtWaylandServer::wl_hawaii_shell
 {
     Q_OBJECT
+    Q_ENUMS(ShellWindowRole)
 public:
+    enum ShellWindowRole {
+        BackgroundWindowRole = 0,
+        PanelWindowRole,
+        LauncherWindowRole,
+        SpecialWindowRole,
+        OverlayWindowRole,
+        DialogWindowRole,
+        PopupWindowRole
+    };
+
     Shell(struct ::wl_display *display);
 
-    bool hasSurface(QWaylandSurface *surface) const;
+    QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
+    QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 
 Q_SIGNALS:
     void ready();
 
 private:
-    QList<QWaylandSurface *> m_surfaces;
+    Layer m_backgroundLayer;
+    Layer m_panelsLayer;
+    Layer m_overlayLayer;
+    Layer m_dialogsLayer;
+
+    void addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface);
 
     void hawaii_shell_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
 
     void hawaii_shell_set_background(Resource *resource,
-                                     struct ::wl_resource *output,
+                                     struct ::wl_resource *output_resource,
                                      struct ::wl_resource *surface) Q_DECL_OVERRIDE;
     void hawaii_shell_set_panel(Resource *resource,
-                                struct ::wl_resource *output,
+                                struct ::wl_resource *output_resource,
                                 struct ::wl_resource *surface) Q_DECL_OVERRIDE;
     void hawaii_shell_set_launcher(Resource *resource,
-                                   struct ::wl_resource *output,
+                                   struct ::wl_resource *output_resource,
                                    struct ::wl_resource *surface) Q_DECL_OVERRIDE;
     void hawaii_shell_set_special(Resource *resource,
-                                  struct ::wl_resource *output,
+                                  struct ::wl_resource *output_resource,
                                   struct ::wl_resource *surface) Q_DECL_OVERRIDE;
     void hawaii_shell_set_overlay(Resource *resource,
-                                  struct ::wl_resource *output,
+                                  struct ::wl_resource *output_resource,
                                   struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+    void hawaii_shell_set_popup(Resource *resource, uint32_t id,
+                                struct ::wl_resource *output_resource,
+                                struct ::wl_resource *surface,
+                                int32_t x, int32_t y) Q_DECL_OVERRIDE;
+    void hawaii_shell_set_dialog(Resource *resource,
+                                 struct ::wl_resource *output_resource,
+                                 struct ::wl_resource *surface) Q_DECL_OVERRIDE;
 
     void hawaii_shell_set_position(Resource *resource,
                                    struct ::wl_resource *surface,
                                    int32_t x, int32_t y) Q_DECL_OVERRIDE;
 
     void hawaii_shell_desktop_ready(Resource *resource) Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void surfaceUnmapped();
 };
 
 #endif // SHELL_H

@@ -202,19 +202,7 @@ function shellWindowAdded(window) {
     // Full opacity
     windowContainer.opacity = 1.0;
 
-    // Set z-index according to window role
-    switch (window.surface.windowProperty("role")) {
-    case compositor.BackgroundWindowRole:
-        windowContainer.z = 0;
-        break;
-    default:
-        windowContainer.z = 1;
-        break;
-    }
-
     // Set geometry
-    windowContainer.x = window.surface.windowProperty("viewPosition").x;
-    windowContainer.y = window.surface.windowProperty("viewPosition").y;
     windowContainer.width = window.width;
     windowContainer.height = window.height;
 }

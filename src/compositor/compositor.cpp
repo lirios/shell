@@ -118,6 +118,19 @@ void Compositor::closeShell()
     delete m_shellProcess;
 }
 
+bool Compositor::isShellWindow(QWaylandSurface *surface)
+{
+    // Sanity check
+    if (!surface)
+        return false;
+
+    // Shell user interface surfaces don't have a shell surface just
+    // like application windows but we must draw them
+    return (surface->windowFlags() & QWaylandSurface::BypassWindowManager) &&
+            !surface->hasShellSurface() &&
+            surface->windowProperties().contains(QStringLiteral("role"));
+}
+
 void Compositor::surfaceCreated(QWaylandSurface *surface)
 {
     // Connect surface signals
@@ -209,27 +222,50 @@ void Compositor::surfaceMapped()
 {
     QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
 
-    qDebug() << "Surface" << surface->title() << "mapped";
-
-    // Shell user interface surfaces don't have a shell surface just
-    // like application windows but we must draw them
-    bool isShell = surface->windowFlags() & QWaylandSurface::BypassWindowManager;
-
-    // A surface without a shell surface is not a client side window
-    if (!surface->hasShellSurface() && !isShell)
+    // Ignore surfaces which are neither application windows nor shell windows
+    if (!surface->hasShellSurface() && !isShellWindow(surface))
         return;
 
+    // Get the surface item
     QWaylandSurfaceItem *item = surface->surfaceItem();
 
-    // Create a WaylandSurfaceItem from the surface
-    if (!item) {
+    // Create a WaylandSurfaceItem for this surface
+    if (!item)
         item = new QWaylandSurfaceItem(surface, rootObject());
-        item->setClientRenderingEnabled(true);
-        item->setTouchEventsEnabled(true);
+
+    // Set surface item up
+    item->setClientRenderingEnabled(true);
+    item->setTouchEventsEnabled(true);
+
+    // Setup shell windows
+    if (isShellWindow(surface)) {
+        // Set z-index for shell windows according to the role
+        switch (surface->windowProperties().value(QStringLiteral("role")).toInt()) {
+        case Shell::BackgroundWindowRole:
+            item->setZ(0);
+            break;
+        case Shell::PanelWindowRole:
+        case Shell::LauncherWindowRole:
+        case Shell::SpecialWindowRole:
+        case Shell::PopupWindowRole:
+            item->setZ(1);
+            break;
+        case Shell::OverlayWindowRole:
+            item->setZ(3);
+            break;
+        case Shell::DialogWindowRole:
+            item->setZ(4);
+            break;
+        default:
+            break;
+        }
+
+        // Set position as asked by the shell client
+        item->setPosition(surface->windowProperties().value(QStringLiteral("position")).toPointF());
     }
 
     // Announce a window was added
-    if (isShell)
+    if (isShellWindow(surface))
         emit shellWindowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
     else
         emit windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
@@ -241,8 +277,6 @@ void Compositor::surfaceUnmapped()
     QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
     if (surface == m_currentSurface)
         m_currentSurface = 0;
-
-    qDebug() << "Surface" << surface->title() << "unmapped";
 
     // Announce this window was destroyed
     QQuickItem *item = surface->surfaceItem();
@@ -278,6 +312,28 @@ void Compositor::resizeEvent(QResizeEvent *event)
     // Scale compositor output to window's size
     QQuickView::resizeEvent(event);
     QWaylandCompositor::setOutputGeometry(QRect(0, 0, width(), height()));
+}
+
+void Compositor::mousePressEvent(QMouseEvent *event)
+{
+    defaultInputDevice()->sendMousePressEvent(event->button(), event->localPos(), event->globalPos());
+    QQuickView::mousePressEvent(event);
+}
+
+void Compositor::mouseReleaseEvent(QMouseEvent *event)
+{
+    defaultInputDevice()->sendMouseReleaseEvent(event->button(), event->localPos(), event->globalPos());
+    QQuickView::mouseReleaseEvent(event);
+}
+
+void Compositor::mouseMoveEvent(QMouseEvent *event)
+{
+    QPointF local;
+    QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
+    if (targetSurface)
+        defaultInputDevice()->sendMouseMoveEvent(targetSurface, local, event->globalPos());
+
+    QQuickView::mouseMoveEvent(event);
 }
 
 #include "moc_compositor.cpp"

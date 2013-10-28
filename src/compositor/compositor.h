@@ -43,16 +43,7 @@ class Compositor : public QQuickView, public VCompositor
 {
     Q_OBJECT
     Q_PROPERTY(QWaylandSurface *currentSurface READ currentSurface WRITE setCurrentSurface NOTIFY currentSurfaceChanged)
-    Q_ENUMS(ShellWindowRole)
 public:
-    enum ShellWindowRole {
-        BackgroundWindowRole = 0,
-        PanelWindowRole,
-        LauncherWindowRole,
-        SpecialWindowRole,
-        OverlayWindowRole
-    };
-
     explicit Compositor(const QRect &geometry);
     ~Compositor();
 
@@ -62,6 +53,8 @@ public:
     QWaylandSurface *currentSurface() const {
         return m_currentSurface;
     }
+
+    bool isShellWindow(QWaylandSurface *surface);
 
     void surfaceCreated(QWaylandSurface *surface);
     void surfaceAboutToBeDestroyed(QWaylandSurface *surface);
@@ -99,6 +92,9 @@ private Q_SLOTS:
 
 protected:
     void resizeEvent(QResizeEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 private:
     Shell *m_shell;
