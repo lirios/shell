@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import "CompositorLogic.js" as CompositorLogic
 
 Item {
     id: chrome
@@ -54,13 +53,6 @@ Item {
         enabled: !window.focus
         hoverEnabled: !window.focus
         onClicked: {
-            // If currently in a grid layout, revert back to the normal layout
-            // and restore coordinates and scale of the windows
-            if (!root.normalLayout) {
-                root.normalLayout = true;
-                CompositorLogic.restorelayout();
-            }
-
             // Select the window if it's unselected
             if (!selected) {
                 root.selectedWindow = window;

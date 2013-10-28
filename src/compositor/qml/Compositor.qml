@@ -25,20 +25,13 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import "CompositorLogic.js" as CompositorLogic
+import "WindowManager.js" as WindowManager
 
 Item {
     id: root
 
     // Currently selected window
     property variant selectedWindow: null
-
-    // True if we're using the normal layout
-    property bool normalLayout: true
-
-    // Relayout windows
-    onWidthChanged: CompositorLogic.relayout()
-    onHeightChanged: CompositorLogic.relayout()
 
     // Bind compositor signals
     Connections {
@@ -67,22 +60,22 @@ Item {
      */
 
     function shellWindowAdded(window) {
-        CompositorLogic.shellWindowAdded(window);
+        WindowManager.shellWindowAdded(window);
     }
 
     function windowAdded(window) {
-        CompositorLogic.windowAdded(window);
+        WindowManager.windowAdded(window);
     }
 
     function windowResized(window) {
-        CompositorLogic.windowResized(window);
+        WindowManager.windowResized(window);
     }
 
     function windowDestroyed(window) {
-        CompositorLogic.windowDestroyed(window);
+        WindowManager.windowDestroyed(window);
     }
 
     function removeWindow(window) {
-        CompositorLogic.windowRemoved(compositor, window);
+        WindowManager.windowRemoved(window);
     }
 }

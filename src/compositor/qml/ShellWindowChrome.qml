@@ -40,84 +40,16 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Window 2.0
 
 Item {
-    id: container
+    id: chrome
+    anchors.fill: parent
 
-    property real targetX
-    property real targetY
-    property real targetWidth
-    property real targetHeight
-    property real targetScale
+    property variant window: parent
 
-    property real originalX
-    property real originalY
-
-    property variant child: null
-    property variant chrome: null
-    property bool animationsEnabled: false
-
-    x: targetX
-    y: targetY
-    width: targetWidth
-    height: targetHeight
-    scale: targetScale
-
-    Behavior on x {
-        enabled: container.animationsEnabled
-        NumberAnimation { easing.type: Easing.InCubic; duration: 200 }
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        preventStealing: true
     }
-
-    Behavior on y {
-        enabled: container.animationsEnabled
-        NumberAnimation { easing.type: Easing.InQuad; duration: 200 }
-    }
-
-    Behavior on width {
-        enabled: container.animationsEnabled
-        NumberAnimation { easing.type: Easing.InCubic; duration: 200 }
-    }
-
-    Behavior on height {
-        enabled: container.animationsEnabled
-        NumberAnimation { easing.type: Easing.InCubic; duration: 200 }
-    }
-
-    Behavior on scale {
-        enabled: container.animationsEnabled
-        NumberAnimation { easing.type: Easing.InQuad; duration: 200 }
-    }
-
-    Behavior on opacity {
-        enabled: true
-        NumberAnimation { easing.type: Easing.Linear; duration: 250 }
-    }
-
-    // Decrease opacity for unfocused windows
-    ContrastEffect {
-        id: effect
-        anchors.fill: child
-        source: child
-        opacity: 1.0
-        z: 1
-
-        Behavior on blend {
-            enabled: true
-            NumberAnimation { easing.type: Easing.Linear; duration: 250 }
-        }
-    }
-
-    states: [
-        State {
-            name: "selected"
-            when: child && child.focus
-            PropertyChanges { target: effect; blend: 0.0 }
-        },
-        State {
-            name: "unselected"
-            when: child && !child.focus
-            PropertyChanges { target: effect; blend: 1.0 }
-        }
-    ]
 }

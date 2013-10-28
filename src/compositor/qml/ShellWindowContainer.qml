@@ -31,7 +31,7 @@ Item {
     id: container
 
     property variant child: null
-    property int index
+    property variant chrome: null
 
     // This effect is used just to invert Y when necessary
     ContrastEffect {
