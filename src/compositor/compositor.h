@@ -42,17 +42,12 @@ class Notifications;
 class Compositor : public QQuickView, public VCompositor
 {
     Q_OBJECT
-    Q_PROPERTY(QWaylandSurface *currentSurface READ currentSurface WRITE setCurrentSurface NOTIFY currentSurfaceChanged)
 public:
     explicit Compositor(const QRect &geometry);
     ~Compositor();
 
     void runShell();
     void closeShell();
-
-    QWaylandSurface *currentSurface() const {
-        return m_currentSurface;
-    }
 
     bool isShellWindow(QWaylandSurface *surface);
 
@@ -66,16 +61,12 @@ Q_SIGNALS:
     void windowDestroyed(QVariant window);
     void windowResized(QVariant window);
 
-    void currentSurfaceChanged();
-
 Q_SIGNALS:
     void ready();
 
 public Q_SLOTS:
     void destroyWindow(QVariant window);
     void destroyClientForWindow(QVariant window);
-
-    void setCurrentSurface(QWaylandSurface *surface);
 
 private Q_SLOTS:
     void shellStarted();
@@ -102,7 +93,6 @@ private:
     QList<ClientWindow *> m_clientWindows;
     QList<Workspace *> m_workspaces;
     Notifications *m_notifications;
-    QWaylandSurface *m_currentSurface;
     QProcess *m_shellProcess;
 };
 

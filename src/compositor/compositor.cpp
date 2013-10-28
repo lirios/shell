@@ -45,7 +45,6 @@
 
 Compositor::Compositor(const QRect &geometry)
     : VCompositor(this)
-    , m_currentSurface(0)
     , m_shellProcess(0)
 {
     // Set title
@@ -159,14 +158,6 @@ void Compositor::destroyClientForWindow(QVariant window)
     destroyClientForSurface(surface);
 }
 
-void Compositor::setCurrentSurface(QWaylandSurface *surface)
-{
-    if (surface == m_currentSurface)
-        return;
-    m_currentSurface = surface;
-    emit currentSurfaceChanged();
-}
-
 void Compositor::shellStarted()
 {
 }
@@ -273,10 +264,8 @@ void Compositor::surfaceMapped()
 
 void Compositor::surfaceUnmapped()
 {
-    // Set to 0 the current surface if it was unmapped
+    // Set the current surface to 0 if it was unmapped
     QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
-    if (surface == m_currentSurface)
-        m_currentSurface = 0;
 
     // Announce this window was destroyed
     QQuickItem *item = surface->surfaceItem();
@@ -286,10 +275,8 @@ void Compositor::surfaceUnmapped()
 
 void Compositor::surfaceDestroyed(QObject *object)
 {
-    // Set to 0 the current surface if it was destroyed
+    // Set the current surface to 0 if it was destroyed
     QWaylandSurface *surface = static_cast<QWaylandSurface *>(object);
-    if (surface == m_currentSurface)
-        m_currentSurface = 0;
 
     // Announce this window was destroyed
     QQuickItem *item = surface->surfaceItem();
