@@ -32,7 +32,7 @@ import Hawaii.Shell.Styles 1.0
 PopupWindow {
     id: popupWindow
 
-    default property alias content: container.children
+    default property alias content: container.data
 
     StyledItem {
         id: root
