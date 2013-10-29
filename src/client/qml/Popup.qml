@@ -24,32 +24,33 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Window 2.0
+import QtQuick 2.1
+import QtQuick.Window 2.1
+import QtQuick.Layouts 1.0
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Styles 1.0
 
 PopupWindow {
     id: popupWindow
 
-    default property alias content: container.data
+    default property alias content: mainLayout.data
 
     StyledItem {
-        id: root
-        anchors {
-            fill: parent
-            leftMargin: __style.padding.left
-            topMargin: __style.padding.top
-            rightMargin: __style.padding.right
-            bottomMargin: __style.padding.bottom
-        }
-        style: Qt.createComponent(StyleSettings.path + "/PopupStyle.qml", root)
+        readonly property int margin: 6
 
-        Item {
-            id: container
+        id: styledItem
+        style: Qt.createComponent(StyleSettings.path + "/PopupStyle.qml", styledItem)
+        width: mainLayout.implicitWidth + __style.padding.left + __style.padding.right + (2 * margin)
+        height: mainLayout.implicitHeight + __style.padding.top + __style.padding.bottom + (2 * margin)
+
+        ColumnLayout {
+            id: mainLayout
             anchors {
                 fill: parent
-                margins: 6
+                leftMargin: styledItem.__style.padding.left + styledItem.margin
+                topMargin: styledItem.__style.padding.top + styledItem.margin
+                rightMargin: styledItem.__style.padding.right + styledItem.margin
+                bottomMargin: styledItem.__style.padding.bottom + styledItem.margin
             }
         }
     }
