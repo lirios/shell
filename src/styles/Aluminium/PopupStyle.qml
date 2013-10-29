@@ -43,6 +43,7 @@ PopupStyle {
         Rectangle {
             id: border
             anchors.fill: parent
+            anchors.margins: shadowSize
             border.color: "#999"
             radius: 6
             gradient: Gradient {
