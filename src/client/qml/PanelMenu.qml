@@ -32,7 +32,6 @@ Popup {
     id: panelMenu
     width: menu.width
     height: menu.height
-    visible: false
 
     default property alias content: menuContents.children
 
@@ -41,7 +40,6 @@ Popup {
         width: menu.width
         height: menu.height
         state: "hidden"
-        enabled: panelMenu.visible
 
         Item {
             id: contentItem
@@ -155,6 +153,6 @@ Popup {
     }
 
     function close() {
-        dismiss();
+        visible = false;
     }
 }
