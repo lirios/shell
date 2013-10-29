@@ -70,5 +70,4 @@ void DialogQuickWindow::setWindowType()
     shell->set_dialog(output, surface);
 }
 
-
 #include "moc_dialogquickwindow_p.cpp"

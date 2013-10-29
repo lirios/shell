@@ -109,7 +109,7 @@ void DialogWindow::show()
     d->window->setWidth(d->content->width());
     d->window->setHeight(d->content->height());
 
-    // Set screen and repare content item
+    // Set screen and reparent content item
     d->window->setScreen(QGuiApplication::primaryScreen());
     d->content->setParentItem(d->window->contentItem());
 
