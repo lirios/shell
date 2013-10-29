@@ -30,12 +30,9 @@ import QtQuick.Layouts 1.0
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Styles 1.0
 
-Item {
+Popup {
     id: appChooser
-    implicitWidth: mainLayout.implicitWidth
-    implicitHeight: mainLayout.implicitHeight
 
-    property var window
     readonly property int itemSize: 128
     readonly property int numRows: 5
     readonly property int numColumns: 3
@@ -44,18 +41,12 @@ Item {
     property int currentPage: 0
     property var palette: SystemPalette {}
 
-    Connections {
-        target: window
-        onVisibleChanged: {
-            currentPage = 0;
-            grid.currentIndex = 0;
-        }
+    onVisibleChanged: {
+        currentPage = 0;
+        grid.currentIndex = 0;
     }
 
     ColumnLayout {
-        id: mainLayout
-        anchors.fill: parent
-
         GridView {
             id: grid
             cacheBuffer: 100
@@ -80,9 +71,11 @@ Item {
                     icon: "image://appicon/" + iconName
                     label: name
                     onClicked: {
-                        // Launch the application and close the AppChooser
+                        // Dismiss the popup
+                        appChooser.visible = false;
+
+                        // Launch the application
                         var item = appsModel.get(VisualDataModel.itemsIndex);
-                        window.dismiss();
                         item.launch();
                     }
                 }

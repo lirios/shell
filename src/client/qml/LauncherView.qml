@@ -50,19 +50,11 @@ Item {
     property var window
 
     // AppChooser
-    Component {
-        id: appChooserComponent
+    AppChooser {
+        id: appChooser
 
-        AppChooserWindow {}
+        Component.onCompleted: moveAppChooser()
     }
-
-    Loader {
-        id: appChooserLoader
-        sourceComponent: appChooserComponent
-        onLoaded: moveAppChooser()
-    }
-
-    property alias appChooser: appChooserLoader.item
 
     // AppChooser window follows the Launcher window when its geometry changes
     Connections {
@@ -357,12 +349,7 @@ Item {
 
             width: tileSize
             height: tileSize
-            onClicked: {
-                if (appChooser.visible)
-                    appChooser.dismiss();
-                else
-                    appChooser.show();
-            }
+            onClicked: appChooser.visible = !appChooser.visible
         }
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
