@@ -37,91 +37,189 @@
  * PopupWindowPrivate
  */
 
-PopupWindowPrivate::PopupWindowPrivate(PopupWindow *parent)
-    : QtWayland::wl_hawaii_shell_surface()
-    , q_ptr(parent)
-    , dismissing(false)
+PopupWindowPrivate::PopupWindowPrivate()
+    : window(0)
+    , x(0)
+    , y(0)
+    , content(0)
 {
 }
 
-void PopupWindowPrivate::hawaii_shell_surface_popup_done()
+PopupWindowPrivate::~PopupWindowPrivate()
 {
-    Q_Q(PopupWindow);
-    QMetaObject::invokeMethod(q, "hide");
+    if (window)
+        window->deleteLater();
 }
 
 /*
  * PopupWindow
  */
 
-PopupWindow::PopupWindow(QWindow *parent)
-    : QQuickWindow(parent)
-    , d_ptr(new PopupWindowPrivate(this))
+PopupWindow::PopupWindow(QObject *parent)
+    : QObject(parent)
+    , d_ptr(new PopupWindowPrivate())
 {
-    // Transparent color
-    setColor(Qt::transparent);
-
-    // Set custom window type
-    setFlags(Qt::BypassWindowManagerHint);
-
-    // Create platform window
-    create();
 }
 
 PopupWindow::~PopupWindow()
 {
-    Q_D(PopupWindow);
-    if (d->isInitialized())
-        wl_hawaii_shell_surface_destroy(d->object());
     delete d_ptr;
 }
 
-void PopupWindow::dismiss()
+QQuickItem *PopupWindow::contentItem() const
 {
-    Q_D(PopupWindow);
-    d->dismissing = true;
-    hide();
+    Q_D(const PopupWindow);
+    return d->content;
 }
 
-void PopupWindow::showEvent(QShowEvent *event)
+void PopupWindow::setContentItem(QQuickItem *item)
 {
-    QQuickWindow::showEvent(event);
-
-    if (isVisible())
-        setWindowType();
-}
-
-void PopupWindow::hideEvent(QHideEvent *event)
-{
-    QQuickWindow::hideEvent(event);
-
     Q_D(PopupWindow);
-    if (d->isInitialized() && !isVisible()) {
-        if (d->dismissing) {
-            d->dismiss();
-            d->dismissing = false;
-        }
-        wl_hawaii_shell_surface_destroy(d->object());
+
+    if (d->content != item) {
+        d->content = item;
+        connect(d->content, SIGNAL(widthChanged()),
+                this, SIGNAL(widthChanged()));
+        connect(d->content, SIGNAL(heightChanged()),
+                this, SIGNAL(heightChanged()));
+        Q_EMIT contentChanged();
     }
 }
 
-void PopupWindow::setWindowType()
+qreal PopupWindow::x() const
 {
-    if (!isVisible())
+    Q_D(const PopupWindow);
+    return d->x;
+}
+
+void PopupWindow::setX(qreal x)
+{
+    Q_D(PopupWindow);
+
+    if (d->x != x) {
+        d->x = x;
+        Q_EMIT xChanged();
+    }
+}
+
+qreal PopupWindow::y() const
+{
+    Q_D(const PopupWindow);
+    return d->y;
+}
+
+void PopupWindow::setY(qreal y)
+{
+    Q_D(PopupWindow);
+
+    if (d->y != y) {
+        d->y = y;
+        Q_EMIT yChanged();
+    }
+}
+
+qreal PopupWindow::width() const
+{
+    Q_D(const PopupWindow);
+
+    if (!d->content)
+        return 0;
+    return d->content->width();
+}
+
+void PopupWindow::setWidth(qreal width)
+{
+    Q_D(PopupWindow);
+
+    if (!d->content)
+        return;
+    d->content->setWidth(width);
+}
+
+qreal PopupWindow::height() const
+{
+    Q_D(const PopupWindow);
+
+    if (!d->content)
+        return 0;
+    return d->content->height();
+}
+
+void PopupWindow::setHeight(qreal height)
+{
+    Q_D(PopupWindow);
+
+    if (!d->content)
+        return;
+    d->content->setHeight(height);
+}
+
+bool PopupWindow::isVisible() const
+{
+    Q_D(const PopupWindow);
+    return d->window && d->window->isVisible() ? true : false;
+}
+
+void PopupWindow::setVisible(bool value)
+{
+    QMetaObject::invokeMethod(this, value ? "show" : "hide", Qt::QueuedConnection);
+}
+
+void PopupWindow::show()
+{
+    Q_D(PopupWindow);
+
+    // Just return if it's already visible or there's no content item
+    if (isVisible() || !d->content)
         return;
 
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+    // Create the window
+    if (!d->window)
+        d->window = new PopupQuickWindow(this);
 
-    wl_output *output = static_cast<struct wl_output *>(
-                native->nativeResourceForScreen("output", screen()));
-    wl_surface *surface = static_cast<struct wl_surface *>(
-                native->nativeResourceForWindow("surface", this));
+    // Set window geometry according to content
+    d->window->setX(qRound(d->x));
+    d->window->setY(qRound(d->y));
+    d->window->setWidth(d->content->width());
+    d->window->setHeight(d->content->height());
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    wl_hawaii_shell_surface *shsurf = shell->set_popup(output, surface, x(), y());
+    // Reparent content item
+    d->content->setParentItem(d->window->contentItem());
 
+    // Show the window and grab input
+    QMetaObject::invokeMethod(d->window, "show",
+                              Qt::QueuedConnection);
+    QMetaObject::invokeMethod(d->window, "setWindowType",
+                              Qt::QueuedConnection);
+    Q_EMIT visibleChanged();
+}
+
+void PopupWindow::hide()
+{
     Q_D(PopupWindow);
-    d->init(shsurf);
+
+    if (isVisible()) {
+        // Break the grab
+        QMetaObject::invokeMethod(d->window, "dismiss",
+                                  Qt::QueuedConnection);
+
+        // Destroy the window
+        d->window->deleteLater();
+        d->window = 0;
+        Q_EMIT visibleChanged();
+    }
+}
+
+void PopupWindow::close()
+{
+    Q_D(PopupWindow);
+
+    if (isVisible()) {
+        // Destroy the window
+        d->window->deleteLater();
+        d->window = 0;
+        Q_EMIT visibleChanged();
+    }
 }
 
 #include "moc_popupwindow.cpp"

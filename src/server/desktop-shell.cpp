@@ -67,16 +67,16 @@ public:
     void end()
     {
         wl_hawaii_shell_surface_send_popup_done(shsurfResource);
-        dismiss();
-    }
-
-    void dismiss()
-    {
         Shell::endGrab(this);
         wl_resource *res = shsurfResource;
         shsurfResource = nullptr;
         wl_resource_destroy(res);
         delete this;
+    }
+
+    void dismiss()
+    {
+        Shell::endGrab(this);
     }
 
     static const struct wl_hawaii_shell_surface_interface m_shellSurfaceImpl;

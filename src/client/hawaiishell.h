@@ -46,7 +46,7 @@ class LauncherWindow;
 class GrabWindow;
 class DialogQuickWindow;
 class ShellWindow;
-class PopupWindow;
+class PopupQuickWindow;
 class OverlayWindow;
 class LockScreenWindow;
 class NotificationWindow;
@@ -111,7 +111,7 @@ private:
     friend class GrabWindow;
     friend class DialogQuickWindow;
     friend class ShellWindow;
-    friend class PopupWindow;
+    friend class PopupQuickWindow;
     friend class OverlayWindow;
     friend class LockScreenWindow;
     friend class NotificationWindow;

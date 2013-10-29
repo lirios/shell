@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,22 +24,41 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef POPUPWINDOW_P_H
-#define POPUPWINDOW_P_H
+#ifndef POPUPQUICKWINDOW_P_H
+#define POPUPQUICKWINDOW_P_H
 
-#include <QtQuick/QQuickItem>
+#include <QtQuick/QQuickWindow>
 
-#include "popupquickwindow_p.h"
+#include "qwayland-hawaii.h"
 
-class PopupWindowPrivate
+class PopupWindow;
+
+class PopupShellSurface : public QtWayland::wl_hawaii_shell_surface
 {
 public:
-    PopupWindowPrivate();
-    ~PopupWindowPrivate();
+    PopupShellSurface(PopupWindow *popup);
+    ~PopupShellSurface();
 
-    PopupQuickWindow *window;
-    qreal x, y;
-    QQuickItem *content;
+protected:
+    void hawaii_shell_surface_popup_done();
+
+private:
+    PopupWindow *m_popup;
 };
 
-#endif // POPUPWINDOW_P_H
+class PopupQuickWindow : public QQuickWindow
+{
+    Q_OBJECT
+public:
+    PopupQuickWindow(PopupWindow *parent);
+    ~PopupQuickWindow();
+
+public Q_SLOTS:
+    void setWindowType();
+    void dismiss();
+
+private:
+    PopupShellSurface *m_shellSurface;
+};
+
+#endif // POPUPQUICKWINDOW_P_H
