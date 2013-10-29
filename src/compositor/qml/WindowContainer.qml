@@ -45,24 +45,9 @@ import QtQuick.Window 2.0
 Item {
     id: container
 
-    property real targetX
-    property real targetY
-    property real targetWidth
-    property real targetHeight
-    property real targetScale
-
-    property real originalX
-    property real originalY
-
     property variant child: null
     property variant chrome: null
-    property bool animationsEnabled: false
-
-    x: targetX
-    y: targetY
-    width: targetWidth
-    height: targetHeight
-    scale: targetScale
+    property bool animationsEnabled: true
 
     Behavior on x {
         enabled: container.animationsEnabled

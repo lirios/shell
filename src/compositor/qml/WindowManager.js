@@ -40,14 +40,10 @@ function shellWindowAdded(window)
     windowContainer.opacity = 1.0;
 
     // Set geometry and z-index
+    console.log(window, window.z);
     windowContainer.width = window.width;
     windowContainer.height = window.height;
     windowContainer.z = window.z;
-    return;
-
-    var windowChromeComponent = Qt.createComponent("ShellWindowChrome.qml");
-    var windowChrome = windowChromeComponent.createObject(window);
-    windowContainer.chrome = windowChrome;
 }
 
 function windowAdded(window)
@@ -55,32 +51,28 @@ function windowAdded(window)
     var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
     var windowContainer = windowContainerComponent.createObject(root);
 
+    // Reparent window
     window.parent = windowContainer;
-
-    windowContainer.targetScale = 1.0;
-    windowContainer.targetWidth = window.width;
-    windowContainer.targetHeight = window.height;
     windowContainer.child = window;
+
+    // Setup window container
+    windowContainer.width = window.width;
+    windowContainer.height = window.height;
+    windowContainer.z = 1;
+    windowContainer.opacity = 1.0;
 
     // Automatically give focus to new windows
     window.takeFocus();
+
+    // Create window chrome to handle focus and enable animations
+    var windowChromeComponent = Qt.createComponent("WindowChrome.qml");
+    var windowChrome = windowChromeComponent.createObject(window);
+    windowContainer.chrome = windowChrome;
 
     // Add to the client window list
     if (windowList == null)
         windowList = new Array(0);
     windowList.push(windowContainer);
-
-    // Full opacity
-    windowContainer.opacity = 1.0;
-
-    // Set appropriate z-index
-    windowContainer.z = 2;
-
-    // Create window chrome to handle focus and enable animations
-    var windowChromeComponent = Qt.createComponent("WindowChrome.qml");
-    var windowChrome = windowChromeComponent.createObject(window);
-    windowContainer.animationsEnabled = true;
-    windowContainer.chrome = windowChrome;
 }
 
 function windowResized(window)

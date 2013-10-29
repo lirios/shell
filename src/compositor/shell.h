@@ -54,7 +54,6 @@ public:
     Shell(struct ::wl_display *display);
 
     QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
-    QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 
 Q_SIGNALS:
     void ready();
@@ -66,6 +65,8 @@ private:
     Layer m_dialogsLayer;
 
     void addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface);
+
+    QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 
     void hawaii_shell_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
 

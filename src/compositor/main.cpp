@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Hawaii");
 
     QRect geometry = QGuiApplication::primaryScreen()->availableGeometry();
-    geometry.setWidth(1024);
-    geometry.setHeight(640);
+    geometry.setWidth(1920);
+    geometry.setHeight(1080);
 
     Compositor compositor(geometry);
     compositor.setGeometry(geometry);

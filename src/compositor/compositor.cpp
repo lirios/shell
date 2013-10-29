@@ -239,10 +239,10 @@ void Compositor::surfaceMapped()
         case Shell::LauncherWindowRole:
         case Shell::SpecialWindowRole:
         case Shell::PopupWindowRole:
-            item->setZ(1);
+            item->setZ(2);
             break;
         case Shell::OverlayWindowRole:
-            item->setZ(3);
+            //item->setZ(3);
             break;
         case Shell::DialogWindowRole:
             item->setZ(4);
@@ -264,10 +264,9 @@ void Compositor::surfaceMapped()
 
 void Compositor::surfaceUnmapped()
 {
-    // Set the current surface to 0 if it was unmapped
     QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
 
-    // Announce this window was destroyed
+    // Announce this window was unmapped
     QQuickItem *item = surface->surfaceItem();
     if (item)
         emit windowDestroyed(QVariant::fromValue(item));
@@ -275,7 +274,6 @@ void Compositor::surfaceUnmapped()
 
 void Compositor::surfaceDestroyed(QObject *object)
 {
-    // Set the current surface to 0 if it was destroyed
     QWaylandSurface *surface = static_cast<QWaylandSurface *>(object);
 
     // Announce this window was destroyed
@@ -303,24 +301,38 @@ void Compositor::resizeEvent(QResizeEvent *event)
 
 void Compositor::mousePressEvent(QMouseEvent *event)
 {
-    defaultInputDevice()->sendMousePressEvent(event->button(), event->localPos(), event->globalPos());
-    QQuickView::mousePressEvent(event);
+    QPointF local;
+    QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
+    if (targetSurface) {
+        defaultInputDevice()->sendMousePressEvent(event->button(), local, event->globalPos());
+        event->accept();
+    } else {
+        QQuickView::mousePressEvent(event);
+    }
 }
 
 void Compositor::mouseReleaseEvent(QMouseEvent *event)
 {
-    defaultInputDevice()->sendMouseReleaseEvent(event->button(), event->localPos(), event->globalPos());
-    QQuickView::mouseReleaseEvent(event);
+    QPointF local;
+    QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
+    if (targetSurface) {
+        defaultInputDevice()->sendMouseReleaseEvent(event->button(), local, event->globalPos());
+        event->accept();
+    } else {
+        QQuickView::mouseReleaseEvent(event);
+    }
 }
 
 void Compositor::mouseMoveEvent(QMouseEvent *event)
 {
     QPointF local;
     QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
-    if (targetSurface)
+    if (targetSurface) {
         defaultInputDevice()->sendMouseMoveEvent(targetSurface, local, event->globalPos());
-
-    QQuickView::mouseMoveEvent(event);
+        event->accept();
+    } else {
+        QQuickView::mouseMoveEvent(event);
+    }
 }
 
 #include "moc_compositor.cpp"

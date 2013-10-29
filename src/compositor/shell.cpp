@@ -46,34 +46,12 @@ QWaylandSurface *Shell::surfaceAt(const QPointF &point, QPointF *local)
     if (surface) \
         return surface;
 
-    SURFACE_AT(m_panelsLayer);
     SURFACE_AT(m_dialogsLayer);
-    SURFACE_AT(m_overlayLayer);
-    SURFACE_AT(m_backgroundLayer);
+    //SURFACE_AT(m_overlayLayer);
+    SURFACE_AT(m_panelsLayer);
+    //SURFACE_AT(m_backgroundLayer);
 
 #undef SURFACE_AT
-
-    return 0;
-}
-
-QWaylandSurface *Shell::surfaceAt(const Layer &layer, const QPointF &point, QPointF *local)
-{
-    // Iterate through the layer in reverse order
-    for (int i = layer.size() - 1; i >= 0; --i) {
-        QWaylandSurface *surface = layer.at(i);
-
-        // Ignore hidden surfaces
-        if (!surface->visible())
-            continue;
-
-        // Are the coordinates inside an item?
-        QRectF geo(surface->pos(), surface->size());
-        if (geo.contains(point)) {
-            if (local)
-                *local = point - surface->pos();
-            return surface;
-        }
-    }
 
     return 0;
 }
@@ -107,6 +85,29 @@ void Shell::addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface)
 
     connect(surface, SIGNAL(unmapped()),
             this, SLOT(surfaceUnmapped()));
+}
+
+QWaylandSurface *Shell::surfaceAt(const Layer &layer, const QPointF &point, QPointF *local)
+{
+    // Iterate through the layer in reverse order
+    for (int i = layer.size() - 1; i >= 0; --i) {
+        QWaylandSurface *surface = layer.at(i);
+
+        // Ignore hidden surfaces or surfaces not mapped
+        if (!surface->visible() || !surface->surfaceItem())
+            continue;
+
+        // Are the coordinates inside an item?
+        QWaylandSurfaceItem *item = surface->surfaceItem();
+        QRectF geo(item->position(), QSizeF(item->width(), item->height()));
+        if (geo.contains(point)) {
+            if (local)
+                *local = point - item->position();
+            return surface;
+        }
+    }
+
+    return 0;
 }
 
 void Shell::hawaii_shell_bind_resource(Resource *resource)
