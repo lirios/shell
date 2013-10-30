@@ -26,18 +26,38 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
+import FluidUi 0.2 as FluidUi
 
 MouseArea {
     id: delegateRoot
 
-    property alias icon: content.icon
-    property alias label: content.label
+    property alias icon: iconItem.iconSource
+    property alias label: labelItem.text
 
     width: grid.cellWidth
     height: grid.cellHeight
 
-    AppChooserItem {
-        id: content
+    ColumnLayout {
         anchors.fill: parent
+
+        FluidUi.Icon {
+            id: iconItem
+            width: 64
+            height: 64
+
+            Layout.alignment: Qt.AlignCenter
+        }
+
+        Label {
+            id: labelItem
+            horizontalAlignment: Qt.AlignHCenter
+            verticalAlignment: Qt.AlignTop
+            wrapMode: Text.Wrap
+            elide: Text.ElideRight
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
     }
 }

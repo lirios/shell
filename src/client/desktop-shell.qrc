@@ -40,7 +40,6 @@
         <!-- AppChooser -->
         <file>qml/AppChooser.qml</file>
         <file>qml/AppChooserButton.qml</file>
-        <file>qml/AppChooserItem.qml</file>
         <file>qml/AppChooserDelegate.qml</file>
 
         <!-- LockScreen -->
