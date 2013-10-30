@@ -18,7 +18,7 @@
         <file>qml/BackgroundRenderer.qml</file>
 
         <!-- Indicators -->
-        <file>qml/PanelIndicator.qml</file>
+        <file>qml/Indicator.qml</file>
         <file>qml/DateIndicator.qml</file>
         <file>qml/NetworkIndicator.qml</file>
         <file>qml/NotificationsIndicator.qml</file>
