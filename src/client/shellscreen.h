@@ -32,7 +32,6 @@
 #include <wayland-client.h>
 
 #include "backgroundwindow.h"
-#include "panelwindow.h"
 #include "launcherwindow.h"
 #include "overlaywindow.h"
 
@@ -51,7 +50,6 @@ public:
     QRect availableGeometry() const;
 
     BackgroundWindow *backgroundWindow() const;
-    PanelWindow *panelWindow() const;
     LauncherWindow *launcherWindow() const;
     OverlayWindow *overlayWindow() const;
 
@@ -66,7 +64,6 @@ private:
     wl_output *m_output;
     QRect m_availableGeometry;
     BackgroundWindow *m_backgroundWindow;
-    PanelWindow *m_panelWindow;
     LauncherWindow *m_launcherWindow;
     OverlayWindow *m_overlayWindow;
 };

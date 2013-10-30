@@ -36,7 +36,6 @@ ShellScreen::ShellScreen(QScreen *screen, QObject *parent)
     : QObject(parent)
     , m_screen(screen)
     , m_backgroundWindow(0)
-    , m_panelWindow(0)
     , m_launcherWindow(0)
     , m_overlayWindow(0)
 {
@@ -50,10 +49,6 @@ ShellScreen::ShellScreen(QScreen *screen, QObject *parent)
     // Create Background window
     m_backgroundWindow = new BackgroundWindow(this);
     m_backgroundWindow->show();
-
-    // Create Panel window
-    m_panelWindow = new PanelWindow(this);
-    m_panelWindow->show();
 
     // Create Launcher window
     m_launcherWindow = new LauncherWindow(this);
@@ -92,11 +87,6 @@ BackgroundWindow *ShellScreen::backgroundWindow() const
     return m_backgroundWindow;
 }
 
-PanelWindow *ShellScreen::panelWindow() const
-{
-    return m_panelWindow;
-}
-
 LauncherWindow *ShellScreen::launcherWindow() const
 {
     return m_launcherWindow;
@@ -111,8 +101,6 @@ void ShellScreen::updateScreenGeometry(const QRect &rect)
 {
     // Calculate available geometry
     QRect geometry = rect;
-    geometry.setTop(m_panelWindow->geometry().top() +
-                    m_panelWindow->geometry().height());
     switch (m_launcherWindow->settings()->alignment()) {
     case LauncherSettings::LeftAlignment:
         geometry.setLeft(m_launcherWindow->geometry().left() +

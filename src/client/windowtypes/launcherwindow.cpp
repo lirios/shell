@@ -104,7 +104,6 @@ void LauncherWindow::geometryChanged(const QRect &rect)
 void LauncherWindow::resetGeometry()
 {
     int size = rootObject()->property("size").toInt();
-    int panelSize = 24;
     int l = screen()->geometry().left();
     int t = screen()->geometry().top();
     int w = screen()->geometry().width();
@@ -113,10 +112,10 @@ void LauncherWindow::resetGeometry()
 
     switch (m_settings->alignment()) {
     case LauncherSettings::LeftAlignment:
-        rect = QRect(l, t + panelSize, size, h - panelSize);
+        rect = QRect(l, t, size, h);
         break;
     case LauncherSettings::RightAlignment:
-        rect = QRect(l + w - size, t + panelSize, size, h - panelSize);
+        rect = QRect(l + w - size, t, size, h);
         break;
     case LauncherSettings::BottomAlignment:
         rect = QRect(l, t + h - size, w, size);

@@ -17,16 +17,8 @@
         <file>qml/Background.qml</file>
         <file>qml/BackgroundRenderer.qml</file>
 
-        <!-- Panel -->
-        <file>qml/Panel.qml</file>
-        <file>qml/PanelView.qml</file>
-        <file>qml/PanelIndicator.qml</file>
-        <file>qml/PanelMenu.qml</file>
-        <file>qml/PanelMenuItem.qml</file>
-        <file>qml/PanelContainerMenuItem.qml</file>
-  	<file>qml/PanelMenuManager.js</file>
-
         <!-- Indicators -->
+        <file>qml/PanelIndicator.qml</file>
         <file>qml/DateIndicator.qml</file>
         <file>qml/NetworkIndicator.qml</file>
         <file>qml/NotificationsIndicator.qml</file>

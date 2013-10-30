@@ -63,7 +63,6 @@ set(SOURCES
     windowtypes/lockscreenwindow.cpp
     windowtypes/notificationwindow.cpp
     windowtypes/overlaywindow.cpp
-    windowtypes/panelwindow.cpp
     windowtypes/popupwindow.cpp
     windowtypes/popupquickwindow_p.cpp
     windowtypes/shellwindow.cpp
