@@ -26,33 +26,12 @@
 
 import QtQuick 2.0
 
-PanelIndicator {
-    // Settings
-    // TODO: Read from settings
-    property int format: Locale.LongFormat
-    property bool showSeconds: false
-
-    // Current date and time
-    property date now
-
-    label: {
-        var l = Qt.formatDate(now, Qt.locale().dateFormat(format));
-        l += " " + Qt.formatTime(now, "HH:mm" + (showSeconds ? ":ss" : ""));
-        return l;
-    }
-
+Indicator {
     Timer {
-        id: timer
-        running: false
-        interval: showSeconds ? 500 : 1000
+        interval: 1000
+        running: true
         repeat: true
-        onTriggered: {
-            now = new Date();
-        }
-    }
-
-    Component.onCompleted: {
-        now = new Date();
-        timer.running = true;
+        triggeredOnStart: true
+        onTriggered: label = Qt.formatTime(new Date(), "HH:mm")
     }
 }
