@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import GreenIsland 1.0
 import "WindowManager.js" as WindowManager
 
 Item {
@@ -52,6 +53,24 @@ Item {
 
         Behavior on opacity {
             NumberAnimation { duration: 250 }
+        }
+    }
+
+    Text {
+        anchors {
+            top: parent.top
+            right: parent.right
+        }
+        z: 1000
+        text: fpsCounter.fps
+        font.pointSize: 36
+        style: Text.Raised
+        styleColor: "#222"
+        color: "white"
+        visible: false
+
+        FpsCounter {
+            id: fpsCounter
         }
     }
 
