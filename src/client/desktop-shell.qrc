@@ -21,6 +21,7 @@
         <file>qml/Indicator.qml</file>
         <file>qml/DateTimeIndicator.qml</file>
         <file>qml/UserIndicator.qml</file>
+        <file>qml/StatusArea.qml</file>
 
         <!-- Launcher -->
         <file>qml/Launcher.qml</file>

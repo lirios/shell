@@ -24,7 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.1
+import QtQuick.Layouts 1.0
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Settings 1.0
 import Hawaii.Shell.Styles 1.0
@@ -57,8 +58,7 @@ Element {
         anchors.fill: parent
         style: Qt.createComponent(StyleSettings.path + "/LauncherStyle.qml", launcherContainer)
 
-        LauncherView {
-            id: launcherView
+        GridLayout {
             anchors {
                 fill: parent
                 leftMargin: styledItem.__style.padding.left
@@ -66,13 +66,29 @@ Element {
                 rightMargin: styledItem.__style.padding.right
                 bottomMargin: styledItem.__style.padding.bottom
             }
-            orientation: {
-                switch (alignment) {
-                case LauncherSettings.BottomAlignment:
-                    return ListView.Horizontal;
-                default:
-                    return ListView.Vertical;
+            rows: orientation == ListView.Horizontal ? 1 : 2
+            columns: orientation == ListView.Horizontal ? 2 : 1
+
+            LauncherView {
+                id: launcherView
+                orientation: {
+                    switch (alignment) {
+                    case LauncherSettings.BottomAlignment:
+                        return ListView.Horizontal;
+                    default:
+                        return ListView.Vertical;
+                    }
                 }
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            StatusArea {
+                id: statusArea
+                orientation: launcherView.orientation
+
+                Layout.alignment: orientation == ListView.Horizontal ? Qt.AlignRight | Qt.AlignVCenter : Qt.AlignBottom | Qt.AlignHCenter
             }
         }
     }
