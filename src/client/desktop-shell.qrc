@@ -19,9 +19,10 @@
 
         <!-- Indicators -->
         <file>qml/Indicator.qml</file>
-        <file>qml/DateTimeIndicator.qml</file>
-        <file>qml/UserIndicator.qml</file>
         <file>qml/StatusArea.qml</file>
+        <file>qml/StatusMenu.qml</file>
+        <file>qml/UserView.qml</file>
+        <file>qml/ShutdownView.qml</file>
 
         <!-- Launcher -->
         <file>qml/Launcher.qml</file>

@@ -36,6 +36,8 @@ Item {
     readonly property int margin: 8
     readonly property int iconSize: 16
 
+    signal clicked()
+
     width: {
         if (orientation == ListView.Horizontal)
             return listView.headerItem.width + (listView.count * iconSize) +
@@ -107,5 +109,10 @@ Item {
         displaced: Transition {
             NumberAnimation { properties: "x,y"; duration: 250; easing.type: Easing.OutBounce }
         }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: statusArea.clicked()
     }
 }

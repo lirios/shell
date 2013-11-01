@@ -87,6 +87,7 @@ Element {
             StatusArea {
                 id: statusArea
                 orientation: launcherView.orientation
+                onClicked: launcherView.showStatusMenu()
 
                 Layout.alignment: orientation == ListView.Horizontal ? Qt.AlignRight | Qt.AlignVCenter : Qt.AlignBottom | Qt.AlignHCenter
             }

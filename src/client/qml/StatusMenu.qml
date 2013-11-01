@@ -24,8 +24,26 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.1
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
+import Hawaii.Shell 1.0
 
-Indicator {
-    iconName: "avatar-default-symbolic"
+Popup {
+    id: statusMenu
+
+    ColumnLayout {
+        UserView {
+            onChildClicked: statusMenu.visible = false
+
+            Layout.fillWidth: true
+        }
+
+        ShutdownView {
+            onChildClicked: statusMenu.visible = false
+
+            Layout.alignment: Qt.AlignCenter
+            Layout.fillWidth: true
+        }
+    }
 }

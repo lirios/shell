@@ -53,16 +53,23 @@ Item {
     AppChooser {
         id: appChooser
 
-        Component.onCompleted: moveAppChooser()
+        Component.onCompleted: movePopupMenus()
     }
 
-    // AppChooser window follows the Launcher window when its geometry changes
+    // Status menu
+    StatusMenu {
+        id: statusMenu
+
+        Component.onCompleted: movePopupMenus()
+    }
+
+    // Popup menus follows the Launcher window when its geometry changes
     Connections {
         id: windowConnection
-        onXChanged: moveAppChooser()
-        onYChanged: moveAppChooser()
-        onWidthChanged: moveAppChooser()
-        onHeightChanged: moveAppChooser()
+        onXChanged: movePopupMenus()
+        onYChanged: movePopupMenus()
+        onWidthChanged: movePopupMenus()
+        onHeightChanged: movePopupMenus()
     }
 
     onWindowChanged: windowConnection.target = window
@@ -360,7 +367,7 @@ Item {
         }
     }
 
-    function moveAppChooser() {
+    function movePopupMenus() {
         if (typeof(window) == "undefined")
             return;
 
@@ -368,14 +375,20 @@ Item {
         case LauncherSettings.LeftAlignment:
             appChooser.x = window.x + window.width;
             appChooser.y = window.y;
+            statusMenu.x = window.x + window.width;
+            statusMenu.y = window.y + window.height - statusMenu.height;
             break;
         case LauncherSettings.RightAlignment:
             appChooser.x = window.x - appChooser.width;
             appChooser.y = window.y;
+            statusMenu.x = window.x - statusMenu.width;
+            statusMenu.y = window.y + window.height - statusMenu.height;
             break;
         case LauncherSettings.BottomAlignment:
             appChooser.x = window.x;
             appChooser.y = window.y - appChooser.height;
+            statusMenu.x = window.x + window.width - statusMenu.width;
+            statusMenu.y = window.y - statusMenu.height;
             break;
         }
     }
@@ -393,5 +406,9 @@ Item {
         default:
             return 48;
         }
+    }
+
+    function showStatusMenu() {
+        statusMenu.visible = !statusMenu.visible;
     }
 }
