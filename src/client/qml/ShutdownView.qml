@@ -48,10 +48,18 @@ Item {
         id: mainLayout
 
         Label {
-            text: {
-                var now = new Date();
-                return Qt.formatDate(now);
-            }
+            id: dateTimeLabel
+            wrapMode: Text.Wrap
+            maximumLineCount: 2
+
+            //Layout.maximumWidth: 100
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignTop
+        }
+
+        Connections {
+            target: __priv.dateTime
+            onDateTimeChanged: dateTimeLabel.text = Qt.formatDate(__priv.dateTime.dateTime, Qt.DefaultLocaleLongDate)
         }
 
         RowLayout {
