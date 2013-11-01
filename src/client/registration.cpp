@@ -29,6 +29,7 @@
 #include "appcategories.h"
 #include "appinfo.h"
 #include "applicationsmodel.h"
+#include "datetime.h"
 #include "dialogwindow.h"
 #include "element.h"
 #include "enums.h"
@@ -96,6 +97,7 @@ void Registration::registerFactories()
                                                QStringLiteral("Do not create PolicyKitAgent"));
 
     // Register service factories
+    ServiceFactory::registerFactory<DateTime>();
     ServiceFactory::registerFactory<PowerManager>();
     ServiceFactory::registerFactory<SessionManager>();
     ServiceFactory::registerFactory<VolumeControl>();

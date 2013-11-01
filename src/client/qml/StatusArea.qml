@@ -51,6 +51,12 @@ Item {
                 (margin * (listView.count + 3));
     }
 
+    QtObject {
+        id: __priv
+
+        property var dateTime: Shell.service("DateTime")
+    }
+
     ListModel {
         id: indicatorsModel
 
@@ -80,14 +86,11 @@ Item {
                     ColorAnimation { easing.type: Easing.Linear; duration: 250 }
                 }
 
-                Timer {
-                    interval: 1000
-                    running: true
-                    repeat: true
-                    triggeredOnStart: true
-                    onTriggered: {
+                Connections {
+                    target: __priv.dateTime
+                    onDateTimeChanged: {
                         var format = orientation == ListView.Horizontal ? "HH:mm" : "HH<br>mm";
-                        timeLabel.text = Qt.formatTime(new Date(), format);
+                        timeLabel.text = Qt.formatTime(__priv.dateTime.dateTime, format);
                     }
                 }
             }

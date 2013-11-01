@@ -12,6 +12,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/launcher
     ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
     ${CMAKE_CURRENT_SOURCE_DIR}/services
+    ${CMAKE_CURRENT_SOURCE_DIR}/services/datetime
     ${CMAKE_CURRENT_SOURCE_DIR}/services/policykit-agent
     ${CMAKE_CURRENT_SOURCE_DIR}/services/powermanager
     ${CMAKE_CURRENT_SOURCE_DIR}/services/volumecontrol
@@ -48,6 +49,7 @@ set(SOURCES
     launcher/launcheritem.cpp
     launcher/launchermodel.cpp
     services/servicefactory.cpp
+    services/datetime/datetime.cpp
     services/policykit-agent/policykitagent.cpp
     services/powermanager/powermanagerbackend.cpp
     services/powermanager/powermanager.cpp

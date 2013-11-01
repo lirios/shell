@@ -40,6 +40,7 @@ Item {
     QtObject {
         id: __priv
 
+        property var dateTime: Shell.service("DateTime")
         property var sessionManager: Shell.service("SessionManager")
     }
 
