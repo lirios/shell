@@ -117,6 +117,9 @@ void LauncherWindow::resetGeometry()
     case LauncherSettings::RightAlignment:
         rect = QRect(l + w - size, t, size, h);
         break;
+    case LauncherSettings::TopAlignment:
+        rect = QRect(l, t, w, size);
+        break;
     case LauncherSettings::BottomAlignment:
         rect = QRect(l, t + h - size, w, size);
         break;

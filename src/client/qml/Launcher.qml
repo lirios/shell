@@ -73,6 +73,7 @@ Element {
                 id: launcherView
                 orientation: {
                     switch (alignment) {
+                    case LauncherSettings.TopAlignment:
                     case LauncherSettings.BottomAlignment:
                         return ListView.Horizontal;
                     default:

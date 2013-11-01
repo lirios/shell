@@ -52,6 +52,7 @@ public:
     enum Alignment {
         LeftAlignment = 0,
         RightAlignment,
+        TopAlignment,
         BottomAlignment
     };
 

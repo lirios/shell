@@ -384,6 +384,12 @@ Item {
             statusMenu.x = window.x - statusMenu.width;
             statusMenu.y = window.y + window.height - statusMenu.height;
             break;
+        case LauncherSettings.TopAlignment:
+            appChooser.x = window.x;
+            appChooser.y = window.y + window.height;
+            statusMenu.x = window.x + window.width;
+            statusMenu.y = window.y + window.height;
+            break;
         case LauncherSettings.BottomAlignment:
             appChooser.x = window.x;
             appChooser.y = window.y - appChooser.height;

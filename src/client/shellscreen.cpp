@@ -110,6 +110,10 @@ void ShellScreen::updateScreenGeometry(const QRect &rect)
         geometry.setRight(m_launcherWindow->geometry().right() -
                           m_launcherWindow->geometry().width());
         break;
+    case LauncherSettings::TopAlignment:
+        geometry.setTop(m_launcherWindow->geometry().top() +
+                        m_launcherWindow->geometry().height());
+        break;
     case LauncherSettings::BottomAlignment:
         geometry.setBottom(rect.bottom() -
                            m_launcherWindow->geometry().height());
