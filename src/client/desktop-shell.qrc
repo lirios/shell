@@ -19,6 +19,7 @@
 
         <!-- Indicators -->
         <file>qml/Indicator.qml</file>
+        <file>qml/VolumeIndicator.qml</file>
         <file>qml/StatusArea.qml</file>
         <file>qml/StatusMenu.qml</file>
         <file>qml/UserView.qml</file>
