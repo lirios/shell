@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QCommandLineParser>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QScreen>
 
@@ -32,11 +33,28 @@
 
 int main(int argc, char *argv[])
 {
+    // Application
     QGuiApplication app(argc, argv);
     app.setApplicationName("Hawaii Compositor");
     app.setApplicationVersion(HAWAII_SHELL_VERSION_STRING);
     app.setOrganizationDomain("hawaii.org");
     app.setOrganizationName("Hawaii");
+
+    // Command line parser
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QObject::tr("Wayland compositor for the Hawaii desktop environment"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    // Synthesize touch for unhandled mouse events
+    QCommandLineOption synthesizeOption(QStringLiteral("synthesize-touch"),
+                                        QObject::tr("Synthesize touch for unhandled mouse events"));
+    parser.addOption(synthesizeOption);
+
+    // Parse command line
+    parser.process(app);
+    if (parser.isSet(synthesizeOption))
+        app.setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, true);
 
     QRect geometry = QGuiApplication::primaryScreen()->availableGeometry();
     geometry.setWidth(1920);
