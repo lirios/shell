@@ -25,39 +25,36 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import FluidUi 0.2 as FluidUi
 
 Item {
-    id: root
+    width: parent.width
+    height: 32
 
-    property alias label: labelItem.text
-    property alias iconName: iconItem.iconName
-    property int orientation
+    property alias iconName: icon.iconName
+    default property alias content: container.data
 
-    ColumnLayout {
+    RowLayout {
         anchors {
             fill: parent
-            margins: 6
+            margins: 10
         }
 
         FluidUi.Icon {
-            id: iconItem
-            width: 48
-            height: 48
-            color: "white"
-            visible: iconName !== ""
+            id: icon
+            width: 22
+            height: 22
+            color: "black"
 
-            Layout.alignment: orientation == ListView.Horizontal ? Qt.AlignLeft : Qt.AlignCenter
+            Layout.alignment: Qt.AlignVCenter
         }
 
-        Label {
-            id: labelItem
-            color: "white"
-            visible: text != ""
+        Item {
+            id: container
 
-            Layout.alignment: orientation == ListView.Horizontal ? Qt.AlignLeft : Qt.AlignCenter
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 }

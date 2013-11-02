@@ -32,11 +32,23 @@ import Hawaii.Shell 1.0
 Popup {
     id: statusMenu
 
+    property alias indicators: placeholder.data
+
     ColumnLayout {
         UserView {
             onChildClicked: statusMenu.visible = false
 
             Layout.fillWidth: true
+        }
+
+        Item {
+            id: placeholder
+            clip: true
+            width: childrenRect.width
+            height: childrenRect.height
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
 
         ShutdownView {
