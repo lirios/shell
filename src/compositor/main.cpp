@@ -28,6 +28,8 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QScreen>
 
+#include <GreenIsland/Utilities>
+
 #include "compositor.h"
 #include "config.h"
 
@@ -39,6 +41,9 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(HAWAII_SHELL_VERSION_STRING);
     app.setOrganizationDomain("hawaii.org");
     app.setOrganizationName("Hawaii");
+
+    // Check whether XDG_RUNTIME_DIR is ok or not
+    GreenIsland::verifyXdgRuntimeDir();
 
     // Command line parser
     QCommandLineParser parser;
