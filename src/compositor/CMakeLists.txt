@@ -1,3 +1,5 @@
+find_package(Qt5 5.2 REQUIRED COMPONENTS Compositor)
+
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${Qt5Compositor_PRIVATE_INCLUDE_DIRS}

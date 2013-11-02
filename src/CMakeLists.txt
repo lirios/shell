@@ -1,5 +1,5 @@
 add_subdirectory(client)
-if(GreenIsland_FOUND AND Qt5Compositor_FOUND)
+if(GreenIsland_FOUND)
     add_subdirectory(compositor)
 endif()
 add_subdirectory(declarative)

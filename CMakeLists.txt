@@ -68,9 +68,6 @@ include(QtWayland)
 
 # Find GreenIsland
 find_package(GreenIsland)
-if(GreenIsland_FOUND)
-    find_package(Qt5Compositor)
-endif()
 
 # Find pkg-config
 find_package(PkgConfig "0.22" REQUIRED)

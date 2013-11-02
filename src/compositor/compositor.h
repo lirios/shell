@@ -30,7 +30,7 @@
 #include <QProcess>
 #include <QQuickView>
 
-#include <GreenIsland/VCompositor>
+#include <GreenIsland/Compositor>
 
 class Shell;
 class KeyBinding;
@@ -39,7 +39,7 @@ class Workspace;
 class Grab;
 class Notifications;
 
-class Compositor : public QQuickView, public VCompositor
+class Compositor : public QQuickView, public GreenIsland::Compositor
 {
     Q_OBJECT
 public:

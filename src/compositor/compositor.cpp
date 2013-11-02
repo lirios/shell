@@ -44,7 +44,7 @@
 #include "cmakedirs.h"
 
 Compositor::Compositor(const QRect &geometry)
-    : VCompositor(this)
+    : GreenIsland::Compositor(this)
     , m_shellProcess(0)
 {
     // Set title
