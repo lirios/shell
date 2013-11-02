@@ -28,16 +28,10 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import FluidUi 0.2 as FluidUi
 import Hawaii.Shell 1.0
+import Hawaii.Shell.Settings 1.0
 
 Item {
     id: statusArea
-
-    property alias orientation: listView.orientation
-    readonly property int margin: 8
-    readonly property int iconSize: 16
-
-    signal clicked()
-
     width: {
         if (orientation == ListView.Horizontal)
             return listView.headerItem.width + (listView.count * iconSize) +
@@ -50,25 +44,47 @@ Item {
         return listView.headerItem.height + (listView.count * iconSize) +
                 (margin * (listView.count + 3));
     }
+    onWindowChanged: windowConnection.target = window
+
+    property alias orientation: listView.orientation
+    readonly property int margin: 8
+    readonly property int iconSize: 16
+
+    property int alignment
+
+    // Launcher window
+    property var window
 
     QtObject {
         id: __priv
 
         property var dateTime: Shell.service("DateTime")
+        property list<Item> indicators: [
+            VolumeIndicator {}
+        ]
     }
 
-    ListModel {
-        id: indicatorsModel
+    // Status menu
+    StatusMenu {
+        id: statusMenu
+        indicators: __priv.indicators
 
-        ListElement { icon: "audio-volume-muted-symbolic" }
-        ListElement { icon: "battery-good-charging-symbolic" }
-        ListElement { icon: "network-wireless-signal-good-symbolic" }
+        Component.onCompleted: movePopupMenus()
+    }
+
+    // Popup menus follows the Launcher window when its geometry changes
+    Connections {
+        id: windowConnection
+        onXChanged: movePopupMenus()
+        onYChanged: movePopupMenus()
+        onWidthChanged: movePopupMenus()
+        onHeightChanged: movePopupMenus()
     }
 
     ListView {
         id: listView
         anchors.fill: parent
-        model: indicatorsModel
+        model: __priv.indicators
         spacing: margin
         interactive: false
         header: Item {
@@ -96,7 +112,7 @@ Item {
             }
         }
         delegate: FluidUi.Icon {
-            iconName: model.icon
+            iconName: modelData.iconName
             width: iconSize
             height: iconSize
             color: "white"
@@ -105,17 +121,34 @@ Item {
                 ColorAnimation { easing.type: Easing.Linear; duration: 250 }
             }
         }
-        add: Transition {
-            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
-            NumberAnimation { property: "scale"; from: 0.0; to: 1.0; duration: 150 }
-        }
-        displaced: Transition {
-            NumberAnimation { properties: "x,y"; duration: 250; easing.type: Easing.OutBounce }
-        }
     }
 
     MouseArea {
         anchors.fill: parent
-        onClicked: statusArea.clicked()
+        onClicked: statusMenu.visible = !statusMenu.visible
+    }
+
+    function movePopupMenus() {
+        if (typeof(window) == "undefined")
+            return;
+
+        switch (alignment) {
+        case LauncherSettings.LeftAlignment:
+            statusMenu.x = window.x + window.width;
+            statusMenu.y = window.y + window.height - statusMenu.height;
+            break;
+        case LauncherSettings.RightAlignment:
+            statusMenu.x = window.x - statusMenu.width;
+            statusMenu.y = window.y + window.height - statusMenu.height;
+            break;
+        case LauncherSettings.TopAlignment:
+            statusMenu.x = window.x + window.width;
+            statusMenu.y = window.y + window.height;
+            break;
+        case LauncherSettings.BottomAlignment:
+            statusMenu.x = window.x + window.width - statusMenu.width;
+            statusMenu.y = window.y - statusMenu.height;
+            break;
+        }
     }
 }

@@ -32,6 +32,7 @@ import Hawaii.Shell.Styles 1.0
 
 Element {
     id: launcherContainer
+    onWindowChanged: statusArea.window = window
 
     // Tile size
     property alias tileSize: launcherView.tileSize
@@ -88,7 +89,7 @@ Element {
             StatusArea {
                 id: statusArea
                 orientation: launcherView.orientation
-                onClicked: launcherView.showStatusMenu()
+                alignment: launcherView.alignment
 
                 Layout.alignment: orientation == ListView.Horizontal ? Qt.AlignRight | Qt.AlignVCenter : Qt.AlignBottom | Qt.AlignHCenter
             }
