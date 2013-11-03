@@ -46,6 +46,27 @@ Popup {
         grid.currentIndex = 0;
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onWheel: {
+            if (wheel.angleDelta.x > 0 || wheel.angleDelta.y > 0) {
+                // Go to the next page
+                if (currentPage < numPages - 1) {
+                    currentPage++;
+                    grid.currentIndex = currentPage * numItemsPerPage + 1;
+                }
+            } else if (wheel.angleDelta.x < 0 || wheel.angleDelta.y < 0) {
+                // Go to the next page
+                if (currentPage > 0) {
+                    currentPage--;
+                    grid.currentIndex = currentPage * numItemsPerPage + 1;
+                }
+            }
+
+            wheel.accepted = true;
+        }
+    }
+
     ColumnLayout {
         GridView {
             id: grid
