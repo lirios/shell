@@ -70,6 +70,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void shellStarted();
+    void shellReady();
     void shellFailed(QProcess::ProcessError error);
     void shellReadyReadStandardOutput();
     void shellReadyReadStandardError();
@@ -94,6 +95,7 @@ private:
     QList<Workspace *> m_workspaces;
     Notifications *m_notifications;
     QProcess *m_shellProcess;
+    bool m_shellReady;
 };
 
 #endif // COMPOSITOR_H

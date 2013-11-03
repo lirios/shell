@@ -46,6 +46,7 @@
 Compositor::Compositor(const QRect &geometry)
     : GreenIsland::Compositor(this)
     , m_shellProcess(0)
+    , m_shellReady(false)
 {
     // Set title
     setTitle(QStringLiteral("Hawaii Shell"));
@@ -80,7 +81,7 @@ Compositor::Compositor(const QRect &geometry)
     // Protocols
     m_shell = new Shell(waylandDisplay());
     connect(m_shell, SIGNAL(ready()),
-            this, SIGNAL(ready()));
+            this, SLOT(shellReady()));
     m_notifications = new Notifications(waylandDisplay());
 }
 
@@ -160,6 +161,15 @@ void Compositor::destroyClientForWindow(QVariant window)
 
 void Compositor::shellStarted()
 {
+}
+
+void Compositor::shellReady()
+{
+    // Shell is ready and we can start handling input events
+    m_shellReady = true;
+
+    // Fade in the desktop
+    Q_EMIT ready();
 }
 
 void Compositor::shellFailed(QProcess::ProcessError error)
@@ -301,6 +311,12 @@ void Compositor::resizeEvent(QResizeEvent *event)
 
 void Compositor::mousePressEvent(QMouseEvent *event)
 {
+    // Ignore events until the shell is ready
+    if (!m_shellReady) {
+        event->ignore();
+        return;
+    }
+
     QPointF local;
     QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
     if (targetSurface) {
@@ -313,6 +329,12 @@ void Compositor::mousePressEvent(QMouseEvent *event)
 
 void Compositor::mouseReleaseEvent(QMouseEvent *event)
 {
+    // Ignore events until the shell is ready
+    if (!m_shellReady) {
+        event->ignore();
+        return;
+    }
+
     QPointF local;
     QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
     if (targetSurface) {
@@ -325,6 +347,12 @@ void Compositor::mouseReleaseEvent(QMouseEvent *event)
 
 void Compositor::mouseMoveEvent(QMouseEvent *event)
 {
+    // Ignore events until the shell is ready
+    if (!m_shellReady) {
+        event->ignore();
+        return;
+    }
+
     QPointF local;
     QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
     if (targetSurface) {
