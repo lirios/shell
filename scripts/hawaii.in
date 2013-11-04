@@ -55,7 +55,7 @@ tmicro=0
 tversion=$((${tmajor} | ${tminor} | ${tmicro}))
 
 if [ ${version} -ge ${tversion} ]; then
-    args="-- --shell=@CMAKE_INSTALL_FULL_LIBDIR@/weston/hawaii-desktop.so"
+    args="--shell=@CMAKE_INSTALL_FULL_LIBDIR@/weston/hawaii-desktop.so"
 else
     echo
     echo "Make sure you configured ~/.config/weston.ini to the following module:"
@@ -66,7 +66,7 @@ else
 fi
 
 if [ -z "$DISPLAY" ]; then
-    exec ${westonlaunch} ${args}
+    exec ${westonlaunch} $@ -- ${args}
 else
-    exec ${weston} ${args}
+    exec ${weston} ${args} $@
 fi
