@@ -221,10 +221,63 @@ void Shell::hawaii_shell_set_position(Resource *resource,
         surface->surfaceItem()->setPosition(QPointF(x, y));
 }
 
+void Shell::hawaii_shell_set_lock_surface(Resource *resource,
+                                          struct ::wl_resource *surface)
+{
+    Q_UNUSED(resource);
+}
+
+void Shell::hawaii_shell_quit(Resource *resource)
+{
+    Q_UNUSED(resource);
+}
+
+void Shell::hawaii_shell_lock(Resource *resource)
+{
+    Q_UNUSED(resource);
+}
+
+void Shell::hawaii_shell_unlock(Resource *resource)
+{
+    Q_UNUSED(resource);
+}
+
+void Shell::hawaii_shell_set_grab_surface(Resource *resource,
+                                          struct ::wl_resource *surface_resource)
+{
+    Q_UNUSED(resource);
+}
+
 void Shell::hawaii_shell_desktop_ready(Resource *resource)
 {
     Q_UNUSED(resource);
     Q_EMIT ready();
+}
+
+void Shell::hawaii_shell_minimize_windows(Resource *resource)
+{
+    Q_UNUSED(resource);
+}
+
+void Shell::hawaii_shell_restore_windows(Resource *resource)
+{
+    Q_UNUSED(resource);
+}
+
+void Shell::hawaii_shell_add_workspace(Resource *resource)
+{
+    Q_UNUSED(resource);
+}
+
+void Shell::hawaii_shell_select_workspace(Resource *resource,
+                                          struct ::wl_resource *workspace)
+{
+    Q_UNUSED(resource);
+}
+
+void Shell::hawaii_shell_start_grab(Resource *resource, uint32_t id)
+{
+    Q_UNUSED(resource);
 }
 
 void Shell::surfaceUnmapped()

@@ -97,7 +97,27 @@ private:
                                    struct ::wl_resource *surface,
                                    int32_t x, int32_t y) Q_DECL_OVERRIDE;
 
+    void hawaii_shell_set_lock_surface(Resource *resource,
+                                       struct ::wl_resource *surface_resource) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_quit(Resource *resource) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_lock(Resource *resource) Q_DECL_OVERRIDE;
+    void hawaii_shell_unlock(Resource *resource) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_set_grab_surface(Resource *resource,
+                                       struct ::wl_resource *surface_resource) Q_DECL_OVERRIDE;
+
     void hawaii_shell_desktop_ready(Resource *resource) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_minimize_windows(Resource *resource) Q_DECL_OVERRIDE;
+    void hawaii_shell_restore_windows(Resource *resource) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_add_workspace(Resource *resource) Q_DECL_OVERRIDE;
+    void hawaii_shell_select_workspace(Resource *resource,
+                                       struct ::wl_resource *workspace) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_start_grab(Resource *resource, uint32_t id) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void surfaceUnmapped();
