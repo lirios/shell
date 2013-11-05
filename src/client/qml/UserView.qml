@@ -27,7 +27,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import QtAccountsService 5.0
+import QtAccountsService 1.0
 import FluidUi 0.2 as FluidUi
 
 Item {
