@@ -3,65 +3,91 @@ Hawaii Shell
 
 This is the Hawaii desktop environment shell.
 
-It contains a Qt platform plugin and shells for different form
-factors such as desktop, netbook and tablet.
+It contains a Qt platform theme plugin, shells for different form
+factors such as desktop, netbook and tablet and QML plugins.
 
 Only the desktop shell is implemented at the moment though.
 
 ## Dependencies
 
-In order to build and install this software, you will need a complete
-and up to date Wayland, Qt 5 and Vibe development environment.
+In order to build and install Hawaii Shell you need Wayland 1.2 and Qt 5.2 or better with
+at least the following modules:
 
-The Wayland site has some information to bring it up:
+* qtbase
+* qtdeclarative
+* qtwayland
+
+At the time of this writing, the qtwayland module doesn't support Wayland 1.3
+for the QtCompositor API.
+
+The Wayland site has some information on how to build it:
 
   http://wayland.freedesktop.org/building.html
 
-More information about building Qt 5 can be found here:
+You can either build Qt from git yourself or download binaries.
+
+More information about building Qt from git can be found here:
 
   http://qt-project.org/wiki/Building-Qt-5-from-Git
 
-Vibe and other Hawaii components can be easily built with our
-Continuous Integration tool, read the instructions here:
+Qt 5 binaries can be downloaded from http://qt-project.org/downloads
 
-  https://github.com/hawaii-desktop/hawaii
+The qtwayland module has not been released yet, please clone the `stable` branch from:
 
-The Continuous Integration tool builds the whole desktop.
+  http://qt.gitorious.org/qt/qtwayland
+
+and build it yourself.
+
+You also need the following modules:
+
+* weston
+* fluid
+* qtaccountsservice
+* qtconfiguration
+* greenisland (optional; used by the QML compositor)
 
 ## Build
 
-Building this software is a piece of cake.
+Building Hawaii Shell is a piece of cake.
 
 Assuming you are in the source directory, just create a build directory
 and run cmake:
 
-    mkdir build
-    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=/opt/hawaii ..
+```sh
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/opt/hawaii ..
+```
 
 To do a debug build the last command can be:
 
-    cmake -DCMAKE_INSTALL_PREFIX=/opt/hawaii -DCMAKE_BUILD_TYPE=Debug ..
+```sh
+cmake -DCMAKE_INSTALL_PREFIX=/opt/hawaii -DCMAKE_BUILD_TYPE=Debug ..
+```
 
 To do a release build instead it can be:
 
-    cmake -DCMAKE_INSTALL_PREFIX=/opt/hawaii -DCMAKE_BUILD_TYPE=Release ..
+```sh
+cmake -DCMAKE_INSTALL_PREFIX=/opt/hawaii -DCMAKE_BUILD_TYPE=Release ..
+```
 
-If not passed, the CMAKE_INSTALL_PREFIX parameter defaults to /usr/local.
+If not passed, the `CMAKE_INSTALL_PREFIX` parameter defaults to /usr/local.
 You have to specify a path that fits your needs, /opt/hawaii is just an example.
 
-Package maintainers would pass *-DCMAKE_INSTALL_PREFIX=/usr*.
+Package maintainers would pass `-DCMAKE_INSTALL_PREFIX=/usr`.
 
-The CMAKE_BUILD_TYPE parameter allows the following values:
+The `CMAKE_BUILD_TYPE` parameter allows the following values:
 
-    Debug: debug build
-    Release: release build
-    RelWithDebInfo: release build with debugging information
+* **Debug:** debug build
+* **Release:** release build
+* **RelWithDebInfo:** release build with debugging information
 
 ## Installation
 
 It's really easy, it's just a matter of typing:
 
-    make install
+```sh
+make install
+```
 
 from the build directory.
