@@ -63,8 +63,11 @@ set(ADDITIONAL_LDLIBPATH "" CACHE STRING "Additional library path that starthawa
 set(ADDITIONAL_PATH "" CACHE STRING "Additional path that starthawaii will use")
 
 # Find Qt5
-find_package(Qt5 5.2 REQUIRED COMPONENTS DBus Qml Quick Configuration)
+find_package(Qt5 5.2 REQUIRED COMPONENTS DBus Qml Quick)
 include(QtWayland)
+
+# Find QtConfiguration
+find_package(QtConfiguration REQUIRED)
 
 # Find GreenIsland
 find_package(GreenIsland)

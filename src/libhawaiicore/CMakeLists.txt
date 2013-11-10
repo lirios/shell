@@ -1,4 +1,5 @@
 include_directories(
+    ${QtConfiguration_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/settings
@@ -11,7 +12,8 @@ set(SOURCES
 )
 
 add_library(HawaiiCore SHARED ${SOURCES})
-qt5_use_modules(HawaiiCore Core Configuration)
+qt5_use_modules(HawaiiCore Core)
+target_link_libraries(HawaiiCore ${QtConfiguration_LIBRARIES})
 set_target_properties(HawaiiCore PROPERTIES
     VERSION ${HAWAII_SHELL_VERSION_STRING}
     SOVERSION ${HAWAII_SHELL_VERSION_MAJOR}.${HAWAII_SHELL_VERSION_MINOR}.${HAWAII_SHELL_VERSION_PATCH})
