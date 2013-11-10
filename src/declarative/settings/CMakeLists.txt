@@ -1,4 +1,5 @@
 include_directories(
+    ${QtConfiguration_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_BINARY_DIR}/headers
 )
