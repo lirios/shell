@@ -60,7 +60,8 @@ Item {
 
         property var dateTime: Shell.service("DateTime")
         property list<Item> indicators: [
-            VolumeIndicator {}
+            VolumeIndicator {},
+            DateTimeIndicator {}
         ]
     }
 

@@ -40,62 +40,44 @@ Item {
     QtObject {
         id: __priv
 
-        property var dateTime: Shell.service("DateTime")
         property var sessionManager: Shell.service("SessionManager")
     }
 
     RowLayout {
         id: mainLayout
 
-        Label {
-            id: dateTimeLabel
-            wrapMode: Text.Wrap
-            maximumLineCount: 2
-
-            //Layout.maximumWidth: 100
-            Layout.fillHeight: true
-            Layout.alignment: Qt.AlignTop
+        ToolButton {
+            iconName: "preferences-system-symbolic"
+            onClicked: {
+                shutdownView.childClicked();
+            }
         }
 
-        Connections {
-            target: __priv.dateTime
-            onDateTimeChanged: dateTimeLabel.text = Qt.formatDate(__priv.dateTime.dateTime, Qt.DefaultLocaleLongDate)
+        ToolButton {
+            iconName: "changes-prevent-symbolic"
+            onClicked: {
+                shutdownView.childClicked();
+                __priv.sessionManager.lock();
+            }
         }
 
-        RowLayout {
-            ToolButton {
-                iconName: "preferences-system-symbolic"
-                onClicked: {
-                    shutdownView.childClicked();
-                }
+        ToolButton {
+            iconName: "system-shutdown-symbolic"
+            onClicked: {
+                shutdownView.childClicked();
+                DialogsSingleton.shutdownDialog.visible = true;
             }
-
-            ToolButton {
-                iconName: "changes-prevent-symbolic"
-                onClicked: {
-                    shutdownView.childClicked();
-                    __priv.sessionManager.lock();
-                }
-            }
-
-            ToolButton {
-                iconName: "system-shutdown-symbolic"
-                onClicked: {
-                    shutdownView.childClicked();
-                    DialogsSingleton.shutdownDialog.visible = true;
-                }
-            }
-
-            ToolButton {
-                iconName: "media-playback-pause-symbolic"
-                visible: false
-                onClicked: {
-                    shutdownView.childClicked();
-                }
-            }
-
-            Layout.alignment: Qt.AlignCenter
-            Layout.fillWidth: true
         }
+
+        ToolButton {
+            iconName: "media-playback-pause-symbolic"
+            visible: false
+            onClicked: {
+                shutdownView.childClicked();
+            }
+        }
+
+        Layout.alignment: Qt.AlignCenter
+        Layout.fillWidth: true
     }
 }
