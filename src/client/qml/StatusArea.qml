@@ -116,6 +116,7 @@ Item {
             width: iconSize
             height: iconSize
             color: "white"
+            visible: modelData.iconVisible
 
             Behavior on color {
                 ColorAnimation { easing.type: Easing.Linear; duration: 250 }

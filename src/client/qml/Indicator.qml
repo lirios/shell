@@ -33,6 +33,7 @@ Item {
 
     property alias iconName: icon.iconName
     default property alias content: container.data
+    property bool iconVisible: true
 
     RowLayout {
         anchors {
@@ -45,6 +46,7 @@ Item {
             width: 22
             height: 22
             color: "black"
+            visible: iconVisible
 
             Layout.alignment: Qt.AlignVCenter
         }
