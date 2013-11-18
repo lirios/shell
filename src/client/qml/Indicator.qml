@@ -29,7 +29,6 @@ import QtQuick.Layouts 1.0
 import FluidUi 0.2 as FluidUi
 
 Item {
-    width: parent.width
     height: 32
 
     property alias iconName: icon.iconName
@@ -57,4 +56,6 @@ Item {
             Layout.fillHeight: true
         }
     }
+
+    Layout.fillWidth: true
 }

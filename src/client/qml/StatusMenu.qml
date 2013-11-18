@@ -41,14 +41,10 @@ Popup {
             Layout.fillWidth: true
         }
 
-        Item {
+        ColumnLayout {
             id: placeholder
-            clip: true
-            width: childrenRect.width
-            height: childrenRect.height
 
             Layout.fillWidth: true
-            Layout.fillHeight: true
         }
 
         ShutdownView {
