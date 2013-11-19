@@ -87,6 +87,7 @@ Item {
                 Layout.alignment: Qt.AlignTop
             }
 
+            Layout.minimumWidth: 100
             Layout.fillHeight: true
         }
 
