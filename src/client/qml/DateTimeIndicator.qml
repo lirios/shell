@@ -43,6 +43,6 @@ Indicator {
 
     Label {
         id: label
-        anchors.fill: parent
+        anchors.verticalCenter: parent.verticalCenter
     }
 }
