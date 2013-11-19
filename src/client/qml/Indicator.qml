@@ -53,6 +53,7 @@ Item {
 
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
             Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 
