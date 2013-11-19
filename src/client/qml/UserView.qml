@@ -110,6 +110,8 @@ Item {
                     __priv.sessionManager.logout();
                 }
             }
+
+            Layout.alignment: Qt.AlignTop
         }
     }
 }
