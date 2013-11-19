@@ -36,7 +36,7 @@ PopupWindow {
     default property alias content: mainLayout.data
 
     StyledItem {
-        readonly property int margin: 6
+        readonly property int margin: 10
 
         id: styledItem
         style: Qt.createComponent(StyleSettings.path + "/PopupStyle.qml", styledItem)
