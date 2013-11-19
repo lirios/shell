@@ -36,10 +36,7 @@ Item {
     property bool iconVisible: true
 
     RowLayout {
-        anchors {
-            fill: parent
-            margins: 10
-        }
+        anchors.fill: parent
 
         FluidUi.Icon {
             id: icon
@@ -48,14 +45,14 @@ Item {
             color: "black"
             visible: iconVisible
 
-            Layout.alignment: Qt.AlignVCenter
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
         }
 
         Item {
             id: container
 
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
             Layout.fillWidth: true
-            Layout.fillHeight: true
         }
     }
 
