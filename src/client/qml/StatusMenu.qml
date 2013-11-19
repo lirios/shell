@@ -50,8 +50,7 @@ Popup {
         ShutdownView {
             onChildClicked: statusMenu.visible = false
 
-            Layout.alignment: Qt.AlignCenter
-            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
         }
     }
 }

@@ -76,8 +76,5 @@ Item {
                 shutdownView.childClicked();
             }
         }
-
-        Layout.alignment: Qt.AlignCenter
-        Layout.fillWidth: true
     }
 }
