@@ -337,19 +337,16 @@ Item {
         cacheBuffer: 10000
         interactive: false
         header: AppChooserButton {
-            Connections {
-                target: appChooser
-                onVisibleChanged: checked = appChooser.visible
-            }
+            id: button
 
             Shortcut {
                 key: Qt.MetaModifier | Qt.Key_A
-                onTriggered: checked = !checked
+                onTriggered: button.checked = !button.checked
             }
 
             width: tileSize
             height: tileSize
-            onClicked: appChooser.visible = !appChooser.visible
+            onCheckedChanged: appChooser.visible = checked
         }
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
