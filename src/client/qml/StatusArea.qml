@@ -97,7 +97,7 @@ Item {
                 anchors.centerIn: parent
                 font.bold: true
                 font.pixelSize: iconSize * 0.7
-                color: "white"
+                color: mouseArea.hover ? "white" : "#cdcdcd"
 
                 Behavior on color {
                     ColorAnimation { easing.type: Easing.Linear; duration: 250 }
@@ -116,7 +116,7 @@ Item {
             iconName: modelData.iconName
             width: iconSize
             height: iconSize
-            color: "white"
+            color: mouseArea.hover ? "white" : "#cdcdcd"
             visible: modelData.iconVisible
 
             Behavior on color {
@@ -126,7 +126,13 @@ Item {
     }
 
     MouseArea {
+        property bool hover: false
+
+        id: mouseArea
         anchors.fill: parent
+        hoverEnabled: true
+        onEntered: hover = true
+        onExited: hover = false
         onClicked: statusMenu.visible = !statusMenu.visible
     }
 
