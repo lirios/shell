@@ -174,8 +174,11 @@ void PopupWindow::show()
         return;
 
     // Create the window
-    if (!d->window)
+    if (!d->window) {
         d->window = new PopupQuickWindow(this);
+        connect(d->window, SIGNAL(visibleChanged(bool)),
+                this, SIGNAL(visibleChanged()));
+    }
 
     // Set window geometry according to content
     d->window->setX(qRound(d->x));
@@ -191,7 +194,6 @@ void PopupWindow::show()
                               Qt::QueuedConnection);
     QMetaObject::invokeMethod(d->window, "setWindowType",
                               Qt::QueuedConnection);
-    Q_EMIT visibleChanged();
 }
 
 void PopupWindow::hide()
