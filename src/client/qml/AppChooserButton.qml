@@ -55,7 +55,6 @@ StyledItem {
         hoverEnabled: true
         onEntered: hover = true
         onExited: hover = checked
-        onReleased: checked = !checked
         onClicked: root.clicked()
     }
 }

@@ -341,12 +341,13 @@ Item {
 
             Shortcut {
                 key: Qt.MetaModifier | Qt.Key_A
-                onTriggered: button.checked = !button.checked
+                onTriggered: appChooser.visible = !appChooser.visible
             }
 
             width: tileSize
             height: tileSize
-            onCheckedChanged: appChooser.visible = checked
+            checked: appChooser.visible
+            onClicked: appChooser.visible = true
         }
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
