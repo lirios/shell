@@ -20,6 +20,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/services/datetime
     ${CMAKE_CURRENT_SOURCE_DIR}/services/policykit-agent
     ${CMAKE_CURRENT_SOURCE_DIR}/services/powermanager
+    ${CMAKE_CURRENT_SOURCE_DIR}/services/processlauncher
     ${CMAKE_CURRENT_SOURCE_DIR}/services/volumecontrol
     ${CMAKE_CURRENT_SOURCE_DIR}/services/sessionmanager
 )
@@ -60,6 +61,7 @@ set(SOURCES
     services/powermanager/powermanager.cpp
     services/powermanager/systemdpowerbackend.cpp
     services/powermanager/upowerpowerbackend.cpp
+    services/processlauncher/processlauncher.cpp
     services/volumecontrol/volumecontrol.cpp
     services/sessionmanager/sessionmanager.cpp
     windowtypes/backgroundwindow.cpp

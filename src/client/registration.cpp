@@ -41,6 +41,7 @@
 #include "popupwindow.h"
 #include "policykitagent.h"
 #include "powermanager.h"
+#include "processlauncher.h"
 #include "servicefactory.h"
 #include "sessionmanager.h"
 #include "shellwindow.h"
@@ -99,6 +100,7 @@ void Registration::registerFactories()
     // Register service factories
     ServiceFactory::registerFactory<DateTime>();
     ServiceFactory::registerFactory<PowerManager>();
+    ServiceFactory::registerFactory<ProcessLauncher>();
     ServiceFactory::registerFactory<SessionManager>();
     ServiceFactory::registerFactory<VolumeControl>();
     ServiceFactory::registerFactory<PolicyKitAgent>();
