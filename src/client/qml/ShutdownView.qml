@@ -41,6 +41,7 @@ Item {
         id: __priv
 
         property var sessionManager: Shell.service("SessionManager")
+        property var processLauncher: Shell.service("ProcessLauncher")
     }
 
     RowLayout {
@@ -50,6 +51,7 @@ Item {
             iconName: "preferences-system-symbolic"
             onClicked: {
                 shutdownView.childClicked();
+                __priv.processLauncher.launch("hawaii-system-preferences");
             }
         }
 
