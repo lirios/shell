@@ -47,6 +47,9 @@ Compositor::Compositor(const QRect &geometry)
     : GreenIsland::Compositor(this)
     , m_shellProcess(0)
     , m_shellReady(false)
+    , m_cursorSurface(nullptr)
+    , m_cursorHotspotX(0)
+    , m_cursorHotspotY(0)
 {
     // Set title
     setTitle(QStringLiteral("Hawaii Shell"));
@@ -361,6 +364,29 @@ void Compositor::mouseMoveEvent(QMouseEvent *event)
     } else {
         QQuickView::mouseMoveEvent(event);
     }
+}
+
+void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY)
+{
+    if ((m_cursorSurface != surface) && surface)
+        connect(surface, &QWaylandSurface::damaged, [=](const QRect &rect) {
+            if (!m_cursorSurface)
+                return;
+
+
+            QCursor cursor(QPixmap::fromImage(m_cursorSurface->image()), m_cursorHotspotX, m_cursorHotspotY);
+            static bool cursorIsSet = false;
+            if (cursorIsSet) {
+                QGuiApplication::changeOverrideCursor(cursor);
+            } else {
+                QGuiApplication::setOverrideCursor(cursor);
+                cursorIsSet = true;
+            }
+        });
+
+    m_cursorSurface = surface;
+    m_cursorHotspotX = hotspotX;
+    m_cursorHotspotY = hotspotY;
 }
 
 #include "moc_compositor.cpp"

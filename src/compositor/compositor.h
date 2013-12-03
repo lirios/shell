@@ -88,6 +88,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
+    void setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY);
+
 private:
     Shell *m_shell;
     QList<KeyBinding *> m_keyBindings;
@@ -96,6 +98,11 @@ private:
     Notifications *m_notifications;
     QProcess *m_shellProcess;
     bool m_shellReady;
+
+    // Cursor
+    QWaylandSurface *m_cursorSurface;
+    int m_cursorHotspotX;
+    int m_cursorHotspotY;
 };
 
 #endif // COMPOSITOR_H
