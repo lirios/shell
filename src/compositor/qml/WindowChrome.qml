@@ -53,6 +53,13 @@ Item {
         enabled: !window.focus
         hoverEnabled: !window.focus
         onClicked: {
+            // Ping the surface to see whether it's responsive, if a pong
+            // doesn't arrive before pingTimeout is trigger we know the
+            // surface is unresponsive and mark the container's flag
+            chrome.parent.parent.unresponsive = false;
+            window.surface.ping();
+            pingTimeout.start();
+
             // Select the window if it's unselected
             if (!selected) {
                 root.selectedWindow = window;
@@ -60,5 +67,20 @@ Item {
                 window.takeFocus();
             }
         }
+    }
+
+    // Timer that pings surfaces to see if they are responsive
+    Timer {
+        id: pingTimeout
+        interval: 200
+        onTriggered: {
+            chrome.parent.parent.unresponsive = true;
+        }
+    }
+
+    // Stops the timeout when a pong is received
+    Connections {
+        target: window.surface
+        onPong: pingTimeout.stop()
     }
 }

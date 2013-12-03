@@ -41,12 +41,14 @@
 
 import QtQuick 2.0
 import QtQuick.Window 2.0
+import QtGraphicalEffects 1.0
 
 Item {
     id: container
 
     property variant child: null
     property variant chrome: null
+    property bool unresponsive: false
     property bool animationsEnabled: true
 
     Behavior on x {
@@ -93,16 +95,37 @@ Item {
         }
     }
 
+    // Unresponsive effect
+    Colorize {
+        id: unresponsiveEffect
+        anchors.fill: effect
+        source: effect
+        hue: 0.0
+        saturation: 0.5
+        lightness: -0.2
+        opacity: 0.0
+        z: 1
+
+        Behavior on opacity {
+            NumberAnimation { easing.type: Easing.Linear; duration: 250 }
+        }
+    }
+
     states: [
         State {
             name: "selected"
-            when: child && child.focus
+            when: child && child.focus && !unresponsive
             PropertyChanges { target: effect; blend: 0.0 }
         },
         State {
             name: "unselected"
-            when: child && !child.focus
+            when: child && !child.focus && !unresponsive
             PropertyChanges { target: effect; blend: 1.0 }
+        },
+        State {
+            name: "unresponsive"
+            when: child && unresponsive
+            PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
         }
     ]
 }
