@@ -116,11 +116,13 @@ Item {
             name: "selected"
             when: child && child.focus && !unresponsive
             PropertyChanges { target: effect; blend: 0.0 }
+            PropertyChanges { target: container; z: 1 }
         },
         State {
             name: "unselected"
             when: child && !child.focus && !unresponsive
             PropertyChanges { target: effect; blend: 1.0 }
+            PropertyChanges { target: container; z: 0 }
         },
         State {
             name: "unresponsive"
