@@ -57,8 +57,10 @@ Item {
             // doesn't arrive before pingTimeout is trigger we know the
             // surface is unresponsive and mark the container's flag
             chrome.parent.parent.unresponsive = false;
-            window.surface.ping();
-            pingTimeout.start();
+            if (window.surface) {
+                window.surface.ping();
+                pingTimeout.start();
+            }
 
             // Select the window if it's unselected
             if (!selected) {
