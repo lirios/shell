@@ -103,6 +103,8 @@ private:
     QWaylandSurface *m_cursorSurface;
     int m_cursorHotspotX;
     int m_cursorHotspotY;
+
+    QPointF calculateInitialPosition(QWaylandSurface *surface);
 };
 
 #endif // COMPOSITOR_H

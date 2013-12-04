@@ -33,6 +33,9 @@
 #include <QtCompositor/QWaylandSurface>
 #include <QtCompositor/QWaylandSurfaceItem>
 #include <QtCompositor/QWaylandInputDevice>
+#include <QtCompositor/private/qwlcompositor_p.h>
+#include <QtCompositor/private/qwlinputdevice_p.h>
+#include <QtCompositor/private/qwlpointer_p.h>
 
 #include "compositor.h"
 #include "shell.h"
@@ -269,10 +272,13 @@ void Compositor::surfaceMapped()
     }
 
     // Announce a window was added
-    if (isShellWindow(surface))
+    if (isShellWindow(surface)) {
         emit shellWindowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
-    else
+    } else {
+        surface->setPos(calculateInitialPosition(surface));
+        //item->setPosition(calculateInitialPosition(surface));
         emit windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
+    }
 }
 
 void Compositor::surfaceUnmapped()
@@ -387,6 +393,48 @@ void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int ho
     m_cursorSurface = surface;
     m_cursorHotspotX = hotspotX;
     m_cursorHotspotY = hotspotY;
+}
+
+QPointF Compositor::calculateInitialPosition(QWaylandSurface *surface)
+{
+    // As a heuristic place the new window on the same output as the
+    // pointer. Falling back to the output containing 0,0.
+    // TODO: Do something clever for touch too
+    QPointF pos = defaultInputDevice()->handle()->pointerDevice()->currentPosition();
+
+    // Find the target output (the one where the coordinates are in)
+    // FIXME: QtWayland::Compositor should give us a list of outputs and then we
+    // can scroll the list and find the output that contains the coordinates;
+    // targetOutput then would be a pointer to an Output
+    QtWayland::Compositor *compositor = static_cast<QWaylandCompositor *>(this)->handle();
+    bool targetOutput = compositor->outputGeometry().contains(pos.toPoint());
+
+    // Just move the surface to a random position if we can't find a target output
+    if (!targetOutput) {
+        pos.setX(10 + qrand() % 400);
+        pos.setY(10 + qrand() % 400);
+        return pos;
+    }
+
+    // Valid range within output where the surface will still be onscreen.
+    // If this is negative it means that the surface is bigger than
+    // output in this case we fallback to 0,0 in available geometry space.
+    // FIXME: When we have an Output we need a way to check the available
+    // geometry (which is the portion of screen that is not used by panels)
+    int rangeX = compositor->outputGeometry().width() - surface->size().width();
+    int rangeY = compositor->outputGeometry().height() - surface->size().height();
+
+    int dx = 0, dy = 0;
+    if (rangeX > 0)
+        dx = qrand() % rangeX;
+    if (rangeY > 0)
+        dy = qrand() % rangeY;
+
+    // Set surface position
+    pos.setX(compositor->outputGeometry().x() + dx);
+    pos.setY(compositor->outputGeometry().y() + dy);
+
+    return pos;
 }
 
 #include "moc_compositor.cpp"

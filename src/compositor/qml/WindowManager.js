@@ -56,6 +56,10 @@ function windowAdded(window)
     windowContainer.child = window;
 
     // Setup window container
+    console.log(window.x, window.y);
+    console.log(windowContainer.x, windowContainer.y);
+    windowContainer.x = window.x;
+    windowContainer.y = window.y;
     windowContainer.width = window.width;
     windowContainer.height = window.height;
     windowContainer.z = 1;
