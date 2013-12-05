@@ -271,7 +271,16 @@ void Compositor::surfaceMapped()
         emit shellWindowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
     } else {
         // Set application window position
-        item->setPosition(calculateInitialPosition(surface));
+        switch (surface->windowType()) {
+        case QWaylandSurface::Toplevel:
+            surface->setPos(calculateInitialPosition(surface));
+            break;
+        case QWaylandSurface::Transient:
+            item->setPosition(surface->pos());
+            break;
+        default:
+            break;
+        }
 
         // Announce a window was added
         emit windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
