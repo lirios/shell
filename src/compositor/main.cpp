@@ -61,12 +61,12 @@ int main(int argc, char *argv[])
     if (parser.isSet(synthesizeOption))
         app.setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, true);
 
-    QRect geometry = QGuiApplication::primaryScreen()->availableGeometry();
-    geometry.setWidth(1920);
-    geometry.setHeight(1080);
+    QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
+    QRect geometry(screenGeometry.topLeft(), QSize(1920, 1080));
 
-    Compositor compositor(geometry);
-    compositor.setGeometry(geometry);
+    Compositor compositor;
+    compositor.setPosition(geometry.topLeft());
+    compositor.resize(geometry.size());
     compositor.runShell();
     compositor.show();
 

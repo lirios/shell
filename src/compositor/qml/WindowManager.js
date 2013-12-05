@@ -36,18 +36,18 @@ function shellWindowAdded(window)
     window.parent = windowContainer;
     windowContainer.child = window;
 
-    // Full opacity
-    windowContainer.opacity = 1.0;
-
-    // Set geometry and z-index
-    console.log(window, window.z);
+    // Setup window container
+    windowContainer.x = window.x;
+    windowContainer.y = window.y;
+    windowContainer.z = window.z;
     windowContainer.width = window.width;
     windowContainer.height = window.height;
-    windowContainer.z = window.z;
+    windowContainer.opacity = 1.0;
 }
 
 function windowAdded(window)
 {
+    // Create container object
     var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
     var windowContainer = windowContainerComponent.createObject(root);
 
@@ -60,7 +60,6 @@ function windowAdded(window)
     windowContainer.y = window.y;
     windowContainer.width = window.width;
     windowContainer.height = window.height;
-    windowContainer.z = 1;
     windowContainer.opacity = 1.0;
 
     // Automatically give focus to new windows

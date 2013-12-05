@@ -31,7 +31,6 @@ Item {
     id: container
 
     property variant child: null
-    property variant chrome: null
 
     // This effect is used just to invert Y when necessary
     ContrastEffect {
@@ -42,16 +41,4 @@ Item {
         blend: 0.0
         z: 1
     }
-
-    // Change container geometry and z-index according to child
-    /*
-    Connections {
-        target: child
-        onXChanged: container.pos.x = x
-        onYChanged: container.pos.y = y
-        onZChanged: container.z = z
-        onWidthChanged: container.width = width
-        onHeightChanged: container.height = height
-    }
-    */
 }

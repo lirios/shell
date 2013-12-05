@@ -46,7 +46,7 @@
 #include "notifications.h"
 #include "cmakedirs.h"
 
-Compositor::Compositor(const QRect &geometry)
+Compositor::Compositor()
     : GreenIsland::Compositor(this)
     , m_shellProcess(0)
     , m_shellReady(false)
@@ -56,9 +56,6 @@ Compositor::Compositor(const QRect &geometry)
 {
     // Set title
     setTitle(QStringLiteral("Hawaii Shell"));
-
-    // Set initial geometry
-    setGeometry(geometry);
 
     // Allow QML to access this compositor
     rootContext()->setContextProperty("compositor", this);
@@ -269,14 +266,14 @@ void Compositor::surfaceMapped()
 
         // Set position as asked by the shell client
         item->setPosition(surface->windowProperties().value(QStringLiteral("position")).toPointF());
-    }
 
-    // Announce a window was added
-    if (isShellWindow(surface)) {
+        // Announce a window was added
         emit shellWindowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
     } else {
-        surface->setPos(calculateInitialPosition(surface));
-        //item->setPosition(calculateInitialPosition(surface));
+        // Set application window position
+        item->setPosition(calculateInitialPosition(surface));
+
+        // Announce a window was added
         emit windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
     }
 }

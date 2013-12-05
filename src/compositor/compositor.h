@@ -43,7 +43,7 @@ class Compositor : public QQuickView, public GreenIsland::Compositor
 {
     Q_OBJECT
 public:
-    explicit Compositor(const QRect &geometry);
+    explicit Compositor();
     ~Compositor();
 
     void runShell();
