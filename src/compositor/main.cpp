@@ -56,18 +56,31 @@ int main(int argc, char *argv[])
                                         QObject::tr("Synthesize touch for unhandled mouse events"));
     parser.addOption(synthesizeOption);
 
-    // Parse command line
-    parser.process(app);
-    if (parser.isSet(synthesizeOption))
-        app.setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, true);
+    // Full screen option
+    QCommandLineOption fullScreenOption(QStringLiteral("fullscreen"),
+                                        QObject::tr("Full screen compositor window"));
+    parser.addOption(fullScreenOption);
 
+    // Geometry
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     QRect geometry(screenGeometry.topLeft(), QSize(1920, 1080));
 
+    // Create compositor, run shell client
     Compositor compositor;
     compositor.setPosition(geometry.topLeft());
     compositor.resize(geometry.size());
     compositor.runShell();
+
+    // Parse command line
+    parser.process(app);
+    if (parser.isSet(synthesizeOption))
+        app.setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, true);
+    if (parser.isSet(fullScreenOption)) {
+        compositor.setGeometry(screenGeometry);
+        compositor.setVisibility(QWindow::FullScreen);
+    }
+
+    // Show compositor window
     compositor.show();
 
     return app.exec();
