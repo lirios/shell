@@ -37,8 +37,6 @@ function shellWindowAdded(window)
     windowContainer.child = window;
 
     // Setup window container
-    windowContainer.x = window.x;
-    windowContainer.y = window.y;
     windowContainer.z = window.z;
     windowContainer.width = window.width;
     windowContainer.height = window.height;
@@ -56,8 +54,6 @@ function windowAdded(window)
     windowContainer.child = window;
 
     // Setup window container
-    windowContainer.x = window.x;
-    windowContainer.y = window.y;
     windowContainer.width = window.width;
     windowContainer.height = window.height;
     windowContainer.opacity = 1.0;
