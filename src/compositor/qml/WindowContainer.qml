@@ -45,6 +45,7 @@ import QtGraphicalEffects 1.0
 
 Item {
     id: container
+    opacity: 0.0
 
     property variant child: null
     property variant chrome: null
