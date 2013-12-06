@@ -66,22 +66,22 @@ int main(int argc, char *argv[])
     QRect geometry(screenGeometry.topLeft(), QSize(1920, 1080));
 
     // Create compositor, run shell client
-    Compositor compositor;
-    compositor.setPosition(geometry.topLeft());
-    compositor.resize(geometry.size());
-    compositor.runShell();
+    Compositor *compositor = Compositor::instance();
+    compositor->setPosition(geometry.topLeft());
+    compositor->resize(geometry.size());
+    compositor->runShell();
 
     // Parse command line
     parser.process(app);
     if (parser.isSet(synthesizeOption))
         app.setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, true);
     if (parser.isSet(fullScreenOption)) {
-        compositor.setGeometry(screenGeometry);
-        compositor.setVisibility(QWindow::FullScreen);
+        compositor->setGeometry(screenGeometry);
+        compositor->setVisibility(QWindow::FullScreen);
     }
 
     // Show compositor window
-    compositor.show();
+    compositor->show();
 
     return app.exec();
 }

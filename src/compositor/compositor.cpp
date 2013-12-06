@@ -46,6 +46,8 @@
 #include "notifications.h"
 #include "cmakedirs.h"
 
+Q_GLOBAL_STATIC(Compositor, s_globalCompositor)
+
 Compositor::Compositor()
     : GreenIsland::Compositor(this)
     , m_shellProcess(0)
@@ -97,6 +99,16 @@ Compositor::~Compositor()
     delete m_shell;
 }
 
+Compositor *Compositor::instance()
+{
+    return s_globalCompositor();
+}
+
+Shell *Compositor::shell() const
+{
+    return m_shell;
+}
+
 void Compositor::runShell()
 {
     // Run the shell client process
@@ -136,6 +148,11 @@ bool Compositor::isShellWindow(QWaylandSurface *surface)
 
 void Compositor::surfaceCreated(QWaylandSurface *surface)
 {
+    // Create application window instance
+    ClientWindow *appWindow = new ClientWindow(waylandDisplay());
+    appWindow->setSurface(surface);
+    m_clientWindows.append(appWindow);
+
     // Connect surface signals
     connect(surface, SIGNAL(destroyed(QObject *)),
             this, SLOT(surfaceDestroyed(QObject *)));

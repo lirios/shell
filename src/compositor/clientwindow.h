@@ -27,12 +27,37 @@
 #ifndef CLIENTWINDOW_H
 #define CLIENTWINDOW_H
 
+#include <QtCompositor/QWaylandSurface>
+
 #include "qwayland-server-hawaii.h"
 
 class ClientWindow : public QtWaylandServer::wl_hawaii_window
 {
 public:
-    ClientWindow();
+    ClientWindow(struct ::wl_display *display);
+
+    QWaylandSurface *surface() const;
+    void setSurface(QWaylandSurface *surface);
+
+    int32_t state() const;
+    void setState(int32_t newState);
+
+    bool isMapped() const;
+
+    bool isActive() const;
+    void activate();
+    void deactivate();
+
+    void minimize();
+    void unminimize();
+
+protected:
+    void hawaii_window_set_state(Resource *resource, int32_t newState);
+
+private:
+    bool m_mapped;
+    QWaylandSurface *m_surface;
+    int32_t m_state;
 };
 
 #endif // CLIENTWINDOW_H

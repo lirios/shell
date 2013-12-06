@@ -46,6 +46,10 @@ public:
     explicit Compositor();
     ~Compositor();
 
+    static Compositor *instance();
+
+    Shell *shell() const;
+
     void runShell();
     void closeShell();
 
