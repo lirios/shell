@@ -42,6 +42,7 @@
 import QtQuick 2.0
 import QtQuick.Window 2.0
 import QtGraphicalEffects 1.0
+import GreenIsland 1.0
 
 Item {
     id: container
@@ -82,25 +83,19 @@ Item {
         NumberAnimation { easing.type: Easing.Linear; duration: 250 }
     }
 
-    // Decrease opacity for unfocused windows
-    ContrastEffect {
-        id: effect
+    // Render surface taking inverted y into account
+    SurfaceRenderer {
+        id: renderer
         anchors.fill: child
         source: child
-        opacity: 1.0
         z: 1
-
-        Behavior on blend {
-            enabled: true
-            NumberAnimation { easing.type: Easing.Linear; duration: 250 }
-        }
     }
 
     // Unresponsive effect
     Colorize {
         id: unresponsiveEffect
-        anchors.fill: effect
-        source: effect
+        anchors.fill: renderer
+        source: renderer
         hue: 0.0
         saturation: 0.5
         lightness: -0.2
@@ -116,13 +111,11 @@ Item {
         State {
             name: "selected"
             when: child && child.focus && !unresponsive
-            PropertyChanges { target: effect; blend: 0.0 }
             PropertyChanges { target: container; z: 1 }
         },
         State {
             name: "unselected"
             when: child && !child.focus && !unresponsive
-            PropertyChanges { target: effect; blend: 1.0 }
             PropertyChanges { target: container; z: 0 }
         },
         State {

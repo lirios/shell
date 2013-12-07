@@ -47,6 +47,8 @@ function windowAdded(window)
 {
     // Create container object
     var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
+    //if (windowContainerComponent.error)
+    console.warn(windowContainerComponent.errorString());
     var windowContainer = windowContainerComponent.createObject(root);
 
     // Reparent window

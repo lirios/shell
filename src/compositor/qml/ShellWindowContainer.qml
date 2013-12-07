@@ -26,19 +26,16 @@
 
 import QtQuick 2.0
 import QtQuick.Window 2.0
+import GreenIsland 1.0
 
 Item {
     id: container
 
     property variant child: null
 
-    // This effect is used just to invert Y when necessary
-    ContrastEffect {
-        id: effect
+    SurfaceRenderer {
         source: child
         anchors.fill: child
-        opacity: 1.0
-        blend: 0.0
         z: 1
     }
 }
