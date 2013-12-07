@@ -64,20 +64,7 @@ Compositor::Compositor()
     // Load the QML code
     setSource(QUrl("qrc:///qml/Compositor.qml"));
 
-    connect(this, SIGNAL(shellWindowAdded(QVariant)),
-            rootObject(), SLOT(shellWindowAdded(QVariant)));
-    connect(this, SIGNAL(windowAdded(QVariant)),
-            rootObject(), SLOT(windowAdded(QVariant)));
-    connect(this, SIGNAL(windowDestroyed(QVariant)),
-            rootObject(), SLOT(windowDestroyed(QVariant)));
-    connect(this, SIGNAL(windowResized(QVariant)),
-            rootObject(), SLOT(windowResized(QVariant)));
-    connect(this, SIGNAL(sceneGraphInitialized()),
-            this, SLOT(sceneGraphInitialized()), Qt::DirectConnection);
-    connect(this, SIGNAL(frameSwapped()),
-            this, SLOT(frameSwapped()));
-
-    // Protocols
+    // Create interfaces
     m_shell = new Shell(waylandDisplay());
     connect(m_shell, &Shell::ready, [=]() {
         // Shell is ready and we can start handling input events
@@ -87,6 +74,18 @@ Compositor::Compositor()
         Q_EMIT ready();
     });
     m_notifications = new Notifications(waylandDisplay());
+
+    // Connect to signals
+    connect(this, SIGNAL(surfaceMapped(QWaylandSurface*)),
+            this, SLOT(surfaceMapped(QWaylandSurface*)));
+    connect(this, SIGNAL(surfaceUnmapped(QWaylandSurface*)),
+            this, SLOT(surfaceUnmapped(QWaylandSurface*)));
+    connect(this, SIGNAL(surfaceDestroyed(QWaylandSurface*)),
+            this, SLOT(surfaceDestroyed(QWaylandSurface*)));
+    connect(this, SIGNAL(sceneGraphInitialized()),
+            this, SLOT(sceneGraphInitialized()), Qt::DirectConnection);
+    connect(this, SIGNAL(frameSwapped()),
+            this, SLOT(frameSwapped()));
 }
 
 Compositor::~Compositor()
@@ -124,22 +123,14 @@ bool Compositor::isShellWindow(QWaylandSurface *surface)
 void Compositor::surfaceCreated(QWaylandSurface *surface)
 {
     // Create application window instance
-    ClientWindow *appWindow = new ClientWindow(waylandDisplay());
-    appWindow->setSurface(surface);
-    m_clientWindows.append(appWindow);
+    if (!isShellWindow(surface)) {
+        ClientWindow *appWindow = new ClientWindow(waylandDisplay());
+        appWindow->setSurface(surface);
+        m_clientWindows.append(appWindow);
+    }
 
-    // Connect surface signals
-    connect(surface, SIGNAL(destroyed(QObject *)),
-            this, SLOT(surfaceDestroyed(QObject *)));
-    connect(surface, SIGNAL(mapped()),
-            this, SLOT(surfaceMapped()));
-    connect(surface, SIGNAL(unmapped()),
-            this, SLOT(surfaceUnmapped()));
-}
-
-void Compositor::surfaceAboutToBeDestroyed(QWaylandSurface *surface)
-{
-    // TODO:
+    // Call overridden method
+    GreenIsland::Compositor::surfaceCreated(surface);
 }
 
 void Compositor::destroyWindow(QVariant window)
@@ -154,10 +145,8 @@ void Compositor::destroyClientForWindow(QVariant window)
     destroyClientForSurface(surface);
 }
 
-void Compositor::surfaceMapped()
+void Compositor::surfaceMapped(QWaylandSurface *surface)
 {
-    QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
-
     // Ignore surfaces which are neither application windows nor shell windows
     if (!surface->hasShellSurface() && !isShellWindow(surface))
         return;
@@ -200,7 +189,10 @@ void Compositor::surfaceMapped()
         item->setPosition(surface->windowProperties().value(QStringLiteral("position")).toPointF());
 
         // Announce a window was added
-        emit shellWindowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
+        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
+        QMetaObject::invokeMethod(rootObject(), "shellWindowAdded",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(QVariant, window));
     } else {
         // Set application window position
 #if 0
@@ -214,28 +206,35 @@ void Compositor::surfaceMapped()
 #endif
 
         // Announce a window was added
-        emit windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
+        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
+        QMetaObject::invokeMethod(rootObject(), "windowAdded",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(QVariant, window));
     }
 }
 
-void Compositor::surfaceUnmapped()
+void Compositor::surfaceUnmapped(QWaylandSurface *surface)
 {
-    QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
-
     // Announce this window was unmapped
-    QQuickItem *item = surface->surfaceItem();
-    if (item)
-        emit windowDestroyed(QVariant::fromValue(item));
+    QWaylandSurfaceItem *item = surface->surfaceItem();
+    if (item) {
+        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
+        QMetaObject::invokeMethod(rootObject(), "windowUnmapped",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(QVariant, window));
+    }
 }
 
-void Compositor::surfaceDestroyed(QObject *object)
+void Compositor::surfaceDestroyed(QWaylandSurface *surface)
 {
-    QWaylandSurface *surface = static_cast<QWaylandSurface *>(object);
-
     // Announce this window was destroyed
-    QQuickItem *item = surface->surfaceItem();
-    if (item)
-        emit windowDestroyed(QVariant::fromValue(item));
+    QWaylandSurfaceItem *item = surface->surfaceItem();
+    if (item) {
+        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
+        QMetaObject::invokeMethod(rootObject(), "windowDestroyed",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(QVariant, window));
+    }
 }
 
 void Compositor::sceneGraphInitialized()

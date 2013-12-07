@@ -90,6 +90,10 @@ Item {
         WindowManager.windowResized(window);
     }
 
+    function windowUnmapped(window) {
+        WindowManager.windowUnmapped(window);
+    }
+
     function windowDestroyed(window) {
         WindowManager.windowDestroyed(window);
     }

@@ -53,25 +53,19 @@ public:
     bool isShellWindow(QWaylandSurface *surface);
 
     void surfaceCreated(QWaylandSurface *surface);
-    void surfaceAboutToBeDestroyed(QWaylandSurface *surface);
 
 Q_SIGNALS:
     void ready();
-
-    void shellWindowAdded(QVariant window);
-
-    void windowAdded(QVariant window);
-    void windowDestroyed(QVariant window);
-    void windowResized(QVariant window);
 
 public Q_SLOTS:
     void destroyWindow(QVariant window);
     void destroyClientForWindow(QVariant window);
 
 private Q_SLOTS:
-    void surfaceMapped();
-    void surfaceUnmapped();
-    void surfaceDestroyed(QObject *object);
+    void surfaceMapped(QWaylandSurface *surface);
+    void surfaceUnmapped(QWaylandSurface *surface);
+    void surfaceDestroyed(QWaylandSurface *surface);
+
     void sceneGraphInitialized();
     void frameSwapped();
 

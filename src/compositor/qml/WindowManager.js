@@ -79,6 +79,10 @@ function windowResized(window)
     windowContainer.height = window.height;
 }
 
+function windowUnmapped(window)
+{
+}
+
 function windowDestroyed(window)
 {
     var windowContainer = window.parent;
