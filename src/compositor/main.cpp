@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QLoggingCategory>
 #include <QtCore/QCommandLineParser>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QScreen>
@@ -45,6 +46,12 @@ int main(int argc, char *argv[])
 
     // Check whether XDG_RUNTIME_DIR is ok or not
     GreenIsland::verifyXdgRuntimeDir();
+
+    // Enable debug messages
+    QLoggingCategory::setFilterRules(QStringLiteral("greenisland.compositor.debug=true"));
+
+    // Set message pattern
+    qSetMessagePattern("%{message}");
 
     // Command line parser
     QCommandLineParser parser;
