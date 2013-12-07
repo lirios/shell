@@ -49,7 +49,7 @@
 Q_GLOBAL_STATIC(Compositor, s_globalCompositor)
 
 Compositor::Compositor()
-    : GreenIsland::Compositor(this)
+    : GreenIsland::Compositor()
     , m_shellProcess(0)
     , m_shellReady(false)
     , m_cursorSurface(nullptr)
@@ -60,15 +60,11 @@ Compositor::Compositor()
     setTitle(QStringLiteral("Hawaii Shell"));
 
     // Allow QML to access this compositor
-    rootContext()->setContextProperty("compositor", this);
     qmlRegisterUncreatableType<Compositor>("Hawaii.Shell", 0, 1, "Compositor",
                                            QStringLiteral("Cannot create Compositor"));
 
     // Load the QML code
     setSource(QUrl("qrc:///qml/Compositor.qml"));
-    setResizeMode(QQuickView::SizeRootObjectToView);
-    setColor(Qt::black);
-    winId();
 
     connect(this, SIGNAL(shellWindowAdded(QVariant)),
             rootObject(), SLOT(shellWindowAdded(QVariant)));
@@ -331,13 +327,6 @@ void Compositor::sceneGraphInitialized()
 void Compositor::frameSwapped()
 {
     frameFinished();
-}
-
-void Compositor::resizeEvent(QResizeEvent *event)
-{
-    // Scale compositor output to window's size
-    QQuickView::resizeEvent(event);
-    QWaylandCompositor::setOutputGeometry(QRect(0, 0, width(), height()));
 }
 
 void Compositor::mousePressEvent(QMouseEvent *event)

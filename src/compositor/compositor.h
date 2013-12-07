@@ -28,7 +28,7 @@
 #define COMPOSITOR_H
 
 #include <QProcess>
-#include <QQuickView>
+
 
 #include <GreenIsland/Compositor>
 
@@ -39,7 +39,7 @@ class Workspace;
 class Grab;
 class Notifications;
 
-class Compositor : public QQuickView, public GreenIsland::Compositor
+class Compositor : public GreenIsland::Compositor
 {
     Q_OBJECT
 public:
@@ -87,7 +87,6 @@ private Q_SLOTS:
     void frameSwapped();
 
 protected:
-    void resizeEvent(QResizeEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
