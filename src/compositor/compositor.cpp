@@ -44,13 +44,11 @@
 #include "workspace.h"
 #include "grab.h"
 #include "notifications.h"
-#include "cmakedirs.h"
 
 Q_GLOBAL_STATIC(Compositor, s_globalCompositor)
 
 Compositor::Compositor()
     : GreenIsland::Compositor()
-    , m_shellProcess(0)
     , m_shellReady(false)
     , m_cursorSurface(nullptr)
     , m_cursorHotspotX(0)
@@ -81,8 +79,13 @@ Compositor::Compositor()
 
     // Protocols
     m_shell = new Shell(waylandDisplay());
-    connect(m_shell, SIGNAL(ready()),
-            this, SLOT(shellReady()));
+    connect(m_shell, &Shell::ready, [=]() {
+        // Shell is ready and we can start handling input events
+        m_shellReady = true;
+
+        // Fade in the desktop
+        Q_EMIT ready();
+    });
     m_notifications = new Notifications(waylandDisplay());
 }
 
@@ -103,30 +106,6 @@ Compositor *Compositor::instance()
 Shell *Compositor::shell() const
 {
     return m_shell;
-}
-
-void Compositor::runShell()
-{
-    // Run the shell client process
-    m_shellProcess = new QProcess(this);
-    connect(m_shellProcess, SIGNAL(started()),
-            this, SLOT(shellStarted()));
-    connect(m_shellProcess, SIGNAL(error(QProcess::ProcessError)),
-            this, SLOT(shellFailed(QProcess::ProcessError)));
-    connect(m_shellProcess, SIGNAL(readyReadStandardOutput()),
-            this, SLOT(shellReadyReadStandardOutput()));
-    connect(m_shellProcess, SIGNAL(readyReadStandardError()),
-            this, SLOT(shellReadyReadStandardError()));
-    connect(m_shellProcess, SIGNAL(aboutToClose()),
-            this, SLOT(shellAboutToClose()));
-    m_shellProcess->start(QLatin1String(INSTALL_LIBEXECDIR "/starthawaii"),
-                          QStringList(), QIODevice::ReadOnly);
-}
-
-void Compositor::closeShell()
-{
-    m_shellProcess->close();
-    delete m_shellProcess;
 }
 
 bool Compositor::isShellWindow(QWaylandSurface *surface)
@@ -173,66 +152,6 @@ void Compositor::destroyClientForWindow(QVariant window)
     QWaylandSurface *surface = qobject_cast<QWaylandSurfaceItem *>(
                 qvariant_cast<QObject *>(window))->surface();
     destroyClientForSurface(surface);
-}
-
-void Compositor::shellStarted()
-{
-}
-
-void Compositor::shellReady()
-{
-    // Shell is ready and we can start handling input events
-    m_shellReady = true;
-
-    // Fade in the desktop
-    Q_EMIT ready();
-}
-
-void Compositor::shellFailed(QProcess::ProcessError error)
-{
-    switch (error) {
-    case QProcess::FailedToStart:
-        qWarning("The shell process failed to start.\n"
-                 "Either the invoked program is missing, or you may have insufficient permissions to run it.");
-        break;
-    case QProcess::Crashed:
-        qWarning("The shell process crashed some time after starting successfully.");
-        break;
-    case QProcess::Timedout:
-        qWarning("The shell process timedout.\n");
-        break;
-    case QProcess::WriteError:
-        qWarning("An error occurred when attempting to write to the shell process.");
-        break;
-    case QProcess::ReadError:
-        qWarning("An error occurred when attempting to read from the shell process.");
-        break;
-    case QProcess::UnknownError:
-        qWarning("Unknown error starting the shell process!");
-        break;
-    }
-
-    // Don't need it anymore because it failed
-    m_shellProcess->close();
-    delete m_shellProcess;
-    m_shellProcess = 0;
-}
-
-void Compositor::shellReadyReadStandardOutput()
-{
-    if (m_shellProcess)
-        printf("%s", m_shellProcess->readAllStandardOutput().constData());
-}
-
-void Compositor::shellReadyReadStandardError()
-{
-    if (m_shellProcess)
-        fprintf(stderr, "%s", m_shellProcess->readAllStandardError().constData());
-}
-
-void Compositor::shellAboutToClose()
-{
-    qDebug() << "Shell is about to close...";
 }
 
 void Compositor::surfaceMapped()

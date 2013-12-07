@@ -50,36 +50,25 @@ public:
 
     Shell *shell() const;
 
-    void runShell();
-    void closeShell();
-
     bool isShellWindow(QWaylandSurface *surface);
 
     void surfaceCreated(QWaylandSurface *surface);
     void surfaceAboutToBeDestroyed(QWaylandSurface *surface);
 
 Q_SIGNALS:
+    void ready();
+
     void shellWindowAdded(QVariant window);
 
     void windowAdded(QVariant window);
     void windowDestroyed(QVariant window);
     void windowResized(QVariant window);
 
-Q_SIGNALS:
-    void ready();
-
 public Q_SLOTS:
     void destroyWindow(QVariant window);
     void destroyClientForWindow(QVariant window);
 
 private Q_SLOTS:
-    void shellStarted();
-    void shellReady();
-    void shellFailed(QProcess::ProcessError error);
-    void shellReadyReadStandardOutput();
-    void shellReadyReadStandardError();
-    void shellAboutToClose();
-
     void surfaceMapped();
     void surfaceUnmapped();
     void surfaceDestroyed(QObject *object);
@@ -99,7 +88,6 @@ private:
     QList<ClientWindow *> m_clientWindows;
     QList<Workspace *> m_workspaces;
     Notifications *m_notifications;
-    QProcess *m_shellProcess;
     bool m_shellReady;
 
     // Cursor

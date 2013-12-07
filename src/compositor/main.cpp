@@ -32,6 +32,7 @@
 
 #include "compositor.h"
 #include "config.h"
+#include "cmakedirs.h"
 
 int main(int argc, char *argv[])
 {
@@ -69,7 +70,6 @@ int main(int argc, char *argv[])
     Compositor *compositor = Compositor::instance();
     compositor->setPosition(geometry.topLeft());
     compositor->resize(geometry.size());
-    compositor->runShell();
 
     // Parse command line
     parser.process(app);
@@ -79,6 +79,10 @@ int main(int argc, char *argv[])
         compositor->setGeometry(screenGeometry);
         compositor->setVisibility(QWindow::FullScreen);
     }
+    
+    // Run shell client
+    compositor->setShellFileName(QLatin1String(INSTALL_LIBEXECDIR "/starthawaii"));
+    compositor->runShell();
 
     // Show compositor window
     compositor->show();
