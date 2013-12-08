@@ -31,8 +31,9 @@ function windowAdded(window)
     // Automatically give focus to new windows
     window.takeFocus();
 
-    // Show the surface item
-    window.opacity = 1.0;
+    // Run create animation
+    if (window.runCreateAnimation)
+        window.runCreateAnimation();
 
     // Add to the client window list
     if (windowList == null)
@@ -46,8 +47,9 @@ function windowUnmapped(window)
 
 function windowDestroyed(window)
 {
-    var windowContainer = window.parent;
-    // TODO: Run an animation
+    // Run create animation
+    if (window.runDestroyAnimation)
+        window.runDestroyAnimation();
 }
 
 function windowRemoved(window)
