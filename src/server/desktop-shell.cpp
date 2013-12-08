@@ -213,7 +213,7 @@ void DesktopShell::init()
     new FadeMovingEffect(this);
     new OpacityEffect(this);
     new ZoomEffect(this);
-    new InOutSurfaceEffect(this);
+    //new InOutSurfaceEffect(this);
     new MinimizeEffect(this);
 
     m_inputPanel = new InputPanel(compositor()->wl_display);
