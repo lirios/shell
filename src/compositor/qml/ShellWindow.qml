@@ -25,17 +25,19 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Window 2.0
+import QtGraphicalEffects 1.0
+import WaylandCompositor 1.0
 import GreenIsland 1.0
 
-Item {
-    id: container
+WaylandSurfaceItem {
+    id: surfaceItem
+    onSurfaceChanged: renderer.source = surfaceItem
 
-    property variant child: null
+    property bool animationsEnabled: true
 
+    // Render item taking care of y inverted surfaces
     SurfaceRenderer {
-        source: child
-        anchors.fill: child
-        z: 1
+        id: renderer
+        anchors.fill: surfaceItem
     }
 }

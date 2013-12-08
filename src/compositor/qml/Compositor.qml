@@ -78,10 +78,6 @@ Item {
      * Slots
      */
 
-    function shellWindowAdded(window) {
-        WindowManager.shellWindowAdded(window);
-    }
-
     function windowAdded(window) {
         WindowManager.windowAdded(window);
     }

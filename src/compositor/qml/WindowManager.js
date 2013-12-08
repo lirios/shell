@@ -26,23 +26,6 @@
 
 var windowList = null;
 
-function shellWindowAdded(window)
-{
-    // Create container object
-    var windowContainerComponent = Qt.createComponent("ShellWindowContainer.qml");
-    var windowContainer = windowContainerComponent.createObject(root);
-
-    // Set window parent
-    window.parent = windowContainer;
-    windowContainer.child = window;
-
-    // Setup window container
-    windowContainer.z = window.z;
-    windowContainer.width = window.width;
-    windowContainer.height = window.height;
-    windowContainer.opacity = 1.0;
-}
-
 function windowAdded(window)
 {
     // Create container object

@@ -155,8 +155,22 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
     QWaylandSurfaceItem *item = surface->surfaceItem();
 
     // Create a WaylandSurfaceItem for this surface
-    if (!item)
-        item = new QWaylandSurfaceItem(surface, rootObject());
+    if (!item) {
+        if (surface->hasShellSurface()) {
+            item = new QWaylandSurfaceItem(surface, rootObject());
+        } else {
+            QQmlComponent component(engine(), QUrl("qrc:///qml/ShellWindow.qml"));
+            if (component.isError()) {
+                qWarning() << "Error loading ShellWindow.qml:" << component.errorString();
+                return;
+            }
+
+            QObject *object = component.create();
+            item = qobject_cast<QWaylandSurfaceItem *>(object);
+            item->setParentItem(rootObject());
+            item->setSurface(surface);
+        }
+    }
 
     // Set surface item up
     item->setClientRenderingEnabled(true);
@@ -187,12 +201,6 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
 
         // Set position as asked by the shell client
         item->setPosition(surface->windowProperties().value(QStringLiteral("position")).toPointF());
-
-        // Announce a window was added
-        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-        QMetaObject::invokeMethod(rootObject(), "shellWindowAdded",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(QVariant, window));
     } else {
         // Set application window position
 #if 0
@@ -255,9 +263,10 @@ void Compositor::mousePressEvent(QMouseEvent *event)
         return;
     }
 
+    // Custom event handling only of shell windows
     QPointF local;
     QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
-    if (targetSurface) {
+    if (targetSurface && !targetSurface->hasShellSurface()) {
         defaultInputDevice()->sendMousePressEvent(event->button(), local, event->globalPos());
         event->accept();
     } else {
@@ -273,9 +282,10 @@ void Compositor::mouseReleaseEvent(QMouseEvent *event)
         return;
     }
 
+    // Custom event handling only of shell windows
     QPointF local;
     QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
-    if (targetSurface) {
+    if (targetSurface && !targetSurface->hasShellSurface()) {
         defaultInputDevice()->sendMouseReleaseEvent(event->button(), local, event->globalPos());
         event->accept();
     } else {
@@ -291,9 +301,10 @@ void Compositor::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
+    // Custom event handling only of shell windows
     QPointF local;
     QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
-    if (targetSurface) {
+    if (targetSurface && !targetSurface->hasShellSurface()) {
         defaultInputDevice()->sendMouseMoveEvent(targetSurface, local, event->globalPos());
         event->accept();
     } else {
