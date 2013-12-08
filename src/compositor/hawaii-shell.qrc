@@ -3,8 +3,6 @@
         <file>qml/Compositor.qml</file>
         <file>qml/ShellWindow.qml</file>
         <file>qml/ApplicationWindow.qml</file>
-        <file>qml/WindowChrome.qml</file>
-        <file>qml/WindowContainer.qml</file>
         <file>qml/WindowManager.js</file>
     </qresource>
 </RCC>
