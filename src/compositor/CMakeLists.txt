@@ -5,6 +5,7 @@ include_directories(
     ${Qt5Compositor_PRIVATE_INCLUDE_DIRS}
     ${GreenIsland_INCLUDE_DIRS}
     ${WaylandServer_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
 )
 

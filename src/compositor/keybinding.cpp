@@ -26,7 +26,29 @@
 
 #include "keybinding.h"
 
-KeyBinding::KeyBinding()
-    : QtWaylandServer::wl_hawaii_key_binding()
+KeyBinding::KeyBinding(struct ::wl_client *client, int id)
+    : QtWaylandServer::wl_hawaii_key_binding(client, id)
+    , m_modifiers(0)
+    , m_key(0)
 {
+}
+
+uint32_t KeyBinding::modifiers() const
+{
+    return m_modifiers;
+}
+
+void KeyBinding::setModifiers(uint32_t modifiers)
+{
+    m_modifiers = modifiers;
+}
+
+uint32_t KeyBinding::key() const
+{
+    return m_key;
+}
+
+void KeyBinding::setKey(uint32_t key)
+{
+    m_key = key;
 }

@@ -32,7 +32,19 @@
 class KeyBinding : public QtWaylandServer::wl_hawaii_key_binding
 {
 public:
-    KeyBinding();
+    KeyBinding(struct ::wl_client *client, int id);
+
+    uint32_t modifiers() const;
+    void setModifiers(uint32_t modifiers);
+
+    uint32_t key() const;
+    void setKey(uint32_t key);
+
+private:
+    uint32_t m_modifiers;
+    uint32_t m_key;
 };
+
+typedef QList<KeyBinding *> KeyBindings;
 
 #endif // KEYBINDING_H

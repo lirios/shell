@@ -33,7 +33,6 @@
 #include <GreenIsland/Compositor>
 
 class Shell;
-class KeyBinding;
 class ClientWindow;
 class Workspace;
 class Grab;
@@ -74,11 +73,12 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
+    void keyPressEvent(QKeyEvent *event);
+
     void setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY);
 
 private:
     Shell *m_shell;
-    QList<KeyBinding *> m_keyBindings;
     QList<ClientWindow *> m_clientWindows;
     QList<Workspace *> m_workspaces;
     Notifications *m_notifications;

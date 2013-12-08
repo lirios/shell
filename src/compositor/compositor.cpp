@@ -39,11 +39,11 @@
 
 #include "compositor.h"
 #include "shell.h"
-#include "keybinding.h"
 #include "clientwindow.h"
 #include "workspace.h"
 #include "grab.h"
 #include "notifications.h"
+#include "keymap.h"
 
 Q_GLOBAL_STATIC(Compositor, s_globalCompositor)
 
@@ -90,7 +90,6 @@ Compositor::Compositor()
 
 Compositor::~Compositor()
 {
-    qDeleteAll(m_keyBindings);
     qDeleteAll(m_clientWindows);
     qDeleteAll(m_workspaces);
     delete m_notifications;
@@ -317,6 +316,42 @@ void Compositor::mouseMoveEvent(QMouseEvent *event)
     } else {
         QQuickView::mouseMoveEvent(event);
     }
+}
+
+void Compositor::keyPressEvent(QKeyEvent *event)
+{
+    // Decode key event
+    uint32_t modifiers = 0;
+    uint32_t key = 0;
+
+    if (event->modifiers() & Qt::ControlModifier)
+        modifiers |= MODIFIER_CTRL;
+    if (event->modifiers() & Qt::AltModifier)
+        modifiers |= MODIFIER_ALT;
+    if (event->modifiers() & Qt::MetaModifier)
+        modifiers |= MODIFIER_SUPER;
+    if (event->modifiers() & Qt::ShiftModifier)
+        modifiers |= MODIFIER_SHIFT;
+
+    int k = 0;
+    while (keyTable[k]) {
+        if (event->key() == (int)keyTable[k]) {
+            key = keyTable[k + 1];
+            break;
+        }
+        k += 2;
+    }
+
+    // Look for a matching key binding
+    for (KeyBinding *keyBinding: m_shell->keyBindings()) {
+        if (keyBinding->modifiers() == modifiers && keyBinding->key() == key) {
+            keyBinding->send_triggered();
+            break;
+        }
+    }
+
+    // Call overridden method
+    QQuickView::keyPressEvent(event);
 }
 
 void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY)

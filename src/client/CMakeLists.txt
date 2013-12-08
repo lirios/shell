@@ -12,6 +12,7 @@ include_directories(
     ${ALSA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/daemons
     ${CMAKE_CURRENT_SOURCE_DIR}/launcher

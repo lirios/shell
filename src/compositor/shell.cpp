@@ -37,6 +37,11 @@ Shell::Shell(struct ::wl_display *display)
 {
 }
 
+Shell::~Shell()
+{
+    qDeleteAll(m_keyBindings);
+}
+
 QWaylandSurface *Shell::surfaceAt(const QPointF &point, QPointF *local)
 {
     QWaylandSurface *surface;
@@ -54,6 +59,11 @@ QWaylandSurface *Shell::surfaceAt(const QPointF &point, QPointF *local)
 #undef SURFACE_AT
 
     return 0;
+}
+
+KeyBindings Shell::keyBindings() const
+{
+    return m_keyBindings;
 }
 
 void Shell::addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface)
@@ -146,6 +156,17 @@ QWaylandSurface *Shell::surfaceAt(const Layer &layer, const QPointF &point, QPoi
 void Shell::hawaii_shell_bind_resource(Resource *resource)
 {
     send_loaded(resource->handle);
+}
+
+void Shell::hawaii_shell_add_key_binding(Resource *resource, uint32_t id,
+                                         uint32_t key, uint32_t modifiers)
+{
+    Q_UNUSED(resource);
+
+    KeyBinding *keyBinding = new KeyBinding(resource->client(), id);
+    keyBinding->setModifiers(modifiers);
+    keyBinding->setKey(key);
+    m_keyBindings.append(keyBinding);
 }
 
 void Shell::hawaii_shell_set_background(Resource *resource,

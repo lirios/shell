@@ -32,6 +32,7 @@
 #include <QtCompositor/QWaylandSurface>
 
 #include "qwayland-server-hawaii.h"
+#include "keybinding.h"
 
 typedef QList<QWaylandSurface *> Layer;
 
@@ -52,8 +53,11 @@ public:
     };
 
     Shell(struct ::wl_display *display);
+    ~Shell();
 
     QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
+
+    KeyBindings keyBindings() const;
 
 Q_SIGNALS:
     void ready();
@@ -64,12 +68,17 @@ private:
     Layer m_overlayLayer;
     Layer m_dialogsLayer;
 
+    KeyBindings m_keyBindings;
+
     void addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface);
     void removeSurfaceFromLayer(QWaylandSurface *surface);
 
     QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 
     void hawaii_shell_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
+
+    void hawaii_shell_add_key_binding(Resource *resource, uint32_t id,
+                                      uint32_t key, uint32_t modifiers) Q_DECL_OVERRIDE;
 
     void hawaii_shell_set_background(Resource *resource,
                                      struct ::wl_resource *output_resource,
