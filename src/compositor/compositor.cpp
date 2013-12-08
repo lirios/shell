@@ -233,6 +233,14 @@ void Compositor::surfaceUnmapped(QWaylandSurface *surface)
 
 void Compositor::surfaceDestroyed(QWaylandSurface *surface)
 {
+    // Delete application window
+    for (ClientWindow *appWindow: m_clientWindows) {
+        if (appWindow->surface() == surface) {
+            m_clientWindows.removeOne(appWindow);
+            break;
+        }
+    }
+
     // Announce this window was destroyed
     QWaylandSurfaceItem *item = surface->surfaceItem();
     if (item) {
