@@ -44,7 +44,7 @@ QWaylandSurface *Shell::surfaceAt(const QPointF &point, QPointF *local)
 #define SURFACE_AT(layer) \
     surface = surfaceAt(layer, point, local); \
     if (surface) \
-        return surface;
+    return surface;
 
     SURFACE_AT(m_dialogsLayer);
     //SURFACE_AT(m_overlayLayer);
@@ -83,8 +83,41 @@ void Shell::addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface)
         break;
     }
 
-    connect(surface, SIGNAL(unmapped()),
-            this, SLOT(surfaceUnmapped()));
+    connect(surface, &QObject::destroyed, [=](QObject *object = 0) {
+        removeSurfaceFromLayer(qobject_cast<QWaylandSurface *>(object));
+    });
+}
+
+void Shell::removeSurfaceFromLayer(QWaylandSurface *surface)
+{
+    if (!surface)
+        return;
+
+    bool found = false;
+    ShellWindowRole role = static_cast<ShellWindowRole>(surface->windowProperties().value(
+                                                            QStringLiteral("role")).toInt(&found));
+    if (!found)
+        return;
+
+    switch (role) {
+    case Shell::BackgroundWindowRole:
+        m_backgroundLayer.removeOne(surface);
+        break;
+    case Shell::PanelWindowRole:
+    case Shell::LauncherWindowRole:
+    case Shell::SpecialWindowRole:
+    case Shell::PopupWindowRole:
+        m_panelsLayer.removeOne(surface);
+        break;
+    case Shell::OverlayWindowRole:
+        m_overlayLayer.removeOne(surface);
+        break;
+    case Shell::DialogWindowRole:
+        m_dialogsLayer.removeOne(surface);
+        break;
+    default:
+        break;
+    }
 }
 
 QWaylandSurface *Shell::surfaceAt(const Layer &layer, const QPointF &point, QPointF *local)
@@ -278,31 +311,6 @@ void Shell::hawaii_shell_select_workspace(Resource *resource,
 void Shell::hawaii_shell_start_grab(Resource *resource, uint32_t id)
 {
     Q_UNUSED(resource);
-}
-
-void Shell::surfaceUnmapped()
-{
-    QWaylandSurface *surface = qobject_cast<QWaylandSurface *>(sender());
-
-    switch (surface->windowProperties().value(QStringLiteral("role")).toInt()) {
-    case Shell::BackgroundWindowRole:
-        m_backgroundLayer.removeOne(surface);
-        break;
-    case Shell::PanelWindowRole:
-    case Shell::LauncherWindowRole:
-    case Shell::SpecialWindowRole:
-    case Shell::PopupWindowRole:
-        m_panelsLayer.removeOne(surface);
-        break;
-    case Shell::OverlayWindowRole:
-        m_overlayLayer.removeOne(surface);
-        break;
-    case Shell::DialogWindowRole:
-        m_dialogsLayer.removeOne(surface);
-        break;
-    default:
-        break;
-    }
 }
 
 #include "moc_shell.cpp"

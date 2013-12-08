@@ -65,6 +65,7 @@ private:
     Layer m_dialogsLayer;
 
     void addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface);
+    void removeSurfaceFromLayer(QWaylandSurface *surface);
 
     QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 
@@ -118,9 +119,6 @@ private:
                                        struct ::wl_resource *workspace) Q_DECL_OVERRIDE;
 
     void hawaii_shell_start_grab(Resource *resource, uint32_t id) Q_DECL_OVERRIDE;
-
-private Q_SLOTS:
-    void surfaceUnmapped();
 };
 
 #endif // SHELL_H

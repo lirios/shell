@@ -236,7 +236,8 @@ void Compositor::surfaceDestroyed(QWaylandSurface *surface)
     // Delete application window
     for (ClientWindow *appWindow: m_clientWindows) {
         if (appWindow->surface() == surface) {
-            m_clientWindows.removeOne(appWindow);
+            if (m_clientWindows.removeOne(appWindow))
+                delete appWindow;
             break;
         }
     }
