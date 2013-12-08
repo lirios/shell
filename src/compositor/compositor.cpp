@@ -156,25 +156,23 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
 
     // Create a WaylandSurfaceItem for this surface
     if (!item) {
-        if (surface->hasShellSurface()) {
-            item = new QWaylandSurfaceItem(surface, rootObject());
-        } else {
-            QQmlComponent component(engine(), QUrl("qrc:///qml/ShellWindow.qml"));
-            if (component.isError()) {
-                qWarning() << "Error loading ShellWindow.qml:" << component.errorString();
-                return;
-            }
+        QUrl url;
+        if (surface->hasShellSurface())
+            url = QUrl("qrc:///qml/ApplicationWindow.qml");
+        else
+            url = QUrl("qrc:///qml/ShellWindow.qml");
 
-            QObject *object = component.create();
-            item = qobject_cast<QWaylandSurfaceItem *>(object);
-            item->setParentItem(rootObject());
-            item->setSurface(surface);
+        QQmlComponent component(engine(), url);
+        if (component.isError()) {
+            qWarning() << "Error loading surface item:" << component.errorString();
+            return;
         }
-    }
 
-    // Set surface item up
-    item->setClientRenderingEnabled(true);
-    item->setTouchEventsEnabled(true);
+        QObject *object = component.create();
+        item = qobject_cast<QWaylandSurfaceItem *>(object);
+        item->setParentItem(rootObject());
+        item->setSurface(surface);
+    }
 
     // Setup shell windows
     if (isShellWindow(surface)) {

@@ -28,40 +28,16 @@ var windowList = null;
 
 function windowAdded(window)
 {
-    // Create container object
-    var windowContainerComponent = Qt.createComponent("WindowContainer.qml");
-    //if (windowContainerComponent.error)
-    console.warn(windowContainerComponent.errorString());
-    var windowContainer = windowContainerComponent.createObject(root);
-
-    // Reparent window
-    window.parent = windowContainer;
-    windowContainer.child = window;
-
-    // Setup window container
-    windowContainer.width = window.width;
-    windowContainer.height = window.height;
-    windowContainer.opacity = 1.0;
-
     // Automatically give focus to new windows
     window.takeFocus();
 
-    // Create window chrome to handle focus and enable animations
-    var windowChromeComponent = Qt.createComponent("WindowChrome.qml");
-    var windowChrome = windowChromeComponent.createObject(window);
-    windowContainer.chrome = windowChrome;
+    // Show the surface item
+    window.opacity = 1.0;
 
     // Add to the client window list
     if (windowList == null)
         windowList = new Array(0);
-    windowList.push(windowContainer);
-}
-
-function windowResized(window)
-{
-    var windowContainer = window.parent;
-    windowContainer.width = window.width;
-    windowContainer.height = window.height;
+    windowList.push(window);
 }
 
 function windowUnmapped(window)

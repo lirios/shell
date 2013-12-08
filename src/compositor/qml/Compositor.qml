@@ -31,9 +31,6 @@ import "WindowManager.js" as WindowManager
 Item {
     id: root
 
-    // Currently selected window
-    property variant selectedWindow: null
-
     // Bind compositor signals
     Connections {
         target: compositor
@@ -80,10 +77,6 @@ Item {
 
     function windowAdded(window) {
         WindowManager.windowAdded(window);
-    }
-
-    function windowResized(window) {
-        WindowManager.windowResized(window);
     }
 
     function windowUnmapped(window) {
