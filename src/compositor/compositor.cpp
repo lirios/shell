@@ -122,7 +122,7 @@ bool Compositor::isShellWindow(QWaylandSurface *surface)
 void Compositor::surfaceCreated(QWaylandSurface *surface)
 {
     // Create application window instance
-    if (!isShellWindow(surface)) {
+    if (surface && surface->hasShellSurface()) {
         ClientWindow *appWindow = new ClientWindow(waylandDisplay());
         appWindow->setSurface(surface);
         m_clientWindows.append(appWindow);
@@ -218,34 +218,38 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
 
 void Compositor::surfaceUnmapped(QWaylandSurface *surface)
 {
-    // Announce this window was unmapped
-    QWaylandSurfaceItem *item = surface->surfaceItem();
-    if (item) {
-        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-        QMetaObject::invokeMethod(rootObject(), "windowUnmapped",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(QVariant, window));
+    if (surface && surface->hasShellSurface()) {
+        // Announce this window was unmapped
+        QWaylandSurfaceItem *item = surface->surfaceItem();
+        if (item) {
+            QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
+            QMetaObject::invokeMethod(rootObject(), "windowUnmapped",
+                                      Qt::QueuedConnection,
+                                      Q_ARG(QVariant, window));
+        }
     }
 }
 
 void Compositor::surfaceDestroyed(QWaylandSurface *surface)
 {
-    // Delete application window
-    for (ClientWindow *appWindow: m_clientWindows) {
-        if (appWindow->surface() == surface) {
-            if (m_clientWindows.removeOne(appWindow))
-                delete appWindow;
-            break;
+    if (surface && surface->hasShellSurface()) {
+        // Delete application window
+        for (ClientWindow *appWindow: m_clientWindows) {
+            if (appWindow->surface() == surface) {
+                if (m_clientWindows.removeOne(appWindow))
+                    delete appWindow;
+                break;
+            }
         }
-    }
 
-    // Announce this window was destroyed
-    QWaylandSurfaceItem *item = surface->surfaceItem();
-    if (item) {
-        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-        QMetaObject::invokeMethod(rootObject(), "windowDestroyed",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(QVariant, window));
+        // Announce this window was destroyed
+        QWaylandSurfaceItem *item = surface->surfaceItem();
+        if (item) {
+            QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
+            QMetaObject::invokeMethod(rootObject(), "windowDestroyed",
+                                      Qt::QueuedConnection,
+                                      Q_ARG(QVariant, window));
+        }
     }
 }
 
