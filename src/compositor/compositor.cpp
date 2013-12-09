@@ -200,7 +200,6 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
         item->setPosition(surface->windowProperties().value(QStringLiteral("position")).toPointF());
     } else {
         // Set application window position
-#if 0
         switch (surface->windowType()) {
         case QWaylandSurface::Toplevel:
             surface->setPos(calculateInitialPosition(surface));
@@ -208,7 +207,6 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
         default:
             break;
         }
-#endif
 
         // Announce a window was added
         QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
