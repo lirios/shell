@@ -202,7 +202,8 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
         // Set application window position
         switch (surface->windowType()) {
         case QWaylandSurface::Toplevel:
-            surface->setPos(calculateInitialPosition(surface));
+            if (surface->visibility() == QWindow::Windowed)
+                surface->setPos(calculateInitialPosition(surface));
             break;
         default:
             break;
