@@ -69,6 +69,13 @@ int main(int argc, char *argv[])
                                         QObject::tr("Full screen compositor window"));
     parser.addOption(fullScreenOption);
 
+    // Idle time
+    QCommandLineOption idleTimeOption(QStringList() << QStringLiteral("i") << QStringLiteral("idle-time"),
+                                      QObject::tr("Idle time in seconds (at least 5 seconds)"),
+                                      QStringLiteral("secs"));
+    idleTimeOption.setDefaultValue("300");
+    parser.addOption(idleTimeOption);
+
     // Geometry
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     QRect geometry(screenGeometry.topLeft(), QSize(1920, 1080));
@@ -86,6 +93,9 @@ int main(int argc, char *argv[])
         compositor->setGeometry(screenGeometry);
         compositor->setVisibility(QWindow::FullScreen);
     }
+    int idleInterval = parser.value(idleTimeOption).toInt();
+    if (idleInterval >= 5)
+        compositor->setIdleInterval(idleInterval * 1000);
     
     // Run shell client
     compositor->setShellFileName(QLatin1String(INSTALL_LIBEXECDIR "/starthawaii"));
