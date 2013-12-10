@@ -34,12 +34,20 @@
 Shell::Shell(struct ::wl_display *display)
     : QObject()
     , QtWaylandServer::wl_hawaii_shell(display)
+    , m_lockSurface(nullptr)
+    , m_locked(false)
+    , m_prepareEventSent(false)
 {
 }
 
 Shell::~Shell()
 {
     qDeleteAll(m_keyBindings);
+}
+
+bool Shell::isLocked() const
+{
+    return m_locked;
 }
 
 QWaylandSurface *Shell::surfaceAt(const QPointF &point, QPointF *local)
@@ -64,6 +72,61 @@ QWaylandSurface *Shell::surfaceAt(const QPointF &point, QPointF *local)
 KeyBindings Shell::keyBindings() const
 {
     return m_keyBindings;
+}
+
+void Shell::lockSession()
+{
+    // If session is already locked, set DPMS off
+    if (m_locked) {
+        Compositor::instance()->setState(Compositor::CompositorSleeping);
+        return;
+    }
+
+    // Session is now locked
+    m_locked = true;
+    Q_EMIT lockedChanged(true);
+
+    // Hide all surfaces
+    for (QWaylandSurface *surface: m_panelsLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(false);
+    }
+    for (QWaylandSurface *surface: m_overlayLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(false);
+    }
+    for (QWaylandSurface *surface: m_dialogsLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(false);
+    }
+
+    // TODO: Run screensaver
+}
+
+void Shell::unlockSession()
+{
+    // If unlocked or the lock surface is already mapped we
+    // just return, the QML side will hide the splash screen
+    if (!m_locked || m_lockSurface) {
+        Q_EMIT Compositor::instance()->fadeIn();
+        return;
+    }
+
+    // If the shell client has gone away, unlock immediately
+    if (!Compositor::instance()->isShellClientRunning()) {
+        resumeDesktop();
+        return;
+    }
+
+    // Just return if we already asked the shell client to
+    // prepare the lock surface
+    if (m_prepareEventSent)
+        return;
+
+    // Ask the shell client to prepare the lock surface
+    for (Resource *resource: resourceMap())
+        send_prepare_lock_surface(resource->handle);
+    m_prepareEventSent = true;
 }
 
 void Shell::addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface)
@@ -151,6 +214,31 @@ QWaylandSurface *Shell::surfaceAt(const Layer &layer, const QPointF &point, QPoi
     }
 
     return 0;
+}
+
+void Shell::resumeDesktop()
+{
+    // TODO: Terminate screen saver process
+
+    // Show all surfaces and hide the lock surface
+    for (QWaylandSurface *surface: m_panelsLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(true);
+    }
+    for (QWaylandSurface *surface: m_overlayLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(true);
+    }
+    for (QWaylandSurface *surface: m_dialogsLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(true);
+    }
+    if (m_lockSurface && m_lockSurface->surfaceItem())
+        m_lockSurface->surfaceItem()->setVisible(false);
+
+    // Unlock the session and reveal the desktop
+    m_locked = false;
+    Q_EMIT lockedChanged(false);
 }
 
 void Shell::hawaii_shell_bind_resource(Resource *resource)
@@ -276,9 +364,30 @@ void Shell::hawaii_shell_set_position(Resource *resource,
 }
 
 void Shell::hawaii_shell_set_lock_surface(Resource *resource,
-                                          struct ::wl_resource *surface)
+                                          struct ::wl_resource *surface_resource)
 {
     Q_UNUSED(resource);
+
+    m_prepareEventSent = false;
+
+    if (!m_locked)
+        return;
+
+    m_lockSurface = QtWayland::Surface::fromResource(
+                surface_resource)->waylandSurface();
+    connect(m_lockSurface, &QWaylandSurface::mapped, [=]() {
+#ifdef QT_COMPOSITOR_QUICK
+        if (m_lockSurface->surfaceItem()) {
+            m_lockSurface->surfaceItem()->setZ(999);
+            m_lockSurface->surfaceItem()->takeFocus();
+        }
+#endif
+
+        Q_EMIT Compositor::instance()->fadeIn();
+    });
+    connect(m_lockSurface, &QObject::destroyed, [=](QObject *object = 0) {
+        m_lockSurface = nullptr;
+    });
 }
 
 void Shell::hawaii_shell_quit(Resource *resource)
@@ -289,11 +398,24 @@ void Shell::hawaii_shell_quit(Resource *resource)
 void Shell::hawaii_shell_lock(Resource *resource)
 {
     Q_UNUSED(resource);
+
+    // Don't lock again in case we're already locked
+    if (m_locked || m_lockSurface)
+        return;
+
+    Compositor::instance()->setState(Compositor::CompositorIdle);
 }
 
 void Shell::hawaii_shell_unlock(Resource *resource)
 {
     Q_UNUSED(resource);
+
+    // Reset the flag for the prepare lock surface event
+    m_prepareEventSent = false;
+
+    // Resume the desktop if we are unlocked
+    if (m_locked)
+        resumeDesktop();
 }
 
 void Shell::hawaii_shell_set_grab_surface(Resource *resource,

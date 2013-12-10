@@ -73,6 +73,12 @@ Compositor::Compositor()
         // Fade in the desktop
         Q_EMIT ready();
     });
+    connect(m_shell, &Shell::lockedChanged, [=](bool value) {
+        if (value)
+            Q_EMIT locked();
+        else
+            Q_EMIT unlocked();
+    });
     m_notifications = new Notifications(waylandDisplay());
 
     // Connect to signals
@@ -142,6 +148,16 @@ void Compositor::destroyClientForWindow(QVariant window)
     QWaylandSurface *surface = qobject_cast<QWaylandSurfaceItem *>(
                 qvariant_cast<QObject *>(window))->surface();
     destroyClientForSurface(surface);
+}
+
+void Compositor::lockSession()
+{
+    m_shell->lockSession();
+}
+
+void Compositor::unlockSession()
+{
+    m_shell->unlockSession();
 }
 
 void Compositor::surfaceMapped(QWaylandSurface *surface)
@@ -279,7 +295,7 @@ void Compositor::mousePressEvent(QMouseEvent *event)
         defaultInputDevice()->sendMousePressEvent(event->button(), local, event->globalPos());
         event->accept();
     } else {
-        QQuickView::mousePressEvent(event);
+        GreenIsland::Compositor::mousePressEvent(event);
     }
 }
 
@@ -298,7 +314,7 @@ void Compositor::mouseReleaseEvent(QMouseEvent *event)
         defaultInputDevice()->sendMouseReleaseEvent(event->button(), local, event->globalPos());
         event->accept();
     } else {
-        QQuickView::mouseReleaseEvent(event);
+        GreenIsland::Compositor::mouseReleaseEvent(event);
     }
 }
 
@@ -317,7 +333,7 @@ void Compositor::mouseMoveEvent(QMouseEvent *event)
         defaultInputDevice()->sendMouseMoveEvent(targetSurface, local, event->globalPos());
         event->accept();
     } else {
-        QQuickView::mouseMoveEvent(event);
+        GreenIsland::Compositor::mouseMoveEvent(event);
     }
 }
 
@@ -354,7 +370,7 @@ void Compositor::keyPressEvent(QKeyEvent *event)
     }
 
     // Call overridden method
-    QQuickView::keyPressEvent(event);
+    GreenIsland::Compositor::keyPressEvent(event);
 }
 
 void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY)

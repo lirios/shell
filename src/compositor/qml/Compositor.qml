@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0
+import Hawaii.Shell 0.1
 import "WindowManager.js" as WindowManager
 
 Item {
@@ -34,7 +35,42 @@ Item {
     // Bind compositor signals
     Connections {
         target: compositor
-        onReady: splash.opacity = 0.0
+        onIdle: {
+            // Fade the desktop out
+            splash.opacity = 1.0;
+
+            // Lock the session
+            compositor.lockSession();
+        }
+        onWake: {
+            // Unlock the session
+            compositor.unlockSession();
+        }
+        onFadeIn: {
+            // Fade the desktop in
+            splash.opacity = 0.0;
+
+            // Damage all surfaces
+            compositor.damageAll();
+        }
+        onFadeOut: {
+            // Fade the desktop out
+            splash.opacity = 1.0;
+        }
+        onUnlocked: {
+            // Fade the desktop in
+            splash.opacity = 0.0;
+
+            // Damage all surfaces
+            compositor.damageAll();
+        }
+        onReady: {
+            // Fade the desktop in
+            splash.opacity = 0.0;
+
+            // Start idle timer
+            compositor.startIdleTimer();
+        }
     }
 
     // Black rectangle for fade-in and fade-out effects

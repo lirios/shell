@@ -40,6 +40,7 @@ class Shell : public QObject,
         public QtWaylandServer::wl_hawaii_shell
 {
     Q_OBJECT
+    Q_PROPERTY(bool locked READ isLocked NOTIFY lockedChanged)
     Q_ENUMS(ShellWindowRole)
 public:
     enum ShellWindowRole {
@@ -55,12 +56,19 @@ public:
     Shell(struct ::wl_display *display);
     ~Shell();
 
+    bool isLocked() const;
+
     QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
 
     KeyBindings keyBindings() const;
 
+    void lockSession();
+    void unlockSession();
+
 Q_SIGNALS:
     void ready();
+
+    void lockedChanged(bool value);
 
 private:
     Layer m_backgroundLayer;
@@ -70,10 +78,16 @@ private:
 
     KeyBindings m_keyBindings;
 
+    QWaylandSurface *m_lockSurface;
+    bool m_locked;
+    bool m_prepareEventSent;
+
     void addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface);
     void removeSurfaceFromLayer(QWaylandSurface *surface);
 
     QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
+
+    void resumeDesktop();
 
     void hawaii_shell_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
 

@@ -56,9 +56,18 @@ public:
 Q_SIGNALS:
     void ready();
 
+    void fadeIn();
+    void fadeOut();
+
+    void locked();
+    void unlocked();
+
 public Q_SLOTS:
     void destroyWindow(QVariant window);
     void destroyClientForWindow(QVariant window);
+
+    void lockSession();
+    void unlockSession();
 
 private Q_SLOTS:
     void surfaceMapped(QWaylandSurface *surface);
