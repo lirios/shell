@@ -359,8 +359,7 @@ void Shell::hawaii_shell_set_position(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), QPointF(x, y));
-    if (surface->surfaceItem())
-        surface->surfaceItem()->setPosition(QPointF(x, y));
+    surface->setPos(QPointF(x, y));
 }
 
 void Shell::hawaii_shell_set_lock_surface(Resource *resource,
