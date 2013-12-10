@@ -146,10 +146,6 @@ void Compositor::destroyClientForWindow(QVariant window)
 
 void Compositor::surfaceMapped(QWaylandSurface *surface)
 {
-    // Ignore surfaces which are neither application windows nor shell windows
-    if (!surface->hasShellSurface() && !isShellWindow(surface))
-        return;
-
     // Get the surface item
     QWaylandSurfaceItem *item = surface->surfaceItem();
 
@@ -198,7 +194,7 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
 
         // Set position as asked by the shell client
         item->setPosition(surface->windowProperties().value(QStringLiteral("position")).toPointF());
-    } else {
+    } else if (surface->hasShellSurface()) {
         // Set application window position
         switch (surface->windowType()) {
         case QWaylandSurface::Toplevel:
@@ -214,6 +210,10 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
         QMetaObject::invokeMethod(rootObject(), "windowAdded",
                                   Qt::QueuedConnection,
                                   Q_ARG(QVariant, window));
+    } else {
+        // Calculate initial position for windows without shell
+        // surface that are not from the shell client
+        surface->setPos(calculateInitialPosition(surface));
     }
 }
 
