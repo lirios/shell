@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
 
     // Enable debug messages
     QLoggingCategory::setFilterRules(QStringLiteral("greenisland.compositor.debug=true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("greenisland.client.debug=true"));
 
     // Set message pattern
     qSetMessagePattern("%{message}");
