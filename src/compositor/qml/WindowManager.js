@@ -54,18 +54,14 @@ function windowDestroyed(window)
 
 function windowRemoved(window)
 {
-    var windowContainer = window.parent;
-
     // Don't take this window into account anymore
     for (var i = 0; i < windowList.length; ++i) {
-        if (windowList[i] == windowContainer) {
+        if (windowList[i] === window) {
             windowList.splice(i, 1);
             break;
         }
     }
 
     // Destroy
-    windowContainer.chrome.destroy();
-    windowContainer.destroy();
     compositor.destroyWindow(window);
 }
