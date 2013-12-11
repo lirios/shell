@@ -31,9 +31,9 @@ function windowAdded(window)
     // Automatically give focus to new windows
     window.takeFocus();
 
-    // Run create animation
-    if (window.runCreateAnimation)
-        window.runCreateAnimation();
+    // Run map animation
+    if (window.runMapAnimation)
+        window.runMapAnimation();
 
     // Add to the client window list
     if (windowList == null)
@@ -47,7 +47,7 @@ function windowUnmapped(window)
 
 function windowDestroyed(window)
 {
-    // Run create animation
+    // Run destroy animation
     if (window.runDestroyAnimation)
         window.runDestroyAnimation();
 }
