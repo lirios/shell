@@ -30,6 +30,8 @@
 
 #include "shell.h"
 #include "compositor.h"
+#include "popupgrabber.h"
+#include "shellsurface.h"
 
 Shell::Shell(struct ::wl_display *display)
     : QObject()
@@ -156,8 +158,8 @@ void Shell::addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface)
         break;
     }
 
-    connect(surface, &QObject::destroyed, [=](QObject *object = 0) {
-        removeSurfaceFromLayer(qobject_cast<QWaylandSurface *>(object));
+    connect(surface, &QWaylandSurface::unmapped, [=]() {
+        removeSurfaceFromLayer(surface);
     });
 }
 
@@ -335,6 +337,15 @@ void Shell::hawaii_shell_set_popup(Resource *resource,
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), QPointF(x, y));
     addSurfaceToLayer(Shell::PopupWindowRole, surface);
+
+    QtWayland::InputDevice *input = Compositor::instance()->defaultInputDevice()->handle();
+
+    ShellSurface *shellSurface = new ShellSurface(Shell::PopupWindowRole, surface);
+    shellSurface->init(resource->client(), id);
+
+    PopupGrabber *grabber = new PopupGrabber(input);
+    wl_resource_set_user_data(shellSurface->resource()->handle, grabber);
+    shellSurface->setPopupGrabber(grabber);
 }
 
 void Shell::hawaii_shell_set_dialog(Resource *resource,

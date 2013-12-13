@@ -25,6 +25,8 @@ set(SOURCES
     shell.cpp
     keybinding.cpp
     clientwindow.cpp
+    popupgrabber.cpp
+    shellsurface.cpp
     workspace.cpp
     grab.cpp
     notifications.cpp

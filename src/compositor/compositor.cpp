@@ -187,8 +187,12 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
 
     // Setup shell windows
     if (isShellWindow(surface)) {
+        Shell::ShellWindowRole role = static_cast<Shell::ShellWindowRole>(
+                    surface->windowProperties().value(
+                        QStringLiteral("role")).toInt());
+
         // Set z-index for shell windows according to the role
-        switch (surface->windowProperties().value(QStringLiteral("role")).toInt()) {
+        switch (role) {
         case Shell::BackgroundWindowRole:
             item->setZ(0);
             break;
@@ -210,6 +214,10 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
 
         // Set position as asked by the shell client
         item->setPosition(surface->windowProperties().value(QStringLiteral("position")).toPointF());
+
+        // Popup windows take focus
+        if (role == Shell::PopupWindowRole)
+            item->takeFocus();
     } else if (surface->hasShellSurface()) {
         // Set application window position
         switch (surface->windowType()) {
