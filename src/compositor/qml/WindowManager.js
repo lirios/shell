@@ -29,7 +29,7 @@ var windowList = null;
 function shellWindowMapped(window)
 {
     // Popup windows always take the focus
-    if (window.surface.windowProperties.role === Compositor.PopupWindowRole)
+    if (window.role === Compositor.PopupWindowRole)
         window.takeFocus();
 }
 
