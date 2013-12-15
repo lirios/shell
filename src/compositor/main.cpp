@@ -83,8 +83,8 @@ int main(int argc, char *argv[])
 
     // Create compositor, run shell client
     Compositor *compositor = Compositor::instance();
-    compositor->setPosition(geometry.topLeft());
-    compositor->resize(geometry.size());
+    compositor->setGeometry(geometry);
+    compositor->setOutputGeometry(geometry);
 
     // Parse command line
     parser.process(app);
