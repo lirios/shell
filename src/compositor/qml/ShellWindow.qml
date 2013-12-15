@@ -64,6 +64,106 @@ WaylandSurfaceItem {
         }
     }
 
+    // Dialog transform for map animation
+    Scale {
+        id: dialogMapTransform
+        origin.x: surfaceItem.width / 2
+        origin.y: surfaceItem.height / 2
+        xScale: 0.01
+        yScale: 0.01
+    }
+
+    // Dialog map animation
+    ParallelAnimation {
+        id: dialogMapAnimation
+
+        NumberAnimation {
+            target: surfaceItem
+            property: "opacity"
+            easing.type: Easing.Linear
+            to: 1.0
+            duration: 250
+        }
+
+        SequentialAnimation {
+            ScriptAction {
+                script: surfaceItem.transform = dialogMapTransform
+            }
+
+            ParallelAnimation {
+                NumberAnimation {
+                    target: dialogMapTransform
+                    property: "xScale"
+                    easing.type: Easing.OutExpo
+                    to: 1.0
+                    duration: 350
+                }
+
+                NumberAnimation {
+                    target: dialogMapTransform
+                    property: "yScale"
+                    easing.type: Easing.OutExpo
+                    to: 1.0
+                    duration: 350
+                }
+            }
+
+            ScriptAction {
+                script: surfaceItem.transform = []
+            }
+        }
+    }
+
+    // Dialog transform for unmap animation
+    Scale {
+        id: dialogUnmapTransform
+        origin.x: surfaceItem.width / 2
+        origin.y: surfaceItem.height / 2
+        xScale: 1.0
+        yScale: 1.0
+    }
+
+    // Dialog unmap animation
+    ParallelAnimation {
+        id: dialogUnmapAnimation
+
+        SequentialAnimation {
+            ScriptAction {
+                script: surfaceItem.transform = dialogUnmapTransform
+            }
+
+            ParallelAnimation {
+                NumberAnimation {
+                    target: dialogUnmapTransform
+                    property: "xScale"
+                    easing.type: Easing.OutExpo
+                    to: 0.01
+                    duration: 350
+                }
+
+                NumberAnimation {
+                    target: dialogUnmapTransform
+                    property: "yScale"
+                    easing.type: Easing.OutExpo
+                    to: 0.01
+                    duration: 350
+                }
+            }
+
+            ScriptAction {
+                script: surfaceItem.transform = []
+            }
+        }
+
+        NumberAnimation {
+            target: surfaceItem
+            property: "opacity"
+            easing.type: Easing.Linear
+            to: 0.0
+            duration: 250
+        }
+    }
+
     function restack() {
         if (surfaceItem.role == null)
             return;
@@ -82,10 +182,34 @@ WaylandSurfaceItem {
             surfaceItem.z = 3;
             break;
         case Compositor.DialogWindowRole:
-            surfaceItem.z = 4;
+            surfaceItem.z = 999;
             break;
         default:
             break;
+        }
+    }
+
+    function runMapAnimation () {
+        if (surfaceItem.animationsEnabled) {
+            switch (surfaceItem.role) {
+            case Compositor.DialogWindowRole:
+                dialogMapAnimation.start();
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    function runDestroyAnimation () {
+        if (surfaceItem.animationsEnabled) {
+            switch (surfaceItem.role) {
+            case Compositor.DialogWindowRole:
+                dialogUnmapAnimation.start();
+                break;
+            default:
+                break;
+            }
         }
     }
 }

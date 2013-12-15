@@ -89,6 +89,30 @@ Item {
         }
     }
 
+    // Modal dialog overlay
+    // TODO: Create a surface every time a modal dialog is created
+    Rectangle {
+        id: modalOverlay
+        color: "black"
+        x: 0
+        y: 0
+        z: 998
+        width: 8192
+        height: 8192
+        opacity: 0.0
+
+        Behavior on opacity {
+            NumberAnimation { duration: 250 }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            preventStealing: true
+            onClicked: mouse.accepted = false
+        }
+    }
+
     Text {
         anchors {
             top: parent.top
@@ -107,12 +131,24 @@ Item {
         }
     }
 
-    /*
-     * Slots
-     */
+    function showModalOverlay() {
+        modalOverlay.opacity = 0.7;
+    }
+
+    function hideModalOverlay() {
+        modalOverlay.opacity = 0.0;
+    }
 
     function shellWindowMapped(window) {
         WindowManager.shellWindowMapped(window);
+    }
+
+    function shellWindowUnmapped(window) {
+        WindowManager.shellWindowUnmapped(window);
+    }
+
+    function shellWindowDestroyed(window) {
+        WindowManager.shellWindowDestroyed(window);
     }
 
     function windowAdded(window) {

@@ -28,9 +28,44 @@ var windowList = null;
 
 function shellWindowMapped(window)
 {
-    // Popup windows always take the focus
-    if (window.role === Compositor.PopupWindowRole)
+    // Do something according to window role
+    switch (window.role) {
+    case Compositor.PopupWindowRole:
+        // Popup windows always take the focus
         window.takeFocus();
+        break;
+    case Compositor.DialogWindowRole:
+        // Modal dialogs take focus and are centered on an overlay
+        window.takeFocus();
+        window.x = root.x + (root.width - window.width) / 2;
+        window.y = root.y + (root.height - window.height) / 2;
+        root.showModalOverlay();
+        break;
+    default:
+        break;
+    }
+
+    // Run map animation
+    if (window.runMapAnimation)
+        window.runMapAnimation();
+}
+
+function shellWindowUnmapped(window)
+{
+    // Run unmap animation
+    if (window.runUnmapAnimation)
+        window.runUnmapAnimation();
+}
+
+function shellWindowDestroyed(window)
+{
+    // Run destroy animation
+    if (window.runDestroyAnimation)
+        window.runDestroyAnimation();
+
+    // Hide modal overlay
+    if (window.role === Compositor.DialogWindowRole)
+        root.hideModalOverlay();
 }
 
 function windowAdded(window)
