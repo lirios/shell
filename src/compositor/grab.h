@@ -29,10 +29,18 @@
 
 #include "qwayland-server-hawaii.h"
 
+class ShellGrabber;
+
 class Grab : public QtWaylandServer::wl_hawaii_grab
 {
 public:
     Grab();
+
+protected:
+    void hawaii_grab_end(Resource *resource);
+
+private:
+    ShellGrabber *m_grabber;
 };
 
 #endif // GRAB_H
