@@ -29,7 +29,6 @@
 #include <private/qwlsurface_p.h>
 
 #include "shell.h"
-#include "compositor.h"
 #include "popupgrabber.h"
 #include "shellsurface.h"
 
@@ -131,7 +130,7 @@ void Shell::unlockSession()
     m_prepareEventSent = true;
 }
 
-void Shell::addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface)
+void Shell::addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface)
 {
     if (!surface)
         return;
@@ -139,19 +138,19 @@ void Shell::addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface)
     surface->setWindowProperty(QStringLiteral("role"), role);
 
     switch (role) {
-    case Shell::BackgroundWindowRole:
+    case Compositor::BackgroundWindowRole:
         m_backgroundLayer.append(surface);
         break;
-    case Shell::PanelWindowRole:
-    case Shell::LauncherWindowRole:
-    case Shell::SpecialWindowRole:
-    case Shell::PopupWindowRole:
+    case Compositor::PanelWindowRole:
+    case Compositor::LauncherWindowRole:
+    case Compositor::SpecialWindowRole:
+    case Compositor::PopupWindowRole:
         m_panelsLayer.append(surface);
         break;
-    case Shell::OverlayWindowRole:
+    case Compositor::OverlayWindowRole:
         m_overlayLayer.append(surface);
         break;
-    case Shell::DialogWindowRole:
+    case Compositor::DialogWindowRole:
         m_dialogsLayer.append(surface);
         break;
     default:
@@ -169,25 +168,25 @@ void Shell::removeSurfaceFromLayer(QWaylandSurface *surface)
         return;
 
     bool found = false;
-    ShellWindowRole role = static_cast<ShellWindowRole>(surface->windowProperties().value(
-                                                            QStringLiteral("role")).toInt(&found));
+    Compositor::ShellWindowRole role = static_cast<Compositor::ShellWindowRole>(
+                surface->windowProperties().value(QStringLiteral("role")).toInt(&found));
     if (!found)
         return;
 
     switch (role) {
-    case Shell::BackgroundWindowRole:
+    case Compositor::BackgroundWindowRole:
         m_backgroundLayer.removeOne(surface);
         break;
-    case Shell::PanelWindowRole:
-    case Shell::LauncherWindowRole:
-    case Shell::SpecialWindowRole:
-    case Shell::PopupWindowRole:
+    case Compositor::PanelWindowRole:
+    case Compositor::LauncherWindowRole:
+    case Compositor::SpecialWindowRole:
+    case Compositor::PopupWindowRole:
         m_panelsLayer.removeOne(surface);
         break;
-    case Shell::OverlayWindowRole:
+    case Compositor::OverlayWindowRole:
         m_overlayLayer.removeOne(surface);
         break;
-    case Shell::DialogWindowRole:
+    case Compositor::DialogWindowRole:
         m_dialogsLayer.removeOne(surface);
         break;
     default:
@@ -269,7 +268,7 @@ void Shell::hawaii_shell_set_background(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Shell::BackgroundWindowRole, surface);
+    addSurfaceToLayer(Compositor::BackgroundWindowRole, surface);
 }
 
 void Shell::hawaii_shell_set_panel(Resource *resource,
@@ -282,7 +281,7 @@ void Shell::hawaii_shell_set_panel(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Shell::PanelWindowRole, surface);
+    addSurfaceToLayer(Compositor::PanelWindowRole, surface);
 }
 
 void Shell::hawaii_shell_set_launcher(Resource *resource,
@@ -295,7 +294,7 @@ void Shell::hawaii_shell_set_launcher(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Shell::LauncherWindowRole, surface);
+    addSurfaceToLayer(Compositor::LauncherWindowRole, surface);
 }
 
 void Shell::hawaii_shell_set_special(Resource *resource,
@@ -308,7 +307,7 @@ void Shell::hawaii_shell_set_special(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Shell::SpecialWindowRole, surface);
+    addSurfaceToLayer(Compositor::SpecialWindowRole, surface);
 }
 
 void Shell::hawaii_shell_set_overlay(Resource *resource,
@@ -321,7 +320,7 @@ void Shell::hawaii_shell_set_overlay(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Shell::OverlayWindowRole, surface);
+    addSurfaceToLayer(Compositor::OverlayWindowRole, surface);
 }
 
 void Shell::hawaii_shell_set_popup(Resource *resource,
@@ -336,11 +335,11 @@ void Shell::hawaii_shell_set_popup(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), QPointF(x, y));
-    addSurfaceToLayer(Shell::PopupWindowRole, surface);
+    addSurfaceToLayer(Compositor::PopupWindowRole, surface);
 
     QtWayland::InputDevice *input = Compositor::instance()->defaultInputDevice()->handle();
 
-    ShellSurface *shellSurface = new ShellSurface(Shell::PopupWindowRole, surface);
+    ShellSurface *shellSurface = new ShellSurface(Compositor::PopupWindowRole, surface);
     shellSurface->init(resource->client(), id);
 
     PopupGrabber *grabber = new PopupGrabber(input);
@@ -358,7 +357,7 @@ void Shell::hawaii_shell_set_dialog(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Shell::DialogWindowRole, surface);
+    addSurfaceToLayer(Compositor::DialogWindowRole, surface);
 }
 
 void Shell::hawaii_shell_set_position(Resource *resource,

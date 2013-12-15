@@ -29,7 +29,6 @@
 
 #include <QProcess>
 
-
 #include <GreenIsland/Compositor>
 
 class Shell;
@@ -41,7 +40,18 @@ class Notifications;
 class Compositor : public GreenIsland::Compositor
 {
     Q_OBJECT
+    Q_ENUMS(ShellWindowRole)
 public:
+    enum ShellWindowRole {
+        BackgroundWindowRole = 0,
+        PanelWindowRole,
+        LauncherWindowRole,
+        SpecialWindowRole,
+        OverlayWindowRole,
+        DialogWindowRole,
+        PopupWindowRole
+    };
+
     explicit Compositor();
     ~Compositor();
 

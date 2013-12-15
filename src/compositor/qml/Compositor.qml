@@ -111,6 +111,10 @@ Item {
      * Slots
      */
 
+    function shellWindowMapped(window) {
+        WindowManager.shellWindowMapped(window);
+    }
+
     function windowAdded(window) {
         WindowManager.windowAdded(window);
     }

@@ -38,10 +38,10 @@ class ShellSurface : public QObject, public QtWaylandServer::wl_hawaii_shell_sur
 {
     Q_OBJECT
 public:
-    ShellSurface(Shell::ShellWindowRole role, QWaylandSurface *surface);
+    ShellSurface(Compositor::ShellWindowRole role, QWaylandSurface *surface);
     ~ShellSurface();
 
-    Shell::ShellWindowRole role() const;
+    Compositor::ShellWindowRole role() const;
 
     QWaylandSurface *surface() const;
     void setSurface(QWaylandSurface *surface);
@@ -53,7 +53,7 @@ protected:
     void hawaii_shell_surface_dismiss(Resource *resource) Q_DECL_OVERRIDE;
 
 private:
-    Shell::ShellWindowRole m_role;
+    Compositor::ShellWindowRole m_role;
     QWaylandSurface *m_surface;
     PopupGrabber *m_popupGrabber;
 };

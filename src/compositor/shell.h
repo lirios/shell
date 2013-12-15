@@ -32,6 +32,7 @@
 #include <QtCompositor/QWaylandSurface>
 
 #include "qwayland-server-hawaii.h"
+#include "compositor.h"
 #include "keybinding.h"
 
 typedef QList<QWaylandSurface *> Layer;
@@ -41,18 +42,7 @@ class Shell : public QObject,
 {
     Q_OBJECT
     Q_PROPERTY(bool locked READ isLocked NOTIFY lockedChanged)
-    Q_ENUMS(ShellWindowRole)
 public:
-    enum ShellWindowRole {
-        BackgroundWindowRole = 0,
-        PanelWindowRole,
-        LauncherWindowRole,
-        SpecialWindowRole,
-        OverlayWindowRole,
-        DialogWindowRole,
-        PopupWindowRole
-    };
-
     Shell(struct ::wl_display *display);
     ~Shell();
 
@@ -82,7 +72,7 @@ private:
     bool m_locked;
     bool m_prepareEventSent;
 
-    void addSurfaceToLayer(ShellWindowRole role, QWaylandSurface *surface);
+    void addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface);
     void removeSurfaceFromLayer(QWaylandSurface *surface);
 
     QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);

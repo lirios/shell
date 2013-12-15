@@ -26,7 +26,7 @@
 
 #include "shellsurface.h"
 
-ShellSurface::ShellSurface(Shell::ShellWindowRole role, QWaylandSurface *surface)
+ShellSurface::ShellSurface(Compositor::ShellWindowRole role, QWaylandSurface *surface)
     : QtWaylandServer::wl_hawaii_shell_surface()
     , m_role(role)
     , m_surface(surface)
@@ -40,7 +40,7 @@ ShellSurface::~ShellSurface()
         m_popupGrabber->setShellSurface(nullptr);
 }
 
-Shell::ShellWindowRole ShellSurface::role() const
+Compositor::ShellWindowRole ShellSurface::role() const
 {
     return m_role;
 }
