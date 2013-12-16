@@ -64,6 +64,80 @@ WaylandSurfaceItem {
         }
     }
 
+    // Popup transform for map animation
+    Translate {
+        id: popupMapTransform
+        y: 50
+    }
+
+    // Popup map animation
+    ParallelAnimation {
+        id: popupMapAnimation
+
+        NumberAnimation {
+            target: surfaceItem
+            property: "opacity"
+            easing.type: Easing.Linear
+            to: 1.0
+            duration: 250
+        }
+
+        SequentialAnimation {
+            ScriptAction {
+                script: surfaceItem.transform = popupMapTransform
+            }
+
+            NumberAnimation {
+                target: popupMapTransform
+                property: "y"
+                easing.type: Easing.OutExpo
+                to: 0
+                duration: 250
+            }
+
+            ScriptAction {
+                script: surfaceItem.transform = []
+            }
+        }
+    }
+
+    // Popup transform for unmap animation
+    Translate {
+        id: popupUnmapTransform
+        y: 0
+    }
+
+    // Popup unmap animation
+    ParallelAnimation {
+        id: popupUnmapAnimation
+
+        SequentialAnimation {
+            ScriptAction {
+                script: surfaceItem.transform = popupUnmapTransform
+            }
+
+            NumberAnimation {
+                target: popupUnmapTransform
+                property: "y"
+                easing.type: Easing.OutExpo
+                to: -50
+                duration: 250
+            }
+
+            ScriptAction {
+                script: surfaceItem.transform = []
+            }
+        }
+
+        NumberAnimation {
+            target: surfaceItem
+            property: "opacity"
+            easing.type: Easing.Linear
+            to: 0.0
+            duration: 250
+        }
+    }
+
     // Dialog transform for map animation
     Scale {
         id: dialogMapTransform
@@ -192,6 +266,9 @@ WaylandSurfaceItem {
     function runMapAnimation () {
         if (surfaceItem.animationsEnabled) {
             switch (surfaceItem.role) {
+            case Compositor.PopupWindowRole:
+                popupMapAnimation.start();
+                break;
             case Compositor.DialogWindowRole:
                 dialogMapAnimation.start();
                 break;
@@ -204,6 +281,9 @@ WaylandSurfaceItem {
     function runDestroyAnimation () {
         if (surfaceItem.animationsEnabled) {
             switch (surfaceItem.role) {
+            case Compositor.PopupWindowRole:
+                popupUnmapAnimation.start();
+                break;
             case Compositor.DialogWindowRole:
                 dialogUnmapAnimation.start();
                 break;
