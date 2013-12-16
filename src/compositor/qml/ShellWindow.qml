@@ -80,7 +80,7 @@ WaylandSurfaceItem {
             property: "opacity"
             easing.type: Easing.Linear
             to: 1.0
-            duration: 250
+            duration: 200
         }
 
         SequentialAnimation {
