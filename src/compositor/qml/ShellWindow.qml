@@ -32,6 +32,7 @@ import Hawaii.Shell 0.1
 
 WaylandSurfaceItem {
     id: surfaceItem
+    opacity: 0.0
     onSurfaceChanged: {
         // Render the surface as soon as it is available
         renderer.source = surfaceItem;
@@ -273,6 +274,7 @@ WaylandSurfaceItem {
                 dialogMapAnimation.start();
                 break;
             default:
+                surfaceItem.opacity = 1.0;
                 break;
             }
         }
@@ -288,6 +290,7 @@ WaylandSurfaceItem {
                 dialogUnmapAnimation.start();
                 break;
             default:
+                surfaceItem.opacity = 0.0;
                 break;
             }
         }
