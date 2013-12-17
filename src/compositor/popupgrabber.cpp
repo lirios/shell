@@ -71,20 +71,23 @@ void PopupGrabber::setShellSurface(ShellSurface *shellSurface)
     if (shellSurface) {
         m_client = shellSurface->resource()->client();
         m_shellSurface = shellSurface;
-        m_inputDevice->pointerDevice()->startGrab(this);
+        if (m_inputDevice)
+            m_inputDevice->pointerDevice()->startGrab(this);
     } else {
+        if (m_inputDevice)
+            m_inputDevice->pointerDevice()->endGrab();
         m_client = nullptr;
         m_shellSurface = nullptr;
-        m_inputDevice->pointerDevice()->endGrab();
     }
 }
 
 void PopupGrabber::end()
 {
+    if (m_inputDevice)
+        m_inputDevice->pointerDevice()->endGrab();
+
     if (m_shellSurface) {
         m_shellSurface->send_popup_done();
-        if (m_inputDevice)
-            m_inputDevice->pointerDevice()->endGrab();
         delete m_shellSurface;
         m_shellSurface = nullptr;
     }
@@ -106,9 +109,11 @@ void PopupGrabber::focus()
     else
         m_inside = false;
 
-    if (m_inside && m_pointer->current() &&
+    if (m_pointer->current() &&
             m_pointer->current()->resource()->client() == m_client)
         m_pointer->setFocus(m_pointer->current(), m_pointer->currentPosition());
+    else
+        m_pointer->setFocus(0, QPointF());
 }
 
 void PopupGrabber::motion(uint32_t time)
@@ -125,5 +130,3 @@ void PopupGrabber::button(uint32_t time, Qt::MouseButton button, uint32_t state)
             !m_inside && (time - m_creationTime > 500))
         end();
 }
-
-#include "moc_popupgrabber.cpp"

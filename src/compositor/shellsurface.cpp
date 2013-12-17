@@ -71,5 +71,3 @@ void ShellSurface::hawaii_shell_surface_dismiss(Resource *resource)
         delete grabber;
     }
 }
-
-#include "moc_shellsurface.cpp"

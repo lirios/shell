@@ -32,9 +32,8 @@
 
 class ShellSurface;
 
-class PopupGrabber : public QObject, public QtWayland::PointerGrabber
+class PopupGrabber : public QtWayland::PointerGrabber
 {
-    Q_OBJECT
 public:
     PopupGrabber(QtWayland::InputDevice *inputDevice);
 

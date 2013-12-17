@@ -27,16 +27,14 @@
 #ifndef SHELLSURFACE_H
 #define SHELLSURFACE_H
 
-#include <QtCore/QObject>
 #include <QtCompositor/private/qwlinputdevice_p.h>
 
 #include "qwayland-server-hawaii.h"
 #include "popupgrabber.h"
 #include "shell.h"
 
-class ShellSurface : public QObject, public QtWaylandServer::wl_hawaii_shell_surface
+class ShellSurface : public QtWaylandServer::wl_hawaii_shell_surface
 {
-    Q_OBJECT
 public:
     ShellSurface(Compositor::ShellWindowRole role, QWaylandSurface *surface);
     ~ShellSurface();
@@ -49,13 +47,14 @@ public:
     PopupGrabber *popupGrabber() const;
     void setPopupGrabber(PopupGrabber *grabber);
 
-protected:
-    void hawaii_shell_surface_dismiss(Resource *resource) Q_DECL_OVERRIDE;
-
 private:
+    Q_DISABLE_COPY(ShellSurface)
+
     Compositor::ShellWindowRole m_role;
     QWaylandSurface *m_surface;
     PopupGrabber *m_popupGrabber;
+
+    void hawaii_shell_surface_dismiss(Resource *resource) Q_DECL_OVERRIDE;
 };
 
 #endif // SHELLSURFACE_H

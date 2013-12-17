@@ -334,6 +334,8 @@ void Shell::hawaii_shell_set_popup(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
+    if (m_panelsLayer.contains(surface))
+        return;
     surface->setWindowProperty(QStringLiteral("position"), QPointF(x, y));
     addSurfaceToLayer(Compositor::PopupWindowRole, surface);
 
