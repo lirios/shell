@@ -202,6 +202,17 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
             if (surface->visibility() == QWindow::Windowed)
                 surface->setPos(calculateInitialPosition(surface));
             break;
+        case QWaylandSurface::Transient: {
+            QWaylandSurface *transientParent = surface->transientParent();
+            if (transientParent) {
+                QPointF parentPos = transientParent->pos();
+                QSize parentSize = transientParent->size();
+                qreal x = parentPos.x() + (parentSize.width() - surface->size().width()) / 2;
+                qreal y = parentPos.y() + (parentSize.height() - surface->size().height()) / 2;
+                surface->setPos(QPointF(x, y));
+            }
+            break;
+        }
         default:
             break;
         }
