@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
+import FluidUi 0.2
 import Hawaii.Shell.Styles 1.0
 import Hawaii.Shell.Styles.Base 1.0
 
@@ -39,11 +40,13 @@ PopupStyle {
         bottom: shadowSize
     }
 
-   panel: Item {
+    panel: Item {
         Rectangle {
             id: border
-            anchors.fill: parent
-            anchors.margins: shadowSize
+            anchors {
+                fill: parent
+                margins: shadowSize
+            }
             border.color: "#999"
             radius: 6
             gradient: Gradient {
@@ -52,13 +55,15 @@ PopupStyle {
             }
             visible: false
 
-            Image {
-                anchors.fill: parent
-                anchors.margins: 3
-                source: StyleSettings.path + "/images/noise.png"
-                sourceSize: Qt.size(100, 100)
-                fillMode: Image.Tile
-                opacity: 0.5
+            NoiseBackground {
+                anchors {
+                    fill: parent
+                    margins: 3
+                }
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#f4f4f4" }
+                    GradientStop { position: 1.0; color: "#dcdcdc" }
+                }
             }
         }
 
