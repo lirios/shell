@@ -53,9 +53,7 @@ Item {
     Rectangle {
         id: gradient
         anchors.fill: parent
-        visible: type == BackgroundSettings.ColorBackground && colorShading != BackgroundSettings.SolidColorShading
-
-        Gradient {
+        gradient: Gradient {
             GradientStop {
                 position: 0.0
                 color: primaryColor
@@ -65,6 +63,7 @@ Item {
                 color: secondaryColor
             }
         }
+        visible: type == BackgroundSettings.ColorBackground && colorShading != BackgroundSettings.SolidColorShading
     }
 
     Item {
