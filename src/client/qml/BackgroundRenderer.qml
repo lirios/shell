@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import FluidUi 0.2
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Settings 1.0
 
@@ -43,14 +44,14 @@ Item {
     }
     onFillModeChanged: wallpaper.fillMode = convertFillMode(fillMode)
 
-    Rectangle {
+    NoiseBackground {
         id: solid
         anchors.fill: parent
         color: primaryColor
         visible: type == BackgroundSettings.ColorBackground && colorShading == BackgroundSettings.SolidColorShading
     }
 
-    Rectangle {
+    NoiseBackground {
         id: gradient
         anchors.fill: parent
         gradient: Gradient {
