@@ -29,6 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 import Fluid.Ui 1.0 as FluidUi
+import Fluid.Effects 1.0 as FluidEffects
 import Hawaii.Shell 1.0
 
 Item {
@@ -59,7 +60,7 @@ Item {
         visible: false
     }
 
-    EffectVignette {
+    FluidEffects.Vignette {
         anchors.fill: fastBlurEffect
         source: fastBlurEffect
         radius: 4

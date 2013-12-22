@@ -39,9 +39,6 @@
         <!-- LockScreen -->
         <file>qml/LockScreen.qml</file>
 
-        <!-- Effects -->
-        <file>qml/EffectVignette.qml</file>
-
         <!-- Overlays -->
         <file>qml/Overlay.qml</file>
         <file>qml/ShortcutsOverlay.qml</file>
