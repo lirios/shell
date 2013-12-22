@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
     // Print version information
     qDebug() << qPrintable(QStringLiteral("== Hawaii Shell v%1 ==\n").arg(HAWAII_SHELL_VERSION_STRING))
              << "** http://www.maui-project.org\n"
-             << "** Bug reports to: https://github.com/hawaii-desktop/shell/issues\n"
+             << "** Bug reports to: https://github.com/mauios/hawaii-shell/issues\n"
              << qPrintable(QStringLiteral("** Build: %1-%2")
                            .arg(HAWAII_SHELL_VERSION_STRING).arg(GIT_REV));
 
