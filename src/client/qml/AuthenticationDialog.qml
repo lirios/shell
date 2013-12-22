@@ -28,8 +28,8 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtAccountsService 1.0
-import FluidUi 0.2 as FluidUi
-import FluidUi.ListItems 0.2 as ListItem
+import Fluid.Ui 0.2 as FluidUi
+import Fluid.Ui.ListItems 0.2 as ListItem
 import Hawaii.Shell 1.0
 
 Dialog {

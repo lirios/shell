@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidUi 0.2
+import Fluid.Ui 0.2
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Settings 1.0
 

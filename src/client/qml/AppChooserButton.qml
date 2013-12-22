@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidUi 0.2 as FluidUi
+import Fluid.Ui 0.2 as FluidUi
 import Hawaii.Shell.Styles 1.0
 
 StyledItem {

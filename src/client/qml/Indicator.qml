@@ -26,7 +26,7 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.0
-import FluidUi 0.2 as FluidUi
+import Fluid.Ui 0.2 as FluidUi
 
 Item {
     height: 32
