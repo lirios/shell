@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Fluid.Ui 0.2 as FluidUi
+import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell.Styles 1.0
 import Hawaii.Shell.Styles.Base 1.0
 
