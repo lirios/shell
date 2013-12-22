@@ -103,13 +103,13 @@ qt5_add_dbus_adaptor(SOURCES
     ${CMAKE_SOURCE_DIR}/data/interfaces/org.freedesktop.Notifications.xml
     notificationsdaemon.h NotificationsDaemon)
 
-add_executable(hawaii-desktop-shell ${SOURCES} ${RESOURCES})
-qt5_use_modules(hawaii-desktop-shell Quick Widgets)
-set_target_properties(hawaii-desktop-shell PROPERTIES
+add_executable(hawaii-shell-client ${SOURCES} ${RESOURCES})
+qt5_use_modules(hawaii-shell-client Quick Widgets)
+set_target_properties(hawaii-shell-client PROPERTIES
     COMPILE_FLAGS "-rdynamic"
     LINK_FLAGS "-L${WaylandClient_LIBDIR} -L${POLKITQT-1_LIB_DIR}"
 )
-target_link_libraries(hawaii-desktop-shell
+target_link_libraries(hawaii-shell-client
     ${WaylandClient_LIBRARIES}
     ${POLKITQT-1_CORE_LIBRARY}
     ${POLKITQT-1_AGENT_LIBRARY}
@@ -120,6 +120,6 @@ target_link_libraries(hawaii-desktop-shell
 
 # Git revision
 include(GetGitRevision)
-create_git_head_revision_file(gitsha1.h hawaii-desktop-shell)
+create_git_head_revision_file(gitsha1.h hawaii-shell-client)
 
-install(TARGETS hawaii-desktop-shell DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
+install(TARGETS hawaii-shell-client DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})

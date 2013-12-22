@@ -33,7 +33,7 @@ test -n "$uxtype" || {
     uxtype="desktop"
 }
 
-executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/hawaii-${uxtype}-shell
+executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/hawaii-shell-client
 
 # Make sure our library path is set
 _libdir="@CMAKE_INSTALL_FULL_LIBDIR@"
