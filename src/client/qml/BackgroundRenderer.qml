@@ -96,8 +96,20 @@ Item {
         }
     }
 
+    Loader {
+        id: animatedWallpaper
+        anchors.fill: parent
+        asynchronous: true
+        visible: type == BackgroundSettings.AnimatedWallpaperBackground &&
+                 animatedWallpaper.status == Loader.Ready
+    }
+
     function unloadBackground() {
         wallpaper.source = "";
+    }
+
+    function unloadAnimatedWallpaper() {
+        animatedWallpaper.active = false;
     }
 
     function convertFillMode(value) {
