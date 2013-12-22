@@ -16,7 +16,7 @@ qt5_use_modules(HawaiiCore Core)
 target_link_libraries(HawaiiCore ${QtConfiguration_LIBRARIES})
 set_target_properties(HawaiiCore PROPERTIES
     VERSION ${HAWAII_SHELL_VERSION_STRING}
-    SOVERSION ${HAWAII_SHELL_VERSION_MAJOR}.${HAWAII_SHELL_VERSION_MINOR}.${HAWAII_SHELL_VERSION_PATCH})
+    SOVERSION "${HAWAII_SHELL_VERSION_MAJOR}")
 
 install(TARGETS HawaiiCore
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
