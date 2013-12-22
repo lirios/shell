@@ -25,139 +25,196 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Settings 1.0
 
 Element {
+    id: background
+
     property var settings: BackgroundSettings {
-        id: settings
-        onTypeChanged: performChanges(currentRenderer, settings)
-        onColorShadingChanged: performChanges(currentRenderer, settings)
-        onPrimaryColorChanged: performChanges(currentRenderer, settings)
-        onSecondaryColorChanged: performChanges(currentRenderer, settings)
-        onWallpaperUrlChanged: performChanges(currentRenderer, settings)
-        onFillModeChanged: performChanges(currentRenderer, settings)
+        onTypeChanged: {
+            __priv.swapBackgrounds();
+        }
+        onWallpaperUrlChanged: {
+            if (__priv.type == BackgroundSettings.WallpaperBackground)
+                wallpaper.source = settings.wallpaperUrl;
+        }
     }
 
-    property int fadeDuration: 400
+    QtObject {
+        id: __priv
 
-    property var currentRenderer: renderer1
-    property var nextRenderer: renderer2
+        property int type
+        property bool swapping: false
+        property int fadeDuration: 400
 
-    BackgroundRenderer {
-        id: renderer1
+        function swapBackgrounds() {
+            __priv.type = settings.type;
+
+            switch (settings.type) {
+            case BackgroundSettings.ColorBackground:
+                switch (settings.colorShading) {
+                case BackgroundSettings.SolidColorShading:
+                    solid.visible = true;
+                    vgradient.visible = false;
+                    hgradient.visible = false;
+                    break;
+                case BackgroundSettings.VerticalColorShading:
+                    solid.visible = false;
+                    vgradient.visible = true;
+                    hgradient.visible = false;
+                    break;
+                case BackgroundSettings.HorizontalColorShading:
+                    solid.visivble = false;
+                    vgradient.visible = false;
+                    hgradient.visible = true;
+                    break;
+                default:
+                    break;
+                }
+
+                wallpaperContainer.visible = false;
+                wallpaper.source = "";
+                break;
+            case BackgroundSettings.WallpaperBackground:
+                __priv.swapping = true;
+                wallpaper.source = settings.wallpaperUrl;
+                break;
+            }
+        }
+
+        function convertFillMode(value) {
+            switch (value) {
+            case BackgroundSettings.Scaled:
+                return Image.PreserveAspectFit;
+            case BackgroundSettings.Cropped:
+                return Image.PreserveAspectCrop;
+            case BackgroundSettings.Centered:
+                return Image.Pad;
+            case BackgroundSettings.Tiled:
+                return Image.Tile;
+            default:
+                return Image.Stretch;
+            }
+        }
+    }
+
+    FluidUi.NoiseBackground {
+        id: solid
         anchors.fill: parent
-        opacity: 1.0
+        color: settings.primaryColor
+        visible: false
+
+        Behavior on color {
+            ColorAnimation {
+                duration: __priv.fadeDuration
+                easing.type: Easing.OutQuad
+            }
+        }
     }
 
-    BackgroundRenderer {
-        id: renderer2
+    FluidUi.NoiseBackground {
+        id: vgradient
         anchors.fill: parent
-        opacity: 0.0
+        gradient: Gradient {
+            GradientStop {
+                position: 0.0
+                color: settings.primaryColor
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: __priv.fadeDuration
+                        easing.type: Easing.OutQuad
+                    }
+                }
+            }
+            GradientStop {
+                position: 1.0
+                color: settings.secondaryColor
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: __priv.fadeDuration
+                        easing.type: Easing.OutQuad
+                    }
+                }
+            }
+        }
+        visible: false
     }
+
+    FluidUi.NoiseBackground {
+        id: hgradient
+        anchors.centerIn: parent
+        width: parent.height
+        height: parent.width
+        gradient: Gradient {
+            GradientStop {
+                position: 0.0
+                color: settings.primaryColor
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: __priv.fadeDuration
+                        easing.type: Easing.OutQuad
+                    }
+                }
+            }
+            GradientStop {
+                position: 1.0
+                color: settings.secondaryColor
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: __priv.fadeDuration
+                        easing.type: Easing.OutQuad
+                    }
+                }
+            }
+        }
+        rotation: 270
+        visible: false
+    }
+
+    FluidUi.NoiseBackground {
+        id: wallpaperContainer
+        anchors.fill: parent
+        color: settings.primaryColor
+        visible: false
+
+        FluidUi.SmoothFadeImage {
+            id: wallpaper
+            anchors.fill: parent
+            sourceSize.width: width
+            sourceSize.height: height
+            smooth: true
+            clip: wallpaper.fillMode === Image.PreserveAspectCrop
+            fillMode: __priv.convertFillMode(settings.fillMode)
+            onSourceChanged: {
+                if (__priv.swapping) {
+                    solid.visible = false;
+                    vgradient.visible = false;
+                    hgradient.visible = false;
+                    wallpaperContainer.visible = true;
+                    __priv.swapping = false;
+                }
+            }
+        }
+    }
+
+    /*
+    Loader {
+        id: animatedWallpaper
+        anchors.fill: parent
+        asynchronous: true
+        z: 3
+        visible: settings.type === BackgroundSettings.AnimatedWallpaperBackground &&
+                 animatedWallpaper.status == Loader.Ready
+    }
+    */
 
     Component.onCompleted: {
-        // Initialize the first renderer with settings
-        updateSettings(currentRenderer, settings);
-
-        // Unload the wallpaper on the second render since we
-        // are not showing it anyway
-        nextRenderer.unloadBackground();
-    }
-
-    function updateSettings(renderer, from) {
-        renderer.type = from.type
-        renderer.primaryColor = from.primaryColor;
-        renderer.secondaryColor = from.secondaryColor;
-        renderer.colorShading = from.colorShading;
-        renderer.wallpaperUrl = from.wallpaperUrl;
-        renderer.fillMode = from.fillMode;
-    }
-
-    SequentialAnimation {
-        id: swapAnimation
-
-        ScriptAction {
-            script: {
-                // Update next renderer settings
-                updateSettings(nextRenderer, settings);
-            }
-        }
-
-        ParallelAnimation {
-            NumberAnimation {
-                target: nextRenderer
-                property: "opacity"
-                easing.type: Easing.Linear
-                to: 1.0
-                duration: fadeDuration
-            }
-            NumberAnimation {
-                target: currentRenderer
-                property: "opacity"
-                easing.type: Easing.Linear
-                to: 0.0
-                duration: fadeDuration
-            }
-        }
-
-        ScriptAction {
-            script: {
-                // Swap renderers
-                var saved = nextRenderer;
-                nextRenderer = currentRenderer;
-                currentRenderer = saved;
-
-                // Unload next renderer wallpaper to save some memory
-                nextRenderer.unloadBackground();
-            }
-        }
-    }
-
-    function isChanged(from, to) {
-        /*
-         * This method returns:
-         *  - 0: no changes
-         *  - 1: changes (swap renderers)
-         *  - 2: changes (don't swap renderers)
-         */
-
-        if (from.type != to.type)
-            return 1;
-
-        switch (to.type) {
-        case BackgroundSettings.ColorBackground:
-            switch (to.colorShading) {
-            case BackgroundSettings.SolidColorShading:
-                if (from.primaryColor != to.primaryColor)
-                    return 1;
-                break;
-            case BackgroundSettings.HorizontalColorShading:
-            case BackgroundSettings.VerticalColorShading:
-                if ((from.primaryColor != to.primaryColor) || (from.secondaryColor != to.secondaryColor))
-                    return 1;
-                break;
-            }
-            break;
-        case BackgroundSettings.WallpaperBackground:
-            if (from.wallpaperUrl != to.wallpaperUrl)
-                return 1;
-            else if (from.fillMode != to.fillMode)
-                return 2;
-            break;
-        default:
-            break;
-        }
-
-        return 0;
-    }
-
-    function performChanges(from, to) {
-        // If something changed swap the two background renderers
-        var changed = isChanged(from, to);
-        if (changed == 1)
-            swapAnimation.start();
-        else if (changed == 2)
-            updateSettings(currentRenderer, settings);
+        __priv.swapBackgrounds();
     }
 }

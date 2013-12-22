@@ -15,7 +15,6 @@
 
         <!-- Background -->
         <file>qml/Background.qml</file>
-        <file>qml/BackgroundRenderer.qml</file>
 
         <!-- Indicators -->
         <file>qml/Indicator.qml</file>
