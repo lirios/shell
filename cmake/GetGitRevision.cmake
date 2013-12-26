@@ -31,15 +31,25 @@
 #=============================================================================
 
 function(create_git_head_revision_file _file _target)
-    if(NOT GIT_FOUND)
-        find_package(Git QUIET)
-    endif()
+    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/.git)
+        if(NOT GIT_FOUND)
+            find_package(Git QUIET)
+        endif()
 
-    add_custom_target(gitsha1
-        ${CMAKE_COMMAND} -E remove -f ${CMAKE_CURRENT_BINARY_DIR}/${_file}
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${_file}.in ${CMAKE_CURRENT_BINARY_DIR}/${_file}
-        COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD >> ${CMAKE_CURRENT_BINARY_DIR}/${_file}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        VERBATIM)
-    add_dependencies(${_target} gitsha1)
+        add_custom_target(gitsha1
+            ${CMAKE_COMMAND} -E remove -f ${CMAKE_CURRENT_BINARY_DIR}/${_file}
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${_file}.in ${CMAKE_CURRENT_BINARY_DIR}/${_file}
+            COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD >> ${CMAKE_CURRENT_BINARY_DIR}/${_file}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            VERBATIM)
+        add_dependencies(${_target} gitsha1)
+    else()
+        add_custom_target(gitsha1
+            ${CMAKE_COMMAND} -E remove -f ${CMAKE_CURRENT_BINARY_DIR}/${_file}
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${_file}.in ${CMAKE_CURRENT_BINARY_DIR}/${_file}
+            COMMAND echo tarball >> ${CMAKE_CURRENT_BINARY_DIR}/${_file}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            VERBATIM)
+        add_dependencies(${_target} gitsha1)
+    endif()
 endfunction()
