@@ -182,6 +182,7 @@ static void popup_grab_motion(struct weston_pointer_grab *grab,  uint32_t time)
 void ShellSeat::popup_grab_button(struct weston_pointer_grab *grab, uint32_t time, uint32_t button, uint32_t state_w)
 {
     ShellSeat *shseat = static_cast<PopupGrab *>(container_of(grab, PopupGrab, grab))->seat;
+    struct wl_display *display = shseat->m_seat->compositor->wl_display;
 
 #if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
     struct wl_list *resource_list = &grab->pointer->focus_resource_list;
@@ -191,7 +192,6 @@ void ShellSeat::popup_grab_button(struct weston_pointer_grab *grab, uint32_t tim
     struct wl_resource *resource = grab->pointer->focus_resource;
     if (resource) {
 #endif
-        struct wl_display *display = wl_client_get_display(wl_resource_get_client(resource));
         uint32_t serial = wl_display_get_serial(display);
 #if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
         wl_resource_for_each(resource, resource_list)
