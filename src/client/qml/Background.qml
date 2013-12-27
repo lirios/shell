@@ -184,10 +184,11 @@ Element {
         visible: false
 
         FluidUi.SmoothFadeImage {
+            property real aspectRatio: background.width / background.height
             id: wallpaper
             anchors.fill: parent
-            sourceSize.width: width
-            sourceSize.height: height
+            sourceSize.width: aspectRatio * 1024
+            sourceSize.height: 1024
             smooth: true
             clip: wallpaper.fillMode === Image.PreserveAspectCrop
             fillMode: __priv.convertFillMode(settings.fillMode)
