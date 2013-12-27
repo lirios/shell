@@ -31,7 +31,7 @@
 #=============================================================================
 
 function(create_git_head_revision_file _file _target)
-    if(IS_DIRECTORY ${CMAKE_SOURCE_DIR}/.git)
+    if(EXISTS ${CMAKE_SOURCE_DIR}/.git)
         if(NOT GIT_FOUND)
             find_package(Git QUIET)
         endif()
