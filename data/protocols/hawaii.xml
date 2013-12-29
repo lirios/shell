@@ -26,9 +26,7 @@
 
   <interface name="wl_hawaii_shell" version="1">
     <description summary="create desktop widgets and helpers">
-      Traditional user interfaces can rely on this interface to define the
-      foundations of typical desktops. Currently it's possible to set up
-      background, panels and locking surfaces.
+      This interface defines the foundations of the Hawaii desktop.
     </description>
 
     <request name="add_key_binding">
@@ -43,7 +41,7 @@
     <request name="set_available_geometry">
       <description summary="set available geometry">
 	The available geometry is a portion of the output free of any
-	shell surface (such as Panel and Launcher).
+	shell surface such as panels.
 	It's used by the compositor to know where mapped surfaces should
 	be placed and to prevent maximized surfaces from covering shell
 	surfaces.
@@ -61,11 +59,6 @@
     </request>
 
     <request name="set_panel">
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_launcher">
       <arg name="output" type="object" interface="wl_output"/>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
@@ -115,20 +108,14 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
-    <request name="set_position">
-      <arg name="surface" type="object" interface="wl_surface"/>
-      <arg name="x" type="int"/>
-      <arg name="y" type="int"/>
-    </request>
-
     <request name="set_lock_surface">
+      <description summary="set lock role">
+        The surface set by this request will receive the lock role.
+        The lock surface is shown by the compositor when the session is
+        locked, users interact with it to unlock the session.
+        Only one surface can have the lock role.
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
-
-    <request name="quit"/>
-
-    <request name="lock"/>
-    <request name="unlock"/>
 
     <request name="set_grab_surface">
       <description summary="set grab surface">
@@ -138,6 +125,34 @@
 	the grab_cursor event sent just before the enter event.
       </description>
       <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
+    <request name="set_position">
+      <description summary="change surface position">
+        Move the surface to new coordinates.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="x" type="int"/>
+      <arg name="y" type="int"/>
+    </request>
+
+    <request name="quit">
+      <description summary="quit the compositor">
+        Tell the server to quit.
+        The shell client sends this request after the session has been
+        closed to quit the compositor.
+    </request>
+
+    <request name="lock">
+      <description summary="lock the session">
+        Tell the server to lock the session.
+      </description>
+    </request>
+
+    <request name="unlock">
+      <description summary="unlock the session">
+        Tell the server to unlock the session.
+      </description>
     </request>
 
     <request name="desktop_ready">
@@ -213,7 +228,6 @@
       <description summary="notify the client that a new window was created">
         This event will be sent immediately after a new window is mapped.
       </description>
-
       <arg name="id" type="new_id" interface="wl_hawaii_window"/>
       <arg name="title" type="string"/>
       <arg name="identifier" type="string"/>
@@ -317,7 +331,6 @@
       <description summary="set client window state">
         Set client window state.
       </description>
-
       <arg name="state" type="int"/>
     </request>
 
@@ -325,7 +338,6 @@
       <description summary="window title have been changed">
         This event will be sent as soon as the window title is changed.
       </description>
-
       <arg name="title" type="string"/>
     </event>
 
@@ -333,7 +345,6 @@
       <description summary="window class have been changed">
         This event will be sent as soon as the window class is changed.
       </description>
-
       <arg name="identifier" type="string"/>
     </event>
 
@@ -341,7 +352,6 @@
       <description summary="window state have been changed">
         This event will be sent as soon as the window state changes.
       </description>
-
       <arg name="state" type="int"/>
     </event>
 
