@@ -114,6 +114,7 @@
         The lock surface is shown by the compositor when the session is
         locked, users interact with it to unlock the session.
         Only one surface can have the lock role.
+      </description>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
@@ -141,6 +142,7 @@
         Tell the server to quit.
         The shell client sends this request after the session has been
         closed to quit the compositor.
+      </description>
     </request>
 
     <request name="lock">
