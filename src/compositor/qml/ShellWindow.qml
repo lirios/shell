@@ -248,7 +248,6 @@ WaylandSurfaceItem {
             surfaceItem.z = 0;
             break;
         case Compositor.PanelWindowRole:
-        case Compositor.LauncherWindowRole:
         case Compositor.SpecialWindowRole:
         case Compositor.PopupWindowRole:
             surfaceItem.z = 2;
