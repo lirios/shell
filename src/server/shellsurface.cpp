@@ -211,11 +211,13 @@ void ShellSurface::sendState()
 void ShellSurface::advertize()
 {
     m_windowResource = wl_resource_create(m_shell->shellClient(), &wl_hawaii_window_interface, 1, 0);
-    wl_resource_set_implementation(m_windowResource, &m_window_implementation, this, 0);
-    wl_hawaii_shell_send_window_mapped(m_shell->shellClientResource(),
-                                       m_windowResource,
-                                       m_title.c_str(), m_class.c_str(),
-                                       m_state);
+    if (m_windowResource) {
+        wl_resource_set_implementation(m_windowResource, &m_window_implementation, this, 0);
+        wl_hawaii_shell_send_window_mapped(m_shell->shellClientResource(),
+                                           m_windowResource,
+                                           m_title.c_str(), m_class.c_str(),
+                                           m_state);
+    }
     m_windowAdvertized = true;
 }
 
