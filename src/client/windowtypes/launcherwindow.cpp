@@ -146,7 +146,7 @@ void LauncherWindow::setWindowType()
                 native->nativeResourceForWindow("surface", this));
 
     HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_launcher(output, m_surface);
+    shell->set_panel(output, m_surface);
 }
 
 void LauncherWindow::setSurfacePosition()

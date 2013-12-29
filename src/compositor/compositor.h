@@ -45,7 +45,6 @@ public:
     enum ShellWindowRole {
         BackgroundWindowRole = 0,
         PanelWindowRole,
-        LauncherWindowRole,
         SpecialWindowRole,
         OverlayWindowRole,
         DialogWindowRole,

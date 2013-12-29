@@ -142,7 +142,6 @@ void Shell::addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface 
         m_backgroundLayer.append(surface);
         break;
     case Compositor::PanelWindowRole:
-    case Compositor::LauncherWindowRole:
     case Compositor::SpecialWindowRole:
     case Compositor::PopupWindowRole:
         m_panelsLayer.append(surface);
@@ -178,7 +177,6 @@ void Shell::removeSurfaceFromLayer(QWaylandSurface *surface)
         m_backgroundLayer.removeOne(surface);
         break;
     case Compositor::PanelWindowRole:
-    case Compositor::LauncherWindowRole:
     case Compositor::SpecialWindowRole:
     case Compositor::PopupWindowRole:
         m_panelsLayer.removeOne(surface);
@@ -282,19 +280,6 @@ void Shell::hawaii_shell_set_panel(Resource *resource,
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
     addSurfaceToLayer(Compositor::PanelWindowRole, surface);
-}
-
-void Shell::hawaii_shell_set_launcher(Resource *resource,
-                                      struct ::wl_resource *output_resource,
-                                      struct ::wl_resource *surface_resource)
-{
-    Q_UNUSED(resource);
-    Q_UNUSED(output_resource);
-
-    QWaylandSurface *surface =
-            QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
-    surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Compositor::LauncherWindowRole, surface);
 }
 
 void Shell::hawaii_shell_set_special(Resource *resource,
