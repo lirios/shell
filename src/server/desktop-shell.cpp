@@ -37,6 +37,7 @@
 #include <weston/matrix.h>
 // #include <weston/config-parser.h>
 
+#include "cmakedirs.h"
 #include "desktop-shell.h"
 #include "wayland-hawaii-server-protocol.h"
 #include "wayland-notification-daemon-server-protocol.h"
@@ -159,6 +160,7 @@ static void shell_surface_destroyed(wl_resource *res)
 DesktopShell::DesktopShell(struct weston_compositor *ec)
             : Shell(ec)
             , m_screenSaverBinding(nullptr)
+            , m_screenSaverPath(INSTALL_LIBEXECDIR "/hawaii-screensaver")
             , m_screenSaverDuration(5*60*1000)
             , m_inputPanel(nullptr)
             , m_notificationsEdge(DesktopShell::EdgeRight)

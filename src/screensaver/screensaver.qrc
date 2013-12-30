@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Swirl.qml</file>
+        <file>images/glowdot.png</file>
+        <file>images/star.png</file>
+    </qresource>
+</RCC>
