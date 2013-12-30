@@ -1241,8 +1241,8 @@ void DesktopShell::screenSaverConfigure(weston_surface *es, int32_t sx, int32_t 
 }
 
 void DesktopShell::setScreenSaverSurface(wl_client *client, wl_resource *resource,
-                                         wl_resource *surface_resource,
-                                         wl_resource *output_resource)
+                                         wl_resource *output_resource,
+                                         wl_resource *surface_resource)
 {
     struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
     struct weston_output *output = static_cast<weston_output *>(output_resource->data);

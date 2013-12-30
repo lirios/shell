@@ -9,9 +9,8 @@
 	A screensaver surface is normally hidden, and only visible after an
         idle timeout.
       </description>
-
-      <arg name="surface" type="object" interface="wl_surface"/>
       <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
     </request>
   </interface>
 </protocol>

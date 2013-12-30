@@ -169,8 +169,8 @@ private:
     void screenSaverConfigure(weston_surface *es, int32_t sx, int32_t sy,
                               int32_t width, int32_t height);
     void setScreenSaverSurface(wl_client *client, wl_resource *resource,
-                               wl_resource *surface_resource,
-                               wl_resource *output_resource);
+                               wl_resource *output_resource,
+                               wl_resource *surface_resource);
 
     static const struct wl_hawaii_shell_interface m_desktopShellImpl;
     static const struct wl_notification_daemon_interface m_notificationDaemonImpl;
