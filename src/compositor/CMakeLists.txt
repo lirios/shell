@@ -20,18 +20,18 @@ add_definitions(
 )
 
 set(SOURCES
-    main.cpp
-    compositor.cpp
-    shell.cpp
-    keybinding.cpp
     clientwindow.cpp
+    compositor.cpp
+    grab.cpp
+    keybinding.cpp
+    logging.cpp
+    main.cpp
+    notifications.cpp
     popupgrabber.cpp
+    screensaver.cpp
+    shell.cpp
     shellsurface.cpp
     workspace.cpp
-    grab.cpp
-    notifications.cpp
-    logging.cpp
-    screensaver.cpp
 )
 
 wayland_add_protocol_client(SOURCES
