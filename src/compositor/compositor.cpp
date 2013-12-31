@@ -190,6 +190,7 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
         item = qobject_cast<QWaylandSurfaceItem *>(object);
         item->setParentItem(rootObject());
         item->setSurface(surface);
+        item->setTouchEventsEnabled(true);
     }
 
     // Setup shell windows
