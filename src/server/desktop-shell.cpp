@@ -187,7 +187,7 @@ void DesktopShell::init()
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShell(client, version, id); }))
         return;
 
-    if (!wl_global_create(compositor()->wl_display, &screensaver_interface, 1, this,
+    if (!wl_global_create(compositor()->wl_display, &wl_screensaver_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindScreenSaver(client, version, id); }))
         return;
 
@@ -351,7 +351,7 @@ void DesktopShell::unbindDesktopShell(struct wl_resource *resource)
 
 void DesktopShell::bindScreenSaver(wl_client *client, uint32_t version, uint32_t id)
 {
-    struct wl_resource *resource = wl_resource_create(client, &screensaver_interface, version, id);
+    struct wl_resource *resource = wl_resource_create(client, &wl_screensaver_interface, version, id);
 
     if (!m_screenSaverBinding) {
         wl_resource_set_implementation(resource, &m_screenSaverImpl, this,
@@ -1246,8 +1246,8 @@ void DesktopShell::setScreenSaverSurface(wl_client *client, wl_resource *resourc
                                          wl_resource *output_resource,
                                          wl_resource *surface_resource)
 {
-    struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
     struct weston_output *output = static_cast<weston_output *>(output_resource->data);
+    struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
 
     surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
         static_cast<DesktopShell *>(es->configure_private)->screenSaverConfigure(es, sx, sy, width, height); };
@@ -1255,6 +1255,6 @@ void DesktopShell::setScreenSaverSurface(wl_client *client, wl_resource *resourc
     surface->output = output;
 }
 
-const struct screensaver_interface DesktopShell::m_screenSaverImpl = {
+const struct wl_screensaver_interface DesktopShell::m_screenSaverImpl = {
     wrapInterface(&DesktopShell::setScreenSaverSurface)
 };

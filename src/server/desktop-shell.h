@@ -174,7 +174,7 @@ private:
 
     static const struct wl_hawaii_shell_interface m_desktopShellImpl;
     static const struct wl_notification_daemon_interface m_notificationDaemonImpl;
-    static const struct screensaver_interface m_screenSaverImpl;
+    static const struct wl_screensaver_interface m_screenSaverImpl;
 
     wl_resource *m_screenSaverBinding;
     wl_event_source *m_screenSaverTimer;
