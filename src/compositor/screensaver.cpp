@@ -25,9 +25,7 @@
  ***************************************************************************/
 
 #include <QtCore/QTimer>
-#ifdef QT_COMPOSITOR_QUICK
-#  include <QtCompositor/QWaylandSurfaceItem>
-#endif
+#include <QtCompositor/QWaylandSurfaceItem>
 #include <QtCompositor/private/qwlsurface_p.h>
 
 #include "cmakedirs.h"
@@ -95,11 +93,9 @@ void ScreenSaver::screensaver_set_surface(Resource *resource,
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     // TODO: As soon as QtCompositor handles outputs we need to center on output
 
-#ifdef QT_COMPOSITOR_QUICK
     QWaylandSurfaceItem *item = surface->surfaceItem();
     if (item)
         item->setZ(100000);
-#endif
 
     Q_EMIT Compositor::instance()->fadeIn();
 }

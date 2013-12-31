@@ -98,7 +98,6 @@ void ClientWindow::setSurface(QWaylandSurface *surface)
                         m_state);
         m_mapped = true;
 
-#ifdef QT_COMPOSITOR_QUICK
         if (m_surface->surfaceItem()) {
             QObject::connect(m_surface->surfaceItem(), &QWaylandSurfaceItem::focusChanged, [=](bool focus) {
                 if (focus)
@@ -110,7 +109,6 @@ void ClientWindow::setSurface(QWaylandSurface *surface)
             for (Resource *resource: resourceMap().values())
                 send_state_changed(resource->handle, m_state);
         }
-#endif
     });
     QObject::connect(m_surface, &QWaylandSurface::unmapped, [=]() {
         if (m_mapped) {
@@ -148,10 +146,8 @@ bool ClientWindow::isActive() const
 void ClientWindow::activate()
 {
     if (m_surface) {
-#ifdef QT_COMPOSITOR_QUICK
         if (m_surface->surfaceItem())
             m_surface->surfaceItem()->takeFocus();
-#endif
         setState(m_state | WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE);
     }
 }
@@ -159,12 +155,10 @@ void ClientWindow::activate()
 void ClientWindow::deactivate()
 {
     if (m_surface) {
-#ifdef QT_COMPOSITOR_QUICK
         if (m_surface->surfaceItem()) {
             m_surface->surfaceItem()->setFocus(false);
             m_surface->compositor()->defaultInputDevice()->setKeyboardFocus(0);
         }
-#endif
         setState(m_state & ~WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE);
     }
 }

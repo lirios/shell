@@ -264,12 +264,10 @@ void Shell::hawaii_shell_set_lock_surface(Resource *resource,
     m_lockSurface = QtWayland::Surface::fromResource(
                 surface_resource)->waylandSurface();
     connect(m_lockSurface, &QWaylandSurface::mapped, [=]() {
-#ifdef QT_COMPOSITOR_QUICK
         if (m_lockSurface->surfaceItem()) {
             m_lockSurface->surfaceItem()->setZ(999);
             m_lockSurface->surfaceItem()->takeFocus();
         }
-#endif
 
         Q_EMIT Compositor::instance()->fadeIn();
     });
