@@ -31,6 +31,7 @@ set(SOURCES
     grab.cpp
     notifications.cpp
     logging.cpp
+    screensaver.cpp
 )
 
 wayland_add_protocol_client(SOURCES
@@ -44,6 +45,19 @@ wayland_add_protocol_server(SOURCES
 qtwayland_add_protocol_server(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
     hawaii
+)
+
+wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/screensaver.xml
+    screensaver
+)
+wayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/screensaver.xml
+    screensaver
+)
+qtwayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/screensaver.xml
+    screensaver
 )
 
 wayland_add_protocol_client(SOURCES

@@ -28,6 +28,7 @@
 
 #include <private/qwlsurface_p.h>
 
+#include "screensaver.h"
 #include "shell.h"
 #include "popupgrabber.h"
 #include "shellsurface.h"
@@ -101,7 +102,8 @@ void Shell::lockSession()
             surface->surfaceItem()->setVisible(false);
     }
 
-    // TODO: Run screensaver
+    // Run screensaver
+    Compositor::instance()->screenSaver()->launchProcess();
 }
 
 void Shell::unlockSession()
@@ -217,7 +219,8 @@ QWaylandSurface *Shell::surfaceAt(const Layer &layer, const QPointF &point, QPoi
 
 void Shell::resumeDesktop()
 {
-    // TODO: Terminate screen saver process
+    // Terminate screen saver process
+    Compositor::instance()->screenSaver()->terminateProcess();
 
     // Show all surfaces and hide the lock surface
     for (QWaylandSurface *surface: m_panelsLayer) {

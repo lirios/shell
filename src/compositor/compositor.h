@@ -35,6 +35,7 @@ class Shell;
 class ClientWindow;
 class Workspace;
 class Grab;
+class ScreenSaver;
 class Notifications;
 
 class Compositor : public GreenIsland::Compositor
@@ -57,6 +58,7 @@ public:
     static Compositor *instance();
 
     Shell *shell() const;
+    ScreenSaver *screenSaver() const;
 
     bool isShellWindow(QWaylandSurface *surface);
 
@@ -99,6 +101,7 @@ private:
     Shell *m_shell;
     QList<ClientWindow *> m_clientWindows;
     QList<Workspace *> m_workspaces;
+    ScreenSaver *m_screenSaver;
     Notifications *m_notifications;
     bool m_shellReady;
 

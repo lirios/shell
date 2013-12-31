@@ -43,6 +43,7 @@
 #include "workspace.h"
 #include "grab.h"
 #include "notifications.h"
+#include "screensaver.h"
 #include "keymap.h"
 
 Q_GLOBAL_STATIC(Compositor, s_globalCompositor)
@@ -80,6 +81,7 @@ Compositor::Compositor()
             Q_EMIT unlocked();
     });
     m_notifications = new Notifications(waylandDisplay());
+    m_screenSaver = new ScreenSaver(waylandDisplay());
 
     // Connect to signals
     connect(this, SIGNAL(surfaceMapped(QWaylandSurface*)),
@@ -98,6 +100,7 @@ Compositor::~Compositor()
 {
     qDeleteAll(m_clientWindows);
     qDeleteAll(m_workspaces);
+    delete m_screenSaver;
     delete m_notifications;
     delete m_shell;
 }
@@ -110,6 +113,11 @@ Compositor *Compositor::instance()
 Shell *Compositor::shell() const
 {
     return m_shell;
+}
+
+ScreenSaver *Compositor::screenSaver() const
+{
+    return m_screenSaver;
 }
 
 bool Compositor::isShellWindow(QWaylandSurface *surface)
