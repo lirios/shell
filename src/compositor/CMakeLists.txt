@@ -30,6 +30,7 @@ set(SOURCES
     workspace.cpp
     grab.cpp
     notifications.cpp
+    logging.cpp
 )
 
 wayland_add_protocol_client(SOURCES

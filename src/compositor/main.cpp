@@ -34,6 +34,7 @@
 #include "compositor.h"
 #include "config.h"
 #include "cmakedirs.h"
+#include "logging.h"
 
 int main(int argc, char *argv[])
 {
@@ -48,8 +49,9 @@ int main(int argc, char *argv[])
     GreenIsland::verifyXdgRuntimeDir();
 
     // Enable debug messages
-    QLoggingCategory::setFilterRules(QStringLiteral("greenisland.compositor.debug=true"));
-    QLoggingCategory::setFilterRules(QStringLiteral("greenisland.client.debug=true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("*.warning=true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("*.critical=true"));
 
     // Set message pattern
     qSetMessagePattern("%{message}");
