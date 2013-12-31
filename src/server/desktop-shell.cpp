@@ -1229,7 +1229,7 @@ void DesktopShell::screenSaverConfigure(weston_surface *es, int32_t sx, int32_t 
         return;
 
     // Starting screensaver beforehand doesn't work
-    if (m_locked)
+    if (!m_locked)
         return;
 
     centerSurfaceOnOutput(es, es->output);
