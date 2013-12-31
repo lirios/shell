@@ -25,7 +25,7 @@
     THIS SOFTWARE.
   </copyright>
 
-  <interface name="screensaver" version="1">
+  <interface name="wl_screensaver" version="1">
     <description summary="interface for implementing screensavers">
       Only one client can bind this interface at a time.
     </description>
