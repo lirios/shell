@@ -33,6 +33,7 @@
 
 ScreenSaverController::ScreenSaverController(QObject *parent)
     : QObject(parent)
+    , m_screensaver(nullptr)
 {
 }
 
