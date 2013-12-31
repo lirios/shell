@@ -24,8 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
-#include <QGuiApplication>
+#include <QtGui/QGuiApplication>
 #include <QScreen>
 #include <QtCore/QVariantMap>
 #include <QQmlContext>
