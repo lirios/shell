@@ -52,11 +52,6 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "" FORCE)
 endif()
 
-# Disable debug output for release builds
-if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
-    add_definitions(-DQT_NO_DEBUG_OUTPUT)
-endif()
-
 # Package builders may specify additional paths for LD_LIBRARY_PATH,
 # this is useful when Qt is installed in a special location
 set(ADDITIONAL_LDLIBPATH "" CACHE STRING "Additional library path that starthawaii will use")
