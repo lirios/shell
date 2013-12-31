@@ -132,117 +132,6 @@ void Shell::unlockSession()
     m_prepareEventSent = true;
 }
 
-void Shell::addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface)
-{
-    if (!surface)
-        return;
-
-    surface->setWindowProperty(QStringLiteral("role"), role);
-
-    switch (role) {
-    case Compositor::BackgroundWindowRole:
-        m_backgroundLayer.append(surface);
-        break;
-    case Compositor::PanelWindowRole:
-    case Compositor::SpecialWindowRole:
-    case Compositor::PopupWindowRole:
-        m_panelsLayer.append(surface);
-        break;
-    case Compositor::OverlayWindowRole:
-        m_overlayLayer.append(surface);
-        break;
-    case Compositor::DialogWindowRole:
-        m_dialogsLayer.append(surface);
-        break;
-    default:
-        break;
-    }
-
-    connect(surface, &QWaylandSurface::unmapped, [=]() {
-        removeSurfaceFromLayer(surface);
-    });
-}
-
-void Shell::removeSurfaceFromLayer(QWaylandSurface *surface)
-{
-    if (!surface)
-        return;
-
-    bool found = false;
-    Compositor::ShellWindowRole role = static_cast<Compositor::ShellWindowRole>(
-                surface->windowProperties().value(QStringLiteral("role")).toInt(&found));
-    if (!found)
-        return;
-
-    switch (role) {
-    case Compositor::BackgroundWindowRole:
-        m_backgroundLayer.removeOne(surface);
-        break;
-    case Compositor::PanelWindowRole:
-    case Compositor::SpecialWindowRole:
-    case Compositor::PopupWindowRole:
-        m_panelsLayer.removeOne(surface);
-        break;
-    case Compositor::OverlayWindowRole:
-        m_overlayLayer.removeOne(surface);
-        break;
-    case Compositor::DialogWindowRole:
-        m_dialogsLayer.removeOne(surface);
-        break;
-    default:
-        break;
-    }
-}
-
-QWaylandSurface *Shell::surfaceAt(const Layer &layer, const QPointF &point, QPointF *local)
-{
-    // Iterate through the layer in reverse order
-    for (int i = layer.size() - 1; i >= 0; --i) {
-        QWaylandSurface *surface = layer.at(i);
-
-        // Ignore hidden surfaces or surfaces not mapped
-        if (!surface->visible() || !surface->surfaceItem())
-            continue;
-
-        // Are the coordinates inside an item?
-        QWaylandSurfaceItem *item = surface->surfaceItem();
-        QRectF geo(item->position(), QSizeF(item->width(), item->height()));
-        if (geo.contains(point)) {
-            if (local)
-                *local = point - item->position();
-            return surface;
-        }
-    }
-
-    return 0;
-}
-
-void Shell::resumeDesktop()
-{
-    // Terminate screen saver process
-    Compositor::instance()->screenSaver()->terminateProcess();
-
-    // Show all surfaces and hide the lock surface
-    for (QWaylandSurface *surface: m_panelsLayer) {
-        if (surface->surfaceItem())
-            surface->surfaceItem()->setVisible(true);
-    }
-    for (QWaylandSurface *surface: m_overlayLayer) {
-        if (surface->surfaceItem())
-            surface->surfaceItem()->setVisible(true);
-    }
-    for (QWaylandSurface *surface: m_dialogsLayer) {
-        if (surface->surfaceItem())
-            surface->surfaceItem()->setVisible(true);
-    }
-    if (m_lockSurface && m_lockSurface->surfaceItem())
-        m_lockSurface->surfaceItem()->setVisible(false);
-
-    // Unlock the session and reveal the desktop
-    m_locked = false;
-    Q_EMIT lockedChanged(false);
-}
-
 void Shell::hawaii_shell_bind_resource(Resource *resource)
 {
     send_loaded(resource->handle);
@@ -453,6 +342,117 @@ void Shell::hawaii_shell_select_workspace(Resource *resource,
 void Shell::hawaii_shell_start_grab(Resource *resource, uint32_t id)
 {
     Q_UNUSED(resource);
+}
+
+void Shell::addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface)
+{
+    if (!surface)
+        return;
+
+    surface->setWindowProperty(QStringLiteral("role"), role);
+
+    switch (role) {
+    case Compositor::BackgroundWindowRole:
+        m_backgroundLayer.append(surface);
+        break;
+    case Compositor::PanelWindowRole:
+    case Compositor::SpecialWindowRole:
+    case Compositor::PopupWindowRole:
+        m_panelsLayer.append(surface);
+        break;
+    case Compositor::OverlayWindowRole:
+        m_overlayLayer.append(surface);
+        break;
+    case Compositor::DialogWindowRole:
+        m_dialogsLayer.append(surface);
+        break;
+    default:
+        break;
+    }
+
+    connect(surface, &QWaylandSurface::unmapped, [=]() {
+        removeSurfaceFromLayer(surface);
+    });
+}
+
+void Shell::removeSurfaceFromLayer(QWaylandSurface *surface)
+{
+    if (!surface)
+        return;
+
+    bool found = false;
+    Compositor::ShellWindowRole role = static_cast<Compositor::ShellWindowRole>(
+                surface->windowProperties().value(QStringLiteral("role")).toInt(&found));
+    if (!found)
+        return;
+
+    switch (role) {
+    case Compositor::BackgroundWindowRole:
+        m_backgroundLayer.removeOne(surface);
+        break;
+    case Compositor::PanelWindowRole:
+    case Compositor::SpecialWindowRole:
+    case Compositor::PopupWindowRole:
+        m_panelsLayer.removeOne(surface);
+        break;
+    case Compositor::OverlayWindowRole:
+        m_overlayLayer.removeOne(surface);
+        break;
+    case Compositor::DialogWindowRole:
+        m_dialogsLayer.removeOne(surface);
+        break;
+    default:
+        break;
+    }
+}
+
+QWaylandSurface *Shell::surfaceAt(const Layer &layer, const QPointF &point, QPointF *local)
+{
+    // Iterate through the layer in reverse order
+    for (int i = layer.size() - 1; i >= 0; --i) {
+        QWaylandSurface *surface = layer.at(i);
+
+        // Ignore hidden surfaces or surfaces not mapped
+        if (!surface->visible() || !surface->surfaceItem())
+            continue;
+
+        // Are the coordinates inside an item?
+        QWaylandSurfaceItem *item = surface->surfaceItem();
+        QRectF geo(item->position(), QSizeF(item->width(), item->height()));
+        if (geo.contains(point)) {
+            if (local)
+                *local = point - item->position();
+            return surface;
+        }
+    }
+
+    return 0;
+}
+
+void Shell::resumeDesktop()
+{
+    // Terminate screen saver process
+    Compositor::instance()->screenSaver()->terminateProcess();
+
+    // Show all surfaces and hide the lock surface
+    for (QWaylandSurface *surface: m_panelsLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(true);
+    }
+    for (QWaylandSurface *surface: m_overlayLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(true);
+    }
+    for (QWaylandSurface *surface: m_dialogsLayer) {
+        if (surface->surfaceItem())
+            surface->surfaceItem()->setVisible(true);
+    }
+    if (m_lockSurface && m_lockSurface->surfaceItem())
+        m_lockSurface->surfaceItem()->setVisible(false);
+
+    // Unlock the session and reveal the desktop
+    m_locked = false;
+    Q_EMIT lockedChanged(false);
 }
 
 #include "moc_shell.cpp"

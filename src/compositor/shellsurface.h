@@ -47,14 +47,15 @@ public:
     PopupGrabber *popupGrabber() const;
     void setPopupGrabber(PopupGrabber *grabber);
 
+protected:
+    void hawaii_shell_surface_dismiss(Resource *resource) Q_DECL_OVERRIDE;
+
 private:
     Q_DISABLE_COPY(ShellSurface)
 
     Compositor::ShellWindowRole m_role;
     QWaylandSurface *m_surface;
     PopupGrabber *m_popupGrabber;
-
-    void hawaii_shell_surface_dismiss(Resource *resource) Q_DECL_OVERRIDE;
 };
 
 #endif // SHELLSURFACE_H

@@ -60,25 +60,7 @@ Q_SIGNALS:
 
     void lockedChanged(bool value);
 
-private:
-    Layer m_backgroundLayer;
-    Layer m_panelsLayer;
-    Layer m_overlayLayer;
-    Layer m_dialogsLayer;
-
-    KeyBindings m_keyBindings;
-
-    QWaylandSurface *m_lockSurface;
-    bool m_locked;
-    bool m_prepareEventSent;
-
-    void addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface);
-    void removeSurfaceFromLayer(QWaylandSurface *surface);
-
-    QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
-
-    void resumeDesktop();
-
+protected:
     void hawaii_shell_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
 
     void hawaii_shell_add_key_binding(Resource *resource, uint32_t id,
@@ -129,6 +111,25 @@ private:
                                        struct ::wl_resource *workspace) Q_DECL_OVERRIDE;
 
     void hawaii_shell_start_grab(Resource *resource, uint32_t id) Q_DECL_OVERRIDE;
+
+private:
+    Layer m_backgroundLayer;
+    Layer m_panelsLayer;
+    Layer m_overlayLayer;
+    Layer m_dialogsLayer;
+
+    KeyBindings m_keyBindings;
+
+    QWaylandSurface *m_lockSurface;
+    bool m_locked;
+    bool m_prepareEventSent;
+
+    void addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface);
+    void removeSurfaceFromLayer(QWaylandSurface *surface);
+
+    QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
+
+    void resumeDesktop();
 };
 
 #endif // SHELL_H
