@@ -1,8 +1,8 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Giulio Camuffo <giuliocamuffo@gmail.com>
  *
  * Author(s):
  *    Giulio Camuffo
