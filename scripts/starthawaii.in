@@ -110,7 +110,7 @@ if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && type dbus-launch >/dev/null; then
 fi
 
 # Check whether D-Bus is OK
-if ! qdbus >/dev/null 2>/dev/null; then
+if ! qdbus >/dev/null; then
     echo "Could not start D-Bus session bus" 1>&2
     exit 1
 fi
