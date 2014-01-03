@@ -117,10 +117,10 @@ int main(int argc, char *argv[])
     signal(SIGSEGV, deathSignal);
 
     QApplication app(argc, argv);
-    app.setApplicationName("Hawaii Shell");
-    app.setApplicationVersion(HAWAII_SHELL_VERSION_STRING);
-    app.setOrganizationDomain("hawaii.org");
-    app.setOrganizationName("Hawaii");
+    app.setApplicationName(QStringLiteral("Hawaii Shell"));
+    app.setApplicationVersion(QStringLiteral(HAWAII_SHELL_VERSION_STRING));
+    app.setOrganizationDomain(QStringLiteral("hawaii.org"));
+    app.setOrganizationName(QStringLiteral("Hawaii"));
 
     // Command line parser
     QCommandLineParser parser;
