@@ -6,3 +6,9 @@ type = QT
 source_lang = en
 source_file = src/client/translations/template.ts
 file_filter = src/client/translations/<lang>.ts
+
+[hawaii.shell-compositor]
+type = QT
+source_lang = en
+source_file = src/compositor/translations/template.ts
+file_filter = src/compositor/translations/<lang>.ts
