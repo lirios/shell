@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
     // Synthesize touch for unhandled mouse events
     QCommandLineOption dbgOption(QStringList() << QStringLiteral("d") << QStringLiteral("qmljsdebugger"),
-                                 QObject::tr("Enable QML JavaScript debugger."));
+                                 QCoreApplication::translate("Command line parser", "Enable QML JavaScript debugger."));
     parser.addOption(dbgOption);
 
     // Parse command line
