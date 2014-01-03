@@ -58,24 +58,24 @@ int main(int argc, char *argv[])
 
     // Command line parser
     QCommandLineParser parser;
-    parser.setApplicationDescription(QObject::tr("Wayland compositor for the Hawaii desktop environment"));
+    parser.setApplicationDescription(QCoreApplication::translate("Command line parser", "Wayland compositor for the Hawaii desktop environment"));
     parser.addHelpOption();
     parser.addVersionOption();
 
     // Synthesize touch for unhandled mouse events
     QCommandLineOption synthesizeOption(QStringLiteral("synthesize-touch"),
-                                        QObject::tr("Synthesize touch for unhandled mouse events"));
+                                        QCoreApplication::translate("Command line parser", "Synthesize touch for unhandled mouse events"));
     parser.addOption(synthesizeOption);
 
     // Full screen option
     QCommandLineOption fullScreenOption(QStringLiteral("fullscreen"),
-                                        QObject::tr("Full screen compositor window"));
+                                        QCoreApplication::translate("Command line parser", "Full screen compositor window"));
     parser.addOption(fullScreenOption);
 
     // Idle time
     QCommandLineOption idleTimeOption(QStringList() << QStringLiteral("i") << QStringLiteral("idle-time"),
-                                      QObject::tr("Idle time in seconds (at least 5 seconds)"),
-                                      QStringLiteral("secs"));
+                                      QCoreApplication::translate("Command line parser", "Idle time in seconds (at least 5 seconds)"),
+                                      QCoreApplication::translate("Command line parser", "secs"));
     idleTimeOption.setDefaultValue("300");
     parser.addOption(idleTimeOption);
 
