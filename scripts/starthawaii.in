@@ -118,6 +118,6 @@ fi
 # Start the right shell
 args=""
 if test -n "$HAWAII_SHELL_DEBUG_PORT"; then
-    args="-qmljsdebugger=port:${HAWAII_SHELL_DEBUG_PORT},block"
+    args="-qmljsdebugger=port:${HAWAII_SHELL_DEBUG_PORT},block -d"
 fi
 exec $executable $args
