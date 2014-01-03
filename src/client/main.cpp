@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 
     // Command line parser
     QCommandLineParser parser;
-    parser.setApplicationDescription(QObject::tr("Hawaii Shell"));
+    parser.setApplicationDescription(QStringLiteral("Hawaii Shell"));
     parser.addHelpOption();
     parser.addVersionOption();
 
