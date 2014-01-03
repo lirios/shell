@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[hawaii.shell-client]
+type = QT
+source_lang = en
+source_file = src/client/translations/template.ts
+file_filter = src/client/translations/<lang>.ts
