@@ -25,6 +25,8 @@
  ***************************************************************************/
 
 #include <QtCore/QDebug>
+#include <QtCore/QCommandLineParser>
+#include <QtQml/QQmlDebuggingEnabler>
 #include <QtWidgets/QApplication>
 
 #include "hawaiishell.h"
@@ -119,6 +121,24 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(HAWAII_SHELL_VERSION_STRING);
     app.setOrganizationDomain("hawaii.org");
     app.setOrganizationName("Hawaii");
+
+    // Command line parser
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QObject::tr("Hawaii Shell"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    // Synthesize touch for unhandled mouse events
+    QCommandLineOption dbgOption(QStringList() << QStringLiteral("d") << QStringLiteral("qmljsdebugger"),
+                                 QObject::tr("Enable QML JavaScript debugger."));
+    parser.addOption(dbgOption);
+
+    // Parse command line
+    parser.process(app);
+    if (parser.isSet(dbgOption)) {
+        QQmlDebuggingEnabler enabler;
+        Q_UNUSED(enabler);
+    }
 
     // Print version information
     qDebug() << qPrintable(QStringLiteral("== Hawaii Shell v%1 ==\n").arg(HAWAII_SHELL_VERSION_STRING))
