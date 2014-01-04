@@ -28,71 +28,45 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
-#include <qpa/qplatformnativeinterface.h>
-
-#include "backgroundwindow.h"
+#include "desktopview.h"
 #include "hawaiishell.h"
 #include "hawaiishell_p.h"
 #include "shellscreen.h"
 
-BackgroundWindow::BackgroundWindow(ShellScreen *screen)
-    : QQuickView(HawaiiShell::instance()->engine(), new QWindow(screen->screen()))
-    , m_surface(0)
-{
-    // Set custom window type
-    setFlags(flags() | Qt::BypassWindowManagerHint);
+using namespace Hawaii::Shell;
 
+DesktopView::DesktopView(QQmlEngine *engine, QScreen *screen)
+    : QuickView(engine, new QWindow(screen))
+{
     // Set Wayland window type
-    create();
     setWindowType();
 
-    // Load QML component
-    setSource(QUrl("qrc:/qml/Background.qml"));
-
-    // Resize view to actual size and thus resize the root object
-    setResizeMode(QQuickView::SizeRootObjectToView);
-    geometryChanged(screen->screen()->geometry());
-
-    // React to screen size changes
-    connect(screen->screen(), SIGNAL(geometryChanged(QRect)),
-            this, SLOT(geometryChanged(QRect)));
+    // React to screen geometry changes
+    connect(this, &QuickView::screenGeometryChanged,
+            this, &DesktopView::changeGeometry);
 
     // Debugging message
-    qDebug() << "-> Created Background with geometry"
+    qDebug() << "-> Created DesktopView with geometry"
              << geometry();
 }
 
-wl_surface *BackgroundWindow::surface() const
-{
-    return m_surface;
-}
-
-void BackgroundWindow::geometryChanged(const QRect &rect)
-{
-    // Resize view to actual size
-    setGeometry(rect);
-
-    // Set surface position
-    setSurfacePosition();
-}
-
-void BackgroundWindow::setWindowType()
+void DesktopView::setWindowType()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    wl_output *output = static_cast<struct wl_output *>(
+    struct ::wl_output *output = static_cast<struct ::wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
-    m_surface = static_cast<struct wl_surface *>(
+    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    HawaiiShell::instance()->d_ptr->shell->set_background(output, m_surface);
+    HawaiiShell::instance()->d_ptr->shell->set_background(output, surface);
 }
 
-void BackgroundWindow::setSurfacePosition()
+void DesktopView::changeGeometry(const QRect &geometry)
 {
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_position(m_surface, geometry().x(), geometry().y());
+    setGeometry(geometry);
 }
 
-#include "moc_backgroundwindow.cpp"
+#include "moc_desktopview.cpp"

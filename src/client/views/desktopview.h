@@ -24,31 +24,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef BACKGROUNDWINDOW_H
-#define BACKGROUNDWINDOW_H
+#ifndef DESKTOPVIEW_H
+#define DESKTOPVIEW_H
 
-#include <QtQuick/QQuickView>
+#include <HawaiiShell/QuickView>
 
-#include <wayland-client.h>
+class QQmlEngine;
+class QScreen;
 
-class ShellScreen;
-
-class BackgroundWindow : public QQuickView
+class DesktopView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
 public:
-    BackgroundWindow(ShellScreen *screen);
-
-    wl_surface *surface() const;
-
-private Q_SLOTS:
-    void geometryChanged(const QRect &rect);
+    explicit DesktopView(QQmlEngine *engine, QScreen *screen);
 
 private:
-    wl_surface *m_surface;
-
     void setWindowType();
-    void setSurfacePosition();
+
+private Q_SLOTS:
+    void changeGeometry(const QRect &geometry);
 };
 
-#endif // BACKGROUNDWINDOW_H
+#endif // DESKTOPVIEW_H

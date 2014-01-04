@@ -40,7 +40,6 @@ class ShellUi;
 class Window;
 class Workspace;
 class KeyBinding;
-class BackgroundWindow;
 class LauncherWindow;
 class GrabWindow;
 class DialogQuickWindow;
@@ -104,7 +103,6 @@ public Q_SLOTS:
 
 private:
     friend class HawaiiShellImpl;
-    friend class BackgroundWindow;
     friend class LauncherWindow;
     friend class GrabWindow;
     friend class DialogQuickWindow;

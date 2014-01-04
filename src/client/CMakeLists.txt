@@ -19,6 +19,7 @@ include_directories(
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/daemons
     ${CMAKE_CURRENT_SOURCE_DIR}/launcher
+    ${CMAKE_CURRENT_SOURCE_DIR}/views
     ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
     ${CMAKE_CURRENT_SOURCE_DIR}/services
     ${CMAKE_CURRENT_SOURCE_DIR}/services/datetime
@@ -62,7 +63,7 @@ set(SOURCES
     services/processlauncher/processlauncher.cpp
     services/volumecontrol/volumecontrol.cpp
     services/sessionmanager/sessionmanager.cpp
-    windowtypes/backgroundwindow.cpp
+    views/desktopview.cpp
     windowtypes/dialogwindow.cpp
     windowtypes/dialogquickwindow_p.cpp
     windowtypes/grabwindow.cpp
