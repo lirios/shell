@@ -47,6 +47,9 @@ add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 # Macros for package config
 include(CMakePackageConfigHelpers)
 
+# Macro to generate export header for libraries
+include(GenerateExportHeader)
+
 # Build flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wno-unused-parameter -std=c++0x")
 
