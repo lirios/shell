@@ -64,10 +64,10 @@ set(SOURCES
     services/volumecontrol/volumecontrol.cpp
     services/sessionmanager/sessionmanager.cpp
     views/desktopview.cpp
+    views/panelview.cpp
     windowtypes/dialogwindow.cpp
     windowtypes/dialogquickwindow_p.cpp
     windowtypes/grabwindow.cpp
-    windowtypes/launcherwindow.cpp
     windowtypes/lockscreenwindow.cpp
     windowtypes/notificationwindow.cpp
     windowtypes/overlaywindow.cpp

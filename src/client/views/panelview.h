@@ -24,40 +24,24 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef LAUNCHERWINDOW_H
-#define LAUNCHERWINDOW_H
+#ifndef PANELVIEW_H
+#define PANELVIEW_H
 
 #include <QtQuick/QQuickView>
 
-#include <libhawaiicore/settings/launchersettings.h>
+#include <HawaiiShell/QuickView>
 
-struct wl_surface;
+class QQmlEngine;
+class QScreen;
 
-class ShellScreen;
-
-class LauncherWindow : public QQuickView
+class PanelView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
 public:
-    LauncherWindow(ShellScreen *screen);
-    ~LauncherWindow();
-
-    wl_surface *surface() const;
-
-    LauncherSettings *settings() const;
-
-private Q_SLOTS:
-    void geometryChanged(const QRect &rect);
-    void resetGeometry();
-    void resized();
+    explicit PanelView(QQmlEngine *engine, QScreen *screen);
 
 private:
-    ShellScreen *m_shellScreen;
-    wl_surface *m_surface;
-    LauncherSettings *m_settings;
-
     void setWindowType();
-    void setSurfacePosition();
 };
 
-#endif // LAUNCHERWINDOW_H
+#endif // PANELVIEW_H
