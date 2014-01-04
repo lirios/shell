@@ -7,6 +7,7 @@ include_directories(
 )
 
 set(SOURCES
+    hawaiishell.cpp
     settings/backgroundsettings.cpp
     settings/launchersettings.cpp
     settings/shellsettings.cpp
@@ -14,6 +15,7 @@ set(SOURCES
 
 set(HEADERS
     ${CMAKE_CURRENT_BINARY_DIR}/hawaiishell_export.h
+    hawaiishell.h
 )
 
 add_library(HF1HawaiiShell SHARED ${SOURCES})
