@@ -24,11 +24,32 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef HAWAIICOREGLOBAL_H
-#define HAWAIICOREGLOBAL_H
+#ifndef SHELLSETTINGS_H
+#define SHELLSETTINGS_H
 
-#include <qglobal.h>
+#include <QtCore/QObject>
 
-#define HAWAIICORE_EXPORT Q_DECL_IMPORT
+#include <HawaiiShell/Export>
 
-#endif // HAWAIICOREGLOBAL_H
+class ShellSettingsPrivate;
+
+class HAWAIISHELL_EXPORT ShellSettings : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString style READ style WRITE setStyle NOTIFY styleChanged)
+    Q_DECLARE_PRIVATE(ShellSettings)
+public:
+    explicit ShellSettings(QObject *parent = 0);
+    ~ShellSettings();
+
+    QString style() const;
+    void setStyle(const QString &style);
+
+Q_SIGNALS:
+    void styleChanged();
+
+private:
+    ShellSettingsPrivate *const d_ptr;
+};
+
+#endif // SHELLSETTINGS_H

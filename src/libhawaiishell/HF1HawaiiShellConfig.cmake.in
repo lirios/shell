@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/HF1HawaiiShellTargets.cmake")
+
+set(HawaiiShell_INSTALL_PREFIX "@PACKAGE_CMAKE_INSTALL_PREFIX@")
+set_and_check(HawaiiShell_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_FULL_INCLUDEDIR@")
+
+set(HawaiiShell_LIBRARIES HF1::HawaiiShell)

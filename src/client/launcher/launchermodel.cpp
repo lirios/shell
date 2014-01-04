@@ -30,7 +30,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringBuilder>
 
-#include <libhawaiicore/settings/launchersettings.h>
+#include <HawaiiShell/LauncherSettings>
 
 #include "launchermodel.h"
 #include "launcheritem.h"

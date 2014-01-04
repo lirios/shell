@@ -12,6 +12,9 @@ include_directories(
     ${ALSA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/libhawaiishell
+    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/settings
+    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/includes
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/daemons
@@ -109,7 +112,7 @@ target_link_libraries(hawaii-shell-client
     ${POLKITQT-1_AGENT_LIBRARY}
     ${ALSA_LIBRARIES}
     ${QtAccountsService_LIBRARIES}
-    HawaiiCore
+    HF1HawaiiShell
 )
 
 # Git revision

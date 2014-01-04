@@ -30,11 +30,11 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-#include <libhawaiicore/hawaiicoreglobal.h>
+#include <HawaiiShell/Export>
 
 class QConfiguration;
 
-class HAWAIICORE_EXPORT LauncherSettings : public QObject
+class HAWAIISHELL_EXPORT LauncherSettings : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(IconSize iconSize READ iconSize WRITE setIconSize NOTIFY iconSizeChanged)

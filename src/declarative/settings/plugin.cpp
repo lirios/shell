@@ -27,9 +27,9 @@
 #include <QtQml/QQmlExtensionPlugin>
 #include <QtQml/QQmlComponent>
 
-#include <libhawaiicore/settings/backgroundsettings.h>
-#include <libhawaiicore/settings/launchersettings.h>
-#include <libhawaiicore/settings/shellsettings.h>
+#include <HawaiiShell/BackgroundSettings>
+#include <HawaiiShell/LauncherSettings>
+#include <HawaiiShell/ShellSettings>
 
 class HawaiiShellSettingsPlugin : public QQmlExtensionPlugin
 {

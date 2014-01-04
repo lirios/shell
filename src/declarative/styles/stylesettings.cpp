@@ -27,7 +27,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
 
-#include <libhawaiicore/settings/shellsettings.h>
+#include <HawaiiShell/ShellSettings>
 
 #include "stylesettings.h"
 #include "cmakedirs.h"
