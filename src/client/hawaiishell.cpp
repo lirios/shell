@@ -42,7 +42,6 @@
 #include "registration.h"
 #include "servicefactory.h"
 #include "shellui.h"
-#include "shellwindow.h"
 #include "shortcut_p.h"
 #include "window.h"
 #include "window_p.h"

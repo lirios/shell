@@ -42,7 +42,6 @@ class Workspace;
 class KeyBinding;
 class GrabWindow;
 class DialogQuickWindow;
-class ShellWindow;
 class PopupQuickWindow;
 class OverlayWindow;
 class LockScreenWindow;
@@ -103,7 +102,6 @@ private:
     friend class HawaiiShellImpl;
     friend class GrabWindow;
     friend class DialogQuickWindow;
-    friend class ShellWindow;
     friend class PopupQuickWindow;
     friend class OverlayWindow;
     friend class LockScreenWindow;

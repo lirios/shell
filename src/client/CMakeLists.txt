@@ -69,7 +69,6 @@ set(SOURCES
     windowtypes/overlaywindow.cpp
     windowtypes/popupwindow.cpp
     windowtypes/popupquickwindow_p.cpp
-    windowtypes/shellwindow.cpp
     windowtypes/tooltipwindow.cpp
 )
 

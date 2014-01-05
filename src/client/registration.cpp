@@ -44,7 +44,6 @@
 #include "processlauncher.h"
 #include "servicefactory.h"
 #include "sessionmanager.h"
-#include "shellwindow.h"
 #include "shortcut.h"
 #include "tooltipwindow.h"
 #include "volumecontrol.h"
@@ -58,7 +57,6 @@ void Registration::registerQmlTypes()
 
     // Window types
     qmlRegisterType<DialogWindow>(uri, 1, 0, "DialogWindow");
-    qmlRegisterType<ShellWindow>(uri, 1, 0, "ShellWindow");
     qmlRegisterType<PopupWindow>(uri, 1, 0, "PopupWindow");
     qmlRegisterType<TooltipWindow>(uri, 1, 0, "TooltipWindow");
 
