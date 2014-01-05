@@ -6,7 +6,6 @@
         <file>qml/BaseItem.qml</file>
 
         <!-- Notifications -->
-        <file>qml/NotificationBubble.qml</file>
         <file>qml/NotificationsPanel.qml</file>
 
         <!-- Dialogs -->

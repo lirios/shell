@@ -30,8 +30,11 @@
 #include <QtWidgets/QApplication>
 
 #include "hawaiishell.h"
+<<<<<<< HEAD
 #include "notificationsdaemon.h"
 #include "shellmanager.h"
+=======
+>>>>>>> 96b1e3e... notifications: Separate notifications daemon from the shell client
 #include "config.h"
 #include "gitsha1.h"
 
@@ -150,9 +153,6 @@ int main(int argc, char *argv[])
 
     // Create the main shell object
     ShellManager::instance();
-
-    // Create the notification daemon
-    (void)NotificationsDaemon::instance();
 
     return app.exec();
 }

@@ -18,7 +18,6 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/daemons
     ${CMAKE_CURRENT_SOURCE_DIR}/launcher
     ${CMAKE_CURRENT_SOURCE_DIR}/views
     ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
@@ -50,9 +49,6 @@ set(SOURCES
     shortcut.cpp
     window.cpp
     workspace.cpp
-    daemons/notificationimageprovider.cpp
-    daemons/notificationsdaemon.cpp
-    daemons/notificationsimage.cpp
     launcher/launcheritem.cpp
     launcher/launchermodel.cpp
     services/servicefactory.cpp
@@ -71,7 +67,6 @@ set(SOURCES
     windowtypes/dialogquickwindow_p.cpp
     windowtypes/grabwindow.cpp
     windowtypes/lockscreenwindow.cpp
-    windowtypes/notificationwindow.cpp
     windowtypes/overlaywindow.cpp
     windowtypes/popupwindow.cpp
     windowtypes/popupquickwindow_p.cpp
@@ -88,20 +83,7 @@ qtwayland_add_protocol_client(SOURCES
     hawaii
 )
 
-wayland_add_protocol_client(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/notification-daemon.xml
-    notification
-)
-qtwayland_add_protocol_client(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/notification-daemon.xml
-    notification
-)
-
 qt5_add_resources(RESOURCES client.qrc)
-
-qt5_add_dbus_adaptor(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/interfaces/org.freedesktop.Notifications.xml
-    notificationsdaemon.h NotificationsDaemon)
 
 add_executable(hawaii-shell-client ${SOURCES} ${RESOURCES})
 qt5_use_modules(hawaii-shell-client Quick Widgets)

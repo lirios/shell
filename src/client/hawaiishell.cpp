@@ -37,9 +37,6 @@
 #include "cmakedirs.h"
 #include "hawaiishell.h"
 #include "hawaiishell_p.h"
-#include "notificationsdaemon.h"
-#include "notificationwindow.h"
-#include "notificationimageprovider.h"
 #include "keybinding.h"
 #include "keybinding_p.h"
 #include "registration.h"
@@ -204,7 +201,6 @@ HawaiiShellPrivate::HawaiiShellPrivate(HawaiiShell *parent)
 
     // Initialize interfaces
     shell = new HawaiiShellImpl(this);
-    notifications = new QtWayland::wl_notification_daemon();
     wl_registry_add_listener(registry,
                              &HawaiiShellPrivate::registryListener,
                              this);
@@ -212,9 +208,6 @@ HawaiiShellPrivate::HawaiiShellPrivate(HawaiiShell *parent)
 
 HawaiiShellPrivate::~HawaiiShellPrivate()
 {
-    wl_notification_daemon_destroy(notifications->object());
-    delete notifications;
-
     wl_hawaii_shell_destroy(shell->object());
     delete shell;
 
@@ -277,15 +270,8 @@ void HawaiiShellPrivate::handleGlobal(void *data,
         return;
     }
 
-    if (strcmp(interface, "wl_hawaii_shell") == 0) {
+    if (strcmp(interface, "wl_hawaii_shell") == 0)
         self->shell->init(registry, id);
-    } else if (strcmp(interface, "wl_notification_daemon") == 0) {
-        self->notifications->init(registry, id);
-
-        // Start the notifications daemon and connect to the session bus
-        NotificationsDaemon *daemon = NotificationsDaemon::instance();
-        QMetaObject::invokeMethod(daemon, "connectOnDBus");
-    }
 }
 
 void HawaiiShellPrivate::handleGlobalRemove(void *data,
@@ -353,7 +339,6 @@ void HawaiiShell::create()
 
     // Register image providers
     d->engine->addImageProvider("appicon", new ApplicationIconProvider);
-    d->engine->addImageProvider("notifications", new NotificationImageProvider);
 
     // Register QML types and factories
     Registration::registerQmlTypes();

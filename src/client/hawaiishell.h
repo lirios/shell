@@ -46,7 +46,6 @@ class ShellWindow;
 class PopupQuickWindow;
 class OverlayWindow;
 class LockScreenWindow;
-class NotificationWindow;
 class SessionManager;
 
 class HawaiiShell : public QObject
@@ -108,7 +107,6 @@ private:
     friend class PopupQuickWindow;
     friend class OverlayWindow;
     friend class LockScreenWindow;
-    friend class NotificationWindow;
     friend class SessionManager;
 
     HawaiiShellPrivate *const d_ptr;
