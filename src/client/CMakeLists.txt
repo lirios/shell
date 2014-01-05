@@ -95,7 +95,7 @@ qtwayland_add_protocol_client(SOURCES
     notification
 )
 
-qt5_add_resources(RESOURCES desktop-shell.qrc)
+qt5_add_resources(RESOURCES client.qrc)
 
 qt5_add_dbus_adaptor(SOURCES
     ${CMAKE_SOURCE_DIR}/data/interfaces/org.freedesktop.Notifications.xml
