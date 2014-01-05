@@ -28,8 +28,8 @@
 #ifndef NOTIFICATIONSIMAGE_H
 #define NOTIFICATIONSIMAGE_H
 
-#include <QDBusArgument>
-#include <QImage>
+#include <QtDBus/QDBusArgument>
+#include <QtGui/QImage>
 
 QImage decodeImageHint(const QDBusArgument &arg);
 

@@ -27,11 +27,12 @@
 #ifndef NOTIFICATIONSDAEMON_H
 #define NOTIFICATIONSDAEMON_H
 
-#include <QList>
-#include <QDBusArgument>
-#include <QImage>
+#include <QtCore/QList>
+#include <QtDBus/QDBusArgument>
+#include <QtGui/QImage>
 
 class QAtomicInt;
+class QQmlEngine;
 class NotificationWindow;
 
 class NotificationsDaemon : public QObject
@@ -71,6 +72,7 @@ public Q_SLOTS:
 
 private:
     QAtomicInt *m_idSeed;
+    QQmlEngine *m_engine;
     QList<NotificationWindow *> m_notifications;
 
     NotificationWindow *createNotification(uint replacesId,

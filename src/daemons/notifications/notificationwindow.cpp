@@ -24,14 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QGuiApplication>
+#include <QtGui/QGuiApplication>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQuick/QQuickItem>
 
-#include <qpa/qplatformnativeinterface.h>
-
 #include "notificationwindow.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
 
 NotificationWindow::NotificationWindow(QWindow *parent)
     : QQuickWindow(parent)

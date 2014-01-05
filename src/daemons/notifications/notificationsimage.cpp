@@ -25,7 +25,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 #include "notificationsimage.h"
 

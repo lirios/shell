@@ -24,22 +24,20 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QAtomicInt>
-#include <QDebug>
-#include <QGuiApplication>
-#include <QDBusConnection>
-#include <QQmlEngine>
-#include <QQmlComponent>
+#include <QtCore/QAtomicInt>
+#include <QtCore/QDebug>
+#include <QtGui/QGuiApplication>
+#include <QtGui/qpa/qplatformnativeinterface.h>
+#include <QtDBus/QDBusConnection>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlComponent>
 #include <QtQuick/QQuickItem>
-
-#include <qpa/qplatformnativeinterface.h>
 
 #include "notificationsadaptor.h"
 #include "notificationsdaemon.h"
 #include "notificationsimage.h"
 #include "notificationwindow.h"
 #include "notificationimageprovider.h"
-#include "hawaiishell.h"
 
 /*
  * Latest specifications:
@@ -51,12 +49,14 @@ Q_GLOBAL_STATIC(NotificationsDaemon, s_notificationsDaemon)
 NotificationsDaemon::NotificationsDaemon()
     : QObject()
 {
-
     // Create the DBus adaptor
     new NotificationsAdaptor(this);
 
     // Create a seed for notifications identifiers, starting from 1
     m_idSeed = new QAtomicInt(1);
+
+    // Create QML engine
+    m_engine = new QQmlEngine(this);
 }
 
 NotificationsDaemon::~NotificationsDaemon()
@@ -193,8 +193,7 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
                                                             const QImage &image,
                                                             int timeout)
 {
-    QQmlEngine *engine = HawaiiShell::instance()->engine();
-    QQmlComponent *component = new QQmlComponent(engine, this);
+    QQmlComponent *component = new QQmlComponent(m_engine, this);
     component->loadUrl(QUrl("qrc:///qml/NotificationBubble.qml"));
     if (!component->isReady())
         qFatal("Failed to create a notification bubble: %s",
@@ -279,8 +278,7 @@ QString NotificationsDaemon::findImageFromPath(const QString &imagePath)
 
 void NotificationsDaemon::cacheImage(const QString &key, const QImage &image)
 {
-    QQmlImageProviderBase *base =
-            HawaiiShell::instance()->engine()->imageProvider("notifications");
+    QQmlImageProviderBase *base = m_engine->imageProvider("notifications");
     NotificationImageProvider *provider =
             static_cast<NotificationImageProvider *>(base);
     if (provider)
@@ -289,8 +287,7 @@ void NotificationsDaemon::cacheImage(const QString &key, const QImage &image)
 
 void NotificationsDaemon::uncacheImage(const QString &key)
 {
-    QQmlImageProviderBase *base =
-            HawaiiShell::instance()->engine()->imageProvider("notifications");
+    QQmlImageProviderBase *base = m_engine->imageProvider("notifications");
     NotificationImageProvider *provider =
             static_cast<NotificationImageProvider *>(base);
     if (provider)

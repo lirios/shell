@@ -27,7 +27,7 @@
 #ifndef NOTIFICATIONWINDOW_H
 #define NOTIFICATIONWINDOW_H
 
-#include <QQuickWindow>
+#include <QtQuick/QQuickWindow>
 
 class QQuickItem;
 
