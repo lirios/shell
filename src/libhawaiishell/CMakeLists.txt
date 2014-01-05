@@ -3,11 +3,14 @@ include_directories(
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/settings
+    ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 set(SOURCES
+    ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg/xdgdesktopfile.cpp
     hawaiishell.cpp
+    pluginmetadata.cpp
     quickview.cpp
     settings/backgroundsettings.cpp
     settings/launchersettings.cpp
