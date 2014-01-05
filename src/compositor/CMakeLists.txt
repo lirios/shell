@@ -9,12 +9,6 @@ include_directories(
     ${CMAKE_BINARY_DIR}/headers
 )
 
-# Create the config.h header file
-configure_file(
-    "${CMAKE_SOURCE_DIR}/src/client/config.h.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY
-)
-
 add_definitions(
     -DQT_COMPOSITOR_QUICK
 )
