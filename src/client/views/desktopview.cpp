@@ -33,7 +33,6 @@
 #include "desktopview.h"
 #include "hawaiishell.h"
 #include "hawaiishell_p.h"
-#include "shellscreen.h"
 
 using namespace Hawaii::Shell;
 

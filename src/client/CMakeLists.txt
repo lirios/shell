@@ -45,7 +45,6 @@ set(SOURCES
     registration.cpp
     shellmanager.cpp
     shellui.cpp
-    shellscreen.cpp
     shortcut.cpp
     window.cpp
     workspace.cpp

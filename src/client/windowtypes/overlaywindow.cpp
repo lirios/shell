@@ -34,7 +34,6 @@
 #include "overlaywindow.h"
 #include "hawaiishell.h"
 #include "hawaiishell_p.h"
-#include "shellscreen.h"
 
 OverlayWindow::OverlayWindow(ShellScreen *screen)
     : QQuickView(HawaiiShell::instance()->engine(), new QWindow(screen->screen()))

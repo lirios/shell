@@ -35,7 +35,6 @@
 #include "lockscreenwindow.h"
 #include "hawaiishell.h"
 #include "hawaiishell_p.h"
-#include "shellscreen.h"
 
 LockScreenWindow::LockScreenWindow()
     : QQuickView(HawaiiShell::instance()->engine(), new QWindow(QGuiApplication::primaryScreen()))

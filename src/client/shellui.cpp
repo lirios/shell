@@ -29,17 +29,20 @@
 #include <QtGui/QScreen>
 #include <QtQml/QQmlEngine>
 
-#include <qpa/qplatformnativeinterface.h>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
+#include "desktopview.h"
+#include "grabwindow.h"
 #include "hawaiishell.h"
+#include "lockscreenwindow.h"
+#include "panelview.h"
 #include "shellui.h"
-#include "shellscreen.h"
+#include "shellmanager.h"
 
-ShellUi::ShellUi(QQmlEngine *engine, QObject *parent)
+ShellUi::ShellUi(QObject *parent)
     : QObject(parent)
-    , m_engine(engine)
-    , m_lockScreenWindow(0)
     , m_numWorkspaces(0)
+    , m_lockScreenWindow(nullptr)
 {
     // Create grab window
     m_grabWindow = new GrabWindow();
@@ -48,13 +51,12 @@ ShellUi::ShellUi(QQmlEngine *engine, QObject *parent)
 
 ShellUi::~ShellUi()
 {
-    delete m_grabWindow;
-    delete m_lockScreenWindow;
-}
-
-QQmlEngine *ShellUi::engine() const
-{
-    return m_engine;
+    if (m_grabWindow)
+        m_grabWindow->deleteLater();
+    if (m_lockScreenWindow)
+        m_lockScreenWindow->deleteLater();
+    qDeleteAll(m_panelViews);
+    qDeleteAll(m_desktopViews);
 }
 
 GrabWindow *ShellUi::grabWindow() const
@@ -65,11 +67,6 @@ GrabWindow *ShellUi::grabWindow() const
 LockScreenWindow *ShellUi::lockScreenWindow() const
 {
     return m_lockScreenWindow;
-}
-
-void ShellUi::loadScreen(QScreen *screen)
-{
-    m_screens.append(new ShellScreen(screen, this));
 }
 
 void ShellUi::createLockScreenWindow()
@@ -109,6 +106,37 @@ void ShellUi::setNumWorkspaces(int num)
         shell->addWorkspace();
     while (m_numWorkspaces > num)
         shell->removeWorkspace(--m_numWorkspaces);
+}
+
+void ShellUi::screenAdded(QScreen *screen)
+{
+    QQmlEngine *engine = ShellManager::instance()->engine();
+
+    DesktopView *view = new DesktopView(engine, screen);
+    m_desktopViews.append(view);
+
+    connect(screen, &QObject::destroyed,
+            this, &ShellUi::screenDestroyed);
+}
+
+void ShellUi::screenDestroyed(QObject *object)
+{
+    QScreen *screen = qobject_cast<QScreen *>(object);
+    if (!screen)
+        return;
+
+    // Remove desktop view for this screen
+    for (DesktopView *view: m_desktopViews) {
+        if (view->screen() == screen) {
+            view->deleteLater();
+            m_desktopViews.removeOne(view);
+            break;
+        }
+    }
+
+    // Move all panels on a deleted screen to the primary screen
+    for (PanelView *view: m_panelViews)
+        view->setScreen(QGuiApplication::primaryScreen());
 }
 
 #include "moc_shellui.cpp"

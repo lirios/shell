@@ -29,25 +29,21 @@
 
 #include <QtCore/QObject>
 
-#include "grabwindow.h"
-#include "lockscreenwindow.h"
-
-class ShellScreen;
+class DesktopView;
+class GrabWindow;
+class LockScreenWindow;
+class PanelView;
 
 class ShellUi : public QObject
 {
     Q_OBJECT
 public:
-    explicit ShellUi(QQmlEngine *engine, QObject *parent = 0);
+    ShellUi(QObject *parent = 0);
     ~ShellUi();
-
-    QQmlEngine *engine() const;
 
     GrabWindow *grabWindow() const;
 
     LockScreenWindow *lockScreenWindow() const;
-
-    void loadScreen(QScreen *screen);
 
 public Q_SLOTS:
     void createLockScreenWindow();
@@ -56,11 +52,15 @@ public Q_SLOTS:
     void setNumWorkspaces(int num);
 
 private:
-    QQmlEngine *m_engine;
+    int m_numWorkspaces;
     GrabWindow *m_grabWindow;
     LockScreenWindow *m_lockScreenWindow;
-    int m_numWorkspaces;
-    QList<ShellScreen *> m_screens;
+    QList<DesktopView *> m_desktopViews;
+    QList<PanelView *> m_panelViews;
+
+private Q_SLOTS:
+    void screenAdded(QScreen *screen);
+    void screenDestroyed(QObject *object);
 };
 
 #endif // SHELLUI_H
