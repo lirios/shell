@@ -25,13 +25,10 @@
  ***************************************************************************/
 
 #include <QtGui/QGuiApplication>
-
-#include <qpa/qplatformnativeinterface.h>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "popupwindow.h"
 #include "popupwindow_p.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
 
 /*
  * PopupWindowPrivate

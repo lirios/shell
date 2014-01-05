@@ -42,7 +42,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
 
 private:
-    void setWindowType();
+    void setSurfaceRole();
 };
 
 #endif // DIALOGQUICKWINDOW_P_H

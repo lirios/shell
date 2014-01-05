@@ -30,7 +30,6 @@
 #include "appinfo.h"
 #include "applicationsmodel.h"
 #include "datetime.h"
-#include "dialogwindow.h"
 #include "element.h"
 #include "enums.h"
 #include "registration.h"
@@ -38,14 +37,12 @@
 #include "hawaiishell.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
-#include "popupwindow.h"
 #include "policykitagent.h"
 #include "powermanager.h"
 #include "processlauncher.h"
 #include "servicefactory.h"
 #include "sessionmanager.h"
 #include "shortcut.h"
-#include "tooltipwindow.h"
 #include "volumecontrol.h"
 #include "window.h"
 #include "workspace.h"
@@ -54,11 +51,6 @@ void Registration::registerQmlTypes()
 {
     // @uri Hawaii.Shell
     const char *uri = "Hawaii.Shell";
-
-    // Window types
-    qmlRegisterType<DialogWindow>(uri, 1, 0, "DialogWindow");
-    qmlRegisterType<PopupWindow>(uri, 1, 0, "PopupWindow");
-    qmlRegisterType<TooltipWindow>(uri, 1, 0, "TooltipWindow");
 
     // Launcher stuff
     qmlRegisterType<AppCategories>(uri, 1, 0, "XdgCategoriesModel");

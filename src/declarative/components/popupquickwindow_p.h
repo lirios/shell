@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,31 +24,41 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef OVERLAYWINDOW_H
-#define OVERLAYWINDOW_H
+#ifndef POPUPQUICKWINDOW_P_H
+#define POPUPQUICKWINDOW_P_H
 
-#include <QtQuick/QQuickView>
+#include <QtQuick/QQuickWindow>
 
-struct wl_surface;
+#include "qwayland-hawaii.h"
 
-class ShellScreen;
+class PopupWindow;
 
-class OverlayWindow : public QQuickView
+class PopupSurface : public QtWayland::wl_hawaii_popup_surface
+{
+public:
+    PopupSurface(PopupWindow *popup);
+    virtual ~PopupSurface();
+
+protected:
+    void hawaii_popup_surface_popup_done();
+
+private:
+    PopupWindow *m_popup;
+};
+
+class PopupQuickWindow : public QQuickWindow
 {
     Q_OBJECT
 public:
-    OverlayWindow(ShellScreen *screen);
+    PopupQuickWindow(PopupWindow *parent);
+    virtual ~PopupQuickWindow();
 
-    wl_surface *surface() const;
-
-private Q_SLOTS:
-    void geometryChanged(const QRect &rect);
+public Q_SLOTS:
+    void setWindowType();
+    void dismiss();
 
 private:
-    wl_surface *m_surface;
-
-    void setWindowType();
-    void setSurfacePosition(const QPoint &pt);
+    PopupSurface *m_popupSurface;
 };
 
-#endif // OVERLAYWINDOW_H
+#endif // POPUPQUICKWINDOW_P_H

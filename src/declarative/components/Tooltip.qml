@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -25,32 +25,42 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Window 2.1
 import QtQuick.Layouts 1.0
-import Hawaii.Shell 1.0
 import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Components.Private 1.0 as Private
 
-PopupWindow {
-    id: popupWindow
-
-    default property alias content: mainLayout.data
+Private.TooltipWindow {
+    property alias text: label.text
 
     StyledItem {
-        readonly property int margin: 10
-
         id: styledItem
-        style: Qt.createComponent(StyleSettings.path + "/PopupStyle.qml", styledItem)
-        width: mainLayout.implicitWidth + __style.padding.left + __style.padding.right + (2 * margin)
-        height: mainLayout.implicitHeight + __style.padding.top + __style.padding.bottom + (2 * margin)
+        style: Qt.createComponent(StyleSettings.path + "/TooltipStyle.qml", styledItem)
+        width: mainLayout.implicitWidth + __style.padding.left + __style.padding.right
+        height: mainLayout.implicitHeight + __style.padding.top + __style.padding.bottom
 
         ColumnLayout {
             id: mainLayout
             anchors {
                 fill: parent
-                leftMargin: styledItem.__style.padding.left + styledItem.margin
-                topMargin: styledItem.__style.padding.top + styledItem.margin
-                rightMargin: styledItem.__style.padding.right + styledItem.margin
-                bottomMargin: styledItem.__style.padding.bottom + styledItem.margin
+                leftMargin: __style.padding.left
+                topMargin: __style.padding.top
+                rightMargin: __style.padding.right
+                bottomMargin: __style.padding.bottom
+            }
+
+            Text {
+                id: label
+                color: styledItem.__style.textColor
+                style: Text.Raised
+                styleColor: styledItem.__style.textShadowColor
+                renderType: Text.NativeRendering
+                verticalAlignment: Text.AlignVCenter
+                maximumLineCount: 4
+                wrapMode: Text.Wrap
+
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.maximumWidth: 400
+                Layout.fillHeight: true
             }
         }
     }

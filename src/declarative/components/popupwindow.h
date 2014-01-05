@@ -44,7 +44,7 @@ class PopupWindow : public QObject
     Q_CLASSINFO("DefaultProperty", "content")
 public:
     PopupWindow(QObject *parent = 0);
-    ~PopupWindow();
+    virtual ~PopupWindow();
 
     QQuickItem *contentItem() const;
     void setContentItem(QQuickItem *item);

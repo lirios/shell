@@ -62,14 +62,8 @@ set(SOURCES
     services/sessionmanager/sessionmanager.cpp
     views/desktopview.cpp
     views/panelview.cpp
-    windowtypes/dialogwindow.cpp
-    windowtypes/dialogquickwindow_p.cpp
     windowtypes/grabwindow.cpp
     windowtypes/lockscreenwindow.cpp
-    windowtypes/overlaywindow.cpp
-    windowtypes/popupwindow.cpp
-    windowtypes/popupquickwindow_p.cpp
-    windowtypes/tooltipwindow.cpp
 )
 
 wayland_add_protocol_client(SOURCES

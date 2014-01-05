@@ -25,12 +25,10 @@
  ***************************************************************************/
 
 #include <QtGui/QGuiApplication>
-
-#include <qpa/qplatformnativeinterface.h>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "dialogquickwindow_p.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
+#include "registrylistener.h"
 
 DialogQuickWindow::DialogQuickWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -41,9 +39,9 @@ DialogQuickWindow::DialogQuickWindow(QWindow *parent)
     // Set custom window type
     setFlags(Qt::BypassWindowManagerHint);
 
-    // Create platform window and inform the compositor about us
+    // Create platform window and set surface role
     create();
-    setWindowType();
+    setSurfaceRole();
 }
 
 void DialogQuickWindow::keyReleaseEvent(QKeyEvent *event)
@@ -57,17 +55,16 @@ void DialogQuickWindow::keyReleaseEvent(QKeyEvent *event)
     QQuickWindow::keyReleaseEvent(event);
 }
 
-void DialogQuickWindow::setWindowType()
+void DialogQuickWindow::setSurfaceRole()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    wl_output *output = static_cast<struct wl_output *>(
+    struct ::wl_output *output = static_cast<struct ::wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
-    wl_surface *surface = static_cast<wl_surface *>(
+    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_dialog(output, surface);
+    RegistryListener::instance()->shellSurface()->set_dialog(output, surface);
 }
 
 #include "moc_dialogquickwindow_p.cpp"

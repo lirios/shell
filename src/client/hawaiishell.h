@@ -41,9 +41,6 @@ class Window;
 class Workspace;
 class KeyBinding;
 class GrabWindow;
-class DialogQuickWindow;
-class PopupQuickWindow;
-class OverlayWindow;
 class LockScreenWindow;
 class SessionManager;
 
@@ -101,9 +98,6 @@ public Q_SLOTS:
 private:
     friend class HawaiiShellImpl;
     friend class GrabWindow;
-    friend class DialogQuickWindow;
-    friend class PopupQuickWindow;
-    friend class OverlayWindow;
     friend class LockScreenWindow;
     friend class SessionManager;
 

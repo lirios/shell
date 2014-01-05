@@ -24,40 +24,30 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef TOOLTIPWINDOW_H
-#define TOOLTIPWINDOW_H
+#include <QtGui/QGuiApplication>
+#include <QtGui/QWindow>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
-#include <QtQuick/QQuickItem>
+#include "overlaywindow.h"
 
-class TooltipWindow : public QQuickItem
+OverlayWindow::OverlayWindow(QWindow *parent)
+    : Hawaii::Shell::QuickView(parent)
 {
-    Q_OBJECT
-    Q_PROPERTY(QQuickItem *content READ content WRITE setContent)
-    Q_CLASSINFO("DefaultProperty", "content")
-public:
-    TooltipWindow(QQuickItem *parent = 0);
-    ~TooltipWindow();
+    // Set surface role
+    setSurfaceRole();
+}
 
-    QQuickItem *content() const;
-    void setContent(QQuickItem *item);
+void OverlayWindow::setSurfaceRole()
+{
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-public Q_SLOTS:
-    void show();
-    void hide();
+    struct ::wl_output *output = static_cast<struct ::wl_output *>(
+                native->nativeResourceForScreen("output", screen()));
+    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
+                native->nativeResourceForWindow("surface", this));
 
-protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
+    shell->set_overlay(output, surface);
+}
 
-private:
-    QTimer *m_showTimer;
-    QTimer *m_hideTimer;
-    int m_showCount;
-    QQuickItem *m_content;
-    QQuickWindow *m_window;
-
-private Q_SLOTS:
-    void showWindow();
-    void hideWindow();
-};
-
-#endif // TOOLTIPWINDOW_H
+#include "moc_overlaywindow.cpp"

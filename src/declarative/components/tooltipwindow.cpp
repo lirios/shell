@@ -24,7 +24,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
 #include <QtCore/QTimer>
 #include <QtGui/QScreen>
 #include <QtQuick/QQuickWindow>

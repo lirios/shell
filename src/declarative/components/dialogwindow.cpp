@@ -25,13 +25,10 @@
  ***************************************************************************/
 
 #include <QtGui/QGuiApplication>
-
-#include <qpa/qplatformnativeinterface.h>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "dialogwindow.h"
 #include "dialogwindow_p.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
 
 /*
  * DialogWindowPrivate

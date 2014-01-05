@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,41 +24,40 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef POPUPQUICKWINDOW_P_H
-#define POPUPQUICKWINDOW_P_H
+#ifndef TOOLTIPWINDOW_H
+#define TOOLTIPWINDOW_H
 
-#include <QtQuick/QQuickWindow>
+#include <QtQuick/QQuickItem>
 
-#include "qwayland-hawaii.h"
-
-class PopupWindow;
-
-class PopupShellSurface : public QtWayland::wl_hawaii_shell_surface
-{
-public:
-    PopupShellSurface(PopupWindow *popup);
-    ~PopupShellSurface();
-
-protected:
-    void hawaii_shell_surface_popup_done();
-
-private:
-    PopupWindow *m_popup;
-};
-
-class PopupQuickWindow : public QQuickWindow
+class TooltipWindow : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(QQuickItem *content READ content WRITE setContent)
+    Q_CLASSINFO("DefaultProperty", "content")
 public:
-    PopupQuickWindow(PopupWindow *parent);
-    ~PopupQuickWindow();
+    TooltipWindow(QQuickItem *parent = 0);
+    virtual ~TooltipWindow();
+
+    QQuickItem *content() const;
+    void setContent(QQuickItem *item);
 
 public Q_SLOTS:
-    void setWindowType();
-    void dismiss();
+    void show();
+    void hide();
+
+protected:
+    bool eventFilter(QObject *object, QEvent *event);
 
 private:
-    PopupShellSurface *m_shellSurface;
+    QTimer *m_showTimer;
+    QTimer *m_hideTimer;
+    int m_showCount;
+    QQuickItem *m_content;
+    QQuickWindow *m_window;
+
+private Q_SLOTS:
+    void showWindow();
+    void hideWindow();
 };
 
-#endif // POPUPQUICKWINDOW_P_H
+#endif // TOOLTIPWINDOW_H

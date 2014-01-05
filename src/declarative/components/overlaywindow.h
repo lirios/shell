@@ -24,43 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef DIALOGWINDOW_H
-#define DIALOGWINDOW_H
+#ifndef OVERLAYWINDOW_H
+#define OVERLAYWINDOW_H
 
-#include <QtCore/QObject>
+#include <HawaiiShell/QuickView>
 
-class QQuickItem;
-class DialogWindowPrivate;
-
-class DialogWindow : public QObject
+class OverlayWindow : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
-    Q_PROPERTY(QQuickItem *content READ contentItem WRITE setContentItem NOTIFY contentChanged)
-    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
-    Q_CLASSINFO("DefaultProperty", "content")
 public:
-    DialogWindow(QObject *parent = 0);
-    ~DialogWindow();
-
-    QQuickItem *contentItem() const;
-    void setContentItem(QQuickItem *item);
-
-    bool isVisible() const;
-    void setVisible(bool value);
-
-public Q_SLOTS:
-    void show();
-    void hide();
-
-Q_SIGNALS:
-    void accepted();
-    void rejected();
-    void contentChanged();
-    void visibleChanged();
+    explicit OverlayWindow(QWindow *parent = 0);
 
 private:
-    Q_DECLARE_PRIVATE(DialogWindow)
-    DialogWindowPrivate *const d_ptr;
+    void setSurfaceRole();
 };
 
-#endif // DIALOGWINDOW_H
+#endif // OVERLAYWINDOW_H

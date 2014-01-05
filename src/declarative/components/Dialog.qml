@@ -27,10 +27,10 @@
 import QtQuick 2.1
 import QtQuick.Window 2.1
 import QtQuick.Layouts 1.0
-import Hawaii.Shell 1.0
 import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Components.Private 1.0 as Private
 
-DialogWindow {
+Private.DialogWindow {
     id: dialogWindow
 
     default property alias content: mainLayout.data

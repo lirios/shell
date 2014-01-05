@@ -25,31 +25,29 @@
  ***************************************************************************/
 
 #include <QtGui/QGuiApplication>
-
-#include <qpa/qplatformnativeinterface.h>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "popupquickwindow_p.h"
 #include "popupwindow.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
+#include "registrylistener.h"
 
 /*
- * PopupShellSurface
+ * PopupSurface
  */
 
-PopupShellSurface::PopupShellSurface(PopupWindow *popup)
-    : QtWayland::wl_hawaii_shell_surface()
+PopupSurface::PopupSurface(PopupWindow *popup)
+    : QtWayland::wl_hawaii_popup_surface()
     , m_popup(popup)
 {
 }
 
-PopupShellSurface::~PopupShellSurface()
+PopupSurface::~PopupSurface()
 {
     if (isInitialized())
-        wl_hawaii_shell_surface_destroy(object());
+        wl_hawaii_popup_surface_destroy(object());
 }
 
-void PopupShellSurface::hawaii_shell_surface_popup_done()
+void PopupSurface::hawaii_popup_surface_popup_done()
 {
     // Call close() instead of hide() because the latter calls
     // PopupQuickWindow::dismiss() that breaks the grab resulting in
@@ -64,7 +62,7 @@ void PopupShellSurface::hawaii_shell_surface_popup_done()
 
 PopupQuickWindow::PopupQuickWindow(PopupWindow *parent)
     : QQuickWindow()
-    , m_shellSurface(new PopupShellSurface(parent))
+    , m_popupSurface(new PopupSurface(parent))
 {
     // Transparent color
     setColor(Qt::transparent);
@@ -78,26 +76,27 @@ PopupQuickWindow::PopupQuickWindow(PopupWindow *parent)
 
 PopupQuickWindow::~PopupQuickWindow()
 {
-    delete m_shellSurface;
+    delete m_popupSurface;
 }
 
 void PopupQuickWindow::setWindowType()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    wl_output *output = static_cast<struct wl_output *>(
+    struct ::wl_output *output = static_cast<struct ::wl_output *>(
                 native->nativeResourceForScreen("output", screen()));
-    wl_surface *surface = static_cast<struct wl_surface *>(
+    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    m_shellSurface->init(shell->set_popup(output, surface, x(), y()));
+    struct ::wl_hawaii_popup_surface *popupSurface =
+            RegistryListener::instance()->shellSurface()->set_popup(output, surface, x(), y());
+    m_popupSurface->init(popupSurface);
 }
 
 void PopupQuickWindow::dismiss()
 {
-    if (m_shellSurface->isInitialized())
-        m_shellSurface->dismiss();
+    if (m_popupSurface->isInitialized())
+        m_popupSurface->dismiss();
 }
 
 #include "moc_popupquickwindow_p.cpp"
