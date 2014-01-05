@@ -53,61 +53,6 @@
       <arg name="height" type="int"/>
     </request>
 
-    <request name="set_background">
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_panel">
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_special">
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_overlay">
-      <description summary="set overlay role">
-        The surface set by this request will receive the overlay role.
-        Overlays are special surfaces that shows for a limited amount
-        of time.  Such surfaces are useful to display things like OSD.
-      </description>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_popup">
-      <description summary="make the surface a popup surface">
-	Map the surface as a popup.
-
-	A popup surface is a surface with an added pointer grab.
-
-	An existing implicit grab will be changed to owner-events mode,
-	and the popup grab will continue after the implicit grab ends
-	(i.e. releasing the mouse button does not cause the popup to
-	be unmapped).
-
-	The popup grab continues until the window is destroyed or a
-	mouse button is pressed in any other window.
-      </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_shell_surface"/>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-      <arg name="x" type="int"/>
-      <arg name="y" type="int"/>
-    </request>
-
-    <request name="set_dialog">
-      <description summary="set dialog role">
-        The surface set by this request will receive the dialog role.
-        Dialogs have a modal behavior which interrupts user's workflow.
-      </description>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
     <request name="set_lock_surface">
       <description summary="set lock role">
         The surface set by this request will receive the lock role.
@@ -296,11 +241,67 @@
   </interface>
 
   <interface name="wl_hawaii_shell_surface" version="1">
-    <description summary="popup interaction is done">
-    The popup_done event is sent out when a popup grab is broken,
-    that is, when the users clicks on a different surface.
-    </description>
+    <request name="set_background">
+      <description summary="set background role">
+        The surface set by this request will receive the background role.
+        Background surfaces are placed above all surfaces and can be used
+        to show wallpapers.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
 
+    <request name="set_panel">
+      <description summary="set panel role">
+        The surface set by this request will receive the panel role.
+        Panels display launchers, buttons and other kind of elements.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
+    <request name="set_overlay">
+      <description summary="set overlay role">
+        The surface set by this request will receive the overlay role.
+        Overlays are special surfaces that shows for a limited amount
+        of time.  Such surfaces are useful to display things like OSD.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
+    <request name="set_popup">
+      <description summary="make the surface a popup surface">
+	Map the surface as a popup.
+
+	A popup surface is a surface with an added pointer grab.
+
+	An existing implicit grab will be changed to owner-events mode,
+	and the popup grab will continue after the implicit grab ends
+	(i.e. releasing the mouse button does not cause the popup to
+	be unmapped).
+
+	The popup grab continues until the window is destroyed or a
+	mouse button is pressed in any other window.
+      </description>
+      <arg name="id" type="new_id" interface="wl_hawaii_popup_surface"/>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="x" type="int"/>
+      <arg name="y" type="int"/>
+    </request>
+
+    <request name="set_dialog">
+      <description summary="set dialog role">
+        The surface set by this request will receive the dialog role.
+        Dialogs have a modal behavior which interrupts user's workflow.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+  </interface>
+
+  <interface name="wl_hawaii_popup_surface" version="1">
     <request name="dismiss">
       <description summary="break popup grab">
         Explicitely break the popup grab. Clients should hide the
@@ -308,7 +309,12 @@
       </description>
     </request>
 
-    <event name="popup_done"/>
+    <event name="popup_done">
+      <description summary="popup interaction is done">
+        The popup_done event is sent out when a popup grab is broken,
+        that is, when the users clicks on a different surface.
+      </description>
+    </event>
   </interface>
 
   <interface name="wl_hawaii_key_binding" version="1">
