@@ -27,7 +27,7 @@
 #include <QtGui/QGuiApplication>
 
 #include "config.h"
-#include "notificationsdaemon.h"
+#include "registrylistener.h"
 
 int main(int argc, char *argv[])
 {
@@ -38,8 +38,9 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain(QStringLiteral("hawaii.org"));
     app.setOrganizationName(QStringLiteral("Hawaii"));
 
-    // Create the notification daemon
-    (void)NotificationsDaemon::instance();
+    // Listen to Wayland registry events
+    RegistryListener registryListener;
+    registryListener.run();
 
     return app.exec();
 }

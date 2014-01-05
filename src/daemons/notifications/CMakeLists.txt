@@ -11,6 +11,7 @@ set(SOURCES
     notificationsdaemon.cpp
     notificationsimage.cpp
     notificationwindow.cpp
+    registrylistener.cpp
 )
 
 wayland_add_protocol_client(SOURCES
