@@ -15,6 +15,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell/settings
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell/includes
+    ${CMAKE_BINARY_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/daemons
@@ -43,6 +44,7 @@ set(SOURCES
     hawaiishell.cpp
     main.cpp
     registration.cpp
+    shellmanager.cpp
     shellui.cpp
     shellscreen.cpp
     shortcut.cpp

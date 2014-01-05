@@ -31,6 +31,7 @@
 
 #include "hawaiishell.h"
 #include "notificationsdaemon.h"
+#include "shellmanager.h"
 #include "config.h"
 #include "gitsha1.h"
 
@@ -147,11 +148,11 @@ int main(int argc, char *argv[])
              << qPrintable(QStringLiteral("** Build: %1-%2")
                            .arg(HAWAII_SHELL_VERSION_STRING).arg(GIT_REV));
 
+    // Create the main shell object
+    ShellManager::instance();
+
     // Create the notification daemon
     (void)NotificationsDaemon::instance();
-
-    // Create the main shell object
-    (void)HawaiiShell::instance();
 
     return app.exec();
 }

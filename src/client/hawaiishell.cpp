@@ -35,7 +35,6 @@
 
 #include "applicationiconprovider.h"
 #include "cmakedirs.h"
-#include "elementfactory.h"
 #include "hawaiishell.h"
 #include "hawaiishell_p.h"
 #include "notificationsdaemon.h"
@@ -220,8 +219,6 @@ HawaiiShellPrivate::~HawaiiShellPrivate()
     delete shell;
 
     qDeleteAll(workspaces);
-
-    ElementFactory::cleanupElements();
 }
 
 void HawaiiShellPrivate::emitWindowAdded(Window *window)
@@ -361,9 +358,6 @@ void HawaiiShell::create()
     // Register QML types and factories
     Registration::registerQmlTypes();
     Registration::registerFactories();
-
-    // Search elements
-    ElementFactory::searchElements();
 
     // Register daemons and singletons
     d->registrar = new QQmlComponent(d->engine, QUrl("qrc:/qml/Registrar.qml"), this);
