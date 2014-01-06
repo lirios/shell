@@ -38,12 +38,16 @@ using namespace Hawaii::Shell;
 DesktopView::DesktopView(QQmlEngine *engine, QScreen *screen)
     : QuickView(engine, new QWindow(screen))
 {
+    // Resize view to actual size and thus resize the root object
+    setResizeMode(QQuickView::SizeRootObjectToView);
+
     // Set Wayland window type
     setWindowType();
 
-    // React to screen geometry changes
-    connect(this, &QuickView::screenGeometryChanged,
-            this, &DesktopView::changeGeometry);
+    // Set geometry and react to screen geometry changes
+    setGeometry(screen->geometry());
+    connect(screen, &QScreen::geometryChanged,
+            this, static_cast<void (QWindow::*)(const QRect &)>(&QWindow::setGeometry));
 
     // Debugging message
     qDebug() << "-> Created DesktopView with geometry"
@@ -60,11 +64,6 @@ void DesktopView::setWindowType()
                 native->nativeResourceForWindow("surface", this));
 
     ShellManager::instance()->shellSurfaceInterface()->set_background(output, surface);
-}
-
-void DesktopView::changeGeometry(const QRect &geometry)
-{
-    setGeometry(geometry);
 }
 
 #include "moc_desktopview.cpp"

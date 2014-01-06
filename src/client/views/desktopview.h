@@ -40,9 +40,6 @@ public:
 
 private:
     void setWindowType();
-
-private Q_SLOTS:
-    void changeGeometry(const QRect &geometry);
 };
 
 #endif // DESKTOPVIEW_H
