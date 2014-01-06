@@ -30,6 +30,12 @@ function shellWindowMapped(window)
 {
     // Do something according to window role
     switch (window.role) {
+    case Compositor.BackgroundWindowRole:
+        // TODO: Move surface according to output coordinates
+        break;
+    case Compositor.OverlayWindowRole:
+        // TODO: Move surface according to output coordinates
+        break;
     case Compositor.PopupWindowRole:
         // Popup windows always take the focus
         window.takeFocus();
