@@ -714,7 +714,9 @@ void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *r
     }
 
     surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
-        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_backgroundLayer, width, height); };
+        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_backgroundLayer, width, height);
+        weston_surface_set_position(es, es->output->x, es->output->y);
+    };
     surface->configure_private = this;
     surface->output = static_cast<weston_output *>(output_resource->data);
 }
@@ -766,7 +768,9 @@ void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *reso
     }
 
     surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
-        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_overlayLayer, width, height); };
+        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_overlayLayer, width, height);
+        weston_surface_set_position(es, es->output->x, es->output->y);
+    };
     surface->configure_private = this;
     surface->output = static_cast<weston_output *>(output_resource->data);
 
