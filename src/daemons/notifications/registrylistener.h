@@ -35,7 +35,11 @@ public:
     RegistryListener();
     ~RegistryListener();
 
+    static RegistryListener *instance();
+
     void run();
+
+    void addSurface(struct ::wl_surface *surface);
 
 private:
     QtWayland::wl_notification_daemon *m_notifications;

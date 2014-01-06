@@ -29,6 +29,7 @@
 #include <QtQuick/QQuickItem>
 
 #include "notificationwindow.h"
+#include "registrylistener.h"
 
 NotificationWindow::NotificationWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -88,9 +89,7 @@ void NotificationWindow::addSurface()
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    QtWayland::wl_notification_daemon *notifications =
-            HawaiiShell::instance()->d_ptr->notifications;
-    notifications->add_surface(surface);
+    RegistryListener::instance()->addSurface(surface);
 
     m_surfaceAdded = true;
 }

@@ -39,8 +39,7 @@ int main(int argc, char *argv[])
     app.setOrganizationName(QStringLiteral("Hawaii"));
 
     // Listen to Wayland registry events
-    RegistryListener registryListener;
-    registryListener.run();
+    RegistryListener::instance()->run();
 
     return app.exec();
 }

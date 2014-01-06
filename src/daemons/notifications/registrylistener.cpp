@@ -31,6 +31,8 @@
 #include "notificationsdaemon.h"
 #include "registrylistener.h"
 
+Q_GLOBAL_STATIC(RegistryListener, s_registryListener)
+
 RegistryListener::RegistryListener()
     : m_notifications(new QtWayland::wl_notification_daemon())
 {
@@ -39,6 +41,11 @@ RegistryListener::RegistryListener()
 RegistryListener::~RegistryListener()
 {
     delete m_notifications;
+}
+
+RegistryListener *RegistryListener::instance()
+{
+    return s_registryListener();
 }
 
 void RegistryListener::run()
@@ -59,6 +66,11 @@ void RegistryListener::run()
 
     // Initialize interfaces
     wl_registry_add_listener(registry, &RegistryListener::listener, this);
+}
+
+void RegistryListener::addSurface(struct ::wl_surface *surface)
+{
+    m_notifications->add_surface(surface);
 }
 
 void RegistryListener::handleGlobal(void *data,
