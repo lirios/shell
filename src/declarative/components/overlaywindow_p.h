@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,41 +24,21 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef OVERLAYWINDOW_H
-#define OVERLAYWINDOW_H
+#ifndef OVERLAYWINDOW_P_H
+#define OVERLAYWINDOW_P_H
 
-#include <QtCore/QObject>
+#include <QtQuick/QQuickItem>
 
-class QQuickItem;
-class OverlayWindowPrivate;
+#include "overlayquickwindow_p.h"
 
-class OverlayWindow : public QObject
+class OverlayWindowPrivate
 {
-    Q_OBJECT
-    Q_PROPERTY(QQuickItem *content READ contentItem WRITE setContentItem NOTIFY contentChanged)
-    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
-    Q_CLASSINFO("DefaultProperty", "content")
 public:
-    OverlayWindow(QObject *parent = 0);
-    virtual ~OverlayWindow();
+    OverlayWindowPrivate();
+    ~OverlayWindowPrivate();
 
-    QQuickItem *contentItem() const;
-    void setContentItem(QQuickItem *item);
-
-    bool isVisible() const;
-    void setVisible(bool value);
-
-public Q_SLOTS:
-    void show();
-    void hide();
-
-Q_SIGNALS:
-    void contentChanged();
-    void visibleChanged();
-
-private:
-    Q_DECLARE_PRIVATE(OverlayWindow)
-    OverlayWindowPrivate *const d_ptr;
+    OverlayQuickWindow *window;
+    QQuickItem *content;
 };
 
-#endif // OVERLAYWINDOW_H
+#endif // OVERLAYWINDOW_P_H

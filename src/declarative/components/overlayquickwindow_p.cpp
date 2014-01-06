@@ -24,41 +24,37 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef OVERLAYWINDOW_H
-#define OVERLAYWINDOW_H
+#include <QtGui/QGuiApplication>
+#include <QtGui/QWindow>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
-#include <QtCore/QObject>
+#include "overlayquickwindow_p.h"
+#include "registrylistener.h"
 
-class QQuickItem;
-class OverlayWindowPrivate;
-
-class OverlayWindow : public QObject
+OverlayQuickWindow::OverlayQuickWindow(QWindow *parent)
+    : QQuickWindow(parent)
 {
-    Q_OBJECT
-    Q_PROPERTY(QQuickItem *content READ contentItem WRITE setContentItem NOTIFY contentChanged)
-    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
-    Q_CLASSINFO("DefaultProperty", "content")
-public:
-    OverlayWindow(QObject *parent = 0);
-    virtual ~OverlayWindow();
+    // Transparent color
+    setColor(Qt::transparent);
 
-    QQuickItem *contentItem() const;
-    void setContentItem(QQuickItem *item);
+    // Set custom window type
+    setFlags(Qt::BypassWindowManagerHint);
 
-    bool isVisible() const;
-    void setVisible(bool value);
+    // Create platform window and set surface role
+    create();
+    setSurfaceRole();
+}
 
-public Q_SLOTS:
-    void show();
-    void hide();
+void OverlayQuickWindow::setSurfaceRole()
+{
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-Q_SIGNALS:
-    void contentChanged();
-    void visibleChanged();
+    struct ::wl_output *output = static_cast<struct ::wl_output *>(
+                native->nativeResourceForScreen("output", screen()));
+    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
+                native->nativeResourceForWindow("surface", this));
 
-private:
-    Q_DECLARE_PRIVATE(OverlayWindow)
-    OverlayWindowPrivate *const d_ptr;
-};
+    RegistryListener::instance()->shellSurface()->set_overlay(output, surface);
+}
 
-#endif // OVERLAYWINDOW_H
+#include "moc_overlayquickwindow_p.cpp"

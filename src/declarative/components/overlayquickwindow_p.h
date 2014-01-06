@@ -24,41 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef OVERLAYWINDOW_H
-#define OVERLAYWINDOW_H
+#ifndef OVERLAYQUICKWINDOW_H
+#define OVERLAYQUICKWINDOW_H
 
-#include <QtCore/QObject>
+#include <QtQuick/QQuickWindow>
 
-class QQuickItem;
-class OverlayWindowPrivate;
-
-class OverlayWindow : public QObject
+class OverlayQuickWindow : public QQuickWindow
 {
     Q_OBJECT
-    Q_PROPERTY(QQuickItem *content READ contentItem WRITE setContentItem NOTIFY contentChanged)
-    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
-    Q_CLASSINFO("DefaultProperty", "content")
 public:
-    OverlayWindow(QObject *parent = 0);
-    virtual ~OverlayWindow();
-
-    QQuickItem *contentItem() const;
-    void setContentItem(QQuickItem *item);
-
-    bool isVisible() const;
-    void setVisible(bool value);
-
-public Q_SLOTS:
-    void show();
-    void hide();
-
-Q_SIGNALS:
-    void contentChanged();
-    void visibleChanged();
+    OverlayQuickWindow(QWindow *parent = 0);
 
 private:
-    Q_DECLARE_PRIVATE(OverlayWindow)
-    OverlayWindowPrivate *const d_ptr;
+    void setSurfaceRole();
 };
 
-#endif // OVERLAYWINDOW_H
+#endif // OVERLAYQUICKWINDOW_H

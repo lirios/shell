@@ -25,29 +25,105 @@
  ***************************************************************************/
 
 #include <QtGui/QGuiApplication>
-#include <QtGui/QWindow>
 #include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "overlaywindow.h"
+#include "overlaywindow_p.h"
 
-OverlayWindow::OverlayWindow(QWindow *parent)
-    : Hawaii::Shell::QuickView(parent)
+/*
+ * OverlayWindowPrivate
+ */
+
+OverlayWindowPrivate::OverlayWindowPrivate()
+    : window(0)
+    , content(0)
 {
-    // Set surface role
-    setSurfaceRole();
 }
 
-void OverlayWindow::setSurfaceRole()
+OverlayWindowPrivate::~OverlayWindowPrivate()
 {
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+    if (window)
+        window->deleteLater();
+}
 
-    struct ::wl_output *output = static_cast<struct ::wl_output *>(
-                native->nativeResourceForScreen("output", screen()));
-    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
-                native->nativeResourceForWindow("surface", this));
+/*
+ * OverlayWindow
+ */
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_overlay(output, surface);
+OverlayWindow::OverlayWindow(QObject *parent)
+    : QObject(parent)
+    , d_ptr(new OverlayWindowPrivate())
+{
+}
+
+OverlayWindow::~OverlayWindow()
+{
+    delete d_ptr;
+}
+
+QQuickItem *OverlayWindow::contentItem() const
+{
+    Q_D(const OverlayWindow);
+    return d->content;
+}
+
+void OverlayWindow::setContentItem(QQuickItem *item)
+{
+    Q_D(OverlayWindow);
+
+    if (d->content != item) {
+        d->content = item;
+        Q_EMIT contentChanged();
+    }
+}
+
+bool OverlayWindow::isVisible() const
+{
+    Q_D(const OverlayWindow);
+    return d->window && d->window->isVisible() ? true : false;
+}
+
+void OverlayWindow::setVisible(bool value)
+{
+    QMetaObject::invokeMethod(this, value ? "show" : "hide", Qt::QueuedConnection);
+}
+
+void OverlayWindow::show()
+{
+    Q_D(OverlayWindow);
+
+    // Just return if it's already visible or there's no content item
+    if (isVisible() || !d->content)
+        return;
+
+    // Create the window
+    if (!d->window) {
+        d->window = new OverlayQuickWindow();
+        connect(d->window, SIGNAL(rejected()), this, SIGNAL(rejected()));
+    }
+
+    // Set window size according to content size
+    d->window->setWidth(d->content->width());
+    d->window->setHeight(d->content->height());
+
+    // Set screen and reparent content item
+    d->window->setScreen(QGuiApplication::primaryScreen());
+    d->content->setParentItem(d->window->contentItem());
+
+    // Show the window
+    d->window->show();
+    Q_EMIT visibleChanged();
+}
+
+void OverlayWindow::hide()
+{
+    Q_D(OverlayWindow);
+
+    if (isVisible()) {
+        d->window->deleteLater();
+        d->window = 0;
+        Q_EMIT visibleChanged();
+    }
 }
 
 #include "moc_overlaywindow.cpp"
