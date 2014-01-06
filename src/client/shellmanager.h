@@ -62,6 +62,7 @@ public:
     void loadHandlers();
 
 public Q_SLOTS:
+    void setup();
     void create();
 
 Q_SIGNALS:

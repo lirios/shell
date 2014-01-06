@@ -139,15 +139,10 @@ ShellController::ShellController(QObject *parent)
     Registration::registerFactories();
 
     ShellManager *manager = ShellManager::instance();
-    ShellUi *ui = manager->ui();
     ShellClient *client = manager->shellInterface();
 
     connect(client, &ShellClient::loaded,
             manager, &ShellManager::create);
-    connect(client, &ShellClient::prepareLockSurface,
-            ui, &ShellUi::createLockScreenWindow);
-    connect(client, &ShellClient::cursorChanged,
-            ui, &ShellUi::setGrabCursor);
     connect(client, SIGNAL(windowAdded(Window*)),
             this, SLOT(_q_windowAdded(Window*)));
     connect(client, &ShellClient::windowSwitchingStarted,

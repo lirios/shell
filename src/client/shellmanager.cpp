@@ -44,14 +44,12 @@ Q_GLOBAL_STATIC(ShellManager, s_shellManager)
 ShellManager::ShellManager()
     : m_engine(new QQmlEngine(this))
     , m_registryListener(new RegistryListener())
+    , m_shellController(nullptr)
     , m_shellUi(nullptr)
     , m_currentHandler(nullptr)
 {
     // Start counting how much time we need to start up :)
     m_elapsedTimer.start();
-
-    // Register Wayland interfaces
-    m_registryListener->run();
 
     // We need windows with alpha buffer
     QQuickWindow::setDefaultAlphaBuffer(true);
@@ -62,12 +60,8 @@ ShellManager::ShellManager()
     // Register QML types
     Registration::registerQmlTypes();
 
-    // Load shell handlers
-    loadHandlers();
-
-    // Create the shell controller
-    m_shellController = new ShellController(this);
-    m_engine->rootContext()->setContextProperty("Shell", m_shellController);
+    // Register Wayland interfaces
+    m_registryListener->run();
 }
 
 ShellManager::~ShellManager()
@@ -144,11 +138,25 @@ void ShellManager::loadHandlers()
     updateShell();
 }
 
+void ShellManager::setup()
+{
+    // Load shell handlers
+    loadHandlers();
+
+    // Create the shell controller
+    m_shellController = new ShellController(this);
+    m_engine->rootContext()->setContextProperty("Shell", m_shellController);
+}
+
 void ShellManager::create()
 {
     // Create shell user interface
     m_shellUi = new ShellUi(this);
     m_engine->rootContext()->setContextProperty("Ui", m_shellUi);
+    connect(m_registryListener->shell, &ShellClient::prepareLockSurface,
+            m_shellUi, &ShellUi::createLockScreenWindow);
+    connect(m_registryListener->shell, &ShellClient::cursorChanged,
+            m_shellUi, &ShellUi::setGrabCursor);
 
     // Add configured workspaces
     // TODO: Add as many workspaces as specified by the settings
