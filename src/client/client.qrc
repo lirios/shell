@@ -10,9 +10,6 @@
         <file>qml/AuthenticationDialog.qml</file>
         <file>qml/ShutdownDialog.qml</file>
 
-        <!-- Background -->
-        <file>qml/Background.qml</file>
-
         <!-- Indicators -->
         <file>qml/Indicator.qml</file>
         <file>qml/DateTimeIndicator.qml</file>
