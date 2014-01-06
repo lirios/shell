@@ -24,6 +24,7 @@ set(SOURCES
     popupgrabber.cpp
     screensaver.cpp
     shell.cpp
+    shellpopupsurface.cpp
     shellsurface.cpp
     workspace.cpp
 )

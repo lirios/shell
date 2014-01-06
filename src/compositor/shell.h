@@ -35,8 +35,6 @@
 #include "compositor.h"
 #include "keybinding.h"
 
-typedef QList<QWaylandSurface *> Layer;
-
 class Shell : public QObject,
         public QtWaylandServer::wl_hawaii_shell
 {
@@ -47,8 +45,6 @@ public:
     ~Shell();
 
     bool isLocked() const;
-
-    QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
 
     KeyBindings keyBindings() const;
 
@@ -65,26 +61,6 @@ protected:
 
     void hawaii_shell_add_key_binding(Resource *resource, uint32_t id,
                                       uint32_t key, uint32_t modifiers) Q_DECL_OVERRIDE;
-
-    void hawaii_shell_set_background(Resource *resource,
-                                     struct ::wl_resource *output_resource,
-                                     struct ::wl_resource *surface) Q_DECL_OVERRIDE;
-    void hawaii_shell_set_panel(Resource *resource,
-                                struct ::wl_resource *output_resource,
-                                struct ::wl_resource *surface) Q_DECL_OVERRIDE;
-    void hawaii_shell_set_special(Resource *resource,
-                                  struct ::wl_resource *output_resource,
-                                  struct ::wl_resource *surface) Q_DECL_OVERRIDE;
-    void hawaii_shell_set_overlay(Resource *resource,
-                                  struct ::wl_resource *output_resource,
-                                  struct ::wl_resource *surface) Q_DECL_OVERRIDE;
-    void hawaii_shell_set_popup(Resource *resource, uint32_t id,
-                                struct ::wl_resource *output_resource,
-                                struct ::wl_resource *surface,
-                                int32_t x, int32_t y) Q_DECL_OVERRIDE;
-    void hawaii_shell_set_dialog(Resource *resource,
-                                 struct ::wl_resource *output_resource,
-                                 struct ::wl_resource *surface) Q_DECL_OVERRIDE;
 
     void hawaii_shell_set_position(Resource *resource,
                                    struct ::wl_resource *surface,
@@ -113,21 +89,11 @@ protected:
     void hawaii_shell_start_grab(Resource *resource, uint32_t id) Q_DECL_OVERRIDE;
 
 private:
-    Layer m_backgroundLayer;
-    Layer m_panelsLayer;
-    Layer m_overlayLayer;
-    Layer m_dialogsLayer;
-
     KeyBindings m_keyBindings;
 
     QWaylandSurface *m_lockSurface;
     bool m_locked;
     bool m_prepareEventSent;
-
-    void addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface);
-    void removeSurfaceFromLayer(QWaylandSurface *surface);
-
-    QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 
     void resumeDesktop();
 };

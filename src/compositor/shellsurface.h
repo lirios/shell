@@ -27,35 +27,53 @@
 #ifndef SHELLSURFACE_H
 #define SHELLSURFACE_H
 
-#include <QtCompositor/private/qwlinputdevice_p.h>
+#include <QtCompositor/QWaylandSurface>
 
+#include "compositor.h"
 #include "qwayland-server-hawaii.h"
-#include "popupgrabber.h"
-#include "shell.h"
 
-class ShellSurface : public QtWaylandServer::wl_hawaii_shell_surface
+typedef QList<QWaylandSurface *> Layer;
+
+class ShellSurface : public QObject, public QtWaylandServer::wl_hawaii_shell_surface
 {
+    Q_OBJECT
 public:
-    ShellSurface(Compositor::ShellWindowRole role, QWaylandSurface *surface);
-    ~ShellSurface();
+    ShellSurface(struct ::wl_display *display);
 
-    Compositor::ShellWindowRole role() const;
+    void setSurfacesVisible(bool visible);
 
-    QWaylandSurface *surface() const;
-    void setSurface(QWaylandSurface *surface);
-
-    PopupGrabber *popupGrabber() const;
-    void setPopupGrabber(PopupGrabber *grabber);
+    QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
 
 protected:
-    void hawaii_shell_surface_dismiss(Resource *resource) Q_DECL_OVERRIDE;
+    void hawaii_shell_surface_set_background(Resource *resource,
+                                             struct ::wl_resource *output_resource,
+                                             struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+    void hawaii_shell_surface_set_panel(Resource *resource,
+                                        struct ::wl_resource *output_resource,
+                                        struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+    void hawaii_shell_surface_set_overlay(Resource *resource,
+                                          struct ::wl_resource *output_resource,
+                                          struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+    void hawaii_shell_surface_set_popup(Resource *resource, uint32_t id,
+                                        struct ::wl_resource *output_resource,
+                                        struct ::wl_resource *surface,
+                                        int32_t x, int32_t y) Q_DECL_OVERRIDE;
+    void hawaii_shell_surface_set_dialog(Resource *resource,
+                                         struct ::wl_resource *output_resource,
+                                         struct ::wl_resource *surface) Q_DECL_OVERRIDE;
 
 private:
     Q_DISABLE_COPY(ShellSurface)
 
-    Compositor::ShellWindowRole m_role;
-    QWaylandSurface *m_surface;
-    PopupGrabber *m_popupGrabber;
+    Layer m_backgroundLayer;
+    Layer m_panelsLayer;
+    Layer m_overlayLayer;
+    Layer m_dialogsLayer;
+
+    void addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface);
+    void removeSurfaceFromLayer(QWaylandSurface *surface);
+
+    QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 };
 
 #endif // SHELLSURFACE_H

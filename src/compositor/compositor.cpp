@@ -38,6 +38,7 @@
 
 #include "compositor.h"
 #include "shell.h"
+#include "shellsurface.h"
 #include "clientwindow.h"
 #include "workspace.h"
 #include "grab.h"
@@ -66,6 +67,7 @@ Compositor::Compositor()
 
     // Create interfaces
     m_shell = new Shell(waylandDisplay());
+    m_shellSurface = new ShellSurface(waylandDisplay());
     connect(m_shell, &Shell::ready, [=]() {
         // Shell is ready and we can start handling input events
         m_shellReady = true;
@@ -101,6 +103,7 @@ Compositor::~Compositor()
     qDeleteAll(m_workspaces);
     delete m_screenSaver;
     delete m_notifications;
+    delete m_shellSurface;
     delete m_shell;
 }
 
@@ -112,6 +115,11 @@ Compositor *Compositor::instance()
 Shell *Compositor::shell() const
 {
     return m_shell;
+}
+
+ShellSurface *Compositor::shellSurface() const
+{
+    return m_shellSurface;
 }
 
 ScreenSaver *Compositor::screenSaver() const
@@ -302,7 +310,7 @@ void Compositor::mousePressEvent(QMouseEvent *event)
 
     // Custom event handling only of shell windows
     QPointF local;
-    QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
+    QWaylandSurface *targetSurface = m_shellSurface->surfaceAt(event->localPos(), &local);
     if (targetSurface && !targetSurface->hasShellSurface()) {
         defaultInputDevice()->sendMousePressEvent(event->button(), local, event->globalPos());
         event->accept();
@@ -321,7 +329,7 @@ void Compositor::mouseReleaseEvent(QMouseEvent *event)
 
     // Custom event handling only of shell windows
     QPointF local;
-    QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
+    QWaylandSurface *targetSurface = m_shellSurface->surfaceAt(event->localPos(), &local);
     if (targetSurface && !targetSurface->hasShellSurface()) {
         defaultInputDevice()->sendMouseReleaseEvent(event->button(), local, event->globalPos());
         event->accept();
@@ -340,7 +348,7 @@ void Compositor::mouseMoveEvent(QMouseEvent *event)
 
     // Custom event handling only of shell windows
     QPointF local;
-    QWaylandSurface *targetSurface = m_shell->surfaceAt(event->localPos(), &local);
+    QWaylandSurface *targetSurface = m_shellSurface->surfaceAt(event->localPos(), &local);
     if (targetSurface && !targetSurface->hasShellSurface()) {
         defaultInputDevice()->sendMouseMoveEvent(targetSurface, local, event->globalPos());
         event->accept();

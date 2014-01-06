@@ -29,13 +29,14 @@
 #include <QtCompositor/private/qwlsurface_p.h>
 
 #include "popupgrabber.h"
+#include "shellpopupsurface.h"
 #include "shellsurface.h"
 
 PopupGrabber::PopupGrabber(QtWayland::InputDevice *inputDevice)
     : QtWayland::PointerGrabber()
     , m_inputDevice(inputDevice)
     , m_client(nullptr)
-    , m_shellSurface(nullptr)
+    , m_popupSurface(nullptr)
     , m_inside(false)
 {
     m_creationTime = m_inputDevice->pointerDevice()->grabTime();
@@ -61,23 +62,23 @@ void PopupGrabber::setClient(struct ::wl_client *client)
     m_client = client;
 }
 
-ShellSurface *PopupGrabber::shellSurface() const
+ShellPopupSurface *PopupGrabber::popupSurface() const
 {
-    return m_shellSurface;
+    return m_popupSurface;
 }
 
-void PopupGrabber::setShellSurface(ShellSurface *shellSurface)
+void PopupGrabber::setPopupSurface(ShellPopupSurface *popupSurface)
 {
-    if (shellSurface) {
-        m_client = shellSurface->resource()->client();
-        m_shellSurface = shellSurface;
+    if (popupSurface) {
+        m_client = popupSurface->resource()->client();
+        m_popupSurface = popupSurface;
         if (m_inputDevice)
             m_inputDevice->pointerDevice()->startGrab(this);
     } else {
         if (m_inputDevice)
             m_inputDevice->pointerDevice()->endGrab();
         m_client = nullptr;
-        m_shellSurface = nullptr;
+        m_popupSurface = nullptr;
     }
 }
 
@@ -86,10 +87,10 @@ void PopupGrabber::end()
     if (m_inputDevice)
         m_inputDevice->pointerDevice()->endGrab();
 
-    if (m_shellSurface) {
-        m_shellSurface->send_popup_done();
-        delete m_shellSurface;
-        m_shellSurface = nullptr;
+    if (m_popupSurface) {
+        m_popupSurface->send_popup_done();
+        delete m_popupSurface;
+        m_popupSurface = nullptr;
     }
 
     m_client = nullptr;
@@ -104,8 +105,8 @@ void PopupGrabber::endGrab()
 
 void PopupGrabber::focus()
 {
-    if (m_shellSurface)
-        m_inside = m_pointer->current()->waylandSurface() == m_shellSurface->surface();
+    if (m_popupSurface)
+        m_inside = m_pointer->current()->waylandSurface() == m_popupSurface->surface();
     else
         m_inside = false;
 

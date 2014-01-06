@@ -32,6 +32,7 @@
 #include <GreenIsland/Compositor>
 
 class Shell;
+class ShellSurface;
 class ClientWindow;
 class Workspace;
 class Grab;
@@ -46,7 +47,6 @@ public:
     enum ShellWindowRole {
         BackgroundWindowRole = 0,
         PanelWindowRole,
-        SpecialWindowRole,
         OverlayWindowRole,
         DialogWindowRole,
         PopupWindowRole
@@ -58,6 +58,7 @@ public:
     static Compositor *instance();
 
     Shell *shell() const;
+    ShellSurface *shellSurface() const;
     ScreenSaver *screenSaver() const;
 
     bool isShellWindow(QWaylandSurface *surface);
@@ -99,6 +100,7 @@ protected:
 
 private:
     Shell *m_shell;
+    ShellSurface *m_shellSurface;
     QList<ClientWindow *> m_clientWindows;
     QList<Workspace *> m_workspaces;
     ScreenSaver *m_screenSaver;

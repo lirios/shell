@@ -30,7 +30,7 @@
 #include <QtCompositor/QWaylandInputDevice>
 #include <QtCompositor/private/qwlpointer_p.h>
 
-class ShellSurface;
+class ShellPopupSurface;
 
 class PopupGrabber : public QtWayland::PointerGrabber
 {
@@ -44,10 +44,8 @@ public:
     struct ::wl_client *client() const;
     void setClient(struct ::wl_client *client);
 
-    bool contains(ShellSurface *shellSurface) const;
-
-    ShellSurface *shellSurface() const;
-    void setShellSurface(ShellSurface *shellSurface);
+    ShellPopupSurface *popupSurface() const;
+    void setPopupSurface(ShellPopupSurface *popupSurface);
 
     void end();
     void endGrab();
@@ -59,7 +57,7 @@ public:
 private:
     QtWayland::InputDevice *m_inputDevice;
     struct ::wl_client *m_client;
-    ShellSurface * m_shellSurface;
+    ShellPopupSurface * m_popupSurface;
     bool m_inside;
     uint32_t m_creationTime;
 };
