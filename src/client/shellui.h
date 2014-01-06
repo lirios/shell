@@ -28,6 +28,7 @@
 #define SHELLUI_H
 
 #include <QtCore/QObject>
+#include <QtGui/QScreen>
 
 class DesktopView;
 class GrabWindow;
@@ -44,6 +45,8 @@ public:
     GrabWindow *grabWindow() const;
 
     LockScreenWindow *lockScreenWindow() const;
+
+    void load();
 
 public Q_SLOTS:
     void createLockScreenWindow();

@@ -26,7 +26,6 @@
 
 #include <QtCore/QDebug>
 #include <QtGui/QGuiApplication>
-#include <QtGui/QScreen>
 #include <QtQml/QQmlEngine>
 
 #include <QtGui/qpa/qplatformnativeinterface.h>
@@ -37,6 +36,8 @@
 #include "panelview.h"
 #include "shellui.h"
 #include "shellmanager.h"
+
+const QString s_desktopViewFileName = QStringLiteral("views/DesktopView.qml");
 
 ShellUi::ShellUi(QObject *parent)
     : QObject(parent)
@@ -66,6 +67,14 @@ GrabWindow *ShellUi::grabWindow() const
 LockScreenWindow *ShellUi::lockScreenWindow() const
 {
     return m_lockScreenWindow;
+}
+
+void ShellUi::load()
+{
+    for (QScreen *screen: QGuiApplication::screens())
+        screenAdded(screen);
+    connect(qApp, &QGuiApplication::screenAdded,
+            this, &ShellUi::screenAdded);
 }
 
 void ShellUi::createLockScreenWindow()
@@ -115,8 +124,11 @@ void ShellUi::setNumWorkspaces(int num)
 void ShellUi::screenAdded(QScreen *screen)
 {
     QQmlEngine *engine = ShellManager::instance()->engine();
+    QDir shellDir = ShellManager::instance()->shellDirectory();
 
     DesktopView *view = new DesktopView(engine, screen);
+    view->setSource(QUrl::fromLocalFile(shellDir.absoluteFilePath(s_desktopViewFileName)));
+    view->show();
     m_desktopViews.append(view);
 
     connect(screen, &QObject::destroyed,

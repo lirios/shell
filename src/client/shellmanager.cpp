@@ -24,9 +24,9 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
+#include <QtGui/QGuiApplication>
 #include <QtQml/QQmlComponent>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>
@@ -106,6 +106,11 @@ QString ShellManager::shell() const
     return QString();
 }
 
+QDir ShellManager::shellDirectory() const
+{
+    return m_shellDir;
+}
+
 void ShellManager::loadHandlers()
 {
     QDir shellsDir(QStringLiteral(INSTALL_DATADIR) + QStringLiteral("/hawaii/shells"));
@@ -130,9 +135,11 @@ void ShellManager::loadHandlers()
         for (QQmlError error: component.errors())
             qWarning() << "Error:" << error.toString();
 
-        // Register shell handler
-        if (handler)
+        // Register shell handler and save the base directory
+        if (handler) {
             registerHandler(name, handler);
+            m_shellDir = shellsDir.absoluteFilePath(dirName + QStringLiteral("/contents/"));
+        }
     }
 
     updateShell();
@@ -161,6 +168,9 @@ void ShellManager::create()
     // Add configured workspaces
     // TODO: Add as many workspaces as specified by the settings
     m_shellController->addWorkspaces(4);
+
+    // Load user interface
+    m_shellUi->load();
 
 #if 0
     // Register daemons and singletons

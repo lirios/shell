@@ -27,6 +27,7 @@
 #ifndef SHELLMANAGER_H
 #define SHELLMANAGER_H
 
+#include <QtCore/QDir>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QObject>
 #include <QtCore/QHash>
@@ -58,6 +59,7 @@ public:
     ShellSurfaceClient *shellSurfaceInterface() const;
 
     QString shell() const;
+    QDir shellDirectory() const;
 
     void loadHandlers();
 
@@ -77,6 +79,7 @@ private:
     ShellUi *m_shellUi;
     QHash<QString, QObject *> m_handlers;
     QObject *m_currentHandler;
+    QDir m_shellDir;
 
     void updateShell();
 
