@@ -30,7 +30,6 @@
 #include "appinfo.h"
 #include "applicationsmodel.h"
 #include "datetime.h"
-#include "element.h"
 #include "enums.h"
 #include "registration.h"
 #include "keybinding.h"
@@ -67,7 +66,6 @@ void Registration::registerQmlTypes()
                                        QStringLiteral("Cannot create Window"));
     qmlRegisterUncreatableType<Workspace>(uri, 1, 0, "Workspace",
                                           QStringLiteral("Workspace"));
-    qmlRegisterType<Element>(uri, 1, 0, "Element");
 
     // Enums
     qmlRegisterUncreatableType<UserStatus>(uri, 1, 0, "UserStatus",

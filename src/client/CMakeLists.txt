@@ -36,8 +36,6 @@ set(SOURCES
     appinfo.cpp
     applicationiconprovider.cpp
     applicationsmodel.cpp
-    element.cpp
-    elementfactory.cpp
     enums.cpp
     keybinding.cpp
     hawaiishell.cpp
