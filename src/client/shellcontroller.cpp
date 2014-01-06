@@ -152,8 +152,8 @@ ShellController::ShellController(QObject *parent)
     connect(client, &ShellClient::switchedToWindow,
             this, &ShellController::windowSwitchingNext);
     connect(client, SIGNAL(workspaceAdded(Workspace*)),
-            this, SLOT(_q_workSpaceAdded(Workspace*)));
-    connect(manager, SIGNAL(ready()), this, SLOT(_q_ready()));
+            this, SLOT(_q_workspaceAdded(Workspace*)));
+    connect(manager, SIGNAL(ready()), this, SLOT(_q_shellReady()));
 
     // Bind Meta-D to toggle windows
     KeyBinding *binding = addKeyBinding(KEY_D, MODIFIER_SUPER);
