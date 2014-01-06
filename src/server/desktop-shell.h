@@ -72,6 +72,9 @@ private:
     void bindDesktopShell(struct wl_client *client, uint32_t version, uint32_t id);
     void unbindDesktopShell(struct wl_resource *resource);
 
+    void bindDesktopShellSurface(struct wl_client *client, uint32_t version, uint32_t id);
+    void unbindDesktopShellSurface(struct wl_resource *resource);
+
     void bindScreenSaver(wl_client *client, uint32_t version, uint32_t id);
     void unbindScreenSaver(wl_resource *resource);
 
@@ -107,10 +110,6 @@ private:
     void setLauncher(struct wl_client *client, struct wl_resource *resource,
                      struct wl_resource *output_resource,
                      struct wl_resource *surface_resource);
-
-    void setSpecial(struct wl_client *client, struct wl_resource *resource,
-                    struct wl_resource *output_resource,
-                    struct wl_resource *surface_resource);
 
     void setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource);
 
@@ -173,9 +172,11 @@ private:
                                wl_resource *surface_resource);
 
     static const struct wl_hawaii_shell_interface m_desktopShellImpl;
+    static const struct wl_hawaii_shell_surface_interface m_shellSurfaceImpl;
     static const struct wl_notification_daemon_interface m_notificationDaemonImpl;
     static const struct wl_screensaver_interface m_screenSaverImpl;
 
+    std::list<wl_resource *> m_shellSurfaceBindings;
     wl_resource *m_screenSaverBinding;
     wl_event_source *m_screenSaverTimer;
     std::string m_screenSaverPath;

@@ -67,7 +67,7 @@ public:
 
     void end()
     {
-        wl_hawaii_shell_surface_send_popup_done(shsurfResource);
+        wl_hawaii_popup_surface_send_popup_done(shsurfResource);
         Shell::endGrab(this);
         wl_resource *res = shsurfResource;
         shsurfResource = nullptr;
@@ -80,10 +80,10 @@ public:
         Shell::endGrab(this);
     }
 
-    static const struct wl_hawaii_shell_surface_interface m_shellSurfaceImpl;
+    static const struct wl_hawaii_popup_surface_interface m_popupSurfaceImpl;
 };
 
-const struct wl_hawaii_shell_surface_interface PopupGrab::m_shellSurfaceImpl = {
+const struct wl_hawaii_popup_surface_interface PopupGrab::m_popupSurfaceImpl = {
     wrapInterface(&PopupGrab::dismiss)
 };
 
@@ -158,18 +158,18 @@ static void shell_surface_destroyed(wl_resource *res)
 }
 
 DesktopShell::DesktopShell(struct weston_compositor *ec)
-            : Shell(ec)
-            , m_screenSaverBinding(nullptr)
-            , m_screenSaverPath(INSTALL_LIBEXECDIR "/hawaii-screensaver")
-            , m_screenSaverDuration(5*60*1000)
-            , m_inputPanel(nullptr)
-            , m_notificationsEdge(DesktopShell::EdgeRight)
-            , m_notificationsCornerAnchor(DesktopShell::CornerTopRight)
-            , m_notificationsOrder(DesktopShell::OrderNewestFirst)
-            , m_notificationsMargin(20)
-            , m_prepareEventSent(false)
-            , m_locked(false)
-            , m_lockSurface(nullptr)
+    : Shell(ec)
+    , m_screenSaverBinding(nullptr)
+    , m_screenSaverPath(INSTALL_LIBEXECDIR "/hawaii-screensaver")
+    , m_screenSaverDuration(5*60*1000)
+    , m_inputPanel(nullptr)
+    , m_notificationsEdge(DesktopShell::EdgeRight)
+    , m_notificationsCornerAnchor(DesktopShell::CornerTopRight)
+    , m_notificationsOrder(DesktopShell::OrderNewestFirst)
+    , m_notificationsMargin(20)
+    , m_prepareEventSent(false)
+    , m_locked(false)
+    , m_lockSurface(nullptr)
 {
     m_screenSaverChild.shell = this;
     m_screenSaverChild.process.pid = 0;
@@ -185,6 +185,10 @@ void DesktopShell::init()
 
     if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShell(client, version, id); }))
+        return;
+
+    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
+                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
         return;
 
     if (!wl_global_create(compositor()->wl_display, &wl_screensaver_interface, 1, this,
@@ -347,6 +351,21 @@ void DesktopShell::unbindDesktopShell(struct wl_resource *resource)
 
     m_child.desktop_shell = nullptr;
     m_prepareEventSent = false;
+}
+
+
+void DesktopShell::bindDesktopShellSurface(struct wl_client *client, uint32_t version, uint32_t id)
+{
+    struct wl_resource *resource = wl_resource_create(client, &wl_hawaii_shell_surface_interface, version, id);
+
+    wl_resource_set_implementation(resource, &m_shellSurfaceImpl, this,
+                                   [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindDesktopShellSurface(resource); });
+    m_shellSurfaceBindings.push_back(resource);
+}
+
+void DesktopShell::unbindDesktopShellSurface(struct wl_resource *resource)
+{
+    m_shellSurfaceBindings.remove(resource);
 }
 
 void DesktopShell::bindScreenSaver(wl_client *client, uint32_t version, uint32_t id)
@@ -736,25 +755,6 @@ void DesktopShell::setLauncher(struct wl_client *client, struct wl_resource *res
     surface->output = static_cast<weston_output *>(output_resource->data);
 }
 
-void DesktopShell::setSpecial(struct wl_client *client, struct wl_resource *resource,
-                              struct wl_resource *output_resource,
-                              struct wl_resource *surface_resource)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    if (surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role already assigned");
-        return;
-    }
-
-    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
-        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_panelsLayer, width, height); };
-    surface->configure_private = this;
-    surface->output = static_cast<weston_output *>(output_resource->data);
-}
-
 void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource)
 {
     struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
@@ -794,8 +794,8 @@ void DesktopShell::setPopup(struct wl_client *client, struct wl_resource *resour
     if (!grab)
         return;
 
-    grab->shsurfResource = wl_resource_create(client, &wl_hawaii_shell_surface_interface, wl_resource_get_version(resource), id);
-    wl_resource_set_implementation(grab->shsurfResource, &PopupGrab::m_shellSurfaceImpl, grab,
+    grab->shsurfResource = wl_resource_create(client, &wl_hawaii_popup_surface_interface, wl_resource_get_version(resource), id);
+    wl_resource_set_implementation(grab->shsurfResource, &PopupGrab::m_popupSurfaceImpl, grab,
                                    [](struct wl_resource *resource){});
     wl_resource_set_destructor(grab->shsurfResource, shell_surface_destroyed);
     wl_resource_set_user_data(grab->shsurfResource, grab);
@@ -1071,12 +1071,6 @@ void DesktopShell::createGrab(wl_client *client, wl_resource *resource, uint32_t
 const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::addKeyBinding),
     wrapInterface(&DesktopShell::setAvailableGeometry),
-    wrapInterface(&DesktopShell::setBackground),
-    wrapInterface(&DesktopShell::setPanel),
-    wrapInterface(&DesktopShell::setSpecial),
-    wrapInterface(&DesktopShell::setOverlay),
-    wrapInterface(&DesktopShell::setPopup),
-    wrapInterface(&DesktopShell::setDialog),
     wrapInterface(&DesktopShell::setLockSurface),
     wrapInterface(&DesktopShell::setGrabSurface),
     wrapInterface(&DesktopShell::setPosition),
@@ -1089,6 +1083,14 @@ const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::addWorkspace),
     wrapInterface(&DesktopShell::selectWorkspace),
     wrapInterface(&DesktopShell::createGrab)
+};
+
+const struct wl_hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl = {
+    wrapInterface(&DesktopShell::setBackground),
+    wrapInterface(&DesktopShell::setPanel),
+    wrapInterface(&DesktopShell::setOverlay),
+    wrapInterface(&DesktopShell::setPopup),
+    wrapInterface(&DesktopShell::setDialog)
 };
 
 void DesktopShell::notificationConfigure(weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
