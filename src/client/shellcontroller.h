@@ -24,50 +24,36 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef HAWAIISHELL_H
-#define HAWAIISHELL_H
+#ifndef SHELLCONTROLLER_H
+#define SHELLCONTROLLER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 #include <QtQml/QQmlListProperty>
 
-class QScreen;
-class QQmlEngine;
+#include "shellclient.h"
 
-class HawaiiShellImpl;
-class HawaiiShellPrivate;
-class ShellUi;
+class QScreen;
+class ShellClient;
+class ShellControllerPrivate;
 class Window;
 class Workspace;
 class KeyBinding;
-class GrabWindow;
-class LockScreenWindow;
-class SessionManager;
 
-class HawaiiShell : public QObject
+class ShellController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QQmlListProperty<Window> windows READ windows NOTIFY windowsChanged)
-    Q_PROPERTY(QQmlListProperty<Workspace> workspaces READ workspaces NOTIFY workspacesChanged)
-    Q_DECLARE_PRIVATE(HawaiiShell)
+    Q_PRIVATE_PROPERTY(d_ptr, QQmlListProperty<Window> windows READ windows NOTIFY windowsChanged)
+    Q_PRIVATE_PROPERTY(d_ptr, QQmlListProperty<Workspace> workspaces READ workspaces NOTIFY workspacesChanged)
 public:
-    HawaiiShell();
-    ~HawaiiShell();
-
-    static HawaiiShell *instance();
-
-    QQmlEngine *engine() const;
+    ShellController(QObject *parent = 0);
+    virtual ~ShellController();
 
     Q_INVOKABLE QObject *service(const QString &name);
 
     Q_INVOKABLE KeyBinding *addKeyBinding(quint32 key, quint32 modifiers);
 
     Q_INVOKABLE void setAvailableGeometry(QScreen *screen, const QRect &geometry);
-
-    ShellUi *uiController() const;
-
-    QQmlListProperty<Window> windows();
-    QQmlListProperty<Workspace> workspaces();
 
 Q_SIGNALS:
     void windowsChanged();
@@ -82,8 +68,6 @@ Q_SIGNALS:
     void workspaceSwitched(Workspace *workspace);
 
 public Q_SLOTS:
-    void create();
-
     void minimizeWindows();
     void restoreWindows();
     void toggleWindows();
@@ -96,21 +80,17 @@ public Q_SLOTS:
     void selectWorkspace(Workspace *workspace);
 
 private:
-    friend class HawaiiShellImpl;
-    friend class GrabWindow;
-    friend class LockScreenWindow;
-    friend class SessionManager;
+    friend class ShellClient;
 
-    HawaiiShellPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(ShellController)
+    ShellControllerPrivate *const d_ptr;
 
-    static int windowsCount(QQmlListProperty<Window> *p);
-    static Window *windowAt(QQmlListProperty<Window> *p, int index);
-
-    static int workspacesCount(QQmlListProperty<Workspace> *p);
-    static Workspace *workspaceAt(QQmlListProperty<Workspace> *p, int index);
+    Q_PRIVATE_SLOT(d_ptr, void _q_windowAdded(Window *window))
+    Q_PRIVATE_SLOT(d_ptr, void _q_workspaceAdded(Workspace *workspace))
+    Q_PRIVATE_SLOT(d_ptr, void _q_shellReady())
 
 private Q_SLOTS:
     void windowUnmapped(Window *window);
 };
 
-#endif // HAWAIISHELL_H
+#endif // SHELLCONTROLLER_H

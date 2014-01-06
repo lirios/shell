@@ -26,11 +26,9 @@
 
 #include <QtCore/QCoreApplication>
 
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
 #include "lockscreenwindow.h"
 #include "sessionmanager.h"
-#include "shellui.h"
+#include "shellmanager.h"
 
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
@@ -39,17 +37,17 @@ SessionManager::SessionManager(QObject *parent)
 
 void SessionManager::logout()
 {
-    HawaiiShell::instance()->d_ptr->shell->quit();;
+    ShellManager::instance()->shellInterface()->quit();
 }
 
 void SessionManager::lock()
 {
-    HawaiiShell::instance()->d_ptr->shell->lock();;
+    ShellManager::instance()->shellInterface()->lock();
 }
 
 void SessionManager::unlock()
 {
-    HawaiiShell::instance()->d_ptr->shell->unlock();
+    ShellManager::instance()->shellInterface()->unlock();
 
     // Synchronization
     while (QCoreApplication::hasPendingEvents())
@@ -57,7 +55,7 @@ void SessionManager::unlock()
 
     // Close the lock screen, this will unmap the window and
     // save some resources
-    HawaiiShell::instance()->uiController()->closeLockScreenWindow();
+    ShellManager::instance()->ui()->createLockScreenWindow();
 
     // Synchronization
     while (QCoreApplication::hasPendingEvents())

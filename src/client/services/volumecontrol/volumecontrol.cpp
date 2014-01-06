@@ -32,7 +32,7 @@
 #include "volumecontrol_p.h"
 #include "keybinding.h"
 #include "servicefactory.h"
-#include "hawaiishell.h"
+#include "shellmanager.h"
 
 /*
  * VolumeControlPrivate
@@ -49,9 +49,9 @@ VolumeControlPrivate::VolumeControlPrivate()
     initialize();
 
     // Bind volume keys
-    upBinding = HawaiiShell::instance()->addKeyBinding(KEY_VOLUMEUP, 0);
-    downBinding = HawaiiShell::instance()->addKeyBinding(KEY_VOLUMEDOWN, 0);
-    muteBinding = HawaiiShell::instance()->addKeyBinding(KEY_MUTE, 0);
+    upBinding = ShellManager::instance()->controller()->addKeyBinding(KEY_VOLUMEUP, 0);
+    downBinding = ShellManager::instance()->controller()->addKeyBinding(KEY_VOLUMEDOWN, 0);
+    muteBinding = ShellManager::instance()->controller()->addKeyBinding(KEY_MUTE, 0);
 }
 
 void VolumeControlPrivate::initialize()

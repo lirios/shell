@@ -27,8 +27,15 @@
 #ifndef SHELLMANAGER_H
 #define SHELLMANAGER_H
 
+#include <QtCore/QElapsedTimer>
 #include <QtCore/QObject>
 #include <QtCore/QHash>
+
+#include "registrylistener.h"
+#include "shellclient.h"
+#include "shellcontroller.h"
+#include "shellsurfaceclient.h"
+#include "shellui.h"
 
 class QQmlEngine;
 
@@ -44,15 +51,29 @@ public:
 
     QQmlEngine *engine() const;
 
+    ShellController *controller() const;
+    ShellUi *ui() const;
+
+    ShellClient *shellInterface() const;
+    ShellSurfaceClient *shellSurfaceInterface() const;
+
     QString shell() const;
 
     void loadHandlers();
 
+public Q_SLOTS:
+    void create();
+
 Q_SIGNALS:
+    void ready();
     void shellChanged(const QString &shell);
 
 private:
+    QElapsedTimer m_elapsedTimer;
     QQmlEngine *m_engine;
+    RegistryListener *m_registryListener;
+    ShellController *m_shellController;
+    ShellUi *m_shellUi;
     QHash<QString, QObject *> m_handlers;
     QObject *m_currentHandler;
 

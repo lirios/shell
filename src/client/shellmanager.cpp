@@ -24,23 +24,55 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtQml/QQmlComponent>
+#include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>
+#include <QtQuick/QQuickWindow>
 
 #include <HawaiiShell/PluginMetadata>
 
+#include "applicationiconprovider.h"
 #include "cmakedirs.h"
+#include "registration.h"
 #include "shellmanager.h"
 
 Q_GLOBAL_STATIC(ShellManager, s_shellManager)
 
 ShellManager::ShellManager()
     : m_engine(new QQmlEngine(this))
+    , m_registryListener(new RegistryListener())
+    , m_shellUi(nullptr)
     , m_currentHandler(nullptr)
 {
+    // Start counting how much time we need to start up :)
+    m_elapsedTimer.start();
+
+    // Register Wayland interfaces
+    m_registryListener->run();
+
+    // We need windows with alpha buffer
+    QQuickWindow::setDefaultAlphaBuffer(true);
+
+    // Register image provider
+    m_engine->addImageProvider("appicon", new ApplicationIconProvider);
+
+    // Register QML types
+    Registration::registerQmlTypes();
+
+    // Load shell handlers
     loadHandlers();
+
+    // Create the shell controller
+    m_shellController = new ShellController(this);
+    m_engine->rootContext()->setContextProperty("Shell", m_shellController);
+}
+
+ShellManager::~ShellManager()
+{
+    delete m_registryListener;
 }
 
 ShellManager *ShellManager::instance()
@@ -51,6 +83,26 @@ ShellManager *ShellManager::instance()
 QQmlEngine *ShellManager::engine() const
 {
     return m_engine;
+}
+
+ShellController *ShellManager::controller() const
+{
+    return m_shellController;
+}
+
+ShellUi *ShellManager::ui() const
+{
+    return m_shellUi;
+}
+
+ShellClient *ShellManager::shellInterface() const
+{
+    return m_registryListener->shell;
+}
+
+ShellSurfaceClient *ShellManager::shellSurfaceInterface() const
+{
+    return m_registryListener->shellSurface;
 }
 
 QString ShellManager::shell() const
@@ -90,6 +142,34 @@ void ShellManager::loadHandlers()
     }
 
     updateShell();
+}
+
+void ShellManager::create()
+{
+    // Create shell user interface
+    m_shellUi = new ShellUi(this);
+    m_engine->rootContext()->setContextProperty("Ui", m_shellUi);
+
+    // Add configured workspaces
+    // TODO: Add as many workspaces as specified by the settings
+    m_shellController->addWorkspaces(4);
+
+#if 0
+    // Register daemons and singletons
+    d->registrar = new QQmlComponent(d->engine, QUrl("qrc:/qml/Registrar.qml"), this);
+    if (d->registrar->status() != QQmlComponent::Ready)
+        qFatal("Unable to register daemons and singletons: %s",
+               qPrintable(d->registrar->errorString()));
+    (void)d->registrar->create();
+#endif
+
+    // Wait until all user interface elements for all screens are ready
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
+
+    // Shell user interface is ready, tell the compositor to fade in
+    qDebug() << "Shell is now ready, elapsed time:" << m_elapsedTimer.elapsed() << "ms";
+    Q_EMIT ready();
 }
 
 void ShellManager::updateShell()

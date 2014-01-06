@@ -31,8 +31,7 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "desktopview.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
+#include "shellmanager.h"
 
 using namespace Hawaii::Shell;
 
@@ -60,7 +59,7 @@ void DesktopView::setWindowType()
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    HawaiiShell::instance()->d_ptr->shell->set_background(output, surface);
+    ShellManager::instance()->shellSurfaceInterface()->set_background(output, surface);
 }
 
 void DesktopView::changeGeometry(const QRect &geometry)

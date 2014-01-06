@@ -33,7 +33,6 @@
 
 #include "desktopview.h"
 #include "grabwindow.h"
-#include "hawaiishell.h"
 #include "lockscreenwindow.h"
 #include "panelview.h"
 #include "shellui.h"
@@ -91,6 +90,11 @@ void ShellUi::closeLockScreenWindow()
     m_lockScreenWindow = 0;
 }
 
+void ShellUi::setGrabCursor(const QCursor &cursor)
+{
+    m_grabWindow->setGrabCursor(cursor);
+}
+
 void ShellUi::setNumWorkspaces(int num)
 {
     // At least one!
@@ -99,13 +103,13 @@ void ShellUi::setNumWorkspaces(int num)
         return;
     }
 
-    HawaiiShell *shell = HawaiiShell::instance();
+    ShellController *controller = ShellManager::instance()->controller();
 
     // Add as many workspaces as needed
     for (; m_numWorkspaces < num; ++m_numWorkspaces)
-        shell->addWorkspace();
+        controller->addWorkspace();
     while (m_numWorkspaces > num)
-        shell->removeWorkspace(--m_numWorkspaces);
+        controller->removeWorkspace(--m_numWorkspaces);
 }
 
 void ShellUi::screenAdded(QScreen *screen)

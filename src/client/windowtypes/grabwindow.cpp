@@ -29,8 +29,7 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "grabwindow.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
+#include "shellmanager.h"
 
 GrabWindow::GrabWindow()
     : QWindow()
@@ -55,8 +54,7 @@ void GrabWindow::setWindowType()
     wl_surface *surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_grab_surface(surface);
+    ShellManager::instance()->shellInterface()->set_grab_surface(surface);
 }
 
 #include "moc_grabwindow.cpp"

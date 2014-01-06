@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,37 +24,32 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef WORKSPACE_H
-#define WORKSPACE_H
+#ifndef REGISTRYLISTENER_H
+#define REGISTRYLISTENER_H
 
-#include <QtCore/QObject>
+#include "shellclient.h"
+#include "shellsurfaceclient.h"
 
-class ShellClient;
-class ShellController;
-class WorkspacePrivate;
-
-class Workspace : public QObject
+class RegistryListener
 {
-    Q_OBJECT
-    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
-    Q_DISABLE_COPY(Workspace)
-    Q_DECLARE_PRIVATE(Workspace)
 public:
-    Workspace(bool active, QObject *parent = 0);
+    RegistryListener();
+    ~RegistryListener();
 
-    bool isActive() const;
+    ShellClient *shell;
+    ShellSurfaceClient *shellSurface;
 
-Q_SIGNALS:
-    void activeChanged(bool value);
-
-public Q_SLOTS:
-    void activate();
+    void run();
 
 private:
-    friend class ShellClient;
-    friend class ShellController;
+    static void handleGlobal(void *data, struct ::wl_registry *registry,
+                             uint32_t id, const char *interface,
+                             uint32_t version);
+    static void handleGlobalRemove(void *data,
+                                   struct ::wl_registry *registry,
+                                   uint32_t name);
 
-    WorkspacePrivate *const d_ptr;
+    static const struct wl_registry_listener listener;
 };
 
-#endif // WORKSPACE_H
+#endif // REGISTRYLISTENER_H

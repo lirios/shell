@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,37 +24,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef WORKSPACE_H
-#define WORKSPACE_H
+#ifndef SHELLSURFACECLIENT_H
+#define SHELLSURFACECLIENT_H
 
-#include <QtCore/QObject>
+#include "qwayland-hawaii.h"
 
-class ShellClient;
-class ShellController;
-class WorkspacePrivate;
-
-class Workspace : public QObject
+class ShellSurfaceClient : public QtWayland::wl_hawaii_shell_surface
 {
-    Q_OBJECT
-    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
-    Q_DISABLE_COPY(Workspace)
-    Q_DECLARE_PRIVATE(Workspace)
 public:
-    Workspace(bool active, QObject *parent = 0);
-
-    bool isActive() const;
-
-Q_SIGNALS:
-    void activeChanged(bool value);
-
-public Q_SLOTS:
-    void activate();
-
-private:
-    friend class ShellClient;
-    friend class ShellController;
-
-    WorkspacePrivate *const d_ptr;
+    ShellSurfaceClient();
 };
 
-#endif // WORKSPACE_H
+#endif // SHELLSURFACECLIENT_H

@@ -29,14 +29,9 @@
 #include <QtQml/QQmlDebuggingEnabler>
 #include <QtWidgets/QApplication>
 
-#include "hawaiishell.h"
-<<<<<<< HEAD
-#include "notificationsdaemon.h"
-#include "shellmanager.h"
-=======
->>>>>>> 96b1e3e... notifications: Separate notifications daemon from the shell client
 #include "config.h"
 #include "gitsha1.h"
+#include "shellmanager.h"
 
 #include <execinfo.h>
 #include <stdio.h>

@@ -26,7 +26,7 @@
 
 #include "workspace.h"
 #include "workspace_p.h"
-#include "hawaiishell.h"
+#include "shellmanager.h"
 
 /*
  * WorkspacePrivate
@@ -81,7 +81,7 @@ bool Workspace::isActive() const
 
 void Workspace::activate()
 {
-    HawaiiShell::instance()->selectWorkspace(this);
+    ShellManager::instance()->controller()->selectWorkspace(this);
 }
 
 #include "moc_workspace.cpp"

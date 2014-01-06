@@ -33,11 +33,10 @@
 #include <qpa/qplatformnativeinterface.h>
 
 #include "lockscreenwindow.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
+#include "shellmanager.h"
 
 LockScreenWindow::LockScreenWindow()
-    : QQuickView(HawaiiShell::instance()->engine(), new QWindow(QGuiApplication::primaryScreen()))
+    : QQuickView(ShellManager::instance()->engine(), new QWindow(QGuiApplication::primaryScreen()))
     , m_surface(0)
 {
     // Set custom window type
@@ -71,8 +70,7 @@ void LockScreenWindow::setWindowType()
     m_surface = static_cast<struct wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_lock_surface(m_surface);
+    ShellManager::instance()->shellInterface()->set_lock_surface(m_surface);
 }
 
 void LockScreenWindow::geometryChanged(const QRect &rect)

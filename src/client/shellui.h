@@ -49,6 +49,8 @@ public Q_SLOTS:
     void createLockScreenWindow();
     void closeLockScreenWindow();
 
+    void setGrabCursor(const QCursor &cursor);
+
     void setNumWorkspaces(int num);
 
 private:

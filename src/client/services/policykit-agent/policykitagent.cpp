@@ -36,8 +36,6 @@
 
 #include "policykitagent.h"
 #include "policykitagent_p.h"
-#include "hawaiishell.h"
-#include "shellui.h"
 
 #include <polkitqt1-subject.h>
 

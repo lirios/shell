@@ -33,7 +33,7 @@
 #include "enums.h"
 #include "registration.h"
 #include "keybinding.h"
-#include "hawaiishell.h"
+#include "shellcontroller.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
 #include "policykitagent.h"

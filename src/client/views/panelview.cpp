@@ -31,8 +31,7 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "panelview.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
+#include "shellmanager.h"
 
 using namespace Hawaii::Shell;
 
@@ -56,8 +55,7 @@ void PanelView::setWindowType()
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_panel(output, surface);
+    ShellManager::instance()->shellSurfaceInterface()->set_panel(output, surface);
 }
 
 #include "moc_panelview.cpp"

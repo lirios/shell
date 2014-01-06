@@ -38,10 +38,13 @@ set(SOURCES
     applicationsmodel.cpp
     enums.cpp
     keybinding.cpp
-    hawaiishell.cpp
     main.cpp
     registration.cpp
+    registrylistener.cpp
+    shellclient.cpp
+    shellcontroller.cpp
     shellmanager.cpp
+    shellsurfaceclient.cpp
     shellui.cpp
     shortcut.cpp
     window.cpp
