@@ -37,6 +37,8 @@ using namespace Hawaii::Shell;
 
 PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
     : QuickView(engine, new QWindow(screen))
+    , m_location(Types::BottomEdge)
+    , m_alignment(Qt::AlignLeft)
 {
     // Set Wayland window type
     setWindowType();
@@ -44,6 +46,32 @@ PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
     // Debugging message
     qDebug() << "-> Created PanelView with geometry"
              << geometry();
+}
+
+Hawaii::Shell::Types::Location PanelView::location() const
+{
+    return m_location;
+}
+
+void PanelView::setLocation(Hawaii::Shell::Types::Location location)
+{
+    if (m_location != location) {
+        m_location = location;
+        Q_EMIT locationChanged();
+    }
+}
+
+Qt::Alignment PanelView::alignment() const
+{
+    return m_alignment;
+}
+
+void PanelView::setAlignment(Qt::Alignment alignment)
+{
+    if (m_alignment != alignment) {
+        m_alignment = alignment;
+        Q_EMIT alignmentChanged();
+    }
 }
 
 void PanelView::setWindowType()

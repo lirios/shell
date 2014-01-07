@@ -29,6 +29,7 @@
 
 #include <QtQuick/QQuickView>
 
+#include <HawaiiShell/HawaiiShell>
 #include <HawaiiShell/QuickView>
 
 class QQmlEngine;
@@ -37,10 +38,25 @@ class QScreen;
 class PanelView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
+    Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
+    Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
 public:
     explicit PanelView(QQmlEngine *engine, QScreen *screen);
 
+    Hawaii::Shell::Types::Location location() const;
+    void setLocation(Hawaii::Shell::Types::Location location);
+
+    Qt::Alignment alignment() const;
+    void setAlignment(Qt::Alignment alignment);
+
+Q_SIGNALS:
+    void locationChanged();
+    void alignmentChanged();
+
 private:
+    Hawaii::Shell::Types::Location m_location;
+    Qt::Alignment m_alignment;
+
     void setWindowType();
 };
 
