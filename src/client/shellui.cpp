@@ -146,7 +146,6 @@ void ShellUi::screenDestroyed(QObject *object)
         if (view->screen() == screen) {
             view->deleteLater();
             m_desktopViews.removeOne(view);
-            break;
         }
     }
 
