@@ -26,6 +26,8 @@
 
 #include <QtQml/QQmlComponent>
 
+#include <HawaiiShell/HawaiiShell>
+
 #include "appcategories.h"
 #include "appinfo.h"
 #include "applicationsmodel.h"
@@ -70,6 +72,8 @@ void Registration::registerQmlTypes()
     // Enums
     qmlRegisterUncreatableType<UserStatus>(uri, 1, 0, "UserStatus",
                                            QStringLiteral("Do not create UserStatus"));
+    qmlRegisterUncreatableType<Hawaii::Shell::Types>(uri, 1, 0, "Types",
+                                                     QStringLiteral("Do not create Types"));
 }
 
 void Registration::registerFactories()

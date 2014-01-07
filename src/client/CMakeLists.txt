@@ -21,6 +21,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/launcher
     ${CMAKE_CURRENT_SOURCE_DIR}/views
     ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
+    ${CMAKE_CURRENT_SOURCE_DIR}/scripting
     ${CMAKE_CURRENT_SOURCE_DIR}/services
     ${CMAKE_CURRENT_SOURCE_DIR}/services/datetime
     ${CMAKE_CURRENT_SOURCE_DIR}/services/policykit-agent
@@ -51,6 +52,8 @@ set(SOURCES
     workspace.cpp
     launcher/launcheritem.cpp
     launcher/launchermodel.cpp
+    scripting/appinterface.cpp
+    scripting/scriptengine.cpp
     services/servicefactory.cpp
     services/datetime/datetime.cpp
     services/policykit-agent/policykitagent.cpp
@@ -79,7 +82,7 @@ qtwayland_add_protocol_client(SOURCES
 qt5_add_resources(RESOURCES client.qrc)
 
 add_executable(hawaii-shell-client ${SOURCES} ${RESOURCES})
-qt5_use_modules(hawaii-shell-client Quick Widgets)
+qt5_use_modules(hawaii-shell-client Quick Widgets Script)
 set_target_properties(hawaii-shell-client PROPERTIES
     COMPILE_FLAGS "-rdynamic"
     LINK_FLAGS "-L${WaylandClient_LIBDIR} -L${POLKITQT-1_LIB_DIR}"

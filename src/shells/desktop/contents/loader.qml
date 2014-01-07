@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import "layout.js" as Layout
 
 QtObject {
     /*! Internal name */
@@ -43,6 +42,4 @@ QtObject {
 
     /*! Set to \c true when this handler is loaded */
     property bool loaded: false
-
-    Component.onCompleted: Layout.setup()
 }

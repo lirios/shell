@@ -15,6 +15,7 @@ at least the following modules:
 
 * qtbase
 * qtdeclarative
+* qtscript
 * qtwayland
 
 At the time of this writing, the qtwayland module doesn't support Wayland 1.3

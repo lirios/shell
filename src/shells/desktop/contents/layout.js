@@ -24,14 +24,12 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-function setup() {
-/*
-    for (var i = 0; i < shell.screens.length; i++) {
-        var panel = new Panel(shell.screens[i]);
-        panel.location = "bottom";
-        panel.addWidget("org.hawaii.elements.appchooser");
-        panel.addWidget("org.hawaii.elements.launcher");
-        panel.addWidget("org.hawaii.elements.indicators");
-    }
-*/
+for (var i = 0; i < screenCount; i++) {
+    var panel = new Panel(i);
+    /*
+    panel.location = "bottom";
+    panel.addWidget("org.hawaii.elements.appchooser");
+    panel.addWidget("org.hawaii.elements.launcher");
+    panel.addWidget("org.hawaii.elements.indicators");
+    */
 }

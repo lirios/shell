@@ -30,6 +30,8 @@
 #include <QtCore/QObject>
 #include <QtGui/QScreen>
 
+#include "scriptengine.h"
+
 class DesktopView;
 class GrabWindow;
 class LockScreenWindow;
@@ -42,9 +44,14 @@ public:
     ShellUi(QObject *parent = 0);
     ~ShellUi();
 
+    ScriptEngine *jsEngine() const;
+
     GrabWindow *grabWindow() const;
 
     LockScreenWindow *lockScreenWindow() const;
+
+    QList<DesktopView *> desktops() const;
+    QList<PanelView *> panels() const;
 
     void load();
 
@@ -57,6 +64,7 @@ public Q_SLOTS:
     void setNumWorkspaces(int num);
 
 private:
+    ScriptEngine *m_jsEngine;
     int m_numWorkspaces;
     GrabWindow *m_grabWindow;
     LockScreenWindow *m_lockScreenWindow;
@@ -66,6 +74,9 @@ private:
 private Q_SLOTS:
     void screenAdded(QScreen *screen);
     void screenDestroyed(QObject *object);
+
+    void printScriptMessage(const QString &text);
+    void printScriptError(const QString &text);
 };
 
 #endif // SHELLUI_H

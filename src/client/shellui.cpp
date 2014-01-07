@@ -44,6 +44,13 @@ ShellUi::ShellUi(QObject *parent)
     , m_numWorkspaces(0)
     , m_lockScreenWindow(nullptr)
 {
+    // Create and connect JavaScript engine
+    m_jsEngine = new ScriptEngine(this);
+    connect(m_jsEngine, &ScriptEngine::print,
+            this, &ShellUi::printScriptMessage);
+    connect(m_jsEngine, &ScriptEngine::printError,
+            this, &ShellUi::printScriptError);
+
     // Create grab window
     m_grabWindow = new GrabWindow();
     m_grabWindow->show();
@@ -59,6 +66,11 @@ ShellUi::~ShellUi()
     qDeleteAll(m_desktopViews);
 }
 
+ScriptEngine *ShellUi::jsEngine() const
+{
+    return m_jsEngine;
+}
+
 GrabWindow *ShellUi::grabWindow() const
 {
     return m_grabWindow;
@@ -69,12 +81,30 @@ LockScreenWindow *ShellUi::lockScreenWindow() const
     return m_lockScreenWindow;
 }
 
+QList<DesktopView *> ShellUi::desktops() const
+{
+    return m_desktopViews;
+}
+
+QList<PanelView *> ShellUi::panels() const
+{
+    return m_panelViews;
+}
+
 void ShellUi::load()
 {
     for (QScreen *screen: QGuiApplication::screens())
         screenAdded(screen);
     connect(qApp, &QGuiApplication::screenAdded,
             this, &ShellUi::screenAdded);
+
+    QString fileName = ShellManager::instance()->shellDirectory().filePath("layout.js");
+    QFile file(fileName);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString script = file.readAll();
+        file.close();
+        m_jsEngine->evaluateScript(script, "layout.js");
+    }
 }
 
 void ShellUi::createLockScreenWindow()
@@ -152,6 +182,16 @@ void ShellUi::screenDestroyed(QObject *object)
     // Move all panels on a deleted screen to the primary screen
     for (PanelView *view: m_panelViews)
         view->setScreen(QGuiApplication::primaryScreen());
+}
+
+void ShellUi::printScriptMessage(const QString &text)
+{
+    qDebug() << qPrintable(text);
+}
+
+void ShellUi::printScriptError(const QString &text)
+{
+    qWarning() << qPrintable(text);
 }
 
 #include "moc_shellui.cpp"
