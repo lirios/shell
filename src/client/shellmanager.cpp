@@ -108,7 +108,9 @@ QString ShellManager::shell() const
 
 QDir ShellManager::shellDirectory() const
 {
-    return m_shellDir;
+    if (m_currentHandler)
+        return m_currentHandler->property("path").toString();
+    return QDir();
 }
 
 void ShellManager::loadHandlers()
@@ -135,10 +137,13 @@ void ShellManager::loadHandlers()
         for (QQmlError error: component.errors())
             qWarning() << "Error:" << error.toString();
 
-        // Register shell handler and save the base directory
         if (handler) {
+            // Register shell handler and save the base directory
             registerHandler(name, handler);
-            m_shellDir = shellsDir.absoluteFilePath(dirName + QStringLiteral("/contents/"));
+
+            // Save shell path
+            const QString path = shellsDir.absoluteFilePath(dirName + QStringLiteral("/contents/"));
+            handler->setProperty("path", path);;
         }
     }
 

@@ -31,6 +31,10 @@ QtObject {
     /*! Internal name */
     property string shell: "org.hawaii.shells.desktop"
 
+    /*! Path of this shell handler (set by the shell manager) */
+    //property string path: "package://shell/org.hawaii.shells.desktop"
+    property string path: ""
+
     /*! Returns \a true if current hardware setup demands this handler */
     property bool willing: true
 

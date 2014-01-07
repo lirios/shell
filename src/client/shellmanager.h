@@ -79,7 +79,6 @@ private:
     ShellUi *m_shellUi;
     QHash<QString, QObject *> m_handlers;
     QObject *m_currentHandler;
-    QDir m_shellDir;
 
     void updateShell();
 
