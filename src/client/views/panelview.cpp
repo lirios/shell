@@ -35,6 +35,8 @@
 
 using namespace Hawaii::Shell;
 
+const QString s_panelViewFileName = QStringLiteral("views/PanelView.qml");
+
 PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
     : QuickView(engine, new QWindow(screen))
     , m_location(Types::BottomEdge)
@@ -42,6 +44,10 @@ PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
 {
     // Set Wayland window type
     setWindowType();
+
+    // Load QML source file
+    QString fileName = ShellManager::instance()->shellDirectory().filePath(s_panelViewFileName);
+    setSource(QUrl::fromLocalFile(fileName));
 
     // Debugging message
     qDebug() << "-> Created PanelView with geometry"
