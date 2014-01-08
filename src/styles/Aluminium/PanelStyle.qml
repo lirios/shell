@@ -30,8 +30,12 @@ import Hawaii.Shell.Styles.Base 1.0
 PanelStyle {
     panelColor: Qt.rgba(0, 0, 0, 0.7)
 
+    padding {
+        left: 2
+        top: 2
+    }
+
     panel: Rectangle {
-        implicitHeight: __item.size
         color: panelColor
     }
 }

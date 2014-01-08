@@ -1,7 +1,6 @@
 set(MODULE_FILES
     AppChooserButtonStyle.qml
     DialogStyle.qml
-    LauncherStyle.qml
     NotificationBubbleStyle.qml
     OverlayStyle.qml
     PanelIndicatorStyle.qml

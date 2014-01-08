@@ -39,7 +39,7 @@ Item {
     StyledItem {
         id: styledItem
         anchors.fill: parent
-        style: Qt.createComponent(StyleSettings.path + "/LauncherStyle.qml", panelView)
+        style: Qt.createComponent(StyleSettings.path + "/PanelStyle.qml", panelView)
 
         property Item currentLayout: view.location == Shell.Types.Vertical ? column : row
 
