@@ -48,6 +48,9 @@ PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
     setFormFactor(Types::Horizontal);
     setLocation(Types::BottomEdge);
 
+    // Resize root object to view
+    setResizeMode(QuickView::SizeRootObjectToView);
+
     // Set Wayland window type
     setWindowType();
 
