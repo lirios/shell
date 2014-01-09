@@ -42,6 +42,19 @@ public:
     ~Types();
 
     /*!
+        Describes the form factor of an element.
+    */
+    enum FormFactor {
+        /*! Element is on a plane. */
+        Plane = 0,
+        /*! Horizontal element. */
+        Horizontal,
+        /*! Vertical element. */
+        Vertical
+    };
+    Q_ENUMS(FormFactor)
+
+    /*!
         Describes where on the screen an element is positioned.
     */
     enum Location {

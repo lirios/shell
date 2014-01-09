@@ -41,7 +41,7 @@ Item {
         anchors.fill: parent
         style: Qt.createComponent(StyleSettings.path + "/PanelStyle.qml", panelView)
 
-        property Item currentLayout: view.location == Shell.Types.Vertical ? column : row
+        property Item currentLayout: view.formFactor == Shell.Types.Vertical ? column : row
 
         RowLayout {
             id: row

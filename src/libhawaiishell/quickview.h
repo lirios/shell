@@ -40,6 +40,7 @@ class QuickViewPrivate;
 class HAWAIISHELL_EXPORT QuickView : public QQuickView
 {
     Q_OBJECT
+    Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
     Q_PROPERTY(QRectF screenGeometry READ screenGeometry NOTIFY screenGeometryChanged)
 public:
@@ -62,6 +63,17 @@ public:
     virtual ~QuickView();
 
     /*!
+     * \return the form factor of this view.
+     */
+    Hawaii::Shell::Types::FormFactor formFactor() const;
+
+    /*!
+     * Sets the form factor of this view.
+     * \param formFactor the form factor of the view
+     */
+    void setFormFactor(Types::FormFactor formFactor);
+
+    /*!
      * \return the location of this view.
      */
     Hawaii::Shell::Types::Location location() const;
@@ -78,6 +90,12 @@ public:
     QRectF screenGeometry() const;
 
 Q_SIGNALS:
+    /*!
+     * Emitted when the form factor is changed.
+     * \param formFactor the new form factorof the view
+     */
+    void formFactorChanged(Hawaii::Shell::Types::FormFactor formFactor);
+
     /*!
      * Emitted when the location is changed.
      * \param location the new location of the view

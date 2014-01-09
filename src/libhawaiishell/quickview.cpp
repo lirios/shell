@@ -42,6 +42,7 @@ class QuickViewPrivate
 public:
     QuickViewPrivate(QuickView *view);
 
+    Types::FormFactor formFactor;
     Types::Location location;
 
     void initialize();
@@ -51,7 +52,8 @@ protected:
 };
 
 QuickViewPrivate::QuickViewPrivate(QuickView *view)
-    : location(Types::Desktop)
+    : formFactor(Types::Plane)
+    , location(Types::Desktop)
     , q_ptr(view)
 {
 }
@@ -102,6 +104,22 @@ QuickView::~QuickView()
     delete d_ptr;
 }
 
+Hawaii::Shell::Types::FormFactor QuickView::formFactor() const
+{
+    Q_D(const QuickView);
+    return d->formFactor;
+}
+
+void QuickView::setFormFactor(Types::FormFactor formFactor)
+{
+    Q_D(QuickView);
+
+    if (d->formFactor != formFactor) {
+        d->formFactor = formFactor;
+        Q_EMIT formFactorChanged(formFactor);
+    }
+}
+
 Hawaii::Shell::Types::Location QuickView::location() const
 {
     Q_D(const QuickView);
@@ -114,6 +132,24 @@ void QuickView::setLocation(Types::Location location)
 
     if (d->location != location) {
         d->location = location;
+
+        switch (d->location) {
+        case Types::LeftEdge:
+            setFormFactor(Types::Vertical);
+            break;
+        case Types::TopEdge:
+            setFormFactor(Types::Horizontal);
+            break;
+        case Types::RightEdge:
+            setFormFactor(Types::Vertical);
+            break;
+        case Types::BottomEdge:
+            setFormFactor(Types::Horizontal);
+            break;
+        default:
+            break;
+        }
+
         Q_EMIT locationChanged(location);
     }
 }
