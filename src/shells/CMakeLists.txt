@@ -1,2 +1,1 @@
-install(DIRECTORY desktop
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/hawaii/shells)
+hawaiishell_install_package(shell org.hawaii.shells.desktop desktop)

@@ -65,6 +65,9 @@ set(ADDITIONAL_LDLIBPATH "" CACHE STRING "Additional library path that starthawa
 # Same for PATH
 set(ADDITIONAL_PATH "" CACHE STRING "Additional path that starthawaii will use")
 
+# Include our macros
+include(${CMAKE_SOURCE_DIR}/src/libhawaiishell/HF1HawaiiShellMacros.cmake)
+
 # Find Qt5
 find_package(Qt5 5.2 REQUIRED COMPONENTS DBus Qml Quick)
 include(QtWayland)

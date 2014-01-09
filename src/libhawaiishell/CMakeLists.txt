@@ -55,6 +55,7 @@ install(TARGETS HF1HawaiiShell
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/HF1HawaiiShellConfig.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/HF1HawaiiShellConfigVersion.cmake
+    HF1HawaiiShellMacros.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/HF1HawaiiShell
     COMPONENT Devel
 )
