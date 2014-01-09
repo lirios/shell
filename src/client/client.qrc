@@ -8,16 +8,6 @@
 
         <!-- Dialogs -->
         <file>qml/AuthenticationDialog.qml</file>
-        <file>qml/ShutdownDialog.qml</file>
-
-        <!-- Indicators -->
-        <file>qml/Indicator.qml</file>
-        <file>qml/DateTimeIndicator.qml</file>
-        <file>qml/VolumeIndicator.qml</file>
-        <file>qml/StatusArea.qml</file>
-        <file>qml/StatusMenu.qml</file>
-        <file>qml/UserView.qml</file>
-        <file>qml/ShutdownView.qml</file>
 
         <!-- LockScreen -->
         <file>qml/LockScreen.qml</file>
