@@ -27,6 +27,8 @@
 #ifndef WINDOW_P_H
 #define WINDOW_P_H
 
+#include <HawaiiShell/AppInfo>
+
 #include "qwayland-hawaii.h"
 
 /*!
@@ -82,7 +84,7 @@ public:
     QString title;
     QString identifier;
     Window::States state;
-    AppInfo *appInfo;
+    Hawaii::Shell::AppInfo *appInfo;
 
 protected:
     virtual void hawaii_window_title_changed(const QString &title);

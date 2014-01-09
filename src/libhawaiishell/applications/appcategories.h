@@ -29,7 +29,13 @@
 
 #include <QtCore/QAbstractListModel>
 
-class AppCategories : public QAbstractListModel
+#include <HawaiiShell/Export>
+
+namespace Hawaii {
+
+namespace Shell {
+
+class HAWAIISHELL_EXPORT AppCategories : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -49,5 +55,9 @@ private:
     typedef QPair<QString, QString> AppCategoryPair;
     QList<AppCategoryPair> m_categories;
 };
+
+} // namespace Shell
+
+} // namespace Hawaii
 
 #endif // APPCATEGORIES_H

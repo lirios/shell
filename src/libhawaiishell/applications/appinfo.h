@@ -29,9 +29,15 @@
 
 #include <QtCore/QObject>
 
+#include <HawaiiShell/Export>
+
 #include "xdgdesktopfile.h"
 
-class AppInfo : public QObject, public XdgDesktopFile
+namespace Hawaii {
+
+namespace Shell {
+
+class HAWAIISHELL_EXPORT AppInfo : public QObject, public XdgDesktopFile
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
@@ -56,5 +62,9 @@ Q_SIGNALS:
 public Q_SLOTS:
     void launch();
 };
+
+} // namespace Shell
+
+} // namespace Hawaii
 
 #endif // APPINFO_H

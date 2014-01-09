@@ -31,7 +31,8 @@
 #include <QtQml/QQmlComponent>
 #include <QtQml/QQmlPropertyMap>
 
-class AppInfo;
+#include <HawaiiShell/AppInfo>
+
 class WindowPrivate;
 class ShellClient;
 
@@ -75,7 +76,7 @@ public:
     States state() const;
     void setState(const States &state);
 
-    AppInfo *appInfo() const;
+    Hawaii::Shell::AppInfo *appInfo() const;
 
     static QQmlPropertyMap *qmlAttachedProperties(QObject *);
 

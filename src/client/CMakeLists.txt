@@ -13,6 +13,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell
+    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/applications
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell/settings
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell/includes
     ${CMAKE_BINARY_DIR}/src/libhawaiishell
@@ -31,11 +32,7 @@ include_directories(
 )
 
 set(SOURCES
-    ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg/xdgdesktopfile.cpp
-    appcategories.cpp
-    appinfo.cpp
     applicationiconprovider.cpp
-    applicationsmodel.cpp
     enums.cpp
     keybinding.cpp
     main.cpp

@@ -28,9 +28,6 @@
 
 #include <HawaiiShell/HawaiiShell>
 
-#include "appcategories.h"
-#include "appinfo.h"
-#include "applicationsmodel.h"
 #include "datetime.h"
 #include "enums.h"
 #include "registration.h"
@@ -50,12 +47,6 @@ void Registration::registerQmlTypes()
 {
     // @uri Hawaii.Shell
     const char *uri = "Hawaii.Shell";
-
-    // Launcher stuff
-    qmlRegisterType<AppCategories>(uri, 1, 0, "XdgCategoriesModel");
-    qmlRegisterType<ApplicationsModel>(uri, 1, 0, "ApplicationsModel");
-    qmlRegisterUncreatableType<AppInfo>(uri, 1, 0, "AppInfo",
-                                        QStringLiteral("Do not create AppInfo"));
 
     // Shell types
     qmlRegisterType<Shortcut>(uri, 1, 0, "Shortcut");

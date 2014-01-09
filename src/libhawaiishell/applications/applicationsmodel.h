@@ -32,10 +32,17 @@
 #include <QtCore/QSortFilterProxyModel>
 #include <QtQml/QQmlComponent>
 
+#include <HawaiiShell/Export>
+
 class QFileSystemWatcher;
+
+namespace Hawaii {
+
+namespace Shell {
+
 class AppInfo;
 
-class ApplicationsModel : public QAbstractListModel
+class HAWAIISHELL_EXPORT ApplicationsModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -69,8 +76,6 @@ private Q_SLOTS:
     void directoryChanged(const QString &path);
 };
 
-QML_DECLARE_TYPE(ApplicationsModel)
-
 class ApplicationsModelSorted : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -82,6 +87,11 @@ private:
     ApplicationsModel *m_model;
 };
 
-QML_DECLARE_TYPE(ApplicationsModelSorted)
+} // namespace Shell
+
+} // namesapce Hawaii
+
+QML_DECLARE_TYPE(Hawaii::Shell::ApplicationsModel)
+QML_DECLARE_TYPE(Hawaii::Shell::ApplicationsModelSorted)
 
 #endif // APPLICATIONSMODEL_H

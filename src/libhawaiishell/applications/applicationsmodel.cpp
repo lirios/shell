@@ -33,6 +33,10 @@
 #include "applicationsmodel.h"
 #include "appinfo.h"
 
+namespace Hawaii {
+
+namespace Shell {
+
 /*
  * ApplicationsModel
  */
@@ -180,5 +184,9 @@ ApplicationsModelSorted::~ApplicationsModelSorted()
 {
     delete m_model;
 }
+
+} // namespace Shell
+
+} // namespace Hawaii
 
 #include "moc_applicationsmodel.cpp"

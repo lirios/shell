@@ -29,6 +29,10 @@
 
 #include "appinfo.h"
 
+namespace Hawaii {
+
+namespace Shell {
+
 AppInfo::AppInfo(QObject *parent)
     : QObject(parent)
     , XdgDesktopFile()
@@ -88,5 +92,9 @@ void AppInfo::launch()
 {
     startDetached();
 }
+
+} // namespace Shell
+
+} // namespace Hawaii
 
 #include "moc_appinfo.cpp"

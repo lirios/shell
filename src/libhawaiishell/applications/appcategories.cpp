@@ -29,6 +29,10 @@
 
 #include "appcategories.h"
 
+namespace Hawaii {
+
+namespace Shell {
+
 AppCategories::AppCategories(QObject *parent)
     : QAbstractListModel(parent)
 {
@@ -80,5 +84,9 @@ int AppCategories::rowCount(const QModelIndex &parent) const
 
     return m_categories.size();
 }
+
+} // namespace Shell
+
+} // namespace Hawaii
 
 #include "moc_appcategories.cpp"

@@ -2,6 +2,7 @@ include_directories(
     ${QtConfiguration_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/applications
     ${CMAKE_CURRENT_SOURCE_DIR}/settings
     ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -9,6 +10,9 @@ include_directories(
 
 set(SOURCES
     ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg/xdgdesktopfile.cpp
+    applications/appcategories.cpp
+    applications/appinfo.cpp
+    applications/applicationsmodel.cpp
     hawaiishell.cpp
     pluginmetadata.cpp
     quickview.cpp
@@ -19,6 +23,9 @@ set(SOURCES
 
 set(HEADERS
     ${CMAKE_CURRENT_BINARY_DIR}/hawaiishell_export.h
+    applications/appcategories.h
+    applications/appinfo.h
+    applications/applicationsmodel.h
     hawaiishell.h
     quickview.h
 )
