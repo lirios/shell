@@ -34,8 +34,6 @@ Item {
     width: 640
     height: 48
 
-    property variant view
-
     StyledItem {
         id: styledItem
         anchors.fill: parent

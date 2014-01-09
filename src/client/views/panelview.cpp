@@ -62,6 +62,9 @@ PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
     // Set initial geometry
     positionPanel();
 
+    // Let QML see us
+    rootContext()->setContextProperty("view", QVariant::fromValue(this));
+
     // Load QML source file
     QString fileName = ShellManager::instance()->shellDirectory().filePath(s_panelViewFileName);
     setSource(QUrl::fromLocalFile(fileName));
