@@ -24,11 +24,6 @@
         <file>qml/LauncherView.qml</file>
         <file>images/launcher_dot.png</file>
 
-        <!-- AppChooser -->
-        <file>qml/AppChooser.qml</file>
-        <file>qml/AppChooserButton.qml</file>
-        <file>qml/AppChooserDelegate.qml</file>
-
         <!-- LockScreen -->
         <file>qml/LockScreen.qml</file>
 
