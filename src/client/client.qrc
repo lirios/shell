@@ -19,11 +19,6 @@
         <file>qml/UserView.qml</file>
         <file>qml/ShutdownView.qml</file>
 
-        <!-- Launcher -->
-        <file>qml/Launcher.qml</file>
-        <file>qml/LauncherView.qml</file>
-        <file>images/launcher_dot.png</file>
-
         <!-- LockScreen -->
         <file>qml/LockScreen.qml</file>
 

@@ -36,8 +36,6 @@
 #include "registration.h"
 #include "keybinding.h"
 #include "shellcontroller.h"
-#include "launcheritem.h"
-#include "launchermodel.h"
 #include "policykitagent.h"
 #include "powermanager.h"
 #include "processlauncher.h"
@@ -56,9 +54,6 @@ void Registration::registerQmlTypes()
     // Launcher stuff
     qmlRegisterType<AppCategories>(uri, 1, 0, "XdgCategoriesModel");
     qmlRegisterType<ApplicationsModel>(uri, 1, 0, "ApplicationsModel");
-    qmlRegisterType<LauncherModel>(uri, 1, 0, "LauncherModel");
-    qmlRegisterUncreatableType<LauncherItem>(uri, 1, 0, "LauncherItem",
-                                             QStringLiteral("Do not create LauncherItem"));
     qmlRegisterUncreatableType<AppInfo>(uri, 1, 0, "AppInfo",
                                         QStringLiteral("Do not create AppInfo"));
 

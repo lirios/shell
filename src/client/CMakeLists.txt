@@ -18,7 +18,6 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/launcher
     ${CMAKE_CURRENT_SOURCE_DIR}/views
     ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
     ${CMAKE_CURRENT_SOURCE_DIR}/scripting
@@ -50,8 +49,6 @@ set(SOURCES
     shortcut.cpp
     window.cpp
     workspace.cpp
-    launcher/launcheritem.cpp
-    launcher/launchermodel.cpp
     scripting/appinterface.cpp
     scripting/scriptengine.cpp
     services/servicefactory.cpp
