@@ -102,6 +102,12 @@ public:
     ~PluginMetadata();
 
     /*!
+     * Loads metadata from another file.
+     * \param fileName plugin metadata file name with path
+     */
+    bool load(const QString &fileName);
+
+    /*!
      * \return whether plugin metadata information is valid
      */
     bool isValid() const;

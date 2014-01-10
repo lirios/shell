@@ -63,9 +63,25 @@ PluginMetadataPrivate::~PluginMetadataPrivate()
 PluginMetadata::PluginMetadata(const QString &fileName)
     : d_ptr(new PluginMetadataPrivate())
 {
+    load(fileName);
+}
+
+PluginMetadata::PluginMetadata()
+    : d_ptr(new PluginMetadataPrivate())
+{
+}
+
+PluginMetadata::~PluginMetadata()
+{
+    delete d_ptr;
+}
+
+bool PluginMetadata::load(const QString &fileName)
+{
     Q_D(PluginMetadata);
 
-    d->entry = new XdgDesktopFile();
+    if (!d->entry)
+        d->entry = new XdgDesktopFile();
     if (d->entry->load(fileName)) {
         if (d->entry->value(QStringLiteral("Type")).toString() != QStringLiteral("Service")) {
             // Unload metadata if it's not the right type
@@ -79,17 +95,11 @@ PluginMetadata::PluginMetadata(const QString &fileName)
             else
                 d->type = PluginMetadata::InvalidType;
         }
+
+        return true;
     }
-}
 
-PluginMetadata::PluginMetadata()
-    : d_ptr(new PluginMetadataPrivate())
-{
-}
-
-PluginMetadata::~PluginMetadata()
-{
-    delete d_ptr;
+    return false;
 }
 
 bool PluginMetadata::isValid() const
