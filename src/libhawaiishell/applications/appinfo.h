@@ -31,13 +31,13 @@
 
 #include <HawaiiShell/Export>
 
-#include "xdgdesktopfile.h"
-
 namespace Hawaii {
 
 namespace Shell {
 
-class HAWAIISHELL_EXPORT AppInfo : public QObject, public XdgDesktopFile
+class AppInfoPrivate;
+
+class HAWAIISHELL_EXPORT AppInfo : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
@@ -46,10 +46,19 @@ class HAWAIISHELL_EXPORT AppInfo : public QObject, public XdgDesktopFile
     Q_PROPERTY(QString comment READ comment NOTIFY commentChanged)
 public:
     AppInfo(QObject *parent = 0);
+    virtual ~AppInfo();
 
+    bool load(const QString &fileName);
+
+    QString fileName() const;
+
+    QString name() const;
     QString genericName() const;
+    QString iconName() const;
+    QString comment() const;
     QStringList categories() const;
 
+    bool isShow(const QString &name) const;
     bool isExecutable() const;
     bool isHidden() const;
 
@@ -60,7 +69,11 @@ Q_SIGNALS:
     void commentChanged(const QString &value);
 
 public Q_SLOTS:
-    void launch();
+    bool launch(const QStringList &arguments = QStringList());
+
+private:
+    Q_DECLARE_PRIVATE(AppInfo)
+    AppInfoPrivate *const d_ptr;
 };
 
 } // namespace Shell

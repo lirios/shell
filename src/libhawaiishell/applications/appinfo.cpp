@@ -28,31 +28,104 @@
 #include <QtCore/QStandardPaths>
 
 #include "appinfo.h"
+#include "xdgdesktopfile.h"
 
 namespace Hawaii {
 
 namespace Shell {
 
+/*
+ * AppInfoPrivate
+ */
+
+class AppInfoPrivate
+{
+public:
+    AppInfoPrivate();
+    ~AppInfoPrivate();
+
+    XdgDesktopFile *entry;
+};
+
+AppInfoPrivate::AppInfoPrivate()
+    : entry(new XdgDesktopFile())
+{
+}
+
+AppInfoPrivate::~AppInfoPrivate()
+{
+    delete entry;
+}
+
+/*
+ * AppInfo
+ */
+
 AppInfo::AppInfo(QObject *parent)
     : QObject(parent)
-    , XdgDesktopFile()
+    , d_ptr(new AppInfoPrivate())
 {
+}
+
+AppInfo::~AppInfo()
+{
+    delete d_ptr;
+}
+
+bool AppInfo::load(const QString &fileName)
+{
+    Q_D(AppInfo);
+    return d->entry->load(fileName);
+}
+
+QString AppInfo::fileName() const
+{
+    Q_D(const AppInfo);
+    return d->entry->fileName();
+}
+
+QString AppInfo::name() const
+{
+    Q_D(const AppInfo);
+    return d->entry->name();
 }
 
 QString AppInfo::genericName() const
 {
-    return localizedValue(QStringLiteral("GenericName")).toString();
+    Q_D(const AppInfo);
+    return d->entry->localizedValue(QStringLiteral("GenericName")).toString();
+}
+
+QString AppInfo::iconName() const
+{
+    Q_D(const AppInfo);
+    return d->entry->iconName();
+}
+
+QString AppInfo::comment() const
+{
+    Q_D(const AppInfo);
+    return d->entry->comment();
 }
 
 QStringList AppInfo::categories() const
 {
-    return value(QStringLiteral("Categories")).toString().split(';', QString::SkipEmptyParts);
+    Q_D(const AppInfo);
+    return d->entry->value(QStringLiteral("Categories")).toString().split(';', QString::SkipEmptyParts);
+}
+
+bool AppInfo::isShow(const QString &name) const
+{
+    Q_D(const AppInfo);
+    return d->entry->isShow(name);
 }
 
 bool AppInfo::isExecutable() const
 {
-    QString tryExec = value(QStringLiteral("TryExec")).toString();
-    QString execCommand = value(QStringLiteral("Exec")).toString();
+    Q_D(const AppInfo);
+
+    QString tryExec = d->entry->value(QStringLiteral("TryExec")).toString();
+    QString execCommand = d->entry->value(QStringLiteral("Exec")).toString();
 
     // If TryExec is empty fallback to the first Exec argument
     if (tryExec.isEmpty()) {
@@ -77,20 +150,23 @@ bool AppInfo::isExecutable() const
 
 bool AppInfo::isHidden() const
 {
+    Q_D(const AppInfo);
+
     // Application exists but should be hidden in the menu
-    if (value(QStringLiteral("NoDisplay")).toBool())
+    if (d->entry->value(QStringLiteral("NoDisplay")).toBool())
         return true;
 
     // User deleted this application at his level
-    if (value(QStringLiteral("Hidden")).toBool())
+    if (d->entry->value(QStringLiteral("Hidden")).toBool())
         return true;
 
     return false;
 }
 
-void AppInfo::launch()
+bool AppInfo::launch(const QStringList &arguments)
 {
-    startDetached();
+    Q_D(AppInfo);
+    return d->entry->startDetached(arguments);
 }
 
 } // namespace Shell

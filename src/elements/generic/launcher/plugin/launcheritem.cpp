@@ -29,6 +29,8 @@
 #include "launcheritem.h"
 #include "launcheritem_p.h"
 
+using namespace Hawaii::Shell;
+
 /*
  * LauncherItemPrivate
  */
@@ -181,7 +183,7 @@ void LauncherItem::activate()
         return;
     }
 
-    if (d->appInfo->startDetached(QStringList())) {
+    if (d->appInfo->launch()) {
         d->isRunning = true;
         Q_EMIT runningChanged(true);
     }
@@ -192,7 +194,7 @@ void LauncherItem::launchNewInstance()
     Q_D(LauncherItem);
 
     if (d->type == LauncherItem::ApplicationItem)
-        d->appInfo->startDetached(QStringList());
+        d->appInfo->launch();
     else
         QDesktopServices::openUrl(d->url);
 }
