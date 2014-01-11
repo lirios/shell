@@ -26,9 +26,9 @@
 
 for (var i = 0; i < screenCount; i++) {
     var panel = new Panel(i);
+    panel.addElement("org.hawaii.elements.appchooser");
     /*
     panel.location = "bottom";
-    panel.addWidget("org.hawaii.elements.appchooser");
     panel.addWidget("org.hawaii.elements.launcher");
     panel.addWidget("org.hawaii.elements.indicators");
     */
