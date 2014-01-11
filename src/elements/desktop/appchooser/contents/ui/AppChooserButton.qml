@@ -26,35 +26,52 @@
 
 import QtQuick 2.0
 import Fluid.Ui 1.0 as FluidUi
+import Hawaii.Shell 1.0
+import Hawaii.Shell.Core 1.0
 import Hawaii.Shell.Styles 1.0
 
-StyledItem {
+Element {
     id: root
 
-    property bool hover: false
-    property bool checked: false
+    QtObject {
+        id: __priv
 
-    signal clicked()
-
-    style: Qt.createComponent(StyleSettings.path + "/AppChooserButtonStyle.qml", root)
-
-    FluidUi.Icon {
-        id: icon
-        anchors.fill: parent
-        iconName: "view-grid-symbolic"
-        color: hover || checked ? __style.highlightedColor : __style.color
-
-        Behavior on color {
-            ColorAnimation { easing.type: Easing.Linear; duration: 250 }
-        }
+        property bool hover: false
+        property bool checked: false
     }
 
-    MouseArea {
-        id: mouse
+    AppChooser {
+        id: appChooser
+    }
+
+    Shortcut {
+        key: Qt.MetaModifier | Qt.Key_A
+        onTriggered: appChooser.visible = !appChooser.visible
+    }
+
+    StyledItem {
+        id: styledItem
         anchors.fill: parent
-        hoverEnabled: true
-        onEntered: hover = true
-        onExited: hover = checked
-        onClicked: root.clicked()
+        style: Qt.createComponent(StyleSettings.path + "/AppChooserButtonStyle.qml", styledItem)
+
+        FluidUi.Icon {
+            id: icon
+            anchors.fill: parent
+            iconName: "view-grid-symbolic"
+            color: __priv.hover || __priv.checked ? styledItem.__style.highlightedColor : styledItem.__style.color
+
+            Behavior on color {
+                ColorAnimation { easing.type: Easing.Linear; duration: 250 }
+            }
+        }
+
+        MouseArea {
+            id: mouse
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: __priv.hover = true
+            onExited: __priv.hover = __priv.checked
+            onClicked: appChooser.visible = !appChooser.visible
+        }
     }
 }

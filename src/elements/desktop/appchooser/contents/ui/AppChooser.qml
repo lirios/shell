@@ -27,7 +27,8 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import Hawaii.Shell 1.0
+import Hawaii.Shell.Core 1.0
+import Hawaii.Shell.Components 1.0
 import Hawaii.Shell.Styles 1.0
 
 Popup {
