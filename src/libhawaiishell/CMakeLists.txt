@@ -13,6 +13,7 @@ set(SOURCES
     applications/appcategories.cpp
     applications/appinfo.cpp
     applications/applicationsmodel.cpp
+    element.cpp
     hawaiishell.cpp
     pluginmetadata.cpp
     quickview.cpp
