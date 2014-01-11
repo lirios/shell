@@ -29,6 +29,7 @@
 
 #include <QtQuick/QQuickView>
 
+#include <HawaiiShell/Element>
 #include <HawaiiShell/HawaiiShell>
 #include <HawaiiShell/QuickView>
 
@@ -41,6 +42,7 @@ class PanelView : public Hawaii::Shell::QuickView
     Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
     Q_PROPERTY(int offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(int thickness READ thickness WRITE setThickness NOTIFY thicknessChanged)
+    Q_PROPERTY(QStringList elements READ elements NOTIFY elementsChanged)
 public:
     explicit PanelView(QQmlEngine *engine, QScreen *screen);
 
@@ -53,15 +55,25 @@ public:
     int thickness() const;
     void setThickness(int value);
 
+    QStringList elements() const;
+
+public Q_SLOTS:
+    void addElement(const QString &name);
+
 Q_SIGNALS:
     void alignmentChanged();
     void offsetChanged();
     void thicknessChanged();
 
+    void elementsChanged();
+    void elementAdded(Hawaii::Shell::Element *element);
+    void elementRemoved();
+
 private:
     Qt::Alignment m_alignment;
     int m_offset;
     int m_thickness;
+    QStringList m_elements;
 
     void setWindowType();
     void setSurfacePosition(const QPoint &pt);

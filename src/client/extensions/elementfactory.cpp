@@ -24,62 +24,51 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QDir>
-#include <QtCore/QJsonObject>
-#include <QtCore/QPluginLoader>
+#include <QtCore/QDebug>
 
-#include "elementfactory.h"
-#include "element.h"
-#include "hawaiishell.h"
 #include "cmakedirs.h"
+#include "elementfactory.h"
 
 Q_GLOBAL_STATIC(ElementFactory, s_elementsFactory)
 
 void ElementFactory::searchElements()
 {
-    QDir pluginsDir(QStringLiteral(INSTALL_LIBDIR) + "/hawaii/plugins/hawaii-shell/elements");
-    for (const QString &fileName: pluginsDir.entryList(QDir::Files)) {
-        QPluginLoader *loader = new QPluginLoader(pluginsDir.absoluteFilePath(fileName));
-        QJsonObject metaData = loader->metaData();
+    qDebug() << "-> Looking for elements...";
 
-        if (metaData.value("IID").toString() != QStringLiteral("HawaiiShell.Element")) {
-            delete loader;
+    QDir elementsDir(QStringLiteral(INSTALL_DATADIR) + QStringLiteral("/hawaii/elements"));
+    for (const QString &dirName: elementsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        const QString &metadataFileName =
+                elementsDir.absoluteFilePath(dirName + QStringLiteral("/metadata.desktop"));
+
+        // Try to load plugin metadata, return if it's not valid
+        Hawaii::Shell::PluginMetadata metadata(metadataFileName);
+        if (!metadata.isValid())
             continue;
-        }
 
-        QString name = metaData.value("className").toString();
-        s_elementsFactory()->m_factories.insert(name, loader);
+        // Check whether we already added this element
+        const QString &name = metadata.internalName();
+        if (s_elementsFactory()->m_factories.contains(name))
+            continue;
+
+        // Register element
+        s_elementsFactory()->m_factories.insert(name, new ElementInfo(metadataFileName));
+        qDebug() << "Registered" << name;
     }
 }
 
 void ElementFactory::cleanupElements()
 {
-    for (QPluginLoader *loader: s_elementsFactory()->m_factories)
-        delete loader;
+    for (const QString &key: s_elementsFactory()->m_factories.keys())
+        delete s_elementsFactory()->m_factories.take(key);
 }
 
-Element *ElementFactory::createElement(const QString &name, HawaiiShell *shell)
+Hawaii::Shell::Element *ElementFactory::createElement(const QString &name)
 {
     if (!s_elementsFactory()->m_factories.contains(name)) {
-        qWarning() << "Couldn't find a plugin for element" << name;
-        return 0;
+        qWarning() << "Element" << name << "is not registered";
+        return nullptr;
     }
 
-    QPluginLoader *loader = s_elementsFactory()->m_factories.value(name);
-    QObject *object = loader->instance();
-    if (!object) {
-        qWarning() << "Couldn't load plugin for element" << name
-                   << loader->errorString();
-        return 0;
-    }
-
-    Element *element = qobject_cast<Element *>(object);
-    if (!element) {
-        qWarning() << "Plugin" << name << "is not an Element subclass";
-        return 0;
-    }
-
-    element->m_shell = shell;
-
-    return element;
+    ElementInfo *info = s_elementsFactory()->m_factories.value(name);
+    return info->createElement();
 }

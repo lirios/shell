@@ -36,6 +36,7 @@
 
 #include "applicationiconprovider.h"
 #include "cmakedirs.h"
+#include "elementfactory.h"
 #include "registration.h"
 #include "shellmanager.h"
 
@@ -66,6 +67,7 @@ ShellManager::ShellManager()
 
 ShellManager::~ShellManager()
 {
+    ElementFactory::cleanupElements();
     delete m_registryListener;
 }
 
@@ -152,6 +154,9 @@ void ShellManager::loadHandlers()
 
 void ShellManager::setup()
 {
+    // Load elements
+    ElementFactory::searchElements();
+
     // Load shell handlers
     loadHandlers();
 

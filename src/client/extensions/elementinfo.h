@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,23 +24,28 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef ELEMENTFACTORY_H
-#define ELEMENTFACTORY_H
+#ifndef ELEMENTINFO_H
+#define ELEMENTINFO_H
 
-#include <QtCore/QHash>
+#include <QtCore/QDir>
 
-#include "elementinfo.h"
+#include <HawaiiShell/Element>
+#include <HawaiiShell/PluginMetadata>
 
-class ElementFactory
+class ElementInfo
 {
 public:
-    static void searchElements();
-    static void cleanupElements();
+    explicit ElementInfo(const QString &fileName);
 
-    static Hawaii::Shell::Element *createElement(const QString &name);
+    Hawaii::Shell::PluginMetadata metadata() const;
+
+    QDir directory() const;
+
+    Hawaii::Shell::Element *createElement();
 
 private:
-    QHash<QString, ElementInfo *> m_factories;
+    Hawaii::Shell::PluginMetadata m_metadata;
+    QDir m_dir;
 };
 
-#endif // ELEMENTFACTORY_H
+#endif // ELEMENTINFO_H

@@ -31,6 +31,8 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQml/QQmlContext>
 
+#include "element.h"
+#include "elementfactory.h"
 #include "panelview.h"
 #include "shellmanager.h"
 
@@ -116,6 +118,22 @@ void PanelView::setThickness(int value)
         positionPanel();
         Q_EMIT thicknessChanged();
     }
+}
+
+QStringList PanelView::elements() const
+{
+    return m_elements;
+}
+
+void PanelView::addElement(const QString &name)
+{
+    if (m_elements.contains(name)) {
+        m_elements.append(name);
+        Q_EMIT elementsChanged();
+    }
+
+    Hawaii::Shell::Element *element = ElementFactory::createElement(name);
+    Q_EMIT elementAdded(element);
 }
 
 void PanelView::setWindowType()
