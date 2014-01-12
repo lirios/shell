@@ -44,7 +44,7 @@ PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
     : QuickView(engine, new QWindow(screen))
     , m_alignment(Qt::AlignLeft)
     , m_offset(0)
-    , m_thickness(48)
+    , m_thickness(60)
 {
     // Set defaults
     setFormFactor(Types::Horizontal);
