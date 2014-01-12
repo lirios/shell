@@ -2,6 +2,9 @@ include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${QtConfiguration_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/libhawaiishell
+    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/includes
+    ${CMAKE_BINARY_DIR}/src/libhawaiishell
     ${CMAKE_BINARY_DIR}/headers
 )
 
@@ -36,7 +39,7 @@ qtwayland_add_protocol_client(SOURCES
 
 add_library(hawaiishellcomponentsplugin SHARED ${SOURCES})
 qt5_use_modules(hawaiishellcomponentsplugin Qml Quick)
-target_link_libraries(hawaiishellcomponentsplugin)
+target_link_libraries(hawaiishellcomponentsplugin HF1HawaiiShell)
 
 install(TARGETS hawaiishellcomponentsplugin LIBRARY
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/hawaii/qml/Hawaii/Shell/Components)

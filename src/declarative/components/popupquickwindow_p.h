@@ -39,6 +39,9 @@ public:
     PopupSurface(PopupWindow *popup);
     virtual ~PopupSurface();
 
+    QWindow *parentWindow() const;
+    QPointF mapToParent(const QPointF &pos);
+
 protected:
     void hawaii_popup_surface_popup_done();
 
