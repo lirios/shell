@@ -27,72 +27,67 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.0
 import Hawaii.Shell 1.0
+import Hawaii.Shell.Core 1.0
 import Hawaii.Shell.Settings 1.0
 import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Elements.Launcher 1.0
 
 Element {
     id: launcherContainer
-    onWindowChanged: statusArea.window = window
+    minimumWidth: listView.orientation == ListView.Horizontal ? listView.count * __priv.tileSize : listView.width
+    minimumHeight: listView.orientation == ListView.Horizontal ? listView.height : listView.count * __priv.tileSize
+    fillWidth: true
+    fillHeight: true
 
-    // Tile size
-    property alias tileSize: launcherView.tileSize
+    QtObject {
+        id: __priv
 
-    // Alignment and orientation
-    property alias alignment: launcherView.alignment
-    property alias orientation: launcherView.orientation
+        property int iconSize: 48
+        property int tileSize: iconSize + (iconSize / 4)
+    }
 
-    // Size
-    property int size: tileSize +
-                       styledItem.__style.padding.left +
-                       styledItem.__style.padding.top +
-                       styledItem.__style.padding.right +
-                       styledItem.__style.padding.bottom
+    /*
+    onApplicationDropped: listView.model.model.pinApplication(path)
+    onUrlDropped: listView.model.model.pinUrl(url)
+    */
 
-    // Number of items
-    property alias count: launcherView.count
-
-    // Propagate window pointer to the view
-    property alias window: launcherView.window
-
-    StyledItem {
-        id: styledItem
+    ListView {
+        id: listView
         anchors.fill: parent
-        style: Qt.createComponent(StyleSettings.path + "/LauncherStyle.qml", launcherContainer)
-
-        GridLayout {
-            anchors {
-                fill: parent
-                leftMargin: styledItem.__style.padding.left
-                topMargin: styledItem.__style.padding.top
-                rightMargin: styledItem.__style.padding.right
-                bottomMargin: styledItem.__style.padding.bottom
-            }
-            rows: orientation == ListView.Horizontal ? 1 : 2
-            columns: orientation == ListView.Horizontal ? 2 : 1
-
-            LauncherView {
-                id: launcherView
-                orientation: {
-                    switch (alignment) {
-                    case LauncherSettings.TopAlignment:
-                    case LauncherSettings.BottomAlignment:
-                        return ListView.Horizontal;
-                    default:
-                        return ListView.Vertical;
-                    }
-                }
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-            }
-
-            StatusArea {
-                id: statusArea
-                orientation: launcherView.orientation
-                alignment: launcherView.alignment
-
-                Layout.alignment: orientation == ListView.Horizontal ? Qt.AlignRight | Qt.AlignVCenter : Qt.AlignBottom | Qt.AlignHCenter
+        orientation: view.formFactor === Types.Horizontal ? ListView.Horizontal : ListView.Vertical
+        focus: true
+        model: VisualDataModel {
+            model: LauncherModel {}
+            delegate: LauncherDelegate {
+                iconSize: __priv.iconSize
+                tileSize: __priv.tileSize
             }
         }
+        cacheBuffer: 10000
+        interactive: false
+        add: Transition {
+            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
+            NumberAnimation { property: "scale"; from: 0.0; to: 1.0; duration: 150 }
+        }
+        displaced: Transition {
+            NumberAnimation { properties: "x,y"; duration: 250; easing.type: Easing.OutBounce }
+        }
     }
+
+    /*
+    function enumIconSizeToActualSize(value) {
+        switch (value) {
+        case LauncherSettings.SmallIconSize:
+            return 32;
+        case LauncherSettings.MediumIconSize:
+            return 48;
+        case LauncherSettings.LargeIconSize:
+            return 64;
+        case LauncherSettings.HugeIconSize:
+            return 96;
+        default:
+            return 48;
+        }
+    }
+    */
 }
