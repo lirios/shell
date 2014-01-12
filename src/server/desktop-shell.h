@@ -116,6 +116,7 @@ private:
     void setPopup(struct wl_client *client, struct wl_resource *resource,
                   uint32_t id,
                   struct wl_resource *output_resource,
+                  struct wl_resource *parent_resource,
                   struct wl_resource *surface_resource,
                   int32_t x, int32_t y);
 

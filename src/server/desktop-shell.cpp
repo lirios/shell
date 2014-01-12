@@ -781,18 +781,38 @@ void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *reso
 void DesktopShell::setPopup(struct wl_client *client, struct wl_resource *resource,
                             uint32_t id,
                             struct wl_resource *output_resource,
+                            struct wl_resource *parent_resource,
                             struct wl_resource *surface_resource,
                             int32_t x, int32_t y)
 {
     struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
     if (!surface->configure) {
         surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
-            configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_panelsLayer, width, height); };
+            configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_panelsLayer, width, height);
+
+            if (width > 0 && height > 0 && es->output) {
+                int32_t x = es->geometry.x;
+                int32_t y = es->geometry.y;
+
+                // Coordinates can't exceed output
+                if (x + width > es->output->width)
+                    x = es->output->width - width;
+                if (y + height > es->output->height)
+                    y = es->output->height - height;
+
+                // Set position
+                weston_surface_set_position(es, x, y);
+            }
+        };
         surface->configure_private = this;
         surface->output = static_cast<weston_output *>(output_resource->data);
     }
 
-    weston_surface_set_position(surface, x, y);
+    // Set initial coordinates, relative to the parent
+    struct weston_surface *parent = static_cast<struct weston_surface *>(parent_resource->data);
+    weston_surface_set_position(surface,
+                                parent->geometry.x + x,
+                                parent->geometry.y + y);
 
     PopupGrab *grab = new PopupGrab;
     if (!grab)
