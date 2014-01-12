@@ -171,7 +171,7 @@ void ShellManager::create()
     m_shellUi = new ShellUi(this);
     m_engine->rootContext()->setContextProperty("Ui", m_shellUi);
     connect(m_registryListener->shell, &ShellClient::prepareLockSurface,
-            m_shellUi, &ShellUi::createLockScreenWindow);
+            m_shellUi, &ShellUi::createLockScreen);
     connect(m_registryListener->shell, &ShellClient::cursorChanged,
             m_shellUi, &ShellUi::setGrabCursor);
     connect(this, &ShellManager::shellChanged,

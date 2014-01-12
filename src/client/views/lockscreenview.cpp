@@ -28,54 +28,40 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
-#include <QtQuick/QQuickItem>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
-#include <qpa/qplatformnativeinterface.h>
-
-#include "lockscreenwindow.h"
+#include "lockscreenview.h"
 #include "shellmanager.h"
 
-LockScreenWindow::LockScreenWindow()
-    : QQuickView(ShellManager::instance()->engine(), new QWindow(QGuiApplication::primaryScreen()))
-    , m_surface(0)
+using namespace Hawaii::Shell;
+
+LockScreenView::LockScreenView(QQmlEngine *engine, QScreen *screen)
+    : QuickView(engine, new QWindow(screen))
 {
-    // Set custom window type
-    setFlags(flags() | Qt::BypassWindowManagerHint);
-
-    // Load QML component
-    setSource(QUrl("qrc:/qml/LockScreen.qml"));
-
-    // Resizing the view resizes the root object
+    // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);
-    setGeometry(screen()->geometry());
 
-    // React to screen size changes and alignment changes
-    connect(screen(), SIGNAL(geometryChanged(QRect)),
-            this, SLOT(geometryChanged(QRect)));
+    // Set Wayland window type
+    setWindowType();
+
+    // Set geometry and react to screen geometry changes
+    setGeometry(screen->geometry());
+    connect(screen, &QScreen::geometryChanged,
+            this, static_cast<void (QWindow::*)(const QRect &)>(&QWindow::setGeometry));
 
     // Debugging message
-    qDebug() << "-> Created LockScreen with geometry"
+    qDebug() << "-> Created LockScreenView with geometry"
              << geometry();
 }
 
-wl_surface *LockScreenWindow::surface() const
-{
-    return m_surface;
-}
-
-void LockScreenWindow::setWindowType()
+void LockScreenView::setWindowType()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    m_surface = static_cast<struct wl_surface *>(
+    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    ShellManager::instance()->shellInterface()->set_lock_surface(m_surface);
+    ShellManager::instance()->shellInterface()->set_lock_surface(surface);
 }
 
-void LockScreenWindow::geometryChanged(const QRect &rect)
-{
-    setGeometry(rect);
-}
-
-#include "moc_lockscreenwindow.cpp"
+#include "moc_lockscreenview.cpp"

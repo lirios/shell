@@ -24,31 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef LOCKSCREENWINDOW_H
-#define LOCKSCREENWINDOW_H
+#ifndef LOCKSCREENVIEW_H
+#define LOCKSCREENVIEW_H
 
-#include <QtQuick/QQuickView>
+#include <HawaiiShell/QuickView>
 
-#include <wayland-client.h>
-
-class ShellScreen;
-
-class LockScreenWindow : public QQuickView
+class LockScreenView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
 public:
-    LockScreenWindow();
-
-    wl_surface *surface() const;
+    explicit LockScreenView(QQmlEngine *engine, QScreen *screen);
 
 public Q_SLOTS:
     void setWindowType();
-
-private Q_SLOTS:
-    void geometryChanged(const QRect &rect);
-
-private:
-    wl_surface *m_surface;
 };
 
-#endif // LOCKSCREENWINDOW_H
+#endif // LOCKSCREENVIEW_H

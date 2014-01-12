@@ -32,17 +32,18 @@
 
 #include "desktopview.h"
 #include "grabwindow.h"
-#include "lockscreenwindow.h"
+#include "lockscreenview.h"
 #include "panelview.h"
 #include "shellui.h"
 #include "shellmanager.h"
 
 const QString s_desktopViewFileName = QStringLiteral("views/DesktopView.qml");
+const QString s_lockScreenViewFileName = QStringLiteral("lockscreen/LockScreen.qml");
 
 ShellUi::ShellUi(QObject *parent)
     : QObject(parent)
     , m_numWorkspaces(0)
-    , m_lockScreenWindow(nullptr)
+    , m_lockScreenView(nullptr)
 {
     // Create and connect JavaScript engine
     m_jsEngine = new ScriptEngine(this);
@@ -64,8 +65,8 @@ ShellUi::~ShellUi()
 {
     if (m_grabWindow)
         m_grabWindow->deleteLater();
-    if (m_lockScreenWindow)
-        m_lockScreenWindow->deleteLater();
+    if (m_lockScreenView)
+        m_lockScreenView->deleteLater();
     qDeleteAll(m_panelViews);
     qDeleteAll(m_desktopViews);
 }
@@ -80,9 +81,9 @@ GrabWindow *ShellUi::grabWindow() const
     return m_grabWindow;
 }
 
-LockScreenWindow *ShellUi::lockScreenWindow() const
+LockScreenView *ShellUi::lockScreenView() const
 {
-    return m_lockScreenWindow;
+    return m_lockScreenView;
 }
 
 QList<DesktopView *> ShellUi::desktops() const
@@ -126,23 +127,22 @@ void ShellUi::unload()
     }
 }
 
-void ShellUi::createLockScreenWindow()
+void ShellUi::createLockScreen()
 {
-    if (!m_lockScreenWindow)
-        m_lockScreenWindow = new LockScreenWindow();
-    m_lockScreenWindow->create();
-    m_lockScreenWindow->setWindowType();
-    m_lockScreenWindow->show();
-    synchronize();
+    if (!m_lockScreenView) {
+        QQmlEngine *engine = ShellManager::instance()->engine();
+        m_lockScreenView = new LockScreenView(engine, QGuiApplication::primaryScreen());
+    }
+    m_lockScreenView->show();
 }
 
-void ShellUi::closeLockScreenWindow()
+void ShellUi::closeLockScreen()
 {
-    if (!m_lockScreenWindow)
+    if (!m_lockScreenView)
         return;
 
-    m_lockScreenWindow->deleteLater();
-    m_lockScreenWindow = 0;
+    m_lockScreenView->deleteLater();
+    m_lockScreenView = nullptr;
 }
 
 void ShellUi::setGrabCursor(const QCursor &cursor)

@@ -62,9 +62,9 @@ set(SOURCES
     services/volumecontrol/volumecontrol.cpp
     services/sessionmanager/sessionmanager.cpp
     views/desktopview.cpp
+    views/lockscreenview.cpp
     views/panelview.cpp
     windowtypes/grabwindow.cpp
-    windowtypes/lockscreenwindow.cpp
 )
 
 wayland_add_protocol_client(SOURCES

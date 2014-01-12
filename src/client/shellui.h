@@ -34,7 +34,7 @@
 
 class DesktopView;
 class GrabWindow;
-class LockScreenWindow;
+class LockScreenView;
 class PanelView;
 
 class ShellUi : public QObject
@@ -48,7 +48,7 @@ public:
 
     GrabWindow *grabWindow() const;
 
-    LockScreenWindow *lockScreenWindow() const;
+    LockScreenView *lockScreenView() const;
 
     QList<DesktopView *> desktops() const;
     QList<PanelView *> panels() const;
@@ -57,8 +57,8 @@ public:
     void unload();
 
 public Q_SLOTS:
-    void createLockScreenWindow();
-    void closeLockScreenWindow();
+    void createLockScreen();
+    void closeLockScreen();
 
     void setGrabCursor(const QCursor &cursor);
 
@@ -70,7 +70,7 @@ private:
     ScriptEngine *m_jsEngine;
     int m_numWorkspaces;
     GrabWindow *m_grabWindow;
-    LockScreenWindow *m_lockScreenWindow;
+    LockScreenView *m_lockScreenView;
     QList<DesktopView *> m_desktopViews;
     QList<PanelView *> m_panelViews;
     QString m_shell;

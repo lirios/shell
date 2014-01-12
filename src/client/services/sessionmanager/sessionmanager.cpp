@@ -26,7 +26,7 @@
 
 #include <QtCore/QCoreApplication>
 
-#include "lockscreenwindow.h"
+#include "lockscreenview.h"
 #include "sessionmanager.h"
 #include "shellmanager.h"
 
@@ -49,17 +49,9 @@ void SessionManager::unlock()
 {
     ShellManager::instance()->shellInterface()->unlock();
 
-    // Synchronization
-    while (QCoreApplication::hasPendingEvents())
-        QCoreApplication::processEvents();
-
     // Close the lock screen, this will unmap the window and
     // save some resources
-    ShellManager::instance()->ui()->createLockScreenWindow();
-
-    // Synchronization
-    while (QCoreApplication::hasPendingEvents())
-        QCoreApplication::processEvents();
+    ShellManager::instance()->ui()->createLockScreen();
 }
 
 #include "moc_sessionmanager.cpp"
