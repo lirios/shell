@@ -46,9 +46,17 @@ Item {
         }
     }
 
+    /*
     Background {
         id: background
         anchors.fill: parent
+        visible: false
+    }
+    */
+    FluidUi.NoiseBackground {
+        id: background
+        anchors.fill: parent
+        color: "#336699"
         visible: false
     }
 
