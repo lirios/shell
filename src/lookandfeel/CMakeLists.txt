@@ -1,0 +1,1 @@
+hawaiishell_install_package(lookandfeel org.hawaii.lookandfeel.standard standard)
