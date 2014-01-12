@@ -184,15 +184,6 @@ void ShellManager::create()
     // Load user interface
     m_shellUi->setShell(m_currentHandler->property("shell").toString());
 
-#if 0
-    // Register daemons and singletons
-    d->registrar = new QQmlComponent(d->engine, QUrl("qrc:/qml/Registrar.qml"), this);
-    if (d->registrar->status() != QQmlComponent::Ready)
-        qFatal("Unable to register daemons and singletons: %s",
-               qPrintable(d->registrar->errorString()));
-    (void)d->registrar->create();
-#endif
-
     // Shell user interface is ready, tell the compositor to fade in
     qDebug() << "Shell is now ready, elapsed time:" << m_elapsedTimer.elapsed() << "ms";
     Q_EMIT ready();
