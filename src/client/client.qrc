@@ -9,9 +9,6 @@
         <!-- Dialogs -->
         <file>qml/AuthenticationDialog.qml</file>
 
-        <!-- LockScreen -->
-        <file>qml/LockScreen.qml</file>
-
         <!-- Overlays -->
         <file>qml/Overlay.qml</file>
         <file>qml/ShortcutsOverlay.qml</file>
