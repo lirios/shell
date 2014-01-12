@@ -37,6 +37,7 @@ public:
 
     QString style;
     QString handler;
+    QString lookAndFeel;
 
     QConfiguration *configuration;
 };

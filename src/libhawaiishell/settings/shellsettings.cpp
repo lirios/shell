@@ -48,6 +48,7 @@ ShellSettings::ShellSettings(QObject *parent)
     Q_D(ShellSettings);
     d->style = QStringLiteral("Aluminium");
     d->handler = QStringLiteral("org.hawaii.shells.desktop");
+    d->lookAndFeel = QStringLiteral("org.hawaii.lookandfeel.standard");
     d->configuration = new QConfiguration(this, "shell");
 }
 
@@ -85,6 +86,22 @@ void ShellSettings::setHandler(const QString &handler)
     if (handler != d->handler) {
         d->handler = handler;
         Q_EMIT handlerChanged();
+    }
+}
+
+QString ShellSettings::lookAndFeel() const
+{
+    Q_D(const ShellSettings);
+    return d->lookAndFeel;
+}
+
+void ShellSettings::setLookAndFeel(const QString &lookAndFeel)
+{
+    Q_D(ShellSettings);
+
+    if (lookAndFeel != d->lookAndFeel) {
+        d->lookAndFeel = lookAndFeel;
+        Q_EMIT lookAndFeelChanged();
     }
 }
 
