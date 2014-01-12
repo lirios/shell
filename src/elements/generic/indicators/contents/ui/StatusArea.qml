@@ -28,35 +28,29 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell 1.0
+import Hawaii.Shell.Core 1.0
 import Hawaii.Shell.Settings 1.0
 
-Item {
+Element {
     id: statusArea
-    width: {
-        if (orientation == ListView.Horizontal)
-            return listView.headerItem.width + (listView.count * iconSize) +
-                    (margin * (listView.count + 3));
-        return iconSize;
+    implicitWidth: {
+        if (listView.orientation == ListView.Horizontal)
+            return listView.headerItem.width + (listView.count * __priv.iconSize) +
+                    (__priv.margin * (listView.count + 3));
+        return __priv.iconSize;
     }
-    height: {
-        if (orientation == ListView.Horizontal)
-            return iconSize;
-        return listView.headerItem.height + (listView.count * iconSize) +
-                (margin * (listView.count + 3));
+    implicitHeight: {
+        if (listView.orientation == ListView.Horizontal)
+            return __priv.iconSize;
+        return listView.headerItem.height + (listView.count * __priv.iconSize) +
+                (__priv.margin * (listView.count + 3));
     }
-    onWindowChanged: windowConnection.target = window
-
-    property alias orientation: listView.orientation
-    readonly property int margin: 8
-    readonly property int iconSize: 16
-
-    property int alignment
-
-    // Launcher window
-    property var window
 
     QtObject {
         id: __priv
+
+        readonly property int margin: 8
+        readonly property int iconSize: 16
 
         property var dateTime: Shell.service("DateTime")
         property list<Item> indicators: [
@@ -65,38 +59,27 @@ Item {
         ]
     }
 
-    // Status menu
     StatusMenu {
         id: statusMenu
         indicators: __priv.indicators
-
-        Component.onCompleted: movePopupMenus()
-    }
-
-    // Popup menus follows the Launcher window when its geometry changes
-    Connections {
-        id: windowConnection
-        onXChanged: movePopupMenus()
-        onYChanged: movePopupMenus()
-        onWidthChanged: movePopupMenus()
-        onHeightChanged: movePopupMenus()
     }
 
     ListView {
         id: listView
         anchors.fill: parent
+        orientation: view.formFactor === Types.Horizontal ? ListView.Horizontal : ListView.Vertical
         model: __priv.indicators
-        spacing: margin
+        spacing: __priv.margin
         interactive: false
         header: Item {
-            width: orientation == ListView.Horizontal ? timeLabel.paintedWidth + 2 * margin : listView.width
-            height: orientation == ListView.Horizontal ? listView.height : timeLabel.paintedHeight + 2 * margin
+            width: listView.orientation == ListView.Horizontal ? timeLabel.paintedWidth + 2 * __priv.margin : listView.width
+            height: listView.orientation == ListView.Horizontal ? listView.height : timeLabel.paintedHeight + 2 * __priv.margin
 
             Label {
                 id: timeLabel
                 anchors.centerIn: parent
                 font.bold: true
-                font.pixelSize: iconSize * 0.7
+                font.pixelSize: __priv.iconSize * 0.7
                 color: mouseArea.hover ? "white" : "#cdcdcd"
 
                 Behavior on color {
@@ -106,7 +89,7 @@ Item {
                 Connections {
                     target: __priv.dateTime
                     onDateTimeChanged: {
-                        var format = orientation == ListView.Horizontal ? "HH:mm" : "HH<br>mm";
+                        var format = listView.orientation == ListView.Horizontal ? "HH:mm" : "HH<br>mm";
                         timeLabel.text = Qt.formatTime(__priv.dateTime.dateTime, format);
                     }
                 }
@@ -114,8 +97,8 @@ Item {
         }
         delegate: FluidUi.Icon {
             iconName: modelData.iconName
-            width: iconSize
-            height: iconSize
+            width: __priv.iconSize
+            height: __priv.iconSize
             color: mouseArea.hover ? "white" : "#cdcdcd"
             visible: modelData.iconVisible
 
@@ -134,29 +117,5 @@ Item {
         onEntered: hover = true
         onExited: hover = false
         onClicked: statusMenu.visible = !statusMenu.visible
-    }
-
-    function movePopupMenus() {
-        if (typeof(window) == "undefined")
-            return;
-
-        switch (alignment) {
-        case LauncherSettings.LeftAlignment:
-            statusMenu.x = window.x + window.width;
-            statusMenu.y = window.y + window.height - statusMenu.height;
-            break;
-        case LauncherSettings.RightAlignment:
-            statusMenu.x = window.x - statusMenu.width;
-            statusMenu.y = window.y + window.height - statusMenu.height;
-            break;
-        case LauncherSettings.TopAlignment:
-            statusMenu.x = window.x + window.width;
-            statusMenu.y = window.y + window.height;
-            break;
-        case LauncherSettings.BottomAlignment:
-            statusMenu.x = window.x + window.width - statusMenu.width;
-            statusMenu.y = window.y - statusMenu.height;
-            break;
-        }
     }
 }

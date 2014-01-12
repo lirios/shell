@@ -28,7 +28,6 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Shell 1.0
-import "."
 
 Item {
     id: shutdownView
@@ -42,6 +41,11 @@ Item {
 
         property var sessionManager: Shell.service("SessionManager")
         property var processLauncher: Shell.service("ProcessLauncher")
+    }
+
+    ShutdownDialog {
+        id: shutdownDialog
+        visible: false
     }
 
     RowLayout {
@@ -67,7 +71,7 @@ Item {
             iconName: "system-shutdown-symbolic"
             onClicked: {
                 shutdownView.childClicked();
-                DialogsSingleton.shutdownDialog.visible = true;
+                shutdownDialog.visible = true;
             }
         }
 
