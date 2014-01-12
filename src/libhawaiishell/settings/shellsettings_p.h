@@ -36,6 +36,8 @@ public:
     ShellSettingsPrivate();
 
     QString style;
+    QString handler;
+
     QConfiguration *configuration;
 };
 

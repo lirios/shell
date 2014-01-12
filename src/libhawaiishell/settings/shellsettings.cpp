@@ -47,6 +47,7 @@ ShellSettings::ShellSettings(QObject *parent)
 {
     Q_D(ShellSettings);
     d->style = QStringLiteral("Aluminium");
+    d->handler = QStringLiteral("org.hawaii.shells.desktop");
     d->configuration = new QConfiguration(this, "shell");
 }
 
@@ -68,6 +69,22 @@ void ShellSettings::setStyle(const QString &style)
     if (style != d->style) {
         d->style = style;
         Q_EMIT styleChanged();
+    }
+}
+
+QString ShellSettings::handler() const
+{
+    Q_D(const ShellSettings);
+    return d->handler;
+}
+
+void ShellSettings::setHandler(const QString &handler)
+{
+    Q_D(ShellSettings);
+
+    if (handler != d->handler) {
+        d->handler = handler;
+        Q_EMIT handlerChanged();
     }
 }
 
