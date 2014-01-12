@@ -239,7 +239,11 @@ void ShellManager::updateShell()
         m_currentHandler->setProperty("loaded", false);
     m_currentHandler = handler;
     m_currentHandler->setProperty("loaded", true);
-    Q_EMIT shellChanged(m_currentHandler->property("shell").toString());
+
+    // Tell listeners that we changed the shell handler
+    const QString currentShell = m_currentHandler->property("shell").toString();
+    qDebug() << "-> Current shell handler is" << currentShell;
+    Q_EMIT shellChanged(currentShell);
 }
 
 void ShellManager::registerHandler(const QString &name, QObject *handler)
