@@ -113,17 +113,23 @@ void ShellSurface::hawaii_shell_surface_set_overlay(Resource *resource,
 void ShellSurface::hawaii_shell_surface_set_popup(Resource *resource,
                                                   uint32_t id,
                                                   struct ::wl_resource *output_resource,
+                                                  struct ::wl_resource *parent_resource,
                                                   struct ::wl_resource *surface_resource,
                                                   int32_t x, int32_t y)
 {
     Q_UNUSED(resource);
     Q_UNUSED(output_resource);
 
+    QWaylandSurface *parent =
+            QtWayland::Surface::fromResource(parent_resource)->waylandSurface();
+    QPointF pos(x, y);
+    pos += parent->pos();
+
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     if (m_panelsLayer.contains(surface))
         return;
-    surface->setWindowProperty(QStringLiteral("position"), QPointF(x, y));
+    surface->setWindowProperty(QStringLiteral("position"), pos);
     addSurfaceToLayer(Compositor::PopupWindowRole, surface);
 
     QtWayland::InputDevice *input = Compositor::instance()->defaultInputDevice()->handle();
