@@ -120,6 +120,7 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(QStringLiteral(HAWAII_SHELL_VERSION_STRING));
     app.setOrganizationDomain(QStringLiteral("hawaii.org"));
     app.setOrganizationName(QStringLiteral("Hawaii"));
+    app.setQuitOnLastWindowClosed(false);
 
     // Command line parser
     QCommandLineParser parser;

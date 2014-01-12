@@ -51,6 +51,10 @@ ShellUi::ShellUi(QObject *parent)
     connect(m_jsEngine, &ScriptEngine::printError,
             this, &ShellUi::printScriptError);
 
+    // Create new desktop views when screens are attached
+    connect(qApp, &QGuiApplication::screenAdded,
+            this, &ShellUi::screenAdded);
+
     // Create grab window
     m_grabWindow = new GrabWindow();
     m_grabWindow->show();
@@ -95,8 +99,6 @@ void ShellUi::load()
 {
     for (QScreen *screen: QGuiApplication::screens())
         screenAdded(screen);
-    connect(qApp, &QGuiApplication::screenAdded,
-            this, &ShellUi::screenAdded);
 
     QString fileName = ShellManager::instance()->shellDirectory().filePath("layout.js");
     QFile file(fileName);
@@ -104,6 +106,23 @@ void ShellUi::load()
         QString script = file.readAll();
         file.close();
         m_jsEngine->evaluateScript(script, "layout.js");
+    }
+
+    synchronize();
+}
+
+void ShellUi::unload()
+{
+    // Don't unload until we know which shell is loaded
+    if (m_shell.isEmpty())
+        return;
+
+    // Destroy all panels
+    for (PanelView *view: m_panelViews) {
+        m_panelViews.removeOne(view);
+        view->hide();
+        view->deleteLater();
+        synchronize();
     }
 }
 
@@ -114,10 +133,7 @@ void ShellUi::createLockScreenWindow()
     m_lockScreenWindow->create();
     m_lockScreenWindow->setWindowType();
     m_lockScreenWindow->show();
-
-    // Synchronization
-    while (QCoreApplication::hasPendingEvents())
-        QCoreApplication::processEvents();
+    synchronize();
 }
 
 void ShellUi::closeLockScreenWindow()
@@ -151,15 +167,56 @@ void ShellUi::setNumWorkspaces(int num)
         controller->removeWorkspace(--m_numWorkspaces);
 }
 
+void ShellUi::setShell(const QString &shell)
+{
+    // Avoid loading the same shell twice
+    if (m_shell == shell)
+        return;
+
+    // Keep track of elapsed time
+    QElapsedTimer elapsed;
+    elapsed.start();
+
+    // Unload the old shell and load the new one
+    unload();
+    m_shell = shell;
+    load();
+
+    // Print how much did it take to load the new shell
+    qDebug() << "Shell handler" << shell << "loaded in" << elapsed.elapsed() << "ms";
+}
+
+void ShellUi::synchronize()
+{
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
+}
+
 void ShellUi::screenAdded(QScreen *screen)
 {
     QQmlEngine *engine = ShellManager::instance()->engine();
     QDir shellDir = ShellManager::instance()->shellDirectory();
 
-    DesktopView *view = new DesktopView(engine, screen);
+    DesktopView *view = nullptr;
+    bool previouslyAdded = false;
+
+    // Create views only when necessary
+    for (DesktopView *currentView: m_desktopViews) {
+        if (currentView->screen() == screen) {
+            view = currentView;
+            previouslyAdded = true;
+            break;
+        }
+    }
+
+    // Load QML code and show
+    if (!view)
+        view = new DesktopView(engine, screen);
     view->setSource(QUrl::fromLocalFile(shellDir.absoluteFilePath(s_desktopViewFileName)));
-    view->show();
-    m_desktopViews.append(view);
+    if (!previouslyAdded) {
+        view->show();
+        m_desktopViews.append(view);
+    }
 
     connect(screen, &QObject::destroyed,
             this, &ShellUi::screenDestroyed);

@@ -54,6 +54,7 @@ public:
     QList<PanelView *> panels() const;
 
     void load();
+    void unload();
 
 public Q_SLOTS:
     void createLockScreenWindow();
@@ -63,6 +64,8 @@ public Q_SLOTS:
 
     void setNumWorkspaces(int num);
 
+    void setShell(const QString &shell);
+
 private:
     ScriptEngine *m_jsEngine;
     int m_numWorkspaces;
@@ -70,6 +73,9 @@ private:
     LockScreenWindow *m_lockScreenWindow;
     QList<DesktopView *> m_desktopViews;
     QList<PanelView *> m_panelViews;
+    QString m_shell;
+
+    void synchronize();
 
 private Q_SLOTS:
     void screenAdded(QScreen *screen);

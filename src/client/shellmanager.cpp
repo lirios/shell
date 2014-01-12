@@ -174,13 +174,15 @@ void ShellManager::create()
             m_shellUi, &ShellUi::createLockScreenWindow);
     connect(m_registryListener->shell, &ShellClient::cursorChanged,
             m_shellUi, &ShellUi::setGrabCursor);
+    connect(this, &ShellManager::shellChanged,
+            m_shellUi, &ShellUi::setShell);
 
     // Add configured workspaces
     // TODO: Add as many workspaces as specified by the settings
     m_shellController->addWorkspaces(4);
 
     // Load user interface
-    m_shellUi->load();
+    m_shellUi->setShell(m_currentHandler->property("shell").toString());
 
 #if 0
     // Register daemons and singletons
@@ -190,10 +192,6 @@ void ShellManager::create()
                qPrintable(d->registrar->errorString()));
     (void)d->registrar->create();
 #endif
-
-    // Wait until all user interface elements for all screens are ready
-    while (QCoreApplication::hasPendingEvents())
-        QCoreApplication::processEvents();
 
     // Shell user interface is ready, tell the compositor to fade in
     qDebug() << "Shell is now ready, elapsed time:" << m_elapsedTimer.elapsed() << "ms";
@@ -250,6 +248,10 @@ void ShellManager::registerHandler(const QString &name, QObject *handler)
 {
     connect(handler, &QObject::destroyed,
             this, &ShellManager::deregisterHandler);
+    connect(handler, SIGNAL(willingChanged()),
+            this, SLOT(updateShell()));
+    connect(handler, SIGNAL(priorityChanged()),
+            this, SLOT(updateShell()));
 
     m_handlers.insert(name, handler);
 }

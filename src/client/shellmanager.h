@@ -80,11 +80,10 @@ private:
     QHash<QString, QObject *> m_handlers;
     QObject *m_currentHandler;
 
-    void updateShell();
-
 private Q_SLOTS:
     void registerHandler(const QString &name, QObject *handler);
     void deregisterHandler(QObject *handler);
+    void updateShell();
 };
 
 #endif // SHELLMANAGER_H
