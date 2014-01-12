@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Shell.Settings 1.0
 
 QtObject {
     /*! Internal name */
@@ -35,11 +36,17 @@ QtObject {
     property string path: ""
 
     /*! Returns \a true if current hardware setup demands this handler */
-    property bool willing: true
+    property bool willing: settings.handler === shell
 
     /*! Handler priority */
     property int priority: 1
 
     /*! Set to \c true when this handler is loaded */
     property bool loaded: false
+
+    default property var children
+
+    ShellSettings {
+        id: settings
+    }
 }
