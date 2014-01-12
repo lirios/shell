@@ -35,7 +35,8 @@
 #
 # Installs a Hawaii Shell package.
 #
-# \param type the package type, one of the following: element, shell
+# \param type the package type, one of the following: element, shell,
+#             lookandfeel
 # \param name the package name, same as the X-Hawaii-PluginInfo-Name
 #             key value from metadata.desktop
 # \param srcpath the source path to install from, it's the
@@ -46,8 +47,10 @@ macro(hawaiishell_install_package type name srcpath)
         set(dstpath hawaii/elements)
     elseif("${type}" STREQUAL "shell")
         set(dstpath hawaii/shells)
+    elseif("${type}" STREQUAL "lookandfeel")
+        set(dstpath hawaii/lookandfeel)
     else()
-        message(FATAL_ERROR "Package type \"${type}\" not recognized, possible values: \"element\", \"shell\"")
+        message(FATAL_ERROR "Package type \"${type}\" not recognized, possible values: \"element\", \"shell\", \"lookandfeeld\"")
     endif()
 
     install(DIRECTORY ${srcpath}/ DESTINATION ${CMAKE_INSTALL_DATADIR}/${dstpath}/${name}
