@@ -180,6 +180,7 @@ private:
     std::list<wl_resource *> m_shellSurfaceBindings;
     wl_resource *m_screenSaverBinding;
     wl_event_source *m_screenSaverTimer;
+    bool m_screenSaverEnabled;
     std::string m_screenSaverPath;
     int m_screenSaverDuration;
 

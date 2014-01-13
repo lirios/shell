@@ -160,6 +160,7 @@ static void shell_surface_destroyed(wl_resource *res)
 DesktopShell::DesktopShell(struct weston_compositor *ec)
     : Shell(ec)
     , m_screenSaverBinding(nullptr)
+    , m_screenSaverEnabled(false)
     , m_screenSaverPath(INSTALL_LIBEXECDIR "/hawaii-screensaver")
     , m_screenSaverDuration(5*60*1000)
     , m_inputPanel(nullptr)
@@ -1219,7 +1220,7 @@ void DesktopShell::launchScreenSaverProcess()
     if (m_screenSaverBinding)
         return;
 
-    if (m_screenSaverPath.empty()) {
+    if (m_screenSaverPath.empty() || !m_screenSaverEnabled) {
         weston_compositor_sleep(m_compositor);
         return;
     }
