@@ -16,6 +16,7 @@ set(SOURCES
     element.cpp
     hawaiishell.cpp
     package.cpp
+    packages_p.cpp
     packagestructure.cpp
     pluginmetadata.cpp
     quickview.cpp
