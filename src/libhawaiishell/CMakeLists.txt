@@ -15,6 +15,8 @@ set(SOURCES
     applications/applicationsmodel.cpp
     element.cpp
     hawaiishell.cpp
+    package.cpp
+    packagestructure.cpp
     pluginmetadata.cpp
     quickview.cpp
     settings/backgroundsettings.cpp
@@ -28,6 +30,8 @@ set(HEADERS
     applications/appinfo.h
     applications/applicationsmodel.h
     hawaiishell.h
+    package.h
+    packagestructure.h
     quickview.h
 )
 
