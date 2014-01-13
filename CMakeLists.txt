@@ -53,6 +53,9 @@ include(GenerateExportHeader)
 # Build flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wno-unused-parameter -std=c++0x")
 
+# Enable deprecated code
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+
 # Assume release build by default
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "" FORCE)
