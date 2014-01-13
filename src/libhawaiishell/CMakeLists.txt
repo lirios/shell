@@ -30,10 +30,15 @@ set(HEADERS
     applications/appcategories.h
     applications/appinfo.h
     applications/applicationsmodel.h
+    element.h
     hawaiishell.h
     package.h
     packagestructure.h
+    pluginmetadata.h
     quickview.h
+    settings/backgroundsettings.h
+    settings/launchersettings.h
+    settings/shellsettings.h
 )
 
 add_library(HF1HawaiiShell SHARED ${SOURCES})
