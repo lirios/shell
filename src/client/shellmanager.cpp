@@ -52,6 +52,9 @@ ShellManager::ShellManager()
     // Start counting how much time we need to start up :)
     m_elapsedTimer.start();
 
+    // Settings
+    m_settings = new ShellSettings(this);
+
     // We need windows with alpha buffer
     QQuickWindow::setDefaultAlphaBuffer(true);
 
@@ -115,6 +118,17 @@ QDir ShellManager::shellDirectory() const
     return QDir();
 }
 
+QString ShellManager::lookAndFeel() const
+{
+    return "org.hawaii.lookandfeel.standard";
+    //return m_settings->lookAndFeel();
+}
+
+QDir ShellManager::lookAndFeelDirectory() const
+{
+    return m_lookAndFeelDir;
+}
+
 void ShellManager::loadHandlers()
 {
     QDir shellsDir(QStringLiteral(INSTALL_DATADIR) + QStringLiteral("/hawaii/shells"));
@@ -152,6 +166,14 @@ void ShellManager::loadHandlers()
     updateShell();
 }
 
+void ShellManager::loadLookAndFeel()
+{
+    // This is bad but it's acceptable since we currently have only one look & feel package,
+    // a better loading mechanism will be implemented as soon as we have the concept of
+    // packages and plugin loader
+    m_lookAndFeelDir = QDir(QStringLiteral(INSTALL_DATADIR) + QStringLiteral("/hawaii/lookandfeel/org.hawaii.lookandfeel.standard/contents"));
+}
+
 void ShellManager::setup()
 {
     // Load elements
@@ -159,6 +181,9 @@ void ShellManager::setup()
 
     // Load shell handlers
     loadHandlers();
+
+    // Load look & feel
+    loadLookAndFeel();
 
     // Create the shell controller
     m_shellController = new ShellController(this);
@@ -183,6 +208,7 @@ void ShellManager::create()
 
     // Load user interface
     m_shellUi->setShell(m_currentHandler->property("shell").toString());
+    m_shellUi->setLookAndFeel("org.hawaii.lookandfeel.standard");
 
     // Shell user interface is ready, tell the compositor to fade in
     qDebug() << "Shell is now ready, elapsed time:" << m_elapsedTimer.elapsed() << "ms";

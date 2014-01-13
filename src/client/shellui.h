@@ -65,6 +65,7 @@ public Q_SLOTS:
     void setNumWorkspaces(int num);
 
     void setShell(const QString &shell);
+    void setLookAndFeel(const QString &lookAndFeel);
 
 private:
     ScriptEngine *m_jsEngine;
@@ -74,6 +75,7 @@ private:
     QList<DesktopView *> m_desktopViews;
     QList<PanelView *> m_panelViews;
     QString m_shell;
+    QString m_lookAndFeel;
 
     void synchronize();
 

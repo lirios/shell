@@ -131,7 +131,10 @@ void ShellUi::createLockScreen()
 {
     if (!m_lockScreenView) {
         QQmlEngine *engine = ShellManager::instance()->engine();
+        QDir dir = ShellManager::instance()->lookAndFeelDirectory();
+
         m_lockScreenView = new LockScreenView(engine, QGuiApplication::primaryScreen());
+        m_lockScreenView->setSource(QUrl::fromLocalFile(dir.absoluteFilePath(s_lockScreenViewFileName)));
     }
     m_lockScreenView->show();
 }
@@ -184,6 +187,22 @@ void ShellUi::setShell(const QString &shell)
 
     // Print how much did it take to load the new shell
     qDebug() << "Shell handler" << shell << "loaded in" << elapsed.elapsed() << "ms";
+}
+
+void ShellUi::setLookAndFeel(const QString &lookAndFeel)
+{
+    // Avoid loading the same look and feel package twice
+    if (m_lookAndFeel == lookAndFeel)
+        return;
+
+    // Save look and feel
+    m_lookAndFeel = lookAndFeel;
+
+    // Change user interface
+    if (m_lockScreenView) {
+        QDir dir = ShellManager::instance()->lookAndFeelDirectory();
+        m_lockScreenView->setSource(QUrl::fromLocalFile(dir.absoluteFilePath(s_lockScreenViewFileName)));
+    }
 }
 
 void ShellUi::synchronize()
