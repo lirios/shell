@@ -51,7 +51,7 @@ void SessionManager::unlock()
 
     // Close the lock screen, this will unmap the window and
     // save some resources
-    ShellManager::instance()->ui()->createLockScreen();
+    ShellManager::instance()->ui()->closeLockScreen();
 }
 
 #include "moc_sessionmanager.cpp"
