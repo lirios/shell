@@ -26,8 +26,11 @@
 
 for (var i = 0; i < screenCount; i++) {
     var topPanel = new Panel(i);
+    topPanel.location = "top";
+    topPanel.thickness = 24;
     topPanel.addElement("org.hawaii.elements.indicators");
 
     var bottomPanel = new Panel(i);
+    bottomPanel.location = "bottom";
     bottomPanel.addElement("org.hawaii.elements.launcher");
 }
