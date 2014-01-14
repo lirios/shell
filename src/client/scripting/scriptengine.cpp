@@ -30,7 +30,7 @@
 
 #include "appinterface.h"
 #include "desktopview.h"
-#include "panelview.h"
+#include "panelinterface.h"
 #include "scriptengine.h"
 #include "shellmanager.h"
 
@@ -133,10 +133,8 @@ QScriptValue ScriptEngine::newPanel(QScriptContext *context, QScriptEngine *engi
     }
 
     ScriptEngine *env = envFor(engine);
-    PanelView *view = new PanelView(ShellManager::instance()->corona(), screen);
-    view->show();
-
-    QScriptValue value = env->wrapWithQtOwnership(view);
+    PanelInterface *panel = new PanelInterface(screen);
+    QScriptValue value = env->wrapWithQtOwnership(panel);
     return value;
 }
 

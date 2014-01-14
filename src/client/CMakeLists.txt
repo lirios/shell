@@ -50,6 +50,7 @@ set(SOURCES
     extensions/elementfactory.cpp
     extensions/elementinfo.cpp
     scripting/appinterface.cpp
+    scripting/panelinterface.cpp
     scripting/scriptengine.cpp
     services/servicefactory.cpp
     services/datetime/datetime.cpp
