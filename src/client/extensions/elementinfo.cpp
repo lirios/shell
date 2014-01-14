@@ -62,7 +62,7 @@ Hawaii::Shell::Element *ElementInfo::createElement()
 
     qDebug() << "-> Loading element" << m_metadata.internalName();
 
-    QQmlEngine *engine = ShellManager::instance()->engine();
+    QQmlEngine *engine = ShellManager::instance()->corona()->engine();
     QQmlComponent component(engine);
     component.loadUrl(QUrl::fromLocalFile(path));
     if (!component.isReady()) {

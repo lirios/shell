@@ -83,7 +83,9 @@ void RegistryListener::handleGlobal(void *data,
     else if (strcmp(interface, "wl_hawaii_shell_surface") == 0)
         self->shellSurface->init(registry, id);
 
-    if (!self->shell->isInitialized() && !self->shellSurface->isInitialized() && !self->m_setupDone) {
+    if (self->shell->isInitialized() &&
+            self->shellSurface->isInitialized() &&
+            !self->m_setupDone) {
         // Ask ShellManager to set things up
         QMetaObject::invokeMethod(ShellManager::instance(), "setup", Qt::QueuedConnection);
         self->m_setupDone = true;

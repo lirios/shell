@@ -133,8 +133,7 @@ QScriptValue ScriptEngine::newPanel(QScriptContext *context, QScriptEngine *engi
     }
 
     ScriptEngine *env = envFor(engine);
-    QQmlEngine *qmlEngine = ShellManager::instance()->engine();
-    PanelView *view = new PanelView(qmlEngine, screen);
+    PanelView *view = new PanelView(ShellManager::instance()->corona(), screen);
     view->show();
 
     QScriptValue value = env->wrapWithQtOwnership(view);

@@ -27,14 +27,12 @@
 #ifndef PANELVIEW_H
 #define PANELVIEW_H
 
-#include <QtQuick/QQuickView>
-
 #include <HawaiiShell/Element>
 #include <HawaiiShell/HawaiiShell>
 #include <HawaiiShell/QuickView>
 
-class QQmlEngine;
 class QScreen;
+class ShellUi;
 
 class PanelView : public Hawaii::Shell::QuickView
 {
@@ -44,7 +42,7 @@ class PanelView : public Hawaii::Shell::QuickView
     Q_PROPERTY(int thickness READ thickness WRITE setThickness NOTIFY thicknessChanged)
     Q_PROPERTY(QStringList elements READ elements NOTIFY elementsChanged)
 public:
-    explicit PanelView(QQmlEngine *engine, QScreen *screen);
+    explicit PanelView(ShellUi *corona, QScreen *screen);
 
     Qt::Alignment alignment() const;
     void setAlignment(Qt::Alignment alignment);

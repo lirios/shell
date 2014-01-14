@@ -38,10 +38,8 @@
 
 using namespace Hawaii::Shell;
 
-const QString s_panelViewFileName = QStringLiteral("views/PanelView.qml");
-
-PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
-    : QuickView(engine, new QWindow(screen))
+PanelView::PanelView(ShellUi *corona, QScreen *screen)
+    : QuickView(corona, new QWindow(screen))
     , m_alignment(Qt::AlignLeft)
     , m_offset(0)
     , m_thickness(60)
@@ -71,8 +69,8 @@ PanelView::PanelView(QQmlEngine *engine, QScreen *screen)
     rootContext()->setContextProperty("view", QVariant::fromValue(this));
 
     // Load QML source file
-    QString fileName = ShellManager::instance()->shellDirectory().filePath(s_panelViewFileName);
-    setSource(QUrl::fromLocalFile(fileName));
+    setSource(QUrl::fromLocalFile(corona->package().filePath(
+                                      "views", QStringLiteral("PanelView.qml"))));
 
     // Debugging message
     qDebug() << "-> Created PanelView with geometry"

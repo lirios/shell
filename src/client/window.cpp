@@ -74,7 +74,7 @@ void WindowPrivate::hawaii_window_identifier_changed(const QString &identifier)
                     identifier);
         delete this->appInfo;
         this->appInfo = new Hawaii::Shell::AppInfo();
-        this->appInfo->moveToThread(ShellManager::instance()->engine()->thread());
+        this->appInfo->moveToThread(ShellManager::instance()->corona()->engine()->thread());
         this->appInfo->load(fileName);
         Q_EMIT q->appInfoChanged();
     }
@@ -134,7 +134,7 @@ Window::Window(const QString &title, const QString &identifier, States state, QO
                 QStandardPaths::ApplicationsLocation,
                 identifier);
     d->appInfo = new Hawaii::Shell::AppInfo();
-    d->appInfo->moveToThread(ShellManager::instance()->engine()->thread());
+    d->appInfo->moveToThread(ShellManager::instance()->corona()->engine()->thread());
     d->appInfo->load(fileName);
 }
 

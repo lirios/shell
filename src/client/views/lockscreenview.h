@@ -29,11 +29,14 @@
 
 #include <HawaiiShell/QuickView>
 
+class QScreen;
+class ShellUi;
+
 class LockScreenView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
 public:
-    explicit LockScreenView(QQmlEngine *engine, QScreen *screen);
+    explicit LockScreenView(ShellUi *corona, QScreen *screen);
 
 public Q_SLOTS:
     void setWindowType();

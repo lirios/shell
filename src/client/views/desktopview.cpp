@@ -35,8 +35,8 @@
 
 using namespace Hawaii::Shell;
 
-DesktopView::DesktopView(QQmlEngine *engine, QScreen *screen)
-    : QuickView(engine, new QWindow(screen))
+DesktopView::DesktopView(ShellUi *corona, QScreen *screen)
+    : QuickView(corona, new QWindow(screen))
 {
     // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);

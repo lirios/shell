@@ -26,10 +26,12 @@
 
 #include <QtCore/QDebug>
 #include <QtGui/QGuiApplication>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQml/QQmlEngine>
 
-#include <QtGui/qpa/qplatformnativeinterface.h>
+#include <HawaiiShell/PluginLoader>
 
+#include "applicationiconprovider.h"
 #include "desktopview.h"
 #include "grabwindow.h"
 #include "lockscreenview.h"
@@ -37,28 +39,23 @@
 #include "shellui.h"
 #include "shellmanager.h"
 
-const QString s_desktopViewFileName = QStringLiteral("views/DesktopView.qml");
 const QString s_lockScreenViewFileName = QStringLiteral("lockscreen/LockScreen.qml");
 
 ShellUi::ShellUi(QObject *parent)
-    : QObject(parent)
+    : Hawaii::Shell::Corona(parent)
     , m_numWorkspaces(0)
+    , m_grabWindow(nullptr)
     , m_lockScreenView(nullptr)
 {
+    // Register image provider
+    engine()->addImageProvider("appicon", new ApplicationIconProvider);
+
     // Create and connect JavaScript engine
     m_jsEngine = new ScriptEngine(this);
     connect(m_jsEngine, &ScriptEngine::print,
             this, &ShellUi::printScriptMessage);
     connect(m_jsEngine, &ScriptEngine::printError,
             this, &ShellUi::printScriptError);
-
-    // Create new desktop views when screens are attached
-    connect(qApp, &QGuiApplication::screenAdded,
-            this, &ShellUi::screenAdded);
-
-    // Create grab window
-    m_grabWindow = new GrabWindow();
-    m_grabWindow->show();
 }
 
 ShellUi::~ShellUi()
@@ -98,15 +95,24 @@ QList<PanelView *> ShellUi::panels() const
 
 void ShellUi::load()
 {
+    // Create grab window
+    m_grabWindow = new GrabWindow();
+    m_grabWindow->show();
+
+    // Create new desktop views when screens are attached
+    connect(qApp, &QGuiApplication::screenAdded,
+            this, &ShellUi::screenAdded);
+
+    // Create desktop view for each screen
     for (QScreen *screen: QGuiApplication::screens())
         screenAdded(screen);
 
-    QString fileName = ShellManager::instance()->shellDirectory().filePath("layout.js");
-    QFile file(fileName);
+    // Execute layout script
+    QFile file(package().filePath("defaultlayout"));
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QString script = file.readAll();
         file.close();
-        m_jsEngine->evaluateScript(script, "layout.js");
+        m_jsEngine->evaluateScript(script, file.fileName());
     }
 
     synchronize();
@@ -117,6 +123,12 @@ void ShellUi::unload()
     // Don't unload until we know which shell is loaded
     if (m_shell.isEmpty())
         return;
+
+    // Destroy grab window
+    if (m_grabWindow) {
+        m_grabWindow->deleteLater();
+        m_grabWindow = nullptr;
+    }
 
     // Destroy all panels
     for (PanelView *view: m_panelViews) {
@@ -130,10 +142,9 @@ void ShellUi::unload()
 void ShellUi::createLockScreen()
 {
     if (!m_lockScreenView) {
-        QQmlEngine *engine = ShellManager::instance()->engine();
         QDir dir = ShellManager::instance()->lookAndFeelDirectory();
 
-        m_lockScreenView = new LockScreenView(engine, QGuiApplication::primaryScreen());
+        m_lockScreenView = new LockScreenView(this, QGuiApplication::primaryScreen());
         m_lockScreenView->setSource(QUrl::fromLocalFile(dir.absoluteFilePath(s_lockScreenViewFileName)));
     }
     m_lockScreenView->show();
@@ -180,9 +191,18 @@ void ShellUi::setShell(const QString &shell)
     QElapsedTimer elapsed;
     elapsed.start();
 
-    // Unload the old shell and load the new one
+    // Unload the old shell
     unload();
+
+    // Save shell name
     m_shell = shell;
+
+    // Load package
+    Hawaii::Shell::Package package = Hawaii::Shell::PluginLoader::instance()->loadPackage("Hawaii/Shell/Shell");
+    package.setPath(shell);
+    setPackage(package);
+
+    // Load the new one
     load();
 
     // Print how much did it take to load the new shell
@@ -213,9 +233,6 @@ void ShellUi::synchronize()
 
 void ShellUi::screenAdded(QScreen *screen)
 {
-    QQmlEngine *engine = ShellManager::instance()->engine();
-    QDir shellDir = ShellManager::instance()->shellDirectory();
-
     DesktopView *view = nullptr;
     bool previouslyAdded = false;
 
@@ -230,8 +247,8 @@ void ShellUi::screenAdded(QScreen *screen)
 
     // Load QML code and show
     if (!view)
-        view = new DesktopView(engine, screen);
-    view->setSource(QUrl::fromLocalFile(shellDir.absoluteFilePath(s_desktopViewFileName)));
+        view = new DesktopView(this, screen);
+    view->setSource(QUrl::fromLocalFile(package().filePath("views", QStringLiteral("DesktopView.qml"))));
     if (!previouslyAdded) {
         view->show();
         m_desktopViews.append(view);

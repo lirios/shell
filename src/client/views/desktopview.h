@@ -29,14 +29,14 @@
 
 #include <HawaiiShell/QuickView>
 
-class QQmlEngine;
 class QScreen;
+class ShellUi;
 
 class DesktopView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
 public:
-    explicit DesktopView(QQmlEngine *engine, QScreen *screen);
+    explicit DesktopView(ShellUi *corona, QScreen *screen);
 
 private:
     void setWindowType();

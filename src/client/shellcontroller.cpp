@@ -136,8 +136,6 @@ ShellController::ShellController(QObject *parent)
     : QObject(parent)
     , d_ptr(new ShellControllerPrivate(this))
 {
-    Registration::registerFactories();
-
     ShellManager *manager = ShellManager::instance();
     ShellClient *client = manager->shellInterface();
 

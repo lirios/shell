@@ -30,6 +30,8 @@
 #include <QtCore/QObject>
 #include <QtGui/QScreen>
 
+#include <HawaiiShell/Corona>
+
 #include "scriptengine.h"
 
 class DesktopView;
@@ -37,7 +39,7 @@ class GrabWindow;
 class LockScreenView;
 class PanelView;
 
-class ShellUi : public QObject
+class ShellUi : public Hawaii::Shell::Corona
 {
     Q_OBJECT
 public:
@@ -74,6 +76,7 @@ private:
     LockScreenView *m_lockScreenView;
     QList<DesktopView *> m_desktopViews;
     QList<PanelView *> m_panelViews;
+    Hawaii::Shell::Package m_package;
     QString m_shell;
     QString m_lookAndFeel;
 

@@ -53,16 +53,13 @@ public:
 
     static ShellManager *instance();
 
-    QQmlEngine *engine() const;
-
     ShellController *controller() const;
-    ShellUi *ui() const;
+    ShellUi *corona() const;
 
     ShellClient *shellInterface() const;
     ShellSurfaceClient *shellSurfaceInterface() const;
 
     QString shell() const;
-    QDir shellDirectory() const;
 
     QString lookAndFeel() const;
     QDir lookAndFeelDirectory() const;
@@ -82,7 +79,6 @@ Q_SIGNALS:
 private:
     QElapsedTimer m_elapsedTimer;
     ShellSettings *m_settings;
-    QQmlEngine *m_engine;
     RegistryListener *m_registryListener;
     ShellController *m_shellController;
     ShellUi *m_shellUi;

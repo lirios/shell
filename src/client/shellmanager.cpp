@@ -34,7 +34,6 @@
 
 #include <HawaiiShell/PluginMetadata>
 
-#include "applicationiconprovider.h"
 #include "cmakedirs.h"
 #include "elementfactory.h"
 #include "registration.h"
@@ -43,10 +42,8 @@
 Q_GLOBAL_STATIC(ShellManager, s_shellManager)
 
 ShellManager::ShellManager()
-    : m_engine(new QQmlEngine(this))
-    , m_registryListener(new RegistryListener())
+    : m_registryListener(new RegistryListener())
     , m_shellController(nullptr)
-    , m_shellUi(nullptr)
     , m_currentHandler(nullptr)
 {
     // Start counting how much time we need to start up :)
@@ -58,11 +55,12 @@ ShellManager::ShellManager()
     // We need windows with alpha buffer
     QQuickWindow::setDefaultAlphaBuffer(true);
 
-    // Register image provider
-    m_engine->addImageProvider("appicon", new ApplicationIconProvider);
-
-    // Register QML types
+    // Register QML types and services
     Registration::registerQmlTypes();
+    Registration::registerFactories();
+
+    // Create shell corona
+    m_shellUi = new ShellUi(this);
 
     // Register Wayland interfaces
     m_registryListener->run();
@@ -79,17 +77,12 @@ ShellManager *ShellManager::instance()
     return s_shellManager();
 }
 
-QQmlEngine *ShellManager::engine() const
-{
-    return m_engine;
-}
-
 ShellController *ShellManager::controller() const
 {
     return m_shellController;
 }
 
-ShellUi *ShellManager::ui() const
+ShellUi *ShellManager::corona() const
 {
     return m_shellUi;
 }
@@ -109,13 +102,6 @@ QString ShellManager::shell() const
     if (m_currentHandler)
         return m_currentHandler->property("shell").toString();
     return QString();
-}
-
-QDir ShellManager::shellDirectory() const
-{
-    if (m_currentHandler)
-        return m_currentHandler->property("path").toString();
-    return QDir();
 }
 
 QString ShellManager::lookAndFeel() const
@@ -148,19 +134,14 @@ void ShellManager::loadHandlers()
 
         // Load shell handler
         qDebug() << "Loading shell handler" << name;
-        QQmlComponent component(m_engine, qmlFileName, this);
+        QQmlComponent component(m_shellUi->engine(), qmlFileName, this);
         QObject *handler = component.create();
         for (QQmlError error: component.errors())
             qWarning() << "Error:" << error.toString();
 
-        if (handler) {
-            // Register shell handler and save the base directory
-            registerHandler(name, handler);
-
-            // Save shell path
-            const QString path = shellsDir.absoluteFilePath(dirName + QStringLiteral("/contents/"));
-            handler->setProperty("path", path);;
-        }
+        // Register shell handler
+        if (handler)
+            registerHandler(name, handler);;
     }
 
     updateShell();
@@ -187,14 +168,13 @@ void ShellManager::setup()
 
     // Create the shell controller
     m_shellController = new ShellController(this);
-    m_engine->rootContext()->setContextProperty("Shell", m_shellController);
 }
 
 void ShellManager::create()
 {
-    // Create shell user interface
-    m_shellUi = new ShellUi(this);
-    m_engine->rootContext()->setContextProperty("Ui", m_shellUi);
+    // Setup shell corona
+    m_shellUi->engine()->rootContext()->setContextProperty("Shell", m_shellController);
+    m_shellUi->engine()->rootContext()->setContextProperty("Ui", m_shellUi);
     connect(m_registryListener->shell, &ShellClient::prepareLockSurface,
             m_shellUi, &ShellUi::createLockScreen);
     connect(m_registryListener->shell, &ShellClient::cursorChanged,
