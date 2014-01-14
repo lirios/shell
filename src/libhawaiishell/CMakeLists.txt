@@ -19,6 +19,7 @@ set(SOURCES
     package.cpp
     packages_p.cpp
     packagestructure.cpp
+    pluginloader.cpp
     pluginmetadata.cpp
     quickview.cpp
     settings/backgroundsettings.cpp
@@ -36,6 +37,7 @@ set(HEADERS
     hawaiishell.h
     package.h
     packagestructure.h
+    pluginloader.h
     pluginmetadata.h
     quickview.h
     settings/backgroundsettings.h
