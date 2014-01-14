@@ -43,6 +43,7 @@ class PanelView : public Hawaii::Shell::QuickView
     Q_PROPERTY(QStringList elements READ elements NOTIFY elementsChanged)
 public:
     explicit PanelView(ShellUi *corona, QScreen *screen);
+    virtual ~PanelView();
 
     Qt::Alignment alignment() const;
     void setAlignment(Qt::Alignment alignment);
@@ -71,7 +72,8 @@ private:
     Qt::Alignment m_alignment;
     int m_offset;
     int m_thickness;
-    QStringList m_elements;
+    QSet<QString> m_elementsSet;
+    QList<Hawaii::Shell::Element *> m_elements;
 
     void setWindowType();
     void setSurfacePosition(const QPoint &pt);

@@ -77,6 +77,11 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
              << geometry();
 }
 
+PanelView::~PanelView()
+{
+    qDeleteAll(m_elements);
+}
+
 Qt::Alignment PanelView::alignment() const
 {
     return m_alignment;
@@ -120,17 +125,15 @@ void PanelView::setThickness(int value)
 
 QStringList PanelView::elements() const
 {
-    return m_elements;
+    return m_elementsSet.toList();
 }
 
 void PanelView::addElement(const QString &name)
 {
-    if (m_elements.contains(name)) {
-        m_elements.append(name);
-        Q_EMIT elementsChanged();
-    }
+    m_elementsSet.insert(name);
 
     Hawaii::Shell::Element *element = ElementFactory::createElement(name);
+    m_elements.append(element);
     Q_EMIT elementAdded(element);
 }
 
