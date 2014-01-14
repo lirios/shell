@@ -42,6 +42,7 @@ class QuickViewPrivate
 public:
     QuickViewPrivate(QuickView *view);
 
+    Corona *corona;
     Types::FormFactor formFactor;
     Types::Location location;
 
@@ -83,19 +84,12 @@ void QuickViewPrivate::initialize()
  * QuickView
  */
 
-QuickView::QuickView(QWindow *parent)
-    : QQuickView(parent)
+QuickView::QuickView(Corona *corona, QWindow *parent)
+    : QQuickView(corona->engine(), parent)
     , d_ptr(new QuickViewPrivate(this))
 {
     Q_D(QuickView);
-    d->initialize();
-}
-
-QuickView::QuickView(QQmlEngine *engine, QWindow *parent)
-    : QQuickView(engine, parent)
-    , d_ptr(new QuickViewPrivate(this))
-{
-    Q_D(QuickView);
+    d->corona = corona;
     d->initialize();
 }
 

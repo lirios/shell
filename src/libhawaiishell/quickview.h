@@ -30,6 +30,7 @@
 #include <QtQuick/QQuickView>
 
 #include <HawaiiShell/HawaiiShell>
+#include <HawaiiShell/Corona>
 
 namespace Hawaii {
 
@@ -46,16 +47,10 @@ class HAWAIISHELL_EXPORT QuickView : public QQuickView
 public:
     /*!
      * Constructor.
+     * \param corona the corona for this view
      * \param parent the QWindow this view is parented to
      */
-    explicit QuickView(QWindow *parent = 0);
-
-    /*!
-     * Constructor.
-     * \param engine the QML engine this view will use
-     * \param parent the QWindow this view is parented to
-     */
-    QuickView(QQmlEngine *engine, QWindow *parent = 0);
+    QuickView(Corona *corona, QWindow *parent = 0);
 
     /*!
      * Destructor.
