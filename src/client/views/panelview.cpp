@@ -66,7 +66,7 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     positionPanel();
 
     // Let QML see us
-    rootContext()->setContextProperty("view", QVariant::fromValue(this));
+    rootContext()->setContextProperty("view", this);
 
     // Load QML source file
     setSource(QUrl::fromLocalFile(corona->package().filePath(
