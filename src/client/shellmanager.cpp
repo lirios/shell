@@ -49,6 +49,12 @@ ShellManager::ShellManager()
     // Start counting how much time we need to start up :)
     m_elapsedTimer.start();
 
+    // Wait during shell switch
+    m_updateTimer.setInterval(100);
+    m_updateTimer.setSingleShot(true);
+    connect(&m_updateTimer, &QTimer::timeout,
+            this, &ShellManager::updateShell);
+
     // Settings
     m_settings = new ShellSettings(this);
 
@@ -195,8 +201,15 @@ void ShellManager::create()
     Q_EMIT ready();
 }
 
+void ShellManager::requestShellUpdate()
+{
+    m_updateTimer.start();
+}
+
 void ShellManager::updateShell()
 {
+    m_updateTimer.stop();
+
     if (m_handlers.isEmpty()) {
         qFatal("No shell handlers installed, cannot continue!");
         return;
@@ -246,9 +259,9 @@ void ShellManager::registerHandler(const QString &name, QObject *handler)
     connect(handler, &QObject::destroyed,
             this, &ShellManager::deregisterHandler);
     connect(handler, SIGNAL(willingChanged()),
-            this, SLOT(updateShell()));
+            this, SLOT(requestShellUpdate()));
     connect(handler, SIGNAL(priorityChanged()),
-            this, SLOT(updateShell()));
+            this, SLOT(requestShellUpdate()));
 
     m_handlers.insert(name, handler);
 }

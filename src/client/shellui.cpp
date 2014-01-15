@@ -133,9 +133,7 @@ void ShellUi::unload()
     // Destroy all panels
     for (PanelView *view: m_panelViews) {
         m_panelViews.removeOne(view);
-        view->hide();
         view->deleteLater();
-        synchronize();
     }
 }
 

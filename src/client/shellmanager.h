@@ -31,6 +31,7 @@
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QObject>
 #include <QtCore/QHash>
+#include <QtCore/QTimer>
 
 #include <HawaiiShell/ShellSettings>
 
@@ -78,6 +79,7 @@ Q_SIGNALS:
 
 private:
     QElapsedTimer m_elapsedTimer;
+    QTimer m_updateTimer;
     ShellSettings *m_settings;
     RegistryListener *m_registryListener;
     ShellController *m_shellController;
@@ -89,6 +91,8 @@ private:
 private Q_SLOTS:
     void registerHandler(const QString &name, QObject *handler);
     void deregisterHandler(QObject *handler);
+
+    void requestShellUpdate();
     void updateShell();
 };
 
