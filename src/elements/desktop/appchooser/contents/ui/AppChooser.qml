@@ -97,8 +97,7 @@ Popup {
                         appChooser.visible = false;
 
                         // Launch the application
-                        var item = appsModel.get(VisualDataModel.itemsIndex);
-                        item.launch();
+                        appsModel.launch(VisualDataModel.itemsIndex);
                     }
                 }
             }
