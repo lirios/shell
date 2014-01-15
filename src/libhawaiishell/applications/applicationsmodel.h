@@ -63,6 +63,7 @@ public:
 
 public Q_SLOTS:
     AppInfo *get(int index);
+    void launch(int index);
 
 private:
     QList<AppInfo *> m_apps;

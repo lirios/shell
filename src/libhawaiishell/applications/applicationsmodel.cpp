@@ -108,6 +108,11 @@ AppInfo *ApplicationsModel::get(int index)
     return m_apps.at(index);
 }
 
+void ApplicationsModel::launch(int index)
+{
+    get(index)->launch();
+}
+
 void ApplicationsModel::populate()
 {
     QStringList paths = QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation);
