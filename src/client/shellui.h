@@ -53,7 +53,9 @@ public:
     LockScreenView *lockScreenView() const;
 
     QList<DesktopView *> desktops() const;
+
     QList<PanelView *> panels() const;
+    void addPanelView(PanelView *view);
 
     void load();
     void unload();

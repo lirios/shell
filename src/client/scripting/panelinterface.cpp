@@ -64,6 +64,10 @@ PanelInterface::PanelInterface(QScreen *screen, QObject *parent)
 {
     m_view = new PanelView(ShellManager::instance()->corona(), screen);
     m_view->show();
+
+    ShellUi *corona = qobject_cast<ShellUi *>(m_view->corona());
+    if (corona)
+        corona->addPanelView(m_view);
 }
 
 QString PanelInterface::formFactor() const

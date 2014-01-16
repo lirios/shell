@@ -93,6 +93,11 @@ QList<PanelView *> ShellUi::panels() const
     return m_panelViews;
 }
 
+void ShellUi::addPanelView(PanelView *view)
+{
+    m_panelViews.append(view);
+}
+
 void ShellUi::load()
 {
     // Create grab window
