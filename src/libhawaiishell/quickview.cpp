@@ -98,6 +98,12 @@ QuickView::~QuickView()
     delete d_ptr;
 }
 
+Corona *QuickView::corona() const
+{
+    Q_D(const QuickView);
+    return d->corona;
+}
+
 Hawaii::Shell::Types::FormFactor QuickView::formFactor() const
 {
     Q_D(const QuickView);

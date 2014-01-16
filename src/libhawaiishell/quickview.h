@@ -58,6 +58,11 @@ public:
     virtual ~QuickView();
 
     /*!
+     * \return the corona for this view.
+     */
+    Corona *corona() const;
+
+    /*!
      * \return the form factor of this view.
      */
     Hawaii::Shell::Types::FormFactor formFactor() const;
