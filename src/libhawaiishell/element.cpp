@@ -39,6 +39,7 @@ class ElementPrivate
 public:
     ElementPrivate();
 
+    bool busy;
     qreal minimumWidth;
     qreal maximumWidth;
     qreal minimumHeight;
@@ -48,7 +49,8 @@ public:
 };
 
 ElementPrivate::ElementPrivate()
-    : minimumWidth(0)
+    : busy(false)
+    , minimumWidth(0)
     , maximumWidth(10000)
     , minimumHeight(0)
     , maximumHeight(10000)
@@ -70,6 +72,22 @@ Element::Element(QQuickItem *parent)
 Element::~Element()
 {
     delete d_ptr;
+}
+
+bool Element::isBusy() const
+{
+    Q_D(const Element);
+    return d->busy;
+}
+
+void Element::setBusy(bool value)
+{
+    Q_D(Element);
+
+    if (d->busy != value) {
+        d->busy = value;
+        Q_EMIT busyChanged();
+    }
 }
 
 qreal Element::minimumWidth() const

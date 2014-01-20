@@ -40,6 +40,7 @@ class ElementPrivate;
 class HAWAIISHELL_EXPORT Element : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(bool busy READ isBusy WRITE setBusy NOTIFY busyChanged)
     Q_PROPERTY(qreal minimumWidth READ minimumWidth WRITE setMinimumWidth NOTIFY minimumWidthChanged)
     Q_PROPERTY(qreal maximumWidth READ maximumWidth WRITE setMaximumWidth NOTIFY maximumWidthChanged)
     Q_PROPERTY(qreal minimumHeight READ minimumHeight WRITE setMinimumHeight NOTIFY minimumHeightChanged)
@@ -49,6 +50,9 @@ class HAWAIISHELL_EXPORT Element : public QQuickItem
 public:
     explicit Element(QQuickItem *parent = 0);
     ~Element();
+
+    bool isBusy() const;
+    void setBusy(bool value);
 
     qreal minimumWidth() const;
     void setMinimumWidth(qreal value);
@@ -69,6 +73,7 @@ public:
     void setFillHeight(bool value);
 
 Q_SIGNALS:
+    void busyChanged();
     void minimumWidthChanged();
     void maximumWidthChanged();
     void minimumHeightChanged();
