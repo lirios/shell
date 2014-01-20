@@ -43,6 +43,7 @@ public:
     QuickViewPrivate(QuickView *view);
 
     Corona *corona;
+    bool immutable;
     Types::FormFactor formFactor;
     Types::Location location;
 
@@ -53,7 +54,8 @@ protected:
 };
 
 QuickViewPrivate::QuickViewPrivate(QuickView *view)
-    : formFactor(Types::Plane)
+    : immutable(false)
+    , formFactor(Types::Plane)
     , location(Types::Desktop)
     , q_ptr(view)
 {
@@ -102,6 +104,22 @@ Corona *QuickView::corona() const
 {
     Q_D(const QuickView);
     return d->corona;
+}
+
+bool QuickView::isImmutable() const
+{
+    Q_D(const QuickView);
+    return d->immutable;
+}
+
+void QuickView::setImmutable(bool value)
+{
+    Q_D(QuickView);
+
+    if (d->immutable != value) {
+        d->immutable = value;
+        Q_EMIT immutableChanged(value);
+    }
 }
 
 Hawaii::Shell::Types::FormFactor QuickView::formFactor() const

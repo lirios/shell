@@ -43,6 +43,7 @@ class HAWAIISHELL_EXPORT QuickView : public QQuickView
     Q_OBJECT
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
+    Q_PROPERTY(bool immutable READ isImmutable WRITE setImmutable NOTIFY immutableChanged)
     Q_PROPERTY(QRectF screenGeometry READ screenGeometry NOTIFY screenGeometryChanged)
 public:
     /*!
@@ -61,6 +62,18 @@ public:
      * \return the corona for this view.
      */
     Corona *corona() const;
+
+    /*!
+     * \return whether the view is immutable or not.
+     */
+    bool isImmutable() const;
+
+    /*!
+     * Makes the view immutable or not.
+     * Immutable views cannot be configured by the user.
+     * \param value whether the view is immutable or not
+     */
+    void setImmutable(bool value);
 
     /*!
      * \return the form factor of this view.
@@ -90,6 +103,13 @@ public:
     QRectF screenGeometry() const;
 
 Q_SIGNALS:
+    /*!
+     * Emitted when the view becomes immutable or it's no longer
+     * immutable.
+     * \param newValue whether the view is immutable
+     */
+    void immutableChanged(bool newValue);
+
     /*!
      * Emitted when the form factor is changed.
      * \param formFactor the new form factorof the view
