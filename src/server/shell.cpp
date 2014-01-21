@@ -189,8 +189,8 @@ ShellGrab::ShellGrab()
 
 Shell::~Shell()
 {
-    for (auto i = m_workspaces.begin(); i != m_workspaces.end(); ++i)
-        m_workspaces.erase(i);
+    for (auto i = m_workspaces.begin(); i != m_workspaces.end(); /*nothing*/)
+        m_workspaces.erase(i++);
 
     // Free client path and kill the shell client (resource was already destroyed)
     free(m_clientPath);

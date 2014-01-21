@@ -70,10 +70,11 @@ InOutSurfaceEffect::InOutSurfaceEffect(Shell *shell)
 
 InOutSurfaceEffect::~InOutSurfaceEffect()
 {
-    for (auto i = m_surfaces.begin(); i != m_surfaces.end(); ++i) {
-        weston_surface_destroy((*i)->surface);
-        delete *i;
-        m_surfaces.erase(i);
+    while (!m_surfaces.empty()) {
+        Surface *s = m_surfaces.front();
+        weston_surface_destroy(s->surface);
+        delete s;
+        m_surfaces.pop_front();
     }
 }
 
