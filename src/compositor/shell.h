@@ -86,8 +86,6 @@ protected:
     void hawaii_shell_select_workspace(Resource *resource,
                                        struct ::wl_resource *workspace) Q_DECL_OVERRIDE;
 
-    void hawaii_shell_start_grab(Resource *resource, uint32_t id) Q_DECL_OVERRIDE;
-
 private:
     KeyBindings m_keyBindings;
 

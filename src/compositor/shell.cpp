@@ -215,11 +215,6 @@ void Shell::hawaii_shell_select_workspace(Resource *resource,
     Q_UNUSED(resource);
 }
 
-void Shell::hawaii_shell_start_grab(Resource *resource, uint32_t id)
-{
-    Q_UNUSED(resource);
-}
-
 void Shell::resumeDesktop()
 {
     // Terminate screen saver process

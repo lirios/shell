@@ -41,7 +41,6 @@
 #include "shellsurface.h"
 #include "clientwindow.h"
 #include "workspace.h"
-#include "grab.h"
 #include "notifications.h"
 #include "screensaver.h"
 #include "keymap.h"

@@ -16,7 +16,6 @@ add_definitions(
 set(SOURCES
     clientwindow.cpp
     compositor.cpp
-    grab.cpp
     keybinding.cpp
     logging.cpp
     main.cpp
