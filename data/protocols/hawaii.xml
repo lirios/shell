@@ -138,13 +138,6 @@
       <arg name="workspace" type="object" interface="wl_hawaii_workspace"/>
     </request>
 
-    <request name="start_grab">
-      <description summary="start grabbing an element">
-        Tell the server we are starting to grab an element.
-      </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_grab"/>
-    </request>
-
     <event name="loaded">
       <description summary="tell the client to create and set its surfaces">
         Tell the shell we want it to create and set its surfaces such as
@@ -393,45 +386,6 @@
       <description summary="workspace deactivated">
         This event will be sent immediately after this workspace is deactivated.
       </description>
-    </event>
-  </interface>
-
-  <interface name="wl_hawaii_grab" version="1">
-    <description summary="desktop elements grabbing">
-      Manage desktop elements grabbing and moving.
-    </description>
-
-    <request name="end">
-      <description summary="end grab">
-        Tell the server that the client stopped grabbing the element.
-      </description>
-    </request>
-
-    <event name="focus">
-      <description summary="element focused">
-        This event will be sent when an element has focus.
-      </description>
-      <arg name="surface" type="object" interface="wl_surface"/>
-      <arg name="sx" type="fixed"/>
-      <arg name="sy" type="fixed"/>
-    </event>
-
-    <event name="motion">
-      <description summary="element motion">
-        This event will be sent when an element is moving.
-      </description>
-      <arg name="time" type="uint"/>
-      <arg name="sx" type="fixed"/>
-      <arg name="sy" type="fixed"/>
-    </event>
-
-    <event name="button">
-      <description summary="element clicked">
-        This event will be sent when an element is clicked.
-      </description>
-      <arg name="time" type="uint"/>
-      <arg name="button" type="uint"/>
-      <arg name="state" type="uint"/>
     </event>
   </interface>
 </protocol>

@@ -1046,53 +1046,6 @@ static void client_grab_button(struct weston_pointer_grab *base, uint32_t time, 
     wl_hawaii_grab_send_button(cgrab->resource, time, button, state);
 }
 
-static const struct weston_pointer_grab_interface client_grab_interface = {
-    client_grab_focus,
-    client_grab_motion,
-    client_grab_button,
-};
-
-void client_grab_end(wl_client *client, wl_resource *resource)
-{
-    ClientGrab *cg = static_cast<ClientGrab *>(resource->data);
-    Shell::endGrab(cg);
-    weston_output_schedule_repaint(cg->pointer->focus->output);
-}
-
-static const struct wl_hawaii_grab_interface hawaii_grab_implementation = {
-    client_grab_end
-};
-
-void DesktopShell::createGrab(wl_client *client, wl_resource *resource, uint32_t id)
-{
-    wl_resource *res = wl_resource_create(client, &wl_hawaii_grab_interface, wl_resource_get_version(resource), id);
-
-    ClientGrab *grab = new ClientGrab;
-    wl_resource_set_implementation(res, &hawaii_grab_implementation, grab, [](wl_resource *) {});
-
-    if (!grab)
-        return;
-
-    weston_seat *seat = container_of(compositor()->seat_list.next, weston_seat, link);
-    grab->pointer = seat->pointer;
-    grab->resource = res;
-    grab->shell = this;
-    grab->pressed = seat->pointer->button_count > 0;
-
-    ShellSeat::shellSeat(seat)->endPopupGrab();
-
-    wl_fixed_t sx, sy;
-    struct weston_surface *surface = weston_compositor_pick_surface(compositor(),
-                                                                    grab->pointer->x, grab->pointer->y,
-                                                                    &sx, &sy);
-    weston_pointer_set_focus(grab->pointer, surface, sx, sy);
-    grab->focus = surface;
-    wl_hawaii_grab_send_focus(grab->resource, surface->resource, sx, sy);
-
-    grab->grab.interface = &client_grab_interface;
-    weston_pointer_start_grab(grab->pointer, &grab->grab);
-}
-
 const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::addKeyBinding),
     wrapInterface(&DesktopShell::setAvailableGeometry),
