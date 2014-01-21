@@ -135,6 +135,7 @@ DropArea {
             onYChanged: d.coordsChanged()
 
             property Item element
+            property bool animationsEnabled: false
 
             QtObject {
                 id: d
@@ -158,6 +159,7 @@ DropArea {
 
             NumberAnimation {
                 id: translateAnimation
+                running: animationsEnabled
                 easing.type: Easing.InOutQuad
                 target: translateTransform
                 properties: "x,y"
@@ -240,6 +242,7 @@ DropArea {
         element.anchors.fill = container;
         element.visible = true;
         container.visible = true;
+        container.animationsEnabled = true;
 
         // Replace drag & drop spacer if available
         if (dndSpacer.parent === currentLayout) {
