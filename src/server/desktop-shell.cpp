@@ -981,71 +981,6 @@ void DesktopShell::selectWorkspace(wl_client *client, wl_resource *resource, wl_
     Shell::selectWorkspace(Workspace::fromResource(workspace_resource)->number());
 }
 
-class ClientGrab : public ShellGrab {
-public:
-    wl_resource *resource;
-    weston_surface *focus;
-    bool pressed;
-};
-
-static void client_grab_focus(struct weston_pointer_grab *base)
-{
-    ShellGrab *grab = container_of(base, ShellGrab, grab);
-    ClientGrab *cgrab = static_cast<ClientGrab *>(grab);
-
-    wl_fixed_t sx, sy;
-    struct weston_surface *surface = weston_compositor_pick_surface(grab->pointer->seat->compositor,
-                                                                    grab->pointer->x, grab->pointer->y,
-                                                                    &sx, &sy);
-    if (cgrab->focus != surface) {
-        cgrab->focus = surface;
-        wl_hawaii_grab_send_focus(cgrab->resource, surface->resource, sx, sy);
-    }
-}
-
-static void client_grab_motion(struct weston_pointer_grab *base, uint32_t time)
-{
-    ShellGrab *grab = container_of(base, ShellGrab, grab);
-    ClientGrab *cgrab = static_cast<ClientGrab *>(grab);
-
-    wl_fixed_t sx = cgrab->pointer->x;
-    wl_fixed_t sy = cgrab->pointer->y;
-    if (cgrab->focus) {
-        weston_surface_from_global_fixed(cgrab->focus, cgrab->pointer->x, cgrab->pointer->y, &sx, &sy);
-    }
-
-    wl_hawaii_grab_send_motion(cgrab->resource, time, sx, sy);
-}
-
-static void client_grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state)
-{
-    ShellGrab *grab = container_of(base, ShellGrab, grab);
-    ClientGrab *cgrab = static_cast<ClientGrab *>(grab);
-
-    // Send the event to the application as normal if the mouse was pressed initially.
-    // The application has to know the button was released, otherwise its internal state
-    // will be inconsistent with the physical button state.
-    // Eat the other events, as the app doesn't need to know them.
-    // NOTE: this works only if there is only 1 button pressed initially. i can know how many button
-    // are pressed but weston currently has no API to determine which ones they are.
-#if (WESTON_VERSION_NUMBER >= WESTON_VERSION_CHECK(1, 3, 0))
-    wl_resource *resource;
-    wl_resource_for_each(resource, &grab->pointer->focus_resource_list) {
-#else
-    wl_resource *resource = grab->pointer->focus_resource;
-    if (resource) {
-#endif
-        if (cgrab->pressed && button == grab->pointer->grab_button) {
-            wl_display *display = wl_client_get_display(wl_resource_get_client(resource));
-            uint32_t serial = wl_display_next_serial(display);
-            wl_pointer_send_button(resource, serial, time, button, state);
-            cgrab->pressed = false;
-        }
-    }
-
-    wl_hawaii_grab_send_button(cgrab->resource, time, button, state);
-}
-
 const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::addKeyBinding),
     wrapInterface(&DesktopShell::setAvailableGeometry),
@@ -1059,8 +994,7 @@ const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&Shell::minimizeWindows),
     wrapInterface(&Shell::restoreWindows),
     wrapInterface(&DesktopShell::addWorkspace),
-    wrapInterface(&DesktopShell::selectWorkspace),
-    wrapInterface(&DesktopShell::createGrab)
+    wrapInterface(&DesktopShell::selectWorkspace)
 };
 
 const struct wl_hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl = {
