@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.1
+import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Core 1.0
@@ -46,31 +46,41 @@ Element {
         property int tileSize: iconSize + (iconSize / 4)
     }
 
-    /*
-    onApplicationDropped: listView.model.model.pinApplication(path)
-    onUrlDropped: listView.model.model.pinUrl(url)
-    */
-
-    ListView {
-        id: listView
+    DropArea {
         anchors.fill: parent
-        orientation: view.formFactor === Types.Horizontal ? ListView.Horizontal : ListView.Vertical
-        focus: true
-        model: VisualDataModel {
-            model: LauncherModel {}
-            delegate: LauncherDelegate {
-                iconSize: __priv.iconSize
-                tileSize: __priv.tileSize
+        onDropped: {
+            if (drop.proposedAction === Qt.MoveAction || drop.proposedAction === Qt.CopyAction) {
+                for (var url in drop.urls) {
+                    if (url.substr(0, 4) === "file" && url.substr(-8, 8) === ".desktop")
+                        listView.model.model.pinApplication(url);
+                    else if (url.substr(0, 4) === "http")
+                        listView.model.model.pinUrl(url);
+                }
+
+                drop.acceptProposedAction();
             }
         }
-        cacheBuffer: 10000
-        interactive: false
-        add: Transition {
-            NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
-            NumberAnimation { property: "scale"; from: 0.0; to: 1.0; duration: 150 }
-        }
-        displaced: Transition {
-            NumberAnimation { properties: "x,y"; duration: 250; easing.type: Easing.OutBounce }
+
+        ListView {
+            id: listView
+            anchors.fill: parent
+            orientation: view.formFactor === Types.Horizontal ? ListView.Horizontal : ListView.Vertical
+            model: VisualDataModel {
+                model: LauncherModel {}
+                delegate: LauncherDelegate {
+                    iconSize: __priv.iconSize
+                    tileSize: __priv.tileSize
+                }
+            }
+            cacheBuffer: 10000
+            interactive: false
+            add: Transition {
+                NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 250 }
+                NumberAnimation { property: "scale"; from: 0.0; to: 1.0; duration: 150 }
+            }
+            displaced: Transition {
+                NumberAnimation { properties: "x,y"; duration: 250; easing.type: Easing.OutBounce }
+            }
         }
     }
 
