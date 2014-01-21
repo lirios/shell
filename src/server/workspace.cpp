@@ -112,7 +112,6 @@ int Workspace::numberOfSurfaces() const
 struct weston_output *Workspace::output() const
 {
     return m_shell->getDefaultOutput();
-    return m_rootSurface->output;
 }
 
 void Workspace::insert(Workspace *ws)
