@@ -96,6 +96,8 @@ Element {
             }
         }
         delegate: FluidUi.Icon {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
             iconName: modelData.iconName
             width: __priv.iconSize
             height: __priv.iconSize
