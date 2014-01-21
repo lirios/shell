@@ -24,18 +24,14 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import "../components" as Components
+import QtQuick 2.2
 
-Item {
-    id: desktopView
-
-    Components.Background {
-        anchors.fill: parent
-
-        DesktopContainment {
-            id: containment
-            anchors.fill: parent
-        }
+DropArea {
+    id: root
+    keys: ["application/x-hawaiishell-element"]
+    onDropped: {
+        console.log(drop.proposedAction, drop.x, drop.y, drop.text, drop.urls, drop.keys, drop.formats);
+        for (var f in drop.formats)
+            console.log("=>", drop.getDataAsString(f));
     }
 }
