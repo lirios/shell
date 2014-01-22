@@ -233,6 +233,73 @@
     </enum>
   </interface>
 
+  <interface name="wl_hawaii_panel_manager" version="1">
+    <description summary="create panels">
+      This interface is used by the shell to create panels.
+      Only one client can bind.
+    </description>
+
+    <request name="set_panel">
+      <description summary="set panel role">
+        The surface set by this request will receive the panel role.
+        Panels display launchers, buttons and other kind of elements.
+      </description>
+      <arg name="id" type="new_id" interface="wl_hawaii_panel"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+  </interface>
+
+  <interface name="wl_hawaii_panel" version="1">
+    <enum name="edge">
+      <entry name="left" value="0"/>
+      <entry name="top" value="1"/>
+      <entry name="right" value="2"/>
+      <entry name="bottom" value="3"/>
+    </enum>
+
+    <enum name="alignment">
+      <entry name="left" value="0"/>
+      <entry name="center" value="1"/>
+      <entry name="right" value="2"/>
+    </enum>
+
+    <request name="set_alignment">
+      <description summary="set panel alignment">
+        Set panel alignment.
+      </description>
+      <arg name="alignment" type="uint"/>
+    </request>
+
+    <request name="set_offset">
+      <description summary="set panel offset">
+        Set panel offset.
+      </description>
+      <arg name="offset" type="uint"/>
+    </request>
+
+    <request name="set_thickness">
+      <description summary="set panel thickness">
+        Set panel size.
+      </description>
+      <arg name="thickness" type="uint"/>
+    </request>
+
+    <request name="dock">
+      <description summary="dock the panel">
+        Set panel position on the specified output according to edge,
+        alignment and offset.
+      </description>
+      <arg name="edge" type="uint"/>
+      <arg name="output" type="object" interface="wl_output"/>
+    </request>
+
+    <event name="docked">
+      <description summary="panel is docked">
+        Emitted when the panel is docked.
+      </description>
+    </event>
+  </interface>
+
   <interface name="wl_hawaii_shell_surface" version="1">
     <request name="set_background">
       <description summary="set background role">
