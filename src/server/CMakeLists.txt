@@ -12,6 +12,7 @@ set(SOURCES
     effect.cpp
     inputpanel.cpp
     layer.cpp
+    panelsurface.cpp
     shell.cpp
     shellseat.cpp
     shellsurface.cpp

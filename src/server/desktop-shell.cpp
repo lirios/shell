@@ -51,6 +51,7 @@
 #include "inoutsurfaceeffect.h"
 #include "opacityeffect.h"
 #include "inputpanel.h"
+#include "panelsurface.h"
 #include "shellseat.h"
 #include "shellwindow.h"
 #include "workspace.h"
@@ -163,6 +164,7 @@ DesktopShell::DesktopShell(struct weston_compositor *ec)
     , m_screenSaverEnabled(false)
     , m_screenSaverPath(INSTALL_LIBEXECDIR "/hawaii-screensaver")
     , m_screenSaverDuration(5*60*1000)
+    , m_panelManagerBinding(nullptr)
     , m_inputPanel(nullptr)
     , m_notificationsEdge(DesktopShell::EdgeRight)
     , m_notificationsCornerAnchor(DesktopShell::CornerTopRight)
@@ -190,6 +192,10 @@ void DesktopShell::init()
 
     if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
+        return;
+
+    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_panel_manager_interface, 1, this,
+                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindPanelManager(client, version, id); }))
         return;
 
     if (!wl_global_create(compositor()->wl_display, &wl_screensaver_interface, 1, this,
@@ -367,6 +373,34 @@ void DesktopShell::bindDesktopShellSurface(struct wl_client *client, uint32_t ve
 void DesktopShell::unbindDesktopShellSurface(struct wl_resource *resource)
 {
     m_shellSurfaceBindings.remove(resource);
+}
+
+void DesktopShell::bindPanelManager(struct wl_client *client, uint32_t version, uint32_t id)
+{
+    struct wl_resource *resource = wl_resource_create(client, &wl_hawaii_panel_manager_interface, version, id);
+
+    if (m_panelManagerBinding) {
+        wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "only one client is allowed to bind wl_hawaii_panel_manager");
+        wl_resource_destroy(resource);
+        return;
+    }
+
+    if (client == m_child.client) {
+        wl_resource_set_implementation(resource, &m_panelManagerImpl, this,
+                                       [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindPanelManager(resource); });
+
+        m_panelManagerBinding = resource;
+        return;
+    }
+
+    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind wl_hawaii_panel_manager denied");
+    wl_resource_destroy(resource);
+}
+
+void DesktopShell::unbindPanelManager(struct wl_resource *resource)
+{
+    m_panelManagerBinding = nullptr;
 }
 
 void DesktopShell::bindScreenSaver(wl_client *client, uint32_t version, uint32_t id)
@@ -1003,6 +1037,38 @@ const struct wl_hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl 
     wrapInterface(&DesktopShell::setOverlay),
     wrapInterface(&DesktopShell::setPopup),
     wrapInterface(&DesktopShell::setDialog)
+};
+
+void DesktopShell::setPanelSurface(struct wl_client *client, struct wl_resource *resource,
+                                   uint32_t id,
+                                   struct wl_resource *surface_resource)
+{
+    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
+
+    if (surface->configure) {
+        wl_resource_post_error(surface_resource,
+                               WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "surface role already assigned");
+        return;
+    }
+
+    PanelSurface *panel = new PanelSurface(client, resource, id);
+    panel->surface = surface;
+    panel->shell = this;
+
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
+        PanelSurface *panel = static_cast<PanelSurface *>(es->configure_private);
+        if (panel) {
+            configure_static_surface(es, &panel->shell->m_panelsLayer, width, height);
+            panel->setPosition();
+        }
+    };
+    surface->configure_private = panel;
+    surface->output = nullptr;
+}
+
+const struct wl_hawaii_panel_manager_interface DesktopShell::m_panelManagerImpl = {
+    wrapInterface(&DesktopShell::setPanelSurface)
 };
 
 void DesktopShell::notificationConfigure(weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height)
