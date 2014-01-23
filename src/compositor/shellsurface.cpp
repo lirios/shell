@@ -84,19 +84,6 @@ void ShellSurface::hawaii_shell_surface_set_background(Resource *resource,
     addSurfaceToLayer(Compositor::BackgroundWindowRole, surface);
 }
 
-void ShellSurface::hawaii_shell_surface_set_panel(Resource *resource,
-                                                  struct ::wl_resource *output_resource,
-                                                  struct ::wl_resource *surface_resource)
-{
-    Q_UNUSED(resource);
-    Q_UNUSED(output_resource);
-
-    QWaylandSurface *surface =
-            QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
-    surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Compositor::PanelWindowRole, surface);
-}
-
 void ShellSurface::hawaii_shell_surface_set_overlay(Resource *resource,
                                                     struct ::wl_resource *output_resource,
                                                     struct ::wl_resource *surface_resource)
