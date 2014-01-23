@@ -107,9 +107,6 @@ private:
     void setBackground(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                        struct wl_resource *surface_resource);
 
-    void setPanel(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
-                  struct wl_resource *surface_resource);
-
     void setLauncher(struct wl_client *client, struct wl_resource *resource,
                      struct wl_resource *output_resource,
                      struct wl_resource *surface_resource);
