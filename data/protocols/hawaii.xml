@@ -311,15 +311,6 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
-    <request name="set_panel">
-      <description summary="set panel role">
-        The surface set by this request will receive the panel role.
-        Panels display launchers, buttons and other kind of elements.
-      </description>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
     <request name="set_overlay">
       <description summary="set overlay role">
         The surface set by this request will receive the overlay role.
