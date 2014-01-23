@@ -2,6 +2,7 @@
  * This file is part of Hawaii Shell.
  *
  * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013 Marco Martin <mart@kde.org>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -26,6 +27,10 @@
 
 #ifndef PANELVIEW_H
 #define PANELVIEW_H
+
+#include <QtQml/QQmlPropertyMap>
+
+#include <QtConfiguration/QConfiguration>
 
 #include <HawaiiShell/Element>
 #include <HawaiiShell/HawaiiShell>
@@ -87,18 +92,18 @@ Q_SIGNALS:
 private:
     Qt::Alignment m_alignment;
     int m_offset;
-    int m_thickness;
-    int m_length;
     int m_minimumLength;
     int m_maximumLength;
+    QConfiguration *m_configuration;
+    QQmlPropertyMap m_settings;
     QSet<QString> m_elementsSet;
     QList<Hawaii::Shell::Element *> m_elements;
     PanelSurface *m_surface;
 
     void setWindowType();
+    void restore();
 
 private Q_SLOTS:
-    void setupGeometry();
     void dockPanel();
 };
 
