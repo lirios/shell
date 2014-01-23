@@ -24,35 +24,22 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef REGISTRYLISTENER_H
-#define REGISTRYLISTENER_H
+#include <QtCore/QDebug>
 
-#include "shellclient.h"
-#include "shellsurfaceclient.h"
+#include "panelsurface.h"
 
-class RegistryListener
+PanelSurface::PanelSurface()
+    : QtWayland::wl_hawaii_panel()
 {
-public:
-    RegistryListener();
-    ~RegistryListener();
+}
 
-    ShellClient *shell;
-    ShellSurfaceClient *shellSurface;
-    QtWayland::wl_hawaii_panel_manager *panelManager;
+PanelSurface::~PanelSurface()
+{
+    if (isInitialized())
+        wl_hawaii_panel_destroy(object());
+}
 
-    void run();
-
-private:
-    bool m_setupDone;
-
-    static void handleGlobal(void *data, struct ::wl_registry *registry,
-                             uint32_t id, const char *interface,
-                             uint32_t version);
-    static void handleGlobalRemove(void *data,
-                                   struct ::wl_registry *registry,
-                                   uint32_t name);
-
-    static const struct wl_registry_listener listener;
-};
-
-#endif // REGISTRYLISTENER_H
+void PanelSurface::hawaii_panel_docked()
+{
+    qDebug() << "Panel docked";
+}

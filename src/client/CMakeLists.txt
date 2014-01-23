@@ -30,6 +30,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/services/processlauncher
     ${CMAKE_CURRENT_SOURCE_DIR}/services/volumecontrol
     ${CMAKE_CURRENT_SOURCE_DIR}/services/sessionmanager
+    ${CMAKE_CURRENT_SOURCE_DIR}/wayland
 )
 
 set(SOURCES
@@ -66,6 +67,7 @@ set(SOURCES
     views/lockscreenview.cpp
     views/panelview.cpp
     windowtypes/grabwindow.cpp
+    wayland/panelsurface.cpp
 )
 
 wayland_add_protocol_client(SOURCES

@@ -24,35 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef REGISTRYLISTENER_H
-#define REGISTRYLISTENER_H
+#ifndef PANELSURFACE_H
+#define PANELSURFACE_H
 
-#include "shellclient.h"
-#include "shellsurfaceclient.h"
+#include "qwayland-hawaii.h"
 
-class RegistryListener
+class PanelSurface : public QtWayland::wl_hawaii_panel
 {
 public:
-    RegistryListener();
-    ~RegistryListener();
+    PanelSurface();
+    virtual ~PanelSurface();
 
-    ShellClient *shell;
-    ShellSurfaceClient *shellSurface;
-    QtWayland::wl_hawaii_panel_manager *panelManager;
-
-    void run();
-
-private:
-    bool m_setupDone;
-
-    static void handleGlobal(void *data, struct ::wl_registry *registry,
-                             uint32_t id, const char *interface,
-                             uint32_t version);
-    static void handleGlobalRemove(void *data,
-                                   struct ::wl_registry *registry,
-                                   uint32_t name);
-
-    static const struct wl_registry_listener listener;
+protected:
+    void hawaii_panel_docked() Q_DECL_OVERRIDE;
 };
 
-#endif // REGISTRYLISTENER_H
+#endif // PANELSURFACE_H

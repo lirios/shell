@@ -34,39 +34,53 @@
 #include "element.h"
 #include "elementfactory.h"
 #include "panelview.h"
+#include "panelsurface.h"
 #include "shellmanager.h"
 
 using namespace Hawaii::Shell;
+
+static PanelSurface::alignment convertAlignment(Qt::Alignment alignment)
+{
+    switch (alignment) {
+    case Qt::AlignRight:
+        return PanelSurface::alignment_right;
+    case Qt::AlignCenter:
+        return PanelSurface::alignment_center;
+    default:
+        break;
+    }
+
+    return PanelSurface::alignment_left;
+}
 
 PanelView::PanelView(ShellUi *corona, QScreen *screen)
     : QuickView(corona, new QWindow(screen))
     , m_alignment(Qt::AlignLeft)
     , m_offset(0)
     , m_thickness(60)
+    , m_surface(new PanelSurface())
 {
-    // Set defaults
-    setFormFactor(Types::Horizontal);
-    setLocation(Types::BottomEdge);
-
-    // Resize root object to view
-    setResizeMode(QuickView::SizeRootObjectToView);
-
     // Set Wayland window type
     setWindowType();
 
     // React to screen changes
     connect(this, &QWindow::screenChanged,
-            this, &PanelView::positionPanel);
-    connect(screen, &QScreen::geometryChanged,
-            this, &PanelView::positionPanel);
+            this, &PanelView::dockPanel);
     connect(this, &QuickView::locationChanged,
-            this, &PanelView::positionPanel);
-
-    // Set initial geometry
-    positionPanel();
+            this, &PanelView::dockPanel);
+    connect(screen, &QScreen::geometryChanged,
+            this, &PanelView::setupGeometry);
 
     // Let QML see us
     rootContext()->setContextProperty("view", this);
+
+    // Resize root object to view
+    setResizeMode(QuickView::SizeRootObjectToView);
+
+    // Set defaults
+    setFormFactor(Types::Horizontal);
+    setLocation(Types::BottomEdge);
+    setupGeometry();
 
     // Load QML source file
     setSource(QUrl::fromLocalFile(corona->package().filePath(
@@ -79,6 +93,7 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
 
 PanelView::~PanelView()
 {
+    delete m_surface;
     qDeleteAll(m_elements);
 }
 
@@ -91,6 +106,10 @@ void PanelView::setAlignment(Qt::Alignment alignment)
 {
     if (m_alignment != alignment) {
         m_alignment = alignment;
+
+        if (m_surface->isInitialized())
+            m_surface->set_alignment(convertAlignment(alignment));
+
         Q_EMIT alignmentChanged();
     }
 }
@@ -104,7 +123,10 @@ void PanelView::setOffset(int value)
 {
     if (m_offset != value) {
         m_offset = value;
-        positionPanel();
+
+        if (m_surface->isInitialized())
+            m_surface->set_offset(value);
+
         Q_EMIT offsetChanged();
     }
 }
@@ -118,7 +140,10 @@ void PanelView::setThickness(int value)
 {
     if (m_thickness != value) {
         m_thickness = value;
-        positionPanel();
+
+        if (m_surface->isInitialized())
+            m_surface->set_thickness(value);
+
         Q_EMIT thicknessChanged();
     }
 }
@@ -141,25 +166,19 @@ void PanelView::setWindowType()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    struct ::wl_output *output = static_cast<struct ::wl_output *>(
-                native->nativeResourceForScreen("output", screen()));
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    ShellManager::instance()->shellSurfaceInterface()->set_panel(output, surface);
+    struct ::wl_hawaii_panel *panel =
+            ShellManager::instance()->panelManagerInterface()->set_panel(surface);
+    m_surface->init(panel);
+
+    m_surface->set_alignment(convertAlignment(m_alignment));
+    m_surface->set_offset(m_offset);
+    m_surface->set_thickness(m_thickness);
 }
 
-void PanelView::setSurfacePosition(const QPoint &pt)
-{
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
-
-    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
-                native->nativeResourceForWindow("surface", this));
-
-    ShellManager::instance()->shellInterface()->set_position(surface, pt.x(), pt.y());
-}
-
-void PanelView::positionPanel()
+void PanelView::setupGeometry()
 {
     QRect geometry = screen()->geometry();
 
@@ -170,65 +189,37 @@ void PanelView::positionPanel()
         setWidth(m_thickness);
         setHeight(geometry.height());
     }
+}
 
+void PanelView::dockPanel()
+{
+    if (!m_surface->isInitialized())
+        return;
+
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+
+    struct ::wl_output *output = static_cast<struct ::wl_output *>(
+                native->nativeResourceForScreen("output", screen()));
+
+    PanelSurface::edge edge;
     switch (location()) {
-    case Types::LeftEdge:
-        switch (m_alignment) {
-        case Qt::AlignCenter:
-            setPosition(QPoint(geometry.left(), geometry.center().y()) + QPoint(0, m_offset));
-            break;
-        case Qt::AlignRight:
-            setPosition(QPoint(geometry.bottomLeft() - QPoint(0, m_offset + size().height())));
-            break;
-        case Qt::AlignLeft:
-        default:
-            setPosition(geometry.topLeft() + QPoint(0, m_offset));
-        }
+    case Hawaii::Shell::Types::LeftEdge:
+        edge = PanelSurface::edge_left;
         break;
-    case Types::TopEdge:
-        switch (m_alignment) {
-        case Qt::AlignCenter:
-            setPosition(QPoint(geometry.center().x(), geometry.top()) + QPoint(m_offset - size().width()/2, 0));
-            break;
-        case Qt::AlignRight:
-            setPosition(geometry.topRight() - QPoint(m_offset + size().width(), 0));
-            break;
-        case Qt::AlignLeft:
-        default:
-            setPosition(geometry.topLeft() + QPoint(m_offset, 0));
-        }
+    case Hawaii::Shell::Types::TopEdge:
+        edge = PanelSurface::edge_top;
         break;
-    case Types::RightEdge:
-        switch (m_alignment) {
-        case Qt::AlignCenter:
-            setPosition(QPoint(geometry.right(), geometry.center().y()) - QPoint(width(), 0) + QPoint(0, m_offset - height()/2));
-            break;
-        case Qt::AlignRight:
-            setPosition(geometry.bottomRight() - QPoint(width(), 0) - QPoint(0, m_offset + height()));
-            break;
-        case Qt::AlignLeft:
-        default:
-            setPosition(geometry.topRight() - QPoint(width(), 0) + QPoint(0, m_offset));
-        }
+    case Hawaii::Shell::Types::RightEdge:
+        edge = PanelSurface::edge_right;
         break;
-    case Types::BottomEdge:
-        switch (m_alignment) {
-        case Qt::AlignCenter:
-            setPosition(QPoint(geometry.center().x(), geometry.bottom()) + QPoint(m_offset - size().width()/2, 1));
-            break;
-        case Qt::AlignRight:
-            setPosition(geometry.bottomRight() - QPoint(0, height()) - QPoint(m_offset + width(), 1));
-            break;
-        case Qt::AlignLeft:
-        default:
-            setPosition(geometry.bottomLeft() - QPoint(0, height()) + QPoint(m_offset, 1));
-        }
+    case Hawaii::Shell::Types::BottomEdge:
+        edge = PanelSurface::edge_bottom;
         break;
     default:
-        break;
+        return;
     }
 
-    setSurfacePosition(position());
+    m_surface->dock(edge, output);
 }
 
 #include "moc_panelview.cpp"

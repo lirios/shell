@@ -32,6 +32,7 @@
 #include <HawaiiShell/QuickView>
 
 class QScreen;
+class PanelSurface;
 class ShellUi;
 
 class PanelView : public Hawaii::Shell::QuickView
@@ -74,12 +75,13 @@ private:
     int m_thickness;
     QSet<QString> m_elementsSet;
     QList<Hawaii::Shell::Element *> m_elements;
+    PanelSurface *m_surface;
 
     void setWindowType();
-    void setSurfacePosition(const QPoint &pt);
 
 private Q_SLOTS:
-    void positionPanel();
+    void setupGeometry();
+    void dockPanel();
 };
 
 #endif // PANELVIEW_H

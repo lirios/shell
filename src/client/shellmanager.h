@@ -59,6 +59,7 @@ public:
 
     ShellClient *shellInterface() const;
     ShellSurfaceClient *shellSurfaceInterface() const;
+    QtWayland::wl_hawaii_panel_manager *panelManagerInterface() const;
 
     QString shell() const;
 
