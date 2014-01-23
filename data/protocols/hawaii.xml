@@ -284,6 +284,27 @@
       <arg name="thickness" type="uint"/>
     </request>
 
+    <request name="set_length">
+      <description summary="set panel length">
+        Set panel length.
+      </description>
+      <arg name="length" type="uint"/>
+    </request>
+
+    <request name="set_min_length">
+      <description summary="set minimum length">
+        Set minimum length of this panel.
+      </description>
+      <arg name="min_length" type="uint"/>
+    </request>
+
+    <request name="set_max_length">
+      <description summary="set maximum length">
+        Set maximum length of this panel.
+      </description>
+      <arg name="max_length" type="uint"/>
+    </request>
+
     <request name="dock">
       <description summary="dock the panel">
         Set panel position on the specified output according to edge,
