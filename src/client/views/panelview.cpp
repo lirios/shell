@@ -124,6 +124,8 @@ void PanelView::setOffset(int value)
     if (m_offset != value) {
         m_offset = value;
 
+        setupGeometry();
+
         if (m_surface->isInitialized())
             m_surface->set_offset(value);
 
@@ -140,6 +142,8 @@ void PanelView::setThickness(int value)
 {
     if (m_thickness != value) {
         m_thickness = value;
+
+        setupGeometry();
 
         if (m_surface->isInitialized())
             m_surface->set_thickness(value);
