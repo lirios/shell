@@ -41,6 +41,9 @@ class PanelView : public Hawaii::Shell::QuickView
     Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
     Q_PROPERTY(int offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(int thickness READ thickness WRITE setThickness NOTIFY thicknessChanged)
+    Q_PROPERTY(int length READ length WRITE setLength NOTIFY lengthChanged)
+    Q_PROPERTY(int minimumLength READ minimumLength WRITE setMinimumLength NOTIFY minimumLengthChanged)
+    Q_PROPERTY(int maximumLength READ maximumLength WRITE setMaximumLength NOTIFY maximumLengthChanged)
     Q_PROPERTY(QStringList elements READ elements NOTIFY elementsChanged)
 public:
     explicit PanelView(ShellUi *corona, QScreen *screen);
@@ -55,6 +58,15 @@ public:
     int thickness() const;
     void setThickness(int value);
 
+    int length() const;
+    void setLength(int value);
+
+    int minimumLength() const;
+    void setMinimumLength(int value);
+
+    int maximumLength() const;
+    void setMaximumLength(int value);
+
     QStringList elements() const;
 
 public Q_SLOTS:
@@ -64,6 +76,9 @@ Q_SIGNALS:
     void alignmentChanged();
     void offsetChanged();
     void thicknessChanged();
+    void lengthChanged();
+    void minimumLengthChanged();
+    void maximumLengthChanged();
 
     void elementsChanged();
     void elementAdded(Hawaii::Shell::Element *element);
@@ -73,6 +88,9 @@ private:
     Qt::Alignment m_alignment;
     int m_offset;
     int m_thickness;
+    int m_length;
+    int m_minimumLength;
+    int m_maximumLength;
     QSet<QString> m_elementsSet;
     QList<Hawaii::Shell::Element *> m_elements;
     PanelSurface *m_surface;

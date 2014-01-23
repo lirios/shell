@@ -58,6 +58,9 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     , m_alignment(Qt::AlignLeft)
     , m_offset(0)
     , m_thickness(60)
+    , m_length(0)
+    , m_minimumLength(0)
+    , m_maximumLength(0)
     , m_surface(new PanelSurface())
 {
     // Set Wayland window type
@@ -152,6 +155,73 @@ void PanelView::setThickness(int value)
     }
 }
 
+int PanelView::length() const
+{
+    return m_length;
+}
+
+void PanelView::setLength(int value)
+{
+    if (m_length != value) {
+        m_length = value;
+        Q_EMIT lengthChanged();
+    }
+}
+
+int PanelView::minimumLength() const
+{
+    return m_minimumLength;
+}
+
+void PanelView::setMinimumLength(int value)
+{
+    if (m_minimumLength == value)
+        return;
+
+    if (m_maximumLength < value)
+        setMaximumLength(value);
+
+    if (formFactor() == Hawaii::Shell::Types::Vertical)
+        setMinimumHeight(value);
+    else
+        setMinimumWidth(value);
+
+    m_minimumLength = value;
+    Q_EMIT minimumLengthChanged();
+
+    setupGeometry();
+
+    if (m_surface->isInitialized())
+        m_surface->set_min_length(value);
+}
+
+int PanelView::maximumLength() const
+{
+    return m_maximumLength;
+}
+
+void PanelView::setMaximumLength(int value)
+{
+    if (m_maximumLength == value)
+        return;
+
+    if (m_minimumLength > value)
+        setMinimumLength(value);
+
+    if (formFactor() == Hawaii::Shell::Types::Vertical)
+        setMaximumHeight(value);
+    else
+        setMaximumWidth(value);
+
+    m_maximumLength = value;
+    Q_EMIT maximumLengthChanged();
+
+    setupGeometry();
+
+    if (m_surface->isInitialized())
+        m_surface->set_max_length(value);
+}
+
 QStringList PanelView::elements() const
 {
     return m_elementsSet.toList();
@@ -187,11 +257,11 @@ void PanelView::setupGeometry()
     QRect geometry = screen()->geometry();
 
     if (formFactor() == Types::Horizontal) {
-        setWidth(geometry.width());
+        setWidth(m_length);
         setHeight(m_thickness);
     } else {
         setWidth(m_thickness);
-        setHeight(geometry.height());
+        setHeight(m_length);
     }
 }
 
