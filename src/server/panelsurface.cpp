@@ -85,6 +85,27 @@ void PanelSurface::setThickness(struct wl_client *,
     m_thickness = value;
 }
 
+void PanelSurface::setLength(struct wl_client *,
+                             struct wl_resource *,
+                             uint32_t value)
+{
+    m_length = value;
+}
+
+void PanelSurface::setMinLength(struct wl_client *,
+                                struct wl_resource *,
+                                uint32_t value)
+{
+    m_minLength = value;
+}
+
+void PanelSurface::setMaxLength(struct wl_client *,
+                                struct wl_resource *,
+                                uint32_t value)
+{
+    m_maxLength = value;
+}
+
 void PanelSurface::dock(struct wl_client *,
                         struct wl_resource *,
                         uint32_t edge,
@@ -197,5 +218,8 @@ const struct wl_hawaii_panel_interface PanelSurface::m_impl = {
     wrapInterface(&PanelSurface::setAlignment),
     wrapInterface(&PanelSurface::setOffset),
     wrapInterface(&PanelSurface::setThickness),
+    wrapInterface(&PanelSurface::setLength),
+    wrapInterface(&PanelSurface::setMinLength),
+    wrapInterface(&PanelSurface::setMaxLength),
     wrapInterface(&PanelSurface::dock)
 };

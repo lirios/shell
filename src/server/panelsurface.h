@@ -48,6 +48,15 @@ public:
     void setThickness(struct wl_client *client,
                       struct wl_resource *resource,
                       uint32_t value);
+    void setLength(struct wl_client *client,
+                   struct wl_resource *resource,
+                   uint32_t value);
+    void setMinLength(struct wl_client *client,
+                      struct wl_resource *resource,
+                      uint32_t value);
+    void setMaxLength(struct wl_client *client,
+                      struct wl_resource *resource,
+                      uint32_t value);
     void dock(struct wl_client *client,
               struct wl_resource *resource,
               uint32_t edge,
@@ -64,6 +73,9 @@ private:
     wl_hawaii_panel_alignment m_alignment;
     uint32_t m_offset;
     uint32_t m_thickness;
+    uint32_t m_length;
+    uint32_t m_minLength;
+    uint32_t m_maxLength;
     float m_x, m_y;
     bool m_dockRequested;
 
