@@ -756,24 +756,6 @@ void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *r
     surface->output = static_cast<weston_output *>(output_resource->data);
 }
 
-void DesktopShell::setLauncher(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
-                               struct wl_resource *surface_resource)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    if (surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role already assigned");
-        return;
-    }
-
-    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {
-        configure_static_surface(es, &static_cast<DesktopShell *>(es->configure_private)->m_panelsLayer, width, height); };
-    surface->configure_private = this;
-    surface->output = static_cast<weston_output *>(output_resource->data);
-}
-
 void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource)
 {
     struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
