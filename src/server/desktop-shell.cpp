@@ -186,20 +186,20 @@ void DesktopShell::init()
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindNotifications(client, version, id); }))
         return;
 
-    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_interface, 1, this,
-                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShell(client, version, id); }))
-        return;
-
-    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
-                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
+    if (!wl_global_create(compositor()->wl_display, &wl_screensaver_interface, 1, this,
+                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindScreenSaver(client, version, id); }))
         return;
 
     if (!wl_global_create(compositor()->wl_display, &wl_hawaii_panel_manager_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindPanelManager(client, version, id); }))
         return;
 
-    if (!wl_global_create(compositor()->wl_display, &wl_screensaver_interface, 1, this,
-                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindScreenSaver(client, version, id); }))
+    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
+                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
+        return;
+
+    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_interface, 1, this,
+                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShell(client, version, id); }))
         return;
 
     struct wl_event_loop *loop = wl_display_get_event_loop(m_compositor->wl_display);
