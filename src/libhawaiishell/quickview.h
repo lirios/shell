@@ -36,6 +36,7 @@ namespace Hawaii {
 
 namespace Shell {
 
+class Containment;
 class QuickViewPrivate;
 
 class HAWAIISHELL_EXPORT QuickView : public QQuickView
@@ -62,6 +63,23 @@ public:
      * \return the corona for this view.
      */
     Corona *corona() const;
+
+    /*!
+     * \return the containment for this view.
+     */
+    Containment *containment() const;
+
+    /*!
+     * Sets the containment for this view.
+     * The containment will influence the \a formFactor and
+     * \a location properties.
+     *
+     * \param containment the containment for this view
+     *
+     * \sa formFactor()
+     * \sa location()
+     */
+    void setContainment(Containment *containment);
 
     /*!
      * \return whether the view is immutable or not.
@@ -103,6 +121,11 @@ public:
     QRectF screenGeometry() const;
 
 Q_SIGNALS:
+    /*!
+     * Emitted when the containment is changed.
+     */
+    void containmentChanged();
+
     /*!
      * Emitted when the view becomes immutable or it's no longer
      * immutable.

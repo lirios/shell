@@ -25,7 +25,9 @@
  ***************************************************************************/
 
 #include <QtGui/QScreen>
+#include <QtQuick/QQuickItem>
 
+#include "containment.h"
 #include "quickview.h"
 
 namespace Hawaii {
@@ -43,6 +45,7 @@ public:
     QuickViewPrivate(QuickView *view);
 
     Corona *corona;
+    QWeakPointer<Containment> containment;
     bool immutable;
     Types::FormFactor formFactor;
     Types::Location location;
@@ -106,6 +109,57 @@ Corona *QuickView::corona() const
     return d->corona;
 }
 
+Containment *QuickView::containment() const
+{
+    Q_D(const QuickView);
+    return d->containment.data();
+}
+
+void QuickView::setContainment(Containment *containment)
+{
+    Q_D(QuickView);
+
+    if (d->containment.data() == containment)
+        return;
+
+    Types::FormFactor oldFormFactor = formFactor();
+    Types::Location oldLocation = location();
+
+    if (d->containment) {
+        disconnect(d->containment.data(), nullptr, this, nullptr);
+
+        QObject *oldItem = d->containment.data()->property("item").value<QObject *>();
+        if (oldItem)
+            oldItem->setParent(d->containment.data());
+    }
+
+    d->containment = containment;
+
+    if (oldFormFactor != formFactor())
+        Q_EMIT formFactorChanged(formFactor());
+    if (oldLocation != location())
+        Q_EMIT locationChanged(location());
+
+    Q_EMIT containmentChanged();
+
+    if (containment) {
+        connect(containment, &Containment::locationChanged,
+                this, &QuickView::locationChanged);
+        connect(containment, &Containment::formFactorChanged,
+                this, &QuickView::formFactorChanged);
+
+        QQuickItem *item = qobject_cast<QQuickItem *>(d->containment.data()->property("item").value<QObject *>());
+        if (item) {
+            item->setProperty("width", width());
+            item->setProperty("height", height());
+            item->setParentItem(rootObject());
+
+            if (rootObject())
+                rootObject()->setProperty("containment", QVariant::fromValue(item));
+        }
+    }
+}
+
 bool QuickView::isImmutable() const
 {
     Q_D(const QuickView);
@@ -141,35 +195,16 @@ void QuickView::setFormFactor(Types::FormFactor formFactor)
 Hawaii::Shell::Types::Location QuickView::location() const
 {
     Q_D(const QuickView);
-    return d->location;
+
+    if (!d->containment)
+        return Types::Desktop;
+    return d->containment.data()->location();
 }
 
 void QuickView::setLocation(Types::Location location)
 {
     Q_D(QuickView);
-
-    if (d->location != location) {
-        d->location = location;
-
-        switch (d->location) {
-        case Types::LeftEdge:
-            setFormFactor(Types::Vertical);
-            break;
-        case Types::TopEdge:
-            setFormFactor(Types::Horizontal);
-            break;
-        case Types::RightEdge:
-            setFormFactor(Types::Vertical);
-            break;
-        case Types::BottomEdge:
-            setFormFactor(Types::Horizontal);
-            break;
-        default:
-            break;
-        }
-
-        Q_EMIT locationChanged(location);
-    }
+    d->containment.data()->setLocation(location);
 }
 
 QRectF QuickView::screenGeometry() const

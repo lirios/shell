@@ -13,6 +13,7 @@ set(SOURCES
     applications/appcategories.cpp
     applications/appinfo.cpp
     applications/applicationsmodel.cpp
+    containment.cpp
     corona.cpp
     element.cpp
     hawaiishell.cpp
@@ -32,6 +33,7 @@ set(HEADERS
     applications/appcategories.h
     applications/appinfo.h
     applications/applicationsmodel.h
+    containment.h
     corona.h
     element.h
     hawaiishell.h
