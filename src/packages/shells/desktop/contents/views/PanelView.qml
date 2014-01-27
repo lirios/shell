@@ -32,12 +32,11 @@ import Hawaii.Shell.Styles 1.0
 Item {
     id: panelView
 
-    property bool configuring: false
-
     property Item containment
 
     onContainmentChanged: {
         containment.visible = true;
+        containment.parent = styledItem;
         containment.anchors.fill = styledItem;
     }
 
