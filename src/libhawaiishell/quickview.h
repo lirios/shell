@@ -45,6 +45,7 @@ class HAWAIISHELL_EXPORT QuickView : public QQuickView
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
     Q_PROPERTY(bool immutable READ isImmutable WRITE setImmutable NOTIFY immutableChanged)
+    Q_PROPERTY(bool configuring READ isConfiguring WRITE setConfiguring NOTIFY configuringChanged)
     Q_PROPERTY(QRectF screenGeometry READ screenGeometry NOTIFY screenGeometryChanged)
 public:
     /*!
@@ -94,6 +95,17 @@ public:
     void setImmutable(bool value);
 
     /*!
+     * \return whether this view is in configuration mode.
+     */
+    bool isConfiguring() const;
+
+    /*!
+     * Enable or disable the configuration mode.
+     * \param value whether configuration mode is enabled or not.
+     */
+    void setConfiguring(bool value);
+
+    /*!
      * \return the form factor of this view.
      */
     Hawaii::Shell::Types::FormFactor formFactor() const;
@@ -132,6 +144,12 @@ Q_SIGNALS:
      * \param newValue whether the view is immutable
      */
     void immutableChanged(bool newValue);
+
+    /*!
+     * Emitted when the configuration mode is enabled or disabled.
+     * \param newValue whether the view is now in configuration mode or not.
+     */
+    void configuringChanged(bool newValue);
 
     /*!
      * Emitted when the form factor is changed.

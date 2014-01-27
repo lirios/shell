@@ -47,6 +47,7 @@ public:
     Corona *corona;
     QWeakPointer<Containment> containment;
     bool immutable;
+    bool configuring;
     Types::FormFactor formFactor;
     Types::Location location;
 
@@ -58,6 +59,7 @@ protected:
 
 QuickViewPrivate::QuickViewPrivate(QuickView *view)
     : immutable(false)
+    , configuring(false)
     , formFactor(Types::Plane)
     , location(Types::Desktop)
     , q_ptr(view)
@@ -173,6 +175,22 @@ void QuickView::setImmutable(bool value)
     if (d->immutable != value) {
         d->immutable = value;
         Q_EMIT immutableChanged(value);
+    }
+}
+
+bool QuickView::isConfiguring() const
+{
+    Q_D(const QuickView);
+    return d->configuring;
+}
+
+void QuickView::setConfiguring(bool value)
+{
+    Q_D(QuickView);
+
+    if (d->configuring != value) {
+        d->configuring = value;
+        Q_EMIT configuringChanged(value);
     }
 }
 
