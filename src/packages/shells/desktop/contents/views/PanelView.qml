@@ -38,7 +38,7 @@ Item {
 
     onContainmentChanged: {
         containment.visible = true;
-        containment.anchors.fill: styledItem
+        containment.anchors.fill = styledItem;
     }
 
     Connections {
@@ -51,7 +51,7 @@ Item {
             if (containment.formFactor === Types.Horizontal)
                 view.width = Math.max(view.maximumLength, Math.max(containment.implicitWidth, view.minimumLength));
         }
-        onMinimumWidthChanged: {
+        onMaximumWidthChanged: {
             if (containment.formFactor === Types.Horizontal)
                 view.width = Math.min(view.width, view.maximumLength);
         }
@@ -63,7 +63,7 @@ Item {
             if (containment.formFactor === Types.Vertical)
                 view.height = Math.min(view.maximumLength, Math.max(containment.implicitHeight, view.minimumLength));
         }
-        onMinimumHeightChanged: {
+        onMaximumHeightChanged: {
             if (containment.formFactor === Types.Vertical)
                 view.height = Math.min(view.height, view.maximumLength);
         }
