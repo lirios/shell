@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include "pluginmetadata.h"
 #include "packages_p.h"
 
 namespace Hawaii {
@@ -33,6 +34,19 @@ namespace Shell {
 void ElementPackage::initializePackage(Package *package)
 {
     package->setDefaultPackageRoot(QStringLiteral("hawaii/elements/"));
+
+    // User interface
+    package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
+}
+
+void ContainmentPackage::initializePackage(Package *package)
+{
+    package->setDefaultPackageRoot(QStringLiteral("hawaii/containments/"));
+
+    // Main script
+    PluginMetadata metadata(package->path() + "/metadata.desktop");
+    const QString mainScript = metadata.property(QStringLiteral("X-Hawaii-MainScript")).toString();
+    package->addFileDefinition("mainscript", mainScript, tr("Main script file"));
 
     // User interface
     package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));

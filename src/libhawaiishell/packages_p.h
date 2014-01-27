@@ -39,6 +39,12 @@ public:
     void initializePackage(Package *package);
 };
 
+class ContainmentPackage : public PackageStructure
+{
+public:
+    void initializePackage(Package *package);
+};
+
 class ShellPackage : public PackageStructure
 {
 public:

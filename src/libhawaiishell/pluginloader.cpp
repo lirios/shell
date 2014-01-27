@@ -83,6 +83,8 @@ Package PluginLoader::loadPackage(const QString &format)
     if (format.startsWith(QStringLiteral("Hawaii/Shell/"))) {
         if (format.endsWith("/Element"))
             structure = new ElementPackage();
+        else if (format.endsWith("/Containment"))
+            structure = new ContainmentPackage();
         else if (format.endsWith("/Shell"))
             structure = new ShellPackage();
         else if (format.endsWith("/LookAndFeel"))
