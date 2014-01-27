@@ -86,15 +86,11 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
             .arg(QString::number(panelId++));
     m_configuration = new QConfiguration(&m_settings, section, this);
 
-    // Load containment package
-    Package package = PluginLoader::instance()->loadPackage(
-                QStringLiteral("Hawaii/Shell/Containment"));
-    package.setPath("org.hawaii.containments.panel");
+    // Let QML see us
+    rootContext()->setContextProperty("view", this);
 
-    // Create and load containment
-    Containment *containment = new Containment(corona, this);
-    containment->setPackage(package);
-    setContainment(containment);
+    // Resize root object to view
+    setResizeMode(QuickView::SizeRootObjectToView);
 
     // Set panel size
     restore();
@@ -112,15 +108,23 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     connect(screen, &QScreen::geometryChanged,
             this, &PanelView::dockPanel);
 
-    // Let QML see us
-    rootContext()->setContextProperty("view", this);
+    // Load containment package
+    Package package = PluginLoader::instance()->loadPackage(
+                QStringLiteral("Hawaii/Shell/Containment"));
+    package.setPath("org.hawaii.containments.panel");
 
-    // Resize root object to view
-    setResizeMode(QuickView::SizeRootObjectToView);
+    // Create and load containment
+    Containment *containment = new Containment(corona, this);
+    containment->setContextProperty(QStringLiteral("panel"), QVariant::fromValue(this));
+    containment->setPackage(package);
+    setLocation(Types::BottomEdge);
 
     // Load QML source file
     setSource(QUrl::fromLocalFile(corona->package().filePath(
                                       "views", QStringLiteral("PanelView.qml"))));
+
+    // Set containment
+    setContainment(containment);
 
     // Debugging message
     qDebug() << "-> Created PanelView with geometry"
