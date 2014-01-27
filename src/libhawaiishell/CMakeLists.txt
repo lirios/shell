@@ -22,6 +22,8 @@ set(SOURCES
     packagestructure.cpp
     pluginloader.cpp
     pluginmetadata.cpp
+    qmlobject.cpp
+    qmlobjectincubationcontroller_p.cpp
     quickview.cpp
     settings/backgroundsettings.cpp
     settings/launchersettings.cpp
@@ -41,6 +43,7 @@ set(HEADERS
     packagestructure.h
     pluginloader.h
     pluginmetadata.h
+    qmlobject.h
     quickview.h
     settings/backgroundsettings.h
     settings/launchersettings.h
