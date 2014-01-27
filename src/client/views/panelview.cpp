@@ -117,7 +117,6 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     Containment *containment = new Containment(corona, this);
     containment->setContextProperty(QStringLiteral("panel"), QVariant::fromValue(this));
     containment->setPackage(package);
-    setLocation(Types::BottomEdge);
 
     // Load QML source file
     setSource(QUrl::fromLocalFile(corona->package().filePath(
@@ -125,6 +124,7 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
 
     // Set containment
     setContainment(containment);
+    setLocation(Types::BottomEdge);
 
     // Debugging message
     qDebug() << "-> Created PanelView with geometry"
