@@ -74,6 +74,17 @@ public:
      */
     void setLocation(Types::Location location);
 
+    /*!
+     * \return the package loaded for this containment.
+     */
+    Package package() const;
+
+    /*!
+     * Loads a QML file from the package.
+     * \param package package to load the QML file from.
+     */
+    void setPackage(const Package &package);
+
 Q_SIGNALS:
     /*!
      * Emitted when the form factor is changed.
@@ -86,6 +97,12 @@ Q_SIGNALS:
      * \param location the new location of the containment
      */
     void locationChanged(Hawaii::Shell::Types::Location location);
+
+    /*!
+     * Emitted when the package for this containment is changed.
+     * \param package the new package.
+     */
+    void packageChanged(const Package &package);
 
 private:
     Q_DECLARE_PRIVATE(Containment)

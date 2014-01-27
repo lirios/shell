@@ -24,11 +24,14 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QDebug>
+#include <QtQml/QQmlContext>
 #include <QtQml/QQmlPropertyMap>
 
 #include <QtConfiguration/QConfiguration>
 
 #include "containment.h"
+#include "qmlobject.h"
 
 namespace Hawaii {
 
@@ -48,6 +51,8 @@ public:
     Corona *corona;
     Types::FormFactor formFactor;
     Types::Location location;
+    Package package;
+    QmlObject *qmlObject;
 };
 
 ContainmentPrivate::ContainmentPrivate()
@@ -67,6 +72,8 @@ Containment::Containment(Corona *corona, QObject *parent)
 {
     Q_D(Containment);
     d->corona = corona;
+    d->qmlObject = new QmlObject(this);
+    d->qmlObject->setInitializationDelayed(true);
 
     // Default configuration
     d->settings.insert("formFactor", d->formFactor);
@@ -141,6 +148,47 @@ void Containment::setLocation(Types::Location location)
 
         Q_EMIT locationChanged(location);
     }
+}
+
+Package Containment::package() const
+{
+    Q_D(const Containment);
+    return d->package;
+}
+
+void Containment::setPackage(const Package &package)
+{
+    Q_D(Containment);
+    d->package = package;
+
+    // Load QML file
+    d->qmlObject->setSource(QUrl::fromLocalFile(package.filePath("mainscript")));
+    if (!d->qmlObject->engine() || !d->qmlObject->engine()->rootContext() ||
+            !d->qmlObject->engine()->rootContext()->isValid() ||
+            d->qmlObject->mainComponent()->isError()) {
+        QString errorMsg;
+        for (QQmlError error: d->qmlObject->mainComponent()->errors())
+            errorMsg += error.toString() + QStringLiteral("\n");
+        errorMsg = tr("Error loading QML file for containment: %1").arg(errorMsg);
+        qWarning() << qPrintable(errorMsg);
+
+        // Load the element error component from corona's package
+        d->qmlObject->setSource(QUrl::fromLocalFile(corona()->package().filePath("elementerror")));
+        d->qmlObject->completeInitialization();
+
+        // If even the element error component cannot be loaded this is a lost cause
+        if (d->qmlObject->mainComponent()->isError())
+            return;
+
+        // Element error component was loaded, set error message
+        d->qmlObject->rootObject()->setProperty("errorMessage", errorMsg);
+    }
+
+    // Load is complete
+    setProperty("item", QVariant::fromValue(d->qmlObject));
+    d->qmlObject->completeInitialization();
+
+    Q_EMIT packageChanged(package);
 }
 
 } // namespace Shell
