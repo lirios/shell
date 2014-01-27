@@ -33,13 +33,22 @@ namespace Hawaii {
 
 namespace Shell {
 
-class ElementPackage : public PackageStructure
+class BasePackage : public PackageStructure
+{
+public:
+    void initializePackage(Package *package);
+
+protected:
+    void pathChanged(Package *package);
+};
+
+class ElementPackage : public BasePackage
 {
 public:
     void initializePackage(Package *package);
 };
 
-class ContainmentPackage : public PackageStructure
+class ContainmentPackage : public BasePackage
 {
 public:
     void initializePackage(Package *package);

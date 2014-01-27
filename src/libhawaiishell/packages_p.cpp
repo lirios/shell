@@ -31,14 +31,28 @@ namespace Hawaii {
 
 namespace Shell {
 
+void BasePackage::initializePackage(Package *package)
+{
+    // Default main script, this can be changed by packages themselves
+    package->addFileDefinition("mainscript", QStringLiteral("ui/main.qml"),
+                               tr("Main script file"));
+    package->setRequired("mainscript", true);
+}
+
+void BasePackage::pathChanged(Package *package)
+{
+    if (package->path().isEmpty())
+        return;
+
+    PluginMetadata metadata(package->path() + "/metadata.desktop");
+    const QString mainScript = metadata.property(QStringLiteral("X-Hawaii-MainScript")).toString();
+    if (!mainScript.isEmpty())
+        package->addFileDefinition("mainscript", mainScript, tr("Main script file"));
+}
+
 void ElementPackage::initializePackage(Package *package)
 {
     package->setDefaultPackageRoot(QStringLiteral("hawaii/elements/"));
-
-    // Main script
-    PluginMetadata metadata(package->path() + "/metadata.desktop");
-    const QString mainScript = metadata.property(QStringLiteral("X-Hawaii-MainScript")).toString();
-    package->addFileDefinition("mainscript", mainScript, tr("Main script file"));
 
     // User interface
     package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
@@ -47,11 +61,6 @@ void ElementPackage::initializePackage(Package *package)
 void ContainmentPackage::initializePackage(Package *package)
 {
     package->setDefaultPackageRoot(QStringLiteral("hawaii/containments/"));
-
-    // Main script
-    PluginMetadata metadata(package->path() + "/metadata.desktop");
-    const QString mainScript = metadata.property(QStringLiteral("X-Hawaii-MainScript")).toString();
-    package->addFileDefinition("mainscript", mainScript, tr("Main script file"));
 
     // User interface
     package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
