@@ -114,7 +114,7 @@ public:
      * Sets the form factor of this view.
      * \param formFactor the form factor of the view
      */
-    void setFormFactor(Types::FormFactor formFactor);
+    void setFormFactor(Types::FormFactor value);
 
     /*!
      * \return the location of this view.
@@ -125,7 +125,7 @@ public:
      * Sets the location of this view.
      * \param location the location of the view
      */
-    void setLocation(Types::Location location);
+    void setLocation(Types::Location value);
 
     /*!
      * \return the geometry of the screen where this view is located.

@@ -48,8 +48,6 @@ public:
     QWeakPointer<Containment> containment;
     bool immutable;
     bool configuring;
-    Types::FormFactor formFactor;
-    Types::Location location;
 
     void initialize();
 
@@ -60,8 +58,6 @@ protected:
 QuickViewPrivate::QuickViewPrivate(QuickView *view)
     : immutable(false)
     , configuring(false)
-    , formFactor(Types::Plane)
-    , location(Types::Desktop)
     , q_ptr(view)
 {
 }
@@ -197,17 +193,18 @@ void QuickView::setConfiguring(bool value)
 Hawaii::Shell::Types::FormFactor QuickView::formFactor() const
 {
     Q_D(const QuickView);
-    return d->formFactor;
+
+    if (!d->containment)
+        return Types::Plane;
+    return d->containment.data()->formFactor();
 }
 
-void QuickView::setFormFactor(Types::FormFactor formFactor)
+void QuickView::setFormFactor(Types::FormFactor value)
 {
     Q_D(QuickView);
 
-    if (d->formFactor != formFactor) {
-        d->formFactor = formFactor;
-        Q_EMIT formFactorChanged(formFactor);
-    }
+    if (formFactor() != value)
+        d->containment.data()->setFormFactor(value);
 }
 
 Hawaii::Shell::Types::Location QuickView::location() const
@@ -219,10 +216,12 @@ Hawaii::Shell::Types::Location QuickView::location() const
     return d->containment.data()->location();
 }
 
-void QuickView::setLocation(Types::Location location)
+void QuickView::setLocation(Types::Location value)
 {
     Q_D(QuickView);
-    d->containment.data()->setLocation(location);
+
+    if (location() != value)
+        d->containment.data()->setLocation(value);
 }
 
 QRectF QuickView::screenGeometry() const
