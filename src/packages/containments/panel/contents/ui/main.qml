@@ -50,8 +50,11 @@ DropArea {
     property int minimumWidth: currentLayout.Layout.minimumWidth
     property int maximumWidth: currentLayout.Layout.maximumWidth
 
+    property int minimumHeight: currentLayout.Layout.minimumHeight
+    property int maximumHeight: currentLayout.Layout.maximumHeight
+
     property Item configButton
-    property Item currentLayout: view.formFactor === Shell.Types.Horizontal ? row : column
+    property Item currentLayout: panel.formFactor === Shell.Types.Horizontal ? row : column
     property Item dragOverlay
 
     RowLayout {
@@ -118,8 +121,8 @@ DropArea {
 
     Item {
         id: dndSpacer
-        width: view.formFactor === Shell.Types.Vertical ? currentLayout.width : 40
-        height: view.formFactor === Shell.Types.Vertical ? 40 : currentLayout.height
+        width: panel.formFactor === Shell.Types.Vertical ? currentLayout.width : 40
+        height: panel.formFactor === Shell.Types.Vertical ? 40 : currentLayout.height
     }
 
     Component {
@@ -174,34 +177,34 @@ DropArea {
             }
 
             Layout.minimumWidth: {
-                if (view.formFactor !== Shell.Types.Vertical)
+                if (panel.formFactor !== Shell.Types.Vertical)
                     return element && element.minimumWidth > 0 ? element.minimumWidth : root.height;
                 return root.width;
             }
             Layout.minimumHeight: {
-                if (view.formFactor === Shell.Types.Vertical)
+                if (panel.formFactor === Shell.Types.Vertical)
                     return element && element.minimumHeight > 0 ? element.minimumHeight : root.width;
                 return root.height;
             }
 
             Layout.preferredWidth: {
-                if (view.formFactor !== Shell.Types.Vertical)
+                if (panel.formFactor !== Shell.Types.Vertical)
                     return element && element.implicitWidth > 0 ? element.implicitWidth : root.height;
                 return root.width;
             }
             Layout.preferredHeight: {
-                if (view.formFactor === Shell.Types.Vertical)
+                if (panel.formFactor === Shell.Types.Vertical)
                     return element && element.implicitHeight > 0 ? element.implicitHeight : root.width;
                 return root.height;
             }
 
             Layout.maximumWidth: {
-                if (view.formFactor !== Shell.Types.Vertical)
+                if (panel.formFactor !== Shell.Types.Vertical)
                     return element && element.maximumWidth > 0 ? element.maximumWidth : (Layout.fillWidth ? -1 : root.height);
                 return Layout.fillHeight ? -1 : root.width;
             }
             Layout.maximumHeight: {
-                if (view.formFactor === Shell.Types.Vertical)
+                if (panel.formFactor === Shell.Types.Vertical)
                     return element && element.maximumHeight > 0 ? element.maximumHeight : (Layout.fillHeight ? -1 : root.width);
                 return Layout.fillWidth ? -1 : root.height;
             }
@@ -212,19 +215,19 @@ DropArea {
     }
 
     Connections {
-        target: view
+        target: panel
         onElementAdded: {
             addElement(element);
         }
     }
 
     Connections {
-        target: panelView
+        target: panel
         onConfiguringChanged: makeConfigurable()
     }
 
     Component.onCompleted: {
-        LayoutManager.view = view;
+        LayoutManager.view = panel;
         LayoutManager.root = root;
         LayoutManager.layout = currentLayout;
         //LayoutManager.restore();
@@ -259,12 +262,12 @@ DropArea {
     }
 
     function makeConfigurable() {
-        if (view.immutable) {
+        if (panel.immutable) {
             dragOverlay.destroy();
             return;
         }
 
-        if (panelView.configuring) {
+        if (panel.configuring) {
             var component = Qt.createComponent("ConfigOverlay.qml");
             dragOverlay = component.createObject(root);
             component.destroy();
