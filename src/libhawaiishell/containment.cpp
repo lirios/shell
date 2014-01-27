@@ -150,6 +150,12 @@ void Containment::setLocation(Types::Location location)
     }
 }
 
+void Containment::setContextProperty(const QString &name, const QVariant &value)
+{
+    Q_D(Containment);
+    d->qmlObject->engine()->rootContext()->setContextProperty(name, value);
+}
+
 Package Containment::package() const
 {
     Q_D(const Containment);

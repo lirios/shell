@@ -75,6 +75,13 @@ public:
     void setLocation(Types::Location location);
 
     /*!
+     * Sets the context property \a name to \a value.
+     * \param name name of the context property.
+     * \param value value of the context property.
+     */
+    void setContextProperty(const QString &name, const QVariant &value);
+
+    /*!
      * \return the package loaded for this containment.
      */
     Package package() const;
