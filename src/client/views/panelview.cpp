@@ -32,6 +32,9 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQml/QQmlContext>
 
+#include <HawaiiShell/Containment>
+#include <HawaiiShell/PluginLoader>
+
 #include "element.h"
 #include "elementfactory.h"
 #include "panelview.h"
@@ -63,8 +66,6 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     , m_surface(new PanelSurface())
 {
     // Initialize settings
-    setLocation(Types::BottomEdge);
-    m_settings.insert("location", Types::BottomEdge);
     m_settings.insert("alignment", Qt::AlignLeft);
     m_settings.insert("offset", 0);
     m_settings.insert("thickness", 60);
@@ -85,6 +86,16 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
             .arg(QString::number(panelId++));
     m_configuration = new QConfiguration(&m_settings, section, this);
 
+    // Load containment package
+    Package package = PluginLoader::instance()->loadPackage(
+                QStringLiteral("Hawaii/Shell/Containment"));
+    package.setPath("org.hawaii.containments.panel");
+
+    // Create and load containment
+    Containment *containment = new Containment(corona, this);
+    containment->setPackage(package);
+    setContainment(containment);
+
     // Set panel size
     restore();
 
@@ -92,10 +103,6 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     setWindowType();
 
     // React to changes
-    connect(&m_settings, &QQmlPropertyMap::valueChanged, [=](const QString &key, const QVariant &value) {
-        if (key == QStringLiteral("location"))
-            setLocation(static_cast<Types::Location>(value.toInt()));
-    });
     connect(this, &QWindow::visibleChanged,
             this, &PanelView::dockPanel);
     connect(this, &QWindow::screenChanged,
