@@ -27,6 +27,7 @@
 #include <QtCore/QDebug>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlPropertyMap>
+#include <QtQuick/QQuickItem>
 
 #include <QtConfiguration/QConfiguration>
 
@@ -191,7 +192,9 @@ void Containment::setPackage(const Package &package)
     }
 
     // Load is complete
-    setProperty("item", QVariant::fromValue(d->qmlObject));
+    QQuickItem *rootItem = qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
+    if (rootItem)
+        setProperty("item", QVariant::fromValue(rootItem));
     d->qmlObject->completeInitialization();
 
     Q_EMIT packageChanged(package);
