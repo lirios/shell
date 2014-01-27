@@ -192,10 +192,12 @@ void Containment::setPackage(const Package &package)
     }
 
     // Load is complete
+    d->qmlObject->completeInitialization();
+
+    // Keep track of the root item
     QQuickItem *rootItem = qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
     if (rootItem)
         setProperty("item", QVariant::fromValue(rootItem));
-    d->qmlObject->completeInitialization();
 
     Q_EMIT packageChanged(package);
 }
