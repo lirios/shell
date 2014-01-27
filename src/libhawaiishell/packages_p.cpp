@@ -35,6 +35,11 @@ void ElementPackage::initializePackage(Package *package)
 {
     package->setDefaultPackageRoot(QStringLiteral("hawaii/elements/"));
 
+    // Main script
+    PluginMetadata metadata(package->path() + "/metadata.desktop");
+    const QString mainScript = metadata.property(QStringLiteral("X-Hawaii-MainScript")).toString();
+    package->addFileDefinition("mainscript", mainScript, tr("Main script file"));
+
     // User interface
     package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
 }
