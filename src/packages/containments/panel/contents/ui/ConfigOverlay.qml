@@ -36,8 +36,8 @@ MouseArea {
     z: 1000
     anchors {
         fill: parent
-        rightMargin: (view.formFactor !== Shell.Types.Vertical) ? handle.width : 0
-        bottomMargin: (view.formFactor === Shell.Types.Vertical) ? handle.height : 0
+        rightMargin: (panel.formFactor !== Shell.Types.Vertical) ? handle.width : 0
+        bottomMargin: (panel.formFactor === Shell.Types.Vertical) ? handle.height : 0
     }
     cursorShape: pressed ? Qt.DragMoveCursor : Qt.ArrowCursor
     hoverEnabled: true
@@ -49,7 +49,7 @@ MouseArea {
 
     onPositionChanged: {
         if (pressed) {
-            if (view.formFactor === Shell.Types.Vertical) {
+            if (panel.formFactor === Shell.Types.Vertical) {
                 currentElement.y += (mouse.y - lastY);
                 handle.y = currentElement.y;
             } else {
@@ -68,8 +68,8 @@ MouseArea {
                 placeHolder.parent = configurationArea;
                 var posInItem = mapToItem(item, mouse.x, mouse.y);
 
-                if ((view.formFactor === Shell.Types.Vertical && posInItem.y < item.height/2) ||
-                    (view.formFactor !== Shell.Types.Vertical && posInItem.x < item.width/2)) {
+                if ((panel.formFactor === Shell.Types.Vertical && posInItem.y < item.height/2) ||
+                    (panel.formFactor !== Shell.Types.Vertical && posInItem.x < item.width/2)) {
                     LayoutManager.insertBefore(item, placeHolder);
                 } else {
                     LayoutManager.insertAfter(item, placeHolder);
