@@ -263,7 +263,8 @@ DropArea {
 
     function makeConfigurable() {
         if (panel.immutable) {
-            dragOverlay.destroy();
+            if (dragOverlay)
+                dragOverlay.destroy();
             return;
         }
 
