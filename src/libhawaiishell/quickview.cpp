@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QPointer>
 #include <QtGui/QScreen>
 #include <QtQuick/QQuickItem>
 
@@ -45,7 +46,7 @@ public:
     QuickViewPrivate(QuickView *view);
 
     Corona *corona;
-    QWeakPointer<Containment> containment;
+    QPointer<Containment> containment;
     bool immutable;
     bool configuring;
 
