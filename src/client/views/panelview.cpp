@@ -294,16 +294,6 @@ void PanelView::restore()
         setMaximumWidth(m_maximumLength);
     }
 
-    // Inform the compositor
-    if (m_surface->isInitialized()) {
-        m_surface->set_alignment(convertAlignment(m_alignment));
-        m_surface->set_offset(m_offset);
-        m_surface->set_thickness(m_thickness);
-        m_surface->set_length(m_length);
-        m_surface->set_min_length(m_minimumLength);
-        m_surface->set_max_length(m_maximumLength);
-    }
-
     // Inform observers
     Q_EMIT offsetChanged();
     Q_EMIT alignmentChanged();
@@ -317,6 +307,14 @@ void PanelView::dockPanel()
 
     if (!m_surface->isInitialized())
         return;
+
+    // Setup surface on the compositor size
+    m_surface->set_alignment(convertAlignment(m_alignment));
+    m_surface->set_offset(m_offset);
+    m_surface->set_thickness(m_thickness);
+    m_surface->set_length(m_length);
+    m_surface->set_min_length(m_minimumLength);
+    m_surface->set_max_length(m_maximumLength);
 
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
@@ -341,6 +339,7 @@ void PanelView::dockPanel()
         return;
     }
 
+    // Dock the panel
     m_surface->dock(edge, output);
 }
 
