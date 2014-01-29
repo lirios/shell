@@ -92,10 +92,11 @@ Q_SIGNALS:
 private:
     Qt::Alignment m_alignment;
     int m_offset;
+    int m_thickness;
+    int m_length;
     int m_minimumLength;
     int m_maximumLength;
     QConfiguration *m_configuration;
-    QQmlPropertyMap m_settings;
     QSet<QString> m_elementsSet;
     QList<Hawaii::Shell::Element *> m_elements;
     PanelSurface *m_surface;
