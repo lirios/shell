@@ -414,6 +414,12 @@
       <arg name="state" type="int"/>
     </request>
 
+    <request name="close">
+      <description summary="close window">
+        Close the client window.
+      </description>
+    </request>
+
     <event name="title_changed">
       <description summary="window title have been changed">
         This event will be sent as soon as the window title is changed.
