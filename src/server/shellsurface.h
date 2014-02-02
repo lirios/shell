@@ -108,7 +108,9 @@ public:
 
     void setTitle(const char *title);
     inline std::string title() const { return m_title; }
-    void setClass(const char *c);
+
+    inline std::string identifier() const { return m_identifier; }
+    void setIdentifier(const char *identifier);
 
     void dragMove(struct weston_seat *ws);
     void dragResize(weston_seat *ws, Edges edges);
@@ -137,6 +139,7 @@ public:
     Signal<> popupDoneSignal;
     Signal<> typeChangedSignal;
     Signal<> titleChangedSignal;
+    Signal<> identifierChangedSignal;
     Signal<> activeChangedSignal;
     Signal<> mappedSignal;
     Signal<> unmappedSignal;
@@ -160,7 +163,7 @@ private:
     Type m_pendingType;
     const struct weston_shell_client *m_client;
     std::string m_title;
-    std::string m_class;
+    std::string m_identifier;
     struct weston_output *m_output;
     int32_t m_savedX, m_savedY;
     bool m_savedPos;

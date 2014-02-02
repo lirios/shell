@@ -292,9 +292,10 @@ void ShellSurface::setTitle(const char *title)
     titleChangedSignal();
 }
 
-void ShellSurface::setClass(const char *c)
+void ShellSurface::setIdentifier(const char *identifier)
 {
-    m_class = c;
+    m_identifier = identifier;
+    identifierChangedSignal();
 }
 
 void ShellSurface::mapPopup()

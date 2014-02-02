@@ -186,7 +186,7 @@ void WlShellSurface::setTitle(wl_client *client, wl_resource *resource, const ch
 
 void WlShellSurface::setClass(wl_client *client, wl_resource *resource, const char *className)
 {
-    shsurf()->setClass(className);
+    shsurf()->setIdentifier(className);
 }
 
 const struct wl_shell_surface_interface WlShellSurface::s_shellSurfaceImplementation = {
