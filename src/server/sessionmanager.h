@@ -15,33 +15,24 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ZOOMEFFECT_H
-#define ZOOMEFFECT_H
+#ifndef SESSIONMANAGER_H
+#define SESSIONMANAGER_H
 
-#include "effect.h"
+#include <string>
+#include <list>
 
-class ZoomEffect : public Effect {
+class SessionManager
+{
 public:
-    class Settings : public Effect::Settings
-    {
-    public:
-        Settings();
-        ~Settings();
+    SessionManager(const char *sessionFile);
 
-        virtual std::list<Option> options() const override;
-        virtual void unSet(const std::string &name) override;
-        virtual void set(const std::string &name, int v) override;
-        virtual void set(const std::string &name, const Option::BindingValue &v) override;
-
-    private:
-        ZoomEffect *m_effect;
-    };
-
-    ZoomEffect();
-    ~ZoomEffect();
+    void restore();
+    void save(const std::list<pid_t> &pids);
 
 private:
-    void run(struct weston_seat *seat, uint32_t time, uint32_t axis, wl_fixed_t value);
+    void start(const char *cmd);
+
+    std::string m_sessionFile;
 };
 
 #endif

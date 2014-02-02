@@ -1,0 +1,79 @@
+
+<protocol name="nuclear_settings">
+    <interface name="nuclear_settings" version="1">
+
+        <request name="unset">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+        </request>
+
+        <request name="set_string">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+            <arg name="value" type="string"/>
+        </request>
+        <request name="set_integer">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+            <arg name="value" type="int"/>
+        </request>
+
+        <request name="set_key_binding">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+            <arg name="key" type="uint"/>
+            <arg name="modifiers" type="uint"/>
+        </request>
+        <request name="set_axis_binding">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+            <arg name="axis" type="uint"/>
+            <arg name="modifiers" type="uint"/>
+        </request>
+        <request name="set_hotspot_binding">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+            <arg name="hotspot" type="uint"/>
+        </request>
+        <request name="set_button_binding">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+            <arg name="button" type="uint"/>
+            <arg name="modifiers" type="uint"/>
+        </request>
+
+        <event name="string_option">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+        </event>
+        <event name="integer_option">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+        </event>
+        <event name="binding_option">
+            <arg name="path" type="string"/>
+            <arg name="option" type="string"/>
+            <arg name="allowed_types" type="int"/>
+        </event>
+
+        <enum name="modifier">
+            <entry name="ctrl" value="1"/>
+            <entry name="alt" value="2"/>
+            <entry name="super" value="4"/>
+            <entry name="shift" value="8"/>
+        </enum>
+        <enum name="binding_type">
+            <entry name="key" value="1"/>
+            <entry name="button" value="2"/>
+            <entry name="axis" value="4"/>
+            <entry name="hotspot" value="8"/>
+        </enum>
+        <enum name="hotspot">
+            <entry name="top_left_corner" value="1"/>
+            <entry name="top_right_corner" value="2"/>
+            <entry name="bottom_left_corner" value="4"/>
+            <entry name="bottom_right_corner" value="8"/>
+        </enum>
+
+    </interface>
+</protocol>

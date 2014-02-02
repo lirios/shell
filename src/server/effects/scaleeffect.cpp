@@ -1,30 +1,19 @@
-/****************************************************************************
- * This file is part of Hawaii Shell.
+/*
+ * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013-2014 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Author(s):
- *    Giulio Camuffo
- *    Pier Luigi Fiorini
- *
- * $BEGIN_LICENSE:LGPL2.1+$
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $END_LICENSE$
- ***************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <linux/input.h>
 
@@ -34,16 +23,10 @@
 #include "animation.h"
 #include "animationcurve.h"
 #include "shellseat.h"
-
-#include "wayland-hawaii-server-protocol.h"
+#include "binding.h"
 
 const float INACTIVE_ALPHA = 0.8;
 const int ALPHA_ANIM_DURATION = 200;
-
-struct Grab : public ShellGrab {
-    ScaleEffect *effect;
-    weston_surface *surface;
-};
 
 struct SurfaceTransform {
     void updateAnimation(float value);
@@ -61,71 +44,65 @@ struct SurfaceTransform {
     int sy, ty, cy;
 };
 
-void ScaleEffect::grab_focus(struct weston_pointer_grab *base)
-{
-    ShellGrab *shgrab = container_of(base, ShellGrab, grab);
-    Grab *grab = static_cast<Grab *>(shgrab);
+struct Grab : public ShellGrab {
+    void focus() override
+    {
+        Workspace *currWs = Shell::instance()->currentWorkspace();
 
-    Workspace *currWs = grab->shell->currentWorkspace();
+        wl_fixed_t sx, sy;
+        weston_view *view = weston_compositor_pick_view(pointer()->seat->compositor, pointer()->x, pointer()->y, &sx, &sy);
 
-    wl_fixed_t sx, sy;
-    struct weston_surface *surface = weston_compositor_pick_surface(grab->pointer->seat->compositor,
-                                                                    grab->pointer->x, grab->pointer->y,
-                                                                    &sx, &sy);
-
-    if (grab->surface == surface) {
-        return;
-    }
-
-    grab->surface = surface;
-
-    for (SurfaceTransform *tr: grab->effect->m_surfaces) {
-        if (tr->surface->workspace() != currWs) {
-            continue;
+        if (surface == view) {
+            return;
         }
 
-        float alpha = (tr->surface->is(surface) ? 1.0 : INACTIVE_ALPHA);
-        float curr = tr->surface->alpha();
-        if (alpha == curr) {
-            continue;
-        }
+        surface = view;
 
-        tr->alphaAnim.setStart(curr);
-        tr->alphaAnim.setTarget(alpha);
-        tr->alphaAnim.run(tr->surface->output(), ALPHA_ANIM_DURATION);
-    }
-}
+        for (SurfaceTransform *tr: effect->m_surfaces) {
+            if (tr->surface->workspace() != currWs) {
+                continue;
+            }
 
-static void grab_button(struct weston_pointer_grab *base, uint32_t time, uint32_t button, uint32_t state_w)
-{
-    ShellGrab *shgrab = container_of(base, ShellGrab, grab);
-    Grab *grab = static_cast<Grab *>(shgrab);
-    if (state_w == WL_POINTER_BUTTON_STATE_PRESSED) {
-        ShellSurface *shsurf = grab->shell->getShellSurface(grab->surface);
-        if (shsurf) {
-            grab->effect->end(shsurf);
+            float alpha = (tr->surface->is(view) ? 1.0 : INACTIVE_ALPHA);
+            float curr = tr->surface->alpha();
+            if (alpha == curr) {
+                continue;
+            }
+
+            tr->alphaAnim.setStart(curr);
+            tr->alphaAnim.setTarget(alpha);
+            tr->alphaAnim.run(tr->surface->output(), ALPHA_ANIM_DURATION);
         }
     }
-}
+    void button(uint32_t time, uint32_t button, uint32_t state) override
+    {
+        if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
+            ShellSurface *shsurf = Shell::getShellSurface(surface->surface);
+            if (shsurf) {
+                effect->end(shsurf);
+            }
+        }
+    }
 
-const struct weston_pointer_grab_interface ScaleEffect::grab_interface = {
-    ScaleEffect::grab_focus,
-    [](struct weston_pointer_grab *grab, uint32_t time) {},
-    grab_button,
+    ScaleEffect *effect;
+    weston_view *surface;
 };
 
-ScaleEffect::ScaleEffect(Shell *shell)
-           : Effect(shell)
+ScaleEffect::ScaleEffect()
+           : Effect()
            , m_scaled(false)
            , m_grab(new Grab)
 {
     m_grab->effect = this;
-    m_binding = shell->bindKey(KEY_E, MODIFIER_SUPER, &ScaleEffect::run, this);
+    Binding *b = new Binding();
+    b->setIsToggle(true);
+    b->keyTriggered.connect(this, &ScaleEffect::run);
+    b->hotSpotTriggered.connect(this, &ScaleEffect::run);
+    addBinding("Toggle", b);
 }
 
 ScaleEffect::~ScaleEffect()
 {
-    delete m_binding;
 }
 
 void ScaleEffect::run(struct weston_seat *seat, uint32_t time, uint32_t key)
@@ -133,15 +110,20 @@ void ScaleEffect::run(struct weston_seat *seat, uint32_t time, uint32_t key)
     run(seat);
 }
 
+void ScaleEffect::run(weston_seat *seat, uint32_t time, Binding::HotSpot hs)
+{
+    run(seat);
+}
+
 void ScaleEffect::run(struct weston_seat *ws)
 {
     int num = m_surfaces.size();
-    if ((num == 0 && !m_scaled) || shell()->isInFullscreen()) {
+    if ((num == 0 && !m_scaled) || Shell::instance()->isInFullscreen()) {
         return;
     }
 
     num = 0;
-    Workspace *currWs = shell()->currentWorkspace();
+    Workspace *currWs = Shell::instance()->currentWorkspace();
     for (SurfaceTransform *surf: m_surfaces) {
         if (surf->surface->workspace() == currWs) {
             ++num;
@@ -178,7 +160,7 @@ void ScaleEffect::run(struct weston_seat *ws)
             surf->animation.run(surf->surface->output(), ANIM_DURATION, Animation::Flags::SendDone);
 
             surf->alphaAnim.setStart(surf->surface->alpha());
-            surf->alphaAnim.setTarget(surf->minimize ? 0.f : surf->surface->maximumAlpha());
+            surf->alphaAnim.setTarget(surf->minimize ? 0.f : 1.f);
             surf->alphaAnim.run(surf->surface->output(), ALPHA_ANIM_DURATION);
         } else {
             surf->wasMinimized = surf->surface->isMinimized();
@@ -186,8 +168,8 @@ void ScaleEffect::run(struct weston_seat *ws)
                 surf->surface->show();
             }
 
-            int cellW = (surf->surface->output()->width - 100) / numCols;
-            int cellH = (surf->surface->output()->height - 100) / numRows;
+            int cellW = surf->surface->output()->width / numCols;
+            int cellH = surf->surface->output()->height / numRows;
 
             float rx = (float)cellW / (float)surf->surface->transformedWidth();
             float ry = (float)cellH / (float)surf->surface->transformedHeight();
@@ -209,8 +191,8 @@ void ScaleEffect::run(struct weston_seat *ws)
             surf->sy = surf->cy;
 
             surf->ts = rx * surf->cs;
-            surf->tx = x + 50;
-            surf->ty = y + 50;
+            surf->tx = x;
+            surf->ty = y;
 
             surf->animation.setStart(0.f);
             surf->animation.setTarget(1.f);
@@ -231,11 +213,11 @@ void ScaleEffect::run(struct weston_seat *ws)
     if (m_scaled) {
         m_seat = ws;
         m_chosenSurface = nullptr;
-        shell()->startGrab(m_grab, &grab_interface, ws, WL_HAWAII_SHELL_CURSOR_ARROW);
-        shell()->hidePanels();
         m_grab->surface = nullptr;
+        m_grab->start(ws, Cursor::Arrow);
+        Shell::instance()->hidePanels();
         if (ws->pointer->focus) {
-            ShellSurface *s = Shell::getShellSurface(ws->pointer->focus);
+            ShellSurface *s = Shell::getShellSurface(ws->pointer->focus->surface);
             if (!s) {
                 return;
             }
@@ -243,7 +225,7 @@ void ScaleEffect::run(struct weston_seat *ws)
             for (SurfaceTransform *tr: m_surfaces) {
                 if (tr->surface == s) {
                     tr->alphaAnim.setStart(tr->surface->alpha());
-                    tr->alphaAnim.setTarget(s->maximumAlpha());
+                    tr->alphaAnim.setTarget(1.0);
                     tr->alphaAnim.run(tr->surface->output(), ALPHA_ANIM_DURATION);
                     break;
                 }
@@ -251,8 +233,8 @@ void ScaleEffect::run(struct weston_seat *ws)
         }
     } else {
         m_seat = nullptr;
-        Shell::endGrab(m_grab);
-        shell()->showPanels();
+        m_grab->end();
+        Shell::instance()->showPanels();
     }
 }
 
@@ -261,6 +243,7 @@ void ScaleEffect::end(ShellSurface *surface)
     m_chosenSurface = surface;
     ShellSeat::shellSeat(m_seat)->activate(surface);
     run(m_seat);
+    binding("Toggle")->releaseToggle();
 }
 
 void ScaleEffect::addedSurface(ShellSurface *surface)
@@ -327,3 +310,56 @@ void SurfaceTransform::doneAnimation()
         surface->setAlpha(1);
     }
 }
+
+
+ScaleEffect::Settings::Settings()
+           : Effect::Settings()
+           , m_effect(nullptr)
+{
+}
+
+ScaleEffect::Settings::~Settings()
+{
+    delete m_effect;
+}
+
+std::list<Option> ScaleEffect::Settings::options() const
+{
+    auto list = Effect::Settings::options();
+    list.push_back(Option::binding("toggle_binding", Binding::Type::Key | Binding::Type::HotSpot));
+
+    return list;
+}
+
+void ScaleEffect::Settings::unSet(const std::string &name)
+{
+    if (name == "enabled") {
+        delete m_effect;
+        m_effect = nullptr;
+    } else if (name == "toggle_binding") {
+        m_effect->binding("Toggle")->reset();
+    }
+}
+
+void ScaleEffect::Settings::set(const std::string &name, int v)
+{
+    if (name == "enabled") {
+        if (v && !m_effect) {
+            m_effect = new ScaleEffect;
+            const Option *o = option("toggle_binding");
+            o->valueAsBinding().bind(m_effect->binding("Toggle"));
+        } else if (!v) {
+            delete m_effect;
+            m_effect = nullptr;
+        }
+    }
+}
+
+void ScaleEffect::Settings::set(const std::string &name, const Option::BindingValue &v)
+{
+    if (name == "toggle_binding" && m_effect) {
+        v.bind(m_effect->binding("Toggle"));
+    }
+}
+
+SETTINGS(scale_effect, ScaleEffect::Settings)

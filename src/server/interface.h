@@ -15,42 +15,59 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INOUTSURFACEEFFECT_H
-#define INOUTSURFACEEFFECT_H
+#ifndef INTERFACE_H
+#define INTERFACE_H
 
 #include <list>
+#include <type_traits>
 
-#include "effect.h"
+class Interface;
 
-class InOutSurfaceEffect : public Effect
+class Object
 {
 public:
-    class Settings : public Effect::Settings
-    {
-    public:
-        Settings();
-        ~Settings();
+    Object();
+    virtual ~Object();
 
-        virtual void unSet(const std::string &name) override;
-        virtual void set(const std::string &name, int v) override;
+    void addInterface(Interface *iface);
+    void destroy();
 
-    private:
-        InOutSurfaceEffect *m_effect;
-    };
-
-    InOutSurfaceEffect();
-    ~InOutSurfaceEffect();
-
-protected:
-    virtual void addedSurface(ShellSurface *surf);
+    template <class T>
+    T *findInterface() const;
 
 private:
-    struct Surface;
-    Surface *findSurface(ShellSurface *surf);
-
-    std::list<Surface *> m_surfaces;
-
-    friend Surface;
+    std::list<Interface *> m_ifaces;
+    bool m_deleting;
 };
+
+class Interface
+{
+public:
+    Interface();
+    virtual ~Interface() {}
+
+    Object *object() { return m_obj; }
+
+protected:
+    virtual void added() {}
+
+private:
+    Object *m_obj;
+
+    friend class Object;
+};
+
+
+template <class T>
+T *Object::findInterface() const
+{
+    static_assert(std::is_base_of<Interface, T>::value, "T is not derived from Interface.");
+    for (Interface *iface: m_ifaces) {
+        if (T *t = dynamic_cast<T *>(iface)) {
+            return t;
+        }
+    }
+    return nullptr;
+}
 
 #endif

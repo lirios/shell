@@ -1,29 +1,19 @@
-/****************************************************************************
- * This file is part of Hawaii Shell.
+/*
+ * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013-2014 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Author(s):
- *    Giulio Camuffo
- *
- * $BEGIN_LICENSE:LGPL2.1+$
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $END_LICENSE$
- ***************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef MINIMIZEEFFECT_H
 #define MINIMIZEEFFECT_H
@@ -35,7 +25,20 @@
 class MinimizeEffect : public Effect
 {
 public:
-    MinimizeEffect(Shell *shell);
+    class Settings : public Effect::Settings
+    {
+    public:
+        Settings();
+        ~Settings();
+
+        virtual void unSet(const std::string &name) override;
+        virtual void set(const std::string &name, int v) override;
+
+    private:
+        MinimizeEffect *m_effect;
+    };
+
+    MinimizeEffect();
     ~MinimizeEffect();
 
 protected:

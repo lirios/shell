@@ -1,30 +1,19 @@
-/****************************************************************************
- * This file is part of Hawaii Shell.
+/*
+ * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013-2014 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Author(s):
- *    Giulio Camuffo
- *    Pier Luigi Fiorini
- *
- * $BEGIN_LICENSE:LGPL2.1+$
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $END_LICENSE$
- ***************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef WORKSPACE_H
 #define WORKSPACE_H
@@ -32,57 +21,58 @@
 #include "layer.h"
 #include "transform.h"
 #include "shellsignal.h"
+#include "utils.h"
+#include "interface.h"
+
+struct weston_view;
 
 class Shell;
 
-class Workspace {
+class Workspace : public Object
+{
 public:
     Workspace(Shell *shell, int number);
     ~Workspace();
 
-    void init(wl_client *client);
+    void createBackgroundView(weston_surface *bkg);
 
     void addSurface(ShellSurface *surface);
+    void removeSurface(ShellSurface *surface);
     void restack(ShellSurface *surface);
-    void stackAbove(struct weston_surface *surf, struct weston_surface *parent);
+    void stackAbove(weston_view *surf, weston_view *parent);
 
     void setTransform(const Transform &tr);
+    IRect2D boundingBox() const;
 
     inline int number() const { return m_number; }
     int numberOfSurfaces() const;
     struct weston_output *output() const;
-    wl_resource *resource() const { return m_resource; }
 
     void insert(Workspace *ws);
     void insert(Layer *layer);
     void insert(struct weston_layer *layer);
     void remove();
-    void reset();
-
-    inline void show() { m_layer.show(); }
-    inline void hide() { m_layer.hide(); }
 
     void setActive(bool active);
-    bool active() const { return m_active; }
+    bool isActive() const { return m_active; }
 
     inline const Layer &layer() const { return m_layer; }
 
-    static Workspace *fromResource(wl_resource *res);
-
+    Signal<> activeChangedSignal;
     Signal<Workspace *> destroyedSignal;
 
 private:
-    void removed(wl_client *client, wl_resource *res);
+    void backgroundDestroyed(void *d);
 
     Shell *m_shell;
     int m_number;
-    wl_resource *m_resource;
-    struct weston_surface *m_rootSurface;
+    weston_view *m_rootSurface;
+    weston_view *m_background;
     Transform m_transform;
+    Layer m_backgroundLayer;
     Layer m_layer;
     bool m_active;
-
-    static const struct wl_hawaii_workspace_interface s_implementation;
+    WlListener m_backgroundDestroy;
 };
 
 #endif

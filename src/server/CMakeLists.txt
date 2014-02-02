@@ -3,29 +3,47 @@ include_directories(
     ${Pixman_INCLUDE_DIRS}
     ${Weston_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
+    ${CMAKE_CURRENT_SOURCE_DIR}/wl_hawaii
+    ${CMAKE_CURRENT_SOURCE_DIR}/wl_shell
     ${CMAKE_BINARY_DIR}/headers
 )
 
 set(SOURCES
     animation.cpp
-    desktop-shell.cpp
+    binding.cpp
     effect.cpp
     inputpanel.cpp
+    interface.cpp
     layer.cpp
-    panelsurface.cpp
+    sessionmanager.cpp
+    settings.cpp
+    settingsinterface.cpp
     shell.cpp
     shellseat.cpp
     shellsurface.cpp
-    shellwindow.cpp
     transform.cpp
     workspace.cpp
+    xwlshell.cpp
     effects/fademovingeffect.cpp
     effects/griddesktops.cpp
     effects/inoutsurfaceeffect.cpp
     effects/minimizeeffect.cpp
-    effects/opacityeffect.cpp
     effects/scaleeffect.cpp
     effects/zoomeffect.cpp
+    wl_hawaii/desktop-shell.cpp
+    wl_hawaii/panelsurface.cpp
+    wl_hawaii/shellwindow.cpp
+    wl_shell/wlshell.cpp
+    wl_shell/wlshellsurface.cpp
+)
+
+wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/settings.xml
+    settings
+)
+wayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/settings.xml
+    settings
 )
 
 wayland_add_protocol_client(SOURCES

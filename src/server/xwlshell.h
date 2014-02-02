@@ -15,33 +15,32 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ZOOMEFFECT_H
-#define ZOOMEFFECT_H
+#ifndef XWLSHELL_H
+#define XWLSHELL_H
 
-#include "effect.h"
+#include <wayland-server.h>
 
-class ZoomEffect : public Effect {
+#include "interface.h"
+
+struct weston_surface;
+struct weston_shell_client;
+
+class ShellSurface;
+
+class XWlShell : public Interface
+{
 public:
-    class Settings : public Effect::Settings
-    {
-    public:
-        Settings();
-        ~Settings();
+    XWlShell();
 
-        virtual std::list<Option> options() const override;
-        virtual void unSet(const std::string &name) override;
-        virtual void set(const std::string &name, int v) override;
-        virtual void set(const std::string &name, const Option::BindingValue &v) override;
-
-    private:
-        ZoomEffect *m_effect;
-    };
-
-    ZoomEffect();
-    ~ZoomEffect();
+    ShellSurface *getShellSurface(weston_surface *surface, const weston_shell_client *client);
 
 private:
-    void run(struct weston_seat *seat, uint32_t time, uint32_t axis, wl_fixed_t value);
+};
+
+class XWlShellSurface : public Interface
+{
+public:
+    XWlShellSurface();
 };
 
 #endif

@@ -1,29 +1,19 @@
-/****************************************************************************
- * This file is part of Hawaii Shell.
+/*
+ * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013-2014 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Author(s):
- *    Giulio Camuffo
- *
- * $BEGIN_LICENSE:LGPL2.1+$
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $END_LICENSE$
- ***************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "fademovingeffect.h"
 #include "animation.h"
@@ -36,8 +26,8 @@ struct FadeMovingEffect::Surface {
     Animation animation;
 };
 
-FadeMovingEffect::FadeMovingEffect(Shell *shell)
-                : Effect(shell)
+FadeMovingEffect::FadeMovingEffect()
+                : Effect()
 {
 }
 
@@ -62,7 +52,7 @@ void FadeMovingEffect::end(ShellSurface *surface)
 {
     Surface *surf = findSurface(surface);
     surf->animation.setStart(surface->alpha());
-    surf->animation.setTarget(surface->maximumAlpha());
+    surf->animation.setTarget(1.0);
     surf->animation.run(surface->output(), ALPHA_ANIM_DURATION);
 }
 
@@ -102,3 +92,38 @@ FadeMovingEffect::Surface *FadeMovingEffect::findSurface(ShellSurface *surface)
 
     return nullptr;
 }
+
+
+
+FadeMovingEffect::Settings::Settings()
+           : Effect::Settings()
+           , m_effect(nullptr)
+{
+}
+
+FadeMovingEffect::Settings::~Settings()
+{
+    delete m_effect;
+}
+
+void FadeMovingEffect::Settings::set(const std::string &name, int v)
+{
+    if (name == "enabled") {
+        if (v && !m_effect) {
+            m_effect = new FadeMovingEffect;
+        } else if (!v) {
+            delete m_effect;
+            m_effect = nullptr;
+        }
+    }
+}
+
+void FadeMovingEffect::Settings::unSet(const std::string &name)
+{
+    if (name == "enabled") {
+        delete m_effect;
+        m_effect = nullptr;
+    }
+}
+
+SETTINGS(fademoving_effect, FadeMovingEffect::Settings)

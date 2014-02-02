@@ -15,33 +15,36 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ZOOMEFFECT_H
-#define ZOOMEFFECT_H
+#include "interface.h"
 
-#include "effect.h"
+Object::Object()
+      : m_deleting(false)
+{
+}
 
-class ZoomEffect : public Effect {
-public:
-    class Settings : public Effect::Settings
-    {
-    public:
-        Settings();
-        ~Settings();
+Object::~Object()
+{
+    m_deleting = true;
+    for (Interface *iface: m_ifaces) {
+        delete iface;
+    }
+}
 
-        virtual std::list<Option> options() const override;
-        virtual void unSet(const std::string &name) override;
-        virtual void set(const std::string &name, int v) override;
-        virtual void set(const std::string &name, const Option::BindingValue &v) override;
+void Object::addInterface(Interface *iface)
+{
+    m_ifaces.push_back(iface);
+    iface->m_obj = this;
+    iface->added();
+}
 
-    private:
-        ZoomEffect *m_effect;
-    };
+void Object::destroy()
+{
+    if (!m_deleting) {
+        delete this;
+    }
+}
 
-    ZoomEffect();
-    ~ZoomEffect();
-
-private:
-    void run(struct weston_seat *seat, uint32_t time, uint32_t axis, wl_fixed_t value);
-};
-
-#endif
+Interface::Interface()
+         : m_obj(nullptr)
+{
+}

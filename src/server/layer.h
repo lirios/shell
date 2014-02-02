@@ -1,30 +1,19 @@
-/****************************************************************************
- * This file is part of Hawaii Shell.
+/*
+ * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013-2014 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Author(s):
- *    Giulio Camuffo
- *    Pier Luigi Fiorini
- *
- * $BEGIN_LICENSE:LGPL2.1+$
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $END_LICENSE$
- ***************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #ifndef LAYER_H
 #define LAYER_H
@@ -32,6 +21,8 @@
 #include <weston/compositor.h>
 
 class ShellSurface;
+
+struct weston_view;
 
 class Layer {
 public:
@@ -65,33 +56,28 @@ public:
         friend class Layer;
     };
 
-    typedef Iterator<struct wl_list, struct weston_surface> iterator;
-    typedef Iterator<const struct wl_list, const struct weston_surface> const_iterator;
+    typedef Iterator<struct wl_list, weston_view> iterator;
+    typedef Iterator<const struct wl_list, const weston_view> const_iterator;
 
     Layer();
 
     void insert(struct weston_layer *below);
     void insert(Layer *below);
     void remove();
-    void reset();
     void hide();
     void show();
     bool isVisible() const;
 
-    void addSurface(struct weston_surface *surf);
+    void addSurface(weston_view *surf);
     void addSurface(ShellSurface *surf);
-
-    void prependSurface(struct weston_surface *surf);
-    void prependSurface(ShellSurface *surf);
-
-    void restack(struct weston_surface *surf);
+    void restack(weston_view *surf);
     void restack(ShellSurface *surf);
 
     bool isEmpty() const;
     int numberOfSurfaces() const;
 
-    void stackAbove(struct weston_surface *surf, struct weston_surface *parent);
-    void stackBelow(struct weston_surface *surf, struct weston_surface *parent);
+    void stackAbove(weston_view *surf, weston_view *parent);
+    void stackBelow(weston_view *surf, weston_view *parent);
 
     iterator begin() const;
     iterator rbegin() const;
@@ -135,7 +121,7 @@ template<class L, class S>
 S *Layer::Iterator<L, S>::deref() const
 {
     if (m_elm) {
-        return container_of(m_elm, struct weston_surface, layer_link);
+        return container_of(m_elm, weston_view, layer_link);
     } else {
         return nullptr;
     }
