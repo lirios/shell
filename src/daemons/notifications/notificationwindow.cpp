@@ -68,7 +68,7 @@ void NotificationWindow::addSurface()
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
-                native->nativeResourceForWindow("surface", window));
+                native->nativeResourceForWindow("surface", this));
 
     RegistryListener::instance()->addSurface(surface);
 }
