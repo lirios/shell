@@ -27,6 +27,7 @@
 #include <QtGui/QGuiApplication>
 
 #include "config.h"
+#include "notificationsdaemon.h"
 #include "registrylistener.h"
 
 int main(int argc, char *argv[])
@@ -41,6 +42,9 @@ int main(int argc, char *argv[])
     // This runs only on Wayland
     if (!app.platformName().contains(QStringLiteral("wayland")))
         qFatal("Hawaii's notifications daemon runs only on Wayland, please pass the -platform wayland argument");
+
+    // Create the daemon instance
+    NotificationsDaemon::instance();
 
     // Listen to Wayland registry events
     RegistryListener::instance()->run();
