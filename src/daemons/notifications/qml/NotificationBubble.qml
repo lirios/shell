@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell 1.0
 import Hawaii.Shell.Styles 1.0
 
 Item {
