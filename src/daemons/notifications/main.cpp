@@ -38,6 +38,10 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain(QStringLiteral("hawaii.org"));
     app.setOrganizationName(QStringLiteral("Hawaii"));
 
+    // This runs only on Wayland
+    if (!app.platformName().contains(QStringLiteral("wayland")))
+        qFatal("Hawaii's notifications daemon runs only on Wayland, please pass the -platform wayland argument");
+
     // Listen to Wayland registry events
     RegistryListener::instance()->run();
 
