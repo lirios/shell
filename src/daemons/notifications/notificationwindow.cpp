@@ -31,36 +31,21 @@
 #include "notificationwindow.h"
 #include "registrylistener.h"
 
-NotificationWindow::NotificationWindow(QWindow *parent)
-    : QQuickWindow(parent)
-    , m_item(0)
-    , m_surfaceAdded(false)
+NotificationWindow::NotificationWindow(QQmlEngine *engine, QWindow *parent)
+    : QQuickView(engine, parent)
 {
     // Set transparent color
     setColor(Qt::transparent);
 
     // Avoid shell surface
-    setFlags(flags() | Qt::BypassWindowManagerHint);
+    setFlags(Qt::BypassWindowManagerHint);
+
+    // Load QML source
+    setResizeMode(QQuickView::SizeViewToRootObject);
+    setSource(QUrl("qrc:///qml/NotificationBubble.qml"));
 
     // Create platform window
     create();
-}
-
-QQuickItem *NotificationWindow::item() const
-{
-    return m_item;
-}
-
-void NotificationWindow::setItem(QQuickItem *item)
-{
-    m_item = item;
-    m_item->setParentItem(contentItem());
-    connect(m_item, &QQuickItem::widthChanged, [=]() {
-        this->setWidth(m_item->width());
-    });
-    connect(m_item, &QQuickItem::heightChanged, [=]() {
-        this->setHeight(m_item->height());
-    });
 }
 
 void NotificationWindow::setInputRegion(const QRect &region)
@@ -80,18 +65,12 @@ void NotificationWindow::setInputRegion(const QRect &region)
 
 void NotificationWindow::addSurface()
 {
-    // Don't add the surface twice
-    if (m_surfaceAdded)
-        return;
-
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
     wl_surface *surface = static_cast<struct wl_surface *>(
-                native->nativeResourceForWindow("surface", this));
+                native->nativeResourceForWindow("surface", window));
 
     RegistryListener::instance()->addSurface(surface);
-
-    m_surfaceAdded = true;
 }
 
 #include "moc_notificationwindow.cpp"

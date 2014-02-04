@@ -97,12 +97,12 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     if (replacesId == 0) {
         notification = findNotification(appName, summary);
         if (notification && !body.isEmpty() && !changeCoords) {
-            QMetaObject::invokeMethod(notification,
+            QMetaObject::invokeMethod(notification->rootObject(),
                                       "appendToBody",
                                       Q_ARG(QVariant, body),
                                       Q_ARG(QVariant, timeout));
 
-            return notification->property("identifier").toUInt();
+            return notification->rootObject()->property("identifier").toUInt();
         }
     }
 
@@ -142,7 +142,7 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     }
 #endif
 
-    return notification->property("identifier").toUInt();
+    return notification->rootObject()->property("identifier").toUInt();
 }
 
 void NotificationsDaemon::CloseNotification(uint id)
@@ -193,26 +193,20 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
                                                             const QImage &image,
                                                             int timeout)
 {
-    QQmlComponent *component = new QQmlComponent(m_engine, this);
-    component->loadUrl(QUrl("qrc:///qml/NotificationBubble.qml"));
-    if (!component->isReady())
-        qFatal("Failed to create a notification bubble: %s",
-               qPrintable(component->errorString()));
-
-    QObject *topLevel = component->create();
-    QQuickItem *item = qobject_cast<QQuickItem *>(topLevel);
-    if (!item)
-        qFatal("Can't get notification bubble item");
-
     // Calculate identifier
     uint id = replacesId > 0 ? replacesId : nextId();
 
+    // Create a window
+    NotificationWindow *window = new NotificationWindow(m_engine);
+    window->moveToThread(m_engine->thread());
+    window->setScreen(QGuiApplication::primaryScreen());
+
     // Set properties
-    item->setProperty("identifier", id);
-    item->setProperty("appName", appName);
-    item->setProperty("summary", summary);
-    item->setProperty("body", body);
-    item->setProperty("expirationTimeout", timeout);
+    window->rootObject()->setProperty("identifier", id);
+    window->rootObject()->setProperty("appName", appName);
+    window->rootObject()->setProperty("summary", summary);
+    window->rootObject()->setProperty("body", body);
+    window->rootObject()->setProperty("expirationTimeout", timeout);
 
     // Set icon name
     QString icon = iconName;
@@ -220,17 +214,11 @@ NotificationWindow *NotificationsDaemon::createNotification(uint replacesId,
         cacheImage(QString::number(id), image);
         icon = QStringLiteral("image://notifications/") + QString::number(id);
     }
-    item->setProperty("iconName", icon);
+    window->rootObject()->setProperty("iconName", icon);
 
     // Handle expiration
-    connect(item, SIGNAL(closed(int)), this, SLOT(notificationExpired(int)));
-
-    // Create a window
-    NotificationWindow *window = new NotificationWindow();
-    window->setItem(item);
-    window->setScreen(QGuiApplication::primaryScreen());
-    window->setWidth(item->width());
-    window->setHeight(item->height());
+    connect(window->rootObject(), SIGNAL(closed(int)),
+            this, SLOT(notificationExpired(int)));
 
     return window;
 }
@@ -240,7 +228,11 @@ NotificationWindow *NotificationsDaemon::findNotification(const QString &appName
     for (int i = 0; i < m_notifications.size(); i++) {
         NotificationWindow *window = m_notifications.at(i);
 
-        if (window->property("appName") == appName || window->property("summary") == summary)
+        QQuickItem *item = window->rootObject();
+        if (!item)
+            continue;
+
+        if (item->property("appName") == appName || item->property("summary") == summary)
             return window;
     }
 
@@ -252,7 +244,7 @@ void NotificationsDaemon::showNotification(NotificationWindow *notification)
     // Show the notification and start the timer that will automatically
     // close the bubble
     notification->show();
-    notification->item()->setProperty("running", true);
+    notification->rootObject()->setProperty("running", true);
 
     // We trigger a fake resize in order to have the buffer created
     // and then syncronize and add the surface so that the compositor

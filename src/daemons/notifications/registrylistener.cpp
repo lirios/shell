@@ -88,6 +88,7 @@ void RegistryListener::handleGlobal(void *data,
     }
 
     if (strcmp(interface, "wl_notification_daemon") == 0) {
+        // Initialize interface
         self->m_notifications->init(registry, id);
 
         // Start the notifications daemon and connect to the session bus

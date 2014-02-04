@@ -27,26 +27,19 @@
 #ifndef NOTIFICATIONWINDOW_H
 #define NOTIFICATIONWINDOW_H
 
-#include <QtQuick/QQuickWindow>
+#include <QtQuick/QQuickView>
 
 class QQuickItem;
 
-class NotificationWindow : public QQuickWindow
+class NotificationWindow : public QQuickView
 {
     Q_OBJECT
 public:
-    explicit NotificationWindow(QWindow *parent = 0);
-
-    QQuickItem *item() const;
-    void setItem(QQuickItem *item);
+    explicit NotificationWindow(QQmlEngine *engine, QWindow *parent = 0);
 
 public Q_SLOTS:
     void setInputRegion(const QRect &region);
     void addSurface();
-
-private:
-    QQuickItem *m_item;
-    bool m_surfaceAdded;
 };
 
 #endif // NOTIFICATIONWINDOW_H
