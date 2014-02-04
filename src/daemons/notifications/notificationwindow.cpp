@@ -52,12 +52,12 @@ void NotificationWindow::setInputRegion(const QRect &region)
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    wl_compositor *compositor = static_cast<wl_compositor *>(
+    struct ::wl_compositor *compositor = static_cast<struct ::wl_compositor *>(
                 native->nativeResourceForIntegration("compositor"));
-    wl_surface *surface = static_cast<struct wl_surface *>(
+    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    wl_region *r = wl_compositor_create_region(compositor);
+    struct ::wl_region *r = wl_compositor_create_region(compositor);
     wl_region_add(r, region.x(), region.y(), region.width(), region.height());
     wl_surface_set_input_region(surface, r);
     wl_region_destroy(r);
@@ -67,7 +67,7 @@ void NotificationWindow::addSurface()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
-    wl_surface *surface = static_cast<struct wl_surface *>(
+    struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", window));
 
     RegistryListener::instance()->addSurface(surface);
