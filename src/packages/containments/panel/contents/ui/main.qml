@@ -223,6 +223,24 @@ DropArea {
 
     Connections {
         target: panel
+        onFormFactorChanged: {
+            lastSpacer.parent = root;
+
+            if (panel.formFactor === Shell.Types.Vertical) {
+                for (var container in row.children) {
+                    var item = row.children[0];
+                    item.parent = column;
+                }
+                lastSpacer.parent = column
+            } else {
+                lastSpacer.parent = row;
+                for (var container in column.children) {
+                    var item = column.children[0];
+                    item.parent = row;
+                }
+                lastSpacer.parent = row;
+            }
+        }
         onConfiguringChanged: makeConfigurable()
     }
 
