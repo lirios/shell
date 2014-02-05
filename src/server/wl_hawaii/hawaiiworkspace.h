@@ -1,9 +1,11 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Giulio Camuffo <giuliocamuffo@gmail.com>
  *
  * Author(s):
+ *    Giulio Camuffo
  *    Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:LGPL2.1+$
@@ -24,46 +26,37 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SHELLWINDOW_H
-#define SHELLWINDOW_H
+#ifndef HAWAIIWORKSPACE_H
+#define HAWAIIWORKSPACE_H
 
-#include "desktop-shell.h"
-#include "animation.h"
+#include "interface.h"
 
-class ShellWindow
+struct wl_client;
+struct wl_resource;
+
+class Workspace;
+
+class HawaiiWorkspace : public Interface
 {
 public:
-    ShellWindow(DesktopShell *shell);
-    ~ShellWindow();
+    HawaiiWorkspace();
 
-    DesktopShell *shell() const {
-        return m_shell;
-    }
+    void init(wl_client *client);
+    wl_resource *resource() const { return m_resource; }
+    Workspace *workspace();
 
-    weston_view *dimmedSurface() const {
-        return m_dimmedSurface;
-    }
+    static HawaiiWorkspace *fromResource(wl_resource *resource);
 
-    void connectSignal(wl_signal *signal);
-
-    void createDimmedSurface(weston_output *output);
-    void destroyDimmedSurface();
-
-    void animateDialog(weston_view *view);
+protected:
+    virtual void added() override;
 
 private:
-    struct DialogOverlayAnimation;
-    struct DialogAnimation;
+    void activeChanged();
+    void removed(wl_client *client, wl_resource *res);
 
-    DesktopShell *m_shell;
-    weston_view *m_dimmedSurface;
-    DialogOverlayAnimation *m_dialogOverlayAnimation;
-    DialogAnimation *m_dialogAnimation;
-    WlListener m_destroyListener;
+    wl_resource *m_resource;
 
-    void setDimmedSurfaceAlpha(float alpha);
-
-    void surfaceDestroyed(void *);
+    static const struct wl_hawaii_workspace_interface s_implementation;
 };
 
-#endif // SHELLWINDOW_H
+#endif // HAWAIIWORKSPACE_H

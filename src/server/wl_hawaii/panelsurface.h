@@ -64,7 +64,7 @@ public:
 
     void setPosition();
 
-    weston_surface *surface;
+    weston_view *view;
     DesktopShell *shell;
 
 private:

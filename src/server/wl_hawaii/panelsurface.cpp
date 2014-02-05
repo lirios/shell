@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <wayland-server.h>
 #include <weston/compositor.h>
 
 #include "desktop-shell.h"
@@ -36,7 +37,7 @@ static void panel_surface_destroyed(wl_resource *resource)
 }
 
 PanelSurface::PanelSurface(struct wl_client *client, struct wl_resource *resource, uint32_t id)
-    : surface(nullptr)
+    : view(nullptr)
     , shell(nullptr)
     , m_edge(WL_HAWAII_PANEL_EDGE_BOTTOM)
     , m_alignment(WL_HAWAII_PANEL_ALIGNMENT_LEFT)
@@ -114,7 +115,7 @@ void PanelSurface::dock(struct wl_client *,
     m_edge = static_cast<wl_hawaii_panel_edge>(edge);
 
     weston_output *output = static_cast<weston_output *>(output_resource->data);
-    surface->output = output;
+    view->output = output;
 
     m_dockRequested = true;
 }
@@ -125,21 +126,21 @@ void PanelSurface::setPosition()
         return;
 
     calculatePosition();
-    weston_surface_set_position(surface, m_x, m_y);
+    weston_view_set_position(view, m_x, m_y);
     wl_hawaii_panel_send_docked(m_resource);
     m_dockRequested = false;
 }
 
 void PanelSurface::calculatePosition()
 {
-    weston_output *output = surface->output;
+    weston_output *output = view->output;
 
     // Recalculate coordinates
     float x = static_cast<float>(output->x);
     float y = static_cast<float>(output->y);
 
-    int32_t width = weston_surface_buffer_width(surface);
-    int32_t height = weston_surface_buffer_height(surface);
+    int32_t width = view->surface->width;
+    int32_t height = view->surface->height;
 
     switch (m_edge) {
     case WL_HAWAII_PANEL_EDGE_LEFT:

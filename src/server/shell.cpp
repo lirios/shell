@@ -267,7 +267,8 @@ void Shell::init()
     m_destroyListener.signal->connect(this, &Shell::destroy);
     m_grabViewDestroy.signal->connect(this, &Shell::grabViewDestroyed);
 
-    m_dialogsLayer.insert(&m_compositor->cursor_layer);
+    m_lockLayer.insert(&compositor()->cursor_layer);
+    m_dialogsLayer.insert(&m_lockLayer);
     m_overlayLayer.insert(&m_dialogsLayer);
     m_notificationsLayer.insert(&m_overlayLayer);
     m_fullscreenLayer.insert(&m_notificationsLayer);

@@ -31,6 +31,8 @@ set(SOURCES
     effects/scaleeffect.cpp
     effects/zoomeffect.cpp
     wl_hawaii/desktop-shell.cpp
+    wl_hawaii/hawaiiclientwindow.cpp
+    wl_hawaii/hawaiiworkspace.cpp
     wl_hawaii/panelsurface.cpp
     wl_hawaii/shellwindow.cpp
     wl_shell/wlshell.cpp

@@ -29,19 +29,19 @@
 struct ShellWindow::DialogOverlayAnimation
 {
     Animation animation;
-    weston_surface *surface;
+    weston_view *view;
 
     void animate(float value)
     {
-        surface->alpha = value;
-        weston_surface_damage(surface);
+        view->alpha = value;
+        weston_surface_damage(view->surface);
     }
 };
 
 struct ShellWindow::DialogAnimation
 {
     Animation animation;
-    weston_surface *surface;
+    weston_view *view;
     weston_transform transform;
     float targetX;
     float targetY;
@@ -53,9 +53,9 @@ struct ShellWindow::DialogAnimation
         weston_matrix_scale(matrix, value, value, 1.0);
         weston_matrix_translate(matrix, targetX * (1.0 - value),
                                 targetY * (1.0 - value), 0);
-        weston_surface_geometry_dirty(surface);
-        weston_surface_update_transform(surface);
-        weston_surface_damage(surface);
+        weston_view_geometry_dirty(view);
+        weston_view_update_transform(view);
+        weston_surface_damage(view->surface);
     }
 
     void done()
@@ -64,9 +64,9 @@ struct ShellWindow::DialogAnimation
             wl_list_remove(&transform.link);
             wl_list_init(&transform.link);
 
-            weston_surface_geometry_dirty(surface);
-            weston_surface_update_transform(surface);
-            weston_surface_damage(surface);
+            weston_view_geometry_dirty(view);
+            weston_view_update_transform(view);
+            weston_surface_damage(view->surface);
         }
     }
 };
@@ -82,7 +82,7 @@ ShellWindow::ShellWindow(DesktopShell *shell)
 ShellWindow::~ShellWindow()
 {
     if (m_dimmedSurface)
-        weston_surface_destroy(m_dimmedSurface);
+        weston_surface_destroy(m_dimmedSurface->surface);
     delete m_dialogOverlayAnimation;
     delete m_dialogAnimation;
 }
@@ -104,7 +104,7 @@ void ShellWindow::createDimmedSurface(weston_output *output)
 
     // Animation
     m_dialogOverlayAnimation = new DialogOverlayAnimation;
-    m_dialogOverlayAnimation->surface = m_dimmedSurface;
+    m_dialogOverlayAnimation->view = m_dimmedSurface;
 
     m_dialogOverlayAnimation->animation.updateSignal->connect(
                 m_dialogOverlayAnimation, &DialogOverlayAnimation::animate);
@@ -116,20 +116,22 @@ void ShellWindow::createDimmedSurface(weston_output *output)
 
 void ShellWindow::destroyDimmedSurface()
 {
-    if (m_dimmedSurface)
-        weston_surface_destroy(m_dimmedSurface);
+    if (m_dimmedSurface) {
+        weston_surface_destroy(m_dimmedSurface->surface);
+        weston_view_destroy(m_dimmedSurface);
+    }
     m_dimmedSurface = nullptr;
 }
 
-void ShellWindow::animateDialog(weston_surface *surface)
+void ShellWindow::animateDialog(weston_view *view)
 {
     if (m_dialogAnimation)
         return;
 
     m_dialogAnimation = new DialogAnimation;
-    m_dialogAnimation->surface = surface;
-    m_dialogAnimation->targetX = weston_surface_buffer_width(surface) / 2.0;
-    m_dialogAnimation->targetY = weston_surface_buffer_height(surface) / 2.0;
+    m_dialogAnimation->view = view;
+    m_dialogAnimation->targetX = view->surface->width / 2.0;
+    m_dialogAnimation->targetY = view->surface->height / 2.0;
     wl_list_init(&m_dialogAnimation->transform.link);
 
     m_dialogAnimation->animation.updateSignal->connect(
@@ -140,14 +142,14 @@ void ShellWindow::animateDialog(weston_surface *surface)
     weston_matrix *matrix = &m_dialogAnimation->transform.matrix;
     weston_matrix_init(matrix);
     weston_matrix_scale(matrix, 0.01, 0.01, 1.0);
-    wl_list_insert(&surface->geometry.transformation_list, &m_dialogAnimation->transform.link);
+    wl_list_insert(&view->geometry.transformation_list, &m_dialogAnimation->transform.link);
 
     m_dialogAnimation->animation.setStart(0.01);
     m_dialogAnimation->animation.setTarget(1.0);
-    m_dialogAnimation->animation.run(surface->output, 200, Animation::Flags::SendDone);
+    m_dialogAnimation->animation.run(view->output, 200, Animation::Flags::SendDone);
 }
 
-void ShellWindow::surfaceDestroyed()
+void ShellWindow::surfaceDestroyed(void *)
 {
     delete this;
 }

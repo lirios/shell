@@ -29,9 +29,20 @@
 #ifndef DESKTOP_SHELL_H
 #define DESKTOP_SHELL_H
 
+#include <list>
+#include <unordered_map>
+
 #include "shell.h"
+#include "utils.h"
 
 class InputPanel;
+class WlShell;
+class XWlShell;
+class HawaiiWorkspace;
+class Splash;
+class Client;
+class Binding;
+class SessionManager;
 
 class DesktopShell : public Shell {
 public:
@@ -55,16 +66,33 @@ public:
     };
 
     DesktopShell(struct weston_compositor *ec);
+    ~DesktopShell();
+
+    weston_view *createBlackSurfaceWithInput(int x, int y, int w, int h, float a);
+
+    void fadeIn();
+    void fadeOut();
+
+    void lockSession();
+    void unlockSession();
+    void resumeDesktop();
 
 protected:
     virtual void init();
-    virtual void setGrabCursor(uint32_t);
-    virtual void setBusyCursor(ShellSurface *shsurf, struct weston_seat *seat) override;
-    virtual void endBusyCursor(struct weston_seat *seat) override;
+    virtual void setGrabCursor(Cursor cursor);
+    virtual ShellSurface *createShellSurface(weston_surface *surface, const weston_shell_client *client) override;
 
 private:
+    void idle(void *);
+    void wake(void *);
+
     void sendInitEvents();
-    void workspaceAdded(Workspace *ws);
+
+    void centerSurfaceOnOutput(weston_view *ev, weston_output *output);
+
+    void workspaceAdded(HawaiiWorkspace *ws);
+
+    void surfaceResponsivenessChanged(ShellSurface *shsurf, bool responsive);
 
     void bindNotifications(wl_client *client, uint32_t version, uint32_t id);
     void unbindNotifications(wl_resource *resource);
@@ -82,18 +110,18 @@ private:
     void unbindScreenSaver(wl_resource *resource);
 
     void moveBinding(struct weston_seat *seat, uint32_t time, uint32_t button);
-    void resizeBinding(weston_seat *seat, uint32_t time, uint32_t button);
-
+    void resizeBinding(struct weston_seat *seat, uint32_t time, uint32_t button);
+    void closeBinding(struct weston_seat *seat, uint32_t time, uint32_t button);
     void switcherBinding(weston_seat *seat, uint32_t time, uint32_t button);
+
+    void setBusyCursor(ShellSurface *shsurf, weston_seat *seat);
+    void endBusyCursor(weston_seat *seat);
+
+    void trustedClientDestroyed(void *client);
 
     void addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers);
 
-    void lockSession();
-    void unlockSession();
-
-    void resumeDesktop();
-
-    void lockSurfaceDestroy();
+    void lockSurfaceDestroy(void *);
 
     /*
      * wl_hawaii_shell
@@ -111,7 +139,6 @@ private:
 
     void setPopup(struct wl_client *client, struct wl_resource *resource,
                   uint32_t id,
-                  struct wl_resource *output_resource,
                   struct wl_resource *parent_resource,
                   struct wl_resource *surface_resource,
                   int32_t x, int32_t y);
@@ -124,7 +151,7 @@ private:
                      struct wl_resource *surface_resource,
                      int32_t x, int32_t y);
 
-    void lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height);
+    void lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t sy);
     void setLockSurface(struct wl_client *client, struct wl_resource *resource, struct wl_resource *surface_resource);
 
     void quit(wl_client *client, wl_resource *resource);
@@ -152,8 +179,7 @@ private:
      * wl_notification_daemon
      */
 
-    void notificationConfigure(weston_surface *es, int32_t sx, int32_t sy,
-                               int32_t width, int32_t height);
+    void notificationConfigure(weston_surface *es, int32_t sx, int32_t sy);
     void mapNotificationSurfaces();
     void addNotificationSurface(wl_client *client, wl_resource *resource,
                                 wl_resource *surface_resource);
@@ -169,11 +195,12 @@ private:
 
     int screenSaverTimeout();
 
-    void screenSaverConfigure(weston_surface *es, int32_t sx, int32_t sy,
-                              int32_t width, int32_t height);
+    void screenSaverConfigure(weston_surface *es, int32_t sx, int32_t sy);
     void setScreenSaverSurface(wl_client *client, wl_resource *resource,
                                wl_resource *output_resource,
                                wl_resource *surface_resource);
+
+    static void configurePopup(weston_surface *es, int32_t sx, int32_t sy);
 
     static const struct wl_hawaii_shell_interface m_desktopShellImpl;
     static const struct wl_hawaii_shell_surface_interface m_shellSurfaceImpl;
@@ -181,7 +208,27 @@ private:
     static const struct wl_notification_daemon_interface m_notificationDaemonImpl;
     static const struct wl_screensaver_interface m_screenSaverImpl;
 
+    WlListener m_idleListener;
+    WlListener m_wakeListener;
+
+    struct Output {
+        weston_output *output;
+        wl_resource *resource;
+        IRect2D rect;
+    };
+    std::list<Output> m_outputs;
+    InputPanel *m_inputPanel;
+    Splash *m_splash;
+    Binding *m_moveBinding;
+    Binding *m_resizeBinding;
+    Binding *m_closeBinding;
+    Binding *m_prevWsBinding;
+    Binding *m_nextWsBinding;
+    Binding *m_quitBinding;
+    SessionManager *m_sessionManager;
+
     std::list<wl_resource *> m_shellSurfaceBindings;
+
     wl_resource *m_screenSaverBinding;
     wl_event_source *m_screenSaverTimer;
     bool m_screenSaverEnabled;
@@ -197,8 +244,6 @@ private:
 
     wl_resource *m_panelManagerBinding;
 
-    InputPanel *m_inputPanel;
-
     Edge m_notificationsEdge;
     CornerAnchors m_notificationsCornerAnchor;
     NotificationsOrder m_notificationsOrder;
@@ -206,8 +251,11 @@ private:
 
     bool m_prepareEventSent;
     bool m_locked;
-    struct weston_surface *m_lockSurface;
+    weston_view *m_lockSurface;
     WlListener m_lockSurfaceDestroyListener;
+
+    friend class DesktopShellSettings;
+    friend int module_init(weston_compositor *ec, int *argc, char *argv[]);
 };
 
 #endif

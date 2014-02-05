@@ -1,9 +1,11 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Giulio Camuffo <giuliocamuffo@gmail.com>
  *
  * Author(s):
+ *    Giulio Camuffo
  *    Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:LGPL2.1+$
@@ -24,46 +26,41 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SHELLWINDOW_H
-#define SHELLWINDOW_H
+#ifndef HAWAIICLIENTWINDOW_H
+#define HAWAIICLIENTWINDOW_H
 
-#include "desktop-shell.h"
-#include "animation.h"
+#include <wayland-server.h>
 
-class ShellWindow
+#include "interface.h"
+
+class ShellSurface;
+
+class HawaiiClientWIndow : public Interface
 {
 public:
-    ShellWindow(DesktopShell *shell);
-    ~ShellWindow();
+    HawaiiClientWIndow();
+    ~HawaiiClientWIndow();
 
-    DesktopShell *shell() const {
-        return m_shell;
-    }
+    void create();
 
-    weston_view *dimmedSurface() const {
-        return m_dimmedSurface;
-    }
-
-    void connectSignal(wl_signal *signal);
-
-    void createDimmedSurface(weston_output *output);
-    void destroyDimmedSurface();
-
-    void animateDialog(weston_view *view);
+protected:
+    virtual void added() override;
 
 private:
-    struct DialogOverlayAnimation;
-    struct DialogAnimation;
+    ShellSurface *shsurf();
+    void surfaceTypeChanged();
+    void activeChanged();
+    void mapped();
+    void destroy();
+    void sendState();
+    void sendTitle();
+    void setState(wl_client *client, wl_resource *resource, int32_t state);
+    void close(wl_client *client, wl_resource *resource);
 
-    DesktopShell *m_shell;
-    weston_view *m_dimmedSurface;
-    DialogOverlayAnimation *m_dialogOverlayAnimation;
-    DialogAnimation *m_dialogAnimation;
-    WlListener m_destroyListener;
+    wl_resource *m_resource;
+    int32_t m_state;
 
-    void setDimmedSurfaceAlpha(float alpha);
-
-    void surfaceDestroyed(void *);
+    static const struct wl_hawaii_window_interface s_implementation;
 };
 
-#endif // SHELLWINDOW_H
+#endif // HAWAIICLIENTWINDOW_H
