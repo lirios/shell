@@ -357,7 +357,6 @@
 	mouse button is pressed in any other window.
       </description>
       <arg name="id" type="new_id" interface="wl_hawaii_popup_surface"/>
-      <arg name="output" type="object" interface="wl_output"/>
       <arg name="parent" type="object" interface="wl_surface"/>
       <arg name="surface" type="object" interface="wl_surface"/>
       <arg name="x" type="int"/>
