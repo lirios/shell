@@ -129,15 +129,13 @@ void PopupQuickWindow::setWindowType()
         }
     }
 
-    struct ::wl_output *output = static_cast<struct ::wl_output *>(
-                native->nativeResourceForScreen("output", screen()));
     struct ::wl_surface *parent = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", parentWindow));
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
     struct ::wl_hawaii_popup_surface *popupSurface =
-            RegistryListener::instance()->shellSurface()->set_popup(output, parent, surface,
+            RegistryListener::instance()->shellSurface()->set_popup(parent, surface,
                                                                     pos.x(), pos.y());
     m_popupSurface->init(popupSurface);
 }
