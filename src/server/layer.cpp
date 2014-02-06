@@ -100,6 +100,18 @@ void Layer::addSurface(ShellSurface *surf)
     addSurface(surf->view());
 }
 
+void Layer::prependSurface(weston_view *view)
+{
+    if (view->layer_link.prev)
+        wl_list_remove(&view->layer_link);
+    wl_list_insert(m_layer.view_list.prev, &view->layer_link);
+}
+
+void Layer::prependSurface(ShellSurface *surf)
+{
+    prependSurface(surf->view());
+}
+
 void Layer::stackAbove(weston_view *surf, weston_view *parent)
 {
     wl_list_remove(&surf->layer_link);

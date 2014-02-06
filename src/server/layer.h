@@ -71,6 +71,10 @@ public:
 
     void addSurface(weston_view *surf);
     void addSurface(ShellSurface *surf);
+
+    void prependSurface(weston_view *view);
+    void prependSurface(ShellSurface *surf);
+
     void restack(weston_view *surf);
     void restack(ShellSurface *surf);
 
