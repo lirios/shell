@@ -52,6 +52,7 @@ public:
     void insert(Layer *layer);
     void insert(struct weston_layer *layer);
     void remove();
+    void reset();
 
     void setActive(bool active);
     bool isActive() const { return m_active; }

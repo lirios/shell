@@ -64,6 +64,7 @@ public:
     void insert(struct weston_layer *below);
     void insert(Layer *below);
     void remove();
+    void reset();
     void hide();
     void show();
     bool isVisible() const;

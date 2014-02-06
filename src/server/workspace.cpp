@@ -166,6 +166,11 @@ void Workspace::remove()
     m_layer.remove();
 }
 
+void Workspace::reset()
+{
+    m_layer.reset();
+}
+
 void Workspace::setActive(bool active)
 {
     m_active = active;

@@ -53,6 +53,12 @@ void Layer::remove()
     m_below = nullptr;
 }
 
+void Layer::reset()
+{
+    wl_list_remove(&m_layer.link);
+    m_below = nullptr;
+}
+
 void Layer::hide()
 {
     for (weston_view *v: *this) {
