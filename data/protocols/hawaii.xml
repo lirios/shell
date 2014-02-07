@@ -374,13 +374,6 @@
   </interface>
 
   <interface name="wl_hawaii_popup_surface" version="1">
-    <request name="dismiss">
-      <description summary="break popup grab">
-        Explicitely break the popup grab. Clients should hide the
-        popup surface after calling this method.
-      </description>
-    </request>
-
     <event name="popup_done">
       <description summary="popup interaction is done">
         The popup_done event is sent out when a popup grab is broken,
