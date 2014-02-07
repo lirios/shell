@@ -92,8 +92,8 @@ Compositor::Compositor()
             this, SLOT(surfaceDestroyed(QWaylandSurface*)));
     connect(this, SIGNAL(sceneGraphInitialized()),
             this, SLOT(sceneGraphInitialized()), Qt::DirectConnection);
-    connect(this, SIGNAL(frameSwapped()),
-            this, SLOT(frameSwapped()));
+    connect(this, SIGNAL(afterRendering()),
+            this, SLOT(sendCallbacks()), Qt::DirectConnection);
 }
 
 Compositor::~Compositor()
@@ -294,9 +294,9 @@ void Compositor::sceneGraphInitialized()
     showGraphicsInfo();
 }
 
-void Compositor::frameSwapped()
+void Compositor::sendCallbacks()
 {
-    frameFinished();
+    sendFrameCallbacks(surfaces());
 }
 
 void Compositor::mousePressEvent(QMouseEvent *event)
