@@ -48,6 +48,11 @@ namespace Shell {
 class QmlObjectIncubator : public QQmlIncubator
 {
 public:
+    QmlObjectIncubator(IncubationMode mode = AsynchronousIfNested)
+        : QQmlIncubator(mode)
+    {
+    }
+
     QVariantHash m_initialProperties;
 
 protected:
