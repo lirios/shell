@@ -33,11 +33,16 @@
 #include <QtQml/QQmlComponent>
 #include <QtQuick/QQuickItem>
 
+#include "config.h"
 #include "notificationsadaptor.h"
 #include "notificationsdaemon.h"
 #include "notificationsimage.h"
 #include "notificationwindow.h"
 #include "notificationimageprovider.h"
+
+#if HAVE_SYSTEMD
+#  include <systemd/sd-daemon.h>
+#endif
 
 /*
  * Latest specifications:
@@ -172,16 +177,39 @@ bool NotificationsDaemon::connectOnDBus()
 {
     QDBusConnection connection = QDBusConnection::sessionBus();
     if (!connection.registerObject("/org/freedesktop/Notifications", this)) {
-        qWarning() << "Couldn't register object /org/freedesktop/Notifications";
+        const char *msg = "Couldn't register object /org/freedesktop/Notifications";
+
+#if HAVE_SYSTEMD
+        sd_notifyf(0,
+                   "STATUS=Failed to start up: %s\n"
+                   "ERRNO=%i",
+                   msg, EFAULT);
+#endif
+        qWarning() << msg;
         return false;
     }
 
     if (!connection.registerService("org.freedesktop.Notifications")) {
-        qWarning() << "Couldn't register service for org.freedesktop.Notifications";
+        const char *msg = "Couldn't register service for org.freedesktop.Notifications";
+
+#if HAVE_SYSTEMD
+        sd_notifyf(0,
+                   "STATUS=Failed to start up: %s\n"
+                   "ERRNO=%i",
+                   msg, EFAULT);
+#endif
+        qWarning() << msg;
         return false;
     }
 
     qDebug() << "Notifications service registered!";
+#if HAVE_SYSTEMD
+    sd_notifyf(0,
+              "READY=1\n"
+              "STATUS=Notifications service registered\n"
+              "MAINPID=%llu",
+              QCoreApplication::applicationPid());
+#endif
     return true;
 }
 
