@@ -104,6 +104,9 @@ if(_failed)
 endif(_failed)
 string(REGEX REPLACE "[ \t\n]+" "" CMAKE_INSTALL_WESTONLIBDIR "${CMAKE_INSTALL_WESTONLIBDIR}")
 
+# Find systemd
+pkg_check_modules(systemd libsystemd-daemon)
+
 # Find polkit-qt-1
 find_package(PolkitQt-1 REQUIRED)
 
