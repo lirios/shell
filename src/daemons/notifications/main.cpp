@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 #include <QtGui/QGuiApplication>
+#include <QtQuick/QQuickWindow>
 
 #include "config.h"
 #include "notificationsdaemon.h"
@@ -58,6 +59,9 @@ int main(int argc, char *argv[])
 #endif
         qFatal(msg);
     }
+
+    // Windows need the alpha buffer
+    QQuickWindow::setDefaultAlphaBuffer(true);
 
     // Create the daemon instance
     NotificationsDaemon::instance();
