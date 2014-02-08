@@ -65,8 +65,10 @@ Compositor::Compositor()
     setSource(QUrl("qrc:///qml/Compositor.qml"));
 
     // Create interfaces
-    m_shell = new Shell(waylandDisplay());
+    m_notifications = new Notifications(waylandDisplay());
+    m_screenSaver = new ScreenSaver(waylandDisplay());
     m_shellSurface = new ShellSurface(waylandDisplay());
+    m_shell = new Shell(waylandDisplay());
     connect(m_shell, &Shell::ready, [=]() {
         // Shell is ready and we can start handling input events
         m_shellReady = true;
@@ -80,8 +82,6 @@ Compositor::Compositor()
         else
             Q_EMIT unlocked();
     });
-    m_notifications = new Notifications(waylandDisplay());
-    m_screenSaver = new ScreenSaver(waylandDisplay());
 
     // Connect to signals
     connect(this, SIGNAL(surfaceMapped(QWaylandSurface*)),

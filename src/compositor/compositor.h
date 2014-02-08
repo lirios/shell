@@ -99,12 +99,14 @@ protected:
     void setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY);
 
 private:
-    Shell *m_shell;
+    Notifications *m_notifications;
+    ScreenSaver *m_screenSaver;
     ShellSurface *m_shellSurface;
+    Shell *m_shell;
+
     QList<ClientWindow *> m_clientWindows;
     QList<Workspace *> m_workspaces;
-    ScreenSaver *m_screenSaver;
-    Notifications *m_notifications;
+
     bool m_shellReady;
 
     // Cursor
