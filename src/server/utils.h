@@ -80,26 +80,26 @@ private:
     Wrapper m_listener;
 };
 
-template<class T, class... Args>
+template<class R, class T, class... Args>
 struct Wrapper {
-    template<void (T::*F)(wl_client *, wl_resource *, Args...)>
+    template<R (T::*F)(wl_client *, wl_resource *, Args...)>
     static void forward(wl_client *client, wl_resource *resource, Args... args) {
         (static_cast<T *>(wl_resource_get_user_data(resource))->*F)(client,resource, args...);
     }
-    template<void (T::*F)(Args...)>
+    template<R (T::*F)(Args...)>
     static void forward(wl_client *client, wl_resource *resource, Args... args) {
         (static_cast<T *>(wl_resource_get_user_data(resource))->*F)(args...);
     }
 };
 
-template<class T, class... Args>
-constexpr static auto createWrapper(void (T::*func)(wl_client *client, wl_resource *resource, Args...)) -> Wrapper<T, Args...> {
-    return Wrapper<T, Args...>();
+template<class R, class T, class... Args>
+constexpr static auto createWrapper(R (T::*func)(wl_client *client, wl_resource *resource, Args...)) -> Wrapper<R, T, Args...> {
+    return Wrapper<R, T, Args...>();
 }
 
-template<class T, class... Args>
-constexpr static auto createWrapper(void (T::*func)(Args...)) -> Wrapper<T, Args...> {
-    return Wrapper<T, Args...>();
+template<class R, class T, class... Args>
+constexpr static auto createWrapper(R (T::*func)(Args...)) -> Wrapper<R, T, Args...> {
+    return Wrapper<R, T, Args...>();
 }
 
 #define wrapInterface(method) createWrapper(method).forward<method>

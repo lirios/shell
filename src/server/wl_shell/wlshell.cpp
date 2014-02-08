@@ -20,6 +20,7 @@
 #include "shellsurface.h"
 #include "wlshellsurface.h"
 #include "shellseat.h"
+#include "utils.h"
 
 WlShell::WlShell()
 {
@@ -108,7 +109,5 @@ const weston_shell_client WlShell::shell_client = {
 };
 
 const struct wl_shell_interface WlShell::shell_implementation = {
-    [](wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface_resource) {
-        static_cast<WlShell *>(wl_resource_get_user_data(resource))->getShellSurface(client, resource, id, surface_resource);
-    }
+    wrapInterface(&WlShell::getShellSurface)
 };
