@@ -77,6 +77,8 @@ public:
     void unlockSession();
     void resumeDesktop();
 
+    bool isTrusted(wl_client *client, const char *interface) const override;
+
 protected:
     virtual void init();
     virtual void setGrabCursor(Cursor cursor);
@@ -126,6 +128,8 @@ private:
     /*
      * wl_hawaii_shell
      */
+
+    void addTrustedClient(wl_client *client, wl_resource *resource, int32_t fd, const char *interface);
 
     void setAvailableGeometry(struct wl_client *client, struct wl_resource *resource,
                               struct wl_resource *output_resource,
@@ -218,6 +222,7 @@ private:
     };
     std::list<Output> m_outputs;
     InputPanel *m_inputPanel;
+    std::unordered_map<std::string, std::list<Client *>> m_trustedClients;
     Splash *m_splash;
     Binding *m_moveBinding;
     Binding *m_resizeBinding;

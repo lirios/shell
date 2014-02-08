@@ -269,6 +269,15 @@ private:
     splash m_splash;
 };
 
+struct Client {
+    ~Client() {
+        destroyListener.reset();
+    }
+
+    wl_client *client;
+    WlListener destroyListener;
+};
+
 DesktopShell::DesktopShell(struct weston_compositor *ec)
     : Shell(ec)
     , m_inputPanel(nullptr)
@@ -294,6 +303,12 @@ DesktopShell::DesktopShell(struct weston_compositor *ec)
 DesktopShell::~DesktopShell()
 {
     delete m_splash;
+
+    for (auto value: m_trustedClients) {
+        for (Client *c: value.second)
+            delete c;
+    }
+
     delete m_moveBinding;
     delete m_resizeBinding;
     delete m_closeBinding;
@@ -530,6 +545,38 @@ void DesktopShell::endBusyCursor(struct weston_seat *seat)
 
     if (dynamic_cast<BusyGrab *>(grab)) {
         delete grab;
+    }
+}
+
+bool DesktopShell::isTrusted(wl_client *client, const char *interface) const
+{
+    if (client == m_child.client)
+        return true;
+
+    auto it = m_trustedClients.find(interface);
+    if (it == m_trustedClients.end())
+        return false;
+
+    for (Client *c: it->second) {
+        if (c->client == client)
+            return true;
+    }
+
+    return false;
+}
+
+void DesktopShell::trustedClientDestroyed(void *data)
+{
+    wl_client *client = static_cast<wl_client *>(data);
+    for (auto v: m_trustedClients) {
+        std::list<Client *> &list = m_trustedClients[v.first];
+        for (auto i = list.begin(); i != list.end(); ++i) {
+            if ((*i)->client == client) {
+                delete *i;
+                list.erase(i);
+                return;
+            }
+        }
     }
 }
 
@@ -924,6 +971,18 @@ void DesktopShell::switcherBinding(weston_seat *seat, uint32_t time, uint32_t bu
 #endif
 }
 
+void DesktopShell::addTrustedClient(wl_client *client, wl_resource *resource, int32_t fd, const char *interface)
+{
+    wl_client *c = wl_client_create(compositor()->wl_display, fd);
+
+    Client *cl = new Client;
+    cl->client = c;
+    cl->destroyListener.signal->connect(this, &DesktopShell::trustedClientDestroyed);
+    wl_client_add_destroy_listener(c, cl->destroyListener.listener());
+
+    m_trustedClients[interface].push_back(cl);
+}
+
 void DesktopShell::addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers)
 {
     wl_resource *res = wl_resource_create(client, &wl_hawaii_key_binding_interface, wl_resource_get_version(resource), id);
@@ -1236,6 +1295,7 @@ void DesktopShell::selectWorkspace(wl_client *client, wl_resource *resource, wl_
 }
 
 const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
+    wrapInterface(&DesktopShell::addTrustedClient),
     wrapInterface(&DesktopShell::addKeyBinding),
     wrapInterface(&DesktopShell::setAvailableGeometry),
     wrapInterface(&DesktopShell::setLockSurface),
