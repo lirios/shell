@@ -1030,7 +1030,19 @@ void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *r
 {
     struct weston_surface *surface = static_cast<weston_surface *>(wl_resource_get_user_data(surface_resource));
 
-    setBackgroundSurface(surface, static_cast<weston_output *>(wl_resource_get_user_data(output_resource)));
+    weston_view *view, *next;
+    wl_list_for_each_safe(view, next, &surface->views, surface_link)
+            weston_view_destroy(view);
+    view = weston_view_create(surface);
+    view->output = static_cast<weston_output *>(output_resource->data);
+
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
+        DesktopShell *shell = static_cast<DesktopShell *>(es->configure_private);
+        weston_view *view = container_of(es->views.next, weston_view, surface_link);
+        configure_static_view(view, &shell->m_backgroundLayer);
+    };
+    surface->configure_private = this;
+    surface->output = view->output;
 }
 
 void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource)
