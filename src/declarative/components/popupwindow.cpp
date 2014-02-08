@@ -195,18 +195,7 @@ void PopupWindow::show()
 
 void PopupWindow::hide()
 {
-    Q_D(PopupWindow);
-
-    if (isVisible()) {
-        // Break the grab
-        QMetaObject::invokeMethod(d->window, "dismiss",
-                                  Qt::QueuedConnection);
-
-        // Destroy the window
-        d->window->deleteLater();
-        d->window = 0;
-        Q_EMIT visibleChanged();
-    }
+    close();
 }
 
 void PopupWindow::close()

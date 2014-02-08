@@ -58,7 +58,6 @@ public:
 
 public Q_SLOTS:
     void setWindowType();
-    void dismiss();
 
 private:
     PopupSurface *m_popupSurface;

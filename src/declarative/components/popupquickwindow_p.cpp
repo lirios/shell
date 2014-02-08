@@ -140,10 +140,4 @@ void PopupQuickWindow::setWindowType()
     m_popupSurface->init(popupSurface);
 }
 
-void PopupQuickWindow::dismiss()
-{
-    if (m_popupSurface->isInitialized())
-        m_popupSurface->dismiss();
-}
-
 #include "moc_popupquickwindow_p.cpp"
