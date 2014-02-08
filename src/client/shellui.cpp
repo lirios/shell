@@ -119,8 +119,6 @@ void ShellUi::load()
         file.close();
         m_jsEngine->evaluateScript(script, file.fileName());
     }
-
-    synchronize();
 }
 
 void ShellUi::unload()
