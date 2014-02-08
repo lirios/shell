@@ -32,6 +32,9 @@
 
 int main(int argc, char *argv[])
 {
+    // Force wayland QPA plugin
+    setenv("QT_QPA_PLATFORM", "wayland", 1);
+
     // Setup application
     QGuiApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Hawaii Notifications Daemon"));
