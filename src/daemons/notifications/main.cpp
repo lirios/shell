@@ -30,6 +30,10 @@
 #include "notificationsdaemon.h"
 #include "registrylistener.h"
 
+#if HAVE_SYSTEMD
+#  include <systemd/sd-daemon.h>
+#endif
+
 int main(int argc, char *argv[])
 {
     // Force wayland QPA plugin
@@ -43,8 +47,17 @@ int main(int argc, char *argv[])
     app.setOrganizationName(QStringLiteral("Hawaii"));
 
     // This runs only on Wayland
-    if (!app.platformName().contains(QStringLiteral("wayland")))
-        qFatal("Hawaii's notifications daemon runs only on Wayland, please pass the -platform wayland argument");
+    if (!app.platformName().contains(QStringLiteral("wayland"))) {
+        const char *msg = "Hawaii's notifications daemon runs only on "
+                "Wayland, please pass the -platform wayland argument";
+#if HAVE_SYSTEMD
+        sd_notifyf(0,
+                   "STATUS=Failed to start up: %s\n"
+                   "ERRNO=%i",
+                   msg, EFAULT);
+#endif
+        qFatal(msg);
+    }
 
     // Create the daemon instance
     NotificationsDaemon::instance();
