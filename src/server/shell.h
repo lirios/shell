@@ -186,6 +186,8 @@ protected:
     Layer m_notificationsLayer;
     Layer m_lockLayer;
 
+    std::vector<Workspace *> m_workspaces;
+
 private:
     void destroy(void *);
     void sigchld(int status);
@@ -205,7 +207,6 @@ private:
     char *m_clientPath;
     std::vector<Effect *> m_effects;
     ShellSurfaceList m_surfaces;
-    std::vector<Workspace *> m_workspaces;
     uint32_t m_currentWorkspace;
     bool m_windowsMinimized;
     bool m_quitting;
