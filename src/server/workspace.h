@@ -54,6 +54,9 @@ public:
     void remove();
     void reset();
 
+    void show();
+    void hide();
+
     void setActive(bool active);
     bool isActive() const { return m_active; }
 

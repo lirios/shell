@@ -171,6 +171,16 @@ void Workspace::reset()
     m_layer.reset();
 }
 
+void Workspace::show()
+{
+    m_layer.show();
+}
+
+void Workspace::hide()
+{
+    m_layer.hide();
+}
+
 void Workspace::setActive(bool active)
 {
     m_active = active;
