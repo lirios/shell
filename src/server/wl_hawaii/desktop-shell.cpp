@@ -65,6 +65,13 @@ public:
     wl_resource *shsurfResource;
     bool inside;
     uint32_t creationTime;
+    bool dismissed;
+
+    PopupGrab()
+        : ShellGrab()
+        , dismissed(false)
+    {
+    }
 
     void end()
     {
@@ -74,6 +81,9 @@ public:
 
     void dismiss()
     {
+        ShellGrab::end();
+        wl_resource_destroy(shsurfResource);
+        dismissed = true;
     }
 
     void focus() override
@@ -127,19 +137,24 @@ struct Popup {
         , shell(s)
         , x(_x)
         , y(_y)
+        , grab(nullptr)
     {
     }
 
     weston_view *parent;
     DesktopShell *shell;
     int32_t x, y;
+    PopupGrab *grab;
     wl_listener destroyListener;
 };
 
 static void popupDestroyed(wl_listener *listener, void *data)
 {
     weston_surface *surface = static_cast<weston_surface *>(data);
-    delete static_cast<Popup *>(surface->configure_private);
+    Popup *popup = static_cast<Popup *>(surface->configure_private);
+    if (popup && popup->grab && !popup->grab->dismissed)
+        popup->grab->dismiss();
+    delete popup;
 }
 
 class Splash
@@ -1045,6 +1060,7 @@ void DesktopShell::setPopup(struct wl_client *client, struct wl_resource *resour
     weston_view *sv = weston_view_create(surface);
 
     PopupGrab *grab = new PopupGrab;
+    p->grab = grab;
     if (!grab)
         return;
 
