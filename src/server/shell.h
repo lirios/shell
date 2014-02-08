@@ -180,6 +180,9 @@ protected:
     Layer m_fullscreenLayer;
     Layer m_stickyLayer;
     Layer m_overlayLayer;
+    Layer m_dialogsLayer;
+    Layer m_notificationsLayer;
+    Layer m_lockLayer;
 
 private:
     void destroy(void *);
