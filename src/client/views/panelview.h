@@ -43,6 +43,7 @@ class ShellUi;
 class PanelView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
+    Q_PROPERTY(bool maximized READ isMaximized WRITE setMaximized NOTIFY maximizedChanged)
     Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
     Q_PROPERTY(int offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(int thickness READ thickness WRITE setThickness NOTIFY thicknessChanged)
@@ -53,6 +54,9 @@ class PanelView : public Hawaii::Shell::QuickView
 public:
     explicit PanelView(ShellUi *corona, QScreen *screen);
     virtual ~PanelView();
+
+    bool isMaximized() const;
+    void setMaximized(bool value);
 
     Qt::Alignment alignment() const;
     void setAlignment(Qt::Alignment alignment);
@@ -78,6 +82,7 @@ public Q_SLOTS:
     void addElement(const QString &name);
 
 Q_SIGNALS:
+    void maximizedChanged();
     void alignmentChanged();
     void offsetChanged();
     void thicknessChanged();
@@ -90,6 +95,7 @@ Q_SIGNALS:
     void elementRemoved();
 
 private:
+    bool m_maximized;
     Qt::Alignment m_alignment;
     int m_offset;
     int m_thickness;

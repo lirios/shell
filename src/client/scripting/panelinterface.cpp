@@ -90,6 +90,16 @@ void PanelInterface::setFormFactor(const QString &value)
     }
 }
 
+bool PanelInterface::isMaximized() const
+{
+    return m_view->isMaximized();
+}
+
+void PanelInterface::setMaximized(bool value)
+{
+    m_view->setMaximized(value);
+}
+
 QString PanelInterface::location() const
 {
     for (int i = 0; i < int(sizeof(locations) / sizeof(locations[0])); i++) {

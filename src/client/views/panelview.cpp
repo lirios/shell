@@ -59,6 +59,7 @@ static PanelSurface::alignment convertAlignment(Qt::Alignment alignment)
 
 PanelView::PanelView(ShellUi *corona, QScreen *screen)
     : QuickView(corona, new QWindow(screen))
+    , m_maximized(true)
     , m_alignment(Qt::AlignLeft)
     , m_offset(0)
     , m_thickness(60)
@@ -91,15 +92,12 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     setLocation(Types::BottomEdge);
 
     // Initialize settings
-    if (formFactor() == Types::Vertical) {
+    if (formFactor() == Types::Vertical)
         m_length = screen->size().height();
-        m_minimumLength = screen->size().height();
-        m_maximumLength = screen->size().height();
-    } else {
+    else
         m_length = screen->size().width();
-        m_minimumLength = screen->size().width();
-        m_maximumLength = screen->size().width();
-    }
+    m_minimumLength = m_length;
+    m_maximumLength = m_length;
 
     // Setup configuration
     static int panelId = 0;
@@ -135,8 +133,33 @@ PanelView::~PanelView()
     qDeleteAll(m_elements);
 }
 
+bool PanelView::isMaximized() const
+{
+    return m_maximized;
+}
+
+void PanelView::setMaximized(bool value)
+{
+    if (m_maximized != value) {
+        // A maximized panel don't need alignment, offset or length
+        m_alignment = Qt::AlignLeft;
+        m_offset = 0;
+        if (formFactor() == Types::Vertical)
+            m_length = screen()->size().height();
+        else
+            m_length = screen()->size().width();
+        m_minimumLength = m_length;
+        m_maximumLength = m_length;
+
+        m_maximized = value;
+        Q_EMIT maximizedChanged();
+    }
+}
+
 Qt::Alignment PanelView::alignment() const
 {
+    if (m_maximized)
+        return Qt::AlignLeft;
     return m_alignment;
 }
 
@@ -151,6 +174,8 @@ void PanelView::setAlignment(Qt::Alignment alignment)
 
 int PanelView::offset() const
 {
+    if (m_maximized)
+        return 0;
     return m_offset;
 }
 
@@ -179,6 +204,12 @@ void PanelView::setThickness(int value)
 
 int PanelView::length() const
 {
+    if (m_maximized) {
+        if (formFactor() == Types::Vertical)
+            return screen()->size().height();
+        else
+            return screen()->size().width();
+    }
     return m_length;
 }
 
@@ -193,6 +224,12 @@ void PanelView::setLength(int value)
 
 int PanelView::minimumLength() const
 {
+    if (m_maximized) {
+        if (formFactor() == Types::Vertical)
+            return screen()->size().height();
+        else
+            return screen()->size().width();
+    }
     return m_minimumLength;
 }
 
@@ -217,6 +254,12 @@ void PanelView::setMinimumLength(int value)
 
 int PanelView::maximumLength() const
 {
+    if (m_maximized) {
+        if (formFactor() == Types::Vertical)
+            return screen()->size().height();
+        else
+            return screen()->size().width();
+    }
     return m_maximumLength;
 }
 

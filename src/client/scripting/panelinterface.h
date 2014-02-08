@@ -36,6 +36,7 @@ class PanelInterface : public QObject
     Q_OBJECT
     Q_PROPERTY(QString formFactor READ formFactor WRITE setFormFactor)
     Q_PROPERTY(QString location READ location WRITE setLocation)
+    Q_PROPERTY(bool maximized READ isMaximized WRITE setMaximized)
     Q_PROPERTY(QString alignment READ alignment WRITE setAlignment)
     Q_PROPERTY(int offset READ offset WRITE setOffset)
     Q_PROPERTY(int thickness READ thickness WRITE setThickness)
@@ -44,6 +45,9 @@ public:
 
     QString formFactor() const;
     void setFormFactor(const QString &value);
+
+    bool isMaximized() const;
+    void setMaximized(bool value);
 
     QString location() const;
     void setLocation(const QString &value);
