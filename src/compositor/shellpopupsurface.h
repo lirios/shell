@@ -44,9 +44,6 @@ public:
     PopupGrabber *popupGrabber() const;
     void setPopupGrabber(PopupGrabber *grabber);
 
-protected:
-    void hawaii_popup_surface_dismiss(Resource *resource) Q_DECL_OVERRIDE;
-
 private:
     QWaylandSurface *m_surface;
     PopupGrabber *m_popupGrabber;

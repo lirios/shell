@@ -59,14 +59,3 @@ void ShellPopupSurface::setPopupGrabber(PopupGrabber *grabber)
     m_popupGrabber = grabber;
     m_popupGrabber->setPopupSurface(this);
 }
-
-void ShellPopupSurface::hawaii_popup_surface_dismiss(Resource *resource)
-{
-    PopupGrabber *grabber = static_cast<PopupGrabber *>(
-                wl_resource_get_user_data(resource->handle));
-    if (grabber) {
-        wl_resource_set_user_data(resource->handle, nullptr);
-        grabber->setPopupSurface(nullptr);
-        delete grabber;
-    }
-}

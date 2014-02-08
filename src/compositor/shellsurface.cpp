@@ -125,6 +125,10 @@ void ShellSurface::hawaii_shell_surface_set_popup(Resource *resource,
     PopupGrabber *grabber = new PopupGrabber(input);
     wl_resource_set_user_data(popupSurface->resource()->handle, grabber);
     popupSurface->setPopupGrabber(grabber);
+
+    connect(surface, &QWaylandSurface::unmapped, [=]() {
+        delete popupSurface;
+    });
 }
 
 void ShellSurface::hawaii_shell_surface_set_dialog(Resource *resource,
