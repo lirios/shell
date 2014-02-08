@@ -269,21 +269,17 @@ NotificationWindow *NotificationsDaemon::findNotification(const QString &appName
 
 void NotificationsDaemon::showNotification(NotificationWindow *notification)
 {
-    // Show the notification and start the timer that will automatically
-    // close the bubble
-    notification->show();
-    notification->rootObject()->setProperty("running", true);
+    // Disable input
+    notification->setInputRegion(QRect(0, 0, 0, 0));
 
-    // We trigger a fake resize in order to have the buffer created
-    // and then syncronize and add the surface so that the compositor
-    // will be able to determine the buffer size
-    notification->resize(notification->size());
-    while (QCoreApplication::hasPendingEvents())
-        QCoreApplication::processEvents();
+    // Show the notification
+    notification->show();
 
     // Ask the compositor to add the surface to the "bubbles list"
     notification->addSurface();
-    notification->setInputRegion(QRect(0, 0, 0, 0));
+
+    // Start the timer that will eventually close the window
+    notification->rootObject()->setProperty("running", true);
 }
 
 QString NotificationsDaemon::findImageFromPath(const QString &imagePath)
