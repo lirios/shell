@@ -29,6 +29,14 @@
       This interface defines the foundations of the Hawaii desktop.
     </description>
 
+    <request name="add_trusted_client">
+      <description summary="add a trusted client">
+        Adds a client to the whitelist for the specified interface.
+      </description>
+      <arg name="fd" type="fd"/>
+      <arg name="interface" type="string"/>
+    </request>
+
     <request name="add_key_binding">
       <description summary="add key binding">
         Bind a global shortcut.
