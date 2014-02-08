@@ -175,6 +175,8 @@ protected:
     };
     Child m_child;
 
+    Layer m_splashLayer;
+    Layer m_limboLayer;
     Layer m_backgroundLayer;
     Layer m_panelsLayer;
     Layer m_fullscreenLayer;
@@ -201,8 +203,6 @@ private:
     struct weston_compositor *m_compositor;
     WlListener m_destroyListener;
     char *m_clientPath;
-    Layer m_splashLayer;
-    Layer m_limboLayer;
     std::vector<Effect *> m_effects;
     ShellSurfaceList m_surfaces;
     std::vector<Workspace *> m_workspaces;
