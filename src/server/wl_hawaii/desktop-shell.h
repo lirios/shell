@@ -183,7 +183,6 @@ private:
      * wl_notification_daemon
      */
 
-    void notificationConfigure(weston_surface *es, int32_t sx, int32_t sy);
     void mapNotificationSurfaces();
     void addNotificationSurface(wl_client *client, wl_resource *resource,
                                 wl_resource *surface_resource);

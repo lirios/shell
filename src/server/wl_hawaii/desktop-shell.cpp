@@ -1362,13 +1362,6 @@ const struct wl_hawaii_panel_manager_interface DesktopShell::m_panelManagerImpl 
     wrapInterface(&DesktopShell::setPanelSurface)
 };
 
-void DesktopShell::notificationConfigure(weston_surface *es, int32_t sx, int32_t sy)
-{
-    mapNotificationSurfaces();
-
-    weston_compositor_schedule_repaint(compositor());
-}
-
 void DesktopShell::mapNotificationSurfaces()
 {
     bool isRight = m_notificationsCornerAnchor & DesktopShell::EdgeRight;
@@ -1403,6 +1396,8 @@ void DesktopShell::mapNotificationSurfaces()
         else
             y += view->surface->height + m_notificationsMargin;
     }
+
+    weston_compositor_schedule_repaint(compositor());
 }
 
 void DesktopShell::addNotificationSurface(wl_client *client, wl_resource *resource,
@@ -1416,10 +1411,16 @@ void DesktopShell::addNotificationSurface(wl_client *client, wl_resource *resour
         return;
     }
 
-    weston_view *view = weston_view_create(surface);
+    weston_view *view, *next;
+    wl_list_for_each_safe(view, next, &surface->views, surface_link)
+            weston_view_destroy(view);
+    view = weston_view_create(surface);
+    view->output = getDefaultOutput();
 
     surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
-        static_cast<DesktopShell *>(es->configure_private)->notificationConfigure(es, sx, sy); };
+        DesktopShell *shell = static_cast<DesktopShell *>(es->configure_private);
+        shell->mapNotificationSurfaces();
+    };
     surface->configure_private = this;
     surface->output = getDefaultOutput();
 
@@ -1428,8 +1429,6 @@ void DesktopShell::addNotificationSurface(wl_client *client, wl_resource *resour
     else
         m_notificationsLayer.prependSurface(view);
     mapNotificationSurfaces();
-
-    weston_compositor_schedule_repaint(compositor());
 }
 
 const struct wl_notification_daemon_interface DesktopShell::m_notificationDaemonImpl = {
