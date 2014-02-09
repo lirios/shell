@@ -328,6 +328,7 @@ void ShellSurface::setTransient(struct weston_surface *parent, int x, int y, boo
     m_transient.inactive = inactive;
 
     m_nextState.transient = true;
+    m_stateChanged = true;
 }
 
 void ShellSurface::setXWayland(int x, int y, bool inactive)
