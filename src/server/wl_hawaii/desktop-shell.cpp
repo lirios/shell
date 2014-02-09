@@ -30,6 +30,7 @@
 #include <weston/compositor.h>
 #include <weston/matrix.h>
 
+#include "config.h"
 #include "cmakedirs.h"
 #include "desktop-shell.h"
 #include "wayland-hawaii-server-protocol.h"
@@ -58,6 +59,11 @@
 #include <string.h>
 #include <signal.h>
 #include <linux/input.h>
+
+#if HAVE_SYSTEMD
+#  include <systemd/sd-daemon.h>
+#  include <unistd.h>
+#endif
 
 class PopupGrab : public ShellGrab {
 public:
@@ -1532,19 +1538,43 @@ module_init(struct weston_compositor *ec, int *argc, char *argv[])
 
     char *client = nullptr;
     if (asprintf(&client, "%s/starthawaii", INSTALL_LIBEXECDIR) == -1) {
-        weston_log("Can't allocate client executable path");
+        const char *msg = "Can't allocate client executable path";
+#if HAVE_SYSTEMD
+        sd_notifyf(0,
+                   "STATUS=%s: %s\n"
+                   "ERRNO=%i",
+                   msg, strerror(errno), errno);
+#endif
+        weston_log("%s\n", msg);
         return -1;
     }
 
     DesktopShell *shell = Shell::load<DesktopShell>(ec, client);
-    if (!shell)
+    if (!shell) {
+        const char *msg = "Cannot create DesktopShell instance";
+#if HAVE_SYSTEMD
+        sd_notifyf(0,
+                   "STATUS=%s\n"
+                   "ERRNO=%i",
+                   msg, EFAULT);
+#endif
+        weston_log("%s\n", msg);
         return -1;
+    }
 
     char *sfile = nullptr;
     if (sfile)
         shell->m_sessionManager = new SessionManager(sfile);
 
     shell->init();
+
+#if HAVE_SYSTEMD
+        sd_notifyf(0,
+                   "READY=1\n"
+                   "STATUS=Ready\n"
+                   "MAINPID=%lu",
+                   (unsigned long) getpid());
+#endif
 
     return 0;
 }

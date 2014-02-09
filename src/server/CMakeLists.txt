@@ -8,6 +8,10 @@ include_directories(
     ${CMAKE_BINARY_DIR}/headers
 )
 
+if(systemd_FOUND)
+    include_directories(${systemd_INCLUDE_DIRS})
+endif()
+
 set(SOURCES
     animation.cpp
     binding.cpp
@@ -86,5 +90,9 @@ wayland_add_protocol_server(SOURCES
 
 add_library(hawaii-desktop SHARED ${SOURCES})
 set_target_properties(hawaii-desktop PROPERTIES PREFIX "")
+if(systemd_FOUND)
+    set_target_properties(hawaii-desktop PROPERTIES LINK_FLAGS "-L${systemd_LIBDIR}")
+    target_link_libraries(hawaii-desktop ${systemd_LIBRARIES})
+endif()
 
 install(TARGETS hawaii-desktop DESTINATION ${CMAKE_INSTALL_LIBDIR}/weston)
