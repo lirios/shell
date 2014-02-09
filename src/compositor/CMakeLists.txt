@@ -9,6 +9,10 @@ include_directories(
     ${CMAKE_BINARY_DIR}/headers
 )
 
+if(systemd_FOUND)
+    include_directories(${systemd_INCLUDE_DIRS})
+endif()
+
 add_definitions(
     -DQT_COMPOSITOR_QUICK
 )
@@ -69,14 +73,21 @@ qtwayland_add_protocol_server(SOURCES
 
 qt5_add_resources(RESOURCES hawaii-shell.qrc)
 
-add_executable(hawaii-shell ${SOURCES} ${RESOURCES})
-qt5_use_modules(hawaii-shell Quick Compositor)
-set_target_properties(hawaii-shell PROPERTIES
-    LINK_FLAGS -L${WaylandServer_LIBDIR}
+set(LINK_FLAGS
+    -L${WaylandServer_LIBDIR}
 )
-target_link_libraries(hawaii-shell
+set(LIBRARIES
     ${GreenIsland_LIBRARIES}
     ${WaylandServer_LIBRARIES}
 )
+if(systemd_FOUND)
+    set(LINK_FLAGS "${LINK_FLAGS} -L${systemd_LIBDIR}")
+    set(LIBRARIES ${LIBRARIES} ${systemd_LIBRARIES})
+endif()
+
+add_executable(hawaii-shell ${SOURCES} ${RESOURCES})
+qt5_use_modules(hawaii-shell Quick Compositor)
+set_target_properties(hawaii-shell PROPERTIES LINK_FLAGS ${LINK_FLAGS})
+target_link_libraries(hawaii-shell ${LIBRARIES})
 
 install(TARGETS hawaii-shell DESTINATION ${CMAKE_INSTALL_BINDIR})

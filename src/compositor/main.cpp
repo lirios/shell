@@ -36,6 +36,10 @@
 #include "cmakedirs.h"
 #include "logging.h"
 
+#if HAVE_SYSTEMD
+#  include <systemd/sd-daemon.h>
+#endif
+
 int main(int argc, char *argv[])
 {
     // Application
@@ -106,6 +110,14 @@ int main(int argc, char *argv[])
 
     // Show compositor window
     compositor->show();
+
+#if HAVE_SYSTEMD
+    sd_notifyf(0,
+               "READY=1\n"
+               "STATUS=Ready\n"
+               "MAINPID=%llu",
+               QCoreApplication::applicationPid());
+#endif
 
     return app.exec();
 }
