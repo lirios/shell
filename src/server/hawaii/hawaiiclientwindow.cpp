@@ -64,18 +64,14 @@ void HawaiiClientWIndow::mapped()
         return;
 
     ShellSurface::Type type = shsurf()->type();
-    if (type == ShellSurface::Type::TopLevel ||
-            type == ShellSurface::Type::Maximized ||
-            type == ShellSurface::Type::Fullscreen)
+    if (type == ShellSurface::Type::TopLevel)
         create();
 }
 
 void HawaiiClientWIndow::surfaceTypeChanged()
 {
     ShellSurface::Type type = shsurf()->type();
-    if (type == ShellSurface::Type::TopLevel ||
-            type == ShellSurface::Type::Maximized ||
-            type == ShellSurface::Type::Fullscreen) {
+    if (type == ShellSurface::Type::TopLevel) {
         if (!m_resource)
             create();
     } else {

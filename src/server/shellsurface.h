@@ -38,10 +38,7 @@ public:
     enum class Type {
         None,
         TopLevel,
-        Maximized,
-        Transient,
         Popup,
-        Fullscreen,
         XWayland
     };
     enum class Edges {
@@ -71,9 +68,14 @@ public:
     void setTopLevel();
     void setTransient(weston_surface *parent, int x, int y, bool inactive);
     void setFullscreen(FullscreenMethod method, uint32_t framerate, weston_output *output);
+    void unsetFullscreen();
     void setXWayland(int x, int y, bool inactive);
     void setPopup(weston_surface *parent, weston_seat *seat, int32_t x, int32_t y, uint32_t serial);
     void setMaximized(weston_output *output);
+    void unsetMaximized();
+
+    inline bool isMaximized() const { return m_nextState.maximized; }
+    inline bool isFullscreen() const { return m_nextState.fullscreen; }
 
     void addTransform(struct weston_transform *transform);
     void removeTransform(struct weston_transform *transform);
@@ -147,8 +149,8 @@ public:
     Signal<> unmappedSignal;
 
 private:
-    void unsetFullscreen();
-    void unsetMaximized();
+    void internalUnsetFullscreen();
+    void internalUnsetMaximized();
     void mapPopup();
     void centerOnOutput(struct weston_output *output);
     void sendState();
@@ -162,13 +164,14 @@ private:
     weston_view *m_view;
     WlListener m_surfaceDestroyListener;
     Type m_type;
-    Type m_pendingType;
     const struct weston_shell_client *m_client;
     std::string m_title;
     std::string m_identifier;
     struct weston_output *m_output;
     int32_t m_savedX, m_savedY;
+    int32_t m_savedWidth, m_savedHeight;
     bool m_savedPos;
+    bool m_savedSize;
     bool m_acceptState;
     ShellGrab *m_runningGrab;
     int32_t m_lastWidth, m_lastHeight;
@@ -180,6 +183,15 @@ private:
         int32_t x, y;
         bool inactive;
     } m_transient;
+
+    struct State {
+        bool maximized;
+        bool fullscreen;
+        bool transient;
+    };
+    State m_state;
+    State m_nextState;
+    bool m_stateChanged;
 
     struct {
         int32_t x, y;

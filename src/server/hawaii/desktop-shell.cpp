@@ -772,7 +772,7 @@ void DesktopShell::moveBinding(struct weston_seat *seat, uint32_t time, uint32_t
     }
 
     ShellSurface *shsurf = getShellSurface(view->surface);
-    if (!shsurf || shsurf->type() == ShellSurface::Type::Fullscreen || shsurf->type() == ShellSurface::Type::Maximized) {
+    if (!shsurf || shsurf->isFullscreen() || shsurf->isMaximized()) {
         return;
     }
 
@@ -790,7 +790,7 @@ void DesktopShell::resizeBinding(weston_seat *seat, uint32_t time, uint32_t butt
     }
 
     ShellSurface *shsurf = getShellSurface(surface);
-    if (!shsurf || shsurf->type() == ShellSurface::Type::Fullscreen || shsurf->type() == ShellSurface::Type::Maximized) {
+    if (!shsurf || shsurf->isFullscreen() || shsurf->isMaximized()) {
         return;
     }
 
@@ -834,7 +834,7 @@ void DesktopShell::closeBinding(weston_seat *seat, uint32_t time, uint32_t butto
     }
 
     ShellSurface *shsurf = getShellSurface(surface);
-    if (!shsurf || shsurf->type() == ShellSurface::Type::Fullscreen || shsurf->type() == ShellSurface::Type::Maximized) {
+    if (!shsurf || shsurf->isFullscreen() || shsurf->isMaximized()) {
         return;
     }
 

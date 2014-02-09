@@ -33,13 +33,15 @@ ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
             , m_surface(surface)
             , m_view(weston_view_create(surface))
             , m_type(Type::None)
-            , m_pendingType(Type::None)
             , m_savedPos(false)
             , m_acceptState(true)
             , m_runningGrab(nullptr)
             , m_active(false)
             , m_minimized(false)
             , m_parent(nullptr)
+            , m_state({ false, false, false })
+            , m_nextState({ false, false, false })
+            , m_stateChanged(false)
 {
     m_popup.seat = nullptr;
     wl_list_init(&m_fullscreen.transform.link);
@@ -211,29 +213,30 @@ void ShellSurface::hide()
 
 bool ShellSurface::updateType()
 {
-    if (m_type != m_pendingType && m_pendingType != Type::None) {
+    if (m_stateChanged) {
         switch (m_type) {
-            case Type::Maximized:
-                unsetMaximized();
-                break;
-            case Type::Fullscreen:
-                unsetFullscreen();
+            case Type::TopLevel:
+                if (m_state.maximized) {
+                    internalUnsetMaximized();
+                } else if (m_state.fullscreen) {
+                    internalUnsetFullscreen();
+                }
                 break;
             default:
                 break;
         }
-        m_type = m_pendingType;
-        m_pendingType = Type::None;
+        m_state = m_nextState;
+        m_stateChanged = false;
 
         switch (m_type) {
-            case Type::Maximized:
-            case Type::Fullscreen:
-                savePos();
+            case Type::TopLevel:
+                if (m_state.maximized || m_state.fullscreen) {
+                    savePos();
+                } else if (m_state.transient) {
+                    weston_view *pv = Shell::defaultView(m_parent);
+                    weston_view_set_position(m_view, pv->geometry.x + m_transient.x, pv->geometry.y + m_transient.y);
+                }
                 break;
-            case Type::Transient: {
-                weston_view *pv = Shell::defaultView(m_parent);
-                weston_view_set_position(m_view, pv->geometry.x + m_transient.x, pv->geometry.y + m_transient.y);
-            } break;
             case Type::XWayland:
                 weston_view_set_position(m_view, m_transient.x, m_transient.y);
             default:
@@ -254,15 +257,16 @@ void ShellSurface::map(int32_t x, int32_t y)
         case Type::Popup:
             mapPopup();
             break;
-        case Type::Fullscreen:
-            centerOnOutput(m_fullscreen.output);
-            break;
-        case Type::Maximized: {
-            IRect2D rect = m_shell->windowsArea(m_output);
-            x = rect.x;
-            y = rect.y;
-        }
         case Type::TopLevel:
+            if (m_state.fullscreen) {
+                centerOnOutput(m_fullscreen.output);
+                break;
+            } else if (m_state.maximized) {
+                IRect2D rect = m_shell->windowsArea(m_output);
+                x = rect.x;
+                y = rect.y;
+                break;
+            }
         case Type::None:
             if (m_savedPos) {
                 restorePos();
@@ -275,7 +279,7 @@ void ShellSurface::map(int32_t x, int32_t y)
 
     if (m_type != Type::None) {
         weston_view_update_transform(m_view);
-        if (m_type == Type::Maximized) {
+        if (m_type == Type::TopLevel && m_state.maximized) {
             m_view->output = m_output;
         }
     }
@@ -298,6 +302,9 @@ void ShellSurface::savePos()
     m_savedX = x();
     m_savedY = y();
     m_savedPos = true;
+    m_savedSize = true;
+    m_savedWidth = width();
+    m_savedHeight = height();
 }
 
 void ShellSurface::restorePos()
@@ -310,7 +317,7 @@ void ShellSurface::restorePos()
 
 void ShellSurface::setTopLevel()
 {
-    m_pendingType = Type::TopLevel;
+    m_type = Type::TopLevel;
 }
 
 void ShellSurface::setTransient(struct weston_surface *parent, int x, int y, bool inactive)
@@ -320,7 +327,7 @@ void ShellSurface::setTransient(struct weston_surface *parent, int x, int y, boo
     m_transient.y = y;
     m_transient.inactive = inactive;
 
-    m_pendingType = Type::Transient;
+    m_nextState.transient = true;
 }
 
 void ShellSurface::setXWayland(int x, int y, bool inactive)
@@ -330,7 +337,7 @@ void ShellSurface::setXWayland(int x, int y, bool inactive)
     m_transient.y = y;
     m_transient.inactive = inactive;
 
-    m_pendingType = Type::XWayland;
+    m_type = Type::XWayland;
 }
 
 void ShellSurface::setTitle(const char *title)
@@ -492,12 +499,36 @@ void ShellSurface::setFullscreen(ShellSurface::FullscreenMethod method, uint32_t
     m_fullscreen.output = m_output;
     m_fullscreen.type = method;
     m_fullscreen.framerate = framerate;
-    m_pendingType = Type::Fullscreen;
+    m_nextState.fullscreen = true;
+    m_stateChanged = true;
 
     m_client->send_configure(m_surface, 0, m_output->width, m_output->height);
 }
 
+
 void ShellSurface::unsetFullscreen()
+{
+    if (!m_nextState.fullscreen) {
+        return;
+    }
+
+    m_nextState.fullscreen = false;
+    m_stateChanged = true;
+
+    int32_t width, height;
+    if (m_savedSize) {
+        width = m_savedWidth;
+        height = m_savedHeight;
+        m_savedSize = false;
+    } else {
+        width = m_surface->width;
+        height = m_surface->height;
+    }
+
+    m_client->send_configure(m_surface, 0, width, height);
+}
+
+void ShellSurface::internalUnsetFullscreen()
 {
     m_fullscreen.type = ShellSurface::FullscreenMethod::Default;
     m_fullscreen.framerate = 0;
@@ -511,6 +542,27 @@ void ShellSurface::unsetFullscreen()
 }
 
 void ShellSurface::unsetMaximized()
+{
+    if (!m_nextState.maximized) {
+        return;
+    }
+
+    m_nextState.maximized = false;
+    m_stateChanged = true;
+
+    int32_t width, height;
+    if (m_savedSize) {
+        width = m_savedWidth;
+        height = m_savedHeight;
+        m_savedSize = false;
+    } else {
+        width = m_surface->width;
+        height = m_surface->height;
+    }
+    m_client->send_configure(m_surface, 0, width, height);
+}
+
+void ShellSurface::internalUnsetMaximized()
 {
     restorePos();
 }
@@ -565,7 +617,7 @@ void ShellSurface::dragMove(struct weston_seat *ws)
         return;
     }
 
-    if (m_type == ShellSurface::Type::Fullscreen) {
+    if (m_type == ShellSurface::Type::TopLevel && m_state.fullscreen) {
         return;
     }
 
@@ -692,7 +744,7 @@ void ShellSurface::setPopup(struct weston_surface *parent, weston_seat *seat, in
     m_popup.serial = serial;
     m_popup.seat = ShellSeat::shellSeat(seat);
 
-    m_pendingType = Type::Popup;
+    m_type = Type::Popup;
 }
 
 void ShellSurface::setMaximized(weston_output *out)
@@ -702,5 +754,6 @@ void ShellSurface::setMaximized(weston_output *out)
 
     IRect2D rect = Shell::instance()->windowsArea(m_output);
     m_client->send_configure(m_surface, edges, rect.width, rect.height);
-    m_pendingType = Type::Maximized;
+    m_nextState.maximized = true;
+    m_stateChanged = true;
 }

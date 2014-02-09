@@ -248,7 +248,7 @@ void ScaleEffect::end(ShellSurface *surface)
 
 void ScaleEffect::addedSurface(ShellSurface *surface)
 {
-    if (surface->type() == ShellSurface::Type::TopLevel || surface->type() == ShellSurface::Type::Maximized) {
+    if (surface->type() == ShellSurface::Type::TopLevel) {
         SurfaceTransform *tr = new SurfaceTransform;
         tr->surface = surface;
         tr->animation.updateSignal->connect(tr, &SurfaceTransform::updateAnimation);

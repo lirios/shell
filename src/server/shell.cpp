@@ -398,8 +398,7 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy)
         return;
     }
 
-    if (surface->m_type == ShellSurface::Type::Fullscreen && surface->m_pendingType != ShellSurface::Type::Fullscreen &&
-        surface->m_pendingType != ShellSurface::Type::None) {
+    if (surface->m_type == ShellSurface::Type::TopLevel && surface->m_state.fullscreen && !surface->m_nextState.fullscreen) {
         if (surface->m_fullscreen.type == ShellSurface::FullscreenMethod::Driver && surfaceIsTopFullscreen(surface)) {
             weston_output_switch_mode(surface->m_fullscreen.output, surface->m_fullscreen.output->original_mode, surface->m_fullscreen.output->original_scale, WESTON_MODE_SWITCH_RESTORE_NATIVE);
         }
@@ -409,9 +408,11 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy)
     if (!surface->isMapped()) {
         switch (surface->m_type) {
             case ShellSurface::Type::TopLevel:
-                int cx, cy;
-                surface->calculateInitialPosition(cx, cy);
-                surface->map(cx, cy);
+                if (!surface->m_state.transient && !surface->m_state.fullscreen && !surface->m_state.maximized) {
+                    int cx, cy;
+                    surface->calculateInitialPosition(cx, cy);
+                    surface->map(cx, cy);
+                }
                 break;
             default:
                 surface->map(surface->view()->geometry.x + sx, surface->view()->geometry.y + sy);
@@ -421,48 +422,47 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy)
             e->addSurface(surface);
         }
 
-        switch (surface->m_type) {
-            case ShellSurface::Type::Transient:
-            case ShellSurface::Type::Popup:
-                if (ShellSurface *p = getShellSurface(surface->m_parent)) {
-                    surface->m_workspace = p->m_workspace;
-                } else {
-                    surface->m_workspace = 0;
-                }
-                surface->view()->output = surface->m_parent->output;
-		wl_list_insert(defaultView(surface->m_parent)->layer_link.prev, &surface->view()->layer_link);
-                break;
-            case ShellSurface::Type::Fullscreen:
-                stackFullscreen(surface);
-                configureFullscreen(surface);
-                break;
-            case ShellSurface::Type::None:
-                break;
-            default:
-                surface->m_workspace->addSurface(surface);
-                m_surfaces.push_back(surface);
+
+        if (surface->m_type == ShellSurface::Type::Popup ||
+            (surface->m_type == ShellSurface::Type::TopLevel && surface->m_state.transient)) {
+            if (ShellSurface *p = getShellSurface(surface->m_parent)) {
+                surface->m_workspace = p->m_workspace;
+            } else {
+                surface->m_workspace = 0;
+            }
+            surface->view()->output = surface->m_parent->output;
+            wl_list_insert(defaultView(surface->m_parent)->layer_link.prev, &surface->view()->layer_link);
+        } else if (surface->m_type == ShellSurface::Type::TopLevel && surface->m_state.fullscreen) {
+            stackFullscreen(surface);
+            configureFullscreen(surface);
+        } else if (surface->m_type != ShellSurface::Type::None) {
+            surface->m_workspace->addSurface(surface);
+            m_surfaces.push_back(surface);
         }
 
         switch (surface->m_type) {
             case ShellSurface::Type::XWayland:
-            case ShellSurface::Type::Transient:
-                if (surface->m_transient.inactive) {
+            case ShellSurface::Type::TopLevel:
+                if (surface->m_state.transient && surface->m_transient.inactive) {
                     break;
                 }
-            case ShellSurface::Type::TopLevel:
-            case ShellSurface::Type::Maximized: {
-                struct weston_seat *seat;
-                wl_list_for_each(seat, &m_compositor->seat_list, link) {
-                    ShellSeat::shellSeat(seat)->activate(surface);
+                if (surface->m_state.maximized) {
+                    struct weston_seat *seat;
+                    wl_list_for_each(seat, &m_compositor->seat_list, link) {
+                        ShellSeat::shellSeat(seat)->activate(surface);
+                    }
                 }
-            } break;
+                break;
             default:
                 break;
         }
 
         if (m_windowsMinimized) {
             switch (surface->m_type) {
-                case ShellSurface::Type::Transient:
+                case ShellSurface::Type::TopLevel:
+                    if (surface->m_state.transient && surface->m_transient.inactive) {
+                        break;
+                    }
                 case ShellSurface::Type::Popup:
                     if (surface->m_transient.inactive) {
                         break;
@@ -486,15 +486,16 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy)
         weston_view_set_position(view, x, y);
 
         switch (surface->m_type) {
-            case ShellSurface::Type::Fullscreen:
-                stackFullscreen(surface);
-                configureFullscreen(surface);
+            case ShellSurface::Type::TopLevel:
+                if (surface->m_state.fullscreen) {
+                    stackFullscreen(surface);
+                    configureFullscreen(surface);
+                } else if (surface->m_state.maximized) {
+                    IRect2D rect = windowsArea(surface->output());
+                    IRect2D bbox = surface->surfaceTreeBoundingBox();
+                    weston_view_set_position(view, rect.x - bbox.x, rect.y - bbox.y);
+                }
                 break;
-            case ShellSurface::Type::Maximized: {
-                IRect2D rect = windowsArea(surface->output());
-                IRect2D bbox = surface->surfaceTreeBoundingBox();
-                weston_view_set_position(view, rect.x - bbox.x, rect.y - bbox.y);
-            } break;
             default:
                 if (!m_windowsMinimized && surface->m_workspace) {
                     surface->m_workspace->addSurface(surface);
@@ -505,7 +506,7 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy)
         if (surface->m_surface->output) {
             weston_view_update_transform(view);
 
-            if (surface->m_type == ShellSurface::Type::Maximized) {
+            if (surface->m_type == ShellSurface::Type::TopLevel && surface->m_state.maximized) {
                 surface->m_surface->output = surface->m_output;
             }
         }
@@ -688,7 +689,7 @@ void Shell::activateSurface(struct weston_seat *seat, uint32_t time, uint32_t bu
 
     if (seat->pointer->grab == &seat->pointer->default_grab) {
         ShellSurface *shsurf = getShellSurface(focus->surface);
-        if (shsurf && shsurf->type() == ShellSurface::Type::Fullscreen) {
+        if (shsurf && shsurf->type() == ShellSurface::Type::TopLevel && shsurf->m_state.fullscreen) {
             return;
         }
 
@@ -993,7 +994,10 @@ void Shell::minimizeWindows()
 {
     for (ShellSurface *shsurf: surfaces()) {
         switch (shsurf->m_type) {
-            case ShellSurface::Type::Transient:
+            case ShellSurface::Type::TopLevel:
+                if (shsurf->m_state.transient && shsurf->m_transient.inactive) {
+                    break;
+                }
             case ShellSurface::Type::Popup:
                 if (shsurf->m_transient.inactive) {
                     break;
@@ -1012,7 +1016,10 @@ void Shell::restoreWindows()
 {
     for (ShellSurface *shsurf: surfaces()) {
         switch (shsurf->m_type) {
-            case ShellSurface::Type::Transient:
+            case ShellSurface::Type::TopLevel:
+                if (shsurf->m_state.transient && shsurf->m_transient.inactive) {
+                    break;
+                }
             case ShellSurface::Type::Popup:
                 if (shsurf->m_transient.inactive) {
                     break;

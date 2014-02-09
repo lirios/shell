@@ -143,15 +143,23 @@ void WlShellSurface::resize(wl_client *client, wl_resource *resource, wl_resourc
 void WlShellSurface::setToplevel(wl_client *, wl_resource *)
 {
     shsurf()->setTopLevel();
+    if (shsurf()->isFullscreen()) {
+        shsurf()->unsetFullscreen();
+    }
+    if (shsurf()->isMaximized()) {
+        shsurf()->unsetMaximized();
+    }
 }
 
 void WlShellSurface::setTransient(wl_client *client, wl_resource *resource, wl_resource *parent_resource, int x, int y, uint32_t flags)
 {
+    shsurf()->setTopLevel();
     shsurf()->setTransient(static_cast<weston_surface *>(wl_resource_get_user_data(parent_resource)), x, y, flags & WL_SHELL_SURFACE_TRANSIENT_INACTIVE);
 }
 
 void WlShellSurface::setFullscreen(wl_client *client, wl_resource *resource, uint32_t method, uint32_t framerate, wl_resource *output_resource)
 {
+    shsurf()->setTopLevel();
     weston_output *output = output_resource ? static_cast<weston_output *>(wl_resource_get_user_data(output_resource)) : nullptr;
     shsurf()->setFullscreen((ShellSurface::FullscreenMethod)method, framerate, output);
 }
@@ -176,6 +184,7 @@ void WlShellSurface::setMaximized(wl_client *client, wl_resource *resource, wl_r
         output = Shell::instance()->getDefaultOutput();
     }
 
+    shsurf()->setTopLevel();
     shsurf()->setMaximized(output);
 }
 
