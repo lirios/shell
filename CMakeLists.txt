@@ -106,6 +106,7 @@ string(REGEX REPLACE "[ \t\n]+" "" CMAKE_INSTALL_WESTONLIBDIR "${CMAKE_INSTALL_W
 
 # Find systemd
 pkg_check_modules(systemd libsystemd-daemon)
+set(HAVE_SYSTEMD ${systemd_FOUND})
 
 # Find polkit-qt-1
 find_package(PolkitQt-1 REQUIRED)
