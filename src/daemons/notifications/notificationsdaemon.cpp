@@ -134,9 +134,8 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
         return 0;
     m_notifications << notification;
 
-    // Show the notification if nothing is on the queue
-    if (m_notifications.size() == 1)
-        showNotification(notification);
+    // Show the notification
+    showNotification(notification);
 
 #if 0
     // Force coordinates
