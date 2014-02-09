@@ -6,7 +6,7 @@ include_directories(
 )
 
 if(systemd_FOUND)
-    include_directories(${wayland_INCLUDE_DIRS})
+    include_directories(${systemd_INCLUDE_DIRS})
 endif()
 
 set(SOURCES
