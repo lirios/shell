@@ -41,6 +41,7 @@
 #include "workspace.h"
 #include "wl_shell/wlshell.h"
 #include "wl_shell/wlshellsurface.h"
+#include "xdg_shell/xdgshell.h"
 #include "xwlshell.h"
 #include "animation.h"
 #include "settings.h"
@@ -364,6 +365,9 @@ void DesktopShell::init()
     addInterface(new XWlShell);
     addInterface(new Notifications);
     addInterface(new SettingsInterface);
+    XdgShell *xdg = new XdgShell;
+    xdg->surfaceResponsivenessChangedSignal.connect(this, &DesktopShell::surfaceResponsivenessChanged);
+    addInterface(xdg);
 
     Notifications *notifications = findInterface<Notifications>();
     notifications->m_notificationsLayer.insert(&m_overlayLayer);

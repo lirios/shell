@@ -44,6 +44,13 @@ set(SOURCES
     hawaii/shellwindow.cpp
     wl_shell/wlshell.cpp
     wl_shell/wlshellsurface.cpp
+    xdg_shell/xdgshell.cpp
+    xdg_shell/xdgsurface.cpp
+)
+
+wayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/xdg-shell.xml
+    xdg-shell
 )
 
 wayland_add_protocol_client(SOURCES
