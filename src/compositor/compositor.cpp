@@ -37,6 +37,7 @@
 #include <QtCompositor/private/qwlpointer_p.h>
 
 #include "compositor.h"
+#include "panelmanager.h"
 #include "shell.h"
 #include "shellsurface.h"
 #include "clientwindow.h"
@@ -67,6 +68,7 @@ Compositor::Compositor()
     // Create interfaces
     m_notifications = new Notifications(waylandDisplay());
     m_screenSaver = new ScreenSaver(waylandDisplay());
+    m_panelManager = new PanelManager(waylandDisplay());
     m_shellSurface = new ShellSurface(waylandDisplay());
     m_shell = new Shell(waylandDisplay());
     connect(m_shell, &Shell::ready, [=]() {
@@ -102,6 +104,7 @@ Compositor::~Compositor()
     qDeleteAll(m_workspaces);
     delete m_screenSaver;
     delete m_notifications;
+    delete m_panelManager;
     delete m_shellSurface;
     delete m_shell;
 }

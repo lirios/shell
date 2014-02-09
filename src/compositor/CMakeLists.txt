@@ -24,9 +24,11 @@ set(SOURCES
     logging.cpp
     main.cpp
     notifications.cpp
+    panelmanager.cpp
     popupgrabber.cpp
     screensaver.cpp
     shell.cpp
+    shellpanelsurface.cpp
     shellpopupsurface.cpp
     shellsurface.cpp
     workspace.cpp

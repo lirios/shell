@@ -36,6 +36,7 @@ class ShellSurface;
 class ClientWindow;
 class Workspace;
 class Grab;
+class PanelManager;
 class ScreenSaver;
 class Notifications;
 
@@ -101,6 +102,7 @@ protected:
 private:
     Notifications *m_notifications;
     ScreenSaver *m_screenSaver;
+    PanelManager *m_panelManager;
     ShellSurface *m_shellSurface;
     Shell *m_shell;
 

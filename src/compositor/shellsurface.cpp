@@ -31,8 +31,9 @@
 #include "shellpopupsurface.h"
 #include "shellsurface.h"
 
-ShellSurface::ShellSurface(wl_display *display)
-    : QtWaylandServer::wl_hawaii_shell_surface(display)
+ShellSurface::ShellSurface(wl_display *display, QObject *parent)
+    : QObject(parent)
+    , QtWaylandServer::wl_hawaii_shell_surface(display)
 {
 }
 

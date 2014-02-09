@@ -38,11 +38,15 @@ class ShellSurface : public QObject, public QtWaylandServer::wl_hawaii_shell_sur
 {
     Q_OBJECT
 public:
-    ShellSurface(struct ::wl_display *display);
+    ShellSurface(struct ::wl_display *display,
+                 QObject *parent = 0);
 
     void setSurfacesVisible(bool visible);
 
     QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
+
+    void addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface);
+    void removeSurfaceFromLayer(QWaylandSurface *surface);
 
 protected:
     void hawaii_shell_surface_set_background(Resource *resource,
@@ -66,9 +70,6 @@ private:
     Layer m_panelsLayer;
     Layer m_overlayLayer;
     Layer m_dialogsLayer;
-
-    void addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface);
-    void removeSurfaceFromLayer(QWaylandSurface *surface);
 
     QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 };
