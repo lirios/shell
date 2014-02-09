@@ -64,6 +64,12 @@ void ContainmentPackage::initializePackage(Package *package)
 
     // User interface
     package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
+
+    // Configuration view
+    package->addFileDefinition("configuration",
+                               QStringLiteral("configuration/ConfigurationView.qml"),
+                               tr("Configuration User Interface"));
+    package->setMimeTypes("configuration", QStringList() << QStringLiteral("text/x-qml"));
 }
 
 void ShellPackage::initializePackage(Package *package)
