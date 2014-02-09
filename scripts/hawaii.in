@@ -28,7 +28,7 @@
 weston=$(which weston)
 westonlaunch=$(which weston-launch)
 
-if [ "x$weston" = "x" ]; then
+if [ "x$weston" = "x" -o "x$westonlaunch" = "x" ]; then
     echo
     echo "Hawaii needs the Weston compositor, but it hasn't been found."
     echo "Please install the weston package."
@@ -36,34 +36,7 @@ if [ "x$weston" = "x" ]; then
     exit 1
 fi
 
-verstr=$(${weston} --version | sed -e 's,^weston ,,g')
-
-IFS=. read -a v <<<"${verstr}"
-if [ ${#v[@]} -lt 3 ]; then
-    echo "Error parsing Weston version!"
-    exit 1
-fi
-
-major=$((${v[0]} << 16))
-minor=$((${v[1]} << 8))
-micro=${v[2]}
-version=$((${major} | ${minor} | ${micro}))
-
-tmajor=$((1<<16))
-tminor=$((3<<8))
-tmicro=0
-tversion=$((${tmajor} | ${tminor} | ${tmicro}))
-
-if [ ${version} -ge ${tversion} ]; then
-    args="--shell=@CMAKE_INSTALL_FULL_LIBDIR@/weston/hawaii-desktop.so"
-else
-    echo
-    echo "Make sure you configured ~/.config/weston.ini to the following module:"
-    echo "@CMAKE_INSTALL_FULL_LIBDIR@/weston/hawaii-desktop.so"
-    echo
-    echo "Consult Hawaii documentation for more details."
-    echo
-fi
+args="--shell=@CMAKE_INSTALL_FULL_LIBDIR@/weston/hawaii-desktop.so"
 
 if [ -z "$DISPLAY" ]; then
     exec ${westonlaunch} $@ -- ${args}
