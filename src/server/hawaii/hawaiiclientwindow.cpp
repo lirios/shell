@@ -64,14 +64,14 @@ void HawaiiClientWIndow::mapped()
         return;
 
     ShellSurface::Type type = shsurf()->type();
-    if (type == ShellSurface::Type::TopLevel)
+    if (type == ShellSurface::Type::TopLevel && !shsurf()->isTransient())
         create();
 }
 
 void HawaiiClientWIndow::surfaceTypeChanged()
 {
     ShellSurface::Type type = shsurf()->type();
-    if (type == ShellSurface::Type::TopLevel) {
+    if (type == ShellSurface::Type::TopLevel && !shsurf()->isTransient()) {
         if (!m_resource)
             create();
     } else {

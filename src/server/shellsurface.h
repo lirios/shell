@@ -76,6 +76,7 @@ public:
 
     inline bool isMaximized() const { return m_nextState.maximized; }
     inline bool isFullscreen() const { return m_nextState.fullscreen; }
+    inline bool isTransient() const { return m_nextState.transient; }
 
     void addTransform(struct weston_transform *transform);
     void removeTransform(struct weston_transform *transform);
