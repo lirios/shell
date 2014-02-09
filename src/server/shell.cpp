@@ -446,15 +446,12 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy)
                 if (surface->m_state.transient && surface->m_transient.inactive) {
                     break;
                 }
-                if (surface->m_state.maximized) {
-                    struct weston_seat *seat;
-                    wl_list_for_each(seat, &m_compositor->seat_list, link) {
-                        ShellSeat::shellSeat(seat)->activate(surface);
-                    }
-                }
                 break;
             default:
-                break;
+                struct weston_seat *seat;
+                wl_list_for_each(seat, &m_compositor->seat_list, link) {
+                    ShellSeat::shellSeat(seat)->activate(surface);
+                }
         }
 
         if (m_windowsMinimized) {
