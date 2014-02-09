@@ -26,9 +26,12 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QScreen>
+#include <QtQml/QQmlContext>
 #include <QtQuick/QQuickItem>
 
+#include "configwindow_p.h"
 #include "containment.h"
+#include "qmlobject.h"
 #include "quickview.h"
 
 namespace Hawaii {
@@ -44,23 +47,38 @@ class QuickViewPrivate
     Q_DECLARE_PUBLIC(QuickView)
 public:
     QuickViewPrivate(QuickView *view);
+    ~QuickViewPrivate();
 
     Corona *corona;
     QPointer<Containment> containment;
+    QPointer<ConfigWindow> configWindow;
+    QmlObject *configViewObject;
     bool immutable;
     bool configuring;
 
     void initialize();
+
+    bool loadConfigurationComponent();
 
 protected:
     QuickView *const q_ptr;
 };
 
 QuickViewPrivate::QuickViewPrivate(QuickView *view)
-    : immutable(false)
+    : configWindow(nullptr)
+    , immutable(false)
     , configuring(false)
     , q_ptr(view)
 {
+    configViewObject = new QmlObject();
+    configViewObject->setInitializationDelayed(true);
+}
+
+QuickViewPrivate::~QuickViewPrivate()
+{
+    configViewObject->deleteLater();
+    if (!configWindow.isNull())
+        configWindow.data()->deleteLater();
 }
 
 void QuickViewPrivate::initialize()
@@ -82,6 +100,41 @@ void QuickViewPrivate::initialize()
 
     // View is sized by the root object
     q->setResizeMode(QQuickView::SizeViewToRootObject);
+}
+
+bool QuickViewPrivate::loadConfigurationComponent()
+{
+    Q_Q(QuickView);
+
+    QUrl url = QUrl::fromLocalFile(containment.data()->package().filePath("configuration"));
+    configViewObject->setSource(url);
+
+    if (!configViewObject->engine() ||
+            !configViewObject->engine()->rootContext() ||
+            !configViewObject->engine()->rootContext()->isValid() ||
+            configViewObject->mainComponent()->isError()) {
+        QString errorMsg;
+        for (QQmlError error: configViewObject->mainComponent()->errors())
+            errorMsg += error.toString() + QStringLiteral("\n");
+        errorMsg = q->tr("Error loading configuration view: %1").arg(errorMsg);
+        qWarning() << qPrintable(errorMsg);
+
+        // Load the element error component from corona's package
+        configViewObject->setSource(QUrl::fromLocalFile(corona->package().filePath("elementerror")));
+        configViewObject->completeInitialization();
+
+        // If even the element error component cannot be loaded this is a lost cause
+        if (configViewObject->mainComponent()->isError())
+            return false;
+
+        // Element error component was loaded, set error message
+        configViewObject->rootObject()->setProperty("errorMessage", errorMsg);
+    }
+
+    // Load is complete
+    configViewObject->completeInitialization();
+
+    return true;
 }
 
 /*
@@ -139,6 +192,10 @@ void QuickView::setContainment(Containment *containment)
     if (oldLocation != location())
         Q_EMIT locationChanged(location());
 
+    // Let the configuration window know about us
+    d->configViewObject->engine()->rootContext()->setContextProperty(
+                "hawaiiShellQuickView", QVariant::fromValue(this));
+
     Q_EMIT containmentChanged();
 
     if (containment) {
@@ -186,6 +243,33 @@ void QuickView::setConfiguring(bool value)
     Q_D(QuickView);
 
     if (d->configuring != value) {
+        // Create the configuration view if necessary
+        if (value && !d->configViewObject->rootObject())
+            if (!d->loadConfigurationComponent())
+                return;
+
+        // Always destroy the window
+        if (!d->configWindow.isNull()) {
+            d->configWindow.data()->hide();
+            d->configWindow.data()->deleteLater();
+        }
+
+        // Show the configuration window
+        if (value) {
+            QQuickItem *item = qobject_cast<QQuickItem *>(d->configViewObject->rootObject());
+            if (!item) {
+                qWarning() << "Configuration view is not an Item!";
+                return;
+            }
+
+            d->configWindow = new ConfigWindow(this);
+            d->configWindow.data()->setTransientParent(this);
+            d->configWindow.data()->setContent(item);
+            d->configWindow.data()->setPosition(d->configWindow.data()->mapToGlobal(QPoint(0, -100)));
+            d->configWindow.data()->show();
+        }
+
+        // Now we can actually change the property
         d->configuring = value;
         Q_EMIT configuringChanged(value);
     }
