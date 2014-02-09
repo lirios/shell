@@ -78,7 +78,7 @@ Item {
         id: configButton
         width: view.formFactor === Types.Horizontal ? parent.height : parent.width
         height: width
-        visible: false
+        visible: true
         states: [
             State {
                 name: "horizontal"
@@ -105,6 +105,11 @@ Item {
                 }
             }
         ]
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: view.configuring = !view.configuring;
+        }
 
         FluidUi.Icon {
             anchors.fill: parent
