@@ -50,6 +50,7 @@ public:
     QQmlPropertyMap settings;
     QConfiguration *configuration;
     Corona *corona;
+    Types::ContainmentType type;
     Types::FormFactor formFactor;
     Types::Location location;
     Package package;
@@ -58,6 +59,7 @@ public:
 
 ContainmentPrivate::ContainmentPrivate()
     : corona(nullptr)
+    , type(Types::UnknownContainment)
     , formFactor(Types::Plane)
     , location(Types::Desktop)
 {
@@ -99,6 +101,12 @@ Corona *Containment::corona() const
 {
     Q_D(const Containment);
     return d->corona;
+}
+
+Hawaii::Shell::Types::ContainmentType Containment::type() const
+{
+    Q_D(const Containment);
+    return d->type;
 }
 
 Hawaii::Shell::Types::FormFactor Containment::formFactor() const
@@ -166,7 +174,18 @@ Package Containment::package() const
 void Containment::setPackage(const Package &package)
 {
     Q_D(Containment);
-    d->package = package;
+
+    // Read the containment type
+    QString containmentType = package.metadata().property(
+                QStringLiteral("X-Hawaii-ContainmentType")).toString();
+    if (containmentType == QStringLiteral("Desktop"))
+        d->type = Types::DesktopContainment;
+    else if (containmentType == QStringLiteral("Panel"))
+        d->type = Types::PanelContainment;
+    else
+        qFatal("Containment \"%s\" has an invalid type \"%s\", aborting...",
+               qPrintable(package.metadata().internalName()),
+               qPrintable(containmentType));
 
     // Load QML file
     d->qmlObject->setSource(QUrl::fromLocalFile(package.filePath("mainscript")));
@@ -199,6 +218,8 @@ void Containment::setPackage(const Package &package)
     if (rootItem)
         setProperty("item", QVariant::fromValue(rootItem));
 
+    // Assign the package and notify observers
+    d->package = package;
     Q_EMIT packageChanged(package);
 }
 

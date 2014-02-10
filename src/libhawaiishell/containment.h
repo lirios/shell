@@ -41,6 +41,7 @@ class ContainmentPrivate;
 class HAWAIISHELL_EXPORT Containment : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(Hawaii::Shell::Types::ContainmentType type READ type NOTIFY typeChanged)
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
 public:
@@ -51,6 +52,11 @@ public:
      * \return the corona for this containment.
      */
     Corona *corona() const;
+
+    /*!
+     * \return the containment type.
+     */
+    Hawaii::Shell::Types::ContainmentType type() const;
 
     /*!
      * \return the form factor of this containment.
@@ -93,6 +99,16 @@ public:
     void setPackage(const Package &package);
 
 Q_SIGNALS:
+    /*!
+     * Emitted when the containment type is changed.
+     * Initially containments are of \a UnknownContainment type,
+     * as soon as the package is loaded the types changes to
+     * what is read from the metadata entry.
+     * \sa setPackage()
+     * \param type the new containment type.
+     */
+    void typeChanged(Hawaii::Shell::Types::ContainmentType type);
+
     /*!
      * Emitted when the form factor is changed.
      * \param formFactor the new form factorof the containment
