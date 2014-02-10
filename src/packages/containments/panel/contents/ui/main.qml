@@ -33,10 +33,11 @@ import Hawaii.Shell 1.0 as Shell
 import "../code/LayoutManager.js" as LayoutManager
 
 DropArea {
+    property Item configButton
+    property Item dragOverlay
+
     id: root
     keys: ["application/x-hawaiishell-element"]
-    implicitWidth: currentLayout.implicitWidth
-    onCurrentLayoutChanged: LayoutManager.layout = currentLayout
     onEntered: LayoutManager.insertAtCoordinates(dndSpacer, drag.x, drag.y)
     onPositionChanged: LayoutManager.insertAtCoordinates(dndSpacer, drag.x, drag.y)
     onExited: dndSpacer.parent = root
@@ -47,68 +48,22 @@ DropArea {
         }
     }
 
-    property int minimumWidth: currentLayout.Layout.minimumWidth
-    property int maximumWidth: currentLayout.Layout.maximumWidth
+    Layout.minimumWidth: currentLayout.Layout.minimumWidth
+    Layout.maximumWidth: currentLayout.Layout.maximumWidth
+    Layout.preferredWidth: currentLayout.Layout.preferredWidth
 
-    property int minimumHeight: currentLayout.Layout.minimumHeight
-    property int maximumHeight: currentLayout.Layout.maximumHeight
+    GridLayout {
+        property bool isHorizontal: panel.formFactor === Shell.Types.Horizontal
 
-    property Item configButton
-    property Item currentLayout: panel.formFactor === Shell.Types.Horizontal ? row : column
-    property Item dragOverlay
-
-    RowLayout {
-        id: row
-        states: [
-            State {
-                name: "configButtonVisible"
-                when: configButton.visible
-
-                AnchorChanges {
-                    target: row
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.right: handle.left
-                    anchors.bottom: parent.bottom
-                }
-            },
-            State {
-                name: "configButtonHidden"
-                when: !configButton.visible
-
-                PropertyChanges {
-                    target: row
-                    anchors.fill: parent
-                }
-            }
-        ]
-    }
-
-    ColumnLayout {
-        id: column
-        states: [
-            State {
-                name: "configButtonVisible"
-                when: configButton.visible
-
-                AnchorChanges {
-                    target: row
-                    anchors.left: parent.left
-                    anchors.top: parent.top
-                    anchors.right: parent.right
-                    anchors.bottom: configButton.top
-                }
-            },
-            State {
-                name: "configButtonHidden"
-                when: !configButton.visible
-
-                PropertyChanges {
-                    target: row
-                    anchors.fill: parent
-                }
-            }
-        ]
+        id: currentLayout
+        anchors {
+            fill: parent
+            rightMargin: configButton && isHorizontal ? configButton.width : 0
+            bottomMargin: configButton && !isHorizontal ? configButton.height : 0
+        }
+        rows: 1
+        columns: 1
+        flow: isHorizontal ? GridLayout.TopToBottom : GridLayout.LeftToRight
     }
 
     Item {
@@ -223,24 +178,6 @@ DropArea {
 
     Connections {
         target: panel
-        onFormFactorChanged: {
-            lastSpacer.parent = root;
-
-            if (panel.formFactor === Shell.Types.Vertical) {
-                for (var container in row.children) {
-                    var item = row.children[0];
-                    item.parent = column;
-                }
-                lastSpacer.parent = column
-            } else {
-                lastSpacer.parent = row;
-                for (var container in column.children) {
-                    var item = column.children[0];
-                    item.parent = row;
-                }
-                lastSpacer.parent = row;
-            }
-        }
         onConfiguringChanged: makeConfigurable()
     }
 
@@ -277,6 +214,9 @@ DropArea {
             LayoutManager.insertBefore(lastSpacer, container);
         else
             container.parent = currentLayout;
+
+        if (element.Layout.fillWidth)
+            lastSpacer.parent = root;
     }
 
     function makeConfigurable() {
