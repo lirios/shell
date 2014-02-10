@@ -54,6 +54,12 @@ public:
     void initializePackage(Package *package);
 };
 
+class ToolBoxPackage : public BasePackage
+{
+public:
+    void initializePackage(Package *package);
+};
+
 class ShellPackage : public PackageStructure
 {
 public:

@@ -72,6 +72,14 @@ void ContainmentPackage::initializePackage(Package *package)
     package->setMimeTypes("configuration", QStringList() << QStringLiteral("text/x-qml"));
 }
 
+void ToolBoxPackage::initializePackage(Package *package)
+{
+    package->setDefaultPackageRoot(QStringLiteral("hawaii/toolboxes/"));
+
+    // User interface
+    package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
+}
+
 void ShellPackage::initializePackage(Package *package)
 {
     package->setDefaultPackageRoot(QStringLiteral("hawaii/shells/"));
