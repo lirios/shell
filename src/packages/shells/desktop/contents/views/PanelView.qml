@@ -40,34 +40,6 @@ Item {
         containment.anchors.fill = styledItem;
     }
 
-    Connections {
-        target: containment
-        onMinimumWidthChanged: {
-            if (containment.formFactor === Types.Horizontal)
-                view.width = Math.max(view.width, view.minimumLength);
-        }
-        onImplicitWidthChanged: {
-            if (containment.formFactor === Types.Horizontal)
-                view.width = Math.max(view.maximumLength, Math.max(containment.implicitWidth, view.minimumLength));
-        }
-        onMaximumWidthChanged: {
-            if (containment.formFactor === Types.Horizontal)
-                view.width = Math.min(view.width, view.maximumLength);
-        }
-        onMinimumHeightChanged: {
-            if (containment.formFactor === Types.Vertical)
-                view.height = Math.max(view.height, view.minimumLength);
-        }
-        onImplicitHeightChanged: {
-            if (containment.formFactor === Types.Vertical)
-                view.height = Math.min(view.maximumLength, Math.max(containment.implicitHeight, view.minimumLength));
-        }
-        onMaximumHeightChanged: {
-            if (containment.formFactor === Types.Vertical)
-                view.height = Math.min(view.height, view.maximumLength);
-        }
-    }
-
     StyledItem {
         id: styledItem
         anchors.fill: parent
