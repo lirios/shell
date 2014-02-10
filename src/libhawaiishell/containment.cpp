@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 #include <QtCore/QDebug>
+#include <QtCore/QElapsedTimer>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlPropertyMap>
 #include <QtQuick/QQuickItem>
@@ -32,6 +33,7 @@
 #include <QtConfiguration/QConfiguration>
 
 #include "containment.h"
+#include "pluginloader.h"
 #include "qmlobject.h"
 
 namespace Hawaii {
@@ -46,6 +48,8 @@ class ContainmentPrivate
 {
 public:
     ContainmentPrivate();
+
+    void loadToolBox();
 
     QQmlPropertyMap settings;
     QConfiguration *configuration;
@@ -63,6 +67,44 @@ ContainmentPrivate::ContainmentPrivate()
     , formFactor(Types::Plane)
     , location(Types::Desktop)
 {
+}
+
+void ContainmentPrivate::loadToolBox()
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    // Load tool box
+    // FIXME: For now this is hard-coded, load the tool box name from somewhere
+    Package package = PluginLoader::instance()->loadPackage(
+                QStringLiteral("Hawaii/Shell/ToolBox"));
+    if (type == Types::DesktopContainment)
+        package.setPath("org.hawaii.toolboxes.desktop");
+    else
+        package.setPath("org.hawaii.toolboxes.panel");
+    if (!package.isValid()) {
+        qWarning() << "Failed to load tool box: package is not valid";
+        return;
+    }
+
+    qDebug() << "-> Loading tool box" << package.metadata().internalName();
+
+    QObject *containmentObject = qmlObject->rootObject();
+    if (containmentObject) {
+        QVariantHash properties;
+        properties["parent"] = QVariant::fromValue(containmentObject);
+
+        QUrl url = QUrl::fromLocalFile(package.filePath("mainscript"));
+        QObject *configButton = qmlObject->createObjectFromSource(url, properties);
+        if (configButton)
+            containmentObject->setProperty("configButton", QVariant::fromValue(configButton));
+
+        qDebug() << "  Tool box" << package.metadata().internalName()
+                 << "created in" << timer.elapsed() << "ms";
+    } else {
+        qWarning() << "  Tool box" << package.metadata().internalName()
+                   << "not loaded because containment is not yet ready";
+    }
 }
 
 /*
@@ -217,6 +259,9 @@ void Containment::setPackage(const Package &package)
     QQuickItem *rootItem = qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
     if (rootItem)
         setProperty("item", QVariant::fromValue(rootItem));
+
+    // Load tool box
+    d->loadToolBox();
 
     // Assign the package and notify observers
     d->package = package;

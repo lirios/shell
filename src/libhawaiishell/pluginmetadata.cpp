@@ -73,7 +73,7 @@ PluginMetadata::PluginMetadata()
 
 PluginMetadata::~PluginMetadata()
 {
-    delete d_ptr;
+    //delete d_ptr;
 }
 
 bool PluginMetadata::load(const QString &fileName)
