@@ -77,6 +77,19 @@ public:
     };
     Q_ENUMS(Location)
 
+    /*!
+        Describes the containment type.
+    */
+    enum ContainmentType {
+        /*! Containment is not yet known (maybe the package was not loaded). */
+        UnknownContainment = 0,
+        /*! Containment is meant for desktop views. */
+        DesktopContainment,
+        /*! Containment is meant for panel views. */
+        PanelContainment
+    };
+    Q_ENUMS(ContainmentType)
+
 private:
     Types(QObject *parent = 0);
 };
