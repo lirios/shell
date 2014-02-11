@@ -3,7 +3,7 @@ Name=Indicators
 Comment=Shows information about the system
 Type=Service
 
-X-Hawaii-ServiceType=Element
+X-Hawaii-ServiceType=Hawaii/Shell/Element
 X-Hawaii-PluginInfo-Name=org.hawaii.elements.indicators
 X-Hawaii-PluginInfo-Version=1.0
 X-Hawaii-PluginInfo-License=GPLv2+

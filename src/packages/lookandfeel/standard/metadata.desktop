@@ -3,7 +3,7 @@ Name=Look And Feel
 Comment=Standard workspace design
 Type=Service
 
-X-Hawaii-ServiceType=LookAndFeeld
+X-Hawaii-ServiceType=Hawaii/Shell/LookAndFeel
 X-Hawaii-PluginInfo-Name=org.hawaii.lookandfeel.standard
 X-Hawaii-PluginInfo-Version=1.0
 X-Hawaii-PluginInfo-License=GPLv2+
