@@ -37,36 +37,42 @@ class BasePackage : public PackageStructure
 {
 public:
     void initializePackage(Package *package);
+};
+
+class MainScriptPackage : public PackageStructure
+{
+public:
+    void initializePackage(Package *package);
 
 protected:
     void pathChanged(Package *package);
 };
 
-class ElementPackage : public BasePackage
+class ElementPackage : public MainScriptPackage
 {
 public:
     void initializePackage(Package *package);
 };
 
-class ContainmentPackage : public BasePackage
+class ContainmentPackage : public MainScriptPackage
 {
 public:
     void initializePackage(Package *package);
 };
 
-class ToolBoxPackage : public BasePackage
+class ToolBoxPackage : public MainScriptPackage
 {
 public:
     void initializePackage(Package *package);
 };
 
-class ShellPackage : public PackageStructure
+class ShellPackage : public BasePackage
 {
 public:
     void initializePackage(Package *package);
 };
 
-class LookAndFeelPackage : public PackageStructure
+class LookAndFeelPackage : public BasePackage
 {
 public:
     void initializePackage(Package *package);

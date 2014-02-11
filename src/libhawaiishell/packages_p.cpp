@@ -33,13 +33,22 @@ namespace Shell {
 
 void BasePackage::initializePackage(Package *package)
 {
+    // Metadata
+    package->addFileDefinition("metadata",
+                               QStringLiteral("metadata.desktop"),
+                               tr("Metadata file"));
+    package->setRequired("metadata", true);
+}
+
+void MainScriptPackage::initializePackage(Package *package)
+{
     // Default main script, this can be changed by packages themselves
     package->addFileDefinition("mainscript", QStringLiteral("ui/main.qml"),
                                tr("Main script file"));
     package->setRequired("mainscript", true);
 }
 
-void BasePackage::pathChanged(Package *package)
+void MainScriptPackage::pathChanged(Package *package)
 {
     if (package->path().isEmpty())
         return;
