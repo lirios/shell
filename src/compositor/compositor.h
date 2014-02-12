@@ -28,6 +28,8 @@
 #define COMPOSITOR_H
 
 #include <QProcess>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QKeyEvent>
 
 #include <GreenIsland/Compositor>
 
