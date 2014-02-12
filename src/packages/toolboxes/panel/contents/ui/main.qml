@@ -34,8 +34,6 @@ Item {
 
     id: root
     anchors {
-        left: undefined
-        top: undefined
         right: isHorizontal ? parent.right : undefined
         bottom: isHorizontal ? undefined : parent.bottom
         horizontalCenter: isHorizontal ? undefined : parent.horizontalCenter
