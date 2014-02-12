@@ -71,11 +71,9 @@ public:
     wl_resource *shsurfResource;
     bool inside;
     uint32_t creationTime;
-    bool dismissed;
 
     PopupGrab()
         : ShellGrab()
-        , dismissed(false)
     {
     }
 
@@ -83,13 +81,6 @@ public:
     {
         wl_hawaii_popup_surface_send_popup_done(shsurfResource);
         wl_resource_destroy(shsurfResource);
-    }
-
-    void dismiss()
-    {
-        ShellGrab::end();
-        wl_resource_destroy(shsurfResource);
-        dismissed = true;
     }
 
     void focus() override
@@ -132,11 +123,6 @@ public:
     }
 };
 
-static void popupGrabDestroyed(wl_resource *res)
-{
-    delete static_cast<PopupGrab *>(wl_resource_get_user_data(res));
-}
-
 struct Popup {
     Popup(weston_view *p, DesktopShell *s, int32_t _x, int32_t _y)
         : parent(p)
@@ -145,6 +131,11 @@ struct Popup {
         , y(_y)
         , grab(nullptr)
     {
+    }
+
+    ~Popup()
+    {
+        delete grab;
     }
 
     weston_view *parent;
@@ -157,10 +148,7 @@ struct Popup {
 static void popupDestroyed(wl_listener *listener, void *data)
 {
     weston_surface *surface = static_cast<weston_surface *>(data);
-    Popup *popup = static_cast<Popup *>(surface->configure_private);
-    if (popup && popup->grab && !popup->grab->dismissed)
-        popup->grab->dismiss();
-    delete popup;
+    delete static_cast<Popup *>(surface->configure_private);
 }
 
 class Splash
@@ -1142,7 +1130,6 @@ void DesktopShell::setPopup(struct wl_client *client, struct wl_resource *resour
         return;
 
     grab->shsurfResource = wl_resource_create(client, &wl_hawaii_popup_surface_interface, wl_resource_get_version(resource), id);
-    wl_resource_set_destructor(grab->shsurfResource, popupGrabDestroyed);
     wl_resource_set_user_data(grab->shsurfResource, grab);
 
     weston_seat *seat = container_of(compositor()->seat_list.next, weston_seat, link);
