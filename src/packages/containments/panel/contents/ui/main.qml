@@ -57,9 +57,10 @@ DropArea {
 
         id: currentLayout
         anchors {
-            fill: parent
-            rightMargin: configButton && isHorizontal ? configButton.width : 0
-            bottomMargin: configButton && !isHorizontal ? configButton.height : 0
+            left: parent.left
+            top: parent.top
+            right: isHorizontal && configButton ? configButton.left : parent.right
+            bottom: isHorizontal ? parent.bottom : (configButton ? configButton.top : parent.bottom)
         }
         rows: 1
         columns: 1
