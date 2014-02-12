@@ -90,10 +90,22 @@ bool PluginMetadata::load(const QString &fileName)
         } else {
             // Determine the plugin type
             QString type = d->entry->value(QStringLiteral("X-Hawaii-ServiceType")).toString();
-            if (type == QStringLiteral("Shell"))
-                d->type = PluginMetadata::ShellType;
-            else
+            if (type.startsWith(QStringLiteral("Hawaii/Shell"))) {
+                if (type.endsWith(QStringLiteral("/Element")))
+                    d->type = PluginMetadata::ElementType;
+                else if (type.endsWith(QStringLiteral("/Containment")))
+                    d->type = PluginMetadata::ContainmentType;
+                else if (type.endsWith(QStringLiteral("/ToolBox")))
+                    d->type = PluginMetadata::ToolBoxType;
+                else if (type.endsWith(QStringLiteral("/Shell")))
+                    d->type = PluginMetadata::ShellType;
+                else if (type.endsWith(QStringLiteral("/LookAndFeel")))
+                    d->type = PluginMetadata::LookAndFeelType;
+                else
+                    d->type = PluginMetadata::InvalidType;
+            } else {
                 d->type = PluginMetadata::InvalidType;
+            }
         }
 
         return true;

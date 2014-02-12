@@ -48,7 +48,11 @@ class HAWAIISHELL_EXPORT PluginMetadata
 public:
     enum Type {
         InvalidType = 0,
-        ShellType
+        ElementType,
+        ContainmentType,
+        ToolBoxType,
+        ShellType,
+        LookAndFeelType
     };
 
     /*!
@@ -75,7 +79,11 @@ public:
      * The X-Hawaii-PluginInfo-ServiceType key can only contain
      * one of the following values:
      * \list
-     *   \listitem Shell
+     *   \listitem Hawaii/Shell/Element
+     *   \listitem Hawaii/Shell/Containment
+     *   \listitem Hawaii/Shell/ToolBox
+     *   \listitem Hawaii/Shell/Shell
+     *   \listitem Hawaii/Shell/LookAndFeel
      * \endlist
      *
      * Use a descriptive name for X-Hawaii-PluginInfo-License such as GPL,
