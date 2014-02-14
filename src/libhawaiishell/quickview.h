@@ -132,6 +132,21 @@ public:
      */
     QRectF screenGeometry() const;
 
+protected:
+    /*!
+     * Shows the configuration window for this view.
+     * This method must be implemented by custom views to create and
+     * set configuration windows up.
+     */
+    virtual void showConfigurationWindow();
+
+    /*!
+     * Hide the configuration window for this view.
+     * This method must be implemented by custom views to hide and
+     * destroy the configuration window when it's not needed anymore.
+     */
+    virtual void hideConfigurationWindow();
+
 Q_SIGNALS:
     /*!
      * Emitted when the containment is changed.
