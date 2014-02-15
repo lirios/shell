@@ -39,6 +39,9 @@ class PanelConfigView : public ConfigView
 public:
     explicit PanelConfigView(PanelView *parent);
 
+protected:
+    void focusOutEvent(QFocusEvent *event);
+
 private:
     PanelView *m_panelView;
 

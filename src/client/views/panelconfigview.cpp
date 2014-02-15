@@ -69,6 +69,12 @@ PanelConfigView::PanelConfigView(PanelView *parent)
     setupGeometry();
 }
 
+void PanelConfigView::focusOutEvent(QFocusEvent *event)
+{
+    m_panelView->setConfiguring(false);
+    ConfigView::focusOutEvent(event);
+}
+
 void PanelConfigView::setSurfaceRole()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
