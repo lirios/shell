@@ -24,28 +24,16 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtQuick/QQuickItem>
+#ifndef CONFIGVIEW_H
+#define CONFIGVIEW_H
 
-#include "configwindow_p.h"
+#include <QtQuick/QQuickView>
 
-ConfigWindow::ConfigWindow(QWindow *parent)
-    : QQuickWindow(parent)
+class ConfigView : public QQuickView
 {
-    // Transparent color
-    setColor(Qt::transparent);
+    Q_OBJECT
+public:
+    explicit ConfigView(QWindow *parent = 0);
+};
 
-    // This is a frameless window
-    setFlags(flags() | Qt::FramelessWindowHint);
-
-    // Create platform window
-    create();
-}
-
-void ConfigWindow::setContent(QQuickItem *content)
-{
-    setWidth(content->width());
-    setHeight(content->height());
-    content->setParentItem(contentItem());
-}
-
-#include "moc_configwindow_p.cpp"
+#endif // CONFIGVIEW_H

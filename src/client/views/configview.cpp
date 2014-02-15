@@ -24,18 +24,24 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef CONFIGWINDOW_P_H
-#define CONFIGWINDOW_P_H
+#include <QtQuick/QQuickItem>
 
-#include <QtQuick/QQuickWindow>
+#include "configview.h"
 
-class ConfigWindow : public QQuickWindow
+ConfigView::ConfigView(QWindow *parent)
+    : QQuickView(parent)
 {
-    Q_OBJECT
-public:
-    explicit ConfigWindow(QWindow *parent = 0);
+    // Transparent color
+    setColor(Qt::transparent);
 
-    void setContent(QQuickItem *content);
-};
+    // Set custom window type
+    setFlags(Qt::BypassWindowManagerHint);
 
-#endif // CONFIGWINDOW_P_H
+    // Resize this view to root object
+    setResizeMode(QQuickView::SizeViewToRootObject);
+
+    // Create platform window
+    create();
+}
+
+#include "moc_configview.cpp"

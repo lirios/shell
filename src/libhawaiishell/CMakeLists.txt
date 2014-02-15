@@ -14,7 +14,6 @@ set(SOURCES
     applications/appinfo.cpp
     applications/applicationsmodel.cpp
     containment.cpp
-    configwindow_p.cpp
     corona.cpp
     element.cpp
     hawaiishell.cpp
