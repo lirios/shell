@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Styles 1.0
@@ -39,31 +40,44 @@ Item {
         containment.visible = true;
         containment.parent = styledItem;
         containment.anchors.fill = styledItem;
+        buttonContainer.parent = containment;
+        containment.configButton = buttonContainer;
+    }
+
+    QtObject {
+        id: d
+
+        property bool isHorizontal: panel.formFactor === Types.Horizontal
+        property int margin: 5
     }
 
     StyledItem {
         id: styledItem
         anchors.fill: parent
         style: Qt.createComponent(StyleSettings.path + "/PanelStyle.qml", panelView)
+    }
 
-        Item {
-            property bool isHorizontal: panel.formFactor === Types.Horizontal
-            property int margin: 10
+    Item {
+        id: buttonContainer
+        anchors {
+            right: d.isHorizontal ? parent.right : undefined
+            bottom: d.isHorizontal ? undefined : parent.bottom
+            horizontalCenter: d.isHorizontal ? undefined : parent.horizontalCenter
+            verticalCenter: d.isHorizontal ? parent.verticalCenter : undefined
+        }
+        width: button.width + (d.isHorizontal ? d.margin * 2 : 0)
+        height: button.height + (d.isHorizontal ? 0 : d.margin * 2)
+        z: 2000
 
-            id: root
-            anchors {
-                right: isHorizontal ? parent.right : undefined
-                bottom: isHorizontal ? undefined : parent.bottom
-                horizontalCenter: isHorizontal ? undefined : parent.horizontalCenter
-                verticalCenter: isHorizontal ? parent.verticalCenter : undefined
-            }
-            width: button.width + (isHorizontal ? margin : 0)
-            height: button.height + (isHorizontal ? 0 : margin)
+        RowLayout {
+            anchors.fill: parent
 
             ToolButton {
                 id: button
                 iconName: "preferences-other-symbolic"
                 onClicked: panel.configuring = !panel.configuring
+
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             }
         }
     }

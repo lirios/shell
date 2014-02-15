@@ -34,11 +34,7 @@ import "../code/LayoutManager.js" as LayoutManager
 MouseArea {
     id: configurationArea
     z: 1000
-    anchors {
-        fill: parent
-        rightMargin: (panel.formFactor !== Shell.Types.Vertical) ? handle.width : 0
-        bottomMargin: (panel.formFactor === Shell.Types.Vertical) ? handle.height : 0
-    }
+    anchors.fill: root
     cursorShape: pressed ? Qt.DragMoveCursor : Qt.ArrowCursor
     hoverEnabled: true
 
@@ -69,7 +65,7 @@ MouseArea {
                 var posInItem = mapToItem(item, mouse.x, mouse.y);
 
                 if ((panel.formFactor === Shell.Types.Vertical && posInItem.y < item.height/2) ||
-                    (panel.formFactor !== Shell.Types.Vertical && posInItem.x < item.width/2)) {
+                        (panel.formFactor !== Shell.Types.Vertical && posInItem.x < item.width/2)) {
                     LayoutManager.insertBefore(item, placeHolder);
                 } else {
                     LayoutManager.insertAfter(item, placeHolder);

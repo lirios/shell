@@ -60,12 +60,6 @@ public:
     void initializePackage(Package *package);
 };
 
-class ToolBoxPackage : public MainScriptPackage
-{
-public:
-    void initializePackage(Package *package);
-};
-
 class ShellPackage : public BasePackage
 {
 public:

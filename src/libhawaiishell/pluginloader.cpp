@@ -85,8 +85,6 @@ Package PluginLoader::loadPackage(const QString &format)
             structure = new ElementPackage();
         else if (format.endsWith("/Containment"))
             structure = new ContainmentPackage();
-        else if (format.endsWith("/ToolBox"))
-            structure = new ToolBoxPackage();
         else if (format.endsWith("/Shell"))
             structure = new ShellPackage();
         else if (format.endsWith("/LookAndFeel"))

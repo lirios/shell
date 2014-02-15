@@ -50,7 +50,6 @@ public:
         InvalidType = 0,
         ElementType,
         ContainmentType,
-        ToolBoxType,
         ShellType,
         LookAndFeelType
     };
@@ -81,7 +80,6 @@ public:
      * \list
      *   \listitem Hawaii/Shell/Element
      *   \listitem Hawaii/Shell/Containment
-     *   \listitem Hawaii/Shell/ToolBox
      *   \listitem Hawaii/Shell/Shell
      *   \listitem Hawaii/Shell/LookAndFeel
      * \endlist

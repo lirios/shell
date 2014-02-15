@@ -75,14 +75,6 @@ void ContainmentPackage::initializePackage(Package *package)
     package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
 }
 
-void ToolBoxPackage::initializePackage(Package *package)
-{
-    package->setDefaultPackageRoot(QStringLiteral("hawaii/toolboxes/"));
-
-    // User interface
-    package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
-}
-
 void ShellPackage::initializePackage(Package *package)
 {
     package->setDefaultPackageRoot(QStringLiteral("hawaii/shells/"));

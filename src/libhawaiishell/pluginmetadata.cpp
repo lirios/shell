@@ -95,8 +95,6 @@ bool PluginMetadata::load(const QString &fileName)
                     d->type = PluginMetadata::ElementType;
                 else if (type.endsWith(QStringLiteral("/Containment")))
                     d->type = PluginMetadata::ContainmentType;
-                else if (type.endsWith(QStringLiteral("/ToolBox")))
-                    d->type = PluginMetadata::ToolBoxType;
                 else if (type.endsWith(QStringLiteral("/Shell")))
                     d->type = PluginMetadata::ShellType;
                 else if (type.endsWith(QStringLiteral("/LookAndFeel")))
