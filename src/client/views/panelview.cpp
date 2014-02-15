@@ -69,7 +69,7 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     , m_surface(new PanelSurface())
 {
     // Let QML see us
-    rootContext()->setContextProperty("view", this);
+    rootContext()->setContextProperty("panel", this);
 
     // Resize root object to view
     setResizeMode(QuickView::SizeRootObjectToView);

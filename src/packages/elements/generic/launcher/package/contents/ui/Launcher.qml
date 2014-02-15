@@ -64,7 +64,7 @@ Element {
         ListView {
             id: listView
             anchors.fill: parent
-            orientation: view.formFactor === Types.Horizontal ? ListView.Horizontal : ListView.Vertical
+            orientation: panel.formFactor === Types.Horizontal ? ListView.Horizontal : ListView.Vertical
             model: VisualDataModel {
                 model: LauncherModel {}
                 delegate: LauncherDelegate {

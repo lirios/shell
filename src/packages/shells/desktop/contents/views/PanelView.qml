@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.0
 import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Styles 1.0
@@ -44,5 +45,26 @@ Item {
         id: styledItem
         anchors.fill: parent
         style: Qt.createComponent(StyleSettings.path + "/PanelStyle.qml", panelView)
+
+        Item {
+            property bool isHorizontal: panel.formFactor === Types.Horizontal
+            property int margin: 10
+
+            id: root
+            anchors {
+                right: isHorizontal ? parent.right : undefined
+                bottom: isHorizontal ? undefined : parent.bottom
+                horizontalCenter: isHorizontal ? undefined : parent.horizontalCenter
+                verticalCenter: isHorizontal ? parent.verticalCenter : undefined
+            }
+            width: button.width + (isHorizontal ? margin : 0)
+            height: button.height + (isHorizontal ? 0 : margin)
+
+            ToolButton {
+                id: button
+                iconName: "preferences-other-symbolic"
+                onClicked: panel.configuring = !panel.configuring
+            }
+        }
     }
 }
