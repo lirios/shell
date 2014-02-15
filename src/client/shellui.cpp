@@ -124,7 +124,7 @@ void ShellUi::load()
 void ShellUi::unload()
 {
     // Don't unload until we know which shell is loaded
-    if (m_shell.isEmpty())
+    if (shell().isEmpty())
         return;
 
     // Destroy grab window
@@ -182,10 +182,10 @@ void ShellUi::setNumWorkspaces(int num)
         controller->removeWorkspace(--m_numWorkspaces);
 }
 
-void ShellUi::setShell(const QString &shell)
+void ShellUi::changeShell(const QString &value)
 {
     // Avoid loading the same shell twice
-    if (m_shell == shell)
+    if (shell() == value)
         return;
 
     // Keep track of elapsed time
@@ -196,18 +196,18 @@ void ShellUi::setShell(const QString &shell)
     unload();
 
     // Save shell name
-    m_shell = shell;
+    setShell(value);
 
     // Load package
     Hawaii::Shell::Package package = Hawaii::Shell::PluginLoader::instance()->loadPackage("Hawaii/Shell/Shell");
-    package.setPath(shell);
+    package.setPath(value);
     setPackage(package);
 
     // Load the new one
     load();
 
     // Print how much did it take to load the new shell
-    qDebug() << "Shell handler" << shell << "loaded in" << elapsed.elapsed() << "ms";
+    qDebug() << "Shell handler" << shell() << "loaded in" << elapsed.elapsed() << "ms";
 }
 
 void ShellUi::setLookAndFeel(const QString &lookAndFeel)

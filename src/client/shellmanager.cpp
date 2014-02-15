@@ -191,14 +191,14 @@ void ShellManager::create()
     connect(m_registryListener->shell, &ShellClient::cursorChanged,
             m_shellUi, &ShellUi::setGrabCursor);
     connect(this, &ShellManager::shellChanged,
-            m_shellUi, &ShellUi::setShell);
+            m_shellUi, &ShellUi::changeShell);
 
     // Add configured workspaces
     // TODO: Add as many workspaces as specified by the settings
     m_shellController->addWorkspaces(4);
 
     // Load user interface
-    m_shellUi->setShell(m_currentHandler->property("shell").toString());
+    m_shellUi->changeShell(m_currentHandler->property("shell").toString());
     m_shellUi->setLookAndFeel("org.hawaii.lookandfeel.standard");
 
     // Shell user interface is ready, tell the compositor to fade in

@@ -68,7 +68,7 @@ public Q_SLOTS:
 
     void setNumWorkspaces(int num);
 
-    void setShell(const QString &shell);
+    void changeShell(const QString &value);
     void setLookAndFeel(const QString &lookAndFeel);
 
 private:
@@ -79,7 +79,6 @@ private:
     QList<DesktopView *> m_desktopViews;
     QList<PanelView *> m_panelViews;
     Hawaii::Shell::Package m_package;
-    QString m_shell;
     QString m_lookAndFeel;
 
     void synchronize();
