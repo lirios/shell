@@ -57,10 +57,7 @@ BaseConfigView {
                     exclusiveGroup: positionGroup
                     checkable: true
                     checked: panel.location === Types.LeftEdge
-                    onClicked: {
-                        if (panel.location !== Types.LeftEdge)
-                            panel.location = Types.LeftEdge;
-                    }
+                    onClicked: panel.location = Types.LeftEdge
                 }
 
                 ToolButton {
@@ -69,10 +66,7 @@ BaseConfigView {
                     exclusiveGroup: positionGroup
                     checkable: true
                     checked: panel.location === Types.TopEdge
-                    onClicked: {
-                        if (panel.location !== Types.TopEdge)
-                            panel.location = Types.TopEdge;
-                    }
+                    onClicked: panel.location = Types.TopEdge
                 }
 
                 ToolButton {
@@ -81,10 +75,7 @@ BaseConfigView {
                     exclusiveGroup: positionGroup
                     checkable: true
                     checked: panel.location === Types.RightEdge
-                    onClicked: {
-                        if (panel.location !== Types.RightEdge)
-                            panel.location = Types.RightEdge;
-                    }
+                    onClicked: panel.location = Types.RightEdge
                 }
 
                 ToolButton {
@@ -93,10 +84,7 @@ BaseConfigView {
                     exclusiveGroup: positionGroup
                     checkable: true
                     checked: panel.location === Types.BottomEdge
-                    onClicked: {
-                        if (panel.location !== Types.BottomEdge)
-                            panel.location = Types.BottomEdge;
-                    }
+                    onClicked: panel.location = Types.BottomEdge
                 }
             }
         }
