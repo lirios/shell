@@ -56,7 +56,7 @@ macro(hawaiishell_install_package type name srcpath)
     else()
         message(FATAL_ERROR "Package type \"${type}\" not recognized, "
                             "possible values: \"element\", \"shell\", "
-                            "\"lookandfeeld\", \"containment\", \"toolbox\"")
+                            "\"lookandfeel\", \"containment\", \"toolbox\"")
     endif()
 
     install(DIRECTORY ${srcpath}/ DESTINATION ${CMAKE_INSTALL_DATADIR}/${dstpath}/${name}
