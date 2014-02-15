@@ -111,24 +111,32 @@ BaseConfigView {
                     text: qsTr("Small")
                     exclusiveGroup: sizeGroup
                     checkable: true
+                    checked: panel.thickness == 40
+                    onClicked: panel.thickness = 40
                 }
 
                 ToolButton {
                     text: qsTr("Medium")
                     exclusiveGroup: sizeGroup
                     checkable: true
+                    checked: panel.thickness == 60
+                    onClicked: panel.thickness = 60
                 }
 
                 ToolButton {
                     text: qsTr("Large")
                     exclusiveGroup: sizeGroup
                     checkable: true
+                    checked: panel.thickness == 80
+                    onClicked: panel.thickness = 80
                 }
 
                 ToolButton {
                     text: qsTr("Huge")
                     exclusiveGroup: sizeGroup
                     checkable: true
+                    checked: panel.thickness == 120
+                    onClicked: panel.thickness = 120
                 }
             }
         }
@@ -144,6 +152,8 @@ BaseConfigView {
                     iconName: "align-horizontal-left"
                     exclusiveGroup: alignmentGroup
                     checkable: true
+                    checked: panel.alignment == Qt.AlignLeft
+                    onClicked: panel.alignment = Qt.AlignLeft
                 }
 
                 ToolButton {
@@ -151,6 +161,8 @@ BaseConfigView {
                     iconName: "align-horizontal-center"
                     exclusiveGroup: alignmentGroup
                     checkable: true
+                    checked: panel.alignment == Qt.AlignCenter
+                    onClicked: panel.alignment = Qt.AlignCenter
                 }
 
                 ToolButton {
@@ -158,6 +170,8 @@ BaseConfigView {
                     iconName: "align-horizontal-right"
                     exclusiveGroup: alignmentGroup
                     checkable: true
+                    checked: panel.alignment == Qt.AlignRight
+                    onClicked: panel.alignment = Qt.AlignRight
                 }
             }
         }
