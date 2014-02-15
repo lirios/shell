@@ -27,7 +27,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QElapsedTimer>
 #include <QtQml/QQmlContext>
-#include <QtQml/QQmlPropertyMap>
 #include <QtQuick/QQuickItem>
 
 #include <QtConfiguration/QConfiguration>
@@ -51,7 +50,6 @@ public:
 
     void loadToolBox();
 
-    QQmlPropertyMap settings;
     QConfiguration *configuration;
     Corona *corona;
     Types::ContainmentType type;
@@ -120,18 +118,12 @@ Containment::Containment(Corona *corona, QObject *parent)
     d->qmlObject = new QmlObject(this);
     d->qmlObject->setInitializationDelayed(true);
 
-    // Default configuration
-    d->settings.insert("formFactor", d->formFactor);
-    d->settings.insert("location", d->location);
-
-#if 0
     // Save and load settings
     static int containmentId = 0;
     const QString section = QString("shell/%1/containments/containment%2")
             .arg(corona->shell())
             .arg(QString::number(containmentId++));
-    d->configuration = new QConfiguration(&d->settings, section, this);
-#endif
+    d->configuration = new QConfiguration(this, section, this);
 }
 
 Containment::~Containment()
