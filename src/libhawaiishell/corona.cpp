@@ -61,6 +61,21 @@ QQmlEngine *Corona::engine() const
     return d->engine;
 }
 
+QString Corona::shell() const
+{
+    Q_D(const Corona);
+    return d->shell;
+}
+
+void Corona::setShell(const QString &shell)
+{
+    Q_D(Corona);
+    if (d->shell != shell) {
+        d->shell = shell;
+        Q_EMIT shellChanged(d->shell);
+    }
+}
+
 Package Corona::package() const
 {
     Q_D(const Corona);

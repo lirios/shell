@@ -39,6 +39,7 @@ public:
     CoronaPrivate(Corona *parent);
 
     QQmlEngine *engine;
+    QString shell;
     Package package;
 
 protected:

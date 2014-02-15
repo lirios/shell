@@ -41,17 +41,24 @@ class CoronaPrivate;
 class HAWAIISHELL_EXPORT Corona : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString shell READ shell NOTIFY shellChanged)
 public:
     explicit Corona(QObject *parent = 0);
     ~Corona();
 
     QQmlEngine *engine() const;
 
+    QString shell() const;
+
     Package package() const;
     void setPackage(const Package &package);
 
 Q_SIGNALS:
+    void shellChanged(const QString &shell);
     void packageChanged(const Package &package);
+
+protected:
+    void setShell(const QString &shell);
 
 private:
     Q_DECLARE_PRIVATE(Corona)
