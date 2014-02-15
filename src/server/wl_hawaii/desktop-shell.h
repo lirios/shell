@@ -155,6 +155,10 @@ private:
                      struct wl_resource *surface_resource,
                      int32_t x, int32_t y);
 
+    void setConfigSurface(wl_client *client, wl_resource *resource,
+                          wl_resource *output_resource,
+                          wl_resource *surface_resource);
+
     void lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t sy);
     void setLockSurface(struct wl_client *client, struct wl_resource *resource, struct wl_resource *surface_resource);
 
