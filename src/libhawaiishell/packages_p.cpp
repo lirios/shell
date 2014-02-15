@@ -73,12 +73,6 @@ void ContainmentPackage::initializePackage(Package *package)
 
     // User interface
     package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
-
-    // Configuration view
-    package->addFileDefinition("configuration",
-                               QStringLiteral("configuration/ConfigurationView.qml"),
-                               tr("Configuration User Interface"));
-    package->setMimeTypes("configuration", QStringList() << QStringLiteral("text/x-qml"));
 }
 
 void ToolBoxPackage::initializePackage(Package *package)
@@ -96,6 +90,18 @@ void ShellPackage::initializePackage(Package *package)
     // Views
     package->addDirectoryDefinition("views", QStringLiteral("views"), tr("User interface for the views"));
     package->setMimeTypes("views", QStringList() << QStringLiteral("text/x-qml"));
+
+    // Desktop configuration view
+    package->addFileDefinition("desktopconfigurationview",
+                               QStringLiteral("configuration/DesktopConfigView.qml"),
+                               tr("Configuration User Interface"));
+    package->setMimeTypes("desktopconfigurationview", QStringList() << QStringLiteral("text/x-qml"));
+
+    // Panel configuration view
+    package->addFileDefinition("panelconfigurationview",
+                               QStringLiteral("configuration/PanelConfigView.qml"),
+                               tr("Configuration User Interface"));
+    package->setMimeTypes("panelconfigurationview", QStringList() << QStringLiteral("text/x-qml"));
 
     // Loader
     package->addFileDefinition("loader", QStringLiteral("loader.qml"),
