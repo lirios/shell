@@ -28,6 +28,7 @@
 #ifndef PANELVIEW_H
 #define PANELVIEW_H
 
+#include <QtCore/QPointer>
 #include <QtQml/QQmlPropertyMap>
 
 #include <QtConfiguration/QConfiguration>
@@ -37,6 +38,7 @@
 #include <HawaiiShell/QuickView>
 
 class QScreen;
+class PanelConfigView;
 class PanelSurface;
 class ShellUi;
 
@@ -81,6 +83,10 @@ public:
 public Q_SLOTS:
     void addElement(const QString &name);
 
+protected:
+    void showConfigurationWindow();
+    void hideConfigurationWindow();
+
 Q_SIGNALS:
     void maximizedChanged();
     void alignmentChanged();
@@ -106,6 +112,7 @@ private:
     QSet<QString> m_elementsSet;
     QList<Hawaii::Shell::Element *> m_elements;
     PanelSurface *m_surface;
+    QPointer<PanelConfigView> m_configView;
 
     void setWindowType();
     void restore();

@@ -66,6 +66,7 @@ set(SOURCES
     views/configview.cpp
     views/desktopview.cpp
     views/lockscreenview.cpp
+    views/panelconfigview.cpp
     views/panelview.cpp
     windowtypes/grabwindow.cpp
     wayland/panelsurface.cpp

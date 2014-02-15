@@ -56,10 +56,10 @@ BaseConfigView {
                     iconName: "align-horizontal-left"
                     exclusiveGroup: positionGroup
                     checkable: true
-                    checked: hawaiiShellQuickView.location === Types.LeftEdge
+                    checked: panel.location === Types.LeftEdge
                     onClicked: {
-                        if (hawaiiShellQuickView.location !== Types.LeftEdge)
-                            hawaiiShellQuickView.location = Types.LeftEdge;
+                        if (panel.location !== Types.LeftEdge)
+                            panel.location = Types.LeftEdge;
                     }
                 }
 
@@ -68,10 +68,10 @@ BaseConfigView {
                     iconName: "align-vertical-top"
                     exclusiveGroup: positionGroup
                     checkable: true
-                    checked: hawaiiShellQuickView.location === Types.TopEdge
+                    checked: panel.location === Types.TopEdge
                     onClicked: {
-                        if (hawaiiShellQuickView.location !== Types.TopEdge)
-                            hawaiiShellQuickView.location = Types.TopEdge;
+                        if (panel.location !== Types.TopEdge)
+                            panel.location = Types.TopEdge;
                     }
                 }
 
@@ -80,10 +80,10 @@ BaseConfigView {
                     iconName: "align-horizontal-right"
                     exclusiveGroup: positionGroup
                     checkable: true
-                    checked: hawaiiShellQuickView.location === Types.RightEdge
+                    checked: panel.location === Types.RightEdge
                     onClicked: {
-                        if (hawaiiShellQuickView.location !== Types.RightEdge)
-                            hawaiiShellQuickView.location = Types.RightEdge;
+                        if (panel.location !== Types.RightEdge)
+                            panel.location = Types.RightEdge;
                     }
                 }
 
@@ -92,10 +92,10 @@ BaseConfigView {
                     iconName: "align-vertical-bottom"
                     exclusiveGroup: positionGroup
                     checkable: true
-                    checked: hawaiiShellQuickView.location === Types.BottomEdge
+                    checked: panel.location === Types.BottomEdge
                     onClicked: {
-                        if (hawaiiShellQuickView.location !== Types.BottomEdge)
-                            hawaiiShellQuickView.location = Types.BottomEdge;
+                        if (panel.location !== Types.BottomEdge)
+                            panel.location = Types.BottomEdge;
                     }
                 }
             }

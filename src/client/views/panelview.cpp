@@ -37,6 +37,7 @@
 
 #include "element.h"
 #include "elementfactory.h"
+#include "panelconfigview.h"
 #include "panelview.h"
 #include "panelsurface.h"
 #include "shellmanager.h"
@@ -294,6 +295,21 @@ void PanelView::addElement(const QString &name)
     Hawaii::Shell::Element *element = ElementFactory::createElement(name);
     m_elements.append(element);
     Q_EMIT elementAdded(element);
+}
+
+void PanelView::showConfigurationWindow()
+{
+    // Recreate the window if necessary and show it
+    if (!m_configView)
+        m_configView = new PanelConfigView(this);
+    m_configView.data()->show();
+}
+
+void PanelView::hideConfigurationWindow()
+{
+    // Hide and destroy the window
+    if (m_configView)
+        m_configView.data()->hide();
 }
 
 void PanelView::setWindowType()
