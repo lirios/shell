@@ -29,7 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Shell 1.0
 
-ConfigurationBaseView {
+BaseConfigView {
     id: root
 
     ExclusiveGroup {
