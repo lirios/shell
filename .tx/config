@@ -48,3 +48,9 @@ type = DESKTOP
 source_lang = en
 source_file = translations/packages/shells/tablet.desktop
 file_filter = translations/packages/shells/tablet_<lang>.desktop
+
+[hawaii.shell-lookandfeel-standard-metadata]
+type = DESKTOP
+source_lang = en
+source_file = translations/packages/lookandfeel/standard.desktop
+file_filter = translations/packages/lookandfeel/standard_<lang>.desktop
