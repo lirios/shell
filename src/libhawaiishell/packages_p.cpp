@@ -59,6 +59,22 @@ void MainScriptPackage::pathChanged(Package *package)
         package->addFileDefinition("mainscript", mainScript, tr("Main script file"));
 }
 
+void BackgroundPackage::initializePackage(Package *package)
+{
+    package->setDefaultPackageRoot(QStringLiteral("hawaii/backgrounds/"));
+
+    // User interface
+    package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
+
+    // System Preferences views
+    package->addDirectoryDefinition("preferences", QStringLiteral("preferences"),
+                                    tr("Code and resources for the preferences user interface"));
+    package->addFileDefinition("preferencesview",
+                               QStringLiteral("preferences/Preferences.qml"),
+                               tr("User interface for System Preferences"));
+    package->setMimeTypes("preferencesview", QStringList() << QStringLiteral("text/x-qml"));
+}
+
 void ElementPackage::initializePackage(Package *package)
 {
     package->setDefaultPackageRoot(QStringLiteral("hawaii/elements/"));

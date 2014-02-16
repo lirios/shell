@@ -35,15 +35,17 @@
 #
 # Installs a Hawaii Shell package.
 #
-# \param type the package type, one of the following: element, shell,
-#             lookandfeel, containment
+# \param type the package type, one of the following: background,
+#             element, shell, lookandfeel, containment
 # \param name the package name, same as the "name" key value
 #             from metadata.json
 # \param srcpath the source path to install from, it's the
 #                directory that contains metadata.json
 #
 macro(hawaiishell_install_package type name srcpath)
-    if("${type}" STREQUAL "element")
+    if("${type}" STREQUAL "background")
+        set(dstpath hawaii/backgrounds)
+    elseif("${type}" STREQUAL "element")
         set(dstpath hawaii/elements)
     elseif("${type}" STREQUAL "shell")
         set(dstpath hawaii/shells)

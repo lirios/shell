@@ -48,6 +48,7 @@ class HAWAIISHELL_EXPORT PluginMetadata
 public:
     enum Type {
         InvalidType = 0,
+        BackgroundType,
         ElementType,
         ContainmentType,
         ShellType,
@@ -77,6 +78,7 @@ public:
      *
      * The "type" key can only contain one of the following values:
      * \list
+     *   \listitem background
      *   \listitem element
      *   \listitem containment
      *   \listitem shell

@@ -177,7 +177,9 @@ bool PluginMetadata::load(const QString &fileName)
 
     // Determine the plugin type
     QString type = d->json.value(QStringLiteral("type")).toString();
-    if (type == QStringLiteral("element"))
+    if (type == QStringLiteral("background"))
+        d->type = PluginMetadata::BackgroundType;
+    else if (type == QStringLiteral("element"))
         d->type = PluginMetadata::ElementType;
     else if (type == QStringLiteral("containment"))
         d->type = PluginMetadata::ContainmentType;

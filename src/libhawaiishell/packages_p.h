@@ -48,6 +48,12 @@ protected:
     void pathChanged(Package *package);
 };
 
+class BackgroundPackage : public MainScriptPackage
+{
+public:
+    void initializePackage(Package *package);
+};
+
 class ElementPackage : public MainScriptPackage
 {
 public:
