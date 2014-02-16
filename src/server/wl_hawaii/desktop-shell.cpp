@@ -1331,6 +1331,7 @@ const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::addTrustedClient),
     wrapInterface(&DesktopShell::addKeyBinding),
     wrapInterface(&DesktopShell::setAvailableGeometry),
+    wrapInterface(&DesktopShell::setBackground),
     wrapInterface(&DesktopShell::setConfigSurface),
     wrapInterface(&DesktopShell::setLockSurface),
     wrapInterface(&DesktopShell::setGrabSurface),
@@ -1346,7 +1347,6 @@ const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
 };
 
 const struct wl_hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl = {
-    wrapInterface(&DesktopShell::setBackground),
     wrapInterface(&DesktopShell::setOverlay),
     wrapInterface(&DesktopShell::setPopup),
     wrapInterface(&DesktopShell::setDialog)
