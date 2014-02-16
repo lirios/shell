@@ -10,7 +10,6 @@ include_directories(
     ${WaylandClient_INCLUDE_DIRS}
     ${QtAccountsService_INCLUDE_DIRS}
     ${ALSA_INCLUDE_DIR}
-    ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell/applications

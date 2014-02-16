@@ -4,12 +4,10 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/applications
     ${CMAKE_CURRENT_SOURCE_DIR}/settings
-    ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 set(SOURCES
-    ${CMAKE_SOURCE_DIR}/3rdparty/libqtxdg/xdgdesktopfile.cpp
     applications/appcategories.cpp
     applications/appinfo.cpp
     applications/applicationsmodel.cpp
@@ -28,6 +26,7 @@ set(SOURCES
     settings/backgroundsettings.cpp
     settings/launchersettings.cpp
     settings/shellsettings.cpp
+    xdgdesktopfile.cpp
 )
 
 set(HEADERS
