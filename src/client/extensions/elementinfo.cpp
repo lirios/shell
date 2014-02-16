@@ -57,7 +57,7 @@ Hawaii::Shell::Element *ElementInfo::createElement()
     QElapsedTimer timer;
     timer.start();
 
-    QString fileName = m_metadata.property(QStringLiteral("X-Hawaii-MainScript")).toString();
+    QString fileName = m_metadata.mainScript();
     QString path = m_dir.absoluteFilePath(fileName);
 
     qDebug() << "-> Loading element" << m_metadata.internalName();
