@@ -1,0 +1,7 @@
+[Unit]
+Description=Hawaii session
+#Requires=dbus.socket
+AllowIsolate=true
+
+[Install]
+Alias=default.target
