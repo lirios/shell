@@ -38,7 +38,7 @@ void ElementFactory::searchElements()
     QDir elementsDir(QStringLiteral(INSTALL_DATADIR) + QStringLiteral("/hawaii/elements"));
     for (const QString &dirName: elementsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
         const QString &metadataFileName =
-                elementsDir.absoluteFilePath(dirName + QStringLiteral("/metadata.desktop"));
+                elementsDir.absoluteFilePath(dirName + QStringLiteral("/metadata.json"));
 
         // Try to load plugin metadata, return if it's not valid
         Hawaii::Shell::PluginMetadata metadata(metadataFileName);

@@ -130,7 +130,7 @@ void ShellManager::loadHandlers()
 {
     QDir shellsDir(QStringLiteral(INSTALL_DATADIR) + QStringLiteral("/hawaii/shells"));
     for (const QString &dirName: shellsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-        const QString &metadataFileName = shellsDir.absoluteFilePath(dirName + QStringLiteral("/metadata.desktop"));
+        const QString &metadataFileName = shellsDir.absoluteFilePath(dirName + QStringLiteral("/metadata.json"));
         const QString &qmlFileName = shellsDir.absoluteFilePath(dirName + QStringLiteral("/contents/loader.qml"));
 
         // Try to load plugin metadata, return if it's not valid
