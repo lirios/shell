@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+#
+# Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+#
+# Author(s):
+#    Pier Luigi Fiorini
+#
+# $BEGIN_LICENSE:GPL2+$
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# $END_LICENSE$
+#
+
+import sys, json
+from collections import OrderedDict
+
+def load_translations(files):
+    translations = {}
+    keymap = {
+        "Name": "title",
+        "Comment": "description"
+    }
+
+    import glob, re
+    l = glob.glob(files)
+    for filename in l:
+        f = open(filename, "r")
+        for line in f.readlines():
+            line = line.rstrip()
+            if not re.match(r'^(?:Name|Comment)\[.+\]=', line):
+                continue
+            for (k, v) in [line.split("=")]:
+                m = re.match(r'(Name|Comment)\[(.+)\]', k)
+                if m:
+                    if not translations.get(m.group(2)):
+                        translations[m.group(2)] = {}
+                    translations[m.group(2)][keymap[m.group(1)]] = v
+    return translations
+
+def load(filename):
+    f = open(filename, "r")
+    data = "\n".join(f.readlines())
+    f.close()
+    return json.loads(data, object_pairs_hook=OrderedDict)
+
+def update(filename, translations):
+    # Load JSON file into an ordered dictionary
+    d = load(filename)
+
+    # Update dictionary with translations
+    if not d.get("translations"):
+        d["translations"] = OrderedDict({})
+    sorted(translations, key=lambda key: translations[key])
+    for lang in translations.keys():
+        for k in ("title", "description"):
+            if not d["translations"].get(lang):
+                d["translations"][lang] = OrderedDict({})
+            d["translations"][lang][k] = translations[lang][k]
+
+    # Write updates to the file
+    data = json.dumps(d, indent=4, separators=(",", ": "))
+    f = open(filename, "w")
+    f.write(data + "\n")
+    f.close()
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        sys.stderr.write("Usage: %s [json file] [glob]\n" % sys.argv[0])
+        sys.stderr.write("Updates JSON file with translations from desktop files.\n")
+        sys.stderr.write("Example:\n")
+        sys.stderr.write("\t%s ../src/packages/shells/desktop/metadata.json packages/shells/desktop_*.desktop\n" % sys.argv[0])
+        sys.exit(1)
+    translations = load_translations(sys.argv[2])
+    update(sys.argv[1], translations)
