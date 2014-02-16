@@ -1,0 +1,10 @@
+[Unit]
+Description=Hawaii desktop environment (Weston)
+
+[Service]
+Type=notify
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii
+
+[Install]
+Alias=hawaii.service
+WantedBy=hawaii.target

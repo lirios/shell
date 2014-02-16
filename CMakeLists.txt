@@ -84,6 +84,7 @@ find_package(GreenIsland REQUIRED)
 
 # Subdirectories
 add_subdirectory(compositor)
+add_subdirectory(data)
 add_subdirectory(declarative)
 add_subdirectory(framework)
 add_subdirectory(headers)
