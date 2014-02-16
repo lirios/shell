@@ -57,39 +57,48 @@ public:
     /*!
      * Read plugin metadata from \a fileName.
      *
-     * Plugin metadata are basically desktop entries and should be in
-     * the following form:
+     * Plugin metadata are JSON documents and should be in the following form:
      *
      * \code
-     * [DesktopEntry]
-     * Name=User Visible Name
-     * Comment=Description of what the plugin does.
-     * Type=Service
-     *
-     * X-Hawaii-ServiceType=...
-     * X-Hawaii-PluginInfo-Name=internalname
-     * X-Hawaii-PluginInfo-Version=Version number
-     * X-Hawaii-PluginInfo-License=License name
-     * X-Hawaii-PluginInfo-AuthorName=Author's Name
-     * X-Hawaii-PluginInfo-AuthorEmail=Author's Email
-     * X-Hawaii-PluginInfo-WebSite=http://plugin.org
+     * {
+     *     "name": "internal name",
+     *     "type": "...",
+     *     "version": "version number",
+     *     "license": "license name",
+     *     "title": "user visible name";
+     *     "description": "description of what the plugin does",
+     *     "icon-name": "icon name from Freedesktop.org Icon Naming Specification",
+     *     "author-name": "author's name",
+     *     "author-email": "author's email address",
+     *     "website": "http://plugin.org",
+     *     "mainscript": "path/to/mainfile.ext"
+     * }
      * \endcode
      *
-     * The X-Hawaii-PluginInfo-ServiceType key can only contain
-     * one of the following values:
+     * The "type" key can only contain one of the following values:
      * \list
-     *   \listitem Hawaii/Shell/Element
-     *   \listitem Hawaii/Shell/Containment
-     *   \listitem Hawaii/Shell/Shell
-     *   \listitem Hawaii/Shell/LookAndFeel
+     *   \listitem element
+     *   \listitem containment
+     *   \listitem shell
+     *   \listitem lookandfeel
      * \endlist
      *
-     * Use a descriptive name for X-Hawaii-PluginInfo-License such as GPL,
-     * GPLv2, or GPLv2+ if the plugin is licensed under the terms of the
+     * The "icon-name" key is not mandatory, especially for non visual
+     * items such as containments. It's generally used only for elements.
+     *
+     * Use a descriptive name for "license" such as GPL, GPLv2, or GPLv2+
+     * if the plugin is licensed under the terms of the
      * GNU General Public License v2 or (at your option) any later version.
      *
-     * Don't use nick names for X-Hawaii-PluginInfo-Author, please use
-     * your first and last name.
+     * Don't use nick names for "author-name", please use your first and
+     * last name.
+     *
+     * If "type" is "containment" you must add the "containment-type" key
+     * with one of the following values:
+     * \list
+     *   \listitem desktop
+     *   \listitem panel
+     * \endlist
      *
      * \param fileName name with full path of the plugin metadata
      */
@@ -169,6 +178,11 @@ public:
      * \return web site.
      */
     QString webSite() const;
+
+    /*!
+     * \return the main script.
+     */
+    QString mainScript() const;
 
     /*!
      * Returns the value associated with \a key.

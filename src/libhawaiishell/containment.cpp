@@ -171,10 +171,10 @@ void Containment::setPackage(const Package &package)
 
     // Read the containment type
     QString containmentType = package.metadata().property(
-                QStringLiteral("X-Hawaii-ContainmentType")).toString();
-    if (containmentType == QStringLiteral("Desktop"))
+                QStringLiteral("containment-type")).toString();
+    if (containmentType == QStringLiteral("desktop"))
         d->type = Types::DesktopContainment;
-    else if (containmentType == QStringLiteral("Panel"))
+    else if (containmentType == QStringLiteral("panel"))
         d->type = Types::PanelContainment;
     else
         qFatal("Containment \"%s\" has an invalid type \"%s\", aborting...",

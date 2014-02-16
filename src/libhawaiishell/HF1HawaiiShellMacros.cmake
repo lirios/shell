@@ -37,10 +37,10 @@
 #
 # \param type the package type, one of the following: element, shell,
 #             lookandfeel, containment
-# \param name the package name, same as the X-Hawaii-PluginInfo-Name
-#             key value from metadata.desktop
+# \param name the package name, same as the "name" key value
+#             from metadata.json
 # \param srcpath the source path to install from, it's the
-#                directory that contains metadata.desktop
+#                directory that contains metadata.json
 #
 macro(hawaiishell_install_package type name srcpath)
     if("${type}" STREQUAL "element")

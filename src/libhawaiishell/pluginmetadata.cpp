@@ -24,8 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QFile>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
+
 #include "pluginmetadata.h"
-#include "xdgdesktopfile.h"
 
 namespace Hawaii {
 
@@ -39,21 +42,85 @@ class PluginMetadataPrivate
 {
 public:
     PluginMetadataPrivate();
-    ~PluginMetadataPrivate();
 
-    XdgDesktopFile *entry;
+    /************************************************
+     * LC_MESSAGES value	Possible keys in order of matching
+     * lang_COUNTRY@MODIFIER	lang_COUNTRY@MODIFIER, lang_COUNTRY, lang@MODIFIER, lang,
+     *                        default value
+     * lang_COUNTRY	        lang_COUNTRY, lang, default value
+     * lang@MODIFIER	        lang@MODIFIER, lang, default value
+     * lang	                lang, default value
+     *
+     * This function is derivate from libqtxdg code.
+     * Copyright (C) 2010-2011 Razor team
+     * Author: Alexander Sokoloff <sokoloff.a@gmail.com>
+     ************************************************/
+    QStringList currentLanguage() const
+    {
+        QStringList list;
+        QString lang = QString::fromUtf8(getenv("LC_MESSAGES"));
+
+        if (lang.isEmpty())
+            lang = QString::fromUtf8(getenv("LC_ALL"));
+        if (lang.isEmpty())
+            lang = QString::fromUtf8(getenv("LANG"));
+
+        QString modifier = lang.section('@', 1);
+        if (!modifier.isEmpty())
+            lang.truncate(lang.length() - modifier.length() - 1);
+
+        QString encoding = lang.section('.', 1);
+        if (!encoding.isEmpty())
+            lang.truncate(lang.length() - encoding.length() - 1);
+
+
+        QString country = lang.section('_', 1);
+        if (!country.isEmpty())
+            lang.truncate(lang.length() - country.length() - 1);
+
+        if (!modifier.isEmpty() && !country.isEmpty())
+            list.append(QString("%1_%2@%3").arg(lang, country, modifier));
+
+        if (!country.isEmpty())
+            list.append(QString("%1_%2").arg(lang, country));
+
+        if (!modifier.isEmpty())
+            list.append(QString("%1@%2").arg(lang, modifier));
+
+        list.append(lang);
+
+        return list;
+    }
+
+    QVariant localizedValue(const QString &key) const
+    {
+        if (!valid)
+            return QVariant();
+
+        QVariantMap translations = json.value(QStringLiteral("translations")).toObject().toVariantMap();
+        QStringList langs = currentLanguage();
+        for (QString lang: translations.keys()) {
+            if (langs.contains(lang)) {
+                QMap<QString, QVariant> map = translations[lang].toMap();
+                if (map.contains(key))
+                    return translations[lang].toMap()[key];
+                return json.value(key);
+            }
+        }
+
+        return json.value(key);
+    }
+
+    bool valid;
+    QFile file;
+    QJsonObject json;
     PluginMetadata::Type type;
 };
 
 PluginMetadataPrivate::PluginMetadataPrivate()
-    : entry(nullptr)
+    : valid(false)
     , type(PluginMetadata::InvalidType)
 {
-}
-
-PluginMetadataPrivate::~PluginMetadataPrivate()
-{
-    delete entry;
 }
 
 /*
@@ -73,49 +140,62 @@ PluginMetadata::PluginMetadata()
 
 PluginMetadata::~PluginMetadata()
 {
-    //delete d_ptr;
+    delete d_ptr;
 }
 
 bool PluginMetadata::load(const QString &fileName)
 {
     Q_D(PluginMetadata);
 
-    if (!d->entry)
-        d->entry = new XdgDesktopFile();
-    if (d->entry->load(fileName)) {
-        if (d->entry->value(QStringLiteral("Type")).toString() != QStringLiteral("Service")) {
-            // Unload metadata if it's not the right type
-            delete d->entry;
-            d->entry = nullptr;
-        } else {
-            // Determine the plugin type
-            QString type = d->entry->value(QStringLiteral("X-Hawaii-ServiceType")).toString();
-            if (type.startsWith(QStringLiteral("Hawaii/Shell"))) {
-                if (type.endsWith(QStringLiteral("/Element")))
-                    d->type = PluginMetadata::ElementType;
-                else if (type.endsWith(QStringLiteral("/Containment")))
-                    d->type = PluginMetadata::ContainmentType;
-                else if (type.endsWith(QStringLiteral("/Shell")))
-                    d->type = PluginMetadata::ShellType;
-                else if (type.endsWith(QStringLiteral("/LookAndFeel")))
-                    d->type = PluginMetadata::LookAndFeelType;
-                else
-                    d->type = PluginMetadata::InvalidType;
-            } else {
-                d->type = PluginMetadata::InvalidType;
-            }
-        }
-
-        return true;
+    // Open the file
+    d->file.setFileName(fileName);
+    if (!d->file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning("Couldn't open \"%s\": %s",
+                 qPrintable(fileName),
+                 qPrintable(d->file.errorString()));
+        d->valid = false;
+        return false;
     }
 
-    return false;
+    QByteArray data = d->file.readAll();
+    d->file.close();
+
+    // Load the JSON document
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(data, &error);
+    if (error.error != QJsonParseError::NoError) {
+        qWarning("Error parsing \"%s\" at offset %d: %s",
+                 qPrintable(fileName),
+                 error.offset,
+                 qPrintable(error.errorString()));
+        d->valid = false;
+        return false;
+    }
+
+    // Retrieve the JSON object
+    d->json = doc.object();
+
+    // Determine the plugin type
+    QString type = d->json.value(QStringLiteral("type")).toString();
+    if (type == QStringLiteral("element"))
+        d->type = PluginMetadata::ElementType;
+    else if (type == QStringLiteral("containment"))
+        d->type = PluginMetadata::ContainmentType;
+    else if (type == QStringLiteral("shell"))
+        d->type = PluginMetadata::ShellType;
+    else if (type == QStringLiteral("lookandfeel"))
+        d->type = PluginMetadata::LookAndFeelType;
+    else
+        d->type = PluginMetadata::InvalidType;
+
+    d->valid = d->type != PluginMetadata::InvalidType;
+    return true;
 }
 
 bool PluginMetadata::isValid() const
 {
     Q_D(const PluginMetadata);
-    return d->entry && d->entry->isValid();
+    return d->valid;
 }
 
 PluginMetadata::Type PluginMetadata::type() const
@@ -127,81 +207,89 @@ PluginMetadata::Type PluginMetadata::type() const
 QString PluginMetadata::name() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->name();
+    return d->localizedValue(QStringLiteral("title")).toString();
 }
 
 QString PluginMetadata::comment() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->comment();
+    return d->localizedValue(QStringLiteral("description")).toString();
 }
 
 QString PluginMetadata::iconName() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->iconName();
+    return d->json.value(QStringLiteral("icon-name")).toString();
 }
 
 QString PluginMetadata::internalName() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->value(QStringLiteral("X-Hawaii-PluginInfo-Name")).toString();
+    return d->json.value(QStringLiteral("name")).toString();
 }
 
 QString PluginMetadata::version() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->value(QStringLiteral("X-Hawaii-PluginInfo-Version")).toString();
+    return d->json.value(QStringLiteral("version")).toString();
 }
 
 QString PluginMetadata::license() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->value(QStringLiteral("X-Hawaii-PluginInfo-License")).toString();
+    return d->json.value(QStringLiteral("license")).toString();
 }
 
 QString PluginMetadata::authorName() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->value(QStringLiteral("X-Hawaii-PluginInfo-AuthorName")).toString();
+    return d->json.value(QStringLiteral("author-name")).toString();
 }
 
 QString PluginMetadata::authorEmail() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->value(QStringLiteral("X-Hawaii-PluginInfo-AuthorEmail")).toString();
+    return d->json.value(QStringLiteral("author-email")).toString();
 }
 
 QString PluginMetadata::webSite() const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QString();
-    return d->entry->value(QStringLiteral("X-Hawaii-PluginInfo-WebSite")).toString();
+    return d->json.value(QStringLiteral("website")).toString();
+}
+
+QString PluginMetadata::mainScript() const
+{
+    Q_D(const PluginMetadata);
+    if (!d->valid)
+        return QString();
+    return d->json.value(QStringLiteral("mainscript")).toString();
 }
 
 QVariant PluginMetadata::property(const QString &key) const
 {
     Q_D(const PluginMetadata);
-    if (!d->entry)
+    if (!d->valid)
         return QVariant();
-    return d->entry->localizedValue(key);
+    return d->localizedValue(key);
 }
 
 } // namespace Shell

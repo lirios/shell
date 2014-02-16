@@ -141,7 +141,7 @@ void PackagePrivate::createPackageMetadata(const QString &path)
 {
     delete metadata;
 
-    QString metadataPath(path + "/metadata.desktop");
+    QString metadataPath(path + "/metadata.json");
     if (!QFile::exists(metadataPath)) {
         qWarning() << "No metadata file in the package, expected it at:" << metadataPath;
         metadataPath.clear();
@@ -602,7 +602,7 @@ QString Package::contentsHash() const
     }
 
     QCryptographicHash hash(QCryptographicHash::Sha1);
-    QString metadataPath = d->path + "metadata.desktop";
+    QString metadataPath = d->path + "metadata.json";
     if (QFile::exists(metadataPath)) {
         QFile f(metadataPath);
         if (f.open(QIODevice::ReadOnly)) {

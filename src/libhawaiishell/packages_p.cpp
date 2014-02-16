@@ -35,7 +35,7 @@ void BasePackage::initializePackage(Package *package)
 {
     // Metadata
     package->addFileDefinition("metadata",
-                               QStringLiteral("metadata.desktop"),
+                               QStringLiteral("metadata.json"),
                                tr("Metadata file"));
     package->setRequired("metadata", true);
 }
@@ -53,8 +53,8 @@ void MainScriptPackage::pathChanged(Package *package)
     if (package->path().isEmpty())
         return;
 
-    PluginMetadata metadata(package->path() + "/metadata.desktop");
-    const QString mainScript = metadata.property(QStringLiteral("X-Hawaii-MainScript")).toString();
+    PluginMetadata metadata(package->path() + "/metadata.json");
+    const QString mainScript = metadata.mainScript();
     if (!mainScript.isEmpty())
         package->addFileDefinition("mainscript", mainScript, tr("Main script file"));
 }
