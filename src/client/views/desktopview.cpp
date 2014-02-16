@@ -63,7 +63,7 @@ void DesktopView::setWindowType()
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    ShellManager::instance()->shellSurfaceInterface()->set_background(output, surface);
+    ShellManager::instance()->shellInterface()->set_background(output, surface);
 }
 
 #include "moc_desktopview.cpp"
