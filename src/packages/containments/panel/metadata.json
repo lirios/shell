@@ -9,5 +9,11 @@
     "author-name": "Pier Luigi Fiorini",
     "author-email": "pierluigi.fiorini@gmail.com",
     "website": "http://www.maui-project.org",
-    "mainscript": "ui/main.qml"
+    "mainscript": "ui/main.qml",
+    "translations": {
+        "it": {
+            "title": "Pannello",
+            "description": "Pannello vuoto"
+        }
+    }
 }
