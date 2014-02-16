@@ -49,9 +49,6 @@ public:
     void removeSurfaceFromLayer(QWaylandSurface *surface);
 
 protected:
-    void hawaii_shell_surface_set_background(Resource *resource,
-                                             struct ::wl_resource *output_resource,
-                                             struct ::wl_resource *surface) Q_DECL_OVERRIDE;
     void hawaii_shell_surface_set_overlay(Resource *resource,
                                           struct ::wl_resource *output_resource,
                                           struct ::wl_resource *surface) Q_DECL_OVERRIDE;

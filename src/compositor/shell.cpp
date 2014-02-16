@@ -182,6 +182,19 @@ void Shell::hawaii_shell_unlock(Resource *resource)
         resumeDesktop();
 }
 
+void Shell::hawaii_shell_set_background(Resource *resource,
+                                        struct ::wl_resource *output_resource,
+                                        struct ::wl_resource *surface_resource)
+{
+    Q_UNUSED(resource);
+    Q_UNUSED(output_resource);
+
+    QWaylandSurface *surface =
+            QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
+    surface->setWindowProperty(QStringLiteral("position"), surface->pos());
+    Compositor::instance()->shellSurface()->addSurfaceToLayer(Compositor::BackgroundWindowRole, surface);
+}
+
 void Shell::hawaii_shell_set_grab_surface(Resource *resource,
                                           struct ::wl_resource *surface_resource)
 {
