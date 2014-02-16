@@ -61,6 +61,16 @@
       <arg name="height" type="int"/>
     </request>
 
+    <request name="set_background">
+      <description summary="set background role">
+        The surface set by this request will receive the background role.
+        Background surfaces are placed above all surfaces and can be used
+        to show wallpapers.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
     <request name="set_config_surface">
       <description summary="set configuration role">
         The surface set by this request will receive the
@@ -341,16 +351,6 @@
   </interface>
 
   <interface name="wl_hawaii_shell_surface" version="1">
-    <request name="set_background">
-      <description summary="set background role">
-        The surface set by this request will receive the background role.
-        Background surfaces are placed above all surfaces and can be used
-        to show wallpapers.
-      </description>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
     <request name="set_overlay">
       <description summary="set overlay role">
         The surface set by this request will receive the overlay role.
