@@ -1,0 +1,12 @@
+{
+    "name": "org.hawaii.lookandfeel.standard",
+    "type": "lookandfeel",
+    "version": "1.0",
+    "license": "GPLv2+",
+    "title": "Look And Feel",
+    "description": "Standard workspace design",
+    "author-name": "Pier Luigi Fiorini",
+    "author-email": "pierluigi.fiorini@gmail.com",
+    "website": "http://www.maui-project.org",
+    "mainscript": ""
+}

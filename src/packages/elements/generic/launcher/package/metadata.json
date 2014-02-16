@@ -1,0 +1,12 @@
+{
+    "name": "org.hawaii.elements.launcher",
+    "type": "element",
+    "version": "1.0",
+    "license": "GPLv2+",
+    "title": "Applications manager",
+    "description": "Switch between running applications, pin favourite applications and start them",
+    "author-name": "Pier Luigi Fiorini",
+    "author-email": "pierluigi.fiorini@gmail.com",
+    "website": "http://www.maui-project.org",
+    "mainscript": "ui/Launcher.qml"
+}

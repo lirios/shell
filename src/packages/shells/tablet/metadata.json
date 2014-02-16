@@ -1,0 +1,12 @@
+{
+    "name": "org.hawaii.shells.tablet",
+    "type": "shell",
+    "version": "1.0",
+    "license": "GPLv2+",
+    "title": "Tablet",
+    "description": "Tablet-style user interface",
+    "author-name": "Pier Luigi Fiorini",
+    "author-email": "pierluigi.fiorini@gmail.com",
+    "website": "http://www.maui-project.org",
+    "mainscript": "loader.qml"
+}

@@ -1,0 +1,13 @@
+{
+    "name": "org.hawaii.containments.panel",
+    "type": "containment",
+    "containment-type": "panel",
+    "version": "1.0",
+    "license": "GPLv2+",
+    "title": "Panel",
+    "description": "Empty panel",
+    "author-name": "Pier Luigi Fiorini",
+    "author-email": "pierluigi.fiorini@gmail.com",
+    "website": "http://www.maui-project.org",
+    "mainscript": "ui/main.qml"
+}
