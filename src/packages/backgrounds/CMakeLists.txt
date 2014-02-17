@@ -1,0 +1,1 @@
+hawaiishell_install_package(background org.hawaii.backgrounds.wallpaper wallpaper)

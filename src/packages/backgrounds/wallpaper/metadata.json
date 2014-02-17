@@ -1,0 +1,12 @@
+{
+    "name": "org.hawaii.backgrounds.wallpaper",
+    "type": "background",
+    "version": "1.0",
+    "license": "GPLv2+",
+    "title": "Wallpaper",
+    "description": "A single image",
+    "author-name": "Pier Luigi Fiorini",
+    "author-email": "pierluigi.fiorini@gmail.com",
+    "website": "http://www.maui-project.org",
+    "mainscript": "ui/main.qml"
+}
