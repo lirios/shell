@@ -206,7 +206,9 @@ void ShellUi::changeShell(const QString &value)
     setShell(value);
 
     // Load package
-    Hawaii::Shell::Package package = Hawaii::Shell::PluginLoader::instance()->loadPackage("Hawaii/Shell/Shell");
+    Hawaii::Shell::Package package =
+            Hawaii::Shell::PluginLoader::instance()->loadPackage(
+                QStringLiteral("shell"));
     package.setPath(value);
     setPackage(package);
 

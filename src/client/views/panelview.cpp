@@ -76,7 +76,7 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
 
     // Load containment package
     Package package = PluginLoader::instance()->loadPackage(
-                QStringLiteral("Hawaii/Shell/Containment"));
+                QStringLiteral("containment"));
     package.setPath("org.hawaii.containments.panel");
 
     // Create and load containment
