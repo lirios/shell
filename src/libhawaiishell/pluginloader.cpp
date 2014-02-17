@@ -80,16 +80,14 @@ Package PluginLoader::loadPackage(const QString &format)
         return Package(structure);
 
     // Create a package structure for this format
-    if (format.startsWith(QStringLiteral("Hawaii/Shell/"))) {
-        if (format.endsWith("/Element"))
-            structure = new ElementPackage();
-        else if (format.endsWith("/Containment"))
-            structure = new ContainmentPackage();
-        else if (format.endsWith("/Shell"))
-            structure = new ShellPackage();
-        else if (format.endsWith("/LookAndFeel"))
-            structure = new LookAndFeelPackage();
-    }
+    if (format == QStringLiteral("element"))
+        structure = new ElementPackage();
+    else if (format == QStringLiteral("containment"))
+        structure = new ContainmentPackage();
+    else if (format == QStringLiteral("shell"))
+        structure = new ShellPackage();
+    else if (format == QStringLiteral("lookandfeel"))
+        structure = new LookAndFeelPackage();
 
     // Create and return a package if there's a structure for the format
     if (structure) {
