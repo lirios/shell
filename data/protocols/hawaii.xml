@@ -71,6 +71,17 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
+    <request name="set_desktop">
+      <description summary="set desktop role">
+        The surface set by this request will receive the desktop role.
+        Desktop surfaces are placed above background surfaces and can be used
+        to show the actual desktop view with icons, search results or
+        controls the user will interact with.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
     <request name="set_config_surface">
       <description summary="set configuration role">
         The surface set by this request will receive the
