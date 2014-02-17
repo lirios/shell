@@ -39,6 +39,7 @@ class HAWAIISHELL_EXPORT ShellSettings : public QObject
     Q_PROPERTY(QString style READ style WRITE setStyle NOTIFY styleChanged)
     Q_PROPERTY(QString handler READ handler WRITE setHandler NOTIFY handlerChanged)
     Q_PROPERTY(QString lookAndFeel READ lookAndFeel WRITE setLookAndFeel NOTIFY lookAndFeelChanged)
+    Q_PROPERTY(QString background READ background WRITE setBackground NOTIFY backgroundChanged)
     Q_DECLARE_PRIVATE(ShellSettings)
 public:
     explicit ShellSettings(QObject *parent = 0);
@@ -53,10 +54,14 @@ public:
     QString lookAndFeel() const;
     void setLookAndFeel(const QString &lookAndFeel);
 
+    QString background() const;
+    void setBackground(const QString &plugin);
+
 Q_SIGNALS:
     void styleChanged();
     void handlerChanged();
     void lookAndFeelChanged();
+    void backgroundChanged();
 
 private:
     ShellSettingsPrivate *const d_ptr;
