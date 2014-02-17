@@ -276,6 +276,7 @@ void Shell::init()
     m_stickyLayer.insert(&m_panelsLayer);
     m_limboLayer.insert(&m_stickyLayer);
     m_backgroundLayer.insert(&m_limboLayer);
+    m_desktopLayer.insert(&m_backgroundLayer);
 
     m_currentWorkspace = 0;
 
@@ -285,7 +286,7 @@ void Shell::init()
         int w = out->width, h = out->height;
 
         weston_view *blackSurface = createBlackSurface(x, y, w, h);
-        m_backgroundLayer.addSurface(blackSurface);
+        m_desktopLayer.addSurface(blackSurface);
         m_blackSurfaces.push_back(blackSurface);
     }
 

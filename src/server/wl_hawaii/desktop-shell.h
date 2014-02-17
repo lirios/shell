@@ -138,6 +138,8 @@ private:
 
     void setBackground(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                        struct wl_resource *surface_resource);
+    void setDesktop(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
+                    struct wl_resource *surface_resource);
 
     void setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource);
 

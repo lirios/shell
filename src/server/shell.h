@@ -178,6 +178,7 @@ protected:
     Layer m_splashLayer;
     Layer m_limboLayer;
     Layer m_backgroundLayer;
+    Layer m_desktopLayer;
     Layer m_panelsLayer;
     Layer m_fullscreenLayer;
     Layer m_stickyLayer;
