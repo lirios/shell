@@ -80,7 +80,9 @@ Package PluginLoader::loadPackage(const QString &format)
         return Package(structure);
 
     // Create a package structure for this format
-    if (format == QStringLiteral("element"))
+    if (format == QStringLiteral("background"))
+        structure = new BackgroundPackage();
+    else if (format == QStringLiteral("element"))
         structure = new ElementPackage();
     else if (format == QStringLiteral("containment"))
         structure = new ContainmentPackage();
