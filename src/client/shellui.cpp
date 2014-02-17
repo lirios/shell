@@ -32,6 +32,7 @@
 #include <HawaiiShell/PluginLoader>
 
 #include "applicationiconprovider.h"
+#include "backgroundview.h"
 #include "desktopview.h"
 #include "grabwindow.h"
 #include "lockscreenview.h"
@@ -66,6 +67,7 @@ ShellUi::~ShellUi()
         m_lockScreenView->deleteLater();
     qDeleteAll(m_panelViews);
     qDeleteAll(m_desktopViews);
+    qDeleteAll(m_backgroundViews);
 }
 
 ScriptEngine *ShellUi::jsEngine() const
@@ -81,6 +83,11 @@ GrabWindow *ShellUi::grabWindow() const
 LockScreenView *ShellUi::lockScreenView() const
 {
     return m_lockScreenView;
+}
+
+QList<BackgroundView *> ShellUi::backgrounds() const
+{
+    return m_backgroundViews;
 }
 
 QList<DesktopView *> ShellUi::desktops() const
@@ -234,25 +241,43 @@ void ShellUi::synchronize()
 
 void ShellUi::screenAdded(QScreen *screen)
 {
-    DesktopView *view = nullptr;
-    bool previouslyAdded = false;
+    BackgroundView *background = nullptr;
+    DesktopView *desktop = nullptr;
+    bool backgroundPreviouslyAdded = false;
+    bool desktopPreviouslyAdded = false;
 
     // Create views only when necessary
+    for (BackgroundView *currentView: m_backgroundViews) {
+        if (currentView->screen() == screen) {
+            background = currentView;
+            backgroundPreviouslyAdded = true;
+            break;
+        }
+    }
     for (DesktopView *currentView: m_desktopViews) {
         if (currentView->screen() == screen) {
-            view = currentView;
-            previouslyAdded = true;
+            desktop = currentView;
+            desktopPreviouslyAdded = true;
             break;
         }
     }
 
-    // Load QML code and show
-    if (!view)
-        view = new DesktopView(this, screen);
-    view->setSource(QUrl::fromLocalFile(package().filePath("views", QStringLiteral("DesktopView.qml"))));
-    if (!previouslyAdded) {
-        view->show();
-        m_desktopViews.append(view);
+    // Load background QML code and show
+    if (!background)
+        background = new BackgroundView(screen);
+    background->loadPlugin();
+    if (!backgroundPreviouslyAdded) {
+        background->show();
+        m_backgroundViews.append(background);
+    }
+
+    // Load desktop QML code and show
+    if (!desktop)
+        desktop = new DesktopView(this, screen);
+    desktop->setSource(QUrl::fromLocalFile(package().filePath("views", QStringLiteral("DesktopView.qml"))));
+    if (!desktopPreviouslyAdded) {
+        desktop->show();
+        m_desktopViews.append(desktop);
     }
 
     connect(screen, &QObject::destroyed,
@@ -276,6 +301,14 @@ void ShellUi::screenDestroyed(QObject *object)
     // Move all panels on a deleted screen to the primary screen
     for (PanelView *view: m_panelViews)
         view->setScreen(QGuiApplication::primaryScreen());
+
+    // Remove background view for this screen
+    for (BackgroundView *view: m_backgroundViews) {
+        if (view->screen() == screen) {
+            view->deleteLater();
+            m_backgroundViews.removeOne(view);
+        }
+    }
 }
 
 void ShellUi::printScriptMessage(const QString &text)

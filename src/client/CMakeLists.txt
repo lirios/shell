@@ -62,6 +62,7 @@ set(SOURCES
     services/processlauncher/processlauncher.cpp
     services/volumecontrol/volumecontrol.cpp
     services/sessionmanager/sessionmanager.cpp
+    views/backgroundview.cpp
     views/configview.cpp
     views/desktopview.cpp
     views/lockscreenview.cpp

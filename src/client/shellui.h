@@ -34,6 +34,7 @@
 
 #include "scriptengine.h"
 
+class BackgroundView;
 class DesktopView;
 class GrabWindow;
 class LockScreenView;
@@ -52,6 +53,7 @@ public:
 
     LockScreenView *lockScreenView() const;
 
+    QList<BackgroundView *> backgrounds() const;
     QList<DesktopView *> desktops() const;
 
     QList<PanelView *> panels() const;
@@ -76,6 +78,7 @@ private:
     int m_numWorkspaces;
     GrabWindow *m_grabWindow;
     LockScreenView *m_lockScreenView;
+    QList<BackgroundView *> m_backgroundViews;
     QList<DesktopView *> m_desktopViews;
     QList<PanelView *> m_panelViews;
     Hawaii::Shell::Package m_package;
