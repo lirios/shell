@@ -23,7 +23,6 @@ set(SOURCES
     qmlobject.cpp
     qmlobjectincubationcontroller_p.cpp
     quickview.cpp
-    settings/backgroundsettings.cpp
     settings/launchersettings.cpp
     settings/shellsettings.cpp
     xdgdesktopfile.cpp
@@ -44,7 +43,6 @@ set(HEADERS
     pluginmetadata.h
     qmlobject.h
     quickview.h
-    settings/backgroundsettings.h
     settings/launchersettings.h
     settings/shellsettings.h
 )
