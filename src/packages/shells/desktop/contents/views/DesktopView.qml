@@ -30,12 +30,8 @@ import "../components" as Components
 Item {
     id: desktopView
 
-    Components.Background {
+    DesktopContainment {
+        id: containment
         anchors.fill: parent
-
-        DesktopContainment {
-            id: containment
-            anchors.fill: parent
-        }
     }
 }
