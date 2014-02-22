@@ -78,7 +78,7 @@ void BackgroundView::loadPlugin()
     // Load background plugin package
     Hawaii::Shell::Package package =
             Hawaii::Shell::PluginLoader::instance()->loadPackage(
-                QStringLiteral("background"));
+                Hawaii::Shell::PluginLoader::BackgroundPlugin);
     package.setPath(m_settings->background());
 
     // If the package is invalid try with the default plugin
