@@ -38,12 +38,21 @@ class PluginLoaderPrivate;
 class HAWAIISHELL_EXPORT PluginLoader
 {
 public:
+    enum PluginType {
+        BackgroundPlugin = 0,
+        ElementPlugin = 1,
+        ContainmentPlugin = 2,
+        ShellPlugin = 3,
+        LookAndFeelPlugin = 4,
+        CustomPlugin = 0x0100
+    };
+
     PluginLoader();
     ~PluginLoader();
 
     static PluginLoader *instance();
 
-    Package loadPackage(const QString &format);
+    Package loadPackage(PluginType type);
 
 private:
     Q_DECLARE_PRIVATE(PluginLoader)

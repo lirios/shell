@@ -44,7 +44,7 @@ public:
     PluginLoaderPrivate();
     ~PluginLoaderPrivate();
 
-    QHash<QString, PackageStructurePtr> structures;
+    QHash<PluginLoader::PluginType, PackageStructurePtr> structures;
 };
 
 } // namespace Shell

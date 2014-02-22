@@ -67,33 +67,39 @@ PluginLoader *PluginLoader::instance()
     return s_pluginLoader();
 }
 
-Package PluginLoader::loadPackage(const QString &format)
+Package PluginLoader::loadPackage(PluginType type)
 {
     Q_D(PluginLoader);
 
-    if (format.isEmpty())
-        return Package();
-
     // Return a previously created package structure for this format
-    PackageStructure *structure = d->structures.value(format).data();
+    PackageStructure *structure = d->structures.value(type).data();
     if (structure)
         return Package(structure);
 
     // Create a package structure for this format
-    if (format == QStringLiteral("background"))
+    switch (type) {
+    case BackgroundPlugin:
         structure = new BackgroundPackage();
-    else if (format == QStringLiteral("element"))
+        break;
+    case ElementPlugin:
         structure = new ElementPackage();
-    else if (format == QStringLiteral("containment"))
+        break;
+    case ContainmentPlugin:
         structure = new ContainmentPackage();
-    else if (format == QStringLiteral("shell"))
+        break;
+    case ShellPlugin:
         structure = new ShellPackage();
-    else if (format == QStringLiteral("lookandfeel"))
+        break;
+    case LookAndFeelPlugin:
         structure = new LookAndFeelPackage();
+        break;
+    default:
+        break;
+    }
 
     // Create and return a package if there's a structure for the format
     if (structure) {
-        d->structures.insert(format, structure);
+        d->structures.insert(type, structure);
         return Package(structure);
     }
 
