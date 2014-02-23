@@ -31,11 +31,13 @@
 
 #include <HawaiiShell/ShellSettings>
 
+class ShellUi;
+
 class BackgroundView : public QQuickView
 {
     Q_OBJECT
 public:
-    explicit BackgroundView(QScreen *screen);
+    explicit BackgroundView(ShellUi *corona, QScreen *screen);
 
 public Q_SLOTS:
     void loadPlugin();

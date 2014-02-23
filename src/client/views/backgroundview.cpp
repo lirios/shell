@@ -29,6 +29,7 @@
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
 #include <QtGui/qpa/qplatformnativeinterface.h>
+#include <QtQuick/QQuickItem>
 
 #include <HawaiiShell/Package>
 #include <HawaiiShell/PluginLoader>
@@ -36,7 +37,7 @@
 #include "backgroundview.h"
 #include "shellmanager.h"
 
-BackgroundView::BackgroundView(QScreen *screen)
+BackgroundView::BackgroundView(ShellUi *corona, QScreen *screen)
     : QQuickView(new QWindow(screen))
     , m_settings(new ShellSettings(this))
 {
@@ -68,6 +69,10 @@ BackgroundView::BackgroundView(QScreen *screen)
         setSurfaceRole();
     });
 
+    // Load QML source file
+    setSource(QUrl::fromLocalFile(corona->package().filePath(
+                                      "views", QStringLiteral("Background.qml"))));
+
     // Debugging message
     qDebug() << "-> Created BackgroundView with geometry"
              << geometry();
@@ -87,7 +92,7 @@ void BackgroundView::loadPlugin()
 
     // Now load the QML component
     QString mainScript = package.filePath("mainscript");
-    setSource(QUrl::fromLocalFile(mainScript));
+    rootObject()->setProperty("sourceUrl", QUrl::fromLocalFile(mainScript));
 }
 
 void BackgroundView::setSurfaceRole()
