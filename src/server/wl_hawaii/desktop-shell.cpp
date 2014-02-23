@@ -51,7 +51,7 @@
 #include "wl_hawaii/dropdown.h"
 #include "wl_hawaii/hawaiiclientwindow.h"
 #include "wl_hawaii/hawaiiworkspace.h"
-#include "wl_hawaii/panelsurface.h"
+#include "wl_hawaii/panelmanager.h"
 #include "wl_hawaii/shellwindow.h"
 
 #include <stdio.h>
@@ -337,10 +337,6 @@ void DesktopShell::init()
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindScreenSaver(client, version, id); }))
         return;
 
-    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_panel_manager_interface, 1, this,
-                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindPanelManager(client, version, id); }))
-        return;
-
     if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
         return;
@@ -378,6 +374,7 @@ void DesktopShell::init()
         Shell::quit();
     });
 
+    addInterface(new PanelManager);
     WlShell *wls = new WlShell;
     wls->surfaceResponsivenessChangedSignal.connect(this, &DesktopShell::surfaceResponsivenessChanged);
     addInterface(wls);
@@ -553,6 +550,25 @@ bool DesktopShell::isTrusted(wl_client *client, const char *interface) const
     return false;
 }
 
+static void configure_static_view_no_position(weston_view *ev, Layer *layer)
+{
+    if (wl_list_empty(&ev->layer_link)) {
+        layer->addSurface(ev);
+        weston_compositor_schedule_repaint(ev->surface->compositor);
+    }
+}
+
+static void configure_static_view(weston_view *ev, Layer *layer)
+{
+    weston_view_set_position(ev, ev->output->x, ev->output->y);
+    configure_static_view_no_position(ev, layer);
+}
+
+void DesktopShell::addPanelSurfaceToLayer(weston_view *view)
+{
+    configure_static_view_no_position(view, &m_panelsLayer);
+}
+
 IRect2D DesktopShell::windowsArea(struct weston_output *output) const
 {
     for (Output o: m_outputs) {
@@ -561,6 +577,47 @@ IRect2D DesktopShell::windowsArea(struct weston_output *output) const
     }
 
     return Shell::windowsArea(output);
+}
+
+void DesktopShell::recalculateAvailableGeometry()
+{
+    PanelManager *manager = findInterface<PanelManager>();
+    if (!manager) {
+        weston_log("Cannot recalculate available geometry: unable to find PanelManager interface\n");
+        return;
+    }
+
+    for (std::list<Output>::iterator o = m_outputs.begin(); o != m_outputs.end(); ++o) {
+        IRect2D rect((*o).output->x, (*o).output->y,
+                     (*o).output->width, (*o).output->height);
+
+        for (PanelSurface *panel: manager->panels()) {
+            // Ignore non-docked panels or panels not in this output
+            if (!panel->isDocked())
+                continue;
+            if (panel->output() != (*o).output)
+                continue;
+
+            switch (panel->edge()) {
+            case WL_HAWAII_PANEL_EDGE_LEFT:
+                rect.x += panel->width();
+                rect.width -= panel->width();
+                break;
+            case WL_HAWAII_PANEL_EDGE_TOP:
+                rect.y += panel->y();
+                rect.height -= panel->height();
+                break;
+            case WL_HAWAII_PANEL_EDGE_RIGHT:
+                rect.width -= panel->width();
+                break;
+            case WL_HAWAII_PANEL_EDGE_BOTTOM:
+                rect.height -= panel->height();
+                break;
+            }
+        }
+
+        (*o).rect = rect;
+    }
 }
 
 void DesktopShell::trustedClientDestroyed(void *data)
@@ -700,34 +757,6 @@ void DesktopShell::bindDesktopShellSurface(struct wl_client *client, uint32_t ve
 void DesktopShell::unbindDesktopShellSurface(struct wl_resource *resource)
 {
     m_shellSurfaceBindings.remove(resource);
-}
-
-void DesktopShell::bindPanelManager(struct wl_client *client, uint32_t version, uint32_t id)
-{
-    struct wl_resource *resource = wl_resource_create(client, &wl_hawaii_panel_manager_interface, version, id);
-
-    if (m_panelManagerBinding) {
-        wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "only one client is allowed to bind wl_hawaii_panel_manager");
-        wl_resource_destroy(resource);
-        return;
-    }
-
-    if (client == m_child.client) {
-        wl_resource_set_implementation(resource, &m_panelManagerImpl, this,
-                                       [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindPanelManager(resource); });
-
-        m_panelManagerBinding = resource;
-        return;
-    }
-
-    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind wl_hawaii_panel_manager denied");
-    wl_resource_destroy(resource);
-}
-
-void DesktopShell::unbindPanelManager(struct wl_resource *resource)
-{
-    m_panelManagerBinding = nullptr;
 }
 
 void DesktopShell::bindScreenSaver(wl_client *client, uint32_t version, uint32_t id)
@@ -995,20 +1024,6 @@ void DesktopShell::lockSurfaceDestroy(void *)
 {
     weston_log("lock surface gone\n");
     m_lockSurface = nullptr;
-}
-
-static void configure_static_view_no_position(weston_view *ev, Layer *layer)
-{
-    if (wl_list_empty(&ev->layer_link)) {
-        layer->addSurface(ev);
-        weston_compositor_schedule_repaint(ev->surface->compositor);
-    }
-}
-
-static void configure_static_view(weston_view *ev, Layer *layer)
-{
-    weston_view_set_position(ev, ev->output->x, ev->output->y);
-    configure_static_view_no_position(ev, layer);
 }
 
 void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
@@ -1364,77 +1379,6 @@ const struct wl_hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl 
     wrapInterface(&DesktopShell::setOverlay),
     wrapInterface(&DesktopShell::setPopup),
     wrapInterface(&DesktopShell::setDialog)
-};
-
-void DesktopShell::setPanelSurface(struct wl_client *client, struct wl_resource *resource,
-                                   uint32_t id,
-                                   struct wl_resource *surface_resource)
-{
-    struct weston_surface *surface = static_cast<struct weston_surface *>(surface_resource->data);
-
-    if (surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role already assigned");
-        return;
-    }
-
-    PanelSurface *panel = new PanelSurface(client, resource, id);
-    panel->view = weston_view_create(surface);
-    panel->shell = this;
-    m_panels.push_back(panel);
-
-    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
-        PanelSurface *panel = static_cast<PanelSurface *>(es->configure_private);
-        if (panel) {
-            configure_static_view_no_position(panel->view, &panel->shell->m_panelsLayer);
-            panel->setPosition();
-            panel->shell->recalculateAvailableGeometry();
-        }
-    };
-    surface->configure_private = panel;
-    surface->output = nullptr;
-}
-
-void DesktopShell::recalculateAvailableGeometry()
-{
-    for (std::list<Output>::iterator o = m_outputs.begin(); o != m_outputs.end(); ++o) {
-        IRect2D rect((*o).output->x, (*o).output->y,
-                     (*o).output->width, (*o).output->height);
-
-        for (PanelSurface *panel: m_panels) {
-            // Ignore non-docked panels or panels not in this output
-            if (!panel->isDocked())
-                continue;
-            if (!panel->view)
-                continue;
-            if (panel->view->output != (*o).output)
-                continue;
-
-            switch (panel->edge()) {
-            case WL_HAWAII_PANEL_EDGE_LEFT:
-                rect.x += panel->view->surface->width;
-                rect.width -= panel->view->surface->width;
-                break;
-            case WL_HAWAII_PANEL_EDGE_TOP:
-                rect.y += panel->view->geometry.y;
-                rect.height -= panel->view->surface->height;
-                break;
-            case WL_HAWAII_PANEL_EDGE_RIGHT:
-                rect.width -= panel->view->surface->width;
-                break;
-            case WL_HAWAII_PANEL_EDGE_BOTTOM:
-                rect.height -= panel->view->surface->height;
-                break;
-            }
-        }
-
-        (*o).rect = rect;
-    }
-}
-
-const struct wl_hawaii_panel_manager_interface DesktopShell::m_panelManagerImpl = {
-    wrapInterface(&DesktopShell::setPanelSurface)
 };
 
 void DesktopShell::mapNotificationSurfaces()

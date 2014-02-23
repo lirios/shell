@@ -80,7 +80,11 @@ public:
 
     bool isTrusted(wl_client *client, const char *interface) const override;
 
+    void addPanelSurfaceToLayer(weston_view *view);
+
     virtual IRect2D windowsArea(struct weston_output *output) const;
+
+    void recalculateAvailableGeometry();
 
 protected:
     virtual void init();
@@ -107,9 +111,6 @@ private:
 
     void bindDesktopShellSurface(struct wl_client *client, uint32_t version, uint32_t id);
     void unbindDesktopShellSurface(struct wl_resource *resource);
-
-    void bindPanelManager(struct wl_client *client, uint32_t version, uint32_t id);
-    void unbindPanelManager(struct wl_resource *resource);
 
     void bindScreenSaver(wl_client *client, uint32_t version, uint32_t id);
     void unbindScreenSaver(wl_resource *resource);
@@ -177,15 +178,6 @@ private:
     void createGrab(wl_client *client, wl_resource *resource, uint32_t id);
 
     /*
-     * wl_hawaii_panel_manager
-     */
-
-    void setPanelSurface(struct wl_client *client, struct wl_resource *resource, uint32_t id,
-                         struct wl_resource *surface_resource);
-
-    void recalculateAvailableGeometry();
-
-    /*
      * wl_notification_daemon
      */
 
@@ -213,7 +205,6 @@ private:
 
     static const struct wl_hawaii_shell_interface m_desktopShellImpl;
     static const struct wl_hawaii_shell_surface_interface m_shellSurfaceImpl;
-    static const struct wl_hawaii_panel_manager_interface m_panelManagerImpl;
     static const struct wl_notification_daemon_interface m_notificationDaemonImpl;
     static const struct wl_screensaver_interface m_screenSaverImpl;
 

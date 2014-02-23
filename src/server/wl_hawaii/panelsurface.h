@@ -27,19 +27,26 @@
 #ifndef PANELSURFACE_H
 #define PANELSURFACE_H
 
+#include "utils.h"
 #include "wayland-hawaii-server-protocol.h"
 
 class DesktopShell;
 
-class PanelSurface
+class PanelSurface : public Interface
 {
 public:
-    PanelSurface(struct wl_client *client, struct wl_resource *resource, uint32_t id);
+    PanelSurface(wl_client *client, wl_resource *resource,
+                 uint32_t id, weston_surface *surface);
 
     wl_hawaii_panel_edge edge() const;
 
+    weston_output *output() const;
+
     float x() const;
     float y() const;
+
+    int32_t width() const;
+    int32_t height() const;
 
     bool isDocked() const;
 
@@ -68,11 +75,11 @@ public:
 
     void setPosition();
 
-    weston_view *view;
-    DesktopShell *shell;
+    WlListener surfaceListener;
 
 private:
     wl_resource *m_resource;
+    weston_view *m_view;
     wl_hawaii_panel_edge m_edge;
     wl_hawaii_panel_alignment m_alignment;
     uint32_t m_offset;
@@ -80,13 +87,12 @@ private:
     uint32_t m_length;
     uint32_t m_minLength;
     uint32_t m_maxLength;
-    float m_x, m_y;
     bool m_docked;
     bool m_dockRequested;
 
-    void calculatePosition();
+    void movePanel();
 
-    static const struct wl_hawaii_panel_interface m_impl;
+    static const struct wl_hawaii_panel_interface implementation;
 };
 
 #endif // PANELSURFACE_H
