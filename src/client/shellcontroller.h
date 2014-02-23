@@ -53,8 +53,6 @@ public:
 
     Q_INVOKABLE KeyBinding *addKeyBinding(quint32 key, quint32 modifiers);
 
-    Q_INVOKABLE void setAvailableGeometry(QScreen *screen, const QRect &geometry);
-
 Q_SIGNALS:
     void windowsChanged();
     void windowActivated(Window *window);

@@ -191,19 +191,6 @@ KeyBinding *ShellController::addKeyBinding(quint32 key, quint32 modifiers)
     return keyBinding;
 }
 
-void ShellController::setAvailableGeometry(QScreen *screen, const QRect &geometry)
-{
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
-
-    struct ::wl_output *output = static_cast<struct ::wl_output *>(
-                native->nativeResourceForScreen("output", screen));
-
-    ShellClient *client = ShellManager::instance()->shellInterface();
-    client->set_available_geometry(output,
-                                   geometry.x(), geometry.y(),
-                                   geometry.width(), geometry.height());
-}
-
 void ShellController::minimizeWindows()
 {
     Q_D(ShellController);
