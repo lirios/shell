@@ -1102,10 +1102,12 @@ void DesktopShell::configurePopup(weston_surface *es, int32_t sx, int32_t sy)
     int32_t y = p->parent->geometry.y + p->y;
 
     // But can't exceed output
-    if (x + view->surface->width > p->parent->output->width)
-        x = p->parent->output->width - view->surface->width;
-    if (y + view->surface->height > p->parent->output->height)
-        y = p->parent->output->height - view->surface->height;
+    int32_t limitX = p->parent->output->x + p->parent->output->width;
+    if (x + view->surface->width > limitX)
+        x = limitX - view->surface->width;
+    int32_t limitY = p->parent->output->y + p->parent->output->height;
+    if (y + view->surface->height > limitY)
+        y = limitY - view->surface->height;
 
     // Set view position
     weston_view_set_position(view, x, y);
