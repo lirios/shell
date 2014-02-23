@@ -425,20 +425,13 @@ void DesktopShell::lockSession()
 
     m_locked = true;
 
-#if 0
-    // Hide all surfaces by removing all layers except for backgrounds,
-    // this way nothing else can show or receive input events while
-    // we are locked.
-    // We don't remove the backgrounds layer because currently we only
-    // show the lock screen on the default output so we need to show
-    // something on the other outputs as well as the default one.
-    // However this is safe because our background only shows a wallpaper
-    // so it won't do much with input events, in the future we need to
-    // show the lock screen on all outpus and remove the backgrounds
-    // layer as well.
-    // TODO: Proper multiscreen setup
-    m_lockLayer.show();
-#endif
+    // Change layers order so the lock screen is shown for the primary
+    // output and backgrounds are show for the other outputs.
+    // Application windows, panels, overlays, etc... are hidden under
+    // the backgrounds layer.
+    m_lockLayer.insert(&compositor()->cursor_layer);
+    m_backgroundLayer.insert(&m_lockLayer);
+    currentWorkspace()->insert(&m_backgroundLayer);
 
     // TODO: Disable bindings that are not supposed to work while locked
 
@@ -476,9 +469,10 @@ void DesktopShell::resumeDesktop()
 {
     terminateScreenSaverProcess();
 
-#if 0
-    m_lockLayer.hide();
-#endif
+    // Restore layers order
+    m_lockLayer.insert(&compositor()->cursor_layer);
+    m_backgroundLayer.insert(&m_limboLayer);
+    currentWorkspace()->insert(&m_limboLayer);
 
     m_locked = false;
     fadeIn();
