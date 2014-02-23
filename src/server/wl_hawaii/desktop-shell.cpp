@@ -1084,7 +1084,7 @@ void DesktopShell::setDesktop(struct wl_client *client, struct wl_resource *reso
     surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
         DesktopShell *shell = static_cast<DesktopShell *>(es->configure_private);
         weston_view *view = container_of(es->views.next, weston_view, surface_link);
-        configure_static_view(view, &shell->m_desktopLayer);
+        shell->configureViewForAvailableSpace(view, &shell->m_desktopLayer);
     };
     surface->configure_private = this;
     surface->output = view->output;
