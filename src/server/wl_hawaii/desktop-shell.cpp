@@ -997,16 +997,6 @@ void DesktopShell::lockSurfaceDestroy(void *)
     m_lockSurface = nullptr;
 }
 
-void DesktopShell::setAvailableGeometry(struct wl_client *client, struct wl_resource *resource,
-                                        struct wl_resource *output_resource,
-                                        int32_t x, int32_t y, int32_t width, int32_t height)
-{
-    struct weston_output *output = static_cast<weston_output *>(output_resource->data);
-
-    IRect2D area(x, y, width, height);
-    //m_windowsArea[output] = area;
-}
-
 static void configure_static_view_no_position(weston_view *ev, Layer *layer)
 {
     if (wl_list_empty(&ev->layer_link)) {
@@ -1354,7 +1344,6 @@ void DesktopShell::selectWorkspace(wl_client *client, wl_resource *resource, wl_
 const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::addTrustedClient),
     wrapInterface(&DesktopShell::addKeyBinding),
-    wrapInterface(&DesktopShell::setAvailableGeometry),
     wrapInterface(&DesktopShell::setBackground),
     wrapInterface(&DesktopShell::setDesktop),
     wrapInterface(&DesktopShell::setConfigSurface),

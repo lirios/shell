@@ -134,11 +134,6 @@ private:
 
     void addTrustedClient(wl_client *client, wl_resource *resource, int32_t fd, const char *interface);
 
-    void setAvailableGeometry(struct wl_client *client, struct wl_resource *resource,
-                              struct wl_resource *output_resource,
-                              int32_t x, int32_t y,
-                              int32_t width, int32_t height);
-
     void setBackground(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                        struct wl_resource *surface_resource);
     void setDesktop(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
