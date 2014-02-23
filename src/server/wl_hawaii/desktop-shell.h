@@ -129,6 +129,9 @@ private:
 
     void lockSurfaceDestroy(void *);
 
+    void configureViewForAvailableSpace(weston_view *ev, Layer *layer);
+    void centerViewOnAvailableSpace(weston_view *ev);
+
     /*
      * wl_hawaii_shell
      */

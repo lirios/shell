@@ -1026,6 +1026,30 @@ void DesktopShell::lockSurfaceDestroy(void *)
     m_lockSurface = nullptr;
 }
 
+void DesktopShell::configureViewForAvailableSpace(weston_view *ev, Layer *layer)
+{
+    for (Output o: m_outputs) {
+        if (o.output == ev->output) {
+            weston_view_set_position(ev, o.rect.x, o.rect.y);
+            configure_static_view_no_position(ev, layer);
+            return;
+        }
+    }
+}
+
+void DesktopShell::centerViewOnAvailableSpace(weston_view *ev)
+{
+    for (Output o: m_outputs) {
+        if (o.output == ev->output) {
+            float x = o.rect.x + (o.rect.width - ev->surface->width) / 2;
+            float y = o.rect.y + (o.rect.height - ev->surface->height) / 2;
+
+            weston_view_set_position(ev, x, y);
+            return;
+        }
+    }
+}
+
 void DesktopShell::setBackground(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                                  struct wl_resource *surface_resource)
 {
@@ -1084,7 +1108,8 @@ void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *reso
     surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
         DesktopShell *shell = static_cast<DesktopShell *>(es->configure_private);
         weston_view *view = container_of(es->views.next, weston_view, surface_link);
-        configure_static_view(view, &shell->m_overlayLayer);
+        configure_static_view_no_position(view, &shell->m_overlayLayer);
+        shell->centerViewOnAvailableSpace(view);
     };
     surface->configure_private = this;
     surface->output = static_cast<weston_output *>(output_resource->data);
