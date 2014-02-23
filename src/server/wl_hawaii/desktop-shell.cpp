@@ -553,6 +553,16 @@ bool DesktopShell::isTrusted(wl_client *client, const char *interface) const
     return false;
 }
 
+IRect2D DesktopShell::windowsArea(struct weston_output *output) const
+{
+    for (Output o: m_outputs) {
+        if (o.output == output)
+            return o.rect;
+    }
+
+    return Shell::windowsArea(output);
+}
+
 void DesktopShell::trustedClientDestroyed(void *data)
 {
     wl_client *client = static_cast<wl_client *>(data);
@@ -602,10 +612,8 @@ void DesktopShell::sendInitEvents()
         wl_resource *resource;
         wl_resource_for_each(resource, &out->resource_list) {
             if (wl_resource_get_client(resource) == m_child.client) {
-                IRect2D rect = windowsArea(out);
+                IRect2D rect(out->x, out->y, out->width, out->height);
                 m_outputs.push_back({ out, resource, rect });
-                //Xwl_hawaii_shell_send_desktop_rect(m_child.desktop_shell, resource, rect.x, rect.y, rect.width, rect.height);
-                break;
             }
         }
     }
@@ -1385,16 +1393,55 @@ void DesktopShell::setPanelSurface(struct wl_client *client, struct wl_resource 
     PanelSurface *panel = new PanelSurface(client, resource, id);
     panel->view = weston_view_create(surface);
     panel->shell = this;
+    m_panels.push_back(panel);
 
     surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
         PanelSurface *panel = static_cast<PanelSurface *>(es->configure_private);
         if (panel) {
             configure_static_view_no_position(panel->view, &panel->shell->m_panelsLayer);
             panel->setPosition();
+            panel->shell->recalculateAvailableGeometry();
         }
     };
     surface->configure_private = panel;
     surface->output = nullptr;
+}
+
+void DesktopShell::recalculateAvailableGeometry()
+{
+    for (std::list<Output>::iterator o = m_outputs.begin(); o != m_outputs.end(); ++o) {
+        IRect2D rect((*o).output->x, (*o).output->y,
+                     (*o).output->width, (*o).output->height);
+
+        for (PanelSurface *panel: m_panels) {
+            // Ignore non-docked panels or panels not in this output
+            if (!panel->isDocked())
+                continue;
+            if (!panel->view)
+                continue;
+            if (panel->view->output != (*o).output)
+                continue;
+
+            switch (panel->edge()) {
+            case WL_HAWAII_PANEL_EDGE_LEFT:
+                rect.x += panel->view->surface->width;
+                rect.width -= panel->view->surface->width;
+                break;
+            case WL_HAWAII_PANEL_EDGE_TOP:
+                rect.y += panel->view->geometry.y;
+                rect.height -= panel->view->surface->height;
+                break;
+            case WL_HAWAII_PANEL_EDGE_RIGHT:
+                rect.width -= panel->view->surface->width;
+                break;
+            case WL_HAWAII_PANEL_EDGE_BOTTOM:
+                rect.height -= panel->view->surface->height;
+                break;
+            }
+        }
+
+        (*o).rect = rect;
+    }
 }
 
 const struct wl_hawaii_panel_manager_interface DesktopShell::m_panelManagerImpl = {

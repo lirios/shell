@@ -36,8 +36,12 @@ class PanelSurface
 public:
     PanelSurface(struct wl_client *client, struct wl_resource *resource, uint32_t id);
 
+    wl_hawaii_panel_edge edge() const;
+
     float x() const;
     float y() const;
+
+    bool isDocked() const;
 
     void setAlignment(struct wl_client *client,
                       struct wl_resource *resource,
@@ -77,6 +81,7 @@ private:
     uint32_t m_minLength;
     uint32_t m_maxLength;
     float m_x, m_y;
+    bool m_docked;
     bool m_dockRequested;
 
     void calculatePosition();

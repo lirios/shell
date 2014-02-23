@@ -45,6 +45,7 @@ PanelSurface::PanelSurface(struct wl_client *client, struct wl_resource *resourc
     , m_thickness(0)
     , m_x(0)
     , m_y(0)
+    , m_docked(false)
     , m_dockRequested(false)
 {
     m_resource = wl_resource_create(client, &wl_hawaii_panel_interface,
@@ -55,6 +56,11 @@ PanelSurface::PanelSurface(struct wl_client *client, struct wl_resource *resourc
     wl_resource_set_user_data(m_resource, this);
 }
 
+wl_hawaii_panel_edge PanelSurface::edge() const
+{
+    return m_edge;
+}
+
 float PanelSurface::x() const
 {
     return m_x;
@@ -63,6 +69,11 @@ float PanelSurface::x() const
 float PanelSurface::y() const
 {
     return m_y;
+}
+
+bool PanelSurface::isDocked() const
+{
+    return m_docked;
 }
 
 void PanelSurface::setAlignment(struct wl_client *,
@@ -116,6 +127,7 @@ void PanelSurface::dock(struct wl_client *,
 
     weston_output *output = static_cast<weston_output *>(output_resource->data);
     view->output = output;
+    view->surface->output = output;
 
     m_dockRequested = true;
 }
@@ -213,6 +225,7 @@ void PanelSurface::calculatePosition()
 
     m_x = x;
     m_y = y;
+    m_docked = true;
 }
 
 const struct wl_hawaii_panel_interface PanelSurface::m_impl = {

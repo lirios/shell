@@ -43,6 +43,7 @@ class Splash;
 class Client;
 class Binding;
 class SessionManager;
+class PanelSurface;
 
 class DesktopShell : public Shell {
 public:
@@ -78,6 +79,8 @@ public:
     void resumeDesktop();
 
     bool isTrusted(wl_client *client, const char *interface) const override;
+
+    virtual IRect2D windowsArea(struct weston_output *output) const;
 
 protected:
     virtual void init();
@@ -185,6 +188,8 @@ private:
     void setPanelSurface(struct wl_client *client, struct wl_resource *resource, uint32_t id,
                          struct wl_resource *surface_resource);
 
+    void recalculateAvailableGeometry();
+
     /*
      * wl_notification_daemon
      */
@@ -236,6 +241,8 @@ private:
     Binding *m_nextWsBinding;
     Binding *m_quitBinding;
     SessionManager *m_sessionManager;
+
+    std::list<PanelSurface *> m_panels;
 
     std::list<wl_resource *> m_shellSurfaceBindings;
 
