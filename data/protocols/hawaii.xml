@@ -46,21 +46,6 @@
       <arg name="modifiers" type="uint"/>
     </request>
 
-    <request name="set_available_geometry">
-      <description summary="set available geometry">
-	The available geometry is a portion of the output free of any
-	shell surface such as panels.
-	It's used by the compositor to know where mapped surfaces should
-	be placed and to prevent maximized surfaces from covering shell
-	surfaces.
-      </description>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="x" type="int"/>
-      <arg name="y" type="int"/>
-      <arg name="width" type="int"/>
-      <arg name="height" type="int"/>
-    </request>
-
     <request name="set_background">
       <description summary="set background role">
         The surface set by this request will receive the background role.
