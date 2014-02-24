@@ -1032,6 +1032,14 @@ void DesktopShell::configureViewForAvailableSpace(weston_view *ev, Layer *layer)
         if (o.output == ev->output) {
             weston_view_set_position(ev, o.rect.x, o.rect.y);
             configure_static_view_no_position(ev, layer);
+
+            if (ev->surface->width != o.rect.width ||
+                    ev->surface->height != o.rect.height)
+                wl_hawaii_shell_send_configure(shellClientResource(),
+                                               ev->surface->resource,
+                                               o.rect.width,
+                                               o.rect.height);
+
             return;
         }
     }
