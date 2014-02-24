@@ -60,7 +60,7 @@ Item {
         id: animation
         running: false
 
-        PropertyAnimation {
+        NumberAnimation {
             target: __priv.currentLoader
             properties: "opacity"
             from: 0.0
