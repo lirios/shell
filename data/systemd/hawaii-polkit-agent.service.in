@@ -1,0 +1,12 @@
+[Unit]
+Description=Hawaii PolicyKit agent
+Requires=hawaii.service
+After=hawaii.service
+
+[Service]
+Type=notify
+NotifyAccess=main
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-polkit-agent
+
+[Install]
+WantedBy=hawaii.target
