@@ -129,8 +129,16 @@ void LookAndFeelPackage::initializePackage(Package *package)
     // Previews
     package->addDirectoryDefinition("previews", QStringLiteral("previews"),
                                     tr("Preview images"));
+    package->addFileDefinition("authenticationpreview", QStringLiteral("previews/authentication.png"),
+                               tr("Preview for the authentication user interface"));
     package->addFileDefinition("lockscreenpreview", QStringLiteral("previews/lockscreen.png"),
                                tr("Preview for the Lock Screen"));
+
+    // Authentication
+    package->addDirectoryDefinition("authentication", QStringLiteral("authentication"),
+                                    tr("Authentication user interface"));
+    package->addFileDefinition("authentication", QStringLiteral("authentication/Authentication.qml"),
+                               tr("Main authentication user interface file"));
 
     // Lock Screen
     package->addDirectoryDefinition("lockscreen", QStringLiteral("lockscreen"),

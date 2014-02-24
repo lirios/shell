@@ -6,9 +6,6 @@
         <!-- Notifications -->
         <file>qml/NotificationsPanel.qml</file>
 
-        <!-- Dialogs -->
-        <file>qml/AuthenticationDialog.qml</file>
-
         <!-- Overlays -->
         <file>qml/Overlay.qml</file>
         <file>qml/ShortcutsOverlay.qml</file>
@@ -17,8 +14,6 @@
         <file>qml/WorkspacesOverlay.qml</file>
 
         <!-- Other files -->
-        <file>qml/qmldir</file>
-        <file>qml/DialogsSingleton.qml</file>
         <file>qml/Registrar.qml</file>
     </qresource>
 </RCC>

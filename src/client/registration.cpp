@@ -33,7 +33,6 @@
 #include "registration.h"
 #include "keybinding.h"
 #include "shellcontroller.h"
-#include "policykitagent.h"
 #include "powermanager.h"
 #include "processlauncher.h"
 #include "servicefactory.h"
@@ -71,9 +70,6 @@ void Registration::registerFactories()
     qmlRegisterUncreatableType<PowerManager>(uri, 1, 0,
                                              "PowerManager",
                                              QStringLiteral("Do not create PowerManager"));
-    qmlRegisterUncreatableType<PolicyKitAgent>(uri, 1, 0,
-                                               "PolicyKitAgent",
-                                               QStringLiteral("Do not create PolicyKitAgent"));
 
     // Register service factories
     ServiceFactory::registerFactory<DateTime>();
@@ -81,5 +77,4 @@ void Registration::registerFactories()
     ServiceFactory::registerFactory<ProcessLauncher>();
     ServiceFactory::registerFactory<SessionManager>();
     ServiceFactory::registerFactory<VolumeControl>();
-    ServiceFactory::registerFactory<PolicyKitAgent>();
 }
