@@ -24,9 +24,12 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtGui/QCursor>
+#include <QtGui/QGuiApplication>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
+#include "desktopview.h"
 #include "shellclient.h"
 #include "shellmanager.h"
 #include "shellcontroller_p.h"
@@ -44,6 +47,25 @@ ShellClient::ShellClient(QObject *parent)
 void ShellClient::hawaii_shell_loaded()
 {
     Q_EMIT loaded();
+}
+
+void ShellClient::hawaii_shell_configure(struct ::wl_surface *target,
+                                         int32_t width,
+                                         int32_t height)
+{
+    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+
+    QList<DesktopView *> views =
+            ShellManager::instance()->corona()->desktops();
+    for (DesktopView *view: views) {
+        struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
+                    native->nativeResourceForWindow("surface", view));
+        if (target == surface) {
+            qDebug("--> Resize DesktopView to %dx%d", width, height);
+            view->resize(width, height);
+            return;
+        }
+    }
 }
 
 void ShellClient::hawaii_shell_prepare_lock_surface()

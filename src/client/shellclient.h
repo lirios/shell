@@ -53,6 +53,9 @@ Q_SIGNALS:
 
 protected:
     void hawaii_shell_loaded() Q_DECL_OVERRIDE;
+    void hawaii_shell_configure(struct ::wl_surface *target,
+                                int32_t width,
+                                int32_t height);
     void hawaii_shell_prepare_lock_surface() Q_DECL_OVERRIDE;
     void hawaii_shell_grab_cursor(uint32_t cursor) Q_DECL_OVERRIDE;
     void hawaii_shell_window_mapped(struct ::wl_hawaii_window *id,

@@ -44,14 +44,12 @@ DesktopView::DesktopView(ShellUi *corona, QScreen *screen)
     // Set Wayland window type
     setWindowType();
 
-    // Set geometry and react to screen geometry changes
+    // Set initial geometry
     setGeometry(screen->geometry());
-    connect(screen, &QScreen::geometryChanged,
-            this, static_cast<void (QWindow::*)(const QRect &)>(&QWindow::setGeometry));
 
     // Debugging message
-    qDebug() << "-> Created DesktopView with geometry"
-             << geometry();
+    qDebug("-> Created DesktopView with size %dx%d",
+           size().width(), size().height());
 }
 
 void DesktopView::setWindowType()
