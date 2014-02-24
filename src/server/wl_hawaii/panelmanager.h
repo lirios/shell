@@ -47,6 +47,7 @@ private:
                                   wl_resource *surface_resource);
 
     void surfaceDestroyed(void *);
+    void panelDocked(PanelSurface *);
 
     wl_resource *m_binding;
     std::list<PanelSurface *> m_panels;

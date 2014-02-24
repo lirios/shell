@@ -94,6 +94,7 @@ PanelSurface *PanelManager::getPanelSurface(wl_client *client,
     m_panels.push_back(panel);
 
     panel->surfaceListener.signal->connect(this, &PanelManager::surfaceDestroyed);
+    panel->dockedSignal.connect(this, &PanelManager::panelDocked);
 
     surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
         DesktopShell *shell = static_cast<DesktopShell *>(Shell::instance());
@@ -107,8 +108,6 @@ PanelSurface *PanelManager::getPanelSurface(wl_client *client,
         weston_view *view = container_of(es->views.next, weston_view, surface_link);
         shell->addPanelSurfaceToLayer(view);
         panel->setPosition();
-
-        shell->recalculateAvailableGeometry();
     };
     surface->configure_private = panel;
     surface->output = nullptr;
@@ -123,6 +122,15 @@ void PanelManager::surfaceDestroyed(void *d)
         panel->surfaceListener.reset();
         m_panels.remove(panel);
     }
+}
+
+void PanelManager::panelDocked(PanelSurface *)
+{
+    DesktopShell *shell = static_cast<DesktopShell *>(Shell::instance());
+    if (!shell)
+        return;
+
+    shell->recalculateAvailableGeometry();
 }
 
 const struct wl_hawaii_panel_manager_interface PanelManager::implementation = {

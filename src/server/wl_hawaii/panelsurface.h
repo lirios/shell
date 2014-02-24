@@ -76,6 +76,7 @@ public:
     void setPosition();
 
     WlListener surfaceListener;
+    Signal<PanelSurface *> dockedSignal;
 
 private:
     wl_resource *m_resource;

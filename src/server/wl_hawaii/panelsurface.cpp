@@ -154,6 +154,7 @@ void PanelSurface::setPosition()
     wl_hawaii_panel_send_docked(m_resource);
     m_docked = true;
     m_dockRequested = false;
+    dockedSignal(this);
 }
 
 void PanelSurface::movePanel()
