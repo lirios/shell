@@ -171,6 +171,18 @@
       </description>
     </event>
 
+    <event name="configure">
+      <description summary="suggest resize">
+        The configure event asks the shell to resize its surface.
+
+        The width and height arguments specify the size of the window
+        in surface local coordinates.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="width" type="int"/>
+      <arg name="height" type="int"/>
+    </event>
+
     <event name="prepare_lock_surface">
       <description summary="tell the client to create, set the lock surface">
 	Tell the shell we want it to create and set the lock surface, which is
