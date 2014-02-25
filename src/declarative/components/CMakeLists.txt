@@ -39,7 +39,13 @@ qtwayland_add_protocol_client(SOURCES
 
 add_library(hawaiishellcomponentsplugin SHARED ${SOURCES})
 qt5_use_modules(hawaiishellcomponentsplugin Qml Quick)
-target_link_libraries(hawaiishellcomponentsplugin HF1HawaiiShell)
+set_target_properties(hawaii-notifications-daemon PROPERTIES
+    LINK_FLAGS -L${WaylandClient_LIBDIR}
+)
+target_link_libraries(hawaiishellcomponentsplugin
+    ${WaylandClient_LIBRARIES}
+    HF1HawaiiShell
+)
 
 install(TARGETS hawaiishellcomponentsplugin LIBRARY
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/hawaii/qml/Hawaii/Shell/Components)
