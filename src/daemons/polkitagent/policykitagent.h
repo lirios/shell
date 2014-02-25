@@ -40,21 +40,6 @@ public:
 
     static PolicyKitAgent *instance();
 
-Q_SIGNALS:
-    void authenticationInitiated(const QString &actionId,
-                                 const QString &message,
-                                 const QString &iconName,
-                                 const QString &realName,
-                                 const QString &avatar);
-    void authenticationRequested(const QString &prompt, bool echo);
-    void authenticationFinished();
-    void authenticationCanceled();
-
-    void authorized();
-
-    void infoMessage(const QString &message);
-    void errorMessage(const QString &message);
-
 public Q_SLOTS:
     void initiateAuthentication(const QString &actionId,
                                 const QString &message,
@@ -74,6 +59,9 @@ public Q_SLOTS:
 
     void authenticate(const QString &response);
     void abortAuthentication();
+
+private Q_SLOTS:
+    void settingChanged(const QString &key, const QVariant &value);
 
 private:
     Q_DISABLE_COPY(PolicyKitAgent)

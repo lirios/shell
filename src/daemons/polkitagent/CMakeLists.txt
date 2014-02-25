@@ -1,8 +1,12 @@
 include_directories(
     ${POLKITQT-1_INCLUDE_DIR}
+    ${QtConfiguration_INCLUDE_DIRS}
     ${QtAccountsService_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
+    ${CMAKE_SOURCE_DIR}/src/libhawaiishell
+    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/includes
+    ${CMAKE_BINARY_DIR}/src/libhawaiishell
 )
 
 if(systemd_FOUND)
@@ -18,7 +22,9 @@ set(LINK_FLAGS "-L${POLKITQT-1_LIB_DIR}")
 set(LIBRARIES
     ${POLKITQT-1_CORE_LIBRARY}
     ${POLKITQT-1_AGENT_LIBRARY}
+    ${QtConfiguration_LIBRARIES}
     ${QtAccountsService_LIBRARIES}
+    HF1HawaiiShell
 )
 if(systemd_FOUND)
     set(LINK_FLAGS "${LINK_FLAGS} -L${systemd_LIBDIR}")

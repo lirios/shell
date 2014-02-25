@@ -31,12 +31,34 @@
 #include <polkitqt1-details.h>
 #include <polkitqt1-identity.h>
 
+#include <QtConfiguration/QStaticConfiguration>
+
+#include <HawaiiShell/Package>
+#include <HawaiiShell/QmlObject>
+
 class PolicyKitAgent;
 
 class PolicyKitAgentPrivate
 {
 public:
     PolicyKitAgentPrivate(PolicyKitAgent *self);
+
+    void createDialog(const QString &actionId,
+                      const QString &message,
+                      const QString &iconName,
+                      const QString &realName,
+                      const QString &avatar);
+    void destroyDialog();
+
+    void settingChanged(const QString &key, const QVariant &value);
+
+    QStaticConfiguration *settings;
+
+    Hawaii::Shell::Package package;
+    QString lookAndFeelId;
+
+    Hawaii::Shell::QmlObject *qmlObject;
+    QObject *dialog;
 
     bool progressing;
     bool canceled;

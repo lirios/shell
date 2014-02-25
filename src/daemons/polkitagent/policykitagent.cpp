@@ -29,10 +29,12 @@
 #include <QtGui/QScreen>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlComponent>
-#include <QtQuick/QQuickWindow>
+#include <QtQml/QQmlContext>
 
 #include <QtAccountsService/AccountsManager>
 #include <QtAccountsService/UserAccount>
+
+#include <HawaiiShell/PluginLoader>
 
 #include "config.h"
 #include "policykitagent.h"
@@ -50,16 +52,95 @@ Q_GLOBAL_STATIC(PolicyKitAgent, s_agent)
 
 QT_USE_NAMESPACE_ACCOUNTSSERVICE
 
+using namespace Hawaii::Shell;
+
 /*
  * PolicyKitAgentPrivate
  */
 
 PolicyKitAgentPrivate::PolicyKitAgentPrivate(PolicyKitAgent *self)
-    : progressing(false)
+    : settings(new QStaticConfiguration(self))
+    , dialog(nullptr)
+    , progressing(false)
     , canceled(false)
     , session(0)
     , q_ptr(self)
 {
+    // Settings category
+    settings->setCategory(QStringLiteral("shell"));
+
+    // Load look and feel package
+    package = PluginLoader::instance()->loadPackage(
+                PluginLoader::LookAndFeelPlugin);
+    package.setPath(settings->value(QStringLiteral("lookAndFeel")).toString());
+    if (!package.isValid())
+        package.setPath(QStringLiteral("org.hawaii.lookandfeel.standard"));
+
+    // Prepare the QML loader
+    qmlObject = new QmlObject(self);
+    qmlObject->setInitializationDelayed(true);
+}
+
+void PolicyKitAgentPrivate::createDialog(const QString &actionId,
+                                         const QString &message,
+                                         const QString &iconName,
+                                         const QString &realName,
+                                         const QString &avatar)
+{
+    Q_Q(PolicyKitAgent);
+
+    // By the time we come here the look and feel package might
+    // have been changed several times. We don't want to change it
+    // while a dialog is still visible so we cache the last package
+    // identifier and load it here
+    if (!lookAndFeelId.isEmpty()) {
+        package.setPath(lookAndFeelId);
+        lookAndFeelId.clear();
+
+        // Fall back to the default package
+        if (!package.isValid())
+            package.setPath(QStringLiteral("org.hawaii.lookandfeel.standard"));
+    }
+
+    // Properties
+    QVariantHash props;
+    props.insert(QStringLiteral("actionId"), actionId);
+    props.insert(QStringLiteral("message"), message);
+    props.insert(QStringLiteral("iconName"), iconName);
+    props.insert(QStringLiteral("realName"), realName);
+    props.insert(QStringLiteral("avatar"), avatar);
+
+    // Load the dialog
+    QUrl url = QUrl::fromLocalFile(package.filePath("authentication"));
+    qmlObject->setSource(url);
+    if (!qmlObject->engine() || !qmlObject->engine()->rootContext() ||
+            !qmlObject->engine()->rootContext()->isValid() ||
+            qmlObject->mainComponent()->isError()) {
+        QString errorMsg;
+        for (QQmlError error: qmlObject->mainComponent()->errors())
+            errorMsg += error.toString() + QStringLiteral("\n");
+        errorMsg = q->tr("Unable to load the authentication dialog: %1").arg(errorMsg);
+        qFatal(qPrintable(errorMsg));
+        return;
+    }
+    qmlObject->completeInitialization(props);
+    dialog = qmlObject->rootObject();
+
+    // Connect signals
+    QObject::connect(qmlObject->rootObject(), SIGNAL(authenticationCanceled()),
+                     q, SLOT(abortAuthentication()));
+    QObject::connect(qmlObject->rootObject(), SIGNAL(authenticationReady(QString)),
+                     q, SLOT(authenticate(QString)));
+}
+
+void PolicyKitAgentPrivate::destroyDialog()
+{
+    if (!dialog)
+        return;
+
+    dialog->setProperty("visible", false);
+    dialog->deleteLater();
+    dialog = nullptr;
 }
 
 /*
@@ -70,6 +151,10 @@ PolicyKitAgent::PolicyKitAgent(QObject *parent)
     : PolkitQt1::Agent::Listener(parent)
     , d_ptr(new PolicyKitAgentPrivate(this))
 {
+    Q_D(PolicyKitAgent);
+    connect(d->settings, &QStaticConfiguration::valueChanged,
+            this, &PolicyKitAgent::settingChanged);
+
     PolkitQt1::UnixSessionSubject session(
                 QCoreApplication::instance()->applicationPid());
     if (registerListener(session, "/org/hawaii/PolicyKit1/AuthenticationAgent")) {
@@ -186,8 +271,8 @@ void PolicyKitAgent::initiateAuthentication(const QString &actionId,
     session->initiate();
 
     // Initiate authentication sequence
-    Q_EMIT authenticationInitiated(actionId, message, iconName,
-                                   d->realName, account->iconFileName());
+    d->createDialog(actionId, message, iconName, d->realName,
+                    account->iconFileName());
 }
 
 bool PolicyKitAgent::initiateAuthenticationFinish()
@@ -196,7 +281,9 @@ bool PolicyKitAgent::initiateAuthenticationFinish()
 
     if (!d->progressing) {
         // Inform the dialog that the authentication sequence has finished
-        Q_EMIT authenticationFinished();
+        Q_ASSERT(d->dialog);
+        QMetaObject::invokeMethod(d->dialog, "authenticationFinished",
+                                  Qt::QueuedConnection);
     }
 
     return true;
@@ -212,7 +299,9 @@ void PolicyKitAgent::cancelAuthentication()
     d->progressing = false;
     d->canceled = true;
     d->session = 0;
-    Q_EMIT authenticationCanceled();
+
+    // Hide and destroy the dialog
+    d->destroyDialog();
 }
 
 void PolicyKitAgent::request(const QString &request, bool echo)
@@ -230,11 +319,16 @@ void PolicyKitAgent::request(const QString &request, bool echo)
     // dialog will be either accepted or rejected
     d->session = session;
 
-    // Set the prompt and password echo
+    // Normalize prompt
     QString prompt = request;
     if (request == QStringLiteral("Password:") || request == QStringLiteral("Password: "))
         prompt = tr("Password:");
-    Q_EMIT authenticationRequested(prompt, echo);
+
+    // Set the prompt and password echo
+    Q_ASSERT(d->dialog);
+    d->dialog->setProperty("prompt", prompt);
+    d->dialog->setProperty("echo", echo);
+    d->dialog->setProperty("visible", true);
 }
 
 void PolicyKitAgent::completed(bool gainedAuthorization)
@@ -248,8 +342,8 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
     PolkitQt1::Agent::AsyncResult *result = d->session->result();
 
     if (gainedAuthorization) {
-        // Authorization completed
-        Q_EMIT authorized();
+        // Authorization completed, destroy dialog
+        d->destroyDialog();
     } else {
         // Authorization failed
         qDebug() << "Authorization failed!";
@@ -257,11 +351,13 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
         if (d->canceled) {
             // Inform the dialog the authentication was canceled by the user
             result->setCompleted();
-            Q_EMIT authenticationCanceled();
+            d->destroyDialog();
         } else {
             // The user didn't cancel the dialog, this is an actual
             // authentication failure
-            Q_EMIT errorMessage(tr("Sorry, that didn't work. Please try again."));
+            Q_ASSERT(d->dialog);
+            d->dialog->setProperty("errorMessage",
+                                   tr("Sorry, that didn't work. Please try again."));
 
             // Cancel current session
             disconnect(d->session, SIGNAL(request(QString, bool)),
@@ -308,12 +404,16 @@ void PolicyKitAgent::completed(bool gainedAuthorization)
 
 void PolicyKitAgent::showInfo(const QString &text)
 {
-    Q_EMIT infoMessage(text);
+    Q_D(PolicyKitAgent);
+    Q_ASSERT(d->dialog);
+    d->dialog->setProperty("infoMessage", text);
 }
 
 void PolicyKitAgent::showError(const QString &text)
 {
-    Q_EMIT errorMessage(text);
+    Q_D(PolicyKitAgent);
+    Q_ASSERT(d->dialog);
+    d->dialog->setProperty("errorMessage", text);
 }
 
 void PolicyKitAgent::authenticate(const QString &response)
@@ -338,6 +438,18 @@ void PolicyKitAgent::abortAuthentication()
     d->progressing = false;
     d->canceled = true;
     d->session->cancel();
+}
+
+void PolicyKitAgent::settingChanged(const QString &key, const QVariant &value)
+{
+    Q_D(PolicyKitAgent);
+
+    if (key != QStringLiteral("lookAndFeel"))
+        return;
+
+    // Cache the last look and feel package identifier,
+    // it will be loaded the next time a dialog is created
+    d->lookAndFeelId = value.toString();
 }
 
 #include "moc_policykitagent.cpp"
