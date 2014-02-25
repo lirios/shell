@@ -95,15 +95,6 @@ pkg_check_modules(Pixman pixman-1 REQUIRED)
 # Find Weston SDK
 pkg_check_modules(Weston weston REQUIRED)
 
-# Find Weston libdir
-execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=libdir weston
-    OUTPUT_VARIABLE CMAKE_INSTALL_WESTONLIBDIR
-    RESULT_VARIABLE _failed)
-if(_failed)
-    message(FATAL_ERROR "Cannot find libdir propery from weston: ${_failed}")
-endif(_failed)
-string(REGEX REPLACE "[ \t\n]+" "" CMAKE_INSTALL_WESTONLIBDIR "${CMAKE_INSTALL_WESTONLIBDIR}")
-
 # Find systemd
 pkg_check_modules(systemd libsystemd-daemon)
 set(HAVE_SYSTEMD ${systemd_FOUND})
