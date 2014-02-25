@@ -1,6 +1,3 @@
-# Find QtAccountsService
-find_package(QtAccountsService REQUIRED)
-
 # Find ALSA
 find_package(ALSA)
 

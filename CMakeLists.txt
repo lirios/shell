@@ -78,6 +78,9 @@ include(QtWayland)
 # Find QtConfiguration
 find_package(QtConfiguration REQUIRED)
 
+# Find QtAccountsService
+find_package(QtAccountsService REQUIRED)
+
 # Find GreenIsland
 find_package(GreenIsland REQUIRED)
 
