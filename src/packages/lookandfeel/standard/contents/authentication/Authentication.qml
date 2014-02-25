@@ -27,10 +27,8 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import QtAccountsService 1.0
 import Fluid.Ui 1.0 as FluidUi
-import Fluid.Ui.ListItems 1.0 as ListItem
-import Hawaii.Shell 1.0
+import Hawaii.Shell.Components 1.0
 
 Dialog {
     id: authenticationDialog
@@ -83,15 +81,15 @@ Dialog {
                             if (avatar == "")
                                 return "image://desktoptheme/avatar-default";
 
-                            // Prepend the file scheme if this is an absolute path,
-                            // this prevents QtQuick from searching the path from qrc
+                            // Load the image from the disk if it's an absolute path
                             if (avatar.indexOf("/") == 0)
-                                return "file://" + avatar;
+                                return avatar;
 
                             // Load from the icon theme
                             return "image://desktoptheme/" + avatar;
                         }
-                        sourceSize: Qt.size(width, height)
+                        sourceSize.width: width
+                        sourceSize.height: height
                         width: 64
                         height: 64
                         smooth: true
@@ -165,14 +163,5 @@ Dialog {
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
         }
-    }
-
-    function initialize() {
-        // Initialization
-        prompt = "";
-        passwordInput.text = "";
-        echo = false;
-        infoMessage = "";
-        errorMessage = "";
     }
 }
