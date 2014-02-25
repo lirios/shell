@@ -100,7 +100,7 @@ pkg_check_modules(systemd libsystemd-daemon)
 set(HAVE_SYSTEMD ${systemd_FOUND})
 
 # Find polkit-qt-1
-find_package(PolkitQt-1 REQUIRED)
+find_package(PolkitQt-1)
 
 # Subdirectories
 add_subdirectory(data)
