@@ -34,12 +34,17 @@
 #include <QtAccountsService/AccountsManager>
 #include <QtAccountsService/UserAccount>
 
+#include "config.h"
 #include "policykitagent.h"
 #include "policykitagent_p.h"
 
 #include <polkitqt1-subject.h>
 
 #include <unistd.h>
+
+#if HAVE_SYSTEMD
+#  include <systemd/sd-daemon.h>
+#endif
 
 Q_GLOBAL_STATIC(PolicyKitAgent, s_agent)
 
@@ -67,7 +72,25 @@ PolicyKitAgent::PolicyKitAgent(QObject *parent)
 {
     PolkitQt1::UnixSessionSubject session(
                 QCoreApplication::instance()->applicationPid());
-    registerListener(session, "/org/hawaii/PolicyKit1/AuthenticationAgent");
+    if (registerListener(session, "/org/hawaii/PolicyKit1/AuthenticationAgent")) {
+        qDebug() << "PolicyKit agent started!";
+#if HAVE_SYSTEMD
+        sd_notifyf(0,
+                   "READY=1\n"
+                   "STATUS=PolicyKit agent started\n"
+                   "MAINPID=%llu",
+                   QCoreApplication::applicationPid());
+#endif
+    } else {
+        const char *msg = "Failed to register PolicyKit agent";
+#if HAVE_SYSTEMD
+        sd_notifyf(0,
+                   "STATUS=%s\n"
+                   "ERRNO=%i",
+                   msg, EFAULT);
+#endif
+        qWarning() << msg;
+    }
 }
 
 PolicyKitAgent::~PolicyKitAgent()
