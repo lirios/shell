@@ -41,6 +41,8 @@
 
 #include <unistd.h>
 
+Q_GLOBAL_STATIC(PolicyKitAgent, s_agent)
+
 QT_USE_NAMESPACE_ACCOUNTSSERVICE
 
 /*
@@ -72,6 +74,11 @@ PolicyKitAgent::PolicyKitAgent(QObject *parent)
 PolicyKitAgent::~PolicyKitAgent()
 {
     delete d_ptr;
+}
+
+PolicyKitAgent *PolicyKitAgent::instance()
+{
+    return s_agent();
 }
 
 void PolicyKitAgent::initiateAuthentication(const QString &actionId,

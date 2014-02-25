@@ -38,6 +38,8 @@ public:
     explicit PolicyKitAgent(QObject *parent = 0);
     ~PolicyKitAgent();
 
+    static PolicyKitAgent *instance();
+
     constexpr static const char *name() { return "PolicyKitAgent"; }
 
 Q_SIGNALS:
