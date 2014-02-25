@@ -79,7 +79,7 @@ include(QtWayland)
 find_package(QtConfiguration REQUIRED)
 
 # Find GreenIsland
-find_package(GreenIsland)
+find_package(GreenIsland REQUIRED)
 
 # Find pkg-config
 find_package(PkgConfig "0.22" REQUIRED)

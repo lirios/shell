@@ -1,7 +1,5 @@
 add_subdirectory(client)
-if(GreenIsland_FOUND)
-    add_subdirectory(compositor)
-endif()
+add_subdirectory(compositor)
 add_subdirectory(daemons)
 add_subdirectory(declarative)
 add_subdirectory(libhawaiishell)
