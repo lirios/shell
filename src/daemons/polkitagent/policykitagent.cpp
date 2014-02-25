@@ -63,9 +63,8 @@ PolicyKitAgentPrivate::PolicyKitAgentPrivate(PolicyKitAgent *self)
 
 PolicyKitAgent::PolicyKitAgent(QObject *parent)
     : PolkitQt1::Agent::Listener(parent)
+    , d_ptr(new PolicyKitAgentPrivate(this))
 {
-    d_ptr = new PolicyKitAgentPrivate(this);
-
     PolkitQt1::UnixSessionSubject session(
                 QCoreApplication::instance()->applicationPid());
     registerListener(session, "/org/hawaii/PolicyKit1/AuthenticationAgent");

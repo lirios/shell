@@ -40,8 +40,6 @@ public:
 
     static PolicyKitAgent *instance();
 
-    constexpr static const char *name() { return "PolicyKitAgent"; }
-
 Q_SIGNALS:
     void authenticationInitiated(const QString &actionId,
                                  const QString &message,
