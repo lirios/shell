@@ -49,9 +49,6 @@ ApplicationsModel::ApplicationsModel(QObject *parent)
     m_watcher->addPaths(QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation));
     connect(m_watcher, SIGNAL(directoryChanged(QString)),
             this, SLOT(directoryChanged(QString)));
-
-    // Populate the list
-    populate();
 }
 
 ApplicationsModel::~ApplicationsModel()
@@ -101,6 +98,15 @@ int ApplicationsModel::rowCount(const QModelIndex &parent) const
     return m_apps.size();
 }
 
+void ApplicationsModel::populate()
+{
+    QStringList paths = QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation);
+    for (int i = 0; i < paths.size(); i++)
+        directoryChanged(paths.at(i));
+
+    cleanupCategories();
+}
+
 AppInfo *ApplicationsModel::get(int index)
 {
     if (index < 0 || index > m_apps.size())
@@ -111,15 +117,6 @@ AppInfo *ApplicationsModel::get(int index)
 void ApplicationsModel::launch(int index)
 {
     get(index)->launch();
-}
-
-void ApplicationsModel::populate()
-{
-    QStringList paths = QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation);
-    for (int i = 0; i < paths.size(); i++)
-        directoryChanged(paths.at(i));
-
-    cleanupCategories();
 }
 
 void ApplicationsModel::cleanupCategories()

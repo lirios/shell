@@ -62,6 +62,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
 public Q_SLOTS:
+    void populate();
+
     AppInfo *get(int index);
     void launch(int index);
 
@@ -70,7 +72,6 @@ private:
     QFileSystemWatcher *m_watcher;
     QSet<QString> m_categories;
 
-    void populate();
     void cleanupCategories();
 
 private Q_SLOTS:
