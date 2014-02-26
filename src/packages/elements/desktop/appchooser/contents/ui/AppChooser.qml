@@ -142,4 +142,6 @@ Popup {
             }
         }
     }
+
+    Component.onCompleted: appsModel.populate()
 }
