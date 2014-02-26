@@ -59,6 +59,11 @@ wl_hawaii_panel_edge PanelSurface::edge() const
     return m_edge;
 }
 
+weston_view *PanelSurface::view() const
+{
+    return m_view;
+}
+
 weston_output *PanelSurface::output() const
 {
     return m_view->output;

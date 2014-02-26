@@ -40,6 +40,7 @@ public:
 
     wl_hawaii_panel_edge edge() const;
 
+    weston_view *view() const;
     weston_output *output() const;
 
     float x() const;
