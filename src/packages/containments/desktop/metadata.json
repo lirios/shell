@@ -1,0 +1,13 @@
+{
+    "name": "org.hawaii.containments.desktop",
+    "type": "containment",
+    "containment-type": "desktop",
+    "version": "1.0",
+    "license": "GPLv2+",
+    "title": "Panel",
+    "description": "Empty desktop",
+    "author-name": "Pier Luigi Fiorini",
+    "author-email": "pierluigi.fiorini@gmail.com",
+    "website": "http://www.maui-project.org",
+    "mainscript": "ui/main.qml"
+}
