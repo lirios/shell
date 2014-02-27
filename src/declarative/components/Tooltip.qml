@@ -42,10 +42,10 @@ Private.TooltipWindow {
             id: mainLayout
             anchors {
                 fill: parent
-                leftMargin: __style.padding.left
-                topMargin: __style.padding.top
-                rightMargin: __style.padding.right
-                bottomMargin: __style.padding.bottom
+                leftMargin: styledItem.__style.padding.left
+                topMargin: styledItem.__style.padding.top
+                rightMargin: styledItem.__style.padding.right
+                bottomMargin: styledItem.__style.padding.bottom
             }
 
             Text {
