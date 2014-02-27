@@ -105,6 +105,8 @@ bool TooltipWindow::eventFilter(QObject *object, QEvent *event)
 void TooltipWindow::showWindow()
 {
     QQuickWindow *window = parentItem()->window();
+    if (!window)
+        return;
 
     // Create a transient window and reparent tooltip's content
     m_window = new QQuickWindow();
