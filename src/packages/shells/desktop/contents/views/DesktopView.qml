@@ -25,13 +25,16 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import "../components" as Components
 
 Item {
-    id: desktopView
+    property Item containment
 
-    DesktopContainment {
-        id: containment
-        anchors.fill: parent
+    id: desktopView
+    onContainmentChanged: {
+        containment.anchors.left = desktopView.left;
+        containment.anchors.top = desktopView.top;
+        containment.anchors.right = desktopView.right;
+        containment.anchors.bottom = desktopView.bottom;
+        containment.visible = true;
     }
 }
