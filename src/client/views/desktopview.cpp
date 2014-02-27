@@ -71,7 +71,7 @@ DesktopView::DesktopView(ShellUi *corona, QScreen *screen)
     setWindowType();
 
     // Set initial geometry
-    setGeometry(screen->geometry());
+    setGeometry(screen->availableGeometry());
 
     // Debugging message
     qDebug("-> Created DesktopView with size %dx%d",
