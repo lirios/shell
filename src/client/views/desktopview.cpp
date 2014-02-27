@@ -29,6 +29,10 @@
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
 #include <QtGui/qpa/qplatformnativeinterface.h>
+#include <QtQml/QQmlContext>
+
+#include <HawaiiShell/Containment>
+#include <HawaiiShell/PluginLoader>
 
 #include "desktopview.h"
 #include "shellmanager.h"
@@ -38,8 +42,30 @@ using namespace Hawaii::Shell;
 DesktopView::DesktopView(ShellUi *corona, QScreen *screen)
     : QuickView(corona, new QWindow(screen))
 {
+    // Let QML see us
+    rootContext()->setContextProperty("desktop", this);
+
     // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);
+
+    // Load containment package
+    Package package = PluginLoader::instance()->loadPackage(
+                PluginLoader::ContainmentPlugin);
+    package.setPath(QStringLiteral("org.hawaii.containments.desktop"));
+
+    // Create and load containment
+    Containment *containment = new Containment(corona, this);
+    containment->setContextProperty(QStringLiteral("desktop"),
+                                    QVariant::fromValue(this));
+    containment->setPackage(package);
+
+    // Load QML source file
+    setSource(QUrl::fromLocalFile(corona->package().filePath(
+                                      "views", QStringLiteral("DesktopView.qml"))));
+
+    // Set containment
+    setContainment(containment);
+    setLocation(Types::Desktop);
 
     // Set Wayland window type
     setWindowType();
