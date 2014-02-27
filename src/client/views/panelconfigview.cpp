@@ -120,20 +120,20 @@ void PanelConfigView::setupGeometry()
     // account here because we can have only one panel for each edge
     switch (m_panelView->containment()->location()) {
     case Hawaii::Shell::Types::LeftEdge:
-        setPosition(screen()->geometry().left() + m_panelView->thickness(),
-                    screen()->geometry().top());
+        setPosition(screen()->availableGeometry().left() + m_panelView->thickness(),
+                    screen()->availableGeometry().top());
         break;
     case Hawaii::Shell::Types::TopEdge:
-        setPosition(screen()->geometry().left(),
-                    screen()->geometry().top() + m_panelView->thickness());
+        setPosition(screen()->availableGeometry().left(),
+                    screen()->availableGeometry().top() + m_panelView->thickness());
         break;
     case Hawaii::Shell::Types::RightEdge:
-        setPosition(screen()->geometry().right() - width() - m_panelView->thickness(),
-                    screen()->geometry().top());
+        setPosition(screen()->availableGeometry().right() - width() - m_panelView->thickness(),
+                    screen()->availableGeometry().top());
         break;
     case Hawaii::Shell::Types::BottomEdge:
-        setPosition(screen()->geometry().left(),
-                    screen()->geometry().bottom() - height() - m_panelView->thickness());
+        setPosition(screen()->availableGeometry().left(),
+                    screen()->availableGeometry().bottom() - height() - m_panelView->thickness());
         break;
     default:
         break;
