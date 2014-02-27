@@ -48,6 +48,10 @@ PanelConfigView::PanelConfigView(PanelView *parent)
         setupGeometry();
     });
 
+    // Change position when panel size changes
+    connect(m_panelView, &PanelView::thicknessChanged,
+            this, &PanelConfigView::setupGeometry);
+
     // Change geometry when the containment changes its form factor or location
     connect(parent->containment(), &Hawaii::Shell::Containment::formFactorChanged,
             this, &PanelConfigView::setupGeometry);
