@@ -121,7 +121,7 @@ void TooltipWindow::showWindow()
 
     // Set window properties
     m_window->setX(pt.x());
-    m_window->setY(pt.y() - window->height());
+    m_window->setY(pt.y() - m_content->height());
     m_window->setWidth(m_content->width());
     m_window->setHeight(m_content->height());
     m_window->setColor(Qt::transparent);
