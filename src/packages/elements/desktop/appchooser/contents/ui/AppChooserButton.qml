@@ -29,6 +29,7 @@ import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Core 1.0
 import Hawaii.Shell.Styles 1.0
+import Hawaii.Shell.Components 1.0
 
 Element {
     id: root
@@ -65,12 +66,23 @@ Element {
             }
         }
 
+        Tooltip {
+            id: tooltip
+            text: qsTr("Applications")
+        }
+
         MouseArea {
             id: mouse
             anchors.fill: parent
             hoverEnabled: true
-            onEntered: __priv.hover = true
-            onExited: __priv.hover = __priv.checked
+            onEntered: {
+                __priv.hover = true;
+                tooltip.show();
+            }
+            onExited: {
+                __priv.hover = __priv.checked;
+                tooltip.hide();
+            }
             onClicked: appChooser.visible = !appChooser.visible
         }
     }
