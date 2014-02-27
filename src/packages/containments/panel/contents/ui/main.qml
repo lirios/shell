@@ -36,8 +36,11 @@ DropArea {
     property Item configButton
     property Item dragOverlay
 
+    property bool isHorizontal: panel.formFactor !== Shell.Types.Vertical
+
     id: root
     keys: ["application/x-hawaiishell-element"]
+    /*
     onEntered: LayoutManager.insertAtCoordinates(dndSpacer, drag.x, drag.y)
     onPositionChanged: LayoutManager.insertAtCoordinates(dndSpacer, drag.x, drag.y)
     onExited: dndSpacer.parent = root
@@ -47,24 +50,51 @@ DropArea {
                 drop.acceptProposedAction();
         }
     }
+*/
+    onWidthChanged: containmentSizeSyncTimer.restart()
+    onHeightChanged: containmentSizeSyncTimer.restart()
+    onConfigButtonChanged: containmentSizeSyncTimer.restart()
 
     Layout.minimumWidth: currentLayout.Layout.minimumWidth
     Layout.maximumWidth: currentLayout.Layout.maximumWidth
     Layout.preferredWidth: currentLayout.Layout.preferredWidth
 
+    Layout.minimumHeight: currentLayout.Layout.minimumHeight
+    Layout.maximumHeight: currentLayout.Layout.maximumHeight
+    Layout.preferredHeight: currentLayout.Layout.preferredHeight
+
     GridLayout {
-        property bool isHorizontal: panel.formFactor === Shell.Types.Horizontal
+        property bool isLayoutHorizontal
 
         id: currentLayout
+        /*
         anchors {
             left: parent.left
             top: parent.top
             right: isHorizontal && configButton ? configButton.left : parent.right
             bottom: isHorizontal ? parent.bottom : (configButton ? configButton.top : parent.bottom)
         }
+*/
         rows: 1
         columns: 1
         flow: isHorizontal ? GridLayout.TopToBottom : GridLayout.LeftToRight
+
+        Layout.preferredWidth: {
+            var width = 0;
+            for (var i = 0; i < currentLayout.children.length; ++i) {
+                if (currentLayout.children[i].Layout)
+                    width += Math.max(currentLayout.children[i].Layout.minimumWidth, currentLayout.children[i].Layout.preferredWidth);
+            }
+            return width;
+        }
+        Layout.preferredHeight: {
+            var height = 0;
+            for (var i = 0; i < currentLayout.children.length; ++i) {
+                if (currentLayout.children[i].Layout)
+                    height += Math.max(currentLayout.children[i].Layout.minimumHeight, currentLayout.children[i].Layout.preferredHeight);
+            }
+            return height;
+        }
     }
 
     Item {
@@ -133,52 +163,77 @@ DropArea {
             }
 
             Layout.minimumWidth: {
-                if (panel.formFactor !== Shell.Types.Vertical)
-                    return element && element.minimumWidth > 0 ? element.minimumWidth : root.height;
+                if (currentLayout.isLayoutHorizontal)
+                    return element && element.Layout.minimumWidth > 0 ? element.Layout.minimumWidth : root.height;
                 return root.width;
             }
             Layout.minimumHeight: {
-                if (panel.formFactor === Shell.Types.Vertical)
-                    return element && element.minimumHeight > 0 ? element.minimumHeight : root.width;
+                if (!currentLayout.isLayoutHorizontal)
+                    return element && element.Layout.minimumHeight > 0 ? element.Layout.minimumHeight : root.width;
                 return root.height;
             }
 
             Layout.preferredWidth: {
-                if (panel.formFactor !== Shell.Types.Vertical)
-                    return element && element.implicitWidth > 0 ? element.implicitWidth : root.height;
+                if (currentLayout.isLayoutHorizontal)
+                    return element && element.Layout.preferredWidth > 0 ? element.Layout.preferredWidth : root.height;
                 return root.width;
             }
             Layout.preferredHeight: {
-                if (panel.formFactor === Shell.Types.Vertical)
-                    return element && element.implicitHeight > 0 ? element.implicitHeight : root.width;
+                if (!currentLayout.isLayoutHorizontal)
+                    return element && element.Layout.preferredHeight > 0 ? element.Layout.preferredHeight : root.width;
                 return root.height;
             }
 
             Layout.maximumWidth: {
-                if (panel.formFactor !== Shell.Types.Vertical)
-                    return element && element.maximumWidth > 0 ? element.maximumWidth : (Layout.fillWidth ? -1 : root.height);
-                return Layout.fillHeight ? -1 : root.width;
+                if (currentLayout.isLayoutHorizontal) {
+                    if (element && element.Layout.maximumWidth > 0)
+                        return element.Layout.maximumWidth;
+                    else if (Layout.fillWidth)
+                        return root.width;
+                }
+                return root.height;
             }
             Layout.maximumHeight: {
-                if (panel.formFactor === Shell.Types.Vertical)
-                    return element && element.maximumHeight > 0 ? element.maximumHeight : (Layout.fillHeight ? -1 : root.width);
-                return Layout.fillWidth ? -1 : root.height;
+                if (!currentLayout.isLayoutHorizontal) {
+                    if (element && element.Layout.maximumHeight > 0)
+                        return element.Layout.maximumHeight;
+                    else if (Layout.fillHeight)
+                        return root.height;
+                }
+                return root.width;
             }
 
             Layout.fillWidth: element && element.fillWidth
+            Layout.onFillWidthChanged: {
+                if (panel.formFactor !== Shell.Types.Vertical)
+                    checkLastSpacer();
+            }
+
             Layout.fillHeight: element && element.fillHeight
+            Layout.onFillHeightChanged: {
+                if (panel.formFactor === Shell.Types.Vertical)
+                    checkLastSpacer();
+            }
+        }
+    }
+
+    Timer {
+        id: containmentSizeSyncTimer
+        interval: 150
+        onTriggered: {
+            currentLayout.x = 0;
+            currentLayout.y = 0;
+            currentLayout.width = root.width - (isHorizontal && configButton && configButton.visible ? configButton.width : 0);
+            currentLayout.height = root.height - (!isHorizontal && configButton && configButton.visible ? configButton.height : 0);
+            currentLayout.isLayoutHorizontal = isHorizontal;
         }
     }
 
     Connections {
         target: panel
-        onElementAdded: {
-            addElement(element);
-        }
-    }
-
-    Connections {
-        target: panel
+        onFormFactorChanged: containmentSizeSyncTimer.restart()
+        onImmutableChanged: containmentSizeSyncTimer.restart()
+        onElementAdded: addElement(element)
         onConfiguringChanged: makeConfigurable()
     }
 
@@ -192,9 +247,6 @@ DropArea {
 
     function addElement(element) {
         var container = elementComponent.createObject(root);
-
-        if (element.fillWidth)
-            lastSpacer.parent = root;
 
         element.parent = container;
         container.element = element;
@@ -218,6 +270,31 @@ DropArea {
 
         if (element.Layout.fillWidth)
             lastSpacer.parent = root;
+    }
+
+    function checkLastSpacer() {
+        lastSpacer.parent = root
+
+        var expands = false;
+        var container;
+        var item;
+
+        if (isHorizontal) {
+            for (container in currentLayout.children) {
+                item = currentLayout.children[container];
+                if (item.Layout && item.Layout.fillWidth)
+                    expands = true;
+            }
+        } else {
+            for (container in currentLayout.children) {
+                item = currentLayout.children[container];
+                if (item.Layout && item.Layout.fillHeight)
+                    expands = true;
+            }
+        }
+
+        if (!expands)
+            lastSpacer.parent = currentLayout
     }
 
     function makeConfigurable() {

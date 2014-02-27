@@ -104,8 +104,8 @@ function insertAtCoordinates(item, x, y) {
     item.parent = root;
 
     //Shell.Types.Vertical = 2
-    if ((view.formFactor === 2 && y < child.y + child.height/2) ||
-            (view.formFactor !== 2 && x < child.x + child.width/2)) {
+    if ((panel.formFactor === 2 && y < child.y + child.height/2) ||
+            (panel.formFactor !== 2 && x < child.x + child.width/2)) {
         return insertBefore(child, item);
     } else {
         return insertAfter(child, item);
