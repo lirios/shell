@@ -114,11 +114,6 @@ public:
     PluginMetadata();
 
     /*!
-     * Destructor.
-     */
-    ~PluginMetadata();
-
-    /*!
      * Loads metadata from another file.
      * \param fileName plugin metadata file name with path
      */

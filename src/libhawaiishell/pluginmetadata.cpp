@@ -27,6 +27,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
+#include <QtCore/QSharedData>
 
 #include "pluginmetadata.h"
 
@@ -38,7 +39,7 @@ namespace Shell {
  * PluginMetadataPrivate
  */
 
-class PluginMetadataPrivate
+class PluginMetadataPrivate : public QSharedData
 {
 public:
     PluginMetadataPrivate();
@@ -136,11 +137,6 @@ PluginMetadata::PluginMetadata(const QString &fileName)
 PluginMetadata::PluginMetadata()
     : d_ptr(new PluginMetadataPrivate())
 {
-}
-
-PluginMetadata::~PluginMetadata()
-{
-    delete d_ptr;
 }
 
 bool PluginMetadata::load(const QString &fileName)
