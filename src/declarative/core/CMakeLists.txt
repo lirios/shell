@@ -9,6 +9,8 @@ include_directories(
 
 set(SOURCES
     plugin.cpp
+    packagesmodel.cpp
+    packagesmodelitem.cpp
 )
 
 set(FILES
@@ -17,7 +19,7 @@ set(FILES
 
 add_library(hawaiishellcoreplugin SHARED ${SOURCES})
 qt5_use_modules(hawaiishellcoreplugin Qml Quick)
-target_link_libraries(hawaiishellcoreplugin)
+target_link_libraries(hawaiishellcoreplugin HF1HawaiiShell)
 
 install(TARGETS hawaiishellcoreplugin LIBRARY
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/hawaii/qml/Hawaii/Shell/Core)
