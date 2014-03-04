@@ -3,6 +3,7 @@ find_package(ALSA)
 
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${QtConfiguration_INCLUDE_DIRS}
     ${WaylandClient_INCLUDE_DIRS}
     ${ALSA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src
