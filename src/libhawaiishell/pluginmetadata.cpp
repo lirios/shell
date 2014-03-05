@@ -24,7 +24,9 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QDebug>
 #include <QtCore/QFile>
+#include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QSharedData>
@@ -98,7 +100,7 @@ public:
         if (!valid)
             return QVariant();
 
-        QVariantMap translations = json.value(QStringLiteral("translations")).toObject().toVariantMap();
+        QVariantMap translations = json.value(QStringLiteral("Translations")).toObject().toVariantMap();
         QStringList langs = currentLanguage();
         for (QString lang: translations.keys()) {
             if (langs.contains(lang)) {
@@ -172,7 +174,7 @@ bool PluginMetadata::load(const QString &fileName)
     d->json = doc.object();
 
     // Determine the plugin type
-    QString type = d->json.value(QStringLiteral("type")).toString();
+    QString type = d->json.value(QStringLiteral("Type")).toString();
     if (type == QStringLiteral("background"))
         d->type = PluginMetadata::BackgroundType;
     else if (type == QStringLiteral("element"))
@@ -207,7 +209,7 @@ QString PluginMetadata::name() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->localizedValue(QStringLiteral("title")).toString();
+    return d->localizedValue(QStringLiteral("Title")).toString();
 }
 
 QString PluginMetadata::comment() const
@@ -215,7 +217,7 @@ QString PluginMetadata::comment() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->localizedValue(QStringLiteral("description")).toString();
+    return d->localizedValue(QStringLiteral("Description")).toString();
 }
 
 QString PluginMetadata::iconName() const
@@ -223,7 +225,7 @@ QString PluginMetadata::iconName() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("icon-name")).toString();
+    return d->json.value(QStringLiteral("IconName")).toString();
 }
 
 QString PluginMetadata::internalName() const
@@ -231,7 +233,7 @@ QString PluginMetadata::internalName() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("name")).toString();
+    return d->json.value(QStringLiteral("Name")).toString();
 }
 
 QString PluginMetadata::version() const
@@ -239,7 +241,7 @@ QString PluginMetadata::version() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("version")).toString();
+    return d->json.value(QStringLiteral("Version")).toString();
 }
 
 QString PluginMetadata::license() const
@@ -247,23 +249,25 @@ QString PluginMetadata::license() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("license")).toString();
+    return d->json.value(QStringLiteral("License")).toString();
 }
 
-QString PluginMetadata::authorName() const
+QList<QStringList> PluginMetadata::authors() const
 {
     Q_D(const PluginMetadata);
-    if (!d->valid)
-        return QString();
-    return d->json.value(QStringLiteral("author-name")).toString();
-}
 
-QString PluginMetadata::authorEmail() const
-{
-    Q_D(const PluginMetadata);
+    QList<QStringList> list;
     if (!d->valid)
-        return QString();
-    return d->json.value(QStringLiteral("author-email")).toString();
+        return list;
+
+    QJsonArray authors = d->json.value(QStringLiteral("Authors")).toArray();
+    for (QVariant item: authors.toVariantList()) {
+        QStringList items = QStringList()
+                << item.toMap().value(QStringLiteral("Name")).toString()
+                << item.toMap().value(QStringLiteral("Email")).toString();
+        list.append(items);
+    }
+    return list;
 }
 
 QString PluginMetadata::webSite() const
@@ -271,7 +275,7 @@ QString PluginMetadata::webSite() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("website")).toString();
+    return d->json.value(QStringLiteral("WebSite")).toString();
 }
 
 QString PluginMetadata::mainScript() const
@@ -279,7 +283,7 @@ QString PluginMetadata::mainScript() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("mainscript")).toString();
+    return d->json.value(QStringLiteral("MainScript")).toString();
 }
 
 QVariant PluginMetadata::property(const QString &key) const

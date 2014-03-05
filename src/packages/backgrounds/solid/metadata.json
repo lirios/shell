@@ -1,12 +1,16 @@
 {
-    "name": "org.hawaii.backgrounds.solid",
-    "type": "background",
-    "version": "1.0",
-    "license": "GPLv2+",
-    "title": "Color",
-    "description": "A solid color",
-    "author-name": "Pier Luigi Fiorini",
-    "author-email": "pierluigi.fiorini@gmail.com",
-    "website": "http://www.maui-project.org",
-    "mainscript": "ui/main.qml"
+    "Name": "org.hawaii.backgrounds.solid",
+    "Type": "background",
+    "Version": "1.0",
+    "License": "GPLv2+",
+    "Title": "Color",
+    "Description": "A solid color",
+    "Authors": [
+        {
+            "Name": "Pier Luigi Fiorini",
+            "Email": "pierluigi.fiorini.com"
+        }
+    ],
+    "WebSite": "http://www.maui-project.org",
+    "MainScript": "ui/main.qml"
 }

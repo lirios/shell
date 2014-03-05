@@ -1,13 +1,17 @@
 {
-    "name": "org.hawaii.elements.appchooser",
-    "type": "element",
-    "version": "1.0",
-    "license": "GPLv2+",
-    "title": "Application launcher",
-    "description": "Launcher to start applications",
-    "icon-name": "view-grid",
-    "author-name": "Pier Luigi Fiorini",
-    "author-email": "pierluigi.fiorini@gmail.com",
-    "website": "http://www.maui-project.org",
-    "mainscript": "ui/AppChooserButton.qml"
+    "Name": "org.hawaii.elements.appchooser",
+    "Type": "element",
+    "Version": "1.0",
+    "License": "GPLv2+",
+    "Title": "Application launcher",
+    "Description": "Launcher to start applications",
+    "IconName": "view-grid",
+    "Authors": [
+        {
+            "Name": "Pier Luigi Fiorini",
+            "Email": "pierluigi.fiorini.com"
+        }
+    ],
+    "WebSite": "http://www.maui-project.org",
+    "MainScript": "ui/AppChooserButton.qml"
 }

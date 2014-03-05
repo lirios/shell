@@ -1,12 +1,16 @@
 {
-    "name": "org.hawaii.elements.indicators",
-    "type": "element",
-    "version": "1.0",
-    "license": "GPLv2+",
-    "title": "Indicators",
-    "description": "Shows information about the system",
-    "author-name": "Pier Luigi Fiorini",
-    "author-email": "pierluigi.fiorini@gmail.com",
-    "website": "http://www.maui-project.org",
-    "mainscript": "ui/StatusArea.qml"
+    "Name": "org.hawaii.elements.indicators",
+    "Type": "element",
+    "Version": "1.0",
+    "License": "GPLv2+",
+    "Title": "Indicators",
+    "Description": "Shows information about the system",
+    "Authors": [
+        {
+            "Name": "Pier Luigi Fiorini",
+            "Email": "pierluigi.fiorini.com"
+        }
+    ],
+    "WebSite": "http://www.maui-project.org",
+    "MainScript": "ui/StatusArea.qml"
 }

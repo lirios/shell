@@ -1,12 +1,16 @@
 {
-    "name": "org.hawaii.shells.desktop",
-    "type": "shell",
-    "version": "1.0",
-    "license": "GPLv2+",
-    "title": "Desktop",
-    "description": "Desktop-style user interface",
-    "author-name": "Pier Luigi Fiorini",
-    "author-email": "pierluigi.fiorini@gmail.com",
-    "website": "http://www.maui-project.org",
-    "mainscript": "loader.qml"
+    "Name": "org.hawaii.shells.desktop",
+    "Type": "shell",
+    "Version": "1.0",
+    "License": "GPLv2+",
+    "Title": "Desktop",
+    "Description": "Desktop-style user interface",
+    "Authors": [
+        {
+            "Name": "Pier Luigi Fiorini",
+            "Email": "pierluigi.fiorini.com"
+        }
+    ],
+    "WebSite": "http://www.maui-project.org",
+    "MainScript": "loader.qml"
 }

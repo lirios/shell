@@ -1,13 +1,17 @@
 {
-    "name": "org.hawaii.containments.desktop",
-    "type": "containment",
-    "containment-type": "desktop",
-    "version": "1.0",
-    "license": "GPLv2+",
-    "title": "Panel",
-    "description": "Empty desktop",
-    "author-name": "Pier Luigi Fiorini",
-    "author-email": "pierluigi.fiorini@gmail.com",
-    "website": "http://www.maui-project.org",
-    "mainscript": "ui/main.qml"
+    "Name": "org.hawaii.containments.desktop",
+    "Type": "containment",
+    "ContainmentType": "desktop",
+    "Version": "1.0",
+    "License": "GPLv2+",
+    "Title": "Panel",
+    "Description": "Empty desktop",
+    "Authors": [
+        {
+            "Name": "Pier Luigi Fiorini",
+            "Email": "pierluigi.fiorini.com"
+        }
+    ],
+    "WebSite": "http://www.maui-project.org",
+    "MainScript": "ui/main.qml"
 }

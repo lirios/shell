@@ -171,7 +171,7 @@ void Containment::setPackage(const Package &package)
 
     // Read the containment type
     QString containmentType = package.metadata().property(
-                QStringLiteral("containment-type")).toString();
+                QStringLiteral("ContainmentType")).toString();
     if (containmentType == QStringLiteral("desktop"))
         d->type = Types::DesktopContainment;
     else if (containmentType == QStringLiteral("panel"))

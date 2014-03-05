@@ -62,21 +62,25 @@ public:
      *
      * \code
      * {
-     *     "name": "internal name",
-     *     "type": "...",
-     *     "version": "version number",
-     *     "license": "license name",
-     *     "title": "user visible name";
-     *     "description": "description of what the plugin does",
-     *     "icon-name": "icon name from Freedesktop.org Icon Naming Specification",
-     *     "author-name": "author's name",
-     *     "author-email": "author's email address",
-     *     "website": "http://plugin.org",
-     *     "mainscript": "path/to/mainfile.ext"
+     *     "Name": "internal name",
+     *     "Type": "...",
+     *     "Version": "version number",
+     *     "License": "license name",
+     *     "Title": "user visible name";
+     *     "Description": "description of what the plugin does",
+     *     "IconName": "icon name from Freedesktop.org Icon Naming Specification",
+     *     "Authors": [
+     *         {
+     *             "Name": "author's name",
+     *             "Email": "author's email address"
+     *         },
+     *     ],
+     *     "WebSite": "http://plugin.org",
+     *     "MainScript": "path/to/mainfile.ext"
      * }
      * \endcode
      *
-     * The "type" key can only contain one of the following values:
+     * The "Type" key can only contain one of the following values:
      * \list
      *   \listitem background
      *   \listitem element
@@ -85,17 +89,17 @@ public:
      *   \listitem lookandfeel
      * \endlist
      *
-     * The "icon-name" key is not mandatory, especially for non visual
+     * The "IconName" key is not mandatory, especially for non visual
      * items such as containments. It's generally used only for elements.
      *
-     * Use a descriptive name for "license" such as GPL, GPLv2, or GPLv2+
+     * Use a descriptive name for "License" such as GPL, GPLv2, or GPLv2+
      * if the plugin is licensed under the terms of the
      * GNU General Public License v2 or (at your option) any later version.
      *
-     * Don't use nick names for "author-name", please use your first and
-     * last name.
+     * Don't use nick names for "Name" in "Authors", please use your first
+     * and last name.
      *
-     * If "type" is "containment" you must add the "containment-type" key
+     * If "type" is "containment" you must add the "ContainmentType" key
      * with one of the following values:
      * \list
      *   \listitem desktop
@@ -162,14 +166,10 @@ public:
     QString license() const;
 
     /*!
-     * \return author's name.
+     * \return a list of authors, each item contains two
+     *         values (author name and email).
      */
-    QString authorName() const;
-
-    /*!
-     * \return author's email.
-     */
-    QString authorEmail() const;
+    QList<QStringList> authors() const;
 
     /*!
      * \return web site.
