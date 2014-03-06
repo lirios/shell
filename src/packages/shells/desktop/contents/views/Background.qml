@@ -80,14 +80,12 @@ Item {
     Loader {
         id: loader1
         anchors.fill: parent
-        asynchronous: true
         z: 1
     }
 
     Loader {
         id: loader2
         anchors.fill: parent
-        asynchronous: true
         z: 0
     }
 }
