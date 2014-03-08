@@ -35,7 +35,6 @@
 #include "desktop-shell.h"
 #include "wayland-hawaii-server-protocol.h"
 #include "wayland-notification-daemon-server-protocol.h"
-#include "wayland-screensaver-server-protocol.h"
 #include "shellsurface.h"
 #include "binding.h"
 #include "inputpanel.h"
@@ -52,6 +51,7 @@
 #include "wl_hawaii/hawaiiclientwindow.h"
 #include "wl_hawaii/hawaiiworkspace.h"
 #include "wl_hawaii/panelmanager.h"
+#include "wl_hawaii/screensaver.h"
 #include "wl_hawaii/shellwindow.h"
 
 #include <stdio.h>
@@ -277,10 +277,6 @@ DesktopShell::DesktopShell(struct weston_compositor *ec)
     , m_inputPanel(nullptr)
     , m_splash(nullptr)
     , m_sessionManager(nullptr)
-    , m_screenSaverBinding(nullptr)
-    , m_screenSaverEnabled(false)
-    , m_screenSaverPath(INSTALL_LIBEXECDIR "/hawaii-screensaver")
-    , m_screenSaverDuration(5*60*1000)
     , m_panelManagerBinding(nullptr)
     , m_notificationsEdge(DesktopShell::EdgeRight)
     , m_notificationsCornerAnchor(DesktopShell::CornerTopRight)
@@ -290,8 +286,6 @@ DesktopShell::DesktopShell(struct weston_compositor *ec)
     , m_locked(false)
     , m_lockSurface(nullptr)
 {
-    m_screenSaverChild.shell = this;
-    m_screenSaverChild.process.pid = 0;
 }
 
 DesktopShell::~DesktopShell()
@@ -333,10 +327,6 @@ void DesktopShell::init()
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindNotifications(client, version, id); }))
         return;
 
-    if (!wl_global_create(compositor()->wl_display, &wl_screensaver_interface, 1, this,
-                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindScreenSaver(client, version, id); }))
-        return;
-
     if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
         return;
@@ -350,10 +340,6 @@ void DesktopShell::init()
 
     m_wakeListener.listen(&compositor()->wake_signal);
     m_wakeListener.signal->connect(this, &DesktopShell::wake);
-
-    struct wl_event_loop *loop = wl_display_get_event_loop(compositor()->wl_display);
-    m_screenSaverTimer = wl_event_loop_add_timer(loop, [](void *data) {
-        return static_cast<DesktopShell *>(data)->screenSaverTimeout(); }, this);
 
     m_moveBinding = new Binding();
     m_moveBinding->buttonTriggered.connect(this, &DesktopShell::moveBinding);
@@ -374,6 +360,7 @@ void DesktopShell::init()
         Shell::quit();
     });
 
+    addInterface(new ScreenSaver);
     addInterface(new PanelManager);
     WlShell *wls = new WlShell;
     wls->surfaceResponsivenessChangedSignal.connect(this, &DesktopShell::surfaceResponsivenessChanged);
@@ -433,7 +420,8 @@ void DesktopShell::lockSession()
     // TODO: Disable bindings that are not supposed to work while locked
 
     // Run screensaver or sleep
-    launchScreenSaverProcess();
+    ScreenSaver *screenSaver = findInterface<ScreenSaver>();
+    screenSaver->launchProcess();
 
     // All this must be undone in resumeDesktop()
 }
@@ -464,7 +452,8 @@ void DesktopShell::unlockSession()
 
 void DesktopShell::resumeDesktop()
 {
-    terminateScreenSaverProcess();
+    ScreenSaver *screenSaver = findInterface<ScreenSaver>();
+    screenSaver->terminateProcess();
 
     // Restore layers order
     m_lockLayer.insert(&compositor()->cursor_layer);
@@ -569,6 +558,11 @@ void DesktopShell::addPanelSurfaceToLayer(weston_view *view)
     configure_static_view_no_position(view, &m_panelsLayer);
 }
 
+void DesktopShell::prependViewToLockLayer(weston_view *view)
+{
+    m_lockLayer.prependSurface(view);
+}
+
 IRect2D DesktopShell::windowsArea(struct weston_output *output) const
 {
     for (Output o: m_outputs) {
@@ -618,6 +612,14 @@ void DesktopShell::recalculateAvailableGeometry()
 
         (*o).rect = rect;
     }
+}
+
+void DesktopShell::centerSurfaceOnOutput(weston_view *ev, weston_output *output)
+{
+    float x = output->x + (output->width - ev->surface->width) / 2;
+    float y = output->y + (output->height - ev->surface->height) / 2;
+
+    weston_view_set_position(ev, x, y);
 }
 
 void DesktopShell::trustedClientDestroyed(void *data)
@@ -674,14 +676,6 @@ void DesktopShell::sendInitEvents()
             }
         }
     }
-}
-
-void DesktopShell::centerSurfaceOnOutput(weston_view *ev, weston_output *output)
-{
-    float x = output->x + (output->width - ev->surface->width) / 2;
-    float y = output->y + (output->height - ev->surface->height) / 2;
-
-    weston_view_set_position(ev, x, y);
 }
 
 void DesktopShell::workspaceAdded(HawaiiWorkspace *ws)
@@ -757,26 +751,6 @@ void DesktopShell::bindDesktopShellSurface(struct wl_client *client, uint32_t ve
 void DesktopShell::unbindDesktopShellSurface(struct wl_resource *resource)
 {
     m_shellSurfaceBindings.remove(resource);
-}
-
-void DesktopShell::bindScreenSaver(wl_client *client, uint32_t version, uint32_t id)
-{
-    struct wl_resource *resource = wl_resource_create(client, &wl_screensaver_interface, version, id);
-
-    if (!m_screenSaverBinding) {
-        wl_resource_set_implementation(resource, &m_screenSaverImpl, this,
-                                       [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindScreenSaver(resource); });
-        m_screenSaverBinding = resource;
-        return;
-    }
-
-    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind wl_notification_daemon denied");
-    wl_resource_destroy(resource);
-}
-
-void DesktopShell::unbindScreenSaver(struct wl_resource *resource)
-{
-    m_screenSaverBinding = nullptr;
 }
 
 void DesktopShell::moveBinding(struct weston_seat *seat, uint32_t time, uint32_t button)
@@ -1491,97 +1465,6 @@ void DesktopShell::addNotificationSurface(wl_client *client, wl_resource *resour
 
 const struct wl_notification_daemon_interface DesktopShell::m_notificationDaemonImpl = {
     wrapInterface(&DesktopShell::addNotificationSurface)
-};
-
-int DesktopShell::screenSaverTimeout()
-{
-    weston_log("screensaver timeout...\n");
-    fadeOut();
-    return 1;
-}
-
-void DesktopShell::screenSaverSigChild(int status)
-{
-    m_screenSaverChild.process.pid = 0;
-    m_screenSaverChild.client = nullptr; // already destroyed by wayland
-
-    if (m_locked)
-        weston_compositor_sleep(compositor());
-}
-
-void DesktopShell::launchScreenSaverProcess()
-{
-    if (m_screenSaverBinding)
-        return;
-
-    if (m_screenSaverPath.empty() || !m_screenSaverEnabled) {
-        weston_compositor_sleep(compositor());
-        return;
-    }
-
-    if (m_screenSaverChild.process.pid != 0) {
-        weston_log("old screensaver still running\n");
-        return;
-    }
-
-    m_screenSaverChild.client = weston_client_launch(compositor(),
-                                                     &m_screenSaverChild.process,
-                                                     m_screenSaverPath.c_str(),
-                                                     [](struct weston_process *process, int status) {
-        ScreenSaverChild *child = container_of(process, ScreenSaverChild, process);
-        child->shell->screenSaverSigChild(status);
-    });
-
-    if (!m_screenSaverChild.client)
-        weston_log("not able to start %s\n", m_screenSaverPath.c_str());
-}
-
-void DesktopShell::terminateScreenSaverProcess()
-{
-    if (m_screenSaverChild.process.pid == 0)
-        return;
-
-    ::kill(m_screenSaverChild.process.pid, SIGTERM);
-}
-
-void DesktopShell::screenSaverConfigure(weston_surface *es, int32_t sx, int32_t sy)
-{
-    // Starting screensaver beforehand doesn't work
-    if (!m_locked)
-        return;
-
-    weston_view *view = container_of(es->views.next, weston_view, surface_link);
-
-    centerSurfaceOnOutput(view, es->output);
-
-    if (wl_list_empty(&view->layer_link)) {
-        m_lockLayer.prependSurface(view);
-        weston_view_update_transform(view);
-        wl_event_source_timer_update(m_screenSaverTimer, m_screenSaverDuration);
-        fadeIn();
-    }
-}
-
-void DesktopShell::setScreenSaverSurface(wl_client *client, wl_resource *resource,
-                                         wl_resource *output_resource,
-                                         wl_resource *surface_resource)
-{
-    struct weston_output *output = static_cast<weston_output *>(output_resource->data);
-    struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
-
-    weston_view *view, *next;
-    wl_list_for_each_safe(view, next, &surface->views, surface_link)
-            weston_view_destroy(view);
-    view = weston_view_create(surface);
-
-    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
-        static_cast<DesktopShell *>(es->configure_private)->screenSaverConfigure(es, sx, sy); };
-    surface->configure_private = this;
-    surface->output = output;
-}
-
-const struct wl_screensaver_interface DesktopShell::m_screenSaverImpl = {
-    wrapInterface(&DesktopShell::setScreenSaverSurface)
 };
 
 WL_EXPORT int

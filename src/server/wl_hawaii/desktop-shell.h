@@ -71,6 +71,8 @@ public:
 
     weston_view *createBlackSurfaceWithInput(int x, int y, int w, int h, float a);
 
+    bool isLocked() const { return m_locked; }
+
     void fadeIn();
     void fadeOut();
 
@@ -81,10 +83,13 @@ public:
     bool isTrusted(wl_client *client, const char *interface) const override;
 
     void addPanelSurfaceToLayer(weston_view *view);
+    void prependViewToLockLayer(weston_view *view);
 
     virtual IRect2D windowsArea(struct weston_output *output) const;
 
     void recalculateAvailableGeometry();
+
+    void centerSurfaceOnOutput(weston_view *ev, weston_output *output);
 
 protected:
     virtual void init();
@@ -96,8 +101,6 @@ private:
     void wake(void *);
 
     void sendInitEvents();
-
-    void centerSurfaceOnOutput(weston_view *ev, weston_output *output);
 
     void workspaceAdded(HawaiiWorkspace *ws);
 
@@ -111,9 +114,6 @@ private:
 
     void bindDesktopShellSurface(struct wl_client *client, uint32_t version, uint32_t id);
     void unbindDesktopShellSurface(struct wl_resource *resource);
-
-    void bindScreenSaver(wl_client *client, uint32_t version, uint32_t id);
-    void unbindScreenSaver(wl_resource *resource);
 
     void moveBinding(struct weston_seat *seat, uint32_t time, uint32_t button);
     void resizeBinding(struct weston_seat *seat, uint32_t time, uint32_t button);
@@ -188,28 +188,11 @@ private:
     void addNotificationSurface(wl_client *client, wl_resource *resource,
                                 wl_resource *surface_resource);
 
-    /*
-     * screensaver
-     */
-
-    void screenSaverSigChild(int status);
-
-    void launchScreenSaverProcess();
-    void terminateScreenSaverProcess();
-
-    int screenSaverTimeout();
-
-    void screenSaverConfigure(weston_surface *es, int32_t sx, int32_t sy);
-    void setScreenSaverSurface(wl_client *client, wl_resource *resource,
-                               wl_resource *output_resource,
-                               wl_resource *surface_resource);
-
     static void configurePopup(weston_surface *es, int32_t sx, int32_t sy);
 
     static const struct wl_hawaii_shell_interface m_desktopShellImpl;
     static const struct wl_hawaii_shell_surface_interface m_shellSurfaceImpl;
     static const struct wl_notification_daemon_interface m_notificationDaemonImpl;
-    static const struct wl_screensaver_interface m_screenSaverImpl;
 
     WlListener m_idleListener;
     WlListener m_wakeListener;
@@ -234,19 +217,6 @@ private:
     std::list<PanelSurface *> m_panels;
 
     std::list<wl_resource *> m_shellSurfaceBindings;
-
-    wl_resource *m_screenSaverBinding;
-    wl_event_source *m_screenSaverTimer;
-    bool m_screenSaverEnabled;
-    std::string m_screenSaverPath;
-    int m_screenSaverDuration;
-
-    struct ScreenSaverChild {
-        DesktopShell *shell;
-        struct weston_process process;
-        struct wl_client *client;
-    };
-    ScreenSaverChild m_screenSaverChild;
 
     wl_resource *m_panelManagerBinding;
 
