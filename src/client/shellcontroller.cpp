@@ -33,7 +33,6 @@
 #include "shellcontroller_p.h"
 #include "keybinding.h"
 #include "keybinding_p.h"
-#include "keymap.h"
 #include "registration.h"
 #include "servicefactory.h"
 #include "shellmanager.h"
@@ -152,12 +151,6 @@ ShellController::ShellController(QObject *parent)
     connect(client, SIGNAL(workspaceAdded(Workspace*)),
             this, SLOT(_q_workspaceAdded(Workspace*)));
     connect(manager, SIGNAL(ready()), this, SLOT(_q_shellReady()));
-
-    // Bind Meta-D to toggle windows
-    KeyBinding *binding = addKeyBinding(KEY_D, MODIFIER_SUPER);
-    connect(binding, &KeyBinding::triggered, [=]() {
-        toggleWindows();
-    });
 }
 
 ShellController::~ShellController()

@@ -36,6 +36,8 @@
 
 #include "cmakedirs.h"
 #include "elementfactory.h"
+#include "keybinding.h"
+#include "keymap.h"
 #include "registration.h"
 #include "shellmanager.h"
 
@@ -193,6 +195,12 @@ void ShellManager::create()
             m_shellUi, &ShellUi::setGrabCursor);
     connect(this, &ShellManager::shellChanged,
             m_shellUi, &ShellUi::changeShell);
+
+    // Bind Meta-D to toggle windows
+    KeyBinding *binding = m_shellController->addKeyBinding(KEY_D, MODIFIER_SUPER);
+    connect(binding, &KeyBinding::triggered, [=]() {
+        m_shellController->toggleWindows();
+    });
 
     // Add configured workspaces
     // TODO: Add as many workspaces as specified by the settings
