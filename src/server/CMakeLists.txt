@@ -37,6 +37,7 @@ set(SOURCES
     wl_hawaii/desktop-shell.cpp
     wl_hawaii/hawaiiclientwindow.cpp
     wl_hawaii/hawaiiworkspace.cpp
+    wl_hawaii/notifications.cpp
     wl_hawaii/panelmanager.cpp
     wl_hawaii/panelsurface.cpp
     wl_hawaii/screensaver.cpp

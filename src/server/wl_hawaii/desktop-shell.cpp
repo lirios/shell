@@ -34,7 +34,6 @@
 #include "cmakedirs.h"
 #include "desktop-shell.h"
 #include "wayland-hawaii-server-protocol.h"
-#include "wayland-notification-daemon-server-protocol.h"
 #include "shellsurface.h"
 #include "binding.h"
 #include "inputpanel.h"
@@ -50,6 +49,7 @@
 #include "wl_hawaii/dropdown.h"
 #include "wl_hawaii/hawaiiclientwindow.h"
 #include "wl_hawaii/hawaiiworkspace.h"
+#include "wl_hawaii/notifications.h"
 #include "wl_hawaii/panelmanager.h"
 #include "wl_hawaii/screensaver.h"
 #include "wl_hawaii/shellwindow.h"
@@ -278,10 +278,6 @@ DesktopShell::DesktopShell(struct weston_compositor *ec)
     , m_splash(nullptr)
     , m_sessionManager(nullptr)
     , m_panelManagerBinding(nullptr)
-    , m_notificationsEdge(DesktopShell::EdgeRight)
-    , m_notificationsCornerAnchor(DesktopShell::CornerTopRight)
-    , m_notificationsOrder(DesktopShell::OrderNewestFirst)
-    , m_notificationsMargin(20)
     , m_prepareEventSent(false)
     , m_locked(false)
     , m_lockSurface(nullptr)
@@ -323,10 +319,6 @@ void DesktopShell::init()
 {
     Shell::init();
 
-    if (!wl_global_create(compositor()->wl_display, &wl_notification_daemon_interface, 1, this,
-                          [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindNotifications(client, version, id); }))
-        return;
-
     if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
         return;
@@ -366,6 +358,7 @@ void DesktopShell::init()
     wls->surfaceResponsivenessChangedSignal.connect(this, &DesktopShell::surfaceResponsivenessChanged);
     addInterface(wls);
     addInterface(new XWlShell);
+    addInterface(new Notifications);
     addInterface(new SettingsInterface);
 
     m_inputPanel = new InputPanel(compositor()->wl_display);
@@ -691,25 +684,6 @@ void DesktopShell::surfaceResponsivenessChanged(ShellSurface *shsurf, bool respo
             responsiveness ? endBusyCursor(seat) : setBusyCursor(shsurf, seat);
         }
     }
-}
-
-void DesktopShell::bindNotifications(wl_client *client, uint32_t version, uint32_t id)
-{
-    struct wl_resource *resource = wl_resource_create(client, &wl_notification_daemon_interface, version, id);
-
-    if (resource) {
-        wl_resource_set_implementation(resource, &m_notificationDaemonImpl, this,
-                                       [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindNotifications(resource); });
-        return;
-    }
-
-    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind wl_notification_daemon denied");
-    wl_resource_destroy(resource);
-}
-
-void DesktopShell::unbindNotifications(struct wl_resource *resource)
-{
-    free(resource);
 }
 
 void DesktopShell::bindDesktopShell(struct wl_client *client, uint32_t version, uint32_t id)
@@ -1392,79 +1366,6 @@ const struct wl_hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl 
     wrapInterface(&DesktopShell::setOverlay),
     wrapInterface(&DesktopShell::setPopup),
     wrapInterface(&DesktopShell::setDialog)
-};
-
-void DesktopShell::mapNotificationSurfaces()
-{
-    bool isRight = m_notificationsCornerAnchor & DesktopShell::EdgeRight;
-    bool isBottom = m_notificationsCornerAnchor & DesktopShell::EdgeBottom;
-
-    IRect2D availableGeometry = windowsArea(getDefaultOutput());
-    int32_t left = availableGeometry.x;
-    int32_t top = availableGeometry.y;
-    int32_t right = availableGeometry.x + availableGeometry.width;
-    int32_t bottom = availableGeometry.y + availableGeometry.height;
-    int32_t x, y;
-
-    if (isRight)
-        x = right - m_notificationsMargin;
-    else
-        x = left + m_notificationsMargin;
-    if (isBottom)
-        y = bottom - m_notificationsMargin;
-    else
-        y = top + m_notificationsMargin;
-
-    for (weston_view *view: m_notificationsLayer) {
-        if (isBottom)
-            y -= view->surface->height;
-        if (isRight)
-            x -= view->surface->width;
-        weston_view_set_position(view, x, y);
-        if (isRight)
-            x += view->surface->width;
-        if (isBottom)
-            y -= m_notificationsMargin;
-        else
-            y += view->surface->height + m_notificationsMargin;
-    }
-
-    weston_compositor_schedule_repaint(compositor());
-}
-
-void DesktopShell::addNotificationSurface(wl_client *client, wl_resource *resource,
-                                          wl_resource *surface_resource)
-{
-    struct weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
-    if (surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role already assigned");
-        return;
-    }
-
-    weston_view *view, *next;
-    wl_list_for_each_safe(view, next, &surface->views, surface_link)
-            weston_view_destroy(view);
-    view = weston_view_create(surface);
-    view->output = getDefaultOutput();
-
-    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
-        DesktopShell *shell = static_cast<DesktopShell *>(es->configure_private);
-        shell->mapNotificationSurfaces();
-    };
-    surface->configure_private = this;
-    surface->output = getDefaultOutput();
-
-    if (m_notificationsOrder == DesktopShell::OrderNewestFirst)
-        m_notificationsLayer.addSurface(view);
-    else
-        m_notificationsLayer.prependSurface(view);
-    mapNotificationSurfaces();
-}
-
-const struct wl_notification_daemon_interface DesktopShell::m_notificationDaemonImpl = {
-    wrapInterface(&DesktopShell::addNotificationSurface)
 };
 
 WL_EXPORT int

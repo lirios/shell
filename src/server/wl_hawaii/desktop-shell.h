@@ -47,25 +47,6 @@ class PanelSurface;
 
 class DesktopShell : public Shell {
 public:
-    enum Edge {
-        EdgeTop = 1 << 0,
-        EdgeBottom = 1 << 1,
-        EdgeLeft = 1 << 2,
-        EdgeRight = 1 << 3
-    };
-
-    enum CornerAnchors {
-        CornerTopRight = EdgeTop | EdgeRight,
-        CornerTopLeft = EdgeTop | EdgeLeft,
-        CornerBottomRight = EdgeBottom | EdgeRight,
-        CornerBottomLeft = EdgeBottom | EdgeLeft
-    };
-
-    enum NotificationsOrder {
-        OrderNewestFirst = 0,
-        OrderOldestFirst
-    };
-
     DesktopShell(struct weston_compositor *ec);
     ~DesktopShell();
 
@@ -82,6 +63,7 @@ public:
 
     bool isTrusted(wl_client *client, const char *interface) const override;
 
+    Layer notificationsLayer() const { return m_notificationsLayer; }
     void addPanelSurfaceToLayer(weston_view *view);
     void prependViewToLockLayer(weston_view *view);
 
@@ -105,9 +87,6 @@ private:
     void workspaceAdded(HawaiiWorkspace *ws);
 
     void surfaceResponsivenessChanged(ShellSurface *shsurf, bool responsive);
-
-    void bindNotifications(wl_client *client, uint32_t version, uint32_t id);
-    void unbindNotifications(wl_resource *resource);
 
     void bindDesktopShell(struct wl_client *client, uint32_t version, uint32_t id);
     void unbindDesktopShell(struct wl_resource *resource);
@@ -180,19 +159,10 @@ private:
 
     void createGrab(wl_client *client, wl_resource *resource, uint32_t id);
 
-    /*
-     * wl_notification_daemon
-     */
-
-    void mapNotificationSurfaces();
-    void addNotificationSurface(wl_client *client, wl_resource *resource,
-                                wl_resource *surface_resource);
-
     static void configurePopup(weston_surface *es, int32_t sx, int32_t sy);
 
     static const struct wl_hawaii_shell_interface m_desktopShellImpl;
     static const struct wl_hawaii_shell_surface_interface m_shellSurfaceImpl;
-    static const struct wl_notification_daemon_interface m_notificationDaemonImpl;
 
     WlListener m_idleListener;
     WlListener m_wakeListener;
@@ -219,11 +189,6 @@ private:
     std::list<wl_resource *> m_shellSurfaceBindings;
 
     wl_resource *m_panelManagerBinding;
-
-    Edge m_notificationsEdge;
-    CornerAnchors m_notificationsCornerAnchor;
-    NotificationsOrder m_notificationsOrder;
-    int32_t m_notificationsMargin;
 
     bool m_prepareEventSent;
     bool m_locked;
