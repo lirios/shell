@@ -46,12 +46,19 @@ Item {
         __priv.currentLoader.z = 1;
         __priv.nextLoader.z = 0;
 
-        animation.running = true;
+        if (__priv.firstTime) {
+            __priv.currentLoader.opacity = 1.0;
+            __priv.nextLoader.opacity = 0.0;
+            __priv.firstTime = false;
+        } else {
+            animation.running = true;
+        }
     }
 
     QtObject {
         id: __priv
 
+        property bool firstTime: true
         property Loader currentLoader: loader1
         property Loader nextLoader: loader2
     }
