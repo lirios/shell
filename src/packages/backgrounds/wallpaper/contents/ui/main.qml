@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Fluid.Core 1.0 as FluidCore
 import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Configuration 1.0
 
@@ -43,7 +44,7 @@ FluidUi.NoiseBackground {
         category: "shell/backgrounds/org.hawaii.backgrounds.wallpaper"
 
         property color color: "#336699"
-        property url wallpaperUrl: "file:///opt/hawaii/share/backgrounds/hawaii/Also_Calm.png"
+        property url wallpaperUrl: FluidCore.StandardPaths.locateFile(FluidCore.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png")
         property int fillMode: Image.Stretch
 
         Component.onCompleted: {
