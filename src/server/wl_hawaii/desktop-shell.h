@@ -191,8 +191,6 @@ private:
 
     std::list<wl_resource *> m_shellSurfaceBindings;
 
-    wl_resource *m_panelManagerBinding;
-
     bool m_prepareEventSent;
     bool m_locked;
     weston_view *m_lockSurface;

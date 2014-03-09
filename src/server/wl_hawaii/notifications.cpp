@@ -137,7 +137,6 @@ void Notifications::addSurface(wl_client *client,
     surface->configure_private = this;
     surface->output = view->output;
 
-    DesktopShell *shell = static_cast<DesktopShell *>(Shell::instance());
     if (m_order == OrderNewestFirst)
         m_notificationsLayer.addSurface(view);
     else
