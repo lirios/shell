@@ -48,6 +48,7 @@ QtObject {
 
     Configuration {
         id: settings
+        category: "shell"
 
         property string handler: "org.hawaii.shells.desktop"
     }
