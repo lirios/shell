@@ -9,7 +9,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell/applications
-    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/settings
     ${CMAKE_SOURCE_DIR}/src/libhawaiishell/includes
     ${CMAKE_BINARY_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/headers

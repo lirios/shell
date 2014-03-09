@@ -29,7 +29,7 @@
 
 #include <QtQuick/QQuickView>
 
-#include <HawaiiShell/ShellSettings>
+#include <QtConfiguration/QStaticConfiguration>
 
 class ShellUi;
 
@@ -40,12 +40,15 @@ public:
     explicit BackgroundView(ShellUi *corona, QScreen *screen);
 
 public Q_SLOTS:
-    void loadPlugin();
+    void loadPlugin(const QString &background);
 
 private:
-    ShellSettings *m_settings;
+    QStaticConfiguration *m_settings;
 
     void setSurfaceRole();
+
+private Q_SLOTS:
+    void settingChanged(const QString &key, const QVariant &value);
 };
 
 #endif // BACKGROUNDVIEW_H

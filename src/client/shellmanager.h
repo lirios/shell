@@ -33,7 +33,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QTimer>
 
-#include <HawaiiShell/ShellSettings>
+#include <QtConfiguration/QStaticConfiguration>
 
 #include "registrylistener.h"
 #include "shellclient.h"
@@ -81,7 +81,7 @@ Q_SIGNALS:
 private:
     QElapsedTimer m_elapsedTimer;
     QTimer m_updateTimer;
-    ShellSettings *m_settings;
+    QStaticConfiguration *m_settings;
     RegistryListener *m_registryListener;
     ShellController *m_shellController;
     ShellUi *m_shellUi;

@@ -3,7 +3,6 @@ include_directories(
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/includes
     ${CMAKE_CURRENT_SOURCE_DIR}/applications
-    ${CMAKE_CURRENT_SOURCE_DIR}/settings
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -23,7 +22,6 @@ set(SOURCES
     qmlobject.cpp
     qmlobjectincubationcontroller_p.cpp
     quickview.cpp
-    settings/shellsettings.cpp
     xdgdesktopfile.cpp
 )
 
@@ -42,7 +40,6 @@ set(HEADERS
     pluginmetadata.h
     qmlobject.h
     quickview.h
-    settings/shellsettings.h
 )
 
 add_library(HF1HawaiiShell SHARED ${SOURCES})

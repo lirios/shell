@@ -42,7 +42,8 @@
 Q_GLOBAL_STATIC(ShellManager, s_shellManager)
 
 ShellManager::ShellManager()
-    : m_registryListener(new RegistryListener())
+    : m_settings(new QStaticConfiguration(this))
+    , m_registryListener(new RegistryListener())
     , m_shellController(nullptr)
     , m_currentHandler(nullptr)
 {
@@ -56,7 +57,7 @@ ShellManager::ShellManager()
             this, &ShellManager::updateShell);
 
     // Settings
-    m_settings = new ShellSettings(this);
+    m_settings->setCategory(QStringLiteral("shell"));
 
     // We need windows with alpha buffer
     QQuickWindow::setDefaultAlphaBuffer(true);
@@ -117,8 +118,8 @@ QString ShellManager::shell() const
 
 QString ShellManager::lookAndFeel() const
 {
-    return "org.hawaii.lookandfeel.standard";
-    //return m_settings->lookAndFeel();
+    QVariant defaultValue = QStringLiteral("org.hawaii.lookandfeel.standard");
+    return m_settings->value(QStringLiteral("lookAndFeel"), defaultValue).toString();
 }
 
 QDir ShellManager::lookAndFeelDirectory() const

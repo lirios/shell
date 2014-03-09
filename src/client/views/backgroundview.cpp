@@ -39,7 +39,7 @@
 
 BackgroundView::BackgroundView(ShellUi *corona, QScreen *screen)
     : QQuickView(new QWindow(screen))
-    , m_settings(new ShellSettings(this))
+    , m_settings(new QStaticConfiguration(this))
 {
     // Transparent color
     setColor(Qt::transparent);
@@ -53,9 +53,10 @@ BackgroundView::BackgroundView(ShellUi *corona, QScreen *screen)
     // Set surface role
     setSurfaceRole();
 
-    // React to background change
-    connect(m_settings, &ShellSettings::backgroundChanged,
-            this, &BackgroundView::loadPlugin);
+    // Setup settings and react to background change
+    m_settings->setCategory(QStringLiteral("shell"));
+    connect(m_settings, &QStaticConfiguration::valueChanged,
+            this, &BackgroundView::settingChanged);
 
     // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);
@@ -73,18 +74,23 @@ BackgroundView::BackgroundView(ShellUi *corona, QScreen *screen)
     setSource(QUrl::fromLocalFile(corona->package().filePath(
                                       "views", QStringLiteral("Background.qml"))));
 
+    // Load plugin
+    const QString defaultBackground = QStringLiteral("org.hawaii.backgrounds.wallpaper");
+    loadPlugin(m_settings->value(QStringLiteral("background"),
+                                 defaultBackground).toString());
+
     // Debugging message
     qDebug() << "-> Created BackgroundView with geometry"
              << geometry();
 }
 
-void BackgroundView::loadPlugin()
+void BackgroundView::loadPlugin(const QString &background)
 {
     // Load background plugin package
     Hawaii::Shell::Package package =
             Hawaii::Shell::PluginLoader::instance()->loadPackage(
                 Hawaii::Shell::PluginLoader::BackgroundPlugin);
-    package.setPath(m_settings->background());
+    package.setPath(background);
 
     // If the package is invalid try with the default plugin
     if (!package.isValid())
@@ -105,6 +111,12 @@ void BackgroundView::setSurfaceRole()
                 native->nativeResourceForWindow("surface", this));
 
     ShellManager::instance()->shellInterface()->set_background(output, surface);
+}
+
+void BackgroundView::settingChanged(const QString &key, const QVariant &value)
+{
+    if (key == QStringLiteral("background"))
+        loadPlugin(value.toString());
 }
 
 #include "moc_backgroundview.cpp"

@@ -29,7 +29,7 @@
 
 #include <QtQml/QQmlEngine>
 
-class ShellSettings;
+#include <QtConfiguration/QStaticConfiguration>
 
 class StyleSettings : public QObject
 {
@@ -47,7 +47,10 @@ Q_SIGNALS:
     void pathChanged();
 
 private:
-    ShellSettings *m_settings;
+    QStaticConfiguration *m_settings;
+
+private Q_SLOTS:
+    void settingChanged(const QString &key, const QVariant &value);
 };
 
 #endif // STYLESETTINGS_H

@@ -267,7 +267,6 @@ void ShellUi::screenAdded(QScreen *screen)
     // Load background QML code and show
     if (!background)
         background = new BackgroundView(this, screen);
-    background->loadPlugin();
     if (!backgroundPreviouslyAdded) {
         background->show();
         m_backgroundViews.append(background);

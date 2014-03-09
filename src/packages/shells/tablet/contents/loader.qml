@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Settings 1.0
+import Hawaii.Configuration 1.0
 
 QtObject {
     /*! Internal name */
@@ -46,7 +46,9 @@ QtObject {
 
     default property var children
 
-    ShellSettings {
+    Configuration {
         id: settings
+
+        property string handler: "org.hawaii.shells.desktop"
     }
 }
