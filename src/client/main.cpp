@@ -33,88 +33,8 @@
 #include "gitsha1.h"
 #include "shellmanager.h"
 
-#include <execinfo.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <cxxabi.h>
-#include <signal.h>
-
-#include <iostream>
-
-static void printBacktrace()
-{
-    const size_t max_depth = 100;
-    void *stack_addrs[max_depth];
-
-    size_t stack_depth = backtrace(stack_addrs, max_depth);
-
-    char **messages = backtrace_symbols(stack_addrs, stack_depth);
-
-    // skip first stack frame (points here)
-    for (size_t i = 1; i < stack_depth && messages != NULL; i++) {
-        char *mangled_name = 0, *offset_begin = 0, *offset_end = 0;
-
-        // find parantheses and +address offset surrounding mangled name
-        for (char *p = messages[i]; *p; ++p) {
-            if (*p == '(') {
-                mangled_name = p;
-            } else if (*p == '+') {
-                offset_begin = p;
-            } else if (*p == ')') {
-                offset_end = p;
-                break;
-            }
-        }
-
-        // if the line could be processed, attempt to demangle the symbol
-        if (mangled_name && offset_begin && offset_end &&
-                mangled_name < offset_begin) {
-            *mangled_name++ = '\0';
-            *offset_begin++ = '\0';
-            *offset_end++ = '\0';
-
-            int status;
-            char *real_name = abi::__cxa_demangle(mangled_name, 0, 0, &status);
-
-            // if demangling is successful, output the demangled function name
-            if (status == 0) {
-                std::cerr << "[bt]: (" << i << ") " << messages[i] << " : "
-                          << real_name << "+" << offset_begin << offset_end
-                          << std::endl;
-
-            }
-            // otherwise, output the mangled function name
-            else {
-                std::cerr << "[bt]: (" << i << ") " << messages[i] << " : "
-                          << mangled_name << "+" << offset_begin << offset_end
-                          << std::endl;
-            }
-            free(real_name);
-        }
-        // otherwise, print the whole line
-        else {
-            std::cerr << "[bt]: (" << i << ") " << messages[i] << std::endl;
-        }
-    }
-    std::cerr << std::endl;
-
-    free(messages);
-}
-
-static void deathSignal(int signum)
-{
-    // Print the stack trace when a segmentation fault occurs
-    printBacktrace();
-    signal(signum, SIG_DFL);
-    _exit(3);
-}
-
 int main(int argc, char *argv[])
 {
-    // Handle a segmentation fault nicely
-    signal(SIGSEGV, deathSignal);
-
     QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Hawaii Shell"));
     app.setApplicationVersion(QStringLiteral(HAWAII_SHELL_VERSION_STRING));

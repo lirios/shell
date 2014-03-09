@@ -79,7 +79,6 @@ qt5_add_resources(RESOURCES client.qrc)
 add_executable(hawaii-shell-client ${SOURCES} ${RESOURCES})
 qt5_use_modules(hawaii-shell-client DBus Quick Widgets Script)
 set_target_properties(hawaii-shell-client PROPERTIES
-    COMPILE_FLAGS "-rdynamic"
     LINK_FLAGS "-L${WaylandClient_LIBDIR}"
 )
 target_link_libraries(hawaii-shell-client
