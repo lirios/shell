@@ -25,16 +25,16 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Fluid.Ui 1.0 as FluidUi
 
 Item {
-    property Item containment
+    property alias sourceUrl: loader.source
 
-    id: desktopView
-    onContainmentChanged: {
-        containment.anchors.left = desktopView.left;
-        containment.anchors.top = desktopView.top;
-        containment.anchors.right = desktopView.right;
-        containment.anchors.bottom = desktopView.bottom;
-        containment.visible = true;
+    id: background
+
+    FluidUi.SmoothFadeLoader {
+        id: loader
+        anchors.fill: parent
+        fadeDuration: 400
     }
 }

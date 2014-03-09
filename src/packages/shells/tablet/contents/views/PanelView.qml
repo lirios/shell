@@ -25,6 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Styles 1.0
@@ -38,34 +40,15 @@ Item {
         containment.visible = true;
         containment.parent = styledItem;
         containment.anchors.fill = styledItem;
+        buttonContainer.parent = containment;
+        containment.configButton = buttonContainer;
     }
 
-    Connections {
-        target: containment
-        onMinimumWidthChanged: {
-            if (containment.formFactor === Types.Horizontal)
-                view.width = Math.max(view.width, view.minimumLength);
-        }
-        onImplicitWidthChanged: {
-            if (containment.formFactor === Types.Horizontal)
-                view.width = Math.max(view.maximumLength, Math.max(containment.implicitWidth, view.minimumLength));
-        }
-        onMaximumWidthChanged: {
-            if (containment.formFactor === Types.Horizontal)
-                view.width = Math.min(view.width, view.maximumLength);
-        }
-        onMinimumHeightChanged: {
-            if (containment.formFactor === Types.Vertical)
-                view.height = Math.max(view.height, view.minimumLength);
-        }
-        onImplicitHeightChanged: {
-            if (containment.formFactor === Types.Vertical)
-                view.height = Math.min(view.maximumLength, Math.max(containment.implicitHeight, view.minimumLength));
-        }
-        onMaximumHeightChanged: {
-            if (containment.formFactor === Types.Vertical)
-                view.height = Math.min(view.height, view.maximumLength);
-        }
+    QtObject {
+        id: d
+
+        property bool isHorizontal: panel.formFactor === Types.Horizontal
+        property int margin: 5
     }
 
     StyledItem {
@@ -75,48 +58,27 @@ Item {
     }
 
     Item {
-        id: configButton
-        width: view.formFactor === Types.Horizontal ? parent.height : parent.width
-        height: width
-        visible: false
-        states: [
-            State {
-                name: "horizontal"
-                when: view.formFactor === Types.Horizontal
+        id: buttonContainer
+        anchors {
+            right: d.isHorizontal ? parent.right : undefined
+            bottom: d.isHorizontal ? undefined : parent.bottom
+            horizontalCenter: d.isHorizontal ? undefined : parent.horizontalCenter
+            verticalCenter: d.isHorizontal ? parent.verticalCenter : undefined
+        }
+        width: button.width + (d.isHorizontal ? d.margin * 2 : 0)
+        height: button.height + (d.isHorizontal ? 0 : d.margin * 2)
+        z: 2000
 
-                AnchorChanges {
-                    target: configButton
-                    anchors.top: parent.top
-                    anchors.right: parent.right
-                }
-            },
-            State {
-                name: "vertical"
-                when: view.formFactor === Types.Vertical
-
-                AnchorChanges {
-                    target: configButton
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
-                }
-                PropertyChanges {
-                    target: configButton
-                    anchors.leftMargin: (parent.width / 2) - (configButton.width / 2)
-                }
-            }
-        ]
-
-        FluidUi.Icon {
+        RowLayout {
             anchors.fill: parent
-            iconName: "preferences-system-windows"
-        }
 
-        Behavior on width {
-            PropertyAnimation {}
-        }
+            ToolButton {
+                id: button
+                iconName: "preferences-other-symbolic"
+                onClicked: panel.configuring = !panel.configuring
 
-        Behavior on height {
-            PropertyAnimation {}
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            }
         }
     }
 }
