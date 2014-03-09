@@ -30,8 +30,6 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QStringBuilder>
 
-#include <HawaiiShell/LauncherSettings>
-
 #include "launchermodel.h"
 #include "launcheritem.h"
 
@@ -39,20 +37,24 @@ LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     // Settings
-    m_settings = new LauncherSettings(this);
+    m_settings = new QStaticConfiguration(this);
+    m_settings->setCategory(QStringLiteral("shell/launcher"));
+
+    // List of pinned applications
+    QStringList apps = m_settings->value(QStringLiteral("favoriteApps")).toStringList();
+    if (apps.size() == 0) {
+        apps.append(QStringLiteral("swordfish.desktop"));
+        apps.append(QStringLiteral("hawaii-terminal.desktop"));
+        apps.append(QStringLiteral("hawaii-system-preferences.desktop"));
+    }
 
     // Load pinned applications
-    foreach(QString fileName, m_settings->favoriteApps()) {
+    foreach(QString fileName, apps) {
         QString fileNameFound = QStandardPaths::locate(QStandardPaths::ApplicationsLocation, fileName);
         QFileInfo fileInfo(fileNameFound);
         if (fileInfo.exists())
             pinApplication(fileInfo.filePath());
     }
-}
-
-LauncherModel::~LauncherModel()
-{
-    delete m_settings;
 }
 
 QHash<int, QByteArray> LauncherModel::roleNames() const

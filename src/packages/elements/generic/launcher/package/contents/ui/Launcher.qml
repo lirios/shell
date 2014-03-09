@@ -42,7 +42,7 @@ Element {
     QtObject {
         id: __priv
 
-        property int iconSize: 48
+        property int iconSize: panel.thickness * 0.8
         property int tileSize: iconSize + (iconSize / 4)
     }
 
@@ -84,21 +84,4 @@ Element {
             }
         }
     }
-
-    /*
-    function enumIconSizeToActualSize(value) {
-        switch (value) {
-        case LauncherSettings.SmallIconSize:
-            return 32;
-        case LauncherSettings.MediumIconSize:
-            return 48;
-        case LauncherSettings.LargeIconSize:
-            return 64;
-        case LauncherSettings.HugeIconSize:
-            return 96;
-        default:
-            return 48;
-        }
-    }
-    */
 }

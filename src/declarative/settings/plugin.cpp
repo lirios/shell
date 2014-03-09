@@ -27,7 +27,6 @@
 #include <QtQml/QQmlExtensionPlugin>
 #include <QtQml/QQmlComponent>
 
-#include <HawaiiShell/LauncherSettings>
 #include <HawaiiShell/ShellSettings>
 
 class HawaiiShellSettingsPlugin : public QQmlExtensionPlugin
@@ -41,7 +40,6 @@ public:
 void HawaiiShellSettingsPlugin::registerTypes(const char *uri)
 {
     // @uri Hawaii.Shell.Settings
-    qmlRegisterType<LauncherSettings>(uri, 1, 0, "LauncherSettings");
     qmlRegisterType<ShellSettings>(uri, 1, 0, "ShellSettings");
 }
 
