@@ -35,7 +35,6 @@ RegistryListener::RegistryListener()
     : shell(new ShellClient())
     , shellSurface(new ShellSurfaceClient())
     , panelManager(new QtWayland::wl_hawaii_panel_manager())
-    , m_setupDone(false)
 {
 }
 
@@ -80,25 +79,12 @@ void RegistryListener::handleGlobal(void *data,
         return;
     }
 
-    qDebug() << "Global interface" << interface
-             << "setup done:" << self->m_setupDone;
-
     if (strcmp(interface, "wl_hawaii_shell") == 0)
         self->shell->init(registry, id);
     else if (strcmp(interface, "wl_hawaii_shell_surface") == 0)
         self->shellSurface->init(registry, id);
     else if (strcmp(interface, "wl_hawaii_panel_manager") == 0)
         self->panelManager->init(registry, id);
-
-    if (self->shell->isInitialized() &&
-            self->shellSurface->isInitialized() &&
-            self->panelManager->isInitialized() &&
-            !self->m_setupDone) {
-        // Ask ShellManager to set things up
-        qDebug() << "Setup user interface...";
-        QMetaObject::invokeMethod(ShellManager::instance(), "setup", Qt::QueuedConnection);
-        self->m_setupDone = true;
-    }
 }
 
 void RegistryListener::handleGlobalRemove(void *data,

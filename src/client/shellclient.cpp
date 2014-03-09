@@ -61,7 +61,7 @@ void ShellClient::hawaii_shell_configure(struct ::wl_surface *target,
         struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                     native->nativeResourceForWindow("surface", view));
         if (target == surface) {
-            qDebug("--> Resize DesktopView to %dx%d", width, height);
+            qDebug("-> Resize DesktopView to %dx%d", width, height);
             view->resize(width, height);
             return;
         }

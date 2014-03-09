@@ -70,7 +70,6 @@ public:
     void loadLookAndFeel();
 
 public Q_SLOTS:
-    void setup();
     void create();
 
 Q_SIGNALS:

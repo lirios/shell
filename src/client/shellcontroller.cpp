@@ -138,8 +138,6 @@ ShellController::ShellController(QObject *parent)
     ShellManager *manager = ShellManager::instance();
     ShellClient *client = manager->shellInterface();
 
-    connect(client, &ShellClient::loaded,
-            manager, &ShellManager::create);
     connect(client, SIGNAL(windowAdded(Window*)),
             this, SLOT(_q_windowAdded(Window*)));
     connect(client, &ShellClient::windowSwitchingStarted,

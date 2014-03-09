@@ -71,6 +71,10 @@ ShellManager::ShellManager()
     // Create shell corona
     m_shellUi = new ShellUi(this);
 
+    // Create UI when the compositor says so
+    connect(m_registryListener->shell, &ShellClient::loaded,
+            this, &ShellManager::create);
+
     // Register Wayland interfaces
     m_registryListener->run();
 }
@@ -169,7 +173,7 @@ void ShellManager::loadLookAndFeel()
     m_lookAndFeelDir = QDir(QStringLiteral(INSTALL_DATADIR) + QStringLiteral("/hawaii/lookandfeel/org.hawaii.lookandfeel.standard/contents"));
 }
 
-void ShellManager::setup()
+void ShellManager::create()
 {
     // Load elements
     ElementFactory::searchElements();
@@ -182,10 +186,7 @@ void ShellManager::setup()
 
     // Create the shell controller
     m_shellController = new ShellController(this);
-}
 
-void ShellManager::create()
-{
     // Setup shell corona
     m_shellUi->engine()->rootContext()->setContextProperty("Shell", m_shellController);
     m_shellUi->engine()->rootContext()->setContextProperty("Ui", m_shellUi);
