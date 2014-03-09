@@ -99,7 +99,6 @@ void Notifications::mapSurfaces()
             y -= view->surface->height;
         if (isRight)
             x -= view->surface->width;
-        weston_log("-- %p %d %d\n", view, x, y);
         weston_view_set_position(view, x, y);
         if (isRight)
             x += view->surface->width;

@@ -178,14 +178,10 @@ protected:
     Layer m_splashLayer;
     Layer m_limboLayer;
     Layer m_backgroundLayer;
-    Layer m_desktopLayer;
     Layer m_panelsLayer;
     Layer m_fullscreenLayer;
     Layer m_stickyLayer;
     Layer m_overlayLayer;
-    Layer m_dialogsLayer;
-    Layer m_notificationsLayer;
-    Layer m_lockLayer;
 
     std::vector<Workspace *> m_workspaces;
 

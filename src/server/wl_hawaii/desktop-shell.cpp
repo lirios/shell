@@ -319,6 +319,11 @@ void DesktopShell::init()
 {
     Shell::init();
 
+    m_lockLayer.insert(&compositor()->cursor_layer);
+    m_dialogsLayer.insert(&m_lockLayer);
+    m_desktopLayer.insert(&m_limboLayer);
+    m_backgroundLayer.insert(&m_desktopLayer);
+
     if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
         return;
@@ -360,6 +365,9 @@ void DesktopShell::init()
     addInterface(new XWlShell);
     addInterface(new Notifications);
     addInterface(new SettingsInterface);
+
+    Notifications *notifications = findInterface<Notifications>();
+    notifications->m_notificationsLayer.insert(&m_overlayLayer);
 
     m_inputPanel = new InputPanel(compositor()->wl_display);
     m_splash = new Splash(this);

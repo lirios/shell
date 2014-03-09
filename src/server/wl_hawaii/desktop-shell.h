@@ -63,7 +63,6 @@ public:
 
     bool isTrusted(wl_client *client, const char *interface) const override;
 
-    Layer notificationsLayer() const { return m_notificationsLayer; }
     void addPanelSurfaceToLayer(weston_view *view);
     void prependViewToLockLayer(weston_view *view);
 
@@ -74,6 +73,10 @@ public:
     void centerSurfaceOnOutput(weston_view *ev, weston_output *output);
 
 protected:
+    Layer m_desktopLayer;
+    Layer m_dialogsLayer;
+    Layer m_lockLayer;
+
     virtual void init();
     virtual void setGrabCursor(Cursor cursor);
     virtual ShellSurface *createShellSurface(weston_surface *surface, const weston_shell_client *client) override;

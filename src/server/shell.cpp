@@ -267,16 +267,13 @@ void Shell::init()
     m_destroyListener.signal->connect(this, &Shell::destroy);
     m_grabViewDestroy.signal->connect(this, &Shell::grabViewDestroyed);
 
-    m_lockLayer.insert(&compositor()->cursor_layer);
-    m_dialogsLayer.insert(&m_lockLayer);
-    m_overlayLayer.insert(&m_dialogsLayer);
-    m_notificationsLayer.insert(&m_overlayLayer);
-    m_fullscreenLayer.insert(&m_notificationsLayer);
+    m_splashLayer.insert(&m_compositor->cursor_layer);
+    m_overlayLayer.insert(&m_splashLayer);
+    m_fullscreenLayer.insert(&m_overlayLayer);
     m_panelsLayer.insert(&m_fullscreenLayer);
     m_stickyLayer.insert(&m_panelsLayer);
     m_limboLayer.insert(&m_stickyLayer);
     m_backgroundLayer.insert(&m_limboLayer);
-    m_desktopLayer.insert(&m_backgroundLayer);
 
     m_currentWorkspace = 0;
 
@@ -286,7 +283,7 @@ void Shell::init()
         int w = out->width, h = out->height;
 
         weston_view *blackSurface = createBlackSurface(x, y, w, h);
-        m_desktopLayer.addSurface(blackSurface);
+        m_backgroundLayer.addSurface(blackSurface);
         m_blackSurfaces.push_back(blackSurface);
     }
 

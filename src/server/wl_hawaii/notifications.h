@@ -30,6 +30,8 @@
 #include "interface.h"
 #include "wayland-notification-daemon-server-protocol.h"
 
+class DesktopShell;
+
 class Notifications : public Interface
 {
 public:
@@ -55,6 +57,8 @@ public:
     Notifications();
 
 private:
+    friend class DesktopShell;
+
     void bind(wl_client *client, uint32_t version, uint32_t id);
     void unbind(wl_resource *resource);
 
