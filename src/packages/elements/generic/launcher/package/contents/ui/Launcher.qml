@@ -28,7 +28,6 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Core 1.0
-import Hawaii.Shell.Settings 1.0
 import Hawaii.Shell.Styles 1.0
 import Hawaii.Shell.Elements.Launcher 1.0
 
