@@ -45,4 +45,5 @@ qt5_use_modules(hawaii-notifications-daemon DBus Quick)
 set_target_properties(hawaii-notifications-daemon PROPERTIES LINK_FLAGS ${LINK_FLAGS})
 target_link_libraries(hawaii-notifications-daemon ${LIBRARIES})
 
-install(TARGETS hawaii-notifications-daemon DESTINATION ${CMAKE_INSTALL_LIBEXECDIR})
+install(TARGETS hawaii-notifications-daemon
+    DESTINATION ${CMAKE_INSTALL_BINDIR})

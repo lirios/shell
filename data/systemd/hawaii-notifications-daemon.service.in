@@ -6,7 +6,7 @@ After=hawaii.service
 [Service]
 Type=notify
 NotifyAccess=main
-ExecStart=@CMAKE_INSTALL_FULL_LIBEXECDIR@/hawaii-notifications-daemon
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-notifications-daemon
 
 [Install]
 WantedBy=hawaii.target
