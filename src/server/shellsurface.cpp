@@ -84,6 +84,53 @@ void ShellSurface::close()
     }
 }
 
+void ShellSurface::calculateInitialPosition(int &x, int &y)
+{
+    // As a heuristic place the new window on the same output as the
+    // pointer. Falling back to the output containing 0,0.
+    // TODO: Do something clever for touch too
+    int ix = 0, iy = 0;
+    weston_seat *seat = 0;
+    wl_list_for_each(seat, &weston_surface()->compositor->seat_list, link) {
+        if (seat->pointer) {
+            ix = wl_fixed_to_int(seat->pointer->x);
+            iy = wl_fixed_to_int(seat->pointer->y);
+        }
+    }
+
+    // Find the target output (the one where the coordinates are in)
+    weston_output *output = 0, *targetOutput = 0;
+    wl_list_for_each(output, &weston_surface()->compositor->output_list, link) {
+        if (pixman_region32_contains_point(&output->region, ix, iy, 0))
+            targetOutput = output;
+    }
+
+    // Just move the surface to a random position if we can't find a target output
+    if (!targetOutput) {
+        x = 10 + random() % 400;
+        y = 10 + random() % 400;
+        return;
+    }
+
+    // Valid range within output where the surface will still be onscreen.
+    // If this is negative it means that the surface is bigger than
+    // output in this case we fallback to 0,0 in available geometry space.
+    int rangeX = m_shell->windowsArea(targetOutput).width -
+            weston_surface()->width;
+    int rangeY = m_shell->windowsArea(targetOutput).height -
+            weston_surface()->height;
+
+    int dx = 0, dy = 0;
+    if (rangeX > 0)
+        dx = random() % rangeX;
+    if (rangeY > 0)
+        dy = random() % rangeY;
+
+    // Set surface position
+    x = m_shell->windowsArea(targetOutput).x + dx;
+    y = m_shell->windowsArea(targetOutput).y + dy;
+}
+
 void ShellSurface::setActive(bool active)
 {
     m_active = active;

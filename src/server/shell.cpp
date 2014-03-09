@@ -409,7 +409,9 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy)
     if (!surface->isMapped()) {
         switch (surface->m_type) {
             case ShellSurface::Type::TopLevel:
-                surface->map(10 + random() % 400, 10 + random() % 400);
+                int cx, cy;
+                surface->calculateInitialPosition(cx, cy);
+                surface->map(cx, cy);
                 break;
             default:
                 surface->map(surface->view()->geometry.x + sx, surface->view()->geometry.y + sy);

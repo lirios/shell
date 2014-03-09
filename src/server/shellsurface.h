@@ -131,6 +131,8 @@ public:
     void hide();
     void close();
 
+    void calculateInitialPosition(int &x, int &y);
+
     Signal<> destroyedSignal;
     Signal<ShellSurface *> moveStartSignal;
     Signal<ShellSurface *> moveEndSignal;
