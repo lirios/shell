@@ -398,7 +398,7 @@ void Compositor::keyPressEvent(QKeyEvent *event)
 void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY)
 {
     if ((m_cursorSurface != surface) && surface)
-        connect(surface, &QWaylandSurface::damaged, [=](const QRect &rect) {
+        connect(surface, &QWaylandSurface::damaged, [=](const QRegion &region) {
             if (!m_cursorSurface)
                 return;
 
