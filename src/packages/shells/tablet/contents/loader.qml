@@ -46,8 +46,7 @@ QtObject {
 
     default property var children
 
-    Configuration {
-        id: settings
+    property var settings: Configuration {
         category: "shell"
 
         property string handler: "org.hawaii.shells.desktop"
