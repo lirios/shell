@@ -376,7 +376,7 @@ QString Package::filePath(const char *fileType, const QString &filename) const
     }
 
     // Nested loop, but in the medium case resolves to just one iteration
-    //qDebug() << "prefixes:" << prefixes.count() << prefixes;
+    //qDebug() << "prefixes:" << d->contentsPrefixPaths.count() << d->contentsPrefixPaths;
     foreach (const QString &contentsPrefix, d->contentsPrefixPaths) {
         const QString prefix(d->path + contentsPrefix);
 
@@ -409,7 +409,7 @@ QString Package::filePath(const char *fileType, const QString &filename) const
         }
     }
 
-    //qDebug() << fileType << filename << "does not exist in" << prefixes << "at root" << d->path;
+    //qDebug() << fileType << filename << "does not exist in" << d->contentsPrefixPaths << "at root" << d->path;
     return QString();
 }
 
