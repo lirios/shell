@@ -130,8 +130,10 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
 
 PanelView::~PanelView()
 {
-    delete m_surface;
     qDeleteAll(m_elements);
+
+    delete m_surface;
+    m_surface = nullptr;
 }
 
 bool PanelView::isMaximized() const
@@ -362,10 +364,15 @@ void PanelView::restore()
 
 void PanelView::dockPanel()
 {
-    restore();
-
-    if (!m_surface->isInitialized())
+    // Sanity check
+    if (!m_surface || !m_surface->isInitialized())
         return;
+
+    // Don't dock hidden panels
+    if (!isVisible())
+        return;
+
+    restore();
 
     // Setup surface on the compositor size
     m_surface->set_alignment(convertAlignment(m_alignment));
