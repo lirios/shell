@@ -118,10 +118,8 @@ PanelSurface *PanelManager::getPanelSurface(wl_client *client,
 void PanelManager::surfaceDestroyed(void *d)
 {
     PanelSurface *panel = static_cast<PanelSurface *>(d);
-    if (panel) {
-        panel->surfaceListener.reset();
+    if (panel)
         m_panels.remove(panel);
-    }
 }
 
 void PanelManager::panelDocked(PanelSurface *)
