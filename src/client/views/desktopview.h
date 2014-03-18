@@ -36,7 +36,7 @@ class DesktopView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
 public:
-    explicit DesktopView(ShellUi *corona, QScreen *screen);
+    explicit DesktopView(ShellUi *mantle, QScreen *screen);
 
 private:
     void setWindowType();

@@ -55,7 +55,7 @@ public:
     static ShellManager *instance();
 
     ShellController *controller() const;
-    ShellUi *corona() const;
+    ShellUi *mantle() const;
 
     ShellClient *shellInterface() const;
     ShellSurfaceClient *shellSurfaceInterface() const;

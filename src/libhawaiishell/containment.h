@@ -29,7 +29,7 @@
 
 #include <QtCore/QObject>
 
-#include <HawaiiShell/Corona>
+#include <HawaiiShell/Mantle>
 #include <HawaiiShell/HawaiiShell>
 
 namespace Hawaii {
@@ -45,13 +45,13 @@ class HAWAIISHELL_EXPORT Containment : public QObject
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
 public:
-    explicit Containment(Corona *corona, QObject *parent = 0);
+    explicit Containment(Mantle *mantle, QObject *parent = 0);
     ~Containment();
 
     /*!
-     * \return the corona for this containment.
+     * \return the mantle for this containment.
      */
-    Corona *corona() const;
+    Mantle *mantle() const;
 
     /*!
      * \return the containment type.

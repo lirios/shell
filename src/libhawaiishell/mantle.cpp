@@ -24,67 +24,67 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include "corona_p.h"
+#include "mantle_p.h"
 
 namespace Hawaii {
 
 namespace Shell {
 
 /*
- * CoronaPrivate
+ * MantlePrivate
  */
 
-CoronaPrivate::CoronaPrivate(Corona *parent)
+MantlePrivate::MantlePrivate(Mantle *parent)
     : engine(new QQmlEngine(parent))
     , q_ptr(parent)
 {
 }
 
 /*
- * Corona
+ * Mantle
  */
 
-Corona::Corona(QObject *parent)
+Mantle::Mantle(QObject *parent)
     : QObject(parent)
-    , d_ptr(new CoronaPrivate(this))
+    , d_ptr(new MantlePrivate(this))
 {
 }
 
-Corona::~Corona()
+Mantle::~Mantle()
 {
     delete d_ptr;
 }
 
-QQmlEngine *Corona::engine() const
+QQmlEngine *Mantle::engine() const
 {
-    Q_D(const Corona);
+    Q_D(const Mantle);
     return d->engine;
 }
 
-QString Corona::shell() const
+QString Mantle::shell() const
 {
-    Q_D(const Corona);
+    Q_D(const Mantle);
     return d->shell;
 }
 
-void Corona::setShell(const QString &shell)
+void Mantle::setShell(const QString &shell)
 {
-    Q_D(Corona);
+    Q_D(Mantle);
     if (d->shell != shell) {
         d->shell = shell;
         Q_EMIT shellChanged(d->shell);
     }
 }
 
-Package Corona::package() const
+Package Mantle::package() const
 {
-    Q_D(const Corona);
+    Q_D(const Mantle);
     return d->package;
 }
 
-void Corona::setPackage(const Package &package)
+void Mantle::setPackage(const Package &package)
 {
-    Q_D(Corona);
+    Q_D(Mantle);
     d->package = package;
     Q_EMIT packageChanged(package);
 }
@@ -93,4 +93,4 @@ void Corona::setPackage(const Package &package)
 
 } // namespace Hawaii
 
-#include "moc_corona.cpp"
+#include "moc_mantle.cpp"

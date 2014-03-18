@@ -47,7 +47,7 @@ class QuickViewPrivate
 public:
     QuickViewPrivate(QuickView *view);
 
-    Corona *corona;
+    Mantle *mantle;
     QPointer<Containment> containment;
     bool immutable;
     bool configuring;
@@ -90,12 +90,12 @@ void QuickViewPrivate::initialize()
  * QuickView
  */
 
-QuickView::QuickView(Corona *corona, QWindow *parent)
-    : QQuickView(corona->engine(), parent)
+QuickView::QuickView(Mantle *mantle, QWindow *parent)
+    : QQuickView(mantle->engine(), parent)
     , d_ptr(new QuickViewPrivate(this))
 {
     Q_D(QuickView);
-    d->corona = corona;
+    d->mantle = mantle;
     d->initialize();
 }
 
@@ -104,10 +104,10 @@ QuickView::~QuickView()
     delete d_ptr;
 }
 
-Corona *QuickView::corona() const
+Mantle *QuickView::mantle() const
 {
     Q_D(const QuickView);
-    return d->corona;
+    return d->mantle;
 }
 
 Containment *QuickView::containment() const

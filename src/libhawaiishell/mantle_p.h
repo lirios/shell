@@ -24,49 +24,31 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef CORONA_H
-#define CORONA_H
+#ifndef MANTLE_P_H
+#define MANTLE_P_H
 
-#include <QtCore/QObject>
-#include <QtQml/QQmlEngine>
-
-#include <HawaiiShell/Package>
+#include "mantle.h"
 
 namespace Hawaii {
 
 namespace Shell {
 
-class CoronaPrivate;
-
-class HAWAIISHELL_EXPORT Corona : public QObject
+class MantlePrivate
 {
-    Q_OBJECT
-    Q_PROPERTY(QString shell READ shell NOTIFY shellChanged)
 public:
-    explicit Corona(QObject *parent = 0);
-    ~Corona();
+    MantlePrivate(Mantle *parent);
 
-    QQmlEngine *engine() const;
-
-    QString shell() const;
-
-    Package package() const;
-    void setPackage(const Package &package);
-
-Q_SIGNALS:
-    void shellChanged(const QString &shell);
-    void packageChanged(const Package &package);
+    QQmlEngine *engine;
+    QString shell;
+    Package package;
 
 protected:
-    void setShell(const QString &shell);
-
-private:
-    Q_DECLARE_PRIVATE(Corona)
-    CoronaPrivate *const d_ptr;
+    Q_DECLARE_PUBLIC(Mantle)
+    Mantle *q_ptr;
 };
 
 } // namespace Shell
 
 } // namespace Hawaii
 
-#endif // CORONA_H
+#endif // MANTLE_P_H

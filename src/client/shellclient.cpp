@@ -56,7 +56,7 @@ void ShellClient::hawaii_shell_configure(struct ::wl_surface *target,
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
 
     QList<DesktopView *> views =
-            ShellManager::instance()->corona()->desktops();
+            ShellManager::instance()->mantle()->desktops();
     for (DesktopView *view: views) {
         struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                     native->nativeResourceForWindow("surface", view));

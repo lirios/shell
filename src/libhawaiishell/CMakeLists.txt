@@ -11,9 +11,9 @@ set(SOURCES
     applications/appinfo.cpp
     applications/applicationsmodel.cpp
     containment.cpp
-    corona.cpp
     element.cpp
     hawaiishell.cpp
+    mantle.cpp
     package.cpp
     packages_p.cpp
     packagestructure.cpp
@@ -31,9 +31,9 @@ set(HEADERS
     applications/appinfo.h
     applications/applicationsmodel.h
     containment.h
-    corona.h
     element.h
     hawaiishell.h
+    mantle.h
     package.h
     packagestructure.h
     pluginloader.h

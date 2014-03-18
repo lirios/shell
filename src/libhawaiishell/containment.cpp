@@ -49,7 +49,7 @@ public:
     ContainmentPrivate();
 
     QConfiguration *configuration;
-    Corona *corona;
+    Mantle *mantle;
     Types::ContainmentType type;
     Types::FormFactor formFactor;
     Types::Location location;
@@ -58,7 +58,7 @@ public:
 };
 
 ContainmentPrivate::ContainmentPrivate()
-    : corona(nullptr)
+    : mantle(nullptr)
     , type(Types::UnknownContainment)
     , formFactor(Types::Plane)
     , location(Types::Desktop)
@@ -69,19 +69,19 @@ ContainmentPrivate::ContainmentPrivate()
  * Containment
  */
 
-Containment::Containment(Corona *corona, QObject *parent)
+Containment::Containment(Mantle *mantle, QObject *parent)
     : QObject(parent)
     , d_ptr(new ContainmentPrivate())
 {
     Q_D(Containment);
-    d->corona = corona;
+    d->mantle = mantle;
     d->qmlObject = new QmlObject(this);
     d->qmlObject->setInitializationDelayed(true);
 
     // Save and load settings
     static int containmentId = 0;
     const QString section = QString("shell/%1/containments/containment%2")
-            .arg(corona->shell())
+            .arg(mantle->shell())
             .arg(QString::number(containmentId++));
     d->configuration = new QConfiguration(this, section, this);
 }
@@ -91,10 +91,10 @@ Containment::~Containment()
     delete d_ptr;
 }
 
-Corona *Containment::corona() const
+Mantle *Containment::mantle() const
 {
     Q_D(const Containment);
-    return d->corona;
+    return d->mantle;
 }
 
 Hawaii::Shell::Types::ContainmentType Containment::type() const
@@ -192,8 +192,8 @@ void Containment::setPackage(const Package &package)
         errorMsg = tr("Error loading QML file for containment: %1").arg(errorMsg);
         qWarning() << qPrintable(errorMsg);
 
-        // Load the element error component from corona's package
-        d->qmlObject->setSource(QUrl::fromLocalFile(corona()->package().filePath("elementerror")));
+        // Load the element error component from mantle's package
+        d->qmlObject->setSource(QUrl::fromLocalFile(mantle()->package().filePath("elementerror")));
         d->qmlObject->completeInitialization();
 
         // If even the element error component cannot be loaded this is a lost cause

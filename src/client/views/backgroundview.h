@@ -37,7 +37,7 @@ class BackgroundView : public QQuickView
 {
     Q_OBJECT
 public:
-    explicit BackgroundView(ShellUi *corona, QScreen *screen);
+    explicit BackgroundView(ShellUi *mantle, QScreen *screen);
 
 public Q_SLOTS:
     void loadPlugin(const QString &background);

@@ -43,7 +43,7 @@
 const QString s_lockScreenViewFileName = QStringLiteral("lockscreen/LockScreen.qml");
 
 ShellUi::ShellUi(QObject *parent)
-    : Hawaii::Shell::Corona(parent)
+    : Hawaii::Shell::Mantle(parent)
     , m_numWorkspaces(0)
     , m_grabWindow(nullptr)
     , m_lockScreenView(nullptr)

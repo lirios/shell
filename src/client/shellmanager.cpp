@@ -68,7 +68,7 @@ ShellManager::ShellManager()
     Registration::registerQmlTypes();
     Registration::registerFactories();
 
-    // Create shell corona
+    // Create shell mantle
     m_shellUi = new ShellUi(this);
 
     // Create UI when the compositor says so
@@ -95,7 +95,7 @@ ShellController *ShellManager::controller() const
     return m_shellController;
 }
 
-ShellUi *ShellManager::corona() const
+ShellUi *ShellManager::mantle() const
 {
     return m_shellUi;
 }
@@ -187,7 +187,7 @@ void ShellManager::create()
     // Create the shell controller
     m_shellController = new ShellController(this);
 
-    // Setup shell corona
+    // Setup shell mantle
     m_shellUi->engine()->rootContext()->setContextProperty("Shell", m_shellController);
     m_shellUi->engine()->rootContext()->setContextProperty("Ui", m_shellUi);
     connect(m_registryListener->shell, &ShellClient::prepareLockSurface,

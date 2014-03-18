@@ -62,12 +62,12 @@ static const struct {
 PanelInterface::PanelInterface(QScreen *screen, QObject *parent)
     : QObject(parent)
 {
-    m_view = new PanelView(ShellManager::instance()->corona(), screen);
+    m_view = new PanelView(ShellManager::instance()->mantle(), screen);
     m_view->show();
 
-    ShellUi *corona = qobject_cast<ShellUi *>(m_view->corona());
-    if (corona)
-        corona->addPanelView(m_view);
+    ShellUi *mantle = qobject_cast<ShellUi *>(m_view->mantle());
+    if (mantle)
+        mantle->addPanelView(m_view);
 }
 
 QString PanelInterface::formFactor() const

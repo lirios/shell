@@ -58,8 +58,8 @@ static PanelSurface::alignment convertAlignment(Qt::Alignment alignment)
     return PanelSurface::alignment_left;
 }
 
-PanelView::PanelView(ShellUi *corona, QScreen *screen)
-    : QuickView(corona, new QWindow(screen))
+PanelView::PanelView(ShellUi *mantle, QScreen *screen)
+    : QuickView(mantle, new QWindow(screen))
     , m_maximized(true)
     , m_alignment(Qt::AlignLeft)
     , m_offset(0)
@@ -80,12 +80,12 @@ PanelView::PanelView(ShellUi *corona, QScreen *screen)
     package.setPath("org.hawaii.containments.panel");
 
     // Create and load containment
-    Containment *containment = new Containment(corona, this);
+    Containment *containment = new Containment(mantle, this);
     containment->setContextProperty(QStringLiteral("panel"), QVariant::fromValue(this));
     containment->setPackage(package);
 
     // Load QML source file
-    setSource(QUrl::fromLocalFile(corona->package().filePath(
+    setSource(QUrl::fromLocalFile(mantle->package().filePath(
                                       "views", QStringLiteral("PanelView.qml"))));
 
     // Set containment

@@ -36,7 +36,7 @@ class LockScreenView : public Hawaii::Shell::QuickView
 {
     Q_OBJECT
 public:
-    explicit LockScreenView(ShellUi *corona, QScreen *screen);
+    explicit LockScreenView(ShellUi *mantle, QScreen *screen);
 
 public Q_SLOTS:
     void setWindowType();

@@ -39,8 +39,8 @@
 
 using namespace Hawaii::Shell;
 
-DesktopView::DesktopView(ShellUi *corona, QScreen *screen)
-    : QuickView(corona, new QWindow(screen))
+DesktopView::DesktopView(ShellUi *mantle, QScreen *screen)
+    : QuickView(mantle, new QWindow(screen))
 {
     // Let QML see us
     rootContext()->setContextProperty("desktop", this);
@@ -54,13 +54,13 @@ DesktopView::DesktopView(ShellUi *corona, QScreen *screen)
     package.setPath(QStringLiteral("org.hawaii.containments.desktop"));
 
     // Create and load containment
-    Containment *containment = new Containment(corona, this);
+    Containment *containment = new Containment(mantle, this);
     containment->setContextProperty(QStringLiteral("desktop"),
                                     QVariant::fromValue(this));
     containment->setPackage(package);
 
     // Load QML source file
-    setSource(QUrl::fromLocalFile(corona->package().filePath(
+    setSource(QUrl::fromLocalFile(mantle->package().filePath(
                                       "views", QStringLiteral("DesktopView.qml"))));
 
     // Set containment

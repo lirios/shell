@@ -54,7 +54,7 @@ class PanelView : public Hawaii::Shell::QuickView
     Q_PROPERTY(int maximumLength READ maximumLength WRITE setMaximumLength NOTIFY maximumLengthChanged)
     Q_PROPERTY(QStringList elements READ elements NOTIFY elementsChanged)
 public:
-    explicit PanelView(ShellUi *corona, QScreen *screen);
+    explicit PanelView(ShellUi *mantle, QScreen *screen);
     virtual ~PanelView();
 
     bool isMaximized() const;

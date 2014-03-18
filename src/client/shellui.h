@@ -30,7 +30,7 @@
 #include <QtCore/QObject>
 #include <QtGui/QScreen>
 
-#include <HawaiiShell/Corona>
+#include <HawaiiShell/Mantle>
 
 #include "scriptengine.h"
 
@@ -40,7 +40,7 @@ class GrabWindow;
 class LockScreenView;
 class PanelView;
 
-class ShellUi : public Hawaii::Shell::Corona
+class ShellUi : public Hawaii::Shell::Mantle
 {
     Q_OBJECT
 public:

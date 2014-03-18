@@ -37,7 +37,7 @@
 #include "backgroundview.h"
 #include "shellmanager.h"
 
-BackgroundView::BackgroundView(ShellUi *corona, QScreen *screen)
+BackgroundView::BackgroundView(ShellUi *mantle, QScreen *screen)
     : QQuickView(new QWindow(screen))
     , m_settings(new QStaticConfiguration(this))
 {
@@ -71,7 +71,7 @@ BackgroundView::BackgroundView(ShellUi *corona, QScreen *screen)
     });
 
     // Load QML source file
-    setSource(QUrl::fromLocalFile(corona->package().filePath(
+    setSource(QUrl::fromLocalFile(mantle->package().filePath(
                                       "views", QStringLiteral("Background.qml"))));
 
     // Load plugin

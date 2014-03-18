@@ -35,8 +35,8 @@
 
 using namespace Hawaii::Shell;
 
-LockScreenView::LockScreenView(ShellUi *corona, QScreen *screen)
-    : QuickView(corona, new QWindow(screen))
+LockScreenView::LockScreenView(ShellUi *mantle, QScreen *screen)
+    : QuickView(mantle, new QWindow(screen))
 {
     // Resize view to actual size and thus resize the root object
     setResizeMode(QQuickView::SizeRootObjectToView);

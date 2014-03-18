@@ -30,7 +30,7 @@
 #include <QtQuick/QQuickView>
 
 #include <HawaiiShell/HawaiiShell>
-#include <HawaiiShell/Corona>
+#include <HawaiiShell/Mantle>
 
 namespace Hawaii {
 
@@ -50,10 +50,10 @@ class HAWAIISHELL_EXPORT QuickView : public QQuickView
 public:
     /*!
      * Constructor.
-     * \param corona the corona for this view
+     * \param mantle the mantle for this view
      * \param parent the QWindow this view is parented to
      */
-    QuickView(Corona *corona, QWindow *parent = 0);
+    QuickView(Mantle *mantle, QWindow *parent = 0);
 
     /*!
      * Destructor.
@@ -61,9 +61,9 @@ public:
     virtual ~QuickView();
 
     /*!
-     * \return the corona for this view.
+     * \return the mantle for this view.
      */
-    Corona *corona() const;
+    Mantle *mantle() const;
 
     /*!
      * \return the containment for this view.
