@@ -30,6 +30,7 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>
+#include <QtQuick/QQuickItem>
 
 #include <HawaiiShell/Containment>
 

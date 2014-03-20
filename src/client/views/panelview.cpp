@@ -33,10 +33,10 @@
 #include <QtQml/QQmlContext>
 
 #include <HawaiiShell/Containment>
+#include <HawaiiShell/Element>
+#include <HawaiiShell/ElementItem>
 #include <HawaiiShell/PluginLoader>
 
-#include "element.h"
-#include "elementfactory.h"
 #include "panelconfigview.h"
 #include "panelview.h"
 #include "panelsurface.h"
@@ -294,9 +294,14 @@ void PanelView::addElement(const QString &name)
 {
     m_elementsSet.insert(name);
 
-    Hawaii::Shell::Element *element = ElementFactory::createElement(name);
-    m_elements.append(element);
-    Q_EMIT elementAdded(element);
+    Element *element = new Element(name, containment(), this);
+    ElementItem *elementItem = new ElementItem(element);
+    elementItem->setContextProperty("Shell", QVariant::fromValue(ShellManager::instance()->controller()));
+    elementItem->setContextProperty("Ui", QVariant::fromValue(ShellManager::instance()->mantle()));
+    elementItem->setContextProperty("panel", QVariant::fromValue(this));
+    elementItem->initialize();
+    m_elements.append(elementItem);
+    Q_EMIT elementAdded(elementItem);
 }
 
 void PanelView::showConfigurationWindow()

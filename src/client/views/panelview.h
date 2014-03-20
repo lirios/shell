@@ -33,7 +33,7 @@
 
 #include <QtConfiguration/QConfiguration>
 
-#include <HawaiiShell/Element>
+#include <HawaiiShell/ElementItem>
 #include <HawaiiShell/HawaiiShell>
 #include <HawaiiShell/QuickView>
 
@@ -97,7 +97,7 @@ Q_SIGNALS:
     void maximumLengthChanged();
 
     void elementsChanged();
-    void elementAdded(Hawaii::Shell::Element *element);
+    void elementAdded(Hawaii::Shell::ElementItem *element);
     void elementRemoved();
 
 private:
@@ -110,7 +110,7 @@ private:
     int m_maximumLength;
     QConfiguration *m_configuration;
     QSet<QString> m_elementsSet;
-    QList<Hawaii::Shell::Element *> m_elements;
+    QList<Hawaii::Shell::ElementItem *> m_elements;
     PanelSurface *m_surface;
     QPointer<PanelConfigView> m_configView;
 

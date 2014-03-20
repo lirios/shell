@@ -35,7 +35,6 @@
 #include <HawaiiShell/PluginMetadata>
 
 #include "cmakedirs.h"
-#include "elementfactory.h"
 #include "keybinding.h"
 #include "keymap.h"
 #include "registration.h"
@@ -81,7 +80,6 @@ ShellManager::ShellManager()
 
 ShellManager::~ShellManager()
 {
-    ElementFactory::cleanupElements();
     delete m_registryListener;
 }
 
@@ -175,9 +173,6 @@ void ShellManager::loadLookAndFeel()
 
 void ShellManager::create()
 {
-    // Load elements
-    ElementFactory::searchElements();
-
     // Load shell handlers
     loadHandlers();
 

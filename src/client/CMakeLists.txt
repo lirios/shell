@@ -13,7 +13,6 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/extensions
     ${CMAKE_CURRENT_SOURCE_DIR}/views
     ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
     ${CMAKE_CURRENT_SOURCE_DIR}/scripting
@@ -41,8 +40,6 @@ set(SOURCES
     shortcut.cpp
     window.cpp
     workspace.cpp
-    extensions/elementfactory.cpp
-    extensions/elementinfo.cpp
     scripting/appinterface.cpp
     scripting/panelinterface.cpp
     scripting/scriptengine.cpp
