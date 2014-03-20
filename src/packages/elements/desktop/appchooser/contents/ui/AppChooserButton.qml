@@ -31,7 +31,7 @@ import Hawaii.Shell.Core 1.0
 import Hawaii.Shell.Styles 1.0
 import Hawaii.Shell.Components 1.0
 
-Element {
+Item {
     id: root
 
     QtObject {

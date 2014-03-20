@@ -31,12 +31,12 @@ import Hawaii.Shell.Core 1.0
 import Hawaii.Shell.Styles 1.0
 import Hawaii.Shell.Elements.Launcher 1.0
 
-Element {
+Item {
     id: launcherContainer
-    minimumWidth: listView.orientation == ListView.Horizontal ? listView.count * __priv.tileSize : listView.width
-    minimumHeight: listView.orientation == ListView.Horizontal ? listView.height : listView.count * __priv.tileSize
-    fillWidth: true
-    fillHeight: true
+    Layout.minimumWidth: listView.orientation == ListView.Horizontal ? listView.count * __priv.tileSize : listView.width
+    Layout.minimumHeight: listView.orientation == ListView.Horizontal ? listView.height : listView.count * __priv.tileSize
+    Layout.fillWidth: true
+    Layout.fillHeight: true
 
     QtObject {
         id: __priv

@@ -30,15 +30,15 @@ import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Core 1.0
 
-Element {
+Item {
     id: statusArea
-    implicitWidth: {
+    Layout.implicitWidth: {
         if (listView.orientation == ListView.Horizontal)
             return listView.headerItem.width + (listView.count * __priv.iconSize) +
                     (__priv.margin * (listView.count + 3));
         return __priv.iconSize;
     }
-    implicitHeight: {
+    Layout.implicitHeight: {
         if (listView.orientation == ListView.Horizontal)
             return __priv.iconSize;
         return listView.headerItem.height + (listView.count * __priv.iconSize) +

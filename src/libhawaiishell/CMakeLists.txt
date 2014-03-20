@@ -12,6 +12,7 @@ set(SOURCES
     applications/applicationsmodel.cpp
     containment.cpp
     element.cpp
+    elementitem.cpp
     hawaiishell.cpp
     mantle.cpp
     package.cpp
@@ -32,6 +33,7 @@ set(HEADERS
     applications/applicationsmodel.h
     containment.h
     element.h
+    elementitem.h
     hawaiishell.h
     mantle.h
     package.h

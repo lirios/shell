@@ -30,6 +30,7 @@
 #include <HawaiiShell/AppCategories>
 #include <HawaiiShell/AppInfo>
 #include <HawaiiShell/ApplicationsModel>
+#include <HawaiiShell/ElementItem>
 
 #include "packagesmodelitem.h"
 #include "packagesmodel.h"
@@ -51,6 +52,8 @@ void HawaiiShellCorePlugin::registerTypes(const char *uri)
     qmlRegisterType<ApplicationsModel>(uri, 1, 0, "ApplicationsModel");
     qmlRegisterUncreatableType<AppInfo>(uri, 1, 0, "AppInfo",
                                         QStringLiteral("Do not create AppInfo"));
+    qmlRegisterUncreatableType<ElementItem>(uri, 1, 0, "Element",
+                                            QStringLiteral("Do not create Element"));
     qmlRegisterUncreatableType<PackagesModelItem>(uri, 1, 0, "PackagesModelItem",
                                                   QStringLiteral("Do not create PackagesModelItem"));
     qmlRegisterType<PackagesModel>(uri, 1, 0, "PackagesModel");
