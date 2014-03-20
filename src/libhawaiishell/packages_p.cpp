@@ -120,6 +120,10 @@ void ShellPackage::initializePackage(Package *package)
     package->addFileDefinition("defaultlayout", QStringLiteral("layout.js"),
                                tr("Default layout script"));
     package->setMimeTypes("defaultlayout", QStringList() << QStringLiteral("application/javascript"));
+
+    // Elements
+    package->addFileDefinition("elementerror", QStringLiteral("element/ElementError.qml"),
+                               tr("Error message for elements that fail to load"));
 }
 
 void LookAndFeelPackage::initializePackage(Package *package)
