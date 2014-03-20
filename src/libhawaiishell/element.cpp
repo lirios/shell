@@ -25,6 +25,8 @@
  ***************************************************************************/
 
 #include "element.h"
+#include "package.h"
+#include "pluginloader.h"
 
 namespace Hawaii {
 
@@ -37,36 +39,45 @@ namespace Shell {
 class ElementPrivate
 {
 public:
-    ElementPrivate();
+    ElementPrivate(Element *self);
 
-    bool busy;
-    qreal minimumWidth;
-    qreal maximumWidth;
-    qreal minimumHeight;
-    qreal maximumHeight;
-    bool fillWidth;
-    bool fillHeight;
+    uint elementId;
+    Containment *containment;
+    Package package;
+    QString errorString;
+
+    static uint s_maxElementId;
+
+protected:
+    Q_DECLARE_PUBLIC(Element)
+    Element *q_ptr;
 };
 
-ElementPrivate::ElementPrivate()
-    : busy(false)
-    , minimumWidth(0)
-    , maximumWidth(10000)
-    , minimumHeight(0)
-    , maximumHeight(10000)
-    , fillWidth(false)
-    , fillHeight(false)
+uint ElementPrivate::s_maxElementId = 0;
+
+ElementPrivate::ElementPrivate(Element *self)
+    : package(nullptr)
+    , q_ptr(self)
 {
+    elementId = ++s_maxElementId;
 }
 
 /*
  * Element
  */
 
-Element::Element(QQuickItem *parent)
-    : QQuickItem(parent)
-    , d_ptr(new ElementPrivate())
+Element::Element(const QString &name, Containment *containment, QObject *parent)
+    : QObject(parent)
+    , d_ptr(new ElementPrivate(this))
 {
+    Q_D(Element);
+    d->containment = containment;
+
+    d->package = PluginLoader::instance()->loadPackage(
+                PluginLoader::ElementPlugin);
+    d->package.setPath(name);
+    Q_ASSERT(d->package.isValid());
+    Q_ASSERT(!d->package.path().isEmpty());
 }
 
 Element::~Element()
@@ -74,115 +85,37 @@ Element::~Element()
     delete d_ptr;
 }
 
-bool Element::isBusy() const
+uint Element::elementId() const
 {
     Q_D(const Element);
-    return d->busy;
+    return d->elementId;
 }
 
-void Element::setBusy(bool value)
+Package Element::package() const
+{
+    Q_D(const Element);
+    return d->package;
+}
+
+Containment *Element::containment() const
+{
+    Q_D(const Element);
+    return d->containment;
+}
+
+QString Element::errorString() const
+{
+    Q_D(const Element);
+    return d->errorString;
+}
+
+void Element::setErrorString(const QString &error)
 {
     Q_D(Element);
 
-    if (d->busy != value) {
-        d->busy = value;
-        Q_EMIT busyChanged();
-    }
-}
-
-qreal Element::minimumWidth() const
-{
-    Q_D(const Element);
-    return d->minimumWidth;
-}
-
-void Element::setMinimumWidth(qreal value)
-{
-    Q_D(Element);
-
-    if (d->minimumWidth != value) {
-        d->minimumWidth = value;
-        Q_EMIT minimumWidthChanged();
-    }
-}
-
-qreal Element::maximumWidth() const
-{
-    Q_D(const Element);
-    return d->maximumWidth;
-}
-
-void Element::setMaximumWidth(qreal value)
-{
-    Q_D(Element);
-
-    if (d->maximumWidth != value) {
-        d->maximumWidth = value;
-        Q_EMIT maximumWidthChanged();
-    }
-}
-
-qreal Element::minimumHeight() const
-{
-    Q_D(const Element);
-    return d->minimumHeight;
-}
-
-void Element::setMinimumHeight(qreal value)
-{
-    Q_D(Element);
-
-    if (d->minimumHeight != value) {
-        d->minimumHeight = value;
-        Q_EMIT minimumHeightChanged();
-    }
-}
-
-qreal Element::maximumHeight() const
-{
-    Q_D(const Element);
-    return d->maximumHeight;
-}
-
-void Element::setMaximumHeight(qreal value)
-{
-    Q_D(Element);
-
-    if (d->maximumHeight != value) {
-        d->maximumHeight = value;
-        Q_EMIT maximumHeightChanged();
-    }
-}
-
-bool Element::fillWidth() const
-{
-    Q_D(const Element);
-    return d->fillWidth;
-}
-
-void Element::setFillWidth(bool value)
-{
-    Q_D(Element);
-
-    if (d->fillWidth != value) {
-        d->fillWidth = value;
-        Q_EMIT fillWidthChanged();
-    }
-}
-
-bool Element::fillHeight() const
-{
-    Q_D(const Element);
-    return d->fillHeight;
-}
-
-void Element::setFillHeight(bool value)
-{
-    Q_D(Element);
-
-    if (d->fillHeight != value) {
-        d->fillHeight = value;
-        Q_EMIT fillHeightChanged();
+    if (d->errorString != error) {
+        d->errorString = error;
+        Q_EMIT errorStringChanged();
     }
 }
 

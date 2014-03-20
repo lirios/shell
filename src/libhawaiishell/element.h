@@ -27,7 +27,7 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
-#include <QtQuick/QQuickItem>
+#include <QtCore/QObject>
 
 #include <HawaiiShell/Export>
 
@@ -35,55 +35,41 @@ namespace Hawaii {
 
 namespace Shell {
 
+class Containment;
+class ElementItem;
 class ElementPrivate;
+class Package;
 
-class HAWAIISHELL_EXPORT Element : public QQuickItem
+class HAWAIISHELL_EXPORT Element : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool busy READ isBusy WRITE setBusy NOTIFY busyChanged)
-    Q_PROPERTY(qreal minimumWidth READ minimumWidth WRITE setMinimumWidth NOTIFY minimumWidthChanged)
-    Q_PROPERTY(qreal maximumWidth READ maximumWidth WRITE setMaximumWidth NOTIFY maximumWidthChanged)
-    Q_PROPERTY(qreal minimumHeight READ minimumHeight WRITE setMinimumHeight NOTIFY minimumHeightChanged)
-    Q_PROPERTY(qreal maximumHeight READ maximumHeight WRITE setMaximumHeight NOTIFY maximumHeightChanged)
-    Q_PROPERTY(bool fillWidth READ fillWidth WRITE setFillWidth NOTIFY fillWidthChanged)
-    Q_PROPERTY(bool fillHeight READ fillHeight WRITE setFillHeight NOTIFY fillHeightChanged)
+    Q_PROPERTY(uint elementId READ elementId CONSTANT)
+    Q_PROPERTY(QString errorString READ errorString NOTIFY errorStringChanged)
 public:
-    explicit Element(QQuickItem *parent = 0);
+    explicit Element(const QString &name,
+                     Hawaii::Shell::Containment *containment,
+                     QObject *parent = 0);
     ~Element();
 
-    bool isBusy() const;
-    void setBusy(bool value);
+    uint elementId() const;
 
-    qreal minimumWidth() const;
-    void setMinimumWidth(qreal value);
+    Package package() const;
 
-    qreal maximumWidth() const;
-    void setMaximumWidth(qreal value);
+    Containment *containment() const;
 
-    qreal minimumHeight() const;
-    void setMinimumHeight(qreal value);
-
-    qreal maximumHeight() const;
-    void setMaximumHeight(qreal value);
-
-    bool fillWidth() const;
-    void setFillWidth(bool value);
-
-    bool fillHeight() const;
-    void setFillHeight(bool value);
+    QString errorString() const;
 
 Q_SIGNALS:
-    void busyChanged();
-    void minimumWidthChanged();
-    void maximumWidthChanged();
-    void minimumHeightChanged();
-    void maximumHeightChanged();
-    void fillWidthChanged();
-    void fillHeightChanged();
+    void errorStringChanged();
 
 private:
     Q_DECLARE_PRIVATE(Element)
     ElementPrivate *const d_ptr;
+
+private:
+    friend class ElementItem;
+
+    void setErrorString(const QString &error);
 };
 
 } // namespace Shell
