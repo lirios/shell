@@ -203,13 +203,13 @@ DropArea {
                 return root.width;
             }
 
-            Layout.fillWidth: element && element.fillWidth
+            Layout.fillWidth: element && element.Layout.fillWidth
             Layout.onFillWidthChanged: {
                 if (panel.formFactor !== Shell.Types.Vertical)
                     checkLastSpacer();
             }
 
-            Layout.fillHeight: element && element.fillHeight
+            Layout.fillHeight: element && element.Layout.fillHeight
             Layout.onFillHeightChanged: {
                 if (panel.formFactor === Shell.Types.Vertical)
                     checkLastSpacer();
