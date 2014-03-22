@@ -242,6 +242,12 @@ ElementItem::ElementItem(Element *element, QQuickItem *parent)
     // Relation between element and its graphical representation
     element->setProperty("_graphicObject", QVariant::fromValue(this));
     setProperty("_element", QVariant::fromValue(element));
+
+    // Emit signals when the containment changes form factor or location
+    connect(element->containment(), &Containment::formFactorChanged,
+            this, &ElementItem::formFactorChanged);
+    connect(element->containment(), &Containment::locationChanged,
+            this, &ElementItem::locationChanged);
 }
 
 ElementItem::~ElementItem()
@@ -254,6 +260,18 @@ Element *ElementItem::element() const
 {
     Q_D(const ElementItem);
     return d->element;
+}
+
+Hawaii::Shell::Types::FormFactor ElementItem::formFactor() const
+{
+    Q_D(const ElementItem);
+    return d->element->containment()->formFactor();
+}
+
+Hawaii::Shell::Types::Location ElementItem::location() const
+{
+    Q_D(const ElementItem);
+    return d->element->containment()->location();
 }
 
 bool ElementItem::isBusy() const

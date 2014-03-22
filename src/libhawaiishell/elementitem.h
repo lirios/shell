@@ -29,7 +29,7 @@
 
 #include <QtQuick/QQuickItem>
 
-#include <HawaiiShell/Export>
+#include <HawaiiShell/HawaiiShell>
 
 namespace Hawaii {
 
@@ -41,12 +41,24 @@ class ElementItemPrivate;
 class HAWAIISHELL_EXPORT ElementItem : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor NOTIFY formFactorChanged)
+    Q_PROPERTY(Hawaii::Shell::Types::Location location READ location NOTIFY locationChanged)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
 public:
     explicit ElementItem(Element *element, QQuickItem *parent = 0);
     ~ElementItem();
 
     Element *element() const;
+
+    /*!
+     * \return the form factor of the containment.
+     */
+    Hawaii::Shell::Types::FormFactor formFactor() const;
+
+    /*!
+     * \return the location of the containment.
+     */
+    Hawaii::Shell::Types::Location location() const;
 
     bool isBusy() const;
 
@@ -57,6 +69,18 @@ public:
     static ElementItem *qmlAttachedProperties(QObject *object);
 
 Q_SIGNALS:
+    /*!
+     * Emitted when the form factor is changed.
+     * \param formFactor the new form factorof the containment
+     */
+    void formFactorChanged(Hawaii::Shell::Types::FormFactor formFactor);
+
+    /*!
+     * Emitted when the location is changed.
+     * \param location the new location of the containment
+     */
+    void locationChanged(Hawaii::Shell::Types::Location location);
+
     void busyChanged();
 
 protected:
