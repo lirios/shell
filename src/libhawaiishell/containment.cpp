@@ -169,6 +169,11 @@ void Containment::setPackage(const Package &package)
 {
     Q_D(Containment);
 
+    QElapsedTimer timer;
+    timer.start();
+
+    qDebug() << "-> Loading containment" << package.metadata().internalName();
+
     // Read the containment type
     QString containmentType = package.metadata().property(
                 QStringLiteral("ContainmentType")).toString();
@@ -190,7 +195,7 @@ void Containment::setPackage(const Package &package)
         for (QQmlError error: d->qmlObject->mainComponent()->errors())
             errorMsgs.append(error.toString());
         QString errorMsg = tr("Error loading QML file: %1").arg(errorMsgs.join('\n'));
-        qWarning() << qPrintable(errorMsg);
+        qWarning("  ** %s", qPrintable(errorMsg));
 
         // Load the element error component from mantle's package
         d->qmlObject->setSource(QUrl::fromLocalFile(mantle()->package().filePath("elementerror")));
@@ -206,6 +211,8 @@ void Containment::setPackage(const Package &package)
 
     // Load is complete
     d->qmlObject->completeInitialization();
+
+    qDebug() << "  Containment created in" << timer.elapsed() << "ms";
 
     // Keep track of the root item
     QQuickItem *rootItem = qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
