@@ -26,19 +26,20 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell 1.0
 import Hawaii.Shell.Core 1.0
 
 Item {
     id: statusArea
-    Layout.implicitWidth: {
+    Layout.preferredWidth: {
         if (listView.orientation == ListView.Horizontal)
             return listView.headerItem.width + (listView.count * __priv.iconSize) +
                     (__priv.margin * (listView.count + 3));
         return __priv.iconSize;
     }
-    Layout.implicitHeight: {
+    Layout.preferredHeight: {
         if (listView.orientation == ListView.Horizontal)
             return __priv.iconSize;
         return listView.headerItem.height + (listView.count * __priv.iconSize) +
