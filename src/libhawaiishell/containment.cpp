@@ -186,10 +186,10 @@ void Containment::setPackage(const Package &package)
     if (!d->qmlObject->engine() || !d->qmlObject->engine()->rootContext() ||
             !d->qmlObject->engine()->rootContext()->isValid() ||
             d->qmlObject->mainComponent()->isError()) {
-        QString errorMsg;
+        QStringList errorMsgs;
         for (QQmlError error: d->qmlObject->mainComponent()->errors())
-            errorMsg += error.toString() + QStringLiteral("\n");
-        errorMsg = tr("Error loading QML file for containment: %1").arg(errorMsg);
+            errorMsgs.append(error.toString());
+        QString errorMsg = tr("Error loading QML file: %1").arg(errorMsgs.join('\n'));
         qWarning() << qPrintable(errorMsg);
 
         // Load the element error component from mantle's package
