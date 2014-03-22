@@ -207,10 +207,9 @@ void Containment::setPackage(const Package &package)
 
         // Element error component was loaded, set error message
         d->qmlObject->rootObject()->setProperty("errorMessage", errorMsg);
+    } else {
+        d->qmlObject->completeInitialization();
     }
-
-    // Load is complete
-    d->qmlObject->completeInitialization();
 
     qDebug() << "  Containment created in" << timer.elapsed() << "ms";
 
