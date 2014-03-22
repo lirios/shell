@@ -67,7 +67,7 @@ Item {
                 width: 64
                 height: 64
                 color: __priv.palette.text
-                visible: !avatarImage
+                visible: !avatarImage.visible
 
                 Layout.alignment: Qt.AlignTop
             }
