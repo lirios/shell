@@ -67,7 +67,7 @@ Item {
     ListView {
         id: listView
         anchors.fill: parent
-        orientation: panel.formFactor === Types.Horizontal ? ListView.Horizontal : ListView.Vertical
+        orientation: statusArea.Element.formFactor == Types.Horizontal ? ListView.Horizontal : ListView.Vertical
         model: __priv.indicators
         spacing: __priv.margin
         interactive: false

@@ -62,7 +62,7 @@ Item {
             id: listView
             anchors.fill: parent
             clip: true
-            orientation: panel.formFactor === Types.Horizontal ? ListView.Horizontal : ListView.Vertical
+            orientation: launcherContainer.Element.formFactor == Types.Horizontal ? ListView.Horizontal : ListView.Vertical
             model: VisualDataModel {
                 model: LauncherModel {}
                 delegate: LauncherDelegate {
