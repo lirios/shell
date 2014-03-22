@@ -1,3 +1,5 @@
+project(libhawaiishell)
+
 include_directories(
     ${QtConfiguration_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}/headers
@@ -7,9 +9,7 @@ include_directories(
 )
 
 set(SOURCES
-    applications/appcategories.cpp
     applications/appinfo.cpp
-    applications/applicationsmodel.cpp
     containment.cpp
     element.cpp
     elementitem.cpp
@@ -28,9 +28,7 @@ set(SOURCES
 
 set(HEADERS
     ${CMAKE_CURRENT_BINARY_DIR}/hawaiishell_export.h
-    applications/appcategories.h
     applications/appinfo.h
-    applications/applicationsmodel.h
     containment.h
     element.h
     elementitem.h

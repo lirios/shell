@@ -31,7 +31,6 @@
 
 #include <HawaiiShell/PluginLoader>
 
-#include "applicationiconprovider.h"
 #include "backgroundview.h"
 #include "desktopview.h"
 #include "grabwindow.h"
@@ -48,9 +47,6 @@ ShellUi::ShellUi(QObject *parent)
     , m_grabWindow(nullptr)
     , m_lockScreenView(nullptr)
 {
-    // Register image provider
-    engine()->addImageProvider("appicon", new ApplicationIconProvider);
-
     // Create and connect JavaScript engine
     m_jsEngine = new ScriptEngine(this);
     connect(m_jsEngine, &ScriptEngine::print,

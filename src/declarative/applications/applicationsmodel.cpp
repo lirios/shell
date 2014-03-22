@@ -31,11 +31,8 @@
 #include <QtGui/QIcon>
 
 #include "applicationsmodel.h"
-#include "appinfo.h"
 
-namespace Hawaii {
-
-namespace Shell {
+using namespace Hawaii::Shell;
 
 /*
  * ApplicationsModel
@@ -186,9 +183,5 @@ ApplicationsModelSorted::~ApplicationsModelSorted()
 {
     delete m_model;
 }
-
-} // namespace Shell
-
-} // namespace Hawaii
 
 #include "moc_applicationsmodel.cpp"

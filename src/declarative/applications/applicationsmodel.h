@@ -24,40 +24,66 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef APPCATEGORIES_H
-#define APPCATEGORIES_H
+#ifndef APPLICATIONSMODEL_H
+#define APPLICATIONSMODEL_H
 
+#include <QtCore/QSet>
 #include <QtCore/QAbstractListModel>
+#include <QtCore/QSortFilterProxyModel>
+#include <QtQml/QQmlComponent>
 
-#include <HawaiiShell/Export>
+#include <HawaiiShell/AppInfo>
 
-namespace Hawaii {
+class QFileSystemWatcher;
 
-namespace Shell {
-
-class HAWAIISHELL_EXPORT AppCategories : public QAbstractListModel
+class ApplicationsModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum {
+    enum Roles {
         NameRole = Qt::UserRole + 1,
-        LabelRole
+        CommentRole,
+        IconNameRole,
+        CategoriesRole
     };
 
-    explicit AppCategories(QObject *parent = 0);
+    ApplicationsModel(QObject *parent = 0);
+    ~ApplicationsModel();
 
     QHash<int, QByteArray> roleNames() const;
 
-    QVariant data(const QModelIndex &index, int role) const;
-    int rowCount(const QModelIndex &parent) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+public Q_SLOTS:
+    void populate();
+
+    Hawaii::Shell::AppInfo *get(int index);
+    void launch(int index);
 
 private:
-    typedef QPair<QString, QString> AppCategoryPair;
-    QList<AppCategoryPair> m_categories;
+    QList<Hawaii::Shell::AppInfo *> m_apps;
+    QFileSystemWatcher *m_watcher;
+    QSet<QString> m_categories;
+
+    void cleanupCategories();
+
+private Q_SLOTS:
+    void directoryChanged(const QString &path);
 };
 
-} // namespace Shell
+class ApplicationsModelSorted : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    ApplicationsModelSorted(QObject *parent = 0);
+    ~ApplicationsModelSorted();
 
-} // namespace Hawaii
+private:
+    ApplicationsModel *m_model;
+};
 
-#endif // APPCATEGORIES_H
+QML_DECLARE_TYPE(ApplicationsModel)
+QML_DECLARE_TYPE(ApplicationsModelSorted)
+
+#endif // APPLICATIONSMODEL_H

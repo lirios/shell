@@ -27,29 +27,37 @@
 #include <QtQml/QQmlExtensionPlugin>
 #include <QtQml/QQmlComponent>
 
-#include <HawaiiShell/ElementItem>
+#include <HawaiiShell/AppInfo>
 
-#include "packagesmodelitem.h"
-#include "packagesmodel.h"
+#include "applicationiconprovider.h"
+#include "applicationsmodel.h"
 
 using namespace Hawaii::Shell;
 
-class HawaiiShellCorePlugin : public QQmlExtensionPlugin
+class HawaiiShellApplicationsPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface/1.0")
 public:
     void registerTypes(const char *uri);
+    void initializeEngine(QQmlEngine *engine, const char *uri);
 };
 
-void HawaiiShellCorePlugin::registerTypes(const char *uri)
+void HawaiiShellApplicationsPlugin::registerTypes(const char *uri)
 {
-    // @uri Hawaii.Shell.Core
-    qmlRegisterUncreatableType<ElementItem>(uri, 1, 0, "Element",
-                                            QStringLiteral("Do not create Element"));
-    qmlRegisterUncreatableType<PackagesModelItem>(uri, 1, 0, "PackagesModelItem",
-                                                  QStringLiteral("Do not create PackagesModelItem"));
-    qmlRegisterType<PackagesModel>(uri, 1, 0, "PackagesModel");
+    Q_ASSERT(QByteArray(uri) == QByteArray("Hawaii.Shell.Applications"));
+
+    // @uri Hawaii.Shell.Applications
+    qmlRegisterType<ApplicationsModel>(uri, 1, 0, "ApplicationsModel");
+    qmlRegisterUncreatableType<AppInfo>(uri, 1, 0, "AppInfo",
+                                        QStringLiteral("Do not create AppInfo"));
+}
+
+void HawaiiShellApplicationsPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
+{
+    Q_UNUSED(uri);
+
+    engine->addImageProvider("appicon", new ApplicationIconProvider);
 }
 
 #include "plugin.moc"

@@ -26,7 +26,6 @@ include_directories(
 )
 
 set(SOURCES
-    applicationiconprovider.cpp
     enums.cpp
     keybinding.cpp
     main.cpp
