@@ -33,8 +33,6 @@ import Hawaii.Shell.Elements.Launcher 1.0
 
 Item {
     id: launcherContainer
-    Layout.minimumWidth: listView.orientation == ListView.Horizontal ? listView.count * __priv.tileSize : listView.width
-    Layout.minimumHeight: listView.orientation == ListView.Horizontal ? listView.height : listView.count * __priv.tileSize
     Layout.fillWidth: true
     Layout.fillHeight: true
 
