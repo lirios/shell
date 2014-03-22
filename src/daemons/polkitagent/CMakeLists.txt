@@ -1,5 +1,5 @@
 include_directories(
-    ${POLKITQT-1_INCLUDE_DIR}
+    ${POLKITQT-1_INCLUDE_DIRS}
     ${QtConfiguration_INCLUDE_DIRS}
     ${QtAccountsService_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/headers

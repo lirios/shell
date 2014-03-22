@@ -40,7 +40,7 @@
 #include "policykitagent.h"
 #include "policykitagent_p.h"
 
-#include <polkitqt1-subject.h>
+#include <PolkitQt1/Subject>
 
 #include <unistd.h>
 

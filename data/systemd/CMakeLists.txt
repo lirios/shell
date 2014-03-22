@@ -19,7 +19,7 @@ configure_file(
     hawaii-notifications-daemon.service.in
     ${CMAKE_CURRENT_BINARY_DIR}/hawaii-notifications-daemon.service
 )
-if(PolkitQt-1_FOUND)
+if(PolkitQt5-1_FOUND)
     configure_file(
         hawaii-polkit-agent.service.in
         ${CMAKE_CURRENT_BINARY_DIR}/hawaii-polkit-agent.service
@@ -40,7 +40,7 @@ set(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/hawaii-weston.service
     hawaii.target
 )
-if(PolkitQt-1_FOUND)
+if(PolkitQt5-1_FOUND)
     set(FILES
         ${FILES}
         ${CMAKE_CURRENT_BINARY_DIR}/hawaii-polkit-agent.service

@@ -27,7 +27,7 @@
 #ifndef POLICYKITAGENT_H
 #define POLICYKITAGENT_H
 
-#include <polkitqt1-agent-listener.h>
+#include <PolkitQt1/Agent/Listener>
 
 class PolicyKitAgentPrivate;
 
