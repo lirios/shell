@@ -266,6 +266,12 @@ Element *ElementItem::element() const
     return d->element;
 }
 
+uint ElementItem::id() const
+{
+    Q_D(const ElementItem);
+    return d->element->elementId();
+}
+
 Hawaii::Shell::Types::FormFactor ElementItem::formFactor() const
 {
     Q_D(const ElementItem);

@@ -41,6 +41,7 @@ class ElementItemPrivate;
 class HAWAIISHELL_EXPORT ElementItem : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(uint id READ id CONSTANT)
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location NOTIFY locationChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
@@ -50,6 +51,14 @@ public:
     ~ElementItem();
 
     Element *element() const;
+
+    /*!
+     * Returns the element identifier.
+     * This identifier is number unique to the session but it may
+     * change between restarts.
+     * \return the element identifier.
+     */
+    uint id() const;
 
     /*!
      * \return the form factor of the containment.
