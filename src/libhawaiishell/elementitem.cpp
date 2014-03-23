@@ -245,7 +245,7 @@ ElementItem::ElementItem(Element *element, QQuickItem *parent)
 
     // Relation between element and its graphical representation
     element->setProperty("_graphicObject", QVariant::fromValue(this));
-    setProperty("_element", QVariant::fromValue(element));
+    setProperty("_internalObject", QVariant::fromValue(element));
 
     // Emit signals when the containment changes form factor or location
     connect(element->containment(), &Containment::formFactorChanged,

@@ -213,10 +213,12 @@ void Containment::setPackage(const Package &package)
 
     qDebug() << "  Containment created in" << timer.elapsed() << "ms";
 
-    // Keep track of the root item
+    // Relation between the containment and its graphical representation
     QQuickItem *rootItem = qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
-    if (rootItem)
-        setProperty("item", QVariant::fromValue(rootItem));
+    if (rootItem) {
+        setProperty("_graphicObject", QVariant::fromValue(rootItem));
+        rootItem->setProperty("_internalObject", QVariant::fromValue(this));
+    }
 
     // Assign the package and notify observers
     d->package = package;
