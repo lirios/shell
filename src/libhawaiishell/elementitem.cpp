@@ -52,6 +52,8 @@ public:
 
     Element *element;
     bool busy : 1;
+    QString title;
+    QString iconName;
     QmlObject *qmlObject;
 
     QWeakPointer<QObject> originalLayout;
@@ -236,6 +238,8 @@ ElementItem::ElementItem(Element *element, QQuickItem *parent)
 {
     Q_D(ElementItem);
     d->element = element;
+    d->title = element->package().metadata().name();
+    d->iconName = element->package().metadata().iconName();
     d->qmlObject = new QmlObject(this);
     d->qmlObject->setInitializationDelayed(true);
 
@@ -278,6 +282,38 @@ bool ElementItem::isBusy() const
 {
     Q_D(const ElementItem);
     return d->busy;
+}
+
+QString ElementItem::title() const
+{
+    Q_D(const ElementItem);
+    return d->title;
+}
+
+void ElementItem::setTitle(const QString &title)
+{
+    Q_D(ElementItem);
+
+    if (d->title != title) {
+        d->title = title;
+        Q_EMIT titleChanged(title);
+    }
+}
+
+QString ElementItem::iconName() const
+{
+    Q_D(const ElementItem);
+    return d->iconName;
+}
+
+void ElementItem::setIconName(const QString &iconName)
+{
+    Q_D(ElementItem);
+
+    if (d->iconName != iconName) {
+        d->iconName = iconName;
+        Q_EMIT iconNameChanged(iconName);
+    }
 }
 
 void ElementItem::setContextProperty(const QString &name, const QVariant &value)

@@ -43,6 +43,7 @@ class HAWAIISHELL_EXPORT ElementItem : public QQuickItem
     Q_OBJECT
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location NOTIFY locationChanged)
+    Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
 public:
     explicit ElementItem(Element *element, QQuickItem *parent = 0);
@@ -61,6 +62,34 @@ public:
     Hawaii::Shell::Types::Location location() const;
 
     bool isBusy() const;
+
+    /*!
+     * Descriptive title of this element.
+     * The localized name from element's metadata is returned by default.
+     * \return the title of this element.
+     */
+    QString title() const;
+
+    /*!
+     * Sets a descriptive title of this element.
+     * \param title the title of this element.
+     */
+    void setTitle(const QString &title);
+
+    /*!
+     * Name of the icon that represents this element.
+     * Icon names must respect the XDG Icon Naming Specification.
+     * The icon name from element's metadata is returned by default.
+     * \return the name of the icon representing this element.
+     */
+    QString iconName() const;
+
+    /*!
+     * Sets the name of the icon representing this element.
+     * Icon names must respect the XDG Icon Naming Specification.
+     * \param iconName the name of the icon representing this element.
+     */
+    void setIconName(const QString &iconName);
 
     void setContextProperty(const QString &name, const QVariant &value);
 
@@ -82,6 +111,18 @@ Q_SIGNALS:
     void locationChanged(Hawaii::Shell::Types::Location location);
 
     void busyChanged();
+
+    /*!
+     * Emitted when the element title is changed.
+     * \param title the new element title.
+     */
+    void titleChanged(const QString &title);
+
+    /*!
+     * Emitted when the icon name representing this element is changed.
+     * \param iconName the new element icon name.
+     */
+    void iconNameChanged(const QString &iconName);
 
 protected:
     virtual void itemChange(ItemChange change, const ItemChangeData &value);
