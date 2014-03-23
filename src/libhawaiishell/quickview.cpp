@@ -129,7 +129,7 @@ void QuickView::setContainment(Containment *containment)
     if (d->containment) {
         disconnect(d->containment.data(), nullptr, this, nullptr);
 
-        QObject *oldItem = d->containment.data()->property("item").value<QObject *>();
+        QObject *oldItem = d->containment.data()->property("_graphicObject").value<QObject *>();
         if (oldItem)
             oldItem->setParent(d->containment.data());
     }
@@ -149,7 +149,7 @@ void QuickView::setContainment(Containment *containment)
         connect(containment, &Containment::formFactorChanged,
                 this, &QuickView::formFactorChanged);
 
-        QQuickItem *item = qobject_cast<QQuickItem *>(d->containment.data()->property("item").value<QObject *>());
+        QQuickItem *item = qobject_cast<QQuickItem *>(d->containment.data()->property("_graphicObject").value<QObject *>());
         if (item) {
             item->setProperty("width", width());
             item->setProperty("height", height());
