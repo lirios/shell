@@ -301,8 +301,6 @@ void PanelView::addElement(const QString &name)
     Element *element = new Element(name, containment(), this);
     ElementItem *elementItem = new ElementItem(element);
     elementItem->setContextProperty("Shell", QVariant::fromValue(ShellManager::instance()->controller()));
-    elementItem->setContextProperty("Ui", QVariant::fromValue(ShellManager::instance()->mantle()));
-    elementItem->setContextProperty("panel", QVariant::fromValue(this));
     elementItem->initialize();
     m_elements.append(elementItem);
     Q_EMIT elementAdded(elementItem);
