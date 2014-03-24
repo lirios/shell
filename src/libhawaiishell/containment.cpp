@@ -53,6 +53,7 @@ public:
     Types::ContainmentType type;
     Types::FormFactor formFactor;
     Types::Location location;
+    bool immutable;
     Package package;
 };
 
@@ -61,6 +62,7 @@ ContainmentPrivate::ContainmentPrivate()
     , type(Types::UnknownContainment)
     , formFactor(Types::Plane)
     , location(Types::Desktop)
+    , immutable(false)
 {
 }
 
@@ -147,6 +149,22 @@ void Containment::setLocation(Types::Location location)
         }
 
         Q_EMIT locationChanged(location);
+    }
+}
+
+bool Containment::isImmutable() const
+{
+    Q_D(const Containment);
+    return d->immutable;
+}
+
+void Containment::setImmutable(bool value)
+{
+    Q_D(Containment);
+
+    if (d->immutable != value) {
+        d->immutable = value;
+        Q_EMIT immutableChanged(value);
     }
 }
 

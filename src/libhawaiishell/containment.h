@@ -44,6 +44,7 @@ class HAWAIISHELL_EXPORT Containment : public QObject
     Q_PROPERTY(Hawaii::Shell::Types::ContainmentType type READ type NOTIFY typeChanged)
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
+    Q_PROPERTY(bool immutable READ isImmutable WRITE setImmutable NOTIFY immutableChanged)
 public:
     explicit Containment(Mantle *mantle, QObject *parent = 0);
     ~Containment();
@@ -81,6 +82,18 @@ public:
     void setLocation(Types::Location location);
 
     /*!
+     * \return whether the containment is immutable or not.
+     */
+    bool isImmutable() const;
+
+    /*!
+     * Makes the containment immutable or not.
+     * Immutable containments cannot be configured by the user.
+     * \param value whether the containment is immutable or not
+     */
+    void setImmutable(bool value);
+
+    /*!
      * \return the package loaded for this containment.
      */
     Package package() const;
@@ -113,6 +126,13 @@ Q_SIGNALS:
      * \param location the new location of the containment
      */
     void locationChanged(Hawaii::Shell::Types::Location location);
+
+    /*!
+     * Emitted when the containment becomes immutable or it's no longer
+     * immutable.
+     * \param newValue whether the containment is immutable
+     */
+    void immutableChanged(bool newValue);
 
     /*!
      * Emitted when the package for this containment is changed.

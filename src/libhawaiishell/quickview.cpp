@@ -49,7 +49,6 @@ public:
 
     Mantle *mantle;
     QPointer<Containment> containment;
-    bool immutable;
     bool configuring;
 
     void initialize();
@@ -59,8 +58,7 @@ protected:
 };
 
 QuickViewPrivate::QuickViewPrivate(QuickView *view)
-    : immutable(false)
-    , configuring(false)
+    : configuring(false)
     , q_ptr(view)
 {
 }
@@ -148,6 +146,8 @@ void QuickView::setContainment(Containment *containment)
                 this, &QuickView::locationChanged);
         connect(containment, &Containment::formFactorChanged,
                 this, &QuickView::formFactorChanged);
+        connect(containment, &Containment::immutableChanged,
+                this, &QuickView::immutableChanged);
 
         QQuickItem *item = qobject_cast<QQuickItem *>(d->containment.data()->property("_graphicObject").value<QObject *>());
         if (item) {
@@ -158,22 +158,6 @@ void QuickView::setContainment(Containment *containment)
             if (rootObject())
                 rootObject()->setProperty("containment", QVariant::fromValue(item));
         }
-    }
-}
-
-bool QuickView::isImmutable() const
-{
-    Q_D(const QuickView);
-    return d->immutable;
-}
-
-void QuickView::setImmutable(bool value)
-{
-    Q_D(QuickView);
-
-    if (d->immutable != value) {
-        d->immutable = value;
-        Q_EMIT immutableChanged(value);
     }
 }
 
@@ -233,6 +217,23 @@ void QuickView::setLocation(Types::Location value)
 
     if (location() != value)
         d->containment.data()->setLocation(value);
+}
+
+bool QuickView::isImmutable() const
+{
+    Q_D(const QuickView);
+
+    if (!d->containment)
+        return true;
+    return d->containment.data()->isImmutable();
+}
+
+void QuickView::setImmutable(bool value)
+{
+    Q_D(QuickView);
+
+    if (isImmutable() != value)
+        d->containment.data()->setImmutable(value);
 }
 
 QRectF QuickView::screenGeometry() const

@@ -83,18 +83,6 @@ public:
     void setContainment(Containment *containment);
 
     /*!
-     * \return whether the view is immutable or not.
-     */
-    bool isImmutable() const;
-
-    /*!
-     * Makes the view immutable or not.
-     * Immutable views cannot be configured by the user.
-     * \param value whether the view is immutable or not
-     */
-    void setImmutable(bool value);
-
-    /*!
      * \return whether this view is in configuration mode.
      */
     bool isConfiguring() const;
@@ -128,6 +116,18 @@ public:
     void setLocation(Types::Location value);
 
     /*!
+     * \return whether the view is immutable or not.
+     */
+    bool isImmutable() const;
+
+    /*!
+     * Makes the view immutable or not.
+     * Immutable views cannot be configured by the user.
+     * \param value whether the view is immutable or not
+     */
+    void setImmutable(bool value);
+
+    /*!
      * \return the geometry of the screen where this view is located.
      */
     QRectF screenGeometry() const;
@@ -154,13 +154,6 @@ Q_SIGNALS:
     void containmentChanged();
 
     /*!
-     * Emitted when the view becomes immutable or it's no longer
-     * immutable.
-     * \param newValue whether the view is immutable
-     */
-    void immutableChanged(bool newValue);
-
-    /*!
      * Emitted when the configuration mode is enabled or disabled.
      * \param newValue whether the view is now in configuration mode or not.
      */
@@ -177,6 +170,13 @@ Q_SIGNALS:
      * \param location the new location of the view
      */
     void locationChanged(Hawaii::Shell::Types::Location location);
+
+    /*!
+     * Emitted when the view becomes immutable or it's no longer
+     * immutable.
+     * \param newValue whether the view is immutable
+     */
+    void immutableChanged(bool newValue);
 
     /*!
      * Emitted when the screen geometry is changed.

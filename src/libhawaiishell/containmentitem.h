@@ -44,6 +44,7 @@ class HAWAIISHELL_EXPORT ContainmentItem : public QQuickItem
     Q_PROPERTY(Hawaii::Shell::Types::ContainmentType type READ type)
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
+    Q_PROPERTY(bool immutable READ isImmutable WRITE setImmutable NOTIFY immutableChanged)
 public:
     /*!
      * \brief Constructor.
@@ -92,6 +93,18 @@ public:
     void setLocation(Types::Location location);
 
     /*!
+     * \return whether the containment is immutable or not.
+     */
+    bool isImmutable() const;
+
+    /*!
+     * Makes the containment immutable or not.
+     * Immutable containments cannot be configured by the user.
+     * \param value whether the containment is immutable or not
+     */
+    void setImmutable(bool value);
+
+    /*!
      * Initializes the containment item.
      */
     void initialize();
@@ -110,6 +123,13 @@ Q_SIGNALS:
      * \param location the new location of the containment
      */
     void locationChanged(Hawaii::Shell::Types::Location location);
+
+    /*!
+     * Emitted when the containment becomes immutable or it's no longer
+     * immutable.
+     * \param newValue whether the containment is immutable
+     */
+    void immutableChanged(bool newValue);
 
 private:
     Q_DECLARE_PRIVATE(ContainmentItem)
