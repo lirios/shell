@@ -29,14 +29,15 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import Fluid.Ui 1.0 as FluidUi
-import Hawaii.Shell 1.0 as Shell
+import Hawaii.Shell 1.0
+import Hawaii.Shell.Core 1.0
 import "../code/LayoutManager.js" as LayoutManager
 
 DropArea {
     property Item configButton
     property Item dragOverlay
 
-    property bool isHorizontal: panel.formFactor !== Shell.Types.Vertical
+    property bool isHorizontal: Containment.formFactor !== Types.Vertical
 
     id: root
     keys: ["application/x-hawaiishell-element"]
@@ -107,8 +108,8 @@ DropArea {
 
     Item {
         id: dndSpacer
-        width: panel.formFactor === Shell.Types.Vertical ? currentLayout.width : 40
-        height: panel.formFactor === Shell.Types.Vertical ? 40 : currentLayout.height
+        width: root.Containment.formFactor === Types.Vertical ? currentLayout.width : 40
+        height: root.Containment.formFactor === Types.Vertical ? 40 : currentLayout.height
     }
 
     Component {
@@ -205,13 +206,13 @@ DropArea {
 
             Layout.fillWidth: element && element.Layout.fillWidth
             Layout.onFillWidthChanged: {
-                if (panel.formFactor !== Shell.Types.Vertical)
+                if (root.Containment.formFactor !== Types.Vertical)
                     checkLastSpacer();
             }
 
             Layout.fillHeight: element && element.Layout.fillHeight
             Layout.onFillHeightChanged: {
-                if (panel.formFactor === Shell.Types.Vertical)
+                if (root.Containment.formFactor === Types.Vertical)
                     checkLastSpacer();
             }
         }
@@ -231,11 +232,12 @@ DropArea {
 
     Connections {
         target: panel
-        onFormFactorChanged: containmentSizeSyncTimer.restart()
         onImmutableChanged: containmentSizeSyncTimer.restart()
         onElementAdded: addElement(element)
         onConfiguringChanged: makeConfigurable()
     }
+
+    Containment.onFormFactorChanged: containmentSizeSyncTimer.restart()
 
     Component.onCompleted: {
         LayoutManager.view = panel;
