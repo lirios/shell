@@ -32,8 +32,8 @@
 #include <QtConfiguration/QConfiguration>
 
 #include "containment.h"
+#include "package.h"
 #include "pluginloader.h"
-#include "qmlobject.h"
 
 namespace Hawaii {
 
@@ -54,7 +54,6 @@ public:
     Types::FormFactor formFactor;
     Types::Location location;
     Package package;
-    QmlObject *qmlObject;
 };
 
 ContainmentPrivate::ContainmentPrivate()
@@ -75,8 +74,6 @@ Containment::Containment(Mantle *mantle, QObject *parent)
 {
     Q_D(Containment);
     d->mantle = mantle;
-    d->qmlObject = new QmlObject(this);
-    d->qmlObject->setInitializationDelayed(true);
 
     // Save and load settings
     static int containmentId = 0;
@@ -153,12 +150,6 @@ void Containment::setLocation(Types::Location location)
     }
 }
 
-void Containment::setContextProperty(const QString &name, const QVariant &value)
-{
-    Q_D(Containment);
-    d->qmlObject->engine()->rootContext()->setContextProperty(name, value);
-}
-
 Package Containment::package() const
 {
     Q_D(const Containment);
@@ -168,11 +159,6 @@ Package Containment::package() const
 void Containment::setPackage(const Package &package)
 {
     Q_D(Containment);
-
-    QElapsedTimer timer;
-    timer.start();
-
-    qDebug() << "-> Loading containment" << package.metadata().internalName();
 
     // Read the containment type
     QString containmentType = package.metadata().property(
@@ -185,40 +171,6 @@ void Containment::setPackage(const Package &package)
         qFatal("Containment \"%s\" has an invalid type \"%s\", aborting...",
                qPrintable(package.metadata().internalName()),
                qPrintable(containmentType));
-
-    // Load QML file
-    d->qmlObject->setSource(QUrl::fromLocalFile(package.filePath("mainscript")));
-    if (!d->qmlObject->engine() || !d->qmlObject->engine()->rootContext() ||
-            !d->qmlObject->engine()->rootContext()->isValid() ||
-            d->qmlObject->mainComponent()->isError()) {
-        QStringList errorMsgs;
-        for (QQmlError error: d->qmlObject->mainComponent()->errors())
-            errorMsgs.append(error.toString());
-        QString errorMsg = tr("Error loading QML file: %1").arg(errorMsgs.join('\n'));
-        qWarning("  ** %s", qPrintable(errorMsg));
-
-        // Load the element error component from mantle's package
-        d->qmlObject->setSource(QUrl::fromLocalFile(mantle()->package().filePath("elementerror")));
-        d->qmlObject->completeInitialization();
-
-        // If even the element error component cannot be loaded this is a lost cause
-        if (d->qmlObject->mainComponent()->isError())
-            return;
-
-        // Element error component was loaded, set error message
-        d->qmlObject->rootObject()->setProperty("errorMessage", errorMsg);
-    } else {
-        d->qmlObject->completeInitialization();
-    }
-
-    qDebug() << "  Containment created in" << timer.elapsed() << "ms";
-
-    // Relation between the containment and its graphical representation
-    QQuickItem *rootItem = qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
-    if (rootItem) {
-        setProperty("_graphicObject", QVariant::fromValue(rootItem));
-        rootItem->setProperty("_internalObject", QVariant::fromValue(this));
-    }
 
     // Assign the package and notify observers
     d->package = package;

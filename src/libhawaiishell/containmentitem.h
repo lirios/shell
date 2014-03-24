@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,34 +24,45 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef CONTAINMENT_H
-#define CONTAINMENT_H
+#ifndef CONTAINMENTITEM_H
+#define CONTAINMENTITEM_H
 
-#include <QtCore/QObject>
+#include <QtQuick/QQuickItem>
 
-#include <HawaiiShell/Mantle>
 #include <HawaiiShell/HawaiiShell>
 
 namespace Hawaii {
 
 namespace Shell {
 
-class ContainmentPrivate;
+class Containment;
+class ContainmentItemPrivate;
 
-class HAWAIISHELL_EXPORT Containment : public QObject
+class HAWAIISHELL_EXPORT ContainmentItem : public QQuickItem
 {
     Q_OBJECT
-    Q_PROPERTY(Hawaii::Shell::Types::ContainmentType type READ type NOTIFY typeChanged)
+    Q_PROPERTY(Hawaii::Shell::Types::ContainmentType type READ type)
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
 public:
-    explicit Containment(Mantle *mantle, QObject *parent = 0);
-    ~Containment();
+    /*!
+     * \brief Constructor.
+     * Creates the object.
+     * \param containment the containment.
+     * \param parent parent item.
+     */
+    explicit ContainmentItem(Containment *containment, QQuickItem *parent = 0);
 
     /*!
-     * \return the mantle for this containment.
+     * \brief Destructor.
+     * Destroys the object.
      */
-    Mantle *mantle() const;
+    ~ContainmentItem();
+
+    /*!
+     * \return the containment represented by this item.
+     */
+    Containment *containment() const;
 
     /*!
      * \return the containment type.
@@ -59,7 +70,7 @@ public:
     Hawaii::Shell::Types::ContainmentType type() const;
 
     /*!
-     * \return the form factor of this containment.
+     * \return the form factor of the containment.
      */
     Hawaii::Shell::Types::FormFactor formFactor() const;
 
@@ -70,7 +81,7 @@ public:
     void setFormFactor(Types::FormFactor formFactor);
 
     /*!
-     * \return the location of this containment.
+     * \return the location of the containment.
      */
     Hawaii::Shell::Types::Location location() const;
 
@@ -81,27 +92,13 @@ public:
     void setLocation(Types::Location location);
 
     /*!
-     * \return the package loaded for this containment.
+     * Initializes the containment item.
      */
-    Package package() const;
+    void initialize();
 
-    /*!
-     * Loads a QML file from the package.
-     * \param package package to load the QML file from.
-     */
-    void setPackage(const Package &package);
+    static ContainmentItem *qmlAttachedProperties(QObject *object);
 
 Q_SIGNALS:
-    /*!
-     * Emitted when the containment type is changed.
-     * Initially containments are of \a UnknownContainment type,
-     * as soon as the package is loaded the types changes to
-     * what is read from the metadata entry.
-     * \sa setPackage()
-     * \param type the new containment type.
-     */
-    void typeChanged(Hawaii::Shell::Types::ContainmentType type);
-
     /*!
      * Emitted when the form factor is changed.
      * \param formFactor the new form factorof the containment
@@ -114,19 +111,17 @@ Q_SIGNALS:
      */
     void locationChanged(Hawaii::Shell::Types::Location location);
 
-    /*!
-     * Emitted when the package for this containment is changed.
-     * \param package the new package.
-     */
-    void packageChanged(const Package &package);
-
 private:
-    Q_DECLARE_PRIVATE(Containment)
-    ContainmentPrivate *const d_ptr;
+    Q_DECLARE_PRIVATE(ContainmentItem)
+    ContainmentItemPrivate *const d_ptr;
+
+    Q_PRIVATE_SLOT(d_func(), void _q_packageChanged())
 };
 
 } // namespace Shell
 
 } // namespace Hawaii
 
-#endif // CONTAINMENT_H
+QML_DECLARE_TYPEINFO(Hawaii::Shell::ContainmentItem, QML_HAS_ATTACHED_PROPERTIES)
+
+#endif // CONTAINMENTITEM_H

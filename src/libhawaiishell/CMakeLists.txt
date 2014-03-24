@@ -11,6 +11,7 @@ include_directories(
 set(SOURCES
     applications/appinfo.cpp
     containment.cpp
+    containmentitem.cpp
     element.cpp
     elementitem.cpp
     hawaiishell.cpp
@@ -30,6 +31,7 @@ set(HEADERS
     ${CMAKE_CURRENT_BINARY_DIR}/hawaiishell_export.h
     applications/appinfo.h
     containment.h
+    containmentitem.h
     element.h
     elementitem.h
     hawaiishell.h
