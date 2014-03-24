@@ -54,6 +54,7 @@ public:
     Types::FormFactor formFactor;
     Types::Location location;
     bool immutable;
+    bool configuring;
     Package package;
 };
 
@@ -63,6 +64,7 @@ ContainmentPrivate::ContainmentPrivate()
     , formFactor(Types::Plane)
     , location(Types::Desktop)
     , immutable(false)
+    , configuring(false)
 {
 }
 
@@ -165,6 +167,22 @@ void Containment::setImmutable(bool value)
     if (d->immutable != value) {
         d->immutable = value;
         Q_EMIT immutableChanged(value);
+    }
+}
+
+bool Containment::isConfiguring() const
+{
+    Q_D(const Containment);
+    return d->configuring;
+}
+
+void Containment::setConfiguring(bool value)
+{
+    Q_D(Containment);
+
+    if (d->configuring != value) {
+        d->configuring = value;
+        Q_EMIT configuringChanged(value);
     }
 }
 

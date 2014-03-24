@@ -45,6 +45,7 @@ class HAWAIISHELL_EXPORT Containment : public QObject
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
     Q_PROPERTY(bool immutable READ isImmutable WRITE setImmutable NOTIFY immutableChanged)
+    Q_PROPERTY(bool configuring READ isConfiguring WRITE setConfiguring NOTIFY configuringChanged)
 public:
     explicit Containment(Mantle *mantle, QObject *parent = 0);
     ~Containment();
@@ -94,6 +95,17 @@ public:
     void setImmutable(bool value);
 
     /*!
+     * \return whether this containment is in configuration mode.
+     */
+    bool isConfiguring() const;
+
+    /*!
+     * Enable or disable the configuration mode.
+     * \param value whether configuration mode is enabled or not.
+     */
+    void setConfiguring(bool value);
+
+    /*!
      * \return the package loaded for this containment.
      */
     Package package() const;
@@ -133,6 +145,12 @@ Q_SIGNALS:
      * \param newValue whether the containment is immutable
      */
     void immutableChanged(bool newValue);
+
+    /*!
+     * Emitted when the configuration mode is enabled or disabled.
+     * \param newValue whether the containment is now in configuration mode or not.
+     */
+    void configuringChanged(bool newValue);
 
     /*!
      * Emitted when the package for this containment is changed.

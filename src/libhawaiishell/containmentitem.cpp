@@ -110,6 +110,8 @@ ContainmentItem::ContainmentItem(Containment *containment, QQuickItem *parent)
             this, &ContainmentItem::locationChanged);
     connect(containment, &Containment::immutableChanged,
             this, &ContainmentItem::immutableChanged);
+    connect(containment, &Containment::configuringChanged,
+            this, &ContainmentItem::configuringChanged);
 
     // Reinizialize this item when the package is changed
     connect(containment, SIGNAL(packageChanged(Package)),
@@ -168,6 +170,18 @@ void ContainmentItem::setImmutable(bool value)
 {
     Q_D(ContainmentItem);
     d->containment->setImmutable(value);
+}
+
+bool ContainmentItem::isConfiguring() const
+{
+    Q_D(const ContainmentItem);
+    return d->containment->isConfiguring();
+}
+
+void ContainmentItem::setConfiguring(bool value)
+{
+    Q_D(ContainmentItem);
+    d->containment->setConfiguring(value);
 }
 
 void ContainmentItem::initialize()

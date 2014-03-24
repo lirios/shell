@@ -49,17 +49,17 @@ public:
 
     Mantle *mantle;
     QPointer<Containment> containment;
-    bool configuring;
 
     void initialize();
+
+    void _q_configuringChanged(bool value);
 
 protected:
     QuickView *const q_ptr;
 };
 
 QuickViewPrivate::QuickViewPrivate(QuickView *view)
-    : configuring(false)
-    , q_ptr(view)
+    : q_ptr(view)
 {
 }
 
@@ -82,6 +82,18 @@ void QuickViewPrivate::initialize()
 
     // View is sized by the root object
     q->setResizeMode(QQuickView::SizeViewToRootObject);
+}
+
+void QuickViewPrivate::_q_configuringChanged(bool value)
+{
+    Q_Q(QuickView);
+
+    // Views inheriting QuickView will have to override these methods
+    // implementing their window setup code
+    if (value)
+        q->showConfigurationWindow();
+    else
+        q->hideConfigurationWindow();
 }
 
 /*
@@ -148,6 +160,8 @@ void QuickView::setContainment(Containment *containment)
                 this, &QuickView::formFactorChanged);
         connect(containment, &Containment::immutableChanged,
                 this, &QuickView::immutableChanged);
+        connect(containment, SIGNAL(configuringChanged(bool)),
+                this, SLOT(_q_configuringChanged(bool)));
 
         QQuickItem *item = qobject_cast<QQuickItem *>(d->containment.data()->property("_graphicObject").value<QObject *>());
         if (item) {
@@ -158,30 +172,6 @@ void QuickView::setContainment(Containment *containment)
             if (rootObject())
                 rootObject()->setProperty("containment", QVariant::fromValue(item));
         }
-    }
-}
-
-bool QuickView::isConfiguring() const
-{
-    Q_D(const QuickView);
-    return d->configuring;
-}
-
-void QuickView::setConfiguring(bool value)
-{
-    Q_D(QuickView);
-
-    if (d->configuring != value) {
-        // Views inheriting QuickView will have to override these methods
-        // implementing their window setup code
-        if (value)
-            showConfigurationWindow();
-        else
-            hideConfigurationWindow();
-
-        // Now we can actually change the property
-        d->configuring = value;
-        Q_EMIT configuringChanged(value);
     }
 }
 
@@ -234,6 +224,23 @@ void QuickView::setImmutable(bool value)
 
     if (isImmutable() != value)
         d->containment.data()->setImmutable(value);
+}
+
+bool QuickView::isConfiguring() const
+{
+    Q_D(const QuickView);
+
+    if (!d->containment)
+        return false;
+    return d->containment.data()->isConfiguring();
+}
+
+void QuickView::setConfiguring(bool value)
+{
+    Q_D(QuickView);
+
+    if (isConfiguring() != value)
+        d->containment.data()->setConfiguring(value);
 }
 
 QRectF QuickView::screenGeometry() const

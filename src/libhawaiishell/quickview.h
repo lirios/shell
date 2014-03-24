@@ -83,17 +83,6 @@ public:
     void setContainment(Containment *containment);
 
     /*!
-     * \return whether this view is in configuration mode.
-     */
-    bool isConfiguring() const;
-
-    /*!
-     * Enable or disable the configuration mode.
-     * \param value whether configuration mode is enabled or not.
-     */
-    void setConfiguring(bool value);
-
-    /*!
      * \return the form factor of this view.
      */
     Hawaii::Shell::Types::FormFactor formFactor() const;
@@ -128,6 +117,17 @@ public:
     void setImmutable(bool value);
 
     /*!
+     * \return whether this view is in configuration mode.
+     */
+    bool isConfiguring() const;
+
+    /*!
+     * Enable or disable the configuration mode.
+     * \param value whether configuration mode is enabled or not.
+     */
+    void setConfiguring(bool value);
+
+    /*!
      * \return the geometry of the screen where this view is located.
      */
     QRectF screenGeometry() const;
@@ -154,12 +154,6 @@ Q_SIGNALS:
     void containmentChanged();
 
     /*!
-     * Emitted when the configuration mode is enabled or disabled.
-     * \param newValue whether the view is now in configuration mode or not.
-     */
-    void configuringChanged(bool newValue);
-
-    /*!
      * Emitted when the form factor is changed.
      * \param formFactor the new form factorof the view
      */
@@ -179,6 +173,12 @@ Q_SIGNALS:
     void immutableChanged(bool newValue);
 
     /*!
+     * Emitted when the configuration mode is enabled or disabled.
+     * \param newValue whether the view is now in configuration mode or not.
+     */
+    void configuringChanged(bool newValue);
+
+    /*!
      * Emitted when the screen geometry is changed.
      * \param geometry the new screen geometry
      */
@@ -187,6 +187,8 @@ Q_SIGNALS:
 private:
     Q_DECLARE_PRIVATE(QuickView)
     QuickViewPrivate *const d_ptr;
+
+    Q_PRIVATE_SLOT(d_func(), void _q_configuringChanged(bool value))
 };
 
 } // namespace Shell
