@@ -27,6 +27,7 @@
 #include <QtQml/QQmlExtensionPlugin>
 #include <QtQml/QQmlComponent>
 
+#include <HawaiiShell/ContainmentItem>
 #include <HawaiiShell/ElementItem>
 
 #include "packagesmodelitem.h"
@@ -45,6 +46,8 @@ public:
 void HawaiiShellCorePlugin::registerTypes(const char *uri)
 {
     // @uri Hawaii.Shell.Core
+    qmlRegisterUncreatableType<ContainmentItem>(uri, 1, 0, "Containment",
+                                                QStringLiteral("Do not create Containment"));
     qmlRegisterUncreatableType<ElementItem>(uri, 1, 0, "Element",
                                             QStringLiteral("Do not create Element"));
     qmlRegisterUncreatableType<PackagesModelItem>(uri, 1, 0, "PackagesModelItem",
