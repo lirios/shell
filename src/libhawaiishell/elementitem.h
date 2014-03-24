@@ -45,6 +45,7 @@ class HAWAIISHELL_EXPORT ElementItem : public QQuickItem
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location NOTIFY locationChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(QString label READ label WRITE setLabel NOTIFY labelChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
 public:
@@ -87,6 +88,27 @@ public:
     void setTitle(const QString &title);
 
     /*!
+     * Label that describes this elment or shows a summary of its
+     * contents.  This is property is handy for elements that will
+     * be represented as indicators; think of a clock element shown
+     * by a status menu, the label may return current date and time
+     * and when clicked the element reveals a calendar.
+     * The localized description from element's metadata is returned by
+     * default.
+     * \return the label describing this element.
+     */
+    QString label() const;
+
+    /*!
+     * Sets a label that describes this element or shows a summary
+     * of its contents.
+     * The localized description from element's metadata is returned by
+     * default.
+     * \param label the label describing this element.
+     */
+    void setLabel(const QString &label);
+
+    /*!
      * Name of the icon that represents this element.
      * Icon names must respect the XDG Icon Naming Specification.
      * The icon name from element's metadata is returned by default.
@@ -127,6 +149,12 @@ Q_SIGNALS:
      * \param title the new element title.
      */
     void titleChanged(const QString &title);
+
+    /*!
+     * Emitted when the element label is changed.
+     * \param label the new element labe.
+     */
+    void labelChanged(const QString &label);
 
     /*!
      * Emitted when the icon name representing this element is changed.

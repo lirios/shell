@@ -53,6 +53,7 @@ public:
     Element *element;
     bool busy : 1;
     QString title;
+    QString label;
     QString iconName;
     QmlObject *qmlObject;
 
@@ -239,6 +240,7 @@ ElementItem::ElementItem(Element *element, QQuickItem *parent)
     Q_D(ElementItem);
     d->element = element;
     d->title = element->package().metadata().name();
+    d->label = element->package().metadata().comment();
     d->iconName = element->package().metadata().iconName();
     d->qmlObject = new QmlObject(this);
     d->qmlObject->setInitializationDelayed(true);
@@ -303,6 +305,22 @@ void ElementItem::setTitle(const QString &title)
     if (d->title != title) {
         d->title = title;
         Q_EMIT titleChanged(title);
+    }
+}
+
+QString ElementItem::label() const
+{
+    Q_D(const ElementItem);
+    return d->label;
+}
+
+void ElementItem::setLabel(const QString &label)
+{
+    Q_D(ElementItem);
+
+    if (d->label != label) {
+        d->label = label;
+        Q_EMIT labelChanged(label);
     }
 }
 
