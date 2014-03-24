@@ -44,6 +44,7 @@ class HAWAIISHELL_EXPORT ElementItem : public QQuickItem
     Q_PROPERTY(uint id READ id CONSTANT)
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location NOTIFY locationChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconNameChanged)
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
 public:
