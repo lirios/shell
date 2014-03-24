@@ -230,17 +230,12 @@ DropArea {
         }
     }
 
-    Connections {
-        target: panel
-        onImmutableChanged: containmentSizeSyncTimer.restart()
-        onElementAdded: addElement(element)
-        onConfiguringChanged: makeConfigurable()
-    }
-
     Containment.onFormFactorChanged: containmentSizeSyncTimer.restart()
+    Containment.onImmutableChanged: containmentSizeSyncTimer.restart()
+    Containment.onConfiguringChanged: makeConfigurable()
+    Containment.onElementAdded: addElement(element)
 
     Component.onCompleted: {
-        LayoutManager.view = panel;
         LayoutManager.root = root;
         LayoutManager.layout = currentLayout;
         //LayoutManager.restore();
@@ -300,13 +295,13 @@ DropArea {
     }
 
     function makeConfigurable() {
-        if (panel.immutable) {
+        if (Containment.immutable) {
             if (dragOverlay)
                 dragOverlay.destroy();
             return;
         }
 
-        if (panel.configuring) {
+        if (Containment.configuring) {
             var component = Qt.createComponent("ConfigOverlay.qml");
             dragOverlay = component.createObject(root);
             component.destroy();

@@ -29,7 +29,6 @@
 
 var layout;
 var root;
-var view;
 
 function insertBefore(item1, item2) {
     if (item1 === item2)
@@ -104,8 +103,8 @@ function insertAtCoordinates(item, x, y) {
     item.parent = root;
 
     //Shell.Types.Vertical = 2
-    if ((panel.formFactor === 2 && y < child.y + child.height/2) ||
-            (panel.formFactor !== 2 && x < child.x + child.width/2)) {
+    if ((root.Containment.formFactor === 2 && y < child.y + child.height/2) ||
+            (root.Containment.formFactor !== 2 && x < child.x + child.width/2)) {
         return insertBefore(child, item);
     } else {
         return insertAfter(child, item);

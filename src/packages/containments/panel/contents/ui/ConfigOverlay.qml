@@ -28,7 +28,8 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.0
 import Fluid.Ui 1.0 as FluidUi
-import Hawaii.Shell 1.0 as Shell
+import Hawaii.Shell 1.0
+import Hawaii.Shell.Core 1.0
 import "../code/LayoutManager.js" as LayoutManager
 
 MouseArea {
@@ -45,7 +46,7 @@ MouseArea {
 
     onPositionChanged: {
         if (pressed) {
-            if (root.Containment.formFactor === Shell.Types.Vertical) {
+            if (root.Containment.formFactor === Types.Vertical) {
                 currentElement.y += (mouse.y - lastY);
                 handle.y = currentElement.y;
             } else {
@@ -64,8 +65,8 @@ MouseArea {
                 placeHolder.parent = configurationArea;
                 var posInItem = mapToItem(item, mouse.x, mouse.y);
 
-                if ((root.Containment.formFactor === Shell.Types.Vertical && posInItem.y < item.height/2) ||
-                        (root.Containment.formFactor !== Shell.Types.Vertical && posInItem.x < item.width/2)) {
+                if ((root.Containment.formFactor === Types.Vertical && posInItem.y < item.height/2) ||
+                        (root.Containment.formFactor !== Types.Vertical && posInItem.x < item.width/2)) {
                     LayoutManager.insertBefore(item, placeHolder);
                 } else {
                     LayoutManager.insertAfter(item, placeHolder);
