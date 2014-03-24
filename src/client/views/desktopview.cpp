@@ -32,6 +32,7 @@
 #include <QtQml/QQmlContext>
 
 #include <HawaiiShell/Containment>
+#include <HawaiiShell/ContainmentItem>
 #include <HawaiiShell/PluginLoader>
 
 #include "desktopview.h"
@@ -55,9 +56,11 @@ DesktopView::DesktopView(ShellUi *mantle, QScreen *screen)
 
     // Create and load containment
     Containment *containment = new Containment(mantle, this);
-    containment->setContextProperty(QStringLiteral("desktop"),
-                                    QVariant::fromValue(this));
     containment->setPackage(package);
+
+    // Create the containment graphical representation
+    ContainmentItem *containmentItem = new ContainmentItem(containment);
+    containmentItem->initialize();
 
     // Load QML source file
     setSource(QUrl::fromLocalFile(mantle->package().filePath(

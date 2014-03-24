@@ -33,6 +33,7 @@
 #include <QtQml/QQmlContext>
 
 #include <HawaiiShell/Containment>
+#include <HawaiiShell/ContainmentItem>
 #include <HawaiiShell/Element>
 #include <HawaiiShell/ElementItem>
 #include <HawaiiShell/PluginLoader>
@@ -81,8 +82,11 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
 
     // Create and load containment
     Containment *containment = new Containment(mantle, this);
-    containment->setContextProperty(QStringLiteral("panel"), QVariant::fromValue(this));
     containment->setPackage(package);
+
+    // Create the containment graphical representation
+    ContainmentItem *containmentItem = new ContainmentItem(containment);
+    containmentItem->initialize();
 
     // Load QML source file
     setSource(QUrl::fromLocalFile(mantle->package().filePath(
