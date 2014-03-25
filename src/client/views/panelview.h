@@ -33,7 +33,7 @@
 
 #include <QtConfiguration/QConfiguration>
 
-#include <HawaiiShell/ElementItem>
+#include <HawaiiShell/Element>
 #include <HawaiiShell/HawaiiShell>
 #include <HawaiiShell/QuickView>
 
@@ -52,7 +52,6 @@ class PanelView : public Hawaii::Shell::QuickView
     Q_PROPERTY(int length READ length WRITE setLength NOTIFY lengthChanged)
     Q_PROPERTY(int minimumLength READ minimumLength WRITE setMinimumLength NOTIFY minimumLengthChanged)
     Q_PROPERTY(int maximumLength READ maximumLength WRITE setMaximumLength NOTIFY maximumLengthChanged)
-    Q_PROPERTY(QStringList elements READ elements NOTIFY elementsChanged)
 public:
     explicit PanelView(ShellUi *mantle, QScreen *screen);
     virtual ~PanelView();
@@ -78,11 +77,6 @@ public:
     int maximumLength() const;
     void setMaximumLength(int value);
 
-    QStringList elements() const;
-
-public Q_SLOTS:
-    void addElement(const QString &name);
-
 protected:
     void showConfigurationWindow();
     void hideConfigurationWindow();
@@ -96,10 +90,6 @@ Q_SIGNALS:
     void minimumLengthChanged();
     void maximumLengthChanged();
 
-    void elementsChanged();
-    void elementAdded(Hawaii::Shell::ElementItem *element);
-    void elementRemoved();
-
 private:
     bool m_maximized;
     Qt::Alignment m_alignment;
@@ -109,8 +99,6 @@ private:
     int m_minimumLength;
     int m_maximumLength;
     QConfiguration *m_configuration;
-    QSet<QString> m_elementsSet;
-    QList<Hawaii::Shell::ElementItem *> m_elements;
     PanelSurface *m_surface;
     QPointer<PanelConfigView> m_configView;
 

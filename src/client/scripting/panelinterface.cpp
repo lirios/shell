@@ -24,6 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <HawaiiShell/Containment>
+
 #include "panelinterface.h"
 #include "panelview.h"
 #include "shellmanager.h"
@@ -162,7 +164,7 @@ void PanelInterface::setThickness(int value)
 
 void PanelInterface::addElement(const QString &element)
 {
-    m_view->addElement(element);
+    m_view->containment()->addElement(element);
 }
 
 #include "moc_panelinterface.cpp"

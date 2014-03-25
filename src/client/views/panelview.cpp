@@ -134,8 +134,6 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
 
 PanelView::~PanelView()
 {
-    qDeleteAll(m_elements);
-
     delete m_surface;
     m_surface = nullptr;
 }
@@ -287,23 +285,6 @@ void PanelView::setMaximumLength(int value)
     Q_EMIT maximumLengthChanged();
 
     dockPanel();
-}
-
-QStringList PanelView::elements() const
-{
-    return m_elementsSet.toList();
-}
-
-void PanelView::addElement(const QString &name)
-{
-    m_elementsSet.insert(name);
-
-    Element *element = new Element(name, containment(), this);
-    ElementItem *elementItem = new ElementItem(element);
-    elementItem->setContextProperty("Shell", QVariant::fromValue(ShellManager::instance()->controller()));
-    elementItem->initialize();
-    m_elements.append(elementItem);
-    Q_EMIT elementAdded(elementItem);
 }
 
 void PanelView::showConfigurationWindow()
