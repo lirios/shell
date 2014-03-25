@@ -37,6 +37,7 @@ namespace Hawaii {
 namespace Shell {
 
 class ContainmentPrivate;
+class Element;
 
 class HAWAIISHELL_EXPORT Containment : public QObject
 {
@@ -116,6 +117,19 @@ public:
      */
     void setPackage(const Package &package);
 
+    /*!
+     * Adds the element called \a name.
+     * \param name internal name of the element to add
+     *             (something along the line of org.hawaii.elements.anelement).
+     */
+    void addElement(const QString &name);
+
+    /*!
+     * Removes the \a element.
+     * \param element the element to remove.
+     */
+    void removeElement(Element *element);
+
 Q_SIGNALS:
     /*!
      * Emitted when the containment type is changed.
@@ -157,6 +171,18 @@ Q_SIGNALS:
      * \param package the new package.
      */
     void packageChanged(const Package &package);
+
+    /*!
+     * Emitted when an element is added.
+     * \param element the elmement.
+     */
+    void elementAdded(Hawaii::Shell::Element *element);
+
+    /*!
+     * Emitted when an element is removed.
+     * \param element the elmement.
+     */
+    void elementRemoved(Hawaii::Shell::Element *element);
 
 private:
     Q_DECLARE_PRIVATE(Containment)

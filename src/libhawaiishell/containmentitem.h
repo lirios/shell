@@ -37,6 +37,8 @@ namespace Shell {
 
 class Containment;
 class ContainmentItemPrivate;
+class Element;
+class ElementItem;
 
 class HAWAIISHELL_EXPORT ContainmentItem : public QQuickItem
 {
@@ -149,10 +151,23 @@ Q_SIGNALS:
      */
     void configuringChanged(bool newValue);
 
+    /*!
+     * Emitted when an element is added.
+     * \param element graphical representation of the elmement.
+     */
+    void elementAdded(Hawaii::Shell::ElementItem *element);
+
+    /*!
+     * Emitted when an element is removed.
+     * \param element graphical representation of the elmement.
+     */
+    void elementRemoved(Hawaii::Shell::ElementItem *element);
+
 private:
     Q_DECLARE_PRIVATE(ContainmentItem)
     ContainmentItemPrivate *const d_ptr;
 
+    Q_PRIVATE_SLOT(d_func(), void _q_elementAdded(Hawaii::Shell::Element *element))
     Q_PRIVATE_SLOT(d_func(), void _q_packageChanged())
 };
 

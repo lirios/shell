@@ -32,6 +32,7 @@
 #include <QtConfiguration/QConfiguration>
 
 #include "containment.h"
+#include "element.h"
 #include "package.h"
 #include "pluginloader.h"
 
@@ -56,6 +57,7 @@ public:
     bool immutable;
     bool configuring;
     Package package;
+    QList<Element *> elements;
 };
 
 ContainmentPrivate::ContainmentPrivate()
@@ -211,6 +213,24 @@ void Containment::setPackage(const Package &package)
     // Assign the package and notify observers
     d->package = package;
     Q_EMIT packageChanged(package);
+}
+
+void Containment::addElement(const QString &name)
+{
+    Q_D(Containment);
+
+    Element *element = new Element(name, this, this);
+    d->elements.append(element);
+    Q_EMIT elementAdded(element);
+}
+
+void Containment::removeElement(Element *element)
+{
+    Q_D(Containment);
+
+    d->elements.removeOne(element);
+    Q_EMIT elementRemoved(element);
+    element->deleteLater();
 }
 
 } // namespace Shell

@@ -33,6 +33,7 @@
 
 #include "containment.h"
 #include "containmentitem.h"
+#include "elementitem.h"
 #include "package.h"
 #include "qmlobject.h"
 
@@ -52,6 +53,7 @@ public:
     Containment *containment;
     QmlObject *qmlObject;
 
+    void _q_elementAdded(Element *element);
     void _q_packageChanged();
 
     static QHash<QObject *, ContainmentItem *> s_rootObjects;
@@ -68,6 +70,16 @@ ContainmentItemPrivate::ContainmentItemPrivate(ContainmentItem *self)
     , qmlObject(nullptr)
     , q_ptr(self)
 {
+}
+
+void ContainmentItemPrivate::_q_elementAdded(Element *element)
+{
+    Q_Q(ContainmentItem);
+
+    ElementItem *elementItem = new ElementItem(element, q);
+    //elementItem->setContextProperty("Shell", QVariant::fromValue(ShellManager::instance()->controller()));
+    elementItem->initialize();
+    Q_EMIT q->elementAdded(elementItem);
 }
 
 void ContainmentItemPrivate::_q_packageChanged()
@@ -112,6 +124,10 @@ ContainmentItem::ContainmentItem(Containment *containment, QQuickItem *parent)
             this, &ContainmentItem::immutableChanged);
     connect(containment, &Containment::configuringChanged,
             this, &ContainmentItem::configuringChanged);
+
+    // Handle elements
+    connect(containment, SIGNAL(elementAdded(Hawaii::Shell::Element*)),
+            this, SLOT(_q_elementAdded(Hawaii::Shell::Element*)));
 
     // Reinizialize this item when the package is changed
     connect(containment, SIGNAL(packageChanged(Package)),
