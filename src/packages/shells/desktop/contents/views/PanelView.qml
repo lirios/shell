@@ -41,7 +41,7 @@ Item {
         containment.parent = styledItem;
         containment.anchors.fill = styledItem;
         buttonContainer.parent = containment;
-        containment.configButton = buttonContainer;
+        containment.rootObject.configButton = buttonContainer;
     }
 
     QtObject {

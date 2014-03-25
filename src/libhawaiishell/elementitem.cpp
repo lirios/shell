@@ -274,6 +274,12 @@ uint ElementItem::id() const
     return d->element->elementId();
 }
 
+QQuickItem *ElementItem::rootObject() const
+{
+    Q_D(const ElementItem);
+    return qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
+}
+
 Hawaii::Shell::Types::FormFactor ElementItem::formFactor() const
 {
     Q_D(const ElementItem);
@@ -401,17 +407,19 @@ void ElementItem::initialize()
         d->qmlObject->completeInitialization();
     }
 
+    // Root object changed
+    Q_EMIT rootObjectChanged(rootObject());
+
     // Set component parent
-    QQuickItem *item = qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
-    item->setParentItem(this);
+    rootObject()->setParentItem(this);
 
     // Fill component
-    QQmlExpression expression(QtQml::qmlContext(d->qmlObject->rootObject()), item, "parent");
-    QQmlProperty property(item, "anchors.fill");
+    QQmlExpression expression(QtQml::qmlContext(d->qmlObject->rootObject()), rootObject(), "parent");
+    QQmlProperty property(rootObject(), "anchors.fill");
     property.write(expression.evaluate());
 
     // Connect Layout from the real element to our's
-    d->setupLayoutAttached(item);
+    d->setupLayoutAttached(rootObject());
 
     // Element is no longer busy
     d->busy = false;

@@ -42,6 +42,7 @@ class HAWAIISHELL_EXPORT ElementItem : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(uint id READ id CONSTANT)
+    Q_PROPERTY(QQuickItem *rootObject READ rootObject NOTIFY rootObjectChanged)
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location NOTIFY locationChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
@@ -61,6 +62,11 @@ public:
      * \return the element identifier.
      */
     uint id() const;
+
+    /*!
+     * \return the element root object.
+     */
+    QQuickItem *rootObject() const;
 
     /*!
      * \return the form factor of the containment.
@@ -135,6 +141,11 @@ public:
     static ElementItem *qmlAttachedProperties(QObject *object);
 
 Q_SIGNALS:
+    /*!
+     * Emitted when the root object is changed (e.g. the package has changed)
+     */
+    void rootObjectChanged(QQuickItem *rootObject);
+
     /*!
      * Emitted when the form factor is changed.
      * \param formFactor the new form factorof the containment

@@ -146,6 +146,12 @@ Containment *ContainmentItem::containment() const
     return d->containment;
 }
 
+QQuickItem *ContainmentItem::rootObject() const
+{
+    Q_D(const ContainmentItem);
+    return qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
+}
+
 Hawaii::Shell::Types::ContainmentType ContainmentItem::type() const
 {
     Q_D(const ContainmentItem);

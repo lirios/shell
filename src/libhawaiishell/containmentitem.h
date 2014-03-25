@@ -43,6 +43,7 @@ class ElementItem;
 class HAWAIISHELL_EXPORT ContainmentItem : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(QQuickItem *rootObject READ rootObject)
     Q_PROPERTY(Hawaii::Shell::Types::ContainmentType type READ type)
     Q_PROPERTY(Hawaii::Shell::Types::FormFactor formFactor READ formFactor WRITE setFormFactor NOTIFY formFactorChanged)
     Q_PROPERTY(Hawaii::Shell::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
@@ -67,6 +68,11 @@ public:
      * \return the containment represented by this item.
      */
     Containment *containment() const;
+
+    /*!
+     * \return the containment root object.
+     */
+    QQuickItem *rootObject() const;
 
     /*!
      * \return the containment type.
