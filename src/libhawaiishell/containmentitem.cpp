@@ -77,7 +77,6 @@ void ContainmentItemPrivate::_q_elementAdded(Element *element)
     Q_Q(ContainmentItem);
 
     ElementItem *elementItem = new ElementItem(element, q);
-    //elementItem->setContextProperty("Shell", QVariant::fromValue(ShellManager::instance()->controller()));
     elementItem->initialize();
     Q_EMIT q->elementAdded(elementItem);
 }

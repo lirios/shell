@@ -51,7 +51,7 @@ DropArea {
                 drop.acceptProposedAction();
         }
     }
-*/
+    */
     onWidthChanged: containmentSizeSyncTimer.restart()
     onHeightChanged: containmentSizeSyncTimer.restart()
     onConfigButtonChanged: containmentSizeSyncTimer.restart()
@@ -68,14 +68,6 @@ DropArea {
         property bool isLayoutHorizontal
 
         id: currentLayout
-        /*
-        anchors {
-            left: parent.left
-            top: parent.top
-            right: isHorizontal && configButton ? configButton.left : parent.right
-            bottom: isHorizontal ? parent.bottom : (configButton ? configButton.top : parent.bottom)
-        }
-*/
         rows: 1
         columns: 1
         flow: isHorizontal ? GridLayout.TopToBottom : GridLayout.LeftToRight
