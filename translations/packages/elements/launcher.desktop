@@ -1,3 +1,11 @@
 [Desktop Entry]
 Name=Applications manager
 Comment=Switch between running applications, pin favourite applications and start them
+X-Hawaii-PluginInfo-Type=HawaiiShell
+X-Hawaii-PluginInfo-Name=org.hawaii.elements.launcher
+X-Hawaii-PluginInfo-Author=Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+X-Hawaii-PluginInfo-Email=pierluigi.fiorini@gmail.com
+X-Hawaii-PluginInfo-Website=http://www.maui-project.org
+X-Hawaii-PluginInfo-License=GPLv2+
+X-Hawaii-PluginInfo-MainScript=ui/Launcher.qml
+X-Hawaii-HawaiiShell-Type=Element

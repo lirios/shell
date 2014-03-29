@@ -1,3 +1,11 @@
 [Desktop Entry]
 Name=Indicators
 Comment=Shows information about the system
+X-Hawaii-PluginInfo-Type=HawaiiShell
+X-Hawaii-PluginInfo-Name=org.hawaii.elements.indicators
+X-Hawaii-PluginInfo-Author=Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+X-Hawaii-PluginInfo-Email=pierluigi.fiorini@gmail.com
+X-Hawaii-PluginInfo-Website=http://www.maui-project.org
+X-Hawaii-PluginInfo-License=GPLv2+
+X-Hawaii-PluginInfo-MainScript=ui/StatusArea.qml
+X-Hawaii-HawaiiShell-Type=Element

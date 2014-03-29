@@ -1,3 +1,11 @@
 [Desktop Entry]
 Name=Desktop
 Comment=Desktop-style user interface
+X-Hawaii-PluginInfo-Type=HawaiiShell
+X-Hawaii-PluginInfo-Name=org.hawaii.shells.desktop
+X-Hawaii-PluginInfo-Author=Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+X-Hawaii-PluginInfo-Email=pierluigi.fiorini@gmail.com
+X-Hawaii-PluginInfo-Website=http://www.maui-project.org
+X-Hawaii-PluginInfo-License=GPLv2+
+X-Hawaii-PluginInfo-MainScript=loader.qml
+X-Hawaii-HawaiiShell-Type=Shell
