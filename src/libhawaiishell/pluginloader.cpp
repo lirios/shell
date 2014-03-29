@@ -24,6 +24,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QDir>
+#include <QtCore/QSet>
+#include <QtCore/QStandardPaths>
+
 #include "packages_p.h"
 #include "pluginloader.h"
 #include "pluginloader_p.h"
@@ -107,6 +111,26 @@ Package PluginLoader::loadPackage(PluginType type)
     }
 
     return Package();
+}
+
+QStringList PluginLoader::listPlugins(PluginType type)
+{
+    QSet<QString> packageIds;
+
+    Package package = loadPackage(type);
+
+    QStringList directories =
+            QStandardPaths::locateAll(QStandardPaths::GenericDataLocation,
+                                      package.defaultPackageRoot(),
+                                      QStandardPaths::LocateDirectory);
+    for (QString directory: directories) {
+        QDir dir(directory);
+
+        for (QString item: dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs))
+            packageIds.insert(item);
+    }
+
+    return packageIds.toList();
 }
 
 } // namespace Shell

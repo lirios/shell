@@ -55,6 +55,8 @@ public:
 
     Package loadPackage(PluginType type);
 
+    QStringList listPlugins(PluginType type);
+
 private:
     Q_DECLARE_PRIVATE(PluginLoader)
     PluginLoaderPrivate *const d_ptr;
