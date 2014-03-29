@@ -185,6 +185,8 @@ bool PluginMetadata::load(const QString &fileName)
         d->type = PluginMetadata::ShellType;
     else if (type == QStringLiteral("lookandfeel"))
         d->type = PluginMetadata::LookAndFeelType;
+    else if (type == QStringLiteral("preferences"))
+        d->type = PluginMetadata::PreferencesType;
     else
         d->type = PluginMetadata::InvalidType;
 

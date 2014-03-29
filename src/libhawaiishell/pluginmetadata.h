@@ -52,7 +52,8 @@ public:
         ElementType,
         ContainmentType,
         ShellType,
-        LookAndFeelType
+        LookAndFeelType,
+        PreferencesType
     };
 
     /*!
@@ -87,6 +88,7 @@ public:
      *   \listitem containment
      *   \listitem shell
      *   \listitem lookandfeel
+     *   \listitem preferences
      * \endlist
      *
      * The "IconName" key is not mandatory, especially for non visual

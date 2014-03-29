@@ -151,6 +151,14 @@ void LookAndFeelPackage::initializePackage(Package *package)
                                tr("Main lock screen user interface file"));
 }
 
+void PreferencesPackage::initializePackage(Package *package)
+{
+    package->setDefaultPackageRoot(QStringLiteral("hawaii/preferences/"));
+
+    // User interface
+    package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
+}
+
 } // namespace Shell
 
 } // namespace Hawaii

@@ -44,6 +44,7 @@ public:
         ContainmentPlugin = 2,
         ShellPlugin = 3,
         LookAndFeelPlugin = 4,
+        PreferencesPlugin = 5,
         CustomPlugin = 0x0100
     };
 

@@ -36,7 +36,7 @@
 # Installs a Hawaii Shell package.
 #
 # \param type the package type, one of the following: background,
-#             element, shell, lookandfeel, containment
+#             element, shell, lookandfeel, containment, preferences
 # \param name the package name, same as the "name" key value
 #             from metadata.json
 # \param srcpath the source path to install from, it's the
@@ -53,10 +53,13 @@ macro(hawaiishell_install_package type name srcpath)
         set(dstpath hawaii/lookandfeel)
     elseif("${type}" STREQUAL "containment")
         set(dstpath hawaii/containments)
+    elseif("${type}" STREQUAL "preferences")
+        set(dstpath hawaii/preferences)
     else()
         message(FATAL_ERROR "Package type \"${type}\" not recognized, "
                             "possible values: \"element\", \"shell\", "
-                            "\"lookandfeel\", \"containment\"")
+                            "\"lookandfeel\", \"containment\", "
+                            "\"preferences\".")
     endif()
 
     install(DIRECTORY ${srcpath}/ DESTINATION ${CMAKE_INSTALL_DATADIR}/${dstpath}/${name}

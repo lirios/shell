@@ -78,6 +78,12 @@ public:
     void initializePackage(Package *package);
 };
 
+class PreferencesPackage : public MainScriptPackage
+{
+public:
+    void initializePackage(Package *package);
+};
+
 } // namespace Shell
 
 } // namespace Hawaii
