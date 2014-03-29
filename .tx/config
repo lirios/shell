@@ -16,41 +16,41 @@ file_filter = src/compositor/translations/<lang>.ts
 [hawaii.shell-containments-panel-metadata]
 type = DESKTOP
 source_lang = en
-source_file = translations/packages/containments/panel.desktop
+source_file = data/packages/containments/panel.desktop
 file_filter = translations/packages/containments/panel_<lang>.desktop
 
 [hawaii.shell-elements-appchooser-metadata]
 type = DESKTOP
 source_lang = en
-source_file = translations/packages/elements/appchooser.desktop
+source_file = data/packages/elements/appchooser.desktop
 file_filter = translations/packages/elements/appchooser_<lang>.desktop
 
 [hawaii.shell-elements-indicators-metadata]
 type = DESKTOP
 source_lang = en
-source_file = translations/packages/elements/indicators.desktop
+source_file = data/packages/elements/indicators.desktop
 file_filter = translations/packages/elements/indicators_<lang>.desktop
 
 [hawaii.shell-elements-launcher-metadata]
 type = DESKTOP
 source_lang = en
-source_file = translations/packages/elements/launcher.desktop
+source_file = data/packages/elements/launcher.desktop
 file_filter = translations/packages/elements/launcher_<lang>.desktop
 
 [hawaii.shell-shells-desktop-metadata]
 type = DESKTOP
 source_lang = en
-source_file = translations/packages/shells/desktop.desktop
+source_file = data/packages/shells/desktop.desktop
 file_filter = translations/packages/shells/desktop_<lang>.desktop
 
 [hawaii.shell-shells-tablet-metadata]
 type = DESKTOP
 source_lang = en
-source_file = translations/packages/shells/tablet.desktop
+source_file = data/packages/shells/tablet.desktop
 file_filter = translations/packages/shells/tablet_<lang>.desktop
 
 [hawaii.shell-lookandfeel-standard-metadata]
 type = DESKTOP
 source_lang = en
-source_file = translations/packages/lookandfeel/standard.desktop
+source_file = data/packages/lookandfeel/standard.desktop
 file_filter = translations/packages/lookandfeel/standard_<lang>.desktop
