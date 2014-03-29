@@ -54,3 +54,21 @@ type = DESKTOP
 source_lang = en
 source_file = data/packages/lookandfeel/standard.desktop
 file_filter = translations/packages/lookandfeel/standard_<lang>.desktop
+
+[hawaii.shell-backgrounds-solid-metadata]
+type = DESKTOP
+source_lang = en
+source_file = data/packages/backgrounds/solid.desktop
+file_filter = translations/packages/backgrounds/solid_<lang>.desktop
+
+[hawaii.shell-backgrounds-wallpaper-metadata]
+type = DESKTOP
+source_lang = en
+source_file = data/packages/backgrounds/wallpaper.desktop
+file_filter = translations/packages/backgrounds/wallpaper_<lang>.desktop
+
+[hawaii.shell-backgrounds-gradient-metadata]
+type = DESKTOP
+source_lang = en
+source_file = data/packages/backgrounds/gradient.desktop
+file_filter = translations/packages/backgrounds/gradient_<lang>.desktop
