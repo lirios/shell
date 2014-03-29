@@ -46,16 +46,6 @@ class PluginMetadataPrivate;
 class HAWAIISHELL_EXPORT PluginMetadata
 {
 public:
-    enum Type {
-        InvalidType = 0,
-        BackgroundType,
-        ElementType,
-        ContainmentType,
-        ShellType,
-        LookAndFeelType,
-        PreferencesType
-    };
-
     /*!
      * Read plugin metadata from \a fileName.
      *
@@ -63,50 +53,52 @@ public:
      *
      * \code
      * {
-     *     "Name": "internal name",
-     *     "Type": "...",
-     *     "Version": "version number",
-     *     "License": "license name",
-     *     "Title": "user visible name";
-     *     "Description": "description of what the plugin does",
-     *     "IconName": "icon name from Freedesktop.org Icon Naming Specification",
+     *   "PluginInfo": {
      *     "Authors": [
-     *         {
-     *             "Name": "author's name",
-     *             "Email": "author's email address"
-     *         },
+     *       "First Last <first.last@email>"
      *     ],
-     *     "WebSite": "http://plugin.org",
+     *     "Contact": {
+     *       "Email": "contact@email",
+     *       "Website": "http://plugin.org",
+     *     },
+     *     "Description": {
+     *       "en": {
+     *         "Comment": "Configure desktop preferences",
+     *         "Keywords": [
+     *           "A keyword to find this plugin",
+     *           "Another keyword",
+     *           "Yet another keyword"
+     *         ],
+     *         "Name": "Desktop"
+     *       }
+     *     },
+     *     "Icon": "icon-name-from-xdg-specs",
+     *     "Implements": "PluginType",
+     *     "InternalName": "org.some.plugins",
+     *     "License": "GPLv2+",
      *     "MainScript": "path/to/mainfile.ext"
+     *   },
+     *   ...
      * }
      * \endcode
      *
-     * The "Type" key can only contain one of the following values:
-     * \list
-     *   \listitem background
-     *   \listitem element
-     *   \listitem containment
-     *   \listitem shell
-     *   \listitem lookandfeel
-     *   \listitem preferences
-     * \endlist
+     * Metadata has at least a "PluginInfo" key, but depending on the plugin type
+     * it may have another dictionary at the same level.
      *
-     * The "IconName" key is not mandatory, especially for non visual
-     * items such as containments. It's generally used only for elements.
+     * The "Authors" key is mandatory. Please don't use nick names and specify your
+     * email address.
+     *
+     * The "Contact" is optional, omit it if you feel the list of authors is enough
+     * for users to get in touch.
+     *
+     * The "Description" key is mandatory and it must have at least the "Name" and
+     * "Comment" keys. The "Keywords" key is optional.
+     *
+     * The "Icon" key is not mandatory, especially for non visual plugins.
      *
      * Use a descriptive name for "License" such as GPL, GPLv2, or GPLv2+
      * if the plugin is licensed under the terms of the
      * GNU General Public License v2 or (at your option) any later version.
-     *
-     * Don't use nick names for "Name" in "Authors", please use your first
-     * and last name.
-     *
-     * If "type" is "containment" you must add the "ContainmentType" key
-     * with one of the following values:
-     * \list
-     *   \listitem desktop
-     *   \listitem panel
-     * \endlist
      *
      * \param fileName name with full path of the plugin metadata
      */
@@ -131,13 +123,6 @@ public:
     bool isValid() const;
 
     /*!
-     * \return plugin type.
-     *
-     * \sa Type
-     */
-    Type type() const;
-
-    /*!
      * \return localized user visible name.
      */
     QString name() const;
@@ -146,6 +131,11 @@ public:
      * \return localized description.
      */
     QString comment() const;
+
+    /*!
+     * \return localized keywords.
+     */
+    QStringList keywords() const;
 
     /*!
      * \return icon name.
@@ -158,6 +148,11 @@ public:
     QString internalName() const;
 
     /*!
+     * \return the plugin type.
+     */
+    QString implements() const;
+
+    /*!
      * \return version.
      */
     QString version() const;
@@ -168,15 +163,19 @@ public:
     QString license() const;
 
     /*!
-     * \return a list of authors, each item contains two
-     *         values (author name and email).
+     * \return a list of authors.
      */
-    QList<QStringList> authors() const;
+    QStringList authors() const;
+
+    /*!
+     * \return email.
+     */
+    QString contactEmail() const;
 
     /*!
      * \return web site.
      */
-    QString webSite() const;
+    QString contactWebsite() const;
 
     /*!
      * \return the main script.
@@ -189,7 +188,7 @@ public:
      * \param key which key you want to know the value
      * \return the value associated with \a key.
      */
-    QVariant property(const QString &key) const;
+    QVariant value(const QString &key) const;
 
 private:
     Q_DECLARE_PRIVATE(PluginMetadata)

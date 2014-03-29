@@ -24,12 +24,13 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
+#include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QSharedData>
+#include <QtCore/QVariant>
 
 #include "pluginmetadata.h"
 
@@ -100,29 +101,30 @@ public:
         if (!valid)
             return QVariant();
 
-        QVariantMap translations = json.value(QStringLiteral("Translations")).toObject().toVariantMap();
         QStringList langs = currentLanguage();
-        for (QString lang: translations.keys()) {
+        langs.append(QStringList("en"));
+
+        QJsonObject description = pluginInfo.value(QStringLiteral("Description")).toObject();
+        for (QString lang: description.keys()) {
             if (langs.contains(lang)) {
-                QMap<QString, QVariant> map = translations[lang].toMap();
-                if (map.contains(key))
-                    return translations[lang].toMap()[key];
-                return json.value(key);
+                QJsonObject record = description.value(lang).toObject();
+                QString value = record.value(key).toString();
+                if (!value.isEmpty())
+                    return value;
             }
         }
 
-        return json.value(key);
+        return QVariant();
     }
 
     bool valid;
     QFile file;
     QJsonObject json;
-    PluginMetadata::Type type;
+    QJsonObject pluginInfo;
 };
 
 PluginMetadataPrivate::PluginMetadataPrivate()
     : valid(false)
-    , type(PluginMetadata::InvalidType)
 {
 }
 
@@ -172,26 +174,13 @@ bool PluginMetadata::load(const QString &fileName)
 
     // Retrieve the JSON object
     d->json = doc.object();
+    d->pluginInfo = d->json.value(QStringLiteral("PluginInfo")).toObject();
 
-    // Determine the plugin type
-    QString type = d->json.value(QStringLiteral("Type")).toString();
-    if (type == QStringLiteral("background"))
-        d->type = PluginMetadata::BackgroundType;
-    else if (type == QStringLiteral("element"))
-        d->type = PluginMetadata::ElementType;
-    else if (type == QStringLiteral("containment"))
-        d->type = PluginMetadata::ContainmentType;
-    else if (type == QStringLiteral("shell"))
-        d->type = PluginMetadata::ShellType;
-    else if (type == QStringLiteral("lookandfeel"))
-        d->type = PluginMetadata::LookAndFeelType;
-    else if (type == QStringLiteral("preferences"))
-        d->type = PluginMetadata::PreferencesType;
-    else
-        d->type = PluginMetadata::InvalidType;
-
-    d->valid = d->type != PluginMetadata::InvalidType;
-    return true;
+    d->valid = !d->pluginInfo.value(QStringLiteral("Implements")).toString().isEmpty() &&
+            !d->pluginInfo.value(QStringLiteral("InternalName")).toString().isEmpty();
+    if (!d->valid)
+        qWarning() << "Metadata" << fileName << "is not valid!";
+    return d->valid;
 }
 
 bool PluginMetadata::isValid() const
@@ -200,18 +189,12 @@ bool PluginMetadata::isValid() const
     return d->valid;
 }
 
-PluginMetadata::Type PluginMetadata::type() const
-{
-    Q_D(const PluginMetadata);
-    return d->type;
-}
-
 QString PluginMetadata::name() const
 {
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->localizedValue(QStringLiteral("Title")).toString();
+    return d->localizedValue(QStringLiteral("Name")).toString();
 }
 
 QString PluginMetadata::comment() const
@@ -219,7 +202,15 @@ QString PluginMetadata::comment() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->localizedValue(QStringLiteral("Description")).toString();
+    return d->localizedValue(QStringLiteral("Comment")).toString();
+}
+
+QStringList PluginMetadata::keywords() const
+{
+    Q_D(const PluginMetadata);
+    if (!d->valid)
+        return QStringList();
+    return d->localizedValue(QStringLiteral("Keywords")).toStringList();
 }
 
 QString PluginMetadata::iconName() const
@@ -227,7 +218,13 @@ QString PluginMetadata::iconName() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("IconName")).toString();
+    return d->pluginInfo.value(QStringLiteral("Icon")).toString();
+}
+
+QString PluginMetadata::implements() const
+{
+    Q_D(const PluginMetadata);
+    return d->pluginInfo.value(QStringLiteral("Implements")).toString();
 }
 
 QString PluginMetadata::internalName() const
@@ -235,7 +232,7 @@ QString PluginMetadata::internalName() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("Name")).toString();
+    return d->pluginInfo.value(QStringLiteral("InternalName")).toString();
 }
 
 QString PluginMetadata::version() const
@@ -243,7 +240,7 @@ QString PluginMetadata::version() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("Version")).toString();
+    return d->pluginInfo.value(QStringLiteral("Version")).toString();
 }
 
 QString PluginMetadata::license() const
@@ -251,33 +248,36 @@ QString PluginMetadata::license() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("License")).toString();
+    return d->pluginInfo.value(QStringLiteral("License")).toString();
 }
 
-QList<QStringList> PluginMetadata::authors() const
+QStringList PluginMetadata::authors() const
 {
     Q_D(const PluginMetadata);
-
-    QList<QStringList> list;
     if (!d->valid)
-        return list;
+        return QStringList();
 
-    QJsonArray authors = d->json.value(QStringLiteral("Authors")).toArray();
-    for (QVariant item: authors.toVariantList()) {
-        QStringList items = QStringList()
-                << item.toMap().value(QStringLiteral("Name")).toString()
-                << item.toMap().value(QStringLiteral("Email")).toString();
-        list.append(items);
-    }
-    return list;
+    QStringList results;
+    QVariantList variantList = d->pluginInfo.value(QStringLiteral("Authors")).toArray().toVariantList();
+    for (QVariant variant: variantList)
+        results.append(variant.toString());
+    return results;
 }
 
-QString PluginMetadata::webSite() const
+QString PluginMetadata::contactEmail() const
 {
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("WebSite")).toString();
+    return d->pluginInfo.value(QStringLiteral("Contact")).toObject().value(QStringLiteral("Email")).toString();
+}
+
+QString PluginMetadata::contactWebsite() const
+{
+    Q_D(const PluginMetadata);
+    if (!d->valid)
+        return QString();
+    return d->pluginInfo.value(QStringLiteral("Contact")).toObject().value(QStringLiteral("Website")).toString();
 }
 
 QString PluginMetadata::mainScript() const
@@ -285,15 +285,15 @@ QString PluginMetadata::mainScript() const
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QString();
-    return d->json.value(QStringLiteral("MainScript")).toString();
+    return d->pluginInfo.value(QStringLiteral("MainScript")).toString();
 }
 
-QVariant PluginMetadata::property(const QString &key) const
+QVariant PluginMetadata::value(const QString &key) const
 {
     Q_D(const PluginMetadata);
     if (!d->valid)
         return QVariant();
-    return d->localizedValue(key);
+    return d->json.value(key).toVariant();
 }
 
 } // namespace Shell

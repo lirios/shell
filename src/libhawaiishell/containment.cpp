@@ -26,6 +26,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QElapsedTimer>
+#include <QtCore/QVariant>
 #include <QtQml/QQmlContext>
 #include <QtQuick/QQuickItem>
 
@@ -199,11 +200,11 @@ void Containment::setPackage(const Package &package)
     Q_D(Containment);
 
     // Read the containment type
-    QString containmentType = package.metadata().property(
-                QStringLiteral("ContainmentType")).toString();
-    if (containmentType == QStringLiteral("desktop"))
+    QVariantMap map = package.metadata().value(QStringLiteral("HawaiiShell")).toMap();
+    QString containmentType = map.value(QStringLiteral("ContainmentType")).toString();
+    if (containmentType == QStringLiteral("Desktop"))
         d->type = Types::DesktopContainment;
-    else if (containmentType == QStringLiteral("panel"))
+    else if (containmentType == QStringLiteral("Panel"))
         d->type = Types::PanelContainment;
     else
         qFatal("Containment \"%s\" has an invalid type \"%s\", aborting...",
