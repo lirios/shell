@@ -13,6 +13,12 @@ source_lang = en
 source_file = src/compositor/translations/template.ts
 file_filter = src/compositor/translations/<lang>.ts
 
+[hawaii.shell-containments-desktop-metadata]
+type = DESKTOP
+source_lang = en
+source_file = data/packages/containments/desktop.desktop
+file_filter = translations/packages/containments/desktop_<lang>.desktop
+
 [hawaii.shell-containments-panel-metadata]
 type = DESKTOP
 source_lang = en
