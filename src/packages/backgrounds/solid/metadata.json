@@ -1,16 +1,24 @@
 {
-    "Name": "org.hawaii.backgrounds.solid",
-    "Type": "background",
-    "Version": "1.0",
-    "License": "GPLv2+",
-    "Title": "Color",
-    "Description": "A solid color",
-    "Authors": [
-        {
-            "Name": "Pier Luigi Fiorini",
-            "Email": "pierluigi.fiorini.com"
-        }
-    ],
-    "WebSite": "http://www.maui-project.org",
-    "MainScript": "ui/main.qml"
+    "HawaiiShell": {
+        "Type": "Background"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "en": {
+                "Comment": "A solid color",
+                "Name": "Color"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.backgrounds.solid",
+        "License": "GPLv2+",
+        "MainScript": "ui/main.qml"
+    }
 }

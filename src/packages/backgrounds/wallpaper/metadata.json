@@ -1,16 +1,24 @@
 {
-    "Name": "org.hawaii.backgrounds.wallpaper",
-    "Type": "background",
-    "Version": "1.0",
-    "License": "GPLv2+",
-    "Title": "Wallpaper",
-    "Description": "A single image",
-    "Authors": [
-        {
-            "Name": "Pier Luigi Fiorini",
-            "Email": "pierluigi.fiorini.com"
-        }
-    ],
-    "WebSite": "http://www.maui-project.org",
-    "MainScript": "ui/main.qml"
+    "HawaiiShell": {
+        "Type": "Background"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "en": {
+                "Comment": "A single image",
+                "Name": "Wallpaper"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.backgrounds.wallpaper",
+        "License": "GPLv2+",
+        "MainScript": "ui/main.qml"
+    }
 }

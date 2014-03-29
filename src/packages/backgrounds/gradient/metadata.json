@@ -1,16 +1,24 @@
 {
-    "Name": "org.hawaii.backgrounds.gradient",
-    "Type": "background",
-    "Version": "1.0",
-    "License": "GPLv2+",
-    "Title": "Gradient",
-    "Description": "Horizontal or vertical gradient",
-    "Authors": [
-        {
-            "Name": "Pier Luigi Fiorini",
-            "Email": "pierluigi.fiorini.com"
-        }
-    ],
-    "WebSite": "http://www.maui-project.org",
-    "MainScript": "ui/main.qml"
+    "HawaiiShell": {
+        "Type": "Background"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "en": {
+                "Comment": "Horizontal or vertical gradient",
+                "Name": "Gradient"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.backgrounds.gradient",
+        "License": "GPLv2+",
+        "MainScript": "ui/main.qml"
+    }
 }
