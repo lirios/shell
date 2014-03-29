@@ -1,16 +1,39 @@
 {
-    "Name": "org.hawaii.elements.launcher",
-    "Type": "element",
-    "Version": "1.0",
-    "License": "GPLv2+",
-    "Title": "Applications manager",
-    "Description": "Switch between running applications, pin favourite applications and start them",
-    "Authors": [
-        {
-            "Name": "Pier Luigi Fiorini",
-            "Email": "pierluigi.fiorini.com"
-        }
-    ],
-    "WebSite": "http://www.maui-project.org",
-    "MainScript": "ui/Launcher.qml"
+    "HawaiiShell": {
+        "Type": "Element"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "cs_CZ": {
+                "Comment": "P\u0159ep\u00ednejte mezi b\u011b\u017e\u00edc\u00edmi programy, p\u0159ip\u00ednejte obl\u00edben\u00e9 programy a spou\u0161t\u011bjte je",
+                "Name": "Spr\u00e1vce program\u016f"
+            },
+            "en": {
+                "Comment": "Switch between running applications, pin favourite applications and start them",
+                "Name": "Applications manager"
+            },
+            "es": {
+                "Comment": "Cambia entre las aplicaciones en ejecuci\u00f3n, fija tus aplicaciones favoritas e inicialas.",
+                "Name": "Gestor de aplicaciones"
+            },
+            "hr_HR": {
+                "Name": "Upravitelj programima"
+            },
+            "sk": {
+                "Comment": "Prep\u00edna medzi spusten\u00fdmi aplik\u00e1ciami, uchyt\u00ed ob\u013e\u00faben\u00e9 aplik\u00e1cie na panel a spust\u00ed ich",
+                "Name": "Spr\u00e1vca aplik\u00e1ci\u00ed"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.elements.launcher",
+        "License": "GPLv2+",
+        "MainScript": "ui/Launcher.qml"
+    }
 }

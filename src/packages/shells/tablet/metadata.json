@@ -1,16 +1,40 @@
 {
-    "Name": "org.hawaii.shells.tablet",
-    "Type": "shell",
-    "Version": "1.0",
-    "License": "GPLv2+",
-    "Title": "Tablet",
-    "Description": "Tablet-style user interface",
-    "Authors": [
-        {
-            "Name": "Pier Luigi Fiorini",
-            "Email": "pierluigi.fiorini.com"
-        }
-    ],
-    "WebSite": "http://www.maui-project.org",
-    "MainScript": "loader.qml"
+    "HawaiiShell": {
+        "Type": "Shell"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "cs_CZ": {
+                "Comment": "U\u017eivatelsk\u00e9 rozhran\u00ed ve stylu desti\u010dky (tabletu)",
+                "Name": "Tablet"
+            },
+            "en": {
+                "Comment": "Tablet-style user interface",
+                "Name": "Tablet"
+            },
+            "es": {
+                "Comment": "Interfaz de usuario estilo tableta",
+                "Name": "Tableta"
+            },
+            "hr_HR": {
+                "Comment": "Grafi\u010dko su\u010delje tablet stila",
+                "Name": "Tablet"
+            },
+            "sk": {
+                "Comment": "Pou\u017e\u00edvate\u013esk\u00e9 rozhranie v \u0161t\u00fdle pre tablety",
+                "Name": "Tablet"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.shells.tablet",
+        "License": "GPLv2+",
+        "MainScript": "loader.qml"
+    }
 }

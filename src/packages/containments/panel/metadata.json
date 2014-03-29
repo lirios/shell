@@ -1,23 +1,53 @@
 {
-    "Name": "org.hawaii.containments.panel",
-    "Type": "containment",
-    "ContainmentType": "panel",
-    "Version": "1.0",
-    "License": "GPLv2+",
-    "Title": "Panel",
-    "Description": "Empty panel",
-    "Authors": [
-        {
-            "Name": "Pier Luigi Fiorini",
-            "Email": "pierluigi.fiorini.com"
-        }
-    ],
-    "WebSite": "http://www.maui-project.org",
-    "MainScript": "ui/main.qml",
-    "translations": {
-        "it": {
-            "title": "Pannello",
-            "description": "Pannello vuoto"
-        }
+    "HawaiiShell": {
+        "ContainmentType": "Panel",
+        "Type": "Containment"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "ast_ES": {
+                "Comment": "Panel baleru",
+                "Name": "Panel"
+            },
+            "cs_CZ": {
+                "Comment": "Pr\u00e1zdn\u00fd panel",
+                "Name": "Panel"
+            },
+            "en": {
+                "Comment": "Empty panel",
+                "Name": "Panel"
+            },
+            "es": {
+                "Comment": "Panel vac\u00edo",
+                "Name": "Panel"
+            },
+            "hr_HR": {
+                "Comment": "Prazna plo\u010da",
+                "Name": "Plo\u010da"
+            },
+            "hu": {
+                "Comment": "\u00dcres panel",
+                "Name": "Panel"
+            },
+            "it": {
+                "Comment": "Pannello vuoto",
+                "Name": "Pannello"
+            },
+            "sk": {
+                "Comment": "Pr\u00e1zdny panel",
+                "Name": "Panel"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.containments.panel",
+        "License": "GPLv2+",
+        "MainScript": "ui/main.qml"
     }
 }

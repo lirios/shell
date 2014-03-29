@@ -1,16 +1,40 @@
 {
-    "Name": "org.hawaii.shells.desktop",
-    "Type": "shell",
-    "Version": "1.0",
-    "License": "GPLv2+",
-    "Title": "Desktop",
-    "Description": "Desktop-style user interface",
-    "Authors": [
-        {
-            "Name": "Pier Luigi Fiorini",
-            "Email": "pierluigi.fiorini.com"
-        }
-    ],
-    "WebSite": "http://www.maui-project.org",
-    "MainScript": "loader.qml"
+    "HawaiiShell": {
+        "Type": "Shell"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "cs_CZ": {
+                "Comment": "U\u017eivatelsk\u00e9 rozhran\u00ed ve stylu pracovn\u00ed plochy",
+                "Name": "Pracovn\u00ed plocha"
+            },
+            "en": {
+                "Comment": "Desktop-style user interface",
+                "Name": "Desktop"
+            },
+            "es": {
+                "Comment": "Interfaz de usuario de estilo escritorio",
+                "Name": "Escritorio"
+            },
+            "hr_HR": {
+                "Comment": "Grafi\u010dko su\u010delje desktop stila",
+                "Name": "Radna povr\u0161ina"
+            },
+            "sk": {
+                "Comment": "Pou\u017e\u00edvate\u013esk\u00e9 rozhranie v \u0161t\u00fdle pracovnej plochy",
+                "Name": "Pracovn\u00e1 plocha"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.shells.desktop",
+        "License": "GPLv2+",
+        "MainScript": "loader.qml"
+    }
 }
