@@ -27,22 +27,29 @@
 #ifndef PACKAGESMODELITEM_H
 #define PACKAGESMODELITEM_H
 
+#include <QtCore/QObject>
 #include <QtCore/QUrl>
-#include <QtQml/QQmlPropertyMap>
 
 #include <HawaiiShell/Package>
 
 class PackagesModelItemPrivate;
 
-class PackagesModelItem : public QQmlPropertyMap
+class PackagesModelItem : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString internalName READ internalName CONSTANT)
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString comment READ comment CONSTANT)
 public:
     explicit PackagesModelItem(Hawaii::Shell::Package package,
                                QObject *parent = 0);
     ~PackagesModelItem();
 
-    Q_INVOKABLE QUrl filePath(const char *key,
+    QString internalName() const;
+    QString name() const;
+    QString comment() const;
+
+    Q_INVOKABLE QUrl filePath(const QString &key,
                               const QString &fileName = QString()) const;
 
 private:

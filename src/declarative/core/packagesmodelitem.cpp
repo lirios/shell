@@ -24,6 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <HawaiiShell/PluginMetadata>
+
 #include "packagesmodelitem.h"
 
 using namespace Hawaii::Shell;
@@ -47,15 +49,11 @@ public:
  */
 
 PackagesModelItem::PackagesModelItem(Package package, QObject *parent)
-    : QQmlPropertyMap(parent)
+    : QObject(parent)
     , d_ptr(new PackagesModelItemPrivate())
 {
     Q_D(PackagesModelItem);
     d->package = package;
-
-    insert(QStringLiteral("identifier"), package.metadata().internalName());
-    insert(QStringLiteral("name"), package.metadata().name());
-    insert(QStringLiteral("description"), package.metadata().comment());
 }
 
 PackagesModelItem::~PackagesModelItem()
@@ -63,14 +61,32 @@ PackagesModelItem::~PackagesModelItem()
     delete d_ptr;
 }
 
-QUrl PackagesModelItem::filePath(const char *key, const QString &fileName) const
+QString PackagesModelItem::internalName() const
+{
+    Q_D(const PackagesModelItem);
+    return d->package.metadata().internalName();
+}
+
+QString PackagesModelItem::name() const
+{
+    Q_D(const PackagesModelItem);
+    return d->package.metadata().name();
+}
+
+QString PackagesModelItem::comment() const
+{
+    Q_D(const PackagesModelItem);
+    return d->package.metadata().comment();
+}
+
+QUrl PackagesModelItem::filePath(const QString &key, const QString &fileName) const
 {
     Q_D(const PackagesModelItem);
 
     if (!d->package.isValid())
         return QUrl();
 
-    return QUrl::fromLocalFile(d->package.filePath(key, fileName));
+    return QUrl::fromLocalFile(d->package.filePath(qPrintable(key), fileName));
 }
 
 #include "moc_packagesmodelitem.cpp"
