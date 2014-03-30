@@ -67,8 +67,6 @@ void BackgroundPackage::initializePackage(Package *package)
     package->addDirectoryDefinition("ui", QStringLiteral("ui"), tr("User Interface"));
 
     // System Preferences views
-    package->addDirectoryDefinition("preferences", QStringLiteral("preferences"),
-                                    tr("Code and resources for the preferences user interface"));
     package->addFileDefinition("preferencesview",
                                QStringLiteral("preferences/Preferences.qml"),
                                tr("User interface for System Preferences"));
