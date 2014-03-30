@@ -33,7 +33,7 @@ import Hawaii.SystemPreferences.Background 1.0
 import Hawaii.Configuration 1.0
 
 Item {
-    property int columns: 6
+    property int columns: 4
     property int cellPadding: 5
     property real aspectRatio: Screen.width / Screen.height
 
