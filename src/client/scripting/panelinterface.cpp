@@ -32,24 +32,24 @@
 
 static const struct {
     const char *string;
-    Hawaii::Shell::Types::FormFactor value;
+    Hawaii::Types::FormFactor value;
 } formFactors[] = {
-    { "plane", Hawaii::Shell::Types::Plane },
-    { "horizontal", Hawaii::Shell::Types::Horizontal },
-    { "vertical", Hawaii::Shell::Types::Vertical }
+    { "plane", Hawaii::Types::Plane },
+    { "horizontal", Hawaii::Types::Horizontal },
+    { "vertical", Hawaii::Types::Vertical }
 };
 
 static const struct {
     const char *string;
-    Hawaii::Shell::Types::Location value;
+    Hawaii::Types::Location value;
 } locations[] = {
-    { "floating", Hawaii::Shell::Types::Floating },
-    { "desktop", Hawaii::Shell::Types::Desktop },
-    { "fullscreen", Hawaii::Shell::Types::FullScreen },
-    { "top", Hawaii::Shell::Types::TopEdge },
-    { "bottom", Hawaii::Shell::Types::BottomEdge },
-    { "left", Hawaii::Shell::Types::LeftEdge },
-    { "right", Hawaii::Shell::Types::RightEdge }
+    { "floating", Hawaii::Types::Floating },
+    { "desktop", Hawaii::Types::Desktop },
+    { "fullscreen", Hawaii::Types::FullScreen },
+    { "top", Hawaii::Types::TopEdge },
+    { "bottom", Hawaii::Types::BottomEdge },
+    { "left", Hawaii::Types::LeftEdge },
+    { "right", Hawaii::Types::RightEdge }
 };
 
 static const struct {

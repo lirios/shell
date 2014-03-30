@@ -31,7 +31,7 @@
 #include "window_p.h"
 #include "shellmanager.h"
 
-using namespace Hawaii::Shell;
+using namespace Hawaii;
 
 /*
  * WindowPrivate
@@ -73,7 +73,7 @@ void WindowPrivate::hawaii_window_identifier_changed(const QString &identifier)
                     QStandardPaths::ApplicationsLocation,
                     identifier);
         delete this->appInfo;
-        this->appInfo = new Hawaii::Shell::AppInfo();
+        this->appInfo = new Hawaii::AppInfo();
         this->appInfo->moveToThread(ShellManager::instance()->mantle()->engine()->thread());
         this->appInfo->load(fileName);
         Q_EMIT q->appInfoChanged();
@@ -133,7 +133,7 @@ Window::Window(const QString &title, const QString &identifier, States state, QO
     QString fileName = QStandardPaths::locate(
                 QStandardPaths::ApplicationsLocation,
                 identifier);
-    d->appInfo = new Hawaii::Shell::AppInfo();
+    d->appInfo = new Hawaii::AppInfo();
     d->appInfo->moveToThread(ShellManager::instance()->mantle()->engine()->thread());
     d->appInfo->load(fileName);
 }
@@ -203,7 +203,7 @@ void Window::setState(const States &state)
     }
 }
 
-Hawaii::Shell::AppInfo *Window::appInfo() const
+Hawaii::AppInfo *Window::appInfo() const
 {
     Q_D(const Window);
     return d->appInfo;

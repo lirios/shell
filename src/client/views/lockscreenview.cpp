@@ -33,7 +33,7 @@
 #include "lockscreenview.h"
 #include "shellmanager.h"
 
-using namespace Hawaii::Shell;
+using namespace Hawaii;
 
 LockScreenView::LockScreenView(ShellUi *mantle, QScreen *screen)
     : QuickView(mantle, new QWindow(screen))

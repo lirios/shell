@@ -1,10 +1,7 @@
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${QtConfiguration_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/libhawaiishell
-    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/includes
-    ${CMAKE_BINARY_DIR}/src/libhawaiishell
+    ${HawaiiShell_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}/headers
 )
 
@@ -44,7 +41,7 @@ set_target_properties(hawaii-notifications-daemon PROPERTIES
 )
 target_link_libraries(hawaiishellcomponentsplugin
     ${WaylandClient_LIBRARIES}
-    HF1HawaiiShell
+    ${HawaiiShell_LIBRARIES}
 )
 
 install(TARGETS hawaiishellcomponentsplugin LIBRARY

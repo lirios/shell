@@ -31,8 +31,8 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQuick/QQuickItem>
 
-#include <HawaiiShell/Package>
-#include <HawaiiShell/PluginLoader>
+#include <Hawaii/Package>
+#include <Hawaii/PluginLoader>
 
 #include "backgroundview.h"
 #include "shellmanager.h"
@@ -87,9 +87,9 @@ BackgroundView::BackgroundView(ShellUi *mantle, QScreen *screen)
 void BackgroundView::loadPlugin(const QString &background)
 {
     // Load background plugin package
-    Hawaii::Shell::Package package =
-            Hawaii::Shell::PluginLoader::instance()->loadPackage(
-                Hawaii::Shell::PluginLoader::BackgroundPlugin);
+    Hawaii::Package package =
+            Hawaii::PluginLoader::instance()->loadPackage(
+                Hawaii::PluginLoader::BackgroundPlugin);
     package.setPath(background);
 
     // If the package is invalid try with the default plugin

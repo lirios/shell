@@ -29,7 +29,7 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQml/QQmlEngine>
 
-#include <HawaiiShell/PluginLoader>
+#include <Hawaii/PluginLoader>
 
 #include "backgroundview.h"
 #include "desktopview.h"
@@ -39,10 +39,12 @@
 #include "shellui.h"
 #include "shellmanager.h"
 
+using namespace Hawaii;
+
 const QString s_lockScreenViewFileName = QStringLiteral("lockscreen/LockScreen.qml");
 
 ShellUi::ShellUi(QObject *parent)
-    : Hawaii::Shell::Mantle(parent)
+    : Mantle(parent)
     , m_numWorkspaces(0)
     , m_grabWindow(nullptr)
     , m_lockScreenView(nullptr)
@@ -202,9 +204,8 @@ void ShellUi::changeShell(const QString &value)
     setShell(value);
 
     // Load package
-    Hawaii::Shell::Package package =
-            Hawaii::Shell::PluginLoader::instance()->loadPackage(
-                Hawaii::Shell::PluginLoader::ShellPlugin);
+    Package package = PluginLoader::instance()->loadPackage(
+                PluginLoader::ShellPlugin);
     package.setPath(value);
     setPackage(package);
 

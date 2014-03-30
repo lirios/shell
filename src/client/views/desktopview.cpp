@@ -31,14 +31,14 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQml/QQmlContext>
 
+#include <Hawaii/PluginLoader>
 #include <HawaiiShell/Containment>
 #include <HawaiiShell/ContainmentItem>
-#include <HawaiiShell/PluginLoader>
 
 #include "desktopview.h"
 #include "shellmanager.h"
 
-using namespace Hawaii::Shell;
+using namespace Hawaii;
 
 DesktopView::DesktopView(ShellUi *mantle, QScreen *screen)
     : QuickView(mantle, new QWindow(screen))

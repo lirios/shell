@@ -32,18 +32,18 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQml/QQmlContext>
 
+#include <Hawaii/PluginLoader>
 #include <HawaiiShell/Containment>
 #include <HawaiiShell/ContainmentItem>
 #include <HawaiiShell/Element>
 #include <HawaiiShell/ElementItem>
-#include <HawaiiShell/PluginLoader>
 
 #include "panelconfigview.h"
 #include "panelview.h"
 #include "panelsurface.h"
 #include "shellmanager.h"
 
-using namespace Hawaii::Shell;
+using namespace Hawaii;
 
 static PanelSurface::alignment convertAlignment(Qt::Alignment alignment)
 {
@@ -246,7 +246,7 @@ void PanelView::setMinimumLength(int value)
     if (m_maximumLength < value)
         setMaximumLength(value);
 
-    if (formFactor() == Hawaii::Shell::Types::Vertical)
+    if (formFactor() == Hawaii::Types::Vertical)
         setMinimumHeight(value);
     else
         setMinimumWidth(value);
@@ -276,7 +276,7 @@ void PanelView::setMaximumLength(int value)
     if (m_minimumLength > value)
         setMinimumLength(value);
 
-    if (formFactor() == Hawaii::Shell::Types::Vertical)
+    if (formFactor() == Hawaii::Types::Vertical)
         setMaximumHeight(value);
     else
         setMaximumWidth(value);
@@ -377,16 +377,16 @@ void PanelView::dockPanel()
 
     PanelSurface::edge edge;
     switch (location()) {
-    case Hawaii::Shell::Types::LeftEdge:
+    case Hawaii::Types::LeftEdge:
         edge = PanelSurface::edge_left;
         break;
-    case Hawaii::Shell::Types::TopEdge:
+    case Hawaii::Types::TopEdge:
         edge = PanelSurface::edge_top;
         break;
-    case Hawaii::Shell::Types::RightEdge:
+    case Hawaii::Types::RightEdge:
         edge = PanelSurface::edge_right;
         break;
-    case Hawaii::Shell::Types::BottomEdge:
+    case Hawaii::Types::BottomEdge:
         edge = PanelSurface::edge_bottom;
         break;
     default:

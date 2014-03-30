@@ -42,7 +42,7 @@ class PanelConfigView;
 class PanelSurface;
 class ShellUi;
 
-class PanelView : public Hawaii::Shell::QuickView
+class PanelView : public Hawaii::QuickView
 {
     Q_OBJECT
     Q_PROPERTY(bool maximized READ isMaximized WRITE setMaximized NOTIFY maximizedChanged)

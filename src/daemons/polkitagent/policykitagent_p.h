@@ -33,7 +33,7 @@
 
 #include <QtConfiguration/QStaticConfiguration>
 
-#include <HawaiiShell/Package>
+#include <Hawaii/Package>
 #include <HawaiiShell/QmlObject>
 
 class PolicyKitAgent;
@@ -54,10 +54,10 @@ public:
 
     QStaticConfiguration *settings;
 
-    Hawaii::Shell::Package package;
+    Hawaii::Package package;
     QString lookAndFeelId;
 
-    Hawaii::Shell::QmlObject *qmlObject;
+    Hawaii::QmlObject *qmlObject;
     QObject *dialog;
 
     bool progressing;

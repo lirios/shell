@@ -54,9 +54,9 @@ PanelConfigView::PanelConfigView(PanelView *parent)
             this, &PanelConfigView::setupGeometry);
 
     // Change geometry when the containment changes its form factor or location
-    connect(parent->containment(), &Hawaii::Shell::Containment::formFactorChanged,
+    connect(parent->containment(), &Hawaii::Containment::formFactorChanged,
             this, &PanelConfigView::setupGeometry);
-    connect(parent->containment(), &Hawaii::Shell::Containment::locationChanged,
+    connect(parent->containment(), &Hawaii::Containment::locationChanged,
             this, &PanelConfigView::setupGeometry);
 
     // Set context properties
@@ -110,10 +110,10 @@ void PanelConfigView::setupGeometry()
 
     // Resize according to the form factor
     switch (m_panelView->containment()->formFactor()) {
-    case Hawaii::Shell::Types::Horizontal:
+    case Hawaii::Types::Horizontal:
         resize(screen()->size().width(), rootObject()->implicitHeight());
         break;
-    case Hawaii::Shell::Types::Vertical:
+    case Hawaii::Types::Vertical:
         resize(rootObject()->implicitWidth(), screen()->size().height());
         break;
     default:
@@ -124,19 +124,19 @@ void PanelConfigView::setupGeometry()
     // we don't need to take the available geometry into
     // account here because we can have only one panel for each edge
     switch (m_panelView->containment()->location()) {
-    case Hawaii::Shell::Types::LeftEdge:
+    case Hawaii::Types::LeftEdge:
         setPosition(screen()->availableGeometry().left() + m_panelView->thickness(),
                     screen()->availableGeometry().top());
         break;
-    case Hawaii::Shell::Types::TopEdge:
+    case Hawaii::Types::TopEdge:
         setPosition(screen()->availableGeometry().left(),
                     screen()->availableGeometry().top() + m_panelView->thickness());
         break;
-    case Hawaii::Shell::Types::RightEdge:
+    case Hawaii::Types::RightEdge:
         setPosition(screen()->availableGeometry().right() - width() - m_panelView->thickness(),
                     screen()->availableGeometry().top());
         break;
-    case Hawaii::Shell::Types::BottomEdge:
+    case Hawaii::Types::BottomEdge:
         setPosition(screen()->availableGeometry().left(),
                     screen()->availableGeometry().bottom() - height() - m_panelView->thickness());
         break;

@@ -4,13 +4,10 @@ find_package(ALSA)
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${QtConfiguration_INCLUDE_DIRS}
+    ${HawaiiShell_INCLUDE_DIRS}
     ${WaylandClient_INCLUDE_DIRS}
     ${ALSA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/libhawaiishell
-    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/applications
-    ${CMAKE_SOURCE_DIR}/src/libhawaiishell/includes
-    ${CMAKE_BINARY_DIR}/src/libhawaiishell
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_CURRENT_SOURCE_DIR}/views
@@ -80,7 +77,7 @@ set_target_properties(hawaii-shell-client PROPERTIES
 target_link_libraries(hawaii-shell-client
     ${WaylandClient_LIBRARIES}
     ${ALSA_LIBRARIES}
-    HF1HawaiiShell
+    ${HawaiiShell_LIBRARIES}
 )
 
 # Git revision

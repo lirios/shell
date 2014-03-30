@@ -108,19 +108,19 @@ void PopupQuickWindow::setWindowType()
     // Calculate position according to view location
     QWindow *parentWindow = m_popupSurface->parentWindow();
     if (parentWindow) {
-        Hawaii::Shell::QuickView *view = qobject_cast<Hawaii::Shell::QuickView *>(parentWindow);
+        Hawaii::QuickView *view = qobject_cast<Hawaii::QuickView *>(parentWindow);
         if (view) {
             switch (view->location()) {
-            case Hawaii::Shell::Types::LeftEdge:
+            case Hawaii::Types::LeftEdge:
                 pos += QPointF(view->width(), 0);
                 break;
-            case Hawaii::Shell::Types::TopEdge:
+            case Hawaii::Types::TopEdge:
                 pos += QPointF(0, view->height());
                 break;
-            case Hawaii::Shell::Types::RightEdge:
+            case Hawaii::Types::RightEdge:
                 pos -= QPointF(width(), 0);
                 break;
-            case Hawaii::Shell::Types::BottomEdge:
+            case Hawaii::Types::BottomEdge:
                 pos -= QPointF(0, height());
                 break;
             default:

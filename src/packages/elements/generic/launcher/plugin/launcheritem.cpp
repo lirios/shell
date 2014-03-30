@@ -29,7 +29,7 @@
 #include "launcheritem.h"
 #include "launcheritem_p.h"
 
-using namespace Hawaii::Shell;
+using namespace Hawaii;
 
 /*
  * LauncherItemPrivate

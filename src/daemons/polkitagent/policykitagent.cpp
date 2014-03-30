@@ -34,7 +34,7 @@
 #include <QtAccountsService/AccountsManager>
 #include <QtAccountsService/UserAccount>
 
-#include <HawaiiShell/PluginLoader>
+#include <Hawaii/PluginLoader>
 
 #include "config.h"
 #include "policykitagent.h"
@@ -52,7 +52,7 @@ Q_GLOBAL_STATIC(PolicyKitAgent, s_agent)
 
 QT_USE_NAMESPACE_ACCOUNTSSERVICE
 
-using namespace Hawaii::Shell;
+using namespace Hawaii;
 
 /*
  * PolicyKitAgentPrivate

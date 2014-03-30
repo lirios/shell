@@ -27,7 +27,7 @@
 #ifndef LAUNCHERITEM_P_H
 #define LAUNCHERITEM_P_H
 
-#include <HawaiiShell/AppInfo>
+#include <Hawaii/AppInfo>
 
 #include "launcheritem.h"
 
@@ -49,7 +49,7 @@ public:
     ~LauncherItemPrivate();
 
     LauncherItem::Type type;
-    Hawaii::Shell::AppInfo *appInfo;
+    Hawaii::AppInfo *appInfo;
     QUrl url;
     bool isActive;
     bool isRunning;

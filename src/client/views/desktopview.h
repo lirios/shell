@@ -32,7 +32,7 @@
 class QScreen;
 class ShellUi;
 
-class DesktopView : public Hawaii::Shell::QuickView
+class DesktopView : public Hawaii::QuickView
 {
     Q_OBJECT
 public:

@@ -40,7 +40,7 @@ class GrabWindow;
 class LockScreenView;
 class PanelView;
 
-class ShellUi : public Hawaii::Shell::Mantle
+class ShellUi : public Hawaii::Mantle
 {
     Q_OBJECT
 public:
@@ -81,7 +81,7 @@ private:
     QList<BackgroundView *> m_backgroundViews;
     QList<DesktopView *> m_desktopViews;
     QList<PanelView *> m_panelViews;
-    Hawaii::Shell::Package m_package;
+    Hawaii::Package m_package;
     QString m_lookAndFeel;
 
     void synchronize();

@@ -44,17 +44,8 @@ set(CPACK_SOURCE_IGNORE_FILES "/build/;/.git;/*.user;/.tx/;~$;${CPACK_SOURCE_IGN
 include(CPack)
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
-# Macros for package config
-include(CMakePackageConfigHelpers)
-
-# Macro to generate export header for libraries
-include(GenerateExportHeader)
-
 # Build flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wno-unused-parameter -std=c++0x")
-
-# Enable deprecated code
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 # Assume release build by default
 if(NOT CMAKE_BUILD_TYPE)
@@ -68,9 +59,6 @@ set(ADDITIONAL_LDLIBPATH "" CACHE STRING "Additional library path that starthawa
 # Same for PATH
 set(ADDITIONAL_PATH "" CACHE STRING "Additional path that starthawaii will use")
 
-# Include our macros
-include(${CMAKE_SOURCE_DIR}/src/libhawaiishell/HF1HawaiiShellMacros.cmake)
-
 # Find Qt5
 find_package(Qt5 5.2 REQUIRED COMPONENTS DBus Qml Quick)
 include(QtWayland)
@@ -83,6 +71,10 @@ find_package(QtAccountsService REQUIRED)
 
 # Find GreenIsland
 find_package(GreenIsland REQUIRED)
+
+# Find libhawaii and libhawaiishell
+find_package(Hawaii REQUIRED)
+find_package(HawaiiShell REQUIRED)
 
 # Find pkg-config
 find_package(PkgConfig "0.22" REQUIRED)

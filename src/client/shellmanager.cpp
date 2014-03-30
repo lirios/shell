@@ -32,7 +32,7 @@
 #include <QtQml/QQmlEngine>
 #include <QtQuick/QQuickWindow>
 
-#include <HawaiiShell/PluginMetadata>
+#include <Hawaii/PluginMetadata>
 
 #include "cmakedirs.h"
 #include "keybinding.h"
@@ -139,7 +139,7 @@ void ShellManager::loadHandlers()
         const QString &qmlFileName = shellsDir.absoluteFilePath(dirName + QStringLiteral("/contents/loader.qml"));
 
         // Try to load plugin metadata, return if it's not valid
-        Hawaii::Shell::PluginMetadata metadata(metadataFileName);
+        Hawaii::PluginMetadata metadata(metadataFileName);
         if (!metadata.isValid())
             continue;
 
