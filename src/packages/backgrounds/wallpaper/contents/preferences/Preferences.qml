@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.1
+import QtQuick.Window 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import Fluid.Core 1.0 as FluidCore
@@ -34,7 +35,7 @@ import Hawaii.Configuration 1.0
 Item {
     property int columns: 6
     property int cellPadding: 5
-    property real aspectRatio: root.width / root.height
+    property real aspectRatio: Screen.width / Screen.height
 
     id: root
     width: 640
