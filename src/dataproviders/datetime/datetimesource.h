@@ -6,46 +6,37 @@
  * Author(s):
  *    Pier Luigi Fiorini
  *
- * $BEGIN_LICENSE:GPL2+$
+ * $BEGIN_LICENSE:LGPL2.1+$
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2.1 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef DATETIME_H
-#define DATETIME_H
+#ifndef DATETIMESOURCE_H
+#define DATETIMESOURCE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QDateTime>
+#include <Hawaii/DataSource>
 
-class DateTime : public QObject
+class DateTimeSource : public Hawaii::DataSource
 {
     Q_OBJECT
-    Q_PROPERTY(QDateTime dateTime READ dateTime NOTIFY dateTimeChanged)
 public:
-    DateTime(QObject *parent = 0);
-
-    constexpr static const char *name() { return "DateTime"; }
-
-    QDateTime dateTime() const;
+    DateTimeSource(QObject *parent = 0);
 
 protected:
-    void timerEvent(QTimerEvent *event);
-
-Q_SIGNALS:
-    void dateTimeChanged();
+    void checkForUpdate();
 };
 
-#endif // DATETIME_H
+#endif // DATETIMESOURCE_H

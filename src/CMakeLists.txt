@@ -1,6 +1,7 @@
 add_subdirectory(client)
 add_subdirectory(compositor)
 add_subdirectory(daemons)
+add_subdirectory(dataproviders)
 add_subdirectory(declarative)
 add_subdirectory(packages)
 add_subdirectory(platformthemes)

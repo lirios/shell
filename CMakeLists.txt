@@ -20,6 +20,10 @@ include(GNUInstallDirs)
 # Define additional paths
 set(CMAKE_INSTALL_STYLESDIR "${CMAKE_INSTALL_DATADIR}/hawaii/styles")
 set(CMAKE_INSTALL_FULL_STYLESDIR "${CMAKE_INSTALL_FULL_DATADIR}/hawaii/styles")
+set(CMAKE_INSTALL_PLUGINSDIR "${CMAKE_INSTALL_LIBDIR}/hawaii/plugins")
+set(CMAKE_INSTALL_FULL_PLUGINSDIR "${CMAKE_INSTALL_FULL_LIBDIR}/hawaii/plugins")
+set(CMAKE_INSTALL_DATAPROVIDERSDIR "${CMAKE_INSTALL_PLUGINSDIR}/dataproviders")
+set(CMAKE_INSTALL_FULL_DATAPROVIDERSDIR "${CMAKE_INSTALL_FULL_PLUGINSDIR}/dataproviders")
 
 # Macro to print feature summary
 include(FeatureSummary)

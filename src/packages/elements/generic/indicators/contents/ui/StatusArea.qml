@@ -52,7 +52,6 @@ Item {
         readonly property int margin: 8
         readonly property int iconSize: 16
 
-        property var dateTime: Shell.service("DateTime")
         property list<Item> indicators: [
             VolumeIndicator {},
             DateTimeIndicator {}
@@ -81,17 +80,19 @@ Item {
                 font.bold: true
                 font.pixelSize: __priv.iconSize * 0.7
                 color: mouseArea.hover ? "white" : "#cdcdcd"
+                text: qsTr("n.a.")
 
                 Behavior on color {
                     ColorAnimation { easing.type: Easing.Linear; duration: 250 }
                 }
+            }
 
-                Connections {
-                    target: __priv.dateTime
-                    onDateTimeChanged: {
-                        var format = listView.orientation == ListView.Horizontal ? "HH:mm" : "HH<br>mm";
-                        timeLabel.text = Qt.formatTime(__priv.dateTime.dateTime, format);
-                    }
+            DataProvider {
+                provider: "org.hawaii.dataproviders.datetime"
+                connectedSources: ["Local"]
+                onDataChanged: {
+                    var format = listView.orientation == ListView.Horizontal ? "HH:mm" : "HH<br>mm";
+                    timeLabel.text = Qt.formatTime(data["Local"].time, format);
                 }
             }
         }

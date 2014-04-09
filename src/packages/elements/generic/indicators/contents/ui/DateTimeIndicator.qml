@@ -26,23 +26,23 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import Hawaii.Shell.Core 1.0
 
 Indicator {
     iconVisible: false
     resources: [
-        QtObject {
-            id: __priv
-
-            property var dateTime: Shell.service("DateTime")
-        },
-        Connections {
-            target: __priv.dateTime
-            onDateTimeChanged: label.text = Qt.formatDate(__priv.dateTime.dateTime, Qt.DefaultLocaleLongDate)
+        DataProvider {
+            provider: "org.hawaii.dataproviders.datetime"
+            connectedSources: ["Local"]
+            onDataChanged: {
+                label.text = Qt.formatDate(data["Local"].date, Qt.DefaultLocaleLongDate);
+            }
         }
     ]
 
     Label {
         id: label
         anchors.verticalCenter: parent.verticalCenter
+        text: qsTr("n.a.")
     }
 }

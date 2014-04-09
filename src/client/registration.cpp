@@ -28,7 +28,6 @@
 
 #include <HawaiiShell/HawaiiShell>
 
-#include "datetime.h"
 #include "enums.h"
 #include "registration.h"
 #include "keybinding.h"
@@ -72,7 +71,6 @@ void Registration::registerFactories()
                                              QStringLiteral("Do not create PowerManager"));
 
     // Register service factories
-    ServiceFactory::registerFactory<DateTime>();
     ServiceFactory::registerFactory<PowerManager>();
     ServiceFactory::registerFactory<ProcessLauncher>();
     ServiceFactory::registerFactory<SessionManager>();

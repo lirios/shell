@@ -14,7 +14,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/windowtypes
     ${CMAKE_CURRENT_SOURCE_DIR}/scripting
     ${CMAKE_CURRENT_SOURCE_DIR}/services
-    ${CMAKE_CURRENT_SOURCE_DIR}/services/datetime
     ${CMAKE_CURRENT_SOURCE_DIR}/services/powermanager
     ${CMAKE_CURRENT_SOURCE_DIR}/services/processlauncher
     ${CMAKE_CURRENT_SOURCE_DIR}/services/volumecontrol
@@ -40,7 +39,6 @@ set(SOURCES
     scripting/panelinterface.cpp
     scripting/scriptengine.cpp
     services/servicefactory.cpp
-    services/datetime/datetime.cpp
     services/powermanager/powermanagerbackend.cpp
     services/powermanager/powermanager.cpp
     services/powermanager/systemdpowerbackend.cpp
