@@ -27,19 +27,16 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Hawaii.Shell.Core 1.0
 
 Indicator {
     id: volumeIndicator
     resources: [
-        QtObject {
-            id: __priv
-
-            property var volumeControl: Shell.service("VolumeControl")
-        },
-        Connections {
-            target: __priv.volumeControl
-            onMuteChanged: setup()
-            onVolumeChanged: setup()
+        DataProvider {
+            id: volumeControl
+            provider: "org.hawaii.dataproviders.mixer"
+            connectedSources: ["Master"]
+            onDataChanged: setup(data)
         }
     ]
 
@@ -48,26 +45,21 @@ Indicator {
         anchors.fill: parent
         minimumValue: 0
         maximumValue: 100
-        onValueChanged: __priv.volumeControl.volume = value
+        onValueChanged: volumeControl.setVolume(value)
     }
 
-    function setup() {
-        if (__priv.volumeControl.volume === 0 || __priv.volumeControl.mute) {
+    function setup(data) {
+        if (data["Master"].volume === 0 || data["Master"].mute) {
             volumeIndicator.iconName = "audio-volume-muted-symbolic";
             return;
         }
 
-        var n = Math.floor(3 * __priv.volumeControl.volume / 100) + 1;
+        var n = Math.floor(3 * data["Volume"] / 100) + 1;
         if (n < 2)
             volumeIndicator.iconName = "audio-volume-low-symbolic";
         else if (n >= 3)
             volumeIndicator.iconName = "audio-volume-high-symbolic"
         else
             volumeIndicator.iconName = "audio-volume-medium-symbolic";
-    }
-
-    Component.onCompleted: {
-        slider.value = __priv.volumeControl.volume;
-        setup();
     }
 }

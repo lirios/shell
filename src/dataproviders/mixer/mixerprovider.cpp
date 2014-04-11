@@ -24,41 +24,31 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef VOLUMECONTROL_H
-#define VOLUMECONTROL_H
+#include "mixerprovider.h"
+#include "mixersource.h"
 
-#include <QtCore/QObject>
-
-class VolumeControlPrivate;
-
-class VolumeControl : public QObject
+MixerProvider::MixerProvider(QObject *parent)
+    : Hawaii::DataProvider(parent)
 {
-    Q_OBJECT
-    Q_PROPERTY(bool muted READ isMute WRITE setMute NOTIFY muteChanged)
-    Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged)
-    Q_DECLARE_PRIVATE(VolumeControl)
-public:
-    VolumeControl(QObject *parent = 0);
-    ~VolumeControl();
+    // Update date and time information every 500ms
+    setPollingInterval(500);
 
-    constexpr static const char *name() { return "VolumeControl"; }
+    // Add master source
+    addSource(new MixerSource(this));
+}
 
-    bool isMute() const;
-    void setMute(bool value);
+void MixerProvider::setMute(bool value)
+{
+    MixerSource *mixer = qobject_cast<MixerSource *>(source("Master"));
+    if (mixer)
+        mixer->setMute(value);
+}
 
-    int volume() const;
-    void setVolume(int value);
+void MixerProvider::setVolume(int value)
+{
+    MixerSource *mixer = qobject_cast<MixerSource *>(source("Master"));
+    if (mixer)
+        mixer->setVolume(value);
+}
 
-Q_SIGNALS:
-    void muteChanged(bool value);
-    void volumeChanged(int value);
-
-private:
-    Q_PRIVATE_SLOT(d_func(), void _q_upTriggered())
-    Q_PRIVATE_SLOT(d_func(), void _q_downTriggered())
-    Q_PRIVATE_SLOT(d_func(), void _q_muteTriggered())
-
-    VolumeControlPrivate *const d_ptr;
-};
-
-#endif // VOLUMECONTROL_H
+#include "moc_mixerprovider.cpp"

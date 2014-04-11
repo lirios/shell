@@ -1,6 +1,3 @@
-# Find ALSA
-find_package(ALSA)
-
 include_directories(
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${QtConfiguration_INCLUDE_DIRS}
@@ -16,7 +13,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/services
     ${CMAKE_CURRENT_SOURCE_DIR}/services/powermanager
     ${CMAKE_CURRENT_SOURCE_DIR}/services/processlauncher
-    ${CMAKE_CURRENT_SOURCE_DIR}/services/volumecontrol
     ${CMAKE_CURRENT_SOURCE_DIR}/services/sessionmanager
     ${CMAKE_CURRENT_SOURCE_DIR}/wayland
 )
@@ -44,7 +40,6 @@ set(SOURCES
     services/powermanager/systemdpowerbackend.cpp
     services/powermanager/upowerpowerbackend.cpp
     services/processlauncher/processlauncher.cpp
-    services/volumecontrol/volumecontrol.cpp
     services/sessionmanager/sessionmanager.cpp
     views/backgroundview.cpp
     views/configview.cpp

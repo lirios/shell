@@ -24,40 +24,22 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef VOLUMECONTROL_P_H
-#define VOLUMECONTROL_P_H
+#ifndef MIXERPROVIDER_H
+#define MIXERPROVIDER_H
 
-#include "volumecontrol.h"
+#include <Hawaii/DataProvider>
 
-#include <alsa/asoundlib.h>
-
-class KeyBinding;
-
-class VolumeControlPrivate
+class MixerProvider : public Hawaii::DataProvider
 {
-    Q_DECLARE_PUBLIC(VolumeControl)
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.hawaii.dataproviders.mixer" FILE "mixer.json")
+    Q_INTERFACES(Hawaii::DataProvider)
 public:
-    VolumeControlPrivate();
+    MixerProvider(QObject *parent = 0);
 
-    VolumeControl *q_ptr;
-
-    snd_mixer_t *mixer;
-    snd_mixer_selem_id_t *selemId;
-    snd_mixer_elem_t *selem;
-    long min, max;
-
-    KeyBinding *upBinding;
-    KeyBinding *downBinding;
-    KeyBinding *muteBinding;
-
-    void initialize();
-
-    long rawVolume() const;
-    void setRawVolume(long value);
-
-    void _q_upTriggered();
-    void _q_downTriggered();
-    void _q_muteTriggered();
+public Q_SLOTS:
+    void setMute(bool value);
+    void setVolume(int value);
 };
 
-#endif // VOLUMECONTROL_P_H
+#endif // MIXERPROVIDER_H

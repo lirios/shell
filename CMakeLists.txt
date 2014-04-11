@@ -101,6 +101,9 @@ set(HAVE_SYSTEMD ${systemd_FOUND})
 # Find polkit-qt-1
 find_package(PolkitQt5-1)
 
+# Find ALSA
+find_package(ALSA)
+
 # Subdirectories
 add_subdirectory(data)
 add_subdirectory(headers)

@@ -37,7 +37,6 @@
 #include "servicefactory.h"
 #include "sessionmanager.h"
 #include "shortcut.h"
-#include "volumecontrol.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -74,5 +73,4 @@ void Registration::registerFactories()
     ServiceFactory::registerFactory<PowerManager>();
     ServiceFactory::registerFactory<ProcessLauncher>();
     ServiceFactory::registerFactory<SessionManager>();
-    ServiceFactory::registerFactory<VolumeControl>();
 }

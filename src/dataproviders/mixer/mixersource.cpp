@@ -24,21 +24,42 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
-#include <QtCore/QtMath>
-#include <linux/input.h>
+#include <QtCore/QVariant>
 
-#include "volumecontrol.h"
-#include "volumecontrol_p.h"
-#include "keybinding.h"
-#include "servicefactory.h"
-#include "shellmanager.h"
+#include "mixersource.h"
+
+#include <alsa/asoundlib.h>
 
 /*
- * VolumeControlPrivate
+ * MixerSourcePrivate
  */
 
-VolumeControlPrivate::VolumeControlPrivate()
+class MixerSourcePrivate
+{
+public:
+    MixerSourcePrivate();
+
+    void initialize();
+
+    long rawVolume() const;
+    void setRawVolume(long value);
+
+    int volume() const;
+    void setVolume(int value);
+
+    void increaseVolume();
+    void decreaseVolume();
+
+    bool isMute() const;
+    void setMute(bool value);
+
+    snd_mixer_t *mixer;
+    snd_mixer_selem_id_t *selemId;
+    snd_mixer_elem_t *selem;
+    long min, max;
+};
+
+MixerSourcePrivate::MixerSourcePrivate()
     : mixer(0)
     , selemId(0)
     , selem(0)
@@ -47,14 +68,9 @@ VolumeControlPrivate::VolumeControlPrivate()
 {
     // Initialize
     initialize();
-
-    // Bind volume keys
-    upBinding = ShellManager::instance()->controller()->addKeyBinding(KEY_VOLUMEUP, 0);
-    downBinding = ShellManager::instance()->controller()->addKeyBinding(KEY_VOLUMEDOWN, 0);
-    muteBinding = ShellManager::instance()->controller()->addKeyBinding(KEY_MUTE, 0);
 }
 
-void VolumeControlPrivate::initialize()
+void MixerSourcePrivate::initialize()
 {
     do {
         // Open mixer
@@ -81,7 +97,7 @@ void VolumeControlPrivate::initialize()
     selem = 0;
 }
 
-long VolumeControlPrivate::rawVolume() const
+long MixerSourcePrivate::rawVolume() const
 {
     if (!selem)
         return 0;
@@ -91,7 +107,7 @@ long VolumeControlPrivate::rawVolume() const
     return vol;
 }
 
-void VolumeControlPrivate::setRawVolume(long value)
+void MixerSourcePrivate::setRawVolume(long value)
 {
     if (!selem)
         return;
@@ -106,90 +122,83 @@ void VolumeControlPrivate::setRawVolume(long value)
     snd_mixer_selem_set_playback_volume(selem, SND_MIXER_SCHN_FRONT_RIGHT, value);
 }
 
-void VolumeControlPrivate::_q_upTriggered()
+int MixerSourcePrivate::volume() const
 {
-    Q_Q(VolumeControl);
-
-    q->setVolume(q->volume() + 5);
+    long vol = rawVolume();
+    int v = 100.f * vol / max;
+    return v;
 }
 
-void VolumeControlPrivate::_q_downTriggered()
+void MixerSourcePrivate::setVolume(int value)
 {
-    Q_Q(VolumeControl);
-
-    q->setVolume(q->volume() - 5);
+    long vol = value * max / 100;
+    setRawVolume(vol);
 }
 
-void VolumeControlPrivate::_q_muteTriggered()
+void MixerSourcePrivate::increaseVolume()
 {
-    Q_Q(VolumeControl);
+    setVolume(volume() + 5);
+}
 
-    q->setMute(!q->isMute());
+void MixerSourcePrivate::decreaseVolume()
+{
+    setVolume(volume() - 5);
+}
+
+bool MixerSourcePrivate::isMute() const
+{
+    if (!selem)
+        return true;
+
+    int mute = 0;
+    snd_mixer_selem_get_playback_switch(selem, SND_MIXER_SCHN_FRONT_LEFT, &mute);
+    return !mute;
+}
+
+void MixerSourcePrivate::setMute(bool value)
+{
+    if (!selem)
+        return;
+
+    if (isMute() != value)
+        snd_mixer_selem_set_playback_switch_all(selem, !value);
 }
 
 /*
- * VolumeControl
+ * MixerSource
  */
 
-VolumeControl::VolumeControl(QObject *parent)
-    : QObject(parent)
-    , d_ptr(new VolumeControlPrivate())
+MixerSource::MixerSource(QObject *parent)
+    : Hawaii::DataSource(parent)
+    , d_ptr(new MixerSourcePrivate())
 {
-    Q_D(VolumeControl);
-    d->q_ptr = this;
-
-    connect(d->upBinding, SIGNAL(triggered()),
-            this, SLOT(_q_upTriggered()));
-    connect(d->downBinding, SIGNAL(triggered()),
-            this, SLOT(_q_downTriggered()));
-    connect(d->muteBinding, SIGNAL(triggered()),
-            this, SLOT(_q_muteTriggered()));
+    setObjectName("Master");
 }
 
-VolumeControl::~VolumeControl()
+MixerSource::~MixerSource()
 {
     delete d_ptr;
 }
 
-bool VolumeControl::isMute() const
+void MixerSource::setMute(bool value)
 {
-    Q_D(const VolumeControl);
-
-    if (!d->selem)
-        return true;
-
-    int mute = 0;
-    snd_mixer_selem_get_playback_switch(d->selem, SND_MIXER_SCHN_FRONT_LEFT, &mute);
-    return !mute;
+    Q_D(MixerSource);
+    d->setMute(value);
 }
 
-void VolumeControl::setMute(bool value)
+void MixerSource::setVolume(int value)
 {
-    Q_D(VolumeControl);
-
-    if (!d->selem)
-        return;
-
-    if (isMute() != value) {
-        snd_mixer_selem_set_playback_switch_all(d->selem, !value);
-        Q_EMIT muteChanged(value);
-    }
+    Q_D(MixerSource);
+    d->setVolume(value);
 }
 
-int VolumeControl::volume() const
+void MixerSource::checkForUpdate()
 {
-    Q_D(const VolumeControl);
-    long vol = d->rawVolume();
-    int v = 100.f * vol / d->max;
-    return v;
+    Q_D(MixerSource);
+
+    setEntry("mute", d->isMute());
+    setEntry("volume", d->volume());
+    update();
 }
 
-void VolumeControl::setVolume(int value)
-{
-    Q_D(VolumeControl);
-    long vol = value * d->max / 100;
-    d->setRawVolume(vol);
-    Q_EMIT volumeChanged(value);
-}
-
-#include "moc_volumecontrol.cpp"
+#include "moc_mixersource.cpp"
