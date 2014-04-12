@@ -598,7 +598,7 @@ void DesktopShell::recalculateAvailableGeometry()
                 rect.width -= panel->width();
                 break;
             case WL_HAWAII_PANEL_EDGE_TOP:
-                rect.y += panel->y();
+                rect.y += panel->height();
                 rect.height -= panel->height();
                 break;
             case WL_HAWAII_PANEL_EDGE_RIGHT:
