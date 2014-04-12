@@ -64,7 +64,7 @@ PanelConfigView::PanelConfigView(PanelView *parent)
     engine()->rootContext()->setContextProperty("configView", this);
 
     // Load QML code
-    QString path = m_panelView->containment()->mantle()->package().filePath("panelconfigurationview");
+    const QString path = m_panelView->containment()->mantle()->shellPackage().filePath("panelconfigurationview");
     setSource(QUrl::fromLocalFile(path));
 
     // Set surface role

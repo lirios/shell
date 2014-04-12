@@ -89,7 +89,7 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
     containmentItem->initialize();
 
     // Load QML source file
-    setSource(QUrl::fromLocalFile(mantle->package().filePath(
+    setSource(QUrl::fromLocalFile(mantle->shellPackage().filePath(
                                       "views", QStringLiteral("PanelView.qml"))));
 
     // Set containment
@@ -107,7 +107,7 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
     // Setup configuration
     static int panelId = 0;
     const QString section = QString("shell/%1/panels/panel%2")
-            .arg(ShellManager::instance()->shell())
+            .arg(ShellManager::instance()->mantle()->shell())
             .arg(QString::number(panelId++));
     m_configuration = new QConfiguration(this, section, this);
 

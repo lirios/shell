@@ -71,7 +71,7 @@ BackgroundView::BackgroundView(ShellUi *mantle, QScreen *screen)
     });
 
     // Load QML source file
-    setSource(QUrl::fromLocalFile(mantle->package().filePath(
+    setSource(QUrl::fromLocalFile(mantle->shellPackage().filePath(
                                       "views", QStringLiteral("Background.qml"))));
 
     // Load plugin

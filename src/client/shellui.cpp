@@ -118,7 +118,7 @@ void ShellUi::load()
         screenAdded(screen);
 
     // Execute layout script
-    QFile file(package().filePath("defaultlayout"));
+    QFile file(shellPackage().filePath("defaultlayout"));
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QString script = file.readAll();
         file.close();
@@ -148,10 +148,10 @@ void ShellUi::unload()
 void ShellUi::createLockScreen()
 {
     if (!m_lockScreenView) {
-        QDir dir = ShellManager::instance()->lookAndFeelDirectory();
+        QString path = lookAndFeelPackage().filePath("lockscreen");
 
         m_lockScreenView = new LockScreenView(this, QGuiApplication::primaryScreen());
-        m_lockScreenView->setSource(QUrl::fromLocalFile(dir.absoluteFilePath(s_lockScreenViewFileName)));
+        m_lockScreenView->setSource(QUrl::fromLocalFile(path));
     }
     m_lockScreenView->show();
 }
@@ -187,10 +187,10 @@ void ShellUi::setNumWorkspaces(int num)
         controller->removeWorkspace(--m_numWorkspaces);
 }
 
-void ShellUi::changeShell(const QString &value)
+void ShellUi::changeShell(const QString &name)
 {
     // Avoid loading the same shell twice
-    if (shell() == value)
+    if (shell() == name)
         return;
 
     // Keep track of elapsed time
@@ -201,13 +201,13 @@ void ShellUi::changeShell(const QString &value)
     unload();
 
     // Save shell name
-    setShell(value);
+    setShell(name);
 
     // Load package
     Package package = PluginLoader::instance()->loadPackage(
                 PluginLoader::ShellPlugin);
-    package.setPath(value);
-    setPackage(package);
+    package.setPath(name);
+    setShellPackage(package);
 
     // Load the new one
     load();
@@ -216,19 +216,25 @@ void ShellUi::changeShell(const QString &value)
     qDebug() << "Shell handler" << shell() << "loaded in" << elapsed.elapsed() << "ms";
 }
 
-void ShellUi::setLookAndFeel(const QString &lookAndFeel)
+void ShellUi::changeLookAndFeel(const QString &name)
 {
     // Avoid loading the same look and feel package twice
-    if (m_lookAndFeel == lookAndFeel)
+    if (lookAndFeel() == name)
         return;
 
-    // Save look and feel
-    m_lookAndFeel = lookAndFeel;
+    // Save look and feel name
+    setLookAndFeel(name);
+
+    // Load package
+    Package package = PluginLoader::instance()->loadPackage(
+                PluginLoader::LookAndFeelPlugin);
+    package.setPath(name);
+    setLookAndFeelPackage(package);
 
     // Change user interface
     if (m_lockScreenView) {
-        QDir dir = ShellManager::instance()->lookAndFeelDirectory();
-        m_lockScreenView->setSource(QUrl::fromLocalFile(dir.absoluteFilePath(s_lockScreenViewFileName)));
+        const QString path = package.filePath("lockscreen");
+        m_lockScreenView->setSource(QUrl::fromLocalFile(path));
     }
 }
 
@@ -272,7 +278,6 @@ void ShellUi::screenAdded(QScreen *screen)
     // Load desktop QML code and show
     if (!desktop)
         desktop = new DesktopView(this, screen);
-    desktop->setSource(QUrl::fromLocalFile(package().filePath("views", QStringLiteral("DesktopView.qml"))));
     if (!desktopPreviouslyAdded) {
         desktop->show();
         m_desktopViews.append(desktop);

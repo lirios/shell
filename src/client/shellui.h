@@ -70,8 +70,8 @@ public Q_SLOTS:
 
     void setNumWorkspaces(int num);
 
-    void changeShell(const QString &value);
-    void setLookAndFeel(const QString &lookAndFeel);
+    void changeShell(const QString &name);
+    void changeLookAndFeel(const QString &name);
 
 private:
     ScriptEngine *m_jsEngine;
@@ -81,8 +81,6 @@ private:
     QList<BackgroundView *> m_backgroundViews;
     QList<DesktopView *> m_desktopViews;
     QList<PanelView *> m_panelViews;
-    Hawaii::Package m_package;
-    QString m_lookAndFeel;
 
     void synchronize();
 

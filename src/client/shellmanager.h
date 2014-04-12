@@ -46,8 +46,6 @@ class QQmlEngine;
 class ShellManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString shell READ shell NOTIFY shellChanged)
-    Q_PROPERTY(QString lookAndFeel READ lookAndFeel NOTIFY lookAndFeelChanged)
 public:
     ShellManager();
     virtual ~ShellManager();
@@ -61,13 +59,7 @@ public:
     ShellSurfaceClient *shellSurfaceInterface() const;
     QtWayland::wl_hawaii_panel_manager *panelManagerInterface() const;
 
-    QString shell() const;
-
-    QString lookAndFeel() const;
-    QDir lookAndFeelDirectory() const;
-
     void loadHandlers();
-    void loadLookAndFeel();
 
 public Q_SLOTS:
     void create();
@@ -75,7 +67,6 @@ public Q_SLOTS:
 Q_SIGNALS:
     void ready();
     void shellChanged(const QString &shell);
-    void lookAndFeelChanged(const QString &lookAndFeel);
 
 private:
     QElapsedTimer m_elapsedTimer;
@@ -86,7 +77,6 @@ private:
     ShellUi *m_shellUi;
     QHash<QString, QObject *> m_handlers;
     QObject *m_currentHandler;
-    QDir m_lookAndFeelDir;
 
 private Q_SLOTS:
     void registerHandler(const QString &name, QObject *handler);
