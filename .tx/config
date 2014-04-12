@@ -43,6 +43,12 @@ source_lang = en
 source_file = data/packages/elements/launcher.desktop
 file_filter = translations/packages/elements/launcher_<lang>.desktop
 
+[hawaii.shell-elements-spacer-metadata]
+type = DESKTOP
+source_lang = en
+source_file = data/packages/elements/spacer.desktop
+file_filter = translations/packages/elements/spacer_<lang>.desktop
+
 [hawaii.shell-shells-desktop-metadata]
 type = DESKTOP
 source_lang = en
