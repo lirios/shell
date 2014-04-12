@@ -25,6 +25,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
+import Hawaii.Shell.Applications 1.0
 
 Item {
     property Item containment
@@ -35,6 +38,51 @@ Item {
         containment.anchors.top = desktopView.top;
         containment.anchors.right = desktopView.right;
         containment.anchors.bottom = desktopView.bottom;
-        containment.visible = true;
+        containment.visible = false;
     }
+
+    readonly property int itemSize: 192
+    readonly property int numRows: 5
+    readonly property int numColumns: 3
+
+    ColumnLayout {
+        TextField {
+            placeholderText: qsTr("Search")
+
+            Layout.minimumWidth: 250
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        GridView {
+            id: grid
+            cacheBuffer: 100
+            cellWidth: itemSize
+            cellHeight: itemSize
+            width: itemSize * numRows
+            height: itemSize * numColumns
+            clip: true
+            snapMode: GridView.SnapOneRow
+            flow: GridView.TopToBottom
+            preferredHighlightBegin: 0
+            preferredHighlightEnd: 0
+            highlightRangeMode: GridView.StrictlyEnforceRange
+            highlightFollowsCurrentItem: true
+            model: VisualDataModel {
+                id: visualModel
+                model: ApplicationsModel {
+                    id: appsModel
+                }
+                delegate: IconDelegate {
+                    icon: "image://appicon/" + iconName
+                    label: name
+                    onClicked: {
+                        // Launch the application
+                        appsModel.launch(VisualDataModel.itemsIndex);
+                    }
+                }
+            }
+        }
+    }
+
+    Component.onCompleted: appsModel.populate()
 }
