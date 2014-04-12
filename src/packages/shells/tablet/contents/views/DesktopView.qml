@@ -42,10 +42,12 @@ Item {
     }
 
     readonly property int itemSize: 192
-    readonly property int numRows: 5
-    readonly property int numColumns: 3
 
     ColumnLayout {
+        anchors.fill: parent
+        anchors.topMargin: 10
+        anchors.bottomMargin: 10
+
         TextField {
             placeholderText: qsTr("Search")
 
@@ -53,34 +55,31 @@ Item {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        GridView {
-            id: grid
-            cacheBuffer: 100
-            cellWidth: itemSize
-            cellHeight: itemSize
-            width: itemSize * numRows
-            height: itemSize * numColumns
-            clip: true
-            snapMode: GridView.SnapOneRow
-            flow: GridView.TopToBottom
-            preferredHighlightBegin: 0
-            preferredHighlightEnd: 0
-            highlightRangeMode: GridView.StrictlyEnforceRange
-            highlightFollowsCurrentItem: true
-            model: VisualDataModel {
-                id: visualModel
-                model: ApplicationsModel {
-                    id: appsModel
-                }
-                delegate: IconDelegate {
-                    icon: "image://appicon/" + iconName
-                    label: name
-                    onClicked: {
-                        // Launch the application
-                        appsModel.launch(VisualDataModel.itemsIndex);
+        ScrollView {
+            GridView {
+                id: grid
+                cacheBuffer: 100
+                cellWidth: itemSize
+                cellHeight: itemSize
+                interactive: true
+                model: VisualDataModel {
+                    id: visualModel
+                    model: ApplicationsModel {
+                        id: appsModel
+                    }
+                    delegate: IconDelegate {
+                        icon: "image://appicon/" + iconName
+                        label: name
+                        onClicked: {
+                            // Launch the application
+                            appsModel.launch(VisualDataModel.itemsIndex);
+                        }
                     }
                 }
             }
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 

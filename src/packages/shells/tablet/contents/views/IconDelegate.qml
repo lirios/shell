@@ -53,8 +53,11 @@ MouseArea {
             id: labelItem
             horizontalAlignment: Qt.AlignHCenter
             verticalAlignment: Qt.AlignTop
+            color: "white"
             wrapMode: Text.Wrap
             elide: Text.ElideRight
+            style: Text.Raised
+            styleColor: "#80000000"
 
             Layout.fillWidth: true
             Layout.fillHeight: true
