@@ -29,10 +29,14 @@ for (var i = 0; i < screenCount; i++) {
     topPanel.location = "top";
     topPanel.thickness = 24;
     topPanel.immutable = true;
+    topPanel.addElement("org.hawaii.elements.spacer");
     topPanel.addElement("org.hawaii.elements.indicators");
+    topPanel.addElement("org.hawaii.elements.spacer");
 
     var bottomPanel = new Panel(i);
     bottomPanel.location = "bottom";
     bottomPanel.immutable = true;
+    bottomPanel.addElement("org.hawaii.elements.spacer");
     bottomPanel.addElement("org.hawaii.elements.launcher");
+    bottomPanel.addElement("org.hawaii.elements.spacer");
 }
