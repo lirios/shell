@@ -154,8 +154,6 @@ void ShellManager::create()
     m_shellController = new ShellController(this);
 
     // Setup shell mantle
-    m_shellUi->engine()->rootContext()->setContextProperty("Shell", m_shellController);
-    m_shellUi->engine()->rootContext()->setContextProperty("Ui", m_shellUi);
     connect(m_registryListener->shell, &ShellClient::prepareLockSurface,
             m_shellUi, &ShellUi::createLockScreen);
     connect(m_registryListener->shell, &ShellClient::cursorChanged,
