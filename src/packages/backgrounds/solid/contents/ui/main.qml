@@ -30,6 +30,7 @@ import Hawaii.Configuration 1.0
 
 FluidUi.NoiseBackground {
     id: background
+    color: settings.color
 
     Behavior on color {
         ColorAnimation {
@@ -43,14 +44,5 @@ FluidUi.NoiseBackground {
         category: "shell/backgrounds/org.hawaii.backgrounds.solid"
 
         property color color: "#336699"
-
-        function applyChanges() {
-            background.color = settings.color;
-        }
-
-        Component.onCompleted: {
-            applyChanges();
-            settings.onColorChanged.connect(applyChanges);
-        }
     }
 }
