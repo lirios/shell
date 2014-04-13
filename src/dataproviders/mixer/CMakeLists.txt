@@ -14,7 +14,7 @@ add_library(hawaiimixer SHARED ${SOURCES})
 qt5_use_modules(hawaiimixer Core)
 target_link_libraries(hawaiimixer
     ${ALSA_LIBRARIES}
-    Hawaii
+    ${Hawaii_LIBRARIES}
 )
 
 install(TARGETS hawaiimixer LIBRARY

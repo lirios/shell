@@ -11,7 +11,7 @@ set(SOURCES
 
 add_library(hawaiidatetime SHARED ${SOURCES})
 qt5_use_modules(hawaiidatetime Core)
-target_link_libraries(hawaiidatetime Hawaii)
+target_link_libraries(hawaiidatetime ${Hawaii_LIBRARIES})
 
 install(TARGETS hawaiidatetime LIBRARY
     DESTINATION ${CMAKE_INSTALL_DATAPROVIDERSDIR})
