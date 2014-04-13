@@ -138,6 +138,12 @@ void ShellUi::unload()
         m_grabWindow = nullptr;
     }
 
+    // Destroy all desktop views
+    for (DesktopView *view: m_desktopViews) {
+        m_desktopViews.removeOne(view);
+        view->deleteLater();
+    }
+
     // Destroy all panels
     for (PanelView *view: m_panelViews) {
         m_panelViews.removeOne(view);
