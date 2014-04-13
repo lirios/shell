@@ -47,10 +47,17 @@ FluidUi.NoiseBackground {
         property url wallpaperUrl: FluidCore.StandardPaths.locateFile(FluidCore.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png")
         property int fillMode: Image.Stretch
 
-        Component.onCompleted: {
+        function applyChanges() {
             background.color = settings.color;
             image.source = settings.wallpaperUrl;
             image.fillMode = settings.fillMode;
+        }
+
+        Component.onCompleted: {
+            applyChanges();
+            settings.onColorChanged.connect(applyChanges);
+            settings.onWallpaperUrlChanged.connect(applyChanges);
+            settings.onFillModeChanged.connect(applyChanges);
         }
     }
 
