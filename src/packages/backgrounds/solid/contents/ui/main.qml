@@ -44,8 +44,13 @@ FluidUi.NoiseBackground {
 
         property color color: "#336699"
 
-        Component.onCompleted: {
+        function applyChanges() {
             background.color = settings.color;
+        }
+
+        Component.onCompleted: {
+            applyChanges();
+            settings.onColorChanged.connect(applyChanges);
         }
     }
 }
