@@ -68,6 +68,7 @@ set_target_properties(hawaii-shell-client PROPERTIES
 )
 target_link_libraries(hawaii-shell-client
     ${WaylandClient_LIBRARIES}
+    ${QtConfiguration_LIBRARIES}
     ${HawaiiShell_LIBRARIES}
 )
 
