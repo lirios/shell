@@ -34,15 +34,19 @@ Item {
     GradientItem {
         id: vgradient
         anchors.fill: parent
-        visible: false
+        primaryColor: settings.primaryColor
+        secondaryColor: settings.secondaryColor
+        visible: settings.type == "vertical"
     }
 
     GradientItem {
         id: hgradient
         anchors.fill: parent
+        primaryColor: settings.primaryColor
+        secondaryColor: settings.secondaryColor
         rotation: 270
         scale: 2
-        visible: false
+        visible: settings.type == "horizontal"
     }
 
     Configuration {
@@ -52,26 +56,5 @@ Item {
         property string type: "vertical"
         property color primaryColor: "#336699"
         property color secondaryColor: "#334455"
-
-        function applyChanges() {
-            if (type == "vertical") {
-                vgradient.primaryColor = primaryColor;
-                vgradient.secondaryColor = secondaryColor;
-                hgradient.visible = false;
-                vgradient.visible = true;
-            } else {
-                hgradient.primaryColor = primaryColor;
-                hgradient.secondaryColor = secondaryColor;
-                vgradient.visible = false;
-                hgradient.visible = true;
-            }
-        }
-
-        Component.onCompleted: {
-            applyChanges();
-            settings.onTypeChanged.connect(applyChanges);
-            settings.onPrimaryColorChanged.connect(applyChanges);
-            settings.onSecondaryColorChanged.connect(applyChanges);
-        }
     }
 }
