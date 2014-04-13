@@ -139,6 +139,7 @@ BaseConfigView {
                     text: qsTr("Left")
                     iconName: "align-horizontal-left"
                     exclusiveGroup: alignmentGroup
+                    enabled: !panel.maximized
                     checkable: true
                     checked: panel.alignment == Qt.AlignLeft
                     onClicked: panel.alignment = Qt.AlignLeft
@@ -148,6 +149,7 @@ BaseConfigView {
                     text: qsTr("Center")
                     iconName: "align-horizontal-center"
                     exclusiveGroup: alignmentGroup
+                    enabled: !panel.maximized
                     checkable: true
                     checked: panel.alignment == Qt.AlignCenter
                     onClicked: panel.alignment = Qt.AlignCenter
@@ -157,6 +159,7 @@ BaseConfigView {
                     text: qsTr("Right")
                     iconName: "align-horizontal-right"
                     exclusiveGroup: alignmentGroup
+                    enabled: !panel.maximized
                     checkable: true
                     checked: panel.alignment == Qt.AlignRight
                     onClicked: panel.alignment = Qt.AlignRight
