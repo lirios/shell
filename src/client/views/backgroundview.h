@@ -29,6 +29,8 @@
 
 #include <QtQuick/QQuickView>
 
+#include <Hawaii/Package>
+
 #include <QtConfiguration/QStaticConfiguration>
 
 class ShellUi;
@@ -44,6 +46,7 @@ public Q_SLOTS:
 
 private:
     QStaticConfiguration *m_settings;
+    Hawaii::Package m_package;
 
     void setSurfaceRole();
 

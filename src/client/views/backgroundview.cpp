@@ -31,7 +31,6 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQuick/QQuickItem>
 
-#include <Hawaii/Package>
 #include <Hawaii/PluginLoader>
 
 #include "backgroundview.h"
@@ -86,18 +85,26 @@ BackgroundView::BackgroundView(ShellUi *mantle, QScreen *screen)
 
 void BackgroundView::loadPlugin(const QString &background)
 {
-    // Load background plugin package
-    Hawaii::Package package =
-            Hawaii::PluginLoader::instance()->loadPackage(
-                Hawaii::PluginLoader::BackgroundPlugin);
-    package.setPath(background);
+    // Load another plugin only if this is the first time or the
+    // previously loaded plugin is different
+    if (!m_package.isValid() || m_package.path() != background) {
+        // Load background plugin package
+        if (!m_package.isValid())
+            m_package = Hawaii::PluginLoader::instance()->loadPackage(
+                        Hawaii::PluginLoader::BackgroundPlugin);
+        m_package.setPath(background);
+    } else {
+        // If we are here it means we're trying to load the same an
+        // already loaded plugin, so bail out
+        return;
+    }
 
     // If the package is invalid try with the default plugin
-    if (!package.isValid())
-        package.setPath(QStringLiteral("org.hawaii.backgrounds.wallpaper"));
+    if (!m_package.isValid())
+        m_package.setPath(QStringLiteral("org.hawaii.backgrounds.wallpaper"));
 
     // Now load the QML component
-    QString mainScript = package.filePath("mainscript");
+    QString mainScript = m_package.filePath("mainscript");
     rootObject()->setProperty("sourceUrl", QUrl::fromLocalFile(mainScript));
 }
 
