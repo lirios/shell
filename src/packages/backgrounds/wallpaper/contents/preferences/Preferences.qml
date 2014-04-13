@@ -134,7 +134,7 @@ Item {
                     qsTr("Tiled")
                 ]
                 currentIndex: mapFillModeToIndex(settings.fillMode)
-                onActivated: settings.fillMode(mapIndexToFillMode(index))
+                onActivated: settings.fillMode = mapIndexToFillMode(index)
             }
 
             Layout.fillWidth: true
