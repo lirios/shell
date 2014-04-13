@@ -3,7 +3,6 @@ include_directories(
     ${QtConfiguration_INCLUDE_DIRS}
     ${HawaiiShell_INCLUDE_DIRS}
     ${WaylandClient_INCLUDE_DIRS}
-    ${ALSA_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
@@ -69,7 +68,6 @@ set_target_properties(hawaii-shell-client PROPERTIES
 )
 target_link_libraries(hawaii-shell-client
     ${WaylandClient_LIBRARIES}
-    ${ALSA_LIBRARIES}
     ${HawaiiShell_LIBRARIES}
 )
 
