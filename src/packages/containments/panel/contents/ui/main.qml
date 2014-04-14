@@ -228,10 +228,11 @@ DropArea {
     Containment.onElementAdded: addElement(element)
 
     Component.onCompleted: {
+        currentLayout.isLayoutHorizontal = isHorizontal;
         LayoutManager.root = root;
         LayoutManager.layout = currentLayout;
         //LayoutManager.restore();
-        makeConfigurable();
+        containmentSizeSyncTimer.restart();
     }
 
     function addElement(element) {
