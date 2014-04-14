@@ -29,9 +29,8 @@
 #define PANELVIEW_H
 
 #include <QtCore/QPointer>
-#include <QtQml/QQmlPropertyMap>
 
-#include <QtConfiguration/QConfiguration>
+#include <QtConfiguration/QStaticConfiguration>
 
 #include <HawaiiShell/Element>
 #include <HawaiiShell/HawaiiShell>
@@ -78,6 +77,8 @@ public:
     void setMaximumLength(int value);
 
 protected:
+    void resizeEvent(QResizeEvent *event);
+
     void showConfigurationWindow();
     void hideConfigurationWindow();
 
@@ -91,6 +92,12 @@ Q_SIGNALS:
     void maximumLengthChanged();
 
 private:
+    QScreen *m_screen;
+    int m_screenNumber;
+    QRect m_screenGeometry;
+
+    int m_panelNum;
+
     bool m_maximized;
     Qt::Alignment m_alignment;
     int m_offset;
@@ -98,14 +105,26 @@ private:
     int m_length;
     int m_minimumLength;
     int m_maximumLength;
-    QConfiguration *m_configuration;
+    QStaticConfiguration *m_settings;
     PanelSurface *m_surface;
     QPointer<PanelConfigView> m_configView;
 
+    QString settingsCategory() const;
+
+    void loadSettings();
+    void saveSettings();
+
     void setWindowType();
-    void restore();
+
+    void updateCurrentScreen();
+
+    void applySizeChanges();
+    void recalculateLength();
 
 private Q_SLOTS:
+    void containmentLocationChanged();
+    void containmentImmutableChanged();
+
     void dockPanel();
 };
 

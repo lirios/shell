@@ -45,6 +45,26 @@
 
 using namespace Hawaii;
 
+#define KEY_LOCATION      QStringLiteral("location")
+#define KEY_IMMUTABLE     QStringLiteral("immutable")
+#define KEY_MAXIMIZED     QStringLiteral("maximized")
+#define KEY_ALIGNMENT     QStringLiteral("alignment")
+#define KEY_OFFSET        QStringLiteral("offset")
+#define KEY_LENGTH        QStringLiteral("length")
+#define KEY_MINLENGTH     QStringLiteral("minLength")
+#define KEY_MAXLENGTH     QStringLiteral("maxLength")
+#define KEY_THICKNESS     QStringLiteral("thickness")
+
+#define DEFAULT_LOCATION  Types::BottomEdge
+#define DEFAULT_IMMUTABLE false
+#define DEFAULT_MAXIMIZED true
+#define DEFAULT_ALIGNMENT Qt::AlignLeft
+#define DEFAULT_OFFSET    0
+#define DEFAULT_THICKNESS 60
+#define DEFAULT_LENGTH    640
+#define DEFAULT_MINLENGTH 640
+#define DEFAULT_MAXLENGTH 640
+
 static PanelSurface::alignment convertAlignment(Qt::Alignment alignment)
 {
     switch (alignment) {
@@ -61,12 +81,15 @@ static PanelSurface::alignment convertAlignment(Qt::Alignment alignment)
 
 PanelView::PanelView(ShellUi *mantle, QScreen *screen)
     : QuickView(mantle, new QWindow(screen))
-    , m_maximized(true)
-    , m_alignment(Qt::AlignLeft)
-    , m_offset(0)
-    , m_thickness(60)
-    , m_minimumLength(0)
-    , m_maximumLength(0)
+    , m_screen(screen)
+    , m_screenGeometry(screen->geometry())
+    , m_maximized(DEFAULT_MAXIMIZED)
+    , m_alignment(DEFAULT_ALIGNMENT)
+    , m_offset(DEFAULT_OFFSET)
+    , m_thickness(DEFAULT_THICKNESS)
+    , m_length(DEFAULT_LENGTH)
+    , m_minimumLength(DEFAULT_MINLENGTH)
+    , m_maximumLength(DEFAULT_MAXLENGTH)
     , m_surface(new PanelSurface())
 {
     // Let QML see us
@@ -94,25 +117,33 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
 
     // Set containment
     setContainment(containment);
-    setLocation(Types::BottomEdge);
 
-    // Initialize settings
-    if (formFactor() == Types::Vertical)
-        m_length = screen->size().height();
-    else
-        m_length = screen->size().width();
-    m_minimumLength = m_length;
-    m_maximumLength = m_length;
+    // Make sure the panel is initially hidden
+    setVisible(false);
+
+    // Determine the screen number
+    const QList<QScreen *> screens = QGuiApplication::screens();
+    for (int i = 0; i < screens.length(); i++) {
+        if (screens.at(i) == screen) {
+            m_screenNumber = i;
+            break;
+        }
+    }
+
+    // Determine the panel number by incrementing the number of panels
+    // for this screen; this would work because we have up to 4 panels
+    // for each screen (one for every edge)
+    int panelCounter = 0;
+    for (PanelView *view: ShellManager::instance()->mantle()->panels()) {
+        if (view->screen() == screen)
+            panelCounter++;
+    }
+    m_panelNum = panelCounter + 1;
 
     // Setup configuration
-    static int panelId = 0;
-    const QString section = QString("shell/%1/panels/panel%2")
-            .arg(ShellManager::instance()->mantle()->shell())
-            .arg(QString::number(panelId++));
-    m_configuration = new QConfiguration(this, section, this);
-
-    // Set panel size
-    restore();
+    m_settings = new QStaticConfiguration(this);
+    m_settings->setCategory(settingsCategory());
+    loadSettings();
 
     // Set Wayland window type
     setWindowType();
@@ -122,10 +153,12 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
             this, &PanelView::dockPanel);
     connect(this, &QWindow::screenChanged,
             this, &PanelView::dockPanel);
-    connect(this, &QuickView::locationChanged,
-            this, &PanelView::dockPanel);
     connect(screen, &QScreen::geometryChanged,
             this, &PanelView::dockPanel);
+    connect(this, &QuickView::locationChanged,
+            this, &PanelView::containmentLocationChanged);
+    connect(this, &QuickView::immutableChanged,
+            this, &PanelView::containmentImmutableChanged);
 
     // Debugging message
     qDebug() << "-> Created PanelView with geometry"
@@ -134,8 +167,12 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
 
 PanelView::~PanelView()
 {
+    // Delete panel surface
     delete m_surface;
     m_surface = nullptr;
+
+    // Save settings
+    saveSettings();
 }
 
 bool PanelView::isMaximized() const
@@ -145,50 +182,81 @@ bool PanelView::isMaximized() const
 
 void PanelView::setMaximized(bool value)
 {
-    if (m_maximized != value) {
-        // A maximized panel don't need alignment, offset or length
-        m_alignment = Qt::AlignLeft;
-        m_offset = 0;
-        if (formFactor() == Types::Vertical)
-            m_length = screen()->size().height();
-        else
-            m_length = screen()->size().width();
-        m_minimumLength = m_length;
-        m_maximumLength = m_length;
+    if (m_maximized == value)
+        return;
 
-        m_maximized = value;
-        Q_EMIT maximizedChanged();
+    // A maximized panel doesn't need alignment, neither offset nor length
+    m_alignment = Qt::AlignLeft;
+    m_offset = 0;
+    if (formFactor() == Types::Vertical)
+        m_length = screen()->size().height();
+    else
+        m_length = screen()->size().width();
+    m_minimumLength = m_length;
+    m_maximumLength = m_length;
+
+    // Set value
+    m_maximized = value;
+    Q_EMIT maximizedChanged();
+
+    // Save settings
+    m_settings->setValue(KEY_MAXIMIZED, m_maximized);
+    if (m_maximized) {
+        m_settings->removeKey(KEY_ALIGNMENT);
+        m_settings->removeKey(KEY_OFFSET);
+        m_settings->removeKey(KEY_LENGTH);
+        m_settings->removeKey(KEY_MINLENGTH);
+        m_settings->removeKey(KEY_MAXLENGTH);
     }
+
+    // Dock panel
+    dockPanel();
 }
 
 Qt::Alignment PanelView::alignment() const
 {
-    if (m_maximized)
-        return Qt::AlignLeft;
     return m_alignment;
 }
 
 void PanelView::setAlignment(Qt::Alignment alignment)
 {
+    // Can't set alignment if the panel is maximized
+    if (m_maximized)
+        return;
+
     if (m_alignment != alignment) {
+        // Set value
         m_alignment = alignment;
         Q_EMIT alignmentChanged();
+
+        // Save settings
+        m_settings->setValue(KEY_ALIGNMENT, (int)m_alignment);
+
+        // Dock panel
         dockPanel();
     }
 }
 
 int PanelView::offset() const
 {
-    if (m_maximized)
-        return 0;
     return m_offset;
 }
 
 void PanelView::setOffset(int value)
 {
+    // Can't set offset if the panel is maximized
+    if (m_maximized)
+        return;
+
     if (m_offset != value) {
+        // Set value
         m_offset = value;
         Q_EMIT offsetChanged();
+
+        // Save settings
+        m_settings->setValue(KEY_OFFSET, m_offset);
+
+        // Dock panel
         dockPanel();
     }
 }
@@ -200,91 +268,123 @@ int PanelView::thickness() const
 
 void PanelView::setThickness(int value)
 {
-    if (value != thickness()) {
+    if (m_thickness != value) {
+        // Set value
         m_thickness = value;
         Q_EMIT thicknessChanged();
+
+        // Save settings
+        m_settings->setValue(KEY_THICKNESS, m_thickness);
+
+        // Dock panel
         dockPanel();
     }
 }
 
 int PanelView::length() const
 {
-    if (m_maximized) {
-        if (formFactor() == Types::Vertical)
-            return screen()->size().height();
-        else
-            return screen()->size().width();
-    }
     return m_length;
 }
 
 void PanelView::setLength(int value)
 {
+    // Can't set length if the panel is maximized
+    if (m_maximized)
+        return;
+
     if (value != length()) {
+        // Set value
         m_length = value;
         Q_EMIT lengthChanged();
+
+        // Save settings
+        m_settings->setValue(KEY_LENGTH, m_length);
+
+        // Dock panel
         dockPanel();
     }
 }
 
 int PanelView::minimumLength() const
 {
-    if (m_maximized) {
-        if (formFactor() == Types::Vertical)
-            return screen()->size().height();
-        else
-            return screen()->size().width();
-    }
     return m_minimumLength;
 }
 
 void PanelView::setMinimumLength(int value)
 {
+    // Can't set length if the panel is maximized
+    if (m_maximized)
+        return;
+
+    // Just ignore if it doesn't change
     if (m_minimumLength == value)
         return;
 
-    if (m_maximumLength < value)
-        setMaximumLength(value);
+    // Expand maximum length if needed
+    if (m_maximumLength < value) {
+        m_maximumLength = value;
+        Q_EMIT maximumLengthChanged();
+    }
 
-    if (formFactor() == Hawaii::Types::Vertical)
+    // Set minimum size
+    if (formFactor() == Types::Vertical)
         setMinimumHeight(value);
     else
         setMinimumWidth(value);
 
+    // Set value
     m_minimumLength = value;
     Q_EMIT minimumLengthChanged();
 
+    // Save settings
+    m_settings->setValue(KEY_MINLENGTH, m_minimumLength);
+
+    // Dock panel
     dockPanel();
 }
 
 int PanelView::maximumLength() const
 {
-    if (m_maximized) {
-        if (formFactor() == Types::Vertical)
-            return screen()->size().height();
-        else
-            return screen()->size().width();
-    }
     return m_maximumLength;
 }
 
 void PanelView::setMaximumLength(int value)
 {
+    // Can't set length if the panel is maximized
+    if (m_maximized)
+        return;
+
+    // Just ignore if it doesn't change
     if (m_maximumLength == value)
         return;
 
-    if (m_minimumLength > value)
-        setMinimumLength(value);
+    // Expand minimum length if needed
+    if (m_minimumLength > value) {
+        m_minimumLength = value;
+        Q_EMIT minimumLengthChanged();
+    }
 
-    if (formFactor() == Hawaii::Types::Vertical)
+    // Set maximum size
+    if (formFactor() == Types::Vertical)
         setMaximumHeight(value);
     else
         setMaximumWidth(value);
 
+    // Set value
     m_maximumLength = value;
     Q_EMIT maximumLengthChanged();
 
+    // Save settings
+    m_settings->setValue(KEY_MAXLENGTH, m_maximumLength);
+
+    // Dock panel
     dockPanel();
+}
+
+void PanelView::resizeEvent(QResizeEvent *event)
+{
+    //saveSettings();
+    QuickView::resizeEvent(event);
 }
 
 void PanelView::showConfigurationWindow()
@@ -302,6 +402,112 @@ void PanelView::hideConfigurationWindow()
         m_configView.data()->hide();
 }
 
+QString PanelView::settingsCategory() const
+{
+    return QString("shell/%1/panels/panel%2_%3")
+            .arg(mantle()->shell())
+            .arg(QString::number(m_screenNumber))
+            .arg(QString::number(m_panelNum));
+}
+
+void PanelView::loadSettings()
+{
+    // Without a containment we don't know the location
+    if (!containment())
+        return;
+
+    // Load containment settings
+    setLocation(static_cast<Types::Location>(m_settings->value(KEY_LOCATION, DEFAULT_LOCATION).toInt()));
+    setImmutable(m_settings->value(KEY_IMMUTABLE, DEFAULT_IMMUTABLE).toBool());
+
+    // Load panel settings
+    m_alignment = static_cast<Qt::Alignment>(m_settings->value(KEY_ALIGNMENT, DEFAULT_ALIGNMENT).toInt());
+    m_maximized = m_settings->value(KEY_MAXIMIZED, DEFAULT_MAXIMIZED).toBool();
+    m_thickness = m_settings->value(KEY_THICKNESS, DEFAULT_THICKNESS).toInt();
+
+    // Set length and offset according to the form factor
+    if (m_maximized) {
+        m_alignment = Qt::AlignLeft;
+        m_offset = 0;
+        if (formFactor() == Types::Vertical)
+            m_length = screen()->size().height();
+        else
+            m_length = screen()->size().width();
+        m_minimumLength = m_length;
+        m_maximumLength = m_length;
+
+        // Remove useless configuration keys
+        m_settings->removeKey(KEY_ALIGNMENT);
+        m_settings->removeKey(KEY_OFFSET);
+        m_settings->removeKey(KEY_LENGTH);
+        m_settings->removeKey(KEY_MINLENGTH);
+        m_settings->removeKey(KEY_MAXLENGTH);
+    } else {
+        m_length = m_settings->value(KEY_LENGTH, DEFAULT_LENGTH).toInt();
+        m_offset = m_settings->value(KEY_OFFSET, DEFAULT_OFFSET).toInt();
+        m_minimumLength = m_settings->value(KEY_MINLENGTH, DEFAULT_MINLENGTH).toInt();
+        m_maximumLength = m_settings->value(KEY_MAXLENGTH, DEFAULT_MAXLENGTH).toInt();
+    }
+
+    // Make sure offset is not negative
+    if (m_alignment != Qt::AlignCenter)
+        m_offset = qMax(0, m_offset);
+
+    // Bounds checking for min and max length and resize
+    const int minSize = 100;
+    if (formFactor() == Types::Vertical) {
+        const int maxSize = screen()->size().height() - offset();
+        m_minimumLength = qBound<int>(minSize, m_minimumLength, maxSize);
+        m_maximumLength = qBound<int>(minSize, m_maximumLength, maxSize);
+
+        setMinimumHeight(m_minimumLength);
+        setMaximumHeight(m_maximumLength);
+
+        resize(m_thickness, qBound<int>(minSize, m_length, maxSize));
+    } else {
+        const int maxSize = screen()->size().width() - offset();
+        m_minimumLength = qBound<int>(minSize, m_minimumLength, maxSize);
+        m_maximumLength = qBound<int>(minSize, m_maximumLength, maxSize);
+
+        setMinimumWidth(m_minimumLength);
+        setMaximumWidth(m_maximumLength);
+
+        resize(qBound<int>(minSize, m_length, maxSize), m_thickness);
+    }
+}
+
+void PanelView::saveSettings()
+{
+    if (containment()) {
+        m_settings->setValue(KEY_LOCATION, (int)location());
+        m_settings->setValue(KEY_IMMUTABLE, isImmutable());
+    }
+
+    m_settings->setValue(KEY_MAXIMIZED, m_maximized);
+    m_settings->setValue(KEY_ALIGNMENT, (int)m_alignment);
+
+    if (m_maximized) {
+        m_settings->removeKey(KEY_OFFSET);
+        m_settings->removeKey(KEY_LENGTH);
+        m_settings->removeKey(KEY_MINLENGTH);
+        m_settings->removeKey(KEY_MAXLENGTH);
+    } else {
+        m_settings->setValue(KEY_OFFSET, m_offset);
+        m_settings->setValue(KEY_MINLENGTH, m_minimumLength);
+        m_settings->setValue(KEY_MAXLENGTH, m_maximumLength);
+    }
+
+    if (formFactor() == Types::Vertical) {
+        m_settings->setValue(KEY_THICKNESS, size().width());
+        if (!m_maximized)
+            m_settings->setValue(KEY_LENGTH, size().height());
+    } else {
+        m_settings->setValue(KEY_THICKNESS, size().height());
+        if (!m_maximized)
+            m_settings->setValue(KEY_LENGTH, size().width());
+    }
+}
+
 void PanelView::setWindowType()
 {
     QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
@@ -314,40 +520,78 @@ void PanelView::setWindowType()
     m_surface->init(panel);
 }
 
-void PanelView::restore()
+void PanelView::updateCurrentScreen()
 {
-    // Make sure offset is positive
-    if (m_alignment != Qt::AlignCenter)
-        m_offset = qMax<int>(0, m_offset);
+    m_screen = screen();
+    m_screenGeometry = m_screen->geometry();
 
-    // Minimum and maximum size
-    if (formFactor() == Types::Vertical) {
-        const int minSize = 10;
-        const int maxSize = screen()->size().height() - m_offset;
-        m_minimumLength = qBound<int>(minSize, m_minimumLength, maxSize);
-        m_maximumLength = qBound<int>(minSize, m_maximumLength, maxSize);
-
-        resize(thickness(), qBound<int>(minSize, length(), maxSize));
-
-        setMinimumHeight(m_minimumLength);
-        setMaximumHeight(m_maximumLength);
-    } else {
-        const int minSize = 10;
-        const int maxSize = screen()->size().width() - m_offset;
-        m_minimumLength = qBound<int>(minSize, m_minimumLength, maxSize);
-        m_maximumLength = qBound<int>(minSize, m_maximumLength, maxSize);
-
-        resize(qBound<int>(minSize, length(), maxSize), thickness());
-
-        setMinimumWidth(m_minimumLength);
-        setMaximumWidth(m_maximumLength);
+    const QList<QScreen *> screens = QGuiApplication::screens();
+    for (int i = 0; i < screens.length(); i++) {
+        if (screens.at(i) == m_screen) {
+            m_screenNumber = i;
+            break;
+        }
     }
 
-    // Inform observers
-    Q_EMIT offsetChanged();
-    Q_EMIT alignmentChanged();
-    Q_EMIT minimumLengthChanged();
-    Q_EMIT maximumLengthChanged();
+    connect(m_screen, &QScreen::geometryChanged,
+            this, &PanelView::dockPanel);
+
+    // TODO: Rename category because the screen is changed and
+    // the panel number might have been changes as well
+    m_settings->setCategory(settingsCategory());
+}
+
+void PanelView::applySizeChanges()
+{
+    if (formFactor() == Types::Vertical) {
+        setMinimumHeight(m_minimumLength);
+        setMaximumHeight(m_maximumLength);
+
+        resize(m_thickness, m_length);
+    } else {
+        setMinimumWidth(m_minimumLength);
+        setMaximumWidth(m_maximumLength);
+
+        resize(m_length, m_thickness);
+    }
+}
+
+void PanelView::recalculateLength()
+{
+    // Save old values
+    int oldLength = m_length;
+    int oldMinLength = m_minimumLength;
+    int oldMaxLength = m_maximumLength;
+
+    // Recalculate length
+    if (formFactor() == Types::Vertical) {
+        m_length = (m_length * screen()->size().height()) / m_screenGeometry.height();
+        m_minimumLength = (m_minimumLength * screen()->size().height()) / m_screenGeometry.height();
+        m_maximumLength = (m_length * screen()->size().height()) / m_screenGeometry.height();
+    } else {
+        m_length = (m_length * screen()->size().width()) / m_screenGeometry.width();
+        m_minimumLength = (m_minimumLength * screen()->size().width()) / m_screenGeometry.width();
+        m_maximumLength = (m_maximumLength * screen()->size().width()) / m_screenGeometry.width();
+    }
+
+    // Determine if something has changed
+    if (oldLength != m_length)
+        Q_EMIT lengthChanged();
+    if (oldMinLength != m_minimumLength)
+        Q_EMIT minimumLengthChanged();
+    if (oldMaxLength != m_maximumLength)
+        Q_EMIT maximumLengthChanged();
+}
+
+void PanelView::containmentLocationChanged()
+{
+    m_settings->setValue(KEY_LOCATION, (int)location());
+    dockPanel();
+}
+
+void PanelView::containmentImmutableChanged()
+{
+    m_settings->setValue(KEY_IMMUTABLE, isImmutable());
 }
 
 void PanelView::dockPanel()
@@ -360,7 +604,17 @@ void PanelView::dockPanel()
     if (!isVisible())
         return;
 
-    restore();
+    // Is the screen changed?
+    if (screen() != m_screen) {
+        // Recalculate length
+        recalculateLength();
+
+        // Update current screen
+        updateCurrentScreen();
+    }
+
+    // Resize the panel if necessary
+    applySizeChanges();
 
     // Setup surface on the compositor size
     m_surface->set_alignment(convertAlignment(m_alignment));
