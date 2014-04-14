@@ -460,7 +460,9 @@ void PanelView::loadSettings()
         m_minimumLength = qBound<int>(minSize, m_minimumLength, maxSize);
         m_maximumLength = qBound<int>(minSize, m_maximumLength, maxSize);
 
+        setMinimumWidth(m_thickness);
         setMinimumHeight(m_minimumLength);
+        setMaximumWidth(m_thickness);
         setMaximumHeight(m_maximumLength);
 
         resize(m_thickness, qBound<int>(minSize, m_length, maxSize));
@@ -470,7 +472,9 @@ void PanelView::loadSettings()
         m_maximumLength = qBound<int>(minSize, m_maximumLength, maxSize);
 
         setMinimumWidth(m_minimumLength);
+        setMinimumHeight(m_thickness);
         setMaximumWidth(m_maximumLength);
+        setMaximumHeight(m_thickness);
 
         resize(qBound<int>(minSize, m_length, maxSize), m_thickness);
     }
@@ -544,13 +548,17 @@ void PanelView::updateCurrentScreen()
 void PanelView::applySizeChanges()
 {
     if (formFactor() == Types::Vertical) {
+        setMinimumWidth(m_thickness);
         setMinimumHeight(m_minimumLength);
+        setMaximumWidth(m_thickness);
         setMaximumHeight(m_maximumLength);
 
         resize(m_thickness, m_length);
     } else {
         setMinimumWidth(m_minimumLength);
+        setMinimumHeight(m_thickness);
         setMaximumWidth(m_maximumLength);
+        setMaximumHeight(m_thickness);
 
         resize(m_length, m_thickness);
     }
@@ -585,6 +593,16 @@ void PanelView::recalculateLength()
 
 void PanelView::containmentLocationChanged()
 {
+    // If panel is maximized recalculate length
+    if (m_maximized) {
+        if (formFactor() == Types::Vertical)
+            m_length = screen()->size().height();
+        else
+            m_length = screen()->size().width();
+        m_minimumLength = m_length;
+        m_maximumLength = m_length;
+    }
+
     m_settings->setValue(KEY_LOCATION, (int)location());
     dockPanel();
 }
