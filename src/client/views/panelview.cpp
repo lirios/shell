@@ -398,8 +398,11 @@ void PanelView::showConfigurationWindow()
 void PanelView::hideConfigurationWindow()
 {
     // Hide and destroy the window
-    if (m_configView)
+    if (m_configView) {
         m_configView.data()->hide();
+        m_configView.data()->deleteLater();;
+        m_configView = nullptr;
+    }
 }
 
 QString PanelView::settingsCategory() const
