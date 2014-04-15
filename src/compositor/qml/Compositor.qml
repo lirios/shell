@@ -25,11 +25,14 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import WaylandCompositor 1.0
 import GreenIsland 1.0
 import Hawaii.Shell 0.1
 import "WindowManager.js" as WindowManager
 
 Item {
+    property alias layers: layers
+
     id: root
 
     // Bind compositor signals
@@ -73,46 +76,7 @@ Item {
         }
     }
 
-    // Black rectangle for fade-in and fade-out effects
-    Rectangle {
-        id: splash
-        color: "black"
-        x: 0
-        y: 0
-        z: 1000
-        width: 8192
-        height: 8192
-        opacity: 1.0
-
-        Behavior on opacity {
-            NumberAnimation { duration: 250 }
-        }
-    }
-
-    // Modal dialog overlay
-    // TODO: Create a surface every time a modal dialog is created
-    Rectangle {
-        id: modalOverlay
-        color: "black"
-        x: 0
-        y: 0
-        z: 998
-        width: 8192
-        height: 8192
-        opacity: 0.0
-
-        Behavior on opacity {
-            NumberAnimation { duration: 250 }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            preventStealing: true
-            onClicked: mouse.accepted = false
-        }
-    }
-
+    // FPS counter
     Text {
         anchors {
             top: parent.top
@@ -128,6 +92,122 @@ Item {
 
         FpsCounter {
             id: fpsCounter
+        }
+    }
+
+    // Black rectangle for fade-in and fade-out effects
+    Rectangle {
+        id: splash
+        anchors.fill: parent
+        color: "black"
+        z: 999
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: 250
+            }
+        }
+    }
+
+    // Layers for windows
+    Item {
+        property alias lock: lockLayer
+        property alias overlay: overlayLayer
+        property alias dialogs: dialogsLayer
+        property alias fullScreen: fullScreenLayer
+        property alias panels: panelsLayer
+        property alias notifications: notificationsLayer
+        property alias windows: windowsLayer
+        property alias desktop: desktopLayer
+        property alias background: backgroundLayer
+
+        id: layers
+        anchors.fill: parent
+        z: 998
+
+        // Lock screen is above all windows to shield the session
+        Item {
+            id: lockLayer
+            anchors.fill: parent
+            z: 900
+        }
+
+        // Overlays can cover pretty much everything except the lock screen
+        Item {
+            id: overlayLayer
+            anchors.fill: parent
+            z: 899
+        }
+
+        // Globally modal dialogs can cover application and shell gadgets
+        Item {
+            id: dialogsLayerContainer
+            anchors.fill: parent
+            z: 898
+
+            // Overlay
+            Rectangle {
+                id: modalOverlay
+                anchors.fill: parent
+                color: "black"
+                opacity: 0.0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        easing.type: Easing.InOutQuad
+                        duration: 250
+                    }
+                }
+            }
+
+            // Actual globally modal dialogs layer
+            Item {
+                id: dialogsLayer
+                anchors.fill: modalOverlay
+            }
+        }
+
+        // Full screen windows can cover application windows and panels
+        Item {
+            id: fullScreenLayer
+            anchors.fill: parent
+            z: 897
+        }
+
+        // Panels are above application windows
+        Item {
+            id: panelsLayer
+            anchors.fill: parent
+            z: 896
+        }
+
+        // Notifications are basically at the same level as panels
+        Item {
+            id: notificationsLayer
+            anchors.fill: parent
+            z: 895
+        }
+
+        // Application windows can only cover the desktop
+        Item {
+            id: windowsLayer
+            anchors.fill: parent
+            z: 894
+        }
+
+        // Desktop is only above to the background
+        Item {
+            id: desktopLayer
+            anchors.fill: parent
+            z: 893
+        }
+
+        // Background is below everything
+        Item {
+            id: backgroundLayer
+            anchors.fill: parent
+            z: 892
         }
     }
 
