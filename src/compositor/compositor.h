@@ -48,11 +48,16 @@ class Compositor : public GreenIsland::Compositor
     Q_ENUMS(ShellWindowRole)
 public:
     enum ShellWindowRole {
-        BackgroundWindowRole = 0,
-        PanelWindowRole,
+        LockScreenRole = 0,
         OverlayWindowRole,
         DialogWindowRole,
-        PopupWindowRole
+        FullScreenWindowRole,
+        PanelWindowRole,
+        PopupWindowRole,
+        NotificationsWindowRole,
+        DesktopWindowRole,
+        BackgroundWindowRole,
+        ApplicationWindowRole
     };
 
     explicit Compositor();
@@ -63,8 +68,6 @@ public:
     Shell *shell() const;
     ShellSurface *shellSurface() const;
     ScreenSaver *screenSaver() const;
-
-    bool isShellWindow(QWaylandSurface *surface);
 
     void surfaceCreated(QWaylandSurface *surface);
 

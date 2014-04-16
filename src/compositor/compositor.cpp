@@ -129,19 +129,6 @@ ScreenSaver *Compositor::screenSaver() const
     return m_screenSaver;
 }
 
-bool Compositor::isShellWindow(QWaylandSurface *surface)
-{
-    // Sanity check
-    if (!surface)
-        return false;
-
-    // Shell user interface surfaces don't have a shell surface just
-    // like application windows but we must draw them
-    return (surface->windowFlags() & QWaylandSurface::BypassWindowManager) &&
-            !surface->hasShellSurface() &&
-            surface->windowProperties().contains(QStringLiteral("role"));
-}
-
 void Compositor::surfaceCreated(QWaylandSurface *surface)
 {
     // Create application window instance
@@ -179,94 +166,47 @@ void Compositor::unlockSession()
 
 void Compositor::surfaceMapped(QWaylandSurface *surface)
 {
+    // Sanity check
+    if (!surface)
+        return;
+
     // Get the surface item
     QWaylandSurfaceItem *item = surface->surfaceItem();
 
     // Create a WaylandSurfaceItem for this surface
-    if (!item) {
-        QUrl url;
-        if (surface->hasShellSurface())
-            url = QUrl("qrc:///qml/ApplicationWindow.qml");
-        else
-            url = QUrl("qrc:///qml/ShellWindow.qml");
+    if (!item)
+        item = new QWaylandSurfaceItem(surface, rootObject());
 
-        QQmlComponent component(engine(), url);
-        if (component.isError()) {
-            qWarning() << "Error loading surface item:" << component.errorString();
-            return;
-        }
+    // Enable touch events
+    item->setTouchEventsEnabled(true);
 
-        QObject *object = component.create();
-        item = qobject_cast<QWaylandSurfaceItem *>(object);
-        item->setParentItem(rootObject());
-        item->setSurface(surface);
-        item->setTouchEventsEnabled(true);
-    }
-
-    // Setup shell windows
-    if (isShellWindow(surface)) {
-        // Set position as asked by the shell client
-        item->setPosition(surface->windowProperties().value(QStringLiteral("position")).toPointF());
-
-        // Announce a shell window was mapped
-        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-        QMetaObject::invokeMethod(rootObject(), "shellWindowMapped",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(QVariant, window));
-    } else if (surface->hasShellSurface()) {
-        // Set application window position
-        switch (surface->windowType()) {
-        case QWaylandSurface::Toplevel:
-            if (surface->visibility() == QWindow::Windowed)
-                surface->setPos(calculateInitialPosition(surface));
-            break;
-        case QWaylandSurface::Transient: {
-            QWaylandSurface *transientParent = surface->transientParent();
-            if (transientParent) {
-                QPointF parentPos = transientParent->pos();
-                QSize parentSize = transientParent->size();
-                qreal x = parentPos.x() + (parentSize.width() - surface->size().width()) / 2;
-                qreal y = parentPos.y() + (parentSize.height() - surface->size().height()) / 2;
-                surface->setPos(QPointF(x, y));
-            }
-            break;
-        }
-        default:
-            break;
-        }
-
-        // Announce a window was added
-        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-        QMetaObject::invokeMethod(rootObject(), "windowAdded",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(QVariant, window));
-    } else {
-        // Calculate initial position for windows without shell
-        // surface that are not from the shell client
-        surface->setPos(calculateInitialPosition(surface));
-    }
+    // Announce a window was added
+    QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
+    QMetaObject::invokeMethod(rootObject(), "windowAdded",
+                              Qt::QueuedConnection,
+                              Q_ARG(QVariant, window));
 }
 
 void Compositor::surfaceUnmapped(QWaylandSurface *surface)
 {
-    if (!surface || (!surface->hasShellSurface() && !isShellWindow(surface)))
+    // Sanity check
+    if (!surface)
         return;
 
-    // Announce this window was unmapped
+    // Announce this window was removed
     QWaylandSurfaceItem *item = surface->surfaceItem();
     if (item) {
-        const char *method = isShellWindow(surface)
-                ? "shellWindowUnmapped" : "windowUnmapped";
         QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-
-        QMetaObject::invokeMethod(rootObject(), method, Qt::QueuedConnection,
+        QMetaObject::invokeMethod(rootObject(), "windowRemoved",
+                                  Qt::QueuedConnection,
                                   Q_ARG(QVariant, window));
     }
 }
 
 void Compositor::surfaceDestroyed(QWaylandSurface *surface)
 {
-    if (!surface || (!surface->hasShellSurface() && !isShellWindow(surface)))
+    // Sanity check
+    if (!surface)
         return;
 
     if (surface->hasShellSurface()) {
@@ -283,11 +223,9 @@ void Compositor::surfaceDestroyed(QWaylandSurface *surface)
     // Announce this window was destroyed
     QWaylandSurfaceItem *item = surface->surfaceItem();
     if (item) {
-        const char *method = isShellWindow(surface)
-                ? "shellWindowDestroyed" : "windowDestroyed";
         QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-
-        QMetaObject::invokeMethod(rootObject(), method, Qt::QueuedConnection,
+        QMetaObject::invokeMethod(rootObject(), "windowDestroyed",
+                                  Qt::QueuedConnection,
                                   Q_ARG(QVariant, window));
     }
 }

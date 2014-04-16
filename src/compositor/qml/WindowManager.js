@@ -26,58 +26,70 @@
 
 var windowList = null;
 
-function shellWindowMapped(window)
+function isShellWindow(window)
 {
-    // Do something according to window role
-    switch (window.role) {
-    case Compositor.BackgroundWindowRole:
-        // TODO: Move surface according to output coordinates
-        break;
-    case Compositor.OverlayWindowRole:
-        // TODO: Move surface according to output coordinates
-        break;
-    case Compositor.PopupWindowRole:
-        // Popup windows always take the focus
-        window.takeFocus();
-        break;
-    case Compositor.DialogWindowRole:
-        // Modal dialogs take focus and are centered on an overlay
-        window.takeFocus();
-        window.x = root.x + (root.width - window.width) / 2;
-        window.y = root.y + (root.height - window.height) / 2;
-        root.showModalOverlay();
-        break;
-    default:
-        break;
-    }
-
-    // Run map animation
-    if (window.runMapAnimation)
-        window.runMapAnimation();
-}
-
-function shellWindowUnmapped(window)
-{
-    // Run unmap animation
-    if (window.runUnmapAnimation)
-        window.runUnmapAnimation();
-}
-
-function shellWindowDestroyed(window)
-{
-    // Run destroy animation
-    if (window.runDestroyAnimation)
-        window.runDestroyAnimation();
-
-    // Hide modal overlay
-    if (window.role === Compositor.DialogWindowRole)
-        root.hideModalOverlay();
+    return (window.surface.windowFlags & WaylandSurface.BypassWindowManager) &&
+            window.surface.windowProperties.role !== Compositor.ApplicationWindowRole;
 }
 
 function windowAdded(window)
 {
-    // Automatically give focus to new windows
-    window.takeFocus();
+    var parent;
+
+    // Determine the correct parent
+    switch (window.surface.windowProperties.role) {
+    case Compositor.LockScreenRole:
+        parent = root.layers.lock;
+        break;
+    case Compositor.OverlayWindowRole:
+        parent = root.layers.overlay;
+        break;
+    case Compositor.DialogWindowRole:
+        parent = root.layers.dialogs;
+        break;
+    case Compositor.FullScreenWindowRole:
+        parent = root.layers.fullScreen;
+        break;
+    case Compositor.PanelWindowRole:
+        parent = root.layers.panels;
+        break;
+    case Compositor.PopupWindowRole:
+        parent = root.layers.panels;
+        break;
+    case Compositor.NotificationsWindowRole:
+        parent = root.layers.notifications;
+        break;
+    case Compositor.DesktopWindowRole:
+        parent = root.layers.desktop;
+        break;
+    case Compositor.BackgroundWindowRole:
+        parent = root.layers.background;
+        break;
+    default:
+        parent = root.layers.windows;
+        break;
+    }
+
+    // Determine the correct wrapper for this window
+    var componentUrl = isShellWindow(window)
+            ? "ShellWindow.qml"
+            : "ClientWindow.qml";
+
+    // Create the wrapper
+    var component = Qt.createComponent(componentUrl);
+    if (component.status !== Component.Ready) {
+        console.error("Couldn't create window wrapper:\n",
+                      component.errorString());
+        return;
+    }
+    var container = component.createObject(parent, {window: window});
+
+    // Center globally modal dialogs and show overlay
+    if (container.role === Compositor.DialogWindowRole) {
+        window.x = root.x + (root.width - window.width) / 2;
+        window.y = root.y + (root.height - window.height) / 2;
+        root.layers.dialogs.overlay.opacity = 1.0;
+    }
 
     // Run map animation
     if (window.runMapAnimation)
@@ -86,11 +98,18 @@ function windowAdded(window)
     // Add to the client window list
     if (windowList == null)
         windowList = new Array(0);
-    windowList.push(window);
+    windowList.push(container);
 }
 
-function windowUnmapped(window)
+function windowRemoved(window)
 {
+    // Hide globally modal dialogs overlay
+    if (window.surface.windowProperties.role)
+        root.layers.dialogs.overlay.opacity = 0.0;
+
+    // Run unmap animation
+    if (window.runUnmapAnimation)
+        window.runUnmapAnimation();
 }
 
 function windowDestroyed(window)

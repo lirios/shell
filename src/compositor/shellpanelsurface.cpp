@@ -172,9 +172,7 @@ void ShellPanelSurface::hawaii_panel_dock(Resource *resource,
     }
 
     // Move panel surface
-    m_surface->setPos(QPointF(x, y));
-    if (m_surface->surfaceItem())
-        m_surface->surfaceItem()->setPosition(QPointF(x, y));
+    m_surface->setWindowProperty(QStringLiteral("position"), QPointF(x, y));
 
     // Notify the client
     send_docked();

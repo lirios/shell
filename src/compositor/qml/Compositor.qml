@@ -163,6 +163,8 @@ Item {
 
             // Actual globally modal dialogs layer
             Item {
+                property alias overlay: modalOverlay
+
                 id: dialogsLayer
                 anchors.fill: modalOverlay
             }
@@ -211,32 +213,12 @@ Item {
         }
     }
 
-    function showModalOverlay() {
-        modalOverlay.opacity = 0.7;
-    }
-
-    function hideModalOverlay() {
-        modalOverlay.opacity = 0.0;
-    }
-
-    function shellWindowMapped(window) {
-        WindowManager.shellWindowMapped(window);
-    }
-
-    function shellWindowUnmapped(window) {
-        WindowManager.shellWindowUnmapped(window);
-    }
-
-    function shellWindowDestroyed(window) {
-        WindowManager.shellWindowDestroyed(window);
-    }
-
     function windowAdded(window) {
         WindowManager.windowAdded(window);
     }
 
-    function windowUnmapped(window) {
-        WindowManager.windowUnmapped(window);
+    function windowRemoved(window) {
+        WindowManager.windowRemoved(window);
     }
 
     function windowDestroyed(window) {

@@ -81,8 +81,8 @@ void ShellSurface::hawaii_shell_surface_set_overlay(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::OverlayWindowRole);
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Compositor::OverlayWindowRole, surface);
 }
 
 void ShellSurface::hawaii_shell_surface_set_popup(Resource *resource,
@@ -102,8 +102,8 @@ void ShellSurface::hawaii_shell_surface_set_popup(Resource *resource,
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     if (m_panelsLayer.contains(surface))
         return;
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::PopupWindowRole);
     surface->setWindowProperty(QStringLiteral("position"), pos);
-    addSurfaceToLayer(Compositor::PopupWindowRole, surface);
 
     QtWayland::InputDevice *input = Compositor::instance()->defaultInputDevice()->handle();
 
@@ -128,68 +128,8 @@ void ShellSurface::hawaii_shell_surface_set_dialog(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::DialogWindowRole);
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    addSurfaceToLayer(Compositor::DialogWindowRole, surface);
-}
-
-void ShellSurface::addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface)
-{
-    if (!surface)
-        return;
-
-    surface->setWindowProperty(QStringLiteral("role"), role);
-
-    switch (role) {
-    case Compositor::BackgroundWindowRole:
-        m_backgroundLayer.append(surface);
-        break;
-    case Compositor::PanelWindowRole:
-    case Compositor::PopupWindowRole:
-        m_panelsLayer.append(surface);
-        break;
-    case Compositor::OverlayWindowRole:
-        m_overlayLayer.append(surface);
-        break;
-    case Compositor::DialogWindowRole:
-        m_dialogsLayer.append(surface);
-        break;
-    default:
-        break;
-    }
-
-    connect(surface, &QWaylandSurface::unmapped, [=]() {
-        removeSurfaceFromLayer(surface);
-    });
-}
-
-void ShellSurface::removeSurfaceFromLayer(QWaylandSurface *surface)
-{
-    if (!surface)
-        return;
-
-    bool found = false;
-    Compositor::ShellWindowRole role = static_cast<Compositor::ShellWindowRole>(
-                surface->windowProperties().value(QStringLiteral("role")).toInt(&found));
-    if (!found)
-        return;
-
-    switch (role) {
-    case Compositor::BackgroundWindowRole:
-        m_backgroundLayer.removeOne(surface);
-        break;
-    case Compositor::PanelWindowRole:
-    case Compositor::PopupWindowRole:
-        m_panelsLayer.removeOne(surface);
-        break;
-    case Compositor::OverlayWindowRole:
-        m_overlayLayer.removeOne(surface);
-        break;
-    case Compositor::DialogWindowRole:
-        m_dialogsLayer.removeOne(surface);
-        break;
-    default:
-        break;
-    }
 }
 
 QWaylandSurface *ShellSurface::surfaceAt(const Layer &layer, const QPointF &point, QPointF *local)

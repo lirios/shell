@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -25,10 +25,29 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import WaylandCompositor 1.0
+import GreenIsland 1.0
 
-WindowWrapper {
-    x: requestedPosition.x
-    y: requestedPosition.y
+Item {
+    id: wrapper
+    width: window.width
+    height: window.height
+    onVisibleChanged: window.clientRenderingEnabled = visible
 
-    property point requestedPosition: window.surface.windowProperties.position
+    property WaylandSurfaceItem window
+    property int role: window.surface.windowProperties.role
+
+    // Render item taking care of y inverted surfaces
+    SurfaceRenderer {
+        id: renderer
+    }
+
+    Component.onCompleted: {
+        // Reparent the actual surface item
+        window.parent = wrapper;
+
+        // Setup surface renderer
+        renderer.anchors.fill = window;
+        renderer.source = window;
+    }
 }

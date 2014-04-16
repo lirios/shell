@@ -27,8 +27,4 @@
 import QtQuick 2.0
 
 WindowWrapper {
-    x: requestedPosition.x
-    y: requestedPosition.y
-
-    property point requestedPosition: window.surface.windowProperties.position
 }

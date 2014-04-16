@@ -46,8 +46,8 @@ void PanelManager::hawaii_panel_manager_set_panel(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
-    Compositor::instance()->shellSurface()->addSurfaceToLayer(
-                Compositor::PanelWindowRole, surface);
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::PanelWindowRole);
+    surface->setWindowProperty(QStringLiteral("position"), QPointF(-1, -1));
 
     ShellPanelSurface *panelSurface = new ShellPanelSurface(surface);
     panelSurface->init(resource->client(), id);

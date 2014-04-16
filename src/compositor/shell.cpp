@@ -126,7 +126,6 @@ void Shell::hawaii_shell_set_position(Resource *resource,
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("position"), QPointF(x, y));
-    surface->setPos(QPointF(x, y));
 }
 
 void Shell::hawaii_shell_set_lock_surface(Resource *resource,
@@ -139,16 +138,16 @@ void Shell::hawaii_shell_set_lock_surface(Resource *resource,
     if (!m_locked)
         return;
 
-    m_lockSurface = QtWayland::Surface::fromResource(
-                surface_resource)->waylandSurface();
-    connect(m_lockSurface, &QWaylandSurface::mapped, [=]() {
-        if (m_lockSurface->surfaceItem()) {
-            m_lockSurface->surfaceItem()->setZ(999);
-            m_lockSurface->surfaceItem()->takeFocus();
-        }
+    m_lockSurface =
+            QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
+    m_lockSurface->setWindowProperty(QStringLiteral("role"), Compositor::BackgroundWindowRole);
+    m_lockSurface->setWindowProperty(QStringLiteral("position"), QPointF(0, 0));
 
+    connect(m_lockSurface, &QWaylandSurface::mapped, [=]() {
+        m_lockSurface->surfaceItem()->takeFocus();
         Q_EMIT Compositor::instance()->fadeIn();
     });
+
     connect(m_lockSurface, &QObject::destroyed, [=](QObject *object = 0) {
         m_lockSurface = nullptr;
     });
@@ -191,8 +190,21 @@ void Shell::hawaii_shell_set_background(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::BackgroundWindowRole);
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
-    Compositor::instance()->shellSurface()->addSurfaceToLayer(Compositor::BackgroundWindowRole, surface);
+}
+
+void Shell::hawaii_shell_set_desktop(Resource *resource,
+                                     struct ::wl_resource *output_resource,
+                                     struct ::wl_resource *surface_resource)
+{
+    Q_UNUSED(resource);
+    Q_UNUSED(output_resource);
+
+    QWaylandSurface *surface =
+            QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::DesktopWindowRole);
+    surface->setWindowProperty(QStringLiteral("position"), surface->pos());
 }
 
 void Shell::hawaii_shell_set_grab_surface(Resource *resource,

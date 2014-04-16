@@ -45,9 +45,6 @@ public:
 
     QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
 
-    void addSurfaceToLayer(Compositor::ShellWindowRole role, QWaylandSurface *surface);
-    void removeSurfaceFromLayer(QWaylandSurface *surface);
-
 protected:
     void hawaii_shell_surface_set_overlay(Resource *resource,
                                           struct ::wl_resource *output_resource,
