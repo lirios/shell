@@ -97,7 +97,6 @@ private Q_SLOTS:
     void surfaceDestroyed(QWaylandSurface *surface);
 
     void sceneGraphInitialized();
-    void sendCallbacks();
 
 protected:
     void mousePressEvent(QMouseEvent *event);
