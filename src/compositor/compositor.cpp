@@ -96,6 +96,12 @@ Compositor::Compositor()
             this, SLOT(sceneGraphInitialized()), Qt::DirectConnection);
     connect(this, SIGNAL(afterRendering()),
             this, SLOT(sendCallbacks()), Qt::DirectConnection);
+    connect(this, SIGNAL(windowAdded(QVariant)),
+            rootObject(), SLOT(windowAdded(QVariant)));
+    connect(this, SIGNAL(windowRemoved(QVariant)),
+            rootObject(), SLOT(windowRemoved(QVariant)));
+    connect(this, SIGNAL(windowDestroyed(QVariant)),
+            rootObject(), SLOT(windowDestroyed(QVariant)));
 }
 
 Compositor::~Compositor()
@@ -181,10 +187,7 @@ void Compositor::surfaceMapped(QWaylandSurface *surface)
     item->setTouchEventsEnabled(true);
 
     // Announce a window was added
-    QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-    QMetaObject::invokeMethod(rootObject(), "windowAdded",
-                              Qt::QueuedConnection,
-                              Q_ARG(QVariant, window));
+    Q_EMIT windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
 }
 
 void Compositor::surfaceUnmapped(QWaylandSurface *surface)
@@ -195,12 +198,8 @@ void Compositor::surfaceUnmapped(QWaylandSurface *surface)
 
     // Announce this window was removed
     QWaylandSurfaceItem *item = surface->surfaceItem();
-    if (item) {
-        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-        QMetaObject::invokeMethod(rootObject(), "windowRemoved",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(QVariant, window));
-    }
+    if (item)
+        Q_EMIT windowRemoved(QVariant::fromValue(static_cast<QQuickItem *>(item)));
 }
 
 void Compositor::surfaceDestroyed(QWaylandSurface *surface)
@@ -222,12 +221,8 @@ void Compositor::surfaceDestroyed(QWaylandSurface *surface)
 
     // Announce this window was destroyed
     QWaylandSurfaceItem *item = surface->surfaceItem();
-    if (item) {
-        QVariant window = QVariant::fromValue(static_cast<QQuickItem *>(item));
-        QMetaObject::invokeMethod(rootObject(), "windowDestroyed",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(QVariant, window));
-    }
+    if (item)
+        Q_EMIT windowDestroyed(QVariant::fromValue(static_cast<QQuickItem *>(item)));
 }
 
 void Compositor::sceneGraphInitialized()

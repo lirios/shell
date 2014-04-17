@@ -74,6 +74,10 @@ public:
 Q_SIGNALS:
     void ready();
 
+    void windowAdded(QVariant window);
+    void windowRemoved(QVariant window);
+    void windowDestroyed(QVariant window);
+
     void fadeIn();
     void fadeOut();
 

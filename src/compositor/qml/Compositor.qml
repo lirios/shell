@@ -224,8 +224,4 @@ Item {
     function windowDestroyed(window) {
         WindowManager.windowDestroyed(window);
     }
-
-    function removeWindow(window) {
-        WindowManager.windowRemoved(window);
-    }
 }
