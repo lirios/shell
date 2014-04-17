@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/Compositor.qml</file>
-        <file>qml/WindowWrapper.qml</file>
         <file>qml/ShellWindow.qml</file>
         <file>qml/ClientWindow.qml</file>
         <file>qml/WindowManager.js</file>
