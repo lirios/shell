@@ -78,6 +78,16 @@
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
+    <request name="set_overlay">
+      <description summary="set overlay role">
+        The surface set by this request will receive the overlay role.
+        Overlays are special surfaces that shows for a limited amount
+        of time.  Such surfaces are useful to display things like volume,
+        brightness and status changes.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
     <request name="set_lock_surface">
       <description summary="set lock role">
         The surface set by this request will receive the lock role.
@@ -359,16 +369,6 @@
   </interface>
 
   <interface name="wl_hawaii_shell_surface" version="1">
-    <request name="set_overlay">
-      <description summary="set overlay role">
-        The surface set by this request will receive the overlay role.
-        Overlays are special surfaces that shows for a limited amount
-        of time.  Such surfaces are useful to display things like OSD.
-      </description>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
     <request name="set_popup">
       <description summary="make the surface a popup surface">
 	Map the surface as a popup.
