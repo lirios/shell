@@ -372,6 +372,36 @@ void DesktopShell::init()
     m_splash = new Splash(this);
 }
 
+weston_output *DesktopShell::preferredOutput() const
+{
+    // Find pointer coordinates and use the output containing them
+    // TODO: Do something clever for touch too
+    int ix = 0, iy = 0;
+    bool found = false;
+    weston_seat *seat = nullptr;
+    wl_list_for_each(seat, &compositor()->seat_list, link) {
+        if (seat->pointer) {
+            ix = wl_fixed_to_int(seat->pointer->x);
+            iy = wl_fixed_to_int(seat->pointer->y);
+            found = true;
+        }
+    }
+
+    // If no pointer have been found just return the default output
+    if (!found)
+        return getDefaultOutput();
+
+    // Find the target output (the one where the coordinates are in)
+    weston_output *output = nullptr;
+    wl_list_for_each(output, &compositor()->output_list, link) {
+        if (pixman_region32_contains_point(&output->region, ix, iy, 0))
+            return output;
+    }
+
+    // If no target output is found just return the default output
+    return getDefaultOutput();
+}
+
 weston_view *DesktopShell::createBlackSurfaceWithInput(int x, int y, int w, int h, float a)
 {
     weston_surface *surface = weston_surface_create(compositor());
@@ -1059,34 +1089,6 @@ void DesktopShell::setDesktop(struct wl_client *client, struct wl_resource *reso
     surface->output = view->output;
 }
 
-void DesktopShell::setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource)
-{
-    weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
-    if (surface->configure) {
-        wl_resource_post_error(surface_resource,
-                               WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "surface role already assigned");
-        return;
-    }
-
-    weston_view *view, *next;
-    wl_list_for_each_safe(view, next, &surface->views, surface_link)
-            weston_view_destroy(view);
-    view = weston_view_create(surface);
-
-    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
-        DesktopShell *shell = static_cast<DesktopShell *>(es->configure_private);
-        weston_view *view = container_of(es->views.next, weston_view, surface_link);
-        configure_static_view_no_position(view, &shell->m_overlayLayer);
-        shell->centerViewOnAvailableSpace(view);
-    };
-    surface->configure_private = this;
-    surface->output = static_cast<weston_output *>(output_resource->data);
-
-    pixman_region32_fini(&surface->pending.input);
-    pixman_region32_init_rect(&surface->pending.input, 0, 0, 0, 0);
-}
-
 void DesktopShell::configurePopup(weston_surface *es, int32_t sx, int32_t sy)
 {
     if (es->width == 0)
@@ -1265,6 +1267,38 @@ void DesktopShell::setConfigSurface(wl_client *client,
     }
 }
 
+void DesktopShell::setOverlay(wl_client *client, wl_resource *resource, wl_resource *surface_resource)
+{
+    weston_surface *surface = static_cast<weston_surface *>(surface_resource->data);
+    if (surface->configure) {
+        wl_resource_post_error(surface_resource,
+                               WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "surface role already assigned");
+        return;
+    }
+
+    weston_view *view, *next;
+    wl_list_for_each_safe(view, next, &surface->views, surface_link)
+            weston_view_destroy(view);
+    view = weston_view_create(surface);
+
+    surface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {
+        DesktopShell *shell = static_cast<DesktopShell *>(es->configure_private);
+        weston_view *view = container_of(es->views.next, weston_view, surface_link);
+
+        es->output = shell->preferredOutput();
+        view->output = es->output;
+
+        configure_static_view_no_position(view, &shell->m_overlayLayer);
+        shell->centerViewOnAvailableSpace(view);
+    };
+    surface->configure_private = this;
+    surface->output = preferredOutput();
+
+    pixman_region32_fini(&surface->pending.input);
+    pixman_region32_init_rect(&surface->pending.input, 0, 0, 0, 0);
+}
+
 void DesktopShell::lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t sy)
 {
     weston_view *view = container_of(es->views.next, weston_view, surface_link);
@@ -1356,6 +1390,7 @@ const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::setBackground),
     wrapInterface(&DesktopShell::setDesktop),
     wrapInterface(&DesktopShell::setConfigSurface),
+    wrapInterface(&DesktopShell::setOverlay),
     wrapInterface(&DesktopShell::setLockSurface),
     wrapInterface(&DesktopShell::setGrabSurface),
     wrapInterface(&DesktopShell::setPosition),
@@ -1370,7 +1405,6 @@ const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
 };
 
 const struct wl_hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl = {
-    wrapInterface(&DesktopShell::setOverlay),
     wrapInterface(&DesktopShell::setPopup),
     wrapInterface(&DesktopShell::setDialog)
 };

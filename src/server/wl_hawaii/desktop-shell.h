@@ -50,6 +50,8 @@ public:
     DesktopShell(struct weston_compositor *ec);
     ~DesktopShell();
 
+    weston_output *preferredOutput() const;
+
     weston_view *createBlackSurfaceWithInput(int x, int y, int w, int h, float a);
 
     bool isLocked() const { return m_locked; }
@@ -125,8 +127,6 @@ private:
     void setDesktop(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource,
                     struct wl_resource *surface_resource);
 
-    void setOverlay(struct wl_client *client, struct wl_resource *resource, struct wl_resource *output_resource, struct wl_resource *surface_resource);
-
     void setPopup(struct wl_client *client, struct wl_resource *resource,
                   uint32_t id,
                   struct wl_resource *parent_resource,
@@ -144,6 +144,9 @@ private:
     void setConfigSurface(wl_client *client, wl_resource *resource,
                           wl_resource *output_resource,
                           wl_resource *surface_resource);
+
+    void setOverlay(wl_client *client, wl_resource *resource,
+                    wl_resource *surface_resource);
 
     void lockSurfaceConfigure(weston_surface *es, int32_t sx, int32_t sy);
     void setLockSurface(struct wl_client *client, struct wl_resource *resource, struct wl_resource *surface_resource);
