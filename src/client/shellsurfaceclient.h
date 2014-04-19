@@ -29,7 +29,7 @@
 
 #include "qwayland-hawaii.h"
 
-class ShellSurfaceClient : public QtWayland::wl_hawaii_shell_surface
+class ShellSurfaceClient : public QtWayland::hawaii_shell_surface
 {
 public:
     ShellSurfaceClient();

@@ -29,14 +29,14 @@
 
 #include "qwayland-hawaii.h"
 
-class PanelSurface : public QtWayland::wl_hawaii_panel
+class PanelSurface : public QtWayland::hawaii_panel
 {
 public:
     PanelSurface();
     virtual ~PanelSurface();
 
 protected:
-    void hawaii_panel_docked() Q_DECL_OVERRIDE;
+    void panel_docked() Q_DECL_OVERRIDE;
 };
 
 #endif // PANELSURFACE_H

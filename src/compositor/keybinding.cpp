@@ -27,7 +27,7 @@
 #include "keybinding.h"
 
 KeyBinding::KeyBinding(struct ::wl_client *client, int id)
-    : QtWaylandServer::wl_hawaii_key_binding(client, id)
+    : QtWaylandServer::hawaii_key_binding(client, id)
     , m_modifiers(0)
     , m_key(0)
 {

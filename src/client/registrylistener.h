@@ -38,7 +38,7 @@ public:
 
     ShellClient *shell;
     ShellSurfaceClient *shellSurface;
-    QtWayland::wl_hawaii_panel_manager *panelManager;
+    QtWayland::hawaii_panel_manager *panelManager;
 
     void run();
 

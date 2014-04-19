@@ -37,10 +37,10 @@ public:
 
     static RegistryListener *instance();
 
-    QtWayland::wl_hawaii_shell_surface *shellSurface() const;
+    QtWayland::hawaii_shell_surface *shellSurface() const;
 
 private:
-    QtWayland::wl_hawaii_shell_surface *m_shellSurface;
+    QtWayland::hawaii_shell_surface *m_shellSurface;
 
     static void handleGlobal(void *data, struct ::wl_registry *registry,
                              uint32_t id, const char *interface,

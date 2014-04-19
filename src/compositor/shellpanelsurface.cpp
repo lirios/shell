@@ -32,9 +32,9 @@
 #include "shellpanelsurface.h"
 
 ShellPanelSurface::ShellPanelSurface(QWaylandSurface *surface)
-    : QtWaylandServer::wl_hawaii_panel()
+    : QtWaylandServer::hawaii_panel()
     , m_surface(surface)
-    , m_alignment(WL_HAWAII_PANEL_ALIGNMENT_LEFT)
+    , m_alignment(HAWAII_PANEL_ALIGNMENT_LEFT)
     , m_offset(0)
     , m_thickness(0)
     , m_length(0)
@@ -43,51 +43,51 @@ ShellPanelSurface::ShellPanelSurface(QWaylandSurface *surface)
 {
 }
 
-void ShellPanelSurface::hawaii_panel_set_alignment(Resource *resource,
-                                                   uint32_t alignment)
+void ShellPanelSurface::panel_set_alignment(Resource *resource,
+                                            uint32_t alignment)
 {
     Q_UNUSED(resource);
     m_alignment = alignment;
 }
 
-void ShellPanelSurface::hawaii_panel_set_offset(Resource *resource,
-                                                uint32_t offset)
+void ShellPanelSurface::panel_set_offset(Resource *resource,
+                                         uint32_t offset)
 {
     Q_UNUSED(resource);
     m_offset = offset;
 }
 
-void ShellPanelSurface::hawaii_panel_set_thickness(Resource *resource,
-                                                   uint32_t thickness)
+void ShellPanelSurface::panel_set_thickness(Resource *resource,
+                                            uint32_t thickness)
 {
     Q_UNUSED(resource);
     m_thickness = thickness;
 }
 
-void ShellPanelSurface::hawaii_panel_set_length(Resource *resource,
-                                                uint32_t length)
+void ShellPanelSurface::panel_set_length(Resource *resource,
+                                         uint32_t length)
 {
     Q_UNUSED(resource);
     m_length = length;
 }
 
-void ShellPanelSurface::hawaii_panel_set_min_length(Resource *resource,
-                                                    uint32_t min_length)
+void ShellPanelSurface::panel_set_min_length(Resource *resource,
+                                             uint32_t min_length)
 {
     Q_UNUSED(resource);
     m_minLength = min_length;
 }
 
-void ShellPanelSurface::hawaii_panel_set_max_length(Resource *resource,
-                                                    uint32_t max_length)
+void ShellPanelSurface::panel_set_max_length(Resource *resource,
+                                             uint32_t max_length)
 {
     Q_UNUSED(resource);
     m_maxLength = max_length;
 }
 
-void ShellPanelSurface::hawaii_panel_dock(Resource *resource,
-                                          uint32_t edge,
-                                          struct ::wl_resource *output)
+void ShellPanelSurface::panel_dock(Resource *resource,
+                                   uint32_t edge,
+                                   struct ::wl_resource *output)
 {
     Q_UNUSED(resource);
     Q_UNUSED(output);
@@ -103,65 +103,65 @@ void ShellPanelSurface::hawaii_panel_dock(Resource *resource,
     int height = m_surface->size().height();
 
     switch (edge) {
-    case WL_HAWAII_PANEL_EDGE_LEFT:
+    case HAWAII_PANEL_EDGE_LEFT:
         switch (m_alignment) {
-        case WL_HAWAII_PANEL_ALIGNMENT_LEFT:
+        case HAWAII_PANEL_ALIGNMENT_LEFT:
             x = static_cast<qreal>(coords.x());
             y = static_cast<qreal>(coords.y() + m_offset);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_CENTER:
+        case HAWAII_PANEL_ALIGNMENT_CENTER:
             x = static_cast<qreal>(coords.x());
             y = static_cast<qreal>(((coords.y() + size.height()) / 2.f) + m_offset);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_RIGHT:
+        case HAWAII_PANEL_ALIGNMENT_RIGHT:
             x = static_cast<qreal>(coords.x());
             y = static_cast<qreal>((coords.y() + size.height()) - (m_offset + height));
             break;
         }
         break;
-    case WL_HAWAII_PANEL_EDGE_TOP:
+    case HAWAII_PANEL_EDGE_TOP:
         switch (m_alignment) {
-        case WL_HAWAII_PANEL_ALIGNMENT_LEFT:
+        case HAWAII_PANEL_ALIGNMENT_LEFT:
             x = static_cast<qreal>(coords.x()) + m_offset;
             y = static_cast<qreal>(coords.y());
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_CENTER:
+        case HAWAII_PANEL_ALIGNMENT_CENTER:
             x = ((coords.x() + size.width()) / 2.f) + (m_offset - (width / 2.f));
             y = static_cast<qreal>(coords.y());
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_RIGHT:
+        case HAWAII_PANEL_ALIGNMENT_RIGHT:
             x = static_cast<qreal>((coords.x() + size.width()) - (m_offset + width));
             y = static_cast<qreal>(coords.y());
             break;
         }
         break;
-    case WL_HAWAII_PANEL_EDGE_RIGHT:
+    case HAWAII_PANEL_EDGE_RIGHT:
         switch (m_alignment) {
-        case WL_HAWAII_PANEL_ALIGNMENT_LEFT:
+        case HAWAII_PANEL_ALIGNMENT_LEFT:
             x = static_cast<qreal>((coords.x() + size.width()) - width);
             y = static_cast<qreal>(coords.y() + m_offset);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_CENTER:
+        case HAWAII_PANEL_ALIGNMENT_CENTER:
             x = static_cast<qreal>(coords.x() + size.width() - width);
             y = ((coords.y() + size.height()) / 2.f) + (m_offset - height / 2.f);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_RIGHT:
+        case HAWAII_PANEL_ALIGNMENT_RIGHT:
             x = static_cast<qreal>(coords.x() + size.width() - width);
             y = static_cast<qreal>((coords.y() + size.height()) - (m_offset + height));
             break;
         }
         break;
-    case WL_HAWAII_PANEL_EDGE_BOTTOM:
+    case HAWAII_PANEL_EDGE_BOTTOM:
         switch (m_alignment) {
-        case WL_HAWAII_PANEL_ALIGNMENT_LEFT:
+        case HAWAII_PANEL_ALIGNMENT_LEFT:
             x = static_cast<qreal>(coords.x() + m_offset);
             y = static_cast<qreal>(coords.y() + size.height() - height + 1);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_CENTER:
+        case HAWAII_PANEL_ALIGNMENT_CENTER:
             x = ((coords.x() + size.width()) / 2.f) + (m_offset - width / 2.f);
             y = static_cast<qreal>(coords.y() + 1);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_RIGHT:
+        case HAWAII_PANEL_ALIGNMENT_RIGHT:
             x = static_cast<qreal>(coords.x() + size.width() - (m_offset + width));
             y = static_cast<qreal>(coords.y() + size.height() - height + 1);
             break;

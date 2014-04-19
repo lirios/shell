@@ -29,7 +29,7 @@
 
 #include "qwayland-server-hawaii.h"
 
-class KeyBinding : public QtWaylandServer::wl_hawaii_key_binding
+class KeyBinding : public QtWaylandServer::hawaii_key_binding
 {
 public:
     KeyBinding(struct ::wl_client *client, int id);

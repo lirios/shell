@@ -29,17 +29,17 @@
 #include "panelsurface.h"
 
 PanelSurface::PanelSurface()
-    : QtWayland::wl_hawaii_panel()
+    : QtWayland::hawaii_panel()
 {
 }
 
 PanelSurface::~PanelSurface()
 {
     if (isInitialized())
-        wl_hawaii_panel_destroy(object());
+        hawaii_panel_destroy(object());
 }
 
-void PanelSurface::hawaii_panel_docked()
+void PanelSurface::panel_docked()
 {
     qDebug() << "Panel docked";
 }

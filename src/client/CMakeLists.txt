@@ -54,11 +54,11 @@ set(SOURCES
 
 wayland_add_protocol_client(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
-    hawaii
+    hawaii hawaii_
 )
 qtwayland_add_protocol_client(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
-    hawaii
+    hawaii hawaii_
 )
 
 qt5_add_resources(RESOURCES client.qrc)

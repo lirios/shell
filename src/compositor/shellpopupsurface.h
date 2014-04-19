@@ -32,7 +32,7 @@
 #include "popupgrabber.h"
 #include "qwayland-server-hawaii.h"
 
-class ShellPopupSurface : public QtWaylandServer::wl_hawaii_popup_surface
+class ShellPopupSurface : public QtWaylandServer::hawaii_popup_surface
 {
 public:
     ShellPopupSurface(QWaylandSurface *surface);

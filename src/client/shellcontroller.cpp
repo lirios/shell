@@ -229,7 +229,7 @@ void ShellController::removeWorkspace(int num)
 
 void ShellController::selectWorkspace(Workspace *workspace)
 {
-    struct ::wl_hawaii_workspace *w = workspace->d_ptr->object();
+    struct ::hawaii_workspace *w = workspace->d_ptr->object();
     ShellManager::instance()->shellInterface()->select_workspace(w);
 }
 

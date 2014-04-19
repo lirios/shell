@@ -33,7 +33,7 @@
 Q_GLOBAL_STATIC(RegistryListener, s_registryListener)
 
 RegistryListener::RegistryListener()
-    : m_shellSurface(new QtWayland::wl_hawaii_shell_surface())
+    : m_shellSurface(new QtWayland::hawaii_shell_surface())
 {
     // Platform native interface
     QPlatformNativeInterface *native =
@@ -63,7 +63,7 @@ RegistryListener *RegistryListener::instance()
     return s_registryListener();
 }
 
-QtWayland::wl_hawaii_shell_surface *RegistryListener::shellSurface() const
+QtWayland::hawaii_shell_surface *RegistryListener::shellSurface() const
 {
     return m_shellSurface;
 }
@@ -82,7 +82,7 @@ void RegistryListener::handleGlobal(void *data,
         return;
     }
 
-    if (strcmp(interface, "wl_hawaii_shell_surface") == 0)
+    if (strcmp(interface, "hawaii_shell_surface") == 0)
         self->m_shellSurface->init(registry, id);
 }
 
@@ -99,7 +99,7 @@ void RegistryListener::handleGlobalRemove(void *data,
         return;
     }
 
-    wl_hawaii_shell_surface_destroy(self->m_shellSurface->object());
+    hawaii_shell_surface_destroy(self->m_shellSurface->object());
 }
 
 const struct wl_registry_listener RegistryListener::listener = {

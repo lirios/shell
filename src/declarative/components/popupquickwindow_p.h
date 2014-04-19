@@ -33,7 +33,7 @@
 
 class PopupWindow;
 
-class PopupSurface : public QtWayland::wl_hawaii_popup_surface
+class PopupSurface : public QtWayland::hawaii_popup_surface
 {
 public:
     PopupSurface(PopupWindow *popup);

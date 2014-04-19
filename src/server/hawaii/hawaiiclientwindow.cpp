@@ -35,7 +35,7 @@
 HawaiiClientWIndow::HawaiiClientWIndow()
     : Interface()
     , m_resource(nullptr)
-    , m_state(WL_HAWAII_SHELL_WINDOW_STATE_INACTIVE)
+    , m_state(HAWAII_SHELL_WINDOW_STATE_INACTIVE)
 {
 }
 
@@ -86,18 +86,18 @@ void HawaiiClientWIndow::surfaceTypeChanged()
 void HawaiiClientWIndow::activeChanged()
 {
     if (shsurf()->isActive())
-        m_state |= WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE;
+        m_state |= HAWAII_SHELL_WINDOW_STATE_ACTIVE;
     else
-        m_state &= ~WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE;
+        m_state &= ~HAWAII_SHELL_WINDOW_STATE_ACTIVE;
     sendState();
 }
 
 void HawaiiClientWIndow::create()
 {
     m_resource = wl_resource_create(Shell::instance()->shellClient(),
-                                    &wl_hawaii_window_interface, 1, 0);
+                                    &hawaii_window_interface, 1, 0);
     wl_resource_set_implementation(m_resource, &s_implementation, this, 0);
-    wl_hawaii_shell_send_window_mapped(Shell::instance()->shellClientResource(),
+    hawaii_shell_send_window_mapped(Shell::instance()->shellClientResource(),
                                        m_resource,
                                        shsurf()->title().c_str(),
                                        shsurf()->identifier().c_str(),
@@ -107,7 +107,7 @@ void HawaiiClientWIndow::create()
 void HawaiiClientWIndow::destroy()
 {
     if (m_resource) {
-        wl_hawaii_window_send_unmapped(m_resource);
+        hawaii_window_send_unmapped(m_resource);
         wl_resource_destroy(m_resource);
         m_resource = nullptr;
     }
@@ -116,29 +116,29 @@ void HawaiiClientWIndow::destroy()
 void HawaiiClientWIndow::sendState()
 {
     if (m_resource)
-        wl_hawaii_window_send_state_changed(m_resource, m_state);
+        hawaii_window_send_state_changed(m_resource, m_state);
 }
 
 void HawaiiClientWIndow::sendTitle()
 {
     if (m_resource)
-        wl_hawaii_window_send_title_changed(m_resource, shsurf()->title().c_str());
+        hawaii_window_send_title_changed(m_resource, shsurf()->title().c_str());
 }
 
 void HawaiiClientWIndow::setState(wl_client *client, wl_resource *resource, int32_t state)
 {
     ShellSurface *s = shsurf();
 
-    if (m_state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED && !(state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED)) {
+    if (m_state & HAWAII_SHELL_WINDOW_STATE_MINIMIZED && !(state & HAWAII_SHELL_WINDOW_STATE_MINIMIZED)) {
         s->setMinimized(false);
-    } else if (state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED && !(m_state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED)) {
+    } else if (state & HAWAII_SHELL_WINDOW_STATE_MINIMIZED && !(m_state & HAWAII_SHELL_WINDOW_STATE_MINIMIZED)) {
         s->setMinimized(true);
         if (s->isActive())
             s->deactivate();
     }
 
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE &&
-            !(state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED))
+    if (state & HAWAII_SHELL_WINDOW_STATE_ACTIVE &&
+            !(state & HAWAII_SHELL_WINDOW_STATE_MINIMIZED))
         s->activate();
 
     m_state = state;
@@ -150,7 +150,7 @@ void HawaiiClientWIndow::close(wl_client *client, wl_resource *resource)
     shsurf()->close();
 }
 
-const struct wl_hawaii_window_interface HawaiiClientWIndow::s_implementation = {
+const struct hawaii_window_interface HawaiiClientWIndow::s_implementation = {
     wrapInterface(&HawaiiClientWIndow::setState),
     wrapInterface(&HawaiiClientWIndow::close)
 };

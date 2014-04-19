@@ -522,7 +522,7 @@ void PanelView::setWindowType()
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    struct ::wl_hawaii_panel *panel =
+    struct ::hawaii_panel *panel =
             ShellManager::instance()->panelManagerInterface()->set_panel(surface);
     m_surface->init(panel);
 }

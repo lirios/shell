@@ -39,13 +39,13 @@ static Window::States wlStateConvert(int32_t state)
 {
     Window::States result = Window::Inactive;
 
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE)
+    if (state & HAWAII_SHELL_WINDOW_STATE_ACTIVE)
         result |= Window::Active;
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED)
+    if (state & HAWAII_SHELL_WINDOW_STATE_MINIMIZED)
         result |= Window::Minimized;
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_MAXIMIZED)
+    if (state & HAWAII_SHELL_WINDOW_STATE_MAXIMIZED)
         result |= Window::Maximized;
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_FULLSCREEN)
+    if (state & HAWAII_SHELL_WINDOW_STATE_FULLSCREEN)
         result |= Window::Fullscreen;
 
     return result;
@@ -57,23 +57,23 @@ static Window::States wlStateConvert(int32_t state)
 */
 static int32_t stateConvert(Window::States state)
 {
-    int32_t result = WL_HAWAII_SHELL_WINDOW_STATE_INACTIVE;
+    int32_t result = HAWAII_SHELL_WINDOW_STATE_INACTIVE;
 
     if (state & Window::Active)
-        result |= WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE;
+        result |= HAWAII_SHELL_WINDOW_STATE_ACTIVE;
     if (state & Window::Minimized)
-        result |= WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED;
+        result |= HAWAII_SHELL_WINDOW_STATE_MINIMIZED;
     if (state & Window::Maximized)
-        result |= WL_HAWAII_SHELL_WINDOW_STATE_MAXIMIZED;
+        result |= HAWAII_SHELL_WINDOW_STATE_MAXIMIZED;
     if (state & Window::Fullscreen)
-        result |= WL_HAWAII_SHELL_WINDOW_STATE_FULLSCREEN;
+        result |= HAWAII_SHELL_WINDOW_STATE_FULLSCREEN;
 
     return result;
 }
 
 class Window;
 
-class WindowPrivate : public QtWayland::wl_hawaii_window
+class WindowPrivate : public QtWayland::hawaii_window
 {
     Q_DECLARE_PUBLIC(Window)
 public:

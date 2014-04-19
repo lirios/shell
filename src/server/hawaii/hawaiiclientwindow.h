@@ -26,37 +26,41 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef HAWAIIWORKSPACE_H
-#define HAWAIIWORKSPACE_H
+#ifndef HAWAIICLIENTWINDOW_H
+#define HAWAIICLIENTWINDOW_H
+
+#include <wayland-server.h>
 
 #include "interface.h"
 
-struct wl_client;
-struct wl_resource;
+class ShellSurface;
 
-class Workspace;
-
-class HawaiiWorkspace : public Interface
+class HawaiiClientWIndow : public Interface
 {
 public:
-    HawaiiWorkspace();
+    HawaiiClientWIndow();
+    ~HawaiiClientWIndow();
 
-    void init(wl_client *client);
-    wl_resource *resource() const { return m_resource; }
-    Workspace *workspace();
-
-    static HawaiiWorkspace *fromResource(wl_resource *resource);
+    void create();
 
 protected:
     virtual void added() override;
 
 private:
+    ShellSurface *shsurf();
+    void surfaceTypeChanged();
     void activeChanged();
-    void removed(wl_client *client, wl_resource *res);
+    void mapped();
+    void destroy();
+    void sendState();
+    void sendTitle();
+    void setState(wl_client *client, wl_resource *resource, int32_t state);
+    void close(wl_client *client, wl_resource *resource);
 
     wl_resource *m_resource;
+    int32_t m_state;
 
-    static const struct wl_hawaii_workspace_interface s_implementation;
+    static const struct hawaii_window_interface s_implementation;
 };
 
-#endif // HAWAIIWORKSPACE_H
+#endif // HAWAIICLIENTWINDOW_H

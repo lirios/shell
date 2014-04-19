@@ -39,7 +39,7 @@
  */
 
 PopupSurface::PopupSurface(PopupWindow *popup)
-    : QtWayland::wl_hawaii_popup_surface()
+    : QtWayland::hawaii_popup_surface()
     , m_popup(popup)
 {
 }
@@ -47,7 +47,7 @@ PopupSurface::PopupSurface(PopupWindow *popup)
 PopupSurface::~PopupSurface()
 {
     if (isInitialized())
-        wl_hawaii_popup_surface_destroy(object());
+        hawaii_popup_surface_destroy(object());
 }
 
 QWindow *PopupSurface::parentWindow() const
@@ -134,7 +134,7 @@ void PopupQuickWindow::setWindowType()
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    struct ::wl_hawaii_popup_surface *popupSurface =
+    struct ::hawaii_popup_surface *popupSurface =
             RegistryListener::instance()->shellSurface()->set_popup(parent, surface,
                                                                     pos.x(), pos.y());
     m_popupSurface->init(popupSurface);

@@ -52,7 +52,7 @@ private:
     wl_resource *m_binding;
     std::list<PanelSurface *> m_panels;
 
-    static const struct wl_hawaii_panel_manager_interface implementation;
+    static const struct hawaii_panel_manager_interface implementation;
 };
 
 #endif // PANELMANAGER_H

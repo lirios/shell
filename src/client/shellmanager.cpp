@@ -109,7 +109,7 @@ ShellSurfaceClient *ShellManager::shellSurfaceInterface() const
     return m_registryListener->shellSurface;
 }
 
-QtWayland::wl_hawaii_panel_manager *ShellManager::panelManagerInterface() const
+QtWayland::hawaii_panel_manager *ShellManager::panelManagerInterface() const
 {
     return m_registryListener->panelManager;
 }

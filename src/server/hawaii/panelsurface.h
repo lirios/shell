@@ -38,7 +38,7 @@ public:
     PanelSurface(wl_client *client, wl_resource *resource,
                  uint32_t id, weston_surface *surface);
 
-    wl_hawaii_panel_edge edge() const;
+    hawaii_panel_edge edge() const;
 
     weston_view *view() const;
     weston_output *output() const;
@@ -82,8 +82,8 @@ public:
 private:
     wl_resource *m_resource;
     weston_view *m_view;
-    wl_hawaii_panel_edge m_edge;
-    wl_hawaii_panel_alignment m_alignment;
+    hawaii_panel_edge m_edge;
+    hawaii_panel_alignment m_alignment;
     uint32_t m_offset;
     uint32_t m_thickness;
     uint32_t m_length;
@@ -94,7 +94,7 @@ private:
 
     void movePanel();
 
-    static const struct wl_hawaii_panel_interface implementation;
+    static const struct hawaii_panel_interface implementation;
 };
 
 #endif // PANELSURFACE_H

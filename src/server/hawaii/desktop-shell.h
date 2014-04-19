@@ -117,7 +117,7 @@ private:
     void centerViewOnAvailableSpace(weston_view *ev);
 
     /*
-     * wl_hawaii_shell
+     * hawaii_shell
      */
 
     void addTrustedClient(wl_client *client, wl_resource *resource, int32_t fd, const char *interface);
@@ -167,8 +167,8 @@ private:
 
     static void configurePopup(weston_surface *es, int32_t sx, int32_t sy);
 
-    static const struct wl_hawaii_shell_interface m_desktopShellImpl;
-    static const struct wl_hawaii_shell_surface_interface m_shellSurfaceImpl;
+    static const struct hawaii_shell_interface m_desktopShellImpl;
+    static const struct hawaii_shell_surface_interface m_shellSurfaceImpl;
 
     WlListener m_idleListener;
     WlListener m_wakeListener;

@@ -27,7 +27,7 @@
 #include "shellpopupsurface.h"
 
 ShellPopupSurface::ShellPopupSurface(QWaylandSurface *surface)
-    : QtWaylandServer::wl_hawaii_popup_surface()
+    : QtWaylandServer::hawaii_popup_surface()
     , m_surface(surface)
     , m_popupGrabber(nullptr)
 {

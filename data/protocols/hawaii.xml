@@ -24,7 +24,7 @@
     THIS SOFTWARE.
   </copyright>
 
-  <interface name="wl_hawaii_shell" version="1">
+  <interface name="hawaii_shell" version="1">
     <description summary="create desktop widgets and helpers">
       This interface defines the foundations of the Hawaii desktop.
     </description>
@@ -41,7 +41,7 @@
       <description summary="add key binding">
         Bind a global shortcut.
       </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_key_binding"/>
+      <arg name="id" type="new_id" interface="hawaii_key_binding"/>
       <arg name="key" type="uint"/>
       <arg name="modifiers" type="uint"/>
     </request>
@@ -170,7 +170,7 @@
       <description summary="select workspace">
         Tell the server to select the specified workspace.
       </description>
-      <arg name="workspace" type="object" interface="wl_hawaii_workspace"/>
+      <arg name="workspace" type="object" interface="hawaii_workspace"/>
     </request>
 
     <event name="loaded">
@@ -215,7 +215,7 @@
       <description summary="notify the client that a new window was created">
         This event will be sent immediately after a new window is mapped.
       </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_window"/>
+      <arg name="id" type="new_id" interface="hawaii_window"/>
       <arg name="title" type="string"/>
       <arg name="identifier" type="string"/>
       <arg name="state" type="int"/>
@@ -239,14 +239,14 @@
         The client provides a nice user interface that shows which window the server
         switched to. This event notifies the client which window the server switched to.
       </description>
-      <arg name="window" type="object" interface="wl_hawaii_window"/>
+      <arg name="window" type="object" interface="hawaii_window"/>
     </event>
 
     <event name="workspace_added">
       <description summary="notify the client that a workspace was added">
         This event will be sent immediately after a workspace is added.
       </description>
-      <arg name="workspace" type="new_id" interface="wl_hawaii_workspace"/>
+      <arg name="workspace" type="new_id" interface="hawaii_workspace"/>
       <arg name="active" type="int"/>
     </event>
 
@@ -280,7 +280,7 @@
     </enum>
   </interface>
 
-  <interface name="wl_hawaii_panel_manager" version="1">
+  <interface name="hawaii_panel_manager" version="1">
     <description summary="create panels">
       This interface is used by the shell to create panels.
       Only one client can bind.
@@ -291,12 +291,12 @@
         The surface set by this request will receive the panel role.
         Panels display launchers, buttons and other kind of elements.
       </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_panel"/>
+      <arg name="id" type="new_id" interface="hawaii_panel"/>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
   </interface>
 
-  <interface name="wl_hawaii_panel" version="1">
+  <interface name="hawaii_panel" version="1">
     <enum name="edge">
       <entry name="left" value="0"/>
       <entry name="top" value="1"/>
@@ -368,7 +368,7 @@
     </event>
   </interface>
 
-  <interface name="wl_hawaii_shell_surface" version="1">
+  <interface name="hawaii_shell_surface" version="1">
     <request name="set_popup">
       <description summary="make the surface a popup surface">
 	Map the surface as a popup.
@@ -383,7 +383,7 @@
 	The popup grab continues until the window is destroyed or a
 	mouse button is pressed in any other window.
       </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_popup_surface"/>
+      <arg name="id" type="new_id" interface="hawaii_popup_surface"/>
       <arg name="parent" type="object" interface="wl_surface"/>
       <arg name="surface" type="object" interface="wl_surface"/>
       <arg name="x" type="int"/>
@@ -400,7 +400,7 @@
     </request>
   </interface>
 
-  <interface name="wl_hawaii_popup_surface" version="1">
+  <interface name="hawaii_popup_surface" version="1">
     <event name="popup_done">
       <description summary="popup interaction is done">
         The popup_done event is sent out when a popup grab is broken,
@@ -409,7 +409,7 @@
     </event>
   </interface>
 
-  <interface name="wl_hawaii_key_binding" version="1">
+  <interface name="hawaii_key_binding" version="1">
     <description summary="interface for key bindings">
       This interface represents a key binding.
     </description>
@@ -422,7 +422,7 @@
     </event>
   </interface>
 
-  <interface name="wl_hawaii_window" version="1">
+  <interface name="hawaii_window" version="1">
     <description summary="interface to control client windows">
       Only one client can bind this interface at a time.
     </description>
@@ -469,7 +469,7 @@
     </event>
   </interface>
 
-  <interface name="wl_hawaii_workspace" version="1">
+  <interface name="hawaii_workspace" version="1">
     <description summary="control and manager workspaces">
       Each workspace can bind this interface.
     </description>

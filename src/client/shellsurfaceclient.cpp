@@ -27,6 +27,6 @@
 #include "shellsurfaceclient.h"
 
 ShellSurfaceClient::ShellSurfaceClient()
-    : QtWayland::wl_hawaii_shell_surface()
+    : QtWayland::hawaii_shell_surface()
 {
 }

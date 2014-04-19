@@ -40,16 +40,16 @@
 
 ShellClient::ShellClient(QObject *parent)
     : QObject(parent)
-    , QtWayland::wl_hawaii_shell()
+    , QtWayland::hawaii_shell()
 {
 }
 
-void ShellClient::hawaii_shell_loaded()
+void ShellClient::shell_loaded()
 {
     Q_EMIT loaded();
 }
 
-void ShellClient::hawaii_shell_configure(struct ::wl_surface *target,
+void ShellClient::shell_configure(struct ::wl_surface *target,
                                          int32_t width,
                                          int32_t height)
 {
@@ -68,49 +68,49 @@ void ShellClient::hawaii_shell_configure(struct ::wl_surface *target,
     }
 }
 
-void ShellClient::hawaii_shell_prepare_lock_surface()
+void ShellClient::shell_prepare_lock_surface()
 {
     Q_EMIT prepareLockSurface();
 }
 
-void ShellClient::hawaii_shell_grab_cursor(uint32_t cursor)
+void ShellClient::shell_grab_cursor(uint32_t cursor)
 {
     QCursor qcursor;
 
     switch (cursor) {
-    case WL_HAWAII_SHELL_CURSOR_NONE:
+    case HAWAII_SHELL_CURSOR_NONE:
         break;
-    case WL_HAWAII_SHELL_CURSOR_BUSY:
+    case HAWAII_SHELL_CURSOR_BUSY:
         qcursor.setShape(Qt::BusyCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_MOVE:
+    case HAWAII_SHELL_CURSOR_MOVE:
         qcursor.setShape(Qt::DragMoveCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_RESIZE_TOP:
+    case HAWAII_SHELL_CURSOR_RESIZE_TOP:
         qcursor.setShape(Qt::SizeVerCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_RESIZE_BOTTOM:
+    case HAWAII_SHELL_CURSOR_RESIZE_BOTTOM:
         qcursor.setShape(Qt::SizeVerCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_RESIZE_LEFT:
+    case HAWAII_SHELL_CURSOR_RESIZE_LEFT:
         qcursor.setShape(Qt::SizeHorCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_RESIZE_RIGHT:
+    case HAWAII_SHELL_CURSOR_RESIZE_RIGHT:
         qcursor.setShape(Qt::SizeHorCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_RESIZE_TOP_LEFT:
+    case HAWAII_SHELL_CURSOR_RESIZE_TOP_LEFT:
         qcursor.setShape(Qt::SizeFDiagCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_RESIZE_TOP_RIGHT:
+    case HAWAII_SHELL_CURSOR_RESIZE_TOP_RIGHT:
         qcursor.setShape(Qt::SizeBDiagCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_RESIZE_BOTTOM_LEFT:
+    case HAWAII_SHELL_CURSOR_RESIZE_BOTTOM_LEFT:
         qcursor.setShape(Qt::SizeBDiagCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_RESIZE_BOTTOM_RIGHT:
+    case HAWAII_SHELL_CURSOR_RESIZE_BOTTOM_RIGHT:
         qcursor.setShape(Qt::SizeFDiagCursor);
         break;
-    case WL_HAWAII_SHELL_CURSOR_ARROW:
+    case HAWAII_SHELL_CURSOR_ARROW:
     default:
         qcursor.setShape(Qt::ArrowCursor);
         break;
@@ -119,7 +119,7 @@ void ShellClient::hawaii_shell_grab_cursor(uint32_t cursor)
     Q_EMIT cursorChanged(qcursor);
 }
 
-void ShellClient::hawaii_shell_window_mapped(struct ::wl_hawaii_window *id,
+void ShellClient::shell_window_mapped(struct ::hawaii_window *id,
                                              const QString &title,
                                              const QString &identifier,
                                              int32_t state)
@@ -131,17 +131,17 @@ void ShellClient::hawaii_shell_window_mapped(struct ::wl_hawaii_window *id,
     Q_EMIT windowAdded(window);
 }
 
-void ShellClient::hawaii_shell_window_switching_started()
+void ShellClient::shell_window_switching_started()
 {
     Q_EMIT windowSwitchingStarted();
 }
 
-void ShellClient::hawaii_shell_window_switching_finished()
+void ShellClient::shell_window_switching_finished()
 {
     Q_EMIT windowSwitchingFinished();
 }
 
-void ShellClient::hawaii_shell_window_switched(struct ::wl_hawaii_window *window)
+void ShellClient::shell_window_switched(struct ::hawaii_window *window)
 {
     QList<Window *> list = ShellManager::instance()->controller()->d_ptr->windowsList;
 
@@ -154,7 +154,7 @@ void ShellClient::hawaii_shell_window_switched(struct ::wl_hawaii_window *window
     }
 }
 
-void ShellClient::hawaii_shell_workspace_added(struct ::wl_hawaii_workspace *id,
+void ShellClient::shell_workspace_added(struct ::hawaii_workspace *id,
                                                int32_t active)
 {
     Workspace *workspace = new Workspace(active != 0);

@@ -31,7 +31,7 @@
 
 class Workspace;
 
-class WorkspacePrivate : public QtWayland::wl_hawaii_workspace
+class WorkspacePrivate : public QtWayland::hawaii_workspace
 {
     Q_DECLARE_PUBLIC(Workspace)
 public:

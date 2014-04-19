@@ -29,7 +29,7 @@
 
 #include "qwayland-server-hawaii.h"
 
-class Workspace : public QtWaylandServer::wl_hawaii_workspace
+class Workspace : public QtWaylandServer::hawaii_workspace
 {
 public:
     Workspace();

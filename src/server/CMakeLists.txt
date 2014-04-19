@@ -3,7 +3,7 @@ include_directories(
     ${Pixman_INCLUDE_DIRS}
     ${Weston_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
-    ${CMAKE_CURRENT_SOURCE_DIR}/wl_hawaii
+    ${CMAKE_CURRENT_SOURCE_DIR}/hawaii
     ${CMAKE_CURRENT_SOURCE_DIR}/wl_shell
     ${CMAKE_BINARY_DIR}/headers
 )
@@ -34,14 +34,14 @@ set(SOURCES
     effects/minimizeeffect.cpp
     effects/scaleeffect.cpp
     effects/zoomeffect.cpp
-    wl_hawaii/desktop-shell.cpp
-    wl_hawaii/hawaiiclientwindow.cpp
-    wl_hawaii/hawaiiworkspace.cpp
-    wl_hawaii/notifications.cpp
-    wl_hawaii/panelmanager.cpp
-    wl_hawaii/panelsurface.cpp
-    wl_hawaii/screensaver.cpp
-    wl_hawaii/shellwindow.cpp
+    hawaii/desktop-shell.cpp
+    hawaii/hawaiiclientwindow.cpp
+    hawaii/hawaiiworkspace.cpp
+    hawaii/notifications.cpp
+    hawaii/panelmanager.cpp
+    hawaii/panelsurface.cpp
+    hawaii/screensaver.cpp
+    hawaii/shellwindow.cpp
     wl_shell/wlshell.cpp
     wl_shell/wlshellsurface.cpp
 )

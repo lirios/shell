@@ -31,7 +31,7 @@
 
 #include "qwayland-server-hawaii.h"
 
-class ClientWindow : public QtWaylandServer::wl_hawaii_window
+class ClientWindow : public QtWaylandServer::hawaii_window
 {
 public:
     ClientWindow(struct ::wl_display *display);
@@ -52,8 +52,8 @@ public:
     void unminimize();
 
 protected:
-    void hawaii_window_set_state(Resource *resource,
-                                 int32_t newState) Q_DECL_OVERRIDE;
+    void window_set_state(Resource *resource,
+                          int32_t newState) Q_DECL_OVERRIDE;
 
 private:
     bool m_mapped;

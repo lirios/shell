@@ -46,13 +46,13 @@
 #include "settings.h"
 #include "settingsinterface.h"
 #include "sessionmanager.h"
-#include "wl_hawaii/dropdown.h"
-#include "wl_hawaii/hawaiiclientwindow.h"
-#include "wl_hawaii/hawaiiworkspace.h"
-#include "wl_hawaii/notifications.h"
-#include "wl_hawaii/panelmanager.h"
-#include "wl_hawaii/screensaver.h"
-#include "wl_hawaii/shellwindow.h"
+#include "hawaii/dropdown.h"
+#include "hawaii/hawaiiclientwindow.h"
+#include "hawaii/hawaiiworkspace.h"
+#include "hawaii/notifications.h"
+#include "hawaii/panelmanager.h"
+#include "hawaii/screensaver.h"
+#include "hawaii/shellwindow.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,7 +79,7 @@ public:
 
     void end()
     {
-        wl_hawaii_popup_surface_send_popup_done(shsurfResource);
+        hawaii_popup_surface_send_popup_done(shsurfResource);
         wl_resource_destroy(shsurfResource);
     }
 
@@ -323,11 +323,11 @@ void DesktopShell::init()
     m_desktopLayer.insert(&m_limboLayer);
     m_backgroundLayer.insert(&m_desktopLayer);
 
-    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_surface_interface, 1, this,
+    if (!wl_global_create(compositor()->wl_display, &hawaii_shell_surface_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShellSurface(client, version, id); }))
         return;
 
-    if (!wl_global_create(compositor()->wl_display, &wl_hawaii_shell_interface, 1, this,
+    if (!wl_global_create(compositor()->wl_display, &hawaii_shell_interface, 1, this,
                           [](struct wl_client *client, void *data, uint32_t version, uint32_t id) { static_cast<DesktopShell *>(data)->bindDesktopShell(client, version, id); }))
         return;
 
@@ -476,7 +476,7 @@ void DesktopShell::unlockSession()
 
     weston_log("preparing lock surface...\n");
     weston_compositor_damage_all(compositor());
-    wl_hawaii_shell_send_prepare_lock_surface(shellClientResource());
+    hawaii_shell_send_prepare_lock_surface(shellClientResource());
     m_prepareEventSent = true;
 }
 
@@ -497,7 +497,7 @@ void DesktopShell::resumeDesktop()
 
 void DesktopShell::setGrabCursor(Cursor cursor)
 {
-    wl_hawaii_shell_send_grab_cursor(m_child.desktop_shell, (uint32_t)cursor);
+    hawaii_shell_send_grab_cursor(m_child.desktop_shell, (uint32_t)cursor);
 }
 
 ShellSurface *DesktopShell::createShellSurface(weston_surface *surface, const weston_shell_client *client)
@@ -623,18 +623,18 @@ void DesktopShell::recalculateAvailableGeometry()
                 continue;
 
             switch (panel->edge()) {
-            case WL_HAWAII_PANEL_EDGE_LEFT:
+            case HAWAII_PANEL_EDGE_LEFT:
                 rect.x += panel->width();
                 rect.width -= panel->width();
                 break;
-            case WL_HAWAII_PANEL_EDGE_TOP:
+            case HAWAII_PANEL_EDGE_TOP:
                 rect.y += panel->height();
                 rect.height -= panel->height();
                 break;
-            case WL_HAWAII_PANEL_EDGE_RIGHT:
+            case HAWAII_PANEL_EDGE_RIGHT:
                 rect.width -= panel->width();
                 break;
-            case WL_HAWAII_PANEL_EDGE_BOTTOM:
+            case HAWAII_PANEL_EDGE_BOTTOM:
                 rect.height -= panel->height();
                 break;
             }
@@ -710,7 +710,7 @@ void DesktopShell::sendInitEvents()
 
 void DesktopShell::workspaceAdded(HawaiiWorkspace *ws)
 {
-    wl_hawaii_shell_send_workspace_added(m_child.desktop_shell, ws->resource(), ws->workspace()->isActive());
+    hawaii_shell_send_workspace_added(m_child.desktop_shell, ws->resource(), ws->workspace()->isActive());
 }
 
 void DesktopShell::surfaceResponsivenessChanged(ShellSurface *shsurf, bool responsiveness)
@@ -725,7 +725,7 @@ void DesktopShell::surfaceResponsivenessChanged(ShellSurface *shsurf, bool respo
 
 void DesktopShell::bindDesktopShell(struct wl_client *client, uint32_t version, uint32_t id)
 {
-    struct wl_resource *resource = wl_resource_create(client, &wl_hawaii_shell_interface, version, id);
+    struct wl_resource *resource = wl_resource_create(client, &hawaii_shell_interface, version, id);
 
     if (client == m_child.client) {
         wl_resource_set_implementation(resource, &m_desktopShellImpl, this,
@@ -733,11 +733,11 @@ void DesktopShell::bindDesktopShell(struct wl_client *client, uint32_t version, 
         m_child.desktop_shell = resource;
 
         sendInitEvents();
-        wl_hawaii_shell_send_loaded(resource);
+        hawaii_shell_send_loaded(resource);
         return;
     }
 
-    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind wl_hawaii_shell denied");
+    wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT, "permission to bind hawaii_shell denied");
     wl_resource_destroy(resource);
 }
 
@@ -752,7 +752,7 @@ void DesktopShell::unbindDesktopShell(struct wl_resource *resource)
 
 void DesktopShell::bindDesktopShellSurface(struct wl_client *client, uint32_t version, uint32_t id)
 {
-    struct wl_resource *resource = wl_resource_create(client, &wl_hawaii_shell_surface_interface, version, id);
+    struct wl_resource *resource = wl_resource_create(client, &hawaii_shell_surface_interface, version, id);
 
     wl_resource_set_implementation(resource, &m_shellSurfaceImpl, this,
                                    [](struct wl_resource *resource) { static_cast<DesktopShell *>(resource->data)->unbindDesktopShellSurface(resource); });
@@ -868,12 +868,12 @@ public:
         if (keyboard->input_method_resource)
             keyboard->grab = &keyboard->input_method_grab;
 
-        wl_hawaii_shell_send_window_switching_finished(shell->shellClientResource());
+        hawaii_shell_send_window_switching_finished(shell->shellClientResource());
     }
 
     void switchNext()
     {
-        wl_hawaii_shell_send_window_switching_started(shell->shellClientResource());
+        hawaii_shell_send_window_switching_started(shell->shellClientResource());
 
         weston_surface *first = nullptr, *prev = nullptr, *next = nullptr;
 
@@ -919,7 +919,7 @@ public:
 
         ShellSurface *shsurf = shell->getShellSurface(next);
         if (shsurf)
-            wl_hawaii_shell_send_window_switched(shell->shellClientResource(),
+            hawaii_shell_send_window_switched(shell->shellClientResource(),
                                                  shsurf->windowResource());
     }
 
@@ -995,13 +995,13 @@ void DesktopShell::addTrustedClient(wl_client *client, wl_resource *resource, in
 
 void DesktopShell::addKeyBinding(struct wl_client *client, struct wl_resource *resource, uint32_t id, uint32_t key, uint32_t modifiers)
 {
-    wl_resource *res = wl_resource_create(client, &wl_hawaii_key_binding_interface, wl_resource_get_version(resource), id);
+    wl_resource *res = wl_resource_create(client, &hawaii_key_binding_interface, wl_resource_get_version(resource), id);
     wl_resource_set_implementation(res, nullptr, res, [](wl_resource *) {});
 
     weston_compositor_add_key_binding(compositor(), key, (weston_keyboard_modifier)modifiers,
                                       [](struct weston_seat *seat, uint32_t time, uint32_t key, void *data) {
 
-        wl_hawaii_key_binding_send_triggered(static_cast<wl_resource *>(data));
+        hawaii_key_binding_send_triggered(static_cast<wl_resource *>(data));
     }, res);
 }
 
@@ -1020,7 +1020,7 @@ void DesktopShell::configureViewForAvailableSpace(weston_view *ev, Layer *layer)
 
             if (ev->surface->width != o.rect.width ||
                     ev->surface->height != o.rect.height)
-                wl_hawaii_shell_send_configure(shellClientResource(),
+                hawaii_shell_send_configure(shellClientResource(),
                                                ev->surface->resource,
                                                o.rect.width,
                                                o.rect.height);
@@ -1154,7 +1154,7 @@ void DesktopShell::setPopup(struct wl_client *client, struct wl_resource *resour
     if (!grab)
         return;
 
-    grab->shsurfResource = wl_resource_create(client, &wl_hawaii_popup_surface_interface, wl_resource_get_version(resource), id);
+    grab->shsurfResource = wl_resource_create(client, &hawaii_popup_surface_interface, wl_resource_get_version(resource), id);
     wl_resource_set_user_data(grab->shsurfResource, grab);
 
     weston_seat *seat = container_of(compositor()->seat_list.next, weston_seat, link);
@@ -1384,7 +1384,7 @@ void DesktopShell::selectWorkspace(wl_client *client, wl_resource *resource, wl_
     Shell::selectWorkspace(HawaiiWorkspace::fromResource(workspace_resource)->workspace()->number());
 }
 
-const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
+const struct hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::addTrustedClient),
     wrapInterface(&DesktopShell::addKeyBinding),
     wrapInterface(&DesktopShell::setBackground),
@@ -1404,7 +1404,7 @@ const struct wl_hawaii_shell_interface DesktopShell::m_desktopShellImpl = {
     wrapInterface(&DesktopShell::selectWorkspace)
 };
 
-const struct wl_hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl = {
+const struct hawaii_shell_surface_interface DesktopShell::m_shellSurfaceImpl = {
     wrapInterface(&DesktopShell::setPopup),
     wrapInterface(&DesktopShell::setDialog)
 };

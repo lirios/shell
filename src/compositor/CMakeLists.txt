@@ -36,15 +36,15 @@ set(SOURCES
 
 wayland_add_protocol_client(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
-    hawaii
+    hawaii hawaii_
 )
 wayland_add_protocol_server(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
-    hawaii
+    hawaii hawaii_
 )
 qtwayland_add_protocol_server(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
-    hawaii
+    hawaii hawaii_
 )
 
 wayland_add_protocol_client(SOURCES

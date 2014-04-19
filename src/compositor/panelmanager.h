@@ -29,7 +29,7 @@
 
 #include "qwayland-server-hawaii.h"
 
-class PanelManager : public QObject, public QtWaylandServer::wl_hawaii_panel_manager
+class PanelManager : public QObject, public QtWaylandServer::hawaii_panel_manager
 {
     Q_OBJECT
 public:
@@ -37,9 +37,9 @@ public:
                  QObject *parent = 0);
 
 protected:
-    void hawaii_panel_manager_set_panel(Resource *resource,
-                                        uint32_t id,
-                                        struct ::wl_resource *surface_resource) Q_DECL_OVERRIDE;
+    void panel_manager_set_panel(Resource *resource,
+                                 uint32_t id,
+                                 struct ::wl_resource *surface_resource) Q_DECL_OVERRIDE;
 };
 
 #endif // PANELMANAGER_H

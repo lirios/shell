@@ -33,7 +33,7 @@ PanelManager::PanelManager()
     : Interface()
     , m_binding(nullptr)
 {
-    wl_global_create(Shell::instance()->compositor()->wl_display, &wl_hawaii_panel_manager_interface, 1, this,
+    wl_global_create(Shell::instance()->compositor()->wl_display, &hawaii_panel_manager_interface, 1, this,
                      [](wl_client *client, void *data, uint32_t version, uint32_t id) {
         static_cast<PanelManager *>(data)->bind(client, version, id);
     });
@@ -46,18 +46,18 @@ std::list<PanelSurface *> PanelManager::panels() const
 
 void PanelManager::bind(wl_client *client, uint32_t version, uint32_t id)
 {
-    wl_resource *resource = wl_resource_create(client, &wl_hawaii_panel_manager_interface, version, id);
+    wl_resource *resource = wl_resource_create(client, &hawaii_panel_manager_interface, version, id);
 
     if (m_binding) {
         wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "only one client is allowed to bind wl_hawaii_panel_manager");
+                               "only one client is allowed to bind hawaii_panel_manager");
         wl_resource_destroy(resource);
         return;
     }
 
     if (client != Shell::instance()->shellClient()) {
         wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                               "permission to bind wl_hawaii_panel_manager denied");
+                               "permission to bind hawaii_panel_manager denied");
         wl_resource_destroy(resource);
         return;
     }
@@ -131,7 +131,7 @@ void PanelManager::panelDocked(PanelSurface *)
     shell->recalculateAvailableGeometry();
 }
 
-const struct wl_hawaii_panel_manager_interface PanelManager::implementation = {
+const struct hawaii_panel_manager_interface PanelManager::implementation = {
     [](wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface_resource) {
         static_cast<PanelManager *>(wl_resource_get_user_data(resource))->getPanelSurface(client, resource, id, surface_resource);
     }

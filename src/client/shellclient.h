@@ -35,7 +35,7 @@ class QCursor;
 class Window;
 class Workspace;
 
-class ShellClient : public QObject, public QtWayland::wl_hawaii_shell
+class ShellClient : public QObject, public QtWayland::hawaii_shell
 {
     Q_OBJECT
 public:
@@ -52,21 +52,21 @@ Q_SIGNALS:
     void workspaceAdded(Workspace *workspace);
 
 protected:
-    void hawaii_shell_loaded() Q_DECL_OVERRIDE;
-    void hawaii_shell_configure(struct ::wl_surface *target,
-                                int32_t width,
-                                int32_t height);
-    void hawaii_shell_prepare_lock_surface() Q_DECL_OVERRIDE;
-    void hawaii_shell_grab_cursor(uint32_t cursor) Q_DECL_OVERRIDE;
-    void hawaii_shell_window_mapped(struct ::wl_hawaii_window *id,
-                                    const QString &title,
-                                    const QString &identifier,
-                                    int32_t state) Q_DECL_OVERRIDE;
-    void hawaii_shell_window_switching_started() Q_DECL_OVERRIDE;
-    void hawaii_shell_window_switching_finished() Q_DECL_OVERRIDE;
-    void hawaii_shell_window_switched(struct ::wl_hawaii_window *window);
-    void hawaii_shell_workspace_added(struct ::wl_hawaii_workspace *workspace,
-                                      int32_t active) Q_DECL_OVERRIDE;
+    void shell_loaded() Q_DECL_OVERRIDE;
+    void shell_configure(struct ::wl_surface *target,
+                         int32_t width,
+                         int32_t height);
+    void shell_prepare_lock_surface() Q_DECL_OVERRIDE;
+    void shell_grab_cursor(uint32_t cursor) Q_DECL_OVERRIDE;
+    void shell_window_mapped(struct ::hawaii_window *id,
+                             const QString &title,
+                             const QString &identifier,
+                             int32_t state) Q_DECL_OVERRIDE;
+    void shell_window_switching_started() Q_DECL_OVERRIDE;
+    void shell_window_switching_finished() Q_DECL_OVERRIDE;
+    void shell_window_switched(struct ::hawaii_window *window);
+    void shell_workspace_added(struct ::hawaii_workspace *workspace,
+                               int32_t active) Q_DECL_OVERRIDE;
 };
 
 #endif // SHELLCLIENT_H

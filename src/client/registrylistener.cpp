@@ -34,7 +34,7 @@
 RegistryListener::RegistryListener()
     : shell(new ShellClient())
     , shellSurface(new ShellSurfaceClient())
-    , panelManager(new QtWayland::wl_hawaii_panel_manager())
+    , panelManager(new QtWayland::hawaii_panel_manager())
 {
 }
 
@@ -79,11 +79,11 @@ void RegistryListener::handleGlobal(void *data,
         return;
     }
 
-    if (strcmp(interface, "wl_hawaii_shell") == 0)
+    if (strcmp(interface, "hawaii_shell") == 0)
         self->shell->init(registry, id);
-    else if (strcmp(interface, "wl_hawaii_shell_surface") == 0)
+    else if (strcmp(interface, "hawaii_shell_surface") == 0)
         self->shellSurface->init(registry, id);
-    else if (strcmp(interface, "wl_hawaii_panel_manager") == 0)
+    else if (strcmp(interface, "hawaii_panel_manager") == 0)
         self->panelManager->init(registry, id);
 }
 
@@ -100,9 +100,9 @@ void RegistryListener::handleGlobalRemove(void *data,
         return;
     }
 
-    wl_hawaii_panel_manager_destroy(self->panelManager->object());
-    wl_hawaii_shell_surface_destroy(self->shellSurface->object());
-    wl_hawaii_shell_destroy(self->shell->object());
+    hawaii_panel_manager_destroy(self->panelManager->object());
+    hawaii_shell_surface_destroy(self->shellSurface->object());
+    hawaii_shell_destroy(self->shell->object());
 }
 
 const struct wl_registry_listener RegistryListener::listener = {

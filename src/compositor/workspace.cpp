@@ -27,6 +27,6 @@
 #include "workspace.h"
 
 Workspace::Workspace()
-    : QtWaylandServer::wl_hawaii_workspace()
+    : QtWaylandServer::hawaii_workspace()
 {
 }

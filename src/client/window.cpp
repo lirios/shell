@@ -38,7 +38,7 @@ using namespace Hawaii;
  */
 
 WindowPrivate::WindowPrivate()
-    : QtWayland::wl_hawaii_window()
+    : QtWayland::hawaii_window()
     , q_ptr(0)
     , state(Window::Inactive)
     , appInfo(0)
@@ -48,7 +48,7 @@ WindowPrivate::WindowPrivate()
 WindowPrivate::~WindowPrivate()
 {
     delete appInfo;
-    wl_hawaii_window_destroy(object());
+    hawaii_window_destroy(object());
 }
 
 void WindowPrivate::hawaii_window_title_changed(const QString &title)

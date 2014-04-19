@@ -32,8 +32,8 @@
 
 PanelSurface::PanelSurface(wl_client *client, wl_resource *resource,
                            uint32_t id, weston_surface *surface)
-    : m_edge(WL_HAWAII_PANEL_EDGE_BOTTOM)
-    , m_alignment(WL_HAWAII_PANEL_ALIGNMENT_LEFT)
+    : m_edge(HAWAII_PANEL_EDGE_BOTTOM)
+    , m_alignment(HAWAII_PANEL_ALIGNMENT_LEFT)
     , m_offset(0)
     , m_thickness(0)
     , m_docked(false)
@@ -43,7 +43,7 @@ PanelSurface::PanelSurface(wl_client *client, wl_resource *resource,
 
     m_view = weston_view_create(surface);
 
-    m_resource = wl_resource_create(client, &wl_hawaii_panel_interface,
+    m_resource = wl_resource_create(client, &hawaii_panel_interface,
                                     wl_resource_get_version(resource), id);
     wl_resource_set_implementation(m_resource, &PanelSurface::implementation, this,
                                    [](struct wl_resource *resource) {});
@@ -54,7 +54,7 @@ PanelSurface::PanelSurface(wl_client *client, wl_resource *resource,
     wl_resource_set_user_data(m_resource, this);
 }
 
-wl_hawaii_panel_edge PanelSurface::edge() const
+hawaii_panel_edge PanelSurface::edge() const
 {
     return m_edge;
 }
@@ -98,7 +98,7 @@ void PanelSurface::setAlignment(struct wl_client *,
                                 struct wl_resource *,
                                 uint32_t alignment)
 {
-    m_alignment = static_cast<wl_hawaii_panel_alignment>(alignment);
+    m_alignment = static_cast<hawaii_panel_alignment>(alignment);
 }
 
 void PanelSurface::setOffset(struct wl_client *,
@@ -141,7 +141,7 @@ void PanelSurface::dock(struct wl_client *,
                         uint32_t edge,
                         struct wl_resource *output_resource)
 {
-    m_edge = static_cast<wl_hawaii_panel_edge>(edge);
+    m_edge = static_cast<hawaii_panel_edge>(edge);
 
     weston_output *output = static_cast<weston_output *>(output_resource->data);
     m_view->output = output;
@@ -156,7 +156,7 @@ void PanelSurface::setPosition()
         return;
 
     movePanel();
-    wl_hawaii_panel_send_docked(m_resource);
+    hawaii_panel_send_docked(m_resource);
     m_docked = true;
     m_dockRequested = false;
     dockedSignal(this);
@@ -169,65 +169,65 @@ void PanelSurface::movePanel()
     float y = static_cast<float>(output()->y);
 
     switch (m_edge) {
-    case WL_HAWAII_PANEL_EDGE_LEFT:
+    case HAWAII_PANEL_EDGE_LEFT:
         switch (m_alignment) {
-        case WL_HAWAII_PANEL_ALIGNMENT_LEFT:
+        case HAWAII_PANEL_ALIGNMENT_LEFT:
             x = static_cast<float>(output()->x);
             y = static_cast<float>(output()->y + m_offset);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_CENTER:
+        case HAWAII_PANEL_ALIGNMENT_CENTER:
             x = static_cast<float>(output()->x);
             y = static_cast<float>(((output()->y + output()->height) / 2.f) + m_offset);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_RIGHT:
+        case HAWAII_PANEL_ALIGNMENT_RIGHT:
             x = static_cast<float>(output()->x);
             y = static_cast<float>((output()->y + output()->height) - (m_offset + height()));
             break;
         }
         break;
-    case WL_HAWAII_PANEL_EDGE_TOP:
+    case HAWAII_PANEL_EDGE_TOP:
         switch (m_alignment) {
-        case WL_HAWAII_PANEL_ALIGNMENT_LEFT:
+        case HAWAII_PANEL_ALIGNMENT_LEFT:
             x = static_cast<float>(output()->x) + m_offset;
             y = static_cast<float>(output()->y);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_CENTER:
+        case HAWAII_PANEL_ALIGNMENT_CENTER:
             x = ((output()->x + output()->width) / 2.f) + (m_offset - (width() / 2.f));
             y = static_cast<float>(output()->y);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_RIGHT:
+        case HAWAII_PANEL_ALIGNMENT_RIGHT:
             x = static_cast<float>((output()->x + output()->width) - (m_offset + width()));
             y = static_cast<float>(output()->y);
             break;
         }
         break;
-    case WL_HAWAII_PANEL_EDGE_RIGHT:
+    case HAWAII_PANEL_EDGE_RIGHT:
         switch (m_alignment) {
-        case WL_HAWAII_PANEL_ALIGNMENT_LEFT:
+        case HAWAII_PANEL_ALIGNMENT_LEFT:
             x = static_cast<float>((output()->x + output()->width) - width());
             y = static_cast<float>(output()->y + m_offset);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_CENTER:
+        case HAWAII_PANEL_ALIGNMENT_CENTER:
             x = static_cast<float>(output()->x + output()->width - width());
             y = ((output()->y + output()->height) / 2.f) + (m_offset - height() / 2.f);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_RIGHT:
+        case HAWAII_PANEL_ALIGNMENT_RIGHT:
             x = static_cast<float>(output()->x + output()->width - width());
             y = static_cast<float>((output()->y + output()->height) - (m_offset + height()));
             break;
         }
         break;
-    case WL_HAWAII_PANEL_EDGE_BOTTOM:
+    case HAWAII_PANEL_EDGE_BOTTOM:
         switch (m_alignment) {
-        case WL_HAWAII_PANEL_ALIGNMENT_LEFT:
+        case HAWAII_PANEL_ALIGNMENT_LEFT:
             x = static_cast<float>(output()->x + m_offset);
             y = static_cast<float>(output()->y + output()->height - height() + 1);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_CENTER:
+        case HAWAII_PANEL_ALIGNMENT_CENTER:
             x = ((output()->x + output()->width) / 2.f) + (m_offset - width() / 2.f);
             y = static_cast<float>(output()->y + 1);
             break;
-        case WL_HAWAII_PANEL_ALIGNMENT_RIGHT:
+        case HAWAII_PANEL_ALIGNMENT_RIGHT:
             x = static_cast<float>(output()->x + output()->width - (m_offset + width()));
             y = static_cast<float>(output()->y + output()->height - height() + 1);
             break;
@@ -240,7 +240,7 @@ void PanelSurface::movePanel()
     weston_view_set_position(m_view, x, y);
 }
 
-const struct wl_hawaii_panel_interface PanelSurface::implementation = {
+const struct hawaii_panel_interface PanelSurface::implementation = {
     wrapInterface(&PanelSurface::setAlignment),
     wrapInterface(&PanelSurface::setOffset),
     wrapInterface(&PanelSurface::setThickness),
