@@ -54,7 +54,10 @@ DropArea {
     */
     onWidthChanged: containmentSizeSyncTimer.restart()
     onHeightChanged: containmentSizeSyncTimer.restart()
-    onConfigButtonChanged: containmentSizeSyncTimer.restart()
+    onConfigButtonChanged: {
+        configButton.visible = !Containment.immutable;
+        containmentSizeSyncTimer.restart();
+    }
 
     Layout.minimumWidth: currentLayout.Layout.minimumWidth
     Layout.maximumWidth: currentLayout.Layout.maximumWidth
@@ -218,7 +221,10 @@ DropArea {
     }
 
     Containment.onFormFactorChanged: containmentSizeSyncTimer.restart()
-    Containment.onImmutableChanged: containmentSizeSyncTimer.restart()
+    Containment.onImmutableChanged: {
+        configButton.visible = !Containment.immutable;
+        containmentSizeSyncTimer.restart();
+    }
     Containment.onConfiguringChanged: makeConfigurable()
     Containment.onElementAdded: addElement(element)
 
