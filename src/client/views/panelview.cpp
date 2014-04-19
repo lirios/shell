@@ -113,7 +113,7 @@ PanelView::PanelView(ShellUi *mantle, QScreen *screen)
 
     // Load QML source file
     setSource(QUrl::fromLocalFile(mantle->shellPackage().filePath(
-                                      "views", QStringLiteral("PanelView.qml"))));
+                                      "views", QStringLiteral("Panel.qml"))));
 
     // Set containment
     setContainment(containment);

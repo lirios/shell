@@ -64,7 +64,7 @@ DesktopView::DesktopView(ShellUi *mantle, QScreen *screen)
 
     // Load QML source file
     setSource(QUrl::fromLocalFile(mantle->shellPackage().filePath(
-                                      "views", QStringLiteral("DesktopView.qml"))));
+                                      "views", QStringLiteral("Desktop.qml"))));
 
     // Set containment
     setContainment(containment);
