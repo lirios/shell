@@ -60,9 +60,6 @@ public Q_SLOTS:
     void authenticate(const QString &response);
     void abortAuthentication();
 
-private Q_SLOTS:
-    void settingChanged(const QString &key, const QVariant &value);
-
 private:
     Q_DISABLE_COPY(PolicyKitAgent)
     Q_DECLARE_PRIVATE(PolicyKitAgent)

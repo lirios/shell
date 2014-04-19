@@ -31,9 +31,7 @@
 #include <polkitqt1-details.h>
 #include <polkitqt1-identity.h>
 
-#include <QtConfiguration/QStaticConfiguration>
-
-#include <Hawaii/Package>
+#include <HawaiiShell/Mantle>
 #include <HawaiiShell/QmlObject>
 
 class PolicyKitAgent;
@@ -52,10 +50,7 @@ public:
 
     void settingChanged(const QString &key, const QVariant &value);
 
-    QStaticConfiguration *settings;
-
-    Hawaii::Package package;
-    QString lookAndFeelId;
+    Hawaii::Mantle *mantle;
 
     Hawaii::QmlObject *qmlObject;
     QObject *dialog;

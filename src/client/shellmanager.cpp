@@ -172,19 +172,8 @@ void ShellManager::create()
     // TODO: Add as many workspaces as specified by the settings
     m_shellController->addWorkspaces(4);
 
-    // Figure out look and feel package name
-    QVariant defaultValue = QStringLiteral("org.hawaii.lookandfeel.standard");
-    QString lookAndFeel = m_settings->value(QStringLiteral("lookAndFeel"), defaultValue).toString();
-
     // Load user interface
     m_shellUi->changeShell(m_currentHandler->property("shell").toString());
-    m_shellUi->changeLookAndFeel(lookAndFeel);
-
-    // Change look and feel as soon as the setting is changed
-    connect(m_settings, &QStaticConfiguration::valueChanged, [=](const QString &name, const QVariant &value) {
-        if (name == QStringLiteral("lookAndFeel"))
-            m_shellUi->changeLookAndFeel(value.toString());
-    });
 
     // Shell user interface is ready, tell the compositor to fade in
     qDebug() << "Shell is now ready, elapsed time:" << m_elapsedTimer.elapsed() << "ms";

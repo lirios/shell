@@ -71,7 +71,6 @@ public Q_SLOTS:
     void setNumWorkspaces(int num);
 
     void changeShell(const QString &name);
-    void changeLookAndFeel(const QString &name);
 
 private:
     ScriptEngine *m_jsEngine;

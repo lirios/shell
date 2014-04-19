@@ -34,8 +34,6 @@
 #include <QtAccountsService/AccountsManager>
 #include <QtAccountsService/UserAccount>
 
-#include <Hawaii/PluginLoader>
-
 #include "config.h"
 #include "policykitagent.h"
 #include "policykitagent_p.h"
@@ -59,23 +57,13 @@ using namespace Hawaii;
  */
 
 PolicyKitAgentPrivate::PolicyKitAgentPrivate(PolicyKitAgent *self)
-    : settings(new QStaticConfiguration(self))
+    : mantle(new Hawaii::Mantle(self))
     , dialog(nullptr)
     , progressing(false)
     , canceled(false)
     , session(0)
     , q_ptr(self)
 {
-    // Settings category
-    settings->setCategory(QStringLiteral("shell"));
-
-    // Load look and feel package
-    package = PluginLoader::instance()->loadPackage(
-                PluginLoader::LookAndFeelPlugin);
-    package.setPath(settings->value(QStringLiteral("lookAndFeel")).toString());
-    if (!package.isValid())
-        package.setPath(QStringLiteral("org.hawaii.lookandfeel.standard"));
-
     // Prepare the QML loader
     qmlObject = new QmlObject(self);
     qmlObject->setInitializationDelayed(true);
@@ -89,19 +77,6 @@ void PolicyKitAgentPrivate::createDialog(const QString &actionId,
 {
     Q_Q(PolicyKitAgent);
 
-    // By the time we come here the look and feel package might
-    // have been changed several times. We don't want to change it
-    // while a dialog is still visible so we cache the last package
-    // identifier and load it here
-    if (!lookAndFeelId.isEmpty()) {
-        package.setPath(lookAndFeelId);
-        lookAndFeelId.clear();
-
-        // Fall back to the default package
-        if (!package.isValid())
-            package.setPath(QStringLiteral("org.hawaii.lookandfeel.standard"));
-    }
-
     // Properties
     QVariantHash props;
     props.insert(QStringLiteral("actionId"), actionId);
@@ -111,7 +86,7 @@ void PolicyKitAgentPrivate::createDialog(const QString &actionId,
     props.insert(QStringLiteral("avatar"), avatar);
 
     // Load the dialog
-    QUrl url = QUrl::fromLocalFile(package.filePath("authentication"));
+    QUrl url = QUrl::fromLocalFile(mantle->shellPackage().filePath("authentication"));
     qmlObject->setSource(url);
     if (!qmlObject->engine() || !qmlObject->engine()->rootContext() ||
             !qmlObject->engine()->rootContext()->isValid() ||
@@ -151,10 +126,6 @@ PolicyKitAgent::PolicyKitAgent(QObject *parent)
     : PolkitQt1::Agent::Listener(parent)
     , d_ptr(new PolicyKitAgentPrivate(this))
 {
-    Q_D(PolicyKitAgent);
-    connect(d->settings, &QStaticConfiguration::valueChanged,
-            this, &PolicyKitAgent::settingChanged);
-
     PolkitQt1::UnixSessionSubject session(
                 QCoreApplication::instance()->applicationPid());
     if (registerListener(session, "/org/hawaii/PolicyKit1/AuthenticationAgent")) {
@@ -438,18 +409,6 @@ void PolicyKitAgent::abortAuthentication()
     d->progressing = false;
     d->canceled = true;
     d->session->cancel();
-}
-
-void PolicyKitAgent::settingChanged(const QString &key, const QVariant &value)
-{
-    Q_D(PolicyKitAgent);
-
-    if (key != QStringLiteral("lookAndFeel"))
-        return;
-
-    // Cache the last look and feel package identifier,
-    // it will be loaded the next time a dialog is created
-    d->lookAndFeelId = value.toString();
 }
 
 #include "moc_policykitagent.cpp"

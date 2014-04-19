@@ -1,6 +1,5 @@
 include_directories(
     ${POLKITQT-1_INCLUDE_DIRS}
-    ${QtConfiguration_INCLUDE_DIRS}
     ${QtAccountsService_INCLUDE_DIRS}
     ${Hawaii_INCLUDE_DIRS}
     ${HawaiiShell_INCLUDE_DIRS}
@@ -21,7 +20,6 @@ set(LINK_FLAGS "-L${POLKITQT-1_LIB_DIR}")
 set(LIBRARIES
     ${POLKITQT-1_CORE_LIBRARY}
     ${POLKITQT-1_AGENT_LIBRARY}
-    ${QtConfiguration_LIBRARIES}
     ${QtAccountsService_LIBRARIES}
     ${Hawaii_LIBRARIES}
     ${HawaiiShell_LIBRARIES}

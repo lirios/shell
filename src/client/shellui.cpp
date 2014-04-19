@@ -41,8 +41,6 @@
 
 using namespace Hawaii;
 
-const QString s_lockScreenViewFileName = QStringLiteral("lockscreen/LockScreen.qml");
-
 ShellUi::ShellUi(QObject *parent)
     : Mantle(parent)
     , m_numWorkspaces(0)
@@ -154,7 +152,7 @@ void ShellUi::unload()
 void ShellUi::createLockScreen()
 {
     if (!m_lockScreenView) {
-        QString path = lookAndFeelPackage().filePath("lockscreen");
+        QString path = shellPackage().filePath("lockscreen");
 
         m_lockScreenView = new LockScreenView(this, QGuiApplication::primaryScreen());
         m_lockScreenView->setSource(QUrl::fromLocalFile(path));
@@ -215,33 +213,17 @@ void ShellUi::changeShell(const QString &name)
     package.setPath(name);
     setShellPackage(package);
 
-    // Load the new one
-    load();
-
-    // Print how much did it take to load the new shell
-    qDebug() << "Shell handler" << shell() << "loaded in" << elapsed.elapsed() << "ms";
-}
-
-void ShellUi::changeLookAndFeel(const QString &name)
-{
-    // Avoid loading the same look and feel package twice
-    if (lookAndFeel() == name)
-        return;
-
-    // Save look and feel name
-    setLookAndFeel(name);
-
-    // Load package
-    Package package = PluginLoader::instance()->loadPackage(
-                PluginLoader::LookAndFeelPlugin);
-    package.setPath(name);
-    setLookAndFeelPackage(package);
-
     // Change user interface
     if (m_lockScreenView) {
         const QString path = package.filePath("lockscreen");
         m_lockScreenView->setSource(QUrl::fromLocalFile(path));
     }
+
+    // Load the new one
+    load();
+
+    // Print how much did it take to load the new shell
+    qDebug() << "Shell handler" << shell() << "loaded in" << elapsed.elapsed() << "ms";
 }
 
 void ShellUi::synchronize()
