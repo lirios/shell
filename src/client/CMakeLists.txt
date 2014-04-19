@@ -47,6 +47,8 @@ set(SOURCES
     views/panelconfigview.cpp
     views/panelview.cpp
     windowtypes/grabwindow.cpp
+    windowtypes/overlayquickwindow_p.cpp
+    windowtypes/overlaywindow.cpp
     wayland/panelsurface.cpp
 )
 

@@ -1,6 +1,5 @@
 module Hawaii.Shell.Components
 plugin hawaiishellcomponentsplugin
 Dialog 1.0 Dialog.qml
-Overlay 1.0 Overlay.qml
 Popup 1.0 Popup.qml
 Tooltip 1.0 Tooltip.qml

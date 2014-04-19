@@ -28,7 +28,6 @@
 #include <QtQml/QQmlComponent>
 
 #include "dialogwindow.h"
-#include "overlaywindow.h"
 #include "popupwindow.h"
 #include "tooltipwindow.h"
 #include "registrylistener.h"
@@ -57,7 +56,6 @@ void HawaiiShellComponentsPlugin::initializeEngine(QQmlEngine *engine, const cha
     // @uri Hawaii.Shell.Components.Private
     const char *privateUri = "Hawaii.Shell.Components.Private";
     qmlRegisterType<DialogWindow>(privateUri, 1, 0, "DialogWindow");
-    qmlRegisterType<OverlayWindow>(privateUri, 1, 0, "OverlayWindow");
     qmlRegisterType<PopupWindow>(privateUri, 1, 0, "PopupWindow");
     qmlRegisterType<TooltipWindow>(privateUri, 1, 0, "TooltipWindow");
 }

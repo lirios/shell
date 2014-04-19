@@ -8,8 +8,6 @@ include_directories(
 set(SOURCES
     dialogquickwindow_p.cpp
     dialogwindow.cpp
-    overlayquickwindow_p.cpp
-    overlaywindow.cpp
     plugin.cpp
     popupquickwindow_p.cpp
     popupwindow.cpp
@@ -21,7 +19,6 @@ set(FILES
     qmldir
     Dialog.qml
     Popup.qml
-    Overlay.qml
     Tooltip.qml
 )
 

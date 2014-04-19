@@ -29,7 +29,7 @@
 #include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "overlayquickwindow_p.h"
-#include "registrylistener.h"
+#include "shellmanager.h"
 
 OverlayQuickWindow::OverlayQuickWindow(QWindow *parent)
     : QQuickWindow(parent)
@@ -54,7 +54,7 @@ void OverlayQuickWindow::setSurfaceRole()
     struct ::wl_surface *surface = static_cast<struct ::wl_surface *>(
                 native->nativeResourceForWindow("surface", this));
 
-    RegistryListener::instance()->shellSurface()->set_overlay(output, surface);
+    ShellManager::instance()->shellInterface()->set_overlay(surface);
 }
 
 #include "moc_overlayquickwindow_p.cpp"

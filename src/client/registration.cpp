@@ -39,6 +39,7 @@
 #include "shortcut.h"
 #include "window.h"
 #include "workspace.h"
+#include "windowtypes/overlaywindow.h"
 
 void Registration::registerQmlTypes()
 {
@@ -57,6 +58,14 @@ void Registration::registerQmlTypes()
                                            QStringLiteral("Do not create UserStatus"));
     qmlRegisterUncreatableType<Hawaii::Types>(uri, 1, 0, "Types",
                                               QStringLiteral("Do not create Types"));
+}
+
+void Registration::registerPrivateQmlTypes()
+{
+    // @uri Hawaii.Shell.Private
+    const char *uri = "Hawaii.Shell.Private";
+
+    qmlRegisterType<OverlayWindow>(uri, 1, 0, "OverlayWindow");
 }
 
 void Registration::registerFactories()

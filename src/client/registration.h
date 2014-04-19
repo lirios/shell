@@ -33,6 +33,7 @@ class Registration
 {
 public:
     static void registerQmlTypes();
+    static void registerPrivateQmlTypes();
     static void registerFactories();
 };
 

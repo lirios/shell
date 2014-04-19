@@ -65,6 +65,7 @@ ShellManager::ShellManager()
 
     // Register QML types and services
     Registration::registerQmlTypes();
+    Registration::registerPrivateQmlTypes();
     Registration::registerFactories();
 
     // Create shell mantle
