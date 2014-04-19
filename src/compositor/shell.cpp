@@ -194,6 +194,17 @@ void Shell::hawaii_shell_set_background(Resource *resource,
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
 }
 
+void Shell::hawaii_shell_set_overlay(Resource *resource,
+                                     struct ::wl_resource *surface_resource)
+{
+    Q_UNUSED(resource);
+
+    QWaylandSurface *surface =
+            QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::OverlayWindowRole);
+    surface->setWindowProperty(QStringLiteral("position"), surface->pos());
+}
+
 void Shell::hawaii_shell_set_desktop(Resource *resource,
                                      struct ::wl_resource *output_resource,
                                      struct ::wl_resource *surface_resource)

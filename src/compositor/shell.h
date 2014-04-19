@@ -81,6 +81,9 @@ protected:
                                   struct ::wl_resource *output_resource,
                                   struct ::wl_resource *surface) Q_DECL_OVERRIDE;
 
+    void hawaii_shell_set_overlay(Resource *resource,
+                                  struct ::wl_resource *surface) Q_DECL_OVERRIDE;
+
     void hawaii_shell_set_grab_surface(Resource *resource,
                                        struct ::wl_resource *surface_resource) Q_DECL_OVERRIDE;
 
