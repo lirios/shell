@@ -39,7 +39,7 @@ Item {
     QtObject {
         id: __priv
 
-        property int iconSize: panel.thickness * 0.8
+        property int iconSize: 64 * 0.8
         property int tileSize: iconSize + (iconSize / 4)
     }
 
