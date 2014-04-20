@@ -55,7 +55,8 @@ DropArea {
     onWidthChanged: containmentSizeSyncTimer.restart()
     onHeightChanged: containmentSizeSyncTimer.restart()
     onConfigButtonChanged: {
-        configButton.visible = !Containment.immutable;
+        if (configButton)
+            configButton.visible = !Containment.immutable;
         containmentSizeSyncTimer.restart();
     }
 
