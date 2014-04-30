@@ -38,8 +38,8 @@ public:
     MixerSource(QObject *parent = 0);
     ~MixerSource();
 
-    Q_INVOKABLE void setMute(bool value);
-    Q_INVOKABLE void setVolume(int value);
+    void setMute(bool value);
+    void setVolume(int value);
 
 protected:
     void checkForUpdate();
