@@ -61,18 +61,30 @@ Window {
             console.debug("Surface", surface, "created");
 
             surface.onMapped.connect(function() {
-                console.debug("Surface " + surface + " mapped (" +
-                              "className: \"" + surface.className + "\", " +
-                              "title: \"" + surface.title + "\", " +
-                              "role: " + surface.windowProperties.role + "): " +
-                              surface.size.width + "x" + surface.size.height + " @ " +
-                              surface.pos.x + "x" + surface.pos.y);
+                if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
+                    console.debug("Surface " + surface + " mapped (" +
+                                  "className: \"" + surface.className + "\", " +
+                                  "title: \"" + surface.title + "\"): " +
+                                  surface.size.width + "x" + surface.size.height + " @ " +
+                                  surface.pos.x + "x" + surface.pos.y);
+                } else {
+                    console.debug("Surface " + surface + " mapped (role: " +
+                                  surface.windowProperties.role + "): " +
+                                  surface.size.width + "x" + surface.size.height + " @ " +
+                                  surface.pos.x + "x" + surface.pos.y);
+                }
             });
             surface.onUnmapped.connect(function() {
-                console.debug("Surface " + surface + " unmapped (" +
-                              "className: \"" + surface.className + "\", " +
-                              "title: \"" + surface.title + "\", " +
-                              "role: " + surface.windowProperties.role + ")");
+                if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
+                    console.debug("Surface " + surface + " unmapped (" +
+                                  "className: \"" + surface.className + "\", " +
+                                  "title: \"" + surface.title + "\")");
+                } else {
+                    console.debug("Surface " + surface + " mapped (role: " +
+                                  surface.windowProperties.role + "): " +
+                                  surface.size.width + "x" + surface.size.height + " @ " +
+                                  surface.pos.x + "x" + surface.pos.y);
+                }
             });
             surface.onSizeChanged.connect(function() {
                 damageAll();
