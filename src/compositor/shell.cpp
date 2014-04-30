@@ -27,6 +27,7 @@
 #include <QtCompositor/QWaylandSurfaceItem>
 #include <QtCompositor/private/qwlsurface_p.h>
 
+#include "compositor.h"
 #include "screensaver.h"
 #include "shell.h"
 #include "popupgrabber.h"
@@ -35,6 +36,7 @@
 Shell::Shell(struct ::wl_display *display)
     : QObject()
     , QtWaylandServer::hawaii_shell(display)
+    , m_compositor(nullptr)
     , m_lockSurface(nullptr)
     , m_locked(false)
     , m_prepareEventSent(false)
@@ -44,6 +46,11 @@ Shell::Shell(struct ::wl_display *display)
 Shell::~Shell()
 {
     qDeleteAll(m_keyBindings);
+}
+
+void Shell::setCompositor(Compositor *compositor)
+{
+    m_compositor = compositor;
 }
 
 bool Shell::isLocked() const
@@ -60,7 +67,7 @@ void Shell::lockSession()
 {
     // If session is already locked, set DPMS off
     if (m_locked) {
-        Compositor::instance()->setState(Compositor::CompositorSleeping);
+        m_compositor->setState(Compositor::Sleeping);
         return;
     }
 
@@ -69,10 +76,10 @@ void Shell::lockSession()
     Q_EMIT lockedChanged(true);
 
     // Hide all surfaces
-    Compositor::instance()->shellSurface()->setSurfacesVisible(false);
+    m_compositor->shellSurface()->setSurfacesVisible(false);
 
     // Run screensaver
-    Compositor::instance()->screenSaver()->launchProcess();
+    m_compositor->screenSaver()->launchProcess();
 }
 
 void Shell::unlockSession()
@@ -80,12 +87,12 @@ void Shell::unlockSession()
     // If unlocked or the lock surface is already mapped we
     // just return, the QML side will hide the splash screen
     if (!m_locked || m_lockSurface) {
-        Q_EMIT Compositor::instance()->fadeIn();
+        Q_EMIT m_compositor->fadeIn();
         return;
     }
 
     // If the shell client has gone away, unlock immediately
-    if (!Compositor::instance()->isShellClientRunning()) {
+    if (!m_compositor->isShellClientRunning()) {
         resumeDesktop();
         return;
     }
@@ -140,12 +147,12 @@ void Shell::shell_set_lock_surface(Resource *resource,
 
     m_lockSurface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
-    m_lockSurface->setWindowProperty(QStringLiteral("role"), Compositor::BackgroundWindowRole);
+    m_lockSurface->setWindowProperty(QStringLiteral("role"), Compositor::BackgroundRole);
     m_lockSurface->setWindowProperty(QStringLiteral("position"), QPointF(0, 0));
 
     connect(m_lockSurface, &QWaylandSurface::mapped, [=]() {
         m_lockSurface->surfaceItem()->takeFocus();
-        Q_EMIT Compositor::instance()->fadeIn();
+        Q_EMIT m_compositor->fadeIn();
     });
 
     connect(m_lockSurface, &QObject::destroyed, [=](QObject *object = 0) {
@@ -166,7 +173,7 @@ void Shell::shell_lock(Resource *resource)
     if (m_locked || m_lockSurface)
         return;
 
-    Compositor::instance()->setState(Compositor::CompositorIdle);
+    m_compositor->setState(Compositor::Idle);
 }
 
 void Shell::shell_unlock(Resource *resource)
@@ -190,7 +197,7 @@ void Shell::shell_set_background(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
-    surface->setWindowProperty(QStringLiteral("role"), Compositor::BackgroundWindowRole);
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::BackgroundRole);
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
 }
 
@@ -201,7 +208,7 @@ void Shell::shell_set_overlay(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
-    surface->setWindowProperty(QStringLiteral("role"), Compositor::OverlayWindowRole);
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::OverlayRole);
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
 }
 
@@ -214,7 +221,7 @@ void Shell::shell_set_desktop(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
-    surface->setWindowProperty(QStringLiteral("role"), Compositor::DesktopWindowRole);
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::DesktopRole);
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
 }
 
@@ -254,10 +261,10 @@ void Shell::shell_select_workspace(Resource *resource,
 void Shell::resumeDesktop()
 {
     // Terminate screen saver process
-    Compositor::instance()->screenSaver()->terminateProcess();
+    m_compositor->screenSaver()->terminateProcess();
 
     // Show all surfaces and hide the lock surface
-    Compositor::instance()->shellSurface()->setSurfacesVisible(true);
+    m_compositor->shellSurface()->setSurfacesVisible(true);
     if (m_lockSurface && m_lockSurface->surfaceItem())
         m_lockSurface->surfaceItem()->setVisible(false);
 

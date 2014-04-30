@@ -24,11 +24,13 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QDebug>
+#include <QtCore/QProcess>
 #include <QtGui/QGuiApplication>
-#include <QScreen>
+#include <QtGui/QScreen>
 #include <QtCore/QVariantMap>
-#include <QQmlContext>
-#include <QQuickItem>
+#include <QtQml/QQmlContext>
+#include <QtQuick/QQuickItem>
 #include <QtCompositor/QWaylandSurface>
 #include <QtCompositor/QWaylandSurfaceItem>
 #include <QtCompositor/QWaylandInputDevice>
@@ -36,6 +38,7 @@
 #include <QtCompositor/private/qwlinputdevice_p.h>
 #include <QtCompositor/private/qwlpointer_p.h>
 
+#include "cmakedirs.h"
 #include "compositor.h"
 #include "panelmanager.h"
 #include "shell.h"
@@ -46,31 +49,140 @@
 #include "screensaver.h"
 #include "keymap.h"
 
-Q_GLOBAL_STATIC(Compositor, s_globalCompositor)
+/*
+ * CompositorPrivate
+ */
 
-Compositor::Compositor()
-    : GreenIsland::Compositor()
+class CompositorPrivate
+{
+public:
+    CompositorPrivate(Compositor *self);
+
+    void closeShell();
+    void dpms(bool on);
+
+    void _q_shellStarted();
+    void _q_shellFailed(QProcess::ProcessError error);
+    void _q_shellReadyReadStandardOutput();
+    void _q_shellReadyReadStandardError();
+    void _q_shellAboutToClose();
+
+    QString shellFileName;
+    QProcess *shellProcess;
+    Compositor::State state;
+
+protected:
+    Q_DECLARE_PUBLIC(Compositor)
+    Compositor *const q_ptr;
+};
+
+CompositorPrivate::CompositorPrivate(Compositor *self)
+    : shellProcess(nullptr)
+    , state(Compositor::Active)
+    , q_ptr(self)
+{
+    shellFileName = QStringLiteral(INSTALL_LIBEXECDIR "/starthawaii");
+}
+
+void CompositorPrivate::closeShell()
+{
+    if (!shellProcess)
+        return;
+
+    shellProcess->close();
+    delete shellProcess;
+    shellProcess = nullptr;
+
+    Q_Q(Compositor);
+    Q_EMIT q->shellClientRunningChanged();
+}
+
+void CompositorPrivate::dpms(bool on)
+{
+    // TODO
+}
+void CompositorPrivate::_q_shellStarted()
+{
+    Q_Q(Compositor);
+    Q_EMIT q->shellClientRunningChanged();
+}
+
+void CompositorPrivate::_q_shellFailed(QProcess::ProcessError error)
+{
+    Q_Q(Compositor);
+
+    switch (error) {
+    case QProcess::FailedToStart:
+        qWarning()
+                << "The shell process failed to start.\n"
+                << "Either the invoked program is missing, or you may have insufficient permissions to run it.";
+        break;
+    case QProcess::Crashed:
+        qWarning()
+                << "The shell process crashed some time after starting successfully.";
+        break;
+    case QProcess::Timedout:
+        qWarning()
+                << "The shell process timedout.\n";
+        break;
+    case QProcess::WriteError:
+        qWarning()
+                << "An error occurred when attempting to write to the shell process.";
+        break;
+    case QProcess::ReadError:
+        qWarning()
+                << "An error occurred when attempting to read from the shell process.";
+        break;
+    case QProcess::UnknownError:
+        qWarning()
+                << "Unknown error starting the shell process!";
+        break;
+    }
+
+    // Don't need it anymore because it failed
+    shellProcess->close();
+    delete shellProcess;
+    shellProcess = nullptr;
+    Q_EMIT q->shellClientRunningChanged();
+}
+
+void CompositorPrivate::_q_shellReadyReadStandardOutput()
+{
+    if (shellProcess)
+        qDebug() << qPrintable(shellProcess->readAllStandardOutput().trimmed());
+}
+
+void CompositorPrivate::_q_shellReadyReadStandardError()
+{
+    if (shellProcess)
+        qDebug() << qPrintable(shellProcess->readAllStandardError().trimmed());
+}
+
+void CompositorPrivate::_q_shellAboutToClose()
+{
+    qDebug() << "Shell is about to close...";
+}
+
+/*
+ * Compositor
+ */
+
+Compositor::Compositor(QWindow *window)
+    : QWaylandCompositor(window)
+    , d_ptr(new CompositorPrivate(this))
     , m_shellReady(false)
     , m_cursorSurface(nullptr)
     , m_cursorHotspotX(0)
     , m_cursorHotspotY(0)
 {
-    // Set title
-    setTitle(QStringLiteral("Hawaii Shell"));
-
-    // Allow QML to access this compositor
-    qmlRegisterUncreatableType<Compositor>("Hawaii.Shell", 0, 1, "Compositor",
-                                           QStringLiteral("Cannot create Compositor"));
-
-    // Load the QML code
-    setSource(QUrl("qrc:///qml/Compositor.qml"));
-
     // Create interfaces
     m_notifications = new Notifications(waylandDisplay());
     m_screenSaver = new ScreenSaver(waylandDisplay());
+    m_screenSaver->setCompositor(this);
     m_panelManager = new PanelManager(waylandDisplay());
     m_shellSurface = new ShellSurface(waylandDisplay());
     m_shell = new Shell(waylandDisplay());
+    m_shell->setCompositor(this);
     connect(m_shell, &Shell::ready, [=]() {
         // Shell is ready and we can start handling input events
         m_shellReady = true;
@@ -86,24 +198,15 @@ Compositor::Compositor()
     });
 
     // Connect to signals
-    connect(this, SIGNAL(surfaceMapped(QWaylandSurface*)),
-            this, SLOT(surfaceMapped(QWaylandSurface*)));
-    connect(this, SIGNAL(surfaceUnmapped(QWaylandSurface*)),
-            this, SLOT(surfaceUnmapped(QWaylandSurface*)));
-    connect(this, SIGNAL(surfaceDestroyed(QWaylandSurface*)),
-            this, SLOT(surfaceDestroyed(QWaylandSurface*)));
     connect(this, SIGNAL(sceneGraphInitialized()),
-            this, SLOT(sceneGraphInitialized()), Qt::DirectConnection);
-    connect(this, SIGNAL(windowAdded(QVariant)),
-            rootObject(), SLOT(windowAdded(QVariant)));
-    connect(this, SIGNAL(windowRemoved(QVariant)),
-            rootObject(), SLOT(windowRemoved(QVariant)));
-    connect(this, SIGNAL(windowDestroyed(QVariant)),
-            rootObject(), SLOT(windowDestroyed(QVariant)));
+            this, SLOT(sceneGraphInitialized()),
+            Qt::DirectConnection);
 }
 
 Compositor::~Compositor()
 {
+    stopShell();
+
     qDeleteAll(m_clientWindows);
     qDeleteAll(m_workspaces);
     delete m_screenSaver;
@@ -111,11 +214,81 @@ Compositor::~Compositor()
     delete m_panelManager;
     delete m_shellSurface;
     delete m_shell;
+    delete d_ptr;
 }
 
-Compositor *Compositor::instance()
+QString Compositor::shellFileName() const
 {
-    return s_globalCompositor();
+    Q_D(const Compositor);
+    return d->shellFileName;
+}
+
+void Compositor::setShellFileName(const QString &fileName)
+{
+    Q_D(Compositor);
+
+    if (d->shellFileName != fileName) {
+        d->shellFileName = fileName;
+        Q_EMIT shellFileNameChanged();
+    }
+}
+
+bool Compositor::isShellClientRunning() const
+{
+    Q_D(const Compositor);
+    return (d->shellProcess != nullptr);
+}
+
+Compositor::State Compositor::state() const
+{
+    Q_D(const Compositor);
+    return d->state;
+}
+
+void Compositor::setState(Compositor::State state)
+{
+    Q_D(Compositor);
+
+    if (state == Compositor::Active && d->state == state) {
+        Q_EMIT idleInhibitResetRequested();
+        Q_EMIT idleTimerStartRequested();
+        return;
+    }
+
+    if (d->state != state) {
+        switch (state) {
+        case Compositor::Active:
+            switch (d->state) {
+            case Compositor::Sleeping:
+                d->dpms(true);
+            default:
+                Q_EMIT wake();
+                Q_EMIT idleInhibitResetRequested();
+                Q_EMIT idleTimerStartRequested();
+            }
+        case Compositor::Idle:
+            Q_EMIT idle();
+            Q_EMIT idleInhibitResetRequested();
+            Q_EMIT idleTimerStopRequested();
+            break;
+        case Compositor::Offscreen:
+            switch (d->state) {
+            case Compositor::Sleeping:
+                d->dpms(true);
+            default:
+                Q_EMIT idleInhibitResetRequested();
+                Q_EMIT idleTimerStopRequested();
+            }
+        case Compositor::Sleeping:
+            Q_EMIT idleInhibitResetRequested();
+            Q_EMIT idleTimerStopRequested();
+            d->dpms(false);
+            break;
+        }
+
+        d->state = state;
+        Q_EMIT stateChanged();
+    }
 }
 
 Shell *Compositor::shell() const
@@ -135,79 +308,19 @@ ScreenSaver *Compositor::screenSaver() const
 
 void Compositor::surfaceCreated(QWaylandSurface *surface)
 {
+    if (!surface || !surface->hasShellSurface())
+        return;
+
+    // Set window role
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::ApplicationRole);
+
     // Create application window instance
-    if (surface && surface->hasShellSurface()) {
-        ClientWindow *appWindow = new ClientWindow(waylandDisplay());
-        appWindow->setSurface(surface);
-        m_clientWindows.append(appWindow);
-    }
+    ClientWindow *appWindow = new ClientWindow(waylandDisplay());
+    appWindow->setSurface(surface);
+    m_clientWindows.append(appWindow);
 
-    // Call overridden method
-    GreenIsland::Compositor::surfaceCreated(surface);
-}
-
-void Compositor::destroyWindow(QVariant window)
-{
-    qvariant_cast<QObject *>(window)->deleteLater();
-}
-
-void Compositor::destroyClientForWindow(QVariant window)
-{
-    QWaylandSurface *surface = qobject_cast<QWaylandSurfaceItem *>(
-                qvariant_cast<QObject *>(window))->surface();
-    destroyClientForSurface(surface);
-}
-
-void Compositor::lockSession()
-{
-    m_shell->lockSession();
-}
-
-void Compositor::unlockSession()
-{
-    m_shell->unlockSession();
-}
-
-void Compositor::surfaceMapped(QWaylandSurface *surface)
-{
-    // Sanity check
-    if (!surface)
-        return;
-
-    // Get the surface item
-    QWaylandSurfaceItem *item = surface->surfaceItem();
-
-    // Create a WaylandSurfaceItem for this surface
-    if (!item)
-        item = new QWaylandSurfaceItem(surface, rootObject());
-
-    // Enable touch events
-    item->setTouchEventsEnabled(true);
-
-    // Announce a window was added
-    Q_EMIT windowAdded(QVariant::fromValue(static_cast<QQuickItem *>(item)));
-}
-
-void Compositor::surfaceUnmapped(QWaylandSurface *surface)
-{
-    // Sanity check
-    if (!surface)
-        return;
-
-    // Announce this window was removed
-    QWaylandSurfaceItem *item = surface->surfaceItem();
-    if (item)
-        Q_EMIT windowRemoved(QVariant::fromValue(static_cast<QQuickItem *>(item)));
-}
-
-void Compositor::surfaceDestroyed(QWaylandSurface *surface)
-{
-    // Sanity check
-    if (!surface)
-        return;
-
-    if (surface->hasShellSurface()) {
-        // Delete application window
+    // Delete application window on surface destruction
+    connect(surface, &QWaylandSurface::destroyed, [=](QObject *object = 0) {
         for (ClientWindow *appWindow: m_clientWindows) {
             if (appWindow->surface() == surface) {
                 if (m_clientWindows.removeOne(appWindow))
@@ -215,133 +328,7 @@ void Compositor::surfaceDestroyed(QWaylandSurface *surface)
                 break;
             }
         }
-    }
-
-    // Announce this window was destroyed
-    QWaylandSurfaceItem *item = surface->surfaceItem();
-    if (item)
-        Q_EMIT windowDestroyed(QVariant::fromValue(static_cast<QQuickItem *>(item)));
-}
-
-void Compositor::sceneGraphInitialized()
-{
-    showGraphicsInfo();
-}
-
-void Compositor::mousePressEvent(QMouseEvent *event)
-{
-    // Ignore events until the shell is ready
-    if (!m_shellReady) {
-        event->ignore();
-        return;
-    }
-
-    // Custom event handling only of shell windows
-    QPointF local;
-    QWaylandSurface *targetSurface = m_shellSurface->surfaceAt(event->localPos(), &local);
-    if (targetSurface && !targetSurface->hasShellSurface()) {
-        defaultInputDevice()->sendMousePressEvent(event->button(), local, event->globalPos());
-        event->accept();
-    } else {
-        GreenIsland::Compositor::mousePressEvent(event);
-    }
-}
-
-void Compositor::mouseReleaseEvent(QMouseEvent *event)
-{
-    // Ignore events until the shell is ready
-    if (!m_shellReady) {
-        event->ignore();
-        return;
-    }
-
-    // Custom event handling only of shell windows
-    QPointF local;
-    QWaylandSurface *targetSurface = m_shellSurface->surfaceAt(event->localPos(), &local);
-    if (targetSurface && !targetSurface->hasShellSurface()) {
-        defaultInputDevice()->sendMouseReleaseEvent(event->button(), local, event->globalPos());
-        event->accept();
-    } else {
-        GreenIsland::Compositor::mouseReleaseEvent(event);
-    }
-}
-
-void Compositor::mouseMoveEvent(QMouseEvent *event)
-{
-    // Ignore events until the shell is ready
-    if (!m_shellReady) {
-        event->ignore();
-        return;
-    }
-
-    // Custom event handling only of shell windows
-    QPointF local;
-    QWaylandSurface *targetSurface = m_shellSurface->surfaceAt(event->localPos(), &local);
-    if (targetSurface && !targetSurface->hasShellSurface()) {
-        defaultInputDevice()->sendMouseMoveEvent(targetSurface, local, event->globalPos());
-        event->accept();
-    } else {
-        GreenIsland::Compositor::mouseMoveEvent(event);
-    }
-}
-
-void Compositor::keyPressEvent(QKeyEvent *event)
-{
-    // Decode key event
-    uint32_t modifiers = 0;
-    uint32_t key = 0;
-
-    if (event->modifiers() & Qt::ControlModifier)
-        modifiers |= MODIFIER_CTRL;
-    if (event->modifiers() & Qt::AltModifier)
-        modifiers |= MODIFIER_ALT;
-    if (event->modifiers() & Qt::MetaModifier)
-        modifiers |= MODIFIER_SUPER;
-    if (event->modifiers() & Qt::ShiftModifier)
-        modifiers |= MODIFIER_SHIFT;
-
-    int k = 0;
-    while (keyTable[k]) {
-        if (event->key() == (int)keyTable[k]) {
-            key = keyTable[k + 1];
-            break;
-        }
-        k += 2;
-    }
-
-    // Look for a matching key binding
-    for (KeyBinding *keyBinding: m_shell->keyBindings()) {
-        if (keyBinding->modifiers() == modifiers && keyBinding->key() == key) {
-            keyBinding->send_triggered();
-            break;
-        }
-    }
-
-    // Call overridden method
-    GreenIsland::Compositor::keyPressEvent(event);
-}
-
-void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY)
-{
-    if ((m_cursorSurface != surface) && surface)
-        connect(surface, &QWaylandSurface::damaged, [=](const QRegion &region) {
-            if (!m_cursorSurface)
-                return;
-
-
-            QCursor cursor(QPixmap::fromImage(m_cursorSurface->image()), m_cursorHotspotX, m_cursorHotspotY);
-            static bool cursorIsSet = false;
-            if (cursorIsSet) {
-                QGuiApplication::changeOverrideCursor(cursor);
-            } else {
-                QGuiApplication::setOverrideCursor(cursor);
-                cursorIsSet = true;
-            }
-        });
-
-    m_cursorSurface = surface;
-    m_cursorHotspotX = hotspotX;
-    m_cursorHotspotY = hotspotY;
+    });
 }
 
 QPointF Compositor::calculateInitialPosition(QWaylandSurface *surface)
@@ -384,6 +371,111 @@ QPointF Compositor::calculateInitialPosition(QWaylandSurface *surface)
     pos.setY(compositor->outputGeometry().y() + dy);
 
     return pos;
+}
+
+void Compositor::startShell()
+{
+    Q_D(Compositor);
+
+    // Sanity check
+    if (d->shellFileName.isEmpty() || d->shellProcess)
+        return;
+
+    // Run the shell client process
+    d->shellProcess = new QProcess(this);
+    connect(d->shellProcess, SIGNAL(started()),
+            this, SLOT(_q_shellStarted()));
+    connect(d->shellProcess, SIGNAL(error(QProcess::ProcessError)),
+            this, SLOT(_q_shellFailed(QProcess::ProcessError)));
+    connect(d->shellProcess, SIGNAL(readyReadStandardOutput()),
+            this, SLOT(_q_shellReadyReadStandardOutput()));
+    connect(d->shellProcess, SIGNAL(readyReadStandardError()),
+            this, SLOT(_q_shellReadyReadStandardError()));
+    connect(d->shellProcess, SIGNAL(aboutToClose()),
+            this, SLOT(_q_shellAboutToClose()));
+    d->shellProcess->start(d->shellFileName, QStringList(), QIODevice::ReadOnly);
+}
+
+void Compositor::stopShell()
+{
+    Q_D(Compositor);
+    d->closeShell();
+}
+
+void Compositor::lockSession()
+{
+    m_shell->lockSession();
+}
+
+void Compositor::unlockSession()
+{
+    m_shell->unlockSession();
+}
+
+void Compositor::sceneGraphInitialized()
+{
+    //showGraphicsInfo();
+}
+
+#if 0
+void Compositor::keyPressEvent(QKeyEvent *event)
+{
+    // Decode key event
+    uint32_t modifiers = 0;
+    uint32_t key = 0;
+
+    if (event->modifiers() & Qt::ControlModifier)
+        modifiers |= MODIFIER_CTRL;
+    if (event->modifiers() & Qt::AltModifier)
+        modifiers |= MODIFIER_ALT;
+    if (event->modifiers() & Qt::MetaModifier)
+        modifiers |= MODIFIER_SUPER;
+    if (event->modifiers() & Qt::ShiftModifier)
+        modifiers |= MODIFIER_SHIFT;
+
+    int k = 0;
+    while (keyTable[k]) {
+        if (event->key() == (int)keyTable[k]) {
+            key = keyTable[k + 1];
+            break;
+        }
+        k += 2;
+    }
+
+    // Look for a matching key binding
+    for (KeyBinding *keyBinding: m_shell->keyBindings()) {
+        if (keyBinding->modifiers() == modifiers && keyBinding->key() == key) {
+            keyBinding->send_triggered();
+            break;
+        }
+    }
+
+    // Call overridden method
+    QWaylandCompositor::keyPressEvent(event);
+}
+#endif
+
+void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY)
+{
+    if ((m_cursorSurface != surface) && surface)
+        connect(surface, &QWaylandSurface::damaged, [=](const QRegion &region) {
+            if (!m_cursorSurface)
+                return;
+
+
+            QCursor cursor(QPixmap::fromImage(m_cursorSurface->image()), m_cursorHotspotX, m_cursorHotspotY);
+            static bool cursorIsSet = false;
+            if (cursorIsSet) {
+                QGuiApplication::changeOverrideCursor(cursor);
+            } else {
+                QGuiApplication::setOverrideCursor(cursor);
+                cursorIsSet = true;
+            }
+        });
+
+    m_cursorSurface = surface;
+    m_cursorHotspotX = hotspotX;
+    m_cursorHotspotY = hotspotY;
 }
 
 #include "moc_compositor.cpp"

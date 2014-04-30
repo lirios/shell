@@ -48,9 +48,10 @@
 #define QMLCOMPOSITORITEM_H
 
 #include <QtQuick/QQuickItem>
-#include <QtCompositor/QWaylandCompositor>
 
-class QmlCompositorItemCompositor : public QObject, public QWaylandCompositor
+#include "compositor.h"
+
+class QmlCompositorItemCompositor : public Compositor
 {
     Q_OBJECT
 public:
@@ -71,12 +72,57 @@ public Q_SLOTS:
 class QmlCompositorItem : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(QmlCompositorItemCompositor *compositor READ compositor)
+    Q_ENUMS(State WindowRole)
 public:
+    enum State {
+        //! Compositor is active.
+        Active,
+        //! Shell unlock called on activity.
+        Idle,
+        //! No rendering, no frame events.
+        Offscreen,
+        //! Same as CompositorOffscreen, but also set DPMS
+        Sleeping
+    };
+
+    enum WindowRole {
+        ApplicationRole,
+        LockScreenRole,
+        OverlayRole,
+        DialogRole,
+        FullScreenRole,
+        PanelRole,
+        PopupRole,
+        NotificationRole,
+        DesktopRole,
+        BackgroundRole
+    };
+
     explicit QmlCompositorItem(QQuickItem *parent = 0);
+
+    QmlCompositorItemCompositor *compositor() const;
+
+    Q_INVOKABLE QPointF initialPositionForSurface(QWaylandSurface *surface);
 
 Q_SIGNALS:
     void waylandSurfaceCreated(QWaylandSurface *surface);
     void waylandSurfaceAboutToBeDestroyed(QWaylandSurface *surface);
+
+    void idleInhibitResetRequested();
+    void idleTimerStartRequested();
+    void idleTimerStopRequested();
+
+    void idle();
+    void wake();
+
+    void ready();
+
+    void fadeIn();
+    void fadeOut();
+
+    void locked();
+    void unlocked();
 
 public Q_SLOTS:
     void damageAll();

@@ -35,6 +35,7 @@ void registerQmlTypes()
     // @uri Hawaii.Compositor
     const char *uri = "Hawaii.Compositor";
 
+    qmlRegisterType<QmlCompositorItemCompositor>();
     qmlRegisterType<QmlCompositorItem>(uri, 1, 0, "WaylandCompositor");
     qmlRegisterType<QWaylandSurfaceItem>(uri, 1, 0, "WaylandSurfaceItem");
     qmlRegisterUncreatableType<QWaylandSurface>(uri, 1, 0, "WaylandSurface",

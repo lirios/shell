@@ -35,6 +35,8 @@
 #include "compositor.h"
 #include "keybinding.h"
 
+class Compositor;
+
 class Shell : public QObject,
         public QtWaylandServer::hawaii_shell
 {
@@ -43,6 +45,8 @@ class Shell : public QObject,
 public:
     Shell(struct ::wl_display *display);
     ~Shell();
+
+    void setCompositor(Compositor *compositor);
 
     bool isLocked() const;
 
@@ -97,6 +101,8 @@ protected:
                                 struct ::wl_resource *workspace) Q_DECL_OVERRIDE;
 
 private:
+    Compositor *m_compositor;
+
     KeyBindings m_keyBindings;
 
     QWaylandSurface *m_lockSurface;

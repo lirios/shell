@@ -30,6 +30,7 @@
 #include "qwayland-server-hawaii.h"
 
 class QWaylandSurface;
+class Compositor;
 
 class ShellPanelSurface : public QtWaylandServer::hawaii_panel
 {
@@ -53,6 +54,8 @@ protected:
                     struct ::wl_resource *output) Q_DECL_OVERRIDE;
 
 private:
+    Compositor *m_compositor;
+
     QWaylandSurface *m_surface;
     uint32_t m_alignment;
     uint32_t m_offset;

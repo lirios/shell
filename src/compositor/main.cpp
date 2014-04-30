@@ -28,12 +28,13 @@
 #include <QtCore/QCommandLineParser>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QScreen>
+#include <QtGui/QWindow>
+#include <QtQml/QQmlApplicationEngine>
 
 #include <GreenIsland/Utilities>
 
 #include "compositor.h"
 #include "config.h"
-#include "cmakedirs.h"
 #include "logging.h"
 #include "registration.h"
 
@@ -91,29 +92,32 @@ int main(int argc, char *argv[])
     // Register QML types
     registerQmlTypes();
 
-    // Create compositor, run shell client
-    Compositor *compositor = Compositor::instance();
-    compositor->setGeometry(geometry);
-    compositor->setOutputGeometry(geometry);
+    // Application engine
+    QQmlApplicationEngine engine(QUrl("qrc:/qml/Compositor.qml"));
+    QWindow *window = qobject_cast<QWindow *>(engine.rootObjects().first());
+    if (!window) {
+        qFatal("Compositor has no top level element that inhertis from Window!");
+        return 1;
+    }
+
+    // Set screen
+    window->setScreen(QGuiApplication::primaryScreen());
+
+    // Set window geometry
+    window->setGeometry(geometry);
 
     // Parse command line
     parser.process(app);
     if (parser.isSet(synthesizeOption))
         app.setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, true);
-    if (parser.isSet(fullScreenOption)) {
-        compositor->setGeometry(screenGeometry);
-        compositor->setVisibility(QWindow::FullScreen);
-    }
+    if (parser.isSet(fullScreenOption))
+        window->setVisibility(QWindow::FullScreen);
     int idleInterval = parser.value(idleTimeOption).toInt();
     if (idleInterval >= 5)
-        compositor->setIdleInterval(idleInterval * 1000);
-    
-    // Run shell client
-    compositor->setShellFileName(QLatin1String(INSTALL_LIBEXECDIR "/starthawaii"));
-    compositor->runShell();
+        window->setProperty("idleInterval", idleInterval * 1000);
 
     // Show compositor window
-    compositor->show();
+    window->show();
 
 #if HAVE_SYSTEMD
     sd_notifyf(0,

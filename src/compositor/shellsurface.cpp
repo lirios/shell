@@ -89,10 +89,11 @@ void ShellSurface::shell_surface_set_popup(Resource *resource,
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     if (m_panelsLayer.contains(surface))
         return;
-    surface->setWindowProperty(QStringLiteral("role"), Compositor::PopupWindowRole);
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::PopupRole);
     surface->setWindowProperty(QStringLiteral("position"), pos);
 
-    QtWayland::InputDevice *input = Compositor::instance()->defaultInputDevice()->handle();
+    Compositor *compositor = static_cast<Compositor *>(surface->compositor());
+    QtWayland::InputDevice *input = compositor->defaultInputDevice()->handle();
 
     ShellPopupSurface *popupSurface = new ShellPopupSurface(surface);
     popupSurface->init(resource->client(), id);
@@ -115,7 +116,7 @@ void ShellSurface::shell_surface_set_dialog(Resource *resource,
 
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
-    surface->setWindowProperty(QStringLiteral("role"), Compositor::DialogWindowRole);
+    surface->setWindowProperty(QStringLiteral("role"), Compositor::DialogRole);
     surface->setWindowProperty(QStringLiteral("position"), surface->pos());
 }
 

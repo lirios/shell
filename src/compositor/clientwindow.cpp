@@ -90,8 +90,9 @@ void ClientWindow::setSurface(QWaylandSurface *surface)
         if (m_mapped)
             return;
 
-        for (Resource *resource: resourceMap().values())
-            Compositor::instance()->shell()->send_window_mapped(
+        Compositor *compositor = static_cast<Compositor *>(m_surface->compositor());
+        for (Resource *resource: resourceMap().values())\
+            compositor->shell()->send_window_mapped(
                         resource->handle,
                         m_surface->title(),
                         m_surface->className(),

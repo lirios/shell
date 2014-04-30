@@ -25,19 +25,87 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import WaylandCompositor 1.0
+import QtQuick.Window 2.0
 import GreenIsland 1.0
-import Hawaii.Shell 0.1
-import "WindowManager.js" as WindowManager
+import Hawaii.Compositor 1.0
 
-Item {
+Window {
+    property alias qmlCompositor: qmlCompositor
     property alias layers: layers
+    property alias idleInterval: idleTimer.interval
 
     id: root
+    color: "black"
+    title: "Hawaii Shell"
+    visible: false
 
-    // Bind compositor signals
-    Connections {
-        target: compositor
+    Timer {
+        id: idleTimer
+        interval: 5*60000
+        onIntervalChanged: {
+            if (running)
+                restart();
+        }
+    }
+
+    ListModel {
+        id: surfaceModel
+    }
+
+    WaylandCompositor {
+        property int idleInhibit: 0
+
+        id: qmlCompositor
+        anchors.fill: parent
+        onWaylandSurfaceCreated: {
+            console.debug("Surface", surface, "created");
+
+            surface.onMapped.connect(function() {
+                console.debug("Surface " + surface + " mapped (" +
+                              "className: \"" + surface.className + "\", " +
+                              "title: \"" + surface.title + "\", " +
+                              "role: " + surface.windowProperties.role + "): " +
+                              surface.size.width + "x" + surface.size.height + " @ " +
+                              surface.pos.x + "x" + surface.pos.y);
+            });
+            surface.onUnmapped.connect(function() {
+                console.debug("Surface " + surface + " unmapped (" +
+                              "className: \"" + surface.className + "\", " +
+                              "title: \"" + surface.title + "\", " +
+                              "role: " + surface.windowProperties.role + ")");
+            });
+            surface.onSizeChanged.connect(function() {
+                damageAll();
+            });
+
+            // Create surface item
+            var component = Qt.createComponent("WaylandWindow.qml");
+            var waylandWindow = component.createObject(qmlCompositor, {surface: surface});
+
+            // Add surface to the model
+            surfaceModel.append({"surface": surface, "window": waylandWindow});
+        }
+        onWaylandSurfaceAboutToBeDestroyed: {
+            console.debug("Surface about to be destroyed:", surface);
+
+            // Remove surface from model
+            var i;
+            for (i = 0; i < surfaceModel.count; i++) {
+                var entry = surfaceModel.get(i);
+
+                if (entry.surface === surface) {
+                    entry.window.destroy();
+                    surfaceModel.remove(i, 1);
+                    break;
+                }
+            }
+
+            // Damage all surfaces
+            damageAll();
+        }
+        onIdleInhibitResetRequested: idleInhibit = 0
+        onIdleTimerStartRequested: idleTimer.running = true
+        onIdleTimerStopRequested: idleTimer.running = false
         onIdle: {
             // Fade the desktop out
             splash.opacity = 1.0;
@@ -54,7 +122,7 @@ Item {
             splash.opacity = 0.0;
 
             // Damage all surfaces
-            compositor.damageAll();
+            damageAll();
         }
         onFadeOut: {
             // Fade the desktop out
@@ -65,67 +133,84 @@ Item {
             splash.opacity = 0.0;
 
             // Damage all surfaces
-            compositor.damageAll();
+            damageAll();
         }
         onReady: {
             // Fade the desktop in
             splash.opacity = 0.0;
 
             // Start idle timer
-            compositor.startIdleTimer();
+            idleTimer.running = true
         }
-    }
 
-    // FPS counter
-    Text {
-        anchors {
-            top: parent.top
-            right: parent.right
+        /*
+         * Idle inhibit
+         */
+
+        Keys.onPressed: idleInhibit++
+        Keys.onReleased: idleInhibit--
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            preventStealing: false
+            onPressed: idleInhibit++
+            onReleased: idleInhibit--
+            onPositionChanged: qmlCompositor.compositor.state = WaylandCompositor.Active
+            onWheel: qmlCompositor.compositor.state = WaylandCompositor.Active
         }
-        z: 1000
-        text: fpsCounter.fps
-        font.pointSize: 36
-        style: Text.Raised
-        styleColor: "#222"
-        color: "white"
-        visible: false
 
-        FpsCounter {
-            id: fpsCounter
+        MultiPointTouchArea {
+            anchors.fill: parent
+            onPressed: idleInhibit++
+            onReleased: idleInhibit--
         }
-    }
 
-    // Black rectangle for fade-in and fade-out effects
-    Rectangle {
-        id: splash
-        anchors.fill: parent
-        color: "black"
-        z: 999
+        /*
+         * Components
+         */
 
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: 250
+        // FPS counter
+        Text {
+            anchors {
+                top: parent.top
+                right: parent.right
+            }
+            z: 1000
+            text: fpsCounter.fps
+            font.pointSize: 36
+            style: Text.Raised
+            styleColor: "#222"
+            color: "white"
+            visible: false
+
+            FpsCounter {
+                id: fpsCounter
             }
         }
-    }
 
-    // Layers for windows
-    Layers {
-        id: layers
-        anchors.fill: parent
-        z: 998
-    }
+        // Black rectangle for fade-in and fade-out effects
+        Rectangle {
+            id: splash
+            anchors.fill: parent
+            color: "black"
+            z: 999
 
-    function windowAdded(window) {
-        WindowManager.windowAdded(window);
-    }
+            Behavior on opacity {
+                NumberAnimation {
+                    easing.type: Easing.InOutQuad
+                    duration: 250
+                }
+            }
+        }
 
-    function windowRemoved(window) {
-        WindowManager.windowRemoved(window);
-    }
+        // Layers for windows
+        Layers {
+            id: layers
+            anchors.fill: parent
+            z: 998
+        }
 
-    function windowDestroyed(window) {
-        WindowManager.windowDestroyed(window);
+        Component.onCompleted: compositor.startShell()
     }
 }

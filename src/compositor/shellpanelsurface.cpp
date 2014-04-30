@@ -41,6 +41,7 @@ ShellPanelSurface::ShellPanelSurface(QWaylandSurface *surface)
     , m_minLength(0)
     , m_maxLength(0)
 {
+    m_compositor = static_cast<Compositor *>(surface->compositor());
 }
 
 void ShellPanelSurface::panel_set_alignment(Resource *resource,
@@ -93,8 +94,8 @@ void ShellPanelSurface::panel_dock(Resource *resource,
     Q_UNUSED(output);
 
     // FIXME: use output's geometry instead of the primary screen geometry
-    QPoint coords = Compositor::instance()->outputGeometry().topLeft();
-    QSize size = Compositor::instance()->outputGeometry().size();
+    QPoint coords = m_compositor->outputGeometry().topLeft();
+    QSize size = m_compositor->outputGeometry().size();
 
     qreal x = static_cast<qreal>(coords.x());
     qreal y = static_cast<qreal>(coords.y());

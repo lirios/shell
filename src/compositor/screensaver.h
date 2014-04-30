@@ -33,6 +33,7 @@
 #include "qwayland-server-screensaver.h"
 
 class QTimer;
+class Compositor;
 
 class ScreenSaver : public QObject, public QtWaylandServer::wl_screensaver
 {
@@ -40,6 +41,8 @@ class ScreenSaver : public QObject, public QtWaylandServer::wl_screensaver
 public:
     explicit ScreenSaver(struct ::wl_display *display,
                          QObject *parent = 0);
+
+    void setCompositor(Compositor *compositor);
 
     void launchProcess();
     void terminateProcess();
@@ -50,6 +53,7 @@ protected:
                                  struct ::wl_resource *surface_resource) Q_DECL_OVERRIDE;
 
 private:
+    Compositor *m_compositor;
     bool m_enabled;
     int m_timeout;
     QTimer *m_timer;

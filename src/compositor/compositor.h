@@ -27,12 +27,9 @@
 #ifndef COMPOSITOR_H
 #define COMPOSITOR_H
 
-#include <QProcess>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QKeyEvent>
+#include <QtCompositor/QWaylandCompositor>
 
-#include <GreenIsland/Compositor>
-
+class CompositorPrivate;
 class Shell;
 class ShellSurface;
 class ClientWindow;
@@ -42,41 +39,70 @@ class PanelManager;
 class ScreenSaver;
 class Notifications;
 
-class Compositor : public GreenIsland::Compositor
+class Compositor : public QObject, public QWaylandCompositor
 {
     Q_OBJECT
-    Q_ENUMS(ShellWindowRole)
+    Q_PROPERTY(QString shellFileName READ shellFileName WRITE setShellFileName NOTIFY shellFileNameChanged)
+    Q_PROPERTY(bool shellClientRunning READ isShellClientRunning NOTIFY shellClientRunningChanged)
+    Q_PROPERTY(State state READ state WRITE setState NOTIFY stateChanged)
+    Q_ENUMS(State WindowRole)
 public:
-    enum ShellWindowRole {
-        LockScreenRole = 0,
-        OverlayWindowRole,
-        DialogWindowRole,
-        FullScreenWindowRole,
-        PanelWindowRole,
-        PopupWindowRole,
-        NotificationsWindowRole,
-        DesktopWindowRole,
-        BackgroundWindowRole,
-        ApplicationWindowRole
+    enum State {
+        //! Compositor is active.
+        Active,
+        //! Shell unlock called on activity.
+        Idle,
+        //! No rendering, no frame events.
+        Offscreen,
+        //! Same as CompositorOffscreen, but also set DPMS
+        Sleeping
     };
 
-    explicit Compositor();
+    enum WindowRole {
+        ApplicationRole,
+        LockScreenRole,
+        OverlayRole,
+        DialogRole,
+        FullScreenRole,
+        PanelRole,
+        PopupRole,
+        NotificationRole,
+        DesktopRole,
+        BackgroundRole
+    };
+
+    explicit Compositor(QWindow *window = 0);
     ~Compositor();
 
-    static Compositor *instance();
+    QString shellFileName() const;
+    void setShellFileName(const QString &fileName);
+
+    bool isShellClientRunning() const;
+
+    State state() const;
+    void setState(State state);
 
     Shell *shell() const;
     ShellSurface *shellSurface() const;
     ScreenSaver *screenSaver() const;
 
-    void surfaceCreated(QWaylandSurface *surface);
+    virtual void surfaceCreated(QWaylandSurface *surface);
+
+    QPointF calculateInitialPosition(QWaylandSurface *surface);
 
 Q_SIGNALS:
-    void ready();
+    void shellFileNameChanged();
+    void shellClientRunningChanged();
+    void stateChanged();
 
-    void windowAdded(QVariant window);
-    void windowRemoved(QVariant window);
-    void windowDestroyed(QVariant window);
+    void idleInhibitResetRequested();
+    void idleTimerStartRequested();
+    void idleTimerStopRequested();
+
+    void idle();
+    void wake();
+
+    void ready();
 
     void fadeIn();
     void fadeOut();
@@ -85,27 +111,27 @@ Q_SIGNALS:
     void unlocked();
 
 public Q_SLOTS:
-    void destroyWindow(QVariant window);
-    void destroyClientForWindow(QVariant window);
+    void startShell();
+    void stopShell();
 
     void lockSession();
     void unlockSession();
 
 private Q_SLOTS:
-    void surfaceMapped(QWaylandSurface *surface);
-    void surfaceUnmapped(QWaylandSurface *surface);
-    void surfaceDestroyed(QWaylandSurface *surface);
-
     void sceneGraphInitialized();
 
 protected:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-
-    void keyPressEvent(QKeyEvent *event);
-
     void setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY);
+
+private:
+    Q_DECLARE_PRIVATE(Compositor)
+    CompositorPrivate *const d_ptr;
+
+    Q_PRIVATE_SLOT(d_func(), void _q_shellStarted())
+    Q_PRIVATE_SLOT(d_func(), void _q_shellFailed(QProcess::ProcessError error))
+    Q_PRIVATE_SLOT(d_func(), void _q_shellReadyReadStandardOutput())
+    Q_PRIVATE_SLOT(d_func(), void _q_shellReadyReadStandardError())
+    Q_PRIVATE_SLOT(d_func(), void _q_shellAboutToClose())
 
 private:
     Notifications *m_notifications;
@@ -123,8 +149,6 @@ private:
     QWaylandSurface *m_cursorSurface;
     int m_cursorHotspotX;
     int m_cursorHotspotY;
-
-    QPointF calculateInitialPosition(QWaylandSurface *surface);
 };
 
 #endif // COMPOSITOR_H

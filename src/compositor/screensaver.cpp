@@ -37,6 +37,7 @@
 ScreenSaver::ScreenSaver(wl_display *display, QObject *parent)
     : QObject(parent)
     , QtWaylandServer::wl_screensaver(display)
+    , m_compositor(nullptr)
     , m_enabled(true)
     , m_timeout(5*60*1000)
     , m_timer(new QTimer(this))
@@ -54,11 +55,16 @@ ScreenSaver::ScreenSaver(wl_display *display, QObject *parent)
             this, SLOT(processError(QProcess::ProcessError)));
 }
 
+void ScreenSaver::setCompositor(Compositor *compositor)
+{
+    m_compositor = compositor;
+}
+
 void ScreenSaver::launchProcess()
 {
     // If the screen saver is disabled we just sleep
     if (!m_enabled) {
-        Compositor::instance()->setState(Compositor::CompositorSleeping);
+        m_compositor->setState(Compositor::Sleeping);
         return;
     }
 
@@ -97,7 +103,7 @@ void ScreenSaver::screensaver_set_surface(Resource *resource,
     if (item)
         item->setZ(100000);
 
-    Q_EMIT Compositor::instance()->fadeIn();
+    Q_EMIT m_compositor->fadeIn();
 }
 
 void ScreenSaver::timeout()
@@ -106,7 +112,7 @@ void ScreenSaver::timeout()
     // in order to save some power
     qCDebug(HAWAII_COMPOSITOR) << "Screen saver timeout...";
     terminateProcess();
-    Compositor::instance()->setState(Compositor::CompositorSleeping);
+    m_compositor->setState(Compositor::Sleeping);
 }
 
 void ScreenSaver::processStarted()
@@ -127,8 +133,8 @@ void ScreenSaver::processFinished(int code)
 
 void ScreenSaver::processError(QProcess::ProcessError error)
 {
-    Compositor *compositor = Compositor::instance();
+    Q_UNUSED(error);
 
-    if (compositor->shell()->isLocked())
-        compositor->setState(Compositor::CompositorSleeping);
+    if (m_compositor->shell()->isLocked())
+        m_compositor->setState(Compositor::Sleeping);
 }

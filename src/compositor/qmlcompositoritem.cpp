@@ -51,7 +51,7 @@
 #include "qmlcompositoritem.h"
 
 QmlCompositorItemCompositor::QmlCompositorItemCompositor(QWindow *window)
-    : QWaylandCompositor(window)
+    : Compositor(window)
 {
     if (QQuickWindow *w = qobject_cast<QQuickWindow *>(window)) {
         connect(w, SIGNAL(beforeSynchronizing()),
@@ -64,6 +64,7 @@ QmlCompositorItemCompositor::QmlCompositorItemCompositor(QWindow *window)
 
 void QmlCompositorItemCompositor::surfaceCreated(QWaylandSurface *surface)
 {
+    Compositor::surfaceCreated(surface);
     Q_EMIT waylandSurfaceCreated(surface);
 }
 
@@ -88,6 +89,19 @@ QmlCompositorItem::QmlCompositorItem(QQuickItem *parent)
 {
     connect(this, SIGNAL(parentChanged(QQuickItem*)),
             this, SLOT(initCompositor()));
+}
+
+QmlCompositorItemCompositor *QmlCompositorItem::compositor() const
+{
+    return m_compositor;
+}
+
+QPointF QmlCompositorItem::initialPositionForSurface(QWaylandSurface *surface)
+{
+    if (!m_compositor)
+        return QPointF(0, 0);
+
+    return m_compositor->calculateInitialPosition(surface);
 }
 
 void QmlCompositorItem::damageAll()
@@ -124,6 +138,26 @@ void QmlCompositorItem::initCompositor()
                 this, SIGNAL(waylandSurfaceCreated(QWaylandSurface*)));
         connect(m_compositor, SIGNAL(waylandSurfaceAboutToBeDestroyed(QWaylandSurface*)),
                 this, SIGNAL(waylandSurfaceAboutToBeDestroyed(QWaylandSurface*)));
+        connect(m_compositor, SIGNAL(idleInhibitResetRequested()),
+                this, SIGNAL(idleInhibitResetRequested()));
+        connect(m_compositor, SIGNAL(idleTimerStartRequested()),
+                this, SIGNAL(idleTimerStartRequested()));
+        connect(m_compositor, SIGNAL(idleTimerStopRequested()),
+                this, SIGNAL(idleTimerStopRequested()));
+        connect(m_compositor, SIGNAL(idle()),
+                this, SIGNAL(idle()));
+        connect(m_compositor, SIGNAL(wake()),
+                this, SIGNAL(wake()));
+        connect(m_compositor, SIGNAL(ready()),
+                this, SIGNAL(ready()));
+        connect(m_compositor, SIGNAL(fadeIn()),
+                this, SIGNAL(fadeIn()));
+        connect(m_compositor, SIGNAL(fadeOut()),
+                this, SIGNAL(fadeOut()));
+        connect(m_compositor, SIGNAL(locked()),
+                this, SIGNAL(locked()));
+        connect(m_compositor, SIGNAL(unlocked()),
+                this, SIGNAL(unlocked()));
 
         // Set initial geometry
         m_compositor->setOutputGeometry(QRect(0, 0, width(), height()));
