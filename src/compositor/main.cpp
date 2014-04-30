@@ -85,10 +85,6 @@ int main(int argc, char *argv[])
     idleTimeOption.setDefaultValue("300");
     parser.addOption(idleTimeOption);
 
-    // Geometry
-    QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
-    QRect geometry(screenGeometry.topLeft(), QSize(1920, 1080));
-
     // Register QML types
     registerQmlTypes();
 
@@ -104,14 +100,16 @@ int main(int argc, char *argv[])
     window->setScreen(QGuiApplication::primaryScreen());
 
     // Set window geometry
-    window->setGeometry(geometry);
+    window->setGeometry(QRect(0, 0, 1920, 1080));
 
     // Parse command line
     parser.process(app);
     if (parser.isSet(synthesizeOption))
         app.setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, true);
-    if (parser.isSet(fullScreenOption))
+    if (parser.isSet(fullScreenOption)) {
+        window->setGeometry(QGuiApplication::primaryScreen()->availableGeometry());
         window->setVisibility(QWindow::FullScreen);
+    }
     int idleInterval = parser.value(idleTimeOption).toInt();
     if (idleInterval >= 5)
         window->setProperty("idleInterval", idleInterval * 1000);
