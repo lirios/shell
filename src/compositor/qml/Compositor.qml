@@ -172,12 +172,6 @@ Window {
             onWheel: qmlCompositor.compositor.state = WaylandCompositor.Active
         }
 
-        MultiPointTouchArea {
-            anchors.fill: parent
-            onPressed: idleInhibit++
-            onReleased: idleInhibit--
-        }
-
         /*
          * Components
          */
