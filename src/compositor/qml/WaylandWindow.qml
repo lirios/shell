@@ -109,4 +109,11 @@ WaylandSurfaceItem {
         anchors.fill: parent
         source: parent
     }
+
+    MouseArea {
+        anchors.fill: parent
+        enabled: !waylandWindow.focus
+        preventStealing: true
+        onClicked: waylandWindow.takeFocus()
+    }
 }
