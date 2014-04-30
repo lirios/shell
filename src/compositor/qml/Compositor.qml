@@ -111,106 +111,10 @@ Item {
     }
 
     // Layers for windows
-    Item {
-        property alias lock: lockLayer
-        property alias overlay: overlayLayer
-        property alias dialogs: dialogsLayer
-        property alias fullScreen: fullScreenLayer
-        property alias panels: panelsLayer
-        property alias notifications: notificationsLayer
-        property alias windows: windowsLayer
-        property alias desktop: desktopLayer
-        property alias background: backgroundLayer
-
+    Layers {
         id: layers
         anchors.fill: parent
         z: 998
-
-        // Lock screen is above all windows to shield the session
-        Item {
-            id: lockLayer
-            anchors.fill: parent
-            z: 900
-        }
-
-        // Overlays can cover pretty much everything except the lock screen
-        Item {
-            id: overlayLayer
-            anchors.fill: parent
-            z: 899
-        }
-
-        // Globally modal dialogs can cover application and shell gadgets
-        Item {
-            id: dialogsLayerContainer
-            anchors.fill: parent
-            z: 898
-
-            // Overlay
-            Rectangle {
-                id: modalOverlay
-                anchors.fill: parent
-                color: "black"
-                opacity: 0.0
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        easing.type: Easing.InOutQuad
-                        duration: 250
-                    }
-                }
-            }
-
-            // Actual globally modal dialogs layer
-            Item {
-                property alias overlay: modalOverlay
-
-                id: dialogsLayer
-                anchors.fill: modalOverlay
-            }
-        }
-
-        // Full screen windows can cover application windows and panels
-        Item {
-            id: fullScreenLayer
-            anchors.fill: parent
-            z: 897
-        }
-
-        // Panels are above application windows
-        Item {
-            id: panelsLayer
-            anchors.fill: parent
-            z: 896
-        }
-
-        // Notifications are basically at the same level as panels
-        Item {
-            id: notificationsLayer
-            anchors.fill: parent
-            z: 895
-        }
-
-        // Application windows can only cover the desktop
-        Item {
-            id: windowsLayer
-            anchors.fill: parent
-            z: 894
-        }
-
-        // Desktop is only above to the background
-        Item {
-            id: desktopLayer
-            anchors.fill: parent
-            z: 893
-        }
-
-        // Background is below everything
-        Item {
-            id: backgroundLayer
-            anchors.fill: parent
-            z: 892
-        }
     }
 
     function windowAdded(window) {
