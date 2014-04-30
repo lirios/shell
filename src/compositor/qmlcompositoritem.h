@@ -88,6 +88,7 @@ public:
 
     enum WindowRole {
         ApplicationRole,
+        CursorRole,
         LockScreenRole,
         OverlayRole,
         DialogRole,

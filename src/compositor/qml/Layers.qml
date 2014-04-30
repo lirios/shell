@@ -27,6 +27,7 @@
 import QtQuick 2.0
 
 Item {
+    property alias cursor: cursorLayer
     property alias lock: lockLayer
     property alias overlay: overlayLayer
     property alias dialogs: dialogsLayer
@@ -36,6 +37,13 @@ Item {
     property alias windows: windowsLayer
     property alias desktop: desktopLayer
     property alias background: backgroundLayer
+
+    // Cursors are above anything
+    Item {
+        id: cursorLayer
+        anchors.fill: parent
+        z: 10
+    }
 
     // Lock screen is above all windows to shield the session
     Item {

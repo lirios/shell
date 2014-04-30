@@ -457,11 +457,12 @@ void Compositor::keyPressEvent(QKeyEvent *event)
 
 void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY)
 {
-    if ((m_cursorSurface != surface) && surface)
+    if ((m_cursorSurface != surface) && surface) {
+        surface->setWindowProperty(QStringLiteral("role"), CursorRole);
+
         connect(surface, &QWaylandSurface::damaged, [=](const QRegion &region) {
             if (!m_cursorSurface)
                 return;
-
 
             QCursor cursor(QPixmap::fromImage(m_cursorSurface->image()), m_cursorHotspotX, m_cursorHotspotY);
             static bool cursorIsSet = false;
@@ -473,9 +474,10 @@ void Compositor::setCursorSurface(QWaylandSurface *surface, int hotspotX, int ho
             }
         });
 
-    m_cursorSurface = surface;
-    m_cursorHotspotX = hotspotX;
-    m_cursorHotspotY = hotspotY;
+        m_cursorSurface = surface;
+        m_cursorHotspotX = hotspotX;
+        m_cursorHotspotY = hotspotY;
+    }
 }
 
 #include "moc_compositor.cpp"

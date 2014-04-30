@@ -44,6 +44,9 @@ WaylandSurfaceItem {
 
         // Find parent based on role
         switch (role) {
+        case WaylandCompositor.CursorRole:
+            windowParent = root.layers.cursor;
+            break;
         case WaylandCompositor.LockScreenRole:
             windowParent = root.layers.lock;
             break;
