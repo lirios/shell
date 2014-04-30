@@ -100,7 +100,8 @@ int main(int argc, char *argv[])
     window->setScreen(QGuiApplication::primaryScreen());
 
     // Set window geometry
-    window->setGeometry(QRect(0, 0, 1920, 1080));
+    window->setGeometry(QRect(window->screen()->geometry().topLeft(),
+                              QSize(1920, 1080)));
 
     // Parse command line
     parser.process(app);
