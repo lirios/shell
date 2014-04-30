@@ -93,6 +93,8 @@ WaylandSurfaceItem {
             surface.pos.y = root.layers.dialogs.overlay.y + (root.layers.dialogs.overlay.height - height) / 2;
             root.layers.dialogs.overlay.opacity = 1.0;
             break;
+        default:
+            break;
         }
     }
     onRequestedPositionChanged: {
