@@ -60,6 +60,10 @@ Window {
         onWaylandSurfaceCreated: {
             console.debug("Surface", surface, "created");
 
+            // Assume application window role by default
+            if (typeof(surface.windowProperties.role) == "undefined")
+                surface.windowProperties.role = WaylandCompositor.ApplicationRole;
+
             surface.onMapped.connect(function() {
                 if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
                     console.debug("Surface " + surface + " mapped (" +

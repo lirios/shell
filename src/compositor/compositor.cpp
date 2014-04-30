@@ -306,9 +306,6 @@ void Compositor::surfaceCreated(QWaylandSurface *surface)
     if (!surface || !surface->hasShellSurface())
         return;
 
-    // Set window role
-    surface->setWindowProperty(QStringLiteral("role"), Compositor::ApplicationRole);
-
     // Create application window instance
     ClientWindow *appWindow = new ClientWindow(waylandDisplay());
     appWindow->setSurface(surface);
