@@ -79,7 +79,7 @@ WaylandSurfaceItem {
         }
 
         // Reparent
-        //parent = windowParent;
+        parent = windowParent;
 
         // Change window position if needed
         switch (role) {
