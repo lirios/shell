@@ -35,6 +35,7 @@
 #include "config.h"
 #include "cmakedirs.h"
 #include "logging.h"
+#include "registration.h"
 
 #if HAVE_SYSTEMD
 #  include <systemd/sd-daemon.h>
@@ -86,6 +87,9 @@ int main(int argc, char *argv[])
     // Geometry
     QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     QRect geometry(screenGeometry.topLeft(), QSize(1920, 1080));
+
+    // Register QML types
+    registerQmlTypes();
 
     // Create compositor, run shell client
     Compositor *compositor = Compositor::instance();

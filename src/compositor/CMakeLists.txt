@@ -26,6 +26,8 @@ set(SOURCES
     notifications.cpp
     panelmanager.cpp
     popupgrabber.cpp
+    qmlcompositoritem.cpp
+    registration.cpp
     screensaver.cpp
     shell.cpp
     shellpanelsurface.cpp
