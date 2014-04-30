@@ -196,11 +196,6 @@ Compositor::Compositor(QWindow *window)
         else
             Q_EMIT unlocked();
     });
-
-    // Connect to signals
-    connect(this, SIGNAL(sceneGraphInitialized()),
-            this, SLOT(sceneGraphInitialized()),
-            Qt::DirectConnection);
 }
 
 Compositor::~Compositor()
@@ -410,11 +405,6 @@ void Compositor::lockSession()
 void Compositor::unlockSession()
 {
     m_shell->unlockSession();
-}
-
-void Compositor::sceneGraphInitialized()
-{
-    //showGraphicsInfo();
 }
 
 #if 0

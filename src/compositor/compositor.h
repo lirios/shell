@@ -118,9 +118,6 @@ public Q_SLOTS:
     void lockSession();
     void unlockSession();
 
-private Q_SLOTS:
-    void sceneGraphInitialized();
-
 protected:
     void setCursorSurface(QWaylandSurface *surface, int hotspotX, int hotspotY);
 
