@@ -196,6 +196,8 @@ Compositor::Compositor(QWindow *window)
         else
             Q_EMIT unlocked();
     });
+    connect(m_shell, SIGNAL(workspaceAdded()),
+            this, SIGNAL(workspaceAdded()));
 }
 
 Compositor::~Compositor()

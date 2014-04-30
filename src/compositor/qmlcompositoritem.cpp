@@ -158,6 +158,8 @@ void QmlCompositorItem::initCompositor()
                 this, SIGNAL(locked()));
         connect(m_compositor, SIGNAL(unlocked()),
                 this, SIGNAL(unlocked()));
+        connect(m_compositor, SIGNAL(workspaceAdded()),
+                this, SIGNAL(workspaceAdded()));
 
         // Set initial geometry
         m_compositor->setOutputGeometry(QRect(0, 0, width(), height()));

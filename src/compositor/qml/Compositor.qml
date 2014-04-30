@@ -158,13 +158,24 @@ Window {
             // Start idle timer
             idleTimer.running = true
         }
+        onWorkspaceAdded: {
+            // Add a new Workspaces
+            console.debug("Add a new workspace");
+            layers.workspaces.addWorkspace();
+        }
 
         /*
-         * Idle inhibit
+         * Input management
          */
 
-        Keys.onPressed: idleInhibit++
-        Keys.onReleased: idleInhibit--
+        Keys.onPressed: {
+            // Idle inhibit
+            idleInhibit++
+        }
+        Keys.onReleased: {
+            // Idle inhibit
+            idleInhibit--
+        }
 
         MouseArea {
             anchors.fill: parent
@@ -179,6 +190,24 @@ Window {
         /*
          * Components
          */
+
+        Rectangle {
+            color: "red"
+            x: 10
+            y: 10
+            width: 150
+            height: 150
+            z: 900000
+
+            MouseArea {
+                anchors.fill: parent
+                preventStealing: true
+                onClicked: {
+                    console.log("!!!");
+                    root.layers.workspaces.selectNextWorkspace();
+                }
+            }
+        }
 
         // FPS counter
         Text {

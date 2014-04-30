@@ -250,6 +250,7 @@ void Shell::shell_restore_windows(Resource *resource)
 void Shell::shell_add_workspace(Resource *resource)
 {
     Q_UNUSED(resource);
+    Q_EMIT workspaceAdded();
 }
 
 void Shell::shell_select_workspace(Resource *resource,

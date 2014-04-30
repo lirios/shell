@@ -125,6 +125,8 @@ Q_SIGNALS:
     void locked();
     void unlocked();
 
+    void workspaceAdded();
+
 public Q_SLOTS:
     void damageAll();
     void destroyClientForSurface(QWaylandSurface *surface);

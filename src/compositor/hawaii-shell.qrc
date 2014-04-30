@@ -2,7 +2,9 @@
     <qresource prefix="/">
         <file>qml/Compositor.qml</file>
         <file>qml/Layers.qml</file>
-        <file>qml/WaylandWindow.qml</file>
         <file>qml/SurfaceRenderer.qml</file>
+        <file>qml/WaylandWindow.qml</file>
+        <file>qml/Workspace.qml</file>
+        <file>qml/Workspaces.qml</file>
     </qresource>
 </RCC>

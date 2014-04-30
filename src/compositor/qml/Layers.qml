@@ -34,7 +34,7 @@ Item {
     property alias fullScreen: fullScreenLayer
     property alias panels: panelsLayer
     property alias notifications: notificationsLayer
-    property alias windows: windowsLayer
+    property alias workspaces: workspacesLayer
     property alias desktop: desktopLayer
     property alias background: backgroundLayer
 
@@ -111,8 +111,8 @@ Item {
     }
 
     // Application windows can only cover the desktop
-    Item {
-        id: windowsLayer
+    Workspaces {
+        id: workspacesLayer
         anchors.fill: parent
         z: 3
     }

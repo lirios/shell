@@ -111,6 +111,8 @@ Q_SIGNALS:
     void locked();
     void unlocked();
 
+    void workspaceAdded();
+
 public Q_SLOTS:
     void startShell();
     void stopShell();

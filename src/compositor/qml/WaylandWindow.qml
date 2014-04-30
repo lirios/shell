@@ -40,7 +40,7 @@ WaylandSurfaceItem {
             return;
 
         // Default parent
-        var windowParent = root.layers.windows;
+        var windowParent = getCurrentWorkspaceItem();
 
         // Find parent based on role
         switch (role) {
@@ -79,7 +79,10 @@ WaylandSurfaceItem {
         }
 
         // Reparent
-        parent = windowParent;
+        if (windowParent)
+            parent = windowParent;
+        else
+            console.warn("Invalid parent for surface with role", role);
 
         // Change window position if needed
         switch (role) {
@@ -113,7 +116,45 @@ WaylandSurfaceItem {
     MouseArea {
         anchors.fill: parent
         enabled: !waylandWindow.focus
-        preventStealing: true
-        onClicked: waylandWindow.takeFocus()
+        preventStealing: false
+        onClicked: {
+            // Change stacking order
+            var i, windowList = waylandWindow.parent.children;
+            for (i = windowList.length; i >= 0; i--) {
+                var curWindow = windowList[i];
+
+                if (curWindow !== waylandWindow)
+                    curWindow.z = -i;
+            }
+            waylandWindow.z = 1;
+
+            // Give window focus
+            waylandWindow.takeFocus();
+        }
+    }
+
+    function getCurrentWorkspaceItem() {
+        return root.layers.workspaces.currentWorkspace;
+    }
+
+    function getWorkspaceItem(index) {
+        // Check whether the workspace actually exists
+        var workspace = root.layers.workspaces.model.get(index);
+        if (typeof(workspace) == "undefined") {
+            console.warn("Invalid workspace", index);
+            return null;
+        }
+
+        return workspace;
+    }
+
+    function moveToWorkspace(index) {
+        // Get workspace item
+        var item = getWorkspaceItem(index);
+        if (!item)
+            return;
+
+        // Reparent
+        waylandWindow.parent = item;
     }
 }

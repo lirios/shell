@@ -60,6 +60,8 @@ Q_SIGNALS:
 
     void lockedChanged(bool value);
 
+    void workspaceAdded();
+
 protected:
     void shell_bind_resource(Resource *resource) Q_DECL_OVERRIDE;
 
