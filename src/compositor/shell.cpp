@@ -145,10 +145,13 @@ void Shell::shell_set_lock_surface(Resource *resource,
     if (!m_locked)
         return;
 
+    // FIXME: Find real output coords
+    QPointF coords = m_compositor->outputGeometry().topLeft();
+
     m_lockSurface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     m_lockSurface->setWindowProperty(QStringLiteral("role"), Compositor::BackgroundRole);
-    m_lockSurface->setWindowProperty(QStringLiteral("position"), QPointF(0, 0));
+    m_lockSurface->setWindowProperty(QStringLiteral("position"), coords);
 
     connect(m_lockSurface, &QWaylandSurface::mapped, [=]() {
         m_lockSurface->surfaceItem()->takeFocus();
@@ -195,10 +198,13 @@ void Shell::shell_set_background(Resource *resource,
     Q_UNUSED(resource);
     Q_UNUSED(output_resource);
 
+    // FIXME: Find real output coords
+    QPointF coords = m_compositor->outputGeometry().topLeft();
+
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("role"), Compositor::BackgroundRole);
-    surface->setWindowProperty(QStringLiteral("position"), surface->pos());
+    surface->setWindowProperty(QStringLiteral("position"), coords);
 }
 
 void Shell::shell_set_overlay(Resource *resource,
@@ -206,10 +212,13 @@ void Shell::shell_set_overlay(Resource *resource,
 {
     Q_UNUSED(resource);
 
+    // FIXME: Find real output coords
+    QPointF coords = m_compositor->outputGeometry().topLeft();
+
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("role"), Compositor::OverlayRole);
-    surface->setWindowProperty(QStringLiteral("position"), surface->pos());
+    surface->setWindowProperty(QStringLiteral("position"), coords);
 }
 
 void Shell::shell_set_desktop(Resource *resource,
@@ -219,10 +228,13 @@ void Shell::shell_set_desktop(Resource *resource,
     Q_UNUSED(resource);
     Q_UNUSED(output_resource);
 
+    // FIXME: Find real output coords
+    QPointF coords = m_compositor->outputGeometry().topLeft();
+
     QWaylandSurface *surface =
             QtWayland::Surface::fromResource(surface_resource)->waylandSurface();
     surface->setWindowProperty(QStringLiteral("role"), Compositor::DesktopRole);
-    surface->setWindowProperty(QStringLiteral("position"), surface->pos());
+    surface->setWindowProperty(QStringLiteral("position"), coords);
 }
 
 void Shell::shell_set_grab_surface(Resource *resource,
