@@ -33,8 +33,6 @@ import Fluid.Effects 1.0 as FluidEffects
 import Hawaii.Shell 1.0
 
 Item {
-    property variant sessionManager: Shell.service("SessionManager")
-
     Timer {
         interval: 1000
         running: true
@@ -107,7 +105,7 @@ Item {
         MouseArea {
             width: 96
             height: 96
-            onReleased: sessionManager.unlock()
+            onReleased: SessionManager.unlock()
 
             Rectangle {
                 anchors.fill: parent

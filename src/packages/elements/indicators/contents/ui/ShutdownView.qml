@@ -39,7 +39,6 @@ Item {
     QtObject {
         id: __priv
 
-        property var sessionManager: Shell.service("SessionManager")
         property var processLauncher: Shell.service("ProcessLauncher")
     }
 
@@ -63,7 +62,7 @@ Item {
             iconName: "changes-prevent-symbolic"
             onClicked: {
                 shutdownView.childClicked();
-                __priv.sessionManager.lock();
+                SessionManager.lock();
             }
         }
 

@@ -29,6 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtAccountsService 1.0
 import Fluid.Ui 1.0 as FluidUi
+import Hawaii.Shell 1.0
 
 Item {
     id: userView
@@ -42,7 +43,6 @@ Item {
 
         property var palette: SystemPalette {}
         property var userAccount: UserAccount {}
-        property var sessionManager: Shell.service("SessionManager")
     }
 
     RowLayout {
@@ -108,7 +108,7 @@ Item {
                 iconName: "system-log-out"
                 onClicked: {
                     userView.childClicked();
-                    __priv.sessionManager.logout();
+                    SessionManager.logout();
                 }
             }
 

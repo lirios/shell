@@ -41,10 +41,21 @@
 #include "workspace.h"
 #include "windowtypes/overlaywindow.h"
 
+static QObject *sessionManagerProvider(QQmlEngine *engine, QJSEngine *jsEngine)
+{
+    Q_UNUSED(engine);
+    Q_UNUSED(jsEngine);
+
+    return new SessionManager();
+}
+
 void Registration::registerQmlTypes()
 {
     // @uri Hawaii.Shell
     const char *uri = "Hawaii.Shell";
+
+    // Singletons
+    qmlRegisterSingletonType<SessionManager>(uri, 1, 0, "SessionManager", sessionManagerProvider);
 
     // Shell types
     qmlRegisterType<Shortcut>(uri, 1, 0, "Shortcut");
@@ -81,5 +92,4 @@ void Registration::registerFactories()
     // Register service factories
     ServiceFactory::registerFactory<PowerManager>();
     ServiceFactory::registerFactory<ProcessLauncher>();
-    ServiceFactory::registerFactory<SessionManager>();
 }

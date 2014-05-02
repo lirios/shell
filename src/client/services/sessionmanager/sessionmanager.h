@@ -35,8 +35,6 @@ class SessionManager : public QObject
 public:
     SessionManager(QObject *parent = 0);
 
-    constexpr static const char *name() { return "SessionManager"; }
-
 public Q_SLOTS:
     void logout();
 
