@@ -34,7 +34,6 @@
 #include "keybinding.h"
 #include "keybinding_p.h"
 #include "registration.h"
-#include "servicefactory.h"
 #include "shellmanager.h"
 #include "window.h"
 #include "workspace.h"
@@ -154,21 +153,6 @@ ShellController::ShellController(QObject *parent)
 ShellController::~ShellController()
 {
     delete d_ptr;
-}
-
-QObject *ShellController::service(const QString &name)
-{
-    Q_D(ShellController);
-
-    // Get an already created service
-    QObject *service = d->services.value(name);
-    if (service)
-        return service;
-
-    // If we can't find it just create it
-    service = ServiceFactory::createService(name, this);
-    d->services[name] = service;
-    return service;
 }
 
 KeyBinding *ShellController::addKeyBinding(quint32 key, quint32 modifiers)

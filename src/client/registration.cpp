@@ -34,7 +34,6 @@
 #include "shellcontroller.h"
 #include "powermanager.h"
 #include "processlauncher.h"
-#include "servicefactory.h"
 #include "sessionmanager.h"
 #include "shortcut.h"
 #include "window.h"

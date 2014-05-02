@@ -33,7 +33,6 @@ set(SOURCES
     scripting/appinterface.cpp
     scripting/panelinterface.cpp
     scripting/scriptengine.cpp
-    services/servicefactory.cpp
     services/powermanager/powermanagerbackend.cpp
     services/powermanager/powermanager.cpp
     services/powermanager/systemdpowerbackend.cpp

@@ -49,8 +49,6 @@ public:
     ShellController(QObject *parent = 0);
     virtual ~ShellController();
 
-    Q_INVOKABLE QObject *service(const QString &name);
-
     Q_INVOKABLE KeyBinding *addKeyBinding(quint32 key, quint32 modifiers);
 
 Q_SIGNALS:
