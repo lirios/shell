@@ -52,8 +52,6 @@ public:
     explicit PowerManager(QObject *parent = 0);
     ~PowerManager();
 
-    constexpr static const char *name() { return "PowerManager"; }
-
     Capabilities capabilities() const;
 
 Q_SIGNALS:

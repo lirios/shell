@@ -34,7 +34,6 @@ import Hawaii.Shell.Components 1.0
 Dialog {
     id: shutdownDialog
 
-    property variant powerManager: Shell.service("PowerManager")
     property var palette: SystemPalette {}
 
     onVisibleChanged: shutdownTimer.timeRemaining = 60
@@ -53,7 +52,7 @@ Dialog {
             updateLabel();
 
             if (timeRemaining <= 0)
-                shutdownDialog.powerManager.powerOff();
+                PowerManager.powerOff();
         }
 
         function updateLabel() {
@@ -98,14 +97,14 @@ Dialog {
 
             Button {
                 text: qsTr("Restart")
-                enabled: powerManager.capabilities & PowerManager.Restart
-                onClicked: powerManager.restart()
+                enabled: PowerManager.capabilities & PowerManager.Restart
+                onClicked: PowerManager.restart()
             }
 
             Button {
                 text: qsTr("Power Off")
-                enabled: powerManager.capabilities & PowerManager.PowerOff
-                onClicked: powerManager.powerOff()
+                enabled: PowerManager.capabilities & PowerManager.PowerOff
+                onClicked: PowerManager.powerOff()
             }
 
             Layout.alignment: Qt.AlignCenter

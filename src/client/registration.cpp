@@ -49,6 +49,14 @@ static QObject *sessionManagerProvider(QQmlEngine *engine, QJSEngine *jsEngine)
     return new SessionManager();
 }
 
+static QObject *powerManagerProvider(QQmlEngine *engine, QJSEngine *jsEngine)
+{
+    Q_UNUSED(engine);
+    Q_UNUSED(jsEngine);
+
+    return new PowerManager();
+}
+
 void Registration::registerQmlTypes()
 {
     // @uri Hawaii.Shell
@@ -56,6 +64,7 @@ void Registration::registerQmlTypes()
 
     // Singletons
     qmlRegisterSingletonType<SessionManager>(uri, 1, 0, "SessionManager", sessionManagerProvider);
+    qmlRegisterSingletonType<PowerManager>(uri, 1, 0, "PowerManager", powerManagerProvider);
 
     // Shell types
     qmlRegisterType<Shortcut>(uri, 1, 0, "Shortcut");
@@ -81,15 +90,6 @@ void Registration::registerPrivateQmlTypes()
 
 void Registration::registerFactories()
 {
-    // @uri Hawaii.Shell
-    const char *uri = "Hawaii.Shell";
-
-    // Register some services as types for using on QML
-    qmlRegisterUncreatableType<PowerManager>(uri, 1, 0,
-                                             "PowerManager",
-                                             QStringLiteral("Do not create PowerManager"));
-
     // Register service factories
-    ServiceFactory::registerFactory<PowerManager>();
     ServiceFactory::registerFactory<ProcessLauncher>();
 }
