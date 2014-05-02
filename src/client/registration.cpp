@@ -57,6 +57,14 @@ static QObject *powerManagerProvider(QQmlEngine *engine, QJSEngine *jsEngine)
     return new PowerManager();
 }
 
+static QObject *processLauncherProvider(QQmlEngine *engine, QJSEngine *jsEngine)
+{
+    Q_UNUSED(engine);
+    Q_UNUSED(jsEngine);
+
+    return new ProcessLauncher();
+}
+
 void Registration::registerQmlTypes()
 {
     // @uri Hawaii.Shell
@@ -65,6 +73,7 @@ void Registration::registerQmlTypes()
     // Singletons
     qmlRegisterSingletonType<SessionManager>(uri, 1, 0, "SessionManager", sessionManagerProvider);
     qmlRegisterSingletonType<PowerManager>(uri, 1, 0, "PowerManager", powerManagerProvider);
+    qmlRegisterSingletonType<ProcessLauncher>(uri, 1, 0, "ProcessLauncher", processLauncherProvider);
 
     // Shell types
     qmlRegisterType<Shortcut>(uri, 1, 0, "Shortcut");
@@ -86,10 +95,4 @@ void Registration::registerPrivateQmlTypes()
     const char *uri = "Hawaii.Shell.Private";
 
     qmlRegisterType<OverlayWindow>(uri, 1, 0, "OverlayWindow");
-}
-
-void Registration::registerFactories()
-{
-    // Register service factories
-    ServiceFactory::registerFactory<ProcessLauncher>();
 }

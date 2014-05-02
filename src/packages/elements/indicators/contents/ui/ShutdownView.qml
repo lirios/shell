@@ -36,12 +36,6 @@ Item {
 
     signal childClicked()
 
-    QtObject {
-        id: __priv
-
-        property var processLauncher: Shell.service("ProcessLauncher")
-    }
-
     ShutdownDialog {
         id: shutdownDialog
         visible: false
@@ -54,7 +48,7 @@ Item {
             iconName: "preferences-system-symbolic"
             onClicked: {
                 shutdownView.childClicked();
-                __priv.processLauncher.launch("hawaii-system-preferences");
+                ProcessLauncher.launch("hawaii-system-preferences");
             }
         }
 

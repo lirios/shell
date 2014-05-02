@@ -35,8 +35,6 @@ class ProcessLauncher : public QObject
 public:
     ProcessLauncher(QObject *parent = 0);
 
-    constexpr static const char *name() { return "ProcessLauncher"; }
-
 public Q_SLOTS:
     bool launch(const QString &program,
                 const QStringList &arguments = QStringList());
