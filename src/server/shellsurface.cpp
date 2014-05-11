@@ -42,6 +42,7 @@ ShellSurface::ShellSurface(Shell *shell, struct weston_surface *surface)
             , m_state({ false, false, false })
             , m_nextState({ false, false, false })
             , m_stateChanged(false)
+            , m_resizeEdges(Edges::None)
 {
     m_popup.seat = nullptr;
     wl_list_init(&m_fullscreen.transform.link);
@@ -503,7 +504,11 @@ void ShellSurface::setFullscreen(ShellSurface::FullscreenMethod method, uint32_t
     m_nextState.fullscreen = true;
     m_stateChanged = true;
 
+#if WESTON_VERSION_AT_LEAST(1, 5, 0)
+    m_client->send_configure(m_surface, m_output->width, m_output->height);
+#else
     m_client->send_configure(m_surface, 0, m_output->width, m_output->height);
+#endif
 }
 
 
@@ -526,7 +531,11 @@ void ShellSurface::unsetFullscreen()
         height = m_surface->height;
     }
 
+#if WESTON_VERSION_AT_LEAST(1, 5, 0)
+    m_client->send_configure(m_surface, width, height);
+#else
     m_client->send_configure(m_surface, 0, width, height);
+#endif
 }
 
 void ShellSurface::internalUnsetFullscreen()
@@ -560,7 +569,11 @@ void ShellSurface::unsetMaximized()
         width = m_surface->width;
         height = m_surface->height;
     }
+#if WESTON_VERSION_AT_LEAST(1, 5, 0)
+    m_client->send_configure(m_surface, width, height);
+#else
     m_client->send_configure(m_surface, 0, width, height);
+#endif
 }
 
 void ShellSurface::internalUnsetMaximized()
@@ -640,6 +653,11 @@ void ShellSurface::dragMove(struct weston_seat *ws)
 class ResizeGrab : public ShellGrab
 {
 public:
+    ~ResizeGrab()
+    {
+        shsurf->m_resizeEdges = ShellSurface::Edges::None;
+    }
+
     void motion(uint32_t time, wl_fixed_t x, wl_fixed_t y) override
     {
         weston_pointer_move(pointer(), x, y);
@@ -655,20 +673,24 @@ public:
         weston_view_from_global_fixed(view, pointer()->x, pointer()->y, &to_x, &to_y);
 
         int32_t w = width;
-        if (edges & ShellSurface::Edges::Left) {
+        if (shsurf->resizeEdges() & ShellSurface::Edges::Left) {
             w += wl_fixed_to_int(from_x - to_x);
-        } else if (edges & ShellSurface::Edges::Right) {
+        } else if (shsurf->resizeEdges() & ShellSurface::Edges::Right) {
             w += wl_fixed_to_int(to_x - from_x);
         }
 
         int32_t h = height;
-        if (edges & ShellSurface::Edges::Top) {
+        if (shsurf->resizeEdges() & ShellSurface::Edges::Top) {
             h += wl_fixed_to_int(from_y - to_y);
-        } else if (edges & ShellSurface::Edges::Bottom) {
+        } else if (shsurf->resizeEdges() & ShellSurface::Edges::Bottom) {
             h += wl_fixed_to_int(to_y - from_y);
         }
 
-        shsurf->m_client->send_configure(shsurf->m_surface, (int)edges, w, h);
+#if WESTON_VERSION_AT_LEAST(1, 5, 0)
+        shsurf->m_client->send_configure(shsurf->m_surface,  w, h);
+#else
+        shsurf->m_client->send_configure(shsurf->m_surface, shsurf->resizeEdges(), w, h);
+#endif
     }
     void button(uint32_t time, uint32_t button, uint32_t state) override
     {
@@ -680,7 +702,6 @@ public:
 
     ShellSurface *shsurf;
     wl_listener shsurf_destroy_listener;
-    ShellSurface::Edges edges;
     int32_t width, height;
 };
 
@@ -699,7 +720,7 @@ void ShellSurface::dragResize(weston_seat *ws, Edges edges)
         return;
     }
 
-    grab->edges = edges;
+    m_resizeEdges = edges;
 
     IRect2D rect = surfaceTreeBoundingBox();
     grab->width = rect.width;
@@ -751,10 +772,16 @@ void ShellSurface::setPopup(struct weston_surface *parent, weston_seat *seat, in
 void ShellSurface::setMaximized(weston_output *out)
 {
     m_output = out;
+#if !WESTON_VERSION_AT_LEAST(1, 5, 0)
     uint32_t edges = (int)ShellSurface::Edges::TopLeft;
+#endif
 
     IRect2D rect = Shell::instance()->windowsArea(m_output);
+#if WESTON_VERSION_AT_LEAST(1, 5, 0)
+    m_client->send_configure(m_surface, rect.width, rect.height);
+#else
     m_client->send_configure(m_surface, edges, rect.width, rect.height);
+#endif
     m_nextState.maximized = true;
     m_stateChanged = true;
 }

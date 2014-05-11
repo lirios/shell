@@ -44,7 +44,11 @@ private:
     void pointerFocus(ShellSeat *seat, weston_pointer *pointer);
     void surfaceResponsiveness(WlShellSurface *shsurf);
 
+#if WESTON_VERSION_AT_LEAST(1, 5, 0)
+    static void sendConfigure(weston_surface *surface, int32_t width, int32_t height);
+#else
     static void sendConfigure(weston_surface *surface, uint32_t edges, int32_t width, int32_t height);
+#endif
 
     static const struct wl_shell_interface shell_implementation;
     static const struct weston_shell_client shell_client;

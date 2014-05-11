@@ -469,6 +469,18 @@ void Shell::configureSurface(ShellSurface *surface, int32_t sx, int32_t sy)
             }
         }
     } else if (changedType || sx != 0 || sy != 0 || surface->width() != surface->m_lastWidth || surface->height() != surface->m_lastHeight) {
+        if (surface->resizeEdges() != ShellSurface::Edges::None) {
+            sx = sy = 0;
+
+            if (surface->resizeEdges() & ShellSurface::Edges::Left) {
+                    sx = surface->m_lastWidth - surface->width();
+            }
+            if (surface->resizeEdges() & ShellSurface::Edges::Top) {
+                    sy = surface->m_lastHeight - surface->height();
+            }
+
+        }
+
         surface->m_lastWidth = surface->width();
         surface->m_lastHeight = surface->height();
         float from_x, from_y;

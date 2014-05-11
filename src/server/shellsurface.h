@@ -108,6 +108,7 @@ public:
     ShellSurface *topLevelParent();
     inline Workspace *workspace() const { return m_workspace; }
     weston_view *transformParent() const;
+    inline Edges resizeEdges() const { return m_resizeEdges; }
 
     void setTitle(const char *title);
     inline std::string title() const { return m_title; }
@@ -193,6 +194,7 @@ private:
     State m_state;
     State m_nextState;
     bool m_stateChanged;
+    Edges m_resizeEdges;
 
     struct {
         int32_t x, y;
