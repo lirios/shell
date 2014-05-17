@@ -25,23 +25,19 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Window 2.0
 import GreenIsland 1.0
-import Hawaii.Compositor 1.0
+import QtCompositor 1.0
 
-Window {
+Item {
     property alias qmlCompositor: qmlCompositor
     property alias layers: layers
     property alias idleInterval: idleTimer.interval
+    property int idleInhibit: 0
 
     id: root
-    color: "black"
-    title: "Hawaii Shell"
-    visible: false
 
     Timer {
         id: idleTimer
-        interval: 5*60000
         onIntervalChanged: {
             if (running)
                 restart();
@@ -52,10 +48,35 @@ Window {
         id: surfaceModel
     }
 
-    WaylandCompositor {
-        property int idleInhibit: 0
+    function surfaceMapped(surface) {
+        if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
+            console.debug("Surface " + surface + " mapped (" +
+                          "className: \"" + surface.className + "\", " +
+                          "title: \"" + surface.title + "\"): " +
+                          surface.size.width + "x" + surface.size.height + " @ " +
+                          surface.pos.x + "x" + surface.pos.y);
+        } else {
+            console.debug("Surface " + surface + " mapped (role: " +
+                          surface.windowProperties.role + "): " +
+                          surface.size.width + "x" + surface.size.height + " @ " +
+                          surface.pos.x + "x" + surface.pos.y);
+        }
+    }
 
-        id: qmlCompositor
+    function surfaceUnmapped(surface) {
+        if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
+            console.debug("Surface " + surface + " unmapped (" +
+                          "className: \"" + surface.className + "\", " +
+                          "title: \"" + surface.title + "\")");
+        } else {
+            console.debug("Surface " + surface + " mapped (role: " +
+                          surface.windowProperties.role + "): " +
+                          surface.size.width + "x" + surface.size.height + " @ " +
+                          surface.pos.x + "x" + surface.pos.y);
+        }
+    }
+
+
         anchors.fill: parent
         onWaylandSurfaceCreated: {
             console.debug("Surface", surface, "created");
@@ -63,36 +84,6 @@ Window {
             // Assume application window role by default
             if (typeof(surface.windowProperties.role) == "undefined")
                 surface.windowProperties.role = WaylandCompositor.ApplicationRole;
-
-            surface.onMapped.connect(function() {
-                if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
-                    console.debug("Surface " + surface + " mapped (" +
-                                  "className: \"" + surface.className + "\", " +
-                                  "title: \"" + surface.title + "\"): " +
-                                  surface.size.width + "x" + surface.size.height + " @ " +
-                                  surface.pos.x + "x" + surface.pos.y);
-                } else {
-                    console.debug("Surface " + surface + " mapped (role: " +
-                                  surface.windowProperties.role + "): " +
-                                  surface.size.width + "x" + surface.size.height + " @ " +
-                                  surface.pos.x + "x" + surface.pos.y);
-                }
-            });
-            surface.onUnmapped.connect(function() {
-                if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
-                    console.debug("Surface " + surface + " unmapped (" +
-                                  "className: \"" + surface.className + "\", " +
-                                  "title: \"" + surface.title + "\")");
-                } else {
-                    console.debug("Surface " + surface + " mapped (role: " +
-                                  surface.windowProperties.role + "): " +
-                                  surface.size.width + "x" + surface.size.height + " @ " +
-                                  surface.pos.x + "x" + surface.pos.y);
-                }
-            });
-            surface.onSizeChanged.connect(function() {
-                damageAll();
-            });
 
             // Create surface item
             var component = Qt.createComponent("WaylandWindow.qml");
@@ -119,7 +110,7 @@ Window {
             // Damage all surfaces
             damageAll();
         }
-        onIdleInhibitResetRequested: idleInhibit = 0
+        onIdleInhibitResetRequested: root.idleInhibit = 0
         onIdleTimerStartRequested: idleTimer.running = true
         onIdleTimerStopRequested: idleTimer.running = false
         onIdle: {
@@ -170,19 +161,19 @@ Window {
 
         Keys.onPressed: {
             // Idle inhibit
-            idleInhibit++
+            root.idleInhibit++
         }
         Keys.onReleased: {
             // Idle inhibit
-            idleInhibit--
+            root.idleInhibit--
         }
 
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
             preventStealing: false
-            onPressed: idleInhibit++
-            onReleased: idleInhibit--
+            onPressed: root.idleInhibit++
+            onReleased: root.idleInhibit--
             onPositionChanged: qmlCompositor.compositor.state = WaylandCompositor.Active
             onWheel: qmlCompositor.compositor.state = WaylandCompositor.Active
         }
