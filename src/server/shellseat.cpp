@@ -64,6 +64,7 @@ public:
 ShellSeat::ShellSeat(struct weston_seat *seat)
          : m_seat(seat)
          , m_focusState(new FocusState(this))
+         , m_keyboardFocus(nullptr)
 {
     m_popupGrab.client = nullptr;
     m_popupGrab.seat = this;
@@ -73,10 +74,16 @@ ShellSeat::ShellSeat(struct weston_seat *seat)
     wl_signal_add(&seat->destroy_signal, &m_listeners.seatDestroy);
 
     if (seat->pointer) {
-        m_listeners.focus.notify = pointerFocus;
-        wl_signal_add(&seat->pointer->focus_signal, &m_listeners.focus);
+        m_listeners.pointerFocus.notify = pointerFocus;
+        wl_signal_add(&seat->pointer->focus_signal, &m_listeners.pointerFocus);
     } else {
-        wl_list_init(&m_listeners.focus.link);
+        wl_list_init(&m_listeners.pointerFocus.link);
+    }
+    if (seat->keyboard) {
+        m_listeners.keyboardFocus.notify = keyboardFocus;
+        wl_signal_add(&seat->keyboard->focus_signal, &m_listeners.keyboardFocus);
+    } else {
+        wl_list_init(&m_listeners.keyboardFocus.link);
     }
 }
 
@@ -86,7 +93,8 @@ ShellSeat::~ShellSeat()
         weston_pointer_end_grab(m_popupGrab.grab.pointer);
     }
     wl_list_remove(&m_listeners.seatDestroy.link);
-    wl_list_remove(&m_listeners.focus.link);
+    wl_list_remove(&m_listeners.pointerFocus.link);
+    wl_list_remove(&m_listeners.keyboardFocus.link);
 }
 
 ShellSeat *ShellSeat::shellSeat(struct weston_seat *seat)
@@ -118,9 +126,14 @@ void ShellSeat::activate(weston_surface *surf)
     m_focusState->setFocus(shsurf);
 }
 
-ShellSurface *ShellSeat::currentFocus() const
+ShellSurface *ShellSeat::currentPointerFocus() const
 {
     return  m_focusState->surface;
+}
+
+weston_surface *ShellSeat::currentKeyboardFocus() const
+{
+    return m_keyboardFocus;
 }
 
 void ShellSeat::seatDestroyed(struct wl_listener *listener, void *data)
@@ -131,9 +144,17 @@ void ShellSeat::seatDestroyed(struct wl_listener *listener, void *data)
 
 void ShellSeat::pointerFocus(struct wl_listener *listener, void *data)
 {
-    ShellSeat *shseat = static_cast<Wrapper *>(container_of(listener, Wrapper, focus))->seat;
+    ShellSeat *shseat = static_cast<Wrapper *>(container_of(listener, Wrapper, pointerFocus))->seat;
     struct weston_pointer *pointer = static_cast<weston_pointer *>(data);
     shseat->pointerFocusSignal(shseat, pointer);
+}
+
+void ShellSeat::keyboardFocus(wl_listener *listener, void *data)
+{
+    ShellSeat *shseat = static_cast<Wrapper *>(container_of(listener, Wrapper, keyboardFocus))->seat;
+    weston_keyboard *keyboard = static_cast<weston_keyboard *>(data);
+    shseat->keyboardFocusSignal(shseat, keyboard);
+    shseat->m_keyboardFocus = keyboard->focus;
 }
 
 void ShellSeat::popup_grab_focus(struct weston_pointer_grab *grab)
