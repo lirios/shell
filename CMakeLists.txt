@@ -92,7 +92,7 @@ pkg_check_modules(WaylandServer wayland-server REQUIRED)
 pkg_check_modules(Pixman pixman-1 REQUIRED)
 
 # Find Weston SDK
-pkg_check_modules(Weston "weston >= 1.4.0" REQUIRED)
+pkg_check_modules(Weston "weston >= 1.5.0" REQUIRED)
 
 # Find systemd
 pkg_check_modules(systemd libsystemd-daemon)
