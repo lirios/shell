@@ -583,7 +583,11 @@ void Shell::configureFullscreen(ShellSurface *shsurf)
     } break;
     case ShellSurface::FullscreenMethod::Driver:
         if (surfaceIsTopFullscreen(shsurf)) {
+#if WESTON_VERSION_AT_LEAST(1, 5, 0)
+            int32_t scale = surface->buffer_viewport.buffer.scale;
+#else
             int32_t scale = surface->buffer_viewport.scale;
+#endif
             weston_mode mode = {0, bbox.width * scale, bbox.height * scale, shsurf->m_fullscreen.framerate, { nullptr, nullptr } };
 
             if (weston_output_switch_mode(output, &mode, scale, WESTON_MODE_SWITCH_SET_TEMPORARY) == 0) {
