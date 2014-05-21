@@ -1,5 +1,5 @@
 add_subdirectory(client)
-add_subdirectory(compositor)
+#add_subdirectory(compositor)
 add_subdirectory(daemons)
 add_subdirectory(dataproviders)
 add_subdirectory(declarative)

@@ -74,7 +74,7 @@ find_package(QtConfiguration REQUIRED)
 find_package(QtAccountsService REQUIRED)
 
 # Find GreenIsland
-find_package(GreenIsland REQUIRED)
+#find_package(GreenIsland REQUIRED)
 
 # Find libhawaii and libhawaiishell
 find_package(Hawaii REQUIRED)
