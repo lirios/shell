@@ -24,6 +24,8 @@
 
 #include "shellsignal.h"
 
+struct weston_keyboard;
+
 class ShellSurface;
 class FocusState;
 
@@ -39,21 +41,26 @@ public:
     void removePopupGrab(ShellSurface *surface);
     void endPopupGrab();
 
-    ShellSurface *currentFocus() const;
+    ShellSurface *currentPointerFocus() const;
+    weston_surface *currentKeyboardFocus() const;
 
     Signal<ShellSeat *, struct weston_pointer *> pointerFocusSignal;
+    Signal<ShellSeat *, weston_keyboard *> keyboardFocusSignal;
 
 private:
     ShellSeat(struct weston_seat *seat);
     static void seatDestroyed(struct wl_listener *listener, void *data);
     static void pointerFocus(struct wl_listener *listener, void *data);
+    static void keyboardFocus(wl_listener *listener, void *data);
 
     struct weston_seat *m_seat;
     FocusState *m_focusState;
+    weston_surface *m_keyboardFocus;
     struct Wrapper {
         ShellSeat *seat;
         struct wl_listener seatDestroy;
-        struct wl_listener focus;
+        struct wl_listener pointerFocus;
+        wl_listener keyboardFocus;
     } m_listeners;
 
     struct PopupGrab {
