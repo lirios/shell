@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
                    "ERRNO=%i",
                    msg, EFAULT);
 #endif
-        qFatal(msg);
+        qFatal("%s", msg);
     }
 
     // Windows need the alpha buffer
