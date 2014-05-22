@@ -158,7 +158,7 @@ void XdgSurface::setTitle(wl_client *client, wl_resource *resource, const char *
 
 void XdgSurface::setAppId(wl_client *client, wl_resource *resource, const char *id)
 {
-    shsurf()->setClass(id);
+    shsurf()->setIdentifier(id);
 }
 
 void XdgSurface::move(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial)
