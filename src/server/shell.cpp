@@ -1086,11 +1086,11 @@ void Shell::sigchld(int status)
 
     m_child.deathcount++;
     if (m_child.deathcount > 5) {
-        weston_log("weston-desktop-shell died, giving up.\n");
+        weston_log("shell client died, giving up.\n");
         return;
     }
 
-    weston_log("weston-desktop-shell died, respawning...\n");
+    weston_log("shell client died, respawning...\n");
     launchShellProcess();
 }
 
