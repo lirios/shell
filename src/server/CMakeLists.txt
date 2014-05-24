@@ -48,6 +48,10 @@ set(SOURCES
     xdg_shell/xdgsurface.cpp
 )
 
+wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/xdg-shell.xml
+    xdg-shell
+)
 wayland_add_protocol_server(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/xdg-shell.xml
     xdg-shell
