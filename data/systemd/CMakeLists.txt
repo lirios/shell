@@ -34,4 +34,4 @@ set(FILES
     hawaii.target
 )
 
-install(FILES ${FILES} DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/systemd/user)
+install(FILES ${FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/systemd/user)
