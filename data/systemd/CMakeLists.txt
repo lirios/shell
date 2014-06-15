@@ -47,4 +47,4 @@ if(PolkitQt5-1_FOUND)
     )
 endif()
 
-install(FILES ${FILES} DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/systemd/user)
+install(FILES ${FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/systemd/user)
