@@ -6,6 +6,7 @@
 #
 # Author(s):
 #    Pier Luigi Fiorini
+#    Lubomir Rintel
 #
 # $BEGIN_LICENSE:GPL2+$
 #
@@ -28,7 +29,7 @@
 weston=$(which weston)
 westonlaunch=$(which weston-launch)
 
-if [ "x$weston" = "x" -o "x$westonlaunch" = "x" ]; then
+if [ "x$weston" = "x" ]; then
     echo
     echo "Hawaii needs the Weston compositor, but it hasn't been found."
     echo "Please install the weston package."
@@ -38,8 +39,11 @@ fi
 
 args="--shell=@CMAKE_INSTALL_FULL_LIBDIR@/weston/hawaii-desktop.so"
 
-if [ -z "$DISPLAY" ]; then
-    exec ${westonlaunch} $@ -- ${args}
-else
-    exec ${weston} ${args} $@
+# Use the launcher, if it's available and works
+if [ "$westonlaunch" ] && [ -z "$DISPLAY" ]; then
+    if [ $UID = 0 ] || [ -u ${westonlaunch} ]; then
+        exec ${westonlaunch} $@ -- ${args}
+    fi
 fi
+
+exec ${weston} ${args} $@
