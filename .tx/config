@@ -78,3 +78,9 @@ type = DESKTOP
 source_lang = en
 source_file = data/packages/backgrounds/gradient.desktop
 file_filter = translations/packages/backgrounds/gradient_<lang>.desktop
+
+[hawaii.shell-wayland-sessions-hawaii]
+type = DESKTOP
+source_lang = en
+source_file = data/wayland-sessions/hawaii.desktop
+file_filter = translations/data/wayland-sessions/hawaii_<lang>.desktop
