@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Hawaii
+Comment=QtQuick and Wayland based desktop environment
+Exec=hawaii
+Icon=start-here
+Type=Application
