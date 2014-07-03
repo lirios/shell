@@ -88,7 +88,7 @@ WaylandSurfaceItem {
         switch (role) {
         case WaylandCompositor.ApplicationRole:
             // Move application window
-            surface.pos = qmlCompositor.initialPositionForSurface(surface);
+            surface.pos = compositor.initialPositionForSurface(surface);
             break;
         case WaylandCompositor.DialogRole:
             // Center globally modal dialogs and show overlay

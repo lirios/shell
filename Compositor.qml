@@ -29,7 +29,6 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 
 Item {
-    property alias qmlCompositor: qmlCompositor
     property alias layers: layers
     property alias idleInterval: idleTimer.interval
     property int idleInhibit: 0
@@ -51,9 +50,9 @@ Item {
     function surfaceMapped(surface) {
         // Assume application window role by default
         if (typeof(surface.windowProperties.role) == "undefined")
-            surface.windowProperties.role = WaylandCompositor.ApplicationRole;
+            surface.windowProperties.role = Compositor.ApplicationRole;
 
-        if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
+        if (surface.windowProperties.role === Compositor.ApplicationRole) {
             console.debug("Surface " + surface + " mapped (" +
                           "className: \"" + surface.className + "\", " +
                           "title: \"" + surface.title + "\"): " +
@@ -68,7 +67,7 @@ Item {
 
         // Create surface item
         var component = Qt.createComponent("WaylandWindow.qml");
-        var window = component.createObject(qmlCompositor, {surface: surface});
+        var window = component.createObject(compositor, {surface: surface});
         console.error(component.errorString());
 
         // Add surface to the model
@@ -76,7 +75,7 @@ Item {
     }
 
     function surfaceUnmapped(surface) {
-        if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
+        if (surface.windowProperties.role === Compositor.ApplicationRole) {
             console.debug("Surface " + surface + " unmapped (" +
                           "className: \"" + surface.className + "\", " +
                           "title: \"" + surface.title + "\")");
@@ -103,54 +102,57 @@ Item {
         //damageAll();
     }
 
-    onIdleInhibitResetRequested: root.idleInhibit = 0
-    onIdleTimerStartRequested: idleTimer.running = true
-    onIdleTimerStopRequested: idleTimer.running = false
-    onIdle: {
-        // Fade the desktop out
-        splash.opacity = 1.0;
+    Connections {
+        target: compositor
+        onIdleInhibitResetRequested: root.idleInhibit = 0
+        onIdleTimerStartRequested: idleTimer.running = true
+        onIdleTimerStopRequested: idleTimer.running = false
+        onIdle: {
+            // Fade the desktop out
+            splash.opacity = 1.0;
 
-        // Lock the session
-        compositor.lockSession();
-    }
-    onWake: {
-        // Unlock the session
-        compositor.unlockSession();
-    }
-    onFadeIn: {
-        // Fade the desktop in
-        splash.opacity = 0.0;
+            // Lock the session
+            compositor.lockSession();
+        }
+        onWake: {
+            // Unlock the session
+            compositor.unlockSession();
+        }
+        onFadeIn: {
+            // Fade the desktop in
+            splash.opacity = 0.0;
 
-        // Damage all surfaces
-        damageAll();
-    }
-    onFadeOut: {
-        // Fade the desktop out
-        splash.opacity = 1.0;
-    }
-    onUnlocked: {
-        // Fade the desktop in
-        splash.opacity = 0.0;
+            // Damage all surfaces
+            damageAll();
+        }
+        onFadeOut: {
+            // Fade the desktop out
+            splash.opacity = 1.0;
+        }
+        onUnlocked: {
+            // Fade the desktop in
+            splash.opacity = 0.0;
 
-        // Damage all surfaces
-        //damageAll();
-    }
-    onReady: {
-        // Fade the desktop in
-        splash.opacity = 0.0;
+            // Damage all surfaces
+            //damageAll();
+        }
+        onReady: {
+            // Fade the desktop in
+            splash.opacity = 0.0;
 
-        // Start idle timer
-        idleTimer.running = true
-    }
-    onWorkspaceAdded: {
-        // Add a new Workspaces
-        console.debug("Add a new workspace");
-        layers.workspaces.addWorkspace();
+            // Start idle timer
+            idleTimer.running = true
+        }
+        onWorkspaceAdded: {
+            // Add a new Workspaces
+            console.debug("Add a new workspace");
+            layers.workspaces.addWorkspace();
+        }
     }
 
     /*
-         * Input management
-         */
+     * Input management
+     */
 
     Keys.onPressed: {
         // Idle inhibit
@@ -167,8 +169,8 @@ Item {
         preventStealing: false
         onPressed: root.idleInhibit++
         onReleased: root.idleInhibit--
-        onPositionChanged: qmlCompositor.compositor.state = WaylandCompositor.Active
-        onWheel: qmlCompositor.compositor.state = WaylandCompositor.Active
+        onPositionChanged: compositor.state = Compositor.Active
+        onWheel: compositor.state = Compositor.Active
     }
 
     /*
