@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Compositor 1.0
+import QtCompositor 1.0
 
 WaylandSurfaceItem {
     property var role: surface.windowProperties.role

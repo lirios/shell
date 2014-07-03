@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0
 import QtCompositor 1.0
 
 Item {
@@ -49,6 +48,10 @@ Item {
     }
 
     function surfaceMapped(surface) {
+        // Assume application window role by default
+        if (typeof(surface.windowProperties.role) == "undefined")
+            surface.windowProperties.role = WaylandCompositor.ApplicationRole;
+
         if (surface.windowProperties.role === WaylandCompositor.ApplicationRole) {
             console.debug("Surface " + surface + " mapped (" +
                           "className: \"" + surface.className + "\", " +
@@ -61,6 +64,14 @@ Item {
                           surface.size.width + "x" + surface.size.height + " @ " +
                           surface.pos.x + "x" + surface.pos.y);
         }
+
+        // Create surface item
+        var component = Qt.createComponent("WaylandWindow.qml");
+        var window = component.createObject(qmlCompositor, {surface: surface});
+        console.error(component.errorString());
+
+        // Add surface to the model
+        surfaceModel.append({"surface": surface, "window": window});
     }
 
     function surfaceUnmapped(surface) {
@@ -74,173 +85,151 @@ Item {
                           surface.size.width + "x" + surface.size.height + " @ " +
                           surface.pos.x + "x" + surface.pos.y);
         }
+
+        // Remove surface from model
+        var i;
+        for (i = 0; i < surfaceModel.count; i++) {
+            var entry = surfaceModel.get(i);
+
+            if (entry.surface === surface) {
+                entry.window.destroy();
+                surfaceModel.remove(i, 1);
+                break;
+            }
+        }
+
+        // Damage all surfaces
+        //damageAll();
     }
 
+    onIdleInhibitResetRequested: root.idleInhibit = 0
+    onIdleTimerStartRequested: idleTimer.running = true
+    onIdleTimerStopRequested: idleTimer.running = false
+    onIdle: {
+        // Fade the desktop out
+        splash.opacity = 1.0;
 
-        anchors.fill: parent
-        onWaylandSurfaceCreated: {
-            console.debug("Surface", surface, "created");
+        // Lock the session
+        compositor.lockSession();
+    }
+    onWake: {
+        // Unlock the session
+        compositor.unlockSession();
+    }
+    onFadeIn: {
+        // Fade the desktop in
+        splash.opacity = 0.0;
 
-            // Assume application window role by default
-            if (typeof(surface.windowProperties.role) == "undefined")
-                surface.windowProperties.role = WaylandCompositor.ApplicationRole;
+        // Damage all surfaces
+        damageAll();
+    }
+    onFadeOut: {
+        // Fade the desktop out
+        splash.opacity = 1.0;
+    }
+    onUnlocked: {
+        // Fade the desktop in
+        splash.opacity = 0.0;
 
-            // Create surface item
-            var component = Qt.createComponent("WaylandWindow.qml");
-            var waylandWindow = component.createObject(qmlCompositor, {surface: surface});
+        // Damage all surfaces
+        //damageAll();
+    }
+    onReady: {
+        // Fade the desktop in
+        splash.opacity = 0.0;
 
-            // Add surface to the model
-            surfaceModel.append({"surface": surface, "window": waylandWindow});
-        }
-        onWaylandSurfaceAboutToBeDestroyed: {
-            console.debug("Surface about to be destroyed:", surface);
+        // Start idle timer
+        idleTimer.running = true
+    }
+    onWorkspaceAdded: {
+        // Add a new Workspaces
+        console.debug("Add a new workspace");
+        layers.workspaces.addWorkspace();
+    }
 
-            // Remove surface from model
-            var i;
-            for (i = 0; i < surfaceModel.count; i++) {
-                var entry = surfaceModel.get(i);
-
-                if (entry.surface === surface) {
-                    entry.window.destroy();
-                    surfaceModel.remove(i, 1);
-                    break;
-                }
-            }
-
-            // Damage all surfaces
-            damageAll();
-        }
-        onIdleInhibitResetRequested: root.idleInhibit = 0
-        onIdleTimerStartRequested: idleTimer.running = true
-        onIdleTimerStopRequested: idleTimer.running = false
-        onIdle: {
-            // Fade the desktop out
-            splash.opacity = 1.0;
-
-            // Lock the session
-            compositor.lockSession();
-        }
-        onWake: {
-            // Unlock the session
-            compositor.unlockSession();
-        }
-        onFadeIn: {
-            // Fade the desktop in
-            splash.opacity = 0.0;
-
-            // Damage all surfaces
-            damageAll();
-        }
-        onFadeOut: {
-            // Fade the desktop out
-            splash.opacity = 1.0;
-        }
-        onUnlocked: {
-            // Fade the desktop in
-            splash.opacity = 0.0;
-
-            // Damage all surfaces
-            damageAll();
-        }
-        onReady: {
-            // Fade the desktop in
-            splash.opacity = 0.0;
-
-            // Start idle timer
-            idleTimer.running = true
-        }
-        onWorkspaceAdded: {
-            // Add a new Workspaces
-            console.debug("Add a new workspace");
-            layers.workspaces.addWorkspace();
-        }
-
-        /*
+    /*
          * Input management
          */
 
-        Keys.onPressed: {
-            // Idle inhibit
-            root.idleInhibit++
-        }
-        Keys.onReleased: {
-            // Idle inhibit
-            root.idleInhibit--
-        }
+    Keys.onPressed: {
+        // Idle inhibit
+        root.idleInhibit++
+    }
+    Keys.onReleased: {
+        // Idle inhibit
+        root.idleInhibit--
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        preventStealing: false
+        onPressed: root.idleInhibit++
+        onReleased: root.idleInhibit--
+        onPositionChanged: qmlCompositor.compositor.state = WaylandCompositor.Active
+        onWheel: qmlCompositor.compositor.state = WaylandCompositor.Active
+    }
+
+    /*
+     * Components
+     */
+
+    Rectangle {
+        color: "red"
+        x: 10
+        y: 10
+        width: 150
+        height: 150
+        z: 900000
 
         MouseArea {
             anchors.fill: parent
-            hoverEnabled: true
-            preventStealing: false
-            onPressed: root.idleInhibit++
-            onReleased: root.idleInhibit--
-            onPositionChanged: qmlCompositor.compositor.state = WaylandCompositor.Active
-            onWheel: qmlCompositor.compositor.state = WaylandCompositor.Active
-        }
-
-        /*
-         * Components
-         */
-
-        Rectangle {
-            color: "red"
-            x: 10
-            y: 10
-            width: 150
-            height: 150
-            z: 900000
-
-            MouseArea {
-                anchors.fill: parent
-                preventStealing: true
-                onClicked: {
-                    console.log("!!!");
-                    root.layers.workspaces.selectNextWorkspace();
-                }
+            preventStealing: true
+            onClicked: {
+                console.log("!!!");
+                root.layers.workspaces.selectNextWorkspace();
             }
         }
+    }
 
-        // FPS counter
-        Text {
-            anchors {
-                top: parent.top
-                right: parent.right
-            }
-            z: 1000
-            text: fpsCounter.fps
-            font.pointSize: 36
-            style: Text.Raised
-            styleColor: "#222"
-            color: "white"
-            visible: false
+    // FPS counter
+    Text {
+        anchors {
+            top: parent.top
+            right: parent.right
+        }
+        z: 1000
+        text: fpsCounter.fps
+        font.pointSize: 36
+        style: Text.Raised
+        styleColor: "#222"
+        color: "white"
+        visible: false
 
-            FpsCounter {
-                id: fpsCounter
+        FpsCounter {
+            id: fpsCounter
+        }
+    }
+
+    // Black rectangle for fade-in and fade-out effects
+    Rectangle {
+        id: splash
+        anchors.fill: parent
+        color: "black"
+        z: 999
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: 250
             }
         }
+    }
 
-        // Black rectangle for fade-in and fade-out effects
-        Rectangle {
-            id: splash
-            anchors.fill: parent
-            color: "black"
-            z: 999
-
-            Behavior on opacity {
-                NumberAnimation {
-                    easing.type: Easing.InOutQuad
-                    duration: 250
-                }
-            }
-        }
-
-        // Layers for windows
-        Layers {
-            id: layers
-            anchors.fill: parent
-            z: 998
-        }
-
-        Component.onCompleted: compositor.startShell()
+    // Layers for windows
+    Layers {
+        id: layers
+        anchors.fill: parent
+        z: 998
     }
 }
