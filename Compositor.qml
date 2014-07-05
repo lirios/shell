@@ -102,6 +102,10 @@ Item {
             // A surface was unmapped
             WindowManagement.surfaceUnmapped(surface);
         }
+        onSurfaceDestroyed: {
+            // A surface was destroyed
+            WindowManagement.surfaceDestroyed(surface);
+        }
     }
 
     /*

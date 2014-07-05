@@ -42,14 +42,6 @@ Item {
         anchors.fill: parent
     }
 
-    Component.onCompleted: {
-        addWorkspace();
-        addWorkspace();
-        addWorkspace();
-        addWorkspace();
-        selectWorkspace(0);
-    }
-
     function getObject(index) {
         var object = workspacesModel.get(index);
         if (typeof(object) == "undefined") {
