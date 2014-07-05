@@ -123,15 +123,41 @@ Item {
         color: "red"
         x: 10
         y: 10
-        width: 150
-        height: 150
+        width: 50
+        height: 50
         z: 900000
+
+        Text {
+            anchors.fill: parent
+            text: "<-- (" + root.layers.workspaces.currentWorkspaceIndex + ")"
+        }
 
         MouseArea {
             anchors.fill: parent
             preventStealing: true
             onClicked: {
-                console.log("!!!");
+                root.layers.workspaces.selectPreviousWorkspace();
+            }
+        }
+    }
+
+    Rectangle {
+        color: "red"
+        x: 80
+        y: 10
+        width: 50
+        height: 50
+        z: 900000
+
+        Text {
+            anchors.fill: parent
+            text: "--> (" + root.layers.workspaces.currentWorkspaceIndex + ")"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            preventStealing: true
+            onClicked: {
                 root.layers.workspaces.selectNextWorkspace();
             }
         }
