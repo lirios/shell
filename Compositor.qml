@@ -90,9 +90,16 @@ Item {
             idleTimer.running = true
         }
         onWorkspaceAdded: {
-            // Add a new Workspaces
-            console.debug("Add a new workspace");
+            // Add a new workspace
             layers.workspaces.addWorkspace();
+        }
+        onWorkspaceRemoved: {
+            // Remove workspace
+            layers.workspaces.removeWorkspace(index);
+        }
+        onWorkspaceSelected: {
+            // Select workspace
+            layers.workspaces.selectWorkspace(index);
         }
         onSurfaceMapped: {
             // A surface was mapped
