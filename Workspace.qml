@@ -27,8 +27,9 @@
 import QtQuick 2.0
 
 Item {
-    width: container.width
-    height: container.height
+    width: parent.width
+    height: parent.height
+    z: -900000
 
     Image {
         anchors.fill: parent

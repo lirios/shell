@@ -52,7 +52,7 @@ function surfaceMapped(surface) {
         window.child.touchEventsEnabled = true;
         window.width = surface.size.width;
         window.height = surface.size.height;
-        //window.reparent();
+        window.reparent();
 
         // Add surface to the model
         surfaceModel.append({"surface": surface, "window": window});

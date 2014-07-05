@@ -151,12 +151,12 @@ Item {
     }
 
     function getCurrentWorkspaceItem() {
-        return root.layers.workspaces.currentWorkspace;
+        return root.layers.workspaces.get(root.layers.workspaces.currentWorkspace);
     }
 
     function getWorkspaceItem(index) {
         // Check whether the workspace actually exists
-        var workspace = root.layers.workspaces.model.get(index);
+        var workspace = root.layers.workspaces.get(index);
         if (typeof(workspace) == "undefined") {
             console.warn("Invalid workspace", index);
             return null;

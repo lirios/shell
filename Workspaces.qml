@@ -25,70 +25,87 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.2
+import GreenIsland.Core 1.0
 
 Item {
-    property alias model: container.model
-    property var currentWorkspace: workspacesModel.children[currentWorkspaceIndex]
-    property alias currentWorkspaceIndex: container.currentIndex
+    property int currentWorkspaceIndex: 0
 
     id: workspaces
 
-    PathView {
-        id: container
-        anchors.fill: parent
-        highlightRangeMode: PathView.StrictlyEnforceRange
-        preferredHighlightBegin: 0.0
-        preferredHighlightEnd: 1.0
-        flickDeceleration: 5000
-        highlightMoveDuration: 250
-        interactive: false
-        model: VisualItemModel {
-            id: workspacesModel
+    ListModel {
+        id: workspacesModel
+    }
 
-            Workspace {}
-            Workspace {}
-            Workspace {}
-            Workspace {}
+    StackView {
+        id: stackView
+        anchors.fill: parent
+    }
+
+    Component.onCompleted: {
+        addWorkspace();
+        addWorkspace();
+        addWorkspace();
+        addWorkspace();
+        selectWorkspace(0);
+    }
+
+    function getObject(index) {
+        var object = workspacesModel.get(index);
+        if (typeof(object) == "undefined") {
+            console.error("Workspace", index, "not found");
+            return null;
         }
-        currentIndex: -1
-        snapMode: PathView.SnapOneItem
-        clip: true
-        path: Path {
-            startX: - width * model.count / 2 + width / 2
-            startY: height / 2
-            PathLine {
-                x: width * model.count / 2 + width / 2
-                y: height / 2
-            }
+
+        return object;
+    }
+
+    function get(index) {
+        var object = getObject(index);
+        if (object)
+            return object.workspace;
+        return null;
+    }
+
+    function indexOf(workspace) {
+        var i;
+        for (i = 0; workspacesModel.count; i++) {
+            if (workspacesModel.get(i).workspace === workspace)
+                return i;
         }
+
+        return -1;
     }
 
     function addWorkspace() {
-        var index = workspacesModel.count;
+        // Instantiate workspace component
+        var component = Qt.createComponent("Workspace.qml");
+        if (component.status === Component.Error) {
+            // Bail out
+            console.error("Cannot create a new workspace:",
+                          component.errorString());
+            return null;
+        }
 
-        // Create workspace item
-        //var component = Qt.createComponent("Workspace.qml");
-        //var item = component.createObject(container);
+        // Create object and append to the model
+        var workspace = component.createObject(workspaces);
+        workspacesModel.append({"workspace": workspace});
 
-        // First workspace created become the current one
-        console.log("*********** prima", currentWorkspaceIndex);
-        if (currentWorkspaceIndex < 0)
-            currentWorkspaceIndex = 0;
-        console.log("*********** dopo", currentWorkspaceIndex);
+        return workspace;
     }
 
     function removeWorkspace(index) {
         // Find workspace
-        var workspace = workspacesModel.get(index);
-        if (typeof(workspace) == "undefined") {
-            console.warn("Workspace " + index + " not found!");
+        var workspace = get(index);
+        if (!workspace) {
+            console.error("Workspace", index, "not found, cannot remove it");
             return;
         }
 
         // Find previous workspace
-        var prevWorkspace = workspacesModel.get(index - 1);
-        if (typeof(prevWorkspace) == "undefined") {
-            console.warn("Workspace " + (index - 1) + " not found!");
+        var prevWorkspace = get(index - 1);
+        if (!prevWorkspace) {
+            console.error("Previous workspace not found, cannot remove workspace", index);
             return;
         }
 
@@ -103,12 +120,21 @@ Item {
         selectWorkspace(index - 1);
 
         // Remove workspace
-        workspacesModel.remove(index - 1);
+        workspacesModel.remove(index);
+        stackView.pop({"immediate": true});
         workspace.destroy();
     }
 
     function selectWorkspace(index) {
-        // Set next workspace position
+        // Find workspace
+        var workspace = get(index);
+        if (!workspace) {
+            console.error("Workspace", index, "not found, cannot switch to it");
+            return;
+        }
+
+        // Switch to workspace
+        stackView.push({"item": workspace});
         currentWorkspaceIndex = index;
         console.debug("Switched to workspace", index);
     }
