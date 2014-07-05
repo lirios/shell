@@ -31,13 +31,12 @@ import GreenIsland.Core 1.0
 
 Item {
     property alias layers: layers
-    property alias idleInterval: idleTimer.interval
-    property int idleInhibit: 0
 
     id: root
 
     Timer {
         id: idleTimer
+        interval: compositor.idleInterval
         onIntervalChanged: {
             if (running)
                 restart();
@@ -105,7 +104,7 @@ Item {
 
     Connections {
         target: compositor
-        onIdleInhibitResetRequested: root.idleInhibit = 0
+        onIdleInhibitResetRequested: compositor.idleInhibit = 0
         onIdleTimerStartRequested: idleTimer.running = true
         onIdleTimerStopRequested: idleTimer.running = false
         onIdle: {
@@ -149,29 +148,6 @@ Item {
             console.debug("Add a new workspace");
             layers.workspaces.addWorkspace();
         }
-    }
-
-    /*
-     * Input management
-     */
-
-    Keys.onPressed: {
-        // Idle inhibit
-        root.idleInhibit++
-    }
-    Keys.onReleased: {
-        // Idle inhibit
-        root.idleInhibit--
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        preventStealing: false
-        onPressed: root.idleInhibit++
-        onReleased: root.idleInhibit--
-        onPositionChanged: compositor.state = Compositor.Active
-        onWheel: compositor.state = Compositor.Active
     }
 
     /*
