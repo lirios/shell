@@ -131,6 +131,16 @@ Item {
         console.debug("Switched to workspace", index);
     }
 
+    function selectPreviousWorkspace() {
+        // Previous index (avoid overflow)
+        var prevIndex = currentWorkspaceIndex - 1;
+        if (prevIndex < 0)
+            prevIndex = workspacesModel.count - 1;
+
+        // Select workspace
+        selectWorkspace(prevIndex);
+    }
+
     function selectNextWorkspace() {
         // Next index (avoid overflow)
         var nextIndex = currentWorkspaceIndex + 1;
