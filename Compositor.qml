@@ -178,6 +178,12 @@ Item {
      * Components
      */
 
+    Image {
+        anchors.fill: parent
+        source: "../images/wallpaper.png"
+        fillMode: Image.Tile
+    }
+
     Rectangle {
         color: "red"
         x: 10
