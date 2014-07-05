@@ -123,7 +123,7 @@ Item {
             splash.opacity = 0.0;
 
             // Damage all surfaces
-            damageAll();
+            //damageAll();
         }
         onFadeOut: {
             // Fade the desktop out
