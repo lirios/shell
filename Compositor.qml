@@ -112,6 +112,7 @@ Item {
         anchors.fill: parent
         source: "../images/wallpaper.png"
         fillMode: Image.Tile
+        z: -900000
     }
 
     Rectangle {
