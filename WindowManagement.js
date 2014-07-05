@@ -42,11 +42,24 @@ function surfaceMapped(surface) {
 
     // Create surface item
     var component = Qt.createComponent("WaylandWindow.qml");
-    var window = component.createObject(compositor, {surface: surface});
-    console.error(component.errorString());
+    if (component.status === Component.Ready) {
+        // Child
+        var child = compositor.firstViewOf(surface);
 
-    // Add surface to the model
-    surfaceModel.append({"surface": surface, "window": window});
+        // Create and setup window container
+        var window = component.createObject(root, {"child": child});
+        window.child.parent = window;
+        window.child.touchEventsEnabled = true;
+        window.width = surface.size.width;
+        window.height = surface.size.height;
+        //window.reparent();
+
+        // Add surface to the model
+        surfaceModel.append({"surface": surface, "window": window});
+    } else {
+        // Bail out
+        console.error(component.errorString());
+    }
 }
 
 function surfaceUnmapped(surface) {
