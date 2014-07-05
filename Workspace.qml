@@ -29,4 +29,10 @@ import QtQuick 2.0
 Item {
     width: container.width
     height: container.height
+
+    Image {
+        anchors.fill: parent
+        source: "../images/wallpaper.png"
+        fillMode: Image.Tile
+    }
 }
