@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtCompositor 1.0
 import GreenIsland 1.0
 import GreenIsland.Core 1.0
+import "WindowManagement.js" as WindowManagement
 
 Item {
     property alias layers: layers
@@ -45,61 +46,6 @@ Item {
 
     ListModel {
         id: surfaceModel
-    }
-
-    function surfaceMapped(surface) {
-        // Assume application window role by default
-        if (typeof(surface.windowProperties.role) == "undefined")
-            surface.windowProperties.role = Compositor.ApplicationRole;
-
-        if (surface.windowProperties.role === Compositor.ApplicationRole) {
-            console.debug("Surface " + surface + " mapped (" +
-                          "className: \"" + surface.className + "\", " +
-                          "title: \"" + surface.title + "\"): " +
-                          surface.size.width + "x" + surface.size.height + " @ " +
-                          surface.pos.x + "x" + surface.pos.y);
-        } else {
-            console.debug("Surface " + surface + " mapped (role: " +
-                          surface.windowProperties.role + "): " +
-                          surface.size.width + "x" + surface.size.height + " @ " +
-                          surface.pos.x + "x" + surface.pos.y);
-        }
-
-        // Create surface item
-        var component = Qt.createComponent("WaylandWindow.qml");
-        var window = component.createObject(compositor, {surface: surface});
-        console.error(component.errorString());
-
-        // Add surface to the model
-        surfaceModel.append({"surface": surface, "window": window});
-    }
-
-    function surfaceUnmapped(surface) {
-        if (surface.windowProperties.role === Compositor.ApplicationRole) {
-            console.debug("Surface " + surface + " unmapped (" +
-                          "className: \"" + surface.className + "\", " +
-                          "title: \"" + surface.title + "\")");
-        } else {
-            console.debug("Surface " + surface + " mapped (role: " +
-                          surface.windowProperties.role + "): " +
-                          surface.size.width + "x" + surface.size.height + " @ " +
-                          surface.pos.x + "x" + surface.pos.y);
-        }
-
-        // Remove surface from model
-        var i;
-        for (i = 0; i < surfaceModel.count; i++) {
-            var entry = surfaceModel.get(i);
-
-            if (entry.surface === surface) {
-                entry.window.destroy();
-                surfaceModel.remove(i, 1);
-                break;
-            }
-        }
-
-        // Damage all surfaces
-        //damageAll();
     }
 
     Connections {
@@ -147,6 +93,14 @@ Item {
             // Add a new Workspaces
             console.debug("Add a new workspace");
             layers.workspaces.addWorkspace();
+        }
+        onSurfaceMapped: {
+            // A surface was mapped
+            WindowManagement.surfaceMapped(surface);
+        }
+        onSurfaceUnmapped: {
+            // A surface was unmapped
+            WindowManagement.surfaceUnmapped(surface);
         }
     }
 
