@@ -38,8 +38,52 @@ Item {
     }
 
     StackView {
+        property int direction
+        property int duration: 500
+
         id: stackView
         anchors.fill: parent
+        delegate: StackViewDelegate {
+            function getTransition(properties) {
+                return (stackView.direction == Qt.LeftToRight) ? ltrTransition : rtlTransition;
+            }
+
+            // Current workspace slide to the left, revealing next workspace
+            property Component ltrTransition: StackViewTransition {
+                PropertyAnimation {
+                    target: exitItem
+                    property: "x"
+                    from: 0
+                    to: -target.width
+                    duration: stackView.duration
+                }
+                PropertyAnimation {
+                    target: enterItem
+                    property: "x"
+                    from: target.width
+                    to: 0
+                    duration: stackView.duration
+                }
+            }
+
+            // Current workspace slide to the right, reveling previous workspace
+            property Component rtlTransition: StackViewTransition {
+                PropertyAnimation {
+                    target: exitItem
+                    property: "x"
+                    from: 0
+                    to: target.width
+                    duration: stackView.duration
+                }
+                PropertyAnimation {
+                    target: enterItem
+                    property: "x"
+                    from: -target.width
+                    to: 0
+                    duration: stackView.duration
+                }
+            }
+        }
     }
 
     function getObject(index) {
@@ -138,6 +182,7 @@ Item {
             prevIndex = workspacesModel.count - 1;
 
         // Select workspace
+        stackView.direction = Qt.RightToLeft;
         selectWorkspace(prevIndex);
     }
 
@@ -148,6 +193,7 @@ Item {
             nextIndex = 0;
 
         // Select workspace
+        stackView.direction = Qt.LeftToRight;
         selectWorkspace(nextIndex);
     }
 }
