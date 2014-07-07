@@ -111,7 +111,7 @@ Item {
     }
 
     // Application windows can only cover the desktop
-    Workspaces {
+    WorkspacesLinearView {
         id: workspacesLayer
         anchors.fill: parent
         z: 3

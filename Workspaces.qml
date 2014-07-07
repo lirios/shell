@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii Shell.
+ * This file is part of Green Island.
  *
  * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -24,89 +24,39 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+pragma Singleton
 import QtQuick 2.0
-import QtQuick.Controls 1.2
-import GreenIsland.Core 1.0
 
 Item {
-    property int currentWorkspaceIndex: 0
+    readonly property alias currentIndex: __priv.currentIndex
+    property Item workspacesView
 
-    id: workspaces
+    QtObject {
+        id: __priv
+
+        property int currentIndex: -1
+    }
 
     ListModel {
-        id: workspacesModel
+        id: workspaceList
     }
 
-    StackView {
-        property int direction
-        property int duration: 500
-
-        id: stackView
-        anchors.fill: parent
-        delegate: StackViewDelegate {
-            function getTransition(properties) {
-                return (stackView.direction == Qt.LeftToRight) ? ltrTransition : rtlTransition;
-            }
-
-            // Current workspace slide to the left, revealing next workspace
-            property Component ltrTransition: StackViewTransition {
-                PropertyAnimation {
-                    target: exitItem
-                    property: "x"
-                    from: 0
-                    to: -target.width
-                    duration: stackView.duration
-                }
-                PropertyAnimation {
-                    target: enterItem
-                    property: "x"
-                    from: target.width
-                    to: 0
-                    duration: stackView.duration
-                }
-            }
-
-            // Current workspace slide to the right, reveling previous workspace
-            property Component rtlTransition: StackViewTransition {
-                PropertyAnimation {
-                    target: exitItem
-                    property: "x"
-                    from: 0
-                    to: target.width
-                    duration: stackView.duration
-                }
-                PropertyAnimation {
-                    target: enterItem
-                    property: "x"
-                    from: -target.width
-                    to: 0
-                    duration: stackView.duration
-                }
-            }
-        }
-    }
-
-    function getObject(index) {
-        var object = workspacesModel.get(index);
-        if (typeof(object) == "undefined") {
+    function get(index) {
+        if ((index + 1) > workspaceList.count) {
             console.error("Workspace", index, "not found");
             return null;
         }
 
-        return object;
-    }
-
-    function get(index) {
-        var object = getObject(index);
-        if (object)
-            return object.workspace;
-        return null;
+        return workspaceList.get(index).workspace;
     }
 
     function indexOf(workspace) {
+        if (workspaceList.count == 0)
+            return -1;
+
         var i;
-        for (i = 0; workspacesModel.count; i++) {
-            if (workspacesModel.get(i).workspace === workspace)
+        for (i = 0; i < workspaceList.count; i++) {
+            if (workspaceList.get(i).workspace == workspace)
                 return i;
         }
 
@@ -124,8 +74,8 @@ Item {
         }
 
         // Create object and append to the model
-        var workspace = component.createObject(workspaces);
-        workspacesModel.append({"workspace": workspace});
+        var workspace = component.createObject(workspacesView);
+        workspaceList.append({"workspace": workspace});
 
         return workspace;
     }
@@ -155,9 +105,10 @@ Item {
         // Transition to the previous workspace
         selectWorkspace(index - 1);
 
-        // Remove workspace
-        workspacesModel.remove(index);
-        stackView.pop({"immediate": true});
+        // Remove workspace and destroy it
+        workspaceList.remove(index);
+        if (workspacesView != null)
+            workspacesView.remove(index);
         workspace.destroy();
     }
 
@@ -170,30 +121,29 @@ Item {
         }
 
         // Switch to workspace
-        stackView.push({"item": workspace});
-        currentWorkspaceIndex = index;
+        if (workspacesView != null)
+            workspacesView.select(index);
+        __priv.currentIndex = index;
         console.debug("Switched to workspace", index);
     }
 
     function selectPreviousWorkspace() {
         // Previous index (avoid overflow)
-        var prevIndex = currentWorkspaceIndex - 1;
+        var prevIndex = __priv.currentIndex - 1;
         if (prevIndex < 0)
-            prevIndex = workspacesModel.count - 1;
+            prevIndex = workspaceList.count - 1;
 
         // Select workspace
-        stackView.direction = Qt.RightToLeft;
         selectWorkspace(prevIndex);
     }
 
     function selectNextWorkspace() {
         // Next index (avoid overflow)
-        var nextIndex = currentWorkspaceIndex + 1;
-        if (nextIndex >= workspacesModel.count)
+        var nextIndex = __priv.currentIndex + 1;
+        if (nextIndex >= workspaceList.count)
             nextIndex = 0;
 
         // Select workspace
-        stackView.direction = Qt.LeftToRight;
         selectWorkspace(nextIndex);
     }
 }

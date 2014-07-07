@@ -64,7 +64,7 @@ function surfaceMapped(surface) {
         window.child.touchEventsEnabled = true;
         window.width = surface.size.width;
         window.height = surface.size.height;
-        window.reparent();
+        window.parent = Workspaces.get(Workspaces.currentIndex);
 
         // Move window to its initial position
         var pos = compositor.calculateInitialPosition(surface);

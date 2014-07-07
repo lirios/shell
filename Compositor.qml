@@ -29,6 +29,7 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 import GreenIsland.Core 1.0
 import "WindowManagement.js" as WindowManagement
+import "."
 
 Item {
     property alias layers: layers
@@ -91,15 +92,15 @@ Item {
         }
         onWorkspaceAdded: {
             // Add a new workspace
-            layers.workspaces.addWorkspace();
+            Workspaces.addWorkspace();
         }
         onWorkspaceRemoved: {
             // Remove workspace
-            layers.workspaces.removeWorkspace(index);
+            Workspaces.removeWorkspace(index);
         }
         onWorkspaceSelected: {
             // Select workspace
-            layers.workspaces.selectWorkspace(index);
+            Workspaces.selectWorkspace(index);
         }
         onSurfaceMapped: {
             // A surface was mapped
@@ -129,14 +130,14 @@ Item {
 
         Text {
             anchors.fill: parent
-            text: "<-- (" + root.layers.workspaces.currentWorkspaceIndex + ")"
+            text: "<-- (" + Workspaces.currentIndex + ")"
         }
 
         MouseArea {
             anchors.fill: parent
             preventStealing: true
             onClicked: {
-                root.layers.workspaces.selectPreviousWorkspace();
+                Workspaces.selectPreviousWorkspace();
             }
         }
     }
@@ -151,14 +152,14 @@ Item {
 
         Text {
             anchors.fill: parent
-            text: "--> (" + root.layers.workspaces.currentWorkspaceIndex + ")"
+            text: "--> (" + Workspaces.currentIndex + ")"
         }
 
         MouseArea {
             anchors.fill: parent
             preventStealing: true
             onClicked: {
-                root.layers.workspaces.selectNextWorkspace();
+                Workspaces.selectNextWorkspace();
             }
         }
     }
@@ -203,4 +204,6 @@ Item {
         anchors.fill: parent
         z: 998
     }
+
+    Component.onCompleted: Workspaces.workspacesView = layers.workspaces
 }

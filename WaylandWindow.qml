@@ -153,25 +153,4 @@ Item {
     function getCurrentWorkspaceItem() {
         return root.layers.workspaces.get(root.layers.workspaces.currentWorkspaceIndex);
     }
-
-    function getWorkspaceItem(index) {
-        // Check whether the workspace actually exists
-        var workspace = root.layers.workspaces.get(index);
-        if (typeof(workspace) == "undefined") {
-            console.warn("Invalid workspace", index);
-            return null;
-        }
-
-        return workspace;
-    }
-
-    function moveToWorkspace(index) {
-        // Get workspace item
-        var item = getWorkspaceItem(index);
-        if (!item)
-            return;
-
-        // Reparent
-        waylandWindow.parent = item;
-    }
 }
