@@ -87,12 +87,15 @@ function surfaceUnmapped(surface) {
 }
 
 function surfaceDestroyed(surface) {
+    console.debug("Surface " + surface + " destroyed");
+
     // Remove surface from model
     var i;
     for (i = 0; i < surfaceModel.count; i++) {
         var entry = surfaceModel.get(i);
 
         if (entry.surface === surface) {
+            entry.window.destroy();
             surfaceModel.remove(i, 1);
             break;
         }
