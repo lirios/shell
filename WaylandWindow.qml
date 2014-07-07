@@ -151,7 +151,7 @@ Item {
     }
 
     function getCurrentWorkspaceItem() {
-        return root.layers.workspaces.get(root.layers.workspaces.currentWorkspace);
+        return root.layers.workspaces.get(root.layers.workspaces.currentWorkspaceIndex);
     }
 
     function getWorkspaceItem(index) {
