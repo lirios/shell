@@ -53,7 +53,7 @@ function surfaceMapped(surface) {
     }
 
     // Create surface item
-    var component = Qt.createComponent("WaylandWindow.qml");
+    var component = Qt.createComponent("WaylandClientWindow.qml");
     if (component.status === Component.Ready) {
         // Child
         var child = compositor.firstViewOf(surface);

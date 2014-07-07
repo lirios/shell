@@ -25,29 +25,27 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtCompositor 1.0
 
-Item {
-    property var child
-    property var role: child.surface.windowProperties.role
+WaylandWindow {
+    id: clientWindow
 
-    id: waylandWindow
-    opacity: 1.0
-    onVisibleChanged: {
-        if (child)
-            child.surface.clientRenderingEnabled = visible;
-    }
-
-    SurfaceRenderer {
+    MouseArea {
         anchors.fill: parent
-        source: child
-    }
+        enabled: !clientWindow.focus
+        preventStealing: false
+        onClicked: {
+            // Change stacking order
+            var i, clientWindow = waylandWindow.parent.children;
+            for (i = clientWindow.length; i >= 0; i--) {
+                var curWindow = clientWindow[i];
 
-    Connections {
-        target: child.surface
-        onSizeChanged: {
-            waylandWindow.width = child.surface.size.width;
-            waylandWindow.height = child.surface.size.height;
+                if (curWindow !== waylandWindow)
+                    curWindow.z = -i;
+            }
+            clientWindow.z = 1;
+
+            // Give window focus
+            clientWindow.takeFocus();
         }
     }
 }
