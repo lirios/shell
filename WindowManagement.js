@@ -66,6 +66,11 @@ function surfaceMapped(surface) {
         window.height = surface.size.height;
         window.reparent();
 
+        // Move window to its initial position
+        var pos = compositor.calculateInitialPosition(surface);
+        window.x = pos.x;
+        window.y = pos.y;
+
         // Add surface to the model
         surfaceModel.append({"surface": surface, "window": window});
     } else {
