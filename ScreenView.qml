@@ -33,5 +33,46 @@ Item {
     Layers {
         id: layers
         anchors.fill: parent
+        z: -1
+    }
+
+    // Top-left corner
+    HotCorner {
+        id: topLeftCorner
+        anchors {
+            left: parent.left
+            top: parent.top
+        }
+        type: Item.TopLeft
+    }
+
+    // Top-right corner
+    HotCorner {
+        id: topRightCorner
+        anchors {
+            right: parent.right
+            top: parent.top
+        }
+        type: Item.TopRight
+    }
+
+    // Bottom-left corner
+    HotCorner {
+        id: bottomLeftCorner
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+        }
+        type: Item.BottomLeft
+    }
+
+    // Bottom-right corner
+    HotCorner {
+        id: bottomRightCorner
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
+        }
+        type: Item.BottomRight
     }
 }
