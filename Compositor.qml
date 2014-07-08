@@ -32,7 +32,7 @@ import "WindowManagement.js" as WindowManagement
 import "."
 
 Item {
-    property alias layers: layers
+    property alias layers: screenView.layers
 
     id: root
 
@@ -198,12 +198,13 @@ Item {
         }
     }
 
-    // Layers for windows
-    Layers {
-        id: layers
+    // Screen view
+    // TODO: Do multimonitor
+    ScreenView {
+        id: screenView
         anchors.fill: parent
         z: 998
     }
 
-    Component.onCompleted: Workspaces.workspacesView = layers.workspaces
+    Component.onCompleted: Workspaces.workspacesView = screenView.layers.workspaces
 }
