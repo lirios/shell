@@ -26,10 +26,8 @@
 
 import QtQuick 2.0
 
-Item {
+WindowAnimation {
     id: animation
-
-    property Item windowItem
 
     Scale {
         id: transform
@@ -39,7 +37,7 @@ Item {
         yScale: 0.9
     }
 
-    property var map: ParallelAnimation {
+    map: ParallelAnimation {
         NumberAnimation {
             target: animation.windowItem
             property: "opacity"
@@ -73,13 +71,11 @@ Item {
         }
     }
 
-    property var unmap: NumberAnimation {
+    unmap: NumberAnimation {
         target: animation.windowItem
         property: "opacity"
         easing.type: Easing.Linear
         to: 0.0
         duration: 250
     }
-
-    property var destroy: null
 }
