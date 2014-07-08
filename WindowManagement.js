@@ -66,10 +66,32 @@ function surfaceMapped(surface) {
         window.height = surface.size.height;
         window.parent = Workspaces.get(Workspaces.currentIndex);
 
-        // Move window to its initial position
-        var pos = compositor.calculateInitialPosition(surface);
-        window.x = pos.x;
-        window.y = pos.y;
+        // Move window
+        switch (surface.windowType) {
+        case WaylandQuickSurface.Toplevel:
+            // Move window to its initial position
+            var pos = compositor.calculateInitialPosition(surface);
+            window.x = pos.x;
+            window.y = pos.y;
+            window.x = window.y = 50;
+            break;
+        case WaylandQuickSurface.Popup:
+        case WaylandQuickSurface.Transient:
+            var transientParentView = compositor.firstViewOf(surface.transientParent);
+
+            if (surface.windowType === WaylandQuickSurface.Popup) {
+                // Move popups relative to parent window
+                window.x = transientParentView.parent.x + surface.transientOffset.x;
+                window.y = transientParentView.parent.y + surface.transientOffset.y;
+            } else {
+                // Center transient windows
+                window.x = transientParentView.parent.x + (transientParentView.width - window.width) / 2;
+                window.y = transientParentView.parent.y + (transientParentView.height - window.height) / 2;
+            }
+            break;
+        default:
+            break;
+        }
 
         // Add surface to the model
         surfaceModel.append({"surface": surface, "window": window});
