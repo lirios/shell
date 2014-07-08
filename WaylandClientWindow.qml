@@ -45,6 +45,16 @@ WaylandWindow {
         windowItem: clientWindow
     }
 
+    Connections {
+        target: child.surface
+        onUnmapped: runUnmapAnimation()
+    }
+
+    Connections {
+        target: child
+        onSurfaceDestroyed: runDestroyAnimation()
+    }
+
     MouseArea {
         anchors.fill: parent
         enabled: !clientWindow.focus
@@ -97,6 +107,25 @@ WaylandWindow {
         case WaylandQuickSurface.Popup:
             if (popupAnimation.unmap)
                 popupAnimation.unmap.start();
+            break;
+        default:
+            break;
+        }
+    }
+
+    function runDestroyAnimation() {
+        switch (child.surface.windowType) {
+        case WaylandQuickSurface.Toplevel:
+            if (toplevelAnimation.destroy)
+                toplevelAnimation.destroy.start();
+            break;
+        case WaylandQuickSurface.Transient:
+            if (transientAnimation.destroy)
+                transientAnimation.destroy.start();
+            break;
+        case WaylandQuickSurface.Popup:
+            if (popupAnimation.destroy)
+                popupAnimation.destroy.start();
             break;
         default:
             break;

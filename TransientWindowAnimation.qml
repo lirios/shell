@@ -80,4 +80,6 @@ Item {
         to: 0.0
         duration: 250
     }
+
+    property var destroy: null
 }

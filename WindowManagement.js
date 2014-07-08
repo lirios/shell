@@ -128,10 +128,6 @@ function surfaceUnmapped(surface) {
     }
     if (!window)
         return;
-
-    // Run unmap animation
-    if (typeof(window.runUnmapAnimation) != "undefined")
-        window.runUnmapAnimation();
 }
 
 function surfaceDestroyed(surface) {
@@ -143,6 +139,8 @@ function surfaceDestroyed(surface) {
         var entry = surfaceModel.get(i);
 
         if (entry.surface === surface) {
+            // Destroy window representation and
+            // remove the surface from the model
             entry.window.destroy();
             surfaceModel.remove(i, 1);
             break;
