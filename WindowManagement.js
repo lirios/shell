@@ -93,6 +93,10 @@ function surfaceMapped(surface) {
             break;
         }
 
+        // Run map animation
+        if (typeof(window.runMapAnimation) != "undefined")
+            window.runMapAnimation();
+
         // Add surface to the model
         surfaceModel.append({"surface": surface, "window": window});
     } else {
@@ -111,6 +115,23 @@ function surfaceUnmapped(surface) {
                       surface.windowProperties.role + "): " +
                       surface.size.width + "x" + surface.size.height);
     }
+
+    // Find window representation
+    var i, window = null;
+    for (i = 0; i < surfaceModel.count; i++) {
+        var entry = surfaceModel.get(i);
+
+        if (entry.surface === surface) {
+            window = entry.window;
+            break;
+        }
+    }
+    if (!window)
+        return;
+
+    // Run unmap animation
+    if (typeof(window.runUnmapAnimation) != "undefined")
+        window.runUnmapAnimation();
 }
 
 function surfaceDestroyed(surface) {

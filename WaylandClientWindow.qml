@@ -25,9 +25,25 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtCompositor 1.0
 
 WaylandWindow {
     id: clientWindow
+
+    ToplevelWindowAnimation {
+        id: toplevelAnimation
+        windowItem: clientWindow
+    }
+
+    TransientWindowAnimation {
+        id: transientAnimation
+        windowItem: clientWindow
+    }
+
+    PopupWindowAnimation {
+        id: popupAnimation
+        windowItem: clientWindow
+    }
 
     MouseArea {
         anchors.fill: parent
@@ -46,6 +62,38 @@ WaylandWindow {
 
             // Give window focus
             clientWindow.takeFocus();
+        }
+    }
+
+    function runMapAnimation() {
+        switch (child.surface.windowType) {
+        case WaylandQuickSurface.Toplevel:
+            toplevelAnimation.map.start();
+            break;
+        case WaylandQuickSurface.Transient:
+            transientAnimation.map.start();
+            break;
+        case WaylandQuickSurface.Popup:
+            popupAnimation.map.start();
+            break;
+        default:
+            break;
+        }
+    }
+
+    function runUnmapAnimation() {
+        switch (child.surface.windowType) {
+        case WaylandQuickSurface.Toplevel:
+            toplevelAnimation.unmap.start();
+            break;
+        case WaylandQuickSurface.Transient:
+            transientAnimation.unmap.start();
+            break;
+        case WaylandQuickSurface.Popup:
+            popupAnimation.unmap.start();
+            break;
+        default:
+            break;
         }
     }
 }
