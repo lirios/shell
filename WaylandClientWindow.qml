@@ -68,13 +68,16 @@ WaylandWindow {
     function runMapAnimation() {
         switch (child.surface.windowType) {
         case WaylandQuickSurface.Toplevel:
-            toplevelAnimation.map.start();
+            if (toplevelAnimation.map)
+                toplevelAnimation.map.start();
             break;
         case WaylandQuickSurface.Transient:
-            transientAnimation.map.start();
+            if (transientAnimation.map)
+                transientAnimation.map.start();
             break;
         case WaylandQuickSurface.Popup:
-            popupAnimation.map.start();
+            if (popupAnimation.map)
+                popupAnimation.map.start();
             break;
         default:
             break;
@@ -84,13 +87,16 @@ WaylandWindow {
     function runUnmapAnimation() {
         switch (child.surface.windowType) {
         case WaylandQuickSurface.Toplevel:
-            toplevelAnimation.unmap.start();
+            if (toplevelAnimation.unmap)
+                toplevelAnimation.unmap.start();
             break;
         case WaylandQuickSurface.Transient:
-            transientAnimation.unmap.start();
+            if (transientAnimation.unmap)
+                transientAnimation.unmap.start();
             break;
         case WaylandQuickSurface.Popup:
-            popupAnimation.unmap.start();
+            if (popupAnimation.unmap)
+                popupAnimation.unmap.start();
             break;
         default:
             break;
