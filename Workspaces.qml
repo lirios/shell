@@ -73,6 +73,10 @@ Item {
             return null;
         }
 
+        // Set current index if this is the first workspace
+        if (__priv.currentIndex < 0)
+            __priv.currentIndex = 0;
+
         // Create object and append to the model
         var workspace = component.createObject(workspacesView);
         workspaceList.append({"workspace": workspace});
