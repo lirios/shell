@@ -120,50 +120,6 @@ Item {
      * Components
      */
 
-    Rectangle {
-        color: "red"
-        x: 10
-        y: 10
-        width: 50
-        height: 50
-        z: 900000
-
-        Text {
-            anchors.fill: parent
-            text: "<-- (" + Workspaces.currentIndex + ")"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            preventStealing: true
-            onClicked: {
-                Workspaces.selectPreviousWorkspace();
-            }
-        }
-    }
-
-    Rectangle {
-        color: "red"
-        x: 80
-        y: 10
-        width: 50
-        height: 50
-        z: 900000
-
-        Text {
-            anchors.fill: parent
-            text: "--> (" + Workspaces.currentIndex + ")"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            preventStealing: true
-            onClicked: {
-                Workspaces.selectNextWorkspace();
-            }
-        }
-    }
-
     // FPS counter
     Text {
         anchors {
