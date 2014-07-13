@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import "."
 
 Item {
     property alias layers: layers
@@ -44,6 +45,7 @@ Item {
             top: parent.top
         }
         type: Item.TopLeft
+        onTriggered: Workspaces.selectPreviousWorkspace()
     }
 
     // Top-right corner
@@ -54,6 +56,7 @@ Item {
             top: parent.top
         }
         type: Item.TopRight
+        onTriggered: Workspaces.selectNextWorkspace()
     }
 
     // Bottom-left corner
