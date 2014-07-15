@@ -9,53 +9,57 @@ include_directories(
     ${CMAKE_BINARY_DIR}/headers
 )
 
-# Create the config.h header file
-configure_file(
-    "${CMAKE_SOURCE_DIR}/src/client/config.h.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY
-)
+if(systemd_FOUND)
+    include_directories(${systemd_INCLUDE_DIRS})
+endif()
 
 add_definitions(
     -DQT_COMPOSITOR_QUICK
 )
 
 set(SOURCES
-    main.cpp
-    compositor.cpp
-    shell.cpp
-    keybinding.cpp
     clientwindow.cpp
+    compositor.cpp
+    keybinding.cpp
+    logging.cpp
+    main.cpp
+    notifications.cpp
+    panelmanager.cpp
     popupgrabber.cpp
+    qmlcompositoritem.cpp
+    registration.cpp
+    screensaver.cpp
+    shell.cpp
+    shellpanelsurface.cpp
+    shellpopupsurface.cpp
     shellsurface.cpp
     workspace.cpp
-    grab.cpp
-    notifications.cpp
-)
-
-wayland_add_protocol_client(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/wayland.xml
-    wayland
-)
-wayland_add_protocol_server(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/wayland.xml
-    wayland
-)
-qtwayland_add_protocol_server(SOURCES
-    ${CMAKE_SOURCE_DIR}/data/protocols/wayland.xml
-    wayland
 )
 
 wayland_add_protocol_client(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
-    hawaii
+    hawaii hawaii_
 )
 wayland_add_protocol_server(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
-    hawaii
+    hawaii hawaii_
 )
 qtwayland_add_protocol_server(SOURCES
     ${CMAKE_SOURCE_DIR}/data/protocols/hawaii.xml
-    hawaii
+    hawaii hawaii_
+)
+
+wayland_add_protocol_client(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/screensaver.xml
+    screensaver
+)
+wayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/screensaver.xml
+    screensaver
+)
+qtwayland_add_protocol_server(SOURCES
+    ${CMAKE_SOURCE_DIR}/data/protocols/screensaver.xml
+    screensaver
 )
 
 wayland_add_protocol_client(SOURCES
@@ -73,14 +77,21 @@ qtwayland_add_protocol_server(SOURCES
 
 qt5_add_resources(RESOURCES hawaii-shell.qrc)
 
-add_executable(hawaii-shell ${SOURCES} ${RESOURCES})
-qt5_use_modules(hawaii-shell Quick Compositor)
-set_target_properties(hawaii-shell PROPERTIES
-    LINK_FLAGS -L${WaylandServer_LIBDIR}
+set(LINK_FLAGS
+    -L${WaylandServer_LIBDIR}
 )
-target_link_libraries(hawaii-shell
+set(LIBRARIES
     ${GreenIsland_LIBRARIES}
     ${WaylandServer_LIBRARIES}
 )
+if(systemd_FOUND)
+    set(LINK_FLAGS "${LINK_FLAGS} -L${systemd_LIBDIR}")
+    set(LIBRARIES ${LIBRARIES} ${systemd_LIBRARIES})
+endif()
+
+add_executable(hawaii-shell ${SOURCES} ${RESOURCES})
+qt5_use_modules(hawaii-shell Quick Compositor)
+set_target_properties(hawaii-shell PROPERTIES LINK_FLAGS ${LINK_FLAGS})
+target_link_libraries(hawaii-shell ${LIBRARIES})
 
 install(TARGETS hawaii-shell DESTINATION ${CMAKE_INSTALL_BINDIR})

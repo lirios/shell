@@ -32,10 +32,18 @@
 
 find_program(QTWAYLAND_SCANNER_EXECUTABLE NAMES qtwaylandscanner)
 
-# qtwayland_add_protocol_client(outfiles inputfile basename)
+# qtwayland_add_protocol_client(outfiles inputfile basename [interfaceprefix])
 function(QTWAYLAND_ADD_PROTOCOL_CLIENT _sources _protocol _basename)
     if(QTWAYLAND_SCANNER_EXECUTABLE EQUAL "QTWAYLAND_SCANNER_EXECUTABLE-NOTFOUND")
         message(FATAL "The qtwayland-canner executable has not been found on your system. Make sure QTDIR/bin is in your PATH.")
+    endif()
+
+    set(_extra_args ${ARGN})
+    list(LENGTH _extra_args _num_extra_args)
+    if(${_num_extra_args} GREATER 0)
+        list(GET _extra_args 0 _prefix)
+    else()
+        set(_prefix "")
     endif()
 
     get_filename_component(_infile ${_protocol} ABSOLUTE)
@@ -44,21 +52,29 @@ function(QTWAYLAND_ADD_PROTOCOL_CLIENT _sources _protocol _basename)
     set(_code "${CMAKE_CURRENT_BINARY_DIR}/qwayland-${_basename}.cpp")
 
     add_custom_command(OUTPUT "${_header}"
-        COMMAND ${QTWAYLAND_SCANNER_EXECUTABLE} client-header ${_infile} > ${_header}
+        COMMAND ${QTWAYLAND_SCANNER_EXECUTABLE} client-header ${_infile} "" ${_prefix} > ${_header}
         DEPENDS ${_infile} ${_cheader} VERBATIM)
 
     add_custom_command(OUTPUT "${_code}"
-        COMMAND ${QTWAYLAND_SCANNER_EXECUTABLE} client-code ${_infile} > ${_code}
+        COMMAND ${QTWAYLAND_SCANNER_EXECUTABLE} client-code ${_infile} "" ${_prefix} > ${_code}
         DEPENDS ${_infile} ${_header} VERBATIM)
 
     list(APPEND ${_sources} "${_code}")
     set(${_sources} ${${_sources}} PARENT_SCOPE)
 endfunction()
 
-# qtwayland_add_protocol_server(outfiles inputfile basename)
+# qtwayland_add_protocol_server(outfiles inputfile basename [interfaceprefix])
 function(QTWAYLAND_ADD_PROTOCOL_SERVER _sources _protocol _basename)
     if(QTWAYLAND_SCANNER_EXECUTABLE EQUAL "QTWAYLAND_SCANNER_EXECUTABLE-NOTFOUND")
         message(FATAL "The qtwayland-canner executable has not been found on your system. Make sure QTDIR/bin is in your PATH.")
+    endif()
+
+    set(_extra_args ${ARGN})
+    list(LENGTH _extra_args _num_extra_args)
+    if(${_num_extra_args} GREATER 0)
+        list(GET _extra_args 0 _prefix)
+    else()
+        set(_prefix "")
     endif()
 
     get_filename_component(_infile ${_protocol} ABSOLUTE)
@@ -66,11 +82,11 @@ function(QTWAYLAND_ADD_PROTOCOL_SERVER _sources _protocol _basename)
     set(_code "${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-${_basename}.cpp")
 
     add_custom_command(OUTPUT "${_header}"
-        COMMAND ${QTWAYLAND_SCANNER_EXECUTABLE} server-header ${_infile} > ${_header}
+        COMMAND ${QTWAYLAND_SCANNER_EXECUTABLE} server-header ${_infile} "" ${_prefix} > ${_header}
         DEPENDS ${_infile} VERBATIM)
 
     add_custom_command(OUTPUT "${_code}"
-        COMMAND ${QTWAYLAND_SCANNER_EXECUTABLE} server-code ${_infile} > ${_code}
+        COMMAND ${QTWAYLAND_SCANNER_EXECUTABLE} server-code ${_infile} "" ${_prefix} > ${_code}
         DEPENDS ${_infile} ${_header} VERBATIM)
 
     list(APPEND ${_sources} "${_code}")

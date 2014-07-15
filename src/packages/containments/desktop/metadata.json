@@ -1,0 +1,25 @@
+{
+    "HawaiiShell": {
+        "ContainmentType": "Desktop",
+        "Type": "Containment"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "en": {
+                "Comment": "Empty desktop",
+                "Name": "Desktop"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.containments.desktop",
+        "License": "GPLv2+",
+        "MainScript": "ui/main.qml"
+    }
+}

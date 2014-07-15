@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidUi 0.2
+import Fluid.Ui 1.0
 import Hawaii.Shell.Styles 1.0
 
 Style {

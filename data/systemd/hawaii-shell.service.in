@@ -1,0 +1,10 @@
+[Unit]
+Description=Hawaii desktop environment
+
+[Service]
+Type=notify
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-shell
+
+[Install]
+Alias=hawaii.service
+WantedBy=hawaii.target

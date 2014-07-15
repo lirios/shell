@@ -1,24 +1,24 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
  *
- * $BEGIN_LICENSE:LGPL2.1+$
+ * $BEGIN_LICENSE:GPL2+$
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * $END_LICENSE$
@@ -28,12 +28,19 @@
 #include <QtCore/QCommandLineParser>
 #include <QtGui/QGuiApplication>
 #include <QtGui/QScreen>
+#include <QtGui/QWindow>
+#include <QtQml/QQmlApplicationEngine>
 
 #include <GreenIsland/Utilities>
 
 #include "compositor.h"
 #include "config.h"
-#include "cmakedirs.h"
+#include "logging.h"
+#include "registration.h"
+
+#if HAVE_SYSTEMD
+#  include <systemd/sd-daemon.h>
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -48,62 +55,76 @@ int main(int argc, char *argv[])
     GreenIsland::verifyXdgRuntimeDir();
 
     // Enable debug messages
-    QLoggingCategory::setFilterRules(QStringLiteral("greenisland.compositor.debug=true"));
-    QLoggingCategory::setFilterRules(QStringLiteral("greenisland.client.debug=true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("*.warning=true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("*.critical=true"));
 
     // Set message pattern
     qSetMessagePattern("%{message}");
 
     // Command line parser
     QCommandLineParser parser;
-    parser.setApplicationDescription(QObject::tr("Wayland compositor for the Hawaii desktop environment"));
+    parser.setApplicationDescription(QCoreApplication::translate("Command line parser", "Wayland compositor for the Hawaii desktop environment"));
     parser.addHelpOption();
     parser.addVersionOption();
 
     // Synthesize touch for unhandled mouse events
     QCommandLineOption synthesizeOption(QStringLiteral("synthesize-touch"),
-                                        QObject::tr("Synthesize touch for unhandled mouse events"));
+                                        QCoreApplication::translate("Command line parser", "Synthesize touch for unhandled mouse events"));
     parser.addOption(synthesizeOption);
 
     // Full screen option
     QCommandLineOption fullScreenOption(QStringLiteral("fullscreen"),
-                                        QObject::tr("Full screen compositor window"));
+                                        QCoreApplication::translate("Command line parser", "Full screen compositor window"));
     parser.addOption(fullScreenOption);
 
     // Idle time
     QCommandLineOption idleTimeOption(QStringList() << QStringLiteral("i") << QStringLiteral("idle-time"),
-                                      QObject::tr("Idle time in seconds (at least 5 seconds)"),
-                                      QStringLiteral("secs"));
+                                      QCoreApplication::translate("Command line parser", "Idle time in seconds (at least 5 seconds)"),
+                                      QCoreApplication::translate("Command line parser", "secs"));
     idleTimeOption.setDefaultValue("300");
     parser.addOption(idleTimeOption);
 
-    // Geometry
-    QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
-    QRect geometry(screenGeometry.topLeft(), QSize(1920, 1080));
+    // Register QML types
+    registerQmlTypes();
 
-    // Create compositor, run shell client
-    Compositor *compositor = Compositor::instance();
-    compositor->setGeometry(geometry);
-    compositor->setOutputGeometry(geometry);
+    // Application engine
+    QQmlApplicationEngine engine(QUrl("qrc:/qml/Compositor.qml"));
+    QWindow *window = qobject_cast<QWindow *>(engine.rootObjects().first());
+    if (!window) {
+        qFatal("Compositor has no top level element that inhertis from Window!");
+        return 1;
+    }
+
+    // Set screen
+    window->setScreen(QGuiApplication::primaryScreen());
+
+    // Set window geometry
+    window->setGeometry(QRect(window->screen()->geometry().topLeft(),
+                              QSize(1920, 1080)));
 
     // Parse command line
     parser.process(app);
     if (parser.isSet(synthesizeOption))
         app.setAttribute(Qt::AA_SynthesizeTouchForUnhandledMouseEvents, true);
     if (parser.isSet(fullScreenOption)) {
-        compositor->setGeometry(screenGeometry);
-        compositor->setVisibility(QWindow::FullScreen);
+        window->setGeometry(QGuiApplication::primaryScreen()->availableGeometry());
+        window->setVisibility(QWindow::FullScreen);
     }
     int idleInterval = parser.value(idleTimeOption).toInt();
     if (idleInterval >= 5)
-        compositor->setIdleInterval(idleInterval * 1000);
-    
-    // Run shell client
-    compositor->setShellFileName(QLatin1String(INSTALL_LIBEXECDIR "/starthawaii"));
-    compositor->runShell();
+        window->setProperty("idleInterval", idleInterval * 1000);
 
     // Show compositor window
-    compositor->show();
+    window->show();
+
+#if HAVE_SYSTEMD
+    sd_notifyf(0,
+               "READY=1\n"
+               "STATUS=Ready\n"
+               "MAINPID=%llu",
+               QCoreApplication::applicationPid());
+#endif
 
     return app.exec();
 }

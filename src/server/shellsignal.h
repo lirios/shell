@@ -1,34 +1,25 @@
-/****************************************************************************
- * This file is part of Hawaii Shell.
+/*
+ * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Author(s):
- *    Giulio Camuffo
- *
- * $BEGIN_LICENSE:LGPL2.1+$
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $END_LICENSE$
- ***************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#ifndef SHELLSIGNAL_H
-#define SHELLSIGNAL_H
+#ifndef SIGNAL_H
+#define SIGNAL_H
 
 #include <list>
+#include <functional>
 
 template<class... Args>
 class Functor;
@@ -39,6 +30,7 @@ public:
     Signal() : m_flush(false), m_calling(false) { }
 
     template<class T> void connect(T *obj, void (T::*func)(Args...));
+    void connect(const std::function<void (Args...)> &func);
     template<class T> void disconnect(T *obj, void (T::*func)(Args...));
     template<class T> void disconnect(T *obj);
     template<class T> bool isConnected(T *obj, void (T::*func)(Args...));
@@ -57,6 +49,14 @@ private:
         bool m_called;
         bool m_toDelete;
         bool m_calling;
+    };
+
+    class FunctionFunctor : public Functor {
+    public:
+        FunctionFunctor(const std::function<void (Args...)> &func) : m_func(func) {}
+        virtual void call(Args... args) override { m_func(args...); }
+
+        std::function<void (Args...)> m_func;
     };
 
     template<class T>
@@ -90,15 +90,22 @@ void Signal<Args...>::connect(T *obj, void (T::*func)(Args...)) {
     }
 }
 
+template<class... Args>
+void Signal<Args...>::connect(const std::function<void (Args...)> &func) {
+    Functor *f = new FunctionFunctor(func);
+    m_listeners.push_back(f);
+}
+
 template<class... Args> template<class T>
 void Signal<Args...>::disconnect(T *obj, void (T::*func)(Args...)) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
         MemberFunctor<T> *f = static_cast<MemberFunctor<T> *>(*i);
         if (f->m_obj == obj && f->m_func == func) {
-            if (f->m_calling)
+            if (f->m_calling) {
                 f->m_toDelete = true;
-            else
+            } else {
                 delete f;
+            }
             m_listeners.erase(i);
             return;
         }
@@ -110,10 +117,11 @@ void Signal<Args...>::disconnect(T *obj) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
         MemberFunctor<T> *f = static_cast<MemberFunctor<T> *>(*i);
         if (f->m_obj == obj) {
-            if (f->m_calling)
+            if (f->m_calling) {
                 f->m_toDelete = true;
-            else
+            } else {
                 delete f;
+            }
             m_listeners.erase(i);
             return;
         }
@@ -123,8 +131,8 @@ void Signal<Args...>::disconnect(T *obj) {
 template<class... Args> template<class T>
 bool Signal<Args...>::isConnected(T *obj, void (T::*func)(Args...)) {
     for (auto i = m_listeners.begin(); i != m_listeners.end(); ++i) {
-        MemberFunctor<T> *f = static_cast<MemberFunctor<T> *>(*i);
-        if (f->m_obj == obj && f->m_func == func) {
+        MemberFunctor<T> *f = dynamic_cast<MemberFunctor<T> *>(*i);
+        if (f && f->m_obj == obj && f->m_func == func) {
             return true;
         }
     }

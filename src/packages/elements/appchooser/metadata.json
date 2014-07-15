@@ -1,0 +1,47 @@
+{
+    "HawaiiShell": {
+        "Type": "Element"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "ast_ES": {
+                "Comment": "Llanzador p'aniciar aplicaciones",
+                "Name": "Llanzador d'aplicaciones"
+            },
+            "cs_CZ": {
+                "Comment": "Spou\u0161t\u011b\u010d ke spou\u0161t\u011bn\u00ed program\u016f",
+                "Name": "Spou\u0161t\u011b\u010d programu"
+            },
+            "en": {
+                "Comment": "Launcher to start applications",
+                "Name": "Application launcher"
+            },
+            "es": {
+                "Comment": "Lanzador para iniciar aplicaciones",
+                "Name": "Lanzador de aplicaciones"
+            },
+            "hr_HR": {
+                "Name": "Pokreta\u010d programa"
+            },
+            "hu": {
+                "Comment": "Eszk\u00f6z programok ind\u00edt\u00e1s\u00e1hoz",
+                "Name": "Alkalmaz\u00e1sind\u00edt\u00f3"
+            },
+            "sk": {
+                "Comment": "Sp\u00fa\u0161\u0165a\u010d ur\u010den\u00fd na sp\u00fa\u0161\u0165anie aplik\u00e1ci\u00ed",
+                "Name": "Sp\u00fa\u0161\u0165a\u010d aplik\u00e1cie"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.elements.appchooser",
+        "License": "GPLv2+",
+        "MainScript": "ui/AppChooserButton.qml"
+    }
+}

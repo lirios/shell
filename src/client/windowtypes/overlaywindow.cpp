@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,84 +24,106 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QDebug>
 #include <QtGui/QGuiApplication>
-#include <QtGui/QWindow>
-#include <QtGui/QScreen>
-
-#include <qpa/qplatformnativeinterface.h>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "overlaywindow.h"
-#include "hawaiishell.h"
-#include "hawaiishell_p.h"
-#include "shellscreen.h"
+#include "overlaywindow_p.h"
 
-OverlayWindow::OverlayWindow(ShellScreen *screen)
-    : QQuickView(HawaiiShell::instance()->engine(), new QWindow(screen->screen()))
-    , m_surface(0)
+/*
+ * OverlayWindowPrivate
+ */
+
+OverlayWindowPrivate::OverlayWindowPrivate()
+    : window(0)
+    , content(0)
 {
-    // Set transparent color
-    setColor(Qt::transparent);
-
-    // Set custom window type
-    setFlags(flags() | Qt::BypassWindowManagerHint);
-
-    // Set Wayland window type
-    create();
-    setWindowType();
-
-    // Load QML component
-    setSource(QUrl("qrc:/qml/Overlay.qml"));
-
-    // Resize view to actual size and thus resize the root object
-    setResizeMode(QQuickView::SizeRootObjectToView);
-    geometryChanged(screen->screen()->geometry());
-
-    // React to screen size changes
-    connect(screen->screen(), SIGNAL(geometryChanged(QRect)),
-            this, SLOT(geometryChanged(QRect)));
-
-    // Debugging message
-    qDebug() << "-> Created Overlay with geometry"
-             << geometry();
 }
 
-wl_surface *OverlayWindow::surface() const
+OverlayWindowPrivate::~OverlayWindowPrivate()
 {
-    return m_surface;
+    if (window)
+        window->deleteLater();
 }
 
-void OverlayWindow::geometryChanged(const QRect &rect)
-{
-    // Resize view to actual size
-    setGeometry(rect);
+/*
+ * OverlayWindow
+ */
 
-    // Set surface position
-    setSurfacePosition(position());
+OverlayWindow::OverlayWindow(QObject *parent)
+    : QObject(parent)
+    , d_ptr(new OverlayWindowPrivate())
+{
 }
 
-void OverlayWindow::setWindowType()
+OverlayWindow::~OverlayWindow()
 {
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
-
-    wl_output *output = static_cast<struct wl_output *>(
-                native->nativeResourceForScreen("output", screen()));
-    wl_surface *surface = static_cast<struct wl_surface *>(
-                native->nativeResourceForWindow("surface", this));
-
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_overlay(output, surface);
+    delete d_ptr;
 }
 
-void OverlayWindow::setSurfacePosition(const QPoint &pt)
+QQuickItem *OverlayWindow::contentItem() const
 {
-    QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+    Q_D(const OverlayWindow);
+    return d->content;
+}
 
-    wl_surface *surface = static_cast<struct wl_surface *>(
-                native->nativeResourceForWindow("surface", this));
+void OverlayWindow::setContentItem(QQuickItem *item)
+{
+    Q_D(OverlayWindow);
 
-    HawaiiShellImpl *shell = HawaiiShell::instance()->d_ptr->shell;
-    shell->set_position(surface, pt.x(), pt.y());
+    if (d->content != item) {
+        d->content = item;
+        Q_EMIT contentChanged();
+    }
+}
+
+bool OverlayWindow::isVisible() const
+{
+    Q_D(const OverlayWindow);
+    return d->window && d->window->isVisible() ? true : false;
+}
+
+void OverlayWindow::setVisible(bool value)
+{
+    QMetaObject::invokeMethod(this, value ? "show" : "hide", Qt::QueuedConnection);
+}
+
+void OverlayWindow::show()
+{
+    Q_D(OverlayWindow);
+
+    // Just return if it's already visible or there's no content item
+    if (isVisible() || !d->content)
+        return;
+
+    // Create the window
+    if (!d->window) {
+        d->window = new OverlayQuickWindow();
+        connect(d->window, SIGNAL(rejected()), this, SIGNAL(rejected()));
+    }
+
+    // Set window size according to content size
+    d->window->setWidth(d->content->width());
+    d->window->setHeight(d->content->height());
+
+    // Set screen and reparent content item
+    d->window->setScreen(QGuiApplication::primaryScreen());
+    d->content->setParentItem(d->window->contentItem());
+
+    // Show the window
+    d->window->show();
+    Q_EMIT visibleChanged();
+}
+
+void OverlayWindow::hide()
+{
+    Q_D(OverlayWindow);
+
+    if (isVisible()) {
+        d->window->deleteLater();
+        d->window = 0;
+        Q_EMIT visibleChanged();
+    }
 }
 
 #include "moc_overlaywindow.cpp"

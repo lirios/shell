@@ -1,24 +1,24 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
  *
- * $BEGIN_LICENSE:LGPL2.1+$
+ * $BEGIN_LICENSE:GPL2+$
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * $END_LICENSE$
@@ -26,35 +26,49 @@
 
 #include <QtCore/QDebug>
 #include <QtGui/QGuiApplication>
-#include <QtGui/QScreen>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 #include <QtQml/QQmlEngine>
 
-#include <qpa/qplatformnativeinterface.h>
+#include <Hawaii/PluginLoader>
 
-#include "hawaiishell.h"
+#include "backgroundview.h"
+#include "desktopview.h"
+#include "grabwindow.h"
+#include "lockscreenview.h"
+#include "panelview.h"
 #include "shellui.h"
-#include "shellscreen.h"
+#include "shellmanager.h"
 
-ShellUi::ShellUi(QQmlEngine *engine, QObject *parent)
-    : QObject(parent)
-    , m_engine(engine)
-    , m_lockScreenWindow(0)
+using namespace Hawaii;
+
+ShellUi::ShellUi(QObject *parent)
+    : Mantle(parent)
     , m_numWorkspaces(0)
+    , m_grabWindow(nullptr)
+    , m_lockScreenView(nullptr)
 {
-    // Create grab window
-    m_grabWindow = new GrabWindow();
-    m_grabWindow->show();
+    // Create and connect JavaScript engine
+    m_jsEngine = new ScriptEngine(this);
+    connect(m_jsEngine, &ScriptEngine::print,
+            this, &ShellUi::printScriptMessage);
+    connect(m_jsEngine, &ScriptEngine::printError,
+            this, &ShellUi::printScriptError);
 }
 
 ShellUi::~ShellUi()
 {
-    delete m_grabWindow;
-    delete m_lockScreenWindow;
+    if (m_grabWindow)
+        m_grabWindow->deleteLater();
+    if (m_lockScreenView)
+        m_lockScreenView->deleteLater();
+    qDeleteAll(m_panelViews);
+    qDeleteAll(m_desktopViews);
+    qDeleteAll(m_backgroundViews);
 }
 
-QQmlEngine *ShellUi::engine() const
+ScriptEngine *ShellUi::jsEngine() const
 {
-    return m_engine;
+    return m_jsEngine;
 }
 
 GrabWindow *ShellUi::grabWindow() const
@@ -62,36 +76,102 @@ GrabWindow *ShellUi::grabWindow() const
     return m_grabWindow;
 }
 
-LockScreenWindow *ShellUi::lockScreenWindow() const
+LockScreenView *ShellUi::lockScreenView() const
 {
-    return m_lockScreenWindow;
+    return m_lockScreenView;
 }
 
-void ShellUi::loadScreen(QScreen *screen)
+QList<BackgroundView *> ShellUi::backgrounds() const
 {
-    m_screens.append(new ShellScreen(screen, this));
+    return m_backgroundViews;
 }
 
-void ShellUi::createLockScreenWindow()
+QList<DesktopView *> ShellUi::desktops() const
 {
-    if (!m_lockScreenWindow)
-        m_lockScreenWindow = new LockScreenWindow();
-    m_lockScreenWindow->create();
-    m_lockScreenWindow->setWindowType();
-    m_lockScreenWindow->show();
-
-    // Synchronization
-    while (QCoreApplication::hasPendingEvents())
-        QCoreApplication::processEvents();
+    return m_desktopViews;
 }
 
-void ShellUi::closeLockScreenWindow()
+QList<PanelView *> ShellUi::panels() const
 {
-    if (!m_lockScreenWindow)
+    return m_panelViews;
+}
+
+void ShellUi::addPanelView(PanelView *view)
+{
+    m_panelViews.append(view);
+}
+
+void ShellUi::load()
+{
+    // Create grab window
+    m_grabWindow = new GrabWindow();
+    m_grabWindow->show();
+
+    // Create new desktop views when screens are attached
+    connect(qApp, &QGuiApplication::screenAdded,
+            this, &ShellUi::screenAdded);
+
+    // Create desktop view for each screen
+    for (QScreen *screen: QGuiApplication::screens())
+        screenAdded(screen);
+
+    // Execute layout script
+    QFile file(shellPackage().filePath("defaultlayout"));
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString script = file.readAll();
+        file.close();
+        m_jsEngine->evaluateScript(script, file.fileName());
+    }
+}
+
+void ShellUi::unload()
+{
+    // Don't unload until we know which shell is loaded
+    if (shell().isEmpty())
         return;
 
-    m_lockScreenWindow->deleteLater();
-    m_lockScreenWindow = 0;
+    // Destroy grab window
+    if (m_grabWindow) {
+        m_grabWindow->deleteLater();
+        m_grabWindow = nullptr;
+    }
+
+    // Destroy all desktop views
+    for (DesktopView *view: m_desktopViews) {
+        m_desktopViews.removeOne(view);
+        view->deleteLater();
+    }
+
+    // Destroy all panels
+    for (PanelView *view: m_panelViews) {
+        m_panelViews.removeOne(view);
+        view->deleteLater();
+    }
+}
+
+void ShellUi::createLockScreen()
+{
+    if (!m_lockScreenView) {
+        QString path = shellPackage().filePath("lockscreen");
+
+        m_lockScreenView = new LockScreenView(this, QGuiApplication::primaryScreen());
+        m_lockScreenView->setSource(QUrl::fromLocalFile(path));
+    }
+    m_lockScreenView->show();
+}
+
+void ShellUi::closeLockScreen()
+{
+    if (!m_lockScreenView)
+        return;
+
+    m_lockScreenView->deleteLater();
+    m_lockScreenView = nullptr;
+}
+
+void ShellUi::setGrabCursor(const QCursor &cursor)
+{
+    m_grabWindow->setGrabCursor(cursor);
 }
 
 void ShellUi::setNumWorkspaces(int num)
@@ -102,13 +182,134 @@ void ShellUi::setNumWorkspaces(int num)
         return;
     }
 
-    HawaiiShell *shell = HawaiiShell::instance();
+    ShellController *controller = ShellManager::instance()->controller();
 
     // Add as many workspaces as needed
     for (; m_numWorkspaces < num; ++m_numWorkspaces)
-        shell->addWorkspace();
+        controller->addWorkspace();
     while (m_numWorkspaces > num)
-        shell->removeWorkspace(--m_numWorkspaces);
+        controller->removeWorkspace(--m_numWorkspaces);
+}
+
+void ShellUi::changeShell(const QString &name)
+{
+    // Avoid loading the same shell twice
+    if (shell() == name)
+        return;
+
+    // Keep track of elapsed time
+    QElapsedTimer elapsed;
+    elapsed.start();
+
+    // Unload the old shell
+    unload();
+
+    // Save shell name
+    setShell(name);
+
+    // Load package
+    Package package = PluginLoader::instance()->loadPackage(
+                PluginLoader::ShellPlugin);
+    package.setPath(name);
+    setShellPackage(package);
+
+    // Change user interface
+    if (m_lockScreenView) {
+        const QString path = package.filePath("lockscreen");
+        m_lockScreenView->setSource(QUrl::fromLocalFile(path));
+    }
+
+    // Load the new one
+    load();
+
+    // Print how much did it take to load the new shell
+    qDebug() << "Shell handler" << shell() << "loaded in" << elapsed.elapsed() << "ms";
+}
+
+void ShellUi::synchronize()
+{
+    while (QCoreApplication::hasPendingEvents())
+        QCoreApplication::processEvents();
+}
+
+void ShellUi::screenAdded(QScreen *screen)
+{
+    BackgroundView *background = nullptr;
+    DesktopView *desktop = nullptr;
+    bool backgroundPreviouslyAdded = false;
+    bool desktopPreviouslyAdded = false;
+
+    // Create views only when necessary
+    for (BackgroundView *currentView: m_backgroundViews) {
+        if (currentView->screen() == screen) {
+            background = currentView;
+            backgroundPreviouslyAdded = true;
+            break;
+        }
+    }
+    for (DesktopView *currentView: m_desktopViews) {
+        if (currentView->screen() == screen) {
+            desktop = currentView;
+            desktopPreviouslyAdded = true;
+            break;
+        }
+    }
+
+    // Load background QML code and show
+    if (!background)
+        background = new BackgroundView(this, screen);
+    if (!backgroundPreviouslyAdded) {
+        background->show();
+        m_backgroundViews.append(background);
+    }
+
+    // Load desktop QML code and show
+    if (!desktop)
+        desktop = new DesktopView(this, screen);
+    if (!desktopPreviouslyAdded) {
+        desktop->show();
+        m_desktopViews.append(desktop);
+    }
+
+    connect(screen, &QObject::destroyed,
+            this, &ShellUi::screenDestroyed);
+}
+
+void ShellUi::screenDestroyed(QObject *object)
+{
+    QScreen *screen = qobject_cast<QScreen *>(object);
+    if (!screen)
+        return;
+
+    // Remove desktop view for this screen
+    for (DesktopView *view: m_desktopViews) {
+        if (view->screen() == screen) {
+            view->deleteLater();
+            m_desktopViews.removeOne(view);
+        }
+    }
+
+    // Move all panels on a deleted screen to the primary screen
+    for (PanelView *view: m_panelViews)
+        view->setScreen(QGuiApplication::primaryScreen());
+
+    // Remove background view for this screen
+    for (BackgroundView *view: m_backgroundViews) {
+        if (view->screen() == screen) {
+            view->deleteLater();
+            m_backgroundViews.removeOne(view);
+        }
+    }
+}
+
+void ShellUi::printScriptMessage(const QString &text)
+{
+    qDebug() << qPrintable(text);
+}
+
+void ShellUi::printScriptError(const QString &text)
+{
+    qWarning() << qPrintable(text);
 }
 
 #include "moc_shellui.cpp"

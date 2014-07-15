@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import FluidUi 0.2
+import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Shell.Styles.Base 1.0
 
 PanelIndicatorStyle {
@@ -52,7 +52,7 @@ PanelIndicatorStyle {
             Behavior on opacity { NumberAnimation { duration: 80 } }
         }
 
-        Icon {
+        FluidUi.Icon {
             id: iconItem
             anchors {
                 left: parent.left

@@ -33,7 +33,8 @@ test -n "$uxtype" || {
     uxtype="desktop"
 }
 
-executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/hawaii-${uxtype}-shell
+executable=@CMAKE_INSTALL_FULL_LIBEXECDIR@/hawaii-shell-client
+build_type=@CMAKE_BUILD_TYPE@
 
 # Make sure our library path is set
 _libdir="@CMAKE_INSTALL_FULL_LIBDIR@"
@@ -118,6 +119,10 @@ fi
 # Start the right shell
 args=""
 if test -n "$HAWAII_SHELL_DEBUG_PORT"; then
-    args="-qmljsdebugger=port:${HAWAII_SHELL_DEBUG_PORT},block"
+    args="-qmljsdebugger=port:${HAWAII_SHELL_DEBUG_PORT},block -d"
 fi
-exec $executable $args
+if [ "$build_type" = "Debug" ]; then
+    exec $executable $args
+else
+    exec catchsegv $executable $args
+fi

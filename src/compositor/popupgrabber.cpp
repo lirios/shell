@@ -1,24 +1,24 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
  *
- * $BEGIN_LICENSE:LGPL2.1+$
+ * $BEGIN_LICENSE:GPL2+$
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * $END_LICENSE$
@@ -29,13 +29,14 @@
 #include <QtCompositor/private/qwlsurface_p.h>
 
 #include "popupgrabber.h"
+#include "shellpopupsurface.h"
 #include "shellsurface.h"
 
 PopupGrabber::PopupGrabber(QtWayland::InputDevice *inputDevice)
     : QtWayland::PointerGrabber()
     , m_inputDevice(inputDevice)
     , m_client(nullptr)
-    , m_shellSurface(nullptr)
+    , m_popupSurface(nullptr)
     , m_inside(false)
 {
     m_creationTime = m_inputDevice->pointerDevice()->grabTime();
@@ -61,23 +62,23 @@ void PopupGrabber::setClient(struct ::wl_client *client)
     m_client = client;
 }
 
-ShellSurface *PopupGrabber::shellSurface() const
+ShellPopupSurface *PopupGrabber::popupSurface() const
 {
-    return m_shellSurface;
+    return m_popupSurface;
 }
 
-void PopupGrabber::setShellSurface(ShellSurface *shellSurface)
+void PopupGrabber::setPopupSurface(ShellPopupSurface *popupSurface)
 {
-    if (shellSurface) {
-        m_client = shellSurface->resource()->client();
-        m_shellSurface = shellSurface;
+    if (popupSurface) {
+        m_client = popupSurface->resource()->client();
+        m_popupSurface = popupSurface;
         if (m_inputDevice)
             m_inputDevice->pointerDevice()->startGrab(this);
     } else {
         if (m_inputDevice)
             m_inputDevice->pointerDevice()->endGrab();
         m_client = nullptr;
-        m_shellSurface = nullptr;
+        m_popupSurface = nullptr;
     }
 }
 
@@ -86,10 +87,10 @@ void PopupGrabber::end()
     if (m_inputDevice)
         m_inputDevice->pointerDevice()->endGrab();
 
-    if (m_shellSurface) {
-        m_shellSurface->send_popup_done();
-        delete m_shellSurface;
-        m_shellSurface = nullptr;
+    if (m_popupSurface) {
+        m_popupSurface->send_popup_done();
+        delete m_popupSurface;
+        m_popupSurface = nullptr;
     }
 
     m_client = nullptr;
@@ -104,8 +105,8 @@ void PopupGrabber::endGrab()
 
 void PopupGrabber::focus()
 {
-    if (m_shellSurface)
-        m_inside = m_pointer->current()->waylandSurface() == m_shellSurface->surface();
+    if (m_popupSurface)
+        m_inside = m_pointer->current()->waylandSurface() == m_popupSurface->surface();
     else
         m_inside = false;
 

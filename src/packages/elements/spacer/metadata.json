@@ -1,0 +1,24 @@
+{
+    "HawaiiShell": {
+        "Type": "Element"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "en": {
+                "Comment": "Reserve empty space within the container",
+                "Name": "Spacer"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.elements.spacer",
+        "License": "GPLv2+",
+        "MainScript": "ui/main.qml"
+    }
+}

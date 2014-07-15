@@ -1,0 +1,44 @@
+{
+    "HawaiiShell": {
+        "Type": "Element"
+    },
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "ast_ES": {
+                "Comment": "Amuesa informaci\u00f3n tocante'l sistema",
+                "Name": "Indicadores"
+            },
+            "cs_CZ": {
+                "Comment": "Ukazuje informace o syst\u00e9mu",
+                "Name": "Ukazatel\u00e9"
+            },
+            "en": {
+                "Comment": "Shows information about the system",
+                "Name": "Indicators"
+            },
+            "es": {
+                "Comment": "Muestra informaci\u00f3n sobre el sistema",
+                "Name": "Indicadores"
+            },
+            "hr_HR": {
+                "Comment": "Pokazuje informacije o sustavu",
+                "Name": "Indikatori"
+            },
+            "sk": {
+                "Comment": "Zobraz\u00ed inform\u00e1cie o syst\u00e9me",
+                "Name": "Indik\u00e1tory"
+            }
+        },
+        "Implements": "HawaiiShell",
+        "InternalName": "org.hawaii.elements.indicators",
+        "License": "GPLv2+",
+        "MainScript": "ui/StatusArea.qml"
+    }
+}

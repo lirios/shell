@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Date and Time
+Comment=Date and time information
+X-Hawaii-PluginInfo-Name=org.hawaii.dataproviders.datetime
+X-Hawaii-PluginInfo-Author=Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+X-Hawaii-PluginInfo-Email=pierluigi.fiorini@gmail.com
+X-Hawaii-PluginInfo-Website=http://www.maui-project.org
+X-Hawaii-PluginInfo-License=LGPLv2.1+

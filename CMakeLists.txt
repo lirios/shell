@@ -11,9 +11,8 @@ set(CMAKE_AUTOMOC ON)
 # Set version
 set(HAWAII_SHELL_VERSION_MAJOR 0)
 set(HAWAII_SHELL_VERSION_MINOR 2)
-set(HAWAII_SHELL_VERSION_PATCH 0)
-set(HAWAII_SHELL_VERSION_POINT 2)
-set(HAWAII_SHELL_VERSION_STRING "${HAWAII_SHELL_VERSION_MAJOR}.${HAWAII_SHELL_VERSION_MINOR}.${HAWAII_SHELL_VERSION_PATCH}.${HAWAII_SHELL_VERSION_POINT}")
+set(HAWAII_SHELL_VERSION_PATCH 90)
+set(HAWAII_SHELL_VERSION_STRING "${HAWAII_SHELL_VERSION_MAJOR}.${HAWAII_SHELL_VERSION_MINOR}.${HAWAII_SHELL_VERSION_PATCH}")
 
 # Installation directories
 include(GNUInstallDirs)
@@ -21,6 +20,10 @@ include(GNUInstallDirs)
 # Define additional paths
 set(CMAKE_INSTALL_STYLESDIR "${CMAKE_INSTALL_DATADIR}/hawaii/styles")
 set(CMAKE_INSTALL_FULL_STYLESDIR "${CMAKE_INSTALL_FULL_DATADIR}/hawaii/styles")
+set(CMAKE_INSTALL_PLUGINSDIR "${CMAKE_INSTALL_LIBDIR}/hawaii/plugins")
+set(CMAKE_INSTALL_FULL_PLUGINSDIR "${CMAKE_INSTALL_FULL_LIBDIR}/hawaii/plugins")
+set(CMAKE_INSTALL_DATAPROVIDERSDIR "${CMAKE_INSTALL_PLUGINSDIR}/dataproviders")
+set(CMAKE_INSTALL_FULL_DATAPROVIDERSDIR "${CMAKE_INSTALL_FULL_PLUGINSDIR}/dataproviders")
 
 # Macro to print feature summary
 include(FeatureSummary)
@@ -46,16 +49,11 @@ include(CPack)
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
 # Build flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wno-unused-parameter -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wno-unused-parameter -std=c++11")
 
 # Assume release build by default
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "" FORCE)
-endif()
-
-# Disable debug output for release builds
-if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
-    add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
 # Package builders may specify additional paths for LD_LIBRARY_PATH,
@@ -72,8 +70,15 @@ include(QtWayland)
 # Find QtConfiguration
 find_package(QtConfiguration REQUIRED)
 
+# Find QtAccountsService
+find_package(QtAccountsService REQUIRED)
+
 # Find GreenIsland
-find_package(GreenIsland)
+#find_package(GreenIsland REQUIRED)
+
+# Find libhawaii and libhawaiishell
+find_package(Hawaii REQUIRED)
+find_package(HawaiiShell REQUIRED)
 
 # Find pkg-config
 find_package(PkgConfig "0.22" REQUIRED)
@@ -87,21 +92,20 @@ pkg_check_modules(WaylandServer wayland-server REQUIRED)
 pkg_check_modules(Pixman pixman-1 REQUIRED)
 
 # Find Weston SDK
-pkg_check_modules(Weston weston REQUIRED)
+pkg_check_modules(Weston "weston >= 1.5.0" REQUIRED)
 
-# Find Weston libdir
-execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=libdir weston
-    OUTPUT_VARIABLE CMAKE_INSTALL_WESTONLIBDIR
-    RESULT_VARIABLE _failed)
-if(_failed)
-    message(FATAL_ERROR "Cannot find libdir propery from weston: ${_failed}")
-endif(_failed)
-string(REGEX REPLACE "[ \t\n]+" "" CMAKE_INSTALL_WESTONLIBDIR "${CMAKE_INSTALL_WESTONLIBDIR}")
+# Find systemd
+pkg_check_modules(systemd libsystemd-daemon)
+set(HAVE_SYSTEMD ${systemd_FOUND})
 
 # Find polkit-qt-1
-find_package(PolkitQt-1 REQUIRED)
+find_package(PolkitQt5-1)
+
+# Find ALSA
+find_package(ALSA)
 
 # Subdirectories
+add_subdirectory(data)
 add_subdirectory(headers)
 add_subdirectory(scripts)
 add_subdirectory(src)

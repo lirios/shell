@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -27,28 +27,38 @@
 #ifndef OVERLAYWINDOW_H
 #define OVERLAYWINDOW_H
 
-#include <QtQuick/QQuickView>
+#include <QtCore/QObject>
 
-struct wl_surface;
+class QQuickItem;
+class OverlayWindowPrivate;
 
-class ShellScreen;
-
-class OverlayWindow : public QQuickView
+class OverlayWindow : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QQuickItem *content READ contentItem WRITE setContentItem NOTIFY contentChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    Q_CLASSINFO("DefaultProperty", "content")
 public:
-    OverlayWindow(ShellScreen *screen);
+    OverlayWindow(QObject *parent = 0);
+    virtual ~OverlayWindow();
 
-    wl_surface *surface() const;
+    QQuickItem *contentItem() const;
+    void setContentItem(QQuickItem *item);
 
-private Q_SLOTS:
-    void geometryChanged(const QRect &rect);
+    bool isVisible() const;
+    void setVisible(bool value);
+
+public Q_SLOTS:
+    void show();
+    void hide();
+
+Q_SIGNALS:
+    void contentChanged();
+    void visibleChanged();
 
 private:
-    wl_surface *m_surface;
-
-    void setWindowType();
-    void setSurfacePosition(const QPoint &pt);
+    Q_DECLARE_PRIVATE(OverlayWindow)
+    OverlayWindowPrivate *const d_ptr;
 };
 
 #endif // OVERLAYWINDOW_H

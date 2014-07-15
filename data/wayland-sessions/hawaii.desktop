@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Hawaii Desktop
+Comment=Desktop Environment from Maui OS
+Exec=hawaii
+Icon=start-here
+Type=Application

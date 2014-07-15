@@ -1,29 +1,19 @@
-/****************************************************************************
- * This file is part of Hawaii Shell.
+/*
+ * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Author(s):
- *    Giulio Camuffo
- *
- * $BEGIN_LICENSE:LGPL2.1+$
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $END_LICENSE$
- ***************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "minimizeeffect.h"
 #include "animation.h"
@@ -87,18 +77,18 @@ struct MinimizeEffect::Surface {
     }
 };
 
-MinimizeEffect::MinimizeEffect(Shell *shell)
-              : Effect(shell)
+MinimizeEffect::MinimizeEffect()
+              : Effect()
 {
 }
 
 MinimizeEffect::~MinimizeEffect()
 {
-    for (auto i = m_surfaces.begin(); i != m_surfaces.end(); ++i) {
-        Surface *s = *i;
+    while (!m_surfaces.empty()) {
+        Surface *s = m_surfaces.front();
         s->surface->minimizedSignal.disconnect(s);
-        delete *i;
-        m_surfaces.erase(i);
+        delete s;
+        m_surfaces.pop_front();
     }
 }
 
@@ -128,3 +118,38 @@ void MinimizeEffect::removedSurface(ShellSurface *surface)
         }
     }
 }
+
+
+
+MinimizeEffect::Settings::Settings()
+           : Effect::Settings()
+           , m_effect(nullptr)
+{
+}
+
+MinimizeEffect::Settings::~Settings()
+{
+    delete m_effect;
+}
+
+void MinimizeEffect::Settings::set(const std::string &name, int v)
+{
+    if (name == "enabled") {
+        if (v && !m_effect) {
+            m_effect = new MinimizeEffect;
+        } else if (!v) {
+            delete m_effect;
+            m_effect = nullptr;
+        }
+    }
+}
+
+void MinimizeEffect::Settings::unSet(const std::string &name)
+{
+    if (name == "enabled") {
+        delete m_effect;
+        m_effect = nullptr;
+    }
+}
+
+SETTINGS(minimize_effect, MinimizeEffect::Settings)

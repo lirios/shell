@@ -1,24 +1,24 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
  *
- * $BEGIN_LICENSE:LGPL2.1+$
+ * $BEGIN_LICENSE:GPL2+$
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * $END_LICENSE$
@@ -29,15 +29,16 @@
 
 #include "window.h"
 #include "window_p.h"
-#include "appinfo.h"
-#include "hawaiishell.h"
+#include "shellmanager.h"
+
+using namespace Hawaii;
 
 /*
  * WindowPrivate
  */
 
 WindowPrivate::WindowPrivate()
-    : QtWayland::wl_hawaii_window()
+    : QtWayland::hawaii_window()
     , q_ptr(0)
     , state(Window::Inactive)
     , appInfo(0)
@@ -47,7 +48,7 @@ WindowPrivate::WindowPrivate()
 WindowPrivate::~WindowPrivate()
 {
     delete appInfo;
-    wl_hawaii_window_destroy(object());
+    hawaii_window_destroy(object());
 }
 
 void WindowPrivate::hawaii_window_title_changed(const QString &title)
@@ -72,8 +73,8 @@ void WindowPrivate::hawaii_window_identifier_changed(const QString &identifier)
                     QStandardPaths::ApplicationsLocation,
                     identifier);
         delete this->appInfo;
-        this->appInfo = new AppInfo();
-        this->appInfo->moveToThread(HawaiiShell::instance()->engine()->thread());
+        this->appInfo = new Hawaii::AppInfo();
+        this->appInfo->moveToThread(ShellManager::instance()->mantle()->engine()->thread());
         this->appInfo->load(fileName);
         Q_EMIT q->appInfoChanged();
     }
@@ -132,8 +133,8 @@ Window::Window(const QString &title, const QString &identifier, States state, QO
     QString fileName = QStandardPaths::locate(
                 QStandardPaths::ApplicationsLocation,
                 identifier);
-    d->appInfo = new AppInfo();
-    d->appInfo->moveToThread(HawaiiShell::instance()->engine()->thread());
+    d->appInfo = new Hawaii::AppInfo();
+    d->appInfo->moveToThread(ShellManager::instance()->mantle()->engine()->thread());
     d->appInfo->load(fileName);
 }
 
@@ -202,7 +203,7 @@ void Window::setState(const States &state)
     }
 }
 
-AppInfo *Window::appInfo() const
+Hawaii::AppInfo *Window::appInfo() const
 {
     Q_D(const Window);
     return d->appInfo;

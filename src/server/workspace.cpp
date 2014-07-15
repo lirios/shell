@@ -1,87 +1,107 @@
-/****************************************************************************
- * This file is part of Hawaii Shell.
+/*
+ * Copyright 2013  Giulio Camuffo <giuliocamuffo@gmail.com>
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * Author(s):
- *    Giulio Camuffo
- *    Pier Luigi Fiorini
- *
- * $BEGIN_LICENSE:LGPL2.1+$
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $END_LICENSE$
- ***************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "workspace.h"
 #include "shell.h"
 #include "shellsurface.h"
-#include "wayland-hawaii-server-protocol.h"
 #include "utils.h"
 
 Workspace::Workspace(Shell *shell, int number)
          : m_shell(shell)
          , m_number(number)
+         , m_background(nullptr)
          , m_active(false)
 {
     int x = 0, y = 0;
     int w = 0, h = 0;
 
-    m_rootSurface = weston_surface_create(shell->compositor());
-    m_rootSurface->configure = [](struct weston_surface *es, int32_t sx, int32_t sy, int32_t width, int32_t height) {};
-    m_rootSurface->configure_private = 0;
-    weston_surface_configure(m_rootSurface, x, y, w, h);
-    weston_surface_set_color(m_rootSurface, 0.0, 0.0, 0.0, 1);
-    pixman_region32_fini(&m_rootSurface->opaque);
-    pixman_region32_init_rect(&m_rootSurface->opaque, 0, 0, w, h);
-    pixman_region32_fini(&m_rootSurface->input);
-    pixman_region32_init_rect(&m_rootSurface->input, 0, 0, w, h);
+    weston_surface *s = weston_surface_create(shell->compositor());
+    m_rootSurface = weston_view_create(s);
+    s->configure = [](struct weston_surface *es, int32_t sx, int32_t sy) {};
+    s->configure_private = 0;
+    weston_view_set_position(m_rootSurface, x, y);
+    s->width = w;
+    s->height = h;
+    weston_surface_set_color(s, 0.0, 0.0, 0.0, 1);
+    pixman_region32_fini(&s->opaque);
+    pixman_region32_init_rect(&s->opaque, 0, 0, w, h);
+    pixman_region32_fini(&s->input);
+    pixman_region32_init_rect(&s->input, 0, 0, w, h);
 
     m_layer.addSurface(m_rootSurface);
+
+    m_backgroundDestroy.signal->connect(this, &Workspace::backgroundDestroyed);
 }
 
 Workspace::~Workspace()
 {
-    for (weston_surface *s: m_layer) {
-        ShellSurface *shsurf = Shell::getShellSurface(s);
+    for (weston_view *v: m_layer) {
+        ShellSurface *shsurf = Shell::getShellSurface(v->surface);
         if (!shsurf)
             continue;
 
         if (shsurf->transformParent() == m_rootSurface) {
-            weston_surface_set_transform_parent(s, nullptr);
+            weston_view_set_transform_parent(v, nullptr);
         }
     }
 
     remove();
     destroyedSignal(this);
-    weston_surface_destroy(m_rootSurface);
+    weston_view_destroy(m_background);
+    weston_surface_destroy(m_rootSurface->surface);
 }
 
-void Workspace::init(wl_client *client)
+void Workspace::createBackgroundView(weston_surface *bkg)
 {
-    m_resource = wl_resource_create(client, &wl_hawaii_workspace_interface, 1, 0);
-    wl_resource_set_implementation(m_resource, &s_implementation, this, 0);
+    if (m_background && m_background->surface != bkg) {
+        weston_view_destroy(m_background);
+    }
+
+    m_background = weston_view_create(bkg);
+    m_backgroundDestroy.listen(&m_background->destroy_signal);
+    weston_view_set_position(m_background, 0, 0);
+    m_backgroundLayer.addSurface(m_background);
+    weston_view_set_transform_parent(m_background, m_rootSurface);
+}
+
+void Workspace::backgroundDestroyed(void *d)
+{
+    if (d == m_background) {
+        m_background = nullptr;
+        m_backgroundDestroy.reset();
+    }
 }
 
 void Workspace::addSurface(ShellSurface *surface)
 {
     if (!surface->transformParent()) {
-        weston_surface_set_transform_parent(surface->m_surface, m_rootSurface);
+        weston_view_set_transform_parent(surface->view(), m_rootSurface);
     }
     m_layer.addSurface(surface);
+    surface->m_workspace = this;
+}
+
+void Workspace::removeSurface(ShellSurface *surface)
+{
+    if (surface->transformParent() == m_rootSurface) {
+        weston_view_set_transform_parent(surface->view(), nullptr);
+    }
+    wl_list_remove(&surface->view()->layer_link);
+    surface->m_workspace = nullptr;
 }
 
 void Workspace::restack(ShellSurface *surface)
@@ -89,7 +109,7 @@ void Workspace::restack(ShellSurface *surface)
     m_layer.restack(surface);
 }
 
-void Workspace::stackAbove(struct weston_surface *surf, struct weston_surface *parent)
+void Workspace::stackAbove(weston_view *surf, weston_view *parent)
 {
     m_layer.stackAbove(surf, parent);
 }
@@ -100,8 +120,16 @@ void Workspace::setTransform(const Transform &tr)
     m_transform = tr;
     wl_list_insert(&m_rootSurface->geometry.transformation_list, &m_transform.nativeHandle()->link);
 
-    weston_surface_geometry_dirty(m_rootSurface);
-    weston_surface_damage(m_rootSurface);
+    weston_view_geometry_dirty(m_rootSurface);
+    weston_surface_damage(m_rootSurface->surface);
+}
+
+IRect2D Workspace::boundingBox() const
+{
+    pixman_box32_t *box = pixman_region32_extents(&m_background->transform.boundingbox);
+    IRect2D rect(box->x1, box->y1, box->x2 - box->x1, box->y2 - box->y1);
+
+    return rect;
 }
 
 int Workspace::numberOfSurfaces() const
@@ -118,16 +146,19 @@ struct weston_output *Workspace::output() const
 void Workspace::insert(Workspace *ws)
 {
     m_layer.insert(&ws->m_layer);
+    m_backgroundLayer.insert(&m_layer);
 }
 
 void Workspace::insert(Layer *layer)
 {
     m_layer.insert(layer);
+    m_backgroundLayer.insert(&m_layer);
 }
 
 void Workspace::insert(struct weston_layer *layer)
 {
     m_layer.insert(layer);
+    m_backgroundLayer.insert(&m_layer);
 }
 
 void Workspace::remove()
@@ -140,27 +171,18 @@ void Workspace::reset()
     m_layer.reset();
 }
 
+void Workspace::show()
+{
+    m_layer.show();
+}
+
+void Workspace::hide()
+{
+    m_layer.hide();
+}
+
 void Workspace::setActive(bool active)
 {
-    if (m_active != active) {
-        m_active = active;
-        if (active)
-            wl_hawaii_workspace_send_activated(m_resource);
-        else
-            wl_hawaii_workspace_send_deactivated(m_resource);
-    }
+    m_active = active;
+    activeChangedSignal();
 }
-
-Workspace *Workspace::fromResource(wl_resource *res)
-{
-    return static_cast<Workspace *>(wl_resource_get_user_data(res));
-}
-
-void Workspace::removed(wl_client *client, wl_resource *res)
-{
-    delete this;
-}
-
-const struct wl_hawaii_workspace_interface Workspace::s_implementation = {
-    wrapInterface(&Workspace::removed)
-};

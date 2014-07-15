@@ -1,24 +1,24 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
  *
- * $BEGIN_LICENSE:LGPL2.1+$
+ * $BEGIN_LICENSE:GPL2+$
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * $END_LICENSE$
@@ -27,34 +27,42 @@
 #ifndef SHELLSURFACE_H
 #define SHELLSURFACE_H
 
-#include <QtCompositor/private/qwlinputdevice_p.h>
+#include <QtCompositor/QWaylandSurface>
 
+#include "compositor.h"
 #include "qwayland-server-hawaii.h"
-#include "popupgrabber.h"
-#include "shell.h"
 
-class ShellSurface : public QtWaylandServer::wl_hawaii_shell_surface
+typedef QList<QWaylandSurface *> Layer;
+
+class ShellSurface : public QObject, public QtWaylandServer::hawaii_shell_surface
 {
+    Q_OBJECT
 public:
-    ShellSurface(Compositor::ShellWindowRole role, QWaylandSurface *surface);
-    ~ShellSurface();
+    ShellSurface(struct ::wl_display *display,
+                 QObject *parent = 0);
 
-    Compositor::ShellWindowRole role() const;
+    void setSurfacesVisible(bool visible);
 
-    QWaylandSurface *surface() const;
-    void setSurface(QWaylandSurface *surface);
+    QWaylandSurface *surfaceAt(const QPointF &point, QPointF *local);
 
-    PopupGrabber *popupGrabber() const;
-    void setPopupGrabber(PopupGrabber *grabber);
+protected:
+    void shell_surface_set_popup(Resource *resource, uint32_t id,
+                                 struct ::wl_resource *parent_resource,
+                                 struct ::wl_resource *surface_resource,
+                                 int32_t x, int32_t y) Q_DECL_OVERRIDE;
+    void shell_surface_set_dialog(Resource *resource,
+                                  struct ::wl_resource *output_resource,
+                                  struct ::wl_resource *surface) Q_DECL_OVERRIDE;
 
 private:
     Q_DISABLE_COPY(ShellSurface)
 
-    Compositor::ShellWindowRole m_role;
-    QWaylandSurface *m_surface;
-    PopupGrabber *m_popupGrabber;
+    Layer m_backgroundLayer;
+    Layer m_panelsLayer;
+    Layer m_overlayLayer;
+    Layer m_dialogsLayer;
 
-    void hawaii_shell_surface_dismiss(Resource *resource) Q_DECL_OVERRIDE;
+    QWaylandSurface *surfaceAt(const Layer &layer, const QPointF &point, QPointF *local);
 };
 
 #endif // SHELLSURFACE_H

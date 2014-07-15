@@ -1,0 +1,19 @@
+{
+    "PluginInfo": {
+        "Authors": [
+            "Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>"
+        ],
+        "Contact": {
+            "Email": "pierluigi.fiorini@gmail.com",
+            "Website": "http://www.maui-project.org"
+        },
+        "Description": {
+            "en": {
+                "Comment": "Date and time information",
+                "Name": "Date and Time"
+            }
+        },
+        "InternalName": "org.hawaii.dataproviders.datetime",
+        "License": "LGPLv2.1+"
+    }
+}

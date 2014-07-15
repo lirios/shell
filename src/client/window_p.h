@@ -1,24 +1,24 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
  *
- * $BEGIN_LICENSE:LGPL2.1+$
+ * $BEGIN_LICENSE:GPL2+$
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * $END_LICENSE$
@@ -26,6 +26,8 @@
 
 #ifndef WINDOW_P_H
 #define WINDOW_P_H
+
+#include <Hawaii/AppInfo>
 
 #include "qwayland-hawaii.h"
 
@@ -37,13 +39,13 @@ static Window::States wlStateConvert(int32_t state)
 {
     Window::States result = Window::Inactive;
 
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE)
+    if (state & HAWAII_SHELL_WINDOW_STATE_ACTIVE)
         result |= Window::Active;
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED)
+    if (state & HAWAII_SHELL_WINDOW_STATE_MINIMIZED)
         result |= Window::Minimized;
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_MAXIMIZED)
+    if (state & HAWAII_SHELL_WINDOW_STATE_MAXIMIZED)
         result |= Window::Maximized;
-    if (state & WL_HAWAII_SHELL_WINDOW_STATE_FULLSCREEN)
+    if (state & HAWAII_SHELL_WINDOW_STATE_FULLSCREEN)
         result |= Window::Fullscreen;
 
     return result;
@@ -55,23 +57,23 @@ static Window::States wlStateConvert(int32_t state)
 */
 static int32_t stateConvert(Window::States state)
 {
-    int32_t result = WL_HAWAII_SHELL_WINDOW_STATE_INACTIVE;
+    int32_t result = HAWAII_SHELL_WINDOW_STATE_INACTIVE;
 
     if (state & Window::Active)
-        result |= WL_HAWAII_SHELL_WINDOW_STATE_ACTIVE;
+        result |= HAWAII_SHELL_WINDOW_STATE_ACTIVE;
     if (state & Window::Minimized)
-        result |= WL_HAWAII_SHELL_WINDOW_STATE_MINIMIZED;
+        result |= HAWAII_SHELL_WINDOW_STATE_MINIMIZED;
     if (state & Window::Maximized)
-        result |= WL_HAWAII_SHELL_WINDOW_STATE_MAXIMIZED;
+        result |= HAWAII_SHELL_WINDOW_STATE_MAXIMIZED;
     if (state & Window::Fullscreen)
-        result |= WL_HAWAII_SHELL_WINDOW_STATE_FULLSCREEN;
+        result |= HAWAII_SHELL_WINDOW_STATE_FULLSCREEN;
 
     return result;
 }
 
 class Window;
 
-class WindowPrivate : public QtWayland::wl_hawaii_window
+class WindowPrivate : public QtWayland::hawaii_window
 {
     Q_DECLARE_PUBLIC(Window)
 public:
@@ -82,7 +84,7 @@ public:
     QString title;
     QString identifier;
     Window::States state;
-    AppInfo *appInfo;
+    Hawaii::AppInfo *appInfo;
 
 protected:
     virtual void hawaii_window_title_changed(const QString &title);

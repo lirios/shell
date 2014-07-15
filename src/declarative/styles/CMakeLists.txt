@@ -1,5 +1,6 @@
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src
+    ${QtConfiguration_INCLUDE_DIRS}
+    ${HawaiiShell_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}/headers
 )
 
@@ -12,7 +13,10 @@ set(SOURCES
 
 add_library(hawaiishellstylesplugin SHARED ${SOURCES})
 qt5_use_modules(hawaiishellstylesplugin Qml)
-target_link_libraries(hawaiishellstylesplugin HawaiiCore)
+target_link_libraries(hawaiishellstylesplugin
+    ${QtConfiguration_LIBRARIES}
+    ${HawaiiShell_LIBRARIES}
+)
 
 install(TARGETS hawaiishellstylesplugin LIBRARY
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/hawaii/qml/Hawaii/Shell/Styles)

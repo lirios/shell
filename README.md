@@ -15,6 +15,7 @@ at least the following modules:
 
 * qtbase
 * qtdeclarative
+* qtscript
 * qtwayland
 
 At the time of this writing, the qtwayland module doesn't support Wayland 1.3
@@ -91,3 +92,19 @@ make install
 ```
 
 from the build directory.
+
+## QML JavaScript debugger
+
+Developers can debug Hawaii Shell with Qt Creator and the QML JavaScript debugger.
+
+Run Hawaii setting the debugger port:
+
+```sh
+HAWAII_SHELL_DEBUG_PORT=3768 hawaii
+```
+
+In the example above we are using the default port which is 3768.
+Now from Qt Creator click on Debug -> Start Debugging -> Attach to QML port and specify
+the 3768 port.
+
+See the [Qt Creator manual](http://qt-project.org/doc/qtcreator-3.0/creator-debugging-qml.html) for more information.

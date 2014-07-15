@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -27,17 +27,16 @@
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
 
-#include <libhawaiicore/settings/shellsettings.h>
-
 #include "stylesettings.h"
 #include "cmakedirs.h"
 
 StyleSettings::StyleSettings(QObject *parent)
     : QObject(parent)
-    , m_settings(new ShellSettings(this))
+    , m_settings(new QStaticConfiguration(this))
 {
-    connect(m_settings, SIGNAL(styleChanged()),
-            this, SIGNAL(pathChanged()));
+    m_settings->setCategory(QStringLiteral("shell"));
+    connect(m_settings, &QStaticConfiguration::valueChanged,
+            this, &StyleSettings::settingChanged);
 }
 
 QString StyleSettings::path() const
@@ -63,6 +62,14 @@ extern Q_GUI_EXPORT int qt_defaultDpiX();
 qreal StyleSettings::dpiScaleFactor() const
 {
     return (qreal(qt_defaultDpiX()) / 96.0);
+}
+
+void StyleSettings::settingChanged(const QString &key, const QVariant &value)
+{
+    Q_UNUSED(value);
+
+    if (key == QStringLiteral("style"))
+        Q_EMIT pathChanged();
 }
 
 #include "moc_stylesettings.cpp"

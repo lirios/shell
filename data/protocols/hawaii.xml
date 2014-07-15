@@ -1,51 +1,79 @@
 <protocol name="hawaii">
-  <interface name="wl_hawaii_shell" version="1">
+  <copyright>
+    Copyright (C) 2013-2014 Pier Luigi Fiorini
+
+    Permission to use, copy, modify, distribute, and sell this
+    software and its documentation for any purpose is hereby granted
+    without fee, provided that the above copyright notice appear in
+    all copies and that both that copyright notice and this permission
+    notice appear in supporting documentation, and that the name of
+    the copyright holders not be used in advertising or publicity
+    pertaining to distribution of the software without specific,
+    written prior permission.  The copyright holders make no
+    representations about the suitability of this software for any
+    purpose.  It is provided "as is" without express or implied
+    warranty.
+
+    THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
+    SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+    FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
+    AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+    ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+    THIS SOFTWARE.
+  </copyright>
+
+  <interface name="hawaii_shell" version="1">
     <description summary="create desktop widgets and helpers">
-      Traditional user interfaces can rely on this interface to define the
-      foundations of typical desktops. Currently it's possible to set up
-      background, panels and locking surfaces.
+      This interface defines the foundations of the Hawaii desktop.
     </description>
+
+    <request name="add_trusted_client">
+      <description summary="add a trusted client">
+        Adds a client to the whitelist for the specified interface.
+      </description>
+      <arg name="fd" type="fd"/>
+      <arg name="interface" type="string"/>
+    </request>
 
     <request name="add_key_binding">
       <description summary="add key binding">
         Bind a global shortcut.
       </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_key_binding"/>
+      <arg name="id" type="new_id" interface="hawaii_key_binding"/>
       <arg name="key" type="uint"/>
       <arg name="modifiers" type="uint"/>
     </request>
 
-    <request name="set_available_geometry">
-      <description summary="set available geometry">
-	The available geometry is a portion of the output free of any
-	shell surface (such as Panel and Launcher).
-	It's used by the compositor to know where mapped surfaces should
-	be placed and to prevent maximized surfaces from covering shell
-	surfaces.
+    <request name="set_background">
+      <description summary="set background role">
+        The surface set by this request will receive the background role.
+        Background surfaces are placed above all surfaces and can be used
+        to show wallpapers.
       </description>
       <arg name="output" type="object" interface="wl_output"/>
-      <arg name="x" type="int"/>
-      <arg name="y" type="int"/>
-      <arg name="width" type="int"/>
-      <arg name="height" type="int"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
-    <request name="set_background">
+    <request name="set_desktop">
+      <description summary="set desktop role">
+        The surface set by this request will receive the desktop role.
+        Desktop surfaces are placed above background surfaces and can be used
+        to show the actual desktop view with icons, search results or
+        controls the user will interact with.
+      </description>
       <arg name="output" type="object" interface="wl_output"/>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
 
-    <request name="set_panel">
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_launcher">
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_special">
+    <request name="set_config_surface">
+      <description summary="set configuration role">
+        The surface set by this request will receive the
+        configuration role.
+        A configuration surface is shown when the user wants to configure
+        panel or desktop views.
+      </description>
       <arg name="output" type="object" interface="wl_output"/>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
@@ -54,56 +82,21 @@
       <description summary="set overlay role">
         The surface set by this request will receive the overlay role.
         Overlays are special surfaces that shows for a limited amount
-        of time.  Such surfaces are useful to display things like OSD.
+        of time.  Such surfaces are useful to display things like volume,
+        brightness and status changes.
       </description>
-      <arg name="output" type="object" interface="wl_output"/>
       <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_popup">
-      <description summary="make the surface a popup surface">
-	Map the surface as a popup.
-
-	A popup surface is a surface with an added pointer grab.
-
-	An existing implicit grab will be changed to owner-events mode,
-	and the popup grab will continue after the implicit grab ends
-	(i.e. releasing the mouse button does not cause the popup to
-	be unmapped).
-
-	The popup grab continues until the window is destroyed or a
-	mouse button is pressed in any other window.
-      </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_shell_surface"/>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-      <arg name="x" type="int"/>
-      <arg name="y" type="int"/>
-    </request>
-
-    <request name="set_dialog">
-      <description summary="set dialog role">
-        The surface set by this request will receive the dialog role.
-        Dialogs have a modal behavior which interrupts user's workflow.
-      </description>
-      <arg name="output" type="object" interface="wl_output"/>
-      <arg name="surface" type="object" interface="wl_surface"/>
-    </request>
-
-    <request name="set_position">
-      <arg name="surface" type="object" interface="wl_surface"/>
-      <arg name="x" type="int"/>
-      <arg name="y" type="int"/>
     </request>
 
     <request name="set_lock_surface">
+      <description summary="set lock role">
+        The surface set by this request will receive the lock role.
+        The lock surface is shown by the compositor when the session is
+        locked, users interact with it to unlock the session.
+        Only one surface can have the lock role.
+      </description>
       <arg name="surface" type="object" interface="wl_surface"/>
     </request>
-
-    <request name="quit"/>
-
-    <request name="lock"/>
-    <request name="unlock"/>
 
     <request name="set_grab_surface">
       <description summary="set grab surface">
@@ -113,6 +106,35 @@
 	the grab_cursor event sent just before the enter event.
       </description>
       <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
+    <request name="set_position">
+      <description summary="change surface position">
+        Move the surface to new coordinates.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="x" type="int"/>
+      <arg name="y" type="int"/>
+    </request>
+
+    <request name="quit">
+      <description summary="quit the compositor">
+        Tell the server to quit.
+        The shell client sends this request after the session has been
+        closed to quit the compositor.
+      </description>
+    </request>
+
+    <request name="lock">
+      <description summary="lock the session">
+        Tell the server to lock the session.
+      </description>
+    </request>
+
+    <request name="unlock">
+      <description summary="unlock the session">
+        Tell the server to unlock the session.
+      </description>
     </request>
 
     <request name="desktop_ready">
@@ -148,14 +170,7 @@
       <description summary="select workspace">
         Tell the server to select the specified workspace.
       </description>
-      <arg name="workspace" type="object" interface="wl_hawaii_workspace"/>
-    </request>
-
-    <request name="start_grab">
-      <description summary="start grabbing an element">
-        Tell the server we are starting to grab an element.
-      </description>
-      <arg name="id" type="new_id" interface="wl_hawaii_grab"/>
+      <arg name="workspace" type="object" interface="hawaii_workspace"/>
     </request>
 
     <event name="loaded">
@@ -164,6 +179,18 @@
         background and panels.  The client will emit desktop_ready when
         all surfaces are ready.
       </description>
+    </event>
+
+    <event name="configure">
+      <description summary="suggest resize">
+        The configure event asks the shell to resize its surface.
+
+        The width and height arguments specify the size of the window
+        in surface local coordinates.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="width" type="int"/>
+      <arg name="height" type="int"/>
     </event>
 
     <event name="prepare_lock_surface">
@@ -188,8 +215,7 @@
       <description summary="notify the client that a new window was created">
         This event will be sent immediately after a new window is mapped.
       </description>
-
-      <arg name="id" type="new_id" interface="wl_hawaii_window"/>
+      <arg name="id" type="new_id" interface="hawaii_window"/>
       <arg name="title" type="string"/>
       <arg name="identifier" type="string"/>
       <arg name="state" type="int"/>
@@ -213,14 +239,14 @@
         The client provides a nice user interface that shows which window the server
         switched to. This event notifies the client which window the server switched to.
       </description>
-      <arg name="window" type="object" interface="wl_hawaii_window"/>
+      <arg name="window" type="object" interface="hawaii_window"/>
     </event>
 
     <event name="workspace_added">
       <description summary="notify the client that a workspace was added">
         This event will be sent immediately after a workspace is added.
       </description>
-      <arg name="workspace" type="new_id" interface="wl_hawaii_workspace"/>
+      <arg name="workspace" type="new_id" interface="hawaii_workspace"/>
       <arg name="active" type="int"/>
     </event>
 
@@ -254,23 +280,136 @@
     </enum>
   </interface>
 
-  <interface name="wl_hawaii_shell_surface" version="1">
-    <description summary="popup interaction is done">
-    The popup_done event is sent out when a popup grab is broken,
-    that is, when the users clicks on a different surface.
+  <interface name="hawaii_panel_manager" version="1">
+    <description summary="create panels">
+      This interface is used by the shell to create panels.
+      Only one client can bind.
     </description>
 
-    <request name="dismiss">
-      <description summary="break popup grab">
-        Explicitely break the popup grab. Clients should hide the
-        popup surface after calling this method.
+    <request name="set_panel">
+      <description summary="set panel role">
+        The surface set by this request will receive the panel role.
+        Panels display launchers, buttons and other kind of elements.
       </description>
+      <arg name="id" type="new_id" interface="hawaii_panel"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
     </request>
-
-    <event name="popup_done"/>
   </interface>
 
-  <interface name="wl_hawaii_key_binding" version="1">
+  <interface name="hawaii_panel" version="1">
+    <enum name="edge">
+      <entry name="left" value="0"/>
+      <entry name="top" value="1"/>
+      <entry name="right" value="2"/>
+      <entry name="bottom" value="3"/>
+    </enum>
+
+    <enum name="alignment">
+      <entry name="left" value="0"/>
+      <entry name="center" value="1"/>
+      <entry name="right" value="2"/>
+    </enum>
+
+    <request name="set_alignment">
+      <description summary="set panel alignment">
+        Set panel alignment.
+      </description>
+      <arg name="alignment" type="uint"/>
+    </request>
+
+    <request name="set_offset">
+      <description summary="set panel offset">
+        Set panel offset.
+      </description>
+      <arg name="offset" type="uint"/>
+    </request>
+
+    <request name="set_thickness">
+      <description summary="set panel thickness">
+        Set panel size.
+      </description>
+      <arg name="thickness" type="uint"/>
+    </request>
+
+    <request name="set_length">
+      <description summary="set panel length">
+        Set panel length.
+      </description>
+      <arg name="length" type="uint"/>
+    </request>
+
+    <request name="set_min_length">
+      <description summary="set minimum length">
+        Set minimum length of this panel.
+      </description>
+      <arg name="min_length" type="uint"/>
+    </request>
+
+    <request name="set_max_length">
+      <description summary="set maximum length">
+        Set maximum length of this panel.
+      </description>
+      <arg name="max_length" type="uint"/>
+    </request>
+
+    <request name="dock">
+      <description summary="dock the panel">
+        Set panel position on the specified output according to edge,
+        alignment and offset.
+      </description>
+      <arg name="edge" type="uint"/>
+      <arg name="output" type="object" interface="wl_output"/>
+    </request>
+
+    <event name="docked">
+      <description summary="panel is docked">
+        Emitted when the panel is docked.
+      </description>
+    </event>
+  </interface>
+
+  <interface name="hawaii_shell_surface" version="1">
+    <request name="set_popup">
+      <description summary="make the surface a popup surface">
+	Map the surface as a popup.
+
+	A popup surface is a surface with an added pointer grab.
+
+	An existing implicit grab will be changed to owner-events mode,
+	and the popup grab will continue after the implicit grab ends
+	(i.e. releasing the mouse button does not cause the popup to
+	be unmapped).
+
+	The popup grab continues until the window is destroyed or a
+	mouse button is pressed in any other window.
+      </description>
+      <arg name="id" type="new_id" interface="hawaii_popup_surface"/>
+      <arg name="parent" type="object" interface="wl_surface"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+      <arg name="x" type="int"/>
+      <arg name="y" type="int"/>
+    </request>
+
+    <request name="set_dialog">
+      <description summary="set dialog role">
+        The surface set by this request will receive the dialog role.
+        Dialogs have a modal behavior which interrupts user's workflow.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+  </interface>
+
+  <interface name="hawaii_popup_surface" version="1">
+    <event name="popup_done">
+      <description summary="popup interaction is done">
+        The popup_done event is sent out when a popup grab is broken,
+        that is, when the users clicks on a different surface.
+      </description>
+    </event>
+  </interface>
+
+  <interface name="hawaii_key_binding" version="1">
     <description summary="interface for key bindings">
       This interface represents a key binding.
     </description>
@@ -283,7 +422,7 @@
     </event>
   </interface>
 
-  <interface name="wl_hawaii_window" version="1">
+  <interface name="hawaii_window" version="1">
     <description summary="interface to control client windows">
       Only one client can bind this interface at a time.
     </description>
@@ -292,15 +431,19 @@
       <description summary="set client window state">
         Set client window state.
       </description>
-
       <arg name="state" type="int"/>
+    </request>
+
+    <request name="close">
+      <description summary="close window">
+        Close the client window.
+      </description>
     </request>
 
     <event name="title_changed">
       <description summary="window title have been changed">
         This event will be sent as soon as the window title is changed.
       </description>
-
       <arg name="title" type="string"/>
     </event>
 
@@ -308,7 +451,6 @@
       <description summary="window class have been changed">
         This event will be sent as soon as the window class is changed.
       </description>
-
       <arg name="identifier" type="string"/>
     </event>
 
@@ -316,7 +458,6 @@
       <description summary="window state have been changed">
         This event will be sent as soon as the window state changes.
       </description>
-
       <arg name="state" type="int"/>
     </event>
 
@@ -328,7 +469,7 @@
     </event>
   </interface>
 
-  <interface name="wl_hawaii_workspace" version="1">
+  <interface name="hawaii_workspace" version="1">
     <description summary="control and manager workspaces">
       Each workspace can bind this interface.
     </description>
@@ -349,45 +490,6 @@
       <description summary="workspace deactivated">
         This event will be sent immediately after this workspace is deactivated.
       </description>
-    </event>
-  </interface>
-
-  <interface name="wl_hawaii_grab" version="1">
-    <description summary="desktop elements grabbing">
-      Manage desktop elements grabbing and moving.
-    </description>
-
-    <request name="end">
-      <description summary="end grab">
-        Tell the server that the client stopped grabbing the element.
-      </description>
-    </request>
-
-    <event name="focus">
-      <description summary="element focused">
-        This event will be sent when an element has focus.
-      </description>
-      <arg name="surface" type="object" interface="wl_surface"/>
-      <arg name="sx" type="fixed"/>
-      <arg name="sy" type="fixed"/>
-    </event>
-
-    <event name="motion">
-      <description summary="element motion">
-        This event will be sent when an element is moving.
-      </description>
-      <arg name="time" type="uint"/>
-      <arg name="sx" type="fixed"/>
-      <arg name="sy" type="fixed"/>
-    </event>
-
-    <event name="button">
-      <description summary="element clicked">
-        This event will be sent when an element is clicked.
-      </description>
-      <arg name="time" type="uint"/>
-      <arg name="button" type="uint"/>
-      <arg name="state" type="uint"/>
     </event>
   </interface>
 </protocol>

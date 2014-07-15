@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Application launcher
+Comment=Launcher to start applications
+IconName=view-grid
+X-Hawaii-PluginInfo-Type=HawaiiShell
+X-Hawaii-PluginInfo-Name=org.hawaii.elements.appchooser
+X-Hawaii-PluginInfo-Author=Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+X-Hawaii-PluginInfo-Email=pierluigi.fiorini@gmail.com
+X-Hawaii-PluginInfo-Website=http://www.maui-project.org
+X-Hawaii-PluginInfo-License=GPLv2+
+X-Hawaii-PluginInfo-MainScript=ui/AppChooserButton.qml
+X-Hawaii-HawaiiShell-Type=Element

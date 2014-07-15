@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -29,7 +29,7 @@
 
 #include <QtQml/QQmlEngine>
 
-class ShellSettings;
+#include <QtConfiguration/QStaticConfiguration>
 
 class StyleSettings : public QObject
 {
@@ -47,7 +47,10 @@ Q_SIGNALS:
     void pathChanged();
 
 private:
-    ShellSettings *m_settings;
+    QStaticConfiguration *m_settings;
+
+private Q_SLOTS:
+    void settingChanged(const QString &key, const QVariant &value);
 };
 
 #endif // STYLESETTINGS_H

@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+#
+# Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+#
+# Author(s):
+#    Pier Luigi Fiorini
+#
+# $BEGIN_LICENSE:GPL2+$
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# $END_LICENSE$
+#
+
+import sys, json
+from collections import OrderedDict
+
+def load(filename):
+    f = open(filename, "r")
+    data = "\n".join(f.readlines())
+    f.close()
+    return json.loads(data, object_pairs_hook=OrderedDict)
+
+def synthesize(d, filename):
+    keymap = {
+        "title": "Name",
+        "description": "Comment"
+    }
+
+    desktop = {}
+    for k,v in d.items():
+        if k in keymap.keys():
+            desktop[keymap[k]] = v
+
+    f = open(filename, "w")
+    f.write("[Desktop Entry]\n")
+    f.write("Name=%s\n" % desktop["Name"])
+    f.write("Comment=%s\n" % desktop["Comment"])
+    f.close()
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        sys.stderr.write("Usage: %s [json file] [desktop file]\n" % sys.argv[0])
+        sys.stderr.write("Updates strings for translation from JSON files.\n")
+        sys.stderr.write("Remember to push source files to Transifex after.\n")
+        sys.stderr.write("Example:\n")
+        sys.stderr.write("\t%s ../src/packages/shells/desktop/metadata.json packages/shells/desktop.desktop\n" % sys.argv[0])
+        sys.exit(1)
+    synthesize(load(sys.argv[1]), sys.argv[2])
