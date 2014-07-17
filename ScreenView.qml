@@ -29,6 +29,7 @@ import "."
 
 Item {
     property alias layers: layers
+    property string name
 
     // Layers for windows
     Layers {

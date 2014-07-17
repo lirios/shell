@@ -154,12 +154,47 @@ Item {
         }
     }
 
-    // Screen view
-    // TODO: Do multimonitor
-    ScreenView {
-        id: screenView
-        anchors.fill: parent
+    // Screen model
+    ScreenModel {
+        id: screenModel
+    }
+
+    // A screen view for each screen
+    // TODO: onItemRemoved -> reparent windows
+    Repeater {
+        id: screenViews
+        model: screenModel
         z: 998
+
+        ScreenView {
+            name: model.name
+            x: model.geometry.x
+            y: model.geometry.y
+            width: model.geometry.width
+            height: model.geometry.height
+        }
+
+        function screenViewForCoordinates(x, y) {
+            var i;
+            for (i = 0; i < screenViews.count; i++) {
+                var screenView = screenViews.itemAt(i);
+                var geometry = Qt.rect(screenView.x, screenView.y,
+                                       screenView.width, screenView.height);
+
+                var l = geometry.x;
+                var r = geometry.x + geometry.width;
+                var t = geometry.y;
+                var b = geometry.y + geometry.height;
+
+                if (x < l || x > r)
+                    continue;
+                if (y < t || y > b)
+                    continue;
+                return screenView;
+            }
+
+            return null;
+        }
     }
 
     Component.onCompleted: Workspaces.workspacesView = screenView.layers.workspaces
