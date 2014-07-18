@@ -84,7 +84,7 @@ Item {
             __priv.currentIndex = 0;
 
         // Create object and append to the model
-        var workspace = component.createObject(null);
+        var workspace = component.createObject(root);
         workspaceList.append({"workspace": workspace});
 
         // Emit signal

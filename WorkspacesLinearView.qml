@@ -81,13 +81,15 @@ StackView {
 
     Connections {
         target: Workspaces
-        onWorkspaceAdded: function(workspace) {
+        onWorkspaceAdded: {
             workspace.parent = workspaces;
+            workspace.width = workspaces.width;
+            workspace.height = workspaces.height;
         }
-        onWorkspaceRemoved: function(index) {
+        onWorkspaceRemoved: {
             workspaces.pop({"item": Workspaces.get(index), "immediate": true});
         }
-        onWorkspaceSwitched: function(index) {
+        onWorkspaceSwitched: {
             if (index > Workspaces.currentIndex)
                 __priv.direction = Qt.LeftToRight;
             else if (index < Workspaces.currentIndex)

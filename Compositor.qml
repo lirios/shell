@@ -32,7 +32,7 @@ import "WindowManagement.js" as WindowManagement
 import "."
 
 Item {
-    property alias layers: screenView.layers
+    readonly property alias screenViews: screenViews
 
     id: compositorRoot
 

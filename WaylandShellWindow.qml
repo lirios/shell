@@ -42,39 +42,40 @@ WaylandWindow {
         if (!child || typeof(role) == "undefined")
             return;
 
+        var screenView = compositorRoot.screenViews.screenViewForCoordinates(shellWindow.x, shellWindow.y);
         var windowParent;
 
         // Find parent based on role
         switch (role) {
         case Compositor.CursorRole:
-            windowParent = compositorRoot.layers.cursor;
+            windowParent = screenView.layers.cursor;
             break;
         case Compositor.LockScreenRole:
-            windowParent = compositorRoot.layers.lock;
+            windowParent = screenView.layers.lock;
             break;
         case Compositor.OverlayRole:
-            windowParent = compositorRoot.layers.overlay;
+            windowParent = screenView.layers.overlay;
             break;
         case Compositor.DialogRole:
-            windowParent = compositorRoot.layers.dialogs;
+            windowParent = screenView.layers.dialogs;
             break;
         case Compositor.FullScreenRole:
-            windowParent = compositorRoot.layers.fullScreen;
+            windowParent = screenView.layers.fullScreen;
             break;
         case Compositor.PanelRole:
-            windowParent = compositorRoot.layers.panels;
+            windowParent = screenView.layers.panels;
             break;
         case Compositor.PopupRole:
-            windowParent = compositorRoot.layers.panels;
+            windowParent = screenView.layers.panels;
             break;
         case Compositor.NotificationRole:
-            windowParent = compositorRoot.layers.notifications;
+            windowParent = screenView.layers.notifications;
             break;
         case Compositor.DesktopRole:
-            windowParent = compositorRoot.layers.desktop;
+            windowParent = screenView.layers.desktop;
             break;
         case Compositor.BackgroundRole:
-            windowParent = compositorRoot.layers.background;
+            windowParent = screenView.layers.background;
             break;
         default:
             console.error("Unrecognized surface role for shell window");
