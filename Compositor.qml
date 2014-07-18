@@ -157,6 +157,10 @@ Item {
     // Screen model
     ScreenModel {
         id: screenModel
+        onTotalGeometryChanged: {
+            compositor.width = totalGeometry.width;
+            compositor.height = totalGeometry.height;
+        }
     }
 
     // A screen view for each screen
