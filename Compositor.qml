@@ -196,6 +196,4 @@ Item {
             return null;
         }
     }
-
-    Component.onCompleted: Workspaces.workspacesView = screenView.layers.workspaces
 }

@@ -27,9 +27,11 @@
 import QtQuick 2.0
 
 Item {
-    width: parent.width
-    height: parent.height
     z: -900000
+    onParentChanged: {
+        width = parent.width;
+        height = parent.height;
+    }
 
     Image {
         anchors.fill: parent

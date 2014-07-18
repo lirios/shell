@@ -79,17 +79,22 @@ StackView {
         readonly property int duration: 500
     }
 
-    function select(index) {
-        if (index > Workspaces.currentIndex)
-            __priv.direction = Qt.LeftToRight;
-        else if (index < Workspaces.currentIndex)
-            __priv.direction = Qt.RightToLeft;
-        else
-            return;
-        workspaces.push({"item": Workspaces.get(index)});
-    }
-
-    function remove(index) {
-        workspaces.pop({"item": Workspaces.get(index), "immediate": true});
+    Connections {
+        target: Workspaces
+        onWorkspaceAdded: function(workspace) {
+            workspace.parent = workspaces;
+        }
+        onWorkspaceRemoved: function(index) {
+            workspaces.pop({"item": Workspaces.get(index), "immediate": true});
+        }
+        onWorkspaceSwitched: function(index) {
+            if (index > Workspaces.currentIndex)
+                __priv.direction = Qt.LeftToRight;
+            else if (index < Workspaces.currentIndex)
+                __priv.direction = Qt.RightToLeft;
+            else
+                return;
+            workspaces.push({"item": Workspaces.get(index)});
+        }
     }
 }

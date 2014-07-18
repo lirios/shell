@@ -31,6 +31,12 @@ Item {
     readonly property alias currentIndex: __priv.currentIndex
     property Item workspacesView
 
+    signal workspaceAdded(Item workspace)
+    signal workspaceRemoved(int index)
+    signal workspaceSwitched(int index)
+
+    id: root
+
     QtObject {
         id: __priv
 
@@ -78,8 +84,11 @@ Item {
             __priv.currentIndex = 0;
 
         // Create object and append to the model
-        var workspace = component.createObject(workspacesView);
+        var workspace = component.createObject(null);
         workspaceList.append({"workspace": workspace});
+
+        // Emit signal
+        root.workspaceAdded(workspace);
 
         return workspace;
     }
@@ -111,9 +120,10 @@ Item {
 
         // Remove workspace and destroy it
         workspaceList.remove(index);
-        if (workspacesView != null)
-            workspacesView.remove(index);
         workspace.destroy();
+
+        // Emit signal
+        root.workspaceRemoved(index);
     }
 
     function selectWorkspace(index) {
@@ -124,9 +134,10 @@ Item {
             return;
         }
 
+        // Emit signal
+        root.workspaceSwitched(index);
+
         // Switch to workspace
-        if (workspacesView != null)
-            workspacesView.select(index);
         __priv.currentIndex = index;
         console.debug("Switched to workspace", index);
     }
