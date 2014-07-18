@@ -47,34 +47,34 @@ WaylandWindow {
         // Find parent based on role
         switch (role) {
         case Compositor.CursorRole:
-            windowParent = root.layers.cursor;
+            windowParent = compositorRoot.layers.cursor;
             break;
         case Compositor.LockScreenRole:
-            windowParent = root.layers.lock;
+            windowParent = compositorRoot.layers.lock;
             break;
         case Compositor.OverlayRole:
-            windowParent = root.layers.overlay;
+            windowParent = compositorRoot.layers.overlay;
             break;
         case Compositor.DialogRole:
-            windowParent = root.layers.dialogs;
+            windowParent = compositorRoot.layers.dialogs;
             break;
         case Compositor.FullScreenRole:
-            windowParent = root.layers.fullScreen;
+            windowParent = compositorRoot.layers.fullScreen;
             break;
         case Compositor.PanelRole:
-            windowParent = root.layers.panels;
+            windowParent = compositorRoot.layers.panels;
             break;
         case Compositor.PopupRole:
-            windowParent = root.layers.panels;
+            windowParent = compositorRoot.layers.panels;
             break;
         case Compositor.NotificationRole:
-            windowParent = root.layers.notifications;
+            windowParent = compositorRoot.layers.notifications;
             break;
         case Compositor.DesktopRole:
-            windowParent = root.layers.desktop;
+            windowParent = compositorRoot.layers.desktop;
             break;
         case Compositor.BackgroundRole:
-            windowParent = root.layers.background;
+            windowParent = compositorRoot.layers.background;
             break;
         default:
             console.error("Unrecognized surface role for shell window");
@@ -92,9 +92,9 @@ WaylandWindow {
         switch (role) {
         case Compositor.DialogRole:
             // Center globally modal dialogs and show overlay
-            child.surface.pos.x = root.layers.dialogs.overlay.x + (root.layers.dialogs.overlay.width - width) / 2;
-            child.surface.pos.y = root.layers.dialogs.overlay.y + (root.layers.dialogs.overlay.height - height) / 2;
-            root.layers.dialogs.overlay.opacity = 1.0;
+            child.surface.pos.x = compositorRoot.layers.dialogs.overlay.x + (compositorRoot.layers.dialogs.overlay.width - width) / 2;
+            child.surface.pos.y = compositorRoot.layers.dialogs.overlay.y + (compositorRoot.layers.dialogs.overlay.height - height) / 2;
+            compositorRoot.layers.dialogs.overlay.opacity = 1.0;
             break;
         default:
             break;

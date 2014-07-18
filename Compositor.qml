@@ -34,7 +34,7 @@ import "."
 Item {
     property alias layers: screenView.layers
 
-    id: root
+    id: compositorRoot
 
     Timer {
         id: idleTimer

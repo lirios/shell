@@ -59,7 +59,7 @@ function surfaceMapped(surface) {
         var child = compositor.firstViewOf(surface);
 
         // Create and setup window container
-        var window = component.createObject(root, {"child": child});
+        var window = component.createObject(compositorRoot, {"child": child});
         window.child.parent = window;
         window.child.touchEventsEnabled = true;
         window.width = surface.size.width;
