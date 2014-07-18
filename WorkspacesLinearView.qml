@@ -83,8 +83,6 @@ StackView {
         target: Workspaces
         onWorkspaceAdded: {
             workspace.parent = workspaces;
-            workspace.width = workspaces.width;
-            workspace.height = workspaces.height;
         }
         onWorkspaceRemoved: {
             workspaces.pop({"item": Workspaces.get(index), "immediate": true});
