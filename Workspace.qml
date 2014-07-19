@@ -26,16 +26,11 @@
 
 import QtQuick 2.0
 
-Item {
-    z: -900000
+Image {
+    source: "../images/wallpaper.png"
+    fillMode: Image.Tile
     onParentChanged: {
         width = parent.width;
         height = parent.height;
-    }
-
-    Image {
-        anchors.fill: parent
-        source: "../images/wallpaper.png"
-        fillMode: Image.Tile
     }
 }
