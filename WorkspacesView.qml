@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Green Island.
+ * This file is part of Hawaii Shell.
  *
  * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -24,16 +24,17 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-pragma Singleton
 import QtQuick 2.0
+import QtQuick.Controls 1.2
 
 Item {
+    readonly property Item currentWorkspace: __priv.currentIndex >= 0 ? get(__priv.currentIndex) : null
     readonly property alias currentIndex: __priv.currentIndex
-    property Item workspacesView
+    property Item view
 
     signal workspaceAdded(Item workspace)
-    signal workspaceRemoved(int index)
-    signal workspaceSwitched(int index)
+    signal workspaceRemoved(int index);
+    signal workspaceSelected(int index);
 
     id: root
 
@@ -62,14 +63,14 @@ Item {
 
         var i;
         for (i = 0; i < workspaceList.count; i++) {
-            if (workspaceList.get(i).workspace == workspace)
+            if (workspaceList.get(i).workspace === workspace)
                 return i;
         }
 
         return -1;
     }
 
-    function addWorkspace() {
+    function add() {
         // Instantiate workspace component
         var component = Qt.createComponent("Workspace.qml");
         if (component.status === Component.Error) {
@@ -79,13 +80,13 @@ Item {
             return null;
         }
 
-        // Set current index if this is the first workspace
-        if (__priv.currentIndex < 0)
-            __priv.currentIndex = 0;
-
         // Create object and append to the model
         var workspace = component.createObject(root);
         workspaceList.append({"workspace": workspace});
+
+        // Set current index if this is the first workspace
+        if (__priv.currentIndex < 0)
+            __priv.currentIndex = 0;
 
         // Emit signal
         root.workspaceAdded(workspace);
@@ -93,7 +94,7 @@ Item {
         return workspace;
     }
 
-    function removeWorkspace(index) {
+    function remove(index) {
         // Find workspace
         var workspace = get(index);
         if (!workspace) {
@@ -126,7 +127,7 @@ Item {
         root.workspaceRemoved(index);
     }
 
-    function selectWorkspace(index) {
+    function select(index) {
         // Find workspace
         var workspace = get(index);
         if (!workspace) {
@@ -135,30 +136,30 @@ Item {
         }
 
         // Emit signal
-        root.workspaceSwitched(index);
+        root.workspaceSelected(index);
 
         // Switch to workspace
         __priv.currentIndex = index;
         console.debug("Switched to workspace", index);
     }
 
-    function selectPreviousWorkspace() {
+    function selectPrevious() {
         // Previous index (avoid overflow)
         var prevIndex = __priv.currentIndex - 1;
         if (prevIndex < 0)
             prevIndex = workspaceList.count - 1;
 
         // Select workspace
-        selectWorkspace(prevIndex);
+        select(prevIndex);
     }
 
-    function selectNextWorkspace() {
+    function selectNext() {
         // Next index (avoid overflow)
         var nextIndex = __priv.currentIndex + 1;
         if (nextIndex >= workspaceList.count)
             nextIndex = 0;
 
         // Select workspace
-        selectWorkspace(nextIndex);
+        select(nextIndex);
     }
 }

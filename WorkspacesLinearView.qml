@@ -26,75 +26,69 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.2
-import "."
 
-StackView {
-    id: workspaces
-    delegate: StackViewDelegate {
-        function getTransition(properties) {
-            return (__priv.direction === Qt.LeftToRight) ? ltrTransition : rtlTransition;
+WorkspacesView {
+    id: root
+    view: StackView {
+        delegate: StackViewDelegate {
+            function getTransition(properties) {
+                return (__priv.direction === Qt.LeftToRight) ? ltrTransition : rtlTransition;
+            }
+
+            // Current workspace slide to the left, revealing next workspace
+            property Component ltrTransition: StackViewTransition {
+                PropertyAnimation {
+                    target: exitItem
+                    property: "x"
+                    from: 0
+                    to: -target.width
+                    duration: __priv.duration
+                }
+                PropertyAnimation {
+                    target: enterItem
+                    property: "x"
+                    from: target.width
+                    to: 0
+                    duration: __priv.duration
+                }
+            }
+
+            // Current workspace slide to the right, reveling previous workspace
+            property Component rtlTransition: StackViewTransition {
+                PropertyAnimation {
+                    target: exitItem
+                    property: "x"
+                    from: 0
+                    to: target.width
+                    duration: __priv.duration
+                }
+                PropertyAnimation {
+                    target: enterItem
+                    property: "x"
+                    from: -target.width
+                    to: 0
+                    duration: __priv.duration
+                }
+            }
         }
 
-        // Current workspace slide to the left, revealing next workspace
-        property Component ltrTransition: StackViewTransition {
-            PropertyAnimation {
-                target: exitItem
-                property: "x"
-                from: 0
-                to: -target.width
-                duration: __priv.duration
-            }
-            PropertyAnimation {
-                target: enterItem
-                property: "x"
-                from: target.width
-                to: 0
-                duration: __priv.duration
-            }
-        }
+        QtObject {
+            id: __priv
 
-        // Current workspace slide to the right, reveling previous workspace
-        property Component rtlTransition: StackViewTransition {
-            PropertyAnimation {
-                target: exitItem
-                property: "x"
-                from: 0
-                to: target.width
-                duration: __priv.duration
-            }
-            PropertyAnimation {
-                target: enterItem
-                property: "x"
-                from: -target.width
-                to: 0
-                duration: __priv.duration
-            }
+            property int direction
+            readonly property int duration: 500
         }
     }
-
-    QtObject {
-        id: __priv
-
-        property int direction
-        readonly property int duration: 500
+    onWorkspaceRemoved: {
+        view.pop({"item": get(index), "immediate": true});
     }
-
-    Connections {
-        target: Workspaces
-        onWorkspaceAdded: {
-            workspace.parent = workspaces;
-        }
-        onWorkspaceRemoved: {
-            workspaces.pop({"item": Workspaces.get(index), "immediate": true});
-        }
-        onWorkspaceSwitched: {
-            if (index > Workspaces.currentIndex)
-                __priv.direction = Qt.LeftToRight;
-            else if (index < Workspaces.currentIndex)
-                __priv.direction = Qt.RightToLeft;
-            else
-                return;
-            workspaces.push({"item": Workspaces.get(index)});
-        }
+    onWorkspaceSelected: {
+        if (index > currentIndex)
+            __priv.direction = Qt.LeftToRight;
+        else if (index < currentIndex)
+            __priv.direction = Qt.RightToLeft;
+        else
+            return;
+        view.push({"item": get(index)});
     }
 }

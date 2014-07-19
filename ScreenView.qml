@@ -25,18 +25,49 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import "."
 
 Item {
-    property alias layers: layers
     property string name
+    readonly property alias workspacesView: workspacesLayer
+    readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
 
-    // Layers for windows
-    Layers {
-        id: layers
+    /*
+     * Shell and workspaces
+     */
+
+    // Background is below everything
+    Item {
+        id: backgroundLayer
         anchors.fill: parent
-        z: -1
     }
+
+    // Desktop is only above to the background
+    Item {
+        id: desktopLayer
+        anchors.fill: parent
+    }
+
+    // Workspaces
+    WorkspacesLinearView {
+        id: workspacesLayer
+        anchors.fill: parent
+    }
+
+    // Panels are above application windows
+    Item {
+        id: panelsLayer
+        anchors.fill: parent
+    }
+
+    // Notifications are above panels
+    Item {
+        id: notificationsLayer
+        anchors.fill: parent
+    }
+
+    /*
+     * Hot corners
+     */
 
     // Top-left corner
     HotCorner {
@@ -46,7 +77,7 @@ Item {
             top: parent.top
         }
         type: Item.TopLeft
-        onTriggered: Workspaces.selectPreviousWorkspace()
+        onTriggered: workspacesLayer.selectPrevious()
     }
 
     // Top-right corner
@@ -57,7 +88,7 @@ Item {
             top: parent.top
         }
         type: Item.TopRight
-        onTriggered: Workspaces.selectNextWorkspace()
+        onTriggered: workspacesLayer.selectNext()
     }
 
     // Bottom-left corner
@@ -78,5 +109,59 @@ Item {
             bottom: parent.bottom
         }
         type: Item.BottomRight
+    }
+
+    /*
+     * Important layers
+     */
+
+    // Full screen windows can cover application windows and panels
+    Item {
+        id: fullScreenLayer
+        anchors.fill: parent
+    }
+
+    // Modal overlay for dialogs
+    Rectangle {
+        id: modalOverlay
+        anchors.fill: parent
+        color: "black"
+        opacity: 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: 250
+            }
+        }
+    }
+
+    // Globally modal dialogs can cover applications and shell gadgets
+    Item {
+        id: dialogsLayer
+        anchors.fill: parent
+    }
+
+    // Overlays can cover pretty much everything except the lock screen
+    Item {
+        id: overlayLayer
+        anchors.fill: parent
+        z: 8
+    }
+
+    // Lock screen is above all windows to shield the session
+    Item {
+        id: lockLayer
+        anchors.fill: parent
+    }
+
+    /*
+     * Mouse pointer
+     */
+
+    // Cursors are above anything
+    Item {
+        id: cursorLayer
+        anchors.fill: parent
     }
 }

@@ -64,7 +64,6 @@ function surfaceMapped(surface) {
         window.child.touchEventsEnabled = true;
         window.width = surface.size.width;
         window.height = surface.size.height;
-        window.parent = Workspaces.get(Workspaces.currentIndex);
 
         // Move window
         switch (surface.windowType) {
@@ -73,7 +72,6 @@ function surfaceMapped(surface) {
             var pos = compositor.calculateInitialPosition(surface);
             window.x = pos.x;
             window.y = pos.y;
-            window.x = window.y = 50;
             break;
         case WaylandQuickSurface.Popup:
         case WaylandQuickSurface.Transient:
@@ -92,6 +90,10 @@ function surfaceMapped(surface) {
         default:
             break;
         }
+
+        // Reparent the window to current screen workspace
+        var screenView = compositorRoot.screenViews.screenViewForCoordinates(window.x, window.y);
+        window.parent = screenView.currentWorkspace;
 
         // Run map animation
         if (typeof(window.runMapAnimation) != "undefined")

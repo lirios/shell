@@ -92,15 +92,21 @@ Item {
         }
         onWorkspaceAdded: {
             // Add a new workspace
-            Workspaces.addWorkspace();
+            var i;
+            for (i = 0; i < screenViews.count; i++)
+                screenViews.itemAt(i).workspacesView.add();
         }
         onWorkspaceRemoved: {
             // Remove workspace
-            Workspaces.removeWorkspace(index);
+            var i;
+            for (i = 0; i < screenViews.count; i++)
+                screenViews.itemAt(i).workspacesView.remove(index);
         }
         onWorkspaceSelected: {
             // Select workspace
-            Workspaces.selectWorkspace(index);
+            var i;
+            for (i = 0; i < screenViews.count; i++)
+                screenViews.itemAt(i).workspacesView.select(index);
         }
         onSurfaceMapped: {
             // A surface was mapped
@@ -164,6 +170,7 @@ Item {
     }
 
     // A screen view for each screen
+    // TODO: onItemAdded -> create all workspaces on new screen
     // TODO: onItemRemoved -> reparent windows
     Repeater {
         id: screenViews
