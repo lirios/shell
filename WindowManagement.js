@@ -58,54 +58,48 @@ function surfaceMapped(surface) {
         // Window position
         var pos = Qt.point(0, 0);
 
+        // Child
+        var child = compositor.firstViewOf(surface);
+
+        // Create and setup window container
+        var window = component.createObject(compositorRoot, {"child": child});
+        window.child.parent = window;
+        window.child.touchEventsEnabled = true;
+        window.width = surface.size.width;
+        window.height = surface.size.height;
+
+        // Transient parent view
+        var transientParentView = null;
+        if (surface.windowType === WaylandQuickSurface.Popup ||
+                surface.windowType === WaylandQuickSurface.Transient)
+            transientParentView = compositor.firstViewOf(surface.transientParent);
+
         // Determine window position
         switch (surface.windowType) {
         case WaylandQuickSurface.Toplevel:
             pos = compositor.calculateInitialPosition(surface);
             break;
         case WaylandQuickSurface.Popup:
+            // Move popups relative to parent window
+            pos.x = transientParentView.parent.x + surface.transientOffset.x;
+            pos.y = transientParentView.parent.y + surface.transientOffset.y;
+            break;
         case WaylandQuickSurface.Transient:
-            var transientParentView = compositor.firstViewOf(surface.transientParent);
-
-            if (surface.windowType === WaylandQuickSurface.Popup) {
-                // Move popups relative to parent window
-                pos.x = transientParentView.parent.x + surface.transientOffset.x;
-                pos.y = transientParentView.parent.y + surface.transientOffset.y;
-            } else {
-                // Center transient windows
-                pos.x = transientParentView.parent.x + (transientParentView.width - window.width) / 2;
-                pos.y = transientParentView.parent.y + (transientParentView.height - window.height) / 2;
-            }
+            // Center transient windows
+            pos.x = transientParentView.parent.x + (transientParentView.width - window.width) / 2;
+            pos.y = transientParentView.parent.y + (transientParentView.height - window.height) / 2;
             break;
         default:
             break;
         }
 
-        // Determine the screen based on coordinates
+        // Reparent
         var screenView = compositorRoot.screenViews.screenViewForCoordinates(pos.x, pos.y);
-
-        // Child
-        var child = compositor.firstViewOf(surface);
-
-        // Create and setup window container
-        var window = component.createObject(screenView.currentWorkspace, {"child": child});
-        window.child.parent = window;
-        window.child.touchEventsEnabled = true;
-        window.width = surface.size.width;
-        window.height = surface.size.height;
+        window.parent = screenView.currentWorkspace;
 
         // Move window
-        switch (surface.windowType) {
-        case WaylandQuickSurface.Toplevel:
-            var newPos = mapFromItem(screenView, pos.x, pos.y);
-            window.x = newPos.x;
-            window.y = newPos.y;
-            break;
-        default:
-            window.y = pos.x;
-            window.y = pos.y;
-            break;
-        }
+        window.y = pos.x;
+        window.y = pos.y;
         console.debug("Map surface " + surface + " to " + window.x + "," + window.y +
                       " on screen " + screenView.name);
 
