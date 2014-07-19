@@ -95,7 +95,6 @@ function surfaceMapped(surface) {
         window.height = surface.size.height;
 
         // Move window
-        pos.x = pos.y = 50;
         switch (surface.windowType) {
         case WaylandQuickSurface.Toplevel:
             var newPos = mapFromItem(screenView, pos.x, pos.y);
