@@ -160,15 +160,6 @@ Item {
         }
     }
 
-    // Screen model
-    ScreenModel {
-        id: screenModel
-        onTotalGeometryChanged: {
-            compositor.width = totalGeometry.width;
-            compositor.height = totalGeometry.height;
-        }
-    }
-
     // A screen view for each screen
     // TODO: onItemAdded -> create all workspaces on new screen
     // TODO: onItemRemoved -> reparent windows
