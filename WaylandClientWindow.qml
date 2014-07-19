@@ -55,6 +55,7 @@ WaylandWindow {
         onSurfaceDestroyed: runDestroyAnimation()
     }
 
+    /*
     MouseArea {
         anchors.fill: parent
         enabled: !clientWindow.focus
@@ -74,6 +75,7 @@ WaylandWindow {
             clientWindow.takeFocus();
         }
     }
+    */
 
     function runMapAnimation() {
         switch (child.surface.windowType) {
