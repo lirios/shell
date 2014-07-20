@@ -81,26 +81,34 @@ function surfaceMapped(surface) {
             break;
         case WaylandQuickSurface.Popup:
             // Move popups relative to parent window
-            pos.x = transientParentView.parent.x + surface.transientOffset.x;
-            pos.y = transientParentView.parent.y + surface.transientOffset.y;
+            pos.x = surface.transientOffset.x;
+            pos.y = surface.transientOffset.y;
             break;
         case WaylandQuickSurface.Transient:
             // Center transient windows
-            pos.x = transientParentView.parent.x + (transientParentView.width - window.width) / 2;
-            pos.y = transientParentView.parent.y + (transientParentView.height - window.height) / 2;
+            pos.x = surface.transientOffset.x + (transientParentView.width - window.width) / 2;
+            pos.y = surface.transientOffset.y + (transientParentView.height - window.height) / 2;
             break;
         default:
             break;
         }
 
+        // Move window
+        window.x = pos.x;
+        window.y = pos.y;
+
         // Reparent and give focus
-        var screenView = compositorRoot.screenViews.screenViewForCoordinates(pos.x, pos.y);
-        window.parent = screenView.currentWorkspace;
+        var screenView = null;
+        if (surface.windowType === WaylandQuickSurface.Toplevel) {
+            screenView = compositorRoot.screenViews.screenViewForCoordinates(pos.x, pos.y);
+            window.parent = screenView.currentWorkspace;
+        } else {
+            screenView = compositorRoot.screenViews.screenViewForCoordinates(transientParentView.x, transientParentView.y);
+            window.parent = transientParentView;
+        }
         window.child.takeFocus();
 
-        // Move window
-        window.y = pos.x;
-        window.y = pos.y;
+        // Log coordinates for debugging purpose
         console.debug("Map surface " + surface + " to " + window.x + "," + window.y +
                       " on screen " + screenView.name);
 
