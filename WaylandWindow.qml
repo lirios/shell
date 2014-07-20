@@ -30,6 +30,7 @@ import QtCompositor 1.0
 Item {
     property var child
     property var role: child.surface.windowProperties.role
+    property var transientChildren: null
 
     id: waylandWindow
     opacity: 1.0

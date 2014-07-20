@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtCompositor 1.0
+import GreenIsland 1.0
 
 WaylandWindow {
     id: clientWindow
@@ -53,6 +54,23 @@ WaylandWindow {
     Connections {
         target: child
         onSurfaceDestroyed: runDestroyAnimation()
+    }
+
+    // Decrease contrast for transient parents
+    ContrastEffect {
+        id: contrast
+        anchors.fill: parent
+        source: clientWindow
+        blend: transientChildren ? 0.742 : 1.0
+        color: "black"
+        visible: transientChildren != null
+
+        Behavior on blend {
+            NumberAnimation {
+                easing.type: transientChildren ? Easing.InQuad : Easing.OutQuad
+                duration: 250
+            }
+        }
     }
 
     /*

@@ -108,6 +108,10 @@ function surfaceMapped(surface) {
         }
         window.child.takeFocus();
 
+        // Set transient children so that the parent can be desaturated
+        if (surface.windowType === WaylandQuickSurface.Transient)
+            transientParentView.parent.transientChildren = window;
+
         // Log coordinates for debugging purpose
         console.debug("Map surface " + surface + " to " + window.x + "," + window.y +
                       " on screen " + screenView.name);
@@ -147,6 +151,12 @@ function surfaceUnmapped(surface) {
     }
     if (!window)
         return;
+
+    // Unset transient children so that the parent can go back to normal
+    if (surface.windowType === WaylandQuickSurface.Transient) {
+        var transientParentView = compositor.firstViewOf(surface.transientParent);
+        transientParentView.parent.transientChildren = null;
+    }
 }
 
 function surfaceDestroyed(surface) {
