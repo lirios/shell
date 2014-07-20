@@ -86,8 +86,8 @@ function surfaceMapped(surface) {
             break;
         case WaylandQuickSurface.Transient:
             // Center transient windows
-            pos.x = surface.transientOffset.x + (transientParentView.width - window.width) / 2;
-            pos.y = surface.transientOffset.y + (transientParentView.height - window.height) / 2;
+            pos.x = (transientParentView.width - window.width) / 2;
+            pos.y = (transientParentView.height - window.height) / 2;
             break;
         default:
             break;
