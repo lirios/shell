@@ -93,9 +93,10 @@ function surfaceMapped(surface) {
             break;
         }
 
-        // Reparent
+        // Reparent and give focus
         var screenView = compositorRoot.screenViews.screenViewForCoordinates(pos.x, pos.y);
         window.parent = screenView.currentWorkspace;
+        window.child.takeFocus();
 
         // Move window
         window.y = pos.x;
