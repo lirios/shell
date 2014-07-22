@@ -30,6 +30,7 @@ WaylandWindow {
     property var requestedPosition: child.surface.windowProperties.position
 
     id: shellWindow
+    objectName: "shellWindow"
     onRequestedPositionChanged: {
         if (typeof(requestedPosition) == "undefined")
             return;

@@ -30,6 +30,7 @@ import GreenIsland 1.0
 
 WaylandWindow {
     id: clientWindow
+    objectName: "clientWindow"
 
     ToplevelWindowAnimation {
         id: toplevelAnimation
