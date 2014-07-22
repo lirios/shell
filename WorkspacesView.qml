@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 
 Item {
+    property Item screenView
     readonly property Item currentWorkspace: __priv.currentIndex >= 0 ? get(__priv.currentIndex) : null
     readonly property alias currentIndex: __priv.currentIndex
     property Item view

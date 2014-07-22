@@ -31,6 +31,8 @@ Item {
     readonly property alias workspacesView: workspacesLayer
     readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
 
+    id: root
+
     /*
      * Shell and workspaces
      */
@@ -51,6 +53,7 @@ Item {
     WorkspacesLinearView {
         id: workspacesLayer
         anchors.fill: parent
+        screenView: root
     }
 
     // Panels are above application windows
