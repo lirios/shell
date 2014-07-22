@@ -29,8 +29,19 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 
 WaylandWindow {
+    property alias savedProperties: saved
+
     id: clientWindow
     objectName: "clientWindow"
+
+    QtObject {
+        id: saved
+
+        property real x
+        property real y
+        property real z
+        property real scale
+    }
 
     ToplevelWindowAnimation {
         id: toplevelAnimation
