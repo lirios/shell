@@ -84,12 +84,16 @@ Item {
         var workspace = component.createObject(root);
         workspaceList.append({"workspace": workspace});
 
-        // Set current index if this is the first workspace
-        if (__priv.currentIndex < 0)
-            __priv.currentIndex = 0;
-
         // Emit signal
         root.workspaceAdded(workspace);
+
+        // Set current index if this is the first workspace
+        if (__priv.currentIndex < 0) {
+            __priv.currentIndex = 0;
+            root.workspaceSelected(0);
+        }
+
+        console.debug("Added workspace", __priv.currentIndex);
 
         return workspace;
     }
