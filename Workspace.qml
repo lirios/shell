@@ -27,10 +27,19 @@
 import QtQuick 2.0
 
 Image {
+    property alias effects: effects
+
+    id: root
     source: "../images/wallpaper.png"
     fillMode: Image.Tile
     onParentChanged: {
         width = parent.width;
         height = parent.height;
+    }
+
+    Effects {
+        id: effects
+        screenView: parent.screenView
+        workspace: root
     }
 }
