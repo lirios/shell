@@ -96,6 +96,7 @@ Item {
             var cy = (iy + 0.5) * cellHeight;
 
             // Apply new properties
+            window.animationsEnabled = true;
             window.x = cx - window.width / 2;
             window.y = cy - window.height / 2;
             window.z = 1;
@@ -134,6 +135,7 @@ Item {
             window.y = window.savedProperties.y;
             window.z = window.savedProperties.z;
             window.scale = window.savedProperties.scale;
+            window.animationsEnabled = false;
         }
     }
 }

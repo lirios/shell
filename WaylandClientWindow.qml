@@ -29,6 +29,7 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 
 WaylandWindow {
+    property bool animationsEnabled: false
     property alias savedProperties: saved
 
     id: clientWindow
@@ -41,6 +42,60 @@ WaylandWindow {
         property real y
         property real z
         property real scale
+    }
+
+    Behavior on x {
+        enabled: clientWindow.animationsEnabled
+
+        NumberAnimation {
+            easing.type: Easing.InCubic
+            duration: 250
+        }
+    }
+
+    Behavior on x {
+        enabled: clientWindow.animationsEnabled
+
+        NumberAnimation {
+            easing.type: Easing.InQuad
+            duration: 250
+        }
+    }
+
+    Behavior on width {
+        enabled: clientWindow.animationsEnabled
+
+        NumberAnimation {
+            easing.type: Easing.InCubic
+            duration: 250
+        }
+    }
+
+    Behavior on height {
+        enabled: clientWindow.animationsEnabled
+
+        NumberAnimation {
+            easing.type: Easing.InCubic
+            duration: 250
+        }
+    }
+
+    Behavior on scale {
+        enabled: clientWindow.animationsEnabled
+
+        NumberAnimation {
+            easing.type: Easing.InQuad
+            duration: 250
+        }
+    }
+
+    Behavior on opacity {
+        enabled: clientWindow.animationsEnabled
+
+        NumberAnimation {
+            easing.type: Easing.Linear
+            duration: 250
+        }
     }
 
     ToplevelWindowAnimation {
