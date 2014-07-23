@@ -102,6 +102,7 @@ Item {
             bottom: parent.bottom
         }
         type: Item.BottomLeft
+        onTriggered: workspacesLayer.currentWorkspace.effects.toggle("PresentWindowsGrid")
     }
 
     // Bottom-right corner
