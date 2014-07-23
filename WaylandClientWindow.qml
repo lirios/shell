@@ -29,6 +29,7 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 
 WaylandWindow {
+    property var chrome: null
     property bool animationsEnabled: false
     property alias savedProperties: saved
 

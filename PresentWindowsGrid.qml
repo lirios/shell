@@ -31,6 +31,8 @@ Item {
     property Item screenView: null
     property Item workspace: null
 
+    id: root
+
     function run() {
         // Sanity check
         if (!screenView) {
@@ -95,6 +97,15 @@ Item {
             var cx = (ix + 0.5) * cellWidth;
             var cy = (iy + 0.5) * cellHeight;
 
+            // Create a chrome
+            var chromeComponent = Qt.createComponent("WaylandClientWindowChrome.qml");
+            var chrome = chromeComponent.createObject(window.child);
+            window.chrome = chrome;
+            window.chrome.clicked.connect(function() {
+                root.end();
+                window.z = 1;
+            });
+
             // Apply new properties
             window.animationsEnabled = true;
             window.x = cx - window.width / 2;
@@ -129,6 +140,12 @@ Item {
             window = workspace.children[i];
             if (window.objectName !== "clientWindow")
                 continue;
+
+            // Remove chrome
+            if (window.chrome) {
+                window.chrome.destroy();
+                window.chrome = null;
+            }
 
             // Restore saved properties
             window.x = window.savedProperties.x;
