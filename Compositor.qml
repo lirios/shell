@@ -33,6 +33,9 @@ import "."
 
 Item {
     readonly property alias screenViews: screenViews
+    readonly property var currentScreenView: null
+
+    readonly property alias surfaceModel: surfaceModel
 
     id: compositorRoot
 
