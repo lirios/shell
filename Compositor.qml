@@ -201,4 +201,14 @@ Item {
             return null;
         }
     }
+
+    /*
+     * Methods
+     */
+
+    function toggleEffect(name) {
+        var i;
+        for (i = 0; i < screenViews.count; i++)
+            screenViews.itemAt(i).workspacesView.currentWorkspace.effects.toggle(name);
+    }
 }
