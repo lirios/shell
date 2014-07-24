@@ -81,7 +81,7 @@ WaylandWindow {
         }
     }
 
-    Behavior on x {
+    Behavior on y {
         enabled: clientWindow.animationsEnabled
 
         NumberAnimation {
