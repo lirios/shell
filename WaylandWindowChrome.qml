@@ -45,7 +45,6 @@ Item {
 
             // Change stacking order
             var i, windowsList = container.parent.children;
-            //for (i = windowsList.length - 1; i >= 0; i--) {
             for (i = 0; i < windowsList.length; i++) {
                 // Process only application windows
                 if (windowsList[i].objectName !== "clientWindow")
