@@ -48,7 +48,7 @@ Item {
     }
 
     Image {
-        source: "../images/closebutton.png"
+        source: "/images/closebutton.png"
         x: parent.width - 32
         y: 4
         z: 4
