@@ -68,6 +68,11 @@ function surfaceMapped(surface) {
         window.width = surface.size.width;
         window.height = surface.size.height;
 
+        // Create a chrome
+        var chromeComponent = Qt.createComponent("WaylandWindowChrome.qml");
+        var chrome = chromeComponent.createObject(window.child);
+        window.chrome = chrome;
+
         // Transient parent view
         var transientParentView = null;
         if (surface.windowType === WaylandQuickSurface.Popup ||

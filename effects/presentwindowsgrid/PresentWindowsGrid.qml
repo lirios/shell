@@ -74,6 +74,8 @@ Item {
             window.savedProperties.y = window.y;
             window.savedProperties.z = window.z;
             window.savedProperties.scale = window.scale;
+            window.savedProperties.chrome = window.chrome;
+            window.savedProperties.chrome.visible = false;
 
             // Calculate grid
             if (index > 0) {
@@ -152,6 +154,8 @@ Item {
             window.y = window.savedProperties.y;
             window.z = window.savedProperties.z;
             window.scale = window.savedProperties.scale;
+            window.chrome = window.savedProperties.chrome;
+            window.chrome.visible = true;
             window.animationsEnabled = false;
         }
     }

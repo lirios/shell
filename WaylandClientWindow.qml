@@ -42,25 +42,21 @@ WaylandWindow {
         State {
             name: "focused"
             when: child.focus && !clientWindow.unresponsive
-            PropertyChanges { target: clientWindow; z: 1 }
             PropertyChanges { target: unresponsiveEffect; opacity: 0.0 }
         },
         State {
             name: "unfocused"
             when: !child.focus && !clientWindow.unresponsive
-            PropertyChanges { target: clientWindow; z: 0 }
             PropertyChanges { target: unresponsiveEffect; opacity: 0.0 }
         },
         State {
             name: "focused-unresponsive"
             when: child.focus && clientWindow.unresponsive
-            PropertyChanges { target: clientWindow; z: 1 }
             PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
         },
         State {
             name: "unfocused-unresponsive"
             when: !child.focus && clientWindow.unresponsive
-            PropertyChanges { target: clientWindow; z: 0 }
             PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
         }
     ]
@@ -72,6 +68,8 @@ WaylandWindow {
         property real y
         property real z
         property real scale
+
+        property var chrome
     }
 
     Behavior on x {
@@ -176,28 +174,6 @@ WaylandWindow {
         anchors.fill: parent
         window: clientWindow
     }
-
-    /*
-    MouseArea {
-        anchors.fill: parent
-        enabled: !clientWindow.focus
-        preventStealing: false
-        onClicked: {
-            // Change stacking order
-            var i, clientWindow = waylandWindow.parent.children;
-            for (i = clientWindow.length; i >= 0; i--) {
-                var curWindow = clientWindow[i];
-
-                if (curWindow !== waylandWindow)
-                    curWindow.z = -i;
-            }
-            clientWindow.z = 1;
-
-            // Give window focus
-            clientWindow.takeFocus();
-        }
-    }
-    */
 
     function runMapAnimation() {
         switch (child.surface.windowType) {
