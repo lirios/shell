@@ -34,7 +34,7 @@ ListModel {
 
     ListElement {
         name: "PresentWindowsGrid"
-        file: "PresentWindowsGrid.qml"
+        file: "effects/presentwindowsgrid/PresentWindowsGrid.qml"
         instance: 0
         running: false
     }

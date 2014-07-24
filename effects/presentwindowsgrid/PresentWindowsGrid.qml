@@ -98,7 +98,7 @@ Item {
             var cy = (iy + 0.5) * cellHeight;
 
             // Create a chrome
-            var chromeComponent = Qt.createComponent("WaylandClientWindowChrome.qml");
+            var chromeComponent = Qt.createComponent("WindowChrome.qml");
             var chrome = chromeComponent.createObject(window.child);
             window.chrome = chrome;
             window.chrome.clicked.connect(function() {
