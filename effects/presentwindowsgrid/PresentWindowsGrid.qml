@@ -109,7 +109,6 @@ Item {
             });
 
             // Apply new properties
-            window.animationsEnabled = true;
             window.x = cx - window.width / 2;
             window.y = cy - window.height / 2;
             window.z = 1;
@@ -156,7 +155,6 @@ Item {
             window.scale = window.savedProperties.scale;
             window.chrome = window.savedProperties.chrome;
             window.chrome.visible = true;
-            window.animationsEnabled = false;
         }
     }
 }
