@@ -38,8 +38,12 @@ Item {
         preventStealing: true
         acceptedButtons: Qt.AllButtons
         onClicked: {
-            // Change stacking order
             var container = window.parent;
+
+            // Ping surface
+            container.pingSurface();
+
+            // Change stacking order
             var i, windowsList = container.parent.children;
             //for (i = windowsList.length - 1; i >= 0; i--) {
             for (i = 0; i < windowsList.length; i++) {
