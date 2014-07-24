@@ -25,8 +25,11 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 import QtCompositor 1.0
 import GreenIsland 1.0
+import "overlays"
 
 WaylandWindow {
     property var chrome: null
@@ -35,6 +38,32 @@ WaylandWindow {
 
     id: clientWindow
     objectName: "clientWindow"
+    states: [
+        State {
+            name: "focused"
+            when: child.focus && !clientWindow.unresponsive
+            PropertyChanges { target: clientWindow; z: 1 }
+            PropertyChanges { target: unresponsiveEffect; opacity: 0.0 }
+        },
+        State {
+            name: "unfocused"
+            when: !child.focus && !clientWindow.unresponsive
+            PropertyChanges { target: clientWindow; z: 0 }
+            PropertyChanges { target: unresponsiveEffect; opacity: 0.0 }
+        },
+        State {
+            name: "focused-unresponsive"
+            when: child.focus && clientWindow.unresponsive
+            PropertyChanges { target: clientWindow; z: 1 }
+            PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
+        },
+        State {
+            name: "unfocused-unresponsive"
+            when: !child.focus && clientWindow.unresponsive
+            PropertyChanges { target: clientWindow; z: 0 }
+            PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
+        }
+    ]
 
     QtObject {
         id: saved
@@ -139,6 +168,13 @@ WaylandWindow {
                 duration: 250
             }
         }
+    }
+
+    // Unresponsive effect
+    UnresponsiveOverlay {
+        id: unresponsiveEffect
+        anchors.fill: parent
+        window: clientWindow
     }
 
     /*

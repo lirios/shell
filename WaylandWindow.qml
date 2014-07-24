@@ -29,6 +29,7 @@ import QtCompositor 1.0
 
 Item {
     property var child
+    property bool unresponsive: false
     property var role: child.surface.windowProperties.role
     property var transientChildren: null
 
@@ -50,5 +51,28 @@ Item {
             waylandWindow.width = child.surface.size.width;
             waylandWindow.height = child.surface.size.height;
         }
+        onPong: {
+            // Surface replied with a pong this means it's responsive
+            pingPongTimer.running = false;
+            unresponsive = false;
+        }
+    }
+
+    Timer {
+        id: pingPongTimer
+        interval: 200
+        onTriggered: unresponsive = true
+    }
+
+    function pingSurface() {
+        // Ping logic applies only to windows actually visible
+        if (!visible)
+            return;
+
+        // Ping the surface to see whether it's responsive, if a pong
+        // doesn't arrive before the timeout is trigger we know the
+        // surface is unresponsive and raise the flag
+        child.surface.ping();
+        pingPongTimer.running = true;
     }
 }
