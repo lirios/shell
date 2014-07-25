@@ -96,12 +96,12 @@ Colorize {
         RowLayout {
             Button {
                 text: qsTr("Wait")
-                onClicked: pingSurface()
+                onClicked: window.pingSurface()
             }
 
             Button {
                 text: qsTr("Force Quit")
-                onClicked: compositor.destroyClientForSurface(child.surface)
+                onClicked: compositor.destroyClientForSurface(window.child.surface)
             }
 
             Layout.alignment: Qt.AlignHCenter
