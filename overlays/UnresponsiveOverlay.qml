@@ -48,13 +48,13 @@ Colorize {
     // Block input on the surface
     MouseArea {
         anchors.fill: parent
-        enabled: clientWindow.unresponsive
+        enabled: window.unresponsive
         z: 1
     }
 
     ColumnLayout {
         anchors.fill: parent
-        enabled: clientWindow.unresponsive
+        enabled: window.unresponsive
         z: 2
 
         Item {
