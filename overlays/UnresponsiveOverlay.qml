@@ -45,6 +45,13 @@ Colorize {
         }
     }
 
+    // Automatically ping the surface
+    Timer {
+        running: window.unresponsive
+        interval: 10000
+        onTriggered: window.pingSurface()
+    }
+
     // Block input on the surface
     MouseArea {
         anchors.fill: parent
