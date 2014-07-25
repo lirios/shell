@@ -49,6 +49,7 @@ Colorize {
     MouseArea {
         anchors.fill: parent
         enabled: window.unresponsive
+        cursorShape: Qt.BusyCursor
         z: 1
     }
 
