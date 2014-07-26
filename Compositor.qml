@@ -71,9 +71,6 @@ Item {
         onFadeIn: {
             // Fade the desktop in
             splash.opacity = 0.0;
-
-            // Damage all surfaces
-            //damageAll();
         }
         onFadeOut: {
             // Fade the desktop out
@@ -82,9 +79,6 @@ Item {
         onUnlocked: {
             // Fade the desktop in
             splash.opacity = 0.0;
-
-            // Damage all surfaces
-            //damageAll();
         }
         onReady: {
             // Fade the desktop in

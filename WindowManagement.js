@@ -194,7 +194,4 @@ function surfaceDestroyed(surface) {
             break;
         }
     }
-
-    // Damage all surfaces
-    //compositor.damageAll();
 }
