@@ -136,7 +136,6 @@ Item {
     Item {
         id: overlayLayer
         anchors.fill: parent
-        z: 8
     }
 
     // Lock screen is above all windows to shield the session
