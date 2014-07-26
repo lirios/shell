@@ -187,8 +187,10 @@ function surfaceDestroyed(surface) {
         if (entry.surface === surface) {
             // Destroy window representation and
             // remove the surface from the model
-            entry.window.destroy();
             surfaceModel.remove(i, 1);
+            if (entry.window.chrome)
+                entry.window.chrome.destroy();
+            entry.window.destroy();
             break;
         }
     }
