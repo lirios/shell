@@ -93,47 +93,12 @@ Item {
      * Hot corners
      */
 
-    // Top-left corner
-    HotCorner {
-        id: topLeftCorner
-        anchors {
-            left: parent.left
-            top: parent.top
-        }
-        type: Item.TopLeft
-        onTriggered: workspacesLayer.selectPrevious()
-    }
-
-    // Top-right corner
-    HotCorner {
-        id: topRightCorner
-        anchors {
-            right: parent.right
-            top: parent.top
-        }
-        type: Item.TopRight
-        onTriggered: workspacesLayer.selectNext()
-    }
-
-    // Bottom-left corner
-    HotCorner {
-        id: bottomLeftCorner
-        anchors {
-            left: parent.left
-            bottom: parent.bottom
-        }
-        type: Item.BottomLeft
-        onTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
-    }
-
-    // Bottom-right corner
-    HotCorner {
-        id: bottomRightCorner
-        anchors {
-            right: parent.right
-            bottom: parent.bottom
-        }
-        type: Item.BottomRight
+    HotCorners {
+        id: hotCorners
+        anchors.fill: parent
+        onTopLeftTriggered: workspacesLayer.selectPrevious()
+        onTopRightTriggered: workspacesLayer.selectNext()
+        onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
     }
 
     /*
