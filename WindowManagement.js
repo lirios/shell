@@ -121,9 +121,6 @@ function surfaceMapped(surface) {
         console.debug("Map surface " + surface + " to " + window.x + "," + window.y +
                       " on screen " + screenView.name);
 
-        // Enable animations
-        window.animationsEnabled = true;
-
         // Run map animation
         if (typeof(window.runMapAnimation) != "undefined")
             window.runMapAnimation();
