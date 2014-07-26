@@ -32,4 +32,44 @@ Item {
     property var map: null
     property var unmap: null
     property var destroy: null
+
+    signal mapAnimationStarted()
+    signal mapAnimationStopped()
+
+    signal unmapAnimationStarted()
+    signal unmapAnimationStopped()
+
+    signal destroyAnimationStarted()
+    signal destroyAnimationStopped()
+
+    id: root
+
+    Component.onCompleted: {
+        if (map) {
+            map.onRunningChanged.connect(function() {
+                if (map.running)
+                    root.mapAnimationStarted();
+                else
+                    root.mapAnimationStopped();
+            });
+        }
+
+        if (unmap) {
+            unmap.onRunningChanged.connect(function() {
+                if (unmap.running)
+                    root.unmapAnimationStarted();
+                else
+                    root.unmapAnimationStopped();
+            });
+        }
+
+        if (destroy) {
+            destroy.onRunningChanged.connect(function() {
+                if (destroy.running)
+                    root.destroyAnimationStarted()
+                else
+                    root.destroyAnimationStopped();
+            });
+        }
+    }
 }
