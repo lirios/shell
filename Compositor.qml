@@ -29,7 +29,7 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 import GreenIsland.Core 1.0
 import "WindowManagement.js" as WindowManagement
-import "."
+import "screen"
 
 Item {
     readonly property alias screenViews: screenViews

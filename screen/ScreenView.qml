@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import "screen"
+import ".."
 
 Item {
     property string name

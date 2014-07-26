@@ -60,26 +60,26 @@ Item {
         Image {
             id: topLeftImage
             anchors.fill: parent
-            source: "../images/corner-ripple-ltr.png"
+            source: "/images/corner-ripple-ltr.png"
             visible: hotCorner.type == Item.TopLeft
         }
         Image {
             id: topRightImage
             anchors.fill: parent
-            source: "../images/corner-ripple-rtl.png"
+            source: "/images/corner-ripple-rtl.png"
             visible: hotCorner.type == Item.TopRight
         }
         Image {
             id: bottomLeftImage
             anchors.fill: parent
-            source: "../images/corner-ripple-ltr.png"
+            source: "/images/corner-ripple-ltr.png"
             transform: Rotation { origin.x: width / 2; origin.y: height / 2; angle: -90 }
             visible: hotCorner.type == Item.BottomLeft
         }
         Image {
             id: bottomRightImage
             anchors.fill: parent
-            source: "../images/corner-ripple-rtl.png"
+            source: "/images/corner-ripple-rtl.png"
             transform: Rotation { origin.x: width / 2; origin.y: height / 2; angle: 90 }
             visible: hotCorner.type == Item.BottomRight
         }
