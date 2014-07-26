@@ -27,12 +27,62 @@
 import QtQuick 2.0
 
 Item {
+    signal topTriggered()
+    signal bottomTriggered()
+    signal leftTriggered()
+    signal rightTriggered()
+
     signal topLeftTriggered()
     signal topRightTriggered()
+
     signal bottomLeftTriggered()
     signal bottomRightTriggered()
 
     id: root
+
+    // Top side
+    HotCorner {
+        id: topSide
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.top
+        }
+        type: Item.Top
+        onTriggered: root.topTriggered()
+    }
+
+    // Bottom side
+    HotCorner {
+        id: bottomSide
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.bottom
+        }
+        type: Item.Bottom
+        onTriggered: root.bottomTriggered()
+    }
+
+    // Left side
+    HotCorner {
+        id: leftSide
+        anchors {
+            horizontalCenter: parent.left
+            verticalCenter: parent.verticalCenter
+        }
+        type: Item.Left
+        onTriggered: root.leftTriggered()
+    }
+
+    // Bottom side
+    HotCorner {
+        id: rightSide
+        anchors {
+            horizontalCenter: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+        type: Item.Right
+        onTriggered: root.rightTriggered()
+    }
 
     // Top-left corner
     HotCorner {

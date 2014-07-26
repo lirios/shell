@@ -58,6 +58,31 @@ Item {
         }
 
         Image {
+            id: topImage
+            anchors.fill: parent
+            source: "/images/corner-ripple-ltr.png"
+            visible: hotCorner.type == Item.Top
+        }
+        Image {
+            id: bottomImage
+            anchors.fill: parent
+            source: "/images/corner-ripple-ltr.png"
+            visible: hotCorner.type == Item.Bottom
+        }
+        Image {
+            id: leftImage
+            anchors.fill: parent
+            source: "/images/corner-ripple-ltr.png"
+            visible: hotCorner.type == Item.Left
+        }
+        Image {
+            id: rightImage
+            anchors.fill: parent
+            source: "/images/corner-ripple-rtl.png"
+            visible: hotCorner.type == Item.Right
+        }
+
+        Image {
             id: topLeftImage
             anchors.fill: parent
             source: "/images/corner-ripple-ltr.png"
