@@ -162,6 +162,18 @@ function surfaceUnmapped(surface) {
         var transientParentView = compositor.firstViewOf(surface.transientParent);
         transientParentView.parent.transientChildren = null;
     }
+
+    // Looks like popup surfaces for Qt applications are never destroyed,
+    // this means that the next time the surface is mapped we'll see it
+    // in the surface model and don't create a window representation, hence
+    // we destroy the surface item when it's unmapped
+    if (surface.windowType === WaylandQuickSurface.Popup) {
+        surfaceModel.remove(i, 1);
+
+        if (window.chrome)
+            window.chrome.destroy();
+        window.destroy();
+    }
 }
 
 function surfaceDestroyed(surface) {
