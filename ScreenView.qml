@@ -32,6 +32,13 @@ Item {
     readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
 
     id: root
+    transform: Scale {
+        id: scaler
+        origin.x: zoomArea.x2
+        origin.y: zoomArea.y2
+        xScale: zoomArea.zoom2
+        yScale: zoomArea.zoom2
+    }
 
     /*
      * Shell and workspaces
@@ -113,6 +120,59 @@ Item {
             bottom: parent.bottom
         }
         type: Item.BottomRight
+    }
+
+    /*
+     * Zoom controls
+     */
+
+    MouseArea {
+        property real x1: 0.0
+        property real y1: 0.0
+        property real x2: 0.0
+        property real y2: 0.0
+        property real zoom1: 1.0
+        property real zoom2: 1.0
+        property real min: 1.0
+        property real max: 10.0
+
+        id: zoomArea
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton
+        enabled: false
+        hoverEnabled: zoomArea.enabled
+        propagateComposedEvents: true
+        //drag.target: root
+        //drag.filterChildren: true
+        onWheel: {
+            if (!(wheel.modifiers & Qt.AltModifier)) {
+                wheel.accepted = false;
+                return;
+            }
+
+            zoomArea.x1 = scaler.origin.x;
+            zoomArea.y1 = scaler.origin.y;
+            zoomArea.zoom1 = scaler.xScale;
+            zoomArea.x2 = zoomArea.mouseX;
+            zoomArea.y2 = zoomArea.mouseY;
+
+            var newZoom;
+            if (wheel.angleDelta.y > 0) {
+                newZoom = zoomArea.zoom1 + 0.1;
+                if (newZoom <= zoomArea.max)
+                    zoomArea.zoom2 = newZoom;
+                else
+                    zoomArea.zoom2 = zoomArea.max;
+            } else {
+                newZoom = zoomArea.zoom1 - 0.1;
+                if (newZoom >= zoomArea.min)
+                    zoomArea.zoom2 = newZoom;
+                else
+                    zoomArea.zoom2 = zoomArea.min;
+            }
+
+            wheel.accepted = true;
+        }
     }
 
     /*
