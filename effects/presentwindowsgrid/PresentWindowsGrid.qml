@@ -49,6 +49,9 @@ Item {
         if (num === 0)
             return 0;
 
+        // Disable output zoom
+        screenView.zoomEnabled = false;
+
         // Calculate rows and columns
         var columns = Math.ceil(Math.sqrt(num));
         var rows = Math.ceil(num / columns);
@@ -156,5 +159,8 @@ Item {
             window.chrome = window.savedProperties.chrome;
             window.chrome.visible = true;
         }
+
+        // Enable output zoom again
+        screenView.zoomEnabled = true;
     }
 }
