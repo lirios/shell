@@ -159,11 +159,32 @@ Item {
 
     // A screen view for each screen
     // TODO: onItemAdded -> create all workspaces on new screen
-    // TODO: onItemRemoved -> reparent windows
     Repeater {
         id: screenViews
         model: screenModel
         z: 998
+        onItemRemoved: {
+            // First find the new primary output or fallback to the last available
+            var i, screenView = null;
+            for (i = 0; i < screenViews.count; i++) {
+                screenView = screenViews.itemAt(i);
+                if (screenView.primary)
+                    break;
+            }
+
+            // Move window to the new primary output
+            var j;
+            for (j = 0; j < item.currentWorkspace.children.length; j++) {
+                var window = item.currentWorkspace.children[j];
+
+                // Skip children that are not application windows
+                if (window.objectName !== "clientWindow")
+                    continue;
+
+                // Reparent window
+                window.parent = screenView.currentWorkspace;
+            }
+        }
 
         ScreenView {
             name: model.name
