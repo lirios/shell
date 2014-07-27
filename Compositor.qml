@@ -195,6 +195,41 @@ Item {
             height: model.geometry.height
             rotation: model.rotation
             transformOrigin: Item.Center
+
+            Behavior on x {
+                NumberAnimation {
+                    easing.type: Easing.InOutQuad
+                    duration: 250
+                }
+            }
+
+            Behavior on y {
+                NumberAnimation {
+                    easing.type: Easing.InOutQuad
+                    duration: 250
+                }
+            }
+
+            Behavior on width {
+                NumberAnimation {
+                    easing.type: Easing.InOutQuad
+                    duration: 250
+                }
+            }
+
+            Behavior on height {
+                NumberAnimation {
+                    easing.type: Easing.InOutQuad
+                    duration: 250
+                }
+            }
+
+            Behavior on rotation {
+                NumberAnimation {
+                    easing.type: Easing.InOutQuad
+                    duration: 250
+                }
+            }
         }
 
         function screenViewForCoordinates(x, y) {
