@@ -53,6 +53,13 @@ ListModel {
         return false;
     }
 
+    function stop() {
+        // End all effects
+        var i;
+        for (i = 0; i < root.count; i++)
+            root.get(i).end();
+    }
+
     function toggle(name) {
         var i;
         for (i = 0; i < root.count; i++) {
