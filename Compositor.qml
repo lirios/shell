@@ -171,6 +171,8 @@ Item {
             y: model.geometry.y
             width: model.geometry.width
             height: model.geometry.height
+            rotation: model.rotation
+            transformOrigin: Item.Center
         }
 
         function screenViewForCoordinates(x, y) {
