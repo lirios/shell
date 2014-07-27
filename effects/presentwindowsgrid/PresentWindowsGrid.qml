@@ -112,6 +112,9 @@ Item {
                 window.z = 1;
             });
 
+            // Enable behavior animations
+            window.animationsEnabled = true;
+
             // Apply new properties
             window.x = cx - window.width / 2;
             window.y = cy - window.height / 2;
@@ -160,6 +163,9 @@ Item {
             window.chrome = window.savedProperties.chrome;
             if (window.chrome)
                 window.chrome.visible = true;
+
+            // Enable behavior animations
+            window.animationsEnabled = true;
         }
 
         // Enable output zoom again

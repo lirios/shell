@@ -176,34 +176,19 @@ WaylandWindow {
     }
 
     function runMapAnimation() {
-        // Disable behavior animations temporarily
-        clientWindow.animationsEnabled = false;
-
         // Run map animation depending on window type
         switch (child.surface.windowType) {
         case WaylandQuickSurface.Toplevel:
-            if (toplevelAnimation.map) {
+            if (toplevelAnimation.map)
                 toplevelAnimation.map.start();
-                toplevelAnimation.mapAnimationStopped.connect(function() {
-                    clientWindow.animationsEnabled = true;
-                });
-            }
             break;
         case WaylandQuickSurface.Transient:
-            if (transientAnimation.map) {
+            if (transientAnimation.map)
                 transientAnimation.map.start();
-                transientAnimation.mapAnimationStopped.connect(function() {
-                    clientWindow.animationsEnabled = true;
-                });
-            }
             break;
         case WaylandQuickSurface.Popup:
-            if (popupAnimation.map) {
+            if (popupAnimation.map)
                 popupAnimation.map.start();
-                popupAnimation.mapAnimationStopped.connect(function() {
-                    clientWindow.animationsEnabled = true;
-                });
-            }
             break;
         default:
             break;
@@ -211,34 +196,19 @@ WaylandWindow {
     }
 
     function runUnmapAnimation() {
-        // Disable behavior animations temporarily
-        clientWindow.animationsEnabled = false;
-
         // Run map animation depending on window type
         switch (child.surface.windowType) {
         case WaylandQuickSurface.Toplevel:
-            if (toplevelAnimation.unmap) {
+            if (toplevelAnimation.unmap)
                 toplevelAnimation.unmap.start();
-                toplevelAnimation.unmapAnimationStopped.connect(function() {
-                    clientWindow.animationsEnabled = true;
-                });
-            }
             break;
         case WaylandQuickSurface.Transient:
-            if (transientAnimation.unmap) {
+            if (transientAnimation.unmap)
                 transientAnimation.unmap.start();
-                transientAnimation.unmapAnimationStopped.connect(function() {
-                    clientWindow.animationsEnabled = true;
-                });
-            }
             break;
         case WaylandQuickSurface.Popup:
-            if (popupAnimation.unmap) {
+            if (popupAnimation.unmap)
                 popupAnimation.unmap.start();
-                popupAnimation.unmapAnimationStopped.connect(function() {
-                    clientWindow.animationsEnabled = true;
-                });
-            }
             break;
         default:
             break;
@@ -246,9 +216,6 @@ WaylandWindow {
     }
 
     function runDestroyAnimation() {
-        // Disable behavior animations
-        clientWindow.animationsEnabled = false;
-
         // Run destroy animation depending on window type
         switch (child.surface.windowType) {
         case WaylandQuickSurface.Toplevel:
