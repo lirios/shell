@@ -31,6 +31,7 @@ Item {
     property string name
     property int number
     property bool primary
+    property alias showInformation: outputInfo.visible
 
     readonly property alias workspacesView: workspacesLayer
     readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
@@ -54,6 +55,22 @@ Item {
         anchors.fill: parent
         scaler: screenScaler
         enabled: true
+        z: 1000
+    }
+
+    /*
+     * Output information panel
+     */
+
+    OutputInfo {
+        id: outputInfo
+        anchors {
+            left: parent.left
+            top: parent.top
+        }
+        number: root.number
+        primary: root.primary
+        visible: false
         z: 1000
     }
 
