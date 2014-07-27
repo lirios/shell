@@ -29,6 +29,8 @@ import ".."
 
 Item {
     property string name
+    property bool primary
+
     readonly property alias workspacesView: workspacesLayer
     readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
     property alias zoomEnabled: zoomArea.enabled
