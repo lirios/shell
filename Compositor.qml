@@ -189,6 +189,7 @@ Item {
         ScreenView {
             name: model.name
             primary: model.primary
+            number: model.number
             x: model.geometry.x
             y: model.geometry.y
             width: model.geometry.width

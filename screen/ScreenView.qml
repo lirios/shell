@@ -29,6 +29,7 @@ import ".."
 
 Item {
     property string name
+    property int number
     property bool primary
 
     readonly property alias workspacesView: workspacesLayer
