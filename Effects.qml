@@ -39,6 +39,20 @@ ListModel {
         running: false
     }
 
+    function isRunning(name) {
+        var i;
+        for (i = 0; i < root.count; i++) {
+            // Find the effect
+            var object = root.get(i);
+            if (object.name !== name)
+                continue;
+
+            return object.running;
+        }
+
+        return false;
+    }
+
     function toggle(name) {
         var i;
         for (i = 0; i < root.count; i++) {
