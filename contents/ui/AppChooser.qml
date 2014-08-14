@@ -27,12 +27,10 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import Hawaii.Shell.Core 1.0
-import Hawaii.Shell.Applications 1.0
-import Hawaii.Shell.Components 1.0
-import Hawaii.Shell.Styles 1.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.private.kickoff 0.1 as Kickoff
 
-Popup {
+Item {
     id: appChooser
 
     readonly property int itemSize: 128
@@ -87,7 +85,7 @@ Popup {
             highlightFollowsCurrentItem: true
             model: VisualDataModel {
                 id: visualModel
-                model: ApplicationsModel {
+                model: Kickoff.ApplicationsModel {
                     id: appsModel
                 }
                 delegate: AppChooserDelegate {

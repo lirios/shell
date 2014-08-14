@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,41 +24,12 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
-import Hawaii.Components 1.0
+import QtQuick 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
-MouseArea {
-    id: delegateRoot
+Item {
+    Plasmoid.switchWidth: units.gridUnit * 20
+    Plasmoid.switchHeight: units.gridUnit * 30
 
-    property alias icon: iconItem.iconSource
-    property alias label: labelItem.text
-
-    width: grid.cellWidth
-    height: grid.cellHeight
-
-    ColumnLayout {
-        anchors.fill: parent
-
-        Icon {
-            id: iconItem
-            width: units.iconSizes.large
-            height: width
-
-            Layout.alignment: Qt.AlignCenter
-        }
-
-        Label {
-            id: labelItem
-            horizontalAlignment: Qt.AlignHCenter
-            verticalAlignment: Qt.AlignTop
-            wrapMode: Text.Wrap
-            elide: Text.ElideRight
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
-    }
+    Plasmoid.fullRepresentation: AppChooser {}
 }
