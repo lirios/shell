@@ -67,4 +67,7 @@ Item {
             Layout.fillWidth: true
         }
     }
+
+    Accessible.role: Accessible.MenuItem
+    Accessible.name: label.text
 }
