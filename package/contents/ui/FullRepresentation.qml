@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
+import QtQuick.Controls 1.1
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
@@ -40,8 +41,18 @@ Item {
         }
 
         ItemListView {
+            id: view
+
             Layout.fillWidth: true
             Layout.fillHeight: true
+        }
+
+        TextField {
+            placeholderText: i18n("Search...")
+            focus: true
+            onTextChanged: view.query = text
+
+            Layout.fillWidth: true
         }
 
         ShutdownActions {

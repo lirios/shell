@@ -32,6 +32,8 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.hawaii.appchooser.private 0.1 as AppChooser
 
 FocusScope {
+    property string query
+
     width: units.gridUnit * 14
     height: listView.contentHeight
 
@@ -40,6 +42,7 @@ FocusScope {
         focus: true
 
         ListView {
+            id: listView
             boundsBehavior: Flickable.StopAtBounds
             snapMode: ListView.SnapToItem
             model: AppChooser.AppsModel {
