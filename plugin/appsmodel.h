@@ -64,6 +64,7 @@ class AppsModel : public AbstractModel
     Q_OBJECT
 
     Q_PROPERTY(bool flat READ flat WRITE setFlat NOTIFY flatChanged)
+    Q_PROPERTY(QString entryPath READ entryPath WRITE setEntryPath NOTIFY entryPathChanged)
     Q_PROPERTY(int appNameFormat READ appNameFormat WRITE setAppNameFormat NOTIFY appNameFormatChanged)
     Q_PROPERTY(QObject* appletInterface READ appletInterface WRITE setAppletInterface);
 
@@ -82,6 +83,9 @@ class AppsModel : public AbstractModel
         bool flat() const;
         void setFlat(bool flat);
 
+        QString entryPath() const;
+        void setEntryPath(const QString &entryPath);
+
         int appNameFormat() const;
         void setAppNameFormat(int format);
 
@@ -91,6 +95,7 @@ class AppsModel : public AbstractModel
     Q_SIGNALS:
         void refreshing() const;
         void flatChanged() const;
+        void entryPathChanged() const;
         void appNameFormatChanged() const;
 
     protected Q_SLOTS:

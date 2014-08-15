@@ -205,6 +205,22 @@ void AppsModel::setFlat(bool flat)
     }
 }
 
+QString AppsModel::entryPath() const
+{
+    return m_entryPath;
+}
+
+void AppsModel::setEntryPath(const QString &entryPath)
+{
+    if (m_entryPath != entryPath) {
+        m_entryPath = entryPath;
+
+        refresh();
+
+        emit entryPathChanged();
+    }
+}
+
 int AppsModel::appNameFormat() const
 {
     return m_appNameFormat;
