@@ -36,6 +36,7 @@ void KickerPlugin::registerTypes(const char *uri)
 
     qmlRegisterType<AbstractModel>();
 
+    qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
     qmlRegisterType<DragHelper>(uri, 0, 1, "DragHelper");
     qmlRegisterType<FunnelModel>(uri, 0, 1, "FunnelModel");
     qmlRegisterType<ImagePicker>(uri, 0, 1, "ImagePicker");
