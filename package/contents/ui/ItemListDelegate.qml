@@ -55,13 +55,26 @@ Item {
             icon: model.decoration
         }
 
-        Label {
-            id: label
-            text: model.display
-            color: PlasmaCore.ColorScope.textColor
-            elide: Text.ElideRight
-            wrapMode: Text.NoWrap
-            textFormat: Text.PlainText
+        Column {
+            Label {
+                id: label
+                text: model.display
+                font.pointSize: theme.defaultFont.pointSize * 1.1
+                font.bold: true
+                color: PlasmaCore.ColorScope.textColor
+                elide: Text.ElideRight
+                wrapMode: Text.NoWrap
+                textFormat: Text.PlainText
+            }
+
+            Label {
+                id: descr
+                text: model.description
+                color: PlasmaCore.ColorScope.textColor
+                elide: Text.ElideRight
+                wrapMode: Text.NoWrap
+                textFormat: Text.PlainText
+            }
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
             Layout.fillWidth: true
@@ -69,5 +82,5 @@ Item {
     }
 
     Accessible.role: Accessible.MenuItem
-    Accessible.name: label.text
+    Accessible.name: label.text + "\n" + descr.text
 }
