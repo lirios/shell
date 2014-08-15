@@ -31,6 +31,7 @@ enum {
     HasActionListRole,
     ActionListRole,
     UrlRole,
+    DescriptionRole,
     IconNameRole
 };
 

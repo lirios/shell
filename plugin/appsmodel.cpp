@@ -32,6 +32,7 @@ AppGroupEntry::AppGroupEntry(KServiceGroup::Ptr group, QAbstractListModel *paren
     bool flat, int appNameFormat)
 {
     m_name = group->caption();
+    m_description = group->comment();
     m_icon = QIcon::fromTheme(group->icon());
     m_iconName = group->icon();
     m_model = new AppsModel(group->entryPath(), flat, parentModel);
@@ -60,6 +61,7 @@ AppEntry::AppEntry(KService::Ptr service, NameFormat nameFormat)
         m_name = i18nc("Generic name (App name)", "%1 (%2)", genericName, name);
     }
 
+    m_description = service->comment().isEmpty() ? service->genericName() : service->comment();
     m_icon = QIcon::fromTheme(service->icon());
     m_iconName = service->icon();
     m_service = service;
@@ -132,6 +134,8 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
         if (m_entryList.at(index.row())->type() == AbstractEntry::RunnableType) {
             return QUrl::fromLocalFile(static_cast<AppEntry *>(m_entryList.at(index.row()))->service()->entryPath());
         }
+    } else if (role == Kicker::DescriptionRole) {
+        return m_entryList.at(index.row())->description();
     } else if (role == Kicker::IconNameRole) {
         return m_entryList.at(index.row())->iconName();
     }
