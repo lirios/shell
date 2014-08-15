@@ -33,6 +33,7 @@ AppGroupEntry::AppGroupEntry(KServiceGroup::Ptr group, QAbstractListModel *paren
 {
     m_name = group->caption();
     m_icon = QIcon::fromTheme(group->icon());
+    m_iconName = group->icon();
     m_model = new AppsModel(group->entryPath(), flat, parentModel);
     static_cast<AppsModel *>(m_model.data())->setAppNameFormat(appNameFormat);
     QObject::connect(parentModel, SIGNAL(refreshing()), m_model, SLOT(deleteLater()));
@@ -60,6 +61,7 @@ AppEntry::AppEntry(KService::Ptr service, NameFormat nameFormat)
     }
 
     m_icon = QIcon::fromTheme(service->icon());
+    m_iconName = service->icon();
     m_service = service;
 }
 
@@ -130,6 +132,8 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
         if (m_entryList.at(index.row())->type() == AbstractEntry::RunnableType) {
             return QUrl::fromLocalFile(static_cast<AppEntry *>(m_entryList.at(index.row()))->service()->entryPath());
         }
+    } else if (role == Kicker::IconNameRole) {
+        return m_entryList.at(index.row())->iconName();
     }
 
     return QVariant();
