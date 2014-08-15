@@ -18,6 +18,6 @@ X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-ServiceTypes=Plasma/Applet,Plasma/PopupApplet
 
 X-Plasma-API=declarativeappletscript
-X-Plasma-MainScript=ui/mauin.qml
+X-Plasma-MainScript=ui/main.qml
 X-Plasma-Provides=org.kde.plasma.launchermenu
 X-Plasma-RequiredExtensions=LaunchApp
