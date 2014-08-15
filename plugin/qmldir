@@ -1,2 +1,2 @@
-module org.kde.plasma.private.hawaii.appchooser
+module org.hawaii.appchooser.private
 plugin appchooserplugin

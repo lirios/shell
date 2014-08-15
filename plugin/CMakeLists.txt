@@ -34,7 +34,7 @@ set(appchooserplugin_SRCS
     windowsystem.cpp
 )
 
-install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/private/hawaii/appchooser)
+install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/hawaii/appchooser/private)
 
 add_library(appchooserplugin SHARED ${appchooserplugin_SRCS})
 
@@ -57,4 +57,4 @@ target_link_libraries(appchooserplugin
                       KF5::WindowSystem
                       PW::KWorkspace)
 
-install(TARGETS appchooserplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/plasma/private/hawaii/appchooser)
+install(TARGETS appchooserplugin DESTINATION ${QML_INSTALL_DIR}/org/hawaii/appchooser/private)

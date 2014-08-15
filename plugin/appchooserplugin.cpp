@@ -32,7 +32,7 @@
 
 void KickerPlugin::registerTypes(const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.plasma.private.hawaii.appchooser"));
+    Q_ASSERT(uri == QLatin1String("org.hawaii.appchooser.private"));
 
     qmlRegisterType<AbstractModel>();
 
