@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -25,12 +25,32 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import org.kde.plasma.plasmoid 2.0
+import QtQuick.Layouts 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Components 1.0
 
-Item {
-    Plasmoid.switchWidth: units.gridUnit * 20
-    Plasmoid.switchHeight: units.gridUnit * 30
+RowLayout {
+    implicitHeight: units.iconSizes.large
+    spacing: units.largeSpacing
 
-    Plasmoid.fullRepresentation: FullRepresentation {}
+    Icon {
+        width: units.iconSizes.large
+        height: width
+        iconName: "system-log-out-symbolic"
+        color: PlasmaCore.ColorScope.textColor
+    }
+
+    Icon {
+        width: units.iconSizes.large
+        height: width
+        iconName: "system-shutdown-symbolic"
+        color: PlasmaCore.ColorScope.textColor
+    }
+
+    Icon {
+        width: units.iconSizes.large
+        height: width
+        iconName: "system-reboot-symbolic"
+        color: PlasmaCore.ColorScope.textColor
+    }
 }

@@ -27,8 +27,9 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.private.kickoff 0.1 as Kickoff
+import org.hawaii.appchooser.private 0.1 as AppChooser
 
 Item {
     id: appChooser
@@ -85,12 +86,15 @@ Item {
             highlightFollowsCurrentItem: true
             model: VisualDataModel {
                 id: visualModel
-                model: Kickoff.ApplicationsModel {
+                model: AppChooser.AppsModel {
                     id: appsModel
+                    flat: true
+                    appNameFormat: 0
+                    appletInterface: plasmoid
                 }
                 delegate: AppChooserDelegate {
-                    icon: "image://appicon/" + iconName
-                    label: name
+                    icon: model.iconName
+                    label: model.display
                     onClicked: {
                         // Dismiss the popup
                         appChooser.visible = false;

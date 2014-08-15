@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,13 +24,31 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.2
+import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.1
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.hawaii.appchooser.private 0.1 as AppChooser
 
-Item {
-    Plasmoid.switchWidth: units.gridUnit * 20
-    Plasmoid.switchHeight: units.gridUnit * 30
+FocusScope {
+    width: units.gridUnit * 14
+    height: listView.contentHeight
 
-    Plasmoid.fullRepresentation: FullRepresentation {}
+    ScrollView {
+        anchors.fill: parent
+        focus: true
+
+        ListView {
+            boundsBehavior: Flickable.StopAtBounds
+            snapMode: ListView.SnapToItem
+            model: AppChooser.AppsModel {
+                flat: true
+                entryPath: "/"
+                appNameFormat: 0
+                appletInterface: plasmoid
+            }
+            delegate: ItemListDelegate {}
+        }
+    }
 }
