@@ -31,7 +31,23 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
+    implicitWidth: layout.implicitWidth
+    implicitHeight: layout.implicitHeight
+
+    Component {
+        id: horizontalView
+
+        HorizontalView {}
+    }
+
+    Component {
+        id: verticalView
+
+        VerticalView {}
+    }
+
     ColumnLayout {
+        id: layout
         anchors.fill: parent
         anchors.margins: units.smallSpacing
         spacing: units.largeSpacing
@@ -42,10 +58,12 @@ Item {
 
         StackView {
             id: view
-            initialItem: VerticalView {}
+            initialItem: horizontalView
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            Layout.preferredWidth: currentItem.implicitWidth
+            Layout.preferredHeight: currentItem.implicitHeight
+            Layout.minimumWidth: currentItem.implicitWidth
+            Layout.minimumHeight: currentItem.implicitHeight
         }
 
         TextField {
@@ -57,7 +75,7 @@ Item {
         }
 
         ShutdownActions {
-            Layout.alignment: Qt.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
         }
     }
 }

@@ -24,34 +24,51 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Layouts 1.0
+import QtQuick 2.2
+import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.1
+import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
 import Hawaii.Components 1.0
 
-RowLayout {
-    implicitWidth: (units.iconSizes.large * 3) + (spacing * 3)
-    implicitHeight: units.iconSizes.large + (spacing * 2)
-    spacing: units.largeSpacing
+ColumnLayout {
+    width: GridView.view.cellWidth
+    height: GridView.view.cellHeight
+    spacing: units.smallSpacing
 
+/*
     Icon {
+        id: icon
         width: units.iconSizes.large
         height: width
-        iconName: "system-log-out-symbolic"
-        color: PlasmaCore.ColorScope.textColor
-    }
+        iconName: model.iconName
 
-    Icon {
+        Layout.alignment: Qt.AlignCenter
+    }
+*/
+    KQuickControls.QIconItem {
+        id: icon
         width: units.iconSizes.large
         height: width
-        iconName: "system-shutdown-symbolic"
-        color: PlasmaCore.ColorScope.textColor
+        icon: model.decoration
+
+        Layout.alignment: Qt.AlignCenter
     }
 
-    Icon {
-        width: units.iconSizes.large
-        height: width
-        iconName: "system-reboot-symbolic"
+    Label {
+        id: label
+        text: model.display
         color: PlasmaCore.ColorScope.textColor
+        wrapMode: Text.Wrap
+        horizontalAlignment: Qt.AlignHCenter
+        verticalAlignment: Qt.AlignTop
+        textFormat: Text.PlainText
+
+        Layout.fillWidth: true
+        Layout.fillHeight: true
     }
+
+    Accessible.role: Accessible.MenuItem
+    Accessible.name: label.text
 }
