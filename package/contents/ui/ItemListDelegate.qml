@@ -79,6 +79,8 @@ Item {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
             Layout.fillWidth: true
         }
+
+        LayoutMirroring.enabled: (Qt.application.layoutDirection == Qt.RightToLeft)
     }
 
     MouseArea {
