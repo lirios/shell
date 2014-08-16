@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -26,38 +26,46 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.1
+import QtQuick.Controls 1.0
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.hawaii.appchooser.private 0.1 as AppChooser
 
 Item {
+    property int orientation: Qt.Horizontal
+
+    implicitWidth: layout.implicitWidth
+    implicitHeight: layout.implicitHeight
+
+    AppChooser.AppsModel {
+        id: categoriesModel
+        flat: true
+        appNameFormat: 0
+        appletInterface: plasmoid
+    }
+
     ColumnLayout {
+        id: layout
         anchors.fill: parent
-        anchors.margins: units.smallSpacing
-        spacing: units.largeSpacing
 
-        Header {
-            Layout.fillWidth: true
+        Grid {
+            spacing: units.smallSpacing
+            rows: orientation == Qt.Horizontal ? 1 : categoriesModel.count
+            columns: orientation == Qt.Horizontal ? categoriesModel.count : 1
+
+            Repeater {
+                model: categoriesModel
+
+                Label {
+                    text: model.display
+                    color: PlasmaCore.ColorScope.textColor
+                }
+            }
         }
 
-        StackView {
-            id: view
-            initialItem: VerticalView {}
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
-
-        TextField {
-            placeholderText: i18n("Search...")
-            focus: true
-            onTextChanged: view.query = text
-
-            Layout.fillWidth: true
-        }
-
-        ShutdownActions {
-            Layout.alignment: Qt.AlignHCenter
+        Item {
+            Layout.fillWidth: orientation == Qt.Horizontal
+            Layout.fillHeight: orientation == Qt.Vertical
         }
     }
 }

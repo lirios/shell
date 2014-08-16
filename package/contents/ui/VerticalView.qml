@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -26,38 +26,22 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.1
-import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: units.smallSpacing
-        spacing: units.largeSpacing
+        spacing: units.smallSpacing
 
-        Header {
-            Layout.fillWidth: true
-        }
-
-        StackView {
-            id: view
-            initialItem: VerticalView {}
-
+        ItemListView {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
 
-        TextField {
-            placeholderText: i18n("Search...")
-            focus: true
-            onTextChanged: view.query = text
+        CategoriesView {
+            orientation: Qt.Horizontal
 
             Layout.fillWidth: true
-        }
-
-        ShutdownActions {
-            Layout.alignment: Qt.AlignHCenter
         }
     }
 }
