@@ -69,6 +69,15 @@ ColumnLayout {
         Layout.fillHeight: true
     }
 
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        onClicked: {
+            parent.GridView.view.model.trigger(index, "", null);
+            plasmoid.expanded = false;
+        }
+    }
+
     Accessible.role: Accessible.MenuItem
     Accessible.name: label.text
 }

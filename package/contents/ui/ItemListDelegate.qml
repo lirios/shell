@@ -81,6 +81,15 @@ Item {
         }
     }
 
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        onClicked: {
+            parent.ListView.view.model.trigger(index, "", null);
+            plasmoid.expanded = false;
+        }
+    }
+
     Accessible.role: Accessible.MenuItem
     Accessible.name: label.text + "\n" + descr.text
 }
