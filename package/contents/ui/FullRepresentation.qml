@@ -31,8 +31,9 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
-    implicitWidth: layout.implicitWidth
-    implicitHeight: layout.implicitHeight
+    property int mode: Qt.Vertical
+
+    id: root
 
     Component {
         id: horizontalView
@@ -58,18 +59,35 @@ Item {
 
         StackView {
             id: view
-            initialItem: horizontalView
 
-            Layout.preferredWidth: currentItem.implicitWidth
-            Layout.preferredHeight: currentItem.implicitHeight
-            Layout.minimumWidth: currentItem.implicitWidth
-            Layout.minimumHeight: currentItem.implicitHeight
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
 
-        TextField {
-            placeholderText: i18n("Search...")
-            focus: true
-            onTextChanged: view.query = text
+        RowLayout {
+            Row {
+                ToolButton {
+                    checkable: true
+                    checked: mode == Qt.Vertical
+                    iconName: "view-list-symbolic"
+                    onClicked: switchMode(Qt.Vertical)
+                }
+
+                ToolButton {
+                    checkable: true
+                    checked: mode == Qt.Horizontal
+                    iconName: "view-paged-symbolic"
+                    onClicked: switchMode(Qt.Horizontal)
+                }
+            }
+
+            TextField {
+                placeholderText: i18n("Search...")
+                focus: true
+                onTextChanged: view.query = text
+
+                Layout.fillWidth: true
+            }
 
             Layout.fillWidth: true
         }
@@ -77,5 +95,19 @@ Item {
         ShutdownActions {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
         }
+    }
+
+    Component.onCompleted: switchMode(root.mode)
+
+    function switchMode(orientation) {
+        if (orientation == Qt.Vertical) {
+            view.push(verticalView);
+            root.width = units.largeSpacing * 18;
+        } else {
+            view.push(horizontalView);
+            root.width = units.largeSpacing * 28;
+        }
+
+        root.mode = orientation;
     }
 }

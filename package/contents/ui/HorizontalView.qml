@@ -30,7 +30,6 @@ import QtQuick.Controls 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 RowLayout {
-    anchors.fill: parent
     spacing: units.smallSpacing
 
     SystemPalette {

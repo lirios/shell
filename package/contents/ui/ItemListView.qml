@@ -34,8 +34,8 @@ import org.hawaii.appchooser.private 0.1 as AppChooser
 FocusScope {
     property string query
 
-    width: units.gridUnit * 14
-    height: listView.contentHeight
+    implicitWidth: units.gridUnit * 10
+    implicitHeight: listView.contentHeight
 
     ScrollView {
         anchors.fill: parent

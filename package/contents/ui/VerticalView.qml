@@ -28,20 +28,17 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
-Item {
-    ColumnLayout {
-        anchors.fill: parent
-        spacing: units.smallSpacing
+ColumnLayout {
+    spacing: units.smallSpacing
 
-        ItemListView {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
+    ItemListView {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+    }
 
-        CategoriesView {
-            orientation: Qt.Horizontal
+    CategoriesView {
+        orientation: Qt.Horizontal
 
-            Layout.fillWidth: true
-        }
+        Layout.fillWidth: true
     }
 }
