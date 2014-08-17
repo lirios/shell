@@ -30,6 +30,8 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 
 ColumnLayout {
     ItemListView {
+        id: listView
+
         Layout.fillWidth: true
         Layout.fillHeight: true
     }
@@ -40,6 +42,7 @@ ColumnLayout {
 
     CategoriesView {
         orientation: Qt.Horizontal
+        onSelected: listView.model = model
 
         Layout.fillWidth: true
     }

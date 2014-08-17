@@ -31,6 +31,7 @@ import org.hawaii.appchooser.private 0.1 as AppChooser
 
 FocusScope {
     property string query
+    property alias model: gridView.model
     readonly property int itemWidth: units.iconSizes.large + units.largeSpacing * 2
     readonly property int itemHeight: units.iconSizes.large + (theme.mSize(theme.defaultTheme).height * 2.5)
     readonly property int numItemsPerPage: numRows * numColumns
@@ -40,6 +41,15 @@ FocusScope {
 
     implicitWidth: itemWidth * numRows
     implicitHeight: itemHeight * numColumns
+
+    AppChooser.AppsModel {
+        id: appsModel
+
+        flat: true
+        entryPath: "/"
+        appNameFormat: 0
+        appletInterface: plasmoid
+    }
 
     GridView {
         id: gridView
@@ -57,12 +67,11 @@ FocusScope {
         highlightRangeMode: GridView.StrictlyEnforceRange
         highlightFollowsCurrentItem: true
         currentIndex: 0
-        model: AppChooser.AppsModel {
-            flat: true
-            entryPath: "/"
-            appNameFormat: 0
-            appletInterface: plasmoid
-        }
+        model: appsModel
         delegate: ItemGridDelegate {}
+        onModelChanged: {
+            if (model == null)
+                model = appsModel
+        }
     }
 }

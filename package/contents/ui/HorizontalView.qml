@@ -38,6 +38,7 @@ RowLayout {
 
     CategoriesView {
         orientation: Qt.Vertical
+        onSelected: grid.model = model
 
         Layout.fillHeight: true
     }

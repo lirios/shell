@@ -34,6 +34,9 @@ import org.hawaii.appchooser.private 0.1 as AppChooser
 Item {
     property int orientation: Qt.Horizontal
 
+    signal selected(var model)
+
+    id: root
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
 
@@ -63,6 +66,7 @@ Item {
                 exclusiveGroup: group
                 style: CategoryStyle {}
                 text: i18n("All")
+                onClicked: root.selected(null)
             }
 
             Repeater {
@@ -73,6 +77,7 @@ Item {
                     exclusiveGroup: group
                     style: CategoryStyle {}
                     text: model.display
+                    onClicked: root.selected(categoriesModel.modelForRow(index))
                 }
             }
 

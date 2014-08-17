@@ -33,9 +33,19 @@ import org.hawaii.appchooser.private 0.1 as AppChooser
 
 FocusScope {
     property string query
+    property alias model: listView.model
 
     implicitWidth: units.gridUnit * 10
     implicitHeight: listView.contentHeight
+
+    AppChooser.AppsModel {
+        id: appsModel
+
+        flat: true
+        entryPath: "/"
+        appNameFormat: 0
+        appletInterface: plasmoid
+    }
 
     ScrollView {
         anchors.fill: parent
@@ -45,13 +55,12 @@ FocusScope {
             id: listView
             boundsBehavior: Flickable.StopAtBounds
             snapMode: ListView.SnapToItem
-            model: AppChooser.AppsModel {
-                flat: true
-                entryPath: "/"
-                appNameFormat: 0
-                appletInterface: plasmoid
-            }
+            model: appsModel
             delegate: ItemListDelegate {}
+            onModelChanged: {
+                if (model == null)
+                    model = appsModel
+            }
         }
     }
 }
