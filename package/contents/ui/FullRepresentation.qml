@@ -36,6 +36,15 @@ Item {
 
     id: root
 
+    AppChooser.ProcessRunner {
+        id: processRunner
+
+        function executeUserSettings() {
+            plasmoid.expanded = false;
+            runUserSettings();
+        }
+    }
+
     AppChooser.RunnerModel {
         id: runnerModel
         runners: new Array("bookmarks", "baloosearch", "services")

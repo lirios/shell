@@ -54,6 +54,12 @@ RowLayout {
         Layout.fillWidth: true
     }
 
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        onClicked: processRunner.executeUserSettings()
+    }
+
     function setFaceIcon() {
         if (user.faceIconUrl != "") {
             // This is a picture from the file system
