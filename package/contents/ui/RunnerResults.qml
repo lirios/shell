@@ -55,8 +55,6 @@ ColumnLayout {
 
     ListView {
         id: runnerMatches
-        boundsBehavior: Flickable.StopAtBounds
-        snapMode: ListView.SnapToItem
         model: runnerModel.modelForRow(index)
         delegate: ItemListDelegate {}
         onModelChanged: {
