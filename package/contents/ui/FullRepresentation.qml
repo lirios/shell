@@ -70,6 +70,8 @@ Item {
             }
 
             Row {
+                visible: false
+
                 ToolButton {
                     checkable: true
                     checked: mode == Qt.Vertical
