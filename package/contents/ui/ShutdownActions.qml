@@ -24,9 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Layouts 1.0
+import QtQuick 2.2
+import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.hawaii.appchooser.private 0.1 as AppChooser
 import Hawaii.Components 1.0
 
 RowLayout {
@@ -34,24 +36,35 @@ RowLayout {
     implicitHeight: units.iconSizes.large + (spacing * 2)
     spacing: units.largeSpacing
 
-    Icon {
+    AppChooser.SystemModel {
+        id: systemModel
+
+        function triggerAction(action) {
+            return trigger(rowForFavoriteId(action), "", null);
+        }
+    }
+
+    ToolButton {
         width: units.iconSizes.large
         height: width
         iconName: "system-log-out-symbolic"
-        color: PlasmaCore.ColorScope.textColor
+        tooltip: i18n("Log out from current session")
+        onClicked: systemModel.triggerAction("logout")
     }
 
-    Icon {
+    ToolButton {
         width: units.iconSizes.large
         height: width
         iconName: "system-shutdown-symbolic"
-        color: PlasmaCore.ColorScope.textColor
+        tooltip: i18n("Power off the system")
+        onClicked: systemModel.triggerAction("shutdown")
     }
 
-    Icon {
+    ToolButton {
         width: units.iconSizes.large
         height: width
         iconName: "system-reboot-symbolic"
-        color: PlasmaCore.ColorScope.textColor
+        tooltip: i18n("Restart the system")
+        onClicked: systemModel.triggerAction("reboot")
     }
 }
