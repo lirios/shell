@@ -29,11 +29,13 @@ import QtQuick.Layouts 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 ColumnLayout {
-    spacing: units.smallSpacing
-
     ItemListView {
         Layout.fillWidth: true
         Layout.fillHeight: true
+    }
+
+    Item {
+        Layout.preferredHeight: units.smallSpacing
     }
 
     CategoriesView {
