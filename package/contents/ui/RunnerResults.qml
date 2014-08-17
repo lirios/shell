@@ -29,17 +29,15 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 ColumnLayout {
     implicitHeight: label.paintedHeight + horizLine.height + runnerMatches.contentHeight + (spacing * 2)
     spacing: units.smallSpacing
 
-    Label {
+    PlasmaExtras.Heading {
         id: label
-        font.pointSize: theme.defaultFont.pointSize * 2
-        font.weight: Font.Bold
-        textFormat: Text.PlainText
-        wrapMode: Text.NoWrap
+        level: 3
         elide: Text.ElideRight
         text: (runnerMatches.model != null) ? runnerMatches.model.name : ""
 
