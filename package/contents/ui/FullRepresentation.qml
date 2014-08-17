@@ -65,10 +65,15 @@ Item {
         }
 
         RowLayout {
+            ExclusiveGroup {
+                id: modeGroup
+            }
+
             Row {
                 ToolButton {
                     checkable: true
                     checked: mode == Qt.Vertical
+                    exclusiveGroup: modeGroup
                     iconName: "view-list-symbolic"
                     onClicked: switchMode(Qt.Vertical)
                 }
@@ -76,6 +81,7 @@ Item {
                 ToolButton {
                     checkable: true
                     checked: mode == Qt.Horizontal
+                    exclusiveGroup: modeGroup
                     iconName: "view-paged-symbolic"
                     onClicked: switchMode(Qt.Horizontal)
                 }
