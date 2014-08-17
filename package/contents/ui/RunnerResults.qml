@@ -38,13 +38,12 @@ ColumnLayout {
         id: label
         font.pointSize: theme.defaultFont.pointSize * 2
         font.weight: Font.Bold
-        horizontalAlignment: Qt.AlignCenter
         textFormat: Text.PlainText
         wrapMode: Text.NoWrap
         elide: Text.ElideRight
         text: (runnerMatches.model != null) ? runnerMatches.model.name : ""
 
-        Layout.fillWidth: true
+        Layout.alignment: Qt.AlignCenter
     }
 
     PlasmaCore.SvgItem {
