@@ -44,27 +44,42 @@ Item {
         appletInterface: plasmoid
     }
 
+    ExclusiveGroup {
+        id: group
+    }
+
     ColumnLayout {
         id: layout
         anchors.fill: parent
 
         Grid {
             spacing: units.smallSpacing
-            rows: orientation == Qt.Horizontal ? 1 : categoriesModel.count
-            columns: orientation == Qt.Horizontal ? categoriesModel.count : 1
+            rows: orientation == Qt.Horizontal ? 1 : categoriesModel.count + 1
+            columns: orientation == Qt.Horizontal ? categoriesModel.count + 1 : 1
+
+            Button {
+                checkable: true
+                checked: true
+                exclusiveGroup: group
+                style: CategoryStyle {}
+                text: i18n("All")
+            }
 
             Repeater {
                 model: categoriesModel
 
-                Label {
+                Button {
+                    checkable: true
+                    exclusiveGroup: group
+                    style: CategoryStyle {}
                     text: model.display
-                    color: PlasmaCore.ColorScope.textColor
                 }
             }
+
+            Layout.fillWidth: true
         }
 
         Item {
-            Layout.fillWidth: orientation == Qt.Horizontal
             Layout.fillHeight: orientation == Qt.Vertical
         }
     }
