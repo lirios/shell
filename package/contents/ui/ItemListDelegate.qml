@@ -69,11 +69,12 @@ Item {
 
             Label {
                 id: descr
-                text: model.description
+                text: model.description ? model.description : ""
                 color: PlasmaCore.ColorScope.textColor
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
                 textFormat: Text.PlainText
+                visible: text != ""
             }
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
@@ -93,5 +94,5 @@ Item {
     }
 
     Accessible.role: Accessible.MenuItem
-    Accessible.name: label.text + "\n" + descr.text
+    Accessible.name: descr.visible ? label.text + "\n" + descr.text : label.text
 }
