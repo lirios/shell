@@ -32,7 +32,6 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.hawaii.appchooser.private 0.1 as AppChooser
 
 FocusScope {
-    property string query
     property alias model: listView.model
 
     implicitWidth: units.gridUnit * 10

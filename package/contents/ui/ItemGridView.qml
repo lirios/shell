@@ -30,7 +30,6 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.hawaii.appchooser.private 0.1 as AppChooser
 
 FocusScope {
-    property string query
     property alias model: gridView.model
     readonly property int itemWidth: units.iconSizes.large + units.largeSpacing * 2
     readonly property int itemHeight: units.iconSizes.large + (theme.mSize(theme.defaultTheme).height * 2.5)

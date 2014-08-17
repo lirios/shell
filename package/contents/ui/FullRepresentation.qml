@@ -29,11 +29,21 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.1
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.hawaii.appchooser.private 0.1 as AppChooser
 
 Item {
     property int mode: Qt.Vertical
 
     id: root
+
+    AppChooser.RunnerModel {
+        id: runnerModel
+    }
+
+    PlasmaCore.Svg {
+        id: lineSvg
+        imagePath: "widgets/line"
+    }
 
     Component {
         id: horizontalView
@@ -57,8 +67,26 @@ Item {
             Layout.fillWidth: true
         }
 
-        StackView {
-            id: view
+        Item {
+            StackView {
+                id: view
+                anchors.fill: parent
+                visible: !runnerView.visible
+            }
+
+            ScrollView {
+                anchors.fill: parent
+                visible: (searchField != "") && (runnerModel.count > 0)
+
+                ListView {
+                    id: runnerView
+                    model: runnerModel
+                    delegate: RunnerResults {
+                        id: runnerMatches
+                        width: runnerView.width
+                    }
+                }
+            }
 
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -70,6 +98,7 @@ Item {
             }
 
             Row {
+                id: runnerColumns
                 visible: false
 
                 ToolButton {
@@ -90,9 +119,10 @@ Item {
             }
 
             TextField {
+                id: searchField
                 placeholderText: i18n("Search...")
                 focus: true
-                onTextChanged: view.query = text
+                onTextChanged: runnerModel.query = text
 
                 Layout.fillWidth: true
             }
