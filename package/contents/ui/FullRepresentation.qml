@@ -38,6 +38,8 @@ Item {
 
     AppChooser.RunnerModel {
         id: runnerModel
+        onRunnersChanged: runnerView.forceLayout()
+        onCountChanged: runnerView.forceLayout()
     }
 
     PlasmaCore.Svg {
