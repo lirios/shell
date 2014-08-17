@@ -63,7 +63,7 @@ class SystemModel : public AbstractModel
 
         Q_INVOKABLE bool trigger(int row, const QString &actionId, const QVariant &argument);
 
-        int rowForFavoriteId(const QString &favoriteId);
+        Q_INVOKABLE int rowForFavoriteId(const QString &favoriteId);
 
     private:
         QList<SystemEntry *> m_entryList;
