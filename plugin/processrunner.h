@@ -30,6 +30,7 @@ class ProcessRunner : public QObject
         ProcessRunner(QObject *parent = 0);
         ~ProcessRunner();
 
+        Q_INVOKABLE void runUserSettings();
         Q_INVOKABLE void runMenuEditor();
 };
 

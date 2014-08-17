@@ -1,4 +1,5 @@
 /***************************************************************************
+ *   Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>   *
  *   Copyright (C) 2013 by Eike Hein <hein@kde.org>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -27,6 +28,11 @@ ProcessRunner::ProcessRunner(QObject *parent) : QObject(parent)
 
 ProcessRunner::~ProcessRunner()
 {
+}
+
+void ProcessRunner::runUserSettings()
+{
+    KProcess::startDetached("kcmshell5", QStringList() << "kcm_useraccount");
 }
 
 void ProcessRunner::runMenuEditor()
