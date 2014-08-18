@@ -58,8 +58,9 @@ function surfaceMapped(surface) {
         // Window position
         var pos = Qt.point(0, 0);
 
-        // Child
-        var child = compositor.firstViewOf(surface);
+        // Request a view for this output (Items cannot be shared between
+        // windows so a new one is created on demand)
+        var child = compositor.viewForOutput(surface, _greenisland_output);
 
         // Create and setup window container
         var window = component.createObject(compositorRoot, {"child": child});
@@ -77,22 +78,30 @@ function surfaceMapped(surface) {
         var transientParentView = null;
         if (surface.windowType === WaylandQuickSurface.Popup ||
                 surface.windowType === WaylandQuickSurface.Transient)
-            transientParentView = compositor.firstViewOf(surface.transientParent);
+            transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
 
         // Determine window position
         switch (surface.windowType) {
         case WaylandQuickSurface.Toplevel:
             pos = compositor.calculateInitialPosition(surface);
+            child.globalGeometry = Qt.rect(pos.x, pos.y, window.width, window.height);
+            pos = _greenisland_output.mapToOutput(pos);
             break;
         case WaylandQuickSurface.Popup:
             // Move popups relative to parent window
             pos.x = surface.transientOffset.x;
             pos.y = surface.transientOffset.y;
+            child.globalGeometry = Qt.rect(transientParentView.globalGeometry.x + pos.x,
+                                           transientParentView.globalGeometry.y + pos.y,
+                                           window.width, window.height);
             break;
         case WaylandQuickSurface.Transient:
             // Center transient windows
             pos.x = (transientParentView.width - window.width) / 2;
             pos.y = (transientParentView.height - window.height) / 2;
+            child.globalGeometry = Qt.rect(transientParentView.globalGeometry.x + pos.x,
+                                           transientParentView.globalGeometry.y + pos.y,
+                                           window.width, window.height);
             break;
         default:
             break;
@@ -103,14 +112,10 @@ function surfaceMapped(surface) {
         window.y = pos.y;
 
         // Reparent and give focus
-        var screenView = null;
-        if (surface.windowType === WaylandQuickSurface.Toplevel) {
-            screenView = compositorRoot.screenViews.screenViewForCoordinates(pos.x, pos.y);
-            window.parent = screenView.currentWorkspace;
-        } else {
-            screenView = compositorRoot.screenViews.screenViewForCoordinates(transientParentView.x, transientParentView.y);
+        if (surface.windowType === WaylandQuickSurface.Toplevel)
+            window.parent = compositorRoot.screenView.currentWorkspace;
+        else
             window.parent = transientParentView;
-        }
         window.child.takeFocus();
 
         // Set transient children so that the parent can be desaturated
@@ -119,7 +124,7 @@ function surfaceMapped(surface) {
 
         // Log coordinates for debugging purpose
         console.debug("Map surface " + surface + " to " + window.x + "," + window.y +
-                      " on screen " + screenView.name);
+                      " on screen " + compositorRoot.screenView.name);
 
         // Run map animation
         if (typeof(window.runMapAnimation) != "undefined")
@@ -159,7 +164,7 @@ function surfaceUnmapped(surface) {
 
     // Unset transient children so that the parent can go back to normal
     if (surface.windowType === WaylandQuickSurface.Transient) {
-        var transientParentView = compositor.firstViewOf(surface.transientParent);
+        var transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
         transientParentView.parent.transientChildren = null;
     }
 

@@ -32,16 +32,14 @@ import "WindowManagement.js" as WindowManagement
 import "screen"
 
 Item {
-    readonly property alias screenViews: screenViews
-    readonly property var currentScreenView: null
-
+    readonly property alias screenView: screenView
     readonly property alias surfaceModel: surfaceModel
 
     id: compositorRoot
 
     Timer {
         id: idleTimer
-        interval: compositor.idleInterval
+        //interval: compositor.idleInterval
         onIntervalChanged: {
             if (running)
                 restart();
@@ -89,21 +87,15 @@ Item {
         }
         onWorkspaceAdded: {
             // Add a new workspace
-            var i;
-            for (i = 0; i < screenViews.count; i++)
-                screenViews.itemAt(i).workspacesView.add();
+            screenView.workspacesView.add();
         }
         onWorkspaceRemoved: {
             // Remove workspace
-            var i;
-            for (i = 0; i < screenViews.count; i++)
-                screenViews.itemAt(i).workspacesView.remove(index);
+            screenView.workspacesView.remove(index);
         }
         onWorkspaceSelected: {
             // Select workspace
-            var i;
-            for (i = 0; i < screenViews.count; i++)
-                screenViews.itemAt(i).workspacesView.select(index);
+            screenView.workspacesView.select(index);
         }
         onSurfaceMapped: {
             // A surface was mapped
@@ -157,103 +149,11 @@ Item {
         }
     }
 
-    // A screen view for each screen
-    // TODO: onItemAdded -> create all workspaces on new screen
-    Repeater {
-        id: screenViews
-        model: screenModel
+    // Screen
+    ScreenView {
+        id: screenView
+        anchors.fill: parent
         z: 998
-        onItemRemoved: {
-            // First find the new primary output or fallback to the last available
-            var i, screenView = null;
-            for (i = 0; i < screenViews.count; i++) {
-                screenView = screenViews.itemAt(i);
-                if (screenView.primary)
-                    break;
-            }
-
-            // Move window to the new primary output
-            var j;
-            for (j = 0; j < item.currentWorkspace.children.length; j++) {
-                var window = item.currentWorkspace.children[j];
-
-                // Skip children that are not application windows
-                if (window.objectName !== "clientWindow")
-                    continue;
-
-                // Reparent window
-                window.parent = screenView.currentWorkspace;
-            }
-        }
-
-        ScreenView {
-            name: model.name
-            primary: model.primary
-            number: model.number
-            x: model.geometry.x
-            y: model.geometry.y
-            width: model.geometry.width
-            height: model.geometry.height
-            rotation: model.rotation
-            transformOrigin: Item.Center
-
-            Behavior on x {
-                NumberAnimation {
-                    easing.type: Easing.InOutQuad
-                    duration: 250
-                }
-            }
-
-            Behavior on y {
-                NumberAnimation {
-                    easing.type: Easing.InOutQuad
-                    duration: 250
-                }
-            }
-
-            Behavior on width {
-                NumberAnimation {
-                    easing.type: Easing.InOutQuad
-                    duration: 250
-                }
-            }
-
-            Behavior on height {
-                NumberAnimation {
-                    easing.type: Easing.InOutQuad
-                    duration: 250
-                }
-            }
-
-            Behavior on rotation {
-                NumberAnimation {
-                    easing.type: Easing.InOutQuad
-                    duration: 250
-                }
-            }
-        }
-
-        function screenViewForCoordinates(x, y) {
-            var i;
-            for (i = 0; i < screenViews.count; i++) {
-                var screenView = screenViews.itemAt(i);
-                var geometry = Qt.rect(screenView.x, screenView.y,
-                                       screenView.width, screenView.height);
-
-                var l = geometry.x;
-                var r = geometry.x + geometry.width;
-                var t = geometry.y;
-                var b = geometry.y + geometry.height;
-
-                if (x < l || x > r)
-                    continue;
-                if (y < t || y > b)
-                    continue;
-                return screenView;
-            }
-
-            return null;
-        }
     }
 
     /*
@@ -261,8 +161,6 @@ Item {
      */
 
     function toggleEffect(name) {
-        var i;
-        for (i = 0; i < screenViews.count; i++)
-            screenViews.itemAt(i).workspacesView.currentWorkspace.effects.toggle(name);
+        screenView.workspacesView.currentWorkspace.effects.toggle(name);
     }
 }

@@ -28,9 +28,9 @@ import QtQuick 2.0
 import ".."
 
 Item {
-    property string name
-    property int number
-    property bool primary
+    readonly property string name: _greenisland_output.name
+    readonly property int number: _greenisland_output.number
+    readonly property bool primary: _greenisland_output.primary
     property alias showInformation: outputInfo.visible
 
     readonly property alias workspacesView: workspacesLayer
@@ -94,7 +94,6 @@ Item {
     WorkspacesLinearView {
         id: workspacesLayer
         anchors.fill: parent
-        screenView: root
     }
 
     // Panels are above application windows

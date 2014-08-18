@@ -43,7 +43,7 @@ WaylandWindow {
         if (!child || typeof(role) == "undefined")
             return;
 
-        var screenView = compositorRoot.screenViews.screenViewForCoordinates(shellWindow.x, shellWindow.y);
+        var screenView = compositorRoot.screenView;
         var windowParent;
 
         // Find parent based on role

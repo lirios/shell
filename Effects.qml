@@ -29,7 +29,6 @@ import QtQuick 2.0
 ListModel {
     id: root
 
-    property Item screenView: null
     property Item workspace: null
 
     ListElement {
@@ -77,7 +76,6 @@ ListModel {
                 }
 
                 object.instance = component.createObject(compositorRoot, {
-                                                             "screenView": screenView,
                                                              "workspace": workspace
                                                          });
             }
@@ -115,7 +113,6 @@ ListModel {
                 }
 
                 object.instance = component.createObject(compositorRoot, {
-                                                             "screenView": screenView,
                                                              "workspace": workspace
                                                          });
             }

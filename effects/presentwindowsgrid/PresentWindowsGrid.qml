@@ -28,17 +28,12 @@ import QtQuick 2.0
 import QtCompositor 1.0
 
 Item {
-    property Item screenView: null
     property Item workspace: null
 
     id: root
 
     function run() {
         // Sanity check
-        if (!screenView) {
-            console.error("Running PresentWindowsGrid without a screen view, cannot continue.");
-            return;
-        }
         if (!workspace) {
             console.error("Running PresentWindowsGrid without a workspace, cannot continue.");
             return;
@@ -50,22 +45,28 @@ Item {
             return 0;
 
         // Disable output zoom
-        screenView.zoomEnabled = false;
+        compositorRoot.screenView.zoomEnabled = false;
 
         // Calculate rows and columns
         var columns = Math.ceil(Math.sqrt(num));
         var rows = Math.ceil(num / columns);
 
         // Calculate cell size
-        var cellWidth = screenView.width / columns;
-        var cellHeight = screenView.height / rows;
+        var cellWidth = compositorRoot.width / columns;
+        var cellHeight = compositorRoot.height / rows;
 
         // Loop over windows
         var i, index = 0, ix = 0, iy = 0, lastDim = 1, window;
         for (i = 0; i < num; i++) {
             // Find window
             window = workspace.children[i];
+
+            // Only windows from applications
             if (window.objectName !== "clientWindow")
+                continue;
+
+            // Skip windows from other outputs
+            if (window.child.mainOutput !== _greenisland_output)
                 continue;
 
             // Skip windows that are not toplevel
@@ -127,10 +128,6 @@ Item {
 
     function end() {
         // Sanity check
-        if (!screenView) {
-            console.error("Running PresentWindowsGrid without a screen view, cannot continue.");
-            return;
-        }
         if (!workspace) {
             console.error("Running PresentWindowsGrid without a workspace, cannot continue.");
             return;
@@ -169,6 +166,6 @@ Item {
         }
 
         // Enable output zoom again
-        screenView.zoomEnabled = true;
+        compositorRoot.screenView.zoomEnabled = true;
     }
 }

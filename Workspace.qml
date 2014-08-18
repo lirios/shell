@@ -39,7 +39,6 @@ Image {
 
     Effects {
         id: effects
-        screenView: parent.screenView
         workspace: root
     }
 }
