@@ -154,10 +154,10 @@ Item {
     function switchMode(orientation) {
         if (orientation == Qt.Vertical) {
             view.push(verticalView);
-            root.width = units.largeSpacing * 18;
+            root.width = units.largeSpacing * 16;
         } else {
             view.push(horizontalView);
-            root.width = units.largeSpacing * 28;
+            root.width = units.largeSpacing * 48;
         }
 
         root.mode = orientation;
