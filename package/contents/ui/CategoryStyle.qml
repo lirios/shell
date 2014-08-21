@@ -32,9 +32,9 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 
 Styles.ButtonStyle {
     padding {
-        left: 0
+        left: units.gridUnit * 0.2
         top: 0
-        right: 0
+        right: units.gridUnit * 0.2
         bottom: 0
     }
 
@@ -42,7 +42,7 @@ Styles.ButtonStyle {
         property bool checked: control.checkable && control.checked
         property bool down: control.pressed || checked
 
-        implicitWidth: Math.round(TextSingleton.implicitHeight * 2.5)
+        implicitWidth: Math.round(TextSingleton.implicitHeight * 4)
         implicitHeight: Math.max(units.gridUnit * 2, Math.round(TextSingleton.implicitHeight * 1.2))
 
         Rectangle {

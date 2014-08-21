@@ -79,6 +79,8 @@ Item {
                     text: model.display
                     onClicked: root.selected(categoriesModel.modelForRow(index))
                 }
+
+                Layout.fillWidth: true
             }
 
             Layout.fillWidth: true
