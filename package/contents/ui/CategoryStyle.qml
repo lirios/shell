@@ -51,7 +51,7 @@ Styles.ButtonStyle {
                 right: parent.right
                 bottom: parent.bottom
             }
-            color: checked ? control.hovered ? Qt.lighter(__syspal.highlight, 1.5) : __syspal.highlight : Qt.lighter(__syspal.highlight, 1.2)
+            color: checked ? control.hovered ? Qt.lighter(theme.viewFocusColor, 1.5) : theme.viewFocusColor : Qt.lighter(theme.viewFocusColor, 1.2)
             height: units.gridUnit * 0.1
             opacity: control.hovered || down ? 1.0 : 0.0
 
@@ -82,7 +82,7 @@ Styles.ButtonStyle {
             renderType: Text.NativeRendering
             text: control.text
             font.bold: control.checkable && control.checked
-            color: __syspal.buttonText
+            color: theme.viewTextColor
         }
     }
 }
