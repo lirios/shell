@@ -54,7 +54,9 @@ FocusScope {
             id: listView
             boundsBehavior: Flickable.StopAtBounds
             snapMode: ListView.SnapToItem
-            model: appsModel
+            model: AppChooser.FunnelModel {
+                sourceModel: appsModel
+            }
             delegate: ItemListDelegate {}
             onModelChanged: {
                 if (model == null)

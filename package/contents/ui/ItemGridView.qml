@@ -66,7 +66,9 @@ FocusScope {
         highlightRangeMode: GridView.StrictlyEnforceRange
         highlightFollowsCurrentItem: true
         currentIndex: 0
-        model: appsModel
+        model: AppChooser.FunnelModel {
+            sourceModel: appsModel
+        }
         delegate: ItemGridDelegate {}
         onModelChanged: {
             if (model == null)
