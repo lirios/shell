@@ -160,6 +160,9 @@ Item {
             root.width = units.largeSpacing * 48;
         }
 
+        // Simulate slide pnale with a very large height
+        root.height = 10000;
+
         root.mode = orientation;
     }
 }
