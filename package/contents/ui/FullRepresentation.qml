@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.1
+import Hawaii.Shell.Controls 1.0 as Controls
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.hawaii.appchooser.private 0.1 as AppChooser
@@ -86,7 +87,7 @@ Item {
                 visible: !runnerView.visible
             }
 
-            ScrollView {
+            Controls.ScrollView {
                 anchors.fill: parent
                 visible: (searchField != "") && (runnerModel.count > 0)
 
@@ -130,10 +131,11 @@ Item {
                 }
             }
 
-            TextField {
+            Controls.TextField {
                 id: searchField
                 placeholderText: i18n("Search...")
                 focus: true
+                clearButtonShown: true
                 onTextChanged: runnerModel.query = text
 
                 Layout.fillWidth: true

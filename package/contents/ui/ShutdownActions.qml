@@ -26,7 +26,7 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.1
+import Hawaii.Shell.Controls 1.0 as Controls
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.hawaii.appchooser.private 0.1 as AppChooser
@@ -46,7 +46,7 @@ RowLayout {
         }
     }
 
-    ToolButton {
+    Controls.ToolButton {
         width: units.iconSizes.large
         height: width
         iconName: "system-log-out-symbolic"
@@ -54,7 +54,7 @@ RowLayout {
         onClicked: systemModel.triggerAction("logout")
     }
 
-    ToolButton {
+    Controls.ToolButton {
         width: units.iconSizes.large
         height: width
         iconName: "system-shutdown-symbolic"
@@ -62,7 +62,7 @@ RowLayout {
         onClicked: systemModel.triggerAction("shutdown")
     }
 
-    ToolButton {
+    Controls.ToolButton {
         width: units.iconSizes.large
         height: width
         iconName: "system-reboot-symbolic"
