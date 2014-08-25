@@ -2,7 +2,7 @@
 Type=Service
 Name=AppChooser
 Comment=Application launcher
-Icon=view-grid-symbolic
+Icon=view-grid
 Keywords=
 
 X-KDE-PluginInfo-Author=Pier Luigi Fiorini
