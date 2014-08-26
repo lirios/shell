@@ -30,6 +30,11 @@ ProcessRunner::~ProcessRunner()
 {
 }
 
+void ProcessRunner::runSetting(const QString &name)
+{
+    KProcess::startDetached("kcmshell5", QStringList() << name);
+}
+
 void ProcessRunner::runUserSettings()
 {
     KProcess::startDetached("kcmshell5", QStringList() << "kcm_useraccount");
