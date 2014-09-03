@@ -101,7 +101,7 @@ Colorize {
 
             Button {
                 text: qsTr("Force Quit")
-                onClicked: compositor.destroyClientForSurface(window.child.surface)
+                onClicked: window.child.surface.client.kill()
             }
 
             Layout.alignment: Qt.AlignHCenter
