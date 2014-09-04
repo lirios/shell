@@ -35,6 +35,26 @@ Item {
 
     id: waylandWindow
     opacity: 1.0
+    rotation: {
+        switch (_greenisland_output.transform) {
+        case WaylandOutput.Transform90:
+            return 90;
+        case WaylandOutput.TransformFlipped90:
+            return -90;
+        case WaylandOutput.Transform180:
+            return 180;
+        case WaylandOutput.TransformFlipped180:
+            return -180;
+        case WaylandOutput.Transform270:
+            return 270;
+        case WaylandOutput.TransformFlipped270:
+            return -270;
+        default:
+            break;
+        }
+
+        return 0;
+    }
     onVisibleChanged: {
         if (child)
             child.surface.clientRenderingEnabled = visible;
