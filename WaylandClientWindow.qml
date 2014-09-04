@@ -38,6 +38,7 @@ WaylandWindow {
 
     id: clientWindow
     objectName: "clientWindow"
+
     states: [
         State {
             name: "focused"
@@ -144,6 +145,8 @@ WaylandWindow {
     Connections {
         target: child.surface
         onUnmapped: runUnmapAnimation()
+        onRaiseRequested: stackingOrder(true)
+        onLowerRequested: stackingOrder(false)
     }
 
     Connections {
@@ -233,5 +236,33 @@ WaylandWindow {
         default:
             break;
         }
+    }
+
+    function stackingOrder(raise) {
+        // Can't retrieve windows list if we're not parented
+        if (!clientWindow.parent)
+            return;
+
+        // Windows list for this output
+        var windowsList = clientWindow.parent.children;
+
+        // Change stacking order
+        var i, count = raise ? 0 : windowsList.length;
+        for (i = count; i < windowsList.length; i++) {
+            // Process only application windows
+            if (windowsList[i].objectName !== "clientWindow")
+                continue;
+
+            // Asign a z-index
+            if (windowsList[i] !== clientWindow) {
+                windowsList[i].z = count;
+                count++;
+            }
+        }
+        clientWindow.z = raise ? windowsList.length : 0;
+
+        // Assign keyboard focus
+        if (raise)
+            clientWindow.child.takeFocus();
     }
 }
