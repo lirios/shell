@@ -25,70 +25,68 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.2
 
 WorkspacesView {
     id: root
-    view: StackView {
-        delegate: StackViewDelegate {
-            function getTransition(properties) {
-                return (__priv.direction === Qt.LeftToRight) ? ltrTransition : rtlTransition;
-            }
-
-            // Current workspace slide to the left, revealing next workspace
-            property Component ltrTransition: StackViewTransition {
-                PropertyAnimation {
-                    target: exitItem
-                    property: "x"
-                    from: 0
-                    to: -target.width
-                    duration: __priv.duration
-                }
-                PropertyAnimation {
-                    target: enterItem
-                    property: "x"
-                    from: target.width
-                    to: 0
-                    duration: __priv.duration
-                }
-            }
-
-            // Current workspace slide to the right, reveling previous workspace
-            property Component rtlTransition: StackViewTransition {
-                PropertyAnimation {
-                    target: exitItem
-                    property: "x"
-                    from: 0
-                    to: target.width
-                    duration: __priv.duration
-                }
-                PropertyAnimation {
-                    target: enterItem
-                    property: "x"
-                    from: -target.width
-                    to: 0
-                    duration: __priv.duration
-                }
-            }
-        }
-
-        QtObject {
-            id: __priv
-
-            property int direction
-            readonly property int duration: 500
-        }
+    view: listView
+    onWorkspaceAdded: {
+        workspaces.model++;
     }
     onWorkspaceRemoved: {
-        view.pop({"item": get(index), "immediate": true});
+        // Reparent all windows to the previous or next workspace
+        var prevIndex = index == 0 ? 1 : index - 1;
+        var workspace = workspaces.itemAt(index);
+        var prevWorkspace = workspaces.itemAt(prevIndex);
+        var i;
+        for (i = 0; i < workspace.children.length; i++) {
+            var window = workspace.children[i];
+            window.parent = prevWorkspace;
+        }
+
+        // Remove item
+        listView.currentIndex = prevIndex;
+        workspaces.model--;
     }
     onWorkspaceSelected: {
-        if (index > currentIndex)
-            __priv.direction = Qt.LeftToRight;
-        else if (index < currentIndex)
-            __priv.direction = Qt.RightToLeft;
-        else
-            return;
-        view.push({"item": get(index)});
+        listView.currentIndex = index;
+    }
+
+    Flickable {
+        property int currentIndex: -1
+        property Workspace currentItem: workspaces.itemAt(currentIndex)
+        property int count: workspaces.model
+
+        id: listView
+        anchors.fill: parent
+        interactive: false
+        contentX: currentIndex * root.width
+        contentY: 0
+        contentWidth: root.width
+        contentHeight: root.height
+        onCurrentIndexChanged: console.debug("Selected workspace", currentIndex)
+
+        Behavior on contentX {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: 250
+            }
+        }
+
+        Item {
+            width: root.width * workspaces.model
+            height: root.height
+
+            Repeater {
+                id: workspaces
+                model: 0
+
+                Workspace {
+                    x: index * width
+                    y: 0
+                    width: listView.width
+                    height: listView.height
+                }
+            }
+        }
     }
 }

@@ -32,13 +32,11 @@ Image {
     id: root
     source: "../images/wallpaper.png"
     fillMode: Image.Tile
-    onParentChanged: {
-        width = parent.width;
-        height = parent.height;
-    }
 
     Effects {
         id: effects
         workspace: root
     }
+
+    //Component.onDestruction: console.debug("Workspace destruction")
 }
