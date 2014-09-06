@@ -168,11 +168,10 @@ function surfaceUnmapped(surface) {
     // in the surface model and don't create a window representation, hence
     // we destroy the surface item when it's unmapped
     if (surface.windowType === WaylandQuickSurface.Popup) {
-        surfaceModel.remove(i, 1);
-
         if (window.chrome)
             window.chrome.destroy();
         window.destroy();
+        surfaceModel.remove(i, 1);
     }
 }
 
