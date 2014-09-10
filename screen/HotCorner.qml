@@ -40,6 +40,7 @@ Item {
         id: __priv
 
         property int threshold: 5
+        property bool entered: false
         property double lastTrigger
 
         Component.onCompleted: lastTrigger = new Date().getTime()
@@ -116,12 +117,45 @@ Item {
         hoverEnabled: true
         onEntered: rect.opacity = 1.0
         onExited: rect.opacity = 0.0
-        onContainsMouseChanged: {
-            if (containsMouse) {
+    }
+
+    MouseArea {
+        id: surroundingArea
+        anchors.left: parent.left
+        anchors.top: parent.top
+        width: 3
+        height: 3
+        hoverEnabled: true
+        onExited: {
+            __priv.entered = false;
+        }
+
+        MouseArea {
+            id: cornerArea
+            anchors.left: parent.left
+            anchors.top: parent.top
+            width: 1
+            height: 1
+            hoverEnabled: true
+            onEntered: {
                 // Mouse entered this corner, do we have to trigger?
+                /*
                 var curtime = new Date().getTime();
-                if (curtime - __priv.lastTrigger > __priv.threshold)
+                if (curtime - __priv.lastTrigger > __priv.threshold) {
                     hotCorner.triggered();
+                    __priv.lastTrigger = new Date().getTime();
+                }
+                */
+                if (!__priv.entered) {
+                    __priv.entered = true;
+                    hotCorner.triggered();
+                }
+            }
+            onExited: {
+                // Save last trigger only when it exits to avoid
+                // triggering when the mouse is still in the area
+                //__priv.lastTrigger = new Date().getTime();
+                __priv.entered = false;
             }
         }
     }
