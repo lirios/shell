@@ -83,24 +83,22 @@ function surfaceMapped(surface) {
     switch (surface.windowType) {
     case WaylandQuickSurface.Toplevel:
         pos = compositor.calculateInitialPosition(surface);
-        child.globalGeometry = Qt.rect(pos.x, pos.y, window.width, window.height);
+        surface.globalPosition = pos;
         pos = _greenisland_output.mapToOutput(pos);
         break;
     case WaylandQuickSurface.Popup:
         // Move popups relative to parent window
         pos.x = surface.transientOffset.x;
         pos.y = surface.transientOffset.y;
-        child.globalGeometry = Qt.rect(transientParentView.globalGeometry.x + pos.x,
-                                       transientParentView.globalGeometry.y + pos.y,
-                                       window.width, window.height);
+        surface.globalPosition = Qt.point(transientParentView.surface.globalPosition.x + pos.x,
+                                          transientParentView.surface.globalPosition.y + pos.y);
         break;
     case WaylandQuickSurface.Transient:
         // Center transient windows
         pos.x = (transientParentView.width - window.width) / 2;
         pos.y = (transientParentView.height - window.height) / 2;
-        child.globalGeometry = Qt.rect(transientParentView.globalGeometry.x + pos.x,
-                                       transientParentView.globalGeometry.y + pos.y,
-                                       window.width, window.height);
+        surface.globalPosition = Qt.point(transientParentView.surface.globalPosition.x + pos.x,
+                                          transientParentView.surface.globalPosition.y + pos.y);
         break;
     default:
         break;
