@@ -24,19 +24,22 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-function surfaceMapped(surface) {
-    // Assume application window role by default
-    if (typeof(surface.windowProperties.role) == "undefined")
-        surface.windowProperties.role = Compositor.ApplicationRole;
+/*
+ * Main procedures
+ */
 
-    if (surface.windowProperties.role === Compositor.ApplicationRole) {
-        console.debug("Surface", surface, "mapped");
+function surfaceMapped(surface) {
+    // Get the first view and if it has a role property than this
+    // is definitely a shell window
+    var firstView = compositor.firstViewOf(surface);
+    if (typeof(firstView.role) == "undefined") {
+        console.debug("Application surface", surface, "mapped");
         console.debug("\tappId:", surface.className);
         console.debug("\ttitle:", surface.title);
         console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
     } else {
-        console.debug("Surface", surface, "mapped");
-        console.debug("\trole:", surface.windowProperties.role);
+        console.debug("Shell surface", surface, "mapped");
+        console.debug("\trole:", firstView.role);
         console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
     }
 
@@ -52,6 +55,61 @@ function surfaceMapped(surface) {
             return;
     }
 
+    // Call a specialized method to deal with application or
+    // shell windows
+    if (typeof(firstView.role) == "undefined")
+        mapApplicationSurface(surface);
+    else
+        mapShellSurface(surface, firstView);
+}
+
+function surfaceUnmapped(surface) {
+    // Get the first view and if it has a role property than this
+    // is definitely a shell window
+    var firstView = compositor.firstViewOf(surface);
+    if (typeof(firstView.role) == "undefined") {
+        console.debug("Application surface", surface, "unmapped");
+        console.debug("\tappId:", surface.className);
+        console.debug("\ttitle:", surface.title);
+    } else {
+        console.debug("Shell surface", surface, "unmapped");
+        console.debug("\trole:", firstView.role);
+        console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
+    }
+
+    // Call a specialized method to deal with application or
+    // shell windows
+    if (typeof(firstView.role) == "undefined")
+        unmapApplicationSurface(surface);
+    else
+        unmapShellSurface(surface);
+}
+
+function surfaceDestroyed(surface) {
+    console.debug("Surface", surface, "destroyed");
+
+    // Remove surface from model
+    var i;
+    for (i = 0; i < surfaceModel.count; i++) {
+        var entry = surfaceModel.get(i);
+
+        if (entry.surface === surface) {
+            // Destroy window representation and
+            // remove the surface from the model
+            if (entry.window.chrome)
+                entry.window.chrome.destroy();
+            entry.window.destroy();
+            surfaceModel.remove(i, 1);
+            break;
+        }
+    }
+}
+
+/*
+ * Map surfaces
+ */
+
+function mapApplicationSurface(surface) {
     // Create surface item
     var component = Qt.createComponent("WaylandClientWindow.qml");
     if (component.status !== Component.Ready) {
@@ -131,17 +189,67 @@ function surfaceMapped(surface) {
     surfaceModel.append({"surface": surface, "window": window});
 }
 
-function surfaceUnmapped(surface) {
-    if (surface.windowProperties.role === Compositor.ApplicationRole) {
-        console.debug("Surface", surface, "unmapped");
-        console.debug("\tappId:", surface.className);
-        console.debug("\ttitle:", surface.title);
-    } else {
-        console.debug("Surface", surface, "mapped");
-        console.debug("\trole:", surface.windowProperties.role);
-        console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
+function mapShellSurface(surface, child) {
+    // Shell surfaces have only one view which is passed to us
+    // as an argument, check whether it's a view for this output
+    // or not
+    if (child.output !== _greenisland_output)
+        return;
+
+    // Create surface item
+    var component = Qt.createComponent("WaylandShellWindow.qml");
+    if (component.status !== Component.Ready) {
+        console.error(component.errorString());
+        return;
     }
 
+    // Create and setup window container
+    var window = component.createObject(compositorRoot, {"child": child});
+    window.child.parent = window;
+    window.child.touchEventsEnabled = true;
+    window.width = surface.size.width;
+    window.height = surface.size.height;
+
+    // Set initial position
+    window.x = window.y = 0;
+
+    // Set appropriate parent
+    switch (child.role) {
+    case ShellWindowView.DesktopRole:
+    case ShellWindowView.DashboardRole:
+        window.parent = compositorRoot.screenView.layers.desktop;
+        break;
+    case ShellWindowView.PanelRole:
+    case ShellWindowView.ConfigRole:
+        window.parent = compositorRoot.screenView.layers.panels;
+        break;
+    case ShellWindowView.OverlayRole:
+        window.parent = compositorRoot.screenView.layers.overlays;
+        break;
+    case ShellWindowView.NotificationRole:
+        window.parent = compositorRoot.screenView.layers.notifications;
+        break;
+    case ShellWindowView.LockRole:
+        window.parent = compositorRoot.screenView.layers.lock;
+        break;
+    default:
+        window.parent = compositorRoot.screenView.layers.desktop;
+        break;
+    }
+
+    // Log coordinates for debugging purpose
+    console.debug("\tposition:", window.x + "," + window.y);
+    console.debug("\tscreen:", compositorRoot.screenView.name);
+
+    // Add surface to the model
+    surfaceModel.append({"surface": surface, "window": window});
+}
+
+/*
+ * Unmap surfaces
+ */
+
+function unmapApplicationSurface(surface) {
     // Find window representation
     var i, window = null;
     for (i = 0; i < surfaceModel.count; i++) {
@@ -173,22 +281,5 @@ function surfaceUnmapped(surface) {
     }
 }
 
-function surfaceDestroyed(surface) {
-    console.debug("Surface", surface, "destroyed");
-
-    // Remove surface from model
-    var i;
-    for (i = 0; i < surfaceModel.count; i++) {
-        var entry = surfaceModel.get(i);
-
-        if (entry.surface === surface) {
-            // Destroy window representation and
-            // remove the surface from the model
-            if (entry.window.chrome)
-                entry.window.chrome.destroy();
-            entry.window.destroy();
-            surfaceModel.remove(i, 1);
-            break;
-        }
-    }
+function unmapShellSurface(surface) {
 }

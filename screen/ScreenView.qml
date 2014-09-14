@@ -37,6 +37,19 @@ Item {
     readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
     property alias zoomEnabled: zoomArea.enabled
 
+    property var layers: QtObject {
+        readonly property alias background: backgroundLayer
+        readonly property alias desktop: desktopLayer
+        readonly property alias workspaces: workspacesLayer
+        readonly property alias panels: panelsLayer
+        readonly property alias notifications: notificationsLayer
+        readonly property alias fullScreen: fullScreenLayer
+        readonly property alias dialogs: dialogsLayer
+        readonly property alias overlays: overlayLayer
+        readonly property alias lock: lockLayer
+        readonly property alias cursors: cursorLayer
+    }
+
     id: root
     transform: Scale {
         id: screenScaler
@@ -82,30 +95,35 @@ Item {
     Item {
         id: backgroundLayer
         anchors.fill: parent
+        z: 999
     }
 
     // Desktop is only above to the background
     Item {
         id: desktopLayer
         anchors.fill: parent
+        z: 998
     }
 
     // Workspaces
     WorkspacesLinearView {
         id: workspacesLayer
         anchors.fill: parent
+        z: 997
     }
 
     // Panels are above application windows
     Item {
         id: panelsLayer
         anchors.fill: parent
+        z: 996
     }
 
     // Notifications are above panels
     Item {
         id: notificationsLayer
         anchors.fill: parent
+        z: 995
     }
 
     /*
@@ -116,6 +134,7 @@ Item {
         id: hotCorners
         anchors.fill: parent
         rotation: 0
+        z: 994
         onTopLeftTriggered: workspacesLayer.selectPrevious()
         onTopRightTriggered: workspacesLayer.selectNext()
         onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
@@ -129,6 +148,7 @@ Item {
     Item {
         id: fullScreenLayer
         anchors.fill: parent
+        z: 993
     }
 
     // Modal overlay for dialogs
@@ -150,18 +170,21 @@ Item {
     Item {
         id: dialogsLayer
         anchors.fill: parent
+        z: 992
     }
 
     // Overlays can cover pretty much everything except the lock screen
     Item {
         id: overlayLayer
         anchors.fill: parent
+        z: 991
     }
 
     // Lock screen is above all windows to shield the session
     Item {
         id: lockLayer
         anchors.fill: parent
+        z: 990
     }
 
     /*
@@ -172,5 +195,6 @@ Item {
     Item {
         id: cursorLayer
         anchors.fill: parent
+        z: 989
     }
 }
