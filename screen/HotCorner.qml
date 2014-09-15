@@ -114,6 +114,7 @@ Item {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        acceptedButtons: Qt.NoButton
         hoverEnabled: true
         onEntered: rect.opacity = 1.0
         onExited: rect.opacity = 0.0
@@ -125,6 +126,7 @@ Item {
         anchors.top: parent.top
         width: 3
         height: 3
+        acceptedButtons: Qt.NoButton
         hoverEnabled: true
         onExited: {
             __priv.entered = false;
@@ -136,6 +138,7 @@ Item {
             anchors.top: parent.top
             width: 1
             height: 1
+            acceptedButtons: Qt.NoButton
             hoverEnabled: true
             onEntered: {
                 // Mouse entered this corner, do we have to trigger?
