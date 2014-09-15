@@ -57,7 +57,7 @@ Item {
         onIdleTimerStopRequested: idleTimer.running = false
         onIdle: {
             // Fade the desktop out
-            splash.opacity = 1.0;
+            screenView.layers.splash.opacity = 1.0;
 
             // Lock the session
             compositor.lockSession();
@@ -68,19 +68,19 @@ Item {
         }
         onFadeIn: {
             // Fade the desktop in
-            splash.opacity = 0.0;
+            screenView.layers.splash.opacity = 0.0;
         }
         onFadeOut: {
             // Fade the desktop out
-            splash.opacity = 1.0;
+            screenView.layers.splash.opacity = 1.0;
         }
         onUnlocked: {
             // Fade the desktop in
-            splash.opacity = 0.0;
+            screenView.layers.splash.opacity = 0.0;
         }
         onReady: {
             // Fade the desktop in
-            splash.opacity = 0.0;
+            screenView.layers.splash.opacity = 0.0;
 
             // Start idle timer
             idleTimer.running = true
@@ -131,21 +131,6 @@ Item {
 
         FpsCounter {
             id: fpsCounter
-        }
-    }
-
-    // Black rectangle for fade-in and fade-out effects
-    Rectangle {
-        id: splash
-        anchors.fill: parent
-        color: "black"
-        z: 999
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: 250
-            }
         }
     }
 

@@ -215,6 +215,9 @@ function mapShellSurface(surface, child) {
 
     // Set appropriate parent
     switch (child.role) {
+    case ShellWindowView.SplashRole:
+        window.parent = compositorRoot.screenView.layers.splash;
+        break;
     case ShellWindowView.DesktopRole:
     case ShellWindowView.DashboardRole:
         window.parent = compositorRoot.screenView.layers.desktop;

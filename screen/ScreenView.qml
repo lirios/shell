@@ -47,6 +47,7 @@ Item {
         readonly property alias dialogs: dialogsLayer
         readonly property alias overlays: overlayLayer
         readonly property alias lock: lockLayer
+        readonly property alias splash: splashLayer
         readonly property alias cursors: cursorLayer
     }
 
@@ -68,7 +69,7 @@ Item {
         anchors.fill: parent
         scaler: screenScaler
         enabled: true
-        z: 1000
+        z: 4000
     }
 
     /*
@@ -84,107 +85,7 @@ Item {
         number: root.number
         primary: root.primary
         visible: false
-        z: 1000
-    }
-
-    /*
-     * Shell and workspaces
-     */
-
-    // Background is below everything
-    Item {
-        id: backgroundLayer
-        anchors.fill: parent
-        z: 999
-    }
-
-    // Desktop is only above to the background
-    Item {
-        id: desktopLayer
-        anchors.fill: parent
-        z: 998
-    }
-
-    // Workspaces
-    WorkspacesLinearView {
-        id: workspacesLayer
-        anchors.fill: parent
-        z: 997
-    }
-
-    // Panels are above application windows
-    Item {
-        id: panelsLayer
-        anchors.fill: parent
-        z: 996
-    }
-
-    // Notifications are above panels
-    Item {
-        id: notificationsLayer
-        anchors.fill: parent
-        z: 995
-    }
-
-    /*
-     * Hot corners
-     */
-
-    HotCorners {
-        id: hotCorners
-        anchors.fill: parent
-        rotation: 0
-        z: 994
-        onTopLeftTriggered: workspacesLayer.selectPrevious()
-        onTopRightTriggered: workspacesLayer.selectNext()
-        onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
-    }
-
-    /*
-     * Important layers
-     */
-
-    // Full screen windows can cover application windows and panels
-    Item {
-        id: fullScreenLayer
-        anchors.fill: parent
-        z: 993
-    }
-
-    // Modal overlay for dialogs
-    Rectangle {
-        id: modalOverlay
-        anchors.fill: parent
-        color: "black"
-        opacity: 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: 250
-            }
-        }
-    }
-
-    // Globally modal dialogs can cover applications and shell gadgets
-    Item {
-        id: dialogsLayer
-        anchors.fill: parent
-        z: 992
-    }
-
-    // Overlays can cover pretty much everything except the lock screen
-    Item {
-        id: overlayLayer
-        anchors.fill: parent
-        z: 991
-    }
-
-    // Lock screen is above all windows to shield the session
-    Item {
-        id: lockLayer
-        anchors.fill: parent
-        z: 990
+        z: 3000
     }
 
     /*
@@ -195,6 +96,126 @@ Item {
     Item {
         id: cursorLayer
         anchors.fill: parent
-        z: 989
+        z: 2000
+    }
+
+    /*
+     * Special layers
+     */
+
+    // Splash is above everything but the cursor layer
+    Rectangle {
+        id: splashLayer
+        anchors.fill: parent
+        color: "black"
+        z: 1500
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: 250
+            }
+        }
+    }
+
+    /*
+     * Important layers
+     */
+
+    // Lock screen is above all windows to shield the session
+    Item {
+        id: lockLayer
+        anchors.fill: parent
+        z: 1400
+    }
+
+    // Overlays can cover pretty much everything except the lock screen
+    Item {
+        id: overlayLayer
+        anchors.fill: parent
+        z: 1399
+    }
+
+    // Globally modal dialogs can cover applications and shell gadgets
+    Item {
+        id: dialogsLayer
+        anchors.fill: parent
+        z: 1398
+    }
+
+    // Modal overlay for dialogs
+    Rectangle {
+        id: modalOverlay
+        anchors.fill: parent
+        color: "black"
+        opacity: 0.0
+        z: 1397
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: 250
+            }
+        }
+    }
+
+    // Full screen windows can cover application windows and panels
+    Item {
+        id: fullScreenLayer
+        anchors.fill: parent
+        z: 1396
+    }
+
+    /*
+     * Hot corners
+     */
+
+    HotCorners {
+        id: hotCorners
+        anchors.fill: parent
+        rotation: 0
+        z: 1395
+        onTopLeftTriggered: workspacesLayer.selectPrevious()
+        onTopRightTriggered: workspacesLayer.selectNext()
+        onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
+    }
+
+    /*
+     * Shell and workspaces
+     */
+
+    // Notifications are above panels
+    Item {
+        id: notificationsLayer
+        anchors.fill: parent
+        z: 1200
+    }
+
+    // Panels are above application windows
+    Item {
+        id: panelsLayer
+        anchors.fill: parent
+        z: 1199
+    }
+
+    // Workspaces
+    WorkspacesLinearView {
+        id: workspacesLayer
+        anchors.fill: parent
+        z: 1198
+    }
+
+    // Desktop is only above to the background
+    Item {
+        id: desktopLayer
+        anchors.fill: parent
+        z: 1197
+    }
+
+    // Background is below everything
+    Item {
+        id: backgroundLayer
+        anchors.fill: parent
+        z: 1196
     }
 }
