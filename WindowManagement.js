@@ -43,18 +43,6 @@ function surfaceMapped(surface) {
         console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
     }
 
-    // We get mapped/unmapped signals all the time for example when a
-    // workspace is selected, for all the surfaces in the previous workspace
-    // an unmapped signal is emitted; so we need to figure out if a
-    // representation for the surface was already created and exit in that case
-    var i;
-    for (i = 0; i < surfaceModel.count; i++) {
-        var entry = surfaceModel.get(i);
-
-        if (entry.surface === surface)
-            return;
-    }
-
     // Call a specialized method to deal with application or
     // shell windows
     if (typeof(firstView.role) == "undefined")
@@ -110,6 +98,18 @@ function surfaceDestroyed(surface) {
  */
 
 function mapApplicationSurface(surface) {
+    // We get mapped/unmapped signals all the time for example when a
+    // workspace is selected, for all the surfaces in the previous workspace
+    // an unmapped signal is emitted; so we need to figure out if a
+    // representation for the surface was already created and exit in that case
+    var i;
+    for (i = 0; i < surfaceModel.count; i++) {
+        var entry = surfaceModel.get(i);
+
+        if (entry.surface === surface)
+            return;
+    }
+
     // Create surface item
     var component = Qt.createComponent("WaylandClientWindow.qml");
     if (component.status !== Component.Ready) {
