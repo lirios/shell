@@ -134,8 +134,18 @@ function mapApplicationSurface(surface) {
     // Transient parent view
     var transientParentView = null;
     if (surface.windowType === WaylandQuickSurface.Popup ||
-            surface.windowType === WaylandQuickSurface.Transient)
-        transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
+            surface.windowType === WaylandQuickSurface.Transient) {
+        // The parent could be a shell window instead of an application window,
+        // this is the case for context menus of the desktop view.
+        // We get the first view and see if it belongs to a shell window otherwise
+        // a view for this output is requested.
+        var parentFirstView = compositor.firstViewOf(surface.transientParent);
+        if (typeof(parentFirstView.role) == "undefined")
+            transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
+        else
+            transientParentView = parentFirstView;
+        console.log(parentFirstView, "vs", transientParentView);
+    }
 
     // Determine window position
     switch (surface.windowType) {
