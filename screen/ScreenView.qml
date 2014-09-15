@@ -213,9 +213,11 @@ Item {
     }
 
     // Background is below everything
-    Item {
+    Image {
         id: backgroundLayer
         anchors.fill: parent
         z: 1196
+        source: "../../images/wallpaper.png"
+        fillMode: Image.Tile
     }
 }

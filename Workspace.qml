@@ -26,12 +26,10 @@
 
 import QtQuick 2.0
 
-Image {
+Item {
     property alias effects: effects
 
     id: root
-    source: "../images/wallpaper.png"
-    fillMode: Image.Tile
 
     Effects {
         id: effects
