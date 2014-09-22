@@ -48,7 +48,6 @@ Item {
         readonly property alias overlays: overlayLayer
         readonly property alias lock: lockLayer
         readonly property alias splash: splashLayer
-        readonly property alias cursors: cursorLayer
     }
 
     id: root
@@ -89,17 +88,6 @@ Item {
     }
 
     /*
-     * Mouse pointer
-     */
-
-    // Cursors are above anything
-    Item {
-        id: cursorLayer
-        anchors.fill: parent
-        z: 2000
-    }
-
-    /*
      * Special layers
      */
 
@@ -108,7 +96,7 @@ Item {
         id: splashLayer
         anchors.fill: parent
         color: "black"
-        z: 1500
+        z: 2000
 
         Behavior on opacity {
             NumberAnimation {
