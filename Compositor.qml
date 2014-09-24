@@ -69,18 +69,34 @@ Item {
         onFadeIn: {
             // Fade the desktop in
             screenView.layers.splash.opacity = 0.0;
+
+            // Bring user layer up
+            screenView.setCurrentLayer("user");
         }
         onFadeOut: {
+            // Bring splash layer up
+            screenView.setCurrentLayer("splash");
+
             // Fade the desktop out
             screenView.layers.splash.opacity = 1.0;
+        }
+        onLocked: {
+            // Bring lock layer up
+            screenView.setCurrentLayer("lock");
         }
         onUnlocked: {
             // Fade the desktop in
             screenView.layers.splash.opacity = 0.0;
+
+            // Bring user layer up
+            screenView.setCurrentLayer("user");
         }
         onReady: {
             // Fade the desktop in
             screenView.layers.splash.opacity = 0.0;
+
+            // Bring user layer up
+            screenView.setCurrentLayer("user");
 
             // Start idle timer
             idleTimer.running = true

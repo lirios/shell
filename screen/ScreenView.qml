@@ -60,18 +60,6 @@ Item {
     }
 
     /*
-     * Screen zoom handler
-     */
-
-    ScreenZoom {
-        id: zoomArea
-        anchors.fill: parent
-        scaler: screenScaler
-        enabled: true
-        z: 4000
-    }
-
-    /*
      * Output information panel
      */
 
@@ -84,6 +72,18 @@ Item {
         number: root.number
         primary: root.primary
         visible: false
+        z: 4000
+    }
+
+    /*
+     * Screen zoom handler
+     */
+
+    ScreenZoom {
+        id: zoomArea
+        anchors.fill: parent
+        scaler: screenScaler
+        enabled: true
         z: 3000
     }
 
@@ -106,38 +106,18 @@ Item {
         }
     }
 
-    /*
-     * Important layers
-     */
-
-    // Lock screen is above all windows to shield the session
-    Item {
-        id: lockLayer
-        anchors.fill: parent
-        z: 1400
-    }
-
-    // Overlays can cover pretty much everything except the lock screen
-    Item {
-        id: overlayLayer
-        anchors.fill: parent
-        z: 1399
-    }
-
-    // Globally modal dialogs can cover applications and shell gadgets
-    Item {
-        id: dialogsLayer
-        anchors.fill: parent
-        z: 1398
-    }
-
     // Modal overlay for dialogs
     Rectangle {
         id: modalOverlay
         anchors.fill: parent
         color: "black"
         opacity: 0.0
-        z: 1397
+
+        // Globally modal dialogs can cover applications and shell gadgets
+        Item {
+            id: dialogsLayer
+            anchors.fill: parent
+        }
 
         Behavior on opacity {
             NumberAnimation {
@@ -147,65 +127,118 @@ Item {
         }
     }
 
-    // Full screen windows can cover application windows and panels
+    // Lock screen is above all windows to shield the session
     Item {
-        id: fullScreenLayer
+        id: lockLayer
         anchors.fill: parent
-        z: 1396
     }
 
     /*
-     * Hot corners
+     * Workspace
      */
 
-    HotCorners {
-        id: hotCorners
-        anchors.fill: parent
-        rotation: 0
-        z: 1395
-        onTopLeftTriggered: workspacesLayer.selectPrevious()
-        onTopRightTriggered: workspacesLayer.selectNext()
-        onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
-    }
-
-    /*
-     * Shell and workspaces
-     */
-
-    // Notifications are above panels
     Item {
-        id: notificationsLayer
+        id: userLayer
         anchors.fill: parent
-        z: 1200
+
+        // Application and shell windows
+        Item {
+            id: sessionLayer
+            anchors.fill: parent
+
+            // Background is below everything
+            Image {
+                id: backgroundLayer
+                anchors.fill: parent
+                source: "../../images/wallpaper.png"
+                fillMode: Image.Tile
+            }
+
+            // Desktop is only above to the background
+            Item {
+                id: desktopLayer
+                anchors.fill: parent
+            }
+
+            // Workspaces
+            WorkspacesLinearView {
+                id: workspacesLayer
+                anchors.fill: parent
+            }
+
+            // Panels are above application windows
+            Item {
+                id: panelsLayer
+                anchors.fill: parent
+            }
+
+            // Notifications are above panels
+            Item {
+                id: notificationsLayer
+                anchors.fill: parent
+            }
+
+            // Overlays can cover pretty much everything except the lock screen
+            Item {
+                id: overlayLayer
+                anchors.fill: parent
+            }
+        }
+
+        // Full screen windows can cover application windows and panels
+        Item {
+            id: fullScreenLayer
+            anchors.fill: parent
+            visible: false
+        }
+
+        // Hot corners
+        HotCorners {
+            id: hotCorners
+            anchors.fill: parent
+            rotation: 0
+            onTopLeftTriggered: workspacesLayer.selectPrevious()
+            onTopRightTriggered: workspacesLayer.selectNext()
+            onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
+        }
     }
 
-    // Panels are above application windows
-    Item {
-        id: panelsLayer
-        anchors.fill: parent
-        z: 1199
-    }
+    /**
+     * Brings up the desired layer, the other layers are
+     * given a 0 z-index hence are shown based on their order
+     * in the code.
+     **/
+    function setCurrentLayer(type) {
+        var lowIndex = 0;
+        var highIndex = 2000;
 
-    // Workspaces
-    WorkspacesLinearView {
-        id: workspacesLayer
-        anchors.fill: parent
-        z: 1198
-    }
-
-    // Desktop is only above to the background
-    Item {
-        id: desktopLayer
-        anchors.fill: parent
-        z: 1197
-    }
-
-    // Background is below everything
-    Image {
-        id: backgroundLayer
-        anchors.fill: parent
-        z: 1196
-        source: "../../images/wallpaper.png"
-        fillMode: Image.Tile
+        switch (type) {
+        case "splash":
+            splashLayer.z = highIndex;
+            modalOverlay.z = lowIndex;
+            lockLayer.z = lowIndex;
+            userLayer.z = lowIndex;
+            break;
+        case "modal":
+            splashLayer.z = lowIndex;
+            modalOverlay.z = highIndex;
+            lockLayer.z = lowIndex;
+            userLayer.z = lowIndex;
+            break;
+        case "lock":
+            splashLayer.z = lowIndex;
+            modalOverlay.z = lowIndex;
+            lockLayer.z = highIndex;
+            userLayer.z = lowIndex;
+            break;
+        case "user":
+            splashLayer.z = lowIndex;
+            modalOverlay.z = lowIndex;
+            lockLayer.z = lowIndex;
+            userLayer.z = highIndex;
+            break;
+        default:
+            break;
+        }
     }
 }
