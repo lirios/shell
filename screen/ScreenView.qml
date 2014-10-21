@@ -97,6 +97,7 @@ Item {
         anchors.fill: parent
         color: "black"
         z: 2000
+        opacity: 0.0
 
         Behavior on opacity {
             NumberAnimation {
