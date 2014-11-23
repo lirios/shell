@@ -34,6 +34,7 @@ Item {
     property string name
     property alias iconName: icon.iconName
     property alias text: label.text
+    property int badgeCount: 0
     property string tooltip
     readonly property bool selected: selectedIndicator == indicator
     property Component component
@@ -51,10 +52,10 @@ Item {
         if (text)
             size += units.smallSpacing + label.width;
         if (iconName && text)
-            size += units.smallSpacing;
+            size += units.smallSpacing * 2;
         return size;
     }
-    height: Math.max(icon.height, label.height)
+    height: Math.max(icon.height, label.height) + (units.smallSpacing * 2)
 
     MouseArea {
         anchors.fill: parent
@@ -75,5 +76,34 @@ Item {
         anchors.centerIn: parent
         color: Theme.panel.textColor
         font.pixelSize: units.roundToIconSize(units.iconSizes.small)
+    }
+
+    Rectangle {
+        id: badge
+        anchors {
+            top: parent.top
+            right: parent.right
+            topMargin: -(units.smallSpacing * 0.5)
+            rightMargin: -(units.largeSpacing * 0.5)
+        }
+        width: units.iconSizes.smallMedium
+        height: width
+        radius: width * 0.5
+        color: "orangered"
+        opacity: indicator.badgeCount > 0 ? 1.0 : 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: units.smallDuration
+            }
+        }
+
+        Label {
+            anchors.centerIn: parent
+            font.pixelSize: parent.width - units.smallSpacing
+            color: "white"
+            text: indicator.badgeCount
+        }
     }
 }
