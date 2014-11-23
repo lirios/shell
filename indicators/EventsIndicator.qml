@@ -90,6 +90,7 @@ Indicator {
             }
         }
     }
+    onTriggered: badgeCount = 0
 
     Timer {
         id: pendingTimer
@@ -169,15 +170,17 @@ Indicator {
                            tmp.body === data.body);
             var sameSource = tmp.source === source;
 
-            if (sameSource && matches) {
+            if (sameSource && matches)
                 return;
-            }
 
             if (sameSource || matches) {
                 notificationsModel.remove(i)
                 break;
             }
         }
+
+        if (!sameSource && !matches)
+            badgeCount++;
 
         data["id"] = ++notificationId;
         data["source"] = source;
