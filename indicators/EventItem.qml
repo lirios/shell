@@ -25,6 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import ".."
@@ -69,47 +71,36 @@ MouseArea {
         }
     }
 
-    Icon {
-        id: icon
-        anchors.verticalCenter: parent.verticalCenter
-        x: units.largeSpacing
-        y: 0
-        width: units.iconSizes.medium
-        height: width
-        iconName: appIcon && appIcon.length > 0 ? appIcon : "dialog-information-symbolic"
-        color: Theme.panel.textColor
-        visible: !root.expanded
-    }
+    RowLayout {
+        spacing: units.largeSpacing
 
-    Item {
-        id: summaryArea
-        anchors {
-            left: root.expanded ? root.left : root.right
-            top: root.top
-            right: root.right
-        }
-        width: parent.width - icon.width - (units.largeSpacing * 2)
-        height: parent.height
-
-        PlasmaExtras.Title {
-            anchors.fill: parent
-            clip: true
-            horizontalAlignment: root.expanded ? Qt.AlignHCenter : Qt.AlignLeft
-            verticalAlignment: Qt.AlignVCenter
-            text: summary + (root.expanded ? (body ? "\n" + body : "") :
-                                             (body ? "..." : ""))
+        Icon {
+            id: icon
+            width: units.iconSizes.medium
+            height: width
+            iconName: appIcon && appIcon.length > 0 ? appIcon : "dialog-information-symbolic"
             color: Theme.panel.textColor
-        }
-    }
 
-    Item {
-        id: extraArea
-        anchors {
-            left: summaryArea.right
-            top: parent.top
-            bottom: parent.bottom
+            Layout.alignment: Qt.AlignTop
         }
-        width: parent.width
-        height: parent.width
+
+        ColumnLayout {
+            spacing: units.largeSpacing
+
+            Label {
+                clip: true
+                text: summary + (root.expanded ? (body ? "\n" + body : "") :
+                                                 (body ? "..." : ""))
+                color: Theme.panel.textColor
+                font.pointSize: 14
+            }
+
+            Item {
+                id: extraArea
+                width: root.parent.width
+                height: root.parent.height
+                visible: root.expanded
+            }
+        }
     }
 }

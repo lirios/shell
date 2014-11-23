@@ -48,7 +48,7 @@ Indicator {
 
             ListView {
                 id: notificationView
-                spacing: units.smallSpacing
+                spacing: units.largeSpacing
                 clip: true
                 model: notificationsModel
                 delegate: EventItem {}
