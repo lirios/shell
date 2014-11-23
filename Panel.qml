@@ -32,6 +32,7 @@ import "indicators"
 
 Rectangle {
     property Indicator selectedIndicator: null
+    property Indicator lastIndicator: null
 
     signal indicatorTriggered(var indicator)
 

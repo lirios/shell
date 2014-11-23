@@ -65,7 +65,8 @@ Window {
             }
 
             // Load indicator component
-            stackView.push(indicator.component);
+            if (indicator != lastIndicator)
+                stackView.push(indicator.component);
 
             // Open drawer if necessary
             if (rightDrawer.status === PlasmaComponents.DialogStatus.Closed)
@@ -73,6 +74,7 @@ Window {
 
             // Save a reference to the currently open indicator
             selectedIndicator = indicator;
+            lastIndicator = indicator;
         }
     }
 
