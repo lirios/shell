@@ -80,7 +80,7 @@ Indicator {
 
                         NumberAnimation {
                             properties: "x,y"
-                            duration: units.smallDuration
+                            duration: units.shortDuration
                         }
                     }
                 }
