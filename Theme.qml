@@ -54,7 +54,7 @@ QtObject {
         readonly property color backgroundColor: "#31363b"
         readonly property color selectedTextColor: "#ffffff"
         readonly property color selectedTextEffectColor: "#000000"
-        readonly property color selectedBackgroundColor: "#5cb7d7"
+        readonly property color selectedBackgroundColor: "mediumturquoise"
         readonly property color primaryColor: "#464e57"
         readonly property color secondaryColor: "#67717a"
     }
