@@ -34,6 +34,7 @@ Rectangle {
     property Indicator selectedIndicator: null
     property Indicator lastIndicator: null
 
+    signal menuTriggered()
     signal indicatorTriggered(var indicator)
 
     color: "transparent"
@@ -48,6 +49,7 @@ Rectangle {
 
             Indicator {
                 text: qsTr("Menu")
+                onTriggered: menuTriggered()
             }
 
             Layout.alignment: Qt.AlignLeft

@@ -53,6 +53,9 @@ Window {
         }
         z: 1000
 
+        onMenuTriggered: {
+            leftDrawer.toggle();
+        }
         onIndicatorTriggered: {
             // Close drawer if the current indicator is triggered again
             if (indicator.selected) {
