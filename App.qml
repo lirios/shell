@@ -42,15 +42,16 @@ Window {
         id: background
         anchors.fill: parent
         source: "/usr/share/wallpapers/Fresh_Morning/contents/images/1920x1200.jpg"
-    }
+        z: 0
 
-    Clock {
-        id: clock
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            top: parent.top
+        Clock {
+            id: clock
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                top: parent.top
+            }
+            onClicked: topDrawer.toggle()
         }
-        onClicked: topDrawer.toggle()
     }
 
     Panel {
@@ -60,7 +61,7 @@ Window {
             right: parent.right
             bottom: parent.bottom
         }
-        z: 1000
+        z: 2
 
         onMenuTriggered: {
             leftDrawer.toggle();
@@ -94,12 +95,14 @@ Window {
         id: leftDrawer
         edge: Qt.LeftEdge
         width: units.gridUnit * 20
+        z: 1
     }
 
     SlidingPanel {
         id: rightDrawer
         edge: Qt.RightEdge
         width: units.gridUnit * 16
+        z: 1
 
         StackView {
             id: stackView
@@ -112,5 +115,6 @@ Window {
         id: topDrawer
         edge: Qt.TopEdge
         height: units.gridUnit * 15
+        z: 1
     }
 }
