@@ -35,8 +35,16 @@ Item {
     readonly property int status: __priv.open ? PlasmaComponents.DialogStatus.Open : PlasmaComponents.DialogStatus.Closed
 
     id: slidingPanel
-    width: units.gridUnit * 10
-    height: shellRoot.height
+    width: {
+        if (edge == Qt.TopEdge || edge == Qt.BottomEdge)
+            return shellRoot.width;
+        return units.gridUnit * 10;
+    }
+    height: {
+        if (edge == Qt.LeftEdge || edge == Qt.RightEdge)
+            return shellRoot.height;
+        return units.gridUnit * 10;
+    }
     clip: true
     onEdgeChanged: __priv.resetPosition()
     onWidthChanged: __priv.resetPosition()
