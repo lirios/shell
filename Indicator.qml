@@ -35,6 +35,7 @@ Item {
     property alias iconName: icon.iconName
     property alias text: label.text
     property int badgeCount: 0
+    property bool active: false
     property string tooltip
     readonly property bool selected: selectedIndicator == indicator
     property Component component
@@ -48,14 +49,29 @@ Item {
 
         var size = 0;
         if (iconName)
-            size += units.smallSpacing + icon.width;
+            size += icon.width + (units.smallSpacing * 2);
         if (text)
-            size += units.smallSpacing + label.width;
+            size += label.width + (units.smallSpacing * 2);
         if (iconName && text)
             size += units.smallSpacing * 2;
-        return size;
+        return Math.max(size, units.smallSpacing * 10);
     }
-    height: Math.max(icon.height, label.height) + (units.smallSpacing * 2)
+    height: Math.max(Math.max(icon.height, label.height) + (units.smallSpacing * 2), units.smallSpacing * 10)
+
+    Rectangle {
+        id: container
+        anchors.fill: parent
+        radius: width * 0.5
+        color: Theme.panel.selectedBackgroundColor
+        opacity: active ? 1.0 : 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: units.shortDuration
+            }
+        }
+    }
 
     MouseArea {
         anchors.fill: parent
