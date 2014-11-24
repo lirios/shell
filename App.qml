@@ -44,6 +44,15 @@ Window {
         source: "/usr/share/wallpapers/Fresh_Morning/contents/images/1920x1200.jpg"
     }
 
+    Clock {
+        id: clock
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+        }
+        onClicked: topDrawer.toggle()
+    }
+
     Panel {
         id: panel
         anchors {
@@ -97,5 +106,11 @@ Window {
             anchors.fill: parent
             anchors.margins: units.largeSpacing
         }
+    }
+
+    SlidingPanel {
+        id: topDrawer
+        edge: Qt.TopEdge
+        height: units.gridUnit * 15
     }
 }
