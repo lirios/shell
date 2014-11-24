@@ -150,8 +150,12 @@ function mapApplicationSurface(surface) {
     // Determine window position
     switch (surface.windowType) {
     case WaylandQuickSurface.Toplevel:
-        pos = compositor.calculateInitialPosition(surface);
-        surface.globalPosition = pos;
+        if (surface.state == WaylandQuickSurface.Normal) {
+            pos = compositor.calculateInitialPosition(surface);
+            surface.globalPosition = pos;
+        } else {
+            pos = surface.globalPosition;
+        }
         pos = _greenisland_output.mapToOutput(pos);
         break;
     case WaylandQuickSurface.Popup:
