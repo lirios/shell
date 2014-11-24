@@ -77,7 +77,7 @@ Item {
                 break;
             case Qt.BottomEdge:
                 x = 0;
-                y = -slidingPanel.height;
+                y = shellRoot.height + slidingPanel.height;
                 break;
             default:
                 break;
@@ -87,12 +87,12 @@ Item {
         function setFinalPosition() {
             switch (edge) {
             case Qt.LeftEdge:
-                x = slidingPanel.width;
+                x = 0;
                 y = 0;
                 break;
             case Qt.TopEdge:
                 x = 0;
-                y = slidingPanel.height;
+                y = 0;
                 break;
             case Qt.RightEdge:
                 x = shellRoot.width - slidingPanel.width;
@@ -100,7 +100,7 @@ Item {
                 break;
             case Qt.BottomEdge:
                 x = 0;
-                y = slidingPanel.height;
+                y = shellRoot.height - slidingPanel.height;
                 break;
             default:
                 break;
