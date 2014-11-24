@@ -25,9 +25,25 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Layouts 1.0
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 import ".."
 
 Indicator {
     name: "settings"
     iconName: "preferences-system-symbolic"
+    component: Component {
+        ColumnLayout {
+            spacing: units.largeSpacing
+
+            PlasmaExtras.Heading {
+                text: qsTr("Settings")
+                color: Theme.panel.textColor
+            }
+
+            Item {
+                Layout.fillHeight: true
+            }
+        }
+    }
 }
