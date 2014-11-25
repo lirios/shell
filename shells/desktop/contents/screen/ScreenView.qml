@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import "plasmapackage:/"
+import ".."
 
 Item {
     readonly property string name: _greenisland_output.name
@@ -151,7 +151,7 @@ Item {
             Image {
                 id: backgroundLayer
                 anchors.fill: parent
-                source: "../../images/wallpaper.png"
+                source: "../images/wallpaper.png"
                 fillMode: Image.Tile
             }
 

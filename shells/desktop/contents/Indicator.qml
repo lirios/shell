@@ -27,8 +27,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import "plasmapackage:/"
-import "plasmapackage:/components"
+import ".."
+import "../components"
 
 Item {
     property string name

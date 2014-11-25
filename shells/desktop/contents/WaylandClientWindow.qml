@@ -29,7 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtCompositor 1.0
 import GreenIsland 1.0
-import "plasmapackage:/overlays"
+import "overlays"
 
 WaylandWindow {
     property var chrome: null
