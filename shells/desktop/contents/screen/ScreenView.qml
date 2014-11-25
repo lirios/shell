@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import ".."
+import "plasmapackage:/"
 
 Item {
     readonly property string name: _greenisland_output.name
