@@ -27,17 +27,17 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import ".."
+import "plasmapackage:/"
 
 Indicator {
-    name: "network"
-    iconName: "im-aim"
+    name: "settings"
+    iconName: "preferences-system-symbolic"
     component: Component {
         ColumnLayout {
             spacing: units.largeSpacing
 
             PlasmaExtras.Heading {
-                text: qsTr("Network")
+                text: qsTr("Settings")
                 color: Theme.panel.textColor
             }
 

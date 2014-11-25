@@ -26,18 +26,19 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import ".."
+import "plasmapackage:/"
 
 Indicator {
-    name: "settings"
-    iconName: "preferences-system-symbolic"
+    name: "chat"
+    iconName: "im-google"
     component: Component {
         ColumnLayout {
             spacing: units.largeSpacing
 
             PlasmaExtras.Heading {
-                text: qsTr("Settings")
+                text: qsTr("Messages")
                 color: Theme.panel.textColor
             }
 

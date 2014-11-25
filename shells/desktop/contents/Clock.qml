@@ -26,24 +26,47 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import ".."
+import QtQuick.Controls 1.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import "plasmapackage:/"
 
-Indicator {
-    name: "settings"
-    iconName: "audio-volume-high-symbolic"
-    component: Component {
-        ColumnLayout {
-            spacing: units.largeSpacing
+ColumnLayout {
+    property string timeFormat
 
-            PlasmaExtras.Heading {
-                text: qsTr("Volume")
-                color: Theme.panel.textColor
-            }
+    signal clicked()
 
-            Item {
-                Layout.fillHeight: true
-            }
-        }
+    id: root
+
+    PlasmaCore.DataSource {
+        id: timeDataSource
+        engine: "time"
+        connectedSources: ["Local"]
+        interval: 30000
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: root.clicked()
+    }
+
+    Label {
+        text: Qt.formatTime(timeDataSource.data["Local"]["DateTime"], timeFormat)
+        font.pointSize: 36
+        color: Theme.window.textColor
+
+        Layout.alignment: Qt.AlignCenter
+    }
+
+    Label {
+        text: Qt.formatDate(timeDataSource.data["Local"]["DateTime"], Locale.LongFormat)
+        font.pointSize: 18
+        color: Theme.window.textColor
+
+        Layout.alignment: Qt.AlignCenter
+    }
+
+    Component.onCompleted: {
+        // Remove seconds from time format
+        timeFormat = Qt.locale().timeFormat(Locale.ShortFormat).replace(/.ss?/i, "");
     }
 }

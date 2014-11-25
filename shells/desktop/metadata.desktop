@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Desktop
+Type=Service
+
+X-KDE-ServiceTypes=GreenIsland/Compositor
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=Pier Luigi Fiorini
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Email=pierluigi.fiorini@gmail.com
+X-KDE-PluginInfo-License=GPLv2+
+X-KDE-PluginInfo-Name=org.hawaii.desktop
+X-KDE-PluginInfo-Version=0.0.0
+X-KDE-PluginInfo-Website=
+

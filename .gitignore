@@ -1,2 +1,2 @@
-*.qmlproject
+build/
 *.user
