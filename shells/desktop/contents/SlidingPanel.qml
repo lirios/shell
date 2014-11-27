@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import ".."
+import "."
 
 Item {
     default property alias contents: background.children
@@ -37,12 +37,12 @@ Item {
     id: slidingPanel
     width: {
         if (edge == Qt.TopEdge || edge == Qt.BottomEdge)
-            return shellRoot.width;
+            return compositorRoot.screenView.width;
         return units.gridUnit * 10;
     }
     height: {
         if (edge == Qt.LeftEdge || edge == Qt.RightEdge)
-            return shellRoot.height;
+            return compositorRoot.screenView.height;
         return units.gridUnit * 10;
     }
     clip: true
@@ -80,12 +80,12 @@ Item {
                 y = -slidingPanel.height;
                 break;
             case Qt.RightEdge:
-                x = shellRoot.width + slidingPanel.width;
+                x = compositorRoot.screenView.width + slidingPanel.width;
                 y = 0;
                 break;
             case Qt.BottomEdge:
                 x = 0;
-                y = shellRoot.height + slidingPanel.height;
+                y = compositorRoot.screenView.height + slidingPanel.height;
                 break;
             default:
                 break;
@@ -103,12 +103,12 @@ Item {
                 y = 0;
                 break;
             case Qt.RightEdge:
-                x = shellRoot.width - slidingPanel.width;
+                x = compositorRoot.screenView.width - slidingPanel.width;
                 y = 0;
                 break;
             case Qt.BottomEdge:
                 x = 0;
-                y = shellRoot.height - slidingPanel.height;
+                y = compositorRoot.screenView.height - slidingPanel.height;
                 break;
             default:
                 break;

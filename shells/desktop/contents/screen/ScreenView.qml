@@ -25,7 +25,13 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Window 2.0
+import QtQuick.Controls 1.1
+import QtGraphicalEffects 1.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 2.0 as PlasmaComponents
 import ".."
+import "../indicators"
 
 Item {
     readonly property string name: _greenisland_output.name
@@ -151,14 +157,16 @@ Item {
             Image {
                 id: backgroundLayer
                 anchors.fill: parent
-                source: "../images/wallpaper.png"
-                fillMode: Image.Tile
+                source: "/usr/share/wallpapers/Green_Leaves/contents/images/1920x1080.png"
+                sourceSize.width: width
+                sourceSize.height: height
             }
 
-            // Desktop is only above to the background
-            Item {
+            // Desktop is only above background
+            Desktop {
                 id: desktopLayer
                 anchors.fill: parent
+                onClockClicked: topDrawer.toggle()
             }
 
             // Workspaces
@@ -171,6 +179,70 @@ Item {
             Item {
                 id: panelsLayer
                 anchors.fill: parent
+
+                Panel {
+                    id: panel
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+                    z: 2
+
+                    onMenuTriggered: {
+                        leftDrawer.toggle();
+                    }
+                    onIndicatorTriggered: {
+                        // Close drawer if the current indicator is triggered again
+                        if (indicator.selected) {
+                            if (rightDrawer.status === PlasmaComponents.DialogStatus.Open) {
+                                rightDrawer.close();
+                                selectedIndicator = null;
+                            }
+
+                            return;
+                        }
+
+                        // Load indicator component
+                        if (indicator != lastIndicator)
+                            stackView.push(indicator.component);
+
+                        // Open drawer if necessary
+                        if (rightDrawer.status === PlasmaComponents.DialogStatus.Closed)
+                            rightDrawer.open();
+
+                        // Save a reference to the currently open indicator
+                        selectedIndicator = indicator;
+                        lastIndicator = indicator;
+                    }
+                }
+
+                SlidingPanel {
+                    id: leftDrawer
+                    edge: Qt.LeftEdge
+                    width: units.gridUnit * 20
+                    z: 1
+                }
+
+                SlidingPanel {
+                    id: rightDrawer
+                    edge: Qt.RightEdge
+                    width: units.gridUnit * 16
+                    z: 1
+
+                    StackView {
+                        id: stackView
+                        anchors.fill: parent
+                        anchors.margins: units.largeSpacing
+                    }
+                }
+
+                SlidingPanel {
+                    id: topDrawer
+                    edge: Qt.TopEdge
+                    height: units.gridUnit * 15
+                    z: 1
+                }
             }
 
             // Notifications are above panels
