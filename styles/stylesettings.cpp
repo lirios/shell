@@ -37,7 +37,7 @@ StyleSettings::StyleSettings(QObject *parent)
 
 QString StyleSettings::name() const
 {
-    return QStringLiteral("Maui");
+    return QStringLiteral("Wind");
 }
 
 QString StyleSettings::path() const
