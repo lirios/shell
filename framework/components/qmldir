@@ -1,0 +1,5 @@
+module Hawaii.Components
+Icon 1.0 Icon.qml
+NoiseBackground 1.0 NoiseBackground.qml
+SmoothFadeImage 1.0 SmoothFadeImage.qml
+SmoothFadeLoader 1.0 SmoothFadeLoader.qml

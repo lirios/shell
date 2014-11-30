@@ -1,0 +1,2 @@
+module Hawaii.Core
+plugin declarative_hawaiicore
