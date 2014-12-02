@@ -49,6 +49,7 @@ Item {
     onEdgeChanged: __priv.resetPosition()
     onWidthChanged: __priv.resetPosition()
     onHeightChanged: __priv.resetPosition()
+    visible: false
 
     Behavior on x {
         NumberAnimation {
@@ -129,12 +130,11 @@ Item {
         color: Theme.panel.backgroundColor
     }
 
-    Component.onCompleted: __priv.setInitialPosition()
-
     function open() {
         if (__priv.open)
             return;
 
+        visible = true;
         __priv.setFinalPosition();
         __priv.open = true;
     }
