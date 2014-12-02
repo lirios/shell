@@ -204,8 +204,10 @@ Item {
                         }
 
                         // Load indicator component
-                        if (indicator != lastIndicator)
-                            stackView.push(indicator.component);
+                        if (indicator !== lastIndicator) {
+                            var closed = rightDrawer.status === PlasmaComponents.DialogStatus.Closed;
+                            stackView.push({item: indicator.component, immediate:closed});
+                        }
 
                         // Open drawer if necessary
                         if (rightDrawer.status === PlasmaComponents.DialogStatus.Closed)
