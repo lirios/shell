@@ -38,6 +38,7 @@ Item {
     property bool active: false
     property string tooltip
     readonly property bool selected: selectedIndicator == indicator
+    readonly property bool expanded: __priv.expanded
     property Component component
 
     signal triggered(var caller)
@@ -57,6 +58,13 @@ Item {
         return Math.max(size, units.smallSpacing * 10);
     }
     height: Math.max(Math.max(icon.height, label.height) + (units.smallSpacing * 2), units.smallSpacing * 10)
+    onTriggered: __priv.expanded = !__priv.expanded
+
+    QtObject {
+        id: __priv
+
+        property bool expanded: false
+    }
 
     Rectangle {
         id: container
