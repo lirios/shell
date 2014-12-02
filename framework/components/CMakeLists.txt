@@ -12,6 +12,7 @@ install(FILES ${FILES}
 set(LISTITEMS_FILES
     ListItems/Base.qml
     ListItems/Empty.qml
+    ListItems/Subtitled.qml
     ListItems/Standard.qml
     ListItems/Highlight.qml
     ListItems/qmldir
