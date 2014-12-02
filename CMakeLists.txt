@@ -67,6 +67,8 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Qml Quick)
 find_package(KF5 REQUIRED COMPONENTS Package)
 
 # Subdirectories
+add_subdirectory(framework)
+add_subdirectory(headers)
 add_subdirectory(shells)
 
 # Display featute summary

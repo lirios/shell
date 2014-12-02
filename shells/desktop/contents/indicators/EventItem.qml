@@ -27,10 +27,10 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Hawaii.Components 1.0 as Components
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import ".."
-import "../components"
 
 MouseArea {
     property bool expanded: false
@@ -74,7 +74,7 @@ MouseArea {
     RowLayout {
         spacing: units.largeSpacing
 
-        Icon {
+        Components.Icon {
             id: icon
             width: units.iconSizes.medium
             height: width

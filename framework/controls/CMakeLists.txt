@@ -12,4 +12,4 @@ set(FILES
 )
 
 install(FILES ${FILES}
-        DESTINATION ${QML_INSTALL_DIR}/Hawaii/Shell/Controls)
+        DESTINATION ${QML_INSTALL_DIR}/Hawaii/Controls)

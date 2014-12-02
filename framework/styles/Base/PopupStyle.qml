@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell.Controls.Styles 1.0 as Styles
+import Hawaii.Controls.Styles 1.0 as Styles
 
 Styles.Style {
     property Component panel: Rectangle {

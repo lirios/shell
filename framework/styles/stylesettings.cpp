@@ -46,7 +46,7 @@ QString StyleSettings::path() const
     QString style = name();
 
     // Try standard path first
-    QString path = QString("%1/Hawaii/Shell/Controls/Styles/%2").arg(QML_INSTALL_DIR).arg(style);
+    QString path = QString("%1/Hawaii/Controls/Styles/%2").arg(QML_INSTALL_DIR).arg(style);
     if (QDir(path).exists())
         return path;
 
@@ -62,7 +62,7 @@ QString StyleSettings::path() const
     }
 
     // Fall back to Base style
-    return QString("file://%1/Hawaii/Shell/Controls/Styles/Base").arg(QML_INSTALL_DIR);
+    return QString("file://%1/Hawaii/Controls/Styles/Base").arg(QML_INSTALL_DIR);
 }
 
 #include "moc_stylesettings.cpp"

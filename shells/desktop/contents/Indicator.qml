@@ -26,9 +26,9 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import Hawaii.Components 1.0 as Components
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "."
-import "components"
 
 Item {
     property string name
@@ -79,7 +79,7 @@ Item {
         onClicked: indicator.triggered(indicator)
     }
 
-    Icon {
+    Components.Icon {
         id: icon
         anchors.centerIn: parent
         color: selected ? Theme.panel.selectedTextColor : Theme.panel.textColor
