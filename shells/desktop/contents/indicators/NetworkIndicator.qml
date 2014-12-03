@@ -24,14 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Layouts 1.0
+import QtQuick 2.1
+import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.1
 import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
+import Hawaii.Components 1.0 as Components
 import ".."
+import "network" as NetworkIndicator
 
 Indicator {
+    id: indicator
     name: "network"
-    iconName: "im-aim"
+    iconName: massageIconName(connectionIconProvider.connectionIcon)
     component: Component {
         ColumnLayout {
             spacing: units.largeSpacing
@@ -41,9 +46,54 @@ Indicator {
                 color: Theme.panel.textColor
             }
 
-            Item {
+            Components.Icon {
+                property bool airplaneMode: false
+
+                iconName: airplaneMode ? "airplane-mode-symbolic" : "airplane-mode-disabled-symbolic"
+                width: units.iconSizes.smallMedium
+                height: width
+                color: Theme.panel.textColor
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        handler.enableAirplaneMode(airplaneMode);
+                        airplaneMode = !airplaneMode;
+                    }
+                }
+            }
+
+            ScrollView {
+                ListView {
+                    model: PlasmaNM.AppletProxyModel {
+                        sourceModel: PlasmaNM.NetworkModel {}
+                    }
+                    clip: true
+                    currentIndex: -1
+                    section.property: "Section"
+                    section.delegate: NetworkIndicator.Header { text: section }
+                    delegate: NetworkIndicator.ConnectionItem {}
+                }
+
+                Layout.fillWidth: true
                 Layout.fillHeight: true
             }
         }
+    }
+    visible: connectionIconProvider.connectionIcon !== "network-unavailable"
+
+    PlasmaNM.ConnectionIcon {
+        id: connectionIconProvider
+    }
+
+    PlasmaNM.Handler {
+        id: handler
+    }
+
+    function massageIconName(iconName) {
+        var newName = iconName.replace("-activated", "");
+        if (newName !== "")
+            return newName + "-symbolic";
+        return newName;
     }
 }

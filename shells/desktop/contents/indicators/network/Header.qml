@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Kahai.
  *
- * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -25,27 +25,26 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import ".."
+import "../.."
 
-Indicator {
-    name: "chat"
-    iconName: "im-google"
-    component: Component {
-        ColumnLayout {
-            spacing: units.largeSpacing
+RowLayout {
+    property alias text: label.text
 
-            PlasmaExtras.Heading {
-                text: qsTr("Messages")
-                color: Theme.panel.textColor
-            }
+    spacing: units.smallSpacing
+    width: ListView.view.width
+    height: Math.max(label.paintedHeight, refreshButton.height) + (units.smallSpacing * 2)
 
-            Item {
-                Layout.fillHeight: true
-            }
-        }
+    Label {
+        id: label
+        font.weight: Font.DemiBold
+        color: Theme.panel.textColor
     }
-    visible: false
+
+    ToolButton {
+        id: refreshButton
+        iconName: "refresh-symbolic"
+    }
 }

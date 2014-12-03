@@ -48,6 +48,7 @@ Indicator {
             }
         }
     }
+    visible: false
 
     PlasmaCore.DataSource {
         id: pmSource
