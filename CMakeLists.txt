@@ -69,6 +69,7 @@ find_package(KF5 REQUIRED COMPONENTS Package)
 # Subdirectories
 add_subdirectory(framework)
 add_subdirectory(headers)
+add_subdirectory(platformtheme)
 add_subdirectory(shells)
 
 # Display featute summary
