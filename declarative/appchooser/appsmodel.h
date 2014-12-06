@@ -66,7 +66,6 @@ class AppsModel : public AbstractModel
     Q_PROPERTY(bool flat READ flat WRITE setFlat NOTIFY flatChanged)
     Q_PROPERTY(QString entryPath READ entryPath WRITE setEntryPath NOTIFY entryPathChanged)
     Q_PROPERTY(int appNameFormat READ appNameFormat WRITE setAppNameFormat NOTIFY appNameFormatChanged)
-    Q_PROPERTY(QObject* appletInterface READ appletInterface WRITE setAppletInterface);
 
     public:
         explicit AppsModel(const QString &entryPath = QString(), bool flat = false, QObject *parent = 0);
@@ -88,9 +87,6 @@ class AppsModel : public AbstractModel
 
         int appNameFormat() const;
         void setAppNameFormat(int format);
-
-        QObject *appletInterface() const;
-        void setAppletInterface(QObject *appletInterface);
 
     Q_SIGNALS:
         void refreshing() const;
@@ -115,7 +111,6 @@ class AppsModel : public AbstractModel
         bool m_flat;
         AppEntry::NameFormat m_appNameFormat;
         bool m_sortNeeded;
-        static ContainmentInterface *m_containmentInterface;
 };
 
 #endif

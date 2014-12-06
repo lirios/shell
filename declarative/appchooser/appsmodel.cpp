@@ -20,7 +20,6 @@
 
 #include "appsmodel.h"
 #include "actionlist.h"
-#include "containmentinterface.h"
 
 #include <QTimer>
 
@@ -67,8 +66,6 @@ AppEntry::AppEntry(KService::Ptr service, NameFormat nameFormat)
     m_service = service;
 }
 
-ContainmentInterface *AppsModel::m_containmentInterface = 0;
-
 AppsModel::AppsModel(const QString &entryPath, bool flat, QObject *parent)
 : AbstractModel(parent)
 , m_entryPath(entryPath)
@@ -111,6 +108,7 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
         }
     } else if (role == Kicker::HasActionListRole) {
         return (m_entryList.at(index.row())->type() == AbstractEntry::RunnableType);
+#if 0
     } else if (role == Kicker::ActionListRole) {
         if (m_containmentInterface) {
             QVariantList actionList;
@@ -130,6 +128,7 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
 
             return actionList;
         }
+#endif
     } else if (role == Kicker::UrlRole) {
         if (m_entryList.at(index.row())->type() == AbstractEntry::RunnableType) {
             return QUrl::fromLocalFile(static_cast<AppEntry *>(m_entryList.at(index.row()))->service()->entryPath());
@@ -156,6 +155,7 @@ bool AppsModel::trigger(int row, const QString &actionId, const QVariant &argume
         return false;
     }
 
+#if 0
     if (actionId == "addToDesktop" && m_containmentInterface
         && m_containmentInterface->mayAddLauncher(ContainmentInterface::Desktop)) {
         m_containmentInterface->addLauncher(ContainmentInterface::Desktop,
@@ -170,6 +170,9 @@ bool AppsModel::trigger(int row, const QString &actionId, const QVariant &argume
         m_containmentInterface->addLauncher(ContainmentInterface::TaskManager,
             static_cast<AppEntry *>(m_entryList.at(row))->service()->entryPath());
     } else if (actionId.isEmpty()) {
+#else
+    if (actionId.isEmpty()) {
+#endif
         KService::Ptr service = static_cast<AppEntry *>(m_entryList.at(row))->service();
 
         bool ran = KRun::run(*service, QList<QUrl>(), 0);
@@ -239,24 +242,6 @@ void AppsModel::setAppNameFormat(int format)
 
         emit appNameFormatChanged();
     }
-}
-
-QObject* AppsModel::appletInterface() const
-{
-    if (m_containmentInterface) {
-        return m_containmentInterface;
-    }
-
-    return 0;
-}
-
-void AppsModel::setAppletInterface(QObject* appletInterface)
-{
-    if (!m_containmentInterface) {
-        m_containmentInterface = new ContainmentInterface(this);
-    }
-
-    m_containmentInterface->setApplet(appletInterface);
 }
 
 void AppsModel::refresh()

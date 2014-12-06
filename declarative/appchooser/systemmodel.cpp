@@ -26,7 +26,6 @@
 
 #include <KAuthorized>
 #include <KLocalizedString>
-#include <kworkspace.h>
 #include <Solid/PowerManagement>
 
 SystemEntry::SystemEntry(SystemEntry::Action action, const QString &name, const QString &icon)
@@ -54,11 +53,13 @@ SystemModel::SystemModel(QObject *parent) : AbstractModel(parent)
         m_entryList << new SystemEntry(SystemEntry::LogoutSession, i18n("Logout"), "system-log-out");
     }
 
+#if 0
     if (KAuthorized::authorizeKAction("start_new_session")
         && m_displayManager.isSwitchable()
         && m_displayManager.numReserve() >= 0) {
         m_entryList << new SystemEntry(SystemEntry::NewSession, i18n("New Session"), "system-switch-user");
     }
+#endif
 
     QSet<Solid::PowerManagement::SleepState> sleepStates = Solid::PowerManagement::supportedSleepStates();
 
@@ -117,6 +118,7 @@ bool SystemModel::trigger(int row, const QString &actionId, const QVariant &argu
                 interface.asyncCall("Lock");
                 break;
             }
+#if 0
             case SystemEntry::LogoutSession:
                 KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeNone);
                 break;
@@ -128,18 +130,21 @@ bool SystemModel::trigger(int row, const QString &actionId, const QVariant &argu
                 m_displayManager.startReserve();
                 break;
             };
+#endif
             case SystemEntry::SuspendToRam:
                 Solid::PowerManagement::requestSleep(Solid::PowerManagement::SuspendState, 0, 0);
                 break;
             case SystemEntry::SuspendToDisk:
                 Solid::PowerManagement::requestSleep(Solid::PowerManagement::HibernateState, 0, 0);
                 break;
+#if 0
             case SystemEntry::Shutdown:
                 KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeHalt);
                 break;
             case SystemEntry::Reboot:
                 KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeReboot);
                 break;
+#endif
         }
 
         return true;

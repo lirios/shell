@@ -23,8 +23,6 @@
 #include "abstractentry.h"
 #include "abstractmodel.h"
 
-#include <kworkspace5/kdisplaymanager.h>
-
 class SystemEntry : public AbstractEntry
 {
     public:
@@ -68,7 +66,6 @@ class SystemModel : public AbstractModel
     private:
         QList<SystemEntry *> m_entryList;
         QHash<SystemEntry::Action, QString> m_favoriteIds;
-        KDisplayManager m_displayManager;
 };
 
 #endif
