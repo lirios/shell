@@ -39,7 +39,8 @@ RowLayout {
         id: systemModel
 
         function triggerAction(action) {
-            plasmoid.expanding = false;
+            if (indicator.expanded)
+                indicator.triggered(indicator);
             return trigger(rowForFavoriteId(action), "", null);
         }
     }

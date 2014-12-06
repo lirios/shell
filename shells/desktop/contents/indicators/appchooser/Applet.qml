@@ -37,7 +37,8 @@ Item {
         id: processRunner
 
         function executeUserSettings() {
-            plasmoid.expanded = false;
+            if (indicator.expanded)
+                indicator.triggered(indicator);
             runUserSettings();
         }
     }

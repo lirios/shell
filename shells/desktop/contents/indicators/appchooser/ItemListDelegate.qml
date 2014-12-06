@@ -88,7 +88,8 @@ Item {
         acceptedButtons: Qt.LeftButton
         onClicked: {
             parent.ListView.view.model.trigger(index, "", null);
-            plasmoid.expanded = false;
+            if (indicator.expanded)
+                indicator.triggered(indicator);
         }
     }
 

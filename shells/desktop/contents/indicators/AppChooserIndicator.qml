@@ -29,6 +29,7 @@ import ".."
 import "appchooser" as AppChooser
 
 Indicator {
+    id: indicator
     name: "appchooser"
     text: qsTr("Menu")
     component: Component {
