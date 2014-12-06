@@ -38,7 +38,7 @@ Rectangle {
     signal indicatorTriggered(var indicator)
 
     color: "transparent"
-    height: units.iconSizes.large
+    height: launcher.itemSize
 
     RowLayout {
         anchors.fill: parent
