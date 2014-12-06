@@ -189,10 +189,16 @@ Item {
                     }
                     z: 2
 
-                    onMenuTriggered: {
-                        leftDrawer.toggle();
-                    }
                     onIndicatorTriggered: {
+                        // AppChooser special case
+                        if (indicator.name === "appchooser") {
+                            // Load AppChooser component
+                            if (leftDrawer.loader.status != Loader.Ready)
+                                leftDrawer.loader.sourceComponent = indicator.component;
+                            leftDrawer.toggle();
+                            return;
+                        }
+
                         // Close drawer if the current indicator is triggered again
                         if (indicator.selected) {
                             if (rightDrawer.status === PlasmaComponents.DialogStatus.Open) {
@@ -220,10 +226,18 @@ Item {
                 }
 
                 SlidingPanel {
+                    property alias loader: loader
+
                     id: leftDrawer
                     edge: Qt.LeftEdge
                     width: units.gridUnit * 20
                     z: 1
+
+                    Loader {
+                        id: loader
+                        anchors.fill: parent
+                        anchors.margins: units.largeSpacing
+                    }
                 }
 
                 SlidingPanel {

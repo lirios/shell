@@ -34,7 +34,6 @@ Rectangle {
     property Indicator selectedIndicator: null
     property Indicator lastIndicator: null
 
-    signal menuTriggered()
     signal indicatorTriggered(var indicator)
 
     color: "transparent"
@@ -48,7 +47,7 @@ Rectangle {
             spacing: units.largeSpacing
 
             AppChooserIndicator {
-                onTriggered: menuTriggered()
+                onTriggered: indicatorTriggered(caller)
             }
 
             Layout.alignment: Qt.AlignLeft

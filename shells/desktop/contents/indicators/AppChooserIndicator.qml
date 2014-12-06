@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import ".."
-import "../appchooser" as AppChooser
+import "appchooser" as AppChooser
 
 Indicator {
     name: "appchooser"
