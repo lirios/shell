@@ -31,8 +31,6 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.hawaii.appchooser 0.1 as AppChooser
 
 Item {
-    property int mode: Qt.Vertical
-
     id: root
 
     AppChooser.ProcessRunner {
@@ -56,18 +54,6 @@ Item {
         imagePath: "widgets/line"
     }
 
-    Component {
-        id: horizontalView
-
-        HorizontalView {}
-    }
-
-    Component {
-        id: verticalView
-
-        VerticalView {}
-    }
-
     ColumnLayout {
         id: layout
         anchors.fill: parent
@@ -79,7 +65,7 @@ Item {
         }
 
         Item {
-            StackView {
+            VerticalView {
                 id: view
                 anchors.fill: parent
                 visible: !runnerView.visible
@@ -108,27 +94,6 @@ Item {
                 id: modeGroup
             }
 
-            Row {
-                id: runnerColumns
-                visible: false
-
-                ToolButton {
-                    checkable: true
-                    checked: mode == Qt.Vertical
-                    exclusiveGroup: modeGroup
-                    iconName: "view-list-symbolic"
-                    onClicked: switchMode(Qt.Vertical)
-                }
-
-                ToolButton {
-                    checkable: true
-                    checked: mode == Qt.Horizontal
-                    exclusiveGroup: modeGroup
-                    iconName: "view-paged-symbolic"
-                    onClicked: switchMode(Qt.Horizontal)
-                }
-            }
-
             TextField {
                 id: searchField
                 placeholderText: i18n("Search...")
@@ -145,22 +110,5 @@ Item {
         ShutdownActions {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
         }
-    }
-
-    Component.onCompleted: switchMode(root.mode)
-
-    function switchMode(orientation) {
-        if (orientation === Qt.Vertical) {
-            view.push(verticalView);
-            root.width = units.largeSpacing * 16;
-        } else {
-            view.push(horizontalView);
-            root.width = units.largeSpacing * 48;
-        }
-
-        // Simulate slide pnale with a very large height
-        root.height = 10000;
-
-        root.mode = orientation;
     }
 }
