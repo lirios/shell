@@ -26,47 +26,57 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import Hawaii.Shell.Controls 1.0 as Controls
-import org.kde.plasma.plasmoid 2.0
+import QtQuick.Controls 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.hawaii.appchooser.private 0.1 as AppChooser
-import Hawaii.Components 1.0
+import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
+import Hawaii.Components 1.0 as Components
 
-RowLayout {
-    implicitWidth: (units.iconSizes.large * 3) + (spacing * 3)
-    implicitHeight: units.iconSizes.large + (spacing * 2)
-    spacing: units.largeSpacing
+ColumnLayout {
+    width: GridView.view.cellWidth
+    height: GridView.view.cellHeight
+    spacing: units.smallSpacing
 
-    AppChooser.SystemModel {
-        id: systemModel
+/*
+    Components.Icon {
+        id: icon
+        width: units.iconSizes.large
+        height: width
+        iconName: model.iconName
 
-        function triggerAction(action) {
-            plasmoid.expanding = false;
-            return trigger(rowForFavoriteId(action), "", null);
+        Layout.alignment: Qt.AlignCenter
+    }
+*/
+    KQuickControls.QIconItem {
+        id: icon
+        width: units.iconSizes.large
+        height: width
+        icon: model.decoration
+
+        Layout.alignment: Qt.AlignCenter
+    }
+
+    Label {
+        id: label
+        text: model.display
+        color: PlasmaCore.ColorScope.textColor
+        wrapMode: Text.Wrap
+        horizontalAlignment: Qt.AlignHCenter
+        verticalAlignment: Qt.AlignTop
+        textFormat: Text.PlainText
+
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        onClicked: {
+            parent.GridView.view.model.trigger(index, "", null);
+            plasmoid.expanded = false;
         }
     }
 
-    Controls.ToolButton {
-        width: units.iconSizes.large
-        height: width
-        iconName: "system-log-out-symbolic"
-        tooltip: i18n("Log out from current session")
-        onClicked: systemModel.triggerAction("logout")
-    }
-
-    Controls.ToolButton {
-        width: units.iconSizes.large
-        height: width
-        iconName: "system-shutdown-symbolic"
-        tooltip: i18n("Power off the system")
-        onClicked: systemModel.triggerAction("shutdown")
-    }
-
-    Controls.ToolButton {
-        width: units.iconSizes.large
-        height: width
-        iconName: "system-reboot-symbolic"
-        tooltip: i18n("Restart the system")
-        onClicked: systemModel.triggerAction("reboot")
-    }
+    Accessible.role: Accessible.MenuItem
+    Accessible.name: label.text
 }

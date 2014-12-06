@@ -25,9 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.hawaii.appchooser.private 0.1 as AppChooser
+import org.hawaii.appchooser 0.1 as AppChooser
 
 FocusScope {
     property alias model: gridView.model
@@ -47,7 +46,6 @@ FocusScope {
         flat: true
         entryPath: "/"
         appNameFormat: 0
-        appletInterface: plasmoid
     }
 
     GridView {

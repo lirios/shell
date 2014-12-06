@@ -24,13 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Layouts 1.0
+import QtQuick 2.1
+import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import Hawaii.Shell.Controls 1.0 as Controls
-import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.hawaii.appchooser.private 0.1 as AppChooser
+import org.hawaii.appchooser 0.1 as AppChooser
 
 Item {
     property int mode: Qt.Vertical
@@ -87,9 +85,9 @@ Item {
                 visible: !runnerView.visible
             }
 
-            Controls.ScrollView {
+            ScrollView {
                 anchors.fill: parent
-                visible: (searchField != "") && (runnerModel.count > 0)
+                visible: (searchField !== "") && (runnerModel.count > 0)
 
                 ListView {
                     id: runnerView
@@ -131,11 +129,11 @@ Item {
                 }
             }
 
-            Controls.TextField {
+            TextField {
                 id: searchField
                 placeholderText: i18n("Search...")
                 focus: true
-                clearButtonShown: true
+                //clearButtonShown: true
                 onTextChanged: runnerModel.query = text
 
                 Layout.fillWidth: true
@@ -152,7 +150,7 @@ Item {
     Component.onCompleted: switchMode(root.mode)
 
     function switchMode(orientation) {
-        if (orientation == Qt.Vertical) {
+        if (orientation === Qt.Vertical) {
             view.push(verticalView);
             root.width = units.largeSpacing * 16;
         } else {

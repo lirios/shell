@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kcoreaddons 1.0 as KCoreAddons
-import Hawaii.Components 1.0
+import Hawaii.Components 1.0 as Components
 
 RowLayout {
     spacing: units.largeSpacing
@@ -39,7 +39,7 @@ RowLayout {
         onFaceIconUrlChanged: setFaceIcon()
     }
 
-    Icon {
+    Components.Icon {
         id: faceIcon
         width: units.iconSizes.large
         height: width

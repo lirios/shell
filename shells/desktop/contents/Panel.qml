@@ -47,8 +47,7 @@ Rectangle {
             id: leftContainer
             spacing: units.largeSpacing
 
-            Indicator {
-                text: qsTr("Menu")
+            AppChooserIndicator {
                 onTriggered: menuTriggered()
             }
 

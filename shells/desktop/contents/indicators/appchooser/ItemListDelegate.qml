@@ -27,10 +27,9 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
-import Hawaii.Components 1.0
+import Hawaii.Components 1.0 as Components
 
 Item {
     width: ListView.view.width
@@ -41,7 +40,7 @@ Item {
         spacing: units.smallSpacing
 
 /*
-        Icon {
+        Components.Icon {
             id: icon
             width: units.iconSizes.large
             height: width

@@ -27,9 +27,8 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
-import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.hawaii.appchooser.private 0.1 as AppChooser
+import org.hawaii.appchooser 0.1 as AppChooser
 
 Item {
     property int orientation: Qt.Horizontal
@@ -44,7 +43,6 @@ Item {
         id: categoriesModel
         flat: true
         appNameFormat: 0
-        appletInterface: plasmoid
     }
 
     ExclusiveGroup {
