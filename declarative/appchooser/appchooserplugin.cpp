@@ -19,6 +19,7 @@
 
 #include "appchooserplugin.h"
 #include "abstractmodel.h"
+#include "favoritesmodel.h"
 #include "funnelmodel.h"
 #include "processrunner.h"
 #include "rootmodel.h"
@@ -35,6 +36,7 @@ void KickerPlugin::registerTypes(const char *uri)
     qmlRegisterType<AbstractModel>();
 
     qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
+    qmlRegisterType<FavoritesModel>(uri, 0, 1, "FavoritesModel");
     qmlRegisterType<FunnelModel>(uri, 0, 1, "FunnelModel");
     qmlRegisterType<ProcessRunner>(uri, 0, 1, "ProcessRunner");
     qmlRegisterType<RootModel>(uri, 0, 1, "RootModel");
