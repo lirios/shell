@@ -61,12 +61,17 @@ set(QT_MIN_VERSION "5.3.0")
 set(KF5_MIN_VERSION "5.1.0")
 
 # Find Qt5
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Qml Quick)
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core DBus Gui Qml Quick)
 
 # Find KF5
-find_package(KF5 REQUIRED COMPONENTS Package)
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
+             KDELibs4Support
+             Package
+             Runner
+             Service)
 
 # Subdirectories
+add_subdirectory(declarative)
 add_subdirectory(framework)
 add_subdirectory(headers)
 add_subdirectory(platformtheme)
