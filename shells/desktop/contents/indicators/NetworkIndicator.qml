@@ -49,6 +49,7 @@ Indicator {
             Components.Icon {
                 property bool airplaneMode: false
 
+                id: airplaneModeIcon
                 iconName: airplaneMode ? "airplane-mode-symbolic" : "airplane-mode-disabled-symbolic"
                 width: units.iconSizes.smallMedium
                 height: width
@@ -57,8 +58,8 @@ Indicator {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        handler.enableAirplaneMode(airplaneMode);
-                        airplaneMode = !airplaneMode;
+                        handler.enableAirplaneMode(airplaneModeIcon.airplaneMode);
+                        airplaneModeIcon.airplaneMode = !airplaneModeIcon.airplaneMode;
                     }
                 }
             }
