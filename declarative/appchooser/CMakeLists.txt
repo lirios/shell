@@ -16,7 +16,6 @@ set(SOURCES
 )
 
 add_library(appchooserplugin SHARED ${SOURCES})
-set_target_properties(appchooserplugin PROPERTIES PREFIX "")
 target_link_libraries(appchooserplugin
                       Qt5::Core
                       Qt5::DBus
