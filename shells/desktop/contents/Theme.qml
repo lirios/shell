@@ -30,11 +30,15 @@ import QtQuick 2.0
 
 QtObject {
     property var window: QtObject {
-        readonly property color textColor: "#ffffff"
+        readonly property color textColor: "#f1f1f1"
         readonly property color textEffectColor: "#000000"
         readonly property color backgroundColor: "#3e4243"
-        readonly property color primaryColor: "#494c4d"
-        readonly property color secondaryColor: "#6f7678"
+        readonly property color primaryColor: "#6f7678"
+        readonly property color secondaryColor: "#494c4d"
+        readonly property color buttonPrimaryColor: "#92918c"
+        readonly property color buttonSecondaryColor: "#5e5d58"
+        readonly property color closeButtonPrimaryColor: "#f49073"
+        readonly property color closeButtonSecondaryColor: "#df4f1c"
     }
 
     property var view: QtObject {

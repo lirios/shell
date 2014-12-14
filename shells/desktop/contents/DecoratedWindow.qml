@@ -25,42 +25,16 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
 import QtCompositor 1.0
 import GreenIsland 1.0
-import "overlays"
+import "decoration"
 
 WaylandWindow {
-    property var chrome: null
     property bool animationsEnabled: false
     property alias savedProperties: saved
 
     id: clientWindow
     objectName: "clientWindow"
-
-    states: [
-        State {
-            name: "focused"
-            when: child.focus && !clientWindow.unresponsive
-            PropertyChanges { target: unresponsiveEffect; opacity: 0.0 }
-        },
-        State {
-            name: "unfocused"
-            when: !child.focus && !clientWindow.unresponsive
-            PropertyChanges { target: unresponsiveEffect; opacity: 0.0 }
-        },
-        State {
-            name: "focused-unresponsive"
-            when: child.focus && clientWindow.unresponsive
-            PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
-        },
-        State {
-            name: "unfocused-unresponsive"
-            when: !child.focus && clientWindow.unresponsive
-            PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
-        }
-    ]
 
     QtObject {
         id: saved
@@ -137,13 +111,9 @@ WaylandWindow {
         windowItem: clientWindow
     }
 
-    PopupWindowAnimation {
-        id: popupAnimation
-        windowItem: clientWindow
-    }
-
     Connections {
         target: child.surface
+        onSizeChanged: setSize()
         onUnmapped: runUnmapAnimation()
         onRaiseRequested: stackingOrder(true)
         onLowerRequested: stackingOrder(false)
@@ -171,11 +141,17 @@ WaylandWindow {
         }
     }
 
-    // Unresponsive effect
-    UnresponsiveOverlay {
-        id: unresponsiveEffect
+    // Decoration and actual surface
+    WindowDecoration {
+        id: decoration
         anchors.fill: parent
-        window: clientWindow
+        source: child
+        onClose: child.surface.destroySurface()
+    }
+
+    function setSize() {
+        clientWindow.width = child.surface.size.width + decoration.additionalWidth;
+        clientWindow.height = child.surface.size.height + decoration.additionalHeight;
     }
 
     function runMapAnimation() {
@@ -188,10 +164,6 @@ WaylandWindow {
         case WaylandQuickSurface.Transient:
             if (transientAnimation.map)
                 transientAnimation.map.start();
-            break;
-        case WaylandQuickSurface.Popup:
-            if (popupAnimation.map)
-                popupAnimation.map.start();
             break;
         default:
             break;
@@ -209,10 +181,6 @@ WaylandWindow {
             if (transientAnimation.unmap)
                 transientAnimation.unmap.start();
             break;
-        case WaylandQuickSurface.Popup:
-            if (popupAnimation.unmap)
-                popupAnimation.unmap.start();
-            break;
         default:
             break;
         }
@@ -228,10 +196,6 @@ WaylandWindow {
         case WaylandQuickSurface.Transient:
             if (transientAnimation.destroy)
                 transientAnimation.destroy.start();
-            break;
-        case WaylandQuickSurface.Popup:
-            if (popupAnimation.destroy)
-                popupAnimation.destroy.start();
             break;
         default:
             break;

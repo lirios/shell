@@ -25,16 +25,42 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import GreenIsland 1.0
+import "overlays"
 
 WaylandWindow {
-    id: shellWindow
-    objectName: "shellWindow"
+    property var chrome: null
 
-    Connections {
-        target: child.surface
-        onSizeChanged: {
-            shellWindow.width = child.surface.size.width
-            shellWindow.height = child.surface.size.height
+    id: clientWindow
+    objectName: "clientWindow"
+
+    states: [
+        State {
+            name: "focused"
+            when: child.focus && !clientWindow.unresponsive
+            PropertyChanges { target: unresponsiveEffect; opacity: 0.0 }
+        },
+        State {
+            name: "unfocused"
+            when: !child.focus && !clientWindow.unresponsive
+            PropertyChanges { target: unresponsiveEffect; opacity: 0.0 }
+        },
+        State {
+            name: "focused-unresponsive"
+            when: child.focus && clientWindow.unresponsive
+            PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
+        },
+        State {
+            name: "unfocused-unresponsive"
+            when: !child.focus && clientWindow.unresponsive
+            PropertyChanges { target: unresponsiveEffect; opacity: 1.0 }
         }
+    ]
+
+    // Unresponsive effect
+    UnresponsiveOverlay {
+        id: unresponsiveEffect
+        anchors.fill: parent
+        window: clientWindow
     }
 }

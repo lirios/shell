@@ -61,17 +61,17 @@ Item {
             child.surface.clientRenderingEnabled = visible;
     }
 
-    SurfaceRenderer {
-        anchors.fill: parent
-        source: child
+    QtObject {
+        id: margins
+
+        property real left: 0
+        property real top: 0
+        property real right: 0
+        property real bottom: 0
     }
 
     Connections {
         target: child.surface
-        onSizeChanged: {
-            waylandWindow.width = child.surface.size.width;
-            waylandWindow.height = child.surface.size.height;
-        }
         onPong: {
             // Surface replied with a pong this means it's responsive
             pingPongTimer.running = false;

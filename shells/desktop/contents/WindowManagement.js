@@ -110,8 +110,12 @@ function mapApplicationSurface(surface) {
             return;
     }
 
+    // Does it need a decoration?
+    var decorated = surface.windowType === WaylandQuickSurface.Toplevel ||
+            surface.windowType === WaylandQuickSurface.Transient;
+
     // Create surface item
-    var component = Qt.createComponent("WaylandClientWindow.qml");
+    var component = Qt.createComponent(decorated ? "DecoratedWindow.qml" : "UndecoratedWindow.qml");
     if (component.status !== Component.Ready) {
         console.error(component.errorString());
         return;
@@ -128,8 +132,7 @@ function mapApplicationSurface(surface) {
     var window = component.createObject(compositorRoot, {"child": child});
     window.child.parent = window;
     window.child.touchEventsEnabled = true;
-    window.width = surface.size.width;
-    window.height = surface.size.height;
+    window.setSize();
 
     // Transient parent view
     var transientParentView = null;
