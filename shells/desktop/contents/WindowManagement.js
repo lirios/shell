@@ -113,6 +113,8 @@ function mapApplicationSurface(surface) {
     // Does it need a decoration?
     var decorated = surface.windowType === WaylandQuickSurface.Toplevel ||
             surface.windowType === WaylandQuickSurface.Transient;
+    // XXX: Disable server-side decorations until ready
+    decorated = false;
 
     // Create surface item
     var component = Qt.createComponent(decorated ? "DecoratedWindow.qml" : "UndecoratedWindow.qml");
