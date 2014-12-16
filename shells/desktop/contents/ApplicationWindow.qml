@@ -63,4 +63,35 @@ WaylandWindow {
         anchors.fill: parent
         window: clientWindow
     }
+
+    /*
+     * Move windows with Super+Drag
+     */
+
+    Connections {
+        target: compositorRoot
+        onKeyPressed: {
+            if (event.modifiers & Qt.MetaModifier)
+                dnd.enabled = true;
+            event.accepted = false;
+        }
+        onKeyReleased: {
+            dnd.enabled = false;
+            event.accepted = false;
+        }
+    }
+
+    MouseArea {
+        id: dnd
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        drag {
+            target: clientWindow
+            axis: Drag.XAndYAxis
+            maximumX: clientWindow.parent.width
+            maximumY: clientWindow.parent.height
+        }
+        enabled: false
+        z: 1000000
+    }
 }

@@ -28,12 +28,16 @@ import QtQuick 2.0
 import QtCompositor 1.0
 import GreenIsland 1.0
 import GreenIsland.Core 1.0
+import org.hawaii.misc 0.1
 import "WindowManagement.js" as WindowManagement
 import "screen"
 
 Item {
     readonly property alias screenView: screenView
     readonly property alias surfaceModel: surfaceModel
+
+    signal keyPressed(var event)
+    signal keyReleased(var event)
 
     id: compositorRoot
 
@@ -148,6 +152,12 @@ Item {
         FpsCounter {
             id: fpsCounter
         }
+    }
+
+    // Key events filter
+    KeyEventFilter {
+        Keys.onPressed: compositorRoot.keyPressed(event)
+        Keys.onReleased: compositorRoot.keyReleased(event)
     }
 
     // Screen
