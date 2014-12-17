@@ -71,12 +71,15 @@ WaylandWindow {
     Connections {
         target: compositorRoot
         onKeyPressed: {
-            if (event.modifiers & Qt.MetaModifier)
+            if (event.modifiers & Qt.MetaModifier) {
                 dnd.enabled = true;
+                rotateMouseArea.enabled = true;
+            }
             event.accepted = false;
         }
         onKeyReleased: {
             dnd.enabled = false;
+            rotateMouseArea.enabled = false;
             event.accepted = false;
         }
     }
@@ -90,6 +93,25 @@ WaylandWindow {
             axis: Drag.XAndYAxis
             maximumX: clientWindow.parent.width
             maximumY: clientWindow.parent.height
+        }
+        enabled: false
+        z: 1000000
+    }
+
+    /*
+     * Rotate with Super+RightButton
+     */
+
+    MouseArea {
+        id: rotateMouseArea
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        onPositionChanged: {
+            var dx = mouse.x - (clientWindow.width * 0.5);
+            var dy = mouse.y - (clientWindow.height * 0.5);
+            var r = Math.sqrt(dx * dx, dy * dy);
+            if (r > 20)
+                clientWindow.rotation = Math.atan2(dx / r, -dy / r) * 50;
         }
         enabled: false
         z: 1000000
