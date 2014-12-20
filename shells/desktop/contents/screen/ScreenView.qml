@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtQuick.Window 2.0
 import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
+import GreenIsland 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import ".."
@@ -179,6 +180,28 @@ Item {
             Item {
                 id: panelsLayer
                 anchors.fill: parent
+
+                // Available area
+                Item {
+                    id: availableArea
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                        right: parent.right
+                    }
+                    height: parent.height - panel.height
+
+                    // Window switcher
+                    WindowSwitcher {
+                        id: windowSwitcher
+                        anchors {
+                            horizontalCenter: parent.horizontalCenter
+                            verticalCenter: parent.verticalCenter
+                        }
+                        width: parent.width - (units.largeSpacing * 2)
+                        height: (parent.height * 0.5) - (units.largeSpacing * 2)
+                    }
+                }
 
                 Panel {
                     id: panel
