@@ -40,6 +40,14 @@ Item {
     signal keyReleased(var event)
 
     id: compositorRoot
+    onKeyPressed: {
+        // Abort session
+        // TODO: Handle this as a keybinding
+        if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Backspace) {
+            event.accepted = true;
+            compositor.abortSession();
+        }
+    }
 
     Timer {
         id: idleTimer
