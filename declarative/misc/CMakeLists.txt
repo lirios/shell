@@ -1,6 +1,7 @@
 set(SOURCES
     miscplugin.cpp
     keyeventfilter.cpp
+    standardpaths.cpp
 )
 
 add_library(miscplugin SHARED ${SOURCES})

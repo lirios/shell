@@ -28,6 +28,16 @@
 
 #include "miscplugin.h"
 #include "keyeventfilter.h"
+#include "standardpaths.h"
+
+static QObject *standardpathsProvider(QQmlEngine *engine, QJSEngine *jsEngine)
+{
+    Q_UNUSED(engine);
+    Q_UNUSED(jsEngine);
+
+    StandardPaths *paths = new StandardPaths();
+    return paths;
+}
 
 void MiscPlugin::registerTypes(const char *uri)
 {
@@ -35,6 +45,8 @@ void MiscPlugin::registerTypes(const char *uri)
     Q_ASSERT(uri == QLatin1String("org.hawaii.misc"));
 
     qmlRegisterType<KeyEventFilter>(uri, 0, 1, "KeyEventFilter");
+    qmlRegisterSingletonType<StandardPaths>(uri, 0, 1, "StandardPaths",
+                                            standardpathsProvider);
 }
 
 #include "moc_miscplugin.cpp"
