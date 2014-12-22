@@ -76,7 +76,7 @@ Rectangle {
                 onTriggered: indicatorTriggered(caller)
             }
 
-            VolumeIndicator {
+            SoundIndicator {
                 onTriggered: indicatorTriggered(caller)
             }
 

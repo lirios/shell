@@ -26,19 +26,27 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import ".."
+import "sound" as SoundIndicator
 
 Indicator {
-    name: "settings"
+    name: "sound"
     iconName: "audio-volume-high-symbolic"
     component: Component {
         ColumnLayout {
             spacing: units.largeSpacing
 
             PlasmaExtras.Heading {
-                text: qsTr("Volume")
+                text: qsTr("Sound")
                 color: Theme.panel.textColor
+            }
+
+            SoundIndicator.MprisItem {
+                id: mpris
+
+                Layout.fillWidth: true
             }
 
             Item {
@@ -46,4 +54,6 @@ Indicator {
             }
         }
     }
+    // TODO: When a volume item will be available -> Or with mpris and volume item
+    visible: mpris.visible
 }
