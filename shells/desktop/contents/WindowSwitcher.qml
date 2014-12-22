@@ -114,6 +114,7 @@ Rectangle {
                     style: Text.Raised
                     styleColor: Theme.panel.textEffectColor
                     maximumLineCount: 2
+                    opacity: wrapper.ListView.isCurrentItem ? 1.0 : 0.6
 
                     Layout.fillWidth: true
                     Layout.fillHeight: true
