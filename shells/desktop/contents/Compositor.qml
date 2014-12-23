@@ -83,32 +83,32 @@ Item {
             screenView.layers.splash.opacity = 0.0;
 
             // Bring user layer up
-            screenView.setCurrentLayer("user");
+            screenView.state = "user";
         }
         onFadeOut: {
             // Bring splash layer up
-            screenView.setCurrentLayer("splash");
+            screenView.state = "splash";
 
             // Fade the desktop out
             screenView.layers.splash.opacity = 1.0;
         }
         onLocked: {
             // Bring lock layer up
-            screenView.setCurrentLayer("lock");
+            screenView.state = "lock";
         }
         onUnlocked: {
             // Fade the desktop in
             screenView.layers.splash.opacity = 0.0;
 
             // Bring user layer up
-            screenView.setCurrentLayer("user");
+            screenView.state = "user";
         }
         onReady: {
             // Fade the desktop in
             screenView.layers.splash.opacity = 0.0;
 
             // Bring user layer up
-            screenView.setCurrentLayer("user");
+            screenView.state = "user";
 
             // Start idle timer
             idleTimer.running = true

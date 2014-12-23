@@ -66,6 +66,53 @@ Item {
         yScale: zoomArea.zoom2
     }
 
+    QtObject {
+        id: __priv
+
+        readonly property int lowIndex: 0
+        readonly property int highIndex: 2000
+    }
+
+    /**
+     * Brings up the desired layer, the other layers are
+     * given a 0 z-index hence are shown based on their order
+     * in the code.
+     **/
+    states: [
+        State {
+            name: "splash"
+
+            PropertyChanges { target: splashLayer; z: __priv.highIndex }
+            PropertyChanges { target: modalOverlay; z: __priv.lowIndex }
+            PropertyChanges { target: lockLayer; z: __priv.lowIndex }
+            PropertyChanges { target: userLayer; z: __priv.lowIndex }
+        },
+        State {
+            name: "modal"
+
+            PropertyChanges { target: splashLayer; z: __priv.lowIndex }
+            PropertyChanges { target: modalOverlay; z: __priv.highIndex }
+            PropertyChanges { target: lockLayer; z: __priv.lowIndex }
+            PropertyChanges { target: userLayer; z: __priv.lowIndex }
+        },
+        State {
+            name: "lock"
+
+            PropertyChanges { target: splashLayer; z: __priv.lowIndex }
+            PropertyChanges { target: modalOverlay; z: __priv.lowIndex }
+            PropertyChanges { target: lockLayer; z: __priv.highIndex }
+            PropertyChanges { target: userLayer; z: __priv.lowIndex }
+        },
+        State {
+            name: "user"
+
+            PropertyChanges { target: splashLayer; z: __priv.lowIndex }
+            PropertyChanges { target: modalOverlay; z: __priv.lowIndex }
+            PropertyChanges { target: lockLayer; z: __priv.lowIndex }
+            PropertyChanges { target: userLayer; z: __priv.highIndex }
+        }
+    ]
+
     /*
      * Output information panel
      */
@@ -312,45 +359,6 @@ Item {
             onTopLeftTriggered: workspacesLayer.selectPrevious()
             onTopRightTriggered: workspacesLayer.selectNext()
             onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
-        }
-    }
-
-    /**
-     * Brings up the desired layer, the other layers are
-     * given a 0 z-index hence are shown based on their order
-     * in the code.
-     **/
-    function setCurrentLayer(type) {
-        var lowIndex = 0;
-        var highIndex = 2000;
-
-        switch (type) {
-        case "splash":
-            splashLayer.z = highIndex;
-            modalOverlay.z = lowIndex;
-            lockLayer.z = lowIndex;
-            userLayer.z = lowIndex;
-            break;
-        case "modal":
-            splashLayer.z = lowIndex;
-            modalOverlay.z = highIndex;
-            lockLayer.z = lowIndex;
-            userLayer.z = lowIndex;
-            break;
-        case "lock":
-            splashLayer.z = lowIndex;
-            modalOverlay.z = lowIndex;
-            lockLayer.z = highIndex;
-            userLayer.z = lowIndex;
-            break;
-        case "user":
-            splashLayer.z = lowIndex;
-            modalOverlay.z = lowIndex;
-            lockLayer.z = lowIndex;
-            userLayer.z = highIndex;
-            break;
-        default:
-            break;
         }
     }
 }
