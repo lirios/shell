@@ -13,6 +13,27 @@ Rectangle {
     color: "#80000000"
     radius: units.gridUnit * 0.5
     opacity: active ? 1.0 : 0.0
+    states: [
+        State {
+            name: "active"
+            when: active
+
+            StateChangeScript {
+                name: "disableInput"
+                script: {
+                    var i;
+                    for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
+                        var window = compositorRoot.surfaceModel.get(i).window;
+                        window.child.focus = false;
+                    }
+                }
+            }
+        },
+        State {
+            name: "inactive"
+            when: !active
+        }
+    ]
 
     Behavior on opacity {
         NumberAnimation {
@@ -24,6 +45,18 @@ Rectangle {
     // Keyboard event handling
     Connections {
         target: compositorRoot
+        onKeyPressed: {
+            // Do not even begin if there are no windows
+            if (!active && listView.model.count === 0)
+                return;
+
+            if (event.modifiers & Qt.MetaModifier) {
+                if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
+                    // Activate window switcher
+                    root.active = true;
+                }
+            }
+        }
         onKeyReleased: {
             // Do not even begin if there are no windows
             if (!active && listView.model.count === 0)
@@ -31,23 +64,31 @@ Rectangle {
 
             if (event.modifiers & Qt.MetaModifier) {
                 if (event.key === Qt.Key_Tab) {
-                    // Activate window switcher
-                    root.active = true;
-
                     // Switch between windows
-                    listView.currentIndex++;
+                    if (listView.currentIndex == listView.count - 1)
+                        listView.currentIndex = 0;
+                    else
+                        listView.currentIndex++;
                     event.accepted = true;
                 } else if (event.key === Qt.Key_Backtab) {
                     // Activate window switcher
                     root.active = true;
 
                     // Switch between windows
-                    listView.currentIndex--;
+                    if (listView.currentIndex == 0)
+                        listView.currentIndex = listView.count - 1;
+                    else
+                        listView.currentIndex--;
                     event.accepted = true;
                 }
             } else {
                 // Keys released, deactivate switcher
                 root.active = false;
+
+                // Give focus to the selected window
+                var window = compositorRoot.surfaceModel.get(listView.currentIndex).window;
+                window.focus = true;
+                window.child.takeFocus();
             }
         }
     }
