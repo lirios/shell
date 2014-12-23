@@ -29,7 +29,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
-import org.hawaii.appchooser 0.1 as AppChooser
+import org.hawaii.launcher 0.1 as Launcher
 import Hawaii.Components 1.0 as Components
 
 Item {
@@ -59,11 +59,8 @@ Item {
         populate: Transition {
             NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.longDuration }
         }
-        model: AppChooser.AppsModel {
-            id: favoritesModel
-            flat: true
-            entryPath: "/"
-            appNameFormat: 0
+        model: Launcher.LauncherModel {
+            id: launcherModel
         }
         delegate: Item {
             property int badgeCount: 1
@@ -71,11 +68,16 @@ Item {
             width: itemSize
             height: width
 
-            KQuickControls.QIconItem {
+            Components.Icon {
                 anchors.centerIn: parent
-                icon: model.decoration
+                iconName: model.iconName
                 width: iconSize
                 height: width
+                onStatusChanged: {
+                    // Fallback to a generic icon
+                    if (status == Image.Error)
+                        iconName = "binary";
+                }
             }
 
             Rectangle {
@@ -90,7 +92,7 @@ Item {
                 height: width
                 radius: width * 0.5
                 color: "orangered"
-                opacity: badgeCount > 0 ? 1.0 : 0.0
+                opacity: model.hasCount > 0 ? 1.0 : 0.0
 
                 Behavior on opacity {
                     NumberAnimation {
