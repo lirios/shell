@@ -84,7 +84,6 @@ Item {
 
             PropertyChanges { target: splashLayer; z: __priv.highIndex }
             PropertyChanges { target: modalOverlay; z: __priv.lowIndex }
-            PropertyChanges { target: lockLayer; z: __priv.lowIndex }
             PropertyChanges { target: userLayer; z: __priv.lowIndex }
         },
         State {
@@ -92,7 +91,6 @@ Item {
 
             PropertyChanges { target: splashLayer; z: __priv.lowIndex }
             PropertyChanges { target: modalOverlay; z: __priv.highIndex }
-            PropertyChanges { target: lockLayer; z: __priv.lowIndex }
             PropertyChanges { target: userLayer; z: __priv.lowIndex }
         },
         State {
@@ -100,16 +98,34 @@ Item {
 
             PropertyChanges { target: splashLayer; z: __priv.lowIndex }
             PropertyChanges { target: modalOverlay; z: __priv.lowIndex }
-            PropertyChanges { target: lockLayer; z: __priv.highIndex }
             PropertyChanges { target: userLayer; z: __priv.lowIndex }
+            StateChangeScript {
+                name: "disableInput"
+                script: {
+                    var i;
+                    for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
+                        var window = compositorRoot.surfaceModel.get(i).window;
+                        window.child.focus = false;
+                    }
+                }
+            }
         },
         State {
             name: "user"
 
             PropertyChanges { target: splashLayer; z: __priv.lowIndex }
             PropertyChanges { target: modalOverlay; z: __priv.lowIndex }
-            PropertyChanges { target: lockLayer; z: __priv.lowIndex }
             PropertyChanges { target: userLayer; z: __priv.highIndex }
+            StateChangeScript {
+                name: "enableInput"
+                script: {
+                    var i;
+                    for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
+                        var window = compositorRoot.surfaceModel.get(i).window;
+                        window.child.focus = true;
+                    }
+                }
+            }
         }
     ]
 
@@ -183,9 +199,11 @@ Item {
     }
 
     // Lock screen is above all windows to shield the session
-    Item {
+    LockScreen {
         id: lockLayer
         anchors.fill: parent
+        z: __priv.highIndex + 1
+        onEnabledChanged: root.state = enabled ? "lock" : "user"
     }
 
     /*
