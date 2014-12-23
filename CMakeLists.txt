@@ -86,6 +86,7 @@ add_subdirectory(framework)
 add_subdirectory(headers)
 add_subdirectory(platformtheme)
 add_subdirectory(shells)
+add_subdirectory(styles)
 
 # Display featute summary
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
