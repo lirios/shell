@@ -29,6 +29,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.0 as Styles
 import QtQuick.Controls.Private 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import "../.."
 
 Styles.ButtonStyle {
     padding {
@@ -51,7 +52,7 @@ Styles.ButtonStyle {
                 right: parent.right
                 bottom: parent.bottom
             }
-            color: checked ? control.hovered ? Qt.lighter(theme.viewFocusColor, 1.5) : theme.viewFocusColor : Qt.lighter(theme.viewFocusColor, 1.2)
+            color: checked ? control.hovered ? Qt.lighter(Theme.panel.selectedBackgroundColor, 1.5) : Theme.panel.selectedBackgroundColor : Qt.lighter(Theme.panel.selectedBackgroundColor, 1.2)
             height: units.gridUnit * 0.1
             opacity: control.hovered || down ? 1.0 : 0.0
 
@@ -82,7 +83,7 @@ Styles.ButtonStyle {
             renderType: Text.NativeRendering
             text: control.text
             font.bold: control.checkable && control.checked
-            color: theme.viewTextColor
+            color: Theme.panel.textColor
         }
     }
 }

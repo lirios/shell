@@ -30,6 +30,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kcoreaddons 1.0 as KCoreAddons
 import Hawaii.Components 1.0 as Components
+import "../.."
 
 RowLayout {
     spacing: units.largeSpacing
@@ -49,6 +50,7 @@ RowLayout {
     PlasmaExtras.Heading {
         level: 2
         text: user.fullName
+        color: Theme.panel.textColor
 
         Layout.alignment: Qt.AlignVCenter
         Layout.fillWidth: true
@@ -70,7 +72,7 @@ RowLayout {
             // Fallback to an icon from the theme
             faceIcon.iconSource = "";
             faceIcon.iconName = "avatar-default-symbolic";
-            faceIcon.color = PlasmaCore.ColorScope.textColor;
+            faceIcon.color = Theme.panel.textColor;
         }
     }
 

@@ -30,6 +30,7 @@ import QtQuick.Controls 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
+import "../.."
 
 ColumnLayout {
     implicitHeight: label.paintedHeight + horizLine.height + runnerMatches.contentHeight + (spacing * 2)
@@ -40,6 +41,7 @@ ColumnLayout {
         level: 3
         elide: Text.ElideRight
         text: (runnerMatches.model != null) ? runnerMatches.model.name : ""
+        color: Theme.panel.textColor
 
         Layout.alignment: Qt.AlignCenter
     }

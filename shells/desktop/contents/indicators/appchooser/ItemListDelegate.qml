@@ -30,6 +30,7 @@ import QtQuick.Controls 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
 import Hawaii.Components 1.0 as Components
+import "../.."
 
 Item {
     width: ListView.view.width
@@ -60,7 +61,7 @@ Item {
                 text: model.display
                 font.pointSize: theme.defaultFont.pointSize * 1.1
                 font.bold: true
-                color: PlasmaCore.ColorScope.textColor
+                color: Theme.panel.textColor
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
                 textFormat: Text.PlainText
@@ -69,7 +70,7 @@ Item {
             Label {
                 id: descr
                 text: model.description ? model.description : ""
-                color: PlasmaCore.ColorScope.textColor
+                color: Theme.panel.textColor
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
                 textFormat: Text.PlainText
