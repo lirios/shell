@@ -105,6 +105,7 @@ Rectangle {
         model: compositorRoot.surfaceModel
         spacing: units.smallSpacing
         currentIndex: 0
+        highlightMoveDuration: units.shortDuration
         delegate: Item {
             readonly property real scaleFactor: listView.width / compositorRoot.width
             readonly property real thumbnailWidth: thumbnailHeight * listView.ratio
