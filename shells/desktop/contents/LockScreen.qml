@@ -116,6 +116,7 @@ Item {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
+        enabled: root.enabled
         onClicked: passwordField.forceActiveFocus()
     }
 

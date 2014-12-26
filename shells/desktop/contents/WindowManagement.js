@@ -24,6 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+var windowList = new Array(0);
+
 /*
  * Main procedures
  */
@@ -135,6 +137,12 @@ function mapApplicationSurface(surface) {
     window.child.parent = window;
     window.child.touchEventsEnabled = true;
     window.setSize();
+
+    // z-order
+    if (surface.windowType === WaylandQuickSurface.Toplevel) {
+        window.z = windowList.length;
+        windowList.push(window);
+    }
 
     // Transient parent view
     var transientParentView = null;
@@ -285,6 +293,14 @@ function unmapApplicationSurface(surface) {
     if (!window)
         return;
 
+    // Remove from z-order list
+    for (i = 0; i < windowList.length; ++i) {
+        if (windowList[i] === window) {
+            windowList.splice(i, 1);
+            break;
+        }
+    }
+
     // Unset transient children so that the parent can go back to normal
     if (surface.windowType === WaylandQuickSurface.Transient) {
         var transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
@@ -304,4 +320,33 @@ function unmapApplicationSurface(surface) {
 }
 
 function unmapShellSurface(surface) {
+}
+
+/*
+ * Window management
+ */
+
+function moveFront(window) {
+    console.debug("moveFront[" + windowList.length + "] for", window + ":");
+
+    // Ignore if the window is already the highest in the stacking order
+    if (window.z == windowList.length - 1) {
+        console.debug("\tAlready the highest");
+        return;
+    }
+
+    var initialZ = window.z
+    var i;
+    console.debug("\ti =", initialZ + 1, "; i <", windowList.length);
+    for (i = initialZ + 1; i < windowList.length; ++i) {
+        windowList[i].z = window.z;
+        windowList[i].child.focus = false;
+        console.debug("\t" + windowList[i], "z:", windowList[i].z);
+        window.z = i;
+    }
+    console.debug("\t" + window, "z:", window.z);
+
+    windowList.splice(initialZ, 1);
+    windowList.push(window);
+    window.child.takeFocus();
 }

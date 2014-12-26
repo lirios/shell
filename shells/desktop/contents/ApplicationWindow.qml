@@ -87,7 +87,7 @@ WaylandWindow {
     MouseArea {
         id: dnd
         anchors.fill: parent
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: enabled ? Qt.LeftButton : Qt.NoBrush
         drag {
             target: clientWindow
             axis: Drag.XAndYAxis
@@ -105,7 +105,7 @@ WaylandWindow {
     MouseArea {
         id: rotateMouseArea
         anchors.fill: parent
-        acceptedButtons: Qt.RightButton
+        acceptedButtons: enabled ? Qt.RightButton : Qt.NoButton
         onPositionChanged: {
             var dx = mouse.x - (clientWindow.width * 0.5);
             var dy = mouse.y - (clientWindow.height * 0.5);

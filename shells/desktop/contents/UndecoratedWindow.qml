@@ -101,6 +101,7 @@ ApplicationWindow {
 
     Connections {
         target: child
+        onRaiseRequested: compositorRoot.moveFront(clientWindow)
         onSurfaceDestroyed: runDestroyAnimation()
     }
 
@@ -109,6 +110,7 @@ ApplicationWindow {
         id: decoration
         anchors.fill: parent
         source: child
+        z: 1
     }
 
     function setSize() {

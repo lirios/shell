@@ -182,4 +182,8 @@ Item {
     function toggleEffect(name) {
         screenView.workspacesView.currentWorkspace.effects.toggle(name);
     }
+
+    function moveFront(window) {
+        return WindowManagement.moveFront(window);
+    }
 }

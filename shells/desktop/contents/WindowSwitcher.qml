@@ -87,8 +87,7 @@ Rectangle {
 
                 // Give focus to the selected window
                 var window = compositorRoot.surfaceModel.get(listView.currentIndex).window;
-                window.focus = true;
-                window.child.takeFocus();
+                compositorRoot.moveFront(window);
             }
         }
     }
