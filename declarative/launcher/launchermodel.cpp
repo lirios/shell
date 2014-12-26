@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 #include <QtGui/QIcon>
-#include <QDebug>
 
 #include "launcheritem.h"
 #include "launchermodel.h"
@@ -71,12 +70,10 @@ int LauncherModel::rowCount(const QModelIndex &parent) const
 
 QVariant LauncherModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "!!!!!" << "DATA" << index;
     if (!index.isValid())
         return QVariant();
 
     LauncherItem *item = m_list.at(index.row());
-    qDebug() << "**** XXdata" << index.row() << role << item->name();
 
     switch (role) {
     case Qt::DecorationRole:
