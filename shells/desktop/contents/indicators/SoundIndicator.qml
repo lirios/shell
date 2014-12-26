@@ -55,5 +55,5 @@ Indicator {
         }
     }
     // TODO: When a volume item will be available -> Or with mpris and volume item
-    visible: mpris.visible
+    //visible: mpris.visible
 }
