@@ -40,29 +40,10 @@ Item {
 
     id: launcher
 
-    ListView {
-        id: listView
-        anchors.centerIn: parent
-        orientation: ListView.Horizontal
-        spacing: units.largePadding * 4
-        interactive: {
-            if (orientation == ListView.Horizontal)
-                return contentWidth > launcher.width;
-            return contentHeight > launcher.height;
-        }
-        add: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.shortDuration }
-        }
-        displaced: Transition {
-            NumberAnimation { properties: "x,y"; duration: units.shortDuration }
-        }
-        populate: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.longDuration }
-        }
-        model: Launcher.LauncherModel {
-            id: launcherModel
-        }
-        delegate: Item {
+    Component {
+        id: iconDelegate
+
+        Item {
             property int badgeCount: 1
 
             width: itemSize
@@ -105,22 +86,43 @@ Item {
                     anchors.centerIn: parent
                     font.pixelSize: parent.width - units.smallSpacing
                     color: "white"
-                    text: badgeCount
+                    text: model.count
                 }
             }
         }
+    }
+
+    ListView {
+        id: listView
+        anchors.centerIn: parent
+        orientation: ListView.Horizontal
+        spacing: units.smallSpacing
+        interactive: false
+        add: Transition {
+            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.shortDuration }
+        }
+        displaced: Transition {
+            NumberAnimation { properties: "x,y"; duration: units.shortDuration }
+        }
+        populate: Transition {
+            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.longDuration }
+        }
+        model: Launcher.LauncherModel {
+            id: launcherModel
+        }
+        delegate: iconDelegate
         width: calcWidth()
         height: calcHeight()
 
         function calcWidth() {
             if (orientation == ListView.Horizontal)
-                return Math.min(contentWidth, launcher.width);
+                return contentWidth;
             return itemSize + itemPadding;
         }
 
         function calcHeight() {
             if (orientation == ListView.Vertical)
-                return Math.min(contentHeight, launcher.height);
+                return contentHeight;
             return itemSize + itemPadding;
         }
     }
