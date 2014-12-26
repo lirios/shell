@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 var windowList = new Array(0);
+var activeWindow = null;
 
 /*
  * Main procedures
@@ -142,6 +143,7 @@ function mapApplicationSurface(surface) {
     if (surface.windowType === WaylandQuickSurface.Toplevel) {
         window.z = windowList.length;
         windowList.push(window);
+        activeWindow = window;
     }
 
     // Transient parent view
@@ -349,4 +351,11 @@ function moveFront(window) {
     windowList.splice(initialZ, 1);
     windowList.push(window);
     window.child.takeFocus();
+    activeWindow = window;
+}
+
+function getActiveWindowIndex() {
+    if (!activeWindow)
+        return -1;
+    return windowList.indexOf(activeWindow);
 }

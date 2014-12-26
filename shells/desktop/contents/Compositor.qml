@@ -35,6 +35,7 @@ import "screen"
 Item {
     readonly property alias screenView: screenView
     readonly property alias surfaceModel: surfaceModel
+    readonly property int activeWindowIndex: WindowManagement.getActiveWindowIndex()
 
     signal keyPressed(var event)
     signal keyReleased(var event)

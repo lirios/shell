@@ -54,6 +54,7 @@ Rectangle {
                 if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
                     // Activate window switcher
                     root.active = true;
+                    event.accepted = true;
                 }
             }
         }
@@ -69,7 +70,6 @@ Rectangle {
                         listView.currentIndex = 0;
                     else
                         listView.currentIndex++;
-                    event.accepted = true;
                 } else if (event.key === Qt.Key_Backtab) {
                     // Activate window switcher
                     root.active = true;
@@ -79,7 +79,6 @@ Rectangle {
                         listView.currentIndex = listView.count - 1;
                     else
                         listView.currentIndex--;
-                    event.accepted = true;
                 }
             } else {
                 // Keys released, deactivate switcher
@@ -89,6 +88,8 @@ Rectangle {
                 var window = compositorRoot.surfaceModel.get(listView.currentIndex).window;
                 compositorRoot.moveFront(window);
             }
+
+            event.accepted = true;
         }
     }
 
@@ -104,7 +105,7 @@ Rectangle {
         orientation: ListView.Horizontal
         model: compositorRoot.surfaceModel
         spacing: units.smallSpacing
-        currentIndex: 0
+        currentIndex: compositorRoot.activeWindowIndex
         highlightMoveDuration: units.shortDuration
         delegate: Item {
             readonly property real scaleFactor: listView.width / compositorRoot.width
