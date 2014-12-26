@@ -155,7 +155,7 @@ function mapApplicationSurface(surface) {
     // Determine window position
     switch (surface.windowType) {
     case WaylandQuickSurface.Toplevel:
-        if (surface.state == WaylandQuickSurface.Normal) {
+        if (surface.state === QuickSurface.Normal) {
             pos = compositor.calculateInitialPosition(surface);
             surface.globalPosition = pos;
         } else {
