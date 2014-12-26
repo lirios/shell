@@ -223,7 +223,7 @@ Item {
             Image {
                 id: backgroundLayer
                 anchors.fill: parent
-                source: "/usr/share/wallpapers/Green_Leaves/contents/images/1920x1080.png"
+                source: "/usr/share/backgrounds/gnome/Waves.jpg"
                 sourceSize.width: width
                 sourceSize.height: height
             }
