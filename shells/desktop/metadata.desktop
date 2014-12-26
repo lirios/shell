@@ -2,7 +2,7 @@
 Name=Desktop
 Type=Service
 
-X-KDE-ServiceTypes=GreenIsland/Compositor
+X-KDE-ServiceTypes=GreenIsland/UI
 X-KDE-ParentApp=
 X-KDE-PluginInfo-Author=Pier Luigi Fiorini
 X-KDE-PluginInfo-Category=
