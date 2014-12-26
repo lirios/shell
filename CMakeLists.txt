@@ -80,7 +80,11 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
              Service
              Solid)
 
+# Find Green Island
+find_package(GreenIsland REQUIRED)
+
 # Subdirectories
+add_subdirectory(compositor)
 add_subdirectory(declarative)
 add_subdirectory(framework)
 add_subdirectory(headers)
