@@ -329,13 +329,13 @@ function unmapShellSurface(surface) {
  */
 
 function moveFront(window) {
-    console.debug("moveFront[" + windowList.length + "] for", window + ":");
-
     // Ignore if the window is already the highest in the stacking order
     if (window.z == windowList.length - 1) {
-        console.debug("\tAlready the highest");
+        window.child.takeFocus();
         return;
     }
+
+    console.debug("moveFront[" + windowList.length + "] for", window + ":");
 
     var initialZ = window.z
     var i;
