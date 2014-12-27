@@ -28,8 +28,8 @@ Item {
         id: picture
         anchors.fill: parent
         source: "/usr/share/backgrounds/gnome/Stones.jpg"
-        sourceSize.width: width
-        sourceSize.height: height
+        sourceSize.width: width * 0.75
+        sourceSize.height: height * 0.75
         fillMode: Image.PreserveAspectCrop
         cache: false
         visible: false
