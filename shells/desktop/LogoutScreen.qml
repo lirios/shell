@@ -35,6 +35,8 @@ import Hawaii.Components 1.0 as Components
 import "."
 
 Item {
+    property alias mode: __priv.mode
+
     signal cancel()
     signal logOutRequested()
     signal powerOffRequested()

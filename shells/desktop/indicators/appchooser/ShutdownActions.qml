@@ -50,7 +50,7 @@ RowLayout {
         height: width
         iconName: "system-log-out-symbolic"
         tooltip: i18n("Log out from current session")
-        onClicked: systemModel.triggerAction("logout")
+        onClicked: compositorRoot.state = "logout"
     }
 
     ToolButton {
@@ -58,7 +58,7 @@ RowLayout {
         height: width
         iconName: "system-shutdown-symbolic"
         tooltip: i18n("Power off the system")
-        onClicked: systemModel.triggerAction("shutdown")
+        onClicked: compositorRoot.state = "poweroff"
     }
 
     ToolButton {
@@ -66,6 +66,6 @@ RowLayout {
         height: width
         iconName: "system-reboot-symbolic"
         tooltip: i18n("Restart the system")
-        onClicked: systemModel.triggerAction("reboot")
+        onClicked: compositorRoot.state = "restart"
     }
 }

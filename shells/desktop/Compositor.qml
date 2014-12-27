@@ -72,7 +72,21 @@ Item {
             name: "logout"
             PropertyChanges { target: keyFilter; enabled: false }
             PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
-            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; z: 910 }
+            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; mode: "logout"; z: 910 }
+            StateChangeScript { script: disableInput() }
+        },
+        State {
+            name: "poweroff"
+            PropertyChanges { target: keyFilter; enabled: false }
+            PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
+            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; mode: "poweroff"; z: 910 }
+            StateChangeScript { script: disableInput() }
+        },
+        State {
+            name: "restart"
+            PropertyChanges { target: keyFilter; enabled: false }
+            PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
+            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; mode: "restart"; z: 910 }
             StateChangeScript { script: disableInput() }
         },
         State {
@@ -329,6 +343,8 @@ Item {
      */
 
     Loader {
+        property string mode: "logout"
+
         id: logoutLoader
         anchors.fill: parent
         asynchronous: true
@@ -340,6 +356,12 @@ Item {
                 duration: units.longDuration
             }
         }
+    }
+
+    Binding {
+        target: logoutLoader.item
+        property: "mode"
+        value: logoutLoader.mode
     }
 
     Connections {
