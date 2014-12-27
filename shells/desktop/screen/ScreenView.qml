@@ -65,35 +65,6 @@ Item {
         readonly property int highIndex: 2000
     }
 
-    /**
-     * Brings up the desired layer, the other layers are
-     * given a 0 z-index hence are shown based on their order
-     * in the code.
-     **/
-    states: [
-        State {
-            name: "splash"
-
-            PropertyChanges { target: splashLayer; z: __priv.highIndex }
-            PropertyChanges { target: modalOverlay; z: __priv.lowIndex }
-            PropertyChanges { target: userLayer; z: __priv.lowIndex }
-        },
-        State {
-            name: "modal"
-
-            PropertyChanges { target: splashLayer; z: __priv.lowIndex }
-            PropertyChanges { target: modalOverlay; z: __priv.highIndex }
-            PropertyChanges { target: userLayer; z: __priv.lowIndex }
-        },
-        State {
-            name: "user"
-
-            PropertyChanges { target: splashLayer; z: __priv.lowIndex }
-            PropertyChanges { target: modalOverlay; z: __priv.lowIndex }
-            PropertyChanges { target: userLayer; z: __priv.highIndex }
-        }
-    ]
-
     /*
      * Output information panel
      */

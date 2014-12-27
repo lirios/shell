@@ -56,7 +56,12 @@ Item {
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
             PropertyChanges { target: logoutLoader; source: ""; z: 899 }
             PropertyChanges { target: lockScreenLoader; source: ""; z: 899 }
+            PropertyChanges { target: splashScreen; opacity: 0.0 }
             StateChangeScript { script: enableInput() }
+        },
+        State {
+            name: "splash"
+            PropertyChanges { target: splashScreen; opacity: 1.0 }
         },
         State {
             name: "windowSwitcher"
@@ -151,7 +156,7 @@ Item {
         onIdleTimerStopRequested: idleTimer.running = false
         onIdle: {
             // Fade the desktop out
-            screenView.layers.splash.opacity = 1.0;
+            compositorRoot.state = "splash";
 
             // Lock the session
             compositor.lockSession();
@@ -161,36 +166,24 @@ Item {
             compositor.unlockSession();
         }
         onFadeIn: {
-            // Fade the desktop in
-            screenView.layers.splash.opacity = 0.0;
-
             // Bring user layer up
-            screenView.state = "user";
+            compositorRoot.state = "session";
         }
         onFadeOut: {
-            // Bring splash layer up
-            screenView.state = "splash";
-
             // Fade the desktop out
-            screenView.layers.splash.opacity = 1.0;
+            compositorRoot.state = "splash";
         }
         onLocked: {
             // Bring lock layer up
-            screenView.state = "lock";
+            compositorRoot.state = "lock";
         }
         onUnlocked: {
-            // Fade the desktop in
-            screenView.layers.splash.opacity = 0.0;
-
             // Bring user layer up
-            screenView.state = "user";
+            compositorRoot.state = "session";
         }
         onReady: {
-            // Fade the desktop in
-            screenView.layers.splash.opacity = 0.0;
-
             // Bring user layer up
-            screenView.state = "user";
+            compositorRoot.state = "session";
 
             // Start idle timer
             idleTimer.running = true
@@ -257,6 +250,32 @@ Item {
         id: screenView
         anchors.fill: parent
         z: 900
+    }
+
+    /*
+     * Splash
+     */
+
+    Rectangle {
+        id: splashScreen
+        anchors.fill: parent
+        color: "black"
+        z: opacity == 0.0 ? 899 : 910
+        opacity: 0.0
+
+        Behavior on z {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: units.longDuration
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InSine
+                duration: units.longDuration
+            }
+        }
     }
 
     /*
