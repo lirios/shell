@@ -83,6 +83,9 @@ Item {
         property real timeout: 60
         property real remainingTime: timeout
         property var currentAction
+        property bool canLogOut: true
+        property bool canPowerOff: true
+        property bool canRestart: true
 
         onModeChanged: remainingTime = timeout
         onRemainingTimeChanged: {
@@ -185,7 +188,53 @@ Item {
             height: units.largeSpacing * 2
         }
 
+        Row {
+            spacing: units.smallSpacing
+            visible: __priv.canLogOut || __priv.canPowerOff || __priv.canRestart
 
+            ExclusiveGroup { id: group }
+
+            ToolButton {
+                id: logoutButton
+                action: logoutAction
+                exclusiveGroup: group
+                iconName: "system-log-out-symbolic"
+                width: units.iconSizes.smallMedium
+                height: width
+                checkable: true
+                checked: __priv.mode == "logout"
+                visible: __priv.canLogOut
+                onClicked: __priv.mode = "logout"
+            }
+
+            ToolButton {
+                id: poweroffButton
+                action: poweroffAction
+                exclusiveGroup: group
+                iconName: "system-shutdown-symbolic"
+                width: units.iconSizes.smallMedium
+                height: width
+                checkable: true
+                checked: __priv.mode == "poweroff"
+                visible: __priv.canPowerOff
+                onClicked: __priv.mode = "poweroff"
+            }
+
+            ToolButton {
+                id: restartButton
+                action: restartAction
+                exclusiveGroup: group
+                iconName: "system-reboot-symbolic"
+                width: units.iconSizes.smallMedium
+                height: width
+                checkable: true
+                checked: __priv.mode == "restart"
+                visible: __priv.canRestart
+                onClicked: __priv.mode = "restart"
+            }
+
+            Layout.alignment: Qt.AlignHCenter
+        }
 
         Item {
             height: units.largeSpacing * 2
