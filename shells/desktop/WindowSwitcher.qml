@@ -47,7 +47,7 @@ Rectangle {
         target: compositorRoot
         onKeyPressed: {
             // Do not even begin if there are no windows
-            if (!active && listView.model.count === 0)
+            if (!active && listView.model.count < 2)
                 return;
 
             if (event.modifiers & Qt.MetaModifier) {
@@ -60,7 +60,7 @@ Rectangle {
         }
         onKeyReleased: {
             // Do not even begin if there are no windows
-            if (!active && listView.model.count === 0)
+            if (!active && listView.model.count < 2)
                 return;
 
             if (event.modifiers & Qt.MetaModifier) {
@@ -85,8 +85,9 @@ Rectangle {
                 root.active = false;
 
                 // Give focus to the selected window
-                var window = compositorRoot.surfaceModel.get(listView.currentIndex).window;
-                compositorRoot.moveFront(window);
+                var item = compositorRoot.surfaceModel.get(listView.currentIndex);
+                if (item !== undefined)
+                    compositorRoot.moveFront(item.window);
             }
 
             event.accepted = true;
