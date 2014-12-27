@@ -29,6 +29,7 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 import GreenIsland.Core 1.0
 import org.hawaii.misc 0.1
+import org.kde.plasma.core 2.0 as PlasmaCore
 import "WindowManagement.js" as WindowManagement
 import "screen"
 
@@ -41,6 +42,25 @@ Item {
     signal keyReleased(var event)
 
     id: compositorRoot
+    state: "session"
+    states: [
+        State {
+            name: "session"
+            PropertyChanges { target: keyFilter; enabled: true }
+            PropertyChanges { target: shieldLoader; source: ""; visible: false }
+            PropertyChanges { target: logoutLoader; source: ""; visible: false }
+        },
+        State {
+            name: "logout"
+            PropertyChanges { target: keyFilter; enabled: false }
+            PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
+            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; visible: true }
+        },
+        State {
+            name: "shield"
+            PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
+        }
+    ]
     onKeyPressed: {
         // Abort session
         // TODO: Handle this as a keybinding
@@ -165,6 +185,8 @@ Item {
 
     // Key events filter
     KeyEventFilter {
+        id: keyFilter
+
         Keys.onPressed: compositorRoot.keyPressed(event)
         Keys.onReleased: compositorRoot.keyReleased(event)
     }
@@ -173,7 +195,61 @@ Item {
     ScreenView {
         id: screenView
         anchors.fill: parent
-        z: 998
+        z: 900
+    }
+
+    // Shield
+    Loader {
+        id: shieldLoader
+        anchors.fill: parent
+        asynchronous: true
+        z: progress > 0 ? 901 : 899
+        opacity: progress
+
+        Behavior on z {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: units.longDuration
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InSine
+                duration: units.longDuration
+            }
+        }
+    }
+
+    /*
+     * Logout screen
+     */
+
+    Loader {
+        id: logoutLoader
+        anchors.fill: parent
+        asynchronous: true
+        z: progress > 0 ? 910 : 899
+        opacity: progress
+
+        Behavior on z {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: units.longDuration
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InSine
+                duration: units.longDuration
+            }
+        }
+    }
+
+    Connections {
+        target: logoutLoader.item
+        onCancel: compositorRoot.state = "session"
     }
 
     /*
