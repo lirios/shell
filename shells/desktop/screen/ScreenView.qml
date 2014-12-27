@@ -45,15 +45,8 @@ Item {
     property alias zoomEnabled: zoomArea.enabled
 
     property var layers: QtObject {
-        readonly property alias background: backgroundLayer
-        readonly property alias desktop: desktopLayer
         readonly property alias workspaces: workspacesLayer
-        readonly property alias panels: panelsLayer
-        readonly property alias notifications: notificationsLayer
         readonly property alias fullScreen: fullScreenLayer
-        readonly property alias dialogs: dialogsLayer
-        readonly property alias overlays: overlayLayer
-        readonly property alias splash: splashLayer
     }
 
     id: root
@@ -130,200 +123,30 @@ Item {
     }
 
     /*
-     * Special layers
-     */
-
-    // Splash is above everything but the cursor layer
-    Rectangle {
-        id: splashLayer
-        anchors.fill: parent
-        color: "black"
-        z: 2000
-        opacity: 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: 250
-            }
-        }
-    }
-
-    // Modal overlay for dialogs
-    Rectangle {
-        id: modalOverlay
-        anchors.fill: parent
-        color: "black"
-        opacity: 0.0
-
-        // Globally modal dialogs can cover applications and shell gadgets
-        Item {
-            id: dialogsLayer
-            anchors.fill: parent
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: 250
-            }
-        }
-    }
-
-    /*
      * Workspace
      */
 
-    Item {
-        id: userLayer
+    // Background is below everything
+    Image {
+        id: backgroundLayer
         anchors.fill: parent
+        source: "/usr/share/backgrounds/gnome/Waves.jpg"
+        sourceSize.width: width
+        sourceSize.height: height
 
-        // Application and shell windows
-        Item {
-            id: sessionLayer
+        // Desktop is only above background
+        Desktop {
+            id: desktopLayer
             anchors.fill: parent
+            z: 0
+            onClockClicked: topDrawer.toggle()
+        }
 
-            // Background is below everything
-            Image {
-                id: backgroundLayer
-                anchors.fill: parent
-                source: "/usr/share/backgrounds/gnome/Waves.jpg"
-                sourceSize.width: width
-                sourceSize.height: height
-            }
-
-            // Desktop is only above background
-            Desktop {
-                id: desktopLayer
-                anchors.fill: parent
-                onClockClicked: topDrawer.toggle()
-            }
-
-            // Workspaces
-            WorkspacesLinearView {
-                id: workspacesLayer
-                anchors.fill: parent
-            }
-
-            // Panels are above application windows
-            Item {
-                id: panelsLayer
-                anchors.fill: parent
-
-                // Available area
-                Item {
-                    id: availableArea
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                        right: parent.right
-                    }
-                    height: parent.height - panel.height
-
-                    // Window switcher
-                    WindowSwitcher {
-                        id: windowSwitcher
-                        anchors {
-                            horizontalCenter: parent.horizontalCenter
-                            verticalCenter: parent.verticalCenter
-                        }
-                        width: parent.width - (units.largeSpacing * 2)
-                        height: (parent.height * 0.5) - (units.largeSpacing * 2)
-                    }
-                }
-
-                Panel {
-                    id: panel
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        bottom: parent.bottom
-                    }
-                    z: 2
-
-                    onIndicatorTriggered: {
-                        // AppChooser special case
-                        if (indicator.name === "appchooser") {
-                            // Load AppChooser component
-                            if (leftDrawer.loader.status != Loader.Ready)
-                                leftDrawer.loader.sourceComponent = indicator.component;
-                            leftDrawer.toggle();
-                            return;
-                        }
-
-                        // Close drawer if the current indicator is triggered again
-                        if (indicator.selected) {
-                            if (rightDrawer.status === PlasmaComponents.DialogStatus.Open) {
-                                rightDrawer.close();
-                                selectedIndicator = null;
-                            }
-
-                            return;
-                        }
-
-                        // Load indicator component
-                        if (indicator !== lastIndicator) {
-                            var closed = rightDrawer.status === PlasmaComponents.DialogStatus.Closed;
-                            stackView.push({item: indicator.component, immediate:closed});
-                        }
-
-                        // Open drawer if necessary
-                        if (rightDrawer.status === PlasmaComponents.DialogStatus.Closed)
-                            rightDrawer.open();
-
-                        // Save a reference to the currently open indicator
-                        selectedIndicator = indicator;
-                        lastIndicator = indicator;
-                    }
-                }
-
-                SlidingPanel {
-                    property alias loader: loader
-
-                    id: leftDrawer
-                    edge: Qt.LeftEdge
-                    width: units.gridUnit * 20
-                    z: 1
-
-                    Loader {
-                        id: loader
-                        anchors.fill: parent
-                        anchors.margins: units.largeSpacing
-                    }
-                }
-
-                SlidingPanel {
-                    id: rightDrawer
-                    edge: Qt.RightEdge
-                    width: units.gridUnit * 16
-                    z: 1
-
-                    StackView {
-                        id: stackView
-                        anchors.fill: parent
-                        anchors.margins: units.largeSpacing
-                    }
-                }
-
-                SlidingPanel {
-                    id: topDrawer
-                    edge: Qt.TopEdge
-                    height: units.gridUnit * 15
-                    z: 1
-                }
-            }
-
-            // Notifications are above panels
-            Item {
-                id: notificationsLayer
-                anchors.fill: parent
-            }
-
-            // Overlays can cover pretty much everything except the lock screen
-            Item {
-                id: overlayLayer
-                anchors.fill: parent
-            }
+        // Workspaces
+        WorkspacesLinearView {
+            id: workspacesLayer
+            anchors.fill: parent
+            z: 1
         }
 
         // Full screen windows can cover application windows and panels
@@ -331,16 +154,96 @@ Item {
             id: fullScreenLayer
             anchors.fill: parent
             visible: false
+            z: 4
         }
 
-        // Hot corners
-        HotCorners {
-            id: hotCorners
-            anchors.fill: parent
-            rotation: 0
-            onTopLeftTriggered: workspacesLayer.selectPrevious()
-            onTopRightTriggered: workspacesLayer.selectNext()
-            onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
+        Panel {
+            id: panel
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+            }
+            z: 3
+            onIndicatorTriggered: {
+                // AppChooser special case
+                if (indicator.name === "appchooser") {
+                    // Load AppChooser component
+                    if (leftDrawer.loader.status != Loader.Ready)
+                        leftDrawer.loader.sourceComponent = indicator.component;
+                    leftDrawer.toggle();
+                    return;
+                }
+
+                // Close drawer if the current indicator is triggered again
+                if (indicator.selected) {
+                    if (rightDrawer.status === PlasmaComponents.DialogStatus.Open) {
+                        rightDrawer.close();
+                        selectedIndicator = null;
+                    }
+
+                    return;
+                }
+
+                // Load indicator component
+                if (indicator !== lastIndicator) {
+                    var closed = rightDrawer.status === PlasmaComponents.DialogStatus.Closed;
+                    stackView.push({item: indicator.component, immediate:closed});
+                }
+
+                // Open drawer if necessary
+                if (rightDrawer.status === PlasmaComponents.DialogStatus.Closed)
+                    rightDrawer.open();
+
+                // Save a reference to the currently open indicator
+                selectedIndicator = indicator;
+                lastIndicator = indicator;
+            }
         }
+
+        SlidingPanel {
+            property alias loader: loader
+
+            id: leftDrawer
+            edge: Qt.LeftEdge
+            width: units.gridUnit * 20
+            z: 2
+
+            Loader {
+                id: loader
+                anchors.fill: parent
+                anchors.margins: units.largeSpacing
+            }
+        }
+
+        SlidingPanel {
+            id: rightDrawer
+            edge: Qt.RightEdge
+            width: units.gridUnit * 16
+            z: 2
+
+            StackView {
+                id: stackView
+                anchors.fill: parent
+                anchors.margins: units.largeSpacing
+            }
+        }
+
+        SlidingPanel {
+            id: topDrawer
+            edge: Qt.TopEdge
+            height: units.gridUnit * 15
+            z: 2
+        }
+    }
+
+    // Hot corners
+    HotCorners {
+        id: hotCorners
+        anchors.fill: parent
+        rotation: 0
+        onTopLeftTriggered: workspacesLayer.selectPrevious()
+        onTopRightTriggered: workspacesLayer.selectNext()
+        onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
     }
 }
