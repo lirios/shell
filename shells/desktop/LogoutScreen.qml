@@ -31,6 +31,7 @@ import QtGraphicalEffects 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.hawaii.appchooser 0.1 as AppChooser
 import Hawaii.Components 1.0 as Components
 import "."
 
@@ -68,6 +69,9 @@ Item {
             PropertyChanges { target: okButton; text: qsTr("Restart") }
         }
     ]
+    onLogOutRequested: systemModel.triggerAction("logout")
+    onPowerOffRequested: systemModel.triggerAction("shutdown")
+    onRestartRequested: systemModel.triggerAction("reboot")
 
     Behavior on opacity {
         NumberAnimation {
@@ -91,6 +95,14 @@ Item {
         onRemainingTimeChanged: {
             if (remainingTime <= 0)
                 currentAction();
+        }
+    }
+
+    AppChooser.SystemModel {
+        id: systemModel
+
+        function triggerAction(action) {
+            return trigger(rowForFavoriteId(action), "", null);
         }
     }
 
@@ -196,7 +208,6 @@ Item {
 
             ToolButton {
                 id: logoutButton
-                action: logoutAction
                 exclusiveGroup: group
                 iconName: "system-log-out-symbolic"
                 width: units.iconSizes.smallMedium
@@ -209,7 +220,6 @@ Item {
 
             ToolButton {
                 id: poweroffButton
-                action: poweroffAction
                 exclusiveGroup: group
                 iconName: "system-shutdown-symbolic"
                 width: units.iconSizes.smallMedium
@@ -222,7 +232,6 @@ Item {
 
             ToolButton {
                 id: restartButton
-                action: restartAction
                 exclusiveGroup: group
                 iconName: "system-reboot-symbolic"
                 width: units.iconSizes.smallMedium

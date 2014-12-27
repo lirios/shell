@@ -28,22 +28,11 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.hawaii.appchooser 0.1 as AppChooser
 
 RowLayout {
     implicitWidth: (units.iconSizes.large * 3) + (spacing * 3)
     implicitHeight: units.iconSizes.large + (spacing * 2)
     spacing: units.largeSpacing
-
-    AppChooser.SystemModel {
-        id: systemModel
-
-        function triggerAction(action) {
-            if (indicator.expanded)
-                indicator.triggered(indicator);
-            return trigger(rowForFavoriteId(action), "", null);
-        }
-    }
 
     ToolButton {
         width: units.iconSizes.large
