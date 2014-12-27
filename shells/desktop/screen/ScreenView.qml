@@ -179,6 +179,11 @@ Item {
             edge: Qt.LeftEdge
             width: units.gridUnit * 20
             z: 2
+            onStatusChanged: {
+                // Unload component once closed
+                if (status === PlasmaComponents.DialogStatus.Closed)
+                    loader.sourceComponent = undefined;
+            }
 
             Loader {
                 id: loader
