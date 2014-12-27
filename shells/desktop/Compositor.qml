@@ -48,15 +48,16 @@ Item {
             name: "session"
             PropertyChanges { target: keyFilter; enabled: true }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
-            PropertyChanges { target: logoutLoader; source: ""; visible: false }
+            PropertyChanges { target: logoutLoader; source: ""; z: 899 }
             PropertyChanges { target: lockScreenLoader; source: ""; z: 899 }
             StateChangeScript { script: enableInput() }
         },
         State {
             name: "logout"
             PropertyChanges { target: keyFilter; enabled: false }
-            PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
-            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; visible: true }
+            PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
+            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; z: 910 }
+            StateChangeScript { script: disableInput() }
         },
         State {
             name: "lock"
@@ -243,19 +244,11 @@ Item {
         id: logoutLoader
         anchors.fill: parent
         asynchronous: true
-        z: progress > 0 ? 910 : 899
-        opacity: progress
+        z: 899
 
         Behavior on z {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: units.longDuration
-            }
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InSine
                 duration: units.longDuration
             }
         }

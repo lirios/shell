@@ -41,6 +41,7 @@ Item {
     signal restartRequested()
 
     id: root
+    opacity: 0.0
     state: __priv.mode
     states: [
         State {
@@ -65,6 +66,13 @@ Item {
             PropertyChanges { target: okButton; text: qsTr("Restart") }
         }
     ]
+
+    Behavior on opacity {
+        NumberAnimation {
+            easing.type: Easing.InSine
+            duration: units.longDuration
+        }
+    }
 
     QtObject {
         id: __priv
@@ -195,4 +203,6 @@ Item {
             Layout.alignment: Qt.AlignHCenter
         }
     }
+
+    Component.onCompleted: opacity = 1.0
 }
