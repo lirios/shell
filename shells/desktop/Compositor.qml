@@ -148,6 +148,14 @@ Item {
             event.accepted = true;
             return;
         }
+
+        // Workspaces
+        if (event.modifiers & (Qt.MetaModifier | Qt.ControlModifier)) {
+            if (event.key === Qt.Key_Left)
+                screenView.workspacesView.selectPrevious();
+            else if (event.key === Qt.Key_Right)
+                screenView.workspacesView.selectNext();
+        }
     }
 
     Timer {
