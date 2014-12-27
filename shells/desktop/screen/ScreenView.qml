@@ -104,6 +104,7 @@ Item {
         source: "/usr/share/backgrounds/gnome/Waves.jpg"
         sourceSize.width: width
         sourceSize.height: height
+        cache: false
 
         // Desktop is only above background
         Desktop {

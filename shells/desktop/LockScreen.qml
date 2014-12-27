@@ -31,6 +31,7 @@ Item {
         sourceSize.width: width
         sourceSize.height: height
         fillMode: Image.PreserveAspectCrop
+        cache: false
         visible: false
     }
 
