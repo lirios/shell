@@ -49,12 +49,20 @@ Item {
             PropertyChanges { target: keyFilter; enabled: true }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
             PropertyChanges { target: logoutLoader; source: ""; visible: false }
+            PropertyChanges { target: lockScreenLoader; source: ""; z: 899 }
+            StateChangeScript { script: enableInput() }
         },
         State {
             name: "logout"
             PropertyChanges { target: keyFilter; enabled: false }
             PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
             PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; visible: true }
+        },
+        State {
+            name: "lock"
+            PropertyChanges { target: keyFilter; enabled: false }
+            PropertyChanges { target: lockScreenLoader; source: "LockScreen.qml"; z: 910 }
+            StateChangeScript { script: disableInput() }
         },
         State {
             name: "shield"
@@ -67,6 +75,12 @@ Item {
         if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Backspace) {
             event.accepted = true;
             compositor.abortSession();
+        }
+
+        // Lock screen
+        if (event.modifiers & Qt.MetaModifier && event.key === Qt.Key_L) {
+            state = "lock";
+            event.accepted = true;
         }
     }
 
@@ -253,6 +267,29 @@ Item {
     }
 
     /*
+     * Lock screen
+     */
+
+    Loader {
+        id: lockScreenLoader
+        anchors.fill: parent
+        asynchronous: true
+        z: 899
+
+        Behavior on z {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: units.longDuration
+            }
+        }
+    }
+
+    Connections {
+        target: lockScreenLoader.item
+        onUnlocked: compositorRoot.state = "session"
+    }
+
+    /*
      * Methods
      */
 
@@ -262,5 +299,21 @@ Item {
 
     function moveFront(window) {
         return WindowManagement.moveFront(window);
+    }
+
+    function enableInput() {
+        var i;
+        for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
+            var window = compositorRoot.surfaceModel.get(i).window;
+            window.child.focus = true;
+        }
+    }
+
+    function disableInput() {
+        var i;
+        for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
+            var window = compositorRoot.surfaceModel.get(i).window;
+            window.child.focus = false;
+        }
     }
 }

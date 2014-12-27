@@ -6,35 +6,22 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import "."
 
 Item {
+    signal unlocked()
+
     id: root
-    enabled: false
-    opacity: enabled ? 1.0 : 0.0
-
-    QtObject {
-        id: __priv
-
-        property string timeFormat
-    }
-
-    Connections {
-        target: compositorRoot
-        onKeyPressed: {
-            if (enabled)
-                return;
-
-            // Trigger lock screen
-            if (event.modifiers & Qt.MetaModifier && event.key === Qt.Key_L) {
-                enabled = true;
-                event.accepted = true;
-            }
-        }
-    }
+    opacity: 0.0
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InSine
             duration: units.longDuration
         }
+    }
+
+    QtObject {
+        id: __priv
+
+        property string timeFormat
     }
 
     Image {
@@ -57,7 +44,7 @@ Item {
         id: timeDataSource
         engine: "time"
         connectedSources: ["Local"]
-        interval: root.enabled ? 30000 : 0
+        interval: 5000
     }
 
     ColumnLayout {
@@ -99,9 +86,9 @@ Item {
                 anchors.centerIn: parent
                 placeholderText: qsTr("Password")
                 width: units.gridUnit * 20
-                focus: root.enabled
+                focus: true
                 echoMode: TextInput.Password
-                onAccepted: root.enabled = false
+                onAccepted: root.unlocked()
             }
 
             Layout.fillWidth: true
@@ -116,12 +103,17 @@ Item {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
-        enabled: root.enabled
         onClicked: passwordField.forceActiveFocus()
     }
 
     Component.onCompleted: {
         // Remove seconds from time format
         __priv.timeFormat = Qt.locale().timeFormat(Locale.ShortFormat).replace(/.ss?/i, "");
+
+        // Trigger opacity animation
+        opacity = 1.0;
+
+        // Activate password field
+        passwordField.forceActiveFocus();
     }
 }
