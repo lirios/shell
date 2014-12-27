@@ -55,7 +55,6 @@ Rectangle {
         }
         clip: true
         orientation: ListView.Horizontal
-        //model: compositorRoot.surfaceModel
         model: compositorRoot.windowList
         spacing: units.smallSpacing
         highlightMoveDuration: units.shortDuration
@@ -67,7 +66,6 @@ Rectangle {
             id: wrapper
             width: thumbnailWidth + thumbnailLayout.anchors.margins + thumbnailLayout.spacing
             height: thumbnailHeight + thumbnailLayout.anchors.margins + thumbnailLayout.spacing
-            //visible: model.surface.windowType === QuickSurface.Toplevel
 
             ColumnLayout {
                 id: thumbnailLayout

@@ -76,6 +76,11 @@ WorkspacesView {
             width: root.width * workspaces.model
             height: root.height
 
+            function selectWorkspace(item) {
+                if (currentIndex !== item.workspaceIndex)
+                    root.workspaceSelected(item.workspaceIndex);
+            }
+
             Repeater {
                 id: workspaces
                 model: 0
@@ -85,6 +90,7 @@ WorkspacesView {
                     y: 0
                     width: listView.width
                     height: listView.height
+                    workspaceIndex: index
                 }
             }
         }

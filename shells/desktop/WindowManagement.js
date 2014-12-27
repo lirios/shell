@@ -350,6 +350,7 @@ function moveFront(window) {
 
     windowList.splice(initialZ, 1);
     windowList.push(window);
+    window.parent.parent.selectWorkspace(window.parent);
     window.child.takeFocus();
     activeWindow = window;
 }

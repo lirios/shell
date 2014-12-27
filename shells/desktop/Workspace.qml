@@ -28,6 +28,7 @@ import QtQuick 2.0
 
 Item {
     property alias effects: effects
+    property int workspaceIndex
 
     id: root
 
