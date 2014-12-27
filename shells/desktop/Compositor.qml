@@ -37,9 +37,14 @@ Item {
     readonly property alias screenView: screenView
     readonly property alias surfaceModel: surfaceModel
     readonly property int activeWindowIndex: WindowManagement.getActiveWindowIndex()
+    readonly property var windowList: WindowManagement.windowList
 
     signal keyPressed(var event)
     signal keyReleased(var event)
+
+    signal windowSwitchPrev()
+    signal windowSwitchNext()
+    signal windowSwitchSelect()
 
     id: compositorRoot
     state: "session"
@@ -47,10 +52,16 @@ Item {
         State {
             name: "session"
             PropertyChanges { target: keyFilter; enabled: true }
+            PropertyChanges { target: windowSwitcherLoader; source: ""; z: 899 }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
             PropertyChanges { target: logoutLoader; source: ""; z: 899 }
             PropertyChanges { target: lockScreenLoader; source: ""; z: 899 }
             StateChangeScript { script: enableInput() }
+        },
+        State {
+            name: "windowSwitcher"
+            PropertyChanges { target: windowSwitcherLoader; source: "WindowSwitcher.qml"; z: 910 }
+            StateChangeScript { script: disableInput() }
         },
         State {
             name: "logout"
@@ -76,12 +87,47 @@ Item {
         if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Backspace) {
             event.accepted = true;
             compositor.abortSession();
+            return;
         }
 
         // Lock screen
         if (event.modifiers & Qt.MetaModifier && event.key === Qt.Key_L) {
             state = "lock";
             event.accepted = true;
+            return;
+        }
+
+        // Window switcher
+        if (event.modifiers & Qt.MetaModifier) {
+            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
+                if (state != "windowSwitcher" && surfaceModel.count >= 2) {
+                    // Activate only when two or more windows are available
+                    state = "windowSwitcher";
+                    event.accepted = true;
+                    return;
+                }
+            }
+        }
+    }
+    onKeyReleased: {
+        // Window switcher
+        if (state == "windowSwitcher") {
+            if (event.modifiers & Qt.MetaModifier) {
+                // Cycle between windows
+                if (event.key === Qt.Key_Tab)
+                    compositorRoot.windowSwitchNext();
+                else if (event.key === Qt.Key_Backtab)
+                    compositorRoot.windowSwitchPrev();
+            } else {
+                // Give focus to the selected window
+                compositorRoot.windowSwitchSelect();
+
+                // Keys released, deactivate switcher
+                state = "session";
+            }
+
+            event.accepted = true;
+            return;
         }
     }
 
@@ -211,6 +257,29 @@ Item {
         id: screenView
         anchors.fill: parent
         z: 900
+    }
+
+    /*
+     * Window switcher
+     */
+
+    Loader {
+        id: windowSwitcherLoader
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+        }
+        asynchronous: true
+        z: 899
+        width: parent.width - (units.largeSpacing * 2)
+        height: (parent.height * 0.5) - (units.largeSpacing * 2)
+
+        Behavior on z {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: units.longDuration
+            }
+        }
     }
 
     // Shield

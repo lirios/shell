@@ -7,37 +7,14 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import "."
 
 Rectangle {
-    property bool active: false
-
     id: root
     color: "#80000000"
     radius: units.gridUnit * 0.5
-    opacity: active ? 1.0 : 0.0
-    states: [
-        State {
-            name: "active"
-            when: active
-
-            StateChangeScript {
-                name: "disableInput"
-                script: {
-                    var i;
-                    for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
-                        var window = compositorRoot.surfaceModel.get(i).window;
-                        window.child.focus = false;
-                    }
-                }
-            }
-        },
-        State {
-            name: "inactive"
-            when: !active
-        }
-    ]
+    opacity: 0.0
 
     Behavior on opacity {
         NumberAnimation {
-            easing.type: Easing.InOutQuad
+            easing.type: Easing.InQuad
             duration: units.shortDuration
         }
     }
@@ -45,52 +22,26 @@ Rectangle {
     // Keyboard event handling
     Connections {
         target: compositorRoot
-        onKeyPressed: {
-            // Do not even begin if there are no windows
-            if (!active && listView.model.count < 2)
-                return;
-
-            if (event.modifiers & Qt.MetaModifier) {
-                if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
-                    // Activate window switcher
-                    root.active = true;
-                    event.accepted = true;
-                }
-            }
+        onWindowSwitchPrev: {
+            if (listView.currentIndex == 0)
+                listView.currentIndex = listView.count - 1;
+            else
+                listView.currentIndex--;
         }
-        onKeyReleased: {
-            // Do not even begin if there are no windows
-            if (!active && listView.model.count < 2)
-                return;
-
-            if (event.modifiers & Qt.MetaModifier) {
-                if (event.key === Qt.Key_Tab) {
-                    // Switch between windows
-                    if (listView.currentIndex == listView.count - 1)
-                        listView.currentIndex = 0;
-                    else
-                        listView.currentIndex++;
-                } else if (event.key === Qt.Key_Backtab) {
-                    // Activate window switcher
-                    root.active = true;
-
-                    // Switch between windows
-                    if (listView.currentIndex == 0)
-                        listView.currentIndex = listView.count - 1;
-                    else
-                        listView.currentIndex--;
-                }
-            } else {
-                // Keys released, deactivate switcher
-                root.active = false;
-
-                // Give focus to the selected window
-                var item = compositorRoot.surfaceModel.get(listView.currentIndex);
-                if (item !== undefined)
-                    compositorRoot.moveFront(item.window);
-            }
-
-            event.accepted = true;
+        onWindowSwitchNext: {
+            if (listView.currentIndex == listView.count - 1)
+                listView.currentIndex = 0;
+            else
+                listView.currentIndex++;
+        }
+        onWindowSwitchSelect: {
+            // Give focus to the selected window
+            /*
+            var item = compositorRoot.surfaceModel.get(listView.currentIndex);
+            if (item !== undefined)
+                compositorRoot.moveFront(item.window);
+                */
+            compositorRoot.moveFront(compositorRoot.windowList[listView.currentIndex]);
         }
     }
 
@@ -104,9 +55,9 @@ Rectangle {
         }
         clip: true
         orientation: ListView.Horizontal
-        model: compositorRoot.surfaceModel
+        //model: compositorRoot.surfaceModel
+        model: compositorRoot.windowList
         spacing: units.smallSpacing
-        currentIndex: compositorRoot.activeWindowIndex
         highlightMoveDuration: units.shortDuration
         delegate: Item {
             readonly property real scaleFactor: listView.width / compositorRoot.width
@@ -116,7 +67,7 @@ Rectangle {
             id: wrapper
             width: thumbnailWidth + thumbnailLayout.anchors.margins + thumbnailLayout.spacing
             height: thumbnailHeight + thumbnailLayout.anchors.margins + thumbnailLayout.spacing
-            visible: model.surface.windowType === QuickSurface.Toplevel
+            //visible: model.surface.windowType === QuickSurface.Toplevel
 
             ColumnLayout {
                 id: thumbnailLayout
@@ -138,7 +89,7 @@ Rectangle {
                             fill: parent
                             margins: units.smallSpacing
                         }
-                        source: model.window.child
+                        source: modelData.child
 
                         MouseArea {
                             anchors.fill: parent
@@ -150,7 +101,7 @@ Rectangle {
 
                 Label {
                     id: label
-                    text: model.surface.title ? model.surface.title : qsTr("Untitled")
+                    text: modelData.child.surface.title ? modelData.child.surface.title : qsTr("Untitled")
                     wrapMode: Text.Wrap
                     color: Theme.panel.textColor
                     font.bold: true
@@ -164,5 +115,15 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+        // Show with an animtation
+        opacity = 1.0;
+
+        var newIndex = compositorRoot.activeWindowIndex + 1;
+        if (newIndex === compositorRoot.surfaceModel.count)
+            newIndex = 0;
+        listView.currentIndex = newIndex;
     }
 }
