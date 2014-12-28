@@ -29,6 +29,7 @@ import QtQuick.Window 2.0
 import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
 import GreenIsland 1.0
+import GreenIsland.Core 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import ".."
@@ -222,5 +223,16 @@ Item {
         onTopLeftTriggered: workspacesLayer.selectPrevious()
         onTopRightTriggered: workspacesLayer.selectNext()
         onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
+    }
+
+    Component.onCompleted: {
+        // Set available geometry so that windows are maximized properly
+        var pt = _greenisland_output.mapToGlobal(0, 0);
+        var g = _greenisland_output.geometry;
+        g.x = pt.x;
+        g.y = pt.y;
+        g.height -= panel.height;
+        _greenisland_output.availableGeometry = g;;
+        console.debug("Available geometry for", name, "is:", _greenisland_output.availableGeometry);
     }
 }
