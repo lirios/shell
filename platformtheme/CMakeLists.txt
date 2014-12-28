@@ -10,4 +10,4 @@ set_target_properties(HawaiiPlatformTheme PROPERTIES PREFIX "")
 target_link_libraries(HawaiiPlatformTheme Qt5::Gui)
 
 install(TARGETS HawaiiPlatformTheme LIBRARY
-    DESTINATION ${PLUGIN_INSTALL_DIR}/platformthemes)
+    DESTINATION ${QT_PLUGIN_INSTALL_DIR}/platformthemes)
