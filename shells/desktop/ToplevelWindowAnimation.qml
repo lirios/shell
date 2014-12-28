@@ -45,7 +45,7 @@ WindowAnimation {
         yScale: 1.0
     }
 
-    map: ParallelAnimation {
+    mapAnimation: ParallelAnimation {
         NumberAnimation {
             target: animation.windowItem
             property: "opacity"
@@ -79,7 +79,7 @@ WindowAnimation {
         }
     }
 
-    unmap: NumberAnimation {
+    unmapAnimation: NumberAnimation {
         target: animation.windowItem
         property: "opacity"
         easing.type: Easing.Linear
@@ -87,7 +87,7 @@ WindowAnimation {
         duration: 250
     }
 
-    destroy: ParallelAnimation {
+    destroyAnimation: ParallelAnimation {
         SequentialAnimation {
             ScriptAction {
                 script: animation.windowItem.transform = destroyTransform

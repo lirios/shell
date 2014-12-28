@@ -25,10 +25,20 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import GreenIsland 1.0
 
-WaylandWindow {
+Item {
+    property var child
+    property var role: child.surface.windowProperties.role
+
     id: shellWindow
     objectName: "shellWindow"
+
+    SurfaceRenderer {
+        anchors.fill: parent
+        source: child
+        z: 1
+    }
 
     Connections {
         target: child.surface

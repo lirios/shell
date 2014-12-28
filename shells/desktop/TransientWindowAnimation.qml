@@ -37,7 +37,7 @@ WindowAnimation {
         yScale: 0.1
     }
 
-    map: ParallelAnimation {
+    mapAnimation: ParallelAnimation {
         NumberAnimation {
             target: animation.windowItem
             property: "opacity"
@@ -71,7 +71,7 @@ WindowAnimation {
         }
     }
 
-    unmap: NumberAnimation {
+    unmapAnimation: NumberAnimation {
         target: animation.windowItem
         property: "opacity"
         easing.type: Easing.Linear

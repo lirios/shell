@@ -27,15 +27,37 @@
 import QtQuick 2.0
 import QtCompositor 1.0
 import GreenIsland 1.0
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     property var child
     property bool unresponsive: false
-    property var role: child.surface.windowProperties.role
-    property var transientChildren: null
+    property var animation: null
 
-    id: waylandWindow
-    opacity: 1.0
+    id: window
+    objectName: "clientWindow"
+    states: [
+        State {
+            name: "focused"
+            when: child.focus && !window.unresponsive
+            PropertyChanges { target: unresponsiveEffectLoader; source: "" }
+        },
+        State {
+            name: "unfocused"
+            when: !child.focus && !window.unresponsive
+            PropertyChanges { target: unresponsiveEffectLoader; source: "" }
+        },
+        State {
+            name: "focused-unresponsive"
+            when: child.focus && window.unresponsive
+            PropertyChanges { target: unresponsiveEffectLoader; source: "overlays/UnresponsiveOverlay.qml" }
+        },
+        State {
+            name: "unfocused-unresponsive"
+            when: !child.focus && window.unresponsive
+            PropertyChanges { target: unresponsiveEffectLoader; source: "overlays/UnresponsiveOverlay.qml" }
+        }
+    ]
     rotation: {
         switch (_greenisland_output.transform) {
         case WaylandOutput.Transform90:
@@ -61,22 +83,56 @@ Item {
             child.surface.clientRenderingEnabled = visible;
     }
 
-    QtObject {
-        id: margins
+    SurfaceRenderer {
+        anchors.fill: parent
+        source: child
+        z: 1
+    }
 
-        property real left: 0
-        property real top: 0
-        property real right: 0
-        property real bottom: 0
+    /*
+     * Connections to child or surface
+     */
+
+    Connections {
+        target: child
+        onSurfaceDestroyed: runDestroyAnimation()
     }
 
     Connections {
         target: child.surface
-        onPong: {
-            // Surface replied with a pong this means it's responsive
-            pingPongTimer.running = false;
-            unresponsive = false;
-        }
+        onPong: pongSurface()
+        onSizeChanged: setSize()
+        onUnmapped: runUnmapAnimation()
+    }
+
+    /*
+     * Animations
+     */
+
+    function runMapAnimation() {
+        if (animation && animation.mapAnimation)
+            animation.mapAnimation.start();
+    }
+
+    function runUnmapAnimation() {
+        if (animation && animation.unmapAnimation)
+            animation.unmapAnimation.start();
+    }
+
+    function runDestroyAnimation() {
+        if (animation && animation.destroyAnimation)
+            animation.destroyAnimation.start();
+    }
+
+    /*
+     * Ping/pong
+     */
+
+    Loader {
+        id: unresponsiveEffectLoader
+        anchors.fill: parent
+        z: visible ? 2 : 0
+        visible: status == Loader.Ready
     }
 
     Timer {
@@ -95,5 +151,20 @@ Item {
         // surface is unresponsive and raise the flag
         child.surface.ping();
         pingPongTimer.running = true;
+    }
+
+    function pongSurface() {
+        // Surface replied with a pong this means it's responsive
+        pingPongTimer.running = false;
+        unresponsive = false;
+    }
+
+    /*
+     * Miscellaneous
+     */
+
+    function setSize() {
+        window.width = child.surface.size.width;
+        window.height = child.surface.size.height;
     }
 }

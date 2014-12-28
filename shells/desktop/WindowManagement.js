@@ -45,6 +45,20 @@ function surfaceMapped(surface) {
         console.debug("\trole:", firstView.role);
         console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
     }
+    switch (surface.windowType) {
+    case WaylandQuickSurface.Toplevel:
+        console.debug("\ttype: Toplevel");
+        break;
+    case WaylandQuickSurface.Popup:
+        console.debug("\ttype: Popup");
+        break;
+    case WaylandQuickSurface.Transient:
+        console.debug("\ttype: Transient");
+        break;
+    default:
+        console.debug("\ttype: Unknown");
+        break;
+    }
 
     // Call a specialized method to deal with application or
     // shell windows
@@ -113,14 +127,19 @@ function mapApplicationSurface(surface) {
             return;
     }
 
-    // Does it need a decoration?
-    var decorated = surface.windowType === WaylandQuickSurface.Toplevel ||
-            surface.windowType === WaylandQuickSurface.Transient;
-    // XXX: Disable server-side decorations until ready
-    decorated = false;
-
     // Create surface item
-    var component = Qt.createComponent(decorated ? "DecoratedWindow.qml" : "UndecoratedWindow.qml");
+    var componentName = "ToplevelWindow.qml";
+    switch (surface.windowType) {
+    case WaylandQuickSurface.Popup:
+        componentName = "PopupWindow.qml";
+        break;
+    case WaylandQuickSurface.Transient:
+        componentName = "TransientWindow.qml";
+        break;
+    default:
+        break;
+    }
+    var component = Qt.createComponent(componentName);
     if (component.status !== Component.Ready) {
         console.error(component.errorString());
         return;
@@ -199,12 +218,15 @@ function mapApplicationSurface(surface) {
     if (surface.windowType === WaylandQuickSurface.Toplevel)
         window.parent = compositorRoot.screenView.currentWorkspace;
     else
-        window.parent = transientParentView;
+        window.parent = transientParentView.parent;
     window.child.takeFocus();
 
     // Set transient children so that the parent can be desaturated
     if (surface.windowType === WaylandQuickSurface.Transient)
         transientParentView.parent.transientChildren = window;
+    // Set popup child to enable dim effect
+    else if (surface.windowType === WaylandQuickSurface.Popup)
+        transientParentView.parent.popupChild = window;
 
     // Log coordinates for debugging purpose
     console.debug("\tposition:", window.x + "," + window.y);
@@ -304,9 +326,11 @@ function unmapApplicationSurface(surface) {
     }
 
     // Unset transient children so that the parent can go back to normal
+    // and also bring to front
     if (surface.windowType === WaylandQuickSurface.Transient) {
         var transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
         transientParentView.parent.transientChildren = null;
+        moveFront(transientParentView.parent);
     }
 
     // Looks like popup surfaces for Qt applications are never destroyed,
@@ -342,6 +366,7 @@ function moveFront(window) {
     console.debug("\ti =", initialZ + 1, "; i <", windowList.length);
     for (i = initialZ + 1; i < windowList.length; ++i) {
         windowList[i].z = window.z;
+        console.log("----", windowList[i], windowList[i].child, windowList[i].child.focus);
         windowList[i].child.focus = false;
         console.debug("\t" + windowList[i], "z:", windowList[i].z);
         window.z = i;

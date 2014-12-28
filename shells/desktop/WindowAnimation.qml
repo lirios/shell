@@ -29,9 +29,9 @@ import QtQuick 2.0
 Item {
     property Item windowItem
 
-    property var map: null
-    property var unmap: null
-    property var destroy: null
+    property var mapAnimation: null
+    property var unmapAnimation: null
+    property var destroyAnimation: null
 
     signal mapAnimationStarted()
     signal mapAnimationStopped()
@@ -45,27 +45,27 @@ Item {
     id: root
 
     Component.onCompleted: {
-        if (map) {
-            map.onRunningChanged.connect(function() {
-                if (map.running)
+        if (mapAnimation) {
+            mapAnimation.onRunningChanged.connect(function() {
+                if (mapAnimation.running)
                     root.mapAnimationStarted();
                 else
                     root.mapAnimationStopped();
             });
         }
 
-        if (unmap) {
-            unmap.onRunningChanged.connect(function() {
-                if (unmap.running)
+        if (unmapAnimation) {
+            unmapAnimation.onRunningChanged.connect(function() {
+                if (unmapAnimation.running)
                     root.unmapAnimationStarted();
                 else
                     root.unmapAnimationStopped();
             });
         }
 
-        if (destroy) {
-            destroy.onRunningChanged.connect(function() {
-                if (destroy.running)
+        if (destroyAnimation) {
+            destroyAnimation.onRunningChanged.connect(function() {
+                if (destroyAnimation.running)
                     root.destroyAnimationStarted()
                 else
                     root.destroyAnimationStopped();
