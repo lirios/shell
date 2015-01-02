@@ -232,7 +232,7 @@ Item {
         g.x = pt.x;
         g.y = pt.y;
         g.height -= panel.height;
-        _greenisland_output.availableGeometry = g;;
+        _greenisland_output.availableGeometry = g;
         console.debug("Available geometry for", name, "is:", _greenisland_output.availableGeometry);
     }
 }
