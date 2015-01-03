@@ -102,7 +102,7 @@ WindowWrapper {
 
         NumberAnimation {
             easing.type: Easing.InCubic
-            duration: units.shortDuration
+            duration: units.longDuration
         }
     }
 
@@ -111,7 +111,7 @@ WindowWrapper {
 
         NumberAnimation {
             easing.type: Easing.InQuad
-            duration: units.shortDuration
+            duration: units.longDuration
         }
     }
 
