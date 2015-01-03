@@ -146,6 +146,9 @@ Item {
         // Enable input in windows
         compositorRoot.enableInput();
 
+        // Enable output zoom again
+        compositorRoot.screenView.zoomEnabled = true;
+
         // Sanity check
         if (!workspace) {
             console.error("Running PresentWindowsGrid without a workspace, cannot continue.");
@@ -190,8 +193,5 @@ Item {
                 window.savedProperties.bringToFront = false;
             }
         }
-
-        // Enable output zoom again
-        compositorRoot.screenView.zoomEnabled = true;
     }
 }
