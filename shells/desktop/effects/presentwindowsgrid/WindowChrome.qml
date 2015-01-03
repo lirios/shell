@@ -25,6 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import "../.."
 
 Item {
     property var window: parent
@@ -36,31 +38,36 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: "red"
+        anchors.margins: -units.gridUnit * 0.25
+        color: Theme.view.selectedBackgroundColor
         opacity: mouseArea.containsMouse ? 0.5 : 0.0
+        radius: units.gridUnit * 0.2
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
-                duration: 250
+                duration: units.shortDuration
             }
         }
     }
 
     Image {
+        anchors {
+            top: parent.top
+            right: parent.right
+            margins: -units.gridUnit * 0.25
+        }
         source: "../../images/closebutton.png"
-        x: parent.width - 32
-        y: 4
         z: 4
-        width: 24
-        height: 24
+        width: units.iconSizes.smallMedium
+        height: width
         smooth: true
         opacity: mouseArea.containsMouse ? 1.0 : 0.0
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
-                duration: 250
+                duration: units.shortDuration
             }
         }
 
