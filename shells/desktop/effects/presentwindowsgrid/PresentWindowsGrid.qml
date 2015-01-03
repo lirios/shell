@@ -44,6 +44,9 @@ Item {
         if (num === 0)
             return 0;
 
+        // Disable input in windows
+        compositorRoot.disableInput();
+
         // Disable output zoom
         compositorRoot.screenView.zoomEnabled = false;
 
@@ -74,13 +77,16 @@ Item {
                 continue;
 
             // Save original properties
-            window.savedProperties.x = window.x;
-            window.savedProperties.y = window.y;
-            window.savedProperties.z = window.z;
-            window.savedProperties.scale = window.scale;
-            window.savedProperties.chrome = window.chrome;
-            if (window.savedProperties.chrome)
-                window.savedProperties.chrome.visible = false;
+            if (!window.savedProperties.saved) {
+                window.savedProperties.x = window.x;
+                window.savedProperties.y = window.y;
+                window.savedProperties.z = window.z;
+                window.savedProperties.scale = window.scale;
+                window.savedProperties.chrome = window.chrome;
+                if (window.savedProperties.chrome)
+                    window.savedProperties.chrome.visible = false;
+                window.savedProperties.saved = true;
+            }
 
             // Calculate grid
             if (index > 0) {
@@ -105,13 +111,15 @@ Item {
             var cy = (iy + 0.5) * cellHeight;
 
             // Create a chrome
-            var chromeComponent = Qt.createComponent("WindowChrome.qml");
-            var chrome = chromeComponent.createObject(window.child);
-            window.chrome = chrome;
-            window.chrome.clicked.connect(function() {
-                root.end();
-                window.z = 1;
-            });
+            if (!window.chrome) {
+                var chromeComponent = Qt.createComponent("WindowChrome.qml");
+                var chrome = chromeComponent.createObject(window.child);
+                window.chrome = chrome;
+                window.chrome.clicked.connect(function() {
+                    window.savedProperties.bringToFront = true;
+                    compositorRoot.endEffect("PresentWindowsGrid");
+                });
+            }
 
             // Enable behavior animations
             window.animationsEnabled = true;
@@ -126,7 +134,18 @@ Item {
         }
     }
 
+    function addWindow(window) {
+        run();
+    }
+
+    function removeWindow(window) {
+        run();
+    }
+
     function end() {
+        // Enable input in windows
+        compositorRoot.enableInput();
+
         // Sanity check
         if (!workspace) {
             console.error("Running PresentWindowsGrid without a workspace, cannot continue.");
@@ -160,9 +179,16 @@ Item {
             window.chrome = window.savedProperties.chrome;
             if (window.chrome)
                 window.chrome.visible = true;
+            window.savedProperties.saved = false;
 
             // Enable behavior animations
             window.animationsEnabled = true;
+
+            // Bring window to front
+            if (window.savedProperties.bringToFront) {
+                compositorRoot.moveFront(window);
+                window.savedProperties.bringToFront = false;
+            }
         }
 
         // Enable output zoom again

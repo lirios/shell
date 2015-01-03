@@ -103,8 +103,12 @@ function surfaceDestroyed(surface) {
             // remove the surface from the model
             if (entry.window.chrome)
                 entry.window.chrome.destroy();
+            entry.window.parent = null;
             entry.window.destroy();
             surfaceModel.remove(i, 1);
+
+            // Remove window from effect
+            compositorRoot.removeWindowFromEffect(entry.window);
             break;
         }
     }
@@ -232,6 +236,9 @@ function mapApplicationSurface(surface) {
     console.debug("\tposition:", window.x + "," + window.y);
     console.debug("\tscreen:", compositorRoot.screenView.name);
 
+    // Add window to current effect
+    compositorRoot.addWindowToEffect(window);
+
     // Run map animation
     if (typeof(window.runMapAnimation) != "undefined")
         window.runMapAnimation();
@@ -324,6 +331,9 @@ function unmapApplicationSurface(surface) {
             break;
         }
     }
+
+    // Remove window from effect
+    compositorRoot.removeWindowFromEffect(window);
 
     // Unset transient children so that the parent can go back to normal
     // and also bring to front

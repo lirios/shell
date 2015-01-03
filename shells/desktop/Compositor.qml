@@ -127,6 +127,13 @@ Item {
                 }
             }
         }
+
+        // Present windows
+        if (event.modifiers & Qt.AltModifier && event.key === Qt.Key_E) {
+            compositorRoot.toggleEffect("PresentWindowsGrid");
+            event.accepted = true;
+            return;
+        }
     }
     onKeyReleased: {
         // Window switcher
@@ -406,6 +413,18 @@ Item {
 
     function toggleEffect(name) {
         screenView.workspacesView.currentWorkspace.effects.toggle(name);
+    }
+
+    function endEffect(name) {
+        screenView.workspacesView.currentWorkspace.effects.end(name);
+    }
+
+    function addWindowToEffect(window) {
+        screenView.workspacesView.currentWorkspace.effects.addWindow(window);
+    }
+
+    function removeWindowFromEffect(window) {
+        screenView.workspacesView.currentWorkspace.effects.removeWindow(window);
     }
 
     function moveFront(window) {

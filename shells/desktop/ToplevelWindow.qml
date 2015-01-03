@@ -30,6 +30,7 @@ import GreenIsland 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 WindowWrapper {
+    property var chrome: null
     property var popupChild: null
     property var transientChildren: null
     property bool animationsEnabled: false
@@ -87,6 +88,9 @@ WindowWrapper {
         property real y
         property real z
         property real scale
+        property var chrome
+        property bool bringToFront: false
+        property bool saved: false
     }
 
     /*
@@ -176,8 +180,8 @@ WindowWrapper {
         drag {
             target: window
             axis: Drag.XAndYAxis
-            maximumX: window.parent.width
-            maximumY: window.parent.height
+            maximumX: window.parent ? window.parent.width : 0
+            maximumY: window.parent ? window.parent.height : 0
         }
         enabled: false
         z: 1000000

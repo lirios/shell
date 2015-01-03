@@ -124,6 +124,34 @@ ListModel {
         }
     }
 
+    function addWindow(window) {
+        var i;
+        for (i = 0; i < root.count; i++) {
+            // Find the effect
+            var object = root.get(i);
+            if (!object.running || !object.instance)
+                continue;
+
+            // Add window only to running effects
+            if (object.instance.addWindow !== undefined)
+                object.instance.addWindow(window);
+        }
+    }
+
+    function removeWindow(window) {
+        var i;
+        for (i = 0; i < root.count; i++) {
+            // Find the effect
+            var object = root.get(i);
+            if (!object.running || !object.instance)
+                continue;
+
+            // Remove window from running effects
+            if (object.instance.removeWindow !== undefined)
+                object.instance.removeWindow(window);
+        }
+    }
+
     function end(name) {
         var i;
         for (i = 0; i < root.count; i++) {
