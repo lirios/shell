@@ -61,6 +61,7 @@ WindowWrapper {
     }
 
     // Dim windows when not focused
+/* TODO: This looks horrible on windows with CSD
     ContrastEffect {
         id: dimEffect
         anchors.fill: parent
@@ -70,6 +71,7 @@ WindowWrapper {
         z: visible ? 2 : 0
         visible: !child.focus && !popupChild
     }
+*/
 
     // Connect to surface or child events
     Connections {
