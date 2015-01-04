@@ -31,7 +31,7 @@ import "../.."
 Item {
     property var window: parent
 
-    signal clicked()
+    signal clicked(var window)
 
     id: root
     anchors.fill: parent
@@ -81,6 +81,6 @@ Item {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
-        onClicked: root.clicked()
+        onClicked: root.clicked(window.parent)
     }
 }

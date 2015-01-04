@@ -115,8 +115,8 @@ Item {
                 var chromeComponent = Qt.createComponent("WindowChrome.qml");
                 var chrome = chromeComponent.createObject(window.child);
                 window.chrome = chrome;
-                window.chrome.clicked.connect(function() {
-                    window.savedProperties.bringToFront = true;
+                window.chrome.clicked.connect(function(w) {
+                    w.savedProperties.bringToFront = true;
                     compositorRoot.endEffect("PresentWindowsGrid");
                 });
             }
@@ -160,6 +160,9 @@ Item {
         if (num === 0)
             return 0;
 
+        // Window that was selected with a click before
+        var selectedWindow = null;
+
         // Loop over windows to restore saved properties
         var i, window;
         for (i = 0; i < num; i++) {
@@ -189,9 +192,12 @@ Item {
 
             // Bring window to front
             if (window.savedProperties.bringToFront) {
-                compositorRoot.moveFront(window);
+                selectedWindow = window;
                 window.savedProperties.bringToFront = false;
             }
         }
+
+        if (selectedWindow)
+            compositorRoot.moveFront(selectedWindow);
     }
 }
