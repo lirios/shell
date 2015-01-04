@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
 {
     // Application
     GreenIsland::HomeApplication app(argc, argv);
+    app.setApplicationName("Hawaii");
 
     // Enable debug messages
     QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true"));
