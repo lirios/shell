@@ -179,6 +179,7 @@ function mapApplicationSurface(surface) {
         window.z = windowList.length;
         windowList.push(window);
         activeWindow = window;
+        compositorRoot.activeWindow = activeWindow;
     }
 
     // Transient parent view
@@ -389,6 +390,7 @@ function moveFront(window) {
     window.parent.parent.selectWorkspace(window.parent);
     window.child.takeFocus();
     activeWindow = window;
+    compositorRoot.activeWindow = activeWindow;
 }
 
 function getActiveWindowIndex() {

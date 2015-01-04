@@ -28,6 +28,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
+import GreenIsland.Core 1.0
+import "."
 import "indicators"
 
 Rectangle {
@@ -37,7 +39,50 @@ Rectangle {
     signal indicatorTriggered(var indicator)
 
     color: "transparent"
-    height: launcher.itemSize
+    height: launcher.itemSize + launcher.itemPadding
+
+    Behavior on color {
+        ColorAnimation { duration: units.longDuration }
+    }
+
+    Behavior on width {
+        NumberAnimation {
+            easing.type: Easing.InSine
+            duration: units.longDuration
+        }
+    }
+
+    Behavior on height {
+        NumberAnimation {
+            easing.type: Easing.InSine
+            duration: units.longDuration
+        }
+    }
+
+    Connections {
+        target: compositorRoot
+        onActiveWindowChanged: {
+            if (!activeWindow) {
+                color = "transparent";
+                launcher.iconSize = units.iconSizes.large;
+            }
+        }
+    }
+
+    Connections {
+        target: compositorRoot.activeWindow ? compositorRoot.activeWindow.child.surface : null
+        onStateChanged: {
+            // TODO: Don't resize the panel, the window is maximized before we change the available
+            // geometry resulting in a "hole" between the window and the panel
+            if (compositorRoot.activeWindow.child.surface.state === QuickSurface.Maximized) {
+                color = Theme.rgba(Theme.window.backgroundColor, 0.85);
+                //launcher.iconSize = units.iconSizes.medium;
+            } else {
+                color = "transparent";
+                //launcher.iconSize = units.iconSizes.large;
+            }
+        }
+    }
 
     RowLayout {
         anchors.fill: parent
@@ -57,7 +102,8 @@ Rectangle {
             id: launcher
 
             Layout.fillWidth: true
-            Layout.fillHeight: true
+            //Layout.fillHeight: true
+            Layout.alignment: Qt.AlignVCenter
         }
 
         RowLayout {

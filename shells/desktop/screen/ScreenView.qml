@@ -138,6 +138,7 @@ Item {
                 bottom: parent.bottom
             }
             z: 3
+            onHeightChanged: setAvailableGeometry()
             onIndicatorTriggered: {
                 // AppChooser special case
                 if (indicator.name === "appchooser") {
@@ -225,11 +226,13 @@ Item {
         onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
     }
 
-    Component.onCompleted: {
+    function setAvailableGeometry() {
         // Set available geometry so that windows are maximized properly
         var pt = _greenisland_output.mapToGlobal(0, 0);
         var g = Qt.rect(pt.x, pt.y, _greenisland_output.geometry.width, _greenisland_output.geometry.height - panel.height);
         _greenisland_output.availableGeometry = g;
         console.debug("Available geometry for", name, "is:", _greenisland_output.availableGeometry);
     }
+
+    Component.onCompleted: setAvailableGeometry()
 }

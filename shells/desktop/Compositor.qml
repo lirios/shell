@@ -36,6 +36,7 @@ import "screen"
 Item {
     readonly property alias screenView: screenView
     readonly property alias surfaceModel: surfaceModel
+    property var activeWindow: null
     readonly property int activeWindowIndex: WindowManagement.getActiveWindowIndex()
     readonly property var windowList: WindowManagement.windowList
 

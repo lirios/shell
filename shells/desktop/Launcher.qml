@@ -49,6 +49,20 @@ Item {
             width: itemSize
             height: width
 
+            Behavior on width {
+                NumberAnimation {
+                    easing.type: Easing.Linear
+                    duration: units.shortDuration
+                }
+            }
+
+            Behavior on height {
+                NumberAnimation {
+                    easing.type: Easing.Linear
+                    duration: units.shortDuration
+                }
+            }
+
             Components.Icon {
                 anchors.centerIn: parent
                 iconName: model.iconName
@@ -101,9 +115,6 @@ Item {
         add: Transition {
             NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.shortDuration }
         }
-        displaced: Transition {
-            NumberAnimation { properties: "x,y"; duration: units.shortDuration }
-        }
         populate: Transition {
             NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.longDuration }
         }
@@ -117,13 +128,13 @@ Item {
         function calcWidth() {
             if (orientation == ListView.Horizontal)
                 return contentWidth;
-            return itemSize + itemPadding;
+            return itemSize + (itemPadding / 2);
         }
 
         function calcHeight() {
             if (orientation == ListView.Vertical)
                 return contentHeight;
-            return itemSize + itemPadding;
+            return itemSize + (itemPadding / 2);
         }
     }
 }
