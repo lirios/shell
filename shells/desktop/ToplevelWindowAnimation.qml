@@ -119,5 +119,9 @@ WindowAnimation {
             to: 0.0
             duration: 300
         }
+
+        ScriptAction {
+            script: animation.windowItem.destroy()
+        }
     }
 }

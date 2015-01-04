@@ -93,24 +93,36 @@ function surfaceUnmapped(surface) {
 function surfaceDestroyed(surface) {
     console.debug("Surface", surface, "destroyed");
 
-    // Remove surface from model
+    // Destroy window
     var i;
     for (i = 0; i < surfaceModel.count; i++) {
         var entry = surfaceModel.get(i);
 
         if (entry.surface === surface) {
-            // Destroy window representation and
-            // remove the surface from the model
-            if (entry.window.chrome)
-                entry.window.chrome.destroy();
-            entry.window.parent = null;
             entry.window.destroy();
-            surfaceModel.remove(i, 1);
-
-            // Remove window from effect
-            compositorRoot.removeWindowFromEffect(entry.window);
-            break;
+            forgetWindow(entry.window);
+            return;
         }
+    }
+}
+
+function forgetWindow(window) {
+    var i;
+    for (i = 0; i < surfaceModel.count; i++) {
+        var entry = surfaceModel.get(i);
+
+        if (entry.window !== window)
+            continue;
+
+        // Remove window from list
+        surfaceModel.remove(i, 1);
+        windowList.splice(i, 1);
+
+        // Remove window from effect
+        window.parent = null;
+        compositorRoot.removeWindowFromEffect(window);
+
+        return;
     }
 }
 
@@ -341,17 +353,6 @@ function unmapApplicationSurface(surface) {
         var transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
         transientParentView.parent.transientChildren = null;
         moveFront(transientParentView.parent);
-    }
-
-    // Looks like popup surfaces for Qt applications are never destroyed,
-    // this means that the next time the surface is mapped we'll see it
-    // in the surface model and don't create a window representation, hence
-    // we destroy the surface item when it's unmapped
-    if (surface.windowType === WaylandQuickSurface.Popup) {
-        if (window.chrome)
-            window.chrome.destroy();
-        window.destroy();
-        surfaceModel.remove(i, 1);
     }
 }
 

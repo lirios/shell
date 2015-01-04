@@ -207,4 +207,14 @@ WindowWrapper {
         enabled: false
         z: 1000000
     }
+
+    /*
+     * Component
+     */
+
+    Component.onDestruction: {
+        // Destroy chrome if any
+        if (window.chrome)
+            window.chrome.destroy();
+    }
 }

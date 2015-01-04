@@ -99,7 +99,7 @@ Item {
     }
 
     Connections {
-        target: child.surface
+        target: child ? child.surface : null
         onPong: pongSurface()
         onSizeChanged: setSize()
         onUnmapped: runUnmapAnimation()
@@ -166,5 +166,16 @@ Item {
     function setSize() {
         window.width = child.surface.size.width;
         window.height = child.surface.size.height;
+    }
+
+    /*
+     * Component
+     */
+
+    Component.onDestruction: {
+        // Remove from parent so it's not shown by present windows and
+        // destroy child
+        compositorRoot.forgetWindow(window);
+        window.child.destroy();
     }
 }

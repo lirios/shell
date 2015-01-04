@@ -431,6 +431,10 @@ Item {
         return WindowManagement.moveFront(window);
     }
 
+    function forgetWindow(window) {
+        return WindowManagement.forgetWindow(window);
+    }
+
     function enableInput() {
         var i;
         for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
