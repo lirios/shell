@@ -37,8 +37,7 @@ import "private/Utils.js" as Utils
 QtControlsStyle.ButtonStyle {
     property int minimumWidth: Layout.minimumWidth + style.padding.left + style.padding.right
     property int minimumHeight: Layout.minimumHeight + style.padding.left + style.padding.right
-    //property size mSize: theme.mSize(theme.defaultFont)
-property size mSize: Qt.size(10, 10)
+    property size mSize: theme.mSize(theme.defaultFont)
     property bool pressed: control.pressed || control.checked
 
     padding {
