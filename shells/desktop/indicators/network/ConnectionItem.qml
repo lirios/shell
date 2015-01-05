@@ -105,35 +105,35 @@ Item {
         }
     }
 
-    RowLayout {
+    ColumnLayout {
         id: mainLayout
-        spacing: units.smallSpacing
+        spacing: units.largeSpacing
 
-        Components.Icon {
-            iconName: indicator.massageIconName(ConnectionIcon)
-            width: units.iconSizes.medium
-            height: width
-            color: Theme.panel.textColor
-
-            Layout.alignment: Qt.AlignTop
-        }
-
-        ColumnLayout {
+        RowLayout {
             spacing: units.smallSpacing
 
-            Label {
-                id: label
-                text: ItemUniqueName
-                elide: Text.ElideRight
-                font.weight: ConnectionState === PlasmaNM.Enums.Activated ? Font.DemiBold : Font.Normal
-                font.italic: ConnectionState === PlasmaNM.Enums.Activating ? true : false
+            Components.Icon {
+                iconName: indicator.massageIconName(ConnectionIcon)
+                width: units.iconSizes.medium
+                height: width
                 color: Theme.panel.textColor
 
-                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignTop
             }
 
-            RowLayout {
+            ColumnLayout {
                 spacing: units.smallSpacing
+
+                Label {
+                    id: label
+                    text: ItemUniqueName
+                    elide: Text.ElideRight
+                    font.weight: ConnectionState === PlasmaNM.Enums.Activated ? Font.DemiBold : Font.Normal
+                    font.italic: ConnectionState === PlasmaNM.Enums.Activating ? true : false
+                    color: Theme.panel.textColor
+
+                    Layout.fillWidth: true
+                }
 
                 Label {
                     id: statusLabel
@@ -172,46 +172,38 @@ Item {
                     Layout.alignment: Qt.AlignTop
                 }
 
-                RowLayout {
-                    spacing: units.smallSpacing
+                Loader {
+                    id: expandableLoader
+                    visible: status == Loader.Ready
 
-                    BusyIndicator {
-                        width: units.iconSizes.medium
-                        height: width
-                        running: ConnectionState === PlasmaNM.Enums.Activating
-                        visible: running && !stateChangedButton.visible
-                    }
-
-                    ToolButton {
-                        id: stateChangeButton
-                        iconName: "network-connect-symbolic"
-                        //opacity: mouseArea.containsMouse ? 1.0 : 0.0
-                        visible: opacity == 1.0
-                        text: ConnectionState === PlasmaNM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
-                        tooltip: text
-                        onClicked: changeState()
-
-                        Behavior on opacity {
-                            NumberAnimation {
-                                easing.type: Easing.InOutQuad
-                                duration: units.shortDuration
-                            }
-                        }
-                    }
-
-                    Layout.alignment: Qt.AlignRight
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                 }
-            }
-
-            Loader {
-                id: expandableLoader
 
                 Layout.fillWidth: true
-                Layout.fillHeight: true
             }
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            Item {
+                Layout.fillWidth: true
+            }
+
+            ToolButton {
+                id: stateChangeButton
+                iconName: ConnectionState === PlasmaNM.Enums.Deactivated ? "network-connect-symbolic" : "network-disconnect-symbolic"
+                //opacity: mouseArea.containsMouse ? 1.0 : 0.0
+                tooltip: ConnectionState === PlasmaNM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
+                visible: opacity == 1.0
+                onClicked: changeState()
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        easing.type: Easing.InOutQuad
+                        duration: units.shortDuration
+                    }
+                }
+
+                Layout.alignment: Qt.AlignTop
+            }
         }
     }
 
@@ -261,8 +253,8 @@ Item {
                     regExp: {
                         if (SecurityType === PlasmaNM.Enums.StaticWep)
                             /^(?:[\x20-\x7F]{5}|[0-9a-fA-F]{10}|[\x20-\x7F]{13}|[0-9a-fA-F]{26}){1}$/
-                        else
-                            /^(?:[\x20-\x7F]{8,64}){1}$/
+                                                                                                   else
+                                                                                                   /^(?:[\x20-\x7F]{8,64}){1}$/
                     }
                 }
                 onAccepted: changeState()

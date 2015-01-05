@@ -41,6 +41,8 @@ RowLayout {
         id: label
         font.weight: Font.DemiBold
         color: Theme.panel.textColor
+
+        Layout.fillWidth: true
     }
 
     ToolButton {
