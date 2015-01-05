@@ -45,10 +45,13 @@ ProcessController::ProcessController(QObject *parent)
 
     // Full screen shell
     m_fullScreenShell = new QProcess(this);
-    m_fullScreenShell->setProgram(QStringLiteral("weston"));
+    m_fullScreenShell->setProcessChannelMode(QProcess::ForwardedChannels);
+    m_fullScreenShell->setProgram(QStringLiteral(INSTALL_BINDIR "/weston"));
     m_fullScreenShell->setArguments(QStringList()
                                     << QStringLiteral("--shell=fullscreen-shell.so")
                                     << QStringLiteral("--socket=") + m_fullScreenShellSocket);
+    connect(m_fullScreenShell, SIGNAL(finished(int,QProcess::ExitStatus)),
+            this, SLOT(fullScreenShellFinished(int,QProcess::ExitStatus)));
 
     m_fullScreenShellWatcher = new QFileSystemWatcher(this);
     m_fullScreenShellWatcher->addPath(QString::fromUtf8(qgetenv("XDG_RUNTIME_DIR")));
@@ -57,6 +60,7 @@ ProcessController::ProcessController(QObject *parent)
 
     // Compositor process
     m_compositor = new QProcess(this);
+    m_compositor->setProcessChannelMode(QProcess::ForwardedChannels);
     m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
     m_compositor->setArguments(QStringList()
                                << QStringLiteral("-platform")
@@ -68,12 +72,6 @@ ProcessController::ProcessController(QObject *parent)
                                << QStringLiteral("org.hawaii.desktop"));
     connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
-    connect(m_compositor, &QProcess::readyReadStandardError, [=]() {
-        qWarning() << qPrintable(m_compositor->readAllStandardError());
-    });
-    connect(m_compositor, &QProcess::readyReadStandardOutput, [=]() {
-        qDebug() << qPrintable(m_compositor->readAllStandardOutput());
-    });
 }
 
 void ProcessController::start()
@@ -140,6 +138,7 @@ void ProcessController::directoryChanged(const QString &path)
     // called over and over again
     m_fullScreenShellWatcher->disconnect(this);
     m_fullScreenShellWatcher->deleteLater();
+    m_fullScreenShellWatcher = Q_NULLPTR;
     startCompositor();
 }
 
