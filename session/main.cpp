@@ -48,11 +48,16 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
+    // Nest into another compositor
+    QCommandLineOption nestedOption(QStringList() << QStringLiteral("n") << QStringLiteral("nested"),
+                                    TR("Nest into another Wayland compositor"));
+    parser.addOption(nestedOption);
+
     // Parse command line
     parser.process(app);
 
     // Process controller that manages the compositor
-    ProcessController processController;
+    ProcessController processController(parser.isSet(nestedOption));
 
     // Start the compositor
     processController.start();

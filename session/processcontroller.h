@@ -36,7 +36,7 @@ class ProcessController : public QObject
 {
     Q_OBJECT
 public:
-    ProcessController(QObject *parent = Q_NULLPTR);
+    ProcessController(bool nested = false, QObject *parent = Q_NULLPTR);
 
     void start();
 

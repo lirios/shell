@@ -35,8 +35,9 @@
 #define FULLSCREEN_SHELL_SOCKET "hawaii-master-"
 #define HAWAII_SOCKET "hawaii-slave-"
 
-ProcessController::ProcessController(QObject *parent)
+ProcessController::ProcessController(bool nested, QObject *parent)
     : QObject(parent)
+    , m_fullScreenShell(Q_NULLPTR)
 {
     // Wayland sockets
     QString random = randomString();
@@ -44,45 +45,55 @@ ProcessController::ProcessController(QObject *parent)
     m_fullScreenShellSocket = QStringLiteral(FULLSCREEN_SHELL_SOCKET) + random;
 
     // Full screen shell
-    m_fullScreenShell = new QProcess(this);
-    m_fullScreenShell->setProcessChannelMode(QProcess::ForwardedChannels);
-    m_fullScreenShell->setProgram(QStringLiteral(INSTALL_BINDIR "/weston"));
-    m_fullScreenShell->setArguments(QStringList()
-                                    << QStringLiteral("--shell=fullscreen-shell.so")
-                                    << QStringLiteral("--socket=") + m_fullScreenShellSocket);
-    connect(m_fullScreenShell, SIGNAL(finished(int,QProcess::ExitStatus)),
-            this, SLOT(fullScreenShellFinished(int,QProcess::ExitStatus)));
+    if (nested) {
+        m_fullScreenShell = new QProcess(this);
+        m_fullScreenShell->setProcessChannelMode(QProcess::ForwardedChannels);
+        m_fullScreenShell->setProgram(QStringLiteral(INSTALL_BINDIR "/weston"));
+        m_fullScreenShell->setArguments(QStringList()
+                                        << QStringLiteral("--shell=fullscreen-shell.so")
+                                        << QStringLiteral("--socket=") + m_fullScreenShellSocket);
+        connect(m_fullScreenShell, SIGNAL(finished(int,QProcess::ExitStatus)),
+                this, SLOT(fullScreenShellFinished(int,QProcess::ExitStatus)));
 
-    m_fullScreenShellWatcher = new QFileSystemWatcher(this);
-    m_fullScreenShellWatcher->addPath(QString::fromUtf8(qgetenv("XDG_RUNTIME_DIR")));
-    connect(m_fullScreenShellWatcher, SIGNAL(directoryChanged(QString)),
-            this, SLOT(directoryChanged(QString)));
+        m_fullScreenShellWatcher = new QFileSystemWatcher(this);
+        m_fullScreenShellWatcher->addPath(QString::fromUtf8(qgetenv("XDG_RUNTIME_DIR")));
+        connect(m_fullScreenShellWatcher, SIGNAL(directoryChanged(QString)),
+                this, SLOT(directoryChanged(QString)));
+    }
 
     // Compositor process
     m_compositor = new QProcess(this);
     m_compositor->setProcessChannelMode(QProcess::ForwardedChannels);
     m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
     m_compositor->setArguments(QStringList()
-                               << QStringLiteral("-platform")
-                               << QStringLiteral("wayland")
                                << QStringLiteral("-platformtheme")
                                << QStringLiteral("KDE")
-                               << QStringLiteral("--socket=") + m_compositorSocket
                                << QStringLiteral("-p")
                                << QStringLiteral("org.hawaii.desktop"));
+    if (nested) {
+        m_compositor->setArguments(m_compositor->arguments()
+                                   << QStringLiteral("-platform")
+                                   << QStringLiteral("wayland")
+                                   << QStringLiteral("--socket=") + m_compositorSocket);
+    }
     connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
 }
 
 void ProcessController::start()
 {
-    // Run the full screen shell compositor if enabled
-    qDebug() << "Running:" << qPrintable(m_fullScreenShell->program())
-             << qPrintable(m_fullScreenShell->arguments().join(" "));
-    m_fullScreenShell->start();
+    if (m_fullScreenShell) {
+        // Run the full screen shell compositor if enabled
+        qDebug() << "Running:" << qPrintable(m_fullScreenShell->program())
+                 << qPrintable(m_fullScreenShell->arguments().join(" "));
+        m_fullScreenShell->start();
 
-    if (!m_fullScreenShell->waitForStarted())
-        qFatal("Full Screen Shell compositor cannot be started, aborting...");
+        if (!m_fullScreenShell->waitForStarted())
+            qFatal("Full Screen Shell compositor cannot be started, aborting...");
+    } else {
+        // Start the compositor
+        startCompositor();
+    }
 }
 
 QString ProcessController::randomString() const
@@ -107,7 +118,8 @@ void ProcessController::startCompositor()
 {
     // Pass arguments for full screen shell and style
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
+    if (m_fullScreenShell)
+        env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
     env.insert(QStringLiteral("KSCREEN_BACKEND"), QStringLiteral("QScreen"));
     env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
     m_compositor->setProcessEnvironment(env);
@@ -126,6 +138,7 @@ void ProcessController::startCompositor()
 void ProcessController::directoryChanged(const QString &path)
 {
     Q_UNUSED(path);
+    Q_ASSERT(m_fullScreenShell);
 
     // Don't start until the full screen shell compositor is up
     const QString socketFileName = path + QStringLiteral("/") +
