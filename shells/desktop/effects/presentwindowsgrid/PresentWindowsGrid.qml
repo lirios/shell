@@ -116,6 +116,7 @@ Item {
                 var chrome = chromeComponent.createObject(window.child);
                 window.chrome = chrome;
                 window.chrome.clicked.connect(function(w) {
+                    compositorRoot.enableInput();
                     w.savedProperties.bringToFront = true;
                     compositorRoot.endEffect("PresentWindowsGrid");
                 });
