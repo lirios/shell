@@ -2,6 +2,7 @@ set(MODULE_FILES
     qmldir
     BusyIndicatorStyle.qml
     ButtonStyle.qml
+    FocusFrameStyle.qml
     Palette.qml
     ProgressBarStyle.qml
     ScrollViewStyle.qml
