@@ -46,22 +46,8 @@ Indicator {
                 color: Theme.panel.textColor
             }
 
-            Components.Icon {
-                property bool airplaneMode: false
-
-                id: airplaneModeIcon
-                iconName: airplaneMode ? "airplane-mode-symbolic" : "airplane-mode-disabled-symbolic"
-                width: units.iconSizes.smallMedium
-                height: width
-                color: Theme.panel.textColor
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        handler.enableAirplaneMode(airplaneModeIcon.airplaneMode);
-                        airplaneModeIcon.airplaneMode = !airplaneModeIcon.airplaneMode;
-                    }
-                }
+            NetworkIndicator.AirplaneMode {
+                onClicked: handler.enableAirplaneMode(airplaneMode)
             }
 
             ScrollView {
