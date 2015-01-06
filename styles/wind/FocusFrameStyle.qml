@@ -25,8 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 
-QtControlsStyle.FocusFrameStyle {
-    margin: -3
+Item {
+    property int margin: -3
 }

@@ -3,6 +3,7 @@ singleton Palette 1.0 Palette.qml
 BusyIndicatorStyle 1.0 BusyIndicatorStyle.qml
 ButtonStyle 1.0 ButtonStyle.qml
 CalendarStyle 1.0 CalendarStyle.qml
+FocusFrameStyle 1.0 FocusFrameStyle.qml
 GroupBoxStyle 1.0 GroupBoxStyle.qml
 ProgressBarStyle 1.0 ProgressBarStyle.qml
 ScrollViewStyle 1.0 ScrollViewStyle.qml
