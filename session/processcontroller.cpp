@@ -67,7 +67,7 @@ ProcessController::ProcessController(bool nested, QObject *parent)
     m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
     m_compositor->setArguments(QStringList()
                                << QStringLiteral("-platformtheme")
-                               << QStringLiteral("KDE")
+                               << QStringLiteral("Hawaii")
                                << QStringLiteral("-p")
                                << QStringLiteral("org.hawaii.desktop"));
     if (nested) {
