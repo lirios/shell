@@ -189,7 +189,7 @@ Item {
 
             ToolButton {
                 id: stateChangeButton
-                iconName: ConnectionState === PlasmaNM.Enums.Deactivated ? "network-connect-symbolic" : "network-disconnect-symbolic"
+                iconName: ConnectionState === PlasmaNM.Enums.Deactivated ? "network-connect" : "network-disconnect"
                 //opacity: mouseArea.containsMouse ? 1.0 : 0.0
                 tooltip: ConnectionState === PlasmaNM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
                 visible: opacity == 1.0
