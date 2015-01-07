@@ -121,7 +121,7 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
     case ItemViewActivateItemOnSingleClick:
         return QVariant(false);
     case SystemIconThemeName:
-        return m_settings->value("interface/icon-theme", "Captiva");
+        return m_settings->value("interface/icon-theme", "elegant");
     case SystemIconFallbackThemeName:
         return QVariant("hicolor");
     case IconThemeSearchPaths:
