@@ -47,6 +47,6 @@ RowLayout {
 
     ToolButton {
         id: refreshButton
-        iconName: "refresh-symbolic"
+        iconName: "view-refresh-symbolic"
     }
 }
