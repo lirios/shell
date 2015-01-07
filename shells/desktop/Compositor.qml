@@ -93,6 +93,8 @@ Item {
         State {
             name: "lock"
             PropertyChanges { target: keyFilter; enabled: false }
+            PropertyChanges { target: shieldLoader; source: ""; visible: false }
+            PropertyChanges { target: logoutLoader; source: ""; z: 899 }
             PropertyChanges { target: lockScreenLoader; source: "LockScreen.qml"; z: 910 }
             StateChangeScript { script: disableInput() }
         },
@@ -382,6 +384,7 @@ Item {
 
     Connections {
         target: logoutLoader.item
+        onSuspendRequested: compositorRoot.state = "lock"
         onCancel: compositorRoot.state = "session"
     }
 
