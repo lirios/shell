@@ -42,6 +42,8 @@ Item {
     signal logOutRequested()
     signal powerOffRequested()
     signal restartRequested()
+    signal suspendRequested()
+    signal hibernateRequested()
 
     id: root
     opacity: 0.0
@@ -67,11 +69,27 @@ Item {
             PropertyChanges { target: actionIcon; iconName: "system-reboot-symbolic" }
             PropertyChanges { target: actionLabel; text: qsTr("Restart") }
             PropertyChanges { target: okButton; text: qsTr("Restart") }
+        },
+        State {
+            name: "suspend"
+            PropertyChanges { target: __priv; currentAction: suspendRequested }
+            PropertyChanges { target: actionIcon; iconName: "system-suspend-symbolic" }
+            PropertyChanges { target: actionLabel; text: qsTr("Suspend") }
+            PropertyChanges { target: okButton; text: qsTr("Suspend") }
+        },
+        State {
+            name: "hibernate"
+            PropertyChanges { target: __priv; currentAction: hibernateRequested }
+            PropertyChanges { target: actionIcon; iconName: "system-suspend-hibernate-symbolic" }
+            PropertyChanges { target: actionLabel; text: qsTr("Hibernate") }
+            PropertyChanges { target: okButton; text: qsTr("Hibernate") }
         }
     ]
     onLogOutRequested: systemModel.triggerAction("logout")
     onPowerOffRequested: systemModel.triggerAction("shutdown")
     onRestartRequested: systemModel.triggerAction("reboot")
+    onSuspendRequested: systemModel.triggerAction("suspend")
+    onHibernateRequested: systemModel.triggerAction("hibernate")
 
     Behavior on opacity {
         NumberAnimation {
@@ -87,9 +105,11 @@ Item {
         property real timeout: 60
         property real remainingTime: timeout
         property var currentAction
-        property bool canLogOut: true
-        property bool canPowerOff: true
-        property bool canRestart: true
+        property bool canLogOut: systemModel.hasCapability(AppChooser.SystemModel.LogoutSession)
+        property bool canPowerOff: systemModel.hasCapability(AppChooser.SystemModel.Shutdown)
+        property bool canRestart: systemModel.hasCapability(AppChooser.SystemModel.Reboot)
+        property bool canSuspend: systemModel.hasCapability(AppChooser.SystemModel.SuspendToRam)
+        property bool canHibernate: systemModel.hasCapability(AppChooser.SystemModel.SuspendToDisk)
 
         onModeChanged: remainingTime = timeout
         onRemainingTimeChanged: {
@@ -185,6 +205,12 @@ Item {
                 case "restart":
                     msg = "The system will restart automatically in %1 seconds.";
                     break;
+                case "suspend":
+                    msg = "The system will be suspended automatically in %1 seconds.";
+                    break;
+                case "hibernate":
+                    msg = "The system will be hibernated automatically in %1 seconds.";
+                    break;
                 default:
                     break;
                 }
@@ -202,7 +228,7 @@ Item {
 
         Row {
             spacing: units.smallSpacing
-            visible: __priv.canLogOut || __priv.canPowerOff || __priv.canRestart
+            visible: __priv.canLogOut || __priv.canPowerOff || __priv.canRestart || __priv.canSuspend || __priv.canHibernate
 
             ExclusiveGroup { id: group }
 
@@ -240,6 +266,30 @@ Item {
                 checked: __priv.mode == "restart"
                 visible: __priv.canRestart
                 onClicked: __priv.mode = "restart"
+            }
+
+            ToolButton {
+                id: suspendButton
+                exclusiveGroup: group
+                iconName: "system-suspend-symbolic"
+                width: units.iconSizes.smallMedium
+                height: width
+                checkable: true
+                checked: __priv.mode == "suspend"
+                visible: __priv.canSuspend
+                onClicked: __priv.mode = "suspend"
+            }
+
+            ToolButton {
+                id: hibernateButton
+                exclusiveGroup: group
+                iconName: "system-suspend-hibernate-symbolic"
+                width: units.iconSizes.smallMedium
+                height: width
+                checkable: true
+                checked: __priv.mode == "hibernate"
+                visible: __priv.canHibernate
+                onClicked: __priv.mode = "hibernate"
             }
 
             Layout.alignment: Qt.AlignHCenter
