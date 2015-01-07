@@ -23,6 +23,8 @@
 #include "abstractentry.h"
 #include "abstractmodel.h"
 
+class PowerManager;
+
 class SystemEntry : public AbstractEntry
 {
     public:
@@ -66,6 +68,7 @@ class SystemModel : public AbstractModel
     private:
         QList<SystemEntry *> m_entryList;
         QHash<SystemEntry::Action, QString> m_favoriteIds;
+        PowerManager *m_powerManager;
 };
 
 #endif

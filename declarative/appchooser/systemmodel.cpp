@@ -19,6 +19,7 @@
 
 #include "systemmodel.h"
 #include "actionlist.h"
+#include "powermanager/powermanager.h"
 
 #include <QDBusConnection>
 #include <QDBusInterface>
@@ -37,6 +38,8 @@ SystemEntry::SystemEntry(SystemEntry::Action action, const QString &name, const 
 
 SystemModel::SystemModel(QObject *parent) : AbstractModel(parent)
 {
+    m_powerManager = new PowerManager(this);
+
     m_favoriteIds[SystemEntry::LockSession] = "lock-screen";
     m_favoriteIds[SystemEntry::LogoutSession] = "logout";
     m_favoriteIds[SystemEntry::NewSession] = "switch-user";
@@ -61,18 +64,21 @@ SystemModel::SystemModel(QObject *parent) : AbstractModel(parent)
     }
 #endif
 
-    QSet<Solid::PowerManagement::SleepState> sleepStates = Solid::PowerManagement::supportedSleepStates();
-
-    if (sleepStates.contains(Solid::PowerManagement::SuspendState)) {
+    if (m_powerManager->capabilities() & PowerManager::Suspend) {
         m_entryList << new SystemEntry(SystemEntry::SuspendToRam, i18n("Suspend"), "system-suspend");
     }
 
-    if (sleepStates.contains(Solid::PowerManagement::HibernateState)) {
+    if (m_powerManager->capabilities() & PowerManager::Hibernate) {
         m_entryList << new SystemEntry(SystemEntry::SuspendToDisk, i18n("Hibernate"), "system-suspend-hibernate");
     }
 
-    m_entryList << new SystemEntry(SystemEntry::Reboot, i18n("Restart"), "system-reboot");
-    m_entryList << new SystemEntry(SystemEntry::Shutdown, i18n("Shutdown"), "system-shutdown");
+    if (m_powerManager->capabilities() & PowerManager::Restart) {
+        m_entryList << new SystemEntry(SystemEntry::Reboot, i18n("Restart"), "system-reboot");
+    }
+
+    if (m_powerManager->capabilities() & PowerManager::PowerOff) {
+        m_entryList << new SystemEntry(SystemEntry::Shutdown, i18n("Shutdown"), "system-shutdown");
+    }
 }
 
 SystemModel::~SystemModel()
@@ -118,11 +124,13 @@ bool SystemModel::trigger(int row, const QString &actionId, const QVariant &argu
                 interface.asyncCall("Lock");
                 break;
             }
-#if 0
             case SystemEntry::LogoutSession:
+#if 0
                 KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeNone);
+#endif
                 break;
             case SystemEntry::NewSession:
+#if 0
             {
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 QDBusInterface interface("org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", bus);
@@ -130,21 +138,21 @@ bool SystemModel::trigger(int row, const QString &actionId, const QVariant &argu
                 m_displayManager.startReserve();
                 break;
             };
+#else
+            break;
 #endif
             case SystemEntry::SuspendToRam:
-                Solid::PowerManagement::requestSleep(Solid::PowerManagement::SuspendState, 0, 0);
+                m_powerManager->suspend();
                 break;
             case SystemEntry::SuspendToDisk:
-                Solid::PowerManagement::requestSleep(Solid::PowerManagement::HibernateState, 0, 0);
+                m_powerManager->hibernate();
                 break;
-#if 0
             case SystemEntry::Shutdown:
-                KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeHalt);
+                m_powerManager->powerOff();
                 break;
             case SystemEntry::Reboot:
-                KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeReboot);
+                m_powerManager->restart();
                 break;
-#endif
         }
 
         return true;
