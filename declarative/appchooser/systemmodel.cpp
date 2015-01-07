@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2014 by Eike Hein <hein@kde.org>                   *
+ *   Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -50,10 +51,12 @@ SystemModel::SystemModel(QObject *parent) : AbstractModel(parent)
 
     if (KAuthorized::authorizeKAction("lock_screen")) {
         m_entryList << new SystemEntry(SystemEntry::LockSession, i18n("Lock"), "system-lock-screen");
+        m_capabilities << LockSession;
     }
 
     if (KAuthorized::authorizeKAction("logout") && KAuthorized::authorize("logout")) {
         m_entryList << new SystemEntry(SystemEntry::LogoutSession, i18n("Logout"), "system-log-out");
+        m_capabilities << LogoutSession;
     }
 
 #if 0
@@ -61,23 +64,28 @@ SystemModel::SystemModel(QObject *parent) : AbstractModel(parent)
         && m_displayManager.isSwitchable()
         && m_displayManager.numReserve() >= 0) {
         m_entryList << new SystemEntry(SystemEntry::NewSession, i18n("New Session"), "system-switch-user");
+        m_capabilities << NewSession;
     }
 #endif
 
     if (m_powerManager->capabilities() & PowerManager::Suspend) {
         m_entryList << new SystemEntry(SystemEntry::SuspendToRam, i18n("Suspend"), "system-suspend");
+        m_capabilities << SuspendToRam;
     }
 
     if (m_powerManager->capabilities() & PowerManager::Hibernate) {
         m_entryList << new SystemEntry(SystemEntry::SuspendToDisk, i18n("Hibernate"), "system-suspend-hibernate");
+        m_capabilities << SuspendToDisk;
     }
 
     if (m_powerManager->capabilities() & PowerManager::Restart) {
         m_entryList << new SystemEntry(SystemEntry::Reboot, i18n("Restart"), "system-reboot");
+        m_capabilities << Reboot;
     }
 
     if (m_powerManager->capabilities() & PowerManager::PowerOff) {
         m_entryList << new SystemEntry(SystemEntry::Shutdown, i18n("Shutdown"), "system-shutdown");
+        m_capabilities << Shutdown;
     }
 }
 
@@ -106,6 +114,11 @@ QVariant SystemModel::data(const QModelIndex &index, int role) const
 int SystemModel::rowCount(const QModelIndex &parent) const
 {
     return parent.isValid() ? 0 : m_entryList.count();
+}
+
+bool SystemModel::hasCapability(const Capabilities &capability) const
+{
+    return m_capabilities.indexOf(capability) != -1;
 }
 
 bool SystemModel::trigger(int row, const QString &actionId, const QVariant &argument)

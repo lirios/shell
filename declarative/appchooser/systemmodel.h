@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2014 by Eike Hein <hein@kde.org>                        *
+ *   Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,14 +53,28 @@ class SystemEntry : public AbstractEntry
 class SystemModel : public AbstractModel
 {
     Q_OBJECT
+    Q_ENUMS(Capabilities)
 
     public:
+        enum Capabilities
+        {
+            LockSession,
+            LogoutSession,
+            NewSession,
+            SuspendToRam,
+            SuspendToDisk,
+            Reboot,
+            Shutdown
+        };
+
         explicit SystemModel(QObject *parent = 0);
         ~SystemModel();
 
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
         int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+        Q_INVOKABLE bool hasCapability(const Capabilities &capability) const;
 
         Q_INVOKABLE bool trigger(int row, const QString &actionId, const QVariant &argument);
 
@@ -68,6 +83,7 @@ class SystemModel : public AbstractModel
     private:
         QList<SystemEntry *> m_entryList;
         QHash<SystemEntry::Action, QString> m_favoriteIds;
+        QList<Capabilities> m_capabilities;
         PowerManager *m_powerManager;
 };
 
