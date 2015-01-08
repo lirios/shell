@@ -112,6 +112,13 @@ WindowWrapper {
         }
     }
 
+    Behavior on z {
+        NumberAnimation {
+            easing.type: Easing.OutQuad
+            duration: units.shortDuration
+        }
+    }
+
     Behavior on width {
         NumberAnimation {
             easing.type: Easing.InCubic
