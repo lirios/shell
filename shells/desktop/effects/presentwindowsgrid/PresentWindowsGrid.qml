@@ -122,9 +122,6 @@ Item {
                 });
             }
 
-            // Enable behavior animations
-            window.animationsEnabled = true;
-
             // Apply new properties
             window.x = cx - window.width / 2;
             window.y = cy - window.height / 2;
@@ -187,9 +184,6 @@ Item {
             if (window.chrome)
                 window.chrome.visible = true;
             window.savedProperties.saved = false;
-
-            // Enable behavior animations
-            window.animationsEnabled = true;
 
             // Bring window to front
             if (window.savedProperties.bringToFront) {

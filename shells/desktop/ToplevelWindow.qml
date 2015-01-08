@@ -33,7 +33,6 @@ WindowWrapper {
     property var chrome: null
     property var popupChild: null
     property var transientChildren: null
-    property bool animationsEnabled: false
     property alias savedProperties: saved
 
     id: window
@@ -100,8 +99,6 @@ WindowWrapper {
      */
 
     Behavior on x {
-        enabled: animationsEnabled
-
         NumberAnimation {
             easing.type: Easing.InCubic
             duration: units.longDuration
@@ -109,8 +106,6 @@ WindowWrapper {
     }
 
     Behavior on y {
-        enabled: animationsEnabled
-
         NumberAnimation {
             easing.type: Easing.InQuad
             duration: units.longDuration
@@ -118,8 +113,6 @@ WindowWrapper {
     }
 
     Behavior on width {
-        enabled: animationsEnabled
-
         NumberAnimation {
             easing.type: Easing.InCubic
             duration: units.shortDuration
@@ -127,8 +120,6 @@ WindowWrapper {
     }
 
     Behavior on height {
-        enabled: animationsEnabled
-
         NumberAnimation {
             easing.type: Easing.InCubic
             duration: units.shortDuration
@@ -136,8 +127,6 @@ WindowWrapper {
     }
 
     Behavior on scale {
-        enabled: animationsEnabled
-
         NumberAnimation {
             easing.type: Easing.InQuad
             duration: units.shortDuration
@@ -145,8 +134,6 @@ WindowWrapper {
     }
 
     Behavior on opacity {
-        enabled: animationsEnabled
-
         NumberAnimation {
             easing.type: Easing.Linear
             duration: units.shortDuration
