@@ -100,14 +100,14 @@ WindowWrapper {
 
     Behavior on x {
         NumberAnimation {
-            easing.type: Easing.InCubic
+            easing.type: Easing.OutQuad
             duration: units.longDuration
         }
     }
 
     Behavior on y {
         NumberAnimation {
-            easing.type: Easing.InQuad
+            easing.type: Easing.OutQuad
             duration: units.longDuration
         }
     }
@@ -121,29 +121,29 @@ WindowWrapper {
 
     Behavior on width {
         NumberAnimation {
-            easing.type: Easing.InCubic
+            easing.type: Easing.OutQuad
             duration: units.shortDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
-            easing.type: Easing.InCubic
+            easing.type: Easing.OutQuad
             duration: units.shortDuration
         }
     }
 
     Behavior on scale {
         NumberAnimation {
-            easing.type: Easing.InQuad
-            duration: units.shortDuration
+            easing.type: Easing.OutQuad
+            duration: units.longDuration
         }
     }
 
     Behavior on opacity {
         NumberAnimation {
-            easing.type: Easing.Linear
-            duration: units.shortDuration
+            easing.type: Easing.InSine
+            duration: units.longDUration
         }
     }
 
