@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,46 +24,24 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef PROCESSCONTROLLER_H
-#define PROCESSCONTROLLER_H
+#ifndef SESSIONMANAGER_H
+#define SESSIONMANAGER_H
 
 #include <QtCore/QObject>
-#include <QtCore/QProcess>
 
-class QFileSystemWatcher;
+class ProcessController;
 
-class ProcessController : public QObject
+class SessionManager : public QObject
 {
     Q_OBJECT
 public:
-    ProcessController(bool nested = false, QObject *parent = Q_NULLPTR);
+    SessionManager(ProcessController *controller);
 
-    void start();
-    void stop();
+public Q_SLOTS:
+    void logOut();
 
 private:
-    QProcess *m_compositor;
-    QStringList m_compositorArgs;
-    QString m_compositorSocket;
-
-    QProcess *m_fullScreenShell;
-    QStringList m_fullScreenShellArgs;
-    QString m_fullScreenShellSocket;
-    QFileSystemWatcher *m_fullScreenShellWatcher;
-
-    QString randomString() const;
-
-Q_SIGNALS:
-    void started();
-    void stopped();
-
-private Q_SLOTS:
-    void startCompositor();
-
-    void directoryChanged(const QString &path);
-
-    void compositorFinished(int code, const QProcess::ExitStatus &status);
-    void fullScreenShellFinished(int code, const QProcess::ExitStatus &status);
+    ProcessController *m_controller;
 };
 
-#endif // PROCESSCONTROLLER_H
+#endif // SESSIONMANAGER_H

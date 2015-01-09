@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,46 +24,26 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef PROCESSCONTROLLER_H
-#define PROCESSCONTROLLER_H
+#ifndef SESSIONADAPTOR_H
+#define SESSIONADAPTOR_H
 
-#include <QtCore/QObject>
-#include <QtCore/QProcess>
+#include <QtDBus/QDBusAbstractAdaptor>
 
-class QFileSystemWatcher;
+class SessionManager;
 
-class ProcessController : public QObject
+class SessionAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.hawaii.session")
 public:
-    ProcessController(bool nested = false, QObject *parent = Q_NULLPTR);
+    SessionAdaptor(SessionManager *sessionManager);
 
-    void start();
-    void stop();
+public Q_SLOTS:
+    bool canLogOut();
+    Q_NOREPLY void logOut();
 
 private:
-    QProcess *m_compositor;
-    QStringList m_compositorArgs;
-    QString m_compositorSocket;
-
-    QProcess *m_fullScreenShell;
-    QStringList m_fullScreenShellArgs;
-    QString m_fullScreenShellSocket;
-    QFileSystemWatcher *m_fullScreenShellWatcher;
-
-    QString randomString() const;
-
-Q_SIGNALS:
-    void started();
-    void stopped();
-
-private Q_SLOTS:
-    void startCompositor();
-
-    void directoryChanged(const QString &path);
-
-    void compositorFinished(int code, const QProcess::ExitStatus &status);
-    void fullScreenShellFinished(int code, const QProcess::ExitStatus &status);
+    SessionManager *m_sessionManager;
 };
 
-#endif // PROCESSCONTROLLER_H
+#endif // SESSIONADAPTOR_H

@@ -27,10 +27,13 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLoggingCategory>
+#include <QtDBus/QDBusConnection>
 
 #include "cmakedirs.h"
 #include "config.h"
 #include "processcontroller.h"
+#include "sessionadaptor.h"
+#include "sessionmanager.h"
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
@@ -58,6 +61,12 @@ int main(int argc, char *argv[])
 
     // Process controller that manages the compositor
     ProcessController processController(parser.isSet(nestedOption));
+
+    // Session manager
+    SessionManager sessionManager(&processController);
+    (void)new SessionAdaptor(&sessionManager);
+    QDBusConnection::sessionBus().registerService("org.hawaii.session");
+    QDBusConnection::sessionBus().registerObject("/HawaiiSession", &sessionManager);
 
     // Start the compositor
     processController.start();

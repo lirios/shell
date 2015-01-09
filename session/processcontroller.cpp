@@ -96,6 +96,18 @@ void ProcessController::start()
     }
 }
 
+void ProcessController::stop()
+{
+    // Stop the compositor, this will also stop fullscreen shell
+    // if it was started
+    m_compositor->terminate();
+    if (!m_compositor->waitForFinished())
+        m_compositor->kill();
+    m_compositor->deleteLater();
+    m_compositor = Q_NULLPTR;
+    Q_EMIT stopped();
+}
+
 QString ProcessController::randomString() const
 {
     // Courtesy of Merlin069 from:
@@ -134,6 +146,8 @@ void ProcessController::startCompositor()
         // Compositor failed to start, kill full screen shell and terminate
         qFatal("Compositor won't start, aborting...");
         compositorFinished(0, QProcess::NormalExit);
+    } else {
+        Q_EMIT started();
     }
 }
 
