@@ -2,7 +2,7 @@
 #
 # This file is part of Hawaii Shell.
 #
-# Copyright (C) 2013 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+# Copyright (C) 2013-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 #
 # Author(s):
 #    Pier Luigi Fiorini
@@ -24,14 +24,6 @@
 #
 # $END_LICENSE$
 #
-
-uxtype=$1
-
-test -n "$uxtype" || {
-    #echo "Unable to determine which UX to run" 1>&2
-    #exit 1
-    uxtype="desktop"
-}
 
 # Make sure we find Hawaii executables
 if test -n "$PATH"; then
@@ -58,12 +50,31 @@ fi
 export QML2_IMPORT_PATH
 
 # Make sure data directories are set
+if test -z "$XDG_DATA_HOME"; then
+    export XDG_DATA_HOME="$HOME/.local/share"
+fi
+if test -z "$XDG_CONFIG_HOME"; then
+    export XDG_CONFIG_HOME="$HOME/.config"
+fi
 if test -n "$XDG_DATA_DIRS"; then
     XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:$XDG_DATA_DIRS"
 else
-    XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:/usr/share:/usr/local/share"
+    XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:/usr/local/share:/usr/share"
 fi
 export XDG_DATA_DIRS
+
+# Enable Qt integration for OpenOffice.org
+export SAL_USE_VCLPLUGIN="kde"
+
+# Qt platform theme
+export QT_PLATFORM_PLUGIN="Hawaii"
+export QT_QPA_PLATFORMTHEME="Hawaii"
+
+# Use hawaii-applications.menu
+export XDG_MENU_PREFIX="hawaii-"
+
+# Set current desktop
+export XDG_CURRENT_DESKTOP="Hawaii"
 
 # Launch a session bus instance
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && type dbus-launch >/dev/null; then
@@ -76,5 +87,5 @@ if ! qdbus >/dev/null 2>/dev/null; then
     exit 1
 fi
 
-# Start the right shell
-@CMAKE_INSTALL_FULL_LIBEXECDIR@/hawaii-${uxtype}-shell
+# Start the actual session
+exec @CMAKE_INSTALL_FULL_BINDIR@/hawaii-session
