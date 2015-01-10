@@ -219,18 +219,6 @@ Item {
             // Start idle timer
             idleTimer.running = true
         }
-        onWorkspaceAdded: {
-            // Add a new workspace
-            screenView.workspacesView.add();
-        }
-        onWorkspaceRemoved: {
-            // Remove workspace
-            screenView.workspacesView.remove(index);
-        }
-        onWorkspaceSelected: {
-            // Select workspace
-            screenView.workspacesView.select(index);
-        }
         onSurfaceMapped: {
             // A surface was mapped
             WindowManagement.surfaceMapped(surface);
@@ -408,6 +396,18 @@ Item {
     Connections {
         target: lockScreenLoader.item
         onUnlocked: compositorRoot.state = "session"
+    }
+
+    /*
+     * Component
+     */
+
+    Component.onCompleted: {
+        // Create default 4 workspaces
+        var i;
+        for (i = 0; i < 4; i++)
+            screenView.workspacesView.add();
+        screenView.workspacesView.select(0);
     }
 
     /*
