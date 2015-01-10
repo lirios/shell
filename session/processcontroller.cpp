@@ -48,7 +48,7 @@ ProcessController::ProcessController(bool nested, QObject *parent)
     if (nested) {
         m_fullScreenShell = new QProcess(this);
         m_fullScreenShell->setProcessChannelMode(QProcess::ForwardedChannels);
-        m_fullScreenShell->setProgram(QStringLiteral(INSTALL_BINDIR "/weston"));
+        m_fullScreenShell->setProgram(QStringLiteral("weston"));
         m_fullScreenShell->setArguments(QStringList()
                                         << QStringLiteral("--shell=fullscreen-shell.so")
                                         << QStringLiteral("--socket=") + m_fullScreenShellSocket);
