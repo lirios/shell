@@ -3,7 +3,6 @@ set(MODULE_FILES
     BusyIndicatorStyle.qml
     ButtonStyle.qml
     FocusFrameStyle.qml
-    Palette.qml
     ProgressBarStyle.qml
     ScrollViewStyle.qml
     TextFieldStyle.qml

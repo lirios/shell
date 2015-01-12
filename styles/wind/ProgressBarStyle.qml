@@ -26,15 +26,15 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
-import QtQuick.Controls.Styles.Wind 1.0 as Wind
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "private/Utils.js" as Utils
 
 QtControlsStyle.ProgressBarStyle {
     id: style
     background: Rectangle {
-        property color baseColor: Wind.Palette.panel.backgroundColor
-        property color highlightColor: Wind.Palette.panel.selectedBackgroundColor
+        property color baseColor: Theme.Palette.panel.backgroundColor
+        property color highlightColor: Theme.Palette.panel.selectedBackgroundColor
 
         implicitWidth: units.gridUnit * 20
         implicitHeight: units.gridUnit
@@ -64,7 +64,7 @@ QtControlsStyle.ProgressBarStyle {
         }
     }
     progress: Rectangle {
-        property color progressColor: Wind.Palette.panel.selectedBackgroundColor
+        property color progressColor: Theme.Palette.panel.selectedBackgroundColor
 
         anchors {
             fill: parent

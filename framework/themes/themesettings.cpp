@@ -1,7 +1,7 @@
 /****************************************************************************
- * This file is part of Hawaii Framework.
+ * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -27,42 +27,36 @@
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
 
-#include "stylesettings.h"
+#include "themesettings.h"
 #include "cmakedirs.h"
 
-StyleSettings::StyleSettings(QObject *parent)
+ThemeSettings::ThemeSettings(QObject *parent)
     : QObject(parent)
 {
 }
 
-QString StyleSettings::name() const
+QString ThemeSettings::name() const
 {
     return QStringLiteral("Wind");
 }
 
-QString StyleSettings::path() const
+QString ThemeSettings::path() const
 {
     // TODO: Read style from settings
-    QString style = name();
-
-    // Try standard path first
-    QString path = QString("%1/Hawaii/Controls/Styles/%2").arg(QML_INSTALL_DIR).arg(style);
-    if (QDir(path).exists())
-        return path;
+    QString theme = name();
 
     // Return style only if it exists
     QStringList paths =
             QStandardPaths::locateAll(QStandardPaths::GenericDataLocation,
-                                      QStringLiteral("hawaii/styles/") + style,
+                                      QStringLiteral("hawaii/themes/") + theme,
                                       QStandardPaths::LocateDirectory);
     for (const QString &path: paths) {
         QDir dir(path);
         if (dir.exists())
-            return QUrl::fromLocalFile(path).toString();
+            return path;
     }
 
-    // Fall back to Base style
-    return QString("file://%1/Hawaii/Controls/Styles/Base").arg(QML_INSTALL_DIR);
+    return QString();
 }
 
-#include "moc_stylesettings.cpp"
+#include "moc_themesettings.cpp"

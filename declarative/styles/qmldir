@@ -2,8 +2,6 @@ module Hawaii.Controls.Styles
 plugin declarative_hawaiistyles
 Style 1.0 Style.qml
 StyledItem 1.0 StyledItem.qml
-Palette 1.0 Palette.qml
-PaletteValues 1.0 PaletteValues.qml
 DialogStyle 1.0 Base/DialogStyle.qml
 NotificationStyle 1.0 Base/NotificationStyle.qml
 OverlayStyle 1.0 Base/OverlayStyle.qml

@@ -24,13 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-pragma Singleton
-
 import QtQuick 2.0
-import Hawaii.Controls.Styles 1.0 as Styles
+import Hawaii.Themes 1.0 as Themes
 
-Styles.Palette {
-    window: Styles.PaletteValues {
+Themes.Palette {
+    window: Themes.PaletteValues {
         textColor: "#f1f1f1"
         textEffectColor: "#000000"
         backgroundColor: "#3e4243"
@@ -40,7 +38,7 @@ Styles.Palette {
         primaryColor: "#6f7678"
         secondaryColor: "#494c4d"
     }
-    view: Styles.PaletteValues {
+    view: Themes.PaletteValues {
         textColor: "#000000"
         textEffectColor: "#ffffff"
         backgroundColor: "#f1f1f1"
@@ -50,7 +48,7 @@ Styles.Palette {
         primaryColor: "#cdcdcd"
         secondaryColor: "#ececec"
     }
-    panel: Styles.PaletteValues {
+    panel: Themes.PaletteValues {
         textColor: "#ffffff"
         textEffectColor: "#000000"
         backgroundColor: "#31363b"

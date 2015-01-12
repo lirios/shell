@@ -6,7 +6,6 @@ add_definitions(-DQT_PLUGIN)
 
 set(SOURCES
     plugin.cpp
-    stylesettings.cpp
 )
 
 add_library(declarative_hawaiistyles SHARED ${SOURCES})
@@ -21,8 +20,6 @@ set(MODULE_FILES
     qmldir
     Style.qml
     StyledItem.qml
-    Palette.qml
-    PaletteValues.qml
 )
 install(FILES ${MODULE_FILES}
         DESTINATION ${QML_INSTALL_DIR}/Hawaii/Controls/Styles)

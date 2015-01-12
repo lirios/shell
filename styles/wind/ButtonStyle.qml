@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 import Hawaii.Components 1.0 as Components
-import QtQuick.Controls.Styles.Wind 1.0 as Wind
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
@@ -37,8 +37,7 @@ import "private/Utils.js" as Utils
 QtControlsStyle.ButtonStyle {
     property int minimumWidth: Layout.minimumWidth + style.padding.left + style.padding.right
     property int minimumHeight: Layout.minimumHeight + style.padding.left + style.padding.right
-    //property size mSize: theme.mSize(theme.defaultFont)
-property size mSize: Qt.size(10,10)
+    property size mSize: Theme.mSize(Theme.defaultFont)
     property bool pressed: control.pressed || control.checked
 
     padding {
@@ -65,7 +64,7 @@ property size mSize: Qt.size(10,10)
                     return control.iconSource;
                 return "";
             }
-            color: Wind.Palette.panel.textColor
+            color: Theme.Palette.panel.textColor
             width: control.iconSize > 0 ? control.iconSize : units.iconSizes.medium
             height: width
             visible: valid
@@ -76,7 +75,7 @@ property size mSize: Qt.size(10,10)
             text: control.text
             visible: control.text != ""
             height: parent.height
-            color: Wind.Palette.panel.textColor
+            color: Theme.Palette.panel.textColor
             horizontalAlignment: icon.valid ? Text.AlignLeft : Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
@@ -125,7 +124,7 @@ property size mSize: Qt.size(10,10)
         id: normalComponent
 
         Rectangle {
-            property color c: Wind.Palette.panel.backgroundColor
+            property color c: Theme.Palette.panel.backgroundColor
 
             id: baserect
             anchors.fill: parent

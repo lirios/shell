@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2012-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,16 +24,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+#ifndef THEMESETTINGS_H
+#define THEMESETTINGS_H
 
-QtObject {
-    property PaletteValues window
-    property PaletteValues view
-    property PaletteValues panel
+#include <QtQml/QQmlEngine>
 
-    function rgba(color, a) {
-        var newColor = color;
-        newColor.a = a;
-        return newColor;
-    }
-}
+class ThemeSettings : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(QString path READ path NOTIFY pathChanged)
+public:
+    ThemeSettings(QObject *parent = 0);
+
+    QString name() const;
+    QString path() const;
+
+Q_SIGNALS:
+    void nameChanged();
+    void pathChanged();
+};
+
+#endif // THEMESETTINGS_H

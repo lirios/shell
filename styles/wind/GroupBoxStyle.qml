@@ -27,7 +27,7 @@
 import QtQuick 2.1
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 import QtQuick.Controls.Private 1.0 as QtControlsPrivate
-import QtQuick.Controls.Styles.Wind 1.0 as Wind
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import "private/Utils.js" as Utils
@@ -37,7 +37,7 @@ QtControlsPrivate.GroupBoxStyle {
 
     padding {
         left: units.smallSpacing * 2
-        top: (units.smallSpacing * 2.5) + theme.mSize(label.font).height
+        top: (units.smallSpacing * 2.5) + Theme.mSize(label.font).height
         right: units.smallSpacing * 2
         bottom: units.smallSpacing * 2
     }
@@ -60,10 +60,10 @@ QtControlsPrivate.GroupBoxStyle {
 
         Rectangle {
             anchors.fill: parent
-            anchors.topMargin: theme.mSize(label.font).height
-            border.color: Utils.blendColors(Wind.Palette.panel.backgroundColor, Wind.Palette.panel.textColor, 0.2)
+            anchors.topMargin: Theme.mSize(label.font).height
+            border.color: Utils.blendColors(Theme.Palette.panel.backgroundColor, Theme.Palette.panel.textColor, 0.2)
             border.width: 1
-            color: Utils.blendColors(Wind.Palette.panel.backgroundColor, Wind.Palette.view.backgroundColor, 0.5)
+            color: Utils.blendColors(Theme.Palette.panel.backgroundColor, Theme.Palette.view.backgroundColor, 0.5)
             radius: units.gridUnit * 0.5
             visible: !control.flat
         }

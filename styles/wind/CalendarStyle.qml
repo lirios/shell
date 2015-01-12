@@ -28,7 +28,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.2 as QtControlsStyle
-import QtQuick.Controls.Styles.Wind 1.0 as Wind
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
@@ -37,7 +37,7 @@ import "private/Utils.js" as Utils
 QtControlsStyle.CalendarStyle {
     id: style
     background: Item {}
-    gridColor: Utils.rgba(Wind.Palette.panel.textColor, 0.3)
+    gridColor: Utils.rgba(Theme.Palette.panel.textColor, 0.3)
     gridVisible: true
     navigationBar: RowLayout {
         width: parent.width
@@ -79,18 +79,18 @@ QtControlsStyle.CalendarStyle {
             anchors.fill: parent
             anchors.margins: styleData.selected ? -1 : 0
             border.color: "transparent"
-            color: styleData.date !== undefined && styleData.selected ? Wind.Palette.panel.selectedBackgroundColor : "transparent"
+            color: styleData.date !== undefined && styleData.selected ? Theme.Palette.panel.selectedBackgroundColor : "transparent"
         }
 
         PlasmaComponents.Label {
             id: label
             anchors.centerIn: parent
             color: {
-                var theColor = Utils.rgba(Wind.Palette.panel.textColor, 0.5); //Qt.lighter(Wind.Palette.panel.textColor, 1.4);
+                var theColor = Utils.rgba(Theme.Palette.panel.textColor, 0.5); //Qt.lighter(Theme.Palette.panel.textColor, 1.4);
                 if (styleData.valid) {
-                    theColor = styleData.visibleMonth ? Qt.darker(Wind.Palette.panel.textColor, 1.2) : Qt.ligther(Wind.Palette.panel.textColor, 1.35);
+                    theColor = styleData.visibleMonth ? Qt.darker(Theme.Palette.panel.textColor, 1.2) : Qt.ligther(Theme.Palette.panel.textColor, 1.35);
                     if (styleData.selected)
-                        theColor = Wind.Palette.panel.selectedBackgroundColor;
+                        theColor = Theme.Palette.panel.selectedBackgroundColor;
                 }
                 return theColor;
             }
@@ -98,22 +98,22 @@ QtControlsStyle.CalendarStyle {
         }
     }
     dayOfWeekDelegate: Rectangle {
-        color: style.gridVisible ? Utils.rgba(Wind.Palette.panel.backgroundColor, 0.5) : "transparent"
-        implicitHeight: theme.mSize(theme.smallestFont).height
+        color: style.gridVisible ? Utils.rgba(Theme.Palette.panel.backgroundColor, 0.5) : "transparent"
+        implicitHeight: Theme.mSize(Theme.smallestFont).height
 
         PlasmaComponents.Label {
             anchors.centerIn: parent
             text: control.__locale.dayName(styleData.dayOfWeek, control.dayOfWeekFormat)
-            font: theme.smallestFont
+            font: Theme.smallestFont
         }
     }
     weekNumberDelegate: Item {
-        implicitWidth: 2 * theme.mSize(theme.smallestFont).width + units.smallSpacing
+        implicitWidth: 2 * Theme.mSize(Theme.smallestFont).width + units.smallSpacing
 
         PlasmaComponents.Label {
             anchors.centerIn: parent
             text: styleData.weekNumber
-            font: theme.smallestFont
+            font: Theme.smallestFont
         }
     }
 }
