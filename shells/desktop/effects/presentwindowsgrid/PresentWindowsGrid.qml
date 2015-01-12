@@ -113,13 +113,18 @@ Item {
             // Create a chrome
             if (!window.chrome) {
                 var chromeComponent = Qt.createComponent("WindowChrome.qml");
-                var chrome = chromeComponent.createObject(window.child);
+                var chrome = chromeComponent.createObject(window);
                 window.chrome = chrome;
+                window.chrome.anchors.fill = window;
                 window.chrome.clicked.connect(function(w) {
                     compositorRoot.enableInput();
                     w.savedProperties.bringToFront = true;
                     compositorRoot.endEffect("PresentWindowsGrid");
                 });
+
+                // Put the window behind its chrome
+                window.z = 0;
+                window.chrome.z = 1;
             }
 
             // Apply new properties

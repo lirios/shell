@@ -35,7 +35,6 @@ Item {
     signal clicked(var window)
 
     id: root
-    anchors.fill: parent
 
     RectangularGlow {
         anchors.fill: parent
@@ -75,14 +74,15 @@ Item {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: window.surface.destroySurface()
+            onClicked: window.child.surface.destroySurface()
         }
     }
 
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        acceptedButtons: Qt.AllButtons
         hoverEnabled: true
-        onClicked: root.clicked(window.parent)
+        onClicked: root.clicked(window)
     }
 }
