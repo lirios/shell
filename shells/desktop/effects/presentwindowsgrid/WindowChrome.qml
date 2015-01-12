@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtGraphicalEffects 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "../.."
 
@@ -36,12 +37,13 @@ Item {
     id: root
     anchors.fill: parent
 
-    Rectangle {
+    RectangularGlow {
         anchors.fill: parent
-        anchors.margins: -units.gridUnit * 0.25
+        glowRadius: 10
+        spread: 0.2
         color: Theme.view.selectedBackgroundColor
+        cornerRadius: units.gridUnit * 0.2
         opacity: mouseArea.containsMouse ? 0.5 : 0.0
-        radius: units.gridUnit * 0.2
 
         Behavior on opacity {
             NumberAnimation {
