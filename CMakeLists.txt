@@ -39,7 +39,7 @@ configure_file(
 add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 
 # Set up packaging
-set(CPACK_PACKAGE_NAME "kahai")
+set(CPACK_PACKAGE_NAME "hawaii-shell")
 set(CPACK_PACKAGE_VERSION "${HAWAII_VERSION_STRING}")
 set(CPACK_GENERATOR "TGZ")
 set(CPACK_SET_DESTDIR FALSE)
