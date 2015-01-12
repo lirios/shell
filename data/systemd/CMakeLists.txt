@@ -1,36 +1,38 @@
 #
-# To enable Hawaii components:
+# You can run Hawaii on:
 #
-# systemctl --user enable hawaii-weston.service
-# systemctl --user enable hawaii-notifications-daemon.service
+#  - KMS (this requires Qt >= 5.5) and root privileges
+#  - Nested into Weston >= 1.5
 #
-# If you want to use the QML compositor instead of Weston:
+# To make Hawaii run on KMS:
 #
-# systemctl --user disable hawaii-weston.service
-# systemctl --user enable hawaii-shell.service
+# systemctl --user enable hawaii-kms.service
+#
+# To make Hawaii run nested into Weston:
+#
+# systemctl --user enable hawaii-nested.service
 #
 # To start a Hawaii shell upon login:
 #
 # systemctl --user enable hawaii.target
 #
+# Otherwise to run it on demand:
+#
+# systemctl --user isolate hawaii.target
+#
 
 configure_file(
-    hawaii-notifications-daemon.service.in
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-notifications-daemon.service
+    hawaii-kms.service.in
+    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-kms.service
 )
 configure_file(
-    hawaii-shell.service.in
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-shell.service
-)
-configure_file(
-    hawaii-weston.service.in
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-weston.service
+    hawaii-nested.service.in
+    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-nested.service
 )
 
 set(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-notifications-daemon.service
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-shell.service
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-weston.service
+    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-kms.service
+    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-nested.service
     hawaii.target
 )
 
