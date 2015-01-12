@@ -190,7 +190,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        PlasmaComponents.Label {
+        Label {
             id: actionText
             text: {
                 var msg = "";
