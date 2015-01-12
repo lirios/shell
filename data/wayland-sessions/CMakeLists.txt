@@ -1,5 +1,5 @@
 configure_file(
-    hawaii.desktop.ini
+    hawaii.desktop.in
     ${CMAKE_CURRENT_BINARY_DIR}/hawaii.desktop
 )
 
