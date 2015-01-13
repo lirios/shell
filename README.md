@@ -10,21 +10,18 @@ Only the desktop shell is implemented at the moment though.
 
 ## Dependencies
 
-In order to build and install Hawaii Shell you need Wayland 1.6 and Qt 5.4 or better with
-at least the following modules:
+You need the following modules and their dependencies:
+
+* weston (from http://wayland.freedesktop.org)
+* greenisland (from https://github.com/greenisland)
+
+Make sure you also have Qt 5.4 or better with the following modules:
 
 * qtbase
 * qtdeclarative
 * qtgraphicaleffects
 * qtquickcontrols
 * qtsvg
-
-Qt 5 binaries can be downloaded from http://qt-project.org/downloads
-
-You also need the following modules:
-
-* weston (from http://wayland.freedesktop.org)
-* greenisland (from https://github.com/greenisland)
 
 And the following modules from KDE:
 
@@ -35,6 +32,7 @@ And the following modules from KDE:
 * solid
 * plasma-framework
 * plasma-workspace
+* plasma-nm
 
 ## Build
 
