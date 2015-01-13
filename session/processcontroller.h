@@ -36,7 +36,9 @@ class ProcessController : public QObject
 {
     Q_OBJECT
 public:
-    ProcessController(bool nested = false, QObject *parent = Q_NULLPTR);
+    ProcessController(const QString &mode, QObject *parent = Q_NULLPTR);
+
+    QString mode() const;
 
     void start();
     void stop();
@@ -50,6 +52,8 @@ private:
     QStringList m_fullScreenShellArgs;
     QString m_fullScreenShellSocket;
     QFileSystemWatcher *m_fullScreenShellWatcher;
+
+    QString m_mode;
 
     QString randomString() const;
 

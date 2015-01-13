@@ -4,7 +4,7 @@ Description=Hawaii (Nested into Weston)
 [Service]
 Type=notify
 Environment="DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus" SAL_USE_VCLPLUGIN=kde QT_QPA_PLATFORMTHEME=Hawaii XDG_MENU_PREFIX=hawaii- XDG_CURRENT_DESKTOP=Hawaii
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session --nested
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session --mode="nested"
 
 [Install]
 Alias=hawaii.service

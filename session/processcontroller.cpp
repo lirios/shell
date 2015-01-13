@@ -35,9 +35,13 @@
 #define FULLSCREEN_SHELL_SOCKET "hawaii-master-"
 #define HAWAII_SOCKET "hawaii-slave-"
 
-ProcessController::ProcessController(bool nested, QObject *parent)
+#define NESTED_MODE QStringLiteral("nested")
+#define EGLFS_MODE QStringLiteral("eglfs")
+
+ProcessController::ProcessController(const QString &mode, QObject *parent)
     : QObject(parent)
     , m_fullScreenShell(Q_NULLPTR)
+    , m_mode(mode)
 {
     // Wayland sockets
     QString random = randomString();
@@ -45,7 +49,7 @@ ProcessController::ProcessController(bool nested, QObject *parent)
     m_fullScreenShellSocket = QStringLiteral(FULLSCREEN_SHELL_SOCKET) + random;
 
     // Full screen shell
-    if (nested) {
+    if (m_mode == NESTED_MODE) {
         m_fullScreenShell = new QProcess(this);
         m_fullScreenShell->setProcessChannelMode(QProcess::ForwardedChannels);
         m_fullScreenShell->setProgram(QStringLiteral("weston"));
@@ -70,14 +74,23 @@ ProcessController::ProcessController(bool nested, QObject *parent)
                                << QStringLiteral("Hawaii")
                                << QStringLiteral("-p")
                                << QStringLiteral("org.hawaii.desktop"));
-    if (nested) {
+    if (m_mode == NESTED_MODE) {
         m_compositor->setArguments(m_compositor->arguments()
                                    << QStringLiteral("-platform")
                                    << QStringLiteral("wayland")
                                    << QStringLiteral("--socket=") + m_compositorSocket);
+    } else if (m_mode == EGLFS_MODE) {
+        m_compositor->setArguments(m_compositor->arguments()
+                                   << QStringLiteral("-platform")
+                                   << QStringLiteral("eglfs"));
     }
     connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
+}
+
+QString ProcessController::mode() const
+{
+    return m_mode;
 }
 
 void ProcessController::start()
