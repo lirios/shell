@@ -28,6 +28,7 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLoggingCategory>
 #include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusError>
 
 #include "cmakedirs.h"
 #include "config.h"
@@ -65,8 +66,13 @@ int main(int argc, char *argv[])
     // Session manager
     SessionManager sessionManager(&processController);
     (void)new SessionAdaptor(&sessionManager);
-    QDBusConnection::sessionBus().registerService("org.hawaii.session");
-    QDBusConnection::sessionBus().registerObject("/HawaiiSession", &sessionManager);
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    if (!bus.registerService("org.hawaii.session"))
+        qFatal("Couldn't register org.hawaii.session D-Bus service: %s",
+               qPrintable(bus.lastError().message()));
+    if (!bus.registerObject("/HawaiiSession", &sessionManager))
+        qFatal("Couldn't register /HawaiiSession D-Bus object: %s",
+               qPrintable(bus.lastError().message()));
 
     // Start the compositor
     processController.start();
