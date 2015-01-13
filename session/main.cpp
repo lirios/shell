@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     // Mode
     QCommandLineOption modeOption(QStringList() << QStringLiteral("m") << QStringLiteral("mode"),
-                                  TR("Specify session mode"), TR("mode"));
+                                  TR("Specify session mode (possible values: nested, eglfs)."), TR("mode"));
     parser.addOption(modeOption);
 
     // Parse command line

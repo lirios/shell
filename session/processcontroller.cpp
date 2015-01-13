@@ -83,6 +83,12 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
         m_compositor->setArguments(m_compositor->arguments()
                                    << QStringLiteral("-platform")
                                    << QStringLiteral("eglfs"));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        // eglfs mode uses libinput with Qt 5.5+
+        m_compositor->setArguments(m_compositor->arguments()
+                                   << QStringLiteral("-plugin")
+                                   << QStringLiteral("libinput"));
+#endif
     }
     connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
@@ -148,6 +154,11 @@ void ProcessController::startCompositor()
     env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
     if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
         env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    // eglfs mode uses libinput with Qt 5.5+
+    if (m_mode == EGLFS_MODE)
+        env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
+#endif
     m_compositor->setProcessEnvironment(env);
 
     // Start the process
