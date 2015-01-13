@@ -63,7 +63,7 @@ Item {
                 checked: true
                 exclusiveGroup: group
                 style: CategoryStyle {}
-                text: i18n("All")
+                text: qsTr("All")
                 onClicked: root.selected(null)
             }
 

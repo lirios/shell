@@ -43,7 +43,7 @@ RowLayout {
         width: units.iconSizes.large
         height: width
         iconName: "system-log-out-symbolic"
-        tooltip: i18n("Log out from current session")
+        tooltip: qsTr("Log out from current session")
         enabled: systemModel.hasCapability(AppChooser.SystemModel.LogoutSession)
         onClicked: compositorRoot.state = "logout"
     }
@@ -52,7 +52,7 @@ RowLayout {
         width: units.iconSizes.large
         height: width
         iconName: "system-shutdown-symbolic"
-        tooltip: i18n("Power off the system")
+        tooltip: qsTr("Power off the system")
         enabled: systemModel.hasCapability(AppChooser.SystemModel.Shutdown)
         onClicked: compositorRoot.state = "poweroff"
     }
@@ -61,7 +61,7 @@ RowLayout {
         width: units.iconSizes.large
         height: width
         iconName: "system-reboot-symbolic"
-        tooltip: i18n("Restart the system")
+        tooltip: qsTr("Restart the system")
         enabled: systemModel.hasCapability(AppChooser.SystemModel.Reboot)
         onClicked: compositorRoot.state = "restart"
     }

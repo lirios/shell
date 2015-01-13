@@ -97,7 +97,7 @@ Item {
 
             TextField {
                 id: searchField
-                placeholderText: i18n("Search...")
+                placeholderText: qsTr("Search...")
                 focus: true
                 //clearButtonShown: true
                 onTextChanged: runnerModel.query = text
