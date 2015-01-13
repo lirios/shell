@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     if (idleInterval >= 5)
         app.setIdleTime(idleInterval * 1000);
 
-            // Create the compositor and run
+    // Create the compositor and run
     if (!app.run(parser.value(pluginOption)))
         return 1;
 

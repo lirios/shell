@@ -149,7 +149,7 @@ Item {
         source: picture
         radius: 32
 
-        // Catch mouse InputMethod
+        // Catch mouse input
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.AllButtons
