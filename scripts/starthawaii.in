@@ -88,4 +88,4 @@ if ! qdbus >/dev/null 2>/dev/null; then
 fi
 
 # Start the actual session
-exec @CMAKE_INSTALL_FULL_BINDIR@/hawaii-session
+exec @CMAKE_INSTALL_FULL_BINDIR@/hawaii-session $@
