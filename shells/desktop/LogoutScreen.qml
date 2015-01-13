@@ -161,7 +161,7 @@ Item {
 
         Components.Icon {
             id: actionIcon
-            width: units.iconSizes.huge
+            width: units.iconSizes.enormous
             height: width
             color: Theme.panel.textColor
 
