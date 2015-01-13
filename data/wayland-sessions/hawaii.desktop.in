@@ -2,5 +2,6 @@
 Name=Hawaii
 Comment=QtQuick and Wayland based desktop environment
 Exec=@CMAKE_INSTALL_FULL_BINDIR@/starthawaii
+TryExec=@CMAKE_INSTALL_FULL_BINDIR@/starthawaii
 Icon=start-here
 Type=Application
