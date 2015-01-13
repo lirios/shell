@@ -27,9 +27,9 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 import Hawaii.Components 1.0 as Components
+import Hawaii.Controls 1.0 as Controls
 import ".."
 import "network" as NetworkIndicator
 
@@ -41,7 +41,7 @@ Indicator {
         ColumnLayout {
             spacing: units.largeSpacing
 
-            PlasmaExtras.Heading {
+            Controls.Heading {
                 text: qsTr("Network")
                 color: Theme.panel.textColor
             }

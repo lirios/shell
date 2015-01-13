@@ -27,16 +27,16 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
+import Hawaii.Controls 1.0 as Controls
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
 import "../.."
 
 ColumnLayout {
     implicitHeight: label.paintedHeight + horizLine.height + runnerMatches.contentHeight + (spacing * 2)
     spacing: units.smallSpacing
 
-    PlasmaExtras.Heading {
+    Controls.Heading {
         id: label
         level: 3
         elide: Text.ElideRight

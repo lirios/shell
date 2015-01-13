@@ -29,10 +29,10 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.hawaii.appchooser 0.1 as AppChooser
 import Hawaii.Components 1.0 as Components
+import Hawaii.Controls 1.0 as Controls
 import "."
 
 Item {
@@ -168,7 +168,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        PlasmaExtras.Heading {
+        Controls.Heading {
             id: actionLabel
             level: 2
             color: Theme.panel.textColor

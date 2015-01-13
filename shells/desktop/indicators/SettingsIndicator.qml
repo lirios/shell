@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import Hawaii.Controls 1.0 as Controls
 import ".."
 
 Indicator {
@@ -36,7 +36,7 @@ Indicator {
         ColumnLayout {
             spacing: units.largeSpacing
 
-            PlasmaExtras.Heading {
+            Controls.Heading {
                 text: qsTr("Settings")
                 color: Theme.panel.textColor
             }
