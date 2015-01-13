@@ -24,6 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
@@ -31,7 +33,6 @@
 #include <QtGui/QFontMetrics>
 #include <QtQml/QQmlComponent>
 #include <QtQml/QQmlContext>
-#include <QDebug>
 
 #include "theme.h"
 
@@ -90,7 +91,6 @@ QString Theme::controlsStyle()
 
 QObject *Theme::palette()
 {
-    qDebug() << ":::::::::::::::::::::::::::";
     if (!m_palette)
         loadPalette(false);
     return m_palette;
@@ -119,6 +119,10 @@ QSizeF Theme::mSize(const QFont &font)
 QObject *Theme::createQmlObject(const QUrl &url, QQmlEngine *engine)
 {
     QQmlComponent *component = new QQmlComponent(engine, url, QQmlComponent::PreferSynchronous);
+    if (component->status() != QQmlComponent::Ready)
+        qWarning("Unable to load component from \"%s\": %s",
+                 qPrintable(url.toString()),
+                 qPrintable(component->errorString()));
     QObject *object = component->create();
     delete component;
     return object;
@@ -126,9 +130,9 @@ QObject *Theme::createQmlObject(const QUrl &url, QQmlEngine *engine)
 
 QUrl Theme::resolveFileName(const QString &fileName)
 {
-    QUrl url = QUrl::fromLocalFile(m_themeSettings.path()).resolved(fileName);
-    if (url.isValid() && QFile::exists(url.toLocalFile()))
-        return url;
+    QDir dir(m_themeSettings.path());
+    if (QFile::exists(dir.absoluteFilePath(fileName)))
+        return QUrl::fromLocalFile(dir.absoluteFilePath(fileName));
 
     return QUrl();
 }
@@ -151,7 +155,6 @@ void Theme::loadPalette(bool changed)
     delete m_palette;
 
     // Create a new object
-    qDebug() << "::::::::::::::::" << resolveFileName("Palette.qml");
     m_palette = createQmlObject(resolveFileName("Palette.qml"), m_engine);
     if (changed)
         Q_EMIT paletteChanged();

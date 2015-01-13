@@ -29,6 +29,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import Hawaii.Controls 1.0 as Controls
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import ".."
 
@@ -44,11 +45,11 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Events")
-                color: Theme.panel.textColor
+                color: Theme.palette.panel.textColor
             }
 
             Label {
-                color: Theme.panel.textColor
+                color: Theme.palette.panel.textColor
                 opacity: 0.6
                 text: qsTr("No new events to see.")
                 visible: notificationView.count == 0

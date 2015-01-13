@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "."
 
@@ -58,9 +59,9 @@ Item {
         Label {
             text: Qt.formatTime(timeDataSource.data["Local"]["DateTime"], __priv.timeFormat)
             font.pointSize: 42
-            color: Theme.window.textColor
+            color: Theme.palette.window.textColor
             style: Text.Raised
-            styleColor: Theme.window.textEffectColor
+            styleColor: Theme.palette.window.textEffectColor
 
             Layout.alignment: Qt.AlignCenter
         }
@@ -68,9 +69,9 @@ Item {
         Label {
             text: Qt.formatDate(timeDataSource.data["Local"]["DateTime"], Locale.LongFormat)
             font.pointSize: 36
-            color: Theme.window.textColor
+            color: Theme.palette.window.textColor
             style: Text.Raised
-            styleColor: Theme.window.textEffectColor
+            styleColor: Theme.palette.window.textEffectColor
 
             Layout.alignment: Qt.AlignCenter
         }

@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
+import Hawaii.Themes 1.0
 import ".."
 
 Indicator {
@@ -38,7 +39,7 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Settings")
-                color: Theme.panel.textColor
+                color: Theme.palette.panel.textColor
             }
 
             Item {

@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "../.."
 
@@ -40,7 +41,7 @@ RowLayout {
     Label {
         id: label
         font.weight: Font.DemiBold
-        color: Theme.panel.textColor
+        color: Theme.palette.panel.textColor
 
         Layout.fillWidth: true
     }

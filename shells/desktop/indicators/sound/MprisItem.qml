@@ -28,6 +28,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "../.."
 
@@ -122,14 +123,14 @@ Item {
 
                 Label {
                     text: mprisDataSource.title
-                    color: Theme.panel.textColor
+                    color: Theme.palette.panel.textColor
                     font.bold: true
                     font.pointSize: 14
                 }
 
                 Label {
                     text: mprisDataSource.artist
-                    color: Theme.panel.textColor
+                    color: Theme.palette.panel.textColor
                     font.pointSize: 10
                 }
             }

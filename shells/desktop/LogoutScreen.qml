@@ -28,11 +28,12 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
+import Hawaii.Components 1.0 as Components
+import Hawaii.Controls 1.0 as Controls
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.hawaii.appchooser 0.1 as AppChooser
-import Hawaii.Components 1.0 as Components
-import Hawaii.Controls 1.0 as Controls
 import "."
 
 Item {
@@ -163,7 +164,7 @@ Item {
             id: actionIcon
             width: units.iconSizes.enormous
             height: width
-            color: Theme.panel.textColor
+            color: Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
         }
@@ -171,7 +172,7 @@ Item {
         Controls.Heading {
             id: actionLabel
             level: 2
-            color: Theme.panel.textColor
+            color: Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
         }
@@ -212,7 +213,7 @@ Item {
 
                 return i18nd("org.hawaii.desktop", msg, __priv.remainingTime);
             }
-            color: Theme.panel.textColor
+            color: Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
         }

@@ -64,7 +64,7 @@ public:
     QFont smallestFont() const;
     QFont monospaceFont() const;
 
-    QSizeF mSize(const QFont &font = QGuiApplication::font());
+    Q_INVOKABLE QSizeF mSize(const QFont &font = QGuiApplication::font());
 
 Q_SIGNALS:
     void nameChanged();

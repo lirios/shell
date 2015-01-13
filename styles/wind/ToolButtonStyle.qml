@@ -65,7 +65,7 @@ QtControlsStyle.ButtonStyle {
                     return control.iconSource;
                 return "";
             }
-            color: Theme.Palette.panel.textColor
+            color: Theme.palette.panel.textColor
             width: control.iconSize > 0 ? control.iconSize : units.iconSizes.medium
             height: width
             visible: valid
@@ -78,7 +78,7 @@ QtControlsStyle.ButtonStyle {
             text: control.text
             visible: control.text != "" && !icon.visible
             height: parent.height
-            color: Theme.Palette.panel.textColor
+            color: Theme.palette.panel.textColor
             //horizontalAlignment: icon.valid ? Text.AlignLeft : Text.AlignHCenter
             //horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -129,7 +129,7 @@ QtControlsStyle.ButtonStyle {
         id: normalComponent
 
         Rectangle {
-            property color c: Theme.Palette.panel.backgroundColor
+            property color c: Theme.palette.panel.backgroundColor
 
             id: baserect
             anchors.fill: parent

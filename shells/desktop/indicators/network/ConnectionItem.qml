@@ -29,6 +29,7 @@ import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
+import Hawaii.Themes 1.0
 import org.kde.kcoreaddons 1.0 as KCoreAddons
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
@@ -116,7 +117,7 @@ Item {
                 iconName: indicator.massageIconName(ConnectionIcon)
                 width: units.iconSizes.medium
                 height: width
-                color: Theme.panel.textColor
+                color: Theme.palette.panel.textColor
 
                 Layout.alignment: Qt.AlignTop
             }
@@ -130,7 +131,7 @@ Item {
                     elide: Text.ElideRight
                     font.weight: ConnectionState === PlasmaNM.Enums.Activated ? Font.DemiBold : Font.Normal
                     font.italic: ConnectionState === PlasmaNM.Enums.Activating ? true : false
-                    color: Theme.panel.textColor
+                    color: Theme.palette.panel.textColor
 
                     Layout.fillWidth: true
                 }
@@ -166,7 +167,7 @@ Item {
                     opacity: 0.6
                     elide: Text.ElideRight
                     font.pointSize: label.font.pointSize * 0.8
-                    color: Theme.panel.textColor
+                    color: Theme.palette.panel.textColor
 
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
@@ -221,14 +222,14 @@ Item {
 
                     Label {
                         text: ConnectionDetails[index * 2]
-                        color: Theme.panel.textColor
+                        color: Theme.palette.panel.textColor
                         font.weight: Font.Bold
                         opacity: 0.6
                     }
 
                     Label {
                         text: ConnectionDetails[(index * 2) + 1]
-                        color: Theme.panel.textColor
+                        color: Theme.palette.panel.textColor
                         textFormat: Text.StyledText
                         opacity: 0.6
                     }

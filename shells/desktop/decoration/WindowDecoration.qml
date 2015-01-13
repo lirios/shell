@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import GreenIsland 1.0
+import Hawaii.Themes 1.0
 import ".."
 
 Item {
@@ -70,7 +71,7 @@ Item {
         }
         width: renderer.width + (border.width * 2)
         height: renderer.height + (border.width * 2) + titleBar.height
-        border.color: Theme.rgba(Theme.window.secondaryColor, 0.5)
+        border.color: Theme.palette.rgba(Theme.palette.window.secondaryColor, 0.5)
         border.width: 1
         z: 1
 

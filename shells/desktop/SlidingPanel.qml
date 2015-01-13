@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import "."
@@ -127,7 +128,7 @@ Item {
     Rectangle {
         id: background
         anchors.fill: parent
-        color: Theme.panel.backgroundColor
+        color: Theme.palette.panel.backgroundColor
     }
 
     function open() {

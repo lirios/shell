@@ -35,22 +35,22 @@ QtControlsStyle.TextFieldStyle {
     property QtObject clearButton: QtObject {
         property string iconName: "edit-clear-rtl-symbolic"
         property url iconSource: ""
-        property color color: Theme.Palette.view.textColor
+        property color color: Theme.palette.view.textColor
         property real iconSize: units.iconSizes.small
     }
 
     id: style
-    textColor: Theme.Palette.view.textColor
-    selectionColor: Theme.Palette.view.selectedBackgroundColor
-    selectedTextColor: Theme.Palette.view.selectedTextColor
-    placeholderTextColor: Utils.rgba(Theme.Palette.view.textColor, 0.5)
+    textColor: Theme.palette.view.textColor
+    selectionColor: Theme.palette.view.selectedBackgroundColor
+    selectedTextColor: Theme.palette.view.selectedTextColor
+    placeholderTextColor: Utils.rgba(Theme.palette.view.textColor, 0.5)
     background: Item {
         anchors.fill: parent
 
         Rectangle {
             anchors.fill: parent
             anchors.bottomMargin: -1
-            color: Utils.rgba(Theme.Palette.view.backgroundColor, 0.26)
+            color: Utils.rgba(Theme.palette.view.backgroundColor, 0.26)
             radius: baserect.radius
         }
 
@@ -58,12 +58,12 @@ QtControlsStyle.TextFieldStyle {
             id: baserect
             anchors.fill: parent
             gradient: Gradient {
-                GradientStop { color: Qt.darker(Theme.Palette.view.backgroundColor, 1.2); position: 0}
-                GradientStop { color: Theme.Palette.view.backgroundColor; position: 0.1 }
-                GradientStop { color: Theme.Palette.view.backgroundColor; position: 1 }
+                GradientStop { color: Qt.darker(Theme.palette.view.backgroundColor, 1.2); position: 0}
+                GradientStop { color: Theme.palette.view.backgroundColor; position: 0.1 }
+                GradientStop { color: Theme.palette.view.backgroundColor; position: 1 }
             }
             radius: 4
-            border.color: control.activeFocus ? Theme.Palette.view.selectedBackgroundColor : Qt.darker(Theme.Palette.view.backgroundColor, 1.5)
+            border.color: control.activeFocus ? Theme.palette.view.selectedBackgroundColor : Qt.darker(Theme.palette.view.backgroundColor, 1.5)
         }
     }
 }

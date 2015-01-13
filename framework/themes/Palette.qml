@@ -25,12 +25,11 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
 
 QtObject {
-    property Themes.PaletteValues window
-    property Themes.PaletteValues view
-    property Themes.PaletteValues panel
+    property PaletteValues window
+    property PaletteValues view
+    property PaletteValues panel
 
     function rgba(color, a) {
         var newColor = color;

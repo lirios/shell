@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import GreenIsland 1.0
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "."
 
@@ -76,7 +77,7 @@ Rectangle {
 
                 Rectangle {
                     id: thumbnailItem
-                    color: wrapper.ListView.isCurrentItem ? Theme.panel.selectedBackgroundColor : "transparent"
+                    color: wrapper.ListView.isCurrentItem ? Theme.palette.panel.selectedBackgroundColor : "transparent"
                     radius: units.gridUnit * 0.5
                     width: thumbnailWidth - units.smallSpacing
                     height: thumbnailHeight - units.smallSpacing - label.height
@@ -100,10 +101,10 @@ Rectangle {
                     id: label
                     text: modelData.child.surface.title ? modelData.child.surface.title : qsTr("Untitled")
                     wrapMode: Text.Wrap
-                    color: Theme.panel.textColor
+                    color: Theme.palette.panel.textColor
                     font.bold: true
                     style: Text.Raised
-                    styleColor: Theme.panel.textEffectColor
+                    styleColor: Theme.palette.panel.textEffectColor
                     maximumLineCount: 2
                     opacity: wrapper.ListView.isCurrentItem ? 1.0 : 0.6
 

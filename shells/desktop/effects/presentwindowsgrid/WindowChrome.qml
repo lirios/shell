@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "../.."
 
@@ -40,7 +41,7 @@ Item {
         anchors.fill: parent
         glowRadius: 10
         spread: 0.2
-        color: Theme.view.selectedBackgroundColor
+        color: Theme.palette.view.selectedBackgroundColor
         cornerRadius: units.gridUnit * 0.2
         opacity: mouseArea.containsMouse ? 0.5 : 0.0
 

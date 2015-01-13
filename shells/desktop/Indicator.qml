@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import Hawaii.Components 1.0 as Components
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "."
 
@@ -70,7 +71,7 @@ Item {
         id: container
         anchors.fill: parent
         radius: width * 0.5
-        color: Theme.panel.selectedBackgroundColor
+        color: Theme.palette.panel.selectedBackgroundColor
         opacity: active ? 1.0 : 0.0
 
         Behavior on opacity {
@@ -90,7 +91,7 @@ Item {
     Components.Icon {
         id: icon
         anchors.centerIn: parent
-        color: selected ? Theme.panel.selectedTextColor : Theme.panel.textColor
+        color: selected ? Theme.palette.panel.selectedTextColor : Theme.palette.panel.textColor
         width: units.roundToIconSize(units.iconSizes.smallMedium)
         height: width
     }
@@ -98,7 +99,7 @@ Item {
     Label {
         id: label
         anchors.centerIn: parent
-        color: Theme.panel.textColor
+        color: Theme.palette.panel.textColor
         font.pixelSize: units.roundToIconSize(units.iconSizes.small)
     }
 

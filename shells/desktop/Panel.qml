@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import GreenIsland 1.0
 import "."
@@ -75,7 +76,7 @@ Rectangle {
             // TODO: Don't resize the panel, the window is maximized before we change the available
             // geometry resulting in a "hole" between the window and the panel
             if (compositorRoot.activeWindow.child.surface.state === QuickSurface.Maximized) {
-                color = Theme.rgba(Theme.window.backgroundColor, 0.85);
+                color = Theme.palette.rgba(Theme.palette.window.backgroundColor, 0.85);
                 //launcher.iconSize = units.iconSizes.medium;
             } else {
                 color = "transparent";

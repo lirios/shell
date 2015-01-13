@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import ".."
 
@@ -40,8 +41,8 @@ Rectangle {
 
     id: root
     gradient: Gradient {
-        GradientStop { color: Theme.window.primaryColor; position: 0 }
-        GradientStop { color: Theme.window.secondaryColor; position: 1 }
+        GradientStop { color: Theme.palette.window.primaryColor; position: 0 }
+        GradientStop { color: Theme.palette.window.secondaryColor; position: 1 }
     }
 
     RowLayout {
@@ -64,12 +65,12 @@ Rectangle {
 
         Label {
             id: titleLabel
-            color: Theme.window.textColor
+            color: Theme.palette.window.textColor
             font.bold: true
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             style: Text.Raised
-            styleColor: Theme.window.textEffectColor
+            styleColor: Theme.palette.window.textEffectColor
             height: parent.height
 
             Layout.fillHeight: true

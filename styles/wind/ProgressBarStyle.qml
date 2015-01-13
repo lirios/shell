@@ -33,8 +33,8 @@ import "private/Utils.js" as Utils
 QtControlsStyle.ProgressBarStyle {
     id: style
     background: Rectangle {
-        property color baseColor: Theme.Palette.panel.backgroundColor
-        property color highlightColor: Theme.Palette.panel.selectedBackgroundColor
+        property color baseColor: Theme.palette.panel.backgroundColor
+        property color highlightColor: Theme.palette.panel.selectedBackgroundColor
 
         implicitWidth: units.gridUnit * 20
         implicitHeight: units.gridUnit
@@ -64,7 +64,7 @@ QtControlsStyle.ProgressBarStyle {
         }
     }
     progress: Rectangle {
-        property color progressColor: Theme.Palette.panel.selectedBackgroundColor
+        property color progressColor: Theme.palette.panel.selectedBackgroundColor
 
         anchors {
             fill: parent

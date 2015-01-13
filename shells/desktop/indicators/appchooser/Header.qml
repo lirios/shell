@@ -26,10 +26,11 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.kcoreaddons 1.0 as KCoreAddons
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
+import Hawaii.Themes 1.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kcoreaddons 1.0 as KCoreAddons
 import "../.."
 
 RowLayout {
@@ -50,7 +51,7 @@ RowLayout {
     Controls.Heading {
         level: 2
         text: user.fullName
-        color: Theme.panel.textColor
+        color: Theme.palette.panel.textColor
 
         Layout.alignment: Qt.AlignVCenter
         Layout.fillWidth: true
@@ -72,7 +73,7 @@ RowLayout {
             // Fallback to an icon from the theme
             faceIcon.iconSource = "";
             faceIcon.iconName = "avatar-default-symbolic";
-            faceIcon.color = Theme.panel.textColor;
+            faceIcon.color = Theme.palette.panel.textColor;
         }
     }
 

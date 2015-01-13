@@ -28,6 +28,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.0 as Styles
 import QtQuick.Controls.Private 1.0
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "../.."
 
@@ -52,7 +53,7 @@ Styles.ButtonStyle {
                 right: parent.right
                 bottom: parent.bottom
             }
-            color: checked ? control.hovered ? Qt.lighter(Theme.panel.selectedBackgroundColor, 1.5) : Theme.panel.selectedBackgroundColor : Qt.lighter(Theme.panel.selectedBackgroundColor, 1.2)
+            color: checked ? control.hovered ? Qt.lighter(Theme.palette.panel.selectedBackgroundColor, 1.5) : Theme.palette.panel.selectedBackgroundColor : Qt.lighter(Theme.palette.panel.selectedBackgroundColor, 1.2)
             height: units.gridUnit * 0.1
             opacity: control.hovered || down ? 1.0 : 0.0
 
@@ -83,7 +84,7 @@ Styles.ButtonStyle {
             renderType: Text.NativeRendering
             text: control.text
             font.bold: control.checkable && control.checked
-            color: Theme.panel.textColor
+            color: Theme.palette.panel.textColor
         }
     }
 }

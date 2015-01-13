@@ -37,7 +37,7 @@ import "private/Utils.js" as Utils
 QtControlsStyle.CalendarStyle {
     id: style
     background: Item {}
-    gridColor: Utils.rgba(Theme.Palette.panel.textColor, 0.3)
+    gridColor: Utils.rgba(Theme.palette.panel.textColor, 0.3)
     gridVisible: true
     navigationBar: RowLayout {
         width: parent.width
@@ -79,18 +79,18 @@ QtControlsStyle.CalendarStyle {
             anchors.fill: parent
             anchors.margins: styleData.selected ? -1 : 0
             border.color: "transparent"
-            color: styleData.date !== undefined && styleData.selected ? Theme.Palette.panel.selectedBackgroundColor : "transparent"
+            color: styleData.date !== undefined && styleData.selected ? Theme.palette.panel.selectedBackgroundColor : "transparent"
         }
 
         PlasmaComponents.Label {
             id: label
             anchors.centerIn: parent
             color: {
-                var theColor = Utils.rgba(Theme.Palette.panel.textColor, 0.5); //Qt.lighter(Theme.Palette.panel.textColor, 1.4);
+                var theColor = Utils.rgba(Theme.palette.panel.textColor, 0.5); //Qt.lighter(Theme.palette.panel.textColor, 1.4);
                 if (styleData.valid) {
-                    theColor = styleData.visibleMonth ? Qt.darker(Theme.Palette.panel.textColor, 1.2) : Qt.ligther(Theme.Palette.panel.textColor, 1.35);
+                    theColor = styleData.visibleMonth ? Qt.darker(Theme.palette.panel.textColor, 1.2) : Qt.ligther(Theme.palette.panel.textColor, 1.35);
                     if (styleData.selected)
-                        theColor = Theme.Palette.panel.selectedBackgroundColor;
+                        theColor = Theme.palette.panel.selectedBackgroundColor;
                 }
                 return theColor;
             }
@@ -98,7 +98,7 @@ QtControlsStyle.CalendarStyle {
         }
     }
     dayOfWeekDelegate: Rectangle {
-        color: style.gridVisible ? Utils.rgba(Theme.Palette.panel.backgroundColor, 0.5) : "transparent"
+        color: style.gridVisible ? Utils.rgba(Theme.palette.panel.backgroundColor, 0.5) : "transparent"
         implicitHeight: Theme.mSize(Theme.smallestFont).height
 
         PlasmaComponents.Label {

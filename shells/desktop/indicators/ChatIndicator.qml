@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import ".."
 
@@ -39,7 +40,7 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Messages")
-                color: Theme.panel.textColor
+                color: Theme.palette.panel.textColor
             }
 
             Item {

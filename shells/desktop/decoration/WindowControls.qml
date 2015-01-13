@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import ".."
 
@@ -42,8 +43,8 @@ Row {
         width: height
         radius: height / 2
         gradient: Gradient {
-            GradientStop { color: Theme.window.closeButtonPrimaryColor; position: 0 }
-            GradientStop { color: Theme.window.closeButtonSecondaryColor; position: 1 }
+            GradientStop { color: Theme.palette.window.closeButtonPrimaryColor; position: 0 }
+            GradientStop { color: Theme.palette.window.closeButtonSecondaryColor; position: 1 }
         }
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
@@ -54,7 +55,7 @@ Row {
                 margins: units.gridUnit * 0.25
             }
             iconName: "window-close-symbolic"
-            color: Theme.window.textColor
+            color: Theme.palette.window.textColor
         }
 
         MouseArea {
@@ -68,8 +69,8 @@ Row {
         width: height
         radius: height / 2
         gradient: Gradient {
-            GradientStop { color: Theme.window.buttonPrimaryColor; position: 0 }
-            GradientStop { color: Theme.window.buttonSecondaryColor; position: 1 }
+            GradientStop { color: Theme.palette.window.buttonPrimaryColor; position: 0 }
+            GradientStop { color: Theme.palette.window.buttonSecondaryColor; position: 1 }
         }
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
@@ -80,7 +81,7 @@ Row {
                 margins: units.gridUnit * 0.25
             }
             iconName: "window-maximize-symbolic"
-            color: Theme.window.textColor
+            color: Theme.palette.window.textColor
         }
 
         MouseArea {
@@ -94,8 +95,8 @@ Row {
         width: height
         radius: height / 2
         gradient: Gradient {
-            GradientStop { color: Theme.window.buttonPrimaryColor; position: 0 }
-            GradientStop { color: Theme.window.buttonSecondaryColor; position: 1 }
+            GradientStop { color: Theme.palette.window.buttonPrimaryColor; position: 0 }
+            GradientStop { color: Theme.palette.window.buttonSecondaryColor; position: 1 }
         }
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
@@ -106,7 +107,7 @@ Row {
                 margins: units.gridUnit * 0.25
             }
             iconName: "window-minimize-symbolic"
-            color: Theme.window.textColor
+            color: Theme.palette.window.textColor
         }
 
         MouseArea {

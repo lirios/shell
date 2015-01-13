@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0 as Components
+import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import ".."
 
@@ -78,7 +79,7 @@ MouseArea {
             width: units.iconSizes.medium
             height: width
             iconName: appIcon && appIcon.length > 0 ? appIcon : "dialog-information-symbolic"
-            color: Theme.panel.textColor
+            color: Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignTop
         }
@@ -90,7 +91,7 @@ MouseArea {
                 clip: true
                 text: summary + (root.expanded ? (body ? "\n" + body : "") :
                                                  (body ? "..." : ""))
-                color: Theme.panel.textColor
+                color: Theme.palette.panel.textColor
                 font.pointSize: 14
             }
 

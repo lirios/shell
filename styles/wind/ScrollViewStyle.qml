@@ -58,8 +58,8 @@ QtControlsStyle.ScrollViewStyle {
             anchors.leftMargin: styleData.horizontal ? -2 : 0
             anchors.topMargin: styleData.horizontal ? 0 : -2
             anchors.bottomMargin: styleData.horizontal ? -1 : -2
-            border.color: Qt.darker(Theme.Palette.panel.backgroundColor, 1.8)
-            color: Qt.lighter(Theme.Palette.panel.backgroundColor, 1.5)
+            border.color: Qt.darker(Theme.palette.panel.backgroundColor, 1.8)
+            color: Qt.lighter(Theme.palette.panel.backgroundColor, 1.5)
             radius: units.gridUnit * 0.6
         }
     }
@@ -79,8 +79,8 @@ QtControlsStyle.ScrollViewStyle {
             anchors.right: parent.right
             anchors.left: styleData.horizontal ? parent.left : undefined
             border.width: transientScrollBars ? units.gridUnit * 0.15 : units.gridUnit * 0.05
-            border.color: Qt.darker(Theme.Palette.panel.backgroundColor, 1.8)
-            color: Qt.darker(Theme.Palette.panel.backgroundColor, 1.4)
+            border.color: Qt.darker(Theme.palette.panel.backgroundColor, 1.8)
+            color: Qt.darker(Theme.palette.panel.backgroundColor, 1.4)
             radius: units.gridUnit * 0.6
             width: !styleData.horizontal && transientScrollBars ? sticky ? units.gridUnit * 1.3 : units.gridUnit : parent.width
             height: styleData.horizontal && transientScrollBars ? sticky ? units.gridUnit * 1.3 : units.gridUnit : parent.height

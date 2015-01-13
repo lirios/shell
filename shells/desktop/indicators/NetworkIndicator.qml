@@ -30,6 +30,7 @@ import QtQuick.Controls 1.1
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
+import Hawaii.Themes 1.0
 import ".."
 import "network" as NetworkIndicator
 
@@ -43,7 +44,7 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Network")
-                color: Theme.panel.textColor
+                color: Theme.palette.panel.textColor
             }
 
             NetworkIndicator.AirplaneMode {

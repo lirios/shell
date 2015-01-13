@@ -61,9 +61,9 @@ QtControlsPrivate.GroupBoxStyle {
         Rectangle {
             anchors.fill: parent
             anchors.topMargin: Theme.mSize(label.font).height
-            border.color: Utils.blendColors(Theme.Palette.panel.backgroundColor, Theme.Palette.panel.textColor, 0.2)
+            border.color: Utils.blendColors(Theme.palette.panel.backgroundColor, Theme.palette.panel.textColor, 0.2)
             border.width: 1
-            color: Utils.blendColors(Theme.Palette.panel.backgroundColor, Theme.Palette.view.backgroundColor, 0.5)
+            color: Utils.blendColors(Theme.palette.panel.backgroundColor, Theme.palette.view.backgroundColor, 0.5)
             radius: units.gridUnit * 0.5
             visible: !control.flat
         }
