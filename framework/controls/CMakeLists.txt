@@ -1,6 +1,7 @@
 set(FILES
     qmldir
     Calendar.qml
+    Heading.qml
     TextField.qml
     ToolButton.qml
     SidePanel.qml
