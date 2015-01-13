@@ -165,11 +165,6 @@ Item {
             height: width
             color: Theme.panel.textColor
 
-            MouseArea {
-                anchors.fill: parent
-                onClicked: __priv.currentAction()
-            }
-
             Layout.alignment: Qt.AlignHCenter
         }
 
