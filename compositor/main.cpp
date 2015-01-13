@@ -29,6 +29,8 @@
 
 #include <greenisland/homeapplication.h>
 
+#define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
+
 int main(int argc, char *argv[])
 {
     // Application
@@ -45,38 +47,34 @@ int main(int argc, char *argv[])
 
     // Command line parser
     QCommandLineParser parser;
-    parser.setApplicationDescription(QCoreApplication::translate("Command line parser", "Wayland compositor for the Hawaii desktop environment"));
+    parser.setApplicationDescription(TR("Wayland compositor for the Hawaii desktop environment"));
     parser.addHelpOption();
     parser.addVersionOption();
 
     // Wayland socket
     QCommandLineOption socketOption(QStringList() << QStringLiteral("s") << QStringLiteral("socket"),
-                                    QCoreApplication::translate("Command line parser", "Wayland socket"),
-                                    QCoreApplication::translate("Command line parser", "name"));
+                                    TR("Wayland socket."), TR("name"));
     parser.addOption(socketOption);
 
     // Synthesize touch for unhandled mouse events
     QCommandLineOption synthesizeOption(QStringLiteral("synthesize-touch"),
-                                        QCoreApplication::translate("Command line parser", "Synthesize touch for unhandled mouse events"));
+                                        TR("Synthesize touch for unhandled mouse events."));
     parser.addOption(synthesizeOption);
 
     // Idle time
     QCommandLineOption idleTimeOption(QStringList() << QStringLiteral("i") << QStringLiteral("idle-time"),
-                                      QCoreApplication::translate("Command line parser", "Idle time in seconds (at least 5 seconds)"),
-                                      QCoreApplication::translate("Command line parser", "secs"));
+                                      TR("Idle time in seconds (at least 5 seconds)."), TR("secs"));
     idleTimeOption.setDefaultValue("300");
     parser.addOption(idleTimeOption);
 
     // Fake screen configuration
     QCommandLineOption fakeScreenOption(QStringLiteral("fake-screen"),
-                                        QCoreApplication::translate("Command line parser", "Use fake screen configuration"),
-                                        QCoreApplication::translate("Command line parser", "filename"));
+                                        TR("Use fake screen configuration."), TR("filename"));
     parser.addOption(fakeScreenOption);
 
     // Compositor package
     QCommandLineOption pluginOption(QStringList() << QStringLiteral("p") << QStringLiteral("compositor-plugin"),
-                                    QCoreApplication::translate("Command line parser", "Force loading the given compositor plugin"),
-                                    QStringLiteral("plugin"));
+                                    TR("Force loading the given compositor plugin."), TR("plugin"));
     parser.addOption(pluginOption);
 
     // Parse command line
