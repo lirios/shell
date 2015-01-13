@@ -20,13 +20,11 @@
 
 #include "systemmodel.h"
 #include "actionlist.h"
-#include "powermanager/powermanager.h"
 
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QDBusPendingCall>
 
-#include <KAuthorized>
 #include <KLocalizedString>
 #include <Solid/PowerManagement>
 
@@ -39,8 +37,6 @@ SystemEntry::SystemEntry(SystemEntry::Action action, const QString &name, const 
 
 SystemModel::SystemModel(QObject *parent) : AbstractModel(parent)
 {
-    m_powerManager = new PowerManager(this);
-
     m_favoriteIds[SystemEntry::LockSession] = "lock-screen";
     m_favoriteIds[SystemEntry::LogoutSession] = "logout";
     m_favoriteIds[SystemEntry::NewSession] = "switch-user";
@@ -49,41 +45,38 @@ SystemModel::SystemModel(QObject *parent) : AbstractModel(parent)
     m_favoriteIds[SystemEntry::Reboot] = "reboot";
     m_favoriteIds[SystemEntry::Shutdown] = "shutdown";
 
-    if (KAuthorized::authorizeKAction("lock_screen")) {
+
+    if (m_sessionInterface.canLock()) {
         m_entryList << new SystemEntry(SystemEntry::LockSession, i18n("Lock"), "system-lock-screen");
         m_capabilities << LockSession;
     }
 
-    if (KAuthorized::authorizeKAction("logout") && KAuthorized::authorize("logout")) {
+    if (m_sessionInterface.canLogOut()) {
         m_entryList << new SystemEntry(SystemEntry::LogoutSession, i18n("Logout"), "system-log-out");
         m_capabilities << LogoutSession;
     }
 
-#if 0
-    if (KAuthorized::authorizeKAction("start_new_session")
-        && m_displayManager.isSwitchable()
-        && m_displayManager.numReserve() >= 0) {
+    if (m_sessionInterface.canStartNewSession()) {
         m_entryList << new SystemEntry(SystemEntry::NewSession, i18n("New Session"), "system-switch-user");
         m_capabilities << NewSession;
     }
-#endif
 
-    if (m_powerManager->capabilities() & PowerManager::Suspend) {
+    if (m_sessionInterface.canSuspend()) {
         m_entryList << new SystemEntry(SystemEntry::SuspendToRam, i18n("Suspend"), "system-suspend");
         m_capabilities << SuspendToRam;
     }
 
-    if (m_powerManager->capabilities() & PowerManager::Hibernate) {
+    if (m_sessionInterface.canHibernate()) {
         m_entryList << new SystemEntry(SystemEntry::SuspendToDisk, i18n("Hibernate"), "system-suspend-hibernate");
         m_capabilities << SuspendToDisk;
     }
 
-    if (m_powerManager->capabilities() & PowerManager::Restart) {
+    if (m_sessionInterface.canRestart()) {
         m_entryList << new SystemEntry(SystemEntry::Reboot, i18n("Restart"), "system-reboot");
         m_capabilities << Reboot;
     }
 
-    if (m_powerManager->capabilities() & PowerManager::PowerOff) {
+    if (m_sessionInterface.canPowerOff()) {
         m_entryList << new SystemEntry(SystemEntry::Shutdown, i18n("Shutdown"), "system-shutdown");
         m_capabilities << Shutdown;
     }
@@ -131,40 +124,25 @@ bool SystemModel::trigger(int row, const QString &actionId, const QVariant &argu
 
         switch (action) {
             case SystemEntry::LockSession:
-            {
-                QDBusConnection bus = QDBusConnection::sessionBus();
-                QDBusInterface interface("org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", bus);
-                interface.asyncCall("Lock");
+                m_sessionInterface.lock();
                 break;
-            }
             case SystemEntry::LogoutSession:
-#if 0
-                KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmDefault, KWorkSpace::ShutdownTypeNone);
-#endif
+                m_sessionInterface.logOut();
                 break;
             case SystemEntry::NewSession:
-#if 0
-            {
-                QDBusConnection bus = QDBusConnection::sessionBus();
-                QDBusInterface interface("org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", bus);
-                interface.asyncCall("Lock");
-                m_displayManager.startReserve();
+                m_sessionInterface.startNewSession();
                 break;
-            };
-#else
-            break;
-#endif
             case SystemEntry::SuspendToRam:
-                m_powerManager->suspend();
+                m_sessionInterface.suspend();
                 break;
             case SystemEntry::SuspendToDisk:
-                m_powerManager->hibernate();
+                m_sessionInterface.hibernate();
                 break;
             case SystemEntry::Shutdown:
-                m_powerManager->powerOff();
+                m_sessionInterface.powerOff();
                 break;
             case SystemEntry::Reboot:
-                m_powerManager->restart();
+                m_sessionInterface.restart();
                 break;
         }
 

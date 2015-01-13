@@ -26,10 +26,12 @@
 
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
+#include "powermanager/powermanager.h"
 
 SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     : QDBusAbstractAdaptor(sessionManager)
     , m_sessionManager(sessionManager)
+    , m_powerManager(new PowerManager(this))
 {
 }
 
@@ -40,9 +42,59 @@ bool SessionAdaptor::canLogOut()
     return true;
 }
 
+bool SessionAdaptor::canPowerOff()
+{
+    return m_powerManager->capabilities() & PowerManager::PowerOff;
+}
+
+bool SessionAdaptor::canRestart()
+{
+    return m_powerManager->capabilities() & PowerManager::Restart;
+}
+
+bool SessionAdaptor::canSuspend()
+{
+    return m_powerManager->capabilities() & PowerManager::Suspend;
+}
+
+bool SessionAdaptor::canHibernate()
+{
+    return m_powerManager->capabilities() & PowerManager::Hibernate;
+}
+
+bool SessionAdaptor::canHybridSleep()
+{
+    return m_powerManager->capabilities() & PowerManager::HybridSleep;
+}
+
 void SessionAdaptor::logOut()
 {
     m_sessionManager->logOut();
+}
+
+void SessionAdaptor::powerOff()
+{
+    m_powerManager->powerOff();
+}
+
+void SessionAdaptor::restart()
+{
+    m_powerManager->restart();
+}
+
+void SessionAdaptor::suspend()
+{
+    m_powerManager->suspend();
+}
+
+void SessionAdaptor::hibernate()
+{
+    m_powerManager->hibernate();
+}
+
+void SessionAdaptor::hybridSleep()
+{
+    m_powerManager->hybridSleep();
 }
 
 #include "moc_sessionadaptor.cpp"

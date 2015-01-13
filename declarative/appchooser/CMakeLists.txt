@@ -12,15 +12,8 @@ set(SOURCES
     runnermatchesmodel.cpp
     recentappsmodel.cpp
     recentdocsmodel.cpp
+    sessioninterface.cpp
     systemmodel.cpp
-    powermanager/powermanager.cpp
-    powermanager/powermanager.h
-    powermanager/powermanagerbackend.cpp
-    powermanager/powermanagerbackend.h
-    powermanager/systemdpowerbackend.cpp
-    powermanager/systemdpowerbackend.h
-    powermanager/upowerpowerbackend.cpp
-    powermanager/upowerpowerbackend.h
 )
 
 add_library(appchooserplugin SHARED ${SOURCES})

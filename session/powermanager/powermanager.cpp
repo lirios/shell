@@ -27,7 +27,6 @@
 #include <QtDBus/QDBusConnectionInterface>
 
 #include "powermanager.h"
-//#include "sessionmanager.h"
 #include "systemdpowerbackend.h"
 #include "upowerpowerbackend.h"
 
@@ -66,11 +65,8 @@ PowerManager::Capabilities PowerManager::capabilities() const
 
 void PowerManager::powerOff()
 {
-    //SessionManager sessionManager;
-
     foreach (PowerManagerBackend *backend, m_backends) {
         if (backend->capabilities() & PowerManager::PowerOff) {
-            //sessionManager.logout();
             backend->powerOff();
             return;
         }
@@ -79,11 +75,8 @@ void PowerManager::powerOff()
 
 void PowerManager::restart()
 {
-    //SessionManager sessionManager;
-
     foreach (PowerManagerBackend *backend, m_backends) {
         if (backend->capabilities() & PowerManager::Restart) {
-            //sessionManager.logout();
             backend->restart();
             return;
         }

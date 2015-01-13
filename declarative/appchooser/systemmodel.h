@@ -23,8 +23,7 @@
 
 #include "abstractentry.h"
 #include "abstractmodel.h"
-
-class PowerManager;
+#include "sessioninterface.h"
 
 class SystemEntry : public AbstractEntry
 {
@@ -84,7 +83,7 @@ class SystemModel : public AbstractModel
         QList<SystemEntry *> m_entryList;
         QHash<SystemEntry::Action, QString> m_favoriteIds;
         QList<Capabilities> m_capabilities;
-        PowerManager *m_powerManager;
+        SessionInterface m_sessionInterface;
 };
 
 #endif
