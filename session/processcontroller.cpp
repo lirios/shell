@@ -26,6 +26,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileSystemWatcher>
 
@@ -65,6 +66,21 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
                 this, SLOT(directoryChanged(QString)));
     }
 
+    // Do we have the libinput plugin? If available, it will be used in eglfs mode
+    bool hasLibInputPlugin = false;
+    if (m_mode == EGLFS_MODE) {
+        for (const QString &path: QCoreApplication::libraryPaths()) {
+            QDir pluginsDir(path + QStringLiteral("/generic"));
+            for (const QString &fileName: pluginsDir.entryList(QDir::Files)) {
+                qDebug() << fileName;
+                if (fileName == QStringLiteral("libqlibinputplugin.so")) {
+                    hasLibInputPlugin = true;
+                    break;
+                }
+            }
+        }
+    }
+
     // Compositor process
     m_compositor = new QProcess(this);
     m_compositor->setProcessChannelMode(QProcess::ForwardedChannels);
@@ -83,12 +99,11 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
         m_compositor->setArguments(m_compositor->arguments()
                                    << QStringLiteral("-platform")
                                    << QStringLiteral("eglfs"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        // eglfs mode uses libinput with Qt 5.5+
-        m_compositor->setArguments(m_compositor->arguments()
-                                   << QStringLiteral("-plugin")
-                                   << QStringLiteral("libinput"));
-#endif
+        if (hasLibInputPlugin) {
+            m_compositor->setArguments(m_compositor->arguments()
+                                       << QStringLiteral("-plugin")
+                                       << QStringLiteral("libinput"));
+        }
     }
     connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
@@ -100,11 +115,8 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
     env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
     if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
         env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    // eglfs mode uses libinput with Qt 5.5+
-    if (m_mode == EGLFS_MODE)
+    if (m_mode == EGLFS_MODE && hasLibInputPlugin)
         env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
-#endif
     m_compositor->setProcessEnvironment(env);
 }
 
