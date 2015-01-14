@@ -92,6 +92,20 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
     }
     connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
+
+    // Pass arguments for full screen shell and style
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    if (m_fullScreenShell)
+        env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
+    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
+    if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
+        env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    // eglfs mode uses libinput with Qt 5.5+
+    if (m_mode == EGLFS_MODE)
+        env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
+#endif
+    m_compositor->setProcessEnvironment(env);
 }
 
 QString ProcessController::mode() const
@@ -147,20 +161,6 @@ QString ProcessController::randomString() const
 
 void ProcessController::startCompositor()
 {
-    // Pass arguments for full screen shell and style
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    if (m_fullScreenShell)
-        env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
-    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
-    if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
-        env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    // eglfs mode uses libinput with Qt 5.5+
-    if (m_mode == EGLFS_MODE)
-        env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
-#endif
-    m_compositor->setProcessEnvironment(env);
-
     // Start the process
     qDebug() << "Running:" << qPrintable(m_compositor->program())
              << qPrintable(m_compositor->arguments().join(" "));
