@@ -39,12 +39,12 @@ Item {
     width: {
         if (edge == Qt.TopEdge || edge == Qt.BottomEdge)
             return compositorRoot.screenView.width;
-        return units.gridUnit * 10;
+        return Math.max(units.gridUnit * 10, childrenRect.width);
     }
     height: {
         if (edge == Qt.LeftEdge || edge == Qt.RightEdge)
             return compositorRoot.screenView.height;
-        return units.gridUnit * 10;
+        return Math.max(units.gridUnit * 10, childrenRect.height);
     }
     clip: true
     onEdgeChanged: __priv.resetPosition()
