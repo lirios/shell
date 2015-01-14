@@ -58,6 +58,7 @@ Item {
         State {
             name: "session"
             PropertyChanges { target: keyFilter; enabled: true }
+            PropertyChanges { target: splashScreen; opacity: 0.0 }
             PropertyChanges { target: windowSwitcherLoader; source: ""; z: 899 }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
             PropertyChanges { target: logoutLoader; source: ""; z: 899 }
@@ -264,6 +265,42 @@ Item {
     }
 
     /*
+     * Splash
+     */
+
+    Loader {
+        id: splashScreen
+        anchors.fill: parent
+        opacity: 0.0
+        onOpacityChanged: {
+            if (opacity == 1.0) {
+                splashScreen.z = 910;
+                splashScreen.source = "SplashScreen.qml";
+            } else if (opacity == 0.0) {
+                splashScreenTimer.start();
+            }
+        }
+
+        // Unload after a while so that the opacity animation is visible
+        Timer {
+            id: splashScreenTimer
+            running: false
+            interval: 5000
+            onTriggered: {
+                splashScreen.z = 899;
+                splashScreen.source = "";
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InSine
+                duration: units.longDuration
+            }
+        }
+    }
+
+    /*
      * Screen view
      */
 
@@ -292,32 +329,6 @@ Item {
 
             // Setup workspaces only once
             alreadyLoaded = true;
-        }
-    }
-
-    /*
-     * Splash
-     */
-
-    Rectangle {
-        id: splashScreen
-        anchors.fill: parent
-        color: "black"
-        z: opacity == 0.0 ? 899 : 910
-        opacity: 0.0
-
-        Behavior on z {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: units.longDuration
-            }
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InSine
-                duration: units.longDuration
-            }
         }
     }
 
