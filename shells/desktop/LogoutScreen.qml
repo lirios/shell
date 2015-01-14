@@ -210,7 +210,7 @@ Item {
                     break;
                 }
 
-                return i18nd("org.hawaii.desktop", msg, __priv.remainingTime);
+                return qsTr(msg).arg(__priv.remainingTime);
             }
             color: Theme.palette.panel.textColor
 

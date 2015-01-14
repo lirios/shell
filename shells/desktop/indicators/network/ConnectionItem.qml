@@ -156,9 +156,9 @@ Item {
                             return result;
                         } else if (ConnectionState === PlasmaNM.Enums.Activated) {
                             if (showSpeed && dataSource.data && dataSource.data[dataSource.downloadSource] && dataSource.data[dataSource.uploadSource]) {
-                                return i18n("Connected, ⬇ %1/s, ⬆ %2/s",
-                                            KCoreAddons.Format.formatByteSize(dataSource.data[dataSource.downloadSource].value * 1024 || 0),
-                                            KCoreAddons.Format.formatByteSize(dataSource.data[dataSource.uploadSource].value * 1024 || 0))
+                                var arg1 = KCoreAddons.Format.formatByteSize(dataSource.data[dataSource.downloadSource].value * 1024 || 0);
+                                var arg2 = KCoreAddons.Format.formatByteSize(dataSource.data[dataSource.uploadSource].value * 1024 || 0)
+                                return qsTr("Connected, ⬇ %1/s, ⬆ %2/s").arg(arg1).arg(arg2);
                             } else {
                                 return qsTr("Connected");
                             }
