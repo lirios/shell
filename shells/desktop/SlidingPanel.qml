@@ -27,13 +27,11 @@
 import QtQuick 2.0
 import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import "."
 
 Item {
     default property alias contents: background.children
     property int edge: Qt.LeftEdge
-    readonly property int status: __priv.open ? PlasmaComponents.DialogStatus.Open : PlasmaComponents.DialogStatus.Closed
+    readonly property alias expanded: __priv.open
 
     id: slidingPanel
     width: {

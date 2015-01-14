@@ -30,7 +30,6 @@ import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
 import GreenIsland 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
 import ".."
 import "../indicators"
 
@@ -150,7 +149,7 @@ Item {
 
                 // Close drawer if the current indicator is triggered again
                 if (indicator.selected) {
-                    if (rightDrawer.status === PlasmaComponents.DialogStatus.Open) {
+                    if (rightDrawer.expanded) {
                         rightDrawer.close();
                         selectedIndicator = null;
                     }
@@ -159,13 +158,11 @@ Item {
                 }
 
                 // Load indicator component
-                if (indicator !== lastIndicator) {
-                    var closed = rightDrawer.status === PlasmaComponents.DialogStatus.Closed;
-                    stackView.push({item: indicator.component, immediate:closed});
-                }
+                if (indicator !== lastIndicator)
+                    stackView.push({item: indicator.component, immediate:!rightDrawer.expanded});
 
                 // Open drawer if necessary
-                if (rightDrawer.status === PlasmaComponents.DialogStatus.Closed)
+                if (!rightDrawer.expanded)
                     rightDrawer.open();
 
                 // Save a reference to the currently open indicator
@@ -181,9 +178,9 @@ Item {
             edge: Qt.LeftEdge
             width: units.gridUnit * 20
             z: 2
-            onStatusChanged: {
+            onExpandedChanged: {
                 // Unload component once closed
-                if (status === PlasmaComponents.DialogStatus.Closed)
+                if (!expanded)
                     loader.sourceComponent = undefined;
             }
 
