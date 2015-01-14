@@ -28,8 +28,6 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import "."
 
 ColumnLayout {
     property string timeFormat
@@ -38,11 +36,16 @@ ColumnLayout {
 
     id: root
 
-    PlasmaCore.DataSource {
-        id: timeDataSource
-        engine: "time"
-        connectedSources: ["Local"]
+    Timer {
+        id: timer
+        running: false
+        triggeredOnStart: true
         interval: 30000
+        onTriggered: {
+            var now = new Date();
+            timeLabel.text = Qt.formatTime(now, timeFormat);
+            dateLabel.text = Qt.formatDate(now, Locale.LongFormat);
+        }
     }
 
     MouseArea {
@@ -51,7 +54,7 @@ ColumnLayout {
     }
 
     Label {
-        text: Qt.formatTime(timeDataSource.data["Local"]["DateTime"], timeFormat)
+        id: timeLabel
         font.pointSize: 36
         color: Theme.palette.window.textColor
 
@@ -59,7 +62,7 @@ ColumnLayout {
     }
 
     Label {
-        text: Qt.formatDate(timeDataSource.data["Local"]["DateTime"], Locale.LongFormat)
+        id: dateLabel
         font.pointSize: 18
         color: Theme.palette.window.textColor
 
@@ -69,5 +72,8 @@ ColumnLayout {
     Component.onCompleted: {
         // Remove seconds from time format
         timeFormat = Qt.locale().timeFormat(Locale.ShortFormat).replace(/.ss?/i, "");
+
+        // Start timer
+        timer.start();
     }
 }
