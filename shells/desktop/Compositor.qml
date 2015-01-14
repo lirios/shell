@@ -330,6 +330,11 @@ Item {
             // Setup workspaces only once
             alreadyLoaded = true;
         }
+        onStatusChanged: {
+            // Show an error screen instead
+            if (status == Loader.Error)
+                source = "ErrorScreen.qml";
+        }
     }
 
     /*
