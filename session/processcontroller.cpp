@@ -33,6 +33,8 @@
 #include "cmakedirs.h"
 #include "processcontroller.h"
 
+ Q_LOGGING_CATEGORY(PROCESS_CONTROLLER, "hawaii.session.processcontroller")
+
 #define FULLSCREEN_SHELL_SOCKET "hawaii-master-"
 #define HAWAII_SOCKET "hawaii-slave-"
 
@@ -43,81 +45,18 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
     : QObject(parent)
     , m_fullScreenShell(Q_NULLPTR)
     , m_mode(mode)
+    , m_hasLibInputPlugin(false)
 {
     // Wayland sockets
     QString random = randomString();
     m_compositorSocket = QStringLiteral(HAWAII_SOCKET) + random;
     m_fullScreenShellSocket = QStringLiteral(FULLSCREEN_SHELL_SOCKET) + random;
 
-    // Full screen shell
-    if (m_mode == NESTED_MODE) {
-        m_fullScreenShell = new QProcess(this);
-        m_fullScreenShell->setProcessChannelMode(QProcess::ForwardedChannels);
-        m_fullScreenShell->setProgram(QStringLiteral("weston"));
-        m_fullScreenShell->setArguments(QStringList()
-                                        << QStringLiteral("--shell=fullscreen-shell.so")
-                                        << QStringLiteral("--socket=") + m_fullScreenShellSocket);
-        connect(m_fullScreenShell, SIGNAL(finished(int,QProcess::ExitStatus)),
-                this, SLOT(fullScreenShellFinished(int,QProcess::ExitStatus)));
-
-        m_fullScreenShellWatcher = new QFileSystemWatcher(this);
-        m_fullScreenShellWatcher->addPath(QString::fromUtf8(qgetenv("XDG_RUNTIME_DIR")));
-        connect(m_fullScreenShellWatcher, SIGNAL(directoryChanged(QString)),
-                this, SLOT(directoryChanged(QString)));
-    }
-
-    // Do we have the libinput plugin? If available, it will be used in eglfs mode
-    bool hasLibInputPlugin = false;
-    if (m_mode == EGLFS_MODE) {
-        for (const QString &path: QCoreApplication::libraryPaths()) {
-            QDir pluginsDir(path + QStringLiteral("/generic"));
-            for (const QString &fileName: pluginsDir.entryList(QDir::Files)) {
-                qDebug() << fileName;
-                if (fileName == QStringLiteral("libqlibinputplugin.so")) {
-                    hasLibInputPlugin = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    // Compositor process
-    m_compositor = new QProcess(this);
-    m_compositor->setProcessChannelMode(QProcess::ForwardedChannels);
-    m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
-    m_compositor->setArguments(QStringList()
-                               << QStringLiteral("-platformtheme")
-                               << QStringLiteral("Hawaii")
-                               << QStringLiteral("-p")
-                               << QStringLiteral("org.hawaii.desktop"));
-    if (m_mode == NESTED_MODE) {
-        m_compositor->setArguments(m_compositor->arguments()
-                                   << QStringLiteral("-platform")
-                                   << QStringLiteral("wayland")
-                                   << QStringLiteral("--socket=") + m_compositorSocket);
-    } else if (m_mode == EGLFS_MODE) {
-        m_compositor->setArguments(m_compositor->arguments()
-                                   << QStringLiteral("-platform")
-                                   << QStringLiteral("eglfs"));
-        if (hasLibInputPlugin) {
-            m_compositor->setArguments(m_compositor->arguments()
-                                       << QStringLiteral("-plugin")
-                                       << QStringLiteral("libinput"));
-        }
-    }
-    connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
-            this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
-
-    // Pass arguments for full screen shell and style
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    if (m_fullScreenShell)
-        env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
-    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
-    if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
-        env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
-    if (m_mode == EGLFS_MODE && hasLibInputPlugin)
-        env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
-    m_compositor->setProcessEnvironment(env);
+    // Setup and print summary
+    if (m_mode == NESTED_MODE)
+        setupFullScreenShell();
+    setupCompositor();
+    printSummary();
 }
 
 QString ProcessController::mode() const
@@ -169,6 +108,90 @@ QString ProcessController::randomString() const
     }
 
     return randomString;
+}
+
+void ProcessController::setupFullScreenShell()
+{
+    // Full screen shell
+    m_fullScreenShell = new QProcess(this);
+    m_fullScreenShell->setProcessChannelMode(QProcess::ForwardedChannels);
+    m_fullScreenShell->setProgram(QStringLiteral("weston"));
+    m_fullScreenShell->setArguments(QStringList()
+                                    << QStringLiteral("--shell=fullscreen-shell.so")
+                                    << QStringLiteral("--socket=") + m_fullScreenShellSocket);
+    connect(m_fullScreenShell, SIGNAL(finished(int,QProcess::ExitStatus)),
+            this, SLOT(fullScreenShellFinished(int,QProcess::ExitStatus)));
+
+    m_fullScreenShellWatcher = new QFileSystemWatcher(this);
+    m_fullScreenShellWatcher->addPath(QString::fromUtf8(qgetenv("XDG_RUNTIME_DIR")));
+    connect(m_fullScreenShellWatcher, SIGNAL(directoryChanged(QString)),
+            this, SLOT(directoryChanged(QString)));
+}
+
+void ProcessController::setupCompositor()
+{
+    // Do we have the libinput plugin? If available, it will be used in eglfs mode
+    if (m_mode == EGLFS_MODE) {
+        for (const QString &path: QCoreApplication::libraryPaths()) {
+            QDir pluginsDir(path + QStringLiteral("/generic"));
+            for (const QString &fileName: pluginsDir.entryList(QDir::Files)) {
+                if (fileName == QStringLiteral("libqlibinputplugin.so")) {
+                    m_hasLibInputPlugin = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Compositor process
+    m_compositor = new QProcess(this);
+    m_compositor->setProcessChannelMode(QProcess::ForwardedChannels);
+    m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
+    m_compositor->setArguments(QStringList()
+                               << QStringLiteral("-platformtheme")
+                               << QStringLiteral("Hawaii")
+                               << QStringLiteral("-p")
+                               << QStringLiteral("org.hawaii.desktop"));
+    if (m_mode == NESTED_MODE) {
+        m_compositor->setArguments(m_compositor->arguments()
+                                   << QStringLiteral("-platform")
+                                   << QStringLiteral("wayland")
+                                   << QStringLiteral("--socket=") + m_compositorSocket);
+    } else if (m_mode == EGLFS_MODE) {
+        m_compositor->setArguments(m_compositor->arguments()
+                                   << QStringLiteral("-platform")
+                                   << QStringLiteral("eglfs"));
+        if (m_hasLibInputPlugin) {
+            m_compositor->setArguments(m_compositor->arguments()
+                                       << QStringLiteral("-plugin")
+                                       << QStringLiteral("libinput"));
+        }
+    }
+    connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
+            this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
+
+    // Pass arguments for full screen shell and style
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    if (m_fullScreenShell)
+        env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
+    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
+    if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
+        env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
+    if (m_mode == EGLFS_MODE && m_hasLibInputPlugin)
+        env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
+    m_compositor->setProcessEnvironment(env);
+}
+
+void ProcessController::printSummary()
+{
+    qCDebug(PROCESS_CONTROLLER) << "Mode:" << m_mode;
+    if (m_mode == NESTED_MODE) {
+        qCDebug(PROCESS_CONTROLLER) << "Weston socket:" << m_fullScreenShellSocket;
+        qCDebug(PROCESS_CONTROLLER) << "Compositor socket:" << m_compositorSocket;
+    }
+    if (m_mode == EGLFS_MODE)
+        qCDebug(PROCESS_CONTROLLER) << "libinput:" << m_hasLibInputPlugin;
+    qCDebug(PROCESS_CONTROLLER) << "X11:" << qEnvironmentVariableIsSet("DISPLAY");
 }
 
 void ProcessController::startCompositor()

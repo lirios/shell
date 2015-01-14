@@ -29,6 +29,9 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QProcess>
+#include <QtCore/QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(PROCESS_CONTROLLER)
 
 class QFileSystemWatcher;
 
@@ -43,6 +46,10 @@ public:
     void start();
     void stop();
 
+Q_SIGNALS:
+    void started();
+    void stopped();
+
 private:
     QProcess *m_compositor;
     QStringList m_compositorArgs;
@@ -54,12 +61,14 @@ private:
     QFileSystemWatcher *m_fullScreenShellWatcher;
 
     QString m_mode;
+    bool m_hasLibInputPlugin;
 
     QString randomString() const;
 
-Q_SIGNALS:
-    void started();
-    void stopped();
+    void setupFullScreenShell();
+    void setupCompositor();
+
+    void printSummary();
 
 private Q_SLOTS:
     void startCompositor();
