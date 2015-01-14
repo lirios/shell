@@ -33,7 +33,7 @@ import "WindowManagement.js" as WindowManagement
 import "screen"
 
 Item {
-    readonly property alias screenView: screenView
+    readonly property alias screenView: screenViewLoader.item
     readonly property alias surfaceModel: surfaceModel
     property var activeWindow: null
     readonly property int activeWindowIndex: WindowManagement.getActiveWindowIndex()
@@ -47,8 +47,14 @@ Item {
     signal windowSwitchSelect()
 
     id: compositorRoot
-    state: "session"
+    state: "splash"
     states: [
+        State {
+            name: "splash"
+            PropertyChanges { target: splashScreen; opacity: 1.0 }
+            PropertyChanges { target: keyFilter; enabled: false }
+            StateChangeScript { script: disableInput() }
+        },
         State {
             name: "session"
             PropertyChanges { target: keyFilter; enabled: true }
@@ -58,10 +64,6 @@ Item {
             PropertyChanges { target: lockScreenLoader; source: ""; z: 899 }
             PropertyChanges { target: splashScreen; opacity: 0.0 }
             StateChangeScript { script: enableInput() }
-        },
-        State {
-            name: "splash"
-            PropertyChanges { target: splashScreen; opacity: 1.0 }
         },
         State {
             name: "windowSwitcher"
@@ -213,9 +215,6 @@ Item {
             compositorRoot.state = "session";
         }
         onReady: {
-            // Bring user layer up
-            compositorRoot.state = "session";
-
             // Start idle timer
             idleTimer.running = true
         }
@@ -264,11 +263,36 @@ Item {
         Keys.onReleased: compositorRoot.keyReleased(event)
     }
 
-    // Screen
-    ScreenView {
-        id: screenView
+    /*
+     * Screen view
+     */
+
+    Loader {
+        property bool alreadyLoaded: false
+
+        id: screenViewLoader
         anchors.fill: parent
+        asynchronous: true
         z: 900
+        onLoaded: {
+            // We asynchronously load the screen component when the splash state
+            // is reached. As soon as the component is loaded we switch to
+            // the session state
+            compositorRoot.state = "session";
+        }
+        onItemChanged: {
+            if (!item || alreadyLoaded)
+                return;
+
+            // Create default 4 workspaces
+            var i;
+            for (i = 0; i < 4; i++)
+                item.workspacesView.add();
+            item.workspacesView.select(0);
+
+            // Setup workspaces only once
+            alreadyLoaded = true;
+        }
     }
 
     /*
@@ -403,11 +427,8 @@ Item {
      */
 
     Component.onCompleted: {
-        // Create default 4 workspaces
-        var i;
-        for (i = 0; i < 4; i++)
-            screenView.workspacesView.add();
-        screenView.workspacesView.select(0);
+        // Load screen view asynchronously
+        screenViewLoader.source = "screen/ScreenView.qml";
     }
 
     /*
