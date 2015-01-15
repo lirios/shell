@@ -37,6 +37,8 @@ class SessionManager : public QObject
 public:
     SessionManager(ProcessController *controller);
 
+    void setupEnvironment();
+
 public Q_SLOTS:
     void logOut();
 

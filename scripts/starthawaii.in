@@ -25,57 +25,6 @@
 # $END_LICENSE$
 #
 
-# Make sure we find Hawaii executables
-if test -n "$PATH"; then
-    PATH="@CMAKE_INSTALL_FULL_BINDIR@:$PATH"
-else
-    PATH="@CMAKE_INSTALL_FULL_BINDIR@:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/sbin:/usr/sbin"
-fi
-export PATH
-
-# Set the path for Qt plugins provided by us
-if test -n "$QT_PLUGIN_PATH"; then
-    QT_PLUGIN_PATH="$QT_PLUGIN_PATH:@CMAKE_INSTALL_FULL_PLUGINSDIR@"
-else
-    QT_PLUGIN_PATH="@CMAKE_INSTALL_FULL_PLUGINSDIR@"
-fi
-export QT_PLUGIN_PATH
-
-# Set the path for QML 2 imports provided by us
-if test -n "$QML2_IMPORT_PATH"; then
-    QML2_IMPORT_PATH="$QML2_IMPORT_PATH:@CMAKE_INSTALL_FULL_QMLDIR@"
-else
-    QML2_IMPORT_PATH="@CMAKE_INSTALL_FULL_QMLDIR@"
-fi
-export QML2_IMPORT_PATH
-
-# Make sure data directories are set
-if test -z "$XDG_DATA_HOME"; then
-    export XDG_DATA_HOME="$HOME/.local/share"
-fi
-if test -z "$XDG_CONFIG_HOME"; then
-    export XDG_CONFIG_HOME="$HOME/.config"
-fi
-if test -n "$XDG_DATA_DIRS"; then
-    XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:$XDG_DATA_DIRS"
-else
-    XDG_DATA_DIRS="@CMAKE_INSTALL_FULL_DATADIR@:/usr/local/share:/usr/share"
-fi
-export XDG_DATA_DIRS
-
-# Enable Qt integration for OpenOffice.org
-export SAL_USE_VCLPLUGIN="kde"
-
-# Qt platform theme
-export QT_PLATFORM_PLUGIN="Hawaii"
-export QT_QPA_PLATFORMTHEME="Hawaii"
-
-# Use hawaii-applications.menu
-export XDG_MENU_PREFIX="hawaii-"
-
-# Set current desktop
-export XDG_CURRENT_DESKTOP="Hawaii"
-
 # Launch a session bus instance
 if [ -z "$DBUS_SESSION_BUS_ADDRESS" ] && type dbus-launch >/dev/null; then
     eval `dbus-launch --auto-syntax --exit-with-session`

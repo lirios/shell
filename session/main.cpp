@@ -80,6 +80,9 @@ int main(int argc, char *argv[])
 
     // Session manager
     SessionManager sessionManager(&processController);
+    sessionManager.setupEnvironment();
+
+    // Start the D-Bus service
     (void)new SessionAdaptor(&sessionManager);
     QDBusConnection bus = QDBusConnection::sessionBus();
     if (!bus.registerService(sessionService))

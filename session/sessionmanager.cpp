@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include "cmakedirs.h"
 #include "processcontroller.h"
 #include "sessionmanager.h"
 
@@ -31,6 +32,43 @@ SessionManager::SessionManager(ProcessController *controller)
     : QObject(controller)
     , m_controller(controller)
 {
+}
+
+void SessionManager::setupEnvironment()
+{
+    // Set paths only if we are installed onto a non standard location
+    if (!QStringLiteral(INSTALL_PREFIX).startsWith(QStringLiteral("/usr"))) {
+        QString path;
+
+        path = QStringLiteral("%1:%2").arg(INSTALL_BINDIR).arg(QString(qgetenv("PATH")));
+        qputenv("PATH", path.toUtf8());
+
+        path = QStringLiteral("%1:%2").arg(INSTALL_PLUGINDIR).arg(QString(qgetenv("QT_PLUGIN_PATH")));
+        qputenv("QT_PLUGIN_PATH", path.toUtf8());
+
+        path = QStringLiteral("%1:%2").arg(INSTALL_QMLDIR).arg(QString(qgetenv("QML2_IMPORT_PATH")));
+        qputenv("QML2_IMPORT_PATH", path.toUtf8());
+
+        path = QStringLiteral("%1:%2").arg(INSTALL_DATADIR).arg(QString(qgetenv("XDG_DATA_DIRS")));
+        qputenv("XDG_DATA_DIRS", path.toUtf8());
+    }
+
+    // Set XDG environment variables
+    if (qEnvironmentVariableIsEmpty("XDG_DATA_HOME")) {
+        QString path = QStringLiteral("%1/.local/share").arg(QString(qgetenv("HOME")));
+        qputenv("XDG_DATA_HOME", path.toUtf8());
+    }
+    if (qEnvironmentVariableIsEmpty("XDG_CONFIG_HOME")) {
+        QString path = QStringLiteral("%1/.config").arg(QString(qgetenv("HOME")));
+        qputenv("XDG_CONFIG_HOME", path.toUtf8());
+    }
+
+    // Set platform integration
+    qputenv("SAL_USE_VCLPLUGIN", QByteArray("kde"));
+    qputenv("QT_PLATFORM_PLUGIN", QByteArray("Hawaii"));
+    qputenv("QT_QPA_PLATFORMTHEME", QByteArray("Hawaii"));
+    qputenv("XDG_MENU_PREFIX", QByteArray("hawaii-"));
+    qputenv("XDG_CURRENT_DESKTOP", QByteArray("Hawaii"));
 }
 
 void SessionManager::logOut()
