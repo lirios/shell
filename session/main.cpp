@@ -27,6 +27,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLoggingCategory>
+#include <QtCore/QProcess>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 #include <QtDBus/QDBusInterface>
@@ -81,6 +82,24 @@ int main(int argc, char *argv[])
     // Session manager
     SessionManager sessionManager(&processController);
     sessionManager.setupEnvironment();
+
+    // Restart with D-Bus session if necessary
+    if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
+        qDebug() << "No D-Bus session bus available, respawning with dbus-launch...";
+
+        qint64 pid = 0;
+        bool ret = QProcess::startDetached(QStringLiteral("dbus-launch"), QStringList()
+                                               << QStringLiteral("--exit-with-session")
+                                               << QCoreApplication::arguments(),
+                                           QString(), &pid);
+        if (ret) {
+            qDebug() << "New process:" << pid;
+            return 0;
+        } else {
+            qWarning() << "Failed to respawn, aborting...";
+            return 1;
+        }
+    }
 
     // Start the D-Bus service
     (void)new SessionAdaptor(&sessionManager);

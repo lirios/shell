@@ -47,16 +47,6 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
     , m_mode(mode)
     , m_hasLibInputPlugin(false)
 {
-    // Wayland sockets
-    QString random = randomString();
-    m_compositorSocket = QStringLiteral(HAWAII_SOCKET) + random;
-    m_fullScreenShellSocket = QStringLiteral(FULLSCREEN_SHELL_SOCKET) + random;
-
-    // Setup and print summary
-    if (m_mode == NESTED_MODE)
-        setupFullScreenShell();
-    setupCompositor();
-    printSummary();
 }
 
 QString ProcessController::mode() const
@@ -66,6 +56,10 @@ QString ProcessController::mode() const
 
 void ProcessController::start()
 {
+    // Prepare for execution
+    prepare();
+
+    // Actually start something
     if (m_fullScreenShell) {
         // Run the full screen shell compositor if enabled
         qDebug() << "Running:" << qPrintable(m_fullScreenShell->program())
@@ -108,6 +102,20 @@ QString ProcessController::randomString() const
     }
 
     return randomString;
+}
+
+void ProcessController::prepare()
+{
+    // Wayland sockets
+    QString random = randomString();
+    m_compositorSocket = QStringLiteral(HAWAII_SOCKET) + random;
+    m_fullScreenShellSocket = QStringLiteral(FULLSCREEN_SHELL_SOCKET) + random;
+
+    // Setup and print summary
+    if (m_mode == NESTED_MODE)
+        setupFullScreenShell();
+    setupCompositor();
+    printSummary();
 }
 
 void ProcessController::setupFullScreenShell()

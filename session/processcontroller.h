@@ -65,6 +65,8 @@ private:
 
     QString randomString() const;
 
+    void prepare();
+
     void setupFullScreenShell();
     void setupCompositor();
 
