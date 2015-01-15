@@ -34,6 +34,24 @@ And the following modules from KDE:
 * plasma-workspace
 * plasma-nm
 
+## Notes for packagers
+
+We use modules from KDE to decrease technology debt.
+However some of those modules pull in too many dependencies.
+
+In particular we need:
+
+* DataSource API and data engines (plasma-framework and plasma-workspace)
+* Device independent units (plasma-framework)
+* Networking (plasma-nm, QML plugin only not plasmoid)
+
+In the near future actions will be taken to cut down those dependencies.
+
+Device independent units will probably be reimplemented here and submitted
+to Qt (either qtdeclarative or qtquickcontrols) once ready.
+
+Frameworks on the other hand are often safe, depending on their tier.
+
 ## Build
 
 Building Hawaii Shell is a piece of cake.
