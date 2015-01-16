@@ -25,7 +25,6 @@ target_link_libraries(appchooserplugin
                       Qt5::Qml
                       Qt5::Quick
                       KF5::KDELibs4Support
-                      KF5::ConfigCore
                       KF5::CoreAddons
                       KF5::KIOCore
                       KF5::KIOWidgets
