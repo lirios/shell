@@ -81,6 +81,7 @@ Item {
             top: parent.top
             right: parent.right
             leftMargin: units.smallSpacing * 2
+            topMargin: units.smallSpacing
         }
         level: 4
         font.weight: Font.Bold
