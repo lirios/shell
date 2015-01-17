@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
     ProcessController processController(parser.value(modeOption));
 
     // Session manager
-    SessionManager sessionManager(&processController);
-    sessionManager.setupEnvironment();
+    SessionManager *sessionManager = new SessionManager(&processController);
+    sessionManager->setupEnvironment();
 
     // Restart with D-Bus session if necessary
     if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
@@ -102,14 +102,19 @@ int main(int argc, char *argv[])
     }
 
     // Start the D-Bus service
-    (void)new SessionAdaptor(&sessionManager);
+    (void)new SessionAdaptor(sessionManager);
     QDBusConnection bus = QDBusConnection::sessionBus();
     if (!bus.registerService(sessionService))
         qFatal("Couldn't register org.hawaii.session D-Bus service: %s",
                qPrintable(bus.lastError().message()));
-    if (!bus.registerObject(sessionObject, &sessionManager))
+    if (!bus.registerObject(sessionObject, sessionManager))
         qFatal("Couldn't register /HawaiiSession D-Bus object: %s",
                qPrintable(bus.lastError().message()));
+
+    // Autostart applications as soon as the compositor is ready
+    QObject::connect(&processController, &ProcessController::started, [sessionManager]() {
+        sessionManager->autostart();
+    });
 
     // Start the compositor
     processController.start();

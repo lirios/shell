@@ -1,5 +1,6 @@
 include_directories(
     ${CMAKE_BINARY_DIR}/headers
+    ${CMAKE_SOURCE_DIR}/3rdparty
 )
 
 set(SOURCES
@@ -21,6 +22,7 @@ add_executable(hawaii-session ${SOURCES})
 target_link_libraries(hawaii-session
     Qt5::Core
     Qt5::DBus
+    HawaiiQtXDG
 )
 
 install(TARGETS hawaii-session DESTINATION ${BIN_INSTALL_DIR})

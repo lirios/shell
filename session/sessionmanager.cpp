@@ -24,9 +24,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include "libqtxdg/xdgautostart.h"
+#include "libqtxdg/xdgdesktopfile.h"
+
 #include "cmakedirs.h"
 #include "processcontroller.h"
 #include "sessionmanager.h"
+
+#include <sys/types.h>
+#include <signal.h>
 
 SessionManager::SessionManager(ProcessController *controller)
     : QObject(controller)
@@ -71,8 +77,41 @@ void SessionManager::setupEnvironment()
     qputenv("XDG_CURRENT_DESKTOP", QByteArray("Hawaii"));
 }
 
+void SessionManager::autostart()
+{
+    for (const XdgDesktopFile &entry: XdgAutoStart::desktopFileList()) {
+        if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
+            continue;
+
+        QStringList args = entry.expandExecString();
+        QString command = args.takeAt(0);
+
+        qDebug() << "Starting" << entry.expandExecString().join(" ") << "from" << entry.fileName();
+
+        qint64 pid = 0;
+        if (QProcess::startDetached(command, args, QString(), &pid)) {
+            qDebug("Started \"%s\" (%s) automatically with pid %lld",
+                   qPrintable(entry.fileName()),
+                   qPrintable(entry.name()),
+                   pid);
+            m_processes.append(pid);
+        } else {
+            qWarning("Failed to start \"%s\" (%s) automatically",
+                     qPrintable(entry.fileName()),
+                     qPrintable(entry.name()));
+        }
+    }
+}
+
 void SessionManager::logOut()
 {
+    // Kill the autostart programs
+    for (qint64 pid: m_processes) {
+        if (kill(pid, SIGTERM) < 0)
+            kill(pid, SIGKILL);
+    }
+
+    // Stop the compositor
     m_controller->stop();
 }
 

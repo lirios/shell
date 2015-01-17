@@ -38,12 +38,14 @@ public:
     SessionManager(ProcessController *controller);
 
     void setupEnvironment();
+    void autostart();
 
 public Q_SLOTS:
     void logOut();
 
 private:
     ProcessController *m_controller;
+    QList<qint64> m_processes;
 };
 
 #endif // SESSIONMANAGER_H
