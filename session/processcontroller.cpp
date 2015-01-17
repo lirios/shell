@@ -33,7 +33,7 @@
 #include "cmakedirs.h"
 #include "processcontroller.h"
 
- Q_LOGGING_CATEGORY(PROCESS_CONTROLLER, "hawaii.session.processcontroller")
+Q_LOGGING_CATEGORY(PROCESS_CONTROLLER, "hawaii.session.processcontroller")
 
 #define FULLSCREEN_SHELL_SOCKET "hawaii-master-"
 #define HAWAII_SOCKET "hawaii-slave-"
@@ -62,8 +62,9 @@ void ProcessController::start()
     // Actually start something
     if (m_fullScreenShell) {
         // Run the full screen shell compositor if enabled
-        qDebug() << "Running:" << qPrintable(m_fullScreenShell->program())
-                 << qPrintable(m_fullScreenShell->arguments().join(" "));
+        qCDebug(PROCESS_CONTROLLER)
+                << "Running:" << qPrintable(m_fullScreenShell->program())
+                << qPrintable(m_fullScreenShell->arguments().join(" "));
         m_fullScreenShell->start();
 
         if (!m_fullScreenShell->waitForStarted())
@@ -206,8 +207,9 @@ void ProcessController::printSummary()
 void ProcessController::startCompositor()
 {
     // Start the process
-    qDebug() << "Running:" << qPrintable(m_compositor->program())
-             << qPrintable(m_compositor->arguments().join(" "));
+    qDebug(PROCESS_CONTROLLER)
+            << "Running:" << qPrintable(m_compositor->program())
+            << qPrintable(m_compositor->arguments().join(" "));
     m_compositor->start();
     if (!m_compositor->waitForStarted()) {
         // Compositor failed to start, kill full screen shell and terminate
@@ -241,7 +243,7 @@ void ProcessController::compositorFinished(int code, const QProcess::ExitStatus 
     Q_UNUSED(status);
 
     if (code != 0)
-        qWarning() << "Compositor finished with exit code" << code;
+        qCWarning(PROCESS_CONTROLLER) << "Compositor finished with exit code" << code;
 
     // Whathever the reason why it finished is we need to quit the
     // full screen shell compositor, if any
@@ -262,7 +264,7 @@ void ProcessController::fullScreenShellFinished(int code, const QProcess::ExitSt
     Q_UNUSED(status);
 
     if (code != 0)
-        qWarning() << "Full screen shell finished with exit code" << code;
+        qCWarning(PROCESS_CONTROLLER) << "Full screen shell finished with exit code" << code;
 
     // Kill the compositor if for some reason is still running
     m_compositor->terminate();

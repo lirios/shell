@@ -34,6 +34,8 @@
 #include <sys/types.h>
 #include <signal.h>
 
+Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
+
 SessionManager::SessionManager(ProcessController *controller)
     : QObject(controller)
     , m_controller(controller)
@@ -86,19 +88,21 @@ void SessionManager::autostart()
         QStringList args = entry.expandExecString();
         QString command = args.takeAt(0);
 
-        qDebug() << "Starting" << entry.expandExecString().join(" ") << "from" << entry.fileName();
+        qCDebug(SESSION_MANAGER) << "Starting" << entry.expandExecString().join(" ") << "from" << entry.fileName();
 
         qint64 pid = 0;
         if (QProcess::startDetached(command, args, QString(), &pid)) {
-            qDebug("Started \"%s\" (%s) automatically with pid %lld",
-                   qPrintable(entry.fileName()),
-                   qPrintable(entry.name()),
-                   pid);
+            qCDebug(SESSION_MANAGER,
+                    "Started \"%s\" (%s) automatically with pid %lld",
+                    qPrintable(entry.fileName()),
+                    qPrintable(entry.name()),
+                    pid);
             m_processes.append(pid);
         } else {
-            qWarning("Failed to start \"%s\" (%s) automatically",
-                     qPrintable(entry.fileName()),
-                     qPrintable(entry.name()));
+            qCWarning(SESSION_MANAGER,
+                      "Failed to start \"%s\" (%s) automatically",
+                      qPrintable(entry.fileName()),
+                      qPrintable(entry.name()));
         }
     }
 }

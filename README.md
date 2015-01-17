@@ -114,6 +114,10 @@ to learn how to enable them.
 
 ### Available categories
 
+* Session manager:
+  * **hawaii.session.processcontroller:** Starts the compositor
+  * **hawaii.session.manager:** Manages the session
+
 * Mixer QML plugin:
   * **hawaii.qml.mixer:** Mixer service
   * **hawaii.qml.mixer.alsa:** Alsa backend
