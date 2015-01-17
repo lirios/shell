@@ -53,13 +53,29 @@ Indicator {
                 color: Theme.palette.panel.textColor
             }
 
+            Controls.Heading {
+                text: qsTr("Volume")
+                color: Theme.palette.panel.textColor
+                level: 3
+                visible: volumeControl.visible
+            }
+
             SoundIndicator.VolumeControl {
+                id: volumeControl
                 visible: MixerService.Mixer.available
 
                 Layout.fillWidth: true
             }
 
+            Controls.Heading {
+                text: qsTr("Playback")
+                color: Theme.palette.panel.textColor
+                level: 3
+                visible: mprisItem.visible
+            }
+
             SoundIndicator.MprisItem {
+                id: mprisItem
                 dataSource: mprisDataSource
                 visible: mprisDataSource.available
 
