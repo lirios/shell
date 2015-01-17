@@ -43,10 +43,12 @@ Rectangle {
         GradientStop { position: 0; color: Qt.lighter(Theme.palette.panel.backgroundColor, 1.2) }
         GradientStop { position: 1; color: Qt.darker(Theme.palette.panel.backgroundColor, 1.1) }
     }
+    border.width: units.gridUnit * 0.05
     border.color: Theme.palette.rgba(Qt.darker(Theme.palette.panel.backgroundColor, 1.2), 0.5)
     width: Math.round(units.gridUnit * 24)
     height: notificationItem.implicitHeight
-    radius: units.gridUnit * 0.2
+    radius: units.gridUnit * 0.4
+    antialiasing: true
     visible: false
 
     Behavior on y {
