@@ -43,6 +43,9 @@ public:
     void setupEnvironment();
     void autostart();
 
+Q_SIGNALS:
+    void loggedOut();
+
 public Q_SLOTS:
     void logOut();
 

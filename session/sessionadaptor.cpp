@@ -26,13 +26,18 @@
 
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
-#include "powermanager/powermanager.h"
 
 SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     : QDBusAbstractAdaptor(sessionManager)
     , m_sessionManager(sessionManager)
     , m_powerManager(new PowerManager(this))
+    , m_actionRequested(PowerManager::None)
 {
+    // When an action is requested we first log out (which means killing
+    // the processes and quitting the compositor), when the session is
+    // logged out this slot is called and perform the actual action
+    connect(m_sessionManager, SIGNAL(loggedOut()),
+            this, SLOT(performAction()));
 }
 
 bool SessionAdaptor::canLogOut()
@@ -70,16 +75,19 @@ bool SessionAdaptor::canHybridSleep()
 void SessionAdaptor::logOut()
 {
     m_sessionManager->logOut();
+    ::exit(EXIT_SUCCESS);
 }
 
 void SessionAdaptor::powerOff()
 {
-    m_powerManager->powerOff();
+    m_actionRequested = PowerManager::PowerOff;
+    logOut();
 }
 
 void SessionAdaptor::restart()
 {
-    m_powerManager->restart();
+    m_actionRequested = PowerManager::Restart;
+    logOut();
 }
 
 void SessionAdaptor::suspend()
@@ -95,6 +103,20 @@ void SessionAdaptor::hibernate()
 void SessionAdaptor::hybridSleep()
 {
     m_powerManager->hybridSleep();
+}
+
+void SessionAdaptor::performAction()
+{
+    switch (m_actionRequested) {
+    case PowerManager::PowerOff:
+        m_powerManager->powerOff();
+        break;
+    case PowerManager::Restart:
+        m_powerManager->restart();
+        break;
+    default:
+        break;
+    }
 }
 
 #include "moc_sessionadaptor.cpp"

@@ -40,6 +40,10 @@ SessionManager::SessionManager(ProcessController *controller)
     : QObject(controller)
     , m_controller(controller)
 {
+    // The compositor is stopped when a logout has been request,
+    // which happens after we killed all the processes so when this
+    // arrives we can emit the loggedOut signal
+    connect(m_controller, SIGNAL(stopped()), this, SIGNAL(loggedOut()));
 }
 
 void SessionManager::setupEnvironment()

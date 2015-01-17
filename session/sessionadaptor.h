@@ -29,8 +29,9 @@
 
 #include <QtDBus/QDBusAbstractAdaptor>
 
+#include "powermanager/powermanager.h"
+
 class SessionManager;
-class PowerManager;
 
 class SessionAdaptor : public QDBusAbstractAdaptor
 {
@@ -57,6 +58,10 @@ public Q_SLOTS:
 private:
     SessionManager *m_sessionManager;
     PowerManager *m_powerManager;
+    PowerManager::Capability m_actionRequested;
+
+private Q_SLOTS:
+    void performAction();
 };
 
 #endif // SESSIONADAPTOR_H
