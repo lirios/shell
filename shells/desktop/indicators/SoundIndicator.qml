@@ -29,6 +29,7 @@ import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.hawaii.mixer 0.1 as MixerService
 import ".."
 import "sound" as SoundIndicator
 
@@ -57,4 +58,28 @@ Indicator {
     }
     // TODO: When a volume item will be available -> Or with mpris and volume item
     //visible: mpris.visible
+    visible: MixerService.Mixer.available
+
+    Connections {
+        target: compositorRoot
+        onKeyPressed: {
+            switch (event.key) {
+            case Qt.Key_VolumeUp:
+                MixerService.Mixer.increaseMaster();
+                event.accepted = true;
+                break;
+            case Qt.Key_VolumeDown:
+                MixerService.Mixer.decreaseMaster();
+                event.accepted = true;
+                break;
+            case Qt.Key_VolumeMute:
+                MixerService.Mixer.muted = !MixerService.Mixer.muted;
+                event.accepted = true;
+                break;
+            default:
+                event.accepted = false;
+                break;
+            }
+        }
+    }
 }

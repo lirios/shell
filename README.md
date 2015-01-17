@@ -34,6 +34,10 @@ And the following modules from KDE:
 * plasma-workspace
 * plasma-nm
 
+Optional dependencies:
+
+* alsa and/or libpulse for volume control
+
 ## Notes for packagers
 
 We use modules from KDE to decrease technology debt.
@@ -107,6 +111,13 @@ them to make debugging easier.
 
 Please refer to the [Qt](http://doc.qt.io/qt-5/qloggingcategory.html) documentation
 to learn how to enable them.
+
+### Available categories
+
+* Mixer QML plugin:
+  * **hawaii.qml.mixer:** Mixer service
+  * **hawaii.qml.mixer.alsa:** Alsa backend
+  * **hawaii.qml.mixer.pulseaudio:** PulseAudio backend
 
 ## QML JavaScript debugger
 

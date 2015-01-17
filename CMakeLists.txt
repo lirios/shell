@@ -10,6 +10,8 @@ set(CMAKE_AUTOMOC ON)
 
 # Options
 option(ENABLE_SYSTEMD "Enables systemd support" OFF)
+option(ENABLE_ALSA "Enables Alsa mixer backend" ON)
+option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
 
 # Set version
 set(HAWAII_VERSION_MAJOR 0)

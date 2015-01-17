@@ -1,0 +1,4 @@
+module org.hawaii.mixer
+plugin mixerplugin
+classname MixerPlugin
+typeinfo plugins.qmltypes
