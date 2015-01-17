@@ -257,18 +257,16 @@ Indicator {
             var operation = service.operationDescription("userClosed");
             service.startOperationCall(operation);
 
-            notificationWindow.parent = null;
-            notificationWindow.destroy();
+            notificationWindow.close();
             repositionNotifications();
         });
         window.expired.connect(function(notificationWindow) {
-            notificationWindow.parent = null;
-            notificationWindow.destroy();
+            notificationWindow.close();
             repositionNotifications();
         });
         window.populateNotification(data);
-        window.visible = true;
         repositionNotifications();
+        window.show();
     }
 
     function repositionNotifications() {

@@ -40,7 +40,14 @@ Item {
     objectName: "notificationWindow"
     width: Math.round(units.gridUnit * 24)
     height: notificationItem.implicitHeight
-    visible: false
+    opacity: 0.0
+    onOpacityChanged: {
+        if (opacity == 0.0 && __priv.closing) {
+            // Destroy notification
+            root.parent = null;
+            root.destroy();
+        }
+    }
 
     Behavior on y {
         NumberAnimation {
@@ -63,9 +70,14 @@ Item {
         }
     }
 
+    QtObject {
+        id: __priv
+
+        property bool closing: false
+    }
+
     Timer {
         id: timer
-        running: root.visible
         onTriggered: {
             if (!notificationData.isPersistent) {
                 timer.running = false;
@@ -120,6 +132,15 @@ Item {
         hoverEnabled: true
         onEntered: root.opacity = 0.5
         onExited: root.opacity = 1.0
+    }
+
+    function show() {
+        opacity = 1.0;
+    }
+
+    function close() {
+        __priv.closing = true;
+        opacity = 0.0;
     }
 
     function populateNotification(notification) {
