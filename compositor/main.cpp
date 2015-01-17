@@ -27,7 +27,7 @@
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QCommandLineParser>
 
-#include <greenisland/homeapplication.h>
+#include <GreenIsland/HomeApplication>
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
@@ -35,15 +35,7 @@ int main(int argc, char *argv[])
 {
     // Application
     GreenIsland::HomeApplication app(argc, argv);
-    app.setApplicationName("Hawaii");
-
-    // Enable debug messages
-    QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true"));
-    QLoggingCategory::setFilterRules(QStringLiteral("*.warning=true"));
-    QLoggingCategory::setFilterRules(QStringLiteral("*.critical=true"));
-
-    // Set message pattern
-    qSetMessagePattern("%{message}");
+    app.setApplicationName(QStringLiteral("Hawaii"));
 
     // Command line parser
     QCommandLineParser parser;
