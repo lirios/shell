@@ -5,6 +5,7 @@ set(MODULE_FILES
     FocusFrameStyle.qml
     ProgressBarStyle.qml
     ScrollViewStyle.qml
+    SliderStyle.qml
     TextFieldStyle.qml
     ToolButtonStyle.qml
 )

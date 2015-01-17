@@ -7,5 +7,6 @@ FocusFrameStyle 1.0 FocusFrameStyle.qml
 GroupBoxStyle 1.0 GroupBoxStyle.qml
 ProgressBarStyle 1.0 ProgressBarStyle.qml
 ScrollViewStyle 1.0 ScrollViewStyle.qml
+SliderStyle 1.0 SliderStyle.qml
 TextFieldStyle 1.0 TextFieldStyle.qml
 ToolButtonStyle 1.0 ToolButtonStyle.qml
