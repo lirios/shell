@@ -54,11 +54,14 @@ Indicator {
             }
 
             SoundIndicator.VolumeControl {
+                visible: MixerService.Mixer.available
+
                 Layout.fillWidth: true
             }
 
             SoundIndicator.MprisItem {
-                id: mpris
+                dataSource: mprisDataSource
+                visible: mprisDataSource.available
 
                 Layout.fillWidth: true
             }
@@ -68,9 +71,11 @@ Indicator {
             }
         }
     }
-    // TODO: When a volume item will be available -> Or with mpris and volume item
-    //visible: mpris.visible
-    visible: MixerService.Mixer.available
+    visible: MixerService.Mixer.available || mprisDataSource.available
+
+    SoundIndicator.MprisDataSource {
+        id: mprisDataSource
+    }
 
     Connections {
         target: compositorRoot
