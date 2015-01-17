@@ -26,8 +26,12 @@
 
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QCommandLineParser>
+#include <QtCompositor/QWaylandOutput>
 
 #include <GreenIsland/HomeApplication>
+#include <GreenIsland/Compositor>
+
+#include "sigwatch/sigwatch.h"
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
@@ -86,6 +90,15 @@ int main(int argc, char *argv[])
     // Create the compositor and run
     if (!app.run(parser.value(pluginOption)))
         return 1;
+
+    // Unix signals watcher
+    UnixSignalWatcher sigwatch;
+    sigwatch.watchForSignal(SIGINT);
+    sigwatch.watchForSignal(SIGTERM);
+
+    // Close all windows when the process is killed
+    QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal,
+                     &app, &GreenIsland::HomeApplication::quit);
 
     return app.exec();
 }
