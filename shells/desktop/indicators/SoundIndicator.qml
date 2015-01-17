@@ -35,7 +35,15 @@ import "sound" as SoundIndicator
 
 Indicator {
     name: "sound"
-    iconName: "audio-volume-high-symbolic"
+    iconName: {
+        if (MixerService.Mixer.muted || MixerService.Mixer.master == 0)
+            return "audio-volume-muted-symbolic";
+        if (MixerService.Mixer.master < 50)
+            return "audio-volume-low-symbolic";
+        if (MixerService.Mixer.master < 75)
+            return "audio-volume-medium-symbolic";
+        return "audio-volume-high-symbolic";
+    }
     component: Component {
         ColumnLayout {
             spacing: units.largeSpacing
@@ -43,6 +51,10 @@ Indicator {
             Controls.Heading {
                 text: qsTr("Sound")
                 color: Theme.palette.panel.textColor
+            }
+
+            SoundIndicator.VolumeControl {
+                Layout.fillWidth: true
             }
 
             SoundIndicator.MprisItem {
