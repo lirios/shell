@@ -32,6 +32,8 @@
 #include <QtDBus/QDBusError>
 #include <QtDBus/QDBusInterface>
 
+#include "sigwatch/sigwatch.h"
+
 #include "cmakedirs.h"
 #include "config.h"
 #include "processcontroller.h"
@@ -76,12 +78,24 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    // Unix signals watcher
+    UnixSignalWatcher sigwatch;
+    sigwatch.watchForSignal(SIGINT);
+    sigwatch.watchForSignal(SIGTERM);
+
     // Process controller that manages the compositor
     ProcessController processController(parser.value(modeOption));
 
     // Session manager
     SessionManager *sessionManager = new SessionManager(&processController);
     sessionManager->setupEnvironment();
+
+    // Log out the session for SIGINT and SIGTERM
+    QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [sessionManager](int signum) {
+        qDebug() << "Log out caused by signal" << signum;
+        sessionManager->logOut();
+        QCoreApplication::quit();
+    });
 
     // Restart with D-Bus session if necessary
     if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {

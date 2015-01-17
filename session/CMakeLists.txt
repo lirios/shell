@@ -23,6 +23,7 @@ target_link_libraries(hawaii-session
     Qt5::Core
     Qt5::DBus
     HawaiiQtXDG
+    HawaiiSigWatch
 )
 
 install(TARGETS hawaii-session DESTINATION ${BIN_INSTALL_DIR})
