@@ -29,6 +29,7 @@ import QtGraphicalEffects 1.0
 import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "../.."
+import "../../components" as ShellComponents
 
 Item {
     property var window: parent
@@ -53,29 +54,21 @@ Item {
         }
     }
 
-    Image {
+    ShellComponents.CloseButton {
         anchors {
             top: parent.top
             right: parent.right
             margins: -units.gridUnit * 0.25
         }
-        source: "../../images/closebutton.png"
         z: 4
-        width: units.iconSizes.smallMedium
-        height: width
-        smooth: true
         opacity: mouseArea.containsMouse ? 1.0 : 0.0
+        onClicked: window.child.surface.destroySurface()
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
                 duration: units.shortDuration
             }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: window.child.surface.destroySurface()
         }
     }
 
