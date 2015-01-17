@@ -242,6 +242,7 @@ Indicator {
         }
 
         var window = component.createObject(compositorRoot.screenView.layers.notifications);
+        window.heightChanged.connect(repositionNotifications);
         window.actionInvoked.connect(function(actionId) {
             var service = notificationsSource.serviceForSource(data["source"]);
             var operation = service.operationDescription("invokeAction");
