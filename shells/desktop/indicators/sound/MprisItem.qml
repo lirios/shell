@@ -1,7 +1,7 @@
 /****************************************************************************
- * This file is part of Hawaii Shell.
+ * This file is part of Hawaii.
  *
- * Copyright (C) 2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2012 Alex Merry <alex.merry@kdemail.net>
  *
  * Author(s):
