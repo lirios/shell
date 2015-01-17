@@ -38,6 +38,7 @@ Rectangle {
 
     id: root
     objectName: "notificationWindow"
+    color: Theme.palette.panel.backgroundColor
     gradient: Gradient {
         GradientStop { position: 0; color: Qt.lighter(Theme.palette.panel.backgroundColor, 1.2) }
         GradientStop { position: 1; color: Qt.darker(Theme.palette.panel.backgroundColor, 1.1) }
@@ -71,7 +72,7 @@ Rectangle {
     Timer {
         id: timer
         repeat: false
-        running: true
+        running: false
         onTriggered: {
             if (!notificationData.isPersistent) {
                 timer.running = false;
@@ -97,21 +98,19 @@ Rectangle {
             top: parent.top
             margins: units.smallSpacing
         }
+        summary: notificationData ? notificationData.summary : ""
+        body: notificationData ? notificationData.body : ""
+        icon: notificationData ? notificationData.appIcon : ""
+        hasIcon: notificationData ? notificationData.appIcon !== "" : false
+        image: notificationData ? notificationData.image : undefined
+        hasImage: notificationData ? notificationData.image !== undefined : false
         onActionInvoked: root.actionInvoked(actionId)
     }
 
     function populateNotification(notification) {
         root.notificationData = notification;
         timer.interval = notification.expireTimeout;
-        notificationItem.summary = notification.summary;
-        notificationItem.body = notification.body;
-        if (notification.appIcon) {
-            notificationItem.icon = notification.appIcon;
-            notificationItem.hasIcon = true;
-        } else if (notification.image) {
-            notificationItem.image = notification.image;
-            notificationItem.hasImage = true;
-        }
+        timer.restart();
         notificationItem.actions.clear();
         notificationItem.actions.append(notification.actions);
     }
