@@ -183,6 +183,8 @@ void ProcessController::setupCompositor()
     if (m_fullScreenShell)
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
     env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
+    env.insert(QStringLiteral("XCURSOR_THEME"), QStringLiteral("hawaii"));
+    env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
     if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
         env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
     if (m_mode == EGLFS_MODE && m_hasLibInputPlugin)
