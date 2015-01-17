@@ -157,8 +157,6 @@ void ProcessController::setupCompositor()
     m_compositor->setProcessChannelMode(QProcess::ForwardedChannels);
     m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
     m_compositor->setArguments(QStringList()
-                               << QStringLiteral("-platformtheme")
-                               << QStringLiteral("Hawaii")
                                << QStringLiteral("-p")
                                << QStringLiteral("org.hawaii.desktop"));
     if (m_mode == NESTED_MODE) {
