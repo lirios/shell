@@ -98,6 +98,16 @@ make install
 
 from the build directory.
 
+# Notes
+
+## Logging categories
+
+Qt 5.2 introduced logging categories and Hawaii takes advantage of
+them to make debugging easier.
+
+Please refer to the [Qt](http://doc.qt.io/qt-5/qloggingcategory.html) documentation
+to learn how to enable them.
+
 ## QML JavaScript debugger
 
 Developers can debug Hawaii Shell with Qt Creator and the QML JavaScript debugger.
