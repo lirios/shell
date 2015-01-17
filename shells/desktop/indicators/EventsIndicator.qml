@@ -155,6 +155,11 @@ Indicator {
         id: notificationsModel
     }
 
+    Component.onCompleted: {
+        // Move notifications every time the available geometry changes
+        //_greenisland_output.availableGeometryChanged.connect(repositionNotifications);
+    }
+
     /*
         Notification data object has the following properties:
          - appIcon
@@ -203,6 +208,79 @@ Indicator {
         if (!data["isPersistent"]) {
             pendingRemovals.push(notificationId);
             pendingTimer.start();
+        }
+
+        // Update notification window if it's the same source
+        // otherwise create a new window
+        if (sameSource) {
+            var i, found = false;
+            var popups = compositorRoot.screenView.layers.notifications.children;
+            for (i = 0; i < popups.length; i++) {
+                var popup = popups[i];
+                if (popup.objectName !== "notificationWindow")
+                    continue;
+
+                if (popup.notificationData.id === data["id"]) {
+                    popup.populateNotification(data);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+                createNotificationWindow(data);
+        } else {
+            createNotificationWindow(data);
+        }
+    }
+
+    function createNotificationWindow(data) {
+        var component = Qt.createComponent("events/NotificationWindow.qml");
+        if (component.status !== Component.Ready) {
+            console.error(component.errorString());
+            return;
+        }
+
+        var window = component.createObject(compositorRoot.screenView.layers.notifications);
+        window.actionInvoked.connect(function(actionId) {
+            var service = notificationsSource.serviceForSource(data["source"]);
+            var operation = service.operationDescription("invokeAction");
+            operation["actionId"] = actionId;
+            service.startOperationCall(operation);
+        });
+        window.closed.connect(function(notificationWindow) {
+            var service = notificationsSource.serviceForSource(data["source"]);
+            var operation = service.operationDescription("userClosed");
+            service.startOperationCall(operation);
+
+            notificationWindow.parent = null;
+            notificationWindow.destroy();
+            repositionNotifications();
+        });
+        window.expired.connect(function(notificationWindow) {
+            notificationWindow.parent = null;
+            notificationWindow.destroy();
+            repositionNotifications();
+        });
+        window.populateNotification(data);
+        repositionNotifications();
+    }
+
+    function repositionNotifications() {
+        var popups = compositorRoot.screenView.layers.notifications.children;
+        var workArea = _greenisland_output.availableGeometry;
+        var offset = Theme.mSize().height;
+        var totalHeight = 0;
+
+        var i;
+        for (i = 0; i < popups.length; i++) {
+            var popup = popups[i];
+            if (popup.objectName !== "notificationWindow")
+                continue;
+
+            popup.x = workArea.width - popup.width - offset;
+            popup.y = workArea.height - totalHeight - popup.height;
+            totalHeight += popup.height + offset;
         }
     }
 }

@@ -46,6 +46,7 @@ Item {
     property var layers: QtObject {
         readonly property alias workspaces: workspacesLayer
         readonly property alias fullScreen: fullScreenLayer
+        readonly property alias notifications: notificationsLayer
     }
 
     id: root
@@ -125,6 +126,13 @@ Item {
             id: fullScreenLayer
             anchors.fill: parent
             visible: false
+            z: 10
+        }
+
+        // Notifications are behind the panel
+        Item {
+            id: notificationsLayer
+            anchors.fill: parent
             z: 4
         }
 
