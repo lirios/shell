@@ -175,6 +175,7 @@ void ProcessController::setupCompositor()
                                        << QStringLiteral("libinput"));
         }
     }
+    connect(m_compositor, SIGNAL(started()), this, SIGNAL(started()));
     connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
 
@@ -212,8 +213,6 @@ void ProcessController::startCompositor()
         // Compositor failed to start, kill full screen shell and terminate
         qFatal("Compositor won't start, aborting...");
         compositorFinished(0, QProcess::NormalExit);
-    } else {
-        Q_EMIT started();
     }
 }
 
