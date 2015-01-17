@@ -52,6 +52,48 @@ Item {
         var maxHeight = Math.max(appIconItem.height, titleLabel.paintedHeight + bodyLabel.implicitHeight) + (units.smallSpacing * 4);
         return Math.max(minHeight, Math.min(maxHeight, units.gridUnit * 5));
     }
+    states: [
+        State {
+            name: "default"
+            when: (appIconItem.visible || imageItem.visible) && (bodyLabel.visible || actionsColumn.visible)
+
+            AnchorChanges {
+                target: titleLabel
+                anchors.left: hasIcon || hasImage ? appIconItem.right : parent.left
+                anchors.top: parent.top
+                anchors.right: parent.right
+            }
+            PropertyChanges {
+                target: titleLabel
+                anchors.leftMargin: units.smallSpacing * 2
+                anchors.topMargin: units.smallSpacing
+            }
+        },
+        State {
+            name: "summaryOnly"
+            when: !appIconItem.visible && !imageItem.visible && !bodyLabel.visible && !actionsColumn.visible
+
+            AnchorChanges {
+                target: titleLabel
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        },
+        State {
+            name: "summaryWithIcons"
+            when: (appIconItem.visible || imageItem.visible) && !bodyLabel.visible && !actionsColumn.visible
+
+            AnchorChanges {
+                target: titleLabel
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            PropertyChanges {
+                target: titleLabel
+                anchors.leftMargin: appIconItem.width + (units.smallSpacing * 2)
+            }
+        }
+    ]
 
     KQuickControls.QIconItem {
         id: appIconItem
@@ -76,13 +118,6 @@ Item {
 
     Controls.Heading {
         id: titleLabel
-        anchors {
-            left: hasIcon || hasImage ? appIconItem.right : parent.left
-            top: parent.top
-            right: parent.right
-            leftMargin: units.smallSpacing * 2
-            topMargin: units.smallSpacing
-        }
         level: 4
         font.weight: Font.Bold
         elide: Text.ElideRight
@@ -108,6 +143,7 @@ Item {
         maximumLineCount: 10
         verticalAlignment: Text.AlignTop
         color: Theme.palette.panel.textColor
+        visible: text.length > 0
         onLinkActivated: Qt.openUrlExternally(link)
     }
 
