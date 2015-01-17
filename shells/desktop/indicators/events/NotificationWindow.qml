@@ -29,7 +29,7 @@ import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "../../components" as ShellComponents
 
-Rectangle {
+Item {
     property var notificationData
 
     signal expired(Item notificationWindow)
@@ -38,17 +38,8 @@ Rectangle {
 
     id: root
     objectName: "notificationWindow"
-    color: Theme.palette.panel.backgroundColor
-    gradient: Gradient {
-        GradientStop { position: 0; color: Qt.lighter(Theme.palette.panel.backgroundColor, 1.2) }
-        GradientStop { position: 1; color: Qt.darker(Theme.palette.panel.backgroundColor, 1.1) }
-    }
-    border.width: units.gridUnit * 0.05
-    border.color: Theme.palette.rgba(Qt.darker(Theme.palette.panel.backgroundColor, 1.2), 0.5)
     width: Math.round(units.gridUnit * 24)
     height: notificationItem.implicitHeight
-    radius: units.gridUnit * 0.4
-    antialiasing: true
     visible: false
 
     Behavior on y {
@@ -83,30 +74,52 @@ Rectangle {
         }
     }
 
-    ShellComponents.CloseButton {
-        anchors {
-            top: parent.top
-            right: parent.right
-            topMargin: -units.smallSpacing * 1.5
-            rightMargin: -units.smallSpacing * 1.5
+    Rectangle {
+        anchors.fill: parent
+        color: Theme.palette.panel.backgroundColor
+        gradient: Gradient {
+            GradientStop { position: 0; color: Qt.lighter(Theme.palette.panel.backgroundColor, 1.2) }
+            GradientStop { position: 1; color: Qt.darker(Theme.palette.panel.backgroundColor, 1.1) }
         }
-        onClicked: root.closed(root)
+        border.width: units.gridUnit * 0.05
+        border.color: Theme.palette.rgba(Qt.darker(Theme.palette.panel.backgroundColor, 1.2), 0.5)
+        radius: units.gridUnit * 0.4
+        antialiasing: true
+
+        ShellComponents.CloseButton {
+            anchors {
+                top: parent.top
+                right: parent.right
+                topMargin: -units.smallSpacing * 1.5
+                rightMargin: -units.smallSpacing * 1.5
+            }
+            onClicked: root.closed(root)
+        }
+
+        NotificationItem {
+            id: notificationItem
+            anchors {
+                fill: parent
+                margins: units.smallSpacing
+            }
+            summary: notificationData ? notificationData.summary : ""
+            body: notificationData ? notificationData.body : ""
+            icon: notificationData ? notificationData.appIcon : ""
+            hasIcon: notificationData ? notificationData.appIcon !== "" : false
+            image: notificationData ? notificationData.image : undefined
+            hasImage: notificationData ? notificationData.image !== undefined : false
+            onActionInvoked: root.actionInvoked(actionId)
+        }
     }
 
-    NotificationItem {
-        id: notificationItem
-        anchors {
-            left: parent.left
-            top: parent.top
-            margins: units.smallSpacing
-        }
-        summary: notificationData ? notificationData.summary : ""
-        body: notificationData ? notificationData.body : ""
-        icon: notificationData ? notificationData.appIcon : ""
-        hasIcon: notificationData ? notificationData.appIcon !== "" : false
-        image: notificationData ? notificationData.image : undefined
-        hasImage: notificationData ? notificationData.image !== undefined : false
-        onActionInvoked: root.actionInvoked(actionId)
+    // Do not capture click events, just change opacity when the pointer
+    // is moved. This will make stuff underneath visible and clickable
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton
+        hoverEnabled: true
+        onEntered: root.opacity = 0.5
+        onExited: root.opacity = 1.0
     }
 
     function populateNotification(notification) {
