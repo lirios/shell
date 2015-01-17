@@ -113,6 +113,12 @@ int main(int argc, char *argv[])
 
     // Autostart applications as soon as the compositor is ready
     QObject::connect(&processController, &ProcessController::started, [sessionManager]() {
+        // Prepare the environment to run applications into our compositor
+        qputenv("QT_QPA_PLATFORM", QByteArray("wayland"));
+        qputenv("GDK_BACKEND", QByteArray("wayland"));
+        qputenv("WAYLAND_DISPLAY", qgetenv("GREENISLAND_SOCKET"));
+
+        // Autostart
         sessionManager->autostart();
     });
 
