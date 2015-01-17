@@ -83,13 +83,14 @@ Item {
             leftMargin: units.smallSpacing * 2
         }
         level: 4
+        font.weight: Font.Bold
         elide: Text.ElideRight
         color: Theme.palette.panel.textColor
         visible: text.length > 0
         onLinkActivated: Qt.openUrlExternally(link)
     }
 
-    Label {
+    Controls.Heading {
         id: bodyLabel
         anchors {
             left: hasIcon || hasImage ? appIconItem.right : parent.left
@@ -100,6 +101,7 @@ Item {
             rightMargin: units.smallSpacing * 2
             bottomMargin: units.smallSpacing
         }
+        level: 5
         wrapMode: Text.Wrap
         elide: Text.ElideRight
         maximumLineCount: 10
