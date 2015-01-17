@@ -47,6 +47,7 @@ Rectangle {
     width: Math.round(units.gridUnit * 24)
     height: notificationItem.implicitHeight
     radius: units.gridUnit * 0.2
+    visible: false
 
     Behavior on y {
         NumberAnimation {
@@ -71,8 +72,7 @@ Rectangle {
 
     Timer {
         id: timer
-        repeat: false
-        running: false
+        running: root.visible
         onTriggered: {
             if (!notificationData.isPersistent) {
                 timer.running = false;

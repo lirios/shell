@@ -210,6 +210,9 @@ Indicator {
             pendingTimer.start();
         }
 
+        // Print notification data
+        console.debug(JSON.stringify(data));
+
         // Update notification window if it's the same source
         // otherwise create a new window
         if (sameSource) {
@@ -264,6 +267,7 @@ Indicator {
             repositionNotifications();
         });
         window.populateNotification(data);
+        window.visible = true;
         repositionNotifications();
     }
 
