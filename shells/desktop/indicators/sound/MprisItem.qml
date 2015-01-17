@@ -27,93 +27,93 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
+import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0
 
-Item {
+ColumnLayout {
     property var dataSource
 
-    ColumnLayout {
-        anchors.fill: parent
+    spacing: units.largeSpacing
+
+    Row {
         spacing: units.smallSpacing
 
-        Row {
-            spacing: units.smallSpacing
+        Item {
+            width: units.iconSizes.huge
+            height: width
 
-            Item {
-                width: units.iconSizes.huge
-                height: width
-
-                Image {
-                    id: albumArt
-                    anchors.fill: parent
-                    source: dataSource ? dataSource.pictureUrl : ""
-                    fillMode: Image.PreserveAspectFit
-                    visible: status == Image.Ready
-                }
-
-                BusyIndicator {
-                    anchors.fill: parent
-                    visible: !albumArt.visible
-                }
-
-                Layout.alignment: Qt.AlignHCenter
+            Image {
+                id: albumArt
+                anchors.fill: parent
+                source: dataSource ? dataSource.pictureUrl : ""
+                fillMode: Image.PreserveAspectFit
+                visible: status == Image.Ready
             }
 
-            Column {
-                spacing: units.smallSpacing
-
-                Label {
-                    text: dataSource ? dataSource.title : ""
-                    color: Theme.palette.panel.textColor
-                    font.bold: true
-                    font.pointSize: 14
-                }
-
-                Label {
-                    text: dataSource ? dataSource.artist : ""
-                    color: Theme.palette.panel.textColor
-                    font.pointSize: 10
-                }
-            }
-        }
-
-        ProgressBar {
-            minimumValue: 0
-            maximumValue: dataSource ? dataSource.trackLength : 0
-            value: dataSource ? dataSource.trackPosition : 0
-
-            Layout.fillWidth: true
-        }
-
-        Row {
-            ToolButton {
-                iconName: "media-skip-backward-symbolic"
-                tooltip: qsTr("Previous")
-                onClicked: {
-                    if (dataSource)
-                        dataSource.prevTrack();
-                }
-            }
-
-            ToolButton {
-                iconName: dataSource ? (dataSource.status === "Playing" ? "media-playback-pause" : "media-playback-start") : ""
-                tooltip: qsTr(mprisDataSource.status == "Playing" ? "Pause" : "Play")
-                onClicked: {
-                    if (dataSource)
-                        dataSource.playPause();
-                }
-            }
-
-            ToolButton {
-                iconName: "media-skip-forward-symbolic"
-                tooltip: qsTr("Next")
-                onClicked: {
-                    if (dataSource)
-                        dataSource.nextTrack();
-                }
+            BusyIndicator {
+                anchors.fill: parent
+                visible: !albumArt.visible
             }
 
             Layout.alignment: Qt.AlignHCenter
         }
+
+        Column {
+            spacing: units.smallSpacing
+
+            Controls.Heading {
+                level: 3
+                text: dataSource ? dataSource.title : ""
+                color: Theme.palette.panel.textColor
+                font.weight: Font.Bold
+                elide: Text.ElideRight
+            }
+
+            Controls.Heading {
+                level: 4
+                text: dataSource ? dataSource.artist : ""
+                color: Theme.palette.panel.textColor
+                elide: Text.ElideRight
+            }
+        }
+    }
+
+    ProgressBar {
+        minimumValue: 0
+        maximumValue: dataSource ? dataSource.trackLength : 0
+        value: dataSource ? dataSource.trackPosition : 0
+
+        Layout.fillWidth: true
+    }
+
+    Row {
+        ToolButton {
+            iconName: "media-skip-backward-symbolic"
+            tooltip: qsTr("Previous")
+            onClicked: {
+                if (dataSource)
+                    dataSource.prevTrack();
+            }
+        }
+
+        ToolButton {
+            iconName: dataSource ? (dataSource.status === "Playing" ? "media-playback-pause" : "media-playback-start") : ""
+            tooltip: qsTr(mprisDataSource.status == "Playing" ? "Pause" : "Play")
+            onClicked: {
+                if (dataSource)
+                    dataSource.playPause();
+            }
+        }
+
+        ToolButton {
+            iconName: "media-skip-forward-symbolic"
+            tooltip: qsTr("Next")
+            onClicked: {
+                if (dataSource)
+                    dataSource.nextTrack();
+            }
+        }
+
+        Layout.alignment: Qt.AlignHCenter
     }
 }
