@@ -189,7 +189,13 @@ int PulseAudioMixerBackend::volume() const
 void PulseAudioMixerBackend::setVolume(int value)
 {
     setMuted(false);
-    if (pa_channels_valid(m_sink->volume.channels)) {
+
+#if PA_CHECK_VERSION(5, 0, 0)
+    bool valid = pa_channels_valid(m_sink->volume.channels) == 1;
+#else
+    bool valid = true;
+#endif
+    if (valid) {
         pa_cvolume_set(&m_sink->volume, m_sink->volume.channels, value);
         pa_context_set_sink_volume_by_index(m_context, m_sink->index, &m_sink->volume, Q_NULLPTR, Q_NULLPTR);
     }
