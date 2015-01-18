@@ -24,7 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QStandardPaths>
+
+#include "libqtxdg/xdgdesktopfile.h"
+
 #include "launcheritem.h"
 
 LauncherItem::LauncherItem(const QString &appId, QObject *parent)
@@ -33,19 +37,26 @@ LauncherItem::LauncherItem(const QString &appId, QObject *parent)
     , m_pinned(false)
     , m_count(0)
     , m_progress(-1)
-    , m_service(KService::serviceByStorageId(appId + ".desktop"))
 {
-    qDebug() << "****" << m_service->name() << m_service->icon();
+    const QString fileName =
+            QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                           appId + QStringLiteral(".desktop"));
+    m_entry = XdgDesktopFileCache::getFile(fileName);
+}
+
+LauncherItem::~LauncherItem()
+{
+    delete m_entry;
 }
 
 QString LauncherItem::name() const
 {
-    return m_service->name();
+    return m_entry->name();
 }
 
 QString LauncherItem::iconName() const
 {
-    return m_service->icon();
+    return m_entry->iconName();
 }
 
 QString LauncherItem::appId() const

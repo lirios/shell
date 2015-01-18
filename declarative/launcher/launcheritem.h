@@ -28,7 +28,8 @@
 #define LAUNCHERITEM_H
 
 #include <QtCore/QObject>
-#include <KService/KService>
+
+class XdgDesktopFile;
 
 class LauncherItem : public QObject
 {
@@ -43,6 +44,7 @@ class LauncherItem : public QObject
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 public:
     LauncherItem(const QString &appId, QObject *parent = 0);
+    ~LauncherItem();
 
     QString name() const;
     QString iconName() const;
@@ -70,7 +72,7 @@ private:
     bool m_pinned;
     int m_count;
     int m_progress;
-    KService::Ptr m_service;
+    XdgDesktopFile *m_entry;
 };
 
 #endif // LAUNCHERITEM_H

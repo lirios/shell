@@ -1,3 +1,7 @@
+include_directories(
+    ${CMAKE_SOURCE_DIR}/3rdparty
+)
+
 set(SOURCES
     launcheritem.cpp
     launchermodel.cpp
@@ -8,7 +12,7 @@ add_library(launcherplugin SHARED ${SOURCES})
 target_link_libraries(launcherplugin
                       Qt5::Qml
                       Qt5::Quick
-                      KF5::Service)
+                      HawaiiQtXDG)
 
 install(FILES qmldir
     DESTINATION ${QML_INSTALL_DIR}/org/hawaii/launcher)
