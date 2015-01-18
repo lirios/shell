@@ -38,18 +38,24 @@ Q_LOGGING_CATEGORY(PROCESS_CONTROLLER, "hawaii.session.processcontroller")
 #define FULLSCREEN_SHELL_SOCKET "hawaii-master-"
 #define HAWAII_SOCKET "hawaii-slave-"
 
-#define NESTED_MODE QStringLiteral("nested")
-#define EGLFS_MODE QStringLiteral("eglfs")
-
 ProcessController::ProcessController(const QString &mode, QObject *parent)
     : QObject(parent)
     , m_fullScreenShell(Q_NULLPTR)
-    , m_mode(mode)
+    , m_modeName(mode)
     , m_hasLibInputPlugin(false)
 {
+    if (mode == QStringLiteral("eglfs"))
+        m_mode = EglFSMode;
+    else if (mode == QStringLiteral("nested"))
+        m_mode = NestedMode;
 }
 
-QString ProcessController::mode() const
+QString ProcessController::modeName() const
+{
+    return m_modeName;
+}
+
+ProcessController::Mode ProcessController::mode() const
 {
     return m_mode;
 }
@@ -118,7 +124,7 @@ void ProcessController::prepare()
     m_fullScreenShellSocket = QStringLiteral(FULLSCREEN_SHELL_SOCKET) + random;
 
     // Setup and print summary
-    if (m_mode == NESTED_MODE)
+    if (m_mode == NestedMode)
         setupFullScreenShell();
     setupCompositor();
     printSummary();
@@ -145,7 +151,7 @@ void ProcessController::setupFullScreenShell()
 void ProcessController::setupCompositor()
 {
     // Do we have the libinput plugin? If available, it will be used in eglfs mode
-    if (m_mode == EGLFS_MODE) {
+    if (m_mode == EglFSMode) {
         for (const QString &path: QCoreApplication::libraryPaths()) {
             QDir pluginsDir(path + QStringLiteral("/generic"));
             for (const QString &fileName: pluginsDir.entryList(QDir::Files)) {
@@ -164,12 +170,12 @@ void ProcessController::setupCompositor()
     m_compositor->setArguments(QStringList()
                                << QStringLiteral("-p")
                                << QStringLiteral("org.hawaii.desktop"));
-    if (m_mode == NESTED_MODE) {
+    if (m_mode == NestedMode) {
         m_compositor->setArguments(m_compositor->arguments()
                                    << QStringLiteral("-platform")
                                    << QStringLiteral("wayland")
                                    << QStringLiteral("--socket=") + m_compositorSocket);
-    } else if (m_mode == EGLFS_MODE) {
+    } else if (m_mode == EglFSMode) {
         m_compositor->setArguments(m_compositor->arguments()
                                    << QStringLiteral("-platform")
                                    << QStringLiteral("eglfs"));
@@ -192,20 +198,25 @@ void ProcessController::setupCompositor()
     env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
     if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
         env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
-    if (m_mode == EGLFS_MODE && m_hasLibInputPlugin)
+    if (m_mode == EglFSMode && m_hasLibInputPlugin)
         env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
     m_compositor->setProcessEnvironment(env);
 }
 
 void ProcessController::printSummary()
 {
-    qCDebug(PROCESS_CONTROLLER) << "Mode:" << m_mode;
-    if (m_mode == NESTED_MODE) {
+    qCDebug(PROCESS_CONTROLLER) << "Mode:" << m_modeName;
+    switch (m_mode) {
+    case EglFSMode:
+        qCDebug(PROCESS_CONTROLLER) << "libinput:" << m_hasLibInputPlugin;
+        break;
+    case NestedMode:
         qCDebug(PROCESS_CONTROLLER) << "Weston socket:" << m_fullScreenShellSocket;
         qCDebug(PROCESS_CONTROLLER) << "Compositor socket:" << m_compositorSocket;
+        break;
+    default:
+        break;
     }
-    if (m_mode == EGLFS_MODE)
-        qCDebug(PROCESS_CONTROLLER) << "libinput:" << m_hasLibInputPlugin;
     qCDebug(PROCESS_CONTROLLER) << "X11:" << qEnvironmentVariableIsSet("DISPLAY");
 }
 

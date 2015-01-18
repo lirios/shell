@@ -48,7 +48,7 @@ SessionManager::SessionManager(ProcessController *controller)
 
         // Set WAYLAND_DISPLAY only when nested, otherwise we don't need to do
         // it because applications can detect the socket themselves
-        if (m_controller->mode() == QStringLiteral("nested"))
+        if (m_controller->mode() == ProcessController::NestedMode)
             qputenv("WAYLAND_DISPLAY", qPrintable(m_controller->compositorSocket()));
 
         // Autostart

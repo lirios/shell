@@ -38,10 +38,17 @@ class QFileSystemWatcher;
 class ProcessController : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(Mode)
 public:
+    enum Mode {
+        EglFSMode = 0,
+        NestedMode
+    };
+
     ProcessController(const QString &mode, QObject *parent = Q_NULLPTR);
 
-    QString mode() const;
+    QString modeName() const;
+    Mode mode() const;
 
     QString compositorSocket() const;
 
@@ -62,7 +69,8 @@ private:
     QString m_fullScreenShellSocket;
     QFileSystemWatcher *m_fullScreenShellWatcher;
 
-    QString m_mode;
+    QString m_modeName;
+    Mode m_mode;
     bool m_hasLibInputPlugin;
 
     QString randomString() const;
