@@ -40,6 +40,21 @@ SessionManager::SessionManager(ProcessController *controller)
     : QObject(controller)
     , m_controller(controller)
 {
+    // Autostart applications as soon as the compositor is ready
+    connect(m_controller, &ProcessController::started, [=]() {
+        // Prepare the environment to run applications into our compositor
+        qputenv("QT_QPA_PLATFORM", QByteArray("wayland"));
+        qputenv("GDK_BACKEND", QByteArray("wayland"));
+
+        // Set WAYLAND_DISPLAY only when nested, otherwise we don't need to do
+        // it because applications can detect the socket themselves
+        if (m_controller->mode() == QStringLiteral("nested"))
+            qputenv("WAYLAND_DISPLAY", qPrintable(m_controller->compositorSocket()));
+
+        // Autostart
+        autostart();
+    });
+
     // The compositor is stopped when a logout has been request,
     // which happens after we killed all the processes so when this
     // arrives we can emit the loggedOut signal

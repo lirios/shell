@@ -54,6 +54,11 @@ QString ProcessController::mode() const
     return m_mode;
 }
 
+QString ProcessController::compositorSocket() const
+{
+    return m_compositorSocket;
+}
+
 void ProcessController::start()
 {
     // Prepare for execution

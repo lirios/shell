@@ -41,7 +41,6 @@ public:
     SessionManager(ProcessController *controller);
 
     void setupEnvironment();
-    void autostart();
 
 Q_SIGNALS:
     void loggedOut();
@@ -52,6 +51,8 @@ public Q_SLOTS:
 private:
     ProcessController *m_controller;
     QList<qint64> m_processes;
+
+    void autostart();
 };
 
 #endif // SESSIONMANAGER_H

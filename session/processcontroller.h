@@ -43,6 +43,8 @@ public:
 
     QString mode() const;
 
+    QString compositorSocket() const;
+
     void start();
     void stop();
 
