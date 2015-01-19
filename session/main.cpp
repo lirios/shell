@@ -80,6 +80,17 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    // Empty mode is allowed only on X11 because we don't need much
+    if (parser.value(modeOption).isEmpty()) {
+        if (qEnvironmentVariableIsEmpty("DISPLAY"))
+            qFatal("Invalid mode specify, possible values are: nested or eglfs.\n" \
+                   "Empty mode is allowed only on X11.");
+    } else {
+        const QString mode = parser.value(modeOption);
+        if (mode != QStringLiteral("nested") || mode != QStringLiteral("eglfs"))
+            qFatal("Invalid mode \"%s\"!", qPrintable(mode));
+    }
+
     // Process controller that manages the compositor
     ProcessController processController(parser.value(modeOption));
 
