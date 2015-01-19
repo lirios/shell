@@ -27,13 +27,13 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import org.hawaii.appchooser 0.1 as AppChooser
 
 FocusScope {
     property alias model: listView.model
 
-    implicitWidth: units.gridUnit * 10
+    implicitWidth: Themes.Units.gu(10)
     implicitHeight: listView.contentHeight
 
     AppChooser.AppsModel {

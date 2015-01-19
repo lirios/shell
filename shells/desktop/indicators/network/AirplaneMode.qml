@@ -28,9 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import "../.."
+import Hawaii.Themes 1.0 as Themes
 
 RowLayout {
     readonly property alias airplaneMode: __priv.airplaneMode
@@ -38,7 +36,7 @@ RowLayout {
     signal clicked()
 
     id: root
-    spacing: units.smallSpacing
+    spacing: Themes.Units.smallSpacing
 
     QtObject {
         id: __priv
@@ -49,14 +47,14 @@ RowLayout {
     Components.Icon {
         id: airplaneModeIcon
         iconName: airplaneMode ? "airplane-mode-symbolic" : "airplane-mode-disabled-symbolic"
-        width: units.iconSizes.smallMedium
+        width: Themes.Units.iconSizes.smallMedium
         height: width
-        color: Theme.palette.panel.textColor
+        color: Themes.Theme.palette.panel.textColor
     }
 
     Label {
         text: airplaneMode ? qsTr("Airplane mode enabled") : qsTr("Airplane mode disabled")
-        color: Theme.palette.panel.textColor
+        color: Themes.Theme.palette.panel.textColor
     }
 
     MouseArea {

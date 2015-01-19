@@ -30,10 +30,8 @@ import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import org.hawaii.appchooser 0.1 as AppChooser
-import "."
 
 Item {
     property alias mode: __priv.mode
@@ -94,7 +92,7 @@ Item {
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InSine
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
@@ -161,9 +159,9 @@ Item {
 
         Components.Icon {
             id: actionIcon
-            width: units.iconSizes.enormous
+            width: Themes.Units.iconSizes.enormous
             height: width
-            color: Theme.palette.panel.textColor
+            color: Themes.Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
         }
@@ -171,13 +169,13 @@ Item {
         Controls.Heading {
             id: actionLabel
             level: 2
-            color: Theme.palette.panel.textColor
+            color: Themes.Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
         }
 
         ProgressBar {
-            width: units.largeSpacing * 5
+            width: Themes.Units.largeSpacing * 5
             minimumValue: 0
             maximumValue: __priv.timeout
             value: __priv.remainingTime
@@ -212,17 +210,17 @@ Item {
 
                 return qsTr(msg).arg(__priv.remainingTime);
             }
-            color: Theme.palette.panel.textColor
+            color: Themes.Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
         }
 
         Item {
-            height: units.largeSpacing * 2
+            height: Themes.Units.largeSpacing * 2
         }
 
         Row {
-            spacing: units.smallSpacing
+            spacing: Themes.Units.smallSpacing
             visible: __priv.canLogOut || __priv.canPowerOff || __priv.canRestart || __priv.canSuspend || __priv.canHibernate
 
             ExclusiveGroup { id: group }
@@ -231,7 +229,7 @@ Item {
                 id: logoutButton
                 exclusiveGroup: group
                 iconName: "system-log-out-symbolic"
-                width: units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.smallMedium
                 height: width
                 checkable: true
                 checked: __priv.mode == "logout"
@@ -243,7 +241,7 @@ Item {
                 id: poweroffButton
                 exclusiveGroup: group
                 iconName: "system-shutdown-symbolic"
-                width: units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.smallMedium
                 height: width
                 checkable: true
                 checked: __priv.mode == "poweroff"
@@ -255,7 +253,7 @@ Item {
                 id: restartButton
                 exclusiveGroup: group
                 iconName: "system-reboot-symbolic"
-                width: units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.smallMedium
                 height: width
                 checkable: true
                 checked: __priv.mode == "restart"
@@ -267,7 +265,7 @@ Item {
                 id: suspendButton
                 exclusiveGroup: group
                 iconName: "system-suspend-symbolic"
-                width: units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.smallMedium
                 height: width
                 checkable: true
                 checked: __priv.mode == "suspend"
@@ -279,7 +277,7 @@ Item {
                 id: hibernateButton
                 exclusiveGroup: group
                 iconName: "system-suspend-hibernate-symbolic"
-                width: units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.smallMedium
                 height: width
                 checkable: true
                 checked: __priv.mode == "hibernate"
@@ -291,7 +289,7 @@ Item {
         }
 
         Item {
-            height: units.largeSpacing * 2
+            height: Themes.Units.largeSpacing * 2
         }
 
         RowLayout {

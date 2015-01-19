@@ -26,9 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import "../.."
+import Hawaii.Themes 1.0 as Themes
 import "../../components" as ShellComponents
 
 Item {
@@ -42,14 +40,14 @@ Item {
         anchors.fill: parent
         glowRadius: 10
         spread: 0.2
-        color: Theme.palette.view.selectedBackgroundColor
-        cornerRadius: units.gridUnit * 0.2
+        color: Themes.Theme.palette.view.selectedBackgroundColor
+        cornerRadius: Themes.Units.gu(0.2)
         opacity: mouseArea.containsMouse ? 0.5 : 0.0
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
-                duration: units.shortDuration
+                duration: Themes.Units.shortDuration
             }
         }
     }
@@ -58,7 +56,7 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            margins: -units.gridUnit * 0.25
+            margins: -Themes.Units.gu(0.25)
         }
         z: 4
         opacity: mouseArea.containsMouse ? 1.0 : 0.0
@@ -67,7 +65,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
-                duration: units.shortDuration
+                duration: Themes.Units.shortDuration
             }
         }
     }

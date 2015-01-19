@@ -25,8 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import "../../components" as ShellComponents
 
 Item {
@@ -38,7 +37,7 @@ Item {
 
     id: root
     objectName: "notificationWindow"
-    width: Math.round(units.gridUnit * 24)
+    width: Math.round(Themes.Units.gu(24))
     height: notificationItem.implicitHeight
     opacity: 0.0
     onOpacityChanged: {
@@ -52,21 +51,21 @@ Item {
     Behavior on y {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.OutSine
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
@@ -88,22 +87,22 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: Theme.palette.panel.backgroundColor
+        color: Themes.Theme.palette.panel.backgroundColor
         gradient: Gradient {
-            GradientStop { position: 0; color: Qt.lighter(Theme.palette.panel.backgroundColor, 1.2) }
-            GradientStop { position: 1; color: Qt.darker(Theme.palette.panel.backgroundColor, 1.1) }
+            GradientStop { position: 0; color: Qt.lighter(Themes.Theme.palette.panel.backgroundColor, 1.2) }
+            GradientStop { position: 1; color: Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.1) }
         }
-        border.width: units.gridUnit * 0.05
-        border.color: Theme.palette.rgba(Qt.darker(Theme.palette.panel.backgroundColor, 1.2), 0.5)
-        radius: units.gridUnit * 0.4
+        border.width: Themes.Units.gu(0.05)
+        border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.2), 0.5)
+        radius: Themes.Units.gu(0.4)
         antialiasing: true
 
         ShellComponents.CloseButton {
             anchors {
                 top: parent.top
                 right: parent.right
-                topMargin: -units.smallSpacing * 1.5
-                rightMargin: -units.smallSpacing * 1.5
+                topMargin: -Themes.Units.smallSpacing * 1.5
+                rightMargin: -Themes.Units.smallSpacing * 1.5
             }
             onClicked: root.closed(root)
         }
@@ -112,7 +111,7 @@ Item {
             id: notificationItem
             anchors {
                 fill: parent
-                margins: units.smallSpacing
+                margins: Themes.Units.smallSpacing
             }
             summary: notificationData ? notificationData.summary : ""
             body: notificationData ? notificationData.body : ""

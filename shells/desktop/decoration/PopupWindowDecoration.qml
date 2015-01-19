@@ -25,13 +25,12 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 import GreenIsland 1.0
-import ".."
+import Hawaii.Themes 1.0 as Themes
 
 Item {
     property alias source: renderer.source
-    readonly property real dropShadowExtents: units.gridUnit
+    readonly property real dropShadowExtents: Themes.Units.gridUnit
     readonly property real additionalWidth: dropShadowExtents
     readonly property real additionalHeight: dropShadowExtents
 
@@ -51,7 +50,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: units.shortDuration
+                duration: Themes.Units.shortDuration
             }
         }
     }

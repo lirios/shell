@@ -30,7 +30,7 @@ import QtQuick.Controls 1.1
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import ".."
 import "network" as NetworkIndicator
 
@@ -40,11 +40,11 @@ Indicator {
     iconName: massageIconName(connectionIconProvider.connectionIcon)
     component: Component {
         ColumnLayout {
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Network")
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
             }
 
             NetworkIndicator.AirplaneMode {

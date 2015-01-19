@@ -27,8 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import ".."
 
 Indicator {
@@ -36,11 +35,11 @@ Indicator {
     iconName: "im-google"
     component: Component {
         ColumnLayout {
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Messages")
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
             }
 
             Item {

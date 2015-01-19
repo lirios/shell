@@ -29,7 +29,7 @@ import QtQuick.Window 2.0
 import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
 import GreenIsland 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import ".."
 import "../indicators"
 
@@ -184,7 +184,7 @@ Item {
 
             id: leftDrawer
             edge: Qt.LeftEdge
-            width: units.gridUnit * 20
+            width: Themes.Units.gu(20)
             z: 2
             onExpandedChanged: {
                 // Unload component once closed
@@ -195,27 +195,27 @@ Item {
             Loader {
                 id: loader
                 anchors.fill: parent
-                anchors.margins: units.largeSpacing
+                anchors.margins: Themes.Units.largeSpacing
             }
         }
 
         SlidingPanel {
             id: rightDrawer
             edge: Qt.RightEdge
-            width: units.gridUnit * 16
+            width: Themes.Units.gu(16)
             z: 2
 
             StackView {
                 id: stackView
                 anchors.fill: parent
-                anchors.margins: units.largeSpacing
+                anchors.margins: Themes.Units.largeSpacing
             }
         }
 
         SlidingPanel {
             id: topDrawer
             edge: Qt.TopEdge
-            height: units.gridUnit * 15
+            height: Themes.Units.gu(15)
             z: 2
         }
     }

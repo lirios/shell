@@ -29,7 +29,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import org.kde.plasma.core 2.0 as PlasmaCore
 import ".."
 
@@ -41,15 +41,15 @@ Indicator {
     iconName: "dialog-information-symbolic"
     component: Component {
         ColumnLayout {
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Events")
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
             }
 
             Label {
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
                 opacity: 0.6
                 text: qsTr("No new events to see.")
                 visible: notificationView.count == 0
@@ -57,7 +57,7 @@ Indicator {
 
             ListView {
                 id: notificationView
-                spacing: units.largeSpacing
+                spacing: Themes.Units.largeSpacing
                 clip: true
                 model: notificationsModel
                 delegate: EventItem {}
@@ -65,31 +65,31 @@ Indicator {
                     NumberAnimation {
                         properties: "x"
                         from: notificationView.width
-                        duration: units.shortDuration
+                        duration: Themes.Units.shortDuration
                     }
                 }
                 remove: Transition {
                     NumberAnimation {
                         properties: "x"
                         to: notificationView.width
-                        duration: units.longDuration
+                        duration: Themes.Units.longDuration
                     }
 
                     NumberAnimation {
                         properties: "opacity"
                         to: 0
-                        duration: units.longDuration
+                        duration: Themes.Units.longDuration
                     }
                 }
                 removeDisplaced: Transition {
                     SequentialAnimation {
                         PauseAnimation {
-                            duration: units.longDuration
+                            duration: Themes.Units.longDuration
                         }
 
                         NumberAnimation {
                             properties: "x,y"
-                            duration: units.shortDuration
+                            duration: Themes.Units.shortDuration
                         }
                     }
                 }

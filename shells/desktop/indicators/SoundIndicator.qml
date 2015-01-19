@@ -27,8 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import org.hawaii.mixer 0.1 as MixerService
 import ".."
 import "sound" as SoundIndicator
@@ -46,16 +45,16 @@ Indicator {
     }
     component: Component {
         ColumnLayout {
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Sound")
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
             }
 
             Controls.Heading {
                 text: qsTr("Volume")
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
                 level: 3
                 visible: volumeControl.visible
             }
@@ -69,7 +68,7 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Playback")
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
                 level: 3
                 visible: mprisItem.visible
             }

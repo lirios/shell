@@ -28,13 +28,12 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import org.hawaii.mixer 0.1 as MixerService
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 RowLayout {
     Components.Icon {
-        width: units.iconSizes.small
+        width: Themes.Units.iconSizes.small
         height: width
         iconName: "audio-volume-low-symbolic"
 
@@ -70,7 +69,7 @@ RowLayout {
     }
 
     Components.Icon {
-        width: units.iconSizes.small
+        width: Themes.Units.iconSizes.small
         height: width
         iconName: "audio-volume-high-symbolic"
 

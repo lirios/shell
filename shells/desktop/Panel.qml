@@ -27,11 +27,10 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 import GreenIsland 1.0
-import "."
+import Hawaii.Themes 1.0 as Themes
 import "indicators"
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Rectangle {
     property Indicator selectedIndicator: null
@@ -43,20 +42,20 @@ Rectangle {
     height: launcher.itemSize + launcher.itemPadding
 
     Behavior on color {
-        ColorAnimation { duration: units.longDuration }
+        ColorAnimation { duration: Themes.Units.longDuration }
     }
 
     Behavior on width {
         NumberAnimation {
             easing.type: Easing.InSine
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.InSine
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
@@ -65,7 +64,7 @@ Rectangle {
         onActiveWindowChanged: {
             if (!activeWindow) {
                 color = "transparent";
-                launcher.iconSize = units.iconSizes.large;
+                launcher.iconSize = Themes.Units.iconSizes.large;
             }
         }
     }
@@ -76,11 +75,11 @@ Rectangle {
             // TODO: Don't resize the panel, the window is maximized before we change the available
             // geometry resulting in a "hole" between the window and the panel
             if (compositorRoot.activeWindow.child.surface.state === QuickSurface.Maximized) {
-                color = Theme.palette.rgba(Theme.palette.window.backgroundColor, 0.85);
-                //launcher.iconSize = units.iconSizes.medium;
+                color = Themes.Theme.palette.rgba(Themes.Theme.palette.window.backgroundColor, 0.85);
+                //launcher.iconSize = Themes.Units.iconSizes.medium;
             } else {
                 color = "transparent";
-                //launcher.iconSize = units.iconSizes.large;
+                //launcher.iconSize = Themes.Units.iconSizes.large;
             }
         }
     }
@@ -90,7 +89,7 @@ Rectangle {
 
         RowLayout {
             id: leftContainer
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             AppChooserIndicator {
                 onTriggered: indicatorTriggered(caller)
@@ -109,7 +108,7 @@ Rectangle {
 
         RowLayout {
             id: indicators
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             ChatIndicator {
                 onTriggered: indicatorTriggered(caller)

@@ -27,9 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import "."
+import Hawaii.Themes 1.0 as Themes
 
 Item {
     property string name
@@ -51,14 +49,14 @@ Item {
 
         var size = 0;
         if (iconName)
-            size += icon.width + (units.smallSpacing * 2);
+            size += icon.width + (Themes.Units.smallSpacing * 2);
         if (text)
-            size += label.width + (units.smallSpacing * 2);
+            size += label.width + (Themes.Units.smallSpacing * 2);
         if (iconName && text)
-            size += units.smallSpacing * 2;
-        return Math.max(size, units.smallSpacing * 10);
+            size += Themes.Units.smallSpacing * 2;
+        return Math.max(size, Themes.Units.smallSpacing * 10);
     }
-    height: Math.max(Math.max(icon.height, label.height) + (units.smallSpacing * 2), units.smallSpacing * 10)
+    height: Math.max(Math.max(icon.height, label.height) + (Themes.Units.smallSpacing * 2), Themes.Units.smallSpacing * 10)
     onTriggered: __priv.expanded = !__priv.expanded
 
     QtObject {
@@ -71,13 +69,13 @@ Item {
         id: container
         anchors.fill: parent
         radius: width * 0.5
-        color: Theme.palette.panel.selectedBackgroundColor
+        color: Themes.Theme.palette.panel.selectedBackgroundColor
         opacity: active ? 1.0 : 0.0
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: units.shortDuration
+                duration: Themes.Units.shortDuration
             }
         }
     }
@@ -91,16 +89,16 @@ Item {
     Components.Icon {
         id: icon
         anchors.centerIn: parent
-        color: selected ? Theme.palette.panel.selectedTextColor : Theme.palette.panel.textColor
-        width: units.roundToIconSize(units.iconSizes.smallMedium)
+        color: selected ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
+        width: Themes.Units.roundToIconSize(Themes.Units.iconSizes.smallMedium)
         height: width
     }
 
     Label {
         id: label
         anchors.centerIn: parent
-        color: Theme.palette.panel.textColor
-        font.pixelSize: units.roundToIconSize(units.iconSizes.small)
+        color: Themes.Theme.palette.panel.textColor
+        font.pixelSize: Themes.Units.roundToIconSize(Themes.Units.iconSizes.small)
     }
 
     Rectangle {
@@ -108,10 +106,10 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -(units.smallSpacing * 0.5)
-            rightMargin: -(units.largeSpacing * 0.5)
+            topMargin: -(Themes.Units.smallSpacing * 0.5)
+            rightMargin: -(Themes.Units.largeSpacing * 0.5)
         }
-        width: units.iconSizes.smallMedium
+        width: Themes.Units.iconSizes.smallMedium
         height: width
         radius: width * 0.5
         color: "orangered"
@@ -120,13 +118,13 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: units.shortDuration
+                duration: Themes.Units.shortDuration
             }
         }
 
         Label {
             anchors.centerIn: parent
-            font.pixelSize: parent.width - units.smallSpacing
+            font.pixelSize: parent.width - Themes.Units.smallSpacing
             color: "white"
             text: indicator.badgeCount
         }

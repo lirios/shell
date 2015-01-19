@@ -28,18 +28,18 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 
 ColumnLayout {
     property var dataSource
 
-    spacing: units.largeSpacing
+    spacing: Themes.Units.largeSpacing
 
     Row {
-        spacing: units.smallSpacing
+        spacing: Themes.Units.smallSpacing
 
         Item {
-            width: units.iconSizes.huge
+            width: Themes.Units.iconSizes.huge
             height: width
 
             Image {
@@ -59,12 +59,12 @@ ColumnLayout {
         }
 
         Column {
-            spacing: units.smallSpacing
+            spacing: Themes.Units.smallSpacing
 
             Controls.Heading {
                 level: 3
                 text: dataSource ? dataSource.title : ""
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
                 font.weight: Font.Bold
                 elide: Text.ElideRight
             }
@@ -72,7 +72,7 @@ ColumnLayout {
             Controls.Heading {
                 level: 4
                 text: dataSource ? dataSource.artist : ""
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
                 elide: Text.ElideRight
             }
         }

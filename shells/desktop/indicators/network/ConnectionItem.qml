@@ -29,11 +29,10 @@ import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import org.kde.kcoreaddons 1.0 as KCoreAddons
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
-import "../.."
 
 Item {
     property bool predictableWirelessPassword: !Uuid && Type === PlasmaNM.Enums.Wireless &&
@@ -108,22 +107,22 @@ Item {
 
     ColumnLayout {
         id: mainLayout
-        spacing: units.largeSpacing
+        spacing: Themes.Units.largeSpacing
 
         RowLayout {
-            spacing: units.smallSpacing
+            spacing: Themes.Units.smallSpacing
 
             Components.Icon {
                 iconName: indicator.massageIconName(ConnectionIcon)
-                width: units.iconSizes.medium
+                width: Themes.Units.iconSizes.medium
                 height: width
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
 
                 Layout.alignment: Qt.AlignTop
             }
 
             ColumnLayout {
-                spacing: units.smallSpacing
+                spacing: Themes.Units.smallSpacing
 
                 Label {
                     id: label
@@ -131,7 +130,7 @@ Item {
                     elide: Text.ElideRight
                     font.weight: ConnectionState === PlasmaNM.Enums.Activated ? Font.DemiBold : Font.Normal
                     font.italic: ConnectionState === PlasmaNM.Enums.Activating ? true : false
-                    color: Theme.palette.panel.textColor
+                    color: Themes.Theme.palette.panel.textColor
 
                     Layout.fillWidth: true
                 }
@@ -167,7 +166,7 @@ Item {
                     opacity: 0.6
                     elide: Text.ElideRight
                     font.pointSize: label.font.pointSize * 0.8
-                    color: Theme.palette.panel.textColor
+                    color: Themes.Theme.palette.panel.textColor
 
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
@@ -199,7 +198,7 @@ Item {
                 Behavior on opacity {
                     NumberAnimation {
                         easing.type: Easing.InOutQuad
-                        duration: units.shortDuration
+                        duration: Themes.Units.shortDuration
                     }
                 }
 
@@ -212,24 +211,24 @@ Item {
         id: detailsComponent
 
         ColumnLayout {
-            spacing: units.smallSpacing
+            spacing: Themes.Units.smallSpacing
 
             Repeater {
                 model: ConnectionDetails.length / 2
 
                 RowLayout {
-                    spacing: units.smallSpacing
+                    spacing: Themes.Units.smallSpacing
 
                     Label {
                         text: ConnectionDetails[index * 2]
-                        color: Theme.palette.panel.textColor
+                        color: Themes.Theme.palette.panel.textColor
                         font.weight: Font.Bold
                         opacity: 0.6
                     }
 
                     Label {
                         text: ConnectionDetails[(index * 2) + 1]
-                        color: Theme.palette.panel.textColor
+                        color: Themes.Theme.palette.panel.textColor
                         textFormat: Text.StyledText
                         opacity: 0.6
                     }
@@ -244,7 +243,7 @@ Item {
         ColumnLayout {
             property alias passwordField: passwordField
 
-            spacing: units.smallSpacing
+            spacing: Themes.Units.smallSpacing
 
             TextField {
                 id: passwordField

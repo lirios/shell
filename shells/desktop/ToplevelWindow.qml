@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtCompositor 1.0
 import GreenIsland 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 
 WindowWrapper {
     property var chrome: null
@@ -54,7 +54,7 @@ WindowWrapper {
         Behavior on blend {
             NumberAnimation {
                 easing.type: transientChildren ? Easing.InQuad : Easing.OutQuad
-                duration: units.shortDuration
+                duration: Themes.Units.shortDuration
             }
         }
     }
@@ -101,49 +101,49 @@ WindowWrapper {
     Behavior on x {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
     Behavior on y {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
     Behavior on z {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: units.shortDuration
+            duration: Themes.Units.shortDuration
         }
     }
 
     Behavior on width {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: units.shortDuration
+            duration: Themes.Units.shortDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: units.shortDuration
+            duration: Themes.Units.shortDuration
         }
     }
 
     Behavior on scale {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InSine
-            duration: units.longDUration
+            duration: Themes.Units.longDUration
         }
     }
 

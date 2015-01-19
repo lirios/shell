@@ -27,10 +27,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
-
 
 Item {
     property alias icon: appIconItem.icon
@@ -48,9 +46,9 @@ Item {
     height: implicitHeight
     implicitHeight: {
         // Return maximum height possible, at least 5 grid units
-        var minHeight = actionsColumn.height + (units.smallSpacing * 4);
-        var maxHeight = Math.max(appIconItem.height, titleLabel.paintedHeight + bodyLabel.implicitHeight) + (units.smallSpacing * 4);
-        return Math.max(minHeight, Math.min(maxHeight, units.gridUnit * 5));
+        var minHeight = actionsColumn.height + (Themes.Units.smallSpacing * 4);
+        var maxHeight = Math.max(appIconItem.height, titleLabel.paintedHeight + bodyLabel.implicitHeight) + (Themes.Units.smallSpacing * 4);
+        return Math.max(minHeight, Math.min(maxHeight, Themes.Units.gu(5)));
     }
     states: [
         State {
@@ -65,8 +63,8 @@ Item {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: units.smallSpacing * 2
-                anchors.topMargin: units.smallSpacing
+                anchors.leftMargin: Themes.Units.smallSpacing * 2
+                anchors.topMargin: Themes.Units.smallSpacing
             }
         },
         State {
@@ -90,7 +88,7 @@ Item {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: appIconItem.width + (units.smallSpacing * 2)
+                anchors.leftMargin: appIconItem.width + (Themes.Units.smallSpacing * 2)
             }
         }
     ]
@@ -100,10 +98,10 @@ Item {
         anchors {
             left: parent.left
             top: parent.top
-            leftMargin: units.smallSpacing
-            topMargin: units.smallSpacing
+            leftMargin: Themes.Units.smallSpacing
+            topMargin: Themes.Units.smallSpacing
         }
-        width: units.iconSizes.large
+        width: Themes.Units.iconSizes.large
         height: width
         visible: hasIcon
     }
@@ -121,7 +119,7 @@ Item {
         level: 4
         font.weight: Font.Bold
         elide: Text.ElideRight
-        color: Theme.palette.panel.textColor
+        color: Themes.Theme.palette.panel.textColor
         visible: text.length > 0
         onLinkActivated: Qt.openUrlExternally(link)
     }
@@ -133,16 +131,16 @@ Item {
             top: titleLabel.bottom
             right: actionsColumn.visible ? actionsColumn.left : parent.right
             bottom: parent.bottom
-            leftMargin: units.smallSpacing * 2
-            rightMargin: units.smallSpacing * 2
-            bottomMargin: units.smallSpacing
+            leftMargin: Themes.Units.smallSpacing * 2
+            rightMargin: Themes.Units.smallSpacing * 2
+            bottomMargin: Themes.Units.smallSpacing
         }
         level: 5
         wrapMode: Text.Wrap
         elide: Text.ElideRight
         maximumLineCount: 10
         verticalAlignment: Text.AlignTop
-        color: Theme.palette.panel.textColor
+        color: Themes.Theme.palette.panel.textColor
         visible: text.length > 0
         onLinkActivated: Qt.openUrlExternally(link)
     }
@@ -152,9 +150,9 @@ Item {
         anchors {
             top: titleLabel.bottom
             right: parent.right
-            topMargin: units.smallSpacing
+            topMargin: Themes.Units.smallSpacing
         }
-        spacing: units.smallSpacing
+        spacing: Themes.Units.smallSpacing
         height: childrenRect.height
         visible: actions.count > 0
 

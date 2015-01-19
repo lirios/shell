@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import ".."
 
 Indicator {
@@ -35,11 +35,11 @@ Indicator {
     iconName: "preferences-system-symbolic"
     component: Component {
         ColumnLayout {
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Settings")
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
             }
 
             Item {

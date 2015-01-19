@@ -28,20 +28,18 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import GreenIsland 1.0
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import "."
+import Hawaii.Themes 1.0 as Themes
 
 Rectangle {
     id: root
     color: "#80000000"
-    radius: units.gridUnit * 0.5
+    radius: Themes.Units.gu(0.5)
     opacity: 0.0
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InQuad
-            duration: units.shortDuration
+            duration: Themes.Units.shortDuration
         }
     }
 
@@ -77,17 +75,17 @@ Rectangle {
         id: listView
         anchors {
             fill: parent
-            margins: units.largeSpacing
+            margins: Themes.Units.largeSpacing
         }
         clip: true
         orientation: ListView.Horizontal
         model: compositorRoot.windowList
-        spacing: units.smallSpacing
-        highlightMoveDuration: units.shortDuration
+        spacing: Themes.Units.smallSpacing
+        highlightMoveDuration: Themes.Units.shortDuration
         delegate: Item {
             readonly property real scaleFactor: listView.width / compositorRoot.width
             readonly property real thumbnailWidth: thumbnailHeight * listView.ratio
-            readonly property real thumbnailHeight: listView.height - units.smallSpacing - (units.largeSpacing * 2)
+            readonly property real thumbnailHeight: listView.height - Themes.Units.smallSpacing - (Themes.Units.largeSpacing * 2)
 
             id: wrapper
             width: thumbnailWidth + thumbnailLayout.anchors.margins + thumbnailLayout.spacing
@@ -97,21 +95,21 @@ Rectangle {
                 id: thumbnailLayout
                 anchors {
                     fill: parent
-                    margins: units.smallSpacing
+                    margins: Themes.Units.smallSpacing
                 }
-                spacing: units.largeSpacing
+                spacing: Themes.Units.largeSpacing
 
                 Rectangle {
                     id: thumbnailItem
-                    color: wrapper.ListView.isCurrentItem ? Theme.palette.panel.selectedBackgroundColor : "transparent"
-                    radius: units.gridUnit * 0.5
-                    width: thumbnailWidth - units.smallSpacing
-                    height: thumbnailHeight - units.smallSpacing - label.height
+                    color: wrapper.ListView.isCurrentItem ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
+                    radius: Themes.Units.gu(0.5)
+                    width: thumbnailWidth - Themes.Units.smallSpacing
+                    height: thumbnailHeight - Themes.Units.smallSpacing - label.height
 
                     SurfaceRenderer {
                         anchors {
                             fill: parent
-                            margins: units.smallSpacing
+                            margins: Themes.Units.smallSpacing
                         }
                         source: modelData.child
 
@@ -127,10 +125,10 @@ Rectangle {
                     id: label
                     text: modelData.child.surface.title ? modelData.child.surface.title : qsTr("Untitled")
                     wrapMode: Text.Wrap
-                    color: Theme.palette.panel.textColor
+                    color: Themes.Theme.palette.panel.textColor
                     font.bold: true
                     style: Text.Raised
-                    styleColor: Theme.palette.panel.textEffectColor
+                    styleColor: Themes.Theme.palette.panel.textEffectColor
                     maximumLineCount: 2
                     opacity: wrapper.ListView.isCurrentItem ? 1.0 : 0.6
 

@@ -28,9 +28,8 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import org.kde.plasma.core 2.0 as PlasmaCore
-import "."
 
 Item {
     signal unlocked()
@@ -41,7 +40,7 @@ Item {
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InSine
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
         }
     }
 
@@ -85,9 +84,9 @@ Item {
         Label {
             text: Qt.formatTime(timeDataSource.data["Local"]["DateTime"], __priv.timeFormat)
             font.pointSize: 42
-            color: Theme.palette.window.textColor
+            color: Themes.Theme.palette.window.textColor
             style: Text.Raised
-            styleColor: Theme.palette.window.textEffectColor
+            styleColor: Themes.Theme.palette.window.textEffectColor
 
             Layout.alignment: Qt.AlignCenter
         }
@@ -95,9 +94,9 @@ Item {
         Label {
             text: Qt.formatDate(timeDataSource.data["Local"]["DateTime"], Locale.LongFormat)
             font.pointSize: 36
-            color: Theme.palette.window.textColor
+            color: Themes.Theme.palette.window.textColor
             style: Text.Raised
-            styleColor: Theme.palette.window.textEffectColor
+            styleColor: Themes.Theme.palette.window.textEffectColor
 
             Layout.alignment: Qt.AlignCenter
         }
@@ -113,14 +112,14 @@ Item {
                 id: passwordField
                 anchors.centerIn: parent
                 placeholderText: qsTr("Password")
-                width: units.gridUnit * 20
+                width: Themes.Units.gu(20)
                 focus: true
                 echoMode: TextInput.Password
                 onAccepted: root.unlocked()
             }
 
             Layout.fillWidth: true
-            Layout.preferredHeight: units.gridUnit * 5
+            Layout.preferredHeight: Themes.Units.gu(5)
         }
 
         Item {

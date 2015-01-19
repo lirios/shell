@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import org.kde.plasma.core 2.0 as PlasmaCore
 import ".."
 
@@ -37,11 +37,11 @@ Indicator {
     iconName: "battery-ups"
     component: Component {
         ColumnLayout {
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Power")
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
             }
 
             Item {

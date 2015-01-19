@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtCompositor 1.0
 import GreenIsland 1.0
+import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "WindowManagement.js" as WindowManagement
@@ -295,7 +296,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InSine
-                duration: units.longDuration
+                duration: Themes.Units.longDuration
             }
         }
     }
@@ -349,13 +350,13 @@ Item {
         }
         asynchronous: true
         z: 899
-        width: parent.width - (units.largeSpacing * 2)
-        height: (parent.height * 0.5) - (units.largeSpacing * 2)
+        width: parent.width - (Themes.Units.largeSpacing * 2)
+        height: (parent.height * 0.5) - (Themes.Units.largeSpacing * 2)
 
         Behavior on z {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: units.longDuration
+                duration: Themes.Units.longDuration
             }
         }
     }
@@ -371,14 +372,14 @@ Item {
         Behavior on z {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: units.longDuration
+                duration: Themes.Units.longDuration
             }
         }
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InSine
-                duration: units.longDuration
+                duration: Themes.Units.longDuration
             }
         }
     }
@@ -398,7 +399,7 @@ Item {
         Behavior on z {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: units.longDuration
+                duration: Themes.Units.longDuration
             }
         }
     }
@@ -428,7 +429,7 @@ Item {
         Behavior on z {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: units.longDuration
+                duration: Themes.Units.longDuration
             }
         }
     }

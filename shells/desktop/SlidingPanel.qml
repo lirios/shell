@@ -25,8 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 
 Item {
     default property alias contents: background.children
@@ -37,12 +36,12 @@ Item {
     width: {
         if (edge == Qt.TopEdge || edge == Qt.BottomEdge)
             return compositorRoot.screenView.width;
-        return Math.max(units.gridUnit * 10, childrenRect.width);
+        return Math.max(Themes.Units.gu(10), childrenRect.width);
     }
     height: {
         if (edge == Qt.LeftEdge || edge == Qt.RightEdge)
             return compositorRoot.screenView.height;
-        return Math.max(units.gridUnit * 10, childrenRect.height);
+        return Math.max(Themes.Units.gu(10), childrenRect.height);
     }
     clip: true
     onEdgeChanged: __priv.resetPosition()
@@ -52,14 +51,14 @@ Item {
 
     Behavior on x {
         NumberAnimation {
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
             easing.type: Easing.OutCubic
         }
     }
 
     Behavior on y {
         NumberAnimation {
-            duration: units.longDuration
+            duration: Themes.Units.longDuration
             easing.type: Easing.OutCubic
         }
     }
@@ -126,7 +125,7 @@ Item {
     Rectangle {
         id: background
         anchors.fill: parent
-        color: Theme.palette.panel.backgroundColor
+        color: Themes.Theme.palette.panel.backgroundColor
     }
 
     function open() {

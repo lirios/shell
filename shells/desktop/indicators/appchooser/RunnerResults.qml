@@ -28,20 +28,19 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import org.kde.plasma.core 2.0 as PlasmaCore
-import "../.."
 
 ColumnLayout {
     implicitHeight: label.paintedHeight + horizLine.height + runnerMatches.contentHeight + (spacing * 2)
-    spacing: units.smallSpacing
+    spacing: Themes.Units.smallSpacing
 
     Controls.Heading {
         id: label
         level: 3
         elide: Text.ElideRight
         text: (runnerMatches.model != null) ? runnerMatches.model.name : ""
-        color: Theme.palette.panel.textColor
+        color: Themes.Theme.palette.panel.textColor
 
         Layout.alignment: Qt.AlignCenter
     }
@@ -50,7 +49,7 @@ ColumnLayout {
         id: horizLine
         svg: lineSvg
         elementId: "horizontal-line"
-        height: units.gridUnit
+        height: Themes.Units.gridUnit
 
         Layout.fillWidth: true
     }

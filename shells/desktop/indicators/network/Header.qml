@@ -27,21 +27,19 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import "../.."
+import Hawaii.Themes 1.0 as Themes
 
 RowLayout {
     property alias text: label.text
 
-    spacing: units.smallSpacing
+    spacing: Themes.Units.smallSpacing
     width: ListView.view.width
-    height: Math.max(label.paintedHeight, refreshButton.height) + (units.smallSpacing * 2)
+    height: Math.max(label.paintedHeight, refreshButton.height) + (Themes.Units.smallSpacing * 2)
 
     Label {
         id: label
         font.weight: Font.DemiBold
-        color: Theme.palette.panel.textColor
+        color: Themes.Theme.palette.panel.textColor
 
         Layout.fillWidth: true
     }

@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 
 ColumnLayout {
     ItemListView {
@@ -37,7 +37,7 @@ ColumnLayout {
     }
 
     Item {
-        Layout.preferredHeight: units.smallSpacing
+        Layout.preferredHeight: Themes.Units.smallSpacing
     }
 
     CategoriesView {

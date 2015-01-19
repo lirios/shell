@@ -28,23 +28,21 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import ".."
+import Hawaii.Themes 1.0 as Themes
 
 MouseArea {
     property bool expanded: false
 
     id: root
     width: parent.width
-    height: units.gridUnit * 2
+    height: Themes.Units.gu(2)
     drag.axis: Drag.XAxis
     drag.target: root
     onExpandedChanged: {
         if (expanded && body)
-            height = units.gridUnit * 4;
+            height = Themes.Units.gu(4);
         else
-            height = units.gridUnit * 2;
+            height = Themes.Units.gu(2);
     }
     onReleased: {
         if (drag.active) {
@@ -72,26 +70,26 @@ MouseArea {
     }
 
     RowLayout {
-        spacing: units.largeSpacing
+        spacing: Themes.Units.largeSpacing
 
         Components.Icon {
             id: icon
-            width: units.iconSizes.medium
+            width: Themes.Units.iconSizes.medium
             height: width
             iconName: appIcon && appIcon.length > 0 ? appIcon : "dialog-information-symbolic"
-            color: Theme.palette.panel.textColor
+            color: Themes.Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignTop
         }
 
         ColumnLayout {
-            spacing: units.largeSpacing
+            spacing: Themes.Units.largeSpacing
 
             Label {
                 clip: true
                 text: summary + (root.expanded ? (body ? "\n" + body : "") :
                                                  (body ? "..." : ""))
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
                 font.pointSize: 14
             }
 

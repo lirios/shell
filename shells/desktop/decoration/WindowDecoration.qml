@@ -25,16 +25,14 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 import GreenIsland 1.0
-import Hawaii.Themes 1.0
-import ".."
+import Hawaii.Themes 1.0 as Themes
 
 Item {
     readonly property string title: source.surface.title
     readonly property bool active: source.focus
     property alias source: renderer.source
-    readonly property real dropShadowExtents: units.gridUnit
+    readonly property real dropShadowExtents: Themes.Units.gridUnit
     readonly property real additionalWidth: dropShadowExtents
     readonly property real additionalHeight: dropShadowExtents + titleBar.height + frame.border.width
 
@@ -58,7 +56,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: units.shortDuration
+                duration: Themes.Units.shortDuration
             }
         }
     }
@@ -71,7 +69,7 @@ Item {
         }
         width: renderer.width + (border.width * 2)
         height: renderer.height + (border.width * 2) + titleBar.height
-        border.color: Theme.palette.rgba(Theme.palette.window.secondaryColor, 0.5)
+        border.color: Themes.Theme.palette.rgba(Themes.Theme.palette.window.secondaryColor, 0.5)
         border.width: 1
         z: 1
 
@@ -84,7 +82,7 @@ Item {
             }
             title: root.title
             active: root.active
-            height: units.iconSizes.medium
+            height: Themes.Units.iconSizes.medium
             z: 0
             onClose: root.close()
             onMinimize: root.minimize()

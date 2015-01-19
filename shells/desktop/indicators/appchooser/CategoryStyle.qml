@@ -28,15 +28,13 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.0 as Styles
 import QtQuick.Controls.Private 1.0
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import "../.."
+import Hawaii.Themes 1.0 as Themes
 
 Styles.ButtonStyle {
     padding {
-        left: units.gridUnit * 0.2
+        left: Themes.Units.gu(0.2)
         top: 0
-        right: units.gridUnit * 0.2
+        right: Themes.Units.gu(0.2)
         bottom: 0
     }
 
@@ -45,7 +43,7 @@ Styles.ButtonStyle {
         property bool down: control.pressed || checked
 
         implicitWidth: Math.round(TextSingleton.implicitHeight * 4)
-        implicitHeight: Math.max(units.gridUnit * 2, Math.round(TextSingleton.implicitHeight * 1.2))
+        implicitHeight: Math.max(Themes.Units.gu(2), Math.round(TextSingleton.implicitHeight * 1.2))
 
         Rectangle {
             anchors {
@@ -53,21 +51,21 @@ Styles.ButtonStyle {
                 right: parent.right
                 bottom: parent.bottom
             }
-            color: checked ? control.hovered ? Qt.lighter(Theme.palette.panel.selectedBackgroundColor, 1.5) : Theme.palette.panel.selectedBackgroundColor : Qt.lighter(Theme.palette.panel.selectedBackgroundColor, 1.2)
-            height: units.gridUnit * 0.1
+            color: checked ? control.hovered ? Qt.lighter(Themes.Theme.palette.panel.selectedBackgroundColor, 1.5) : Themes.Theme.palette.panel.selectedBackgroundColor : Qt.lighter(Themes.Theme.palette.panel.selectedBackgroundColor, 1.2)
+            height: Themes.Units.gu(0.1)
             opacity: control.hovered || down ? 1.0 : 0.0
 
             Behavior on color {
                 ColorAnimation {
                     easing.type: Easing.Linear
-                    duration: units.longDuration
+                    duration: Themes.Units.longDuration
                 }
             }
 
             Behavior on opacity {
                 NumberAnimation {
                     easing.type: Easing.Linear
-                    duration: units.longDuration
+                    duration: Themes.Units.longDuration
                 }
             }
         }
@@ -84,7 +82,7 @@ Styles.ButtonStyle {
             renderType: Text.NativeRendering
             text: control.text
             font.bold: control.checkable && control.checked
-            color: Theme.palette.panel.textColor
+            color: Themes.Theme.palette.panel.textColor
         }
     }
 }

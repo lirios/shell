@@ -27,8 +27,9 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import org.hawaii.appchooser 0.1 as AppChooser
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     id: root
@@ -58,8 +59,8 @@ Item {
     ColumnLayout {
         id: layout
         anchors.fill: parent
-        anchors.margins: units.smallSpacing
-        spacing: units.largeSpacing
+        anchors.margins: Themes.Units.smallSpacing
+        spacing: Themes.Units.largeSpacing
 
         Header {
             Layout.fillWidth: true

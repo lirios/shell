@@ -28,30 +28,28 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
-import "../.."
 
 Item {
     width: ListView.view.width
-    height: Math.max(icon.height, label.paintedHeight) + (units.smallSpacing * 2)
+    height: Math.max(icon.height, label.paintedHeight) + (Themes.Units.smallSpacing * 2)
 
     RowLayout {
         anchors.fill: parent
-        spacing: units.smallSpacing
+        spacing: Themes.Units.smallSpacing
 
 /*
         Components.Icon {
             id: icon
-            width: units.iconSizes.large
+            width: Themes.Units.iconSizes.large
             height: width
             iconName: model.iconName
         }
 */
         KQuickControls.QIconItem {
             id: icon
-            width: units.iconSizes.large
+            width: Themes.Units.iconSizes.large
             height: width
             icon: model.decoration
         }
@@ -60,9 +58,9 @@ Item {
             Label {
                 id: label
                 text: model.display
-                font.pointSize: theme.defaultFont.pointSize * 1.1
+                font.pointSize: Themes.Theme.defaultFont.pointSize * 1.1
                 font.bold: true
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
                 textFormat: Text.PlainText
@@ -71,7 +69,7 @@ Item {
             Label {
                 id: descr
                 text: model.description ? model.description : ""
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
                 textFormat: Text.PlainText

@@ -27,20 +27,20 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Themes 1.0 as Themes
 import org.hawaii.appchooser 0.1 as AppChooser
 
 RowLayout {
-    implicitWidth: (units.iconSizes.large * 3) + (spacing * 3)
-    implicitHeight: units.iconSizes.large + (spacing * 2)
-    spacing: units.largeSpacing
+    implicitWidth: (Themes.Units.iconSizes.large * 3) + (spacing * 3)
+    implicitHeight: Themes.Units.iconSizes.large + (spacing * 2)
+    spacing: Themes.Units.largeSpacing
 
     AppChooser.SystemModel {
         id: systemModel
     }
 
     ToolButton {
-        width: units.iconSizes.large
+        width: Themes.Units.iconSizes.large
         height: width
         iconName: "system-log-out-symbolic"
         tooltip: qsTr("Log out from current session")
@@ -49,7 +49,7 @@ RowLayout {
     }
 
     ToolButton {
-        width: units.iconSizes.large
+        width: Themes.Units.iconSizes.large
         height: width
         iconName: "system-shutdown-symbolic"
         tooltip: qsTr("Power off the system")
@@ -58,7 +58,7 @@ RowLayout {
     }
 
     ToolButton {
-        width: units.iconSizes.large
+        width: Themes.Units.iconSizes.large
         height: width
         iconName: "system-reboot-symbolic"
         tooltip: qsTr("Restart the system")

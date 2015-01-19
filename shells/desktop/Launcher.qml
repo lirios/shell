@@ -27,15 +27,15 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import Hawaii.Components 1.0 as Components
+import Hawaii.Themes 1.0 as Themes
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
 import org.hawaii.launcher 0.1 as Launcher
-import Hawaii.Components 1.0 as Components
 
 Item {
-    property real iconSize: units.iconSizes.large
+    property real iconSize: Themes.Units.iconSizes.large
     readonly property real itemSize: iconSize + (iconSize * 0.25)
-    readonly property real itemPadding: units.smallSpacing * 2
+    readonly property real itemPadding: Themes.Units.smallSpacing * 2
     property alias orientation: listView.orientation
 
     id: launcher
@@ -52,14 +52,14 @@ Item {
             Behavior on width {
                 NumberAnimation {
                     easing.type: Easing.Linear
-                    duration: units.shortDuration
+                    duration: Themes.Units.shortDuration
                 }
             }
 
             Behavior on height {
                 NumberAnimation {
                     easing.type: Easing.Linear
-                    duration: units.shortDuration
+                    duration: Themes.Units.shortDuration
                 }
             }
 
@@ -80,10 +80,10 @@ Item {
                 anchors {
                     top: parent.top
                     right: parent.right
-                    topMargin: -(units.smallSpacing * 0.35)
-                    rightMargin: -(units.largeSpacing * 0.35)
+                    topMargin: -(Themes.Units.smallSpacing * 0.35)
+                    rightMargin: -(Themes.Units.largeSpacing * 0.35)
                 }
-                width: units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.smallMedium
                 height: width
                 radius: width * 0.5
                 color: "orangered"
@@ -92,13 +92,13 @@ Item {
                 Behavior on opacity {
                     NumberAnimation {
                         easing.type: Easing.OutQuad
-                        duration: units.shortDuration
+                        duration: Themes.Units.shortDuration
                     }
                 }
 
                 Label {
                     anchors.centerIn: parent
-                    font.pixelSize: parent.width - units.smallSpacing
+                    font.pixelSize: parent.width - Themes.Units.smallSpacing
                     color: "white"
                     text: model.count
                 }
@@ -110,13 +110,13 @@ Item {
         id: listView
         anchors.centerIn: parent
         orientation: ListView.Horizontal
-        spacing: units.smallSpacing
+        spacing: Themes.Units.smallSpacing
         interactive: false
         add: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.shortDuration }
+            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Themes.Units.shortDuration }
         }
         populate: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: units.longDuration }
+            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Themes.Units.longDuration }
         }
         model: Launcher.LauncherModel {
             id: launcherModel
