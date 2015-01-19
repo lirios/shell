@@ -33,6 +33,7 @@
 #include "qlogind/src/session.h"
 
 class SessionManager;
+class SessionTracker;
 
 class SessionAdaptor : public QDBusAbstractAdaptor
 {
@@ -56,6 +57,8 @@ public Q_SLOTS:
     Q_NOREPLY void lockSession();
     Q_NOREPLY void unlockSession();
 
+    Q_NOREPLY void activateSession(int index);
+
     Q_NOREPLY void logOut();
     Q_NOREPLY void powerOff();
     Q_NOREPLY void restart();
@@ -68,6 +71,7 @@ private:
     PowerManager *m_powerManager;
     PowerManager::Capability m_actionRequested;
     SessionPtr m_session;
+    SessionTracker *m_sessionTracker;
 
 private Q_SLOTS:
     void performAction();

@@ -27,6 +27,7 @@
 #include <QtCore/QCoreApplication>
 
 #include "qlogind/src/manager.h"
+#include "qlogind/src/sessiontracker.h"
 
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
@@ -36,6 +37,7 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     , m_sessionManager(sessionManager)
     , m_powerManager(new PowerManager(this))
     , m_actionRequested(PowerManager::None)
+    , m_sessionTracker(new SessionTracker(this))
 {
     // When an action is requested we first log out (which means killing
     // the processes and quitting the compositor), when the session is
@@ -98,6 +100,17 @@ void SessionAdaptor::unlockSession()
 {
     if (!m_session.isNull())
         m_session->requestUnlock();
+}
+
+void SessionAdaptor::activateSession(int index)
+{
+    PendingSessions *pendingSessions = m_sessionTracker->listSessions();
+    for (SessionPtr session: pendingSessions->interfaces()) {
+        if (session->property("TTY").toInt() == index) {
+            session->Activate();
+            break;
+        }
+    }
 }
 
 void SessionAdaptor::logOut()
