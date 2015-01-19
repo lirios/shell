@@ -46,13 +46,13 @@ However some of those modules pull in too many dependencies.
 In particular we need:
 
 * DataSource API and data engines (plasma-framework and plasma-workspace)
-* Device independent units (plasma-framework)
+* A couple of SVG items here and there (plasma-framework)
 * Networking (plasma-nm, QML plugin only not plasmoid)
 
 In the near future actions will be taken to cut down those dependencies.
 
-Device independent units will probably be reimplemented here and submitted
-to Qt (either qtdeclarative or qtquickcontrols) once ready.
+Data engines might be replaced with QML imports since the Plasma developers
+don't have time to move the DataSource API into a separate framework.
 
 Frameworks on the other hand are often safe, depending on their tier.
 
