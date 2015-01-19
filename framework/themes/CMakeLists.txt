@@ -8,6 +8,7 @@ set(SOURCES
     plugin.cpp
     theme.cpp
     themesettings.cpp
+    units.cpp
 )
 
 add_library(declarative_hawaiithemes SHARED ${SOURCES})

@@ -29,6 +29,7 @@
 
 #include "theme.h"
 #include "themesettings.h"
+#include "units.h"
 
 class HawaiiThemesPlugin : public QQmlExtensionPlugin
 {
@@ -39,6 +40,7 @@ public:
 
     static QObject *themeProvider(QQmlEngine *engine, QJSEngine *jsEngine);
     static QObject *themeSettingsProvider(QQmlEngine *engine, QJSEngine *jsEngine);
+    static QObject *unitsProvider(QQmlEngine *engine, QJSEngine *jsEngine);
 };
 
 void HawaiiThemesPlugin::registerTypes(const char *uri)
@@ -48,6 +50,8 @@ void HawaiiThemesPlugin::registerTypes(const char *uri)
                                     HawaiiThemesPlugin::themeProvider);
     qmlRegisterSingletonType<ThemeSettings>(uri, 1, 0, "ThemeSettings",
                                             HawaiiThemesPlugin::themeSettingsProvider);
+    qmlRegisterSingletonType<Units>(uri, 1, 0, "Units",
+                                    HawaiiThemesPlugin::unitsProvider);
 }
 
 QObject *HawaiiThemesPlugin::themeProvider(QQmlEngine *engine, QJSEngine *jsEngine)
@@ -63,6 +67,14 @@ QObject *HawaiiThemesPlugin::themeSettingsProvider(QQmlEngine *engine, QJSEngine
     Q_UNUSED(jsEngine);
 
     return new ThemeSettings();
+}
+
+QObject *HawaiiThemesPlugin::unitsProvider(QQmlEngine *engine, QJSEngine *jsEngine)
+{
+    Q_UNUSED(engine);
+    Q_UNUSED(jsEngine);
+
+    return new Units();
 }
 
 #include "plugin.moc"
