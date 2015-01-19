@@ -130,6 +130,14 @@ Item {
             return;
         }
 
+        // Activate session
+        if (event.modifiers === (Qt.ControlModifier | Qt.AltModifier) && event.key >= Qt.Key_F1 && event.key <= Qt.Key_F12) {
+            var index = (event.key - Qt.Key_F1) + 1;
+            session.activateSession(index);
+            event.accepted = true;
+            return;
+        }
+
         // Window switcher
         if (event.modifiers & Qt.MetaModifier) {
             if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
