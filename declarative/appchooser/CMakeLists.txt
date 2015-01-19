@@ -7,7 +7,6 @@ set(SOURCES
     funnelmodel.cpp
     appchooserplugin.cpp
     processrunner.cpp
-    rootmodel.cpp
     runnermodel.cpp
     runnermatchesmodel.cpp
     recentappsmodel.cpp
