@@ -21,7 +21,6 @@
 #include "favoritesmodel.h"
 #include "recentappsmodel.h"
 #include "recentdocsmodel.h"
-#include "systemmodel.h"
 
 #include <KLocalizedString>
 
@@ -40,9 +39,6 @@ RootModel::RootModel(QObject *parent) : AppsModel(QString(), parent)
     FavoritesModel *favoritesModel = new FavoritesModel(this);
     connect(favoritesModel, SIGNAL(appLaunched(QString)), this, SIGNAL(appLaunched(QString)));
     m_favoritesModels["app"] = favoritesModel;
-
-    favoritesModel = new FavoritesModel(this);
-    m_favoritesModels["sys"] = favoritesModel;
 
     extendEntryList();
 }
@@ -77,9 +73,6 @@ void RootModel::extendEntryList()
 
     RecentDocsModel *recentDocsModel = new RecentDocsModel(this);
 
-    SystemModel *systemModel = new SystemModel(this);
-    m_favoritesModels["sys"]->setSourceModel(systemModel);
-
     beginInsertRows(QModelIndex(), 0, 0);
     GroupEntry *entry = new GroupEntry(i18n("Recent Applications"), QString(), m_recentAppsModel, this);
     m_entryList.prepend(entry);
@@ -87,7 +80,6 @@ void RootModel::extendEntryList()
 
     beginInsertRows(QModelIndex(), m_entryList.size(), m_entryList.size() + 1);
     m_entryList << new GroupEntry(i18n("Recent Documents"), QString(), recentDocsModel, this);
-    m_entryList << new GroupEntry(i18n("Power / Session"), QString(), systemModel, this);
     endInsertRows();
 
     emit countChanged();

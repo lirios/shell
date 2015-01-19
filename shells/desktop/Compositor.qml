@@ -29,6 +29,7 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
+import org.hawaii.session 0.1 as Session
 import org.kde.plasma.core 2.0 as PlasmaCore
 import "WindowManagement.js" as WindowManagement
 import "screen"
@@ -109,14 +110,14 @@ Item {
     onKeyPressed: {
         // Abort session
         // TODO: Handle this as a keybinding
-        if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Backspace) {
+        if (event.modifiers === (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Backspace) {
             event.accepted = true;
             compositor.abortSession();
             return;
         }
 
         // Power off
-        if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Delete) {
+        if (event.modifiers === (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Delete && session.canPowerOff) {
             state = "poweroff";
             event.accepted = true;
             return;
@@ -124,7 +125,7 @@ Item {
 
         // Lock screen
         if (event.modifiers & Qt.MetaModifier && event.key === Qt.Key_L) {
-            state = "lock";
+            session.lockSession();
             event.accepted = true;
             return;
         }
@@ -215,14 +216,6 @@ Item {
             // Fade the desktop out
             compositorRoot.state = "splash";
         }
-        onLocked: {
-            // Bring lock layer up
-            compositorRoot.state = "lock";
-        }
-        onUnlocked: {
-            // Bring user layer up
-            compositorRoot.state = "session";
-        }
         onReady: {
             // Start idle timer
             idleTimer.running = true
@@ -270,6 +263,13 @@ Item {
 
         Keys.onPressed: compositorRoot.keyPressed(event)
         Keys.onReleased: compositorRoot.keyReleased(event)
+    }
+
+    // Session
+    Session.SessionInterface {
+        id: session
+        onSessionLocked: compositorRoot.state = "lock"
+        onSessionUnlocked: compositorRoot.state = "session"
     }
 
     /*

@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
-import org.hawaii.appchooser 0.1 as AppChooser
+import org.hawaii.session 0.1 as Session
 
 Rectangle {
     gradient: Gradient {
@@ -35,12 +35,8 @@ Rectangle {
         GradientStop { position: 1; color: Qt.darker("firebrick", 1.1) }
     }
 
-    AppChooser.SystemModel {
-        id: systemModel
-
-        function triggerAction(action) {
-            return trigger(rowForFavoriteId(action), "", null);
-        }
+    Session.SessionInterface {
+        id: session
     }
 
     ColumnLayout {
@@ -69,7 +65,7 @@ Rectangle {
 
         Button {
             text: qsTr("Quit")
-            onClicked: systemModel.triggerAction("logout")
+            onClicked: session.logOut()
 
             Layout.alignment: Qt.AlignHCenter
         }

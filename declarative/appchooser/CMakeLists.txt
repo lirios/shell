@@ -12,8 +12,6 @@ set(SOURCES
     runnermatchesmodel.cpp
     recentappsmodel.cpp
     recentdocsmodel.cpp
-    sessioninterface.cpp
-    systemmodel.cpp
 )
 
 add_library(appchooserplugin SHARED ${SOURCES})

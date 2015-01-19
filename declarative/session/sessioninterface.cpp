@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii Shell.
+ * This file is part of Hawaii.
  *
  * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -26,15 +26,38 @@
 
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusPendingCall>
-#include <QDebug>
 
 #include "sessioninterface.h"
 
 const QDBusConnection bus = QDBusConnection::sessionBus();
 
-SessionInterface::SessionInterface()
-    : m_interface(new QDBusInterface("org.hawaii.session", "/HawaiiSession", "org.hawaii.session", bus))
+SessionInterface::SessionInterface(QObject *parent)
+    : QObject(parent)
+    , m_interface(new QDBusInterface("org.hawaii.session", "/HawaiiSession", "org.hawaii.session", bus))
+    , m_canLock(true)
+    , m_canStartNewSession(false)
+    , m_canLogOut(false)
+    , m_canPowerOff(false)
+    , m_canRestart(false)
+    , m_canSuspend(false)
+    , m_canHibernate(false)
+    , m_canHybridSleep(false)
 {
+    m_canLogOut = m_interface->call("canLogOut").arguments().at(0).toBool();
+    m_canPowerOff = m_interface->call("canPowerOff").arguments().at(0).toBool();
+    m_canRestart = m_interface->call("canRestart").arguments().at(0).toBool();
+    m_canSuspend = m_interface->call("canSuspend").arguments().at(0).toBool();
+    m_canHibernate = m_interface->call("canHibernate").arguments().at(0).toBool();
+    m_canHybridSleep = m_interface->call("canHybridSleep").arguments().at(0).toBool();
+
+    QDBusConnection::sessionBus().connect(
+                "org.hawaii.session", "/HawaiiSession",
+                "org.hawaii.session", "sessionLocked",
+                this, SIGNAL(sessionLocked()));
+    QDBusConnection::sessionBus().connect(
+                "org.hawaii.session", "/HawaiiSession",
+                "org.hawaii.session", "sessionUnlocked",
+                this, SIGNAL(sessionUnlocked()));
 }
 
 SessionInterface::~SessionInterface()
@@ -54,44 +77,52 @@ bool SessionInterface::canStartNewSession() const
 
 bool SessionInterface::canLogOut() const
 {
-    return m_interface->call("canLogOut").arguments().at(0).toBool();
+    return m_canLogOut;
 }
 
 bool SessionInterface::canPowerOff() const
 {
-    return m_interface->call("canPowerOff").arguments().at(0).toBool();
+    return m_canPowerOff;
 }
 
 bool SessionInterface::canRestart() const
 {
-    return m_interface->call("canRestart").arguments().at(0).toBool();
+    return m_canRestart;
 }
 
 bool SessionInterface::canSuspend() const
 {
-    return m_interface->call("canSuspend").arguments().at(0).toBool();
+    return m_canSuspend;
 }
 
 bool SessionInterface::canHibernate() const
 {
-    return m_interface->call("canHibernate").arguments().at(0).toBool();
+    return m_canHibernate;
 }
 
 bool SessionInterface::canHybridSleep() const
 {
-    return m_interface->call("canHybridSleep").arguments().at(0).toBool();
+    return m_canHybridSleep;
 }
 
-void SessionInterface::lock()
+void SessionInterface::lockSession()
 {
-    QDBusInterface interface("org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", bus);
-    interface.asyncCall("Lock");
+    m_interface->asyncCall("lockSession");
+}
+
+void SessionInterface::unlockSession()
+{
+    m_interface->asyncCall("unlockSession");
 }
 
 void SessionInterface::startNewSession()
 {
-    QDBusInterface interface("org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", bus);
-    interface.asyncCall("Lock");
+    m_interface->asyncCall("startNewSession");
+}
+
+void SessionInterface::activateSession(int index)
+{
+    m_interface->asyncCall("activateSession", index);
 }
 
 void SessionInterface::logOut()
@@ -123,3 +154,5 @@ void SessionInterface::hybridSleep()
 {
     m_interface->asyncCall("hybridSleep");
 }
+
+#include "moc_sessioninterface.cpp"

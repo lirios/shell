@@ -31,7 +31,7 @@ import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.appchooser 0.1 as AppChooser
+import org.hawaii.session 0.1 as Session
 
 Item {
     property alias mode: __priv.mode
@@ -83,11 +83,11 @@ Item {
             PropertyChanges { target: okButton; text: qsTr("Hibernate") }
         }
     ]
-    onLogOutRequested: systemModel.triggerAction("logout")
-    onPowerOffRequested: systemModel.triggerAction("shutdown")
-    onRestartRequested: systemModel.triggerAction("reboot")
-    onSuspendRequested: systemModel.triggerAction("suspend")
-    onHibernateRequested: systemModel.triggerAction("hibernate")
+    onLogOutRequested: session.logOut()
+    onPowerOffRequested: session.powerOff()
+    onRestartRequested: session.restart()
+    onSuspendRequested: session.suspend()
+    onHibernateRequested: session.hibernate()
 
     Behavior on opacity {
         NumberAnimation {
@@ -103,11 +103,6 @@ Item {
         property real timeout: 60
         property real remainingTime: timeout
         property var currentAction
-        property bool canLogOut: systemModel.hasCapability(AppChooser.SystemModel.LogoutSession)
-        property bool canPowerOff: systemModel.hasCapability(AppChooser.SystemModel.Shutdown)
-        property bool canRestart: systemModel.hasCapability(AppChooser.SystemModel.Reboot)
-        property bool canSuspend: systemModel.hasCapability(AppChooser.SystemModel.SuspendToRam)
-        property bool canHibernate: systemModel.hasCapability(AppChooser.SystemModel.SuspendToDisk)
 
         onModeChanged: remainingTime = timeout
         onRemainingTimeChanged: {
@@ -116,12 +111,8 @@ Item {
         }
     }
 
-    AppChooser.SystemModel {
-        id: systemModel
-
-        function triggerAction(action) {
-            return trigger(rowForFavoriteId(action), "", null);
-        }
+    Session.SessionInterface {
+        id: session
     }
 
     Timer {
@@ -221,7 +212,7 @@ Item {
 
         Row {
             spacing: Themes.Units.smallSpacing
-            visible: __priv.canLogOut || __priv.canPowerOff || __priv.canRestart || __priv.canSuspend || __priv.canHibernate
+            visible: session.canLogOut || session.canPowerOff || session.canRestart || session.canSuspend || session.canHibernate
 
             ExclusiveGroup { id: group }
 
@@ -233,7 +224,7 @@ Item {
                 height: width
                 checkable: true
                 checked: __priv.mode == "logout"
-                visible: __priv.canLogOut
+                visible: session.canLogOut
                 onClicked: __priv.mode = "logout"
             }
 
@@ -245,7 +236,7 @@ Item {
                 height: width
                 checkable: true
                 checked: __priv.mode == "poweroff"
-                visible: __priv.canPowerOff
+                visible: session.canPowerOff
                 onClicked: __priv.mode = "poweroff"
             }
 
@@ -257,7 +248,7 @@ Item {
                 height: width
                 checkable: true
                 checked: __priv.mode == "restart"
-                visible: __priv.canRestart
+                visible: session.canRestart
                 onClicked: __priv.mode = "restart"
             }
 
@@ -269,7 +260,7 @@ Item {
                 height: width
                 checkable: true
                 checked: __priv.mode == "suspend"
-                visible: __priv.canSuspend
+                visible: session.canSuspend
                 onClicked: __priv.mode = "suspend"
             }
 
@@ -281,7 +272,7 @@ Item {
                 height: width
                 checkable: true
                 checked: __priv.mode == "hibernate"
-                visible: __priv.canHibernate
+                visible: session.canHibernate
                 onClicked: __priv.mode = "hibernate"
             }
 

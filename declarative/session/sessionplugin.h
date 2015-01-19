@@ -1,10 +1,10 @@
 /****************************************************************************
- * This file is part of Hawaii Shell.
+ * This file is part of Hawaii.
  *
- * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015 Pier Luigi Fiorini
  *
  * Author(s):
- *    Pier Luigi Fiorini
+ *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
@@ -24,39 +24,18 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONINTERFACE_H
-#define SESSIONINTERFACE_H
+#ifndef SESSIONPLUGIN_H
+#define SESSIONPLUGIN_H
 
-#include <QtDBus/QDBusConnection>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlExtensionPlugin>
 
-class QDBusInterface;
-
-class SessionInterface
+class SessionPlugin : public QQmlExtensionPlugin
 {
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 public:
-    SessionInterface();
-    ~SessionInterface();
-
-    bool canLock() const;
-    bool canStartNewSession() const;
-    bool canLogOut() const;
-    bool canPowerOff() const;
-    bool canRestart() const;
-    bool canSuspend() const;
-    bool canHibernate() const;
-    bool canHybridSleep() const;
-
-    void lock();
-    void startNewSession();
-    void logOut();
-    void powerOff();
-    void restart();
-    void suspend();
-    void hibernate();
-    void hybridSleep();
-
-private:
-    QDBusInterface *m_interface;
+    virtual void registerTypes(const char *uri);
 };
 
-#endif // SESSIONINTERFACE_H
+#endif // SESSIONPLUGIN_H

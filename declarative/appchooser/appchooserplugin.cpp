@@ -24,7 +24,6 @@
 #include "processrunner.h"
 #include "rootmodel.h"
 #include "runnermodel.h"
-#include "systemmodel.h"
 
 #include <QtQml>
 
@@ -41,5 +40,4 @@ void KickerPlugin::registerTypes(const char *uri)
     qmlRegisterType<ProcessRunner>(uri, 0, 1, "ProcessRunner");
     qmlRegisterType<RootModel>(uri, 0, 1, "RootModel");
     qmlRegisterType<RunnerModel>(uri, 0, 1, "RunnerModel");
-    qmlRegisterType<SystemModel>(uri, 0, 1, "SystemModel");
 }
