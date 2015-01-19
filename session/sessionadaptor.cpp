@@ -24,6 +24,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QCoreApplication>
+
+#include "qlogind/src/manager.h"
+
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
 
@@ -38,6 +42,18 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     // logged out this slot is called and perform the actual action
     connect(m_sessionManager, SIGNAL(loggedOut()),
             this, SLOT(performAction()));
+
+    // logind interface
+    PendingSession *ps = Session::sessionFromPid(QCoreApplication::applicationPid());
+    connect(ps, &PendingSession::finished, [=] {
+        m_session = ps->interface();
+        connect(m_session.data(), &OrgFreedesktopLogin1SessionInterface::Lock, [=] {
+            Q_EMIT sessionLocked();
+        });
+        connect(m_session.data(), &OrgFreedesktopLogin1SessionInterface::Unlock, [=] {
+            Q_EMIT sessionUnlocked();
+        });
+    });
 }
 
 bool SessionAdaptor::canLogOut()
@@ -72,6 +88,18 @@ bool SessionAdaptor::canHybridSleep()
     return m_powerManager->capabilities() & PowerManager::HybridSleep;
 }
 
+void SessionAdaptor::lockSession()
+{
+    if (!m_session.isNull())
+        m_session->requestLock();
+}
+
+void SessionAdaptor::unlockSession()
+{
+    if (!m_session.isNull())
+        m_session->requestUnlock();
+}
+
 void SessionAdaptor::logOut()
 {
     m_sessionManager->logOut();
@@ -92,6 +120,7 @@ void SessionAdaptor::restart()
 
 void SessionAdaptor::suspend()
 {
+    lockSession();
     m_powerManager->suspend();
 }
 

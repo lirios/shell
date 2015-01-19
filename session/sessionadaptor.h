@@ -30,6 +30,7 @@
 #include <QtDBus/QDBusAbstractAdaptor>
 
 #include "powermanager/powermanager.h"
+#include "qlogind/src/session.h"
 
 class SessionManager;
 
@@ -40,6 +41,10 @@ class SessionAdaptor : public QDBusAbstractAdaptor
 public:
     SessionAdaptor(SessionManager *sessionManager);
 
+Q_SIGNALS:
+    void sessionLocked();
+    void sessionUnlocked();
+
 public Q_SLOTS:
     bool canLogOut();
     bool canPowerOff();
@@ -47,6 +52,9 @@ public Q_SLOTS:
     bool canSuspend();
     bool canHibernate();
     bool canHybridSleep();
+
+    Q_NOREPLY void lockSession();
+    Q_NOREPLY void unlockSession();
 
     Q_NOREPLY void logOut();
     Q_NOREPLY void powerOff();
@@ -59,6 +67,7 @@ private:
     SessionManager *m_sessionManager;
     PowerManager *m_powerManager;
     PowerManager::Capability m_actionRequested;
+    SessionPtr m_session;
 
 private Q_SLOTS:
     void performAction();
