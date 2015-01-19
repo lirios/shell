@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
                    "Empty mode is allowed only on X11.");
     } else {
         const QString mode = parser.value(modeOption);
-        if (mode != QStringLiteral("nested") || mode != QStringLiteral("eglfs"))
+        if (mode != QStringLiteral("nested") && mode != QStringLiteral("eglfs"))
             qFatal("Invalid mode \"%s\"!", qPrintable(mode));
     }
 
