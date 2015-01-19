@@ -29,6 +29,7 @@
 
 #include "cmakedirs.h"
 #include "processcontroller.h"
+#include "processlauncher.h"
 #include "sessionmanager.h"
 
 #include <sys/types.h>
@@ -39,26 +40,19 @@ Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 SessionManager::SessionManager(ProcessController *controller)
     : QObject(controller)
     , m_controller(controller)
+    , m_launcher(new ProcessLauncher(this))
 {
     // Autostart applications as soon as the compositor is ready
-    connect(m_controller, &ProcessController::started, [=]() {
-        // Prepare the environment to run applications into our compositor
-        qputenv("QT_QPA_PLATFORM", QByteArray("wayland"));
-        qputenv("GDK_BACKEND", QByteArray("wayland"));
-
-        // Set WAYLAND_DISPLAY only when nested, otherwise we don't need to do
-        // it because applications can detect the socket themselves
-        if (m_controller->mode() == ProcessController::NestedMode)
-            qputenv("WAYLAND_DISPLAY", qPrintable(m_controller->compositorSocket()));
-
-        // Autostart
-        autostart();
-    });
+    connect(m_controller, &ProcessController::started,
+            this, &SessionManager::autostart);
 
     // The compositor is stopped when a logout has been request,
     // which happens after we killed all the processes so when this
     // arrives we can emit the loggedOut signal
     connect(m_controller, SIGNAL(stopped()), this, SIGNAL(loggedOut()));
+
+    // Register process launcher service
+    m_launcher->registerInterface();
 }
 
 void SessionManager::setupEnvironment()

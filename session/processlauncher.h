@@ -24,42 +24,47 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#ifndef PROCESSLAUNCHER_H
+#define PROCESSLAUNCHER_H
 
-#include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
+#include <QtCore/QMap>
+#include <QtDBus/QDBusAbstractAdaptor>
 
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
+Q_DECLARE_LOGGING_CATEGORY(LAUNCHER)
 
-class ProcessController;
-class ProcessLauncher;
+class QProcess;
+class XdgDesktopFile;
+class SessionManager;
 
-class SessionManager : public QObject
+typedef QMap<XdgDesktopFile *, QProcess *> ApplicationMap;
+typedef QMutableMapIterator<XdgDesktopFile *, QProcess *> ApplicationMapIterator;
+
+class ProcessLauncher : public QDBusAbstractAdaptor
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.hawaii.launcher")
 public:
-    SessionManager(ProcessController *controller);
+    ProcessLauncher(SessionManager *sessionManager);
+    ~ProcessLauncher();
 
-    ProcessController *processController() const {
-        return m_controller;
-    }
-
-    void setupEnvironment();
-
-Q_SIGNALS:
-    void loggedOut();
+    bool registerInterface();
+    
+    static constexpr const char *interfaceName = "org.hawaii.launcher";
+    static constexpr const char *objectPath = "/Launcher";
 
 public Q_SLOTS:
-    void logOut();
+    bool launchApplication(const QString &appId);
+    bool launchDesktopFile(const QString &fileName);
 
 private:
-    ProcessController *m_controller;
-    ProcessLauncher *m_launcher;
-    QList<qint64> m_processes;
+    SessionManager *m_sessionManager;
+    ApplicationMap m_apps;
+
+    bool launchEntry(XdgDesktopFile *entry);
 
 private Q_SLOTS:
-    void autostart();
+    void finished(int exitCode);
 };
 
-#endif // SESSIONMANAGER_H
+#endif // PROCESSLAUNCHER_H

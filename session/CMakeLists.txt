@@ -6,6 +6,7 @@ include_directories(
 set(SOURCES
     main.cpp
     processcontroller.cpp
+    processlauncher.cpp
     sessionadaptor.cpp
     sessionmanager.cpp
     powermanager/powermanager.cpp
