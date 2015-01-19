@@ -115,6 +115,13 @@ Item {
             return;
         }
 
+        // Power off
+        if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Delete) {
+            state = "poweroff";
+            event.accepted = true;
+            return;
+        }
+
         // Lock screen
         if (event.modifiers & Qt.MetaModifier && event.key === Qt.Key_L) {
             state = "lock";
