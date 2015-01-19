@@ -23,6 +23,9 @@
 
 #include <QTimer>
 
+#include <QDBusConnection>
+#include <QDBusInterface>
+
 #include <KLocalizedString>
 #include <KRun>
 #include <KSycoca>
@@ -175,7 +178,10 @@ bool AppsModel::trigger(int row, const QString &actionId, const QVariant &argume
 #endif
         KService::Ptr service = static_cast<AppEntry *>(m_entryList.at(row))->service();
 
-        bool ran = KRun::run(*service, QList<QUrl>(), 0);
+        const QDBusConnection bus = QDBusConnection::sessionBus();
+        QDBusInterface interface("org.hawaii.session", "/HawaiiSession", "org.hawaii.launcher", bus);
+        QDBusMessage msg = interface.call("launchDesktopFile", service->entryPath());
+        bool ran = msg.arguments().at(0).toBool();
 
         if (ran) {
             emit appLaunched(service->storageId());
