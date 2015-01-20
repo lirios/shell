@@ -67,11 +67,16 @@ Item {
         radius: 32
     }
 
-    PlasmaCore.DataSource {
-        id: timeDataSource
-        engine: "time"
-        connectedSources: ["Local"]
-        interval: 5000
+    Timer {
+        id: timer
+        running: false
+        triggeredOnStart: true
+        interval: 30000
+        onTriggered: {
+            var now = new Date();
+            timeLabel.text = Qt.formatTime(now, __priv.timeFormat);
+            dateLabel.text = Qt.formatDate(now, Locale.LongFormat);
+        }
     }
 
     ColumnLayout {
@@ -82,7 +87,7 @@ Item {
         }
 
         Label {
-            text: Qt.formatTime(timeDataSource.data["Local"]["DateTime"], __priv.timeFormat)
+            id: timeLabel
             font.pointSize: 42
             color: Themes.Theme.palette.window.textColor
             style: Text.Raised
@@ -92,7 +97,7 @@ Item {
         }
 
         Label {
-            text: Qt.formatDate(timeDataSource.data["Local"]["DateTime"], Locale.LongFormat)
+            id: dateLabel
             font.pointSize: 36
             color: Themes.Theme.palette.window.textColor
             style: Text.Raised
@@ -136,6 +141,9 @@ Item {
     Component.onCompleted: {
         // Remove seconds from time format
         __priv.timeFormat = Qt.locale().timeFormat(Locale.ShortFormat).replace(/.ss?/i, "");
+
+        // Start timer
+        timer.start();
 
         // Trigger opacity animation
         opacity = 1.0;
