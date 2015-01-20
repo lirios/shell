@@ -206,15 +206,12 @@ Item {
         onIdleTimerStartRequested: idleTimer.running = true
         onIdleTimerStopRequested: idleTimer.running = false
         onIdle: {
-            // Fade the desktop out
-            compositorRoot.state = "splash";
-
-            // Lock the session
-            compositor.lockSession();
+            // Set idle hint
+            session.idle = true;
         }
         onWake: {
-            // Unlock the session
-            compositor.unlockSession();
+            // Unset idle hint
+            session.idle = false;
         }
         onFadeIn: {
             // Bring user layer up
