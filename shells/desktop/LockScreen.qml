@@ -29,7 +29,6 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
 import Hawaii.Themes 1.0 as Themes
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     signal unlocked()
