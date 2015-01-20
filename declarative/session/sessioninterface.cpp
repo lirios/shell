@@ -43,6 +43,8 @@ SessionInterface::SessionInterface(QObject *parent)
     , m_canHibernate(false)
     , m_canHybridSleep(false)
 {
+    m_canLock = m_interface->call("canLock").arguments().at(0).toBool();
+    m_canStartNewSession = m_interface->call("canStartNewSession").arguments().at(0).toBool();
     m_canLogOut = m_interface->call("canLogOut").arguments().at(0).toBool();
     m_canPowerOff = m_interface->call("canPowerOff").arguments().at(0).toBool();
     m_canRestart = m_interface->call("canRestart").arguments().at(0).toBool();
@@ -67,12 +69,12 @@ SessionInterface::~SessionInterface()
 
 bool SessionInterface::canLock() const
 {
-    return true;
+    return m_canLock;
 }
 
 bool SessionInterface::canStartNewSession() const
 {
-    return false;
+    return m_canStartNewSession;
 }
 
 bool SessionInterface::canLogOut() const

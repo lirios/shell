@@ -58,11 +58,25 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     });
 }
 
+bool SessionAdaptor::canLock()
+{
+    // Always true, but in the future we might consider blocking
+    // this; might come in handy for kiosk systems
+    return true;
+}
+
 bool SessionAdaptor::canLogOut()
 {
     // Always true, but in the future we might consider blocking
     // logout; might come in handy for kiosk systems
     return true;
+}
+
+bool SessionAdaptor::canStartNewSession()
+{
+    // Always false, but in the future we might consider
+    // allowing this
+    return false;
 }
 
 bool SessionAdaptor::canPowerOff()

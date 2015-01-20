@@ -47,6 +47,8 @@ Q_SIGNALS:
     void sessionUnlocked();
 
 public Q_SLOTS:
+    bool canLock();
+    bool canStartNewSession();
     bool canLogOut();
     bool canPowerOff();
     bool canRestart();
