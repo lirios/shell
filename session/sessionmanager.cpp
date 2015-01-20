@@ -101,36 +101,13 @@ void SessionManager::autostart()
         if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
             continue;
 
-        QStringList args = entry.expandExecString();
-        QString command = args.takeAt(0);
-
-        qCDebug(SESSION_MANAGER) << "Starting" << entry.expandExecString().join(" ") << "from" << entry.fileName();
-
-        qint64 pid = 0;
-        if (QProcess::startDetached(command, args, QString(), &pid)) {
-            qCDebug(SESSION_MANAGER,
-                    "Started \"%s\" (%s) automatically with pid %lld",
-                    qPrintable(entry.fileName()),
-                    qPrintable(entry.name()),
-                    pid);
-            m_processes.append(pid);
-        } else {
-            qCWarning(SESSION_MANAGER,
-                      "Failed to start \"%s\" (%s) automatically",
-                      qPrintable(entry.fileName()),
-                      qPrintable(entry.name()));
-        }
+        qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
+        m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
     }
 }
 
 void SessionManager::logOut()
 {
-    // Kill the autostart programs
-    for (qint64 pid: m_processes) {
-        if (kill(pid, SIGTERM) < 0)
-            kill(pid, SIGKILL);
-    }
-
     // Stop the compositor
     m_controller->stop();
 }

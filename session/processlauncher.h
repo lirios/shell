@@ -63,6 +63,8 @@ private:
 
     bool launchEntry(XdgDesktopFile *entry);
 
+    friend class SessionManager;
+
 private Q_SLOTS:
     void finished(int exitCode);
 };
