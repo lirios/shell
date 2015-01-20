@@ -102,6 +102,10 @@ void SessionAdaptor::unlockSession()
         m_session->requestUnlock();
 }
 
+void SessionAdaptor::startNewSession()
+{
+}
+
 void SessionAdaptor::activateSession(int index)
 {
     PendingSessions *pendingSessions = m_sessionTracker->listSessions();

@@ -57,6 +57,8 @@ public Q_SLOTS:
     Q_NOREPLY void lockSession();
     Q_NOREPLY void unlockSession();
 
+    Q_NOREPLY void startNewSession();
+
     Q_NOREPLY void activateSession(int index);
 
     Q_NOREPLY void logOut();
