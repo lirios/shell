@@ -10,6 +10,7 @@ set(SOURCES
 add_executable(hawaii ${SOURCES})
 target_link_libraries(hawaii
     Qt5::Core
+    Qt5::Gui
     GreenIsland::GreenIsland
     HawaiiSigWatch
 )
