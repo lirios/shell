@@ -30,6 +30,7 @@
 #include <QtDBus/QDBusAbstractAdaptor>
 
 #include "powermanager/powermanager.h"
+#include "qlogind/src/manager.h"
 #include "qlogind/src/session.h"
 
 class SessionManager;
@@ -79,6 +80,7 @@ private:
     SessionManager *m_sessionManager;
     PowerManager *m_powerManager;
     PowerManager::Capability m_actionRequested;
+    ManagerPtr m_manager;
     SessionPtr m_session;
     SessionTracker *m_sessionTracker;
     bool m_idle;

@@ -26,7 +26,6 @@
 
 #include <QtCore/QCoreApplication>
 
-#include "qlogind/src/manager.h"
 #include "qlogind/src/sessiontracker.h"
 
 #include "sessionadaptor.h"
@@ -46,7 +45,7 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     connect(m_sessionManager, SIGNAL(loggedOut()),
             this, SLOT(performAction()));
 
-    // logind interface
+    // Session interface
     PendingSession *ps = Session::sessionFromPid(QCoreApplication::applicationPid());
     connect(ps, &PendingSession::finished, [=] {
         m_session = ps->interface();
@@ -55,6 +54,17 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
         });
         connect(m_session.data(), &OrgFreedesktopLogin1SessionInterface::Unlock, [=] {
             Q_EMIT sessionUnlocked();
+        });
+    });
+
+    // Manager interface
+    PendingManager *pm = Manager::manager();
+    connect(pm, &PendingManager::finished, [=] {
+        m_manager = pm->interface();
+        connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForSleep, [=](bool before) {
+            // Lock session before the system goes to sleep
+            if (before && !m_session.isNull())
+                m_session->requestLock();
         });
     });
 }
@@ -167,7 +177,6 @@ void SessionAdaptor::restart()
 
 void SessionAdaptor::suspend()
 {
-    lockSession();
     m_powerManager->suspend();
 }
 
