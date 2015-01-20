@@ -38,6 +38,7 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     , m_powerManager(new PowerManager(this))
     , m_actionRequested(PowerManager::None)
     , m_sessionTracker(new SessionTracker(this))
+    , m_idle(false)
 {
     // When an action is requested we first log out (which means killing
     // the processes and quitting the compositor), when the session is
@@ -56,6 +57,21 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
             Q_EMIT sessionUnlocked();
         });
     });
+}
+
+bool SessionAdaptor::isIdle() const
+{
+    return m_idle;
+}
+
+void SessionAdaptor::setIdle(bool value)
+{
+    if (m_idle == value)
+        return;
+
+    m_session->SetIdleHint(value);
+    m_idle = value;
+    Q_EMIT idleChanged();
 }
 
 bool SessionAdaptor::canLock()

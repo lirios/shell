@@ -38,11 +38,16 @@ class SessionTracker;
 class SessionAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
+    Q_PROPERTY(bool idle READ isIdle WRITE setIdle NOTIFY idleChanged)
     Q_CLASSINFO("D-Bus Interface", "org.hawaii.session")
 public:
     SessionAdaptor(SessionManager *sessionManager);
 
+    bool isIdle() const;
+    void setIdle(bool value);
+
 Q_SIGNALS:
+    void idleChanged();
     void sessionLocked();
     void sessionUnlocked();
 
@@ -76,6 +81,7 @@ private:
     PowerManager::Capability m_actionRequested;
     SessionPtr m_session;
     SessionTracker *m_sessionTracker;
+    bool m_idle;
 
 private Q_SLOTS:
     void performAction();

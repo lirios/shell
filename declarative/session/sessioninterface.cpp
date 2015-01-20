@@ -54,6 +54,10 @@ SessionInterface::SessionInterface(QObject *parent)
 
     QDBusConnection::sessionBus().connect(
                 "org.hawaii.session", "/HawaiiSession",
+                "org.hawaii.session", "idleChanged",
+                this, SIGNAL(idleChanged()));
+    QDBusConnection::sessionBus().connect(
+                "org.hawaii.session", "/HawaiiSession",
                 "org.hawaii.session", "sessionLocked",
                 this, SIGNAL(sessionLocked()));
     QDBusConnection::sessionBus().connect(
@@ -65,6 +69,16 @@ SessionInterface::SessionInterface(QObject *parent)
 SessionInterface::~SessionInterface()
 {
     delete m_interface;
+}
+
+bool SessionInterface::isIdle() const
+{
+    return m_interface->property("idle").toBool();
+}
+
+void SessionInterface::setIdle(bool value)
+{
+    m_interface->setProperty("idle", value);
 }
 
 bool SessionInterface::canLock() const

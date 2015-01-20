@@ -34,6 +34,7 @@ class QDBusInterface;
 class SessionInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool idle READ isIdle WRITE setIdle NOTIFY idleChanged)
     Q_PROPERTY(bool canLock READ canLock CONSTANT)
     Q_PROPERTY(bool canStartNewSession READ canStartNewSession CONSTANT)
     Q_PROPERTY(bool canLogOut READ canLogOut CONSTANT)
@@ -46,6 +47,9 @@ public:
     SessionInterface(QObject *parent = 0);
     ~SessionInterface();
 
+    bool isIdle() const;
+    void setIdle(bool value);
+
     bool canLock() const;
     bool canStartNewSession() const;
     bool canLogOut() const;
@@ -56,6 +60,7 @@ public:
     bool canHybridSleep() const;
 
 Q_SIGNALS:
+    void idleChanged();
     void sessionLocked();
     void sessionUnlocked();
 
