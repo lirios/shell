@@ -132,6 +132,10 @@ to learn how to enable them.
 * Launcher QML plugin:
   * **hawaii.qml.launcher:**" Launcher model and items
 
+* MPRIS2 QML plugin:
+  * **hawaii.qml.mpris2:** MPRIS2 engine
+  * **hawaii.qml.mpris2.player:** MPRIS2 player interface
+
 * Notifications QML plugin:
   * **hawaii.qml.notifications:** Notifications service.
 
