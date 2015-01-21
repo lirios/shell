@@ -1,0 +1,4 @@
+module org.hawaii.notifications
+plugin notificationsplugin
+classname NotificationsPlugin
+typeinfo plugins.qmltypes

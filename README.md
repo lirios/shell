@@ -132,6 +132,9 @@ to learn how to enable them.
 * Launcher QML plugin:
   * **hawaii.qml.launcher:**" Launcher model and items
 
+* Notifications QML plugin:
+  * **hawaii.qml.notifications:** Notifications service.
+
 ## Components
 
 *hawaii*
