@@ -51,18 +51,17 @@ ProcessLauncher::~ProcessLauncher()
     while (i.hasNext()) {
         i.next();
 
-        XdgDesktopFile *entry = i.key();
+        QString fileName = i.key();
         QProcess *process = i.value();
 
         i.remove();
 
-        qCDebug(LAUNCHER) << "Terminating application" << entry->name() << "with pid" << process->pid();
+        qCDebug(LAUNCHER) << "Terminating application from" << fileName << "with pid" << process->pid();
 
         process->terminate();
         if (!process->waitForFinished())
             process->kill();
-        delete process;
-        delete entry;
+        process->deleteLater();
     }
 }
 
@@ -130,6 +129,7 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
     process->setArguments(args);
     process->setProcessEnvironment(env);
     process->setProcessChannelMode(QProcess::ForwardedChannels);
+    m_apps[entry->fileName()] = process;
     connect(process, SIGNAL(finished(int)), this, SLOT(finished(int)));
     process->start();
     if (!process->waitForStarted()) {
@@ -146,33 +146,22 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
             qPrintable(entry->name()),
             process->pid());
 
-    m_apps[entry] = process;
-
     return true;
 }
 
 void ProcessLauncher::finished(int exitCode)
 {
-    QProcess *p = qobject_cast<QProcess *>(sender());
-    if (!p)
+    QProcess *process = qobject_cast<QProcess *>(sender());
+    if (!process)
         return;
 
-    ApplicationMapIterator i(m_apps);
-    while (i.hasNext()) {
-        i.next();
-
-        XdgDesktopFile *entry = i.key();
-        QProcess *process = i.value();
-
-        if (process != p)
-            continue;
-
+    QString fileName = m_apps.key(process);
+    XdgDesktopFile *entry = XdgDesktopFileCache::getFile(fileName);
+    if (entry) {
         qCDebug(LAUNCHER) << "Application" << entry->name() << "finished with exit code" << exitCode;
 
-        i.remove();
-
-        delete process;
-        delete entry;
+        m_apps.remove(fileName);
+        process->deleteLater();
     }
 }
 

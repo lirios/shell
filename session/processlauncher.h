@@ -37,8 +37,8 @@ class QProcess;
 class XdgDesktopFile;
 class SessionManager;
 
-typedef QMap<XdgDesktopFile *, QProcess *> ApplicationMap;
-typedef QMutableMapIterator<XdgDesktopFile *, QProcess *> ApplicationMapIterator;
+typedef QMap<QString, QProcess *> ApplicationMap;
+typedef QMutableMapIterator<QString, QProcess *> ApplicationMapIterator;
 
 class ProcessLauncher : public QDBusAbstractAdaptor
 {
