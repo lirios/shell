@@ -30,6 +30,7 @@ import "../../components" as ShellComponents
 
 Item {
     property var notificationData
+    readonly property alias closing: __priv.closing
 
     signal expired(Item notificationWindow)
     signal closed(Item notificationWindow)

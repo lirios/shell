@@ -30,7 +30,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.hawaii.notifications 0.1
 import ".."
 
 Indicator {
@@ -120,35 +120,10 @@ Indicator {
         }
     }
 
-    PlasmaCore.DataSource {
-        id: notificationsSource
-        engine: "notifications"
-        interval: 0
-        onSourceAdded: connectSource(source)
-        onSourceRemoved: {
-            var i;
-            for (i = 0; i < notificationsModel.count; ++i) {
-                if (notificationsModel.get(i) === source) {
-                    notificationsModel.remove(i);
-                    break;
-                }
-            }
-        }
-        onNewData: {
-            var actions = new Array();
-
-            if (data["actions"] && data["actions"].length % 2 == 0) {
-                var i;
-                for (i = 0; i < data["actions"].length; i += 2) {
-                    var action = new Object();
-                    action["id"] = data["actions"][i];
-                    action["text"] = data["actions"][i + 1];
-                    actions.push(action);
-                }
-            }
-
-            addNotification(sourceName, data, actions);
-        }
+    Notifications {
+        id: notificationsService
+        onNotificationReceived: addNotification(data)
+        onNotificationClosed: repositionNotifications()
     }
 
     ListModel {
@@ -162,18 +137,18 @@ Indicator {
 
     /*
         Notification data object has the following properties:
+         - id
+         - appName
          - appIcon
          - image
-         - appName
          - summary
          - body
+         - actions
          - isPersistent
          - expireTimeout
-         - urgency
-         - appRealName
-         - configurable
+         - hints
     */
-    function addNotification(source, data, actions) {
+    function addNotification(data) {
         // Do not show duplicated notifications
         // Remove notifications that are sent again (odd, but true)
         var i;
@@ -182,7 +157,7 @@ Indicator {
             var matches = (tmp.appName === data.appName &&
                            tmp.summary === data.summary &&
                            tmp.body === data.body);
-            var sameSource = tmp.source === source;
+            var sameSource = tmp.id === data["id"];
 
             if (sameSource && matches)
                 return;
@@ -196,17 +171,14 @@ Indicator {
         if (!sameSource && !matches)
             badgeCount++;
 
-        data["id"] = ++notificationId;
-        data["source"] = source;
         if (data["summary"].length < 1) {
             data["summary"] = data["body"];
-            data["body"] = '';
+            data["body"] = "";
         }
-        data["actions"] = actions;
 
         notificationsModel.insert(0, data);
         if (!data["isPersistent"]) {
-            pendingRemovals.push(notificationId);
+            pendingRemovals.push(data["id"]);
             pendingTimer.start();
         }
 
@@ -247,20 +219,15 @@ Indicator {
         var window = component.createObject(compositorRoot.screenView.layers.notifications);
         window.heightChanged.connect(repositionNotifications);
         window.actionInvoked.connect(function(actionId) {
-            var service = notificationsSource.serviceForSource(data["source"]);
-            var operation = service.operationDescription("invokeAction");
-            operation["actionId"] = actionId;
-            service.startOperationCall(operation);
+            notificationsService.invokeAction(data["id"], actionId);
         });
         window.closed.connect(function(notificationWindow) {
-            var service = notificationsSource.serviceForSource(data["source"]);
-            var operation = service.operationDescription("userClosed");
-            service.startOperationCall(operation);
-
+            notificationsService.closeNotification(data["id"], Notifications.CloseReasonByUser);
             notificationWindow.close();
             repositionNotifications();
         });
         window.expired.connect(function(notificationWindow) {
+            notificationsService.closeNotification(data["id"], Notifications.CloseReasonExpired);
             notificationWindow.close();
             repositionNotifications();
         });
@@ -272,13 +239,17 @@ Indicator {
     function repositionNotifications() {
         var popups = compositorRoot.screenView.layers.notifications.children;
         var workArea = _greenisland_output.availableGeometry;
-        var offset = Theme.mSize().height;
+        var offset = Themes.Theme.mSize().height;
         var totalHeight = 0;
 
         var i;
         for (i = 0; i < popups.length; i++) {
             var popup = popups[i];
             if (popup.objectName !== "notificationWindow")
+                continue;
+
+            // Ignore notification windows that are about to be destroyed
+            if (popup.closing)
                 continue;
 
             popup.x = workArea.width - popup.width - offset;

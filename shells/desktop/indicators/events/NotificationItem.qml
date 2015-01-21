@@ -26,12 +26,13 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
 
 Item {
-    property alias icon: appIconItem.icon
+    property alias icon: appIconItem.iconName
     property alias image: imageItem.image
     property bool hasIcon: false
     property bool hasImage: false
@@ -93,7 +94,7 @@ Item {
         }
     ]
 
-    KQuickControls.QIconItem {
+    Components.Icon {
         id: appIconItem
         anchors {
             left: parent.left
@@ -103,6 +104,7 @@ Item {
         }
         width: Themes.Units.iconSizes.large
         height: width
+        color: Themes.Theme.palette.panel.textColor
         visible: hasIcon
     }
 
