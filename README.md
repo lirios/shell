@@ -124,6 +124,31 @@ to learn how to enable them.
   * **hawaii.qml.mixer.alsa:** Alsa backend
   * **hawaii.qml.mixer.pulseaudio:** PulseAudio backend
 
+## Components
+
+*hawaii*
+
+Compositor executable that links to Green Island.
+
+*hawaii-session*
+
+Manages the session, drives the compositor, runs autostart programs
+and launches applications for the application launcher.
+
+Autostarts the D-Bus session if needed and can logout an existing
+session with:
+
+```sh
+hawaii-session --logout
+```
+
+Supports a couple of modes:
+
+* **eglfs:** runs the compositor directly
+* **nested:** runs the compositor inside Weston
+
+The **eglfs** mode requires Qt 5.5 and root privileges.
+
 ## QML JavaScript debugger
 
 Developers can debug Hawaii Shell with Qt Creator and the QML JavaScript debugger.
