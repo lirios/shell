@@ -46,6 +46,8 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
 {
     if (mode == QStringLiteral("eglfs"))
         m_mode = EglFSMode;
+    else if (mode == QStringLiteral("hwcomposer"))
+        m_mode = HwComposerMode;
     else if (mode == QStringLiteral("nested"))
         m_mode = NestedMode;
 }
@@ -175,10 +177,11 @@ void ProcessController::setupCompositor()
                                    << QStringLiteral("-platform")
                                    << QStringLiteral("wayland")
                                    << QStringLiteral("--socket=") + m_compositorSocket);
-    } else if (m_mode == EglFSMode) {
+    } else if (m_mode == EglFSMode || m_mode == HwComposerMode) {
+        const QString platform(m_mode == EglFSMode ? "eglfs" : "hwcomposer");
         m_compositor->setArguments(m_compositor->arguments()
                                    << QStringLiteral("-platform")
-                                   << QStringLiteral("eglfs"));
+                                   << platform);
         if (m_hasLibInputPlugin) {
             m_compositor->setArguments(m_compositor->arguments()
                                        << QStringLiteral("-plugin")
@@ -198,8 +201,14 @@ void ProcessController::setupCompositor()
     env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
     if (qEnvironmentVariableIsSet("DISPLAY") && !m_fullScreenShell)
         env.insert(QStringLiteral("QT_XCB_GL_INTEGRATION"), QStringLiteral("xcb_egl"));
-    if (m_mode == EglFSMode && m_hasLibInputPlugin)
+    if ((m_mode == EglFSMode || m_mode == HwComposerMode) && m_hasLibInputPlugin)
         env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
+    if (m_mode == HwComposerMode) {
+        env.insert(QStringLiteral("EGL_PLATFORM"), QStringLiteral("hwcomposer"));
+        env.insert(QStringLiteral("QT_COMPOSITOR_NEGATE_INVERTED_Y"), QStringLiteral("0"));
+        env.insert(QStringLiteral("QT_QPA_EGLFS_DEPTH"), QStringLiteral("32"));
+        env.insert(QStringLiteral("QT_QPA_EGLFS_HIDECURSOR"), QStringLiteral("1"));
+    }
     m_compositor->setProcessEnvironment(env);
 }
 
@@ -208,6 +217,7 @@ void ProcessController::printSummary()
     qCDebug(PROCESS_CONTROLLER) << "Mode:" << m_modeName;
     switch (m_mode) {
     case EglFSMode:
+    case HwComposerMode:
         qCDebug(PROCESS_CONTROLLER) << "libinput:" << m_hasLibInputPlugin;
         break;
     case NestedMode:

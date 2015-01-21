@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
     // Mode
     QCommandLineOption modeOption(QStringList() << QStringLiteral("m") << QStringLiteral("mode"),
-                                  TR("Specify session mode (possible values: nested, eglfs)."), TR("mode"));
+                                  TR("Specify session mode (possible values: eglfs, hwcomposer, nested)."), TR("mode"));
     parser.addOption(modeOption);
 
     // Logout
@@ -87,7 +87,9 @@ int main(int argc, char *argv[])
                    "Empty mode is allowed only on X11.");
     } else {
         const QString mode = parser.value(modeOption);
-        if (mode != QStringLiteral("nested") && mode != QStringLiteral("eglfs"))
+        if (mode != QStringLiteral("eglfs") &&
+                mode != QStringLiteral("hwcomposer") &&
+                mode != QStringLiteral("nested"))
             qFatal("Invalid mode \"%s\"!", qPrintable(mode));
     }
 

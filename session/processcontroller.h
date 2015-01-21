@@ -42,6 +42,7 @@ class ProcessController : public QObject
 public:
     enum Mode {
         EglFSMode = 0,
+        HwComposerMode,
         NestedMode
     };
 

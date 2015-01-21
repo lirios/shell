@@ -144,10 +144,23 @@ hawaii-session --logout
 
 Supports a couple of modes:
 
-* **eglfs:** runs the compositor directly
+* **eglfs:** runs the compositor directly on KMS
+* **hwcomposer:** runs the compositor directly with Android drivers
 * **nested:** runs the compositor inside Weston
 
 The **eglfs** mode requires Qt 5.5 and root privileges.
+
+The **hwcomposer** mode requires root privileges only when using
+the libinput input plugin with Qt 5.5.
+
+The mode can be specified with the ``--mode`` argument, here's an example:
+
+```sh
+hawaii-session --mode=eglfs
+```
+
+The ``--mode`` argument can be avoid only on X11 where a specific mode
+is not required.
 
 ## QML JavaScript debugger
 
