@@ -35,7 +35,6 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     : QDBusAbstractAdaptor(sessionManager)
     , m_sessionManager(sessionManager)
     , m_powerManager(new PowerManager(this))
-    , m_actionRequested(PowerManager::None)
     , m_sessionTracker(new SessionTracker(this))
     , m_idle(false)
 {
@@ -61,6 +60,11 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     PendingManager *pm = Manager::manager();
     connect(pm, &PendingManager::finished, [=] {
         m_manager = pm->interface();
+        connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForShutdown, [=](bool before) {
+            // Logout session before the system goes off
+            if (before)
+                logOut();
+        });
         connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForSleep, [=](bool before) {
             // Lock session before the system goes to sleep
             if (before && !m_session.isNull())
@@ -165,14 +169,12 @@ void SessionAdaptor::logOut()
 
 void SessionAdaptor::powerOff()
 {
-    m_actionRequested = PowerManager::PowerOff;
-    logOut();
+    m_powerManager->powerOff();
 }
 
 void SessionAdaptor::restart()
 {
-    m_actionRequested = PowerManager::Restart;
-    logOut();
+    m_powerManager->restart();
 }
 
 void SessionAdaptor::suspend()
@@ -188,20 +190,6 @@ void SessionAdaptor::hibernate()
 void SessionAdaptor::hybridSleep()
 {
     m_powerManager->hybridSleep();
-}
-
-void SessionAdaptor::performAction()
-{
-    switch (m_actionRequested) {
-    case PowerManager::PowerOff:
-        m_powerManager->powerOff();
-        break;
-    case PowerManager::Restart:
-        m_powerManager->restart();
-        break;
-    default:
-        break;
-    }
 }
 
 #include "moc_sessionadaptor.cpp"

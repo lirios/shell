@@ -79,14 +79,10 @@ public Q_SLOTS:
 private:
     SessionManager *m_sessionManager;
     PowerManager *m_powerManager;
-    PowerManager::Capability m_actionRequested;
     ManagerPtr m_manager;
     SessionPtr m_session;
     SessionTracker *m_sessionTracker;
     bool m_idle;
-
-private Q_SLOTS:
-    void performAction();
 };
 
 #endif // SESSIONADAPTOR_H
