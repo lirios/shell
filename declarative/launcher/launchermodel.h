@@ -30,29 +30,37 @@
 #include <QtCore/QAbstractListModel>
 #include <QtQml/QQmlComponent>
 
+#include <GreenIsland/ApplicationManager>
+
 class LauncherItem;
 
 class LauncherModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(GreenIsland::ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
     Q_ENUMS(Roles)
 public:
     enum Roles {
-        NameRole = Qt::UserRole + 1,
+        AppIdRole = Qt::UserRole + 1,
+        NameRole,
+        CommentRole,
         IconNameRole,
-        AppIdRole,
         PinnedRole,
         RunningRole,
         ActiveRole,
+        HasWindowsRole,
         HasCountRole,
         CountRole,
         HasProgressRole,
         ProgressRole,
-        HasActionListRole
+        HasActionsRole
     };
 
     LauncherModel(QObject *parent = 0);
     ~LauncherModel();
+
+    GreenIsland::ApplicationManager *applicationManager() const;
+    void setApplicationManager(GreenIsland::ApplicationManager *appMan);
 
     QHash<int, QByteArray> roleNames() const;
 
@@ -62,8 +70,12 @@ public:
 
     Q_INVOKABLE LauncherItem *get(int index) const;
 
+Q_SIGNALS:
+    void applicationManagerChanged();
+
 private:
     QList<LauncherItem *> m_list;
+    GreenIsland::ApplicationManager *m_appMan;
 };
 
 QML_DECLARE_TYPE(LauncherModel)

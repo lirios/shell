@@ -26,39 +26,79 @@
 
 #include <QtGui/QIcon>
 
+#include "applicationinfo.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
 
+using namespace GreenIsland;
+
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
+    , m_appMan(Q_NULLPTR)
 {
+    // Add static items
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + 2);
-    m_list.append(new LauncherItem("chromium"));
-    m_list.append(new LauncherItem("xchat"));
+    m_list.append(new LauncherItem("chromium", true, this));
+    m_list.append(new LauncherItem("xchat", true, this));
     endInsertRows();
 }
 
 LauncherModel::~LauncherModel()
 {
     // Delete the items
-    while (!m_list.empty())
+    while (!m_list.isEmpty())
         m_list.takeFirst()->deleteLater();
+}
+
+ApplicationManager *LauncherModel::applicationManager() const
+{
+    return m_appMan;
+}
+
+void LauncherModel::setApplicationManager(ApplicationManager *appMan)
+{
+    if (m_appMan) {
+        disconnect(appMan, SIGNAL(applicationAdded(QString)));
+        disconnect(appMan, SIGNAL(applicationRemoved(QString)));
+    }
+
+    connect(appMan, &ApplicationManager::applicationAdded, [=](const QString &appId) {
+        beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
+        m_list.append(new LauncherItem(appId, this));
+        endInsertRows();
+    });
+    connect(appMan, &ApplicationManager::applicationRemoved, [=](const QString &appId) {
+        for (int i = 0; i < m_list.size(); i++) {
+            LauncherItem *item = m_list.at(i);
+            if (item->appId() == appId) {
+                beginRemoveRows(QModelIndex(), i, i);
+                m_list.takeAt(i)->deleteLater();
+                endRemoveRows();
+                break;
+            }
+        }
+    });
+
+    m_appMan = appMan;
+    Q_EMIT applicationManagerChanged();
 }
 
 QHash<int, QByteArray> LauncherModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles.insert(NameRole, "name");
-    roles.insert(IconNameRole, "iconName");
     roles.insert(AppIdRole, "appId");
+    roles.insert(NameRole, "name");
+    roles.insert(CommentRole, "comment");
+    roles.insert(IconNameRole, "iconName");
     roles.insert(PinnedRole, "pinned");
     roles.insert(RunningRole, "running");
     roles.insert(ActiveRole, "active");
+    roles.insert(HasWindowsRole, "hasWindows");
     roles.insert(HasCountRole, "hasCount");
     roles.insert(CountRole, "count");
     roles.insert(HasProgressRole, "hasProgress");
     roles.insert(ProgressRole, "progress");
-    roles.insert(HasActionListRole, "hasAction");
+    roles.insert(HasActionsRole, "hasActions");
     return roles;
 }
 
@@ -91,6 +131,8 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
         return item->isRunning();
     case ActiveRole:
         return item->isActive();
+    case HasWindowsRole:
+        return false;
     case HasCountRole:
         return item->count() > 0;
     case CountRole:
@@ -99,6 +141,12 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
         return item->progress() >= 0;
     case ProgressRole:
         return item->progress();
+        /*
+    case HasActionListRole:
+        return item->actionsCount();
+    case ActionListRole:
+        return item->actions();
+        */
     default:
         break;
     }

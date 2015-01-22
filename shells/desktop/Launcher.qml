@@ -70,11 +70,6 @@ Item {
                 iconName: model.iconName
                 width: iconSize
                 height: width
-                onStatusChanged: {
-                    // Fallback to a generic icon
-                    if (status == Image.Error)
-                        iconName = "binary";
-                }
             }
 
             Rectangle {
@@ -136,6 +131,7 @@ Item {
         }
         model: Launcher.LauncherModel {
             id: launcherModel
+            applicationManager: compositor.applicationManager
         }
         delegate: iconDelegate
         width: calcWidth()

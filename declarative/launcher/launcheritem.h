@@ -28,15 +28,18 @@
 #define LAUNCHERITEM_H
 
 #include <QtCore/QObject>
+#include <QtQml/QQmlListProperty>
 
-class XdgDesktopFile;
+class ApplicationAction;
+class ApplicationInfo;
 
 class LauncherItem : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name CONSTANT)
-    Q_PROPERTY(QString iconName READ iconName CONSTANT)
     Q_PROPERTY(QString appId READ appId CONSTANT)
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString comment READ comment CONSTANT)
+    Q_PROPERTY(QString iconName READ iconName CONSTANT)
     Q_PROPERTY(bool pinned READ isPinned WRITE setPinned NOTIFY pinnedChanged)
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
@@ -44,11 +47,12 @@ class LauncherItem : public QObject
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 public:
     LauncherItem(const QString &appId, QObject *parent = 0);
-    ~LauncherItem();
+    LauncherItem(const QString &appId, bool pinned, QObject *parent = 0);
 
-    QString name() const;
-    QString iconName() const;
     QString appId() const;
+    QString name() const;
+    QString comment() const;
+    QString iconName() const;
 
     bool isPinned() const;
     void setPinned(bool value);
@@ -68,11 +72,11 @@ Q_SIGNALS:
     void progressChanged();
 
 private:
-    QString m_appId;
     bool m_pinned;
+    bool m_running;
     int m_count;
     int m_progress;
-    XdgDesktopFile *m_entry;
+    ApplicationInfo *m_info;
 };
 
 #endif // LAUNCHERITEM_H

@@ -121,7 +121,7 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
         if (key.startsWith(QStringLiteral("QT_QPA")) || key.startsWith(QStringLiteral("EGL")))
             env.remove(key);
     }
-    env.insert(QStringLiteral("QT_WAYLAND_USE_XDG_SHELL"), QStringLiteral("1"));
+    //env.insert(QStringLiteral("QT_WAYLAND_USE_XDG_SHELL"), QStringLiteral("1"));
     env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
     env.insert(QStringLiteral("GDK_BACKEND"), QStringLiteral("wayland"));
 

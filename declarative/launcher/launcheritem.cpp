@@ -27,41 +27,52 @@
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
 
-#include "libqtxdg/xdgdesktopfile.h"
-
+#include "applicationaction.h"
+#include "applicationinfo.h"
 #include "launcheritem.h"
 
 LauncherItem::LauncherItem(const QString &appId, QObject *parent)
     : QObject(parent)
-    , m_appId(appId)
     , m_pinned(false)
+    , m_running(true)
     , m_count(0)
     , m_progress(-1)
+    , m_info(new ApplicationInfo(appId, this))
 {
-    const QString fileName =
-            QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                           appId + QStringLiteral(".desktop"));
-    m_entry = XdgDesktopFileCache::getFile(fileName);
+    connect(m_info, SIGNAL(stateChanged()), this, SIGNAL(runningChanged()));
+    connect(m_info, SIGNAL(focusedChanged()), this, SIGNAL(activeChanged()));
 }
 
-LauncherItem::~LauncherItem()
+LauncherItem::LauncherItem(const QString &appId, bool pinned, QObject *parent)
+    : QObject(parent)
+    , m_pinned(pinned)
+    , m_running(false)
+    , m_count(0)
+    , m_progress(-1)
+    , m_info(new ApplicationInfo(appId, this))
 {
-    delete m_entry;
-}
-
-QString LauncherItem::name() const
-{
-    return m_entry->name();
-}
-
-QString LauncherItem::iconName() const
-{
-    return m_entry->iconName();
+    connect(m_info, SIGNAL(stateChanged()), this, SIGNAL(runningChanged()));
+    connect(m_info, SIGNAL(focusedChanged()), this, SIGNAL(activeChanged()));
 }
 
 QString LauncherItem::appId() const
 {
-    return m_appId;
+    return m_info->appId();
+}
+
+QString LauncherItem::name() const
+{
+    return m_info->name();
+}
+
+QString LauncherItem::comment() const
+{
+    return m_info->comment();
+}
+
+QString LauncherItem::iconName() const
+{
+    return m_info->iconName();
 }
 
 bool LauncherItem::isPinned() const
@@ -80,12 +91,13 @@ void LauncherItem::setPinned(bool value)
 
 bool LauncherItem::isRunning() const
 {
-    return false;
+    //return m_info->state() != ApplicationInfo::NotRunning;
+    return m_running;
 }
 
 bool LauncherItem::isActive() const
 {
-    return false;
+    return m_info->isFocused();
 }
 
 int LauncherItem::count() const

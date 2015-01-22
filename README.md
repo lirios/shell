@@ -129,6 +129,9 @@ to learn how to enable them.
   * **hawaii.qml.mixer.alsa:** Alsa backend
   * **hawaii.qml.mixer.pulseaudio:** PulseAudio backend
 
+* Launcher QML plugin:
+  * **hawaii.qml.launcher:**" Launcher model and items
+
 ## Components
 
 *hawaii*
