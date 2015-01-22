@@ -38,12 +38,6 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     , m_sessionTracker(new SessionTracker(this))
     , m_idle(false)
 {
-    // When an action is requested we first log out (which means killing
-    // the processes and quitting the compositor), when the session is
-    // logged out this slot is called and perform the actual action
-    connect(m_sessionManager, SIGNAL(loggedOut()),
-            this, SLOT(performAction()));
-
     // Session interface
     PendingSession *ps = Session::sessionFromPid(QCoreApplication::applicationPid());
     connect(ps, &PendingSession::finished, [=] {
