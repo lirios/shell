@@ -1,3 +1,14 @@
+#
+# This file is part of Hawaii.
+#
+# Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation; either version 2.1 of the License, or
+# (at your option) any later version.
+#
+
 [Desktop Entry]
 Name=Hawaii
 Comment=QtQuick and Wayland based desktop environment
