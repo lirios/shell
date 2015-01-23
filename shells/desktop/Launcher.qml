@@ -31,6 +31,7 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
 import org.hawaii.launcher 0.1 as Launcher
+import "components" as CustomComponents
 
 Item {
     property real iconSize: Themes.Units.iconSizes.large
@@ -46,6 +47,7 @@ Item {
         Item {
             property int badgeCount: 1
 
+            id: root
             width: itemSize
             height: width
 
@@ -102,6 +104,20 @@ Item {
                     color: "white"
                     text: model.count
                 }
+            }
+
+            CustomComponents.Tooltip {
+                id: tooltip
+                text: model.name
+                visualParent: root
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                hoverEnabled: true
+                onPositionChanged: tooltip.open()
+                onExited: tooltip.close()
             }
         }
     }
