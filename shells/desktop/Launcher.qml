@@ -45,8 +45,6 @@ Item {
         id: iconDelegate
 
         Item {
-            property int badgeCount: 1
-
             id: root
             width: itemSize
             height: width
@@ -70,6 +68,24 @@ Item {
                 iconName: model.iconName
                 width: iconSize
                 height: width
+            }
+
+            Rectangle {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+                height: Themes.Units.dp(2)
+                color: Themes.Theme.palette.view.selectedBackgroundColor
+                opacity: model.running ? 1.0 : 0.0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        easing.type: Easing.OutQuad
+                        duration: Themes.Units.shortDuration
+                    }
+                }
             }
 
             Rectangle {
@@ -113,6 +129,7 @@ Item {
                 hoverEnabled: true
                 onPositionChanged: tooltip.open()
                 onExited: tooltip.close()
+                //onClicked: model.activate(index)
             }
         }
     }
