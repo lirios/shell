@@ -125,7 +125,7 @@ Item {
 
         // Lock screen
         if (event.modifiers & Qt.MetaModifier && event.key === Qt.Key_L) {
-            session.lockSession();
+            state = "lock";
             event.accepted = true;
             return;
         }
@@ -448,7 +448,7 @@ Item {
 
     Connections {
         target: lockScreenLoader.item
-        onUnlocked: session.unlockSession()
+        onUnlocked: compositorRoot.state = "session"
     }
 
     /*
