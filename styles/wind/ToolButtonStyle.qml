@@ -32,7 +32,6 @@ import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import "private/Utils.js" as Utils
 
 QtControlsStyle.ButtonStyle {
     property int minimumWidth: Layout.minimumWidth + style.padding.left + style.padding.right

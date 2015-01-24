@@ -19,9 +19,3 @@ set(IMAGE_FILES
 )
 install(FILES ${IMAGE_FILES}
     DESTINATION ${QML_INSTALL_DIR}/QtQuick/Controls/Styles/Wind/images)
-
-set(PRIVATE_FILES
-    private/Utils.js
-)
-install(FILES ${PRIVATE_FILES}
-    DESTINATION ${QML_INSTALL_DIR}/QtQuick/Controls/Styles/Wind/private)

@@ -30,7 +30,6 @@ import QtQuick.Controls.Private 1.0 as QtControlsPrivate
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import "private/Utils.js" as Utils
 
 QtControlsStyle.ScrollViewStyle {
     id: style
