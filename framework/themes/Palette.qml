@@ -32,8 +32,6 @@ QtObject {
     property PaletteValues panel
 
     function rgba(color, a) {
-        var newColor = color;
-        newColor.a = a;
-        return newColor;
+        return Qt.rgba(color.r, color.g, color.b, a);
     }
 }

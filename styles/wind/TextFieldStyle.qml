@@ -43,14 +43,14 @@ QtControlsStyle.TextFieldStyle {
     textColor: Theme.palette.view.textColor
     selectionColor: Theme.palette.view.selectedBackgroundColor
     selectedTextColor: Theme.palette.view.selectedTextColor
-    placeholderTextColor: Utils.rgba(Theme.palette.view.textColor, 0.5)
+    placeholderTextColor: Theme.palette.rgba(Theme.palette.view.textColor, 0.5)
     background: Item {
         anchors.fill: parent
 
         Rectangle {
             anchors.fill: parent
             anchors.bottomMargin: -1
-            color: Utils.rgba(Theme.palette.view.backgroundColor, 0.26)
+            color: Theme.palette.rgba(Theme.palette.view.backgroundColor, 0.26)
             radius: baserect.radius
         }
 
