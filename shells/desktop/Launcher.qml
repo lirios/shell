@@ -45,6 +45,8 @@ Item {
         id: iconDelegate
 
         Item {
+            property int indexOfThisDelegate: index
+
             id: root
             width: itemSize
             height: width
@@ -123,13 +125,94 @@ Item {
                 visualParent: root
             }
 
+            CustomComponents.PopupMenu {
+                id: menu
+                content: [
+                    Repeater {
+                        model: listView.model.get(root.indexOfThisDelegate).windows
+
+                        CustomComponents.MenuItem {
+                            text: modelData.title
+                        }
+                    },
+                    CustomComponents.MenuSeparator {
+                        visible: model.hasWindows
+                    },
+                    /*
+                    Repeater {
+                        model: menu.actionList ? menu.actionList : 0
+
+                        CustomComponents.MenuItem {
+                            text: "Action " + index
+                        }
+                    },
+                    */
+                    CustomComponents.MenuSeparator {
+                        visible: model.hasActionList
+                    },
+                    CustomComponents.MenuItem {
+                        text: qsTr("New Window")
+                        visible: model.running
+                    },
+                    CustomComponents.MenuSeparator {},
+                    CustomComponents.MenuItem {
+                        text: qsTr("Add To Launcher")
+                        visible: !model.pinned
+                        onClicked: model.pinned = true
+                    },
+                    CustomComponents.MenuItem {
+                        text: qsTr("Remove From Launcher")
+                        visible: model.pinned
+                        onClicked: model.pinned = false
+                    },
+                    CustomComponents.MenuSeparator {},
+                    CustomComponents.MenuItem {
+                        text: qsTr("Show All Windows")
+                        visible: model.running
+                    },
+                    CustomComponents.MenuItem {
+                        text: qsTr("Show")
+                        visible: model.running && !model.active
+                    },
+                    CustomComponents.MenuItem {
+                        text: qsTr("Hide")
+                        visible: model.running && model.active
+                    },
+                    CustomComponents.MenuSeparator {},
+                    CustomComponents.MenuItem {
+                        text: qsTr("Quit")
+                        visible: model.running
+                    }
+                ]
+                onTriggered: {
+                    mouseArea.hoverEnabled = false;
+                    tooltip.close();
+                }
+                onClosed: mouseArea.hoverEnabled = true
+            }
+
             MouseArea {
+                id: mouseArea
                 anchors.fill: parent
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 hoverEnabled: true
-                onPositionChanged: tooltip.open()
+                onPositionChanged: if (hoverEnabled) tooltip.open()
                 onExited: tooltip.close()
-                //onClicked: model.activate(index)
+                onClicked: {
+                    switch (mouse.button) {
+                    case Qt.LeftButton:
+                        model.activate(index);
+                        break;
+                    case Qt.RightButton:
+                        if (menu.showing)
+                            menu.close();
+                        else
+                            menu.open();
+                        break;
+                    default:
+                        break;
+                    }
+                }
             }
         }
     }
