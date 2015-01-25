@@ -54,14 +54,14 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     PendingManager *pm = Manager::manager();
     connect(pm, &PendingManager::finished, [=] {
         m_manager = pm->interface();
-        connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForShutdown, [=](bool before) {
+        connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForShutdown, [=](bool after) {
             // Logout session before the system goes off
-            if (before)
+            if (!after)
                 logOut();
         });
-        connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForSleep, [=](bool before) {
+        connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForSleep, [=](bool after) {
             // Lock session before the system goes to sleep
-            if (before && !m_session.isNull())
+            if (!after && !m_session.isNull())
                 m_session->requestLock();
         });
     });
