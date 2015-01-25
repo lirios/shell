@@ -30,7 +30,6 @@ import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
 import org.hawaii.session 0.1 as Session
-import org.kde.plasma.core 2.0 as PlasmaCore
 import "WindowManagement.js" as WindowManagement
 import "screen"
 

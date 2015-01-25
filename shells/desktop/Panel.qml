@@ -30,7 +30,6 @@ import QtQuick.Layouts 1.1
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 import "indicators"
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 Rectangle {
     property Indicator selectedIndicator: null

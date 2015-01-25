@@ -27,7 +27,6 @@
 import QtQuick 2.0
 import QtCompositor 1.0
 import GreenIsland 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 WindowWrapper {
     id: window
