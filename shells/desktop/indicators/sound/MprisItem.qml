@@ -28,10 +28,14 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
+import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import org.hawaii.mpris2 0.1
 
 ColumnLayout {
-    property var dataSource
+    property var player
+    readonly property int trackLength: player ? player.metadata["mpris:length"]||0 / 1000 : 0
+    readonly property int trackPosition: player ? player.position : 0
 
     spacing: Themes.Units.largeSpacing
 
@@ -45,14 +49,23 @@ ColumnLayout {
             Image {
                 id: albumArt
                 anchors.fill: parent
-                source: dataSource ? dataSource.pictureUrl : ""
+                source: player ? player.metadata["mpris:artUrl"] : ""
+                sourceSize.width: width
+                sourceSize.height: height
                 fillMode: Image.PreserveAspectFit
                 visible: status == Image.Ready
             }
 
+            Components.Icon {
+                id: icon
+                anchors.fill: parent
+                iconName: player ? player.iconName : ""
+                visible: !albumArt.visible && iconName != ""
+            }
+
             BusyIndicator {
                 anchors.fill: parent
-                visible: !albumArt.visible
+                visible: !albumArt.visible && !icon.visible
             }
 
             Layout.alignment: Qt.AlignHCenter
@@ -63,7 +76,7 @@ ColumnLayout {
 
             Controls.Heading {
                 level: 3
-                text: dataSource ? dataSource.title : ""
+                text: player ? player.metadata["xesam:title"] : qsTr("Unknown Title")
                 color: Themes.Theme.palette.panel.textColor
                 font.weight: Font.Bold
                 elide: Text.ElideRight
@@ -71,7 +84,7 @@ ColumnLayout {
 
             Controls.Heading {
                 level: 4
-                text: dataSource ? dataSource.artist : ""
+                text: player ? player.metadata["xesam:artist"] : qsTr("Unknown Artist")
                 color: Themes.Theme.palette.panel.textColor
                 elide: Text.ElideRight
             }
@@ -80,8 +93,8 @@ ColumnLayout {
 
     ProgressBar {
         minimumValue: 0
-        maximumValue: dataSource ? dataSource.trackLength : 0
-        value: dataSource ? dataSource.trackPosition : 0
+        maximumValue: trackLength
+        value: trackPosition
 
         Layout.fillWidth: true
     }
@@ -91,17 +104,17 @@ ColumnLayout {
             iconName: "media-skip-backward-symbolic"
             tooltip: qsTr("Previous")
             onClicked: {
-                if (dataSource)
-                    dataSource.prevTrack();
+                if (player)
+                    player.previous();
             }
         }
 
         ToolButton {
-            iconName: dataSource ? (dataSource.status === "Playing" ? "media-playback-pause" : "media-playback-start") : ""
-            tooltip: qsTr(mprisDataSource.status == "Playing" ? "Pause" : "Play")
+            iconName: player ? (player.status === "Playing" ? "media-playback-pause" : "media-playback-start") : ""
+            tooltip: qsTr(player.status == "Playing" ? "Pause" : "Play")
             onClicked: {
-                if (dataSource)
-                    dataSource.playPause();
+                if (player)
+                    player.playPause();
             }
         }
 
@@ -109,8 +122,8 @@ ColumnLayout {
             iconName: "media-skip-forward-symbolic"
             tooltip: qsTr("Next")
             onClicked: {
-                if (dataSource)
-                    dataSource.nextTrack();
+                if (player)
+                    player.next();
             }
         }
 

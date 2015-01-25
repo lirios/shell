@@ -29,6 +29,7 @@ import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.mixer 0.1 as MixerService
+import org.hawaii.mpris2 0.1
 import ".."
 import "sound" as SoundIndicator
 
@@ -70,15 +71,17 @@ Indicator {
                 text: qsTr("Playback")
                 color: Themes.Theme.palette.panel.textColor
                 level: 3
-                visible: mprisItem.visible
+                visible: mpris2.players.length > 0
             }
 
-            SoundIndicator.MprisItem {
-                id: mprisItem
-                dataSource: mprisDataSource
-                visible: mprisDataSource.available
+            Repeater {
+                model: mpris2.players
 
-                Layout.fillWidth: true
+                SoundIndicator.MprisItem {
+                    player: modelData
+
+                    Layout.fillWidth: true
+                }
             }
 
             Item {
@@ -86,10 +89,10 @@ Indicator {
             }
         }
     }
-    visible: MixerService.Mixer.available || mprisDataSource.available
+    visible: MixerService.Mixer.available || mpris2.players.length > 0
 
-    SoundIndicator.MprisDataSource {
-        id: mprisDataSource
+    Mpris2 {
+        id: mpris2
     }
 
     Connections {
