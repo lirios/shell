@@ -28,8 +28,6 @@ import QtQuick 2.1
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 import QtQuick.Controls.Private 1.0 as QtControlsPrivate
 import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
 
 QtControlsPrivate.GroupBoxStyle {
     id: groupBoxStyle
@@ -41,9 +39,10 @@ QtControlsPrivate.GroupBoxStyle {
         bottom: units.smallSpacing * 2
     }
 
-    property Component label: PlasmaComponents.Label {
+    property Component label: Label {
         text: control.title
         font.weight: Font.Bold
+        color: Theme.palette.panel.textColor
     }
 
     panel: Item {

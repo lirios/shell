@@ -29,9 +29,6 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.2 as QtControlsStyle
 import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 QtControlsStyle.CalendarStyle {
     id: style
@@ -51,7 +48,7 @@ QtControlsStyle.CalendarStyle {
             Layout.alignment: Qt.AlignLeft
         }
 
-        PlasmaExtras.Heading {
+        Components.Heading {
             level: 3
             text: styleData.title
             font.capitalization: Font.Capitalize
@@ -81,7 +78,7 @@ QtControlsStyle.CalendarStyle {
             color: styleData.date !== undefined && styleData.selected ? Theme.palette.panel.selectedBackgroundColor : "transparent"
         }
 
-        PlasmaComponents.Label {
+        Label {
             id: label
             anchors.centerIn: parent
             color: {
@@ -100,19 +97,21 @@ QtControlsStyle.CalendarStyle {
         color: style.gridVisible ? Theme.palette.rgba(Theme.palette.panel.backgroundColor, 0.5) : "transparent"
         implicitHeight: Theme.mSize(Theme.smallestFont).height
 
-        PlasmaComponents.Label {
+        Label {
             anchors.centerIn: parent
             text: control.__locale.dayName(styleData.dayOfWeek, control.dayOfWeekFormat)
             font: Theme.smallestFont
+            color: Theme.palette.panel.textColor
         }
     }
     weekNumberDelegate: Item {
         implicitWidth: 2 * Theme.mSize(Theme.smallestFont).width + units.smallSpacing
 
-        PlasmaComponents.Label {
+        Label {
             anchors.centerIn: parent
             text: styleData.weekNumber
             font: Theme.smallestFont
+            color: Theme.palette.panel.textColor
         }
     }
 }

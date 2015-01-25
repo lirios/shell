@@ -26,8 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Styles 1.3 as QtControlsStyle
-import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 QtControlsStyle.SliderStyle {
 }

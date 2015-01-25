@@ -28,7 +28,6 @@ import QtQuick 2.0
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 QtControlsStyle.TextFieldStyle {
     property QtObject clearButton: QtObject {
