@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtCompositor 1.0
 import GreenIsland 1.0
+import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
 import org.hawaii.session 0.1 as Session
@@ -63,7 +64,7 @@ Item {
             PropertyChanges { target: windowSwitcherLoader; source: ""; z: 899 }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
             PropertyChanges { target: logoutLoader; source: ""; z: 899 }
-            PropertyChanges { target: lockScreenLoader; source: ""; z: 899 }
+            PropertyChanges { target: lockScreenLoader; loadComponent: false }
             PropertyChanges { target: splashScreen; opacity: 0.0 }
             StateChangeScript { script: enableInput() }
         },
@@ -98,7 +99,7 @@ Item {
             PropertyChanges { target: keyFilter; enabled: false }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
             PropertyChanges { target: logoutLoader; source: ""; z: 899 }
-            PropertyChanges { target: lockScreenLoader; source: "LockScreen.qml"; z: 910 }
+            PropertyChanges { target: lockScreenLoader; loadComponent: true }
             StateChangeScript { script: disableInput() }
         },
         State {
@@ -431,18 +432,17 @@ Item {
      * Lock screen
      */
 
-    Loader {
+    Components.Loadable {
+        property bool loadComponent: false
+
         id: lockScreenLoader
         anchors.fill: parent
         asynchronous: true
-        z: 899
-
-        Behavior on z {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: Themes.Units.longDuration
-            }
+        component: Component {
+            LockScreen {}
         }
+        z: 910
+        onLoadComponentChanged: if (loadComponent) show(); else hide();
     }
 
     Connections {

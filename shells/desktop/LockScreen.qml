@@ -24,24 +24,33 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.4
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
+import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 
-Item {
+Components.Showable {
     signal unlocked()
 
     id: root
-    opacity: 0.0
-
-    Behavior on opacity {
-        NumberAnimation {
-            easing.type: Easing.InSine
-            duration: Themes.Units.longDuration
-        }
+    showAnimation: OpacityAnimator {
+        target: root
+        easing.type: Easing.InSine
+        duration: Themes.Units.longDuration
+        from: 0.0
+        to: 1.0
     }
+    hideAnimation: OpacityAnimator {
+        target: root
+        easing.type: Easing.InSine
+        duration: Themes.Units.longDuration
+        from: 1.0
+        to: 0.0
+    }
+    opacity: 0.0
+    visible: true
 
     QtObject {
         id: __priv
@@ -143,9 +152,6 @@ Item {
 
         // Start timer
         timer.start();
-
-        // Trigger opacity animation
-        opacity = 1.0;
 
         // Activate password field
         passwordField.forceActiveFocus();
