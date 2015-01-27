@@ -63,7 +63,7 @@ Item {
             PropertyChanges { target: splashScreen; opacity: 0.0 }
             PropertyChanges { target: windowSwitcherLoader; source: ""; z: 899 }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
-            PropertyChanges { target: logoutLoader; source: ""; z: 899 }
+            PropertyChanges { target: logoutLoader; loadComponent: false }
             PropertyChanges { target: lockScreenLoader; loadComponent: false }
             PropertyChanges { target: splashScreen; opacity: 0.0 }
             StateChangeScript { script: enableInput() }
@@ -76,29 +76,29 @@ Item {
         State {
             name: "logout"
             PropertyChanges { target: keyFilter; enabled: false }
-            PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
-            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; mode: "logout"; z: 910 }
+            //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
+            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "logout" }
             StateChangeScript { script: disableInput() }
         },
         State {
             name: "poweroff"
             PropertyChanges { target: keyFilter; enabled: false }
-            PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
-            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; mode: "poweroff"; z: 910 }
+            //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
+            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "poweroff" }
             StateChangeScript { script: disableInput() }
         },
         State {
             name: "restart"
             PropertyChanges { target: keyFilter; enabled: false }
-            PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
-            PropertyChanges { target: logoutLoader; source: "LogoutScreen.qml"; mode: "restart"; z: 910 }
+            //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
+            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "restart" }
             StateChangeScript { script: disableInput() }
         },
         State {
             name: "lock"
             PropertyChanges { target: keyFilter; enabled: false }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
-            PropertyChanges { target: logoutLoader; source: ""; z: 899 }
+            PropertyChanges { target: logoutLoader; loadComponent: false }
             PropertyChanges { target: lockScreenLoader; loadComponent: true }
             StateChangeScript { script: disableInput() }
         },
@@ -400,26 +400,20 @@ Item {
      * Logout screen
      */
 
-    Loader {
+    Components.Loadable {
+        property bool loadComponent: false
         property string mode: "logout"
 
         id: logoutLoader
         anchors.fill: parent
         asynchronous: true
-        z: 899
-
-        Behavior on z {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: Themes.Units.longDuration
+        component: Component {
+            LogoutScreen {
+                mode: logoutLoader.mode
             }
         }
-    }
-
-    Binding {
-        target: logoutLoader.item
-        property: "mode"
-        value: logoutLoader.mode
+        z: 910
+        onLoadComponentChanged: if (loadComponent) show(); else hide();
     }
 
     Connections {

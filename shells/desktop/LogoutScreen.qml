@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.4
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
@@ -33,7 +33,7 @@ import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.session 0.1 as Session
 
-Item {
+Components.Showable {
     property alias mode: __priv.mode
 
     signal cancel()
@@ -45,6 +45,20 @@ Item {
 
     id: root
     opacity: 0.0
+    showAnimation: OpacityAnimator {
+        target: root
+        easing.type: Easing.InSine
+        duration: Themes.Units.longDuration
+        from: 0.0
+        to: 1.0
+    }
+    hideAnimation: OpacityAnimator {
+        target: root
+        easing.type: Easing.InSine
+        duration: Themes.Units.longDuration
+        from: 1.0
+        to: 0.0
+    }
     state: __priv.mode
     states: [
         State {
@@ -83,18 +97,12 @@ Item {
             PropertyChanges { target: okButton; text: qsTr("Hibernate") }
         }
     ]
+    visible: true
     onLogOutRequested: session.logOut()
     onPowerOffRequested: session.powerOff()
     onRestartRequested: session.restart()
     onSuspendRequested: session.suspend()
     onHibernateRequested: session.hibernate()
-
-    Behavior on opacity {
-        NumberAnimation {
-            easing.type: Easing.InSine
-            duration: Themes.Units.longDuration
-        }
-    }
 
     QtObject {
         id: __priv
@@ -298,6 +306,4 @@ Item {
             Layout.alignment: Qt.AlignHCenter
         }
     }
-
-    Component.onCompleted: opacity = 1.0
 }
