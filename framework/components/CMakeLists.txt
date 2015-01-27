@@ -1,7 +1,9 @@
 set(FILES
     qmldir
     Icon.qml
+    Loadable.qml
     NoiseBackground.qml
+    Showable.qml
     SmoothFadeImage.qml
     SmoothFadeLoader.qml
 )
