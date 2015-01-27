@@ -35,21 +35,20 @@ Components.Showable {
     signal unlocked()
 
     id: root
-    showAnimation: OpacityAnimator {
+    showAnimation: YAnimator {
         target: root
-        easing.type: Easing.InSine
+        easing.type: Easing.OutQuad
         duration: Themes.Units.longDuration
-        from: 0.0
-        to: 1.0
+        from: -root.height
+        to: 0
     }
-    hideAnimation: OpacityAnimator {
+    hideAnimation: YAnimator {
         target: root
-        easing.type: Easing.InSine
+        easing.type: Easing.OutQuad
         duration: Themes.Units.longDuration
-        from: 1.0
-        to: 0.0
+        from: 0
+        to: -root.height
     }
-    opacity: 0.0
     visible: true
 
     QtObject {

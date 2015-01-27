@@ -430,7 +430,10 @@ Item {
         property bool loadComponent: false
 
         id: lockScreenLoader
-        anchors.fill: parent
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
         asynchronous: true
         component: Component {
             LockScreen {}
