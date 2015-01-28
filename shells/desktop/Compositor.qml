@@ -124,7 +124,7 @@ Item {
         }
 
         // Lock screen
-        if (event.modifiers & Qt.MetaModifier && event.key === Qt.Key_L) {
+        if (event.modifiers === Qt.MetaModifier && event.key === Qt.Key_L) {
             state = "lock";
             event.accepted = true;
             return;
@@ -139,7 +139,7 @@ Item {
         }
 
         // Window switcher
-        if (event.modifiers & Qt.MetaModifier) {
+        if (event.modifiers === Qt.MetaModifier) {
             if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
                 if (state != "windowSwitcher" && surfaceModel.count >= 2) {
                     // Activate only when two or more windows are available
@@ -163,7 +163,7 @@ Item {
     onKeyReleased: {
         // Window switcher
         if (state == "windowSwitcher") {
-            if (event.modifiers & Qt.MetaModifier) {
+            if (event.modifiers === Qt.MetaModifier) {
                 // Cycle between windows
                 if (event.key === Qt.Key_Tab)
                     compositorRoot.windowSwitchNext();
@@ -182,7 +182,7 @@ Item {
         }
 
         // Workspaces
-        if (event.modifiers & (Qt.MetaModifier | Qt.ControlModifier)) {
+        if (event.modifiers === (Qt.MetaModifier | Qt.ControlModifier)) {
             if (event.key === Qt.Key_Left) {
                 screenView.workspacesView.selectPrevious();
                 event.accepted = true;
