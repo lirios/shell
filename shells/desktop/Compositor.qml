@@ -156,6 +156,9 @@ Item {
             event.accepted = true;
             return;
         }
+
+        // Let other components handle this
+        event.accepted = false;
     }
     onKeyReleased: {
         // Window switcher
@@ -180,11 +183,19 @@ Item {
 
         // Workspaces
         if (event.modifiers & (Qt.MetaModifier | Qt.ControlModifier)) {
-            if (event.key === Qt.Key_Left)
+            if (event.key === Qt.Key_Left) {
                 screenView.workspacesView.selectPrevious();
-            else if (event.key === Qt.Key_Right)
+                event.accepted = true;
+                return;
+            } else if (event.key === Qt.Key_Right) {
                 screenView.workspacesView.selectNext();
+                event.accepted = true;
+                return true;
+            }
         }
+
+        // Let other components handle this
+        event.accepted = false;
     }
 
     Timer {
