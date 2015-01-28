@@ -29,7 +29,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.appchooser 0.1 as AppChooser
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     id: root
@@ -49,11 +48,6 @@ Item {
         runners: new Array("bookmarks", "baloosearch", "services")
         onRunnersChanged: runnerView.forceLayout()
         onCountChanged: runnerView.forceLayout()
-    }
-
-    PlasmaCore.Svg {
-        id: lineSvg
-        imagePath: "widgets/line"
     }
 
     ColumnLayout {

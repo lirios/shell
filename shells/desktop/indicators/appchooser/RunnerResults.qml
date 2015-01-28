@@ -29,7 +29,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 ColumnLayout {
     implicitHeight: label.paintedHeight + horizLine.height + runnerMatches.contentHeight + (spacing * 2)
@@ -45,11 +44,11 @@ ColumnLayout {
         Layout.alignment: Qt.AlignCenter
     }
 
-    PlasmaCore.SvgItem {
+    Rectangle {
         id: horizLine
-        svg: lineSvg
-        elementId: "horizontal-line"
-        height: Themes.Units.gridUnit
+        color: Themes.Theme.palette.panel.textColor
+        opacity: 0.6
+        height: Themes.Units.dp(1)
 
         Layout.fillWidth: true
     }
