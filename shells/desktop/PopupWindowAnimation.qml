@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.4
 
 WindowAnimation {
     id: animation
@@ -38,9 +38,8 @@ WindowAnimation {
     }
 
     mapAnimation: ParallelAnimation {
-        NumberAnimation {
+        OpacityAnimator {
             target: animation.windowItem
-            property: "opacity"
             easing.type: Easing.Linear
             to: 1.0
             duration: 150
@@ -71,9 +70,8 @@ WindowAnimation {
         }
     }
 
-    unmapAnimation: NumberAnimation {
+    unmapAnimation: OpacityAnimator {
         target: animation.windowItem
-        property: "opacity"
         easing.type: Easing.Linear
         to: 0.0
         duration: 250
