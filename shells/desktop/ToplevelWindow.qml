@@ -143,7 +143,7 @@ WindowWrapper {
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InSine
-            duration: Themes.Units.longDUration
+            duration: Themes.Units.longDuration
         }
     }
 
