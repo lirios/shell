@@ -151,7 +151,7 @@ Item {
         }
 
         // Present windows
-        if (event.modifiers & Qt.MetaModifier && event.key === Qt.Key_E) {
+        if (event.modifiers === Qt.MetaModifier && event.key === Qt.Key_S) {
             compositorRoot.toggleEffect("PresentWindowsGrid");
             event.accepted = true;
             return;
