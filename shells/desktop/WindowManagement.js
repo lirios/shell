@@ -35,7 +35,9 @@ function surfaceMapped(surface) {
     // Get the first view and if it has a role property than this
     // is definitely a shell window
     var firstView = compositor.firstViewOf(surface);
-    if (typeof(firstView.role) == "undefined") {
+    if (!firstView) {
+        console.debug("Unknown surface", surface, "mapped");
+    } else if (firstView.role == undefined) {
         console.debug("Application surface", surface, "mapped");
         console.debug("\tappId:", surface.className);
         console.debug("\ttitle:", surface.title);
@@ -60,9 +62,13 @@ function surfaceMapped(surface) {
         break;
     }
 
+    // Can't continue without a view
+    if (!firstView)
+        return;
+
     // Call a specialized method to deal with application or
     // shell windows
-    if (typeof(firstView.role) == "undefined")
+    if (firstView && firstView.role == undefined)
         mapApplicationSurface(surface);
     else
         mapShellSurface(surface, firstView);
@@ -72,19 +78,23 @@ function surfaceUnmapped(surface) {
     // Get the first view and if it has a role property than this
     // is definitely a shell window
     var firstView = compositor.firstViewOf(surface);
-    if (typeof(firstView.role) == "undefined") {
+    if (!firstView) {
+        console.debug("Unknown surface", surface, "unmapped");
+        return;
+    } else if (firstView.role == undefined) {
         console.debug("Application surface", surface, "unmapped");
         console.debug("\tappId:", surface.className);
         console.debug("\ttitle:", surface.title);
     } else {
         console.debug("Shell surface", surface, "unmapped");
-        console.debug("\trole:", firstView.role);
+        if (firstView)
+            console.debug("\trole:", firstView.role);
         console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
     }
 
     // Call a specialized method to deal with application or
     // shell windows
-    if (typeof(firstView.role) == "undefined")
+    if (firstView.role == undefined)
         unmapApplicationSurface(surface);
     else
         unmapShellSurface(surface);
