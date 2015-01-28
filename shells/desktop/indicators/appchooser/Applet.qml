@@ -45,7 +45,7 @@ Item {
 
     AppChooser.RunnerModel {
         id: runnerModel
-        runners: new Array("bookmarks", "baloosearch", "services")
+        runners: new Array("bookmarks", "baloosearch")
         onRunnersChanged: runnerView.forceLayout()
         onCountChanged: runnerView.forceLayout()
     }
