@@ -12,6 +12,7 @@ set(CMAKE_AUTOMOC ON)
 option(ENABLE_SYSTEMD "Enables systemd support" OFF)
 option(ENABLE_ALSA "Enables Alsa mixer backend" ON)
 option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
+option(ENABLE_MAINLINE_QTXDG "Use mainline libqtxdg found at https://github.com/lxde/libqtxdg" OFF)
 
 # Set version
 set(HAWAII_VERSION_MAJOR 0)
@@ -83,6 +84,11 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 
 # Find Green Island
 find_package(GreenIsland REQUIRED)
+
+# lxqt
+if(ENABLE_MAINLINE_QTXDG)
+    find_package(QT5XDG REQUIRED)
+endif()
 
 # Subdirectories
 add_subdirectory(3rdparty)

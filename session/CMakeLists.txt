@@ -23,9 +23,14 @@ add_executable(hawaii-session ${SOURCES})
 target_link_libraries(hawaii-session
     Qt5::Core
     Qt5::DBus
-    HawaiiQtXDG
     HawaiiSigWatch
     HawaiiQLogind
 )
+
+if(QTXDG_FOUND)
+    target_link_libraries(hawaii-session ${QTXDG_LIBRARIES})
+else()
+    target_link_libraries(hawaii-session HawaiiQtXDG)
+endif()
 
 install(TARGETS hawaii-session DESTINATION ${BIN_INSTALL_DIR})
