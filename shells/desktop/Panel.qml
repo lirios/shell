@@ -60,27 +60,12 @@ Rectangle {
 
     Connections {
         target: compositorRoot
-        onActiveWindowChanged: {
-            if (!activeWindow) {
-                color = "transparent";
-                launcher.iconSize = Themes.Units.iconSizes.large;
-            }
-        }
+        onActiveWindowChanged: setup()
     }
 
     Connections {
-        target: compositorRoot.activeWindow ? compositorRoot.activeWindow.child.surface : null
-        onStateChanged: {
-            // TODO: Don't resize the panel, the window is maximized before we change the available
-            // geometry resulting in a "hole" between the window and the panel
-            if (compositorRoot.activeWindow.child.surface.state === QuickSurface.Maximized) {
-                color = Themes.Theme.palette.rgba(Themes.Theme.palette.window.backgroundColor, 0.85);
-                //launcher.iconSize = Themes.Units.iconSizes.medium;
-            } else {
-                color = "transparent";
-                //launcher.iconSize = Themes.Units.iconSizes.large;
-            }
-        }
+        target: compositorRoot.activeWindow ? compositorRoot.activeWindow.clientWindow : null
+        onMaximizedChanged: setup()
     }
 
     RowLayout {
@@ -134,6 +119,18 @@ Rectangle {
             }
 
             Layout.alignment: Qt.AlignRight
+        }
+    }
+
+    function setup() {
+        // TODO: Don't resize the panel, the window is maximized before we change the available
+        // geometry resulting in a "hole" between the window and the panel
+        if (compositorRoot.activeWindow && compositorRoot.activeWindow.clientWindow.maximized) {
+            color = Themes.Theme.palette.rgba(Themes.Theme.palette.window.backgroundColor, 0.85);
+            //launcher.iconSize = Themes.Units.iconSizes.medium;
+        } else {
+            color = "transparent";
+            //launcher.iconSize = Themes.Units.iconSizes.large;
         }
     }
 }

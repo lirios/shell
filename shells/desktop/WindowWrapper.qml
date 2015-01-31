@@ -29,6 +29,7 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 
 Item {
+    property var clientWindow
     property var child
     property bool unresponsive: false
     property var animation: null
@@ -77,10 +78,7 @@ Item {
 
         return 0;
     }
-    onVisibleChanged: {
-        if (child)
-            child.surface.clientRenderingEnabled = visible;
-    }
+    visible: false
 
     SurfaceRenderer {
         anchors.fill: parent
@@ -89,8 +87,18 @@ Item {
     }
 
     /*
-     * Connections to child or surface
+     * Connections to client window, child or surface
      */
+
+    Connections {
+        target: clientWindow
+        onXChanged: window.x = clientWindow.x
+        onYChanged: window.y = clientWindow.y
+        onSizeChanged: {
+            window.width = clientWindow.size.width;
+            window.height = clientWindow.size.height;
+        }
+    }
 
     Connections {
         target: child
@@ -100,8 +108,13 @@ Item {
     Connections {
         target: child ? child.surface : null
         onPong: pongSurface()
-        onSizeChanged: setSize()
         onUnmapped: runUnmapAnimation()
+    }
+
+    Binding {
+        target: child ? child.surface : null
+        property: "clientRenderingEnabled"
+        value: window.visible
     }
 
     /*
@@ -156,25 +169,5 @@ Item {
         // Surface replied with a pong this means it's responsive
         pingPongTimer.running = false;
         unresponsive = false;
-    }
-
-    /*
-     * Miscellaneous
-     */
-
-    function setSize() {
-        window.width = child.surface.size.width;
-        window.height = child.surface.size.height;
-    }
-
-    /*
-     * Component
-     */
-
-    Component.onDestruction: {
-        // Remove from parent so it's not shown by present windows and
-        // destroy child
-        compositorRoot.forgetWindow(window);
-        window.child.destroy();
     }
 }

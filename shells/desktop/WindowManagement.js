@@ -31,135 +31,41 @@ var activeWindow = null;
  * Main procedures
  */
 
-function surfaceMapped(surface) {
-    // Get the first view and if it has a role property than this
-    // is definitely a shell window
-    var firstView = compositor.firstViewOf(surface);
-    if (!firstView) {
-        console.debug("Unknown surface", surface, "mapped");
-    } else if (firstView.role == undefined) {
-        console.debug("Application surface", surface, "mapped");
-        console.debug("\tappId:", surface.className);
-        console.debug("\ttitle:", surface.title);
-        console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
-    } else {
-        console.debug("Shell surface", surface, "mapped");
-        console.debug("\trole:", firstView.role);
-        console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
-    }
-    switch (surface.windowType) {
-    case WaylandQuickSurface.Toplevel:
-        console.debug("\ttype: Toplevel");
+function _printWindowInfo(window) {
+    console.debug("\twindow:", window);
+    console.debug("\tsurface:", window.surface);
+    console.debug("\tappId:", window.appId);
+    console.debug("\ttitle:", window.title);
+    console.debug("\tposition:", window.x + "," + window.y);
+    console.debug("\tsize:", window.size.width + "x" + window.size.height);
+    switch (window.type) {
+    case ClientWindow.TopLevel:
+        console.debug("\ttype: TopLevel");
         break;
-    case WaylandQuickSurface.Popup:
+    case ClientWindow.Popup:
         console.debug("\ttype: Popup");
         break;
-    case WaylandQuickSurface.Transient:
+    case ClientWindow.Transient:
         console.debug("\ttype: Transient");
         break;
     default:
-        console.debug("\ttype: Unknown");
         break;
     }
-
-    // Can't continue without a view
-    if (!firstView)
-        return;
-
-    // Call a specialized method to deal with application or
-    // shell windows
-    if (firstView && firstView.role == undefined)
-        mapApplicationSurface(surface);
-    else
-        mapShellSurface(surface, firstView);
+    console.debug("\tparentWindow:", window.parentWindow);
+    console.debug("\tscreen:", compositorRoot.screenView.name);
 }
 
-function surfaceUnmapped(surface) {
-    // Get the first view and if it has a role property than this
-    // is definitely a shell window
-    var firstView = compositor.firstViewOf(surface);
-    if (!firstView) {
-        console.debug("Unknown surface", surface, "unmapped");
-        return;
-    } else if (firstView.role == undefined) {
-        console.debug("Application surface", surface, "unmapped");
-        console.debug("\tappId:", surface.className);
-        console.debug("\ttitle:", surface.title);
-    } else {
-        console.debug("Shell surface", surface, "unmapped");
-        if (firstView)
-            console.debug("\trole:", firstView.role);
-        console.debug("\tsize:", surface.size.width + "x" + surface.size.height);
-    }
-
-    // Call a specialized method to deal with application or
-    // shell windows
-    if (firstView.role == undefined)
-        unmapApplicationSurface(surface);
-    else
-        unmapShellSurface(surface);
-}
-
-function surfaceDestroyed(surface) {
-    console.debug("Surface", surface, "destroyed");
-
-    // Destroy window
-    var i;
-    for (i = 0; i < surfaceModel.count; i++) {
-        var entry = surfaceModel.get(i);
-
-        if (entry.surface === surface) {
-            entry.window.destroy();
-            forgetWindow(entry.window);
-            return;
-        }
-    }
-}
-
-function forgetWindow(window) {
-    var i;
-    for (i = 0; i < surfaceModel.count; i++) {
-        var entry = surfaceModel.get(i);
-
-        if (entry.window !== window)
-            continue;
-
-        // Remove window from list
-        surfaceModel.remove(i, 1);
-        windowList.splice(i, 1);
-
-        // Remove window from effect
-        window.parent = null;
-        compositorRoot.removeWindowFromEffect(window);
-
-        return;
-    }
-}
-
-/*
- * Map surfaces
- */
-
-function mapApplicationSurface(surface) {
-    // We get mapped/unmapped signals all the time for example when a
-    // workspace is selected, for all the surfaces in the previous workspace
-    // an unmapped signal is emitted; so we need to figure out if a
-    // representation for the surface was already created and exit in that case
-    var i;
-    for (i = 0; i < surfaceModel.count; i++) {
-        var entry = surfaceModel.get(i);
-
-        if (entry.surface === surface)
-            return;
-    }
+function windowMapped(window) {
+    console.debug("Application window mapped");
+    _printWindowInfo(window);
 
     // Create surface item
     var componentName = "ToplevelWindow.qml";
-    switch (surface.windowType) {
-    case WaylandQuickSurface.Popup:
+    switch (window.type) {
+    case ClientWindow.Popup:
         componentName = "PopupWindow.qml";
         break;
-    case WaylandQuickSurface.Transient:
+    case ClientWindow.Transient:
         componentName = "TransientWindow.qml";
         break;
     default:
@@ -171,104 +77,109 @@ function mapApplicationSurface(surface) {
         return;
     }
 
-    // Window position
-    var pos = Qt.point(0, 0);
+    // Retrieve the view for this output
+    var child = window.viewForOutput(_greenisland_output);
 
-    // Request a view for this output (Items cannot be shared between
-    // windows so a new one is created on demand)
-    var child = compositor.viewForOutput(surface, _greenisland_output);
-
-    // Create and setup window container
-    var window = component.createObject(compositorRoot, {"child": child});
-    window.child.parent = window;
-    window.child.touchEventsEnabled = true;
-    window.setSize();
-
-    // z-order
-    if (surface.windowType === WaylandQuickSurface.Toplevel) {
-        window.z = windowList.length;
-        windowList.push(window);
-        activeWindow = window;
-        compositorRoot.activeWindow = activeWindow;
-    }
-
-    // Transient parent view
-    var transientParentView = null;
-    if (surface.windowType === WaylandQuickSurface.Popup ||
-            surface.windowType === WaylandQuickSurface.Transient) {
-        // The parent could be a shell window instead of an application window,
-        // this is the case for context menus of the desktop view.
-        // We get the first view and see if it belongs to a shell window otherwise
-        // a view for this output is requested.
-        var parentFirstView = compositor.firstViewOf(surface.transientParent);
-        if (typeof(parentFirstView.role) == "undefined")
-            transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
-        else
-            transientParentView = parentFirstView;
-        console.log(parentFirstView, "vs", transientParentView);
-    }
-
-    // Determine window position
-    switch (surface.windowType) {
-    case WaylandQuickSurface.Toplevel:
-        if (surface.state === QuickSurface.Normal) {
-            pos = compositor.calculateInitialPosition(surface);
-            surface.globalPosition = pos;
-        } else {
-            pos = surface.globalPosition;
-        }
-        pos = _greenisland_output.mapToOutput(pos);
+    // Determine the parent
+    var parentItem = compositorRoot;
+    switch (window.type) {
+    case ClientWindow.TopLevel:
+        parentItem = compositorRoot.screenView.currentWorkspace
         break;
-    case WaylandQuickSurface.Popup:
-        // Move popups relative to parent window
-        pos.x = surface.transientOffset.x;
-        pos.y = surface.transientOffset.y;
-        surface.globalPosition = Qt.point(transientParentView.surface.globalPosition.x + pos.x,
-                                          transientParentView.surface.globalPosition.y + pos.y);
-        break;
-    case WaylandQuickSurface.Transient:
-        // Center transient windows
-        pos.x = (transientParentView.width - window.width) / 2;
-        pos.y = (transientParentView.height - window.height) / 2;
-        surface.globalPosition = Qt.point(transientParentView.surface.globalPosition.x + pos.x,
-                                          transientParentView.surface.globalPosition.y + pos.y);
+    case ClientWindow.Popup:
+    case ClientWindow.Transient:
+        parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
         break;
     default:
         break;
     }
 
-    // Move window
-    window.x = pos.x;
-    window.y = pos.y;
-
-    // Reparent and give focus
-    if (surface.windowType === WaylandQuickSurface.Toplevel)
-        window.parent = compositorRoot.screenView.currentWorkspace;
-    else
-        window.parent = transientParentView.parent;
-    window.child.takeFocus();
+    // Create and setup window container
+    var item = component.createObject(parentItem, {"clientWindow": window, "child": child});
+    item.child.parent = item;
+    item.child.touchEventsEnabled = true;
+    item.x = window.x;
+    item.y = window.y;
+    item.width = window.size.width;
+    item.height = window.size.height;
 
     // Set transient children so that the parent can be desaturated
-    if (surface.windowType === WaylandQuickSurface.Transient)
-        transientParentView.parent.transientChildren = window;
+    if (window.type === ClientWindow.Transient)
+        parentItem.transientChildren = item;
     // Set popup child to enable dim effect
-    else if (surface.windowType === WaylandQuickSurface.Popup)
-        transientParentView.parent.popupChild = window;
+    else if (window.type === ClientWindow.Popup)
+        parentItem.popupChild = item;
 
-    // Log coordinates for debugging purpose
-    console.debug("\tposition:", window.x + "," + window.y);
-    console.debug("\tscreen:", compositorRoot.screenView.name);
+    // z-order and focus
+    if (window.type === ClientWindow.TopLevel) {
+        item.z = windowList.push(item);
+        activeWindow = item;
+        compositorRoot.activeWindow = activeWindow;
+        item.forceActiveFocus();
+    }
+
+    // Make it visible
+    item.visible = true;
 
     // Add window to current effect
-    compositorRoot.addWindowToEffect(window);
+    compositorRoot.addWindowToEffect(item);
 
     // Run map animation
-    if (typeof(window.runMapAnimation) != "undefined")
-        window.runMapAnimation();
+    if (item.runMapAnimation != undefined)
+        item.runMapAnimation();
 
     // Add surface to the model
-    surfaceModel.append({"surface": surface, "window": window});
+    surfaceModel.append({"window": window, "item": item, "surface": window.surface});
 }
+
+function windowUnmapped(window) {
+    console.debug("Application window unmapped");
+    _printWindowInfo(window);
+
+    // Find window representation
+    var i, item = null;
+    for (i = 0; i < surfaceModel.count; i++) {
+        var entry = surfaceModel.get(i);
+
+        if (entry.window === window) {
+            item = entry.item;
+            break;
+        }
+    }
+    if (!item)
+        return;
+
+    // Remove from model
+    surfaceModel.remove(i);
+
+    // Remove from z-order list
+    if (window.type === ClientWindow.TopLevel) {
+        for (i = 0; i < windowList.length; ++i) {
+            if (windowList[i] === item) {
+                windowList.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    // Remove window from effect
+    compositorRoot.removeWindowFromEffect(item);
+
+    // Unset transient children so that the parent can go back to normal
+    // and also bring to front
+    if (window.type === ClientWindow.Transient) {
+        var parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
+        parentItem.transientChildren = null;
+        //parentItem.child.takeFocus();
+    }
+
+    // Destroy window representation
+    item.destroy();
+}
+
+/*
+ * Map surfaces
+ */
 
 function mapShellSurface(surface, child) {
     // Shell surfaces have only one view which is passed to us
@@ -330,75 +241,34 @@ function mapShellSurface(surface, child) {
 }
 
 /*
- * Unmap surfaces
- */
-
-function unmapApplicationSurface(surface) {
-    // Find window representation
-    var i, window = null;
-    for (i = 0; i < surfaceModel.count; i++) {
-        var entry = surfaceModel.get(i);
-
-        if (entry.surface === surface) {
-            window = entry.window;
-            break;
-        }
-    }
-    if (!window)
-        return;
-
-    // Remove from z-order list
-    for (i = 0; i < windowList.length; ++i) {
-        if (windowList[i] === window) {
-            windowList.splice(i, 1);
-            break;
-        }
-    }
-
-    // Remove window from effect
-    compositorRoot.removeWindowFromEffect(window);
-
-    // Unset transient children so that the parent can go back to normal
-    // and also bring to front
-    if (surface.windowType === WaylandQuickSurface.Transient) {
-        var transientParentView = compositor.viewForOutput(surface.transientParent, _greenisland_output);
-        transientParentView.parent.transientChildren = null;
-        moveFront(transientParentView.parent);
-    }
-}
-
-function unmapShellSurface(surface) {
-}
-
-/*
  * Window management
  */
 
 function moveFront(window) {
+    var initialZ = Math.ceil(window.z);
+
     // Ignore if the window is already the highest in the stacking order
-    if (window.z == windowList.length - 1) {
-        window.child.takeFocus();
+    if (initialZ == windowList.length - 1) {
+        //window.child.takeFocus();
         return;
     }
 
     console.debug("moveFront[" + windowList.length + "] for", window + ":");
 
-    var initialZ = window.z
     var i;
     console.debug("\ti =", initialZ + 1, "; i <", windowList.length);
     for (i = initialZ + 1; i < windowList.length; ++i) {
-        windowList[i].z = window.z;
-        console.log("----", windowList[i], windowList[i].child, windowList[i].child.focus);
-        windowList[i].child.focus = false;
-        console.debug("\t" + windowList[i], "z:", windowList[i].z);
+        windowList[i].z = Math.ceil(window.z);
+        if (windowList[i].child)
+            windowList[i].child.focus = false;
+        console.debug("\t" + windowList[i], "z:", Math.ceil(windowList[i].z));
         window.z = i;
     }
-    console.debug("\t" + window, "z:", window.z);
+    console.debug("\t" + window, "z:", Math.ceil(window.z));
 
     windowList.splice(initialZ, 1);
     windowList.push(window);
     window.parent.parent.selectWorkspace(window.parent);
-    window.child.takeFocus();
     activeWindow = window;
     compositorRoot.activeWindow = activeWindow;
 }

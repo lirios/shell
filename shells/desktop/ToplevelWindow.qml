@@ -33,6 +33,7 @@ WindowWrapper {
     property var chrome: null
     property var popupChild: null
     property var transientChildren: null
+    property bool animationsEnabled: visible
     property alias savedProperties: saved
 
     id: window
@@ -44,7 +45,10 @@ WindowWrapper {
     // Decrease contrast for transient parents
     ContrastEffect {
         id: contrast
-        anchors.fill: parent
+        x: clientWindow.internalGeometry.x
+        y: clientWindow.internalGeometry.y
+        width: clientWindow.internalGeometry.width
+        height: clientWindow.internalGeometry.height
         source: window
         blend: transientChildren ? 0.742 : 1.0
         color: "black"
@@ -60,22 +64,27 @@ WindowWrapper {
     }
 
     // Dim windows when not focused
-/* TODO: This looks horrible on windows with CSD
+    /*
     ContrastEffect {
         id: dimEffect
-        anchors.fill: parent
+        x: clientWindow.internalGeometry.x
+        y: clientWindow.internalGeometry.y
+        width: clientWindow.internalGeometry.width
+        height: clientWindow.internalGeometry.height
         source: window
         blend: 0.742
         color: "gray"
         z: visible ? 2 : 0
-        visible: !child.focus && !popupChild
+        visible: !clientWindow.active && !popupChild
     }
-*/
+    */
 
-    // Connect to surface or child events
+    // Connect to the client window
     Connections {
-        target: child
-        onRaiseRequested: compositorRoot.moveFront(window)
+        target: clientWindow
+        onMotionStarted: animationsEnabled = false
+        onMotionFinished: animationsEnabled = true
+        onActiveChanged: if (clientWindow.active) compositorRoot.moveFront(window)
     }
 
     /*
@@ -87,7 +96,6 @@ WindowWrapper {
 
         property real x
         property real y
-        property real z
         property real scale
         property var chrome
         property bool bringToFront: false
@@ -99,6 +107,7 @@ WindowWrapper {
      */
 
     Behavior on x {
+        enabled: animationsEnabled
         NumberAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.longDuration
@@ -106,6 +115,7 @@ WindowWrapper {
     }
 
     Behavior on y {
+        enabled: animationsEnabled
         NumberAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.longDuration
@@ -113,6 +123,7 @@ WindowWrapper {
     }
 
     Behavior on z {
+        enabled: visible
         NumberAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.shortDuration
@@ -120,6 +131,7 @@ WindowWrapper {
     }
 
     Behavior on width {
+        enabled: visible
         NumberAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.shortDuration
@@ -127,6 +139,7 @@ WindowWrapper {
     }
 
     Behavior on height {
+        enabled: visible
         NumberAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.shortDuration
@@ -134,6 +147,7 @@ WindowWrapper {
     }
 
     Behavior on scale {
+        enabled: visible
         NumberAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.longDuration
@@ -141,6 +155,7 @@ WindowWrapper {
     }
 
     Behavior on opacity {
+        enabled: visible
         NumberAnimation {
             easing.type: Easing.InSine
             duration: Themes.Units.longDuration
@@ -154,33 +169,16 @@ WindowWrapper {
     Connections {
         target: compositorRoot
         onKeyPressed: {
-            if (event.modifiers & Qt.MetaModifier) {
-                dnd.enabled = true;
+            if (event.modifiers === Qt.MetaModifier) {
+                ////clientWindow.move();
                 rotateMouseArea.enabled = true;
             }
             event.accepted = false;
         }
         onKeyReleased: {
-            dnd.enabled = false;
             rotateMouseArea.enabled = false;
             event.accepted = false;
         }
-    }
-
-    // FIXME: Dragging doesn't change child.surface.globalPosition
-    // resulting in the window not being shown in other outputs
-    MouseArea {
-        id: dnd
-        anchors.fill: parent
-        acceptedButtons: enabled ? Qt.LeftButton : Qt.NoBrush
-        drag {
-            target: window
-            axis: Drag.XAndYAxis
-            maximumX: window.parent ? window.parent.width : 0
-            maximumY: window.parent ? window.parent.height : 0
-        }
-        enabled: false
-        z: 1000000
     }
 
     /*

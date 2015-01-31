@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtCompositor 1.0
+import GreenIsland 1.0
 
 Item {
     property Item workspace: null
@@ -69,18 +69,17 @@ Item {
                 continue;
 
             // Skip windows from other outputs
-            if (window.child.mainOutput !== _greenisland_output)
+            if (window.clientWindow.output !== _greenisland_output)
                 continue;
 
             // Skip windows that are not toplevel
-            if (window.child.surface.windowType !== WaylandQuickSurface.Toplevel)
+            if (window.clientWindow.type !== ClientWindow.TopLevel)
                 continue;
 
             // Save original properties
             if (!window.savedProperties.saved) {
                 window.savedProperties.x = window.x;
                 window.savedProperties.y = window.y;
-                window.savedProperties.z = window.z;
                 window.savedProperties.scale = window.scale;
                 window.savedProperties.chrome = window.chrome;
                 if (window.savedProperties.chrome)
@@ -116,21 +115,19 @@ Item {
                 var chrome = chromeComponent.createObject(window);
                 window.chrome = chrome;
                 window.chrome.anchors.fill = window;
+                window.chrome.anchors.leftMargin = window.clientWindow.internalGeometry.x;
+                window.chrome.anchors.topMargin = window.clientWindow.internalGeometry.y;
+                window.chrome.anchors.rightMargin = window.width - window.clientWindow.internalGeometry.width;
+                window.chrome.anchors.bottomMargin = window.height - window.clientWindow.internalGeometry.height;
                 window.chrome.clicked.connect(function(w) {
-                    compositorRoot.enableInput();
                     w.savedProperties.bringToFront = true;
                     compositorRoot.endEffect("PresentWindowsGrid");
                 });
-
-                // Put the window behind its chrome
-                window.z = 0;
-                window.chrome.z = 1;
             }
 
             // Apply new properties
             window.x = cx - window.width / 2;
             window.y = cy - window.height / 2;
-            window.z = 1;
             window.scale = 0.98 * Math.min(cellWidth / window.width, cellHeight / window.height);
 
             index++;
@@ -183,7 +180,6 @@ Item {
             // Restore saved properties
             window.x = window.savedProperties.x;
             window.y = window.savedProperties.y;
-            window.z = window.savedProperties.z;
             window.scale = window.savedProperties.scale;
             window.chrome = window.savedProperties.chrome;
             if (window.chrome)
@@ -198,6 +194,6 @@ Item {
         }
 
         if (selectedWindow)
-            compositorRoot.moveFront(selectedWindow);
+            selectedWindow.child.takeFocus();
     }
 }

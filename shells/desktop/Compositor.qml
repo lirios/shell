@@ -236,17 +236,13 @@ Item {
             // Start idle timer
             idleTimer.running = true
         }
-        onSurfaceMapped: {
-            // A surface was mapped
-            WindowManagement.surfaceMapped(surface);
+        onWindowMapped: {
+            // A window was mapped
+            WindowManagement.windowMapped(window);
         }
-        onSurfaceUnmapped: {
-            // A surface was unmapped
-            WindowManagement.surfaceUnmapped(surface);
-        }
-        onSurfaceDestroyed: {
-            // A surface was destroyed
-            WindowManagement.surfaceDestroyed(surface);
+        onWindowUnmapped: {
+            // A window was unmapped
+            WindowManagement.windowUnmapped(window);
         }
     }
 
@@ -491,14 +487,10 @@ Item {
         return WindowManagement.moveFront(window);
     }
 
-    function forgetWindow(window) {
-        return WindowManagement.forgetWindow(window);
-    }
-
     function enableInput() {
         var i;
         for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
-            var window = compositorRoot.surfaceModel.get(i).window;
+            var window = compositorRoot.surfaceModel.get(i).item;
             window.child.focus = true;
         }
     }
@@ -506,7 +498,7 @@ Item {
     function disableInput() {
         var i;
         for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
-            var window = compositorRoot.surfaceModel.get(i).window;
+            var window = compositorRoot.surfaceModel.get(i).item;
             window.child.focus = false;
         }
     }

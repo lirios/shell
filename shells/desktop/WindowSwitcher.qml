@@ -60,12 +60,7 @@ Rectangle {
         }
         onWindowSwitchSelect: {
             // Give focus to the selected window
-            /*
-            var item = compositorRoot.surfaceModel.get(listView.currentIndex);
-            if (item !== undefined)
-                compositorRoot.moveFront(item.window);
-                */
-            compositorRoot.moveFront(compositorRoot.windowList[listView.currentIndex]);
+            compositorRoot.windowList[listView.currentIndex].child.takeFocus();
         }
     }
 
