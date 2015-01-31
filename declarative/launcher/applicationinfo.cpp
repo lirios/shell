@@ -109,14 +109,14 @@ ApplicationInfoPrivate::~ApplicationInfoPrivate()
 QVariant ApplicationInfoPrivate::value(const QString &key, const QVariant &defaultValue) const
 {
     if (!entry)
-        return QVariant();
+        return defaultValue;
     return entry->value(key, defaultValue);
 }
 
 QVariant ApplicationInfoPrivate::localizedValue(const QString &key, const QVariant &defaultValue) const
 {
     if (!entry)
-        return QVariant();
+        return defaultValue;
 
     QString locale = QLocale().name();
     QString shortLocale = locale.split('_').first();
