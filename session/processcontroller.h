@@ -74,6 +74,8 @@ private:
     Mode m_mode;
     bool m_hasLibInputPlugin;
 
+    int m_retry;
+
     QString randomString() const;
 
     void prepare();
@@ -88,6 +90,7 @@ private Q_SLOTS:
 
     void directoryChanged(const QString &path);
 
+    void compositorError(QProcess::ProcessError error);
     void compositorFinished(int code, const QProcess::ExitStatus &status);
     void fullScreenShellFinished(int code, const QProcess::ExitStatus &status);
 };

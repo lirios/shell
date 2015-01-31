@@ -29,6 +29,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileSystemWatcher>
+#include <QtCore/QTimer>
 
 #include "cmakedirs.h"
 #include "processcontroller.h"
@@ -43,6 +44,7 @@ ProcessController::ProcessController(const QString &mode, QObject *parent)
     , m_fullScreenShell(Q_NULLPTR)
     , m_modeName(mode)
     , m_hasLibInputPlugin(false)
+    , m_retry(3)
 {
     if (mode == QStringLiteral("eglfs"))
         m_mode = EglFSMode;
@@ -188,9 +190,8 @@ void ProcessController::setupCompositor()
                                        << QStringLiteral("libinput"));
         }
     }
-    connect(m_compositor, SIGNAL(started()), this, SIGNAL(started()));
-    connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
-            this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
+    connect(m_compositor, SIGNAL(error(QProcess::ProcessError)),
+            this, SLOT(compositorError(QProcess::ProcessError)));
 
     // Pass arguments for full screen shell and style
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -237,10 +238,10 @@ void ProcessController::startCompositor()
             << "Running:" << qPrintable(m_compositor->program())
             << qPrintable(m_compositor->arguments().join(" "));
     m_compositor->start();
-    if (!m_compositor->waitForStarted()) {
-        // Compositor failed to start, kill full screen shell and terminate
-        qFatal("Compositor won't start, aborting...");
-        compositorFinished(0, QProcess::NormalExit);
+    if (m_compositor->waitForStarted()) {
+        connect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)),
+                this, SLOT(compositorFinished(int,QProcess::ExitStatus)));
+        Q_EMIT started();
     }
 }
 
@@ -262,6 +263,36 @@ void ProcessController::directoryChanged(const QString &path)
     m_fullScreenShellWatcher->deleteLater();
     m_fullScreenShellWatcher = Q_NULLPTR;
     startCompositor();
+}
+
+void ProcessController::compositorError(QProcess::ProcessError error)
+{
+    Q_UNUSED(error);
+
+    qCWarning(PROCESS_CONTROLLER) << "Compositor had an error:" << m_compositor->errorString();
+
+    // Retry
+    if (m_retry > 0) {
+        qCDebug(PROCESS_CONTROLLER) << "Compositor retries left:" << m_retry;
+        m_retry--;
+
+        // Signal must be connected only if the process really starts
+        disconnect(m_compositor, SIGNAL(finished(int,QProcess::ExitStatus)));
+
+        // Delete old process instance
+        m_compositor->deleteLater();
+
+        // Restart the process after 3 seconds
+        QTimer::singleShot(3000, [&] {
+            setupCompositor();
+            startCompositor();
+        });
+        return;
+    }
+
+    // Compositor failed to start, kill full screen shell and terminate
+    compositorFinished(0, QProcess::NormalExit);
+    qFatal("Compositor won't start, aborting...");
 }
 
 void ProcessController::compositorFinished(int code, const QProcess::ExitStatus &status)
