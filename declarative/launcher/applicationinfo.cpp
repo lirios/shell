@@ -26,6 +26,7 @@
 
 #include <QtCore/QLocale>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QDebug>
 
 #include "applicationaction.h"
 #include "applicationinfo.h"
@@ -47,8 +48,10 @@ ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &appId, Application
     const QString name = QString(appId).replace('-', '/');
 
     // Now the fun part begins: Qt sets app_id to program name + ".desktop",
-    // while GTK+ uses the program name starting with an upper case letter
-    // and I'm not sure what's used for D-Bus activatable applications...
+    // while GTK+ uses the program name starting with an upper case letter.
+    // It seems a pattern with D-Bus activatable it goes like this: let's take
+    // GNOME Clocks as an example: Gnome-clocks app_id and
+    // org.gnome.clocks.desktop desktop entry.
 
     // Case 1: assume app_id is already the desktop file base name (Qt)
     fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
@@ -64,6 +67,23 @@ ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &appId, Application
     if (fileName.isEmpty()) {
         fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
                                           name.toLower() + QStringLiteral(".desktop"));
+    }
+
+    // Case 4: lower case, do not replace '-' with '/' and append ".desktop" (GTK+)
+    if (fileName.isEmpty())
+        fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                          appId.toLower() + QStringLiteral(".desktop"));
+
+    // Case 5: D-Bus activatable applications: lower case appId, split with '-'
+    // and treat the first as a reverse domain name prepending org (yeah it might
+    // be another extension...)
+    QStringList pieces = appId.toLower().split('-', QString::SkipEmptyParts);
+    if (pieces.size() == 2) {
+        QString processedAppId = QStringLiteral("org.%1.%2")
+                .arg(pieces.at(0)).arg(pieces.at(1));
+        if (fileName.isEmpty())
+            fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                              processedAppId + QStringLiteral(".desktop"));
     }
 
     if (!fileName.isEmpty()) {
