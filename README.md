@@ -45,21 +45,16 @@ However some of those modules pull in too many dependencies.
 
 In particular we currently need:
 
-* DataSource API and data engines (plasma-framework and plasma-workspace)
-* A couple of SVG items here and there (plasma-framework)
 * Networking (plasma-nm, QML plugin only not plasmoid)
 * KService to search applications (kservice)
 * Plasma Runner for searches (plasma-framework)
 
-In the near future actions will be taken to cut down those dependencies.
-
-Data engines might be replaced with QML imports since the Plasma developers
-don't have time to move the DataSource API into a separate framework.
+More actions will be taken in the future to cut down those dependencies.
 
 KService is really slow so we need to get rid of it.
 We partially did that with the process launcher which uses QtXDG, however KService is still pulled for searches and data engines lookup. Once data engines are gone only the AppChooser will need to be modified.
 
-Frameworks on the other hand are often safe, depending on their tier.
+Tier 1 frameworks on the other hand are safe.
 
 ## Build
 
