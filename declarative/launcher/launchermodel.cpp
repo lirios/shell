@@ -161,4 +161,14 @@ LauncherItem *LauncherModel::get(int index) const
     return m_list.at(index);
 }
 
+int LauncherModel::indexFromAppId(const QString &appId) const
+{
+    for (int i = 0; i < m_list.size(); i++) {
+        if (m_list.at(i)->appId() == appId)
+            return 0;
+    }
+
+    return -1;
+}
+
 #include "moc_launchermodel.cpp"

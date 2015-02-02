@@ -69,6 +69,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     Q_INVOKABLE LauncherItem *get(int index) const;
+    Q_INVOKABLE int indexFromAppId(const QString &appId) const;
 
 Q_SIGNALS:
     void applicationManagerChanged();
