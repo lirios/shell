@@ -28,13 +28,13 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.hawaii.hardware 0.1
 import ".."
+import "power" as PowerIndicator
 
 Indicator {
-    //batteryType: "Mouse"
     name: "battery"
-    iconName: "battery-ups"
+    iconName: "battery-missing-symbolic"
     component: Component {
         ColumnLayout {
             spacing: Themes.Units.largeSpacing
@@ -44,52 +44,40 @@ Indicator {
                 color: Themes.Theme.palette.panel.textColor
             }
 
+            Repeater {
+                model: hardwareEngine.batteries
+
+                PowerIndicator.BatteryEntry {
+                    battery: modelData
+
+                    Layout.fillWidth: true
+                }
+            }
+
             Item {
                 Layout.fillHeight: true
             }
         }
     }
-    visible: false
+    visible: hardwareEngine.batteries.length > 0
 
-    PlasmaCore.DataSource {
-        id: pmSource
-        engine: "powermanagement"
-        connectedSources: sources
-        onSourceAdded: {
-            disconnectSource(source);
-            connectSource(source);
-        }
-        onSourceRemoved: {
-            disconnectSource(source);
+    HardwareEngine {
+        id: hardwareEngine
+        onBatteriesChanged: {
+            var i, total = 0;
+            for (i = 0; i < hardwareEngine.batteries.length; i++)
+                total = Math.max(hardwareEngine.batteries[i].chargePercent, total);
+
+            if (total < 5)
+                iconName = "battery-empty-symbolic"
+            else if (total < 20)
+                iconName = "battery-low-symbolic";
+            else if (total < 40)
+                iconName = "battery-caution-symbolic";
+            else if (total < 80)
+                iconName = "battery-good-symbolic";
+            else
+                iconName = "battery-full-symbolic";
         }
     }
-
-    PlasmaCore.SortFilterModel {
-        id: batteries
-        filterRole: "Is Power Supply"
-        sortOrder: Qt.DescendingOrder
-        sourceModel: PlasmaCore.SortFilterModel {
-            sortRole: "Pretty Name"
-            sortOrder: Qt.AscendingOrder
-            sortCaseSensitivity: Qt.CaseInsensitive
-            sourceModel: PlasmaCore.DataModel {
-                dataSource: pmSource
-                sourceFilter: "Battery[0-9]+"
-
-                onDataChanged: updateLogic()
-            }
-        }
-
-        property int cumulativePercent
-        property bool cumulativePluggedin
-        // true  --> all batteries charged
-        // false --> one of the batteries charging/discharging
-        property bool allCharged
-        property bool charging
-        property string tooltipMainText
-        property string tooltipSubText
-        property string tooltipImage
-    }
-
-    function updateLogic() {}
 }
