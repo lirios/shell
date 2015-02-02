@@ -126,6 +126,16 @@ Item {
             animation.mapAnimation.start();
     }
 
+    function runMinimizeAnimation() {
+        if (animation && animation.minimizeAnimation)
+            animation.minimizeAnimation.start();
+    }
+
+    function runUnminimizeAnimation() {
+        if (animation && animation.unminimizeAnimation)
+            animation.unminimizeAnimation.start();
+    }
+
     function runUnmapAnimation() {
         if (animation && animation.unmapAnimation)
             animation.unmapAnimation.start();

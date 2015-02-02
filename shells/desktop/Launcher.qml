@@ -38,6 +38,7 @@ Item {
     readonly property real itemSize: iconSize + (iconSize * 0.25)
     readonly property real itemPadding: Themes.Units.smallSpacing * 2
     property alias orientation: listView.orientation
+    readonly property alias currentItem: listView.currentItem
 
     id: launcher
 
@@ -46,6 +47,8 @@ Item {
 
         Item {
             property int indexOfThisDelegate: index
+            property string appId: model.appId
+            property bool active: true
 
             id: root
             width: itemSize
@@ -201,7 +204,7 @@ Item {
                 onClicked: {
                     switch (mouse.button) {
                     case Qt.LeftButton:
-                        model.activate(index);
+                        toggleWindows();
                         break;
                     case Qt.RightButton:
                         if (menu.showing)
@@ -213,6 +216,26 @@ Item {
                         break;
                     }
                 }
+            }
+
+            function toggleWindows() {
+                // Set index so that the window have a clue of which icon was clicked
+                listView.currentIndex = index;
+
+                // Minimize or unminimize windows
+                var i, entry;
+                for (i = 0; i < surfaceModel.count; i++) {
+                    entry = surfaceModel.get(i);
+                    if (entry.window.appId === model.appId) {
+                        if (root.active)
+                            entry.window.minimize();
+                        else
+                            entry.window.unminimize();
+                    }
+                }
+
+                // Toggle active flag
+                root.active = !root.active;
             }
         }
     }

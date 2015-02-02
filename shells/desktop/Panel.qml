@@ -34,6 +34,7 @@ import "indicators"
 Rectangle {
     property Indicator selectedIndicator: null
     property Indicator lastIndicator: null
+    readonly property alias currentLauncherItem: launcher.currentItem
 
     signal indicatorTriggered(var indicator)
 

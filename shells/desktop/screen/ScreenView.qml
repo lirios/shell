@@ -49,6 +49,8 @@ Item {
         readonly property alias notifications: notificationsLayer
     }
 
+    readonly property alias panel: panel
+
     id: root
     transform: Scale {
         id: screenScaler

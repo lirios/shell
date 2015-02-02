@@ -85,6 +85,28 @@ WindowWrapper {
         onMotionStarted: animationsEnabled = false
         onMotionFinished: animationsEnabled = true
         onActiveChanged: if (clientWindow.active) compositorRoot.moveFront(window)
+        onMinimizedChanged: {
+            if (clientWindow.minimized) {
+                // Save old position and scale
+                saved.x = window.x;
+                saved.y = window.y;
+                saved.scale = window.scale;
+
+                // Move the window
+                var panel = compositorRoot.screenView.panel;
+                var pos = compositorRoot.mapFromItem(panel.currentLauncherItem, 0, 0);
+                window.x = pos.x - (width * 0.5);
+                window.y = pos.y - (height * 0.5);
+                window.scale = 0.0;
+                window.opacity = 0.0;
+            } else {
+                // Restore old properties
+                window.x = saved.x;
+                window.y = saved.y;
+                window.scale = saved.scale;
+                window.opacity = 1.0;
+            }
+        }
     }
 
     /*
@@ -157,7 +179,7 @@ WindowWrapper {
     Behavior on opacity {
         enabled: visible
         NumberAnimation {
-            easing.type: Easing.InSine
+            easing.type: Easing.Linear
             duration: Themes.Units.longDuration
         }
     }
