@@ -50,6 +50,27 @@ Item {
         // Disable output zoom
         compositorRoot.screenView.zoomEnabled = false;
 
+        // Layout
+        gridLayout(num);
+    }
+
+    function isWindowFine(window) {
+        // Only windows from applications
+        if (window.objectName !== "clientWindow")
+            return false;
+
+        // Skip windows from other outputs
+        if (window.clientWindow.output !== _greenisland_output)
+            return false;
+
+        // Skip windows that are not toplevel
+        if (window.clientWindow.type !== ClientWindow.TopLevel)
+            return false;
+
+        return true;
+    }
+
+    function gridLayout(num) {
         // Calculate rows and columns
         var columns = Math.ceil(Math.sqrt(num));
         var rows = Math.ceil(num / columns);
@@ -64,16 +85,8 @@ Item {
             // Find window
             window = workspace.children[i];
 
-            // Only windows from applications
-            if (window.objectName !== "clientWindow")
-                continue;
-
-            // Skip windows from other outputs
-            if (window.clientWindow.output !== _greenisland_output)
-                continue;
-
-            // Skip windows that are not toplevel
-            if (window.clientWindow.type !== ClientWindow.TopLevel)
+            // Skip certain windows
+            if (!isWindowFine(window))
                 continue;
 
             // Save original properties
