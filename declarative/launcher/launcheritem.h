@@ -42,7 +42,7 @@ class LauncherItem : public QObject
     Q_PROPERTY(QString iconName READ iconName CONSTANT)
     Q_PROPERTY(bool pinned READ isPinned WRITE setPinned NOTIFY pinnedChanged)
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
-    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+    Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 public:
@@ -60,6 +60,7 @@ public:
     bool isRunning() const;
 
     bool isActive() const;
+    void setActive(bool value);
 
     int count() const;
     int progress() const;
@@ -74,6 +75,7 @@ Q_SIGNALS:
 private:
     bool m_pinned;
     bool m_running;
+    bool m_active;
     int m_count;
     int m_progress;
     ApplicationInfo *m_info;

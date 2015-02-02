@@ -35,24 +35,24 @@ LauncherItem::LauncherItem(const QString &appId, QObject *parent)
     : QObject(parent)
     , m_pinned(false)
     , m_running(true)
+    , m_active(true)
     , m_count(0)
     , m_progress(-1)
     , m_info(new ApplicationInfo(appId, this))
 {
     connect(m_info, SIGNAL(stateChanged()), this, SIGNAL(runningChanged()));
-    connect(m_info, SIGNAL(focusedChanged()), this, SIGNAL(activeChanged()));
 }
 
 LauncherItem::LauncherItem(const QString &appId, bool pinned, QObject *parent)
     : QObject(parent)
     , m_pinned(pinned)
     , m_running(false)
+    , m_active(false)
     , m_count(0)
     , m_progress(-1)
     , m_info(new ApplicationInfo(appId, this))
 {
     connect(m_info, SIGNAL(stateChanged()), this, SIGNAL(runningChanged()));
-    connect(m_info, SIGNAL(focusedChanged()), this, SIGNAL(activeChanged()));
 }
 
 QString LauncherItem::appId() const
@@ -91,13 +91,21 @@ void LauncherItem::setPinned(bool value)
 
 bool LauncherItem::isRunning() const
 {
-    //return m_info->state() != ApplicationInfo::NotRunning;
     return m_running;
 }
 
 bool LauncherItem::isActive() const
 {
-    return m_info->isFocused();
+    return m_active;
+}
+
+void LauncherItem::setActive(bool value)
+{
+    if (m_active == value)
+        return;
+
+    m_active = value;
+    Q_EMIT activeChanged();
 }
 
 int LauncherItem::count() const
