@@ -28,18 +28,64 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0 as Components
+import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
+import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
 
 MouseArea {
     property bool expanded: false
+    property bool hasIcon: model.appIcon !== ""
+    property bool hasImage: model.image !== undefined
 
     id: root
     width: parent.width
     height: Themes.Units.gu(2)
     drag.axis: Drag.XAxis
     drag.target: root
+    states: [
+        State {
+            name: "default"
+            when: (hasIcon || hasImage) && (model.body.length > 0)
+
+            AnchorChanges {
+                target: titleLabel
+                anchors.left: model.appIcon || model.image ? appIconItem.right : parent.left
+                anchors.top: parent.top
+                anchors.right: parent.right
+            }
+            PropertyChanges {
+                target: titleLabel
+                anchors.leftMargin: Themes.Units.smallSpacing * 2
+                anchors.topMargin: Themes.Units.smallSpacing
+            }
+        },
+        State {
+            name: "summaryOnly"
+            when: !hasIcon && !hasImage && (model.body.length === 0)
+
+            AnchorChanges {
+                target: titleLabel
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        },
+        State {
+            name: "summaryWithIcons"
+            when: (hasIcon || hasImage) && (model.body.length === 0)
+
+            AnchorChanges {
+                target: titleLabel
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            PropertyChanges {
+                target: titleLabel
+                anchors.leftMargin: appIconItem.width + (Themes.Units.smallSpacing * 2)
+            }
+        }
+    ]
     onExpandedChanged: {
-        if (expanded && body)
+        if (expanded && model.body)
             height = Themes.Units.gu(4);
         else
             height = Themes.Units.gu(2);
@@ -50,7 +96,7 @@ MouseArea {
                 notificationsModel.remove(index);
             else
                 x = 0;
-        } else if (body) {
+        } else if (model.body) {
             expanded = !expanded;
         }
     }
@@ -69,36 +115,77 @@ MouseArea {
         }
     }
 
-    RowLayout {
-        spacing: Themes.Units.largeSpacing
-
-        Components.Icon {
-            id: icon
-            width: Themes.Units.iconSizes.medium
-            height: width
-            iconName: appIcon && appIcon.length > 0 ? appIcon : "dialog-information-symbolic"
-            color: Themes.Theme.palette.panel.textColor
-
-            Layout.alignment: Qt.AlignTop
+    Component.onCompleted: {
+        if (hasIcon && !hasImage) {
+            if (model.appIcon.indexOf("/") === -1)
+                appIconItem.iconName = model.appIcon;
+            else
+                pictureItem.source = model.appIcon;
+        } else if (!hasIcon && hasImage) {
+            imageItem.image = model.image;
         }
+    }
 
-        ColumnLayout {
-            spacing: Themes.Units.largeSpacing
-
-            Label {
-                clip: true
-                text: summary + (root.expanded ? (body ? "\n" + body : "") :
-                                                 (body ? "..." : ""))
-                color: Themes.Theme.palette.panel.textColor
-                font.pointSize: 14
-            }
-
-            Item {
-                id: extraArea
-                width: root.parent.width
-                height: root.parent.height
-                visible: root.expanded
-            }
+    Components.Icon {
+        id: appIconItem
+        anchors {
+            left: parent.left
+            top: parent.top
+            leftMargin: Themes.Units.smallSpacing
+            topMargin: Themes.Units.smallSpacing
         }
+        width: Themes.Units.iconSizes.medium
+        height: width
+        color: Themes.Theme.palette.panel.textColor
+        visible: hasIcon && model.appIcon.indexOf("/") === -1
+    }
+
+    Image {
+        id: pictureItem
+        anchors.fill: appIconItem
+        sourceSize.width: width
+        sourceSize.height: height
+        fillMode: Image.PreserveAspectFit
+        visible: hasIcon && model.appIcon.indexOf("/") !== -1
+    }
+
+    KQuickControls.QImageItem {
+        id: imageItem
+        anchors.fill: appIconItem
+        fillMode: Image.PreserveAspectFit
+        visible: hasImage
+    }
+
+    Controls.Heading {
+        id: titleLabel
+        level: 4
+        font.weight: Font.Bold
+        elide: Text.ElideRight
+        text: model.summary
+        color: Themes.Theme.palette.panel.textColor
+        visible: text.length > 0
+        onLinkActivated: Qt.openUrlExternally(link)
+    }
+
+    Controls.Heading {
+        id: bodyLabel
+        anchors {
+            left: model.appIcon || model.image ? appIconItem.right : parent.left
+            top: titleLabel.bottom
+            right: parent.right
+            bottom: parent.bottom
+            leftMargin: Themes.Units.smallSpacing * 2
+            rightMargin: Themes.Units.smallSpacing * 2
+            bottomMargin: Themes.Units.smallSpacing
+        }
+        level: 5
+        wrapMode: Text.Wrap
+        elide: Text.ElideRight
+        text: model.body
+        maximumLineCount: 10
+        verticalAlignment: Text.AlignTop
+        color: Themes.Theme.palette.panel.textColor
+        visible: text.length > 0 && expanded
+        onLinkActivated: Qt.openUrlExternally(link)
     }
 }
