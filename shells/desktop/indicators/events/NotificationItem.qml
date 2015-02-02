@@ -32,7 +32,7 @@ import Hawaii.Themes 1.0 as Themes
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
 
 Item {
-    property alias icon: appIconItem.iconName
+    property string icon
     property alias image: imageItem.image
     property bool hasIcon: false
     property bool hasImage: false
@@ -54,7 +54,7 @@ Item {
     states: [
         State {
             name: "default"
-            when: (appIconItem.visible || imageItem.visible) && (bodyLabel.visible || actionsColumn.visible)
+            when: (hasIcon || hasImage) && (bodyLabel.visible || actionsColumn.visible)
 
             AnchorChanges {
                 target: titleLabel
@@ -70,7 +70,7 @@ Item {
         },
         State {
             name: "summaryOnly"
-            when: !appIconItem.visible && !imageItem.visible && !bodyLabel.visible && !actionsColumn.visible
+            when: !hasIcon && !hasImage && !bodyLabel.visible && !actionsColumn.visible
 
             AnchorChanges {
                 target: titleLabel
@@ -80,7 +80,7 @@ Item {
         },
         State {
             name: "summaryWithIcons"
-            when: (appIconItem.visible || imageItem.visible) && !bodyLabel.visible && !actionsColumn.visible
+            when: (hasIcon || hasImage) && !bodyLabel.visible && !actionsColumn.visible
 
             AnchorChanges {
                 target: titleLabel
@@ -93,6 +93,14 @@ Item {
             }
         }
     ]
+    onIconChanged: {
+        if (hasIcon && !hasImage) {
+            if (icon.indexOf("/") === -1)
+                appIconItem.iconName = icon;
+            else
+                pictureItem.source = icon;
+        }
+    }
 
     Components.Icon {
         id: appIconItem
@@ -105,7 +113,16 @@ Item {
         width: Themes.Units.iconSizes.large
         height: width
         color: Themes.Theme.palette.panel.textColor
-        visible: hasIcon
+        visible: hasIcon && icon.indexOf("/") === -1
+    }
+
+    Image {
+        id: pictureItem
+        anchors.fill: appIconItem
+        sourceSize.width: width
+        sourceSize.height: height
+        fillMode: Image.PreserveAspectFit
+        visible: hasIcon && icon.indexOf("/") !== -1
     }
 
     KQuickControls.QImageItem {
