@@ -1,0 +1,4 @@
+module org.hawaii.hardware
+plugin hardwareplugin
+classname HardwarePlugin
+typeinfo plugins.qmltypes
