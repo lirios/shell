@@ -176,8 +176,6 @@ void ProcessController::setupCompositor()
                                << QStringLiteral("org.hawaii.desktop"));
     if (m_mode == NestedMode) {
         m_compositor->setArguments(m_compositor->arguments()
-                                   << QStringLiteral("-platform")
-                                   << QStringLiteral("wayland")
                                    << QStringLiteral("--socket=") + m_compositorSocket);
     } else if (m_mode == EglFSMode || m_mode == HwComposerMode) {
         const QString platform(m_mode == EglFSMode ? "eglfs" : "hwcomposer");
@@ -195,8 +193,10 @@ void ProcessController::setupCompositor()
 
     // Pass arguments for full screen shell and style
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    if (m_fullScreenShell)
+    if (m_fullScreenShell) {
+        env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
+    }
     env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
     env.insert(QStringLiteral("XCURSOR_THEME"), QStringLiteral("hawaii"));
     env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
