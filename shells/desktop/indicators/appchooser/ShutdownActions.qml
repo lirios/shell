@@ -45,7 +45,11 @@ RowLayout {
         iconName: "system-log-out-symbolic"
         tooltip: qsTr("Log out from current session")
         enabled: session.canLogOut
-        onClicked: compositorRoot.state = "logout"
+        onClicked: {
+            compositorRoot.state = "logout";
+            if (indicator.expanded)
+                indicator.triggered(indicator);
+        }
     }
 
     ToolButton {
@@ -54,7 +58,11 @@ RowLayout {
         iconName: "system-shutdown-symbolic"
         tooltip: qsTr("Power off the system")
         enabled: session.canPowerOff
-        onClicked: compositorRoot.state = "poweroff"
+        onClicked: {
+            compositorRoot.state = "poweroff";
+            if (indicator.expanded)
+                indicator.triggered(indicator);
+        }
     }
 
     ToolButton {
@@ -63,6 +71,10 @@ RowLayout {
         iconName: "system-reboot-symbolic"
         tooltip: qsTr("Restart the system")
         enabled: session.canRestart
-        onClicked: compositorRoot.state = "restart"
+        onClicked: {
+            compositorRoot.state = "restart";
+            if (indicator.expanded)
+                indicator.triggered(indicator);
+        }
     }
 }
