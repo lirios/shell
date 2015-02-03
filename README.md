@@ -12,8 +12,18 @@ Only the desktop shell is implemented at the moment though.
 
 You need the following modules and their dependencies:
 
-* weston (from http://wayland.freedesktop.org)
-* greenisland (from https://github.com/greenisland)
+* [greenisland](https://github.com/greenisland/greenisland)
+
+Optional, but recommended dependencies:
+
+* [hawaii-icon-themes](https://github.com/hawaii-desktop/hawaii-icon-themes) (for the default icon theme)
+* [hawaii-wallpapers](https://github.com/hawaii-desktop/hawaii-wallpapers) (for the default wallpaper)
+
+If you do not install those dependencies, please configure Hawaii with an
+alternative icon theme and wallpaper.
+
+You may also need [Weston](http://wayland.freedesktop.org) for nested mode
+to work.
 
 Make sure you also have Qt 5.4 or better with the following modules:
 
