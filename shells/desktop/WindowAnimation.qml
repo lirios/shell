@@ -43,33 +43,22 @@ Item {
     signal destroyAnimationStopped()
 
     id: root
-
-    Component.onCompleted: {
+    onMapAnimationChanged: {
         if (mapAnimation) {
-            mapAnimation.onRunningChanged.connect(function() {
-                if (mapAnimation.running)
-                    root.mapAnimationStarted();
-                else
-                    root.mapAnimationStopped();
-            });
+            mapAnimation.started.connect(root.mapAnimationStarted);
+            mapAnimation.stopped.connect(root.mapAnimationStopped);
         }
-
+    }
+    onUnmapAnimationChanged: {
         if (unmapAnimation) {
-            unmapAnimation.onRunningChanged.connect(function() {
-                if (unmapAnimation.running)
-                    root.unmapAnimationStarted();
-                else
-                    root.unmapAnimationStopped();
-            });
+            unmapAnimation.started.connect(root.unmapAnimationStarted);
+            unmapAnimation.stopped.connect(root.unmapAnimationStopped);
         }
-
+    }
+    onDestroyAnimationChanged: {
         if (destroyAnimation) {
-            destroyAnimation.onRunningChanged.connect(function() {
-                if (destroyAnimation.running)
-                    root.destroyAnimationStarted()
-                else
-                    root.destroyAnimationStopped();
-            });
+            destroyAnimation.started.connect(root.destroyAnimationStarted);
+            destroyAnimation.stopped.connect(root.destroyAnimationStopped);
         }
     }
 }
