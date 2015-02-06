@@ -45,10 +45,10 @@ WindowWrapper {
     // Decrease contrast for transient parents
     ContrastEffect {
         id: contrast
-        x: clientWindow.internalGeometry.x
-        y: clientWindow.internalGeometry.y
-        width: clientWindow.internalGeometry.width
-        height: clientWindow.internalGeometry.height
+        x: clientWindow ? clientWindow.internalGeometry.x : 0
+        y: clientWindow ? clientWindow.internalGeometry.y : 0
+        width: clientWindow ? clientWindow.internalGeometry.width : 0
+        height: clientWindow ? clientWindow.internalGeometry.height : 0
         source: window
         blend: transientChildren ? 0.742 : 1.0
         color: "black"

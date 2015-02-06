@@ -125,15 +125,14 @@ function windowMapped(window) {
     compositorRoot.addWindowToEffect(item);
 
     // Run map animation
-    if (item.runMapAnimation != undefined)
-        item.runMapAnimation();
+    item.runMapAnimation();
 
     // Add surface to the model
     surfaceModel.append({"window": window, "item": item, "surface": window.surface});
 }
 
-function windowUnmapped(window) {
-    console.debug("Application window unmapped");
+function windowUnmapped(window, destruction) {
+    console.debug("Application window", destruction ? "destroyed" : "unmapped");
     _printWindowInfo(window);
 
     // Find window representation
@@ -165,6 +164,12 @@ function windowUnmapped(window) {
     // Remove window from effect
     compositorRoot.removeWindowFromEffect(item);
 
+    // Run unmap or destruction animation
+    if (destruction)
+        item.runDestroyAnimation();
+    else
+        item.runUnmapAnimation();
+
     // Unset transient children so that the parent can go back to normal
     // and also bring to front
     if (window.type === ClientWindow.Transient) {
@@ -172,9 +177,6 @@ function windowUnmapped(window) {
         parentItem.transientChildren = null;
         //parentItem.child.takeFocus();
     }
-
-    // Destroy window representation
-    item.destroy();
 }
 
 /*

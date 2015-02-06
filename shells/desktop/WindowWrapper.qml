@@ -101,14 +101,8 @@ Item {
     }
 
     Connections {
-        target: child
-        onSurfaceDestroyed: runDestroyAnimation()
-    }
-
-    Connections {
         target: child ? child.surface : null
         onPong: pongSurface()
-        onUnmapped: runUnmapAnimation()
     }
 
     Binding {
@@ -120,6 +114,18 @@ Item {
     /*
      * Animations
      */
+
+    Connections {
+        target: animation
+        onUnmapAnimationStopped: {
+            // Destroy window representation
+            window.destroy();
+        }
+        onDestroyAnimationStopped: {
+            // Destroy window representation
+            window.destroy();
+        }
+    }
 
     function runMapAnimation() {
         if (animation && animation.mapAnimation)
@@ -136,14 +142,19 @@ Item {
             animation.unminimizeAnimation.start();
     }
 
+
     function runUnmapAnimation() {
         if (animation && animation.unmapAnimation)
             animation.unmapAnimation.start();
+        else
+            window.destroy();
     }
 
     function runDestroyAnimation() {
         if (animation && animation.destroyAnimation)
             animation.destroyAnimation.start();
+        else
+            window.destroy();
     }
 
     /*

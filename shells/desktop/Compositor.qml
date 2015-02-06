@@ -242,7 +242,11 @@ Item {
         }
         onWindowUnmapped: {
             // A window was unmapped
-            WindowManagement.windowUnmapped(window);
+            WindowManagement.windowUnmapped(window, false);
+        }
+        onWindowDestroyed: {
+            // A window was unmapped
+            WindowManagement.windowUnmapped(window, true);
         }
     }
 
