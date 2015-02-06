@@ -81,9 +81,9 @@ Item {
     visible: false
 
     SurfaceRenderer {
+        id: surfaceRenderer
         anchors.fill: parent
         source: child
-        z: 1
     }
 
     /*
@@ -141,7 +141,6 @@ Item {
         if (animation && animation.unminimizeAnimation)
             animation.unminimizeAnimation.start();
     }
-
 
     function runUnmapAnimation() {
         if (animation && animation.unmapAnimation)

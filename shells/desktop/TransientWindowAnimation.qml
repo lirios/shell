@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.4
+import QtQuick 2.0
 
 WindowAnimation {
     id: animation
@@ -33,47 +33,63 @@ WindowAnimation {
         id: transform
         origin.x: animation.windowItem.width / 2
         origin.y: animation.windowItem.height / 2
-        xScale: 0.01
-        yScale: 0.1
+        yScale: 0.0
     }
 
-    mapAnimation: ParallelAnimation {
-        OpacityAnimator {
-            target: animation.windowItem
-            easing.type: Easing.Linear
-            to: 1.0
-            duration: 250
-        }
+    mapAnimation: SequentialAnimation {
+        ScriptAction { script: animation.windowItem.transform = transform }
 
-        SequentialAnimation {
-            ScriptAction {
-                script: animation.windowItem.transform = transform
+        ParallelAnimation {
+            NumberAnimation {
+                target: animation.windowItem
+                property: "opacity"
+                easing.type: Easing.OutQuad
+                from: 0.0
+                to: 1.0
+                duration: 250
             }
-
-            ParallelAnimation {
-                NumberAnimation {
-                    target: transform
-                    property: "xScale"
-                    easing.type: Easing.OutExpo
-                    to: 1.0
-                    duration: 350
-                }
-
-                NumberAnimation {
-                    target: transform
-                    property: "yScale"
-                    easing.type: Easing.OutExpo
-                    to: 1.0
-                    duration: 350
-                }
+            NumberAnimation {
+                target: transform
+                property: "yScale"
+                easing.type: Easing.OutQuad
+                from: 0.0
+                to: 1.0
+                duration: 250
             }
         }
+
+        ScriptAction { script: animation.windowItem.transform = null }
     }
 
-    unmapAnimation: OpacityAnimator {
+    unmapAnimation: NumberAnimation {
         target: animation.windowItem
+        property: "opacity"
         easing.type: Easing.Linear
         to: 0.0
         duration: 250
+    }
+
+    destroyAnimation: SequentialAnimation {
+        ScriptAction { script: animation.windowItem.transform = transform }
+
+        ParallelAnimation {
+            NumberAnimation {
+                target: transform
+                property: "yScale"
+                easing.type: Easing.OutQuad
+                from: 1.0
+                to: 0.0
+                duration: 200
+            }
+            NumberAnimation {
+                target: animation.windowItem
+                property: "opacity"
+                easing.type: Easing.OutQuad
+                to: 0.0
+                duration: 200
+            }
+        }
+
+        ScriptAction { script: animation.windowItem.transform = null }
     }
 }
