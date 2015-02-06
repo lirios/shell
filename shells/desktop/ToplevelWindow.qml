@@ -130,17 +130,17 @@ WindowWrapper {
 
     Behavior on x {
         enabled: animationsEnabled
-        NumberAnimation {
+        SmoothedAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.longDuration
+            duration: Themes.Units.mediumDuration
         }
     }
 
     Behavior on y {
         enabled: animationsEnabled
-        NumberAnimation {
+        SmoothedAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.longDuration
+            duration: Themes.Units.mediumDuration
         }
     }
 
@@ -154,17 +154,17 @@ WindowWrapper {
 
     Behavior on width {
         enabled: visible
-        NumberAnimation {
+        SmoothedAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.shortDuration
+            duration: Themes.Units.mediumDuration
         }
     }
 
     Behavior on height {
         enabled: visible
-        NumberAnimation {
+        SmoothedAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.shortDuration
+            duration: Themes.Units.mediumDuration
         }
     }
 
