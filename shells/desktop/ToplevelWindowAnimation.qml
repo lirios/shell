@@ -37,14 +37,6 @@ WindowAnimation {
         yScale: 0.1
     }
 
-    Scale {
-        id: destroyTransform
-        origin.x: animation.windowItem.width / 2
-        origin.y: animation.windowItem.height / 2
-        xScale: 1.0
-        yScale: 1.0
-    }
-
     mapAnimation: ParallelAnimation {
         OpacityAnimator {
             target: animation.windowItem
@@ -86,35 +78,21 @@ WindowAnimation {
     }
 
     destroyAnimation: ParallelAnimation {
-        SequentialAnimation {
-            ScriptAction {
-                script: animation.windowItem.transform = destroyTransform
-            }
-
-            ParallelAnimation {
-                NumberAnimation {
-                    target: destroyTransform
-                    property: "xScale"
-                    easing.type: Easing.Linear
-                    to: 0.0
-                    duration: 250
-                }
-
-                NumberAnimation {
-                    target: destroyTransform
-                    property: "yScale"
-                    easing.type: Easing.Linear
-                    to: 0.0
-                    duration: 250
-                }
-            }
-        }
-
-        OpacityAnimator {
+        NumberAnimation {
             target: animation.windowItem
+            property: "scale"
             easing.type: Easing.Linear
+            from: 1.0
             to: 0.0
-            duration: 300
+            duration: 3500
+        }
+        NumberAnimation {
+            target: animation.windowItem
+            property: "opacity"
+            easing.type: Easing.Linear
+            from: 1.0
+            to: 0.0
+            duration: 2500
         }
     }
 }
