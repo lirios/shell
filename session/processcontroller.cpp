@@ -193,7 +193,7 @@ void ProcessController::setupCompositor()
 
     // Pass arguments for full screen shell and style
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    if (m_fullScreenShell) {
+    if (m_mode == NestedMode) {
         env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
     }
