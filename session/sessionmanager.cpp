@@ -24,12 +24,16 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusError>
+
 #include "libqtxdg/xdgautostart.h"
 #include "libqtxdg/xdgdesktopfile.h"
 
 #include "cmakedirs.h"
 #include "processcontroller.h"
 #include "processlauncher.h"
+#include "sessionadaptor.h"
 #include "sessionmanager.h"
 
 #include <sys/types.h>
@@ -50,9 +54,6 @@ SessionManager::SessionManager(ProcessController *controller)
     // which happens after we killed all the processes so when this
     // arrives we can emit the loggedOut signal
     connect(m_controller, SIGNAL(stopped()), this, SIGNAL(loggedOut()));
-
-    // Register process launcher service
-    m_launcher->registerInterface();
 }
 
 void SessionManager::setupEnvironment()
@@ -93,6 +94,31 @@ void SessionManager::setupEnvironment()
     qputenv("QT_QPA_PLATFORMTHEME", QByteArray("Hawaii"));
     qputenv("XDG_MENU_PREFIX", QByteArray("hawaii-"));
     qputenv("XDG_CURRENT_DESKTOP", QByteArray("Hawaii"));
+}
+
+bool SessionManager::registerDBus()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    // Start the D-Bus service
+    (void)new SessionAdaptor(this);
+    if (!bus.registerObject(objectPath, this)) {
+        qCWarning(SESSION_MANAGER) << "Couldn't register /HawaiiSession D-Bus object:"
+                                   << qPrintable(bus.lastError().message());
+        return false;
+    }
+    if (!bus.registerService(interfaceName)) {
+        qCWarning(SESSION_MANAGER) << "Couldn't register org.hawaii.session D-Bus service:"
+                                   << qPrintable(bus.lastError().message());
+        return false;
+    }
+    qCDebug(SESSION_MANAGER) << "Registered" << interfaceName << "D-Bus interface";
+
+    // Register process launcher service
+    if (!m_launcher->registerInterface())
+        return false;
+
+    return true;
 }
 
 void SessionManager::autostart()

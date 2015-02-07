@@ -28,8 +28,6 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QProcess>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
 #include <QtDBus/QDBusInterface>
 
 #include "sigwatch/sigwatch.h"
@@ -37,15 +35,11 @@
 #include "cmakedirs.h"
 #include "config.h"
 #include "processcontroller.h"
-#include "sessionadaptor.h"
 #include "sessionmanager.h"
 
 #include <unistd.h>
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
-
-const QString sessionService("org.hawaii.session");
-const QString sessionObject("/HawaiiSession");
 
 int main(int argc, char *argv[])
 {
@@ -75,7 +69,7 @@ int main(int argc, char *argv[])
 
     // Logout from an existing session
     if (parser.isSet(logoutOption)) {
-        QDBusInterface interface(sessionService, sessionObject);
+        QDBusInterface interface(SessionManager::interfaceName, SessionManager::objectPath);
         interface.call("logOut");
         return 0;
     }
@@ -150,15 +144,9 @@ int main(int argc, char *argv[])
         QCoreApplication::quit();
     });
 
-    // Start the D-Bus service
-    (void)new SessionAdaptor(sessionManager);
-    QDBusConnection bus = QDBusConnection::sessionBus();
-    if (!bus.registerService(sessionService))
-        qFatal("Couldn't register org.hawaii.session D-Bus service: %s",
-               qPrintable(bus.lastError().message()));
-    if (!bus.registerObject(sessionObject, sessionManager))
-        qFatal("Couldn't register /HawaiiSession D-Bus object: %s",
-               qPrintable(bus.lastError().message()));
+    // Register all D-Bus services
+    if (!sessionManager->registerDBus())
+        return 1;
 
     // Start the compositor
     processController.start();

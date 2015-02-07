@@ -46,6 +46,10 @@ public:
     }
 
     void setupEnvironment();
+    bool registerDBus();
+
+    static constexpr const char *interfaceName = "org.hawaii.session";
+    static constexpr const char *objectPath = "/HawaiiSession";
 
 Q_SIGNALS:
     void loggedOut();
