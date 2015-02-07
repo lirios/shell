@@ -110,16 +110,14 @@ function windowMapped(window) {
     else if (window.type === ClientWindow.Popup)
         parentItem.popupChild = item;
 
-    // z-order and focus
-    if (window.type === ClientWindow.TopLevel) {
-        item.z = windowList.push(item);
-        activeWindow = item;
-        compositorRoot.activeWindow = activeWindow;
-        item.forceActiveFocus();
-    }
-
     // Make it visible
     item.visible = true;
+
+    // z-order and focus
+    if (window.type === ClientWindow.TopLevel) {
+        item.z = windowList.push(item) - 1;
+        window.activate();
+    }
 
     // Add window to current effect
     compositorRoot.addWindowToEffect(item);
@@ -175,7 +173,7 @@ function windowUnmapped(window, destruction) {
     if (window.type === ClientWindow.Transient) {
         var parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
         parentItem.transientChildren = null;
-        //parentItem.child.takeFocus();
+        parentItem.child.takeFocus();
     }
 }
 
@@ -251,7 +249,8 @@ function moveFront(window) {
 
     // Ignore if the window is already the highest in the stacking order
     if (initialZ == windowList.length - 1) {
-        //window.child.takeFocus();
+        window.child.takeFocus();
+        window.forceActiveFocus();
         return;
     }
 
@@ -261,11 +260,10 @@ function moveFront(window) {
     console.debug("\ti =", initialZ + 1, "; i <", windowList.length);
     for (i = initialZ + 1; i < windowList.length; ++i) {
         windowList[i].z = Math.ceil(window.z);
-        if (windowList[i].child)
-            windowList[i].child.focus = false;
         console.debug("\t" + windowList[i], "z:", Math.ceil(windowList[i].z));
         window.z = i;
     }
+
     console.debug("\t" + window, "z:", Math.ceil(window.z));
 
     windowList.splice(initialZ, 1);
@@ -273,6 +271,9 @@ function moveFront(window) {
     window.parent.parent.selectWorkspace(window.parent);
     activeWindow = window;
     compositorRoot.activeWindow = activeWindow;
+
+    window.child.takeFocus();
+    window.forceActiveFocus();
 }
 
 function getActiveWindowIndex() {
