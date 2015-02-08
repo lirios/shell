@@ -35,11 +35,30 @@ Rectangle {
     property Indicator selectedIndicator: null
     property Indicator lastIndicator: null
     readonly property alias currentLauncherItem: launcher.currentItem
+    property real size: Themes.Units.iconSizes.large
+    property int alignment: Qt.AlignBottom
+    readonly property int formFactor: (alignment == Qt.AlignLeft || alignment == Qt.AlignRight) ? Qt.Horizontal : Qt.Vertical
 
     signal indicatorTriggered(var indicator)
 
+    id: root
     color: "transparent"
     height: launcher.itemSize + launcher.itemPadding
+    onSizeChanged: {
+        switch (size) {
+        case Themes.Units.iconSizes.medium:
+            indicators.iconSize = Themes.Units.iconSizes.small;
+            break;
+        case Themes.Units.iconSizes.large:
+            indicators.iconSize = Themes.Units.iconSizes.smallMedium;
+            break;
+        case Themes.Units.iconSizes.huge:
+            indicators.iconSize = Themes.Units.iconSizes.medium;
+            break;
+        default:
+            break;
+        }
+    }
 
     Behavior on color {
         ColorAnimation { duration: Themes.Units.longDuration }
@@ -47,15 +66,15 @@ Rectangle {
 
     Behavior on width {
         NumberAnimation {
-            easing.type: Easing.InSine
-            duration: Themes.Units.longDuration
+            easing.type: Easing.Linear
+            duration: Themes.Units.shortDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
-            easing.type: Easing.InSine
-            duration: Themes.Units.longDuration
+            easing.type: Easing.Linear
+            duration: Themes.Units.shortDuration
         }
     }
 
@@ -71,6 +90,7 @@ Rectangle {
 
     RowLayout {
         anchors.fill: parent
+        spacing: Themes.Units.smallSpacing
 
         RowLayout {
             id: leftContainer
@@ -85,6 +105,8 @@ Rectangle {
 
         Launcher {
             id: launcher
+            iconSize: root.size
+            alignment: root.alignment
 
             Layout.fillWidth: true
             //Layout.fillHeight: true
@@ -92,30 +114,38 @@ Rectangle {
         }
 
         RowLayout {
+            property int iconSize
+
             id: indicators
-            spacing: Themes.Units.largeSpacing
+            spacing: Themes.Units.smallSpacing
 
             ChatIndicator {
+                iconSize: indicators.iconSize
                 onTriggered: indicatorTriggered(caller)
             }
 
             EventsIndicator {
+                iconSize: indicators.iconSize
                 onTriggered: indicatorTriggered(caller)
             }
 
             SettingsIndicator {
+                iconSize: indicators.iconSize
                 onTriggered: indicatorTriggered(caller)
             }
 
             SoundIndicator {
+                iconSize: indicators.iconSize
                 onTriggered: indicatorTriggered(caller)
             }
 
             NetworkIndicator {
+                iconSize: indicators.iconSize
                 onTriggered: indicatorTriggered(caller)
             }
 
             BatteryIndicator {
+                iconSize: indicators.iconSize
                 onTriggered: indicatorTriggered(caller)
             }
 

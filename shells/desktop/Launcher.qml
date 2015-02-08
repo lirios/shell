@@ -34,7 +34,8 @@ import org.hawaii.launcher 0.1 as Launcher
 import "components" as CustomComponents
 
 Item {
-    property real iconSize: Themes.Units.iconSizes.large
+    property real iconSize
+    property int alignment
     readonly property real itemSize: iconSize + (iconSize * 0.25)
     readonly property real itemPadding: Themes.Units.smallSpacing * 2
     property alias orientation: listView.orientation
@@ -243,7 +244,7 @@ Item {
     ListView {
         id: listView
         anchors.centerIn: parent
-        orientation: ListView.Horizontal
+        orientation: alignment == Qt.AlignTop || alignment == Qt.AlignBottom ? ListView.Horizontal : ListView.Vertical
         spacing: Themes.Units.smallSpacing
         interactive: false
         add: Transition {

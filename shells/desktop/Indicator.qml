@@ -32,6 +32,7 @@ import Hawaii.Themes 1.0 as Themes
 Item {
     property string name
     property alias iconName: icon.iconName
+    property alias iconSize: icon.width
     property alias text: label.text
     property int badgeCount: 0
     property bool active: false
@@ -90,7 +91,6 @@ Item {
         id: icon
         anchors.centerIn: parent
         color: selected ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
-        width: Themes.Units.roundToIconSize(Themes.Units.iconSizes.smallMedium)
         height: width
     }
 
