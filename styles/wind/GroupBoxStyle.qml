@@ -25,29 +25,19 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls.Styles 1.1 as QtControlsStyle
-import QtQuick.Controls.Private 1.0 as QtControlsPrivate
+import QtQuick.Controls.Private 1.0 as QtControlsStylePrivate
 import Hawaii.Themes 1.0
 
-QtControlsPrivate.GroupBoxStyle {
+QtControlsStylePrivate.GroupBoxStyle {
     id: groupBoxStyle
 
     padding {
-        left: units.smallSpacing * 2
-        top: (units.smallSpacing * 2.5) + Theme.mSize(label.font).height
-        right: units.smallSpacing * 2
-        bottom: units.smallSpacing * 2
-    }
-
-    property Component label: Label {
-        text: control.title
-        font.weight: Font.Bold
-        color: Theme.palette.panel.textColor
+        top: (control.title.length > 0 || control.checkable ? Units.iconSizes.small : 0) + Units.largeSpacing
+        left: Units.iconSizes.small
     }
 
     panel: Item {
         anchors.fill: parent
-
         Loader {
             id: checkboxloader
             anchors.left: parent.left
@@ -56,22 +46,15 @@ QtControlsPrivate.GroupBoxStyle {
             width: item ? item.implicitWidth : 0
         }
 
-        Rectangle {
-            anchors.fill: parent
-            anchors.topMargin: Theme.mSize(label.font).height
-            border.color: Theme.palette.blendColors(Theme.palette.panel.backgroundColor, Theme.palette.panel.textColor, 0.2)
-            border.width: 1
-            color: Theme.palette.blendColors(Theme.palette.panel.backgroundColor, Theme.palette.view.backgroundColor, 0.5)
-            radius: units.gridUnit * 0.5
-            visible: !control.flat
-        }
-
-        Loader {
-            id: labelLoader
+        Text {
+            id: label
             anchors.top: parent.top
             anchors.left: checkboxloader.right
-            anchors.topMargin: -units.smallSpacing * 1.2
-            sourceComponent: label
+            anchors.margins: Units.smallSpacing
+            text: control.title
+            color: Theme.palette.panel.textColor
+            font.bold: true
+            renderType: Text.NativeRendering
         }
     }
 }

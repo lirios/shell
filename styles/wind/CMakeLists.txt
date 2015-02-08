@@ -4,6 +4,7 @@ set(MODULE_FILES
     ButtonStyle.qml
     CalendarStyle.qml
     FocusFrameStyle.qml
+    GroupBoxStyle.qml
     MenuStyle.qml
     ProgressBarStyle.qml
     ScrollViewStyle.qml
