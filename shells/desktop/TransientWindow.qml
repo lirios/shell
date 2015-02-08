@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtCompositor 1.0
 import GreenIsland 1.0
+import Hawaii.Themes 1.0 as Themes
 
 WindowWrapper {
     property var popupChild: null
