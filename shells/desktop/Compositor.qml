@@ -248,6 +248,10 @@ Item {
             // A window was unmapped
             WindowManagement.windowUnmapped(window, true);
         }
+        onShellWindowMapped: {
+            // A shell window was mapped
+            WindowManagement.shellWindowMapped(window);
+        }
     }
 
     /*

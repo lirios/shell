@@ -28,7 +28,7 @@ var windowList = new Array(0);
 var activeWindow = null;
 
 /*
- * Main procedures
+ * Application windows
  */
 
 function _printWindowInfo(window) {
@@ -178,66 +178,72 @@ function windowUnmapped(window, destruction) {
 }
 
 /*
- * Map surfaces
+ * Shell windows
  */
 
-function mapShellSurface(surface, child) {
-    // Shell surfaces have only one view which is passed to us
-    // as an argument, check whether it's a view for this output
-    // or not
-    if (child.output !== _greenisland_output)
+function _printShellWindowInfo(window) {
+    console.debug("\twindow:", window);
+    console.debug("\tsurface:", window.surface);
+    console.debug("\role:", window.role);
+    console.debug("\flags:", window.flags);
+    console.debug("\tsize:", window.surface.size.width + "x" + window.surface.size.height);
+    console.debug("\tscreen:", compositorRoot.screenView.name);
+}
+
+function shellWindowMapped(window) {
+    // Skip windows for another output
+    if (window.output !== _greenisland_output)
         return;
 
+    console.debug("Shell window mapped");
+    _printShellWindowInfo(window);
+
     // Create surface item
-    var component = Qt.createComponent("WaylandShellWindow.qml");
+    var component = Qt.createComponent("ShellWindow.qml");
     if (component.status !== Component.Ready) {
         console.error(component.errorString());
         return;
     }
 
     // Create and setup window container
-    var window = component.createObject(compositorRoot, {"child": child});
-    window.child.parent = window;
-    window.child.touchEventsEnabled = true;
-    window.width = surface.size.width;
-    window.height = surface.size.height;
+    var item = component.createObject(compositorRoot, {"child": window.view});
+    item.child.parent = window;
+    item.child.touchEventsEnabled = true;
+    item.width = window.surface.size.width;
+    item.height = window.surface.size.height;
 
     // Set initial position
-    window.x = window.y = 0;
+    item.x = item.y = 0;
 
     // Set appropriate parent
     switch (child.role) {
-    case ShellWindowView.SplashRole:
-        window.parent = compositorRoot.screenView.layers.splash;
+    case ShellWindow.SplashRole:
+        item.parent = compositorRoot.screenView.layers.splash;
         break;
-    case ShellWindowView.DesktopRole:
-    case ShellWindowView.DashboardRole:
-        window.parent = compositorRoot.screenView.layers.desktop;
+    case ShellWindow.DesktopRole:
+    case ShellWindow.DashboardRole:
+        item.parent = compositorRoot.screenView.layers.desktop;
         break;
-    case ShellWindowView.PanelRole:
-    case ShellWindowView.ConfigRole:
-        window.parent = compositorRoot.screenView.layers.panels;
+    case ShellWindow.PanelRole:
+    case ShellWindow.ConfigRole:
+        item.parent = compositorRoot.screenView.layers.panels;
         break;
-    case ShellWindowView.OverlayRole:
-        window.parent = compositorRoot.screenView.layers.overlays;
+    case ShellWindow.OverlayRole:
+        item.parent = compositorRoot.screenView.layers.overlays;
         break;
-    case ShellWindowView.NotificationRole:
-        window.parent = compositorRoot.screenView.layers.notifications;
+    case ShellWindow.NotificationRole:
+        item.parent = compositorRoot.screenView.layers.notifications;
         break;
-    case ShellWindowView.LockRole:
-        window.parent = compositorRoot.screenView.layers.lock;
+    case ShellWindow.LockRole:
+        item.parent = compositorRoot.screenView.layers.lock;
         break;
     default:
-        window.parent = compositorRoot.screenView.layers.desktop;
+        item.parent = compositorRoot.screenView.layers.desktop;
         break;
     }
 
     // Log coordinates for debugging purpose
-    console.debug("\tposition:", window.x + "," + window.y);
-    console.debug("\tscreen:", compositorRoot.screenView.name);
-
-    // Add surface to the model
-    surfaceModel.append({"surface": surface, "window": window});
+    console.debug("\tposition:", item.x + "," + item.y);
 }
 
 /*
