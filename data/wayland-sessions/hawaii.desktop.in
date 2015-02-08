@@ -13,6 +13,6 @@
 Name=Hawaii
 Comment=QtQuick and Wayland based desktop environment
 Exec=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session --mode="eglfs"
-TryExec=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session --mode="eglfs"
+TryExec=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session
 Icon=start-here
 Type=Application
