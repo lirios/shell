@@ -29,10 +29,34 @@ import QtCompositor 1.0
 import GreenIsland 1.0
 
 WindowWrapper {
+    property var popupChild: null
+    property var transientChildren: null
+
     id: window
     objectName: "clientWindow"
     animation: TransientWindowAnimation {
         windowItem: window
     }
     z: 3
+
+    // Decrease contrast for transient parents
+    ContrastEffect {
+        id: contrast
+        x: clientWindow ? clientWindow.internalGeometry.x : 0
+        y: clientWindow ? clientWindow.internalGeometry.y : 0
+        width: clientWindow ? clientWindow.internalGeometry.width : 0
+        height: clientWindow ? clientWindow.internalGeometry.height : 0
+        source: window
+        blend: transientChildren ? 0.742 : 1.0
+        color: "black"
+        z: visible ? 2 : 0
+        visible: transientChildren != null
+
+        Behavior on blend {
+            NumberAnimation {
+                easing.type: transientChildren ? Easing.InQuad : Easing.OutQuad
+                duration: Themes.Units.shortDuration
+            }
+        }
+    }
 }
