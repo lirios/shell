@@ -29,6 +29,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.2 as QtControlsStyle
 import Hawaii.Themes 1.0
+import Hawaii.Controls 1.0 as Controls
 
 QtControlsStyle.CalendarStyle {
     id: style
@@ -40,15 +41,15 @@ QtControlsStyle.CalendarStyle {
         spacing: units.smallSpacing
 
         ToolButton {
-            iconSize: units.iconSizes.small
+            //iconSize: units.iconSizes.small
             iconName: "go-previous-symbolic"
-            flat: true
+            //flat: true
             onClicked: control.showPreviousMonth()
 
             Layout.alignment: Qt.AlignLeft
         }
 
-        Components.Heading {
+        Controls.Heading {
             level: 3
             text: styleData.title
             font.capitalization: Font.Capitalize
@@ -60,9 +61,9 @@ QtControlsStyle.CalendarStyle {
         }
 
         ToolButton {
-            iconSize: units.iconSizes.small
+            //iconSize: units.iconSizes.small
             iconName: "go-next-symbolic"
-            flat: true
+            //flat: true
             onClicked: control.showNextMonth()
 
             Layout.alignment: Qt.AlignRight
