@@ -229,6 +229,8 @@ void ProcessController::printSummary()
         break;
     }
     qCDebug(PROCESS_CONTROLLER) << "X11:" << qEnvironmentVariableIsSet("DISPLAY");
+    if (qEnvironmentVariableIsSet("DISPLAY"))
+        qCDebug(PROCESS_CONTROLLER) << "X11 display:" << qgetenv("DISPLAY");
 }
 
 void ProcessController::startCompositor()
