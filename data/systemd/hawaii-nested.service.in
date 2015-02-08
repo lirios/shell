@@ -15,7 +15,7 @@ Description=Hawaii (Nested into Weston)
 [Service]
 Type=notify
 Environment="DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus"
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session --mode="nested"
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session --mode=nested
 
 [Install]
 Alias=hawaii.service
