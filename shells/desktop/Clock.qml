@@ -33,6 +33,7 @@ ColumnLayout {
     property string timeFormat
 
     signal clicked()
+    signal doubleClicked()
 
     id: root
 
@@ -51,6 +52,7 @@ ColumnLayout {
     MouseArea {
         anchors.fill: parent
         onClicked: root.clicked()
+        onDoubleClicked: root.doubleClicked()
     }
 
     Label {
