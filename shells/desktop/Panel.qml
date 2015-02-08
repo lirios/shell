@@ -119,10 +119,12 @@ Rectangle {
             id: indicators
             spacing: Themes.Units.smallSpacing
 
+            /*
             ChatIndicator {
                 iconSize: indicators.iconSize
                 onTriggered: indicatorTriggered(caller)
             }
+            */
 
             EventsIndicator {
                 iconSize: indicators.iconSize
