@@ -61,7 +61,7 @@ Item {
             name: "session"
             PropertyChanges { target: keyFilter; enabled: true }
             PropertyChanges { target: splashScreen; opacity: 0.0 }
-            PropertyChanges { target: windowSwitcherLoader; source: ""; z: 899 }
+            PropertyChanges { target: windowSwitcherLoader; active: false }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
             PropertyChanges { target: logoutLoader; loadComponent: false }
             PropertyChanges { target: lockScreenLoader; loadComponent: false }
@@ -70,7 +70,7 @@ Item {
         },
         State {
             name: "windowSwitcher"
-            PropertyChanges { target: windowSwitcherLoader; source: "WindowSwitcher.qml"; z: 910 }
+            PropertyChanges { target: windowSwitcherLoader; active: true }
             StateChangeScript { script: disableInput() }
         },
         State {
@@ -97,6 +97,7 @@ Item {
         State {
             name: "lock"
             PropertyChanges { target: keyFilter; enabled: false }
+            PropertyChanges { target: windowSwitcherLoader; active: false }
             PropertyChanges { target: shieldLoader; source: ""; visible: false }
             PropertyChanges { target: logoutLoader; loadComponent: false }
             PropertyChanges { target: lockScreenLoader; loadComponent: true }
@@ -375,17 +376,12 @@ Item {
             horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
         }
+        active: false
         asynchronous: true
-        z: 899
+        source: "WindowSwitcher.qml"
+        z: active ? 910 : 899
         width: parent.width - (Themes.Units.largeSpacing * 2)
         height: (parent.height * 0.5) - (Themes.Units.largeSpacing * 2)
-
-        Behavior on z {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: Themes.Units.longDuration
-            }
-        }
     }
 
     // Shield
