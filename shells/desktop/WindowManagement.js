@@ -126,11 +126,11 @@ function windowMapped(window) {
     item.runMapAnimation();
 
     // Add surface to the model
-    surfaceModel.append({"window": window, "item": item, "surface": window.surface});
+    surfaceModel.append({"id": window.id, "window": window, "item": item, "surface": window.surface});
 }
 
-function windowUnmapped(window, destruction) {
-    console.debug("Application window", destruction ? "destroyed" : "unmapped");
+function windowUnmapped(window) {
+    console.debug("Application window unmapped");
     _printWindowInfo(window);
 
     // Find window representation
@@ -146,35 +146,30 @@ function windowUnmapped(window, destruction) {
     if (!item)
         return;
 
-    // Remove from model
-    surfaceModel.remove(i);
+    // Forget window
+    _forgetWindow(i, entry.window, entry.item, false);
+}
 
-    // Remove from z-order list
-    if (window.type === ClientWindow.TopLevel) {
-        for (i = 0; i < windowList.length; ++i) {
-            if (windowList[i] === item) {
-                windowList.splice(i, 1);
-                break;
-            }
+function windowDestroyed(id) {
+    // Find window representation
+    var i, found = false, entry = null;
+    for (i = 0; i < surfaceModel.count; i++) {
+        entry = surfaceModel.get(i);
+
+        if (entry.id === id) {
+            found = true;
+            break;
         }
     }
+    if (!found)
+        return;
 
-    // Remove window from effect
-    compositorRoot.removeWindowFromEffect(item);
+    // Debug
+    console.debug("Application window destroyed");
+    _printWindowInfo(entry.window);
 
-    // Run unmap or destruction animation
-    if (destruction)
-        item.runDestroyAnimation();
-    else
-        item.runUnmapAnimation();
-
-    // Unset transient children so that the parent can go back to normal
-    // and also bring to front
-    if (window.type === ClientWindow.Transient) {
-        var parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
-        parentItem.transientChildren = null;
-        parentItem.child.takeFocus();
-    }
+    // Forget window
+    _forgetWindow(i, entry.window, entry.item, true);
 }
 
 /*
@@ -280,6 +275,38 @@ function moveFront(window) {
 
     window.child.takeFocus();
     window.forceActiveFocus();
+}
+
+function _forgetWindow(i, window, item, destruction) {
+    // Remove from model
+    surfaceModel.remove(i);
+
+    // Remove from z-order list
+    if (window.type === ClientWindow.TopLevel) {
+        for (i = 0; i < windowList.length; ++i) {
+            if (windowList[i] === item) {
+                windowList.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    // Remove window from effect
+    compositorRoot.removeWindowFromEffect(item);
+
+    // Run animation
+    if (destruction)
+        item.runDestroyAnimation();
+    else
+        item.runUnmapAnimation();
+
+    // Unset transient children so that the parent can go back to normal
+    // and also bring to front
+    if (window.type === ClientWindow.Transient) {
+        var parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
+        parentItem.transientChildren = null;
+        parentItem.child.takeFocus();
+    }
 }
 
 function getActiveWindowIndex() {

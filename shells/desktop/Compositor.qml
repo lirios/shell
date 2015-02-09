@@ -243,11 +243,11 @@ Item {
         }
         onWindowUnmapped: {
             // A window was unmapped
-            WindowManagement.windowUnmapped(window, false);
+            WindowManagement.windowUnmapped(window);
         }
         onWindowDestroyed: {
             // A window was unmapped
-            WindowManagement.windowUnmapped(window, true);
+            WindowManagement.windowDestroyed(id);
         }
         onShellWindowMapped: {
             // A shell window was mapped
