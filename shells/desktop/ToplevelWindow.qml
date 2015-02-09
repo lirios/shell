@@ -127,6 +127,10 @@ WindowWrapper {
      * Animations
      */
 
+    // NOTE: Never animate z otherwise window stacking won't work
+    // because the z property will be changed progressively by
+    // the animation
+
     Behavior on x {
         enabled: animationsEnabled
         SmoothedAnimation {
@@ -140,14 +144,6 @@ WindowWrapper {
         SmoothedAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.mediumDuration
-        }
-    }
-
-    Behavior on z {
-        enabled: visible
-        NumberAnimation {
-            easing.type: Easing.OutQuad
-            duration: Themes.Units.shortDuration
         }
     }
 

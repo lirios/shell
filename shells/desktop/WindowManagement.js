@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-var windowList = new Array(0);
+var windowList = null;
 var activeWindow = null;
 
 /*
@@ -102,6 +102,7 @@ function windowMapped(window) {
     item.y = window.y;
     item.width = window.size.width;
     item.height = window.size.height;
+    console.debug("\titem:", item);
 
     // Set transient children so that the parent can be desaturated
     if (window.type === ClientWindow.Transient)
@@ -115,7 +116,9 @@ function windowMapped(window) {
 
     // z-order and focus
     if (window.type === ClientWindow.TopLevel) {
-        item.z = windowList.push(item) - 1;
+        if (windowList == null)
+            windowList = new Array(0);
+        item.z = windowList.length;
         window.activate();
     }
 
@@ -246,35 +249,31 @@ function shellWindowMapped(window) {
  */
 
 function moveFront(window) {
-    var initialZ = Math.ceil(window.z);
+    var initialZ = window.z;
 
-    // Ignore if the window is already the highest in the stacking order
-    if (initialZ == windowList.length - 1) {
-        window.child.takeFocus();
-        window.forceActiveFocus();
-        return;
-    }
-
-    console.debug("moveFront[" + windowList.length + "] for", window + ":");
+    console.debug("moveFront[" + windowList.length + "] initialZ:", initialZ);
+    console.debug("\twindow:", window);
 
     var i;
-    console.debug("\ti =", initialZ + 1, "; i <", windowList.length);
     for (i = initialZ + 1; i < windowList.length; ++i) {
-        windowList[i].z = Math.ceil(window.z);
-        console.debug("\t" + windowList[i], "z:", Math.ceil(windowList[i].z));
+        windowList[i].z = window.z;
         window.z = i;
+        console.debug("\t\t-> above:", windowList[i].z, "selected:", window.z);
     }
-
-    console.debug("\t" + window, "z:", Math.ceil(window.z));
+    console.debug("\t\t-> new:", window.z);
 
     windowList.splice(initialZ, 1);
     windowList.push(window);
+
+    //console.debug("\twindowList:", windowList);
+    //console.debug("\twindowList.length:", windowList.length);
+
     window.parent.parent.selectWorkspace(window.parent);
     activeWindow = window;
     compositorRoot.activeWindow = activeWindow;
 
+    // Give focus to the window
     window.child.takeFocus();
-    window.forceActiveFocus();
 }
 
 function _forgetWindow(i, window, item, destruction) {
