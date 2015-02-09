@@ -38,10 +38,10 @@ const QString mprisPrefix("org.mpris.MediaPlayer2.");
 Q_LOGGING_CATEGORY(MPRIS2, "hawaii.qml.mpris2")
 
 Mpris2Engine::Mpris2Engine(QObject *parent)
-	: QObject(parent)
+    : QObject(parent)
 {
-	const QDBusConnection bus = QDBusConnection::sessionBus();
-	const QStringList services = bus.interface()->registeredServiceNames();
+    const QDBusConnection bus = QDBusConnection::sessionBus();
+    const QStringList services = bus.interface()->registeredServiceNames();
 
     for (const QString &name: services.filter(mprisInterface)) {
         qCDebug(MPRIS2) << "Found player" << name;

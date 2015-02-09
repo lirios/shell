@@ -38,7 +38,7 @@ Q_DECLARE_LOGGING_CATEGORY(MPRIS2)
 
 class Mpris2Engine : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
     Q_PROPERTY(QQmlListProperty<Mpris2Player> players READ players NOTIFY playersChanged)
 public:
     Mpris2Engine(QObject *parent = 0);
@@ -52,7 +52,7 @@ Q_SIGNALS:
     void playersChanged();
 
 private:
-	QDBusServiceWatcher *m_watcher;
+    QDBusServiceWatcher *m_watcher;
     QList<Mpris2Player *> m_players;
 };
 
