@@ -380,8 +380,6 @@ Item {
         asynchronous: true
         source: "WindowSwitcher.qml"
         z: active ? 910 : 899
-        width: parent.width - (Themes.Units.largeSpacing * 2)
-        height: (parent.height * 0.5) - (Themes.Units.largeSpacing * 2)
     }
 
     // Shield

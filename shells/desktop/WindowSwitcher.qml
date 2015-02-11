@@ -35,11 +35,13 @@ Rectangle {
     color: "#80000000"
     radius: Themes.Units.gu(0.5)
     opacity: 0.0
+    width: Math.min(listView.count * (listView.thumbnailWidth + Themes.Units.largeSpacing * 2), compositorRoot.width * 0.7)
+    height: Math.min(listView.thumbnailHeight + label.paintedHeight * 2 + Themes.Units.largeSpacing * 2, compositorRoot.height * 0.5)
 
     Behavior on opacity {
         NumberAnimation {
-            easing.type: Easing.InQuad
-            duration: Themes.Units.shortDuration
+            easing.type: Easing.InSine
+            duration: Themes.Units.mediumDuration
         }
     }
 
@@ -60,87 +62,82 @@ Rectangle {
         }
         onWindowSwitchSelect: {
             // Give focus to the selected window
-            compositorRoot.windowList[listView.currentIndex].child.takeFocus();
+            var item = compositorRoot.windowList[listView.currentIndex];
+            if (item && item.clientWindow)
+                item.clientWindow.activate();
         }
     }
 
-    ListView {
-        readonly property real ratio: compositorRoot.width / compositorRoot.height
+    Component {
+        id: thumbnailComponent
 
-        id: listView
-        anchors {
-            fill: parent
-            margins: Themes.Units.largeSpacing
-        }
-        clip: true
-        orientation: ListView.Horizontal
-        model: compositorRoot.windowList
-        spacing: Themes.Units.smallSpacing
-        highlightMoveDuration: Themes.Units.shortDuration
-        delegate: Item {
-            readonly property real scaleFactor: listView.width / compositorRoot.width
-            readonly property real thumbnailWidth: thumbnailHeight * listView.ratio
-            readonly property real thumbnailHeight: listView.height - Themes.Units.smallSpacing - (Themes.Units.largeSpacing * 2)
+        Rectangle {
+            readonly property string title: modelData.child.surface.title
 
             id: wrapper
-            width: thumbnailWidth + thumbnailLayout.anchors.margins + thumbnailLayout.spacing
-            height: thumbnailHeight + thumbnailLayout.anchors.margins + thumbnailLayout.spacing
+            width: listView.thumbnailWidth
+            height: listView.thumbnailHeight
+            color: wrapper.ListView.isCurrentItem ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
+            radius: Themes.Units.gu(0.5)
 
-            ColumnLayout {
-                id: thumbnailLayout
+            SurfaceRenderer {
                 anchors {
                     fill: parent
                     margins: Themes.Units.smallSpacing
                 }
-                spacing: Themes.Units.largeSpacing
+                source: modelData.child
 
-                Rectangle {
-                    id: thumbnailItem
-                    color: wrapper.ListView.isCurrentItem ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
-                    radius: Themes.Units.gu(0.5)
-                    width: thumbnailWidth - Themes.Units.smallSpacing
-                    height: thumbnailHeight - Themes.Units.smallSpacing - label.height
-
-                    SurfaceRenderer {
-                        anchors {
-                            fill: parent
-                            margins: Themes.Units.smallSpacing
-                        }
-                        source: modelData.child
-
-                        MouseArea {
-                            anchors.fill: parent
-                            acceptedButtons: Qt.AllButtons
-                            onClicked: listView.currentIndex = index
-                        }
-                    }
-                }
-
-                Label {
-                    id: label
-                    text: modelData.child.surface.title ? modelData.child.surface.title : qsTr("Untitled")
-                    wrapMode: Text.Wrap
-                    color: Themes.Theme.palette.panel.textColor
-                    font.bold: true
-                    style: Text.Raised
-                    styleColor: Themes.Theme.palette.panel.textEffectColor
-                    maximumLineCount: 2
-                    opacity: wrapper.ListView.isCurrentItem ? 1.0 : 0.6
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.AllButtons
+                    onClicked: listView.currentIndex = index
                 }
             }
+        }
+    }
+
+    ColumnLayout {
+        anchors {
+            fill: parent
+            margins: Themes.Units.largeSpacing
+        }
+        spacing: Themes.Units.smallSpacing
+
+        ListView {
+            readonly property real thumbnailWidth: Themes.Units.gu(24)
+            readonly property real thumbnailHeight: thumbnailWidth / ratio
+            readonly property real ratio: compositorRoot.width / compositorRoot.height
+
+            id: listView
+            clip: true
+            orientation: ListView.Horizontal
+            model: compositorRoot.windowList
+            spacing: Themes.Units.smallSpacing
+            highlightMoveDuration: Themes.Units.shortDuration
+            delegate: thumbnailComponent
+            currentIndex: compositorRoot.activeWindowIndex
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        Label {
+            id: label
+            text: listView.currentItem ? listView.currentItem.title : qsTr("Untitled")
+            wrapMode: Text.Wrap
+            color: Themes.Theme.palette.panel.textColor
+            font.bold: true
+            style: Text.Raised
+            styleColor: Themes.Theme.palette.panel.textEffectColor
+            maximumLineCount: 2
+            horizontalAlignment: Text.AlignHCenter
+
+            Layout.fillWidth: true
         }
     }
 
     Component.onCompleted: {
         // Show with an animtation
         opacity = 1.0;
-
-        var newIndex = compositorRoot.activeWindowIndex + 1;
-        if (newIndex === compositorRoot.surfaceModel.count)
-            newIndex = 0;
-        listView.currentIndex = newIndex;
     }
 }
