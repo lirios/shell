@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-var windowList = null;
+var windowList = new Array(0);
 var activeWindow = null;
 
 /*
@@ -116,8 +116,6 @@ function windowMapped(window) {
 
     // z-order and focus
     if (window.type === ClientWindow.TopLevel) {
-        if (windowList == null)
-            windowList = new Array(0);
         item.z = windowList.length;
         window.activate();
     }
