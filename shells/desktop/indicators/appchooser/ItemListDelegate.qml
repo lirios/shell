@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
+import org.hawaii.misc 0.1 as Misc
 
 Item {
     width: ListView.view.width
@@ -47,7 +47,7 @@ Item {
             iconName: model.iconName
         }
 */
-        KQuickControls.QIconItem {
+        Misc.QIconItem {
             id: icon
             width: Themes.Units.iconSizes.large
             height: width

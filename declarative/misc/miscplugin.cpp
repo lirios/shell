@@ -27,6 +27,8 @@
 #include <QtQml>
 
 #include "miscplugin.h"
+#include "qiconitem.h"
+#include "qimageitem.h"
 #include "keyeventfilter.h"
 #include "standardpaths.h"
 
@@ -44,6 +46,8 @@ void MiscPlugin::registerTypes(const char *uri)
     // @uri org.hawaii.misc
     Q_ASSERT(uri == QLatin1String("org.hawaii.misc"));
 
+    qmlRegisterType<QIconItem>(uri, 0, 1, "QIconItem");
+    qmlRegisterType<QImageItem>(uri, 0, 1, "QImageItem");
     qmlRegisterType<KeyEventFilter>(uri, 0, 1, "KeyEventFilter");
     qmlRegisterSingletonType<StandardPaths>(uri, 0, 1, "StandardPaths",
                                             standardpathsProvider);

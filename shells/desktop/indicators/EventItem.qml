@@ -30,7 +30,7 @@ import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
+import org.hawaii.misc 0.1 as Misc
 
 MouseArea {
     property bool expanded: false
@@ -149,7 +149,7 @@ MouseArea {
         visible: hasIcon && model.appIcon.indexOf("/") !== -1
     }
 
-    KQuickControls.QImageItem {
+    Misc.QImageItem {
         id: imageItem
         anchors.fill: appIconItem
         fillMode: Image.PreserveAspectFit

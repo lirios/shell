@@ -29,7 +29,7 @@ import QtQuick.Controls 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControls
+import org.hawaii.misc 0.1 as Misc
 
 Item {
     property string icon
@@ -125,7 +125,7 @@ Item {
         visible: hasIcon && icon.indexOf("/") !== -1
     }
 
-    KQuickControls.QImageItem {
+    Misc.QImageItem {
         id: imageItem
         anchors.fill: appIconItem
         image: undefined
