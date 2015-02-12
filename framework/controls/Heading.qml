@@ -53,7 +53,7 @@ import Hawaii.Themes 1.0
  * Label. See QtQuick Controls Label and primitive QML Text element API for
  * additional properties, methods and signals.
  */
-QtControls.Label {
+Text {
     id: root
 
     /**
@@ -68,6 +68,7 @@ QtControls.Label {
     font.pointSize: headerPointSize(level)
     font.weight: Font.Light
     wrapMode: Text.WordWrap
+    renderType: Text.NativeRendering
     opacity: 0.8
 
     function headerPointSize(l) {
