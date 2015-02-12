@@ -109,6 +109,8 @@ Item {
         }
     ]
     onKeyPressed: {
+        console.log("Key pressed:", event.key);
+
         // Abort session
         // TODO: Handle this as a keybinding
         if (event.modifiers === (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Backspace) {
@@ -162,6 +164,8 @@ Item {
         event.accepted = false;
     }
     onKeyReleased: {
+        console.log("Key released:", event.key);
+
         // Window switcher
         if (state == "windowSwitcher") {
             if (event.modifiers === Qt.MetaModifier) {
