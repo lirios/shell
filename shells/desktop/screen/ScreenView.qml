@@ -151,8 +151,8 @@ Item {
                 // AppChooser special case
                 if (indicator.name === "appchooser") {
                     // Load AppChooser component
-                    if (leftDrawer.loader.status != Loader.Ready)
-                        leftDrawer.loader.sourceComponent = indicator.component;
+                    if (leftDrawer.component == undefined)
+                        leftDrawer.component = indicator.component;
                     leftDrawer.toggle();
                     return;
                 }
@@ -182,22 +182,18 @@ Item {
         }
 
         SlidingPanel {
-            property alias loader: loader
+            property alias component: loader.sourceComponent
 
             id: leftDrawer
             edge: Qt.LeftEdge
             width: Themes.Units.gu(20)
             z: 2
-            onExpandedChanged: {
-                // Unload component once closed
-                if (!expanded)
-                    loader.sourceComponent = undefined;
-            }
 
             Loader {
                 id: loader
                 anchors.fill: parent
                 anchors.margins: Themes.Units.largeSpacing
+                active: leftDrawer.expanded
             }
         }
 
