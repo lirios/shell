@@ -134,6 +134,9 @@ void SessionManager::autostart()
 
 void SessionManager::logOut()
 {
+    // Close all applications we launched
+    m_launcher->closeApplications();
+
     // Stop the compositor
     m_controller->stop();
 }

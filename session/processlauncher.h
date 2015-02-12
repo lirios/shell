@@ -49,6 +49,8 @@ public:
     ~ProcessLauncher();
 
     bool registerInterface();
+
+    void closeApplications();
     
     static constexpr const char *interfaceName = "org.hawaii.launcher";
     static constexpr const char *objectPath = "/Launcher";

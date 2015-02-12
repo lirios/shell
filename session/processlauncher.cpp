@@ -46,6 +46,27 @@ ProcessLauncher::ProcessLauncher(SessionManager *sessionManager)
 
 ProcessLauncher::~ProcessLauncher()
 {
+    closeApplications();
+}
+
+bool ProcessLauncher::registerInterface()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    if (!bus.registerObject(objectPath, this)) {
+        qCWarning(LAUNCHER,
+                  "Couldn't register %s D-Bus object: %s",
+                  objectPath,
+                  qPrintable(bus.lastError().message()));
+        return false;
+    }
+
+    qCDebug(LAUNCHER) << "Registered" << interfaceName << "D-Bus interface";
+    return true;
+}
+
+void ProcessLauncher::closeApplications()
+{
     // Terminate all process launched by us
     ApplicationMapIterator i(m_apps);
     while (i.hasNext()) {
@@ -63,22 +84,6 @@ ProcessLauncher::~ProcessLauncher()
             process->kill();
         process->deleteLater();
     }
-}
-
-bool ProcessLauncher::registerInterface()
-{
-    QDBusConnection bus = QDBusConnection::sessionBus();
-
-    if (!bus.registerObject(objectPath, this)) {
-        qCWarning(LAUNCHER,
-                  "Couldn't register %s D-Bus object: %s",
-                  objectPath,
-                  qPrintable(bus.lastError().message()));
-        return false;
-    }
-
-    qCDebug(LAUNCHER) << "Registered" << interfaceName << "D-Bus interface";
-    return true;
 }
 
 bool ProcessLauncher::launchApplication(const QString &appId)
