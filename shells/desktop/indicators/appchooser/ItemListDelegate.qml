@@ -55,21 +55,23 @@ Item {
         }
 
         Column {
-            Label {
+            Text {
                 id: label
                 text: model.display
                 font.pointSize: Themes.Theme.defaultFont.pointSize * 1.1
                 font.bold: true
+                renderType: Text.NativeRendering
                 color: Themes.Theme.palette.panel.textColor
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
                 textFormat: Text.PlainText
             }
 
-            Label {
+            Text {
                 id: descr
                 text: model.description ? model.description : ""
                 color: Themes.Theme.palette.panel.textColor
+                renderType: Text.NativeRendering
                 elide: Text.ElideRight
                 wrapMode: Text.NoWrap
                 textFormat: Text.PlainText
