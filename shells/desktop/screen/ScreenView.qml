@@ -30,6 +30,7 @@ import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
+import org.hawaii.misc 0.1 as Misc
 import ".."
 import "../indicators"
 
@@ -103,7 +104,7 @@ Item {
     Image {
         id: backgroundLayer
         anchors.fill: parent
-        source: "/usr/share/backgrounds/gnome/Waves.jpg"
+        source: Misc.StandardPaths.locateFile(Misc.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png")
         sourceSize.width: width
         sourceSize.height: height
         cache: false
