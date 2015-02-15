@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import GreenIsland 1.0
+import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 
 Rectangle {
@@ -92,6 +93,16 @@ Rectangle {
                     acceptedButtons: Qt.AllButtons
                     onClicked: listView.currentIndex = index
                 }
+            }
+
+            Components.Icon {
+                anchors {
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+                width: Themes.Units.iconSizes.large
+                height: width
+                iconName: modelData.clientWindow.iconName
             }
         }
     }
