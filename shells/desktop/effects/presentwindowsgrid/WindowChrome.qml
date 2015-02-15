@@ -30,11 +30,20 @@ import Hawaii.Themes 1.0 as Themes
 import "../../components" as ShellComponents
 
 Item {
-    property var window: parent
+    property var window
 
     signal clicked(var window)
 
     id: root
+    anchors {
+        fill: parent
+        /*
+        leftMargin: window.clientWindow.internalGeometry.x
+        topMargin: window.clientWindow.internalGeometry.y
+        rightMargin: window.clientWindow.internalGeometry.width
+        bottomMargin: window.clientWindow.internalGeometry.height
+        */
+    }
 
     RectangularGlow {
         anchors.fill: parent

@@ -125,13 +125,7 @@ Item {
             // Create a chrome
             if (!window.chrome) {
                 var chromeComponent = Qt.createComponent("WindowChrome.qml");
-                var chrome = chromeComponent.createObject(window);
-                window.chrome = chrome;
-                window.chrome.anchors.fill = window;
-                window.chrome.anchors.leftMargin = window.clientWindow.internalGeometry.x;
-                window.chrome.anchors.topMargin = window.clientWindow.internalGeometry.y;
-                window.chrome.anchors.rightMargin = window.width - window.clientWindow.internalGeometry.width;
-                window.chrome.anchors.bottomMargin = window.height - window.clientWindow.internalGeometry.height;
+                window.chrome = chromeComponent.createObject(window, {"window": window});
                 window.chrome.clicked.connect(function(w) {
                     w.savedProperties.bringToFront = true;
                     compositorRoot.endEffect("PresentWindowsGrid");
