@@ -343,6 +343,7 @@ Item {
         id: screenViewLoader
         anchors.fill: parent
         asynchronous: true
+        source: "screen/ScreenView.qml"
         z: 900
         onLoaded: {
             // We asynchronously load the screen component when the splash state
@@ -463,11 +464,6 @@ Item {
     /*
      * Component
      */
-
-    Component.onCompleted: {
-        // Load screen view asynchronously
-        screenViewLoader.source = "screen/ScreenView.qml";
-    }
 
     /*
      * Methods
