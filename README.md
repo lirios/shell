@@ -128,6 +128,7 @@ to learn how to enable them.
   * **hawaii.session.processcontroller:** Starts the compositor
   * **hawaii.session.manager:** Manages the session
   * **hawaii.session.launcher:** Process launcher and application tracker
+  * **hawaii.session.screensaver:** Lock, idle and inhibit interface
 
 * Mixer QML plugin:
   * **hawaii.qml.mixer:** Mixer service

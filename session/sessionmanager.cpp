@@ -33,6 +33,7 @@
 #include "cmakedirs.h"
 #include "processcontroller.h"
 #include "processlauncher.h"
+#include "screensaver.h"
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
 
@@ -45,6 +46,7 @@ SessionManager::SessionManager(ProcessController *controller)
     : QObject(controller)
     , m_controller(controller)
     , m_launcher(new ProcessLauncher(this))
+    , m_screenSaver(new ScreenSaver(this))
 {
     // Autostart applications as soon as the compositor is ready
     connect(m_controller, &ProcessController::started,
@@ -116,6 +118,10 @@ bool SessionManager::registerDBus()
 
     // Register process launcher service
     if (!m_launcher->registerInterface())
+        return false;
+
+    // Register screen saver interface
+    if (!m_screenSaver->registerInterface())
         return false;
 
     return true;

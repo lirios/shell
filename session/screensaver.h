@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -24,48 +24,47 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#ifndef SCREENSAVER_H
+#define SCREENSAVER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
+Q_DECLARE_LOGGING_CATEGORY(SCREENSAVER)
 
-class ProcessController;
-class ProcessLauncher;
-class ScreenSaver;
-
-class SessionManager : public QObject
+class ScreenSaver : public QObject
 {
     Q_OBJECT
 public:
-    SessionManager(ProcessController *controller);
+    ScreenSaver(QObject *parent = 0);
+    ~ScreenSaver();
 
-    ProcessController *processController() const {
-        return m_controller;
-    }
+    bool registerInterface();
 
-    void setupEnvironment();
-    bool registerDBus();
+    bool GetActive();
+    bool SetActive(bool state);
 
-    static constexpr const char *interfaceName = "org.hawaii.session";
-    static constexpr const char *objectPath = "/HawaiiSession";
+    uint GetActiveTime();
+    uint GetSessionIdleTime();
+
+    void SimulateUserActivity();
+
+    uint Inhibit(const QString &appName, const QString &reason);
+    void UnInhibit(uint cookie);
+
+    void Lock();
+
+    uint Throttle(const QString &appName, const QString &reason);
+    void UnThrottle(uint cookie);
+
+    static constexpr const char *interfaceName = "org.freedesktop.ScreenSaver";
+    static constexpr const char *objectPath = "/org/freedesktop/ScreenSaver";
 
 Q_SIGNALS:
-    void loggedOut();
-
-public Q_SLOTS:
-    void logOut();
+    void ActiveChanged(bool in);
 
 private:
-    ProcessController *m_controller;
-    ProcessLauncher *m_launcher;
-    ScreenSaver *m_screenSaver;
-    QList<qint64> m_processes;
-
-private Q_SLOTS:
-    void autostart();
+    bool m_active;
 };
 
-#endif // SESSIONMANAGER_H
+#endif // SCREENSAVER_H
