@@ -132,6 +132,12 @@ int main(int argc, char *argv[])
         ::exit(EXIT_SUCCESS);
     }
 
+    // Log out when the application quits
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, [=] {
+        qDebug() << "About to quit";
+        sessionManager->logOut();
+    });
+
     // Unix signals watcher
     UnixSignalWatcher sigwatch;
     sigwatch.watchForSignal(SIGINT);
@@ -140,7 +146,6 @@ int main(int argc, char *argv[])
     // Log out the session for SIGINT and SIGTERM
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [sessionManager](int signum) {
         qDebug() << "Log out caused by signal" << signum;
-        sessionManager->logOut();
         QCoreApplication::quit();
     });
 
