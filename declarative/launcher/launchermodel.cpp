@@ -27,15 +27,54 @@
 #include <QtGui/QIcon>
 
 #include "applicationinfo.h"
+#include "applicationmanager.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
 
-using namespace GreenIsland;
-
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
-    , m_appMan(Q_NULLPTR)
+    , m_appMan(new ApplicationManager(this))
 {
+    // Connect to application events
+    connect(m_appMan, &ApplicationManager::registered, this, [this](const QString &appId) {
+        beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
+        m_list.append(new LauncherItem(appId, this));
+        endInsertRows();
+    });
+    connect(m_appMan, &ApplicationManager::unregistered, this, [this](const QString &appId) {
+        for (int i = 0; i < m_list.size(); i++) {
+            LauncherItem *item = m_list.at(i);
+            if (item->appId() == appId) {
+                beginRemoveRows(QModelIndex(), i, i);
+                m_list.takeAt(i)->deleteLater();
+                endRemoveRows();
+                break;
+            }
+        }
+    });
+    connect(m_appMan, &ApplicationManager::focused, this, [this](const QString &appId) {
+        for (int i = 0; i < m_list.size(); i++) {
+            LauncherItem *item = m_list.at(i);
+            if (item->appId() == appId) {
+                item->setActive(true);
+                QModelIndex modelIndex = index(i);
+                Q_EMIT dataChanged(modelIndex, modelIndex);
+                break;
+            }
+        }
+    });
+    connect(m_appMan, &ApplicationManager::unfocused, this, [this](const QString &appId) {
+        for (int i = 0; i < m_list.size(); i++) {
+            LauncherItem *item = m_list.at(i);
+            if (item->appId() == appId) {
+                item->setActive(false);
+                QModelIndex modelIndex = index(i);
+                Q_EMIT dataChanged(modelIndex, modelIndex);
+                break;
+            }
+        }
+    });
+
     // Add static items
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + 2);
     m_list.append(new LauncherItem("chromium", true, this));
@@ -48,39 +87,6 @@ LauncherModel::~LauncherModel()
     // Delete the items
     while (!m_list.isEmpty())
         m_list.takeFirst()->deleteLater();
-}
-
-ApplicationManager *LauncherModel::applicationManager() const
-{
-    return m_appMan;
-}
-
-void LauncherModel::setApplicationManager(ApplicationManager *appMan)
-{
-    if (m_appMan) {
-        disconnect(appMan, SIGNAL(applicationAdded(QString)));
-        disconnect(appMan, SIGNAL(applicationRemoved(QString)));
-    }
-
-    connect(appMan, &ApplicationManager::applicationAdded, [=](const QString &appId) {
-        beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
-        m_list.append(new LauncherItem(appId, this));
-        endInsertRows();
-    });
-    connect(appMan, &ApplicationManager::applicationRemoved, [=](const QString &appId) {
-        for (int i = 0; i < m_list.size(); i++) {
-            LauncherItem *item = m_list.at(i);
-            if (item->appId() == appId) {
-                beginRemoveRows(QModelIndex(), i, i);
-                m_list.takeAt(i)->deleteLater();
-                endRemoveRows();
-                break;
-            }
-        }
-    });
-
-    m_appMan = appMan;
-    Q_EMIT applicationManagerChanged();
 }
 
 QHash<int, QByteArray> LauncherModel::roleNames() const

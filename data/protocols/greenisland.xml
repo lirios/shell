@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="greenisland">
+  <copyright><![CDATA[
+    Copyright (C) 2015 Pier Luigi Fiorini
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 2.1 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ]]></copyright>
+
+  <interface name="greenisland_applications" version="1">
+    <description summary="track running applications">
+      This interface is used by UI modules interested in tracking running applications,
+      for example a library that expose the list of running applications to a launcher.
+      Only one client can bind this interface at a time.
+    </description>
+
+    <event name="registered">
+      <description summary="emitted when an application is registered">
+        This event is sent when the first window of an application have been created.
+      </description>
+      <arg name="app_id" type="string" summary="application identifier"/>
+    </event>
+
+    <event name="unregistered">
+      <description summary="emitted when an application is unregistered">
+        This event is sent when the last window of an application have been closed.
+      </description>
+      <arg name="app_id" type="string" summary="application identifier"/>
+    </event>
+
+    <event name="focused">
+      <description summary="emitted when a window that belongs to an application has focused">
+        This event is sent when a window that belongs to an application has focus.
+      </description>
+      <arg name="app_id" type="string" summary="application identifier"/>
+    </event>
+
+    <event name="unfocused">
+      <description summary="emitted when a window that belongs to an application has lost its focus">
+        This event is sent when a window that belongs to an application has lost its focus.
+      </description>
+      <arg name="app_id" type="string" summary="application identifier"/>
+    </event>
+  </interface>
+
+  <interface name="greenisland_windows" version="1">
+    <description summary="track application windows">
+      This interface is used by UI modules interested in tracking application windows
+      for example a task bars and launchers.
+      Only one client can bind this interface at a time.
+    </description>
+
+    <enum name="type">
+      <entry name="toplevel" value="1"/>
+      <entry name="popup" value="2"/>
+      <entry name="transient" value="3"/>
+    </enum>
+
+    <enum name="state">
+      <entry name="inactive" value="0x0"/>
+      <entry name="active" value="0x1"/>
+      <entry name="minimized" value="0x2"/>
+      <entry name="maximized" value="0x3"/>
+      <entry name="fullscreen" value="0x4"/>
+      <entry name="keep_above" value="0x5"/>
+      <entry name="keep_below" value="0x6"/>
+      <entry name="shaded" value="0x7"/>
+      <entry name="on_all_workspaces" value="0x8"/>
+    </enum>
+
+    <event name="window_mapped">
+      <description summary="notify the client that a window was mapped">
+        This event will be sent immediately after a window is mapped.
+        A new greenisland_window object is created and it will be used to manage
+        the window.
+
+        Values for type argument are described by greenisland_windows.type.
+
+        Values for state argument are described by greenisland_windows.state.
+        They are used in a bitfield.
+      </description>
+      <arg name="id" type="new_id" interface="greenisland_window"/>
+      <arg name="type" type="uint" summary="window type"/>
+      <arg name="state" type="uint" summary="bitfield of state flags"/>
+      <arg name="title" type="string" summary="window title"/>
+      <arg name="app_id" type="string" summary="application identifier"/>
+    </event>
+  </interface>
+
+  <interface name="greenisland_window" version="1">
+    <description summary="interface to control application windows">
+      Manages and control an application window.
+      Only one client can bind this interface at a time.
+    </description>
+
+    <event name="title_changed">
+      <description summary="window title has been changed">
+        This event will be sent as soon as the window title is changed.
+      </description>
+      <arg name="title" type="string" summary="window title"/>
+    </event>
+
+    <event name="app_id_changed">
+      <description summary="application identifier has been changed">
+        This event will be sent as soon as the application
+        identifier is changed.
+      </description>
+      <arg name="app_id" type="string"/>
+    </event>
+
+    <event name="state_changed">
+      <description summary="window state has been changed">
+        This event will be sent as soon as the window state changes.
+
+        Values for state argument are described by greenisland_windows.state.
+      </description>
+      <arg name="flags" type="uint" summary="bitfield of state flags"/>
+    </event>
+
+    <event name="workspace_changed">
+      <description summary="window was moved to another workspace">
+        This event will be sent when a window is moved to another
+        workspace.
+
+        It is not sent if it becomes visible on all workspaces though.
+
+        Workspace index starts from 0.
+      </description>
+      <arg name="number" type="uint" summary="workspace index"/>
+    </event>
+
+    <event name="unmapped">
+      <description summary="window's surface was unmapped">
+        This event will be sent immediately after the window is closed
+        and its surface is unmapped.
+      </description>
+    </event>
+  </interface>
+</protocol>

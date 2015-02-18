@@ -39,6 +39,7 @@ And the following modules from KDE:
 * kcoreaddons
 * kio
 * kservice
+* kwayland
 * solid
 * plasma-framework
 * plasma-workspace

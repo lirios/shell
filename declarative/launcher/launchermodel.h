@@ -30,14 +30,12 @@
 #include <QtCore/QAbstractListModel>
 #include <QtQml/QQmlComponent>
 
-#include <GreenIsland/ApplicationManager>
-
+class ApplicationManager;
 class LauncherItem;
 
 class LauncherModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(GreenIsland::ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
     Q_ENUMS(Roles)
 public:
     enum Roles {
@@ -59,9 +57,6 @@ public:
     LauncherModel(QObject *parent = 0);
     ~LauncherModel();
 
-    GreenIsland::ApplicationManager *applicationManager() const;
-    void setApplicationManager(GreenIsland::ApplicationManager *appMan);
-
     QHash<int, QByteArray> roleNames() const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -71,12 +66,9 @@ public:
     Q_INVOKABLE LauncherItem *get(int index) const;
     Q_INVOKABLE int indexFromAppId(const QString &appId) const;
 
-Q_SIGNALS:
-    void applicationManagerChanged();
-
 private:
+    ApplicationManager *m_appMan;
     QList<LauncherItem *> m_list;
-    GreenIsland::ApplicationManager *m_appMan;
 };
 
 QML_DECLARE_TYPE(LauncherModel)

@@ -34,6 +34,16 @@ include(KDECompilerSettings)
 # Macro to print feature summary
 include(FeatureSummary)
 
+# Require at least gcc 4.8
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.8")
+        message(SEND_ERROR "Version ${CMAKE_CXX_COMPILER_VERSION} of the ${CMAKE_CXX_COMPILER_ID} C++ compiler is not supported. Please use version 4.8 or later.")
+    endif()
+
+    # Adjusting CMAKE_C_FLAGS to get wayland protocols to compile
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
+endif()
+
 # Add custom uninstall target
 if ("${ECM_VERSION}" VERSION_LESS "1.7.0")
     # ECM 1.7.0 provides this target, so we can't roll our own (see issue #172)
@@ -83,7 +93,8 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
              KIO
              Runner
              Service
-             Solid)
+             Solid
+             Wayland)
 
 # Find Green Island
 find_package(GreenIsland REQUIRED)
@@ -92,6 +103,17 @@ find_package(GreenIsland REQUIRED)
 if(ENABLE_MAINLINE_QTXDG)
     find_package(QT5XDG REQUIRED)
 endif()
+
+# Wayland
+set(REQUIRED_WAYLAND_VERSION 1.2.0)
+find_package(Wayland ${REQUIRED_WAYLAND_VERSION} COMPONENTS Client)
+set_package_properties(Wayland PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "Required for protocols")
+add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for protocols")
+
+# Wayland and QtWayland scanner
+find_package(QtWaylandScanner REQUIRED)
 
 # Subdirectories
 add_subdirectory(3rdparty)

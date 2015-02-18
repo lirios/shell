@@ -255,7 +255,6 @@ Item {
         }
         model: Launcher.LauncherModel {
             id: launcherModel
-            applicationManager: compositor.applicationManager
         }
         delegate: iconDelegate
         width: calcWidth()
