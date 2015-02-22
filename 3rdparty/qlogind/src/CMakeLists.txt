@@ -4,7 +4,7 @@ macro(generateInterface interfaceName)
     string(REPLACE "." "" fileName ${interfaceName})
 
     add_custom_command(OUTPUT ${fileName}.cpp OUTPUT ${fileName}.h
-        COMMAND ../tools/enhancedqdbusxml2cpp -p ${fileName} ${CMAKE_SOURCE_DIR}/3rdparty/qlogind/spec/${interfaceName}.xml -i types.h
+        COMMAND ${CMAKE_CURRENT_BINARY_DIR}/../tools/enhancedqdbusxml2cpp -p ${fileName} ${CMAKE_SOURCE_DIR}/3rdparty/qlogind/spec/${interfaceName}.xml -i types.h
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating Interface for ${interfaceName}"
         SOURCES $fileName.h
