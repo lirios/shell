@@ -29,15 +29,9 @@ import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 import QtQuick.Controls.Private 1.0 as QtControlsPrivate
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 QtControlsStyle.ScrollViewStyle {
     id: style
-
-    PlasmaCore.Svg {
-        id: arrowsSvg
-        imagePath: "widgets/arrows"
-    }
 
     scrollBarBackground: Item {
         property bool sticky: false
@@ -107,13 +101,9 @@ QtControlsStyle.ScrollViewStyle {
                 bottomMargin: -1
             }
 
-            PlasmaCore.SvgItem {
+            Image {
                 anchors.centerIn: parent
-                anchors.margins: 1
-                svg: arrowsSvg
-                elementId: styleData.horizontal ? "right-arrow" : "down-arrow"
-                width: units.gridUnit * 0.7
-                height: width
+                source: styleData.horizontal ? "images/arrow-right.png" : "images/arrow-down.png"
             }
         }
     }
@@ -131,15 +121,11 @@ QtControlsStyle.ScrollViewStyle {
                 bottomMargin: styleData.horizontal ? -1 : 0
             }
 
-            PlasmaCore.SvgItem {
+            Image {
                 anchors.centerIn: parent
-                anchors.margins: 1
                 anchors.verticalCenterOffset: styleData.horizontal ? 0 : -1
                 anchors.horizontalCenterOffset: styleData.horizontal ? -1 : 0
-                svg: arrowsSvg
-                elementId: styleData.horizontal ? "left-arrow" : "up-arrow"
-                width: units.gridUnit * 0.7
-                height: width
+                source: styleData.horizontal ? "images/arrow-left.png" : "images/arrow-up.png"
                 opacity: control.enabled ? 0.6 : 0.5
             }
         }

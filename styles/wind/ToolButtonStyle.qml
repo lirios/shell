@@ -30,8 +30,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 QtControlsStyle.ButtonStyle {
     property int minimumWidth: Layout.minimumWidth + style.padding.left + style.padding.right
@@ -88,22 +86,16 @@ QtControlsStyle.ButtonStyle {
             Layout.alignment: Qt.AlignCenter
         }
 
-        PlasmaExtras.ConditionalLoader {
+        Loader {
             id: arrow
-            when: control.menu !== null
+            active: control.menu !== null
             height: width
-            source: Component {
-                PlasmaCore.SvgItem {
-                    anchors.fill: parent
-                    svg: PlasmaCore.Svg {
-                        imagePath: "widgets/arrows"
-                        colorGroup: control.hovered || !control.flat ? PlasmaCore.Theme.ButtonColorGroup : PlasmaCore.Theme.NormalColorGroup
-                    }
-                    elementId: "down-arrow"
-                    visible: control.menu !== null
-                }
+            sourceComponent: Image
+                anchors.fill: parent
+                source: "images/arrow-down.png"
             }
-            visible: when
+            visible: active
+            opacity: control.enabled ? 0.6 : 0.5
 
             Layout.minimumWidth: units.iconSizes.small
             Layout.maximumWidth: Layout.minimumWidth
@@ -116,11 +108,11 @@ QtControlsStyle.ButtonStyle {
         implicitWidth: (!label.visible || control.text.length == 0) ? height : Math.max(style.mSize.width * 12, style.minimumWidth)
         implicitHeight: Math.floor(Math.max(style.mSize.height * 1.6, style.minimumHeight))
 
-        PlasmaExtras.ConditionalLoader {
+        Loader {
             anchors.fill: parent
-            when: !control.flat
-            source: normalComponent
-            visible: when
+            active: !control.flat
+            sourceComponent: normalComponent
+            visible: active
         }
     }
 

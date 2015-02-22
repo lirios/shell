@@ -16,6 +16,14 @@ install(FILES ${MODULE_FILES}
     DESTINATION ${QML_INSTALL_DIR}/QtQuick/Controls/Styles/Wind)
 
 set(IMAGE_FILES
+    images/arrow-down.png
+    images/arrow-down@2x.png
+    images/arrow-left.png
+    images/arrow-left@2x.png
+    images/arrow-right.png
+    images/arrow-right@2x.png
+    images/arrow-up.png
+    images/arrow-up@2x.png
     images/noise-texture.png
     images/progress-indeterminate.png
 )
