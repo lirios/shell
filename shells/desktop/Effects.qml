@@ -38,6 +38,13 @@ ListModel {
         running: false
     }
 
+    ListElement {
+        name: "RevealDesktop"
+        file: "effects/revealdesktop/RevealDesktop.qml"
+        instance: 0
+        running: false
+    }
+
     function isRunning(name) {
         var i;
         for (i = 0; i < root.count; i++) {

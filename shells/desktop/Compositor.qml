@@ -199,6 +199,13 @@ Item {
             }
         }
 
+        // Minimize or unmimimize all windows
+        if (event.modifiers === Qt.MetaModifier && event.key === Qt.Key_X) {
+            compositorRoot.toggleEffect("RevealDesktop");
+            event.accepted = true;
+            return;
+        }
+
         // Let other components handle this
         event.accepted = false;
     }
