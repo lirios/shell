@@ -25,99 +25,19 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.1
-import QtQuick.Controls.Styles 1.1 as QtControlsStyle
+import QtQuick.Controls.Private 1.0 as QtControlsPrivate
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0
 
-QtControlsStyle.ButtonStyle {
-    property int minimumWidth: Layout.minimumWidth + style.padding.left + style.padding.right
-    property int minimumHeight: Layout.minimumHeight + style.padding.left + style.padding.right
-    property size mSize: Theme.mSize(Theme.defaultFont)
-    property bool pressed: control.pressed || control.checked
-
-    padding {
-        left: units.smallSpacing
-        top: units.smallSpacing
-        right: units.smallSpacing
-        bottom: units.smallSpacing
-    }
-
+QtControlsPrivate.ToolButtonStyle {
     id: style
-    label: RowLayout {
-        spacing: units.smallSpacing
+    panel: Item {
+        id: styleitem
+        implicitWidth: (hasIcon ? icon.width : Math.max(label.implicitWidth + frame.border.left + frame.border.right, Units.dp(36)))
+                                 + (arrow.visible ? Units.dp(10) : 0)
+        implicitHeight: hasIcon ? icon.height : Math.max(label.implicitHeight, Units.dp(36))
 
-        Components.Icon {
-            readonly property bool valid: status === Image.Ready || status === Image.Loading
-
-            id: icon
-            //anchors.verticalCenter: parent.verticalCenter
-            //anchors.horizontalCenter: label.text.length > 0 ? undefined : parent.horizontalCenter
-            iconName: control.__action.iconName ? control.__action.iconName : control.iconName
-            iconSource: {
-                if (control.__action && !control.__action.iconName)
-                    return control.__action.iconSource;
-                if (control.iconSource)
-                    return control.iconSource;
-                return "";
-            }
-            color: Theme.palette.panel.textColor
-            width: control.iconSize > 0 ? control.iconSize : units.iconSizes.medium
-            height: width
-            visible: valid
-
-            Layout.alignment: Qt.AlignCenter
-        }
-
-        Label {
-            id: label
-            text: control.text
-            visible: control.text != "" && !icon.visible
-            height: parent.height
-            color: Theme.palette.panel.textColor
-            //horizontalAlignment: icon.valid ? Text.AlignLeft : Text.AlignHCenter
-            //horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-
-            //Layout.fillWidth: true
-            Layout.minimumWidth: implicitWidth
-            Layout.alignment: Qt.AlignCenter
-        }
-
-        Loader {
-            id: arrow
-            active: control.menu !== null
-            height: width
-            sourceComponent: Image
-                anchors.fill: parent
-                source: "images/arrow-down.png"
-            }
-            visible: active
-            opacity: control.enabled ? 0.6 : 0.5
-
-            Layout.minimumWidth: units.iconSizes.small
-            Layout.maximumWidth: Layout.minimumWidth
-            Layout.alignment: Qt.AlignVCenter
-        }
-
-        Layout.preferredHeight: Math.max(units.gridUnit, Math.max(icon.visible ? icon.height : 0, label.visible ? label.implicitHeight : 0))
-    }
-    background: Item {
-        implicitWidth: (!label.visible || control.text.length == 0) ? height : Math.max(style.mSize.width * 12, style.minimumWidth)
-        implicitHeight: Math.floor(Math.max(style.mSize.height * 1.6, style.minimumHeight))
-
-        Loader {
-            anchors.fill: parent
-            active: !control.flat
-            sourceComponent: normalComponent
-            visible: active
-        }
-    }
-
-    Component {
-        id: normalComponent
+        readonly property bool hasIcon: icon.status === Image.Ready || icon.status === Image.Loading
 
         Rectangle {
             property color c: Theme.palette.panel.backgroundColor
@@ -145,6 +65,64 @@ QtControlsStyle.ButtonStyle {
                 }
             }
             antialiasing: true
+            visible: control.pressed || (control.checkable && control.checked)
+        }
+
+        Item {
+            anchors.left: parent.left
+            anchors.right: arrow.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            clip: true
+
+            Text {
+                id: label
+                visible: !hasIcon
+                anchors.centerIn: parent
+                text: control.text
+                renderType: QtControlsPrivate.Settings.isMobile ? Text.QtRendering : Text.NativeRendering
+                color: Theme.palette.panel.textColor
+            }
+
+            Components.Icon {
+                id: icon
+                anchors.centerIn: parent
+                iconName: control.__action.iconName ? control.__action.iconName : control.iconName ? control.iconName : ""
+                iconSource: {
+                    if (control.__action && !control.__action.iconName)
+                        return control.__action.iconSource;
+                    if (control.iconSource)
+                        return control.iconSource;
+                    return "";
+                }
+                color: Theme.palette.panel.textColor
+                width: control.iconSize > 0 ? control.iconSize : units.iconSizes.smallMedium
+                height: width
+            }
+        }
+
+        BorderImage {
+            id: frame
+            anchors.fill: parent
+            anchors.margins: -1
+            anchors.topMargin: -2
+            anchors.rightMargin: 0
+            border.left: 4
+            border.right: 4
+            border.top: 4
+            border.bottom: 4
+            source: "images/focusframe.png"
+            visible: control.activeFocus
+        }
+
+        Image {
+            id: arrow
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: visible ? 3 : 0
+            source: visible ? "images/arrow-down.png" : ""
+            opacity: control.enabled ? 0.7 : 0.5
+            visible: control.menu !== null
         }
     }
 }
