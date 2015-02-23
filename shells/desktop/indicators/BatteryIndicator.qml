@@ -67,20 +67,27 @@ Indicator {
     }
 
     function determineIconName() {
-        var i, total = 0;
-        for (i = 0; i < hardwareEngine.batteries.length; i++)
-            total = Math.max(hardwareEngine.batteries[i].chargePercent, total);
+        var i, total = 0, battery = null;
+        var charging = false, fullyCharged = false;
+        for (i = 0; i < hardwareEngine.batteries.length; i++) {
+            battery = hardwareEngine.batteries[i];
+            total = Math.max(battery.chargePercent, total);
+
+            if (battery.chargeState == Battery.Charging)
+                charging = true;
+            fullyCharged = battery.chargeState == Battery.FullyCharged;
+        }
 
         if (total < 5)
-            iconName = "battery-empty-symbolic"
+            iconName = "battery-empty-" + (charging ? "charging-" : "") + "symbolic"
         else if (total < 20)
-            iconName = "battery-low-symbolic";
+            iconName = "battery-low-" + (charging ? "charging-" : "") + "symbolic";
         else if (total < 40)
-            iconName = "battery-caution-symbolic";
+            iconName = "battery-caution-" + (charging ? "charging-" : "") + "symbolic";
         else if (total < 80)
-            iconName = "battery-good-symbolic";
+            iconName = "battery-good-" + (charging ? "charging-" : "") + "symbolic";
         else
-            iconName = "battery-full-symbolic";
+            iconName = "battery-full-" + (fullyCharged ? "charged-" : (charging ? "charging-" : "")) + "symbolic";
     }
 
     Component.onCompleted: determineIconName()
