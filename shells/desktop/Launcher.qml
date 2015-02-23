@@ -83,8 +83,15 @@ Item {
                     bottom: parent.bottom
                 }
                 height: Themes.Units.dp(2)
-                color: Themes.Theme.palette.view.selectedBackgroundColor
+                color: model.active ? Themes.Theme.palette.view.selectedBackgroundColor : "white"
                 opacity: model.running ? 1.0 : 0.0
+
+                Behavior on color {
+                    ColorAnimation {
+                        easing.type: Easing.OutQuad
+                        duration: Themes.Units.shortDuration
+                    }
+                }
 
                 Behavior on opacity {
                     NumberAnimation {
