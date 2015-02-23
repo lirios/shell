@@ -28,6 +28,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.2 as QtControlsStyle
+import QtQuick.Controls.Private 1.0 as QtControlsPrivate
 import Hawaii.Themes 1.0
 import Hawaii.Controls 1.0 as Controls
 
@@ -79,7 +80,7 @@ QtControlsStyle.CalendarStyle {
             color: styleData.date !== undefined && styleData.selected ? Theme.palette.panel.selectedBackgroundColor : "transparent"
         }
 
-        Label {
+        Text {
             id: label
             anchors.centerIn: parent
             color: {
@@ -92,27 +93,30 @@ QtControlsStyle.CalendarStyle {
                 return theColor;
             }
             text: styleData.date.getDate()
+            renderType: QtControlsPrivate.Settings.isMobile ? Text.QtRendering : Text.NativeRendering
         }
     }
     dayOfWeekDelegate: Rectangle {
         color: style.gridVisible ? Theme.palette.rgba(Theme.palette.panel.backgroundColor, 0.5) : "transparent"
         implicitHeight: Theme.mSize(Theme.smallestFont).height
 
-        Label {
+        Text {
             anchors.centerIn: parent
             text: control.__locale.dayName(styleData.dayOfWeek, control.dayOfWeekFormat)
             font: Theme.smallestFont
             color: Theme.palette.panel.textColor
+            renderType: QtControlsPrivate.Settings.isMobile ? Text.QtRendering : Text.NativeRendering
         }
     }
     weekNumberDelegate: Item {
         implicitWidth: 2 * Theme.mSize(Theme.smallestFont).width + units.smallSpacing
 
-        Label {
+        Text {
             anchors.centerIn: parent
             text: styleData.weekNumber
             font: Theme.smallestFont
             color: Theme.palette.panel.textColor
+            renderType: QtControlsPrivate.Settings.isMobile ? Text.QtRendering : Text.NativeRendering
         }
     }
 }

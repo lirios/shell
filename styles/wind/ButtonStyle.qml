@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
+import QtQuick.Controls.Private 1.0 as QtControlsPrivate
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0
 
@@ -67,7 +68,7 @@ QtControlsStyle.ButtonStyle {
             visible: valid
         }
 
-        Label {
+        Text {
             id: label
             text: control.text
             visible: control.text != ""
@@ -76,6 +77,7 @@ QtControlsStyle.ButtonStyle {
             horizontalAlignment: icon.valid ? Text.AlignLeft : Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
+            renderType: QtControlsPrivate.Settings.isMobile ? Text.QtRendering : Text.NativeRendering
 
             Layout.fillWidth: true
             Layout.minimumWidth: implicitWidth
