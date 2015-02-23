@@ -120,35 +120,53 @@ Rectangle {
             spacing: Themes.Units.smallSpacing
 
             /*
-            ChatIndicator {
-                iconSize: indicators.iconSize
-                onTriggered: indicatorTriggered(caller)
+            Loader {
+                asynchronous: true
+                sourceComponent: ChatIndicator {
+                    iconSize: indicators.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
             }
             */
 
-            EventsIndicator {
-                iconSize: indicators.iconSize
-                onTriggered: indicatorTriggered(caller)
+            Loader {
+                asynchronous: true
+                sourceComponent: EventsIndicator {
+                    iconSize: indicators.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
             }
 
-            SettingsIndicator {
-                iconSize: indicators.iconSize
-                onTriggered: indicatorTriggered(caller)
+            Loader {
+                asynchronous: true
+                sourceComponent: SettingsIndicator {
+                    iconSize: indicators.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
             }
 
-            SoundIndicator {
-                iconSize: indicators.iconSize
-                onTriggered: indicatorTriggered(caller)
+            Loader {
+                asynchronous: true
+                sourceComponent: SoundIndicator {
+                    iconSize: indicators.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
             }
 
-            NetworkIndicator {
-                iconSize: indicators.iconSize
-                onTriggered: indicatorTriggered(caller)
+            Loader {
+                asynchronous: true
+                sourceComponent: NetworkIndicator {
+                    iconSize: indicators.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
             }
 
-            BatteryIndicator {
-                iconSize: indicators.iconSize
-                onTriggered: indicatorTriggered(caller)
+            Loader {
+                asynchronous: true
+                sourceComponent: BatteryIndicator {
+                    iconSize: indicators.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
             }
 
             Layout.alignment: Qt.AlignRight
