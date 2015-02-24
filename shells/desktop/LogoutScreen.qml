@@ -162,6 +162,7 @@ Components.Showable {
             width: Themes.Units.iconSizes.enormous
             height: width
             color: Themes.Theme.palette.panel.textColor
+            cache: false
 
             Layout.alignment: Qt.AlignHCenter
         }

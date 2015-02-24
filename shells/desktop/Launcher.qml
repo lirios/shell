@@ -74,6 +74,7 @@ Item {
                 iconName: model.iconName
                 width: iconSize
                 height: width
+                cache: false
             }
 
             Rectangle {

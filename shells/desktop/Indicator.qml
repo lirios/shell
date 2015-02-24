@@ -92,6 +92,7 @@ Item {
         anchors.centerIn: parent
         color: selected ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
         height: width
+        cache: false
     }
 
     Label {

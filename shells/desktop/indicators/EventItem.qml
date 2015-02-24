@@ -137,6 +137,7 @@ MouseArea {
         width: Themes.Units.iconSizes.medium
         height: width
         color: Themes.Theme.palette.panel.textColor
+        cache: false
         visible: hasIcon && model.appIcon.indexOf("/") === -1
     }
 
@@ -146,6 +147,7 @@ MouseArea {
         sourceSize.width: width
         sourceSize.height: height
         fillMode: Image.PreserveAspectFit
+        cache: false
         visible: hasIcon && model.appIcon.indexOf("/") !== -1
     }
 

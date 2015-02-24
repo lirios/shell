@@ -103,6 +103,7 @@ Rectangle {
                 width: Themes.Units.iconSizes.large
                 height: width
                 iconName: modelData.clientWindow.iconName
+                cache: false
             }
         }
     }

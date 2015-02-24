@@ -36,6 +36,7 @@ RowLayout {
         width: Themes.Units.iconSizes.small
         height: width
         iconName: "audio-volume-low-symbolic"
+        cache: false
 
         MouseArea {
             anchors.fill: parent
@@ -72,6 +73,7 @@ RowLayout {
         width: Themes.Units.iconSizes.small
         height: width
         iconName: "audio-volume-high-symbolic"
+        cache: false
 
         MouseArea {
             anchors.fill: parent

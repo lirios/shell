@@ -46,6 +46,7 @@ Item {
             width: Themes.Units.iconSizes.large
             height: width
             color: Themes.Theme.palette.panel.textColor
+            cache: false
         }
 
         ColumnLayout {
