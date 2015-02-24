@@ -61,13 +61,6 @@ Item {
         yScale: zoomArea.zoom2
     }
 
-    QtObject {
-        id: __priv
-
-        readonly property int lowIndex: 0
-        readonly property int highIndex: 2000
-    }
-
     /*
      * Output information panel
      */
