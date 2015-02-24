@@ -87,6 +87,7 @@ Rectangle {
                     margins: Themes.Units.smallSpacing
                 }
                 source: modelData.child
+                z: 0
 
                 MouseArea {
                     anchors.fill: parent
@@ -104,6 +105,7 @@ Rectangle {
                 height: width
                 iconName: modelData.clientWindow.iconName
                 cache: false
+                z: 1
             }
         }
     }
