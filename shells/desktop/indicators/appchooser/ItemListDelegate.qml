@@ -29,7 +29,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.misc 0.1 as Misc
 
 Item {
     width: ListView.view.width
@@ -39,19 +38,11 @@ Item {
         anchors.fill: parent
         spacing: Themes.Units.smallSpacing
 
-/*
         Components.Icon {
             id: icon
             width: Themes.Units.iconSizes.large
             height: width
             iconName: model.iconName
-        }
-*/
-        Misc.QIconItem {
-            id: icon
-            width: Themes.Units.iconSizes.large
-            height: width
-            icon: model.decoration
         }
 
         Column {
