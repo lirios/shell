@@ -140,7 +140,9 @@ Item {
 
         function determineSource() {
             // Icon names have precedence over icon URLs
-            if (root.iconName != "")
+            if (root.iconName.indexOf("/") != -1)
+                image.source = root.iconName;
+            else if (root.iconName != "")
                 image.source = "image://desktoptheme/" + root.iconName;
             else if (root.iconSource != "")
                 image.source = root.iconSource;
