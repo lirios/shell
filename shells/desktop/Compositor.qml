@@ -41,6 +41,10 @@ Item {
     readonly property int activeWindowIndex: WindowManagement.getActiveWindowIndex()
     readonly property var windowList: WindowManagement.windowList
 
+    readonly property alias topLevelWindowComponent: topLevelWindowComponent
+    readonly property alias popupWindowComponent: popupWindowComponent
+    readonly property alias transientWindowComponent: transientWindowComponent
+
     signal keyPressed(var event)
     signal keyReleased(var event)
 
@@ -302,6 +306,27 @@ Item {
         id: session
         onSessionLocked: compositorRoot.state = "lock"
         onSessionUnlocked: compositorRoot.state = "session"
+    }
+
+    // Top level window component
+    Component {
+        id: topLevelWindowComponent
+
+        ToplevelWindow {}
+    }
+
+    // Popup window component
+    Component {
+        id: popupWindowComponent
+
+        PopupWindow {}
+    }
+
+    // Transient window component
+    Component {
+        id: transientWindowComponent
+
+        TransientWindow {}
     }
 
     /*

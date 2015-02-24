@@ -60,20 +60,19 @@ function windowMapped(window) {
     _printWindowInfo(window);
 
     // Create surface item
-    var componentName = "ToplevelWindow.qml";
+    var component = null;
     switch (window.type) {
+    case ClientWindow.TopLevel:
+        component = compositorRoot.topLevelWindowComponent;
+        break;
     case ClientWindow.Popup:
-        componentName = "PopupWindow.qml";
+        component = compositorRoot.popupWindowComponent;
         break;
     case ClientWindow.Transient:
-        componentName = "TransientWindow.qml";
+        component = compositorRoot.transientWindowComponent;
         break;
     default:
-        break;
-    }
-    var component = Qt.createComponent(componentName);
-    if (component.status !== Component.Ready) {
-        console.error(component.errorString());
+        console.error("Unknown window type", window.type);
         return;
     }
 
