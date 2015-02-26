@@ -14,7 +14,7 @@ Description=Hawaii (KMS)
 
 [Service]
 Type=notify
-Environment="DBUS_SESSION_BUS_ADDRESS=unix:path=%t/bus" QT_QPA_EGLFS_INTEGRATION=eglfs_kms
+Environment=QT_QPA_EGLFS_INTEGRATION=eglfs_kms
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session --mode=eglfs
 
 [Install]
