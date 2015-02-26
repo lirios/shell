@@ -24,6 +24,7 @@ set(IMAGE_FILES
     images/arrow-right@2x.png
     images/arrow-up.png
     images/arrow-up@2x.png
+    images/focusframe.png
     images/noise-texture.png
     images/progress-indeterminate.png
 )
