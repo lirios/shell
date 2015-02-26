@@ -46,8 +46,6 @@ Item {
     AppChooser.RunnerModel {
         id: runnerModel
         runners: new Array("bookmarks", "baloosearch")
-        onRunnersChanged: runnerView.forceLayout()
-        onCountChanged: runnerView.forceLayout()
     }
 
     ColumnLayout {
@@ -61,22 +59,29 @@ Item {
         }
 
         Item {
-            VerticalView {
-                id: view
+            Loader {
                 anchors.fill: parent
-                visible: !runnerView.visible
+                active: runnerModel.count == 0
+                sourceComponent: VerticalView {}
             }
 
-            ScrollView {
+            Loader {
                 anchors.fill: parent
-                visible: (searchField !== "") && (runnerModel.count > 0)
+                active: (searchField !== "") && (runnerModel.count > 0)
+                sourceComponent: ScrollView {
+                    ListView {
+                        id: runnerView
+                        model: runnerModel
+                        delegate: RunnerResults {
+                            id: runnerMatches
+                            width: runnerView.width
+                        }
 
-                ListView {
-                    id: runnerView
-                    model: runnerModel
-                    delegate: RunnerResults {
-                        id: runnerMatches
-                        width: runnerView.width
+                        Connections {
+                            target: runnerModel
+                            onRunnersChanged: runnerView.forceLayout()
+                            onCountChanged: runnerView.forceLayout()
+                        }
                     }
                 }
             }
