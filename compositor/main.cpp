@@ -97,8 +97,10 @@ int main(int argc, char *argv[])
     sigwatch.watchForSignal(SIGTERM);
 
     // Close all windows when the process is killed
-    QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal,
-                     &app, &GreenIsland::HomeApplication::quit);
+    QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [=] {
+        GreenIsland::HomeApplication::quit();
+        GreenIsland::HomeApplication::processEvents();
+    });
 
     return app.exec();
 }

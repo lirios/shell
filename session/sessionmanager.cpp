@@ -145,7 +145,6 @@ void SessionManager::logOut()
     m_launcher->closeApplications();
 
     // Stop the compositor
-    QCoreApplication::processEvents();
     m_controller->stop();
 }
 
