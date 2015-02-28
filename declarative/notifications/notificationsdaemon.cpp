@@ -149,15 +149,14 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     // Fetch the image hint (we also support the obsolete icon_data hint which
     // is still used by applications compatible with the specification version
     QImage image;
+    QString iconName = appIcon;
     if (hints.contains(QStringLiteral("image_data")) || hints.contains(QStringLiteral("icon_data"))) {
         if (hints.contains(QStringLiteral("image_data")))
             image = decodeImageHint(hints["image_data"].value<QDBusArgument>());
         else if (hints.contains(QStringLiteral("icon_data")))
             image = decodeImageHint(hints["icon_data"].value<QDBusArgument>());
-#if 0
     } else if (hints.contains(QStringLiteral("image_path"))) {
-        iconName = findImageFromPath(hints["image_path"].toString());
-#endif
+        iconName = hints["image_path"].toString();
     }
 
     // Create actions property map
@@ -173,7 +172,7 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     QQmlPropertyMap *data = new QQmlPropertyMap(this);
     data->insert(QStringLiteral("id"), id);
     data->insert(QStringLiteral("appName"), realAppName);
-    data->insert(QStringLiteral("appIcon"), appIcon);
+    data->insert(QStringLiteral("appIcon"), iconName);
     data->insert(QStringLiteral("image"), image.isNull() ? QVariant() : image);
     data->insert(QStringLiteral("summary"), summary);
     data->insert(QStringLiteral("body"), body);
