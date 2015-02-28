@@ -301,7 +301,7 @@ function _forgetWindow(i, window, item, destruction) {
     if (window.type === ClientWindow.Transient) {
         var parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
         parentItem.transientChildren = null;
-        parentItem.child.takeFocus();
+        parentItem.clientWindow.activate();
     }
 }
 
