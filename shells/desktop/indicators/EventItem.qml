@@ -116,14 +116,10 @@ MouseArea {
     }
 
     Component.onCompleted: {
-        if (hasIcon && !hasImage) {
-            if (model.appIcon.indexOf("/") === -1)
-                appIconItem.iconName = model.appIcon;
-            else
-                pictureItem.source = model.appIcon;
-        } else if (!hasIcon && hasImage) {
+        if (hasIcon && !hasImage)
+            appIconItem.iconName = model.appIcon;
+        else if (!hasIcon && hasImage)
             imageItem.image = model.image;
-        }
     }
 
     Components.Icon {
@@ -138,24 +134,14 @@ MouseArea {
         height: width
         color: Themes.Theme.palette.panel.textColor
         cache: false
-        visible: hasIcon && model.appIcon.indexOf("/") === -1
-    }
-
-    Image {
-        id: pictureItem
-        anchors.fill: appIconItem
-        sourceSize.width: width
-        sourceSize.height: height
-        fillMode: Image.PreserveAspectFit
-        cache: false
-        visible: hasIcon && model.appIcon.indexOf("/") !== -1
+        visible: hasIcon
     }
 
     Misc.QImageItem {
         id: imageItem
         anchors.fill: appIconItem
         fillMode: Image.PreserveAspectFit
-        visible: hasImage
+        visible: !hasIcon && hasImage
     }
 
     Controls.Heading {
@@ -172,7 +158,7 @@ MouseArea {
     Controls.Heading {
         id: bodyLabel
         anchors {
-            left: model.appIcon || model.image ? appIconItem.right : parent.left
+            left: hasIcon || hasImage ? appIconItem.right : parent.left
             top: titleLabel.bottom
             right: parent.right
             bottom: parent.bottom

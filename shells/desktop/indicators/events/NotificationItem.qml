@@ -32,7 +32,7 @@ import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1 as Misc
 
 Item {
-    property string icon
+    property alias icon: appIconItem.iconName
     property alias image: imageItem.image
     property bool hasIcon: false
     property bool hasImage: false
@@ -93,14 +93,6 @@ Item {
             }
         }
     ]
-    onIconChanged: {
-        if (hasIcon && !hasImage) {
-            if (icon.indexOf("/") === -1)
-                appIconItem.iconName = icon;
-            else
-                pictureItem.source = icon;
-        }
-    }
 
     Components.Icon {
         id: appIconItem
@@ -113,16 +105,7 @@ Item {
         width: Themes.Units.iconSizes.large
         height: width
         color: Themes.Theme.palette.panel.textColor
-        visible: hasIcon && icon.indexOf("/") === -1
-    }
-
-    Image {
-        id: pictureItem
-        anchors.fill: appIconItem
-        sourceSize.width: width
-        sourceSize.height: height
-        fillMode: Image.PreserveAspectFit
-        visible: hasIcon && icon.indexOf("/") !== -1
+        visible: hasIcon
     }
 
     Misc.QImageItem {
