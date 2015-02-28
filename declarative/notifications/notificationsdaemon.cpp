@@ -173,7 +173,7 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     data->insert(QStringLiteral("id"), id);
     data->insert(QStringLiteral("appName"), realAppName);
     data->insert(QStringLiteral("appIcon"), iconName);
-    data->insert(QStringLiteral("image"), image.isNull() ? QVariant() : image);
+    data->insert(QStringLiteral("image"), image);
     data->insert(QStringLiteral("summary"), summary);
     data->insert(QStringLiteral("body"), body);
     data->insert(QStringLiteral("actions"), actionsList);
