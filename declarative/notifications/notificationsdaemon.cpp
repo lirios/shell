@@ -119,7 +119,7 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
         replacesId = m_notifications.key(appName + summary);
 
     // Calculate identifier
-    uint id = replacesId ? replacesId : nextId();
+    uint id = replacesId > 0 ? replacesId : nextId();
 
     qCDebug(NOTIFICATIONS)
             << "Notification:"
