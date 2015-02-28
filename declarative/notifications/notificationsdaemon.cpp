@@ -118,12 +118,15 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     if (m_notifications.values().contains(appName + summary))
         replacesId = m_notifications.key(appName + summary);
 
-    qCDebug(NOTIFICATIONS)
-            << "Notification:" << appName << replacesId << appIcon
-            << summary << body << actions << hints << timeout;
-
     // Calculate identifier
     uint id = replacesId ? replacesId : nextId();
+
+    qCDebug(NOTIFICATIONS)
+            << "Notification:"
+            << "ID =" << id
+            << "replaced =" << (replacesId == id)
+            << appName << appIcon << summary << body
+            << actions << hints << timeout;
 
     // Some applications (mostly media players) will send too many notifications,
     // for them we want to replace an older notification (if applicable)
