@@ -210,6 +210,7 @@ void ProcessController::setupCompositor()
         env.insert(QStringLiteral("QT_QPA_EGLFS_DEPTH"), QStringLiteral("32"));
         env.insert(QStringLiteral("QT_QPA_EGLFS_HIDECURSOR"), QStringLiteral("1"));
     }
+    env.insert(QStringLiteral("QSG_RENDER_LOOP"), QStringLiteral("windows"));
     m_compositor->setProcessEnvironment(env);
 }
 
