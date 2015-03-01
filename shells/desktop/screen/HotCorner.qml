@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Themes 1.0 as Themes
 
 Item {
     property int type: Item.TopLeft
@@ -32,19 +33,8 @@ Item {
     signal triggered()
 
     id: hotCorner
-    // FIXME: Size depends on DPIs
-    width: 32
-    height: 32
-
-    QtObject {
-        id: __priv
-
-        property int threshold: 5
-        property bool entered: false
-        property double lastTrigger
-
-        Component.onCompleted: lastTrigger = new Date().getTime()
-    }
+    width: Themes.Units.dp(32)
+    height: Themes.Units.dp(32)
 
     Item {
         id: rect
@@ -54,7 +44,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: 250
+                duration: Themes.Units.shortDuration
             }
         }
 
