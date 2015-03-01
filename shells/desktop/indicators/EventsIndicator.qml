@@ -32,6 +32,7 @@ import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.notifications 0.1
 import ".."
+import "events" as EventsIndicator
 
 Indicator {
     property int notificationId: 0
@@ -60,7 +61,7 @@ Indicator {
                 spacing: Themes.Units.largeSpacing
                 clip: true
                 model: notificationsModel
-                delegate: EventItem {}
+                delegate: EventsIndicator.EventItem {}
                 add: Transition {
                     NumberAnimation {
                         properties: "x"
