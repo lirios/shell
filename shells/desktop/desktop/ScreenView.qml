@@ -32,6 +32,7 @@ import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1 as Misc
 import ".."
+import "../components"
 import "../indicators"
 
 Item {
@@ -111,7 +112,7 @@ Item {
         }
 
         // Workspaces
-        WorkspacesLinearView {
+        WorkspacesView {
             id: workspacesLayer
             anchors.fill: parent
             z: 1

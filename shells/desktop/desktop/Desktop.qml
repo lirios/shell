@@ -25,17 +25,19 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import "../components"
 
 Item {
-    property alias effects: effects
-    property int workspaceIndex
+    signal clockClicked()
 
     id: root
 
-    Effects {
-        id: effects
-        workspace: root
+    Clock {
+        id: clock
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+        }
+        onClicked: root.clockClicked()
     }
-
-    //Component.onDestruction: console.debug("Workspace destruction")
 }

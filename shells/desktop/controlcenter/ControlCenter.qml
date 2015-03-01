@@ -29,7 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.appchooser 0.1 as AppChooser
-import ".."
+import "../components"
 
 FocusScope {
     signal closed()

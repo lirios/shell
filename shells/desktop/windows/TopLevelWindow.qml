@@ -37,7 +37,7 @@ WindowWrapper {
 
     id: window
     objectName: "clientWindow"
-    animation: ToplevelWindowAnimation {
+    animation: TopLevelWindowAnimation {
         windowItem: window
     }
 

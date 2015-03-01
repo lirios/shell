@@ -39,15 +39,15 @@ QtControlsStyle.ButtonStyle {
     property bool pressed: control.pressed || control.checked
 
     padding {
-        left: units.smallSpacing
-        top: units.smallSpacing
-        right: units.smallSpacing
-        bottom: units.smallSpacing
+        left: Units.smallSpacing
+        top: Units.smallSpacing
+        right: Units.smallSpacing
+        bottom: Units.smallSpacing
     }
 
     id: style
     label: RowLayout {
-        spacing: units.smallSpacing
+        spacing: Units.smallSpacing
 
         Components.Icon {
             readonly property bool valid: status === Image.Ready || status === Image.Loading
@@ -63,7 +63,7 @@ QtControlsStyle.ButtonStyle {
                 return "";
             }
             color: Theme.palette.panel.textColor
-            width: control.iconSize > 0 ? control.iconSize : units.iconSizes.medium
+            width: control.iconSize > 0 ? control.iconSize : Units.iconSizes.medium
             height: width
             visible: valid
         }
@@ -94,12 +94,12 @@ QtControlsStyle.ButtonStyle {
             opacity: control.enabled ? 0.6 : 0.5
             visible: active
 
-            Layout.minimumWidth: units.iconSizes.small
+            Layout.minimumWidth: Units.iconSizes.small
             Layout.maximumWidth: Layout.minimumWidth
             Layout.alignment: Qt.AlignVCenter
         }
 
-        Layout.preferredHeight: Math.max(units.iconSizes.small, label.implicitHeight)
+        Layout.preferredHeight: Math.max(Units.iconSizes.small, label.implicitHeight)
     }
     background: Item {
         implicitWidth: control.text.length == 0 ? height : Math.max(style.mSize.width * 12, style.minimumWidth)

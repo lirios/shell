@@ -25,31 +25,14 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.2
 
-WorkspacesView {
+Item {
+    readonly property Item currentWorkspace: listView.currentItem
+    readonly property int currentIndex: listView.currentIndex
+    property alias view: listView
+
     id: root
-    view: listView
-    onWorkspaceAdded: {
-        workspaces.model++;
-    }
-    onWorkspaceRemoved: {
-        // Reparent all windows to the previous or next workspace
-        var prevIndex = index == 0 ? 1 : index - 1;
-        var workspace = workspaces.itemAt(index);
-        var prevWorkspace = workspaces.itemAt(prevIndex);
-        var i;
-        for (i = 0; i < workspace.children.length; i++) {
-            var window = workspace.children[i];
-            window.parent = prevWorkspace;
-        }
-
-        // Remove item
-        listView.currentIndex = prevIndex;
-        workspaces.model--;
-    }
-    onWorkspaceSelected: {
-        listView.currentIndex = index;
-    }
 
     Flickable {
         property int currentIndex: -1
@@ -78,7 +61,7 @@ WorkspacesView {
 
             function selectWorkspace(item) {
                 if (currentIndex !== item.workspaceIndex)
-                    root.workspaceSelected(item.workspaceIndex);
+                    root.select(item.workspaceIndex);
             }
 
             Repeater {
@@ -94,5 +77,51 @@ WorkspacesView {
                 }
             }
         }
+    }
+
+    function add() {
+        workspaces.model++;
+    }
+
+    function remove(index) {
+        // Reparent all windows to the previous or next workspace
+        var prevIndex = index === 0 ? 1 : index - 1;
+        var workspace = workspaces.itemAt(index);
+        var prevWorkspace = workspaces.itemAt(prevIndex);
+        var i;
+        for (i = 0; i < workspace.children.length; i++) {
+            var window = workspace.children[i];
+            window.parent = prevWorkspace;
+        }
+
+        // Remove item
+        listView.currentIndex = prevIndex;
+        workspaces.model--;
+    }
+
+    function select(index) {
+        listView.currentIndex = index;
+    }
+
+    function selectPrevious() {
+        // Previous index (avoid overflow)
+        var prevIndex = view.currentIndex - 1;
+        if (prevIndex < 0)
+            prevIndex = view.count - 1;
+        if (prevIndex < 0)
+            prevIndex = 0;
+
+        // Select workspace
+        select(prevIndex);
+    }
+
+    function selectNext() {
+        // Next index (avoid overflow)
+        var nextIndex = view.currentIndex + 1;
+        if (nextIndex >= view.count)
+            nextIndex = 0;
+
+        // Select workspace
+        select(nextIndex);
     }
 }

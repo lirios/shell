@@ -31,8 +31,9 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
 import org.hawaii.session 0.1 as Session
-import "WindowManagement.js" as WindowManagement
-import "screen"
+import "desktop"
+import "windows"
+import "windows/WindowManagement.js" as WindowManagement
 
 Item {
     readonly property alias screenView: screenViewLoader.item
@@ -312,7 +313,7 @@ Item {
     Component {
         id: topLevelWindowComponent
 
-        ToplevelWindow {}
+        TopLevelWindow {}
     }
 
     // Popup window component
@@ -375,7 +376,7 @@ Item {
         id: screenViewLoader
         anchors.fill: parent
         asynchronous: true
-        source: "screen/ScreenView.qml"
+        source: "desktop/ScreenView.qml"
         z: 900
         onLoaded: {
             // We asynchronously load the screen component when the splash state

@@ -25,18 +25,16 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import ".."
 
 Item {
-    signal clockClicked()
+    property alias effects: effects
+    property int workspaceIndex
 
     id: root
 
-    Clock {
-        id: clock
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            top: parent.top
-        }
-        onClicked: root.clockClicked()
+    Effects {
+        id: effects
+        workspace: root
     }
 }
