@@ -228,7 +228,7 @@ Item {
     HotCorners {
         id: hotCorners
         anchors.fill: parent
-        rotation: 0
+        z: 2000
         onTopLeftTriggered: workspacesLayer.selectPrevious()
         onTopRightTriggered: workspacesLayer.selectNext()
         onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")

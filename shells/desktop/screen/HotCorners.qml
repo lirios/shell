@@ -25,13 +25,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import GreenIsland 1.0
+import Hawaii.Themes 1.0 as Themes
 
 Item {
-    signal topTriggered()
-    signal bottomTriggered()
-    signal leftTriggered()
-    signal rightTriggered()
-
     signal topLeftTriggered()
     signal topRightTriggered()
 
@@ -40,91 +37,148 @@ Item {
 
     id: root
 
-    // Top side
-    HotCorner {
-        id: topSide
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.top
+    // Redirect events
+    Connections {
+        target: _greenisland_output
+        onHotSpotTriggered: {
+            switch (hotSpot) {
+            case Output.TopLeftHotSpot:
+                root.topLeftTriggered();
+                break;
+            case Output.TopRightHotSpot:
+                root.topRightTriggered();
+                break;
+            case Output.BottomLeftHotSpot:
+                root.bottomLeftTriggered();
+                break;
+            case Output.BottomRightHotSpot:
+                root.bottomRightTriggered();
+                break;
+            default:
+                break;
+            }
         }
-        type: Item.Top
-        onTriggered: root.topTriggered()
-    }
-
-    // Bottom side
-    HotCorner {
-        id: bottomSide
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.bottom
-        }
-        type: Item.Bottom
-        onTriggered: root.bottomTriggered()
-    }
-
-    // Left side
-    HotCorner {
-        id: leftSide
-        anchors {
-            horizontalCenter: parent.left
-            verticalCenter: parent.verticalCenter
-        }
-        type: Item.Left
-        onTriggered: root.leftTriggered()
-    }
-
-    // Bottom side
-    HotCorner {
-        id: rightSide
-        anchors {
-            horizontalCenter: parent.right
-            verticalCenter: parent.verticalCenter
-        }
-        type: Item.Right
-        onTriggered: root.rightTriggered()
     }
 
     // Top-left corner
-    HotCorner {
+    Image {
         id: topLeftCorner
         anchors {
             left: parent.left
             top: parent.top
         }
-        type: Item.TopLeft
-        onTriggered: root.topLeftTriggered()
+        source: "../images/corner-ripple-ltr.png"
+        sourceSize.width: width
+        sourceSize.height: height
+        width: Themes.Units.dp(32)
+        height: width
+        opacity: 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: Themes.Units.shortDuration
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true
+            onEntered: parent.opacity = 1.0
+            onExited: parent.opacity = 0.0
+        }
     }
 
     // Top-right corner
-    HotCorner {
+    Image {
         id: topRightCorner
         anchors {
             right: parent.right
             top: parent.top
         }
-        type: Item.TopRight
-        onTriggered: root.topRightTriggered()
+        source: "../images/corner-ripple-rtl.png"
+        sourceSize.width: width
+        sourceSize.height: height
+        width: Themes.Units.dp(32)
+        height: width
+        opacity: 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: Themes.Units.shortDuration
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true
+            onEntered: parent.opacity = 1.0
+            onExited: parent.opacity = 0.0
+        }
     }
 
     // Bottom-left corner
-    HotCorner {
+    Image {
         id: bottomLeftCorner
         anchors {
             left: parent.left
             bottom: parent.bottom
         }
-        type: Item.BottomLeft
-        onTriggered: root.bottomLeftTriggered()
+        source: "../images/corner-ripple-ltr.png"
+        sourceSize.width: width
+        sourceSize.height: height
+        width: Themes.Units.dp(32)
+        height: width
+        transform: Rotation { origin.x: width / 2; origin.y: height / 2; angle: -90 }
+        opacity: 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: Themes.Units.shortDuration
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true
+            onEntered: parent.opacity = 1.0
+            onExited: parent.opacity = 0.0
+        }
     }
 
     // Bottom-right corner
-    HotCorner {
+    Image {
         id: bottomRightCorner
         anchors {
             right: parent.right
             bottom: parent.bottom
         }
-        type: Item.BottomRight
-        onTriggered: root.bottomRightTriggered()
+        source: "../images/corner-ripple-rtl.png"
+        sourceSize.width: width
+        sourceSize.height: height
+        width: Themes.Units.dp(32)
+        height: width
+        transform: Rotation { origin.x: width / 2; origin.y: height / 2; angle: 90 }
+        opacity: 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: Themes.Units.shortDuration
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true
+            onEntered: parent.opacity = 1.0
+            onExited: parent.opacity = 0.0
+        }
     }
 }
