@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.3
 import Hawaii.Themes 1.0 as Themes
 
 Item {
@@ -44,23 +44,20 @@ Item {
         return Math.max(Themes.Units.gu(10), childrenRect.height);
     }
     clip: true
-    onEdgeChanged: __priv.resetPosition()
-    onWidthChanged: __priv.resetPosition()
-    onHeightChanged: __priv.resetPosition()
     visible: false
 
-    Behavior on x {
-        NumberAnimation {
-            duration: Themes.Units.longDuration
-            easing.type: Easing.OutCubic
-        }
+    XAnimator {
+        id: xAnimator
+        target: slidingPanel
+        easing.type: Easing.OutCubic
+        duration: Themes.Units.longDuration
     }
 
-    Behavior on y {
-        NumberAnimation {
-            duration: Themes.Units.longDuration
-            easing.type: Easing.OutCubic
-        }
+    YAnimator {
+        id: yAnimator
+        target: slidingPanel
+        easing.type: Easing.OutCubic
+        duration: Themes.Units.longDuration
     }
 
     QtObject {
@@ -68,57 +65,31 @@ Item {
 
         property bool open: false
 
-        function setInitialPosition() {
+        onOpenChanged: {
             switch (edge) {
             case Qt.LeftEdge:
-                x = -slidingPanel.width;
-                y = 0;
+                xAnimator.from = open ? -slidingPanel.width : 0;
+                xAnimator.to = open ? 0 : -slidingPanel.width;
+                xAnimator.start();
                 break;
             case Qt.TopEdge:
-                x = 0;
-                y = -slidingPanel.height;
+                yAnimator.from = open ? -slidingPanel.height : 0;
+                yAnimator.to = open ? 0 : -slidingPanel.height;
+                yAnimator.start();
                 break;
             case Qt.RightEdge:
-                x = compositorRoot.screenView.width + slidingPanel.width;
-                y = 0;
+                xAnimator.from = open ? compositorRoot.screenView.width + slidingPanel.width : compositorRoot.screenView.width - slidingPanel.width;
+                xAnimator.to = open ? compositorRoot.screenView.width - slidingPanel.width : compositorRoot.screenView.width + slidingPanel.width;
+                xAnimator.start();
                 break;
             case Qt.BottomEdge:
-                x = 0;
-                y = compositorRoot.screenView.height + slidingPanel.height;
+                yAnimator.from = open ? compositorRoot.screenView.height + slidingPanel.height : compositorRoot.screenView.height - slidingPanel.height;
+                yAnimator.to = open ? compositorRoot.screenView.height - slidingPanel.height : compositorRoot.screenView.height + slidingPanel.height;
+                yAnimator.start();
                 break;
             default:
                 break;
             }
-        }
-
-        function setFinalPosition() {
-            switch (edge) {
-            case Qt.LeftEdge:
-                x = 0;
-                y = 0;
-                break;
-            case Qt.TopEdge:
-                x = 0;
-                y = 0;
-                break;
-            case Qt.RightEdge:
-                x = compositorRoot.screenView.width - slidingPanel.width;
-                y = 0;
-                break;
-            case Qt.BottomEdge:
-                x = 0;
-                y = compositorRoot.screenView.height - slidingPanel.height;
-                break;
-            default:
-                break;
-            }
-        }
-
-        function resetPosition() {
-            if (open)
-                setFinalPosition();
-            else
-                setInitialPosition();
         }
     }
 
@@ -133,7 +104,6 @@ Item {
             return;
 
         visible = true;
-        __priv.setFinalPosition();
         __priv.open = true;
     }
 
@@ -141,7 +111,6 @@ Item {
         if (!__priv.open)
             return;
 
-        __priv.setInitialPosition();
         __priv.open = false;
     }
 
