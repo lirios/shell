@@ -500,7 +500,7 @@ Item {
         width: parent.width
         height: parent.height
         asynchronous: true
-        component: screenView.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
+        component: _greenisland_output.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
         z: 910
         onLoadComponentChanged: if (loadComponent) show(); else hide();
     }
