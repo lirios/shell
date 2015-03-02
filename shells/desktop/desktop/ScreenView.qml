@@ -25,8 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Window 2.0
-import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
@@ -51,7 +49,7 @@ Item {
         readonly property alias notifications: notificationsLayer
     }
 
-    readonly property alias panel: panel
+    readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
 
     id: root
     transform: Scale {
@@ -91,6 +89,19 @@ Item {
     }
 
     /*
+     * Hot corners
+     */
+
+    HotCorners {
+        id: hotCorners
+        anchors.fill: parent
+        z: 2000
+        onTopLeftTriggered: workspacesLayer.selectPrevious()
+        onTopRightTriggered: workspacesLayer.selectNext()
+        onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
+    }
+
+    /*
      * Workspace
      */
 
@@ -117,6 +128,19 @@ Item {
             z: 1
         }
 
+        // Panels
+        Loader {
+            id: shellLoader
+            anchors.fill: parent
+            active: primary
+            sourceComponent: Shell {
+                onPanelHeightChanged: setAvailableGeometry()
+
+                Component.onCompleted: setAvailableGeometry()
+            }
+            z: 2
+        }
+
         // Full screen windows can cover application windows and panels
         Item {
             id: fullScreenLayer
@@ -131,97 +155,16 @@ Item {
             anchors.fill: parent
             z: 4
         }
-
-        Panel {
-            id: panel
-            anchors {
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-            }
-            z: 3
-            onHeightChanged: setAvailableGeometry()
-            onIndicatorTriggered: {
-                // AppChooser special case
-                if (indicator.name === "appchooser") {
-                    // Load AppChooser component
-                    if (leftDrawer.component == undefined)
-                        leftDrawer.component = indicator.component;
-                    leftDrawer.toggle();
-                    return;
-                }
-
-                // Close drawer if the current indicator is triggered again
-                if (indicator.selected) {
-                    if (rightDrawer.expanded) {
-                        rightDrawer.close();
-                        selectedIndicator = null;
-                    }
-
-                    return;
-                }
-
-                // Load indicator component
-                if (indicator !== lastIndicator)
-                    stackView.push({item: indicator.component, immediate:!rightDrawer.expanded});
-
-                // Open drawer if necessary
-                if (!rightDrawer.expanded)
-                    rightDrawer.open();
-
-                // Save a reference to the currently open indicator
-                selectedIndicator = indicator;
-                lastIndicator = indicator;
-            }
-        }
-
-        SlidingPanel {
-            property alias component: loader.sourceComponent
-
-            id: leftDrawer
-            edge: Qt.LeftEdge
-            width: Themes.Units.gu(20)
-            z: 2
-
-            Loader {
-                id: loader
-                anchors.fill: parent
-                anchors.margins: Themes.Units.largeSpacing
-                active: leftDrawer.expanded
-            }
-        }
-
-        SlidingPanel {
-            id: rightDrawer
-            edge: Qt.RightEdge
-            width: Themes.Units.gu(16)
-            z: 2
-
-            StackView {
-                id: stackView
-                anchors.fill: parent
-                anchors.margins: Themes.Units.largeSpacing
-            }
-        }
-    }
-
-    // Hot corners
-    HotCorners {
-        id: hotCorners
-        anchors.fill: parent
-        z: 2000
-        onTopLeftTriggered: workspacesLayer.selectPrevious()
-        onTopRightTriggered: workspacesLayer.selectNext()
-        onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
     }
 
     function setAvailableGeometry() {
+        if (!panel)
+            return;
+
         // Set available geometry so that windows are maximized properly
         var pt = _greenisland_output.mapToGlobal(0, 0);
         var g = Qt.rect(pt.x, pt.y, _greenisland_output.geometry.width, _greenisland_output.geometry.height - panel.height);
         _greenisland_output.availableGeometry = g;
         console.debug("Available geometry for", name, "is:", _greenisland_output.availableGeometry);
     }
-
-    Component.onCompleted: setAvailableGeometry()
 }
