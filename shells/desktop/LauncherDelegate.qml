@@ -29,7 +29,6 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.launcher 0.1 as Launcher
 import "components" as CustomComponents
 
 Item {
@@ -123,6 +122,7 @@ Item {
         visualParent: root
     }
 
+    /*
     CustomComponents.PopupMenu {
         id: menu
         content: [
@@ -136,15 +136,13 @@ Item {
             CustomComponents.MenuSeparator {
                 visible: model.hasWindows
             },
-            /*
-                Repeater {
-                    model: menu.actionList ? menu.actionList : 0
+            Repeater {
+                model: menu.actionList ? menu.actionList : 0
 
-                    CustomComponents.MenuItem {
-                        text: "Action " + index
-                    }
-                },
-                */
+                CustomComponents.MenuItem {
+                    text: "Action " + index
+                }
+            },
             CustomComponents.MenuSeparator {
                 visible: model.hasActionList
             },
@@ -188,6 +186,7 @@ Item {
         }
         onClosed: mouseArea.hoverEnabled = true
     }
+    */
 
     MouseArea {
         id: mouseArea
@@ -201,12 +200,14 @@ Item {
             case Qt.LeftButton:
                 toggleWindows();
                 break;
+                /*
             case Qt.RightButton:
                 if (menu.showing)
                     menu.close();
                 else
                     menu.open();
                 break;
+                */
             default:
                 break;
             }
