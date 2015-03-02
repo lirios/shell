@@ -108,4 +108,6 @@ Item {
             anchors.margins: Themes.Units.largeSpacing
         }
     }
+
+    Component.onCompleted: setAvailableGeometry(panel.height)
 }

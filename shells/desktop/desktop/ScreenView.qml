@@ -134,9 +134,7 @@ Item {
             anchors.fill: parent
             active: primary
             sourceComponent: Shell {
-                onPanelHeightChanged: setAvailableGeometry()
-
-                Component.onCompleted: setAvailableGeometry()
+                onPanelHeightChanged: setAvailableGeometry(panel.height)
             }
             z: 2
         }
@@ -157,13 +155,11 @@ Item {
         }
     }
 
-    function setAvailableGeometry() {
-        if (!panel)
-            return;
-
+    function setAvailableGeometry(h) {
+        console.debug(":::::::::::::",h);
         // Set available geometry so that windows are maximized properly
         var pt = _greenisland_output.mapToGlobal(0, 0);
-        var g = Qt.rect(pt.x, pt.y, _greenisland_output.geometry.width, _greenisland_output.geometry.height - panel.height);
+        var g = Qt.rect(pt.x, pt.y, _greenisland_output.geometry.width, _greenisland_output.geometry.height - h);
         _greenisland_output.availableGeometry = g;
         console.debug("Available geometry for", name, "is:", _greenisland_output.availableGeometry);
     }
