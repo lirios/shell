@@ -41,6 +41,30 @@ Item {
     readonly property alias currentItem: listView.currentItem
 
     id: launcher
+    onOrientationChanged: {
+        listView.width = __priv.calcWidth();
+        listView.height = __priv.calcHeight();
+    }
+    onItemSizeChanged: {
+        listView.width = __priv.calcWidth();
+        listView.height = __priv.calcHeight();
+    }
+
+    QtObject {
+        id: __priv
+
+        function calcWidth() {
+            if (launcher.orientation == ListView.Horizontal)
+                return listView.contentWidth;
+            return launcher.itemSize + (launcher.itemPadding / 2);
+        }
+
+        function calcHeight() {
+            if (launcher.orientation == ListView.Vertical)
+                return listView.contentHeight;
+            return launcher.itemSize + (launcher.itemPadding / 2);
+        }
+    }
 
     Component {
         id: iconDelegate
@@ -264,19 +288,7 @@ Item {
             id: launcherModel
         }
         delegate: iconDelegate
-        width: calcWidth()
-        height: calcHeight()
-
-        function calcWidth() {
-            if (orientation == ListView.Horizontal)
-                return contentWidth;
-            return itemSize + (itemPadding / 2);
-        }
-
-        function calcHeight() {
-            if (orientation == ListView.Vertical)
-                return contentHeight;
-            return itemSize + (itemPadding / 2);
-        }
+        onContentWidthChanged: width = __priv.calcWidth()
+        onContentHeightChanged: height = __priv.calcHeight()
     }
 }
