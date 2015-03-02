@@ -25,11 +25,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Themes 1.0 as Themes
 import "../components"
 
 Item {
-    signal clockClicked()
-
     id: root
 
     Clock {
@@ -38,6 +37,27 @@ Item {
             horizontalCenter: parent.horizontalCenter
             top: parent.top
         }
-        onClicked: root.clockClicked()
+        z: 0
+        onClicked: topDrawer.toggle()
+    }
+
+    SlidingPanel {
+        id: topDrawer
+        edge: Qt.TopEdge
+        height: Themes.Units.gu(15)
+        z: 1
+
+        Loader {
+            id: loader
+            anchors.fill: parent
+            anchors.margins: Themes.Units.largeSpacing
+            active: topDrawer.expanded
+            source: "../controlcenter/ControlCenter.qml"
+
+            Connections {
+                target: loader.item
+                onClosed: topDrawer.close()
+            }
+        }
     }
 }

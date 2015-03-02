@@ -108,7 +108,6 @@ Item {
             id: desktopLayer
             anchors.fill: parent
             z: 0
-            onClockClicked: topDrawer.toggle()
         }
 
         // Workspaces
@@ -202,25 +201,6 @@ Item {
                 id: stackView
                 anchors.fill: parent
                 anchors.margins: Themes.Units.largeSpacing
-            }
-        }
-
-        SlidingPanel {
-            id: topDrawer
-            edge: Qt.TopEdge
-            height: Themes.Units.gu(15)
-            z: 2
-
-            Loader {
-                anchors.fill: parent
-                anchors.margins: Themes.Units.largeSpacing
-                active: topDrawer.expanded
-                source: "../controlcenter/ControlCenter.qml"
-
-                Connections {
-                    target: loader.item
-                    onClosed: topDrawer.close()
-                }
             }
         }
     }
