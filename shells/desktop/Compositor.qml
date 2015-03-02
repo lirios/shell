@@ -133,7 +133,7 @@ Item {
 
         // Lock screen
         if (event.modifiers === Qt.MetaModifier && event.key === Qt.Key_L) {
-            state = "lock";
+            compositor.locked = true;
             event.accepted = true;
             return;
         }
@@ -233,6 +233,12 @@ Item {
         onIdleInhibitResetRequested: compositor.idleInhibit = 0
         onIdleTimerStartRequested: idleTimer.running = true
         onIdleTimerStopRequested: idleTimer.running = false
+        onLockedChanged: {
+            if (compositor.locked)
+                compositorRoot.state = "lock";
+            else
+                compositorRoot.state = "session";
+        }
         onIdle: {
             // Set idle hint
             session.idle = true;
@@ -305,8 +311,8 @@ Item {
     // Session
     Session.SessionInterface {
         id: session
-        onSessionLocked: compositorRoot.state = "lock"
-        onSessionUnlocked: compositorRoot.state = "session"
+        onSessionLocked: compositor.locked = true
+        onSessionUnlocked: compositor.locked = false
     }
 
     // Top level window component
@@ -473,6 +479,18 @@ Item {
      * Lock screen
      */
 
+    Component {
+        id: primaryLockScreenComponent
+
+        LockScreen {}
+    }
+
+    Component {
+        id: secondaryLockScreenComponent
+
+        SecondaryLockScreen {}
+    }
+
     Components.Loadable {
         property bool loadComponent: false
 
@@ -482,16 +500,14 @@ Item {
         width: parent.width
         height: parent.height
         asynchronous: true
-        component: Component {
-            LockScreen {}
-        }
+        component: screenView.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
         z: 910
         onLoadComponentChanged: if (loadComponent) show(); else hide();
     }
 
     Connections {
         target: lockScreenLoader.item
-        onUnlocked: session.sessionUnlocked()
+        onUnlocked: compositor.locked = false
     }
 
     /*
