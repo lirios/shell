@@ -28,7 +28,10 @@
 #define SESSIONINTERFACE_H
 
 #include <QtDBus/QDBusConnection>
+#include <QtQml/QJSValue>
 
+class Authenticator;
+class CustomAuthenticator;
 class QDBusInterface;
 
 class SessionInterface : public QObject
@@ -66,7 +69,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void lockSession();
-    void unlockSession();
+    void unlockSession(const QString &password, const QJSValue &callback);
     void startNewSession();
     void activateSession(int index);
 
@@ -78,6 +81,11 @@ public Q_SLOTS:
     void hybridSleep();
 
 private:
+    Authenticator *m_authenticator;
+    QThread *m_authenticatorThread;
+
+    bool m_authRequested;
+
     QDBusInterface *m_interface;
     bool m_canLock;
     bool m_canStartNewSession;
@@ -87,6 +95,8 @@ private:
     bool m_canSuspend;
     bool m_canHibernate;
     bool m_canHybridSleep;
+
+    friend class CustomAuthenticator;
 };
 
 #endif // SESSIONINTERFACE_H

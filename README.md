@@ -45,6 +45,10 @@ And the following modules from KDE:
 * plasma-workspace
 * plasma-nm
 
+Other dependencies:
+
+* pam
+
 Optional dependencies:
 
 * alsa and/or libpulse for volume control

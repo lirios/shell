@@ -491,7 +491,7 @@ Item {
 
     Connections {
         target: lockScreenLoader.item
-        onUnlocked: compositorRoot.state = "session"
+        onUnlocked: session.sessionUnlocked()
     }
 
     /*

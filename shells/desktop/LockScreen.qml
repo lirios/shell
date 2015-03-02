@@ -31,6 +31,7 @@ import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1 as Misc
+import org.hawaii.session 0.1 as Session
 
 Components.Showable {
     signal unlocked()
@@ -56,6 +57,10 @@ Components.Showable {
         id: __priv
 
         property string timeFormat
+    }
+
+    Session.SessionInterface {
+        id: session
     }
 
     Image {
@@ -121,14 +126,45 @@ Components.Showable {
         Rectangle {
             color: "#80000000"
 
-            TextField {
-                id: passwordField
+            Column {
                 anchors.centerIn: parent
-                placeholderText: qsTr("Password")
-                width: Themes.Units.gu(20)
-                focus: true
-                echoMode: TextInput.Password
-                onAccepted: root.unlocked()
+                spacing: Themes.Units.smallSpacing
+
+                TextField {
+                    id: passwordField
+                    placeholderText: qsTr("Password")
+                    width: Themes.Units.gu(20)
+                    focus: true
+                    echoMode: TextInput.Password
+                    onAccepted: {
+                        session.unlockSession(text, function(succeded) {
+                            if (succeded)
+                                root.unlocked();
+                            else {
+                                text = "";
+                                errorLabel.text = qsTr("Sorry, wrong password. Please try again.");
+                                errorTimer.start();
+                            }
+                        });
+                    }
+                }
+
+                Text {
+                    id: errorLabel
+                    color: "red"
+                    text: " "
+                    height: paintedHeight
+                    renderType: Text.NativeRendering
+
+                    Timer {
+                        id: errorTimer
+                        interval: 5000
+                        onTriggered: {
+                            errorLabel.text = " ";
+                            running = false;
+                        }
+                    }
+                }
             }
 
             Layout.fillWidth: true

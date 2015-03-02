@@ -24,15 +24,69 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QThread>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusPendingCall>
 
+#include "authenticator.h"
 #include "sessioninterface.h"
 
 const QDBusConnection bus = QDBusConnection::sessionBus();
 
+/*
+ * CustomAuthenticator
+ */
+
+class CustomAuthenticator : public QObject
+{
+public:
+    CustomAuthenticator(SessionInterface *parent, const QJSValue &callback)
+        : m_parent(parent)
+        , m_callback(callback)
+        , m_succeded(false)
+    {
+        connect(m_parent->m_authenticator, &Authenticator::authenticationSucceded, this, [=] {
+            m_succeded = true;
+            authenticate();
+        });
+        connect(m_parent->m_authenticator, &Authenticator::authenticationFailed, this, [=] {
+            m_succeded = false;
+            authenticate();
+        });
+        connect(m_parent->m_authenticator, &Authenticator::authenticationError, this, [=] {
+            m_succeded = false;
+            authenticate();
+        });
+    }
+
+private:
+    SessionInterface *m_parent;
+    QJSValue m_callback;
+    bool m_succeded;
+
+private Q_SLOTS:
+    void authenticate() {
+        if (m_callback.isCallable())
+            m_callback.call(QJSValueList() << m_succeded);
+
+        m_parent->m_authRequested = false;
+
+        if (m_succeded)
+            Q_EMIT m_parent->sessionUnlocked();
+
+        deleteLater();
+    }
+};
+
+/*
+ * SessionInterface
+ */
+
 SessionInterface::SessionInterface(QObject *parent)
     : QObject(parent)
+    , m_authenticator(new Authenticator)
+    , m_authenticatorThread(new QThread(this))
+    , m_authRequested(false)
     , m_interface(new QDBusInterface("org.hawaii.session", "/HawaiiSession", "org.hawaii.session", bus))
     , m_canLock(true)
     , m_canStartNewSession(false)
@@ -43,6 +97,10 @@ SessionInterface::SessionInterface(QObject *parent)
     , m_canHibernate(false)
     , m_canHybridSleep(false)
 {
+    // Authenticate in a separate thread
+    m_authenticator->moveToThread(m_authenticatorThread);
+    m_authenticatorThread->start();
+
     m_canLock = m_interface->call("canLock").arguments().at(0).toBool();
     m_canStartNewSession = m_interface->call("canStartNewSession").arguments().at(0).toBool();
     m_canLogOut = m_interface->call("canLogOut").arguments().at(0).toBool();
@@ -68,6 +126,9 @@ SessionInterface::SessionInterface(QObject *parent)
 
 SessionInterface::~SessionInterface()
 {
+    m_authenticatorThread->quit();
+    m_authenticatorThread->wait();
+    m_authenticator->deleteLater();
     delete m_interface;
 }
 
@@ -126,9 +187,14 @@ void SessionInterface::lockSession()
     m_interface->asyncCall("lockSession");
 }
 
-void SessionInterface::unlockSession()
+void SessionInterface::unlockSession(const QString &password, const QJSValue &callback)
 {
-    m_interface->asyncCall("unlockSession");
+    if (m_authRequested)
+        return;
+
+    (void)new CustomAuthenticator(this, callback);
+    QMetaObject::invokeMethod(m_authenticator, "authenticate", Q_ARG(QString, password));
+    m_authRequested = true;
 }
 
 void SessionInterface::startNewSession()
