@@ -33,16 +33,6 @@ Item {
     readonly property alias expanded: __priv.open
 
     id: slidingPanel
-    width: {
-        if (edge == Qt.TopEdge || edge == Qt.BottomEdge)
-            return compositorRoot.screenView.width;
-        return Math.max(Themes.Units.gu(10), childrenRect.width);
-    }
-    height: {
-        if (edge == Qt.LeftEdge || edge == Qt.RightEdge)
-            return compositorRoot.screenView.height;
-        return Math.max(Themes.Units.gu(10), childrenRect.height);
-    }
     clip: true
     visible: false
 
@@ -66,6 +56,13 @@ Item {
         property bool open: false
 
         onOpenChanged: {
+            // Calculate implicit size
+            if (open) {
+                implicitWidth = __priv.calcWidth();
+                implicitHeight = __priv.calcHeight();
+            }
+
+            // Animate
             switch (edge) {
             case Qt.LeftEdge:
                 xAnimator.from = open ? -slidingPanel.width : 0;
@@ -90,6 +87,18 @@ Item {
             default:
                 break;
             }
+        }
+
+        function calcWidth() {
+            if (slidingPanel.edge == Qt.TopEdge || slidingPanel.edge == Qt.BottomEdge)
+                return _greenisland_output.availableGeometry.width;
+            return Math.max(Themes.Units.gu(10), slidingPanel.width, slidingPanel.childrenRect.width);
+        }
+
+        function calcHeight() {
+            if (slidingPanel.edge == Qt.LeftEdge || slidingPanel.edge == Qt.RightEdge)
+                return _greenisland_output.availableGeometry.height;
+            return Math.max(Themes.Units.gu(10), slidingPanel.height, slidingPanel.childrenRect.height);
         }
     }
 
