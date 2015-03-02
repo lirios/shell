@@ -99,7 +99,6 @@ int main(int argc, char *argv[])
     // Close all windows when the process is killed
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [=] {
         GreenIsland::HomeApplication::quit();
-        GreenIsland::HomeApplication::processEvents();
     });
 
     return app.exec();
