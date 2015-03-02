@@ -156,7 +156,6 @@ Item {
     }
 
     function setAvailableGeometry(h) {
-        console.debug(":::::::::::::",h);
         // Set available geometry so that windows are maximized properly
         var pt = _greenisland_output.mapToGlobal(0, 0);
         var g = Qt.rect(pt.x, pt.y, _greenisland_output.geometry.width, _greenisland_output.geometry.height - h);
