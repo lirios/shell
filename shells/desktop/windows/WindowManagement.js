@@ -96,12 +96,15 @@ function windowMapped(window) {
     // Create and setup window container
     var item = component.createObject(parentItem, {"clientWindow": window, "child": child});
     item.child.parent = item;
+    item.child.anchors.left = Qt.binding(function() { return item.left });
+    item.child.anchors.top = Qt.binding(function() { return item.top });
     item.child.touchEventsEnabled = true;
-    item.x = window.x;
-    item.y = window.y;
+    item.x = child.localX;
+    item.y = child.localY;
     item.width = window.size.width;
     item.height = window.size.height;
     console.debug("\titem:", item);
+    console.debug("\titem position:", item.x + "," + item.y);
 
     // Set transient children so that the parent can be desaturated
     if (window.type === ClientWindow.Transient)

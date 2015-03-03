@@ -91,9 +91,13 @@ Item {
      */
 
     Connections {
+        target: child
+        onLocalXChanged: window.x = child.localX
+        onLocalYChanged: window.y = child.localY
+    }
+
+    Connections {
         target: clientWindow
-        onXChanged: window.x = clientWindow.x
-        onYChanged: window.y = clientWindow.y
         onSizeChanged: {
             window.width = clientWindow.size.width;
             window.height = clientWindow.size.height;
