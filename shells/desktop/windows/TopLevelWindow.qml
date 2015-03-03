@@ -93,7 +93,9 @@ WindowWrapper {
 
                 // Move the window
                 var panel = compositorRoot.screenView.panel;
-                var pos = compositorRoot.mapFromItem(panel.currentLauncherItem, 0, 0);
+                var center = Qt.point(panel.currentLauncherItem.width / 2,
+                                      panel.currentLauncherItem.height / 2);
+                var pos = compositorRoot.mapFromItem(panel.currentLauncherItem, center.x, center.y);
                 window.x = pos.x - (width * 0.5);
                 window.y = pos.y - (height * 0.5);
                 window.scale = 0.0;
