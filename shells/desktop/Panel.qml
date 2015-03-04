@@ -163,6 +163,14 @@ Rectangle {
 
             Loader {
                 asynchronous: true
+                sourceComponent: StorageIndicator {
+                    iconSize: indicators.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
+            }
+
+            Loader {
+                asynchronous: true
                 sourceComponent: BatteryIndicator {
                     iconSize: indicators.iconSize
                     onTriggered: indicatorTriggered(caller)
