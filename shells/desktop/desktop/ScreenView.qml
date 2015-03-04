@@ -137,6 +137,7 @@ Item {
                 onPanelHeightChanged: setAvailableGeometry(panel.height)
             }
             z: 2
+            visible: status == Loader.Ready
         }
 
         // Full screen windows can cover application windows and panels
