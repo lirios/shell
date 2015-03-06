@@ -178,10 +178,6 @@ void ProcessController::setupCompositor()
         m_compositor->setArguments(m_compositor->arguments()
                                    << QStringLiteral("--socket=") + m_compositorSocket);
     } else if (m_mode == EglFSMode || m_mode == HwComposerMode) {
-        const QString platform(m_mode == EglFSMode ? "eglfs" : "hwcomposer");
-        m_compositor->setArguments(m_compositor->arguments()
-                                   << QStringLiteral("-platform")
-                                   << platform);
         if (m_hasLibInputPlugin) {
             m_compositor->setArguments(m_compositor->arguments()
                                        << QStringLiteral("-plugin")
@@ -196,6 +192,10 @@ void ProcessController::setupCompositor()
     if (m_mode == NestedMode) {
         env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
+    } else if (m_mode == EglFSMode) {
+        env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("eglfs"));
+    } else if (m_mode == HwComposerMode) {
+        env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("hwcomposer"));
     }
     env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Wind"));
     env.insert(QStringLiteral("XCURSOR_THEME"), QStringLiteral("hawaii"));
