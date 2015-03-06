@@ -32,6 +32,7 @@
 #include <QtCore/QTimer>
 
 #include "cmakedirs.h"
+#include "config.h"
 #include "processcontroller.h"
 
 Q_LOGGING_CATEGORY(PROCESS_CONTROLLER, "hawaii.session.processcontroller")
@@ -193,7 +194,11 @@ void ProcessController::setupCompositor()
         env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_fullScreenShellSocket);
     } else if (m_mode == EglFSMode) {
+#ifdef HAVE_CUSTOM_QPA_EGLFS
+        env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral(CUSTOM_QPA_EGLFS));
+#else
         env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("eglfs"));
+#endif
     } else if (m_mode == HwComposerMode) {
         env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("hwcomposer"));
     }
