@@ -1,0 +1,4 @@
+module org.hawaii.settings
+plugin settingsplugin
+classname SettingPlugin
+typeinfo plugins.qmltypes
