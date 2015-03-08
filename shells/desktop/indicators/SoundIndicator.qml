@@ -34,6 +34,7 @@ import ".."
 import "sound" as SoundIndicator
 
 Indicator {
+    id: indicator
     name: "sound"
     iconName: {
         if (MixerService.Mixer.muted || MixerService.Mixer.master == 0)
@@ -94,6 +95,20 @@ Indicator {
     Mpris2 {
         id: mpris2
     }
+
+    Connections {
+        target: MixerService.Mixer
+        onMasterChanged: {
+            // Show overlay
+            var overlay = compositorRoot.screenView.layers.overlays;
+            overlay.iconName = indicator.iconName;
+            overlay.value = MixerService.Mixer.master;
+            overlay.showProgress = true;
+            if (!overlay.visible)
+                overlay.show();
+        }
+    }
+
 
     Connections {
         target: compositorRoot
