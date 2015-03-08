@@ -31,6 +31,7 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
 import org.hawaii.session 0.1 as Session
+import org.hawaii.settings 0.1
 import "desktop"
 import "windows"
 import "windows/WindowManagement.js" as WindowManagement
@@ -222,6 +223,27 @@ Item {
             if (running)
                 restart();
         }
+    }
+
+    /*
+     * Settings
+     */
+
+    ConfigGroup {
+        id: keymapConfig
+        file: "hawaii/keyboardrc"
+        group: "Layout"
+        onKeyListChanged: applySettings()
+
+        function applySettings() {
+            compositor.settings.keyboardLayout = keymapConfig.readEntry("Layout1", "us");
+            compositor.settings.keyboardVariant = keymapConfig.readEntry("Variant1");
+            compositor.settings.keyboardOptions = keymapConfig.readEntry("Options");
+            compositor.settings.keyboardRules = keymapConfig.readEntry("Rules", "evdev");
+            compositor.settings.keyboardModel = keymapConfig.readEntry("Model", "pc105");
+        }
+
+        Component.onCompleted: applySettings()
     }
 
     ListModel {
