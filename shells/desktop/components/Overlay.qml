@@ -86,8 +86,10 @@ Components.Showable {
         onOpacityChanged: {
             if (opacity == 0.0) {
                 // Reset values to prevent fading from old values
+                root.timeout = 2500;
                 root.iconName = "";
                 root.value = 0;
+                root.showProgress = false;
             }
         }
 
