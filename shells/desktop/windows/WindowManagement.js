@@ -293,6 +293,9 @@ function _forgetWindow(i, window, item, destruction) {
     // Remove window from effect
     compositorRoot.removeWindowFromEffect(item);
 
+    // Do not update child because it is going away
+    item.child.paintEnabled = false;
+
     // Run animation
     if (destruction)
         item.runDestroyAnimation();

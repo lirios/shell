@@ -122,10 +122,16 @@ Item {
     Connections {
         target: animation
         onUnmapAnimationStopped: {
+            // Unset source since the actual surface went away
+            surfaceRenderer.source = null;
+
             // Destroy window representation
             window.destroy();
         }
         onDestroyAnimationStopped: {
+            // Unset source since the actual surface went away
+            surfaceRenderer.source = null;
+
             // Destroy window representation
             window.destroy();
         }
