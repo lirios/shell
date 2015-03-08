@@ -46,6 +46,7 @@ Item {
     property var layers: QtObject {
         readonly property alias workspaces: workspacesLayer
         readonly property alias fullScreen: fullScreenLayer
+        readonly property alias overlays: overlaysLayer
         readonly property alias notifications: notificationsLayer
     }
 
@@ -146,6 +147,13 @@ Item {
             anchors.fill: parent
             visible: false
             z: 10
+        }
+
+        // Overlays are above the panel
+        Overlay {
+            id: overlaysLayer
+            anchors.centerIn: parent
+            z: 4
         }
 
         // Notifications are behind the panel

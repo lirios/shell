@@ -24,26 +24,104 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.2
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
+import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 
-Rectangle {
-    default property alias data: container.data
+Components.Showable {
+    //! How long the overlay will stay on screen
+    property alias timeout: timer.interval
 
-    color: "#80000000"
-    radius: Themes.Units.gu(0.5)
-    opacity: 0.0
+    //! Name of the icon to show (see XDG icon naming specification)
+    property alias iconName: icon.iconName
 
-    Behavior on opacity {
-        NumberAnimation {
-            easing.type: Easing.InSine
-            duration: Themes.Units.mediumDuration
+    //! Overlay value, either text or number
+    property var value
+
+    //! Set to true if the value is a number used for progress,
+    // otherwise the value will be assumed to be a string to
+    // be used for text
+    property alias showProgress: progress.visible
+
+    id: root
+    showAnimation: OpacityAnimator {
+        target: rect
+        easing.type: Easing.InSine
+        duration: Themes.Units.mediumDuration
+        from: 0.0
+        to: 1.0
+    }
+    hideAnimation: OpacityAnimator {
+        target: rect
+        easing.type: Easing.InSine
+        duration: Themes.Units.mediumDuration
+        from: 1.0
+        to: 0.0
+    }
+    width: height
+    height: Themes.Units.gu(15)
+    onIconNameChanged: if (timer.running) timer.restart()
+    onValueChanged: if (timer.running) timer.restart()
+    onShowProgressChanged: if (timer.running) timer.restart()
+
+    // Hide automatically after the timeout
+    Timer {
+        id: timer
+        running: root.visible
+        interval: 2500
+        onTriggered: hide()
+    }
+
+    Rectangle {
+        id: rect
+        anchors.fill: parent
+        border.color: Themes.Theme.palette.rgba(Themes.Theme.palette.panel.backgroundColor, 0.5)
+        border.width: Themes.Units.dp(1)
+        color: Themes.Theme.palette.rgba(Themes.Theme.palette.panel.backgroundColor, 0.85)
+        radius: Themes.Units.dp(6)
+        antialiasing: true
+        opacity: 0.0
+        onOpacityChanged: {
+            if (opacity == 0.0) {
+                // Reset values to prevent fading from old values
+                root.iconName = "";
+                root.value = 0;
+            }
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: Themes.Units.largeSpacing
+            spacing: Themes.Units.smallSpacing
+
+            Components.Icon {
+                id: icon
+                width: Themes.Units.iconSizes.enormous
+                height: width
+                color: Themes.Theme.palette.panel.textColor
+
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            ProgressBar {
+                id: progress
+                minimumValue: 0
+                maximumValue: 100
+                value: visible ? root.value : 0
+                visible: false
+
+                Layout.fillWidth: true
+            }
+
+            Text {
+                renderType: Text.NativeRendering
+                text: progress.visible ? "" : (root.value ? root.value : "")
+                visible: !progress.visible
+
+                Layout.alignment: Qt.AlignHCenter
+            }
         }
     }
-
-    Item {
-        id: container
-        anchors.fill: parent
-    }
 }
-
