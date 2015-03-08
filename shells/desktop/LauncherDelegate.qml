@@ -198,7 +198,10 @@ Item {
         onClicked: {
             switch (mouse.button) {
             case Qt.LeftButton:
-                toggleWindows();
+                if (model.active)
+                    toggleWindows();
+                else
+                    activeWindows();
                 break;
                 /*
             case Qt.RightButton:
@@ -214,6 +217,26 @@ Item {
         }
     }
 
+    function activeWindows() {
+        // Set index so that the window have a clue of which icon was clicked
+        listView.currentIndex = index;
+
+        // Minimize or unminimize windows
+        var i, entry;
+        for (i = 0; i < surfaceModel.count; i++) {
+            entry = surfaceModel.get(i);
+            if (entry.window.appId === model.appId) {
+                if (entry.window.minimized)
+                    entry.window.unminimize();
+                if (!entry.window.active)
+                    entry.window.activate();
+            }
+        }
+
+        // Toggle active flag
+        root.active = !root.active;
+    }
+
     function toggleWindows() {
         // Set index so that the window have a clue of which icon was clicked
         listView.currentIndex = index;
@@ -223,14 +246,11 @@ Item {
         for (i = 0; i < surfaceModel.count; i++) {
             entry = surfaceModel.get(i);
             if (entry.window.appId === model.appId) {
-                if (root.active)
-                    entry.window.minimize();
-                else
+                if (entry.window.minimized)
                     entry.window.unminimize();
+                else
+                    entry.window.minimize();
             }
         }
-
-        // Toggle active flag
-        root.active = !root.active;
     }
 }
