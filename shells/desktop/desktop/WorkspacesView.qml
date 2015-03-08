@@ -34,6 +34,21 @@ Item {
 
     id: root
 
+    QtObject {
+        id: __priv
+
+        function showOverlay(next) {
+            // Show overlay
+            var overlay = compositorRoot.screenView.layers.overlays;
+            overlay.iconName = next ? "go-next-symbolic" : "go-previous-symbolic";
+            overlay.value = "";
+            overlay.showProgress = false;
+            overlay.timeout = 1000;
+            if (!overlay.visible)
+                overlay.show();
+        }
+    }
+
     Flickable {
         property int currentIndex: -1
         property Workspace currentItem: workspaces.itemAt(currentIndex)
@@ -113,6 +128,9 @@ Item {
 
         // Select workspace
         select(prevIndex);
+
+        // Show overlay
+        __priv.showOverlay(false);
     }
 
     function selectNext() {
@@ -123,5 +141,8 @@ Item {
 
         // Select workspace
         select(nextIndex);
+
+        // Show overlay
+        __priv.showOverlay(true);
     }
 }
