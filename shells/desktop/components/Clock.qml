@@ -39,9 +39,9 @@ ColumnLayout {
 
     Timer {
         id: timer
-        running: false
+        repeat: true
         triggeredOnStart: true
-        interval: 30000
+        interval: 3000
         onTriggered: {
             var now = new Date();
             timeLabel.text = Qt.formatTime(now, timeFormat);
