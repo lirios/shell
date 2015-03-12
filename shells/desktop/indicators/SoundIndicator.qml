@@ -99,6 +99,10 @@ Indicator {
     Connections {
         target: MixerService.Mixer
         onMasterChanged: {
+            // Screen view is loaded asynchronously and might not be yet available
+            if (!compositorRoot.screenView)
+                return;
+
             // Show overlay
             var overlay = compositorRoot.screenView.layers.overlays;
             overlay.iconName = indicator.iconName;
