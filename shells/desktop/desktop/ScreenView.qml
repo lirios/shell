@@ -142,11 +142,19 @@ Item {
         }
 
         // Full screen windows can cover application windows and panels
-        Item {
+        Rectangle {
             id: fullScreenLayer
             anchors.fill: parent
-            visible: false
+            color: "black"
             z: 10
+            opacity: children.length > 0 ? 1.0 : 0.0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    easing.type: Easing.InSine
+                    duration: Themes.Units.mediumDuration
+                }
+            }
         }
 
         // Overlays are above the panel

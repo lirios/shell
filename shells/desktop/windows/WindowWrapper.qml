@@ -80,6 +80,13 @@ Item {
     }
     visible: false
 
+    QtObject {
+        id: savedData
+
+        property Item parent
+        property bool saved: false
+    }
+
     SurfaceRenderer {
         id: surfaceRenderer
         anchors.fill: parent
@@ -98,6 +105,17 @@ Item {
 
     Connections {
         target: clientWindow
+        onFullScreenChanged: {
+            // Save old parent and reparent to the full screen layer
+            if (clientWindow.fullScreen) {
+                savedData.parent = window.parent;
+                savedData.saved = true;
+                window.parent = compositorRoot.screenView.layers.fullScreen;
+            } else {
+                window.parent = savedData.parent;
+                savedData.saved = false;
+            }
+        }
         onSizeChanged: {
             window.width = clientWindow.size.width;
             window.height = clientWindow.size.height;
