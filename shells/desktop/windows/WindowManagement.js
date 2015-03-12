@@ -83,7 +83,9 @@ function windowMapped(window) {
     var parentItem = compositorRoot;
     switch (window.type) {
     case ClientWindow.TopLevel:
-        parentItem = compositorRoot.screenView.currentWorkspace
+        parentItem = window.fullScreen
+                ? compositorRoot.screenView.layers.fullScreen
+                : compositorRoot.screenView.currentWorkspace
         break;
     case ClientWindow.Popup:
     case ClientWindow.Transient:
