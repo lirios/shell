@@ -124,7 +124,7 @@ Item {
                 Text {
                     renderType: Text.NativeRendering
                     color: Themes.Theme.palette.panel.textColor
-                    text: battery ? battery.recallVendor : qsTr("n.a.")
+                    text: battery ? battery.vendor : qsTr("n.a.")
                     horizontalAlignment: Qt.AlignRight
                 }
 
@@ -137,7 +137,7 @@ Item {
                 Text {
                     renderType: Text.NativeRendering
                     color: Themes.Theme.palette.panel.textColor
-                    text: battery ? battery.serial : qsTr("n.a.")
+                    text: battery ? battery.product : qsTr("n.a.")
                     horizontalAlignment: Qt.AlignRight
                 }
 
