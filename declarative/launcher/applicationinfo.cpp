@@ -36,8 +36,8 @@
  * ApplicationInfoPrivate
  */
 
-ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &appId, ApplicationInfo *parent)
-    : appId(appId)
+ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &_appId, ApplicationInfo *parent)
+    : appId(_appId)
     , state(ApplicationInfo::NotRunning)
     , entry(Q_NULLPTR)
     , focused(false)

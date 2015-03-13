@@ -46,7 +46,7 @@ class ApplicationInfoPrivate
 {
     Q_DECLARE_PUBLIC(ApplicationInfo)
 public:
-    ApplicationInfoPrivate(const QString &appId, ApplicationInfo *parent);
+    ApplicationInfoPrivate(const QString &_appId, ApplicationInfo *parent);
     ~ApplicationInfoPrivate();
 
     QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
