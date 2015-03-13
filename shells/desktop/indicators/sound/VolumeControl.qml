@@ -51,6 +51,7 @@ RowLayout {
         maximumValue: 100
         value: 0
         opacity: MixerService.Mixer.available ? 1.0 : 0.6
+        enabled: MixerService.Mixer.available
         onValueChanged: {
             // Set mixer value only if pressed to avoid loops
             if (slider.pressed)
