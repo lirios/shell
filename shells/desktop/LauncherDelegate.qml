@@ -198,10 +198,15 @@ Item {
         onClicked: {
             switch (mouse.button) {
             case Qt.LeftButton:
-                if (model.active)
-                    toggleWindows();
-                else
-                    activeWindows();
+                if (model.running) {
+                    if (model.active)
+                        toggleWindows();
+                    else
+                        activeWindows();
+                } else {
+                    if (!listView.model.get(index).launch())
+                        console.warn("Failed to run:", model.appId);
+                }
                 break;
                 /*
             case Qt.RightButton:
