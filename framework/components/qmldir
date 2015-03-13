@@ -1,4 +1,7 @@
 module Hawaii.Components
+plugin componentsplugin
+classname ComponentsPlugin
+typeinfo plugins.qmltypes
 Icon 1.0 Icon.qml
 Loadable 1.0 Loadable.qml
 NoiseBackground 1.0 NoiseBackground.qml
