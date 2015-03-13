@@ -47,6 +47,8 @@ Item {
             height: width
             color: Themes.Theme.palette.panel.textColor
             cache: false
+
+            Layout.alignment: Qt.AlignTop
         }
 
         ColumnLayout {
@@ -80,10 +82,9 @@ Item {
                 Layout.fillWidth: true
             }
 
-            Grid {
+            GridLayout {
                 rows: 4
                 columns: 2
-                spacing: Themes.Units.smallSpacing
                 opacity: 0.6
                 visible: battery !== null
 
@@ -98,6 +99,7 @@ Item {
                     color: Themes.Theme.palette.panel.textColor
                     // TODO: Convert to time
                     text: battery ? battery.timeToEmpty : 0
+                    horizontalAlignment: Qt.AlignRight
                 }
 
                 Text {
@@ -110,6 +112,7 @@ Item {
                     renderType: Text.NativeRendering
                     color: Themes.Theme.palette.panel.textColor
                     text: (battery ? battery.capacity : 0) + "%"
+                    horizontalAlignment: Qt.AlignRight
                 }
 
                 Text {
@@ -121,7 +124,8 @@ Item {
                 Text {
                     renderType: Text.NativeRendering
                     color: Themes.Theme.palette.panel.textColor
-                    text: battery ? battery.recallVendor : ""
+                    text: battery ? battery.recallVendor : qsTr("n.a.")
+                    horizontalAlignment: Qt.AlignRight
                 }
 
                 Text {
@@ -133,7 +137,8 @@ Item {
                 Text {
                     renderType: Text.NativeRendering
                     color: Themes.Theme.palette.panel.textColor
-                    text: battery ? battery.serial : ""
+                    text: battery ? battery.serial : qsTr("n.a.")
+                    horizontalAlignment: Qt.AlignRight
                 }
 
                 Layout.fillWidth: true
