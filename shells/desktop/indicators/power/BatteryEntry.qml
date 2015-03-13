@@ -83,7 +83,7 @@ Item {
             }
 
             GridLayout {
-                rows: 4
+                rows: battery && battery.powerSupply ? 2 : 4
                 columns: 2
                 opacity: 0.6
                 visible: battery !== null
@@ -119,6 +119,7 @@ Item {
                     renderType: Text.NativeRendering
                     color: Themes.Theme.palette.panel.textColor
                     text: qsTr("Vendor")
+                    visible: battery && battery.powerSupply
                 }
 
                 Text {
@@ -126,12 +127,14 @@ Item {
                     color: Themes.Theme.palette.panel.textColor
                     text: battery ? battery.vendor : qsTr("n.a.")
                     horizontalAlignment: Qt.AlignRight
+                    visible: battery && battery.powerSupply
                 }
 
                 Text {
                     renderType: Text.NativeRendering
                     color: Themes.Theme.palette.panel.textColor
                     text: qsTr("Model")
+                    visible: battery && battery.powerSupply
                 }
 
                 Text {
@@ -139,6 +142,7 @@ Item {
                     color: Themes.Theme.palette.panel.textColor
                     text: battery ? battery.product : qsTr("n.a.")
                     horizontalAlignment: Qt.AlignRight
+                    visible: battery && battery.powerSupply
                 }
 
                 Layout.fillWidth: true
