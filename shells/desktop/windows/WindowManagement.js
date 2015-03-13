@@ -33,6 +33,7 @@ var activeWindow = null;
 
 function _printWindowInfo(window) {
     console.debug("\twindow:", window);
+    console.debug("\tid:", window.id);
     console.debug("\tsurface:", window.surface);
     console.debug("\tappId:", window.appId);
     console.debug("\ttitle:", window.title);
