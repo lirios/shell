@@ -198,6 +198,15 @@ QString ApplicationInfo::appId() const
     return d->appId;
 }
 
+QString ApplicationInfo::fileName() const
+{
+    Q_D(const ApplicationInfo);
+
+    if (d->entry)
+        return d->entry->fileName();
+    return QString();
+}
+
 QString ApplicationInfo::name() const
 {
     Q_D(const ApplicationInfo);

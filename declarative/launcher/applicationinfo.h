@@ -81,6 +81,13 @@ public:
     QString appId() const;
 
     /*!
+     * \brief Desktop entry file name.
+     *
+     * Returns the desktop entry file name.
+     */
+    QString fileName() const;
+
+    /*!
      * \brief Application name.
      *
      * Returns the application name localized to current language.
