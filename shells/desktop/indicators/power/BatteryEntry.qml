@@ -59,19 +59,85 @@ Item {
                 Layout.fillWidth: true
             }
 
-            ProgressBar {
-                id: chargeProgress
-                minimumValue: 0
-                maximumValue: 100
-                value: battery ? battery.chargePercent : 0
+            RowLayout {
+                spacing: Themes.Units.smallSpacing
+
+                ProgressBar {
+                    id: chargeProgress
+                    minimumValue: 0
+                    maximumValue: 100
+                    value: battery ? battery.chargePercent : 0
+
+                    Layout.fillWidth: true
+                }
+
+                Text {
+                    renderType: Text.NativeRendering
+                    text: (battery ? battery.chargePercent : 0) + "%"
+                    color: Themes.Theme.palette.panel.textColor
+                }
 
                 Layout.fillWidth: true
             }
 
-            Text {
-                renderType: Text.NativeRendering
-                text: battery ? battery.chargePercent : 0
-                color: Themes.Theme.palette.panel.textColor
+            Grid {
+                rows: 4
+                columns: 2
+                spacing: Themes.Units.smallSpacing
+                opacity: 0.6
+                visible: battery !== null
+
+                Text {
+                    renderType: Text.NativeRendering
+                    color: Themes.Theme.palette.panel.textColor
+                    text: qsTr("Time To Empty")
+                }
+
+                Text {
+                    renderType: Text.NativeRendering
+                    color: Themes.Theme.palette.panel.textColor
+                    // TODO: Convert to time
+                    text: battery ? battery.timeToEmpty : 0
+                }
+
+                Text {
+                    renderType: Text.NativeRendering
+                    color: Themes.Theme.palette.panel.textColor
+                    text: qsTr("Capacity")
+                }
+
+                Text {
+                    renderType: Text.NativeRendering
+                    color: Themes.Theme.palette.panel.textColor
+                    text: (battery ? battery.capacity : 0) + "%"
+                }
+
+                Text {
+                    renderType: Text.NativeRendering
+                    color: Themes.Theme.palette.panel.textColor
+                    text: qsTr("Vendor")
+                }
+
+                Text {
+                    renderType: Text.NativeRendering
+                    color: Themes.Theme.palette.panel.textColor
+                    text: battery ? battery.recallVendor : ""
+                }
+
+                Text {
+                    renderType: Text.NativeRendering
+                    color: Themes.Theme.palette.panel.textColor
+                    text: qsTr("Model")
+                }
+
+                Text {
+                    renderType: Text.NativeRendering
+                    color: Themes.Theme.palette.panel.textColor
+                    text: battery ? battery.serial : ""
+                }
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
 
             Layout.fillWidth: true
