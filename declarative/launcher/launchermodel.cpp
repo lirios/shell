@@ -79,6 +79,8 @@ LauncherModel::LauncherModel(QObject *parent)
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + 2);
     m_list.append(new LauncherItem("chromium", true, this));
     m_list.append(new LauncherItem("xchat", true, this));
+    m_list.append(new LauncherItem("org.kde.konsole", true, this));
+    m_list.append(new LauncherItem("weston-terminal", true, this));
     endInsertRows();
 }
 
