@@ -36,6 +36,7 @@ RowLayout {
         width: Themes.Units.iconSizes.small
         height: width
         iconName: "audio-volume-low-symbolic"
+        opacity: MixerService.Mixer.available ? 1.0 : 0.6
         cache: false
 
         MouseArea {
@@ -49,6 +50,7 @@ RowLayout {
         minimumValue: 0
         maximumValue: 100
         value: 0
+        opacity: MixerService.Mixer.available ? 1.0 : 0.6
         onValueChanged: {
             // Set mixer value only if pressed to avoid loops
             if (slider.pressed)
@@ -73,6 +75,7 @@ RowLayout {
         width: Themes.Units.iconSizes.small
         height: width
         iconName: "audio-volume-high-symbolic"
+        opacity: MixerService.Mixer.available ? 1.0 : 0.6
         cache: false
 
         MouseArea {
