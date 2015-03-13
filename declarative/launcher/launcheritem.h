@@ -65,12 +65,15 @@ public:
     int count() const;
     int progress() const;
 
+    Q_INVOKABLE bool launch();
+
 Q_SIGNALS:
     void pinnedChanged();
     void runningChanged();
     void activeChanged();
     void countChanged();
     void progressChanged();
+    void launched();
 
 private:
     bool m_pinned;

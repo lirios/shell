@@ -26,6 +26,8 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusInterface>
 
 #include "applicationaction.h"
 #include "applicationinfo.h"
@@ -116,6 +118,22 @@ int LauncherItem::count() const
 int LauncherItem::progress() const
 {
     return m_progress;
+}
+
+bool LauncherItem::launch()
+{
+    if (isRunning())
+        return true;
+
+    const QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusInterface interface("org.hawaii.session", "/HawaiiSession", "org.hawaii.launcher", bus);
+    QDBusMessage msg = interface.call("launchDesktopFile", m_info->fileName());
+    bool ran = msg.arguments().at(0).toBool();
+
+    if (ran)
+        Q_EMIT launched();
+
+    return ran;
 }
 
 #include "moc_launcheritem.cpp"
