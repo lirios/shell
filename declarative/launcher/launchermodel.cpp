@@ -61,6 +61,8 @@ LauncherModel::LauncherModel(QObject *parent)
                     // If it's pinned we just unset the flags
                     item->setRunning(false);
                     item->setActive(false);
+                    QModelIndex modelIndex = index(i);
+                    Q_EMIT dataChanged(modelIndex, modelIndex);
                 } else {
                     // Otherwise the icon goes away because it wasn't meant
                     // to stay
