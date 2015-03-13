@@ -172,6 +172,16 @@ QUrl Battery::recallUrl() const
     return QUrl(m_battery->recallUrl());
 }
 
+QString Battery::vendor() const
+{
+    return m_device.vendor();
+}
+
+QString Battery::product() const
+{
+    return m_device.product();
+}
+
 QString Battery::serial() const
 {
     return m_battery->serial();

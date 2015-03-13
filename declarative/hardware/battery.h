@@ -57,6 +57,8 @@ class Battery : public QObject
     Q_PROPERTY(bool recalled READ isRecalled CONSTANT)
     Q_PROPERTY(QString recallVendor READ recallVendor CONSTANT)
     Q_PROPERTY(QUrl recallUrl READ recallUrl CONSTANT)
+    Q_PROPERTY(QString vendor READ vendor CONSTANT)
+    Q_PROPERTY(QString product READ product CONSTANT)
     Q_PROPERTY(QString serial READ serial CONSTANT)
     Q_ENUMS(Type Technology ChargeState)
 public:
@@ -119,6 +121,9 @@ public:
     bool isRecalled() const;
     QString recallVendor() const;
     QUrl recallUrl() const;
+
+    QString vendor() const;
+    QString product() const;
 
     QString serial() const;
 
