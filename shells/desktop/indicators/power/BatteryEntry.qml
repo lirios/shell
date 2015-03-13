@@ -68,6 +68,12 @@ Item {
                 Layout.fillWidth: true
             }
 
+            Text {
+                renderType: Text.NativeRendering
+                text: battery ? battery.chargePercent : 0
+                color: Themes.Theme.palette.panel.textColor
+            }
+
             Layout.fillWidth: true
         }
     }
