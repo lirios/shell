@@ -58,8 +58,9 @@ LauncherModel::LauncherModel(QObject *parent)
             LauncherItem *item = m_list.at(i);
             if (item->appId() == appId) {
                 if (item->isPinned()) {
-                    // If it's pinned we just unset the running flag
+                    // If it's pinned we just unset the flags
                     item->setRunning(false);
+                    item->setActive(false);
                 } else {
                     // Otherwise the icon goes away because it wasn't meant
                     // to stay
