@@ -37,6 +37,18 @@ LauncherModel::LauncherModel(QObject *parent)
 {
     // Connect to application events
     connect(m_appMan, &ApplicationManager::registered, this, [this](const QString &appId) {
+        // Do we have already an icon?
+        for (int i = 0; i < m_list.size(); i++) {
+            LauncherItem *item = m_list.at(i);
+            if (item->appId() == appId) {
+                item->setRunning(true);
+                QModelIndex modelIndex = index(i);
+                Q_EMIT dataChanged(modelIndex, modelIndex);
+                return;
+            }
+        }
+
+        // Otherwise create one
         beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
         m_list.append(new LauncherItem(appId, this));
         endInsertRows();
@@ -45,9 +57,16 @@ LauncherModel::LauncherModel(QObject *parent)
         for (int i = 0; i < m_list.size(); i++) {
             LauncherItem *item = m_list.at(i);
             if (item->appId() == appId) {
-                beginRemoveRows(QModelIndex(), i, i);
-                m_list.takeAt(i)->deleteLater();
-                endRemoveRows();
+                if (item->isPinned()) {
+                    // If it's pinned we just unset the running flag
+                    item->setRunning(false);
+                } else {
+                    // Otherwise the icon goes away because it wasn't meant
+                    // to stay
+                    beginRemoveRows(QModelIndex(), i, i);
+                    m_list.takeAt(i)->deleteLater();
+                    endRemoveRows();
+                }
                 break;
             }
         }

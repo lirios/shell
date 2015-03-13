@@ -32,6 +32,7 @@
 
 class ApplicationAction;
 class ApplicationInfo;
+class LauncherModel;
 
 class LauncherItem : public QObject
 {
@@ -82,6 +83,10 @@ private:
     int m_count;
     int m_progress;
     ApplicationInfo *m_info;
+
+    void setRunning(bool value);
+
+    friend class LauncherModel;
 };
 
 #endif // LAUNCHERITEM_H

@@ -136,4 +136,13 @@ bool LauncherItem::launch()
     return ran;
 }
 
+void LauncherItem::setRunning(bool value)
+{
+    if (m_running == value)
+        return;
+
+    m_running = value;
+    Q_EMIT runningChanged();
+}
+
 #include "moc_launcheritem.cpp"
