@@ -9,16 +9,16 @@
 #
 # This will define the following variables:
 #
-# ``BCM_HOST_FOUND``
+# ``BcmHost_FOUND``
 #     True if bcm_host is available
-# ``BCM_HOST_LIBRARIES``
+# ``BcmHost_LIBRARIES``
 #     This can be passed to target_link_libraries() instead of the ``BcmHost::BcmHost``
 #     target
-# ``BCM_HOSTL_INCLUDE_DIRS``
+# ``BcmHost_INCLUDE_DIRS``
 #     This should be passed to target_include_directories() if the target is not
 #     used for linking
 #
-# If ``BCM_HOST_FOUND`` is TRUE, it will also define the following imported target:
+# If ``BcmHost_FOUND`` is TRUE, it will also define the following imported target:
 #
 # ``BcmHost::BcmHost``
 #     The BcmHost library
@@ -60,72 +60,72 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-if(NOT BCM_HOST_PREFIX)
-    set(BCM_HOST_PREFIX "/opt/vc")
+if(NOT BcmHost_PREFIX)
+    set(BcmHost_PREFIX "/opt/vc")
 endif()
 
-find_path(BCM_HOST_INCLUDE_DIR
+find_path(BcmHost_INCLUDE_DIR
     NAMES
         bcm_host.h
     HINTS
-        "${BCM_HOST_PREFIX}/include"
+        "${BcmHost_PREFIX}/include"
 )
 
-find_library(BCM_HOST_LIBRARY
+find_library(BcmHost_LIBRARY
     NAMES
         bcm_host
     HINTS
-        "${BCM_HOST_PREFIX}/lib"
+        "${BcmHost_PREFIX}/lib"
 )
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(BCM_HOST
+find_package_handle_standard_args(BcmHost
     FOUND_VAR
-        BCM_HOST_FOUND
+        BcmHost_FOUND
     REQUIRED_VARS
-        BCM_HOST_LIBRARY
-        BCM_HOST_INCLUDE_DIR
+        BcmHost_LIBRARY
+        BcmHost_INCLUDE_DIR
 )
 
-if(BCM_HOST_FOUND)
-    set(BCM_HOST_LIBRARY_DIRS "${BCM_HOST_PREFIX}/lib")
-    set(BCM_HOST_INCLUDE_DIR ${BCM_HOST_INCLUDE_DIR} ${BCM_HOST_INCLUDE_DIR}/interface ${BCM_HOST_INCLUDE_DIR}/interface/vcos/pthreads)
+if(BcmHost_FOUND)
+    set(BcmHost_LIBRARY_DIRS "${BcmHost_PREFIX}/lib")
+    set(BcmHost_INCLUDE_DIR ${BcmHost_INCLUDE_DIR} ${BcmHost_INCLUDE_DIR}/interface ${BcmHost_INCLUDE_DIR}/interface/vcos/pthreads)
 endif()
 
-if(BCM_HOST_FOUND)
+if(BcmHost_FOUND)
     if(NOT TARGET BcmHost::BcmHost)
         add_library(BcmHost::BcmHost UNKNOWN IMPORTED)
         set_target_properties(BcmHost::BcmHost PROPERTIES
-            IMPORTED_LOCATION "-L${BCM_HOST_LIBRARY_DIRS} ${BCM_HOST_LIBRARY}"
-            INTERFACE_INCLUDE_DIRECTORIES "${BCM_HOST_INCLUDE_DIR}"
+            IMPORTED_LOCATION "-L${BcmHost_LIBRARY_DIRS} ${BcmHost_LIBRARY}"
+            INTERFACE_INCLUDE_DIRECTORIES "${BcmHost_INCLUDE_DIR}"
         )
     endif()
 
     if(NOT TARGET BcmHost::GLESv2)
         add_library(BcmHost::GLESv2 UNKNOWN IMPORTED)
         set_target_properties(BcmHost::GLESv2 PROPERTIES
-            IMPORTED_LOCATION "-L${BCM_HOST_LIBRARY_DIRS} -lGLESv2"
-            INTERFACE_INCLUDE_DIRECTORIES "${BCM_HOST_INCLUDE_DIR}"
+            IMPORTED_LOCATION "-L${BcmHost_LIBRARY_DIRS} -lGLESv2"
+            INTERFACE_INCLUDE_DIRECTORIES "${BcmHost_INCLUDE_DIR}"
         )
     endif()
 
     if(NOT TARGET BcmHost::EGL)
         add_library(BcmHost::EGL UNKNOWN IMPORTED)
         set_target_properties(BcmHost::EGL PROPERTIES
-            IMPORTED_LOCATION "-L${BCM_HOST_LIBRARY_DIRS} -lEGL"
-            INTERFACE_INCLUDE_DIRECTORIES "${BCM_HOST_INCLUDE_DIR}"
+            IMPORTED_LOCATION "-L${BcmHost_LIBRARY_DIRS} -lEGL"
+            INTERFACE_INCLUDE_DIRECTORIES "${BcmHost_INCLUDE_DIR}"
         )
     endif()
 endif()
 
-mark_as_advanced(BCM_HOST_LIBRARY BCM_HOST_INCLUDE_DIR)
+mark_as_advanced(BcmHost_LIBRARY BcmHost_INCLUDE_DIR)
 
 # Compatibility variables
-set(BCM_HOST_LIBRARIES "-L${BCM_HOST_LIBRARY_DIRS} -lGLESv2 -lEGL -lm -lbcm_host")
-set(BCM_HOST_INCLUDE_DIRS ${BCM_HOST_INCLUDE_DIR})
+set(BcmHost_LIBRARIES "-L${BcmHost_LIBRARY_DIRS} -lGLESv2 -lEGL -lm -lbcm_host")
+set(BcmHost_INCLUDE_DIRS ${BcmHost_INCLUDE_DIR})
 
 include(FeatureSummary)
-set_package_properties(BCM_HOST PROPERTIES
+set_package_properties(BcmHost PROPERTIES
     URL "http://www.broadcom.com/"
     DESCRIPTION "Broadcom OpenGLES graphics libraries."
 )
