@@ -155,8 +155,8 @@ void ProcessController::setupFullScreenShell()
 
 void ProcessController::setupCompositor()
 {
-    // Do we have the libinput plugin? If available, it will be used in eglfs mode
-    if (m_mode == EglFSMode) {
+    // Do we have the libinput plugin? If available, it will be used in eglfs or hwcomposer mode
+    if (m_mode == EglFSMode || m_mode == HwComposerMode) {
         for (const QString &path: QCoreApplication::libraryPaths()) {
             QDir pluginsDir(path + QStringLiteral("/generic"));
             for (const QString &fileName: pluginsDir.entryList(QDir::Files)) {
