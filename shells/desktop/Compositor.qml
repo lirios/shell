@@ -233,7 +233,7 @@ Item {
         id: keymapConfig
         file: "hawaii/keyboardrc"
         group: "Layout"
-        onKeyListChanged: applySettings()
+        onConfigChanged: applySettings()
 
         function applySettings() {
             compositor.settings.keyboardLayout = keymapConfig.readEntry("Layout1", "us");
