@@ -62,6 +62,7 @@ Indicator {
                         }
 
                         Text {
+                            renderType: Text.NativeRendering
                             text: modelData.name
                             color: Themes.Theme.palette.panel.textColor
                         }
