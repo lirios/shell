@@ -106,10 +106,9 @@ CustomComponents.PopupMenu {
             text: qsTr("Quit")
             visible: model.running
             onClicked: {
-                if (listView.model.get(index).quit())
-                    menu.close();
-                else
+                if (!listView.model.get(index).quit())
                     console.warn("Failed to quit:", model.appId);
+                menu.close();
             }
         }
     }
