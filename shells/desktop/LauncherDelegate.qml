@@ -119,74 +119,84 @@ Item {
     CustomComponents.Tooltip {
         id: tooltip
         text: model.name
+        visualLayer: panel.parent
         visualParent: root
     }
 
-    /*
     CustomComponents.PopupMenu {
         id: menu
-        content: [
+        width: 250
+        height: column.height
+        visualLayer: panel.parent
+        visualParent: root
+        onShowingChanged: {
+            if (showing) {
+                mouseArea.hoverEnabled = false;
+                tooltip.close();
+            } else {
+                mouseArea.hoverEnabled = true;
+            }
+        }
+
+        Column {
+            id: column
+            width: parent.width
+
             Repeater {
                 model: listView.model.get(root.indexOfThisDelegate).windows
 
                 CustomComponents.MenuItem {
                     text: modelData.title
                 }
-            },
+            }
             CustomComponents.MenuSeparator {
                 visible: model.hasWindows
-            },
+            }
             Repeater {
                 model: menu.actionList ? menu.actionList : 0
 
                 CustomComponents.MenuItem {
                     text: "Action " + index
                 }
-            },
+            }
             CustomComponents.MenuSeparator {
                 visible: model.hasActionList
-            },
+            }
             CustomComponents.MenuItem {
                 text: qsTr("New Window")
                 visible: model.running
-            },
-            CustomComponents.MenuSeparator {},
+            }
+            CustomComponents.MenuSeparator {}
             CustomComponents.MenuItem {
                 text: qsTr("Add To Launcher")
                 visible: !model.pinned
                 onClicked: model.pinned = true
-            },
+            }
             CustomComponents.MenuItem {
                 text: qsTr("Remove From Launcher")
                 visible: model.pinned
                 onClicked: model.pinned = false
-            },
-            CustomComponents.MenuSeparator {},
+            }
+            CustomComponents.MenuSeparator {}
             CustomComponents.MenuItem {
                 text: qsTr("Show All Windows")
                 visible: model.running
-            },
+            }
             CustomComponents.MenuItem {
                 text: qsTr("Show")
                 visible: model.running && !model.active
-            },
+            }
             CustomComponents.MenuItem {
                 text: qsTr("Hide")
                 visible: model.running && model.active
-            },
-            CustomComponents.MenuSeparator {},
+            }
+            CustomComponents.MenuSeparator {}
             CustomComponents.MenuItem {
                 text: qsTr("Quit")
                 visible: model.running
             }
-        ]
-        onTriggered: {
-            mouseArea.hoverEnabled = false;
-            tooltip.close();
         }
-        onClosed: mouseArea.hoverEnabled = true
     }
-    */
 
     MouseArea {
         id: mouseArea
@@ -208,17 +218,21 @@ Item {
                         console.warn("Failed to run:", model.appId);
                 }
                 break;
-                /*
             case Qt.RightButton:
                 if (menu.showing)
                     menu.close();
                 else
                     menu.open();
                 break;
-                */
             default:
                 break;
             }
+        }
+        onPressAndHold: {
+            if (menu.showing)
+                menu.close();
+            else
+                menu.open();
         }
     }
 

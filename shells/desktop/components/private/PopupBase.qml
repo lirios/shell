@@ -27,16 +27,17 @@
 import QtQuick 2.0
 
 Item {
-    property Item visualParent
     property Item visualLayer
-    property Item popup
-    readonly property bool showing: popup ? popup.opacity > 0.0 : false
+    property Item visualParent
+    readonly property alias showing: __priv.showing
 
-    signal closed()
+    id: popup
 
-    id: root
-    width: popup ? popup.width : 0
-    height: popup ? popup.height : 0
+    QtObject {
+        id: __priv
+
+        property bool showing: false
+    }
 
     function open() {
         if (showing)
@@ -55,13 +56,13 @@ Item {
         popup.parent = visualLayer;
         popup.x = pt.x;
         popup.y = pt.y;
-        popup.opacity = 1.0;
+        __priv.showing = true;
     }
 
     function close() {
         if (!showing)
             return;
 
-        popup.opacity = 0.0;
+        __priv.showing = false;
     }
 }

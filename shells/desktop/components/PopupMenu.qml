@@ -25,77 +25,32 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import "private" as Private
 
-MouseArea {
-    property ListModel model
-    property Item visualParent: parent
-    readonly property bool showing: popupLoader.loaded ? popupLoader.item.showing : false
-    property list<Item> content
-
-    signal triggered()
-    signal closed()
+Private.PopupBase {
+    default property alias content: container.data
 
     id: root
-    acceptedButtons: Qt.LeftButton
-    hoverEnabled: true
-    preventStealing: true
-    width: popupLoader.loaded ? popupLoader.item.width : 0
-    height: popupLoader.loaded ? popupLoader.item.height : 0
-    onClicked: root.closed()
+    width: implicitWidth
+    height: implicitHeight
+    implicitWidth: Themes.Units.dp(300)
 
-    Component {
-        id: popupComponent
-
-        Private.BasicPopupMenu {
-            id: popup
-            content: root.content
-            visualParent: root.visualParent
-            visualLayer: notificationsLayer
-            onShowingChanged: {
-                if (showing)
-                    root.triggered();
-            }
-            onClosed: {
-                popupLoader.sourceComponent = undefined;
-                root.closed();
-            }
-
-            /*
-            Components.MouseGrabber {
-                id: grabber
-                acceptedButtons: Qt.AllButtons
-                anchors.fill: parent
-                onClickedOutside: root.close()
-            }
-            */
+    Rectangle {
+        id: container
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            right: parent.right
         }
-    }
-
-    Loader {
-        property bool loaded: status == Loader.Ready
-
-        id: popupLoader
-    }
-
-    function open() {
-        if (!popupLoader.loaded)
-            popupLoader.sourceComponent = popupComponent;
-        popupLoader.item.open();
-    }
-
-    function openAt(x, y) {
-        if (!popupLoader.loaded)
-            popupLoader.sourceComponent = popupComponent;
-        popupLoader.item.openAt(x, y);
-    }
-
-    function close() {
-        if (popupLoader.loaded)
-            popupLoader.item.close();
+        color: Themes.Theme.palette.panel.backgroundColor
+        radius: Themes.Units.dp(6)
+        height: parent.height
+        border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.5), 0.3)
+        border.width: Themes.Units.dp(1)
+        antialiasing: true
+        opacity: showing ? 1.0 : 0.0
+        visible: opacity > 0.0
     }
 }
 
