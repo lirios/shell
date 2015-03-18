@@ -66,6 +66,8 @@ public:
     Q_INVOKABLE LauncherItem *get(int index) const;
     Q_INVOKABLE int indexFromAppId(const QString &appId) const;
 
+    Q_INVOKABLE void unpin(const QString &appId);
+
 private:
     ApplicationManager *m_appMan;
     QList<LauncherItem *> m_list;

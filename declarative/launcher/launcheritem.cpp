@@ -96,15 +96,6 @@ bool LauncherItem::isPinned() const
     return m_pinned;
 }
 
-void LauncherItem::setPinned(bool value)
-{
-    if (m_pinned == value)
-        return;
-
-    m_pinned = value;
-    Q_EMIT pinnedChanged();
-}
-
 bool LauncherItem::isRunning() const
 {
     return m_running;
@@ -172,6 +163,15 @@ void LauncherItem::setPid(pid_t pid)
         return;
 
     m_pid = pid;
+}
+
+void LauncherItem::setPinned(bool value)
+{
+    if (m_pinned == value)
+        return;
+
+    m_pinned = value;
+    Q_EMIT pinnedChanged();
 }
 
 void LauncherItem::setRunning(bool value)

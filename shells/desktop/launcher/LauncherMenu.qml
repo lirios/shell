@@ -84,7 +84,7 @@ CustomComponents.PopupMenu {
             text: qsTr("Remove From Launcher")
             visible: model.pinned
             onClicked: {
-                model.pinned = false;
+                listView.model.unpin(model.appId);
                 menu.close();
             }
         }

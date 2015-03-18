@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 #include <QtGui/QIcon>
+#include <QDebug>
 
 #include "applicationinfo.h"
 #include "applicationmanager.h"
@@ -200,6 +201,35 @@ int LauncherModel::indexFromAppId(const QString &appId) const
     }
 
     return -1;
+}
+
+void LauncherModel::unpin(const QString &appId)
+{
+    LauncherItem *found = Q_NULLPTR;
+
+    Q_FOREACH (LauncherItem *item, m_list) {
+        if (item->appId() != appId)
+            continue;
+
+        found = item;
+        break;
+    }
+
+    if (!found)
+        return;
+
+    int i = m_list.indexOf(found);
+
+    // Remove the item when unpinned and not running
+    if (found->isRunning()) {
+        found->setPinned(false);
+        QModelIndex modelIndex = index(i);
+        Q_EMIT dataChanged(modelIndex, modelIndex);
+    } else {
+        beginRemoveRows(QModelIndex(), i, i);
+        m_list.takeAt(i)->deleteLater();
+        endRemoveRows();
+    }
 }
 
 #include "moc_launchermodel.cpp"

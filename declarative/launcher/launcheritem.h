@@ -41,7 +41,7 @@ class LauncherItem : public QObject
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString comment READ comment CONSTANT)
     Q_PROPERTY(QString iconName READ iconName CONSTANT)
-    Q_PROPERTY(bool pinned READ isPinned WRITE setPinned NOTIFY pinnedChanged)
+    Q_PROPERTY(bool pinned READ isPinned NOTIFY pinnedChanged)
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
@@ -60,7 +60,6 @@ public:
     QString iconName() const;
 
     bool isPinned() const;
-    void setPinned(bool value);
 
     bool isRunning() const;
 
@@ -91,6 +90,7 @@ private:
     ApplicationInfo *m_info;
 
     void setPid(pid_t pid);
+    void setPinned(bool value);
     void setRunning(bool value);
 
     friend class LauncherModel;
