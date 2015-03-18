@@ -33,6 +33,8 @@
 #include "applicationinfo.h"
 #include "launcheritem.h"
 
+#include <signal.h>
+
 LauncherItem::LauncherItem(const QString &appId, pid_t pid, QObject *parent)
     : QObject(parent)
     , m_pid(pid)
@@ -153,15 +155,15 @@ bool LauncherItem::quit()
     if (!isRunning())
         return false;
 
-    const QDBusConnection bus = QDBusConnection::sessionBus();
-    QDBusInterface interface("org.hawaii.session", "/HawaiiSession", "org.hawaii.launcher", bus);
-    QDBusMessage msg = interface.call("closeDesktopFile", m_info->fileName());
-    bool retval = msg.arguments().at(0).toBool();
+    if (m_pid == 0)
+        return false;
 
-    if (retval)
-        Q_EMIT closed();
+    if (::kill(m_pid, SIGTERM) != 0) {
+        if (::kill(m_pid, SIGKILL) != 0)
+            return false;
+    }
 
-    return retval;
+    return true;
 }
 
 void LauncherItem::setPid(pid_t pid)

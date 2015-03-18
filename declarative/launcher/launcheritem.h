@@ -80,7 +80,6 @@ Q_SIGNALS:
     void countChanged();
     void progressChanged();
     void launched();
-    void closed();
 
 private:
     pid_t m_pid;
