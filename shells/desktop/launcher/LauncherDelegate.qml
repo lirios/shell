@@ -29,7 +29,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import "components" as CustomComponents
+import "../components" as CustomComponents
 
 Item {
     property int indexOfThisDelegate: index

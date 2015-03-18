@@ -30,6 +30,7 @@ import QtQuick.Layouts 1.1
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 import "indicators"
+import "launcher"
 
 Rectangle {
     property Indicator selectedIndicator: null
