@@ -25,61 +25,47 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Themes 1.0 as Themes
 import "private" as Private
 
-Item {
-    property string text
-    property Item visualParent: parent
-    readonly property bool showing: tooltipLoader.loaded ? tooltipLoader.item.showing : false
+Private.PopupBase {
+    property alias text: label.text
 
     signal closed()
 
     id: root
-    width: tooltipLoader.loaded ? tooltipLoader.item.width : 0
-    height: tooltipLoader.loaded ? tooltipLoader.item.height : 0
+    width: label.width + (Themes.Units.largeSpacing * 2)
+    height: label.height + (Themes.Units.smallSpacing * 2)
 
-    Component {
-        id: tooltipComponent
+    Rectangle {
+        anchors.fill: parent
+        color: Themes.Theme.palette.panel.backgroundColor
+        radius: Themes.Units.dp(6)
+        border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.5), 0.25)
+        border.width: Themes.Units.dp(1)
+        antialiasing: true
+        opacity: showing ? 1.0 : 0.0
+        visible: opacity > 0.0
 
-        Private.BasicTooltip {
-            id: tooltip
-            text: root.text
-            visualParent: root.visualParent
-            visualLayer: notificationsLayer
-            onClosed: {
-                tooltipLoader.sourceComponent = undefined;
-                root.closed();
+        Text {
+            id: label
+            anchors.centerIn: parent
+            color: Themes.Theme.palette.panel.textColor
+            elide: Text.ElideRight
+            wrapMode: Text.NoWrap
+            style: Text.Raised
+            styleColor: Themes.Theme.palette.panel.textEffectColor
+            horizontalAlignment: Text.AlignHCenter
+            width: Math.min(implicitWidth, Themes.Units.dp(100))
+            height: implicitHeight
+            renderType: Text.NativeRendering
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: Themes.Units.longDuration
             }
         }
-    }
-
-    Loader {
-        property bool loaded: status == Loader.Ready
-
-        id: tooltipLoader
-    }
-
-    Timer {
-        running: root.showing
-        repeat: false
-        interval: 1500
-        onTriggered: root.close()
-    }
-
-    function open() {
-        if (!tooltipLoader.loaded)
-            tooltipLoader.sourceComponent = tooltipComponent;
-        tooltipLoader.item.open();
-    }
-
-    function openAt(x, y) {
-        if (!tooltipLoader.loaded)
-            tooltipLoader.sourceComponent = tooltipComponent;
-        tooltipLoader.item.openAt(x, y);
-    }
-
-    function close() {
-        if (tooltipLoader.loaded)
-            tooltipLoader.item.close();
     }
 }
