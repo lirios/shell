@@ -37,7 +37,7 @@ public:
     Applications(ApplicationManager *parent);
     ~Applications();
 
-    void applications_registered(const QString &appId) Q_DECL_OVERRIDE;
+    void applications_registered(const QString &appId, uint32_t pid) Q_DECL_OVERRIDE;
     void applications_unregistered(const QString &appId) Q_DECL_OVERRIDE;
     void applications_focused(const QString &appId) Q_DECL_OVERRIDE;
     void applications_unfocused(const QString &appId) Q_DECL_OVERRIDE;

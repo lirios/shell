@@ -47,11 +47,13 @@ class LauncherItem : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 public:
-    LauncherItem(const QString &appId, QObject *parent = 0);
+    LauncherItem(const QString &appId, pid_t pid, QObject *parent = 0);
     LauncherItem(const QString &appId, bool pinned, QObject *parent = 0);
 
     QString appId() const;
     QString desktopFileName() const;
+
+    pid_t pid() const;
 
     QString name() const;
     QString comment() const;
@@ -81,6 +83,7 @@ Q_SIGNALS:
     void closed();
 
 private:
+    pid_t m_pid;
     bool m_pinned;
     bool m_running;
     bool m_active;
@@ -88,6 +91,7 @@ private:
     int m_progress;
     ApplicationInfo *m_info;
 
+    void setPid(pid_t pid);
     void setRunning(bool value);
 
     friend class LauncherModel;

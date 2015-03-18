@@ -36,11 +36,12 @@ LauncherModel::LauncherModel(QObject *parent)
     , m_appMan(new ApplicationManager(this))
 {
     // Connect to application events
-    connect(m_appMan, &ApplicationManager::registered, this, [this](const QString &appId) {
+    connect(m_appMan, &ApplicationManager::registered, this, [this](const QString &appId, pid_t pid) {
         // Do we have already an icon?
         for (int i = 0; i < m_list.size(); i++) {
             LauncherItem *item = m_list.at(i);
             if (item->appId() == appId) {
+                item->setPid(pid);
                 item->setRunning(true);
                 QModelIndex modelIndex = index(i);
                 Q_EMIT dataChanged(modelIndex, modelIndex);
@@ -50,7 +51,7 @@ LauncherModel::LauncherModel(QObject *parent)
 
         // Otherwise create one
         beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
-        m_list.append(new LauncherItem(appId, this));
+        m_list.append(new LauncherItem(appId, pid, this));
         endInsertRows();
     });
     connect(m_appMan, &ApplicationManager::unregistered, this, [this](const QString &appId) {

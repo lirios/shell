@@ -43,7 +43,7 @@ public:
     ~ApplicationManager();
 
 Q_SIGNALS:
-    void registered(const QString &appId);
+    void registered(const QString &appId, pid_t pid);
     void unregistered(const QString &appId);
 
     void focused(const QString &appId);

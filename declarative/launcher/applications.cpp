@@ -38,9 +38,9 @@ Applications::~Applications()
     greenisland_applications_destroy(object());
 }
 
-void Applications::applications_registered(const QString &appId)
+void Applications::applications_registered(const QString &appId, uint32_t pid)
 {
-    Q_EMIT m_parent->registered(appId);
+    Q_EMIT m_parent->registered(appId, pid);
 }
 
 void Applications::applications_unregistered(const QString &appId)

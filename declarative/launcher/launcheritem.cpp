@@ -33,8 +33,9 @@
 #include "applicationinfo.h"
 #include "launcheritem.h"
 
-LauncherItem::LauncherItem(const QString &appId, QObject *parent)
+LauncherItem::LauncherItem(const QString &appId, pid_t pid, QObject *parent)
     : QObject(parent)
+    , m_pid(pid)
     , m_pinned(false)
     , m_running(true)
     , m_active(true)
@@ -47,6 +48,7 @@ LauncherItem::LauncherItem(const QString &appId, QObject *parent)
 
 LauncherItem::LauncherItem(const QString &appId, bool pinned, QObject *parent)
     : QObject(parent)
+    , m_pid(0)
     , m_pinned(pinned)
     , m_running(false)
     , m_active(false)
@@ -65,6 +67,11 @@ QString LauncherItem::appId() const
 QString LauncherItem::desktopFileName() const
 {
     return m_info->fileName();
+}
+
+pid_t LauncherItem::pid() const
+{
+    return m_pid;
 }
 
 QString LauncherItem::name() const
@@ -155,6 +162,14 @@ bool LauncherItem::quit()
         Q_EMIT closed();
 
     return retval;
+}
+
+void LauncherItem::setPid(pid_t pid)
+{
+    if (m_pid == pid)
+        return;
+
+    m_pid = pid;
 }
 
 void LauncherItem::setRunning(bool value)

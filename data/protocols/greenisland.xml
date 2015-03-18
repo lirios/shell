@@ -29,6 +29,7 @@
         This event is sent when the first window of an application have been created.
       </description>
       <arg name="app_id" type="string" summary="application identifier"/>
+      <arg name="pid" type="uint" summary="process identifier"/>
     </event>
 
     <event name="unregistered">
