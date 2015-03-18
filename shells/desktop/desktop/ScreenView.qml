@@ -44,6 +44,7 @@ Item {
     property alias zoomEnabled: zoomArea.enabled
 
     property var layers: QtObject {
+        readonly property alias panels: shellLoader.item
         readonly property alias workspaces: workspacesLayer
         readonly property alias fullScreen: fullScreenLayer
         readonly property alias overlays: overlaysLayer

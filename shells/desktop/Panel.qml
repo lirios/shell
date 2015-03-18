@@ -97,9 +97,12 @@ Rectangle {
             id: leftContainer
             spacing: Themes.Units.largeSpacing
 
+            /*
             AppChooserIndicator {
                 onTriggered: indicatorTriggered(caller)
             }
+            */
+            LauncherIndicator {}
 
             Layout.alignment: Qt.AlignLeft
         }

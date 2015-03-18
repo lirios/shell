@@ -132,7 +132,7 @@ Item {
         sourceSize.height: height
         width: Themes.Units.dp(32)
         height: width
-        transform: Rotation { origin.x: width / 2; origin.y: height / 2; angle: -90 }
+        transform: Rotation { origin.x: width / 2; origin.y: height ; angle: -90 }
         opacity: 0.0
 
         Behavior on opacity {
