@@ -201,4 +201,9 @@ Item {
             }
         }
     }
+
+    Component.onDestruction: {
+        tooltip.close();
+        menu.close();
+    }
 }

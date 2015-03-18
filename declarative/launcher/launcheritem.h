@@ -51,6 +51,8 @@ public:
     LauncherItem(const QString &appId, bool pinned, QObject *parent = 0);
 
     QString appId() const;
+    QString desktopFileName() const;
+
     QString name() const;
     QString comment() const;
     QString iconName() const;
@@ -67,6 +69,7 @@ public:
     int progress() const;
 
     Q_INVOKABLE bool launch();
+    Q_INVOKABLE bool quit();
 
 Q_SIGNALS:
     void pinnedChanged();
@@ -75,6 +78,7 @@ Q_SIGNALS:
     void countChanged();
     void progressChanged();
     void launched();
+    void closed();
 
 private:
     bool m_pinned;

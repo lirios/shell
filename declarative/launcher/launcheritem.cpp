@@ -62,6 +62,11 @@ QString LauncherItem::appId() const
     return m_info->appId();
 }
 
+QString LauncherItem::desktopFileName() const
+{
+    return m_info->fileName();
+}
+
 QString LauncherItem::name() const
 {
     return m_info->name();
@@ -134,6 +139,22 @@ bool LauncherItem::launch()
         Q_EMIT launched();
 
     return ran;
+}
+
+bool LauncherItem::quit()
+{
+    if (!isRunning())
+        return false;
+
+    const QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusInterface interface("org.hawaii.session", "/HawaiiSession", "org.hawaii.launcher", bus);
+    QDBusMessage msg = interface.call("closeDesktopFile", m_info->fileName());
+    bool retval = msg.arguments().at(0).toBool();
+
+    if (retval)
+        Q_EMIT closed();
+
+    return retval;
 }
 
 void LauncherItem::setRunning(bool value)
