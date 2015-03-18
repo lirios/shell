@@ -203,6 +203,27 @@ int LauncherModel::indexFromAppId(const QString &appId) const
     return -1;
 }
 
+void LauncherModel::pin(const QString &appId)
+{
+    LauncherItem *found = Q_NULLPTR;
+
+    Q_FOREACH (LauncherItem *item, m_list) {
+        if (item->appId() != appId)
+            continue;
+
+        found = item;
+        break;
+    }
+
+    qDebug() << found;
+    if (!found)
+        return;
+
+    found->setPinned(true);
+    QModelIndex modelIndex = index(m_list.indexOf(found));
+    Q_EMIT dataChanged(modelIndex, modelIndex);
+}
+
 void LauncherModel::unpin(const QString &appId)
 {
     LauncherItem *found = Q_NULLPTR;

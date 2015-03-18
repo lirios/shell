@@ -76,7 +76,7 @@ CustomComponents.PopupMenu {
             text: qsTr("Add To Launcher")
             visible: !model.pinned
             onClicked: {
-                model.pinned = true;
+                listView.model.pin(model.appId);
                 menu.close();
             }
         }
