@@ -31,6 +31,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <KDirWatch>
 #include <QDebug>
 
 class ConfigGroupPrivate {
@@ -39,7 +40,8 @@ public:
     ConfigGroupPrivate(ConfigGroup *q)
         : q(q),
           config(0),
-          configGroup(0)
+          configGroup(0),
+          watcher(Q_NULLPTR)
     {}
 
     ~ConfigGroupPrivate()
@@ -52,6 +54,7 @@ public:
     KConfigGroup *configGroup;
     QString file;
     QTimer *syncTimer;
+    KDirWatch *watcher;
     QString group;
 };
 
@@ -65,6 +68,15 @@ ConfigGroup::ConfigGroup(QQuickItem *parent)
     d->syncTimer->setSingleShot(true);
     d->syncTimer->setInterval(1500);
     connect(d->syncTimer, &QTimer::timeout, this, &ConfigGroup::sync);
+
+    // Watch for changes
+    d->watcher = new KDirWatch(this);
+    connect(d->watcher, SIGNAL(created(QString)),
+            this, SLOT(syncFile(QString)));
+    connect(d->watcher, SIGNAL(deleted(QString)),
+            this, SLOT(syncFile(QString)));
+    connect(d->watcher, SIGNAL(dirty(QString)),
+            this, SLOT(syncFile(QString)));
 }
 
 ConfigGroup::~ConfigGroup()
@@ -93,6 +105,12 @@ void ConfigGroup::setFile(const QString& filename)
     if (d->file == filename) {
         return;
     }
+
+    d->watcher->removeFile(QStandardPaths::locate(QStandardPaths::GenericConfigLocation,
+                                                  d->file));
+    d->watcher->addFile(QStandardPaths::locate(QStandardPaths::GenericConfigLocation,
+                                               filename));
+
     d->file = filename;
     readConfigFile();
     emit fileChanged();
@@ -195,6 +213,13 @@ void ConfigGroup::sync()
         qDebug() << "synching config...";
         d->configGroup->sync();
     }
+}
+
+void ConfigGroup::syncFile(const QString &fileName)
+{
+    Q_UNUSED(fileName)
+    d->config->reparseConfiguration();
+    Q_EMIT configChanged();
 }
 
 #include "moc_configgroup.cpp"

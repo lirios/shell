@@ -12,6 +12,7 @@ target_link_libraries(settingsplugin
                       Qt5::Core
                       Qt5::Qml
                       Qt5::Quick
+                      KF5::CoreAddons
                       KF5::ConfigCore)
 
 install(FILES qmldir plugins.qmltypes

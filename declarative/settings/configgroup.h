@@ -66,6 +66,7 @@ Q_SIGNALS:
     void groupChanged();
     void keyListChanged();
     void groupListChanged();
+    void configChanged();
 
 private:
     ConfigGroupPrivate* d;
@@ -74,6 +75,7 @@ private:
 
 private Q_SLOTS:
     void sync();
+    void syncFile(const QString &fileName);
 };
 
 #endif // CONFIGGROUP_H
