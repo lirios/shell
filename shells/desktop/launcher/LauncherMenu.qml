@@ -75,12 +75,18 @@ CustomComponents.PopupMenu {
         CustomComponents.MenuItem {
             text: qsTr("Add To Launcher")
             visible: !model.pinned
-            onClicked: model.pinned = true
+            onClicked: {
+                model.pinned = true;
+                menu.close();
+            }
         }
         CustomComponents.MenuItem {
             text: qsTr("Remove From Launcher")
             visible: model.pinned
-            onClicked: model.pinned = false
+            onClicked: {
+                model.pinned = false;
+                menu.close();
+            }
         }
         CustomComponents.MenuSeparator {}
         CustomComponents.MenuItem {
