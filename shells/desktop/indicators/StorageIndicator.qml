@@ -58,6 +58,7 @@ Indicator {
                             iconName: modelData.iconName + "-symbolic"
                             width: Themes.Units.iconSizes.large
                             height: width
+                            color: Themes.Theme.palette.panel.textColor
                         }
 
                         Text {
