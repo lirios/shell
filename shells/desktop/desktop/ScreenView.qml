@@ -107,13 +107,9 @@ Item {
      */
 
     // Background is below everything
-    Image {
+    Background {
         id: backgroundLayer
         anchors.fill: parent
-        source: Misc.StandardPaths.locateFile(Misc.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png")
-        sourceSize.width: width
-        sourceSize.height: height
-        cache: false
 
         // Desktop is only above background
         Desktop {
