@@ -59,11 +59,15 @@ public Q_SLOTS:
     bool launchApplication(const QString &appId);
     bool launchDesktopFile(const QString &fileName);
 
+    bool closeApplication(const QString &appId);
+    bool closeDesktopFile(const QString &fileName);
+
 private:
     SessionManager *m_sessionManager;
     ApplicationMap m_apps;
 
     bool launchEntry(XdgDesktopFile *entry);
+    bool closeEntry(const QString &fileName);
 
     friend class SessionManager;
 

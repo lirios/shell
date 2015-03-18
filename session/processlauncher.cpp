@@ -111,6 +111,18 @@ bool ProcessLauncher::launchDesktopFile(const QString &fileName)
     return launchEntry(entry);
 }
 
+bool ProcessLauncher::closeApplication(const QString &appId)
+{
+    const QString fileName = appId + QStringLiteral(".desktop");
+    return closeEntry(fileName);
+}
+
+bool ProcessLauncher::closeDesktopFile(const QString &fileName)
+{
+    qCDebug(LAUNCHER) << "Closing application for" << fileName;
+    return closeEntry(fileName);
+}
+
 bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
 {
     QStringList args = entry->expandExecString();
@@ -160,6 +172,18 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
     return true;
 }
 
+bool ProcessLauncher::closeEntry(const QString &fileName)
+{
+    if (!m_apps.contains(fileName))
+        return false;
+
+    QProcess *process = m_apps[fileName];
+    process->terminate();
+    if (!process->waitForFinished())
+        process->kill();
+    return true;
+}
+
 void ProcessLauncher::finished(int exitCode)
 {
     QProcess *process = qobject_cast<QProcess *>(sender());
@@ -169,8 +193,7 @@ void ProcessLauncher::finished(int exitCode)
     QString fileName = m_apps.key(process);
     XdgDesktopFile *entry = XdgDesktopFileCache::getFile(fileName);
     if (entry) {
-        qCDebug(LAUNCHER) << "Application" << entry->name() << "finished with exit code" << exitCode;
-
+        qCDebug(LAUNCHER) << "Application for" << fileName << "finished with exit code" << exitCode;
         m_apps.remove(fileName);
         process->deleteLater();
     }
