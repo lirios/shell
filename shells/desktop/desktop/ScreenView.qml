@@ -110,62 +110,63 @@ Item {
     Background {
         id: backgroundLayer
         anchors.fill: parent
+        z: 0
+    }
 
-        // Desktop is only above background
-        Desktop {
-            id: desktopLayer
-            anchors.fill: parent
-            z: 0
+    // Desktop is only above background
+    Desktop {
+        id: desktopLayer
+        anchors.fill: parent
+        z: 1
+    }
+
+    // Workspaces
+    WorkspacesView {
+        id: workspacesLayer
+        anchors.fill: parent
+        z: 2
+    }
+
+    // Panels
+    Loader {
+        id: shellLoader
+        anchors.fill: parent
+        active: primary
+        sourceComponent: Shell {
+            onPanelHeightChanged: setAvailableGeometry(panel.height)
         }
+        z: 3
+        visible: status == Loader.Ready
+    }
 
-        // Workspaces
-        WorkspacesView {
-            id: workspacesLayer
-            anchors.fill: parent
-            z: 1
-        }
+    // Full screen windows can cover application windows and panels
+    Rectangle {
+        id: fullScreenLayer
+        anchors.fill: parent
+        color: "black"
+        z: 10
+        opacity: children.length > 0 ? 1.0 : 0.0
 
-        // Panels
-        Loader {
-            id: shellLoader
-            anchors.fill: parent
-            active: primary
-            sourceComponent: Shell {
-                onPanelHeightChanged: setAvailableGeometry(panel.height)
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InSine
+                duration: Themes.Units.mediumDuration
             }
-            z: 2
-            visible: status == Loader.Ready
         }
+    }
 
-        // Full screen windows can cover application windows and panels
-        Rectangle {
-            id: fullScreenLayer
-            anchors.fill: parent
-            color: "black"
-            z: 10
-            opacity: children.length > 0 ? 1.0 : 0.0
+    // Overlays are above the panel
+    Overlay {
+        id: overlaysLayer
+        anchors.centerIn: parent
+        z: 5
+    }
 
-            Behavior on opacity {
-                NumberAnimation {
-                    easing.type: Easing.InSine
-                    duration: Themes.Units.mediumDuration
-                }
-            }
-        }
-
-        // Overlays are above the panel
-        Overlay {
-            id: overlaysLayer
-            anchors.centerIn: parent
-            z: 4
-        }
-
-        // Notifications are behind the panel
-        Item {
-            id: notificationsLayer
-            anchors.fill: parent
-            z: 4
-        }
+    // Notifications are behind the panel
+    Item {
+        id: notificationsLayer
+        anchors.fill: parent
+        z: 5
     }
 
     function setAvailableGeometry(h) {
