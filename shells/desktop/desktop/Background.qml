@@ -1,65 +1,37 @@
-import QtQuick 2.2
+/****************************************************************************
+ * This file is part of Hawaii.
+ *
+ * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ *
+ * Author(s):
+ *    Pier Luigi Fiorini
+ *
+ * $BEGIN_LICENSE:GPL2+$
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * $END_LICENSE$
+ ***************************************************************************/
+
+import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0 as Themes
-import org.hawaii.misc 0.1 as Misc
-import org.hawaii.settings 0.1 as Settings
+import ".."
 
 Loader {
-    Settings.ConfigGroup {
-        id: config
-        file: "hawaii/shellrc"
-        group: "Background"
-        onConfigChanged: applySettings()
-
-        function applySettings() {
-            settings.mode = config.readEntry("Mode", "wallpaper");
-            settings.primaryColor = config.readEntry("PrimaryColor", "#336699");
-            settings.secondaryColor = config.readEntry("SecondaryColor", "#334455");
-            settings.pictureUrl = config.readEntry("PictureUrl", Misc.StandardPaths.locateFile(Misc.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png"));
-            settings.fillMode = config.readEntry("FillMode", Image.Stretch);
-
-            switch (settings.mode) {
-            case "solid":
-                sourceComponent = solid;
-                break;
-            case "hgradient":
-            case "vgradient":
-                sourceComponent = gradient;
-                break;
-            case "wallpaper":
-                sourceComponent = wallpaper;
-                break;
-            default:
-                sourceComponent = null;
-                break;
-            }
-        }
-    }
-
-    QtObject {
-        id: settings
-
-        property string mode
-        property color primaryColor
-        property color secondaryColor
-        property url pictureUrl
-        property int fillMode
-
-        Behavior on primaryColor {
-            ColorAnimation {
-                easing.type: Easing.OutQuad
-                duration: Themes.Units.mediumDuration
-            }
-        }
-
-        Behavior on secondaryColor {
-            ColorAnimation {
-                easing.type: Easing.OutQuad
-                duration: Themes.Units.mediumDuration
-            }
-        }
-
-        Component.onCompleted: config.applySettings()
+    Connections {
+        target: ShellSettings.background
+        onModeChanged: readSettings()
     }
 
     Component {
@@ -67,7 +39,7 @@ Loader {
 
         Components.NoiseBackground {
             objectName: "solid"
-            color: settings.primaryColor
+            color: ShellSettings.background.primaryColor
         }
     }
 
@@ -75,17 +47,17 @@ Loader {
         id: gradient
 
         Components.NoiseBackground {
-            property bool vertical: settings.mode == "vgradient"
+            property bool vertical: ShellSettings.background.mode == "vgradient"
 
             objectName: "gradient"
             gradient: Gradient {
                 GradientStop {
                     position: 0
-                    color: settings.primaryColor
+                    color: ShellSettings.background.primaryColor
                 }
                 GradientStop {
                     position: 1
-                    color: settings.secondaryColor
+                    color: ShellSettings.background.secondaryColor
                 }
             }
             rotation: vertical ? 270 : 0
@@ -98,19 +70,39 @@ Loader {
 
         Components.NoiseBackground {
             objectName: "wallpaper"
-            color: settings.primaryColor
+            color: ShellSettings.background.primaryColor
 
             Components.SmoothFadeImage {
                 readonly property real aspectRatio: width / height
 
                 anchors.fill: parent
-                source: settings.pictureUrl
+                source: ShellSettings.background.pictureUrl
                 sourceSize.width: aspectRatio * 1024
                 sourceSize.height: 1024
                 smooth: true
                 clip: fillMode === Image.PreserveAspectCrop
-                fillMode: settings.fillMode
+                fillMode: ShellSettings.background.fillMode
             }
         }
     }
+
+    function readSettings() {
+        switch (ShellSettings.background.mode) {
+        case "solid":
+            sourceComponent = solid;
+            break;
+        case "hgradient":
+        case "vgradient":
+            sourceComponent = gradient;
+            break;
+        case "wallpaper":
+            sourceComponent = wallpaper;
+            break;
+        default:
+            sourceComponent = null;
+            break;
+        }
+    }
+
+    Component.onCompleted: readSettings()
 }

@@ -32,7 +32,7 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.session 0.1 as Session
-import org.hawaii.misc 0.1 as Misc
+import "."
 
 Components.Showable {
     property alias mode: __priv.mode
@@ -134,7 +134,7 @@ Components.Showable {
     Image {
         id: picture
         anchors.fill: parent
-        source: Misc.StandardPaths.locateFile(Misc.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png")
+        source: ShellSettings.background.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
         fillMode: Image.PreserveAspectCrop
