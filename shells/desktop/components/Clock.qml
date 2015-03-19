@@ -41,6 +41,7 @@ ColumnLayout {
         id: timer
         repeat: true
         triggeredOnStart: true
+        running: true
         interval: 3000
         onTriggered: {
             var now = new Date();
@@ -74,8 +75,5 @@ ColumnLayout {
     Component.onCompleted: {
         // Remove seconds from time format
         timeFormat = Qt.locale().timeFormat(Locale.ShortFormat).replace(/.ss?/i, "");
-
-        // Start timer
-        timer.start();
     }
 }
