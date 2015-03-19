@@ -86,7 +86,19 @@ Item {
         }
     }
 
+    ShellComponents.CloseButton {
+        anchors {
+            top: parent.top
+            right: parent.right
+            topMargin: -Themes.Units.smallSpacing * 1.5
+            rightMargin: -Themes.Units.smallSpacing * 1.5
+        }
+        z: 1
+        onClicked: root.closed(root)
+    }
+
     Rectangle {
+        id: bubble
         anchors.fill: parent
         color: Themes.Theme.palette.panel.backgroundColor
         gradient: Gradient {
@@ -97,15 +109,13 @@ Item {
         border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.2), 0.5)
         radius: Themes.Units.gu(0.4)
         antialiasing: true
+        z: 0
 
-        ShellComponents.CloseButton {
-            anchors {
-                top: parent.top
-                right: parent.right
-                topMargin: -Themes.Units.smallSpacing * 1.5
-                rightMargin: -Themes.Units.smallSpacing * 1.5
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutSine
+                duration: Themes.Units.longDuration
             }
-            onClicked: root.closed(root)
         }
 
         NotificationItem {
@@ -130,8 +140,8 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
         hoverEnabled: true
-        onEntered: root.opacity = 0.5
-        onExited: root.opacity = 1.0
+        onEntered: bubble.opacity = 0.5
+        onExited: bubble.opacity = 1.0
     }
 
     function show() {
