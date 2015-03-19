@@ -83,6 +83,8 @@ WindowWrapper {
         target: clientWindow
         onMotionStarted: animationsEnabled = false
         onMotionFinished: animationsEnabled = true
+        onResizeStarted: animationsEnabled = false
+        onResizeFinished: animationsEnabled = true
         onActiveChanged: if (clientWindow.active) compositorRoot.moveFront(window)
         onMinimizedChanged: {
             if (clientWindow.minimized) {
@@ -150,7 +152,7 @@ WindowWrapper {
     }
 
     Behavior on width {
-        enabled: visible
+        enabled: animationsEnabled
         SmoothedAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.mediumDuration
@@ -158,7 +160,7 @@ WindowWrapper {
     }
 
     Behavior on height {
-        enabled: visible
+        enabled: animationsEnabled
         SmoothedAnimation {
             easing.type: Easing.OutQuad
             duration: Themes.Units.mediumDuration
