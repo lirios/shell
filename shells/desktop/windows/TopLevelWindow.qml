@@ -184,28 +184,10 @@ WindowWrapper {
     }
 
     /*
-     * Move windows with Super+Drag
-     */
-
-    Connections {
-        target: compositorRoot
-        onKeyPressed: {
-            if (event.modifiers === Qt.MetaModifier) {
-                ////clientWindow.move();
-                rotateMouseArea.enabled = true;
-            }
-            event.accepted = false;
-        }
-        onKeyReleased: {
-            rotateMouseArea.enabled = false;
-            event.accepted = false;
-        }
-    }
-
-    /*
      * Rotate with Super+RightButton
      */
 
+    /*
     MouseArea {
         id: rotateMouseArea
         anchors.fill: parent
@@ -220,6 +202,7 @@ WindowWrapper {
         enabled: false
         z: 1000000
     }
+    */
 
     /*
      * Component
