@@ -35,6 +35,31 @@ import org.hawaii.settings 0.1 as Settings
 Components.Object {
     readonly property alias background: bgSettings
 
+    /*
+     * Keymap
+     */
+
+    Settings.ConfigGroup {
+        id: keymapConfig
+        file: "hawaii/keyboardrc"
+        group: "Layout"
+        onConfigChanged: applySettings()
+
+        function applySettings() {
+            compositor.settings.keyboardLayout = keymapConfig.readEntry("Layout1", "us");
+            compositor.settings.keyboardVariant = keymapConfig.readEntry("Variant1");
+            compositor.settings.keyboardOptions = keymapConfig.readEntry("Options");
+            compositor.settings.keyboardRules = keymapConfig.readEntry("Rules", "evdev");
+            compositor.settings.keyboardModel = keymapConfig.readEntry("Model", "pc105");
+        }
+
+        Component.onCompleted: keymapConfig.applySettings()
+    }
+
+    /*
+     * Background
+     */
+
     Settings.ConfigGroup {
         id: bgConfig
         file: "hawaii/shellrc"
