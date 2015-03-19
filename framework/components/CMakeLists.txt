@@ -15,6 +15,7 @@ set(FILES
     Icon.qml
     Loadable.qml
     NoiseBackground.qml
+    Object.qml
     Showable.qml
     SmoothFadeImage.qml
     SmoothFadeLoader.qml

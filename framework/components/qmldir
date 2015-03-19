@@ -5,6 +5,7 @@ typeinfo plugins.qmltypes
 Icon 1.0 Icon.qml
 Loadable 1.0 Loadable.qml
 NoiseBackground 1.0 NoiseBackground.qml
+Object 1.0 Object.qml
 Showable 1.0 Showable.qml
 SmoothFadeImage 1.0 SmoothFadeImage.qml
 SmoothFadeLoader 1.0 SmoothFadeLoader.qml
