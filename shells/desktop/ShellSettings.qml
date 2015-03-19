@@ -34,6 +34,7 @@ import org.hawaii.settings 0.1 as Settings
 
 Components.Object {
     readonly property alias background: bgSettings
+    readonly property alias lockScreen: lockSettings
 
     /*
      * Keymap
@@ -99,5 +100,50 @@ Components.Object {
         }
 
         Component.onCompleted: bgConfig.applySettings()
+    }
+
+    /*
+     * Lock screen
+     */
+
+    Settings.ConfigGroup {
+        id: lockConfig
+        file: "hawaii/shellrc"
+        group: "LockScreen"
+        onConfigChanged: applySettings()
+
+        function applySettings() {
+            lockSettings.mode = lockConfig.readEntry("Mode", "wallpaper");
+            lockSettings.primaryColor = lockConfig.readEntry("PrimaryColor", "#336699");
+            lockSettings.secondaryColor = lockConfig.readEntry("SecondaryColor", "#334455");
+            lockSettings.pictureUrl = lockConfig.readEntry("PictureUrl", Misc.StandardPaths.locateFile(Misc.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png"));
+            lockSettings.fillMode = lockConfig.readEntry("FillMode", Image.Stretch);
+        }
+    }
+
+    QtObject {
+        id: lockSettings
+
+        property string mode
+        property color primaryColor
+        property color secondaryColor
+        property url pictureUrl
+        property int fillMode
+
+        Behavior on primaryColor {
+            ColorAnimation {
+                easing.type: Easing.OutQuad
+                duration: Themes.Units.mediumDuration
+            }
+        }
+
+        Behavior on secondaryColor {
+            ColorAnimation {
+                easing.type: Easing.OutQuad
+                duration: Themes.Units.mediumDuration
+            }
+        }
+
+        Component.onCompleted: lockConfig.applySettings()
     }
 }

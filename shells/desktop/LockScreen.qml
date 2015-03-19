@@ -66,7 +66,7 @@ Components.Showable {
     Image {
         id: picture
         anchors.fill: parent
-        source: ShellSettings.background.pictureUrl
+        source: ShellSettings.lockScreen.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
         fillMode: Image.PreserveAspectCrop
