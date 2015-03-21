@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2010-2015 Pier Luigi Fiorini
+ * Copyright (C) 2015 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
@@ -24,43 +24,24 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef HAWAIITHEME_H
-#define HAWAIITHEME_H
+#ifndef HAWAIITHEME_P_H
+#define HAWAIITHEME_P_H
 
-#include <qpa/qplatformtheme.h>
+#include <qpa/qplatformtheme_p.h>
 
-class QSettings;
+#include "hawaiitheme.h"
 
-class ResourceHelper
+class HawaiiThemePrivate : public QPlatformThemePrivate
 {
 public:
-    ResourceHelper();
-    ~ResourceHelper() { clear(); }
+    HawaiiThemePrivate();
 
-    void clear();
+    void readPalette(const QString &scheme, QPalette *pal);
+    void refresh();
 
-    QPalette *palettes[QPlatformTheme::NPalettes];
+    static bool readColor(QPalette *pal, QPalette::ColorRole role, const QVariant &value);
+
+    ResourceHelper resources;
 };
 
-class HawaiiThemePrivate;
-
-class Q_GUI_EXPORT HawaiiTheme : public QPlatformTheme
-{
-    Q_DECLARE_PRIVATE(HawaiiTheme)
-public:
-    HawaiiTheme();
-    ~HawaiiTheme();
-
-    bool usePlatformNativeDialog(DialogType type) const;
-    QPlatformDialogHelper *createPlatformDialogHelper(DialogType type) const;
-
-    const QPalette *palette(Palette type = SystemPalette) const;
-    const QFont *font(Font type = SystemFont) const;
-
-    QVariant themeHint(ThemeHint hint) const;
-
-private:
-    QSettings *m_settings;
-};
-
-#endif // HAWAIITHEME_H
+#endif // HAWAIITHEME_P_H

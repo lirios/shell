@@ -34,10 +34,25 @@
 #include <QtGui/QTextCharFormat>
 
 #include "hawaiitheme.h"
+#include "hawaiitheme_p.h"
+
+ResourceHelper::ResourceHelper()
+{
+    std::fill(palettes, palettes + QPlatformTheme::NPalettes, static_cast<QPalette *>(0));
+}
+
+void ResourceHelper::clear()
+{
+    qDeleteAll(palettes, palettes + QPlatformTheme::NPalettes);
+    std::fill(palettes, palettes + QPlatformTheme::NPalettes, static_cast<QPalette *>(0));
+}
+
 
 HawaiiTheme::HawaiiTheme()
+    : QPlatformTheme(new HawaiiThemePrivate())
 {
     m_settings = new QSettings("Hawaii", "Desktop");
+    d_func()->refresh();
 }
 
 HawaiiTheme::~HawaiiTheme()
@@ -57,7 +72,8 @@ QPlatformDialogHelper *HawaiiTheme::createPlatformDialogHelper(DialogType type) 
 
 const QPalette *HawaiiTheme::palette(Palette type) const
 {
-    return new QPalette();
+    Q_D(const HawaiiTheme);
+    return d->resources.palettes[type];
 }
 
 const QFont *HawaiiTheme::font(Font type) const

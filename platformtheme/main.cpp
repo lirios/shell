@@ -39,8 +39,8 @@ public:
     QPlatformTheme *create(const QString &key, const QStringList &paramList);
 };
 
-HawaiiThemePlugin::HawaiiThemePlugin(QObject *parent) :
-    QPlatformThemePlugin(parent)
+HawaiiThemePlugin::HawaiiThemePlugin(QObject *parent)
+    : QPlatformThemePlugin(parent)
 {
 }
 

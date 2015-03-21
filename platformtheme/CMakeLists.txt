@@ -3,6 +3,7 @@ include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 set(SOURCES
     main.cpp
     hawaiitheme.cpp
+    hawaiitheme_p.cpp
 )
 
 add_library(HawaiiPlatformTheme SHARED ${SOURCES})
