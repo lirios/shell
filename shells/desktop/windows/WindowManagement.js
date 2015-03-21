@@ -271,7 +271,11 @@ function moveFront(window) {
     //console.debug("\twindowList:", windowList);
     //console.debug("\twindowList.length:", windowList.length);
 
-    window.parent.parent.selectWorkspace(window.parent);
+    // XXX: Full screen windows do not have workspace as a parent
+    // hence calling selectWorkspace() here will result in an error
+    // TODO: Handle this in a different way
+    if (!window.clientWindow.fullScreen)
+        window.parent.parent.selectWorkspace(window.parent);
     activeWindow = window;
     compositorRoot.activeWindow = activeWindow;
 
