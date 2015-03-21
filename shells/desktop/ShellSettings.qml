@@ -29,7 +29,6 @@ pragma Singleton
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.misc 0.1 as Misc
 import org.hawaii.settings 0.1 as Settings
 
 Components.Object {
@@ -68,11 +67,11 @@ Components.Object {
         onConfigChanged: applySettings()
 
         function applySettings() {
-            bgSettings.mode = bgConfig.readEntry("Mode", "wallpaper");
-            bgSettings.primaryColor = bgConfig.readEntry("PrimaryColor", "#336699");
-            bgSettings.secondaryColor = bgConfig.readEntry("SecondaryColor", "#334455");
-            bgSettings.pictureUrl = bgConfig.readEntry("PictureUrl", Misc.StandardPaths.locateFile(Misc.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png"));
-            bgSettings.fillMode = bgConfig.readEntry("FillMode", Image.Stretch);
+            bgSettings.mode = bgConfig.readEntry("Mode");
+            bgSettings.primaryColor = bgConfig.readEntry("PrimaryColor", Qt.rgba(0, 0, 0, 0));
+            bgSettings.secondaryColor = bgConfig.readEntry("SecondaryColor", Qt.rgba(0, 0, 0, 0));
+            bgSettings.pictureUrl = bgConfig.readEntry("PictureUrl");
+            bgSettings.fillMode = bgConfig.readEntry("FillMode");
         }
     }
 
@@ -113,11 +112,11 @@ Components.Object {
         onConfigChanged: applySettings()
 
         function applySettings() {
-            lockSettings.mode = lockConfig.readEntry("Mode", "wallpaper");
-            lockSettings.primaryColor = lockConfig.readEntry("PrimaryColor", "#336699");
-            lockSettings.secondaryColor = lockConfig.readEntry("SecondaryColor", "#334455");
-            lockSettings.pictureUrl = lockConfig.readEntry("PictureUrl", Misc.StandardPaths.locateFile(Misc.StandardPaths.GenericDataLocation, "backgrounds/hawaii/Also_Calm.png"));
-            lockSettings.fillMode = lockConfig.readEntry("FillMode", Image.Stretch);
+            lockSettings.mode = lockConfig.readEntry("Mode");
+            lockSettings.primaryColor = lockConfig.readEntry("PrimaryColor", Qt.rgba(0, 0, 0, 0));
+            lockSettings.secondaryColor = lockConfig.readEntry("SecondaryColor", Qt.rgba(0, 0, 0, 0));
+            lockSettings.pictureUrl = lockConfig.readEntry("PictureUrl");
+            lockSettings.fillMode = lockConfig.readEntry("FillMode");
         }
     }
 
