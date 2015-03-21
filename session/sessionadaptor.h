@@ -30,16 +30,15 @@
 #include <QtDBus/QDBusAbstractAdaptor>
 
 #include "powermanager/powermanager.h"
-#include "qlogind/src/manager.h"
-#include "qlogind/src/session.h"
+#include "loginmanager/loginmanager.h"
 
 class SessionManager;
-class SessionTracker;
 
 class SessionAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_PROPERTY(bool idle READ isIdle WRITE setIdle NOTIFY idleChanged)
+    Q_PROPERTY(bool locked READ isLocked NOTIFY lockedChanged)
     Q_CLASSINFO("D-Bus Interface", "org.hawaii.session")
 public:
     SessionAdaptor(SessionManager *sessionManager);
@@ -47,8 +46,11 @@ public:
     bool isIdle() const;
     void setIdle(bool value);
 
+    bool isLocked() const;
+
 Q_SIGNALS:
     void idleChanged();
+    void lockedChanged();
     void sessionLocked();
     void sessionUnlocked();
 
@@ -79,9 +81,7 @@ public Q_SLOTS:
 private:
     SessionManager *m_sessionManager;
     PowerManager *m_powerManager;
-    ManagerPtr m_manager;
-    SessionPtr m_session;
-    SessionTracker *m_sessionTracker;
+    LoginManager *m_loginManager;
     bool m_idle;
 };
 

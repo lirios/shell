@@ -24,55 +24,41 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#ifndef LOGINMANAGER_H
+#define LOGINMANAGER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
+#include "loginmanagerbackend.h"
 
-class ProcessController;
-class ProcessLauncher;
-class ScreenSaver;
+Q_DECLARE_LOGGING_CATEGORY(LOGINMANAGER)
 
-class SessionManager : public QObject
+class LoginManager : public QObject
 {
     Q_OBJECT
 public:
-    SessionManager(ProcessController *controller);
+    LoginManager(QObject *parent = 0);
+    ~LoginManager();
 
-    ProcessController *processController() const {
-        return m_controller;
-    }
+    void setIdle(bool value);
 
-    void setupEnvironment();
-    bool registerDBus();
+    void lockSession();
+    void unlockSession();
 
-    bool isLocked() const;
-
-    static constexpr const char *interfaceName = "org.hawaii.session";
-    static constexpr const char *objectPath = "/HawaiiSession";
-
-Q_SIGNALS:
-    void loggedOut();
+    void switchToVt(int index);
 
 public Q_SLOTS:
-    void logOut();
+    void locked();
+    void unlocked();
+
+Q_SIGNALS:
+    void logOutRequested();
+    void sessionLocked();
+    void sessionUnlocked();
 
 private:
-    ProcessController *m_controller;
-    ProcessLauncher *m_launcher;
-    ScreenSaver *m_screenSaver;
-    QList<qint64> m_processes;
-    bool m_locked;
-
-    void setLocked(bool value);
-
-    friend class SessionAdaptor;
-
-private Q_SLOTS:
-    void autostart();
+    LoginManagerBackend *m_backend;
 };
 
-#endif // SESSIONMANAGER_H
+#endif // LOGINMANAGER_H

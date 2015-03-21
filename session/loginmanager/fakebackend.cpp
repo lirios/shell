@@ -24,55 +24,45 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#include "fakebackend.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QLoggingCategory>
-
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
-
-class ProcessController;
-class ProcessLauncher;
-class ScreenSaver;
-
-class SessionManager : public QObject
+FakeBackend::FakeBackend()
+    : LoginManagerBackend()
 {
-    Q_OBJECT
-public:
-    SessionManager(ProcessController *controller);
+}
 
-    ProcessController *processController() const {
-        return m_controller;
-    }
+QString FakeBackend::name() const
+{
+    return QStringLiteral("fake");
+}
 
-    void setupEnvironment();
-    bool registerDBus();
+FakeBackend *FakeBackend::create()
+{
+    return new FakeBackend();
+}
 
-    bool isLocked() const;
+void FakeBackend::setIdle(bool value)
+{
+    Q_UNUSED(value)
+}
 
-    static constexpr const char *interfaceName = "org.hawaii.session";
-    static constexpr const char *objectPath = "/HawaiiSession";
+void FakeBackend::lockSession()
+{
+}
 
-Q_SIGNALS:
-    void loggedOut();
+void FakeBackend::unlockSession()
+{
+}
 
-public Q_SLOTS:
-    void logOut();
+void FakeBackend::locked()
+{
+}
 
-private:
-    ProcessController *m_controller;
-    ProcessLauncher *m_launcher;
-    ScreenSaver *m_screenSaver;
-    QList<qint64> m_processes;
-    bool m_locked;
+void FakeBackend::unlocked()
+{
+}
 
-    void setLocked(bool value);
-
-    friend class SessionAdaptor;
-
-private Q_SLOTS:
-    void autostart();
-};
-
-#endif // SESSIONMANAGER_H
+void FakeBackend::switchToVt(int index)
+{
+    Q_UNUSED(index)
+}

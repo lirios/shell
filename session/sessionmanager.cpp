@@ -48,6 +48,7 @@ SessionManager::SessionManager(ProcessController *controller)
     , m_controller(controller)
     , m_launcher(new ProcessLauncher(this))
     , m_screenSaver(new ScreenSaver(this))
+    , m_locked(false)
 {
     // Autostart applications as soon as the compositor is ready
     connect(m_controller, &ProcessController::started,
@@ -129,6 +130,16 @@ bool SessionManager::registerDBus()
         return false;
 
     return true;
+}
+
+bool SessionManager::isLocked() const
+{
+    return m_locked;
+}
+
+void SessionManager::setLocked(bool value)
+{
+    m_locked = value;
 }
 
 void SessionManager::autostart()

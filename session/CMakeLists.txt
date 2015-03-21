@@ -10,6 +10,10 @@ set(SOURCES
     screensaver.cpp
     sessionadaptor.cpp
     sessionmanager.cpp
+    loginmanager/loginmanager.cpp
+    loginmanager/loginmanagerbackend.cpp
+    loginmanager/logindbackend.cpp
+    loginmanager/fakebackend.cpp
     powermanager/powermanager.cpp
     powermanager/powermanager.h
     powermanager/powermanagerbackend.cpp
@@ -29,7 +33,6 @@ target_link_libraries(hawaii-session
     Qt5::Core
     Qt5::DBus
     HawaiiSigWatch
-    HawaiiQLogind
 )
 
 if(QTXDG_FOUND)

@@ -24,55 +24,30 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#ifndef FAKEBACKEND_H
+#define FAKEBACKEND_H
 
-#include <QtCore/QObject>
-#include <QtCore/QLoggingCategory>
+#include "loginmanagerbackend.h"
 
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
-
-class ProcessController;
-class ProcessLauncher;
-class ScreenSaver;
-
-class SessionManager : public QObject
+class FakeBackend : public LoginManagerBackend
 {
-    Q_OBJECT
 public:
-    SessionManager(ProcessController *controller);
+    static FakeBackend *create();
 
-    ProcessController *processController() const {
-        return m_controller;
-    }
+    QString name() const;
 
-    void setupEnvironment();
-    bool registerDBus();
+    void setIdle(bool value);
 
-    bool isLocked() const;
+    void lockSession();
+    void unlockSession();
 
-    static constexpr const char *interfaceName = "org.hawaii.session";
-    static constexpr const char *objectPath = "/HawaiiSession";
+    void locked();
+    void unlocked();
 
-Q_SIGNALS:
-    void loggedOut();
-
-public Q_SLOTS:
-    void logOut();
+    void switchToVt(int index);
 
 private:
-    ProcessController *m_controller;
-    ProcessLauncher *m_launcher;
-    ScreenSaver *m_screenSaver;
-    QList<qint64> m_processes;
-    bool m_locked;
-
-    void setLocked(bool value);
-
-    friend class SessionAdaptor;
-
-private Q_SLOTS:
-    void autostart();
+    FakeBackend();
 };
 
-#endif // SESSIONMANAGER_H
+#endif // FAKEBACKEND_H

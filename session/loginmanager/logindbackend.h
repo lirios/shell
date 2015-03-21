@@ -24,55 +24,52 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#ifndef LOGINDBACKEND_H
+#define LOGINDBACKEND_H
 
-#include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
+#include <QtDBus/QDBusConnection>
 
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
+#include "loginmanagerbackend.h"
 
-class ProcessController;
-class ProcessLauncher;
-class ScreenSaver;
+Q_DECLARE_LOGGING_CATEGORY(LOGIND_BACKEND)
 
-class SessionManager : public QObject
+class QDBusInterface;
+class QDBusPendingCallWatcher;
+
+class LogindBackend : public LoginManagerBackend
 {
     Q_OBJECT
 public:
-    SessionManager(ProcessController *controller);
+    ~LogindBackend();
 
-    ProcessController *processController() const {
-        return m_controller;
-    }
+    static LogindBackend *create(const QDBusConnection &connection = QDBusConnection::systemBus());
 
-    void setupEnvironment();
-    bool registerDBus();
+    QString name() const;
 
-    bool isLocked() const;
+    void setIdle(bool value);
 
-    static constexpr const char *interfaceName = "org.hawaii.session";
-    static constexpr const char *objectPath = "/HawaiiSession";
+    void lockSession();
+    void unlockSession();
 
-Q_SIGNALS:
-    void loggedOut();
+    void locked();
+    void unlocked();
 
-public Q_SLOTS:
-    void logOut();
+    void switchToVt(int index);
 
 private:
-    ProcessController *m_controller;
-    ProcessLauncher *m_launcher;
-    ScreenSaver *m_screenSaver;
-    QList<qint64> m_processes;
-    bool m_locked;
+    LogindBackend();
 
-    void setLocked(bool value);
+    QDBusInterface *m_interface;
+    QString m_sessionPath;
+    int m_inhibitFd;
 
-    friend class SessionAdaptor;
+    void setupInhibitors();
 
 private Q_SLOTS:
-    void autostart();
+    void prepareForSleep(bool arg);
+    void prepareForShutdown(bool arg);
+    void getSession(QDBusPendingCallWatcher *watcher);
 };
 
-#endif // SESSIONMANAGER_H
+#endif // LOGINDBACKEND_H

@@ -24,10 +24,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
-
-#include "qlogind/src/sessiontracker.h"
-
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
 
@@ -35,35 +31,30 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     : QDBusAbstractAdaptor(sessionManager)
     , m_sessionManager(sessionManager)
     , m_powerManager(new PowerManager(this))
-    , m_sessionTracker(new SessionTracker(this))
+    , m_loginManager(new LoginManager(this))
     , m_idle(false)
 {
-    // Session interface
-    PendingSession *ps = Session::sessionFromPid(QCoreApplication::applicationPid());
-    connect(ps, &PendingSession::finished, [=] {
-        m_session = ps->interface();
-        connect(m_session.data(), &OrgFreedesktopLogin1SessionInterface::Lock, [=] {
-            Q_EMIT sessionLocked();
-        });
-        connect(m_session.data(), &OrgFreedesktopLogin1SessionInterface::Unlock, [=] {
-            Q_EMIT sessionUnlocked();
-        });
+    // Relay session locked/unlocked signals
+    connect(m_loginManager, &LoginManager::sessionLocked, this, [this] {
+        if (!m_sessionManager->isLocked()) {
+            m_sessionManager->setLocked(true);
+            Q_EMIT lockedChanged();
+        }
+
+        Q_EMIT sessionLocked();
+    });
+    connect(m_loginManager, &LoginManager::sessionUnlocked, this, [this] {
+        if (m_sessionManager->isLocked()) {
+            m_sessionManager->setLocked(false);
+            Q_EMIT lockedChanged();
+        }
+
+        Q_EMIT sessionUnlocked();
     });
 
-    // Manager interface
-    PendingManager *pm = Manager::manager();
-    connect(pm, &PendingManager::finished, [=] {
-        m_manager = pm->interface();
-        connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForShutdown, [=](bool after) {
-            // Logout session before the system goes off
-            if (!after)
-                logOut();
-        });
-        connect(m_manager.data(), &OrgFreedesktopLogin1ManagerInterface::PrepareForSleep, [=](bool after) {
-            // Lock session before the system goes to sleep
-            if (!after && !m_session.isNull())
-                m_session->requestLock();
-        });
+    // Logout session before the system goes off
+    connect(m_loginManager, &LoginManager::logOutRequested, [=] {
+        logOut();
     });
 }
 
@@ -77,9 +68,15 @@ void SessionAdaptor::setIdle(bool value)
     if (m_idle == value)
         return;
 
-    m_session->SetIdleHint(value);
+    m_loginManager->setIdle(value);
+
     m_idle = value;
     Q_EMIT idleChanged();
+}
+
+bool SessionAdaptor::isLocked() const
+{
+    return m_sessionManager->isLocked();
 }
 
 bool SessionAdaptor::canLock()
@@ -130,14 +127,12 @@ bool SessionAdaptor::canHybridSleep()
 
 void SessionAdaptor::lockSession()
 {
-    if (!m_session.isNull())
-        m_session->requestLock();
+    m_loginManager->lockSession();
 }
 
 void SessionAdaptor::unlockSession()
 {
-    if (!m_session.isNull())
-        m_session->requestUnlock();
+    m_loginManager->unlockSession();
 }
 
 void SessionAdaptor::startNewSession()
@@ -146,13 +141,7 @@ void SessionAdaptor::startNewSession()
 
 void SessionAdaptor::activateSession(int index)
 {
-    PendingSessions *pendingSessions = m_sessionTracker->listSessions();
-    for (SessionPtr session: pendingSessions->interfaces()) {
-        if (session->property("TTY").toInt() == index) {
-            session->Activate();
-            break;
-        }
-    }
+    m_loginManager->switchToVt(index);
 }
 
 void SessionAdaptor::logOut()
