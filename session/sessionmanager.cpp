@@ -77,6 +77,9 @@ void SessionManager::setupEnvironment()
         path = QStringLiteral("%1:%2").arg(INSTALL_DATADIR).arg(QString(qgetenv("XDG_DATA_DIRS")));
         qputenv("XDG_DATA_DIRS", path.toUtf8());
 
+        path = QStringLiteral("%1:%2:/etc/xdg").arg(INSTALL_CONFIGDIR).arg(QString(qgetenv("XDG_CONFIG_DIRS")));
+        qputenv("XDG_CONFIG_DIRS", path.toUtf8());
+
         path = QStringLiteral("%1:%2").arg(INSTALL_DATADIR "/icons").arg(QString(qgetenv("XCURSOR_PATH")));
         qputenv("XCURSOR_PATH", path.toUtf8());
     }
