@@ -309,8 +309,16 @@ function _forgetWindow(i, window, item, destruction) {
     else
         item.runUnmapAnimation();
 
+    // Activate next top level window
+    if (window.type === ClientWindow.TopLevel && windowList.length > 0) {
+        if (windowList.length - 1 < i)
+            windowList[0].clientWindow.activate();
+        else
+            windowList[i].clientWindow.activate();
+    }
+
     // Unset transient children so that the parent can go back to normal
-    // and also bring to front
+    // and also bring the parent to front
     if (window.type === ClientWindow.Transient) {
         var parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
         parentItem.transientChildren = null;
