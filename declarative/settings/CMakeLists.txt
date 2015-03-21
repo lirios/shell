@@ -13,7 +13,8 @@ target_link_libraries(settingsplugin
                       Qt5::Qml
                       Qt5::Quick
                       KF5::CoreAddons
-                      KF5::ConfigCore)
+                      KF5::ConfigCore
+                      KF5::ConfigGui)
 
 install(FILES qmldir plugins.qmltypes
     DESTINATION ${QML_INSTALL_DIR}/org/hawaii/settings)
