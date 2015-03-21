@@ -1,0 +1,13 @@
+[Background]
+Mode=wallpaper
+PrimaryColor=51,102,153
+SecondaryColor=51,68,85
+PictureUrl=file://@KDE_INSTALL_FULL_DATADIR@/backgrounds/hawaii/Also_Calm.png
+FillMode=0
+
+[LockScreen]
+Mode=wallpaper
+PrimaryColor=51,102,153
+SecondaryColor=51,68,85
+PictureUrl=file://@KDE_INSTALL_FULL_DATADIR@/backgrounds/hawaii/Also_Calm.png
+FillMode=0
