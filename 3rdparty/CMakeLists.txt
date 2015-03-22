@@ -1,5 +1,4 @@
 if(NOT QTXDG_FOUND)
     add_subdirectory(libqtxdg)
 endif()
-add_subdirectory(qlogind)
 add_subdirectory(sigwatch)
