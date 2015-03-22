@@ -10,6 +10,8 @@ Only the desktop shell is implemented at the moment though.
 
 ## Dependencies
 
+gcc >= 4.8 is required to build this software.
+
 You need the following modules and their dependencies:
 
 * [greenisland](https://github.com/greenisland/greenisland)
