@@ -288,10 +288,12 @@ function _forgetWindow(i, window, item, destruction) {
     surfaceModel.remove(i);
 
     // Remove from z-order list
+    var j;
     if (window.type === ClientWindow.TopLevel) {
-        for (i = 0; i < windowList.length; ++i) {
-            if (windowList[i] === item) {
-                windowList.splice(i, 1);
+        for (j = 0; j < windowList.length; j++) {
+            if (windowList[j] === item) {
+                windowList.splice(j, 1);
+                j--;
                 break;
             }
         }
@@ -309,13 +311,9 @@ function _forgetWindow(i, window, item, destruction) {
     else
         item.runUnmapAnimation();
 
-    // Activate next top level window
-    if (window.type === ClientWindow.TopLevel && windowList.length > 0) {
-        if (windowList.length - 1 < i)
-            windowList[0].clientWindow.activate();
-        else
-            windowList[i].clientWindow.activate();
-    }
+    // Activate previous top level window
+    if (window.type === ClientWindow.TopLevel && j >= 0)
+        windowList[j].clientWindow.activate();
 
     // Unset transient children so that the parent can go back to normal
     // and also bring the parent to front
