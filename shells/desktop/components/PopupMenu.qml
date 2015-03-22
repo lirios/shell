@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import "private" as Private
 
@@ -51,6 +52,11 @@ Private.PopupBase {
         antialiasing: true
         opacity: showing ? 1.0 : 0.0
         visible: opacity > 0.0
+
+        Controls.PopupBehavior {
+            anchors.fill: parent
+            onDismissed: root.close()
+        }
     }
 }
 
