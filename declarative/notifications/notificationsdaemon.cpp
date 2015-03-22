@@ -126,13 +126,6 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     // Calculate identifier
     uint id = replacesId > 0 ? replacesId : nextId();
 
-    qCDebug(NOTIFICATIONS)
-            << "Notification:"
-            << "ID =" << id
-            << "replaced =" << (replacesId == id)
-            << appName << appIcon << summary << body
-            << actions << hints << timeout;
-
     // Some applications (mostly media players) will send too many notifications,
     // for them we want to replace an older notification (if applicable)
     if (m_spamApplications.contains(appName)) {
@@ -141,6 +134,13 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
         else
             m_replaceableNotifications.insert(appName, id);
     }
+
+    qCDebug(NOTIFICATIONS)
+            << "Notification:"
+            << "ID =" << id
+            << "replaced =" << (replacesId == id)
+            << appName << appIcon << summary << body
+            << actions << hints << timeout;
 
     // Rectify appName if needed
     QString realAppName = appName;
