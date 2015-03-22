@@ -123,6 +123,8 @@ function windowMapped(window) {
     if (window.type === ClientWindow.TopLevel) {
         item.z = windowList.length;
         window.activate();
+    } else if (window.type === ClientWindow.Transient) {
+        item.child.takeFocus();
     }
 
     // Add window to current effect

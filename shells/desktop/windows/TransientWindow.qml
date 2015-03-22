@@ -59,4 +59,10 @@ WindowWrapper {
             }
         }
     }
+
+    // Connect to the client window
+    Connections {
+        target: clientWindow
+        onActiveChanged: if (clientWindow.active) window.child.takeFocus()
+    }
 }
