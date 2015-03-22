@@ -132,7 +132,7 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
-        onPositionChanged: if (hoverEnabled) tooltip.open()
+        onEntered: tooltip.open()
         onExited: tooltip.close()
         onClicked: {
             switch (mouse.button) {

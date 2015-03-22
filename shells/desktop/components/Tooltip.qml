@@ -36,6 +36,20 @@ Private.PopupBase {
     id: root
     width: label.width + (Themes.Units.largeSpacing * 2)
     height: label.height + (Themes.Units.smallSpacing * 2)
+    onShowingChanged: {
+        if (showing)
+            showingTimer.start();
+        else {
+            showingTimer.stop();
+            __priv.reallyShowing = false;
+        }
+    }
+
+    QtObject {
+        id: __priv
+
+        property bool reallyShowing: false
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -44,7 +58,7 @@ Private.PopupBase {
         border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.5), 0.25)
         border.width: Themes.Units.dp(1)
         antialiasing: true
-        opacity: showing ? 1.0 : 0.0
+        opacity: __priv.reallyShowing ? 1.0 : 0.0
         visible: opacity > 0.0
 
         Text {
@@ -67,5 +81,18 @@ Private.PopupBase {
                 duration: Themes.Units.longDuration
             }
         }
+    }
+
+    Timer {
+        id: showingTimer
+        interval: 500
+        onTriggered: __priv.reallyShowing = true
+    }
+
+    Timer {
+        id: hidingTimer
+        running: showing
+        interval: 2500
+        onTriggered: root.close()
     }
 }
