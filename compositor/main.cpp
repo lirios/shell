@@ -68,11 +68,6 @@ int main(int argc, char *argv[])
                                         TR("Use fake screen configuration."), TR("filename"));
     parser.addOption(fakeScreenOption);
 
-    // Compositor package
-    QCommandLineOption pluginOption(QStringList() << QStringLiteral("p") << QStringLiteral("compositor-plugin"),
-                                    TR("Force loading the given compositor plugin."), TR("plugin"));
-    parser.addOption(pluginOption);
-
     // Parse command line
     parser.process(app);
 
@@ -88,7 +83,7 @@ int main(int argc, char *argv[])
         app.setIdleTime(idleInterval * 1000);
 
     // Create the compositor and run
-    if (!app.run(parser.value(pluginOption)))
+    if (!app.run(QStringLiteral("org.hawaii.desktop")))
         return 1;
 
     // Unix signals watcher
