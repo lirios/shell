@@ -31,8 +31,7 @@ import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 
 Item {
-    property int notificationId
-    property string icon
+    property alias icon: imageItem.source
     property bool hasIcon: false
     property alias summary: titleLabel.text
     property alias body: bodyLabel.text
@@ -102,7 +101,6 @@ Item {
         }
         width: Themes.Units.iconSizes.large
         height: width
-        source: width > 0 && height > 0 && hasIcon ? "image://notifications/" + notificationId : ""
         sourceSize.width: width
         sourceSize.height: height
         fillMode: Image.PreserveAspectFit

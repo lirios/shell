@@ -124,11 +124,6 @@ Item {
                 fill: parent
                 margins: Themes.Units.smallSpacing
             }
-            notificationId: notificationData ? notificationData.id : -1
-            summary: notificationData ? notificationData.summary : ""
-            body: notificationData ? notificationData.body : ""
-            icon: notificationData ? notificationData.appIcon : ""
-            hasIcon: notificationData ? notificationData.hasIcon : false
             onActionInvoked: root.actionInvoked(actionId)
         }
     }
@@ -154,6 +149,10 @@ Item {
 
     function populateNotification(notification) {
         root.notificationData = notification;
+        notificationItem.summary = notification.summary;
+        notificationItem.body = notification.body;
+        notificationItem.hasIcon = notification.hasIcon;
+        notificationItem.icon = "image://notifications/%1/%2".arg(notification.id).arg(Date.now() / 1000 | 0);
         timer.interval = notification.expireTimeout;
         timer.restart();
         notificationItem.actions.clear();
