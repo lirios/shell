@@ -110,7 +110,26 @@ WindowWrapper {
                 window.opacity = 1.0;
             }
         }
+        onWindowMenuRequested: {
+            /*
+              TODO: Destroy when closed
+            var menu = windowMenu.createObject(window, {
+                                                   "clientWindow": clientWindow,
+                                                   "visualLayer": compositorRoot.screenView.layers.panel,
+                                                   "visualParent": window
+                                               });
+            menu.openAt(pt.x, pt.y);
+            */
+        }
     }
+
+    /*
+    Component {
+        id: windowMenu
+
+        WindowMenu {}
+    }
+    */
 
     /*
      * Position and scale
