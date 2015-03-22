@@ -106,6 +106,8 @@ Item {
         sourceSize.width: width
         sourceSize.height: height
         fillMode: Image.PreserveAspectFit
+        cache: false
+        smooth: false
         visible: hasIcon
     }
 

@@ -127,6 +127,7 @@ MouseArea {
         sourceSize.height: height
         fillMode: Image.PreserveAspectFit
         cache: false
+        smooth: false
         visible: model.hasIcon
     }
 
