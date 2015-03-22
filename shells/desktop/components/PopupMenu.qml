@@ -36,6 +36,12 @@ Private.PopupBase {
     width: implicitWidth
     height: implicitHeight
     implicitWidth: Themes.Units.dp(300)
+    onShowingChanged: {
+        if (showing)
+            showAnimation.start();
+        else
+            hideAnimation.start();
+    }
 
     Rectangle {
         id: container
@@ -50,12 +56,73 @@ Private.PopupBase {
         border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.5), 0.3)
         border.width: Themes.Units.dp(1)
         antialiasing: true
-        opacity: showing ? 1.0 : 0.0
-        visible: opacity > 0.0
+        visible: false
 
         Controls.PopupBehavior {
             anchors.fill: parent
             onDismissed: root.close()
+        }
+    }
+
+    /*
+     * Animations
+     */
+
+    SequentialAnimation {
+        id: showAnimation
+
+        PropertyAction {
+            target: container
+            property: "visible"
+            value: true
+        }
+
+        ParallelAnimation {
+            NumberAnimation {
+                target: root
+                property: "opacity"
+                easing.type: Easing.OutQuad
+                from: 0.0
+                to: 1.0
+                duration: 150
+            }
+            NumberAnimation {
+                target: root
+                property: "scale"
+                easing.type: Easing.OutQuad
+                from: 0.9
+                to: 1.0
+                duration: 150
+            }
+        }
+    }
+
+    SequentialAnimation {
+        id: hideAnimation
+
+        ParallelAnimation {
+            NumberAnimation {
+                target: root
+                property: "scale"
+                easing.type: Easing.OutQuad
+                from: 1.0
+                to: 0.8
+                duration: 150
+            }
+            NumberAnimation {
+                target: root
+                property: "opacity"
+                easing.type: Easing.OutQuad
+                from: 1.0
+                to: 0.0
+                duration: 250
+            }
+        }
+
+        PropertyAction {
+            target: container
+            property: "visible"
+            value: false
         }
     }
 }
