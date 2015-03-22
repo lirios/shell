@@ -30,11 +30,18 @@
 #include <QtCore/QObject>
 #include <QtCore/QSet>
 #include <QtCore/QLoggingCategory>
+#include <QtGui/QPixmap>
 
 class QAtomicInt;
 class Notifications;
 
 Q_DECLARE_LOGGING_CATEGORY(NOTIFICATIONS)
+
+struct NotificationImage {
+    QPixmap image;
+    QString iconName;
+    QString entryIconName;
+};
 
 class NotificationsDaemon : public QObject
 {
@@ -45,6 +52,8 @@ public:
 
     bool registerService();
     void unregisterService();
+
+    NotificationImage *imageFor(uint id) const;
 
     uint Notify(const QString &appName, uint replacesId, const QString &appIcon,
                 const QString &summary, const QString &body, const QStringList &actions,
@@ -68,6 +77,7 @@ private:
     QSet<QString> m_spamApplications;
     QHash<QString, uint> m_replaceableNotifications;
     QHash<uint, QString> m_notifications;
+    QHash<uint, NotificationImage *> m_images;
 
     uint nextId();
 

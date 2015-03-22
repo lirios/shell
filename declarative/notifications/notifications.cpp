@@ -66,6 +66,11 @@ void Notifications::setActive(bool value)
     Q_EMIT activeChanged();
 }
 
+NotificationsDaemon *Notifications::daemon() const
+{
+    return m_daemon;
+}
+
 void Notifications::invokeAction(uint id, const QString &actionId)
 {
     Q_EMIT m_daemon->ActionInvoked(id, actionId);

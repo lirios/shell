@@ -124,12 +124,11 @@ Item {
                 fill: parent
                 margins: Themes.Units.smallSpacing
             }
+            notificationId: notificationData ? notificationData.id : -1
             summary: notificationData ? notificationData.summary : ""
             body: notificationData ? notificationData.body : ""
             icon: notificationData ? notificationData.appIcon : ""
-            hasIcon: notificationData ? notificationData.appIcon !== "" : false
-            image: notificationData ? notificationData.image : undefined
-            hasImage: notificationData ? notificationData.image !== undefined : false
+            hasIcon: notificationData ? notificationData.hasIcon : false
             onActionInvoked: root.actionInvoked(actionId)
         }
     }

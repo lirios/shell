@@ -1,10 +1,10 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015 Pier Luigi Fiorini
+ * Copyright (C) 2012-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ *    Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
@@ -24,27 +24,22 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtQml/QtQml>
+#ifndef NOTIFICATIONSIMAGEPROVIDER_H
+#define NOTIFICATIONSIMAGEPROVIDER_H
 
-#include "notifications.h"
-#include "notificationsimageprovider.h"
+#include <QtQuick/QQuickImageProvider>
 
-class NotificationsPlugin : public QQmlExtensionPlugin
+class NotificationsDaemon;
+
+class NotificationsImageProvider : public QQuickImageProvider
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 public:
-    void registerTypes(const char *uri)
-    {
-        // @uri org.hawaii.notifications
-        Q_ASSERT(uri == QStringLiteral("org.hawaii.notifications"));
+    NotificationsImageProvider(NotificationsDaemon *daemon);
 
-        qmlRegisterSingletonType<Notifications>(uri, 0, 1, "NotificationsService", [](QQmlEngine *engine, QJSEngine *) {
-            Notifications *notifications = new Notifications();
-            engine->addImageProvider(QStringLiteral("notifications"), new NotificationsImageProvider(notifications->daemon()));
-            return static_cast<QObject *>(notifications);
-        });
-    }
+    QPixmap requestPixmap(const QString &id, QSize *realSize, const QSize &requestedSize);
+
+private:
+    NotificationsDaemon *m_daemon;
 };
 
-#include "plugin.moc"
+#endif // NOTIFICATIONSIMAGEPROVIDER_H

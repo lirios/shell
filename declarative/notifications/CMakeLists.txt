@@ -6,6 +6,7 @@ set(SOURCES
     notifications.cpp
     notificationsdaemon.cpp
     notificationsimage.cpp
+    notificationsimageprovider.cpp
     plugin.cpp
 )
 
@@ -18,7 +19,8 @@ target_link_libraries(notificationsplugin
                       Qt5::Core
                       Qt5::DBus
                       Qt5::Gui
-                      Qt5::Qml)
+                      Qt5::Qml
+                      Qt5::Quick)
 
 install(FILES qmldir plugins.qmltypes
     DESTINATION ${QML_INSTALL_DIR}/org/hawaii/notifications)

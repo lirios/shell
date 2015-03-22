@@ -29,13 +29,11 @@ import QtQuick.Controls 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.misc 0.1 as Misc
 
 Item {
-    property alias icon: appIconItem.iconName
-    property alias image: imageItem.image
+    property int notificationId
+    property string icon
     property bool hasIcon: false
-    property bool hasImage: false
     property alias summary: titleLabel.text
     property alias body: bodyLabel.text
     property ListModel actions: ListModel {}
@@ -48,17 +46,17 @@ Item {
     implicitHeight: {
         // Return maximum height possible, at least 5 grid units
         var minHeight = actionsColumn.height + (Themes.Units.smallSpacing * 4);
-        var maxHeight = Math.max(appIconItem.height, titleLabel.paintedHeight + bodyLabel.implicitHeight) + (Themes.Units.smallSpacing * 4);
+        var maxHeight = Math.max(imageItem.height, titleLabel.paintedHeight + bodyLabel.implicitHeight) + (Themes.Units.smallSpacing * 4);
         return Math.max(minHeight, Math.min(maxHeight, Themes.Units.gu(5)));
     }
     states: [
         State {
             name: "default"
-            when: (hasIcon || hasImage) && (bodyLabel.visible || actionsColumn.visible)
+            when: hasIcon && (bodyLabel.visible || actionsColumn.visible)
 
             AnchorChanges {
                 target: titleLabel
-                anchors.left: hasIcon || hasImage ? appIconItem.right : parent.left
+                anchors.left: hasIcon ? imageItem.right : parent.left
                 anchors.top: parent.top
                 anchors.right: parent.right
             }
@@ -70,7 +68,7 @@ Item {
         },
         State {
             name: "summaryOnly"
-            when: !hasIcon && !hasImage && !bodyLabel.visible && !actionsColumn.visible
+            when: !hasIcon && !bodyLabel.visible && !actionsColumn.visible
 
             AnchorChanges {
                 target: titleLabel
@@ -80,7 +78,7 @@ Item {
         },
         State {
             name: "summaryWithIcons"
-            when: (hasIcon || hasImage) && !bodyLabel.visible && !actionsColumn.visible
+            when: hasIcon && !bodyLabel.visible && !actionsColumn.visible
 
             AnchorChanges {
                 target: titleLabel
@@ -89,13 +87,13 @@ Item {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: appIconItem.width + (Themes.Units.smallSpacing * 2)
+                anchors.leftMargin: imageItem.width + (Themes.Units.smallSpacing * 2)
             }
         }
     ]
 
-    Components.Icon {
-        id: appIconItem
+    Image {
+        id: imageItem
         anchors {
             left: parent.left
             top: parent.top
@@ -104,16 +102,11 @@ Item {
         }
         width: Themes.Units.iconSizes.large
         height: width
-        color: Themes.Theme.palette.panel.textColor
-        visible: hasIcon
-    }
-
-    Misc.QImageItem {
-        id: imageItem
-        anchors.fill: appIconItem
-        image: undefined
+        source: width > 0 && height > 0 && hasIcon ? "image://notifications/" + notificationId : ""
+        sourceSize.width: width
+        sourceSize.height: height
         fillMode: Image.PreserveAspectFit
-        visible: hasImage
+        visible: hasIcon
     }
 
     Controls.Heading {
@@ -129,7 +122,7 @@ Item {
     Controls.Heading {
         id: bodyLabel
         anchors {
-            left: hasIcon || hasImage ? appIconItem.right : parent.left
+            left: hasIcon ? imageItem.right : parent.left
             top: titleLabel.bottom
             right: actionsColumn.visible ? actionsColumn.left : parent.right
             bottom: parent.bottom

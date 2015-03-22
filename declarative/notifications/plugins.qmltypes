@@ -10,7 +10,9 @@ Module {
     Component {
         name: "Notifications"
         prototype: "QObject"
-        exports: ["org.hawaii.notifications/Notifications 0.1"]
+        exports: ["org.hawaii.notifications/NotificationsService 0.1"]
+        isCreatable: false
+        isSingleton: true
         exportMetaObjectRevisions: [0]
         Enum {
             name: "CloseReason"
@@ -29,12 +31,22 @@ Module {
         Signal {
             name: "notificationClosed"
             Parameter { name: "notificationId"; type: "uint" }
-            Parameter { name: "reason"; type: "CloseReason" }
+            Parameter { name: "reason"; type: "uint" }
         }
         Signal {
             name: "actionInvoked"
             Parameter { name: "notificationId"; type: "uint" }
             Parameter { name: "actionKey"; type: "string" }
+        }
+        Method {
+            name: "invokeAction"
+            Parameter { name: "id"; type: "uint" }
+            Parameter { name: "actionId"; type: "string" }
+        }
+        Method {
+            name: "closeNotification"
+            Parameter { name: "id"; type: "uint" }
+            Parameter { name: "reason"; type: "Notifications::CloseReason" }
         }
     }
 }

@@ -30,12 +30,9 @@ import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.misc 0.1 as Misc
 
 MouseArea {
     property bool expanded: false
-    property bool hasIcon: model.appIcon !== ""
-    property bool hasImage: model.image !== undefined
 
     id: root
     width: parent.width
@@ -45,11 +42,11 @@ MouseArea {
     states: [
         State {
             name: "default"
-            when: (hasIcon || hasImage) && (model.body.length > 0)
+            when: model.hasIcon && (model.body.length > 0)
 
             AnchorChanges {
                 target: titleLabel
-                anchors.left: model.appIcon || model.image ? appIconItem.right : parent.left
+                anchors.left: model.hasIcon ? imageItem.right : parent.left
                 anchors.top: parent.top
                 anchors.right: parent.right
             }
@@ -61,7 +58,7 @@ MouseArea {
         },
         State {
             name: "summaryOnly"
-            when: !hasIcon && !hasImage && (model.body.length === 0)
+            when: !model.hasIcon && (model.body.length === 0)
 
             AnchorChanges {
                 target: titleLabel
@@ -71,7 +68,7 @@ MouseArea {
         },
         State {
             name: "summaryWithIcons"
-            when: (hasIcon || hasImage) && (model.body.length === 0)
+            when: model.hasIcon && (model.body.length === 0)
 
             AnchorChanges {
                 target: titleLabel
@@ -80,7 +77,7 @@ MouseArea {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: appIconItem.width + (Themes.Units.smallSpacing * 2)
+                anchors.leftMargin: imageItem.width + (Themes.Units.smallSpacing * 2)
             }
         }
     ]
@@ -115,15 +112,8 @@ MouseArea {
         }
     }
 
-    Component.onCompleted: {
-        if (hasIcon && !hasImage)
-            appIconItem.iconName = model.appIcon;
-        else if (!hasIcon && hasImage)
-            imageItem.image = model.image;
-    }
-
-    Components.Icon {
-        id: appIconItem
+    Image {
+        id: imageItem
         anchors {
             left: parent.left
             top: parent.top
@@ -132,16 +122,12 @@ MouseArea {
         }
         width: Themes.Units.iconSizes.medium
         height: width
-        color: Themes.Theme.palette.panel.textColor
-        cache: false
-        visible: hasIcon
-    }
-
-    Misc.QImageItem {
-        id: imageItem
-        anchors.fill: appIconItem
+        source: width > 0 && height > 0 && model.hasIcon ? "image://notifications/" + model.id : ""
+        sourceSize.width: width
+        sourceSize.height: height
         fillMode: Image.PreserveAspectFit
-        visible: !hasIcon && hasImage
+        cache: false
+        visible: model.hasIcon
     }
 
     Controls.Heading {
@@ -158,7 +144,7 @@ MouseArea {
     Controls.Heading {
         id: bodyLabel
         anchors {
-            left: hasIcon || hasImage ? appIconItem.right : parent.left
+            left: model.hasIcon ? imageItem.right : parent.left
             top: titleLabel.bottom
             right: parent.right
             bottom: parent.bottom

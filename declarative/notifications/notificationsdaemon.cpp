@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 #include <QtCore/QAtomicInt>
-#include <QtCore/QDebug>
+#include <QtCore/QStandardPaths>
 #include <QtGui/QGuiApplication>
 #include <QtDBus/QDBusConnection>
 #include <QtQml/QQmlEngine>
@@ -33,7 +33,6 @@
 #include <QtQuick/QQuickItem>
 #include <QtQml/QQmlPropertyMap>
 #include <QtDBus/QDBusArgument>
-#include <QtGui/QImage>
 
 #include "config.h"
 #include "notifications.h"
@@ -74,6 +73,7 @@ NotificationsDaemon::NotificationsDaemon(Notifications *parent)
 
 NotificationsDaemon::~NotificationsDaemon()
 {
+    qDeleteAll(m_images);
     unregisterService();
     delete m_idSeed;
 }
@@ -106,6 +106,11 @@ void NotificationsDaemon::unregisterService()
     QDBusConnection bus = QDBusConnection::sessionBus();
     bus.unregisterObject(servicePath);
     bus.unregisterService(serviceName);
+}
+
+NotificationImage *NotificationsDaemon::imageFor(uint id) const
+{
+    return m_images.value(id);
 }
 
 uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
@@ -149,17 +154,32 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     int totalLength = summary.length() + body.length();
     timeout = 2000 + qMax(60000 * totalLength / averageWordLength / wordPerMinute, 3000);
 
+    // Notification image
+    NotificationImage *notificationImage = new NotificationImage();
+    if (m_images.contains(id))
+        delete m_images.take(id);
+    m_images[id] = notificationImage;
+    notificationImage->iconName = appIcon;
+
     // Fetch the image hint (we also support the obsolete icon_data hint which
     // is still used by applications compatible with the specification version
-    QImage image;
-    QString iconName = appIcon;
-    if (hints.contains(QStringLiteral("image_data")) || hints.contains(QStringLiteral("icon_data"))) {
-        if (hints.contains(QStringLiteral("image_data")))
-            image = decodeImageHint(hints["image_data"].value<QDBusArgument>());
-        else if (hints.contains(QStringLiteral("icon_data")))
-            image = decodeImageHint(hints["icon_data"].value<QDBusArgument>());
-    } else if (hints.contains(QStringLiteral("image_path"))) {
-        iconName = hints["image_path"].toString();
+    if (hints.contains(QStringLiteral("image_data")))
+        notificationImage->image.convertFromImage(decodeImageHint(hints["image_data"].value<QDBusArgument>()));
+    else if (hints.contains(QStringLiteral("image-data")))
+        notificationImage->image.convertFromImage(decodeImageHint(hints["image-data"].value<QDBusArgument>()));
+    else if (hints.contains(QStringLiteral("image_path")))
+        notificationImage->image = QPixmap(hints["image_path"].toString());
+    else if (hints.contains(QStringLiteral("image-path")))
+        notificationImage->image = QPixmap(hints["image-path"].toString());
+    else if (hints.contains(QStringLiteral("icon_data")))
+        notificationImage->image.convertFromImage(decodeImageHint(hints["icon_data"].value<QDBusArgument>()));
+
+    // Retrieve icon from desktop entry, if any
+    if (hints.contains(QStringLiteral("desktop-entry"))) {
+        QString fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                                  hints[QStringLiteral("desktop-entry")].toString());
+        QSettings desktopEntry(fileName, QSettings::IniFormat);
+        notificationImage->entryIconName = desktopEntry.value(QStringLiteral("Icon"), appIcon).toString();
     }
 
     // Create actions property map
@@ -176,8 +196,10 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
     data->setObjectName(QStringLiteral("notification-%1").arg(QString::number(id)));
     data->insert(QStringLiteral("id"), id);
     data->insert(QStringLiteral("appName"), realAppName);
-    data->insert(QStringLiteral("appIcon"), iconName);
-    data->insert(QStringLiteral("image"), QVariant::fromValue(image));
+    data->insert(QStringLiteral("appIcon"), appIcon);
+    data->insert(QStringLiteral("hasIcon"), !notificationImage->image.isNull() ||
+                 !notificationImage->iconName.isEmpty() ||
+                 !notificationImage->entryIconName.isEmpty());
     data->insert(QStringLiteral("summary"), summary);
     data->insert(QStringLiteral("body"), body);
     data->insert(QStringLiteral("actions"), actionsList);
@@ -194,8 +216,12 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
 
 void NotificationsDaemon::CloseNotification(uint id)
 {
-    if (m_notifications.remove(id) > 0)
+    if (m_notifications.remove(id) > 0) {
+        if (m_images.contains(id))
+            delete m_images.take(id);
+
         Q_EMIT NotificationClosed(id, (uint)Notifications::CloseReasonByApplication);
+    }
 }
 
 QStringList NotificationsDaemon::GetCapabilities()

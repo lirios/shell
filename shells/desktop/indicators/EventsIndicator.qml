@@ -121,8 +121,8 @@ Indicator {
         }
     }
 
-    Notifications {
-        id: notificationsService
+    Connections {
+        target: NotificationsService
         onNotificationReceived: addNotification(data)
         onNotificationClosed: repositionNotifications()
     }
@@ -220,15 +220,15 @@ Indicator {
         var window = component.createObject(compositorRoot.screenView.layers.notifications);
         window.heightChanged.connect(repositionNotifications);
         window.actionInvoked.connect(function(actionId) {
-            notificationsService.invokeAction(data["id"], actionId);
+            NotificationsService.invokeAction(data["id"], actionId);
         });
         window.closed.connect(function(notificationWindow) {
-            notificationsService.closeNotification(data["id"], Notifications.CloseReasonByUser);
+            NotificationsService.closeNotification(data["id"], NotificationsService.CloseReasonByUser);
             notificationWindow.close();
             repositionNotifications();
         });
         window.expired.connect(function(notificationWindow) {
-            notificationsService.closeNotification(data["id"], Notifications.CloseReasonExpired);
+            NotificationsService.closeNotification(data["id"], NotificationsService.CloseReasonExpired);
             notificationWindow.close();
             repositionNotifications();
         });

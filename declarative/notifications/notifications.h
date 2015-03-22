@@ -52,6 +52,8 @@ public:
     bool isActive() const;
     void setActive(bool value);
 
+    NotificationsDaemon *daemon() const;
+
     Q_INVOKABLE void invokeAction(uint id, const QString &actionId);
 
     Q_INVOKABLE void closeNotification(uint id, const Notifications::CloseReason &reason);
