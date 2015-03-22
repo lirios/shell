@@ -172,9 +172,6 @@ void ProcessController::setupCompositor()
     m_compositor = new QProcess(this);
     m_compositor->setProcessChannelMode(QProcess::ForwardedChannels);
     m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
-    m_compositor->setArguments(QStringList()
-                               << QStringLiteral("-p")
-                               << QStringLiteral("org.hawaii.desktop"));
     if (m_mode == NestedMode) {
         m_compositor->setArguments(m_compositor->arguments()
                                    << QStringLiteral("--socket=") + m_compositorSocket);
