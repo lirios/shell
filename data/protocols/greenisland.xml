@@ -37,6 +37,7 @@
         This event is sent when the last window of an application have been closed.
       </description>
       <arg name="app_id" type="string" summary="application identifier"/>
+      <arg name="pid" type="uint" summary="process identifier"/>
     </event>
 
     <event name="focused">
@@ -52,6 +53,13 @@
       </description>
       <arg name="app_id" type="string" summary="application identifier"/>
     </event>
+
+    <request name="quit">
+      <description summary="quit an application">
+        Ask the compositor to terminate a Wayland client with the specified application identifier.
+      </description>
+      <arg name="app_id" type="string" summary="application identifier"/>
+    </request>
   </interface>
 
   <interface name="greenisland_windows" version="1">

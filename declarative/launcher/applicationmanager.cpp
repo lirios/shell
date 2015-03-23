@@ -102,4 +102,10 @@ void ApplicationManager::setupRegistry(KWayland::Client::Registry *registry)
     registry->setup();
 }
 
+void ApplicationManager::quit(const QString &appId)
+{
+    if (m_apps)
+        m_apps->quit(appId);
+}
+
 #include "moc_applicationmanager.cpp"

@@ -42,9 +42,11 @@ public:
     ApplicationManager(QObject *parent = 0);
     ~ApplicationManager();
 
+    void quit(const QString &appId);
+
 Q_SIGNALS:
     void registered(const QString &appId, pid_t pid);
-    void unregistered(const QString &appId);
+    void unregistered(const QString &appId, pid_t pid_t);
 
     void focused(const QString &appId);
     void unfocused(const QString &appId);

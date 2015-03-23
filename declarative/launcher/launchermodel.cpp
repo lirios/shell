@@ -42,7 +42,7 @@ LauncherModel::LauncherModel(QObject *parent)
         for (int i = 0; i < m_list.size(); i++) {
             LauncherItem *item = m_list.at(i);
             if (item->appId() == appId) {
-                item->setPid(pid);
+                item->m_pids.insert(pid);
                 item->setRunning(true);
                 QModelIndex modelIndex = index(i);
                 Q_EMIT dataChanged(modelIndex, modelIndex);
@@ -52,15 +52,22 @@ LauncherModel::LauncherModel(QObject *parent)
 
         // Otherwise create one
         beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
-        m_list.append(new LauncherItem(appId, pid, this));
+        LauncherItem *item = new LauncherItem(appId, m_appMan, this);
+        item->m_pids.insert(pid);
+        m_list.append(item);
         endInsertRows();
     });
-    connect(m_appMan, &ApplicationManager::unregistered, this, [this](const QString &appId) {
+    connect(m_appMan, &ApplicationManager::unregistered, this, [this](const QString &appId, pid_t pid) {
         for (int i = 0; i < m_list.size(); i++) {
             LauncherItem *item = m_list.at(i);
             if (item->appId() == appId) {
+                // Remove this pid and determine if there are any processes left
+                item->m_pids.remove(pid);
+                if (item->m_pids.count() > 0)
+                    return;
+
                 if (item->isPinned()) {
-                    // If it's pinned we just unset the flags
+                    // If it's pinned we just unset the flags if all pids are gone
                     item->setRunning(false);
                     item->setActive(false);
                     QModelIndex modelIndex = index(i);
@@ -101,10 +108,10 @@ LauncherModel::LauncherModel(QObject *parent)
 
     // Add static items
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + 2);
-    m_list.append(new LauncherItem("chromium", true, this));
-    m_list.append(new LauncherItem("xchat", true, this));
-    m_list.append(new LauncherItem("org.kde.konsole", true, this));
-    m_list.append(new LauncherItem("weston-terminal", true, this));
+    m_list.append(new LauncherItem("chromium", true, m_appMan, this));
+    m_list.append(new LauncherItem("xchat", true, m_appMan, this));
+    m_list.append(new LauncherItem("org.kde.konsole", true, m_appMan, this));
+    m_list.append(new LauncherItem("weston-terminal", true, m_appMan, this));
     endInsertRows();
 }
 

@@ -31,32 +31,33 @@
 
 #include "applicationaction.h"
 #include "applicationinfo.h"
+#include "applicationmanager.h"
 #include "launcheritem.h"
 
 #include <signal.h>
 
-LauncherItem::LauncherItem(const QString &appId, pid_t pid, QObject *parent)
+LauncherItem::LauncherItem(const QString &appId, ApplicationManager *appMan, QObject *parent)
     : QObject(parent)
-    , m_pid(pid)
     , m_pinned(false)
     , m_running(true)
     , m_active(true)
     , m_count(0)
     , m_progress(-1)
     , m_info(new ApplicationInfo(appId, this))
+    , m_appMan(appMan)
 {
     connect(m_info, SIGNAL(stateChanged()), this, SIGNAL(runningChanged()));
 }
 
-LauncherItem::LauncherItem(const QString &appId, bool pinned, QObject *parent)
+LauncherItem::LauncherItem(const QString &appId, bool pinned, ApplicationManager *appMan, QObject *parent)
     : QObject(parent)
-    , m_pid(0)
     , m_pinned(pinned)
     , m_running(false)
     , m_active(false)
     , m_count(0)
     , m_progress(-1)
     , m_info(new ApplicationInfo(appId, this))
+    , m_appMan(appMan)
 {
     connect(m_info, SIGNAL(stateChanged()), this, SIGNAL(runningChanged()));
 }
@@ -69,11 +70,6 @@ QString LauncherItem::appId() const
 QString LauncherItem::desktopFileName() const
 {
     return m_info->fileName();
-}
-
-pid_t LauncherItem::pid() const
-{
-    return m_pid;
 }
 
 QString LauncherItem::name() const
@@ -146,23 +142,8 @@ bool LauncherItem::quit()
     if (!isRunning())
         return false;
 
-    if (m_pid == 0)
-        return false;
-
-    if (::kill(m_pid, SIGTERM) != 0) {
-        if (::kill(m_pid, SIGKILL) != 0)
-            return false;
-    }
-
+    m_appMan->quit(appId());
     return true;
-}
-
-void LauncherItem::setPid(pid_t pid)
-{
-    if (m_pid == pid)
-        return;
-
-    m_pid = pid;
 }
 
 void LauncherItem::setPinned(bool value)

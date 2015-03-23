@@ -28,10 +28,12 @@
 #define LAUNCHERITEM_H
 
 #include <QtCore/QObject>
+#include <QtCore/QSet>
 #include <QtQml/QQmlListProperty>
 
 class ApplicationAction;
 class ApplicationInfo;
+class ApplicationManager;
 class LauncherModel;
 
 class LauncherItem : public QObject
@@ -47,13 +49,11 @@ class LauncherItem : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 public:
-    LauncherItem(const QString &appId, pid_t pid, QObject *parent = 0);
-    LauncherItem(const QString &appId, bool pinned, QObject *parent = 0);
+    LauncherItem(const QString &appId, ApplicationManager *appMan, QObject *parent = 0);
+    explicit LauncherItem(const QString &appId, bool pinned, ApplicationManager *appMan, QObject *parent = 0);
 
     QString appId() const;
     QString desktopFileName() const;
-
-    pid_t pid() const;
 
     QString name() const;
     QString comment() const;
@@ -81,15 +81,15 @@ Q_SIGNALS:
     void launched();
 
 private:
-    pid_t m_pid;
+    QSet<pid_t> m_pids;
     bool m_pinned;
     bool m_running;
     bool m_active;
     int m_count;
     int m_progress;
     ApplicationInfo *m_info;
+    ApplicationManager *m_appMan;
 
-    void setPid(pid_t pid);
     void setPinned(bool value);
     void setRunning(bool value);
 
