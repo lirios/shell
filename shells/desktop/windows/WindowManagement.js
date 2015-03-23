@@ -320,9 +320,12 @@ function _forgetWindow(i, window, item, destruction) {
     // Unset transient children so that the parent can go back to normal
     // and also bring the parent to front
     if (window.type === ClientWindow.Transient) {
-        var parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
-        parentItem.transientChildren = null;
-        parentItem.clientWindow.activate();
+        var parentWindow = window.parentWindow;
+        if (parentWindow) {
+            var parentItem = parentWindow.viewForOutput(_greenisland_output).parent;
+            parentItem.transientChildren = null;
+            parentItem.clientWindow.activate();
+        }
     }
 }
 
