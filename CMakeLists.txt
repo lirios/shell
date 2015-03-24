@@ -13,11 +13,6 @@ option(ENABLE_SYSTEMD "Enables systemd support" OFF)
 option(ENABLE_ALSA "Enables Alsa mixer backend" ON)
 option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
 option(ENABLE_MAINLINE_QTXDG "Use mainline libqtxdg found at https://github.com/lxde/libqtxdg" OFF)
-if(DEFINED CUSTOM_QPA_EGLFS)
-    set(HAVE_CUSTOM_QPA_EGLFS ON)
-else()
-    set(HAVE_CUSTOM_QPA_EGLFS OFF)
-endif()
 
 # Set version
 set(HAWAII_VERSION_MAJOR 0)
