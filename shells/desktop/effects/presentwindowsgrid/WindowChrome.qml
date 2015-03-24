@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
+import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import "../../components" as ShellComponents
 
@@ -52,12 +53,60 @@ Item {
         color: Themes.Theme.palette.view.selectedBackgroundColor
         cornerRadius: Themes.Units.gu(0.2)
         opacity: mouseArea.containsMouse ? 0.5 : 0.0
+        z: 3
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
                 duration: Themes.Units.shortDuration
             }
+        }
+    }
+
+    Rectangle {
+        anchors.centerIn: parent
+        radius: Themes.Units.dp(6)
+        color: "black"
+        width: Math.max(parent.width * 0.8, titleLabel.paintedWidth) + Themes.Units.smallSpacing * 2
+        height: titleLabel.paintedHeight + Themes.Units.smallSpacing * 2
+        z: 4
+
+        Text {
+            id: titleLabel
+            anchors {
+                centerIn: parent
+                margins: Themes.Units.smallSpacing
+            }
+            renderType: Text.NativeRendering
+            text: window.clientWindow.title
+            elide: Text.ElideRight
+            color: "white"
+        }
+    }
+
+    Rectangle {
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
+            rightMargin: Themes.Units.largeSpacing
+            bottomMargin: Themes.Units.largeSpacing
+        }
+        z: 4
+
+        radius: Themes.Units.dp(6)
+        color: "black"
+        width: icon.width + Themes.Units.smallSpacing * 2
+        height: width
+
+        Components.Icon {
+            id: icon
+            anchors {
+                centerIn: parent
+                margins: Themes.Units.smallSpacing
+            }
+            iconName: window.clientWindow.iconName
+            width: Themes.Units.iconSizes.large
+            height: width
         }
     }
 
@@ -84,6 +133,7 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
         hoverEnabled: true
+        z: 1000
         onClicked: root.clicked(window)
     }
 }
