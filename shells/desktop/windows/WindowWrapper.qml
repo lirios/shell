@@ -111,8 +111,10 @@ Item {
                 savedData.parent = window.parent;
                 savedData.saved = true;
                 window.parent = compositorRoot.screenView.layers.fullScreen;
+                window.anchors.centerIn = window.parent;
             } else {
                 window.parent = savedData.parent;
+                window.anchors.centerIn = undefined;
                 savedData.saved = false;
             }
         }
