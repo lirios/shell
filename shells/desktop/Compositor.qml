@@ -141,6 +141,7 @@ Item {
         // Activate session
         if (event.modifiers === (Qt.ControlModifier | Qt.AltModifier) && event.key >= Qt.Key_F1 && event.key <= Qt.Key_F12) {
             var index = (event.key - Qt.Key_F1) + 1;
+            console.debug("About to activate session", index);
             session.activateSession(index);
             event.accepted = true;
             return;
