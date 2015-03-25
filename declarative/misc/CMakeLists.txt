@@ -1,10 +1,6 @@
 set(SOURCES
-    imagetexturescache.cpp
     keyeventfilter.cpp
-    managedtexturenode.cpp
     miscplugin.cpp
-    qiconitem.cpp
-    qimageitem.cpp
     standardpaths.cpp
 )
 
