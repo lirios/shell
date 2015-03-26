@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.appchooser 0.1 as AppChooser
+import org.hawaii.launcher 0.1 as Launcher
 
 GridView {
     readonly property int iconSize: Themes.Units.iconSizes.large
@@ -51,11 +51,9 @@ GridView {
     preferredHighlightEnd: 0
     highlightRangeMode: GridView.StrictlyEnforceRange
     highlightFollowsCurrentItem: true
-    model: AppChooser.AppsModel {
+    model: Launcher.AppsModel {
         id: appsModel
-        flat: true
-        entryPath: "/"
-        appNameFormat: 0
+        onAppLaunched: grid.appLaunched()
     }
     delegate: LauncherGridDelegate {
         id: delegate
@@ -69,10 +67,7 @@ GridView {
             hoverEnabled: true
             onEntered: delegate.hovered = true
             onExited: delegate.hovered = false
-            onClicked: {
-                appsModel.trigger(index, "", null);
-                grid.appLaunched();
-            }
+            onClicked: appsModel.trigger(index)
         }
     }
 }

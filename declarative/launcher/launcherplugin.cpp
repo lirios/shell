@@ -26,6 +26,7 @@
 
 #include <QtQml>
 
+#include "appsmodel.h"
 #include "categoriesmodel.h"
 #include "launcherplugin.h"
 #include "launchermodel.h"
@@ -36,6 +37,7 @@ void LauncherPlugin::registerTypes(const char *uri)
     // @uri org.hawaii.launcher
     Q_ASSERT(uri == QLatin1String("org.hawaii.launcher"));
 
+    qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
     qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
     qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
     qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",

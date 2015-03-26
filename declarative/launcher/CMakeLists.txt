@@ -5,6 +5,7 @@ set(SOURCES
     applicationinfo.cpp
     applicationmanager.cpp
     applications.cpp
+    appsmodel.cpp
     categoriesmodel.cpp
     launcheritem.cpp
     launchermodel.cpp

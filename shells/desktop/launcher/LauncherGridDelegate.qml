@@ -62,7 +62,7 @@ Rectangle {
             rightMargin: Themes.Units.largeSpacing
             bottomMargin: Themes.Units.largeSpacing
         }
-        text: model.display
+        text: model.name
         renderType: Text.NativeRendering
         color: Themes.Theme.palette.panel.textColor
         elide: Text.ElideRight
