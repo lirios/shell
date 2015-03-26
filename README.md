@@ -50,6 +50,7 @@ And the following modules from KDE:
 Other dependencies:
 
 * pam
+* libqtxdg
 
 Optional dependencies:
 

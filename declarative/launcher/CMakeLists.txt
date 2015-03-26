@@ -5,6 +5,7 @@ set(SOURCES
     applicationinfo.cpp
     applicationmanager.cpp
     applications.cpp
+    categoriesmodel.cpp
     launcheritem.cpp
     launchermodel.cpp
     launcherplugin.cpp
@@ -21,6 +22,7 @@ ecm_add_qtwayland_client_protocol(SOURCES
 add_library(launcherplugin SHARED ${SOURCES})
 target_link_libraries(launcherplugin
                       Qt5::DBus
+                      Qt5::Xml
                       Qt5::Qml
                       Qt5::Quick
                       Wayland::Client

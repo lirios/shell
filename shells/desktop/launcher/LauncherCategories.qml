@@ -26,13 +26,11 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.appchooser 0.1 as AppChooser
+import org.hawaii.launcher 0.1 as Launcher
 
 ListView {
-    model: AppChooser.AppsModel {
+    model: Launcher.CategoriesModel {
         id: categoriesModel
-        flat: true
-        appNameFormat: 0
     }
     delegate: Text {
         renderType: Text.NativeRendering

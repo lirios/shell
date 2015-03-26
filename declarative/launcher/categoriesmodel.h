@@ -1,7 +1,7 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2014-2015 Pier Luigi Fiorini
+ * Copyright (C) 2015 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
@@ -24,22 +24,43 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtQml>
+#ifndef CATEGORIESMODEL_H
+#define CATEGORIESMODEL_H
 
-#include "categoriesmodel.h"
-#include "launcherplugin.h"
-#include "launchermodel.h"
-#include "launcheritem.h"
+#include <QtCore/QAbstractListModel>
+#include <QtQml/QQmlComponent>
 
-void LauncherPlugin::registerTypes(const char *uri)
+class CategoryEntry;
+
+class CategoriesModel : public QAbstractListModel
 {
-    // @uri org.hawaii.launcher
-    Q_ASSERT(uri == QLatin1String("org.hawaii.launcher"));
+    Q_OBJECT
+    Q_ENUMS(Roles)
+public:
+    enum Roles {
+        NameRole = Qt::UserRole +1,
+        CommentRole,
+        IconNameRole
+    };
 
-    qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
-    qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
-    qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
-                                             QStringLiteral("Cannot create LauncherItem"));
-}
+    CategoriesModel(QObject *parent = 0);
+    ~CategoriesModel();
 
-#include "moc_launcherplugin.cpp"
+    QHash<int, QByteArray> roleNames() const;
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+Q_SIGNALS:
+    void refreshing();
+
+private:
+    QList<CategoryEntry *> m_list;
+
+    void refresh();
+};
+
+QML_DECLARE_TYPE(CategoriesModel)
+
+#endif // CATEGORIESMODEL_H
