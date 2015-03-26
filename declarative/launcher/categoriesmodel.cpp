@@ -39,6 +39,10 @@ public:
     QString name;
     QString comment;
     QString iconName;
+
+    static bool lessThan(CategoryEntry *e1, CategoryEntry *e2) {
+        return e1->name < e2->name;
+    }
 };
 
 CategoriesModel::CategoriesModel(QObject *parent)
@@ -124,6 +128,8 @@ void CategoriesModel::refresh()
             m_list.append(entry);
         }
     }
+
+    qSort(m_list.begin(), m_list.end(), CategoryEntry::lessThan);
 
     endResetModel();
 }
