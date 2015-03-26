@@ -1,17 +1,18 @@
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(backend)
 
 set(SOURCES
+    backend/applicationmanager.cpp
+    backend/applications.cpp
+    backend/window.cpp
+    backend/windows.cpp
     applicationaction.cpp
     applicationinfo.cpp
-    applicationmanager.cpp
-    applications.cpp
     appsmodel.cpp
     categoriesmodel.cpp
     launcheritem.cpp
     launchermodel.cpp
     launcherplugin.cpp
-    window.cpp
-    windows.cpp
 )
 
 ecm_add_qtwayland_client_protocol(SOURCES
