@@ -39,11 +39,8 @@ And the following modules from KDE:
 
 * kconfig
 * kcoreaddons
-* kio
-* kservice
 * kwayland
 * solid
-* plasma-framework
 * plasma-workspace
 * plasma-nm
 
@@ -64,15 +61,13 @@ However some of those modules pull in too many dependencies.
 In particular we currently need:
 
 * Networking (plasma-nm, QML plugin only not plasmoid)
-* KService to search applications (kservice)
-* Plasma Runner for searches (plasma-framework)
 
 More actions will be taken in the future to cut down those dependencies.
 
-KService is really slow so we need to get rid of it.
-We partially did that with the process launcher which uses QtXDG, however KService is still pulled for searches and data engines lookup. Once data engines are gone only the AppChooser will need to be modified.
+KService is really slow and was replaced by libqtxdg for the applications menu.
+plasma-workspace is needed for the data engine and it's a plasma-nm dependency.
 
-Tier 1 frameworks on the other hand are safe.
+Tier 1 frameworks on the other hand are usually safe.
 
 ## Build
 

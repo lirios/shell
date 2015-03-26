@@ -80,6 +80,7 @@ set(KF5_MIN_VERSION "5.1.0")
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
              Core
              DBus
+             Xml
              Gui
              Widgets
              Qml
@@ -87,12 +88,8 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 
 # Find KF5
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
-             KDELibs4Support
              Config
              CoreAddons
-             KIO
-             Runner
-             Service
              Solid
              Wayland)
 
