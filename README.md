@@ -39,7 +39,6 @@ And the following modules from KDE:
 
 * kconfig
 * kcoreaddons
-* kwayland
 * solid
 * plasma-workspace
 * plasma-nm

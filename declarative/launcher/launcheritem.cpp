@@ -29,14 +29,15 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
 
+#include <GreenIsland/ApplicationManager>
+
 #include "applicationaction.h"
 #include "applicationinfo.h"
-#include "applicationmanager.h"
 #include "launcheritem.h"
 
 #include <signal.h>
 
-LauncherItem::LauncherItem(const QString &appId, ApplicationManager *appMan, QObject *parent)
+LauncherItem::LauncherItem(const QString &appId, QObject *parent)
     : QObject(parent)
     , m_pinned(false)
     , m_running(true)
@@ -44,12 +45,11 @@ LauncherItem::LauncherItem(const QString &appId, ApplicationManager *appMan, QOb
     , m_count(0)
     , m_progress(-1)
     , m_info(new ApplicationInfo(appId, this))
-    , m_appMan(appMan)
 {
     connect(m_info, SIGNAL(stateChanged()), this, SIGNAL(runningChanged()));
 }
 
-LauncherItem::LauncherItem(const QString &appId, bool pinned, ApplicationManager *appMan, QObject *parent)
+LauncherItem::LauncherItem(const QString &appId, bool pinned, QObject *parent)
     : QObject(parent)
     , m_pinned(pinned)
     , m_running(false)
@@ -57,7 +57,6 @@ LauncherItem::LauncherItem(const QString &appId, bool pinned, ApplicationManager
     , m_count(0)
     , m_progress(-1)
     , m_info(new ApplicationInfo(appId, this))
-    , m_appMan(appMan)
 {
     connect(m_info, SIGNAL(stateChanged()), this, SIGNAL(runningChanged()));
 }
@@ -142,7 +141,7 @@ bool LauncherItem::quit()
     if (!isRunning())
         return false;
 
-    m_appMan->quit(appId());
+    GreenIsland::ApplicationManager::instance()->quit(appId());
     return true;
 }
 

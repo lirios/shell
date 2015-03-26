@@ -33,7 +33,6 @@
 
 class ApplicationAction;
 class ApplicationInfo;
-class ApplicationManager;
 class LauncherModel;
 
 class LauncherItem : public QObject
@@ -49,8 +48,8 @@ class LauncherItem : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 public:
-    LauncherItem(const QString &appId, ApplicationManager *appMan, QObject *parent = 0);
-    explicit LauncherItem(const QString &appId, bool pinned, ApplicationManager *appMan, QObject *parent = 0);
+    LauncherItem(const QString &appId, QObject *parent = 0);
+    explicit LauncherItem(const QString &appId, bool pinned, QObject *parent = 0);
 
     QString appId() const;
     QString desktopFileName() const;
@@ -88,7 +87,6 @@ private:
     int m_count;
     int m_progress;
     ApplicationInfo *m_info;
-    ApplicationManager *m_appMan;
 
     void setPinned(bool value);
     void setRunning(bool value);

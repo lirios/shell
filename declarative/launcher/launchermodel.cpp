@@ -27,17 +27,21 @@
 #include <QtGui/QIcon>
 #include <QDebug>
 
+#include <GreenIsland/ApplicationManager>
+
 #include "applicationinfo.h"
-#include "applicationmanager.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
 
+using namespace GreenIsland;
+
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
-    , m_appMan(new ApplicationManager(this))
 {
+    ApplicationManager *appMan = ApplicationManager::instance();
+
     // Connect to application events
-    connect(m_appMan, &ApplicationManager::registered, this, [this](const QString &appId, pid_t pid) {
+    connect(appMan, &ApplicationManager::applicationAdded, this, [this](const QString &appId, pid_t pid) {
         // Do we have already an icon?
         for (int i = 0; i < m_list.size(); i++) {
             LauncherItem *item = m_list.at(i);
@@ -52,12 +56,12 @@ LauncherModel::LauncherModel(QObject *parent)
 
         // Otherwise create one
         beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
-        LauncherItem *item = new LauncherItem(appId, m_appMan, this);
+        LauncherItem *item = new LauncherItem(appId, this);
         item->m_pids.insert(pid);
         m_list.append(item);
         endInsertRows();
     });
-    connect(m_appMan, &ApplicationManager::unregistered, this, [this](const QString &appId, pid_t pid) {
+    connect(appMan, &ApplicationManager::applicationRemoved, this, [this](const QString &appId, pid_t pid) {
         for (int i = 0; i < m_list.size(); i++) {
             LauncherItem *item = m_list.at(i);
             if (item->appId() == appId) {
@@ -83,7 +87,7 @@ LauncherModel::LauncherModel(QObject *parent)
             }
         }
     });
-    connect(m_appMan, &ApplicationManager::focused, this, [this](const QString &appId) {
+    connect(appMan, &ApplicationManager::applicationFocused, this, [this](const QString &appId) {
         for (int i = 0; i < m_list.size(); i++) {
             LauncherItem *item = m_list.at(i);
             if (item->appId() == appId) {
@@ -94,7 +98,7 @@ LauncherModel::LauncherModel(QObject *parent)
             }
         }
     });
-    connect(m_appMan, &ApplicationManager::unfocused, this, [this](const QString &appId) {
+    connect(appMan, &ApplicationManager::applicationUnfocused, this, [this](const QString &appId) {
         for (int i = 0; i < m_list.size(); i++) {
             LauncherItem *item = m_list.at(i);
             if (item->appId() == appId) {
@@ -108,10 +112,10 @@ LauncherModel::LauncherModel(QObject *parent)
 
     // Add static items
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + 2);
-    m_list.append(new LauncherItem("chromium", true, m_appMan, this));
-    m_list.append(new LauncherItem("xchat", true, m_appMan, this));
-    m_list.append(new LauncherItem("org.kde.konsole", true, m_appMan, this));
-    m_list.append(new LauncherItem("weston-terminal", true, m_appMan, this));
+    m_list.append(new LauncherItem("chromium", true, this));
+    m_list.append(new LauncherItem("xchat", true, this));
+    m_list.append(new LauncherItem("org.kde.konsole", true, this));
+    m_list.append(new LauncherItem("weston-terminal", true, this));
     endInsertRows();
 }
 

@@ -30,7 +30,6 @@
 #include <QtCore/QAbstractListModel>
 #include <QtQml/QQmlComponent>
 
-class ApplicationManager;
 class LauncherItem;
 
 class LauncherModel : public QAbstractListModel
@@ -70,7 +69,6 @@ public:
     Q_INVOKABLE void unpin(const QString &appId);
 
 private:
-    ApplicationManager *m_appMan;
     QList<LauncherItem *> m_list;
 };
 
