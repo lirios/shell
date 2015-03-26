@@ -114,7 +114,7 @@ static Mpris2Player::Capability capabilityFromName(const QString &name)
 static bool decodeUri(QVariantMap &map, const QString &entry) {
     if (map.contains(entry)) {
         QString urlString = map.value(entry).toString();
-        QUrl url = QUrl::fromEncoded(urlString.toAscii());
+        QUrl url = QUrl::fromEncoded(urlString.toUtf8());
         if (!url.isValid()) {
             // try to be lenient
             url = QUrl(urlString);
@@ -373,7 +373,7 @@ void Mpris2Player::updateFromMap(const QVariantMap &map)
                     m_capabilities &= ~capability;
             } else {
                 const char *gotTypeCh = QDBusMetaType::typeToSignature(i.value().userType());
-                QString gotType = gotTypeCh ? QString::fromAscii(gotTypeCh) : QStringLiteral("<unknown>");
+                QString gotType = gotTypeCh ? QString::fromUtf8(gotTypeCh) : QStringLiteral("<unknown>");
 
                 qCWarning(MPRIS2_PLAYER) << m_serviceName << "exports" << i.key()
                                          << "as D-Bus type" << gotType
@@ -427,9 +427,9 @@ void Mpris2Player::copyProperty(const QString &name, const QVariant &value,
     }
     if (tmp.type() != expectedType) {
         const char * gotTypeCh = QDBusMetaType::typeToSignature(tmp.userType());
-        QString gotType = gotTypeCh ? QString::fromAscii(gotTypeCh) : "<unknown>";
+        QString gotType = gotTypeCh ? QString::fromUtf8(gotTypeCh) : "<unknown>";
         const char * expTypeCh = QDBusMetaType::typeToSignature(expectedType);
-        QString expType = expTypeCh ? QString::fromAscii(expTypeCh) : "<unknown>";
+        QString expType = expTypeCh ? QString::fromUtf8(expTypeCh) : "<unknown>";
 
         qCWarning(MPRIS2_PLAYER) << m_serviceName << "exports" << name
                                  << "as D-Bus type" << gotType
