@@ -42,6 +42,10 @@ public:
     QString comment;
     QString iconName;
     QString desktopFile;
+
+    static bool lessThan(AppEntry *e1, AppEntry *e2) {
+        return e1->name < e2->name;
+    }
 };
 
 AppsModel::AppsModel(QObject *parent)
@@ -167,6 +171,8 @@ void AppsModel::readMenu(const QDomElement &xml)
         if (xml.tagName() == QStringLiteral("AppLink"))
             readAppLink(xml);
     }
+
+    qSort(m_list.begin(), m_list.end(), AppEntry::lessThan);
 }
 
 void AppsModel::readAppLink(const QDomElement &xml)
