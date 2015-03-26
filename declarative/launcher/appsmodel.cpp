@@ -159,6 +159,8 @@ void AppsModel::refresh()
             readMenu(xml);
     }
 
+    qSort(m_list.begin(), m_list.end(), AppEntry::lessThan);
+
     endResetModel();
 }
 
@@ -171,8 +173,6 @@ void AppsModel::readMenu(const QDomElement &xml)
         if (xml.tagName() == QStringLiteral("AppLink"))
             readAppLink(xml);
     }
-
-    qSort(m_list.begin(), m_list.end(), AppEntry::lessThan);
 }
 
 void AppsModel::readAppLink(const QDomElement &xml)
