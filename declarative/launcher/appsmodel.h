@@ -77,6 +77,7 @@ private:
 
     void refresh();
     void readMenu(const QDomElement &xml);
+    void readAppLink(const QDomElement &xml);
 };
 
 QML_DECLARE_TYPE(AppsModel)

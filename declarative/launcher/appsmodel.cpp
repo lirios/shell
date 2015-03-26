@@ -164,37 +164,49 @@ void AppsModel::readMenu(const QDomElement &xml)
     while (it.hasNext()) {
         QDomElement xml = it.next();
 
-        if (xml.tagName() == QStringLiteral("AppLink")) {
-            AppEntry *entry = new AppEntry();
-
-            QString name;
-            if (!xml.attribute(QStringLiteral("title")).isEmpty())
-                name = xml.attribute(QStringLiteral("title"));
-            else
-                name = xml.attribute(QStringLiteral("name"));
-            QString genericName = xml.attribute(QStringLiteral("genericName"));
-
-            switch (m_nameFormat) {
-            case GenericNameOnly:
-                entry->name = genericName;
-                break;
-            case NameAndGenericName:
-                entry->name = QStringLiteral("%1 (%2)").arg(name).arg(genericName);
-                break;
-            case GenericNameAndName:
-                entry->name = QStringLiteral("%1 (%2)").arg(genericName).arg(name);
-                break;
-            default:
-                entry->name = name;
-                break;
-            }
-
-            entry->comment = xml.attribute(QStringLiteral("comment"));
-            entry->desktopFile = xml.attribute(QStringLiteral("desktopFile"));
-            entry->iconName = xml.attribute(QStringLiteral("icon"));
-            m_list.append(entry);
-        }
+        if (xml.tagName() == QStringLiteral("AppLink"))
+            readAppLink(xml);
     }
+}
+
+void AppsModel::readAppLink(const QDomElement &xml)
+{
+    QString desktopFile = xml.attribute(QStringLiteral("desktopFile"));
+
+    // Do not duplicate applications
+    Q_FOREACH (AppEntry *entry, m_list) {
+        if (entry->desktopFile == desktopFile)
+            return;
+    }
+
+    AppEntry *entry = new AppEntry();
+
+    QString name;
+    if (!xml.attribute(QStringLiteral("title")).isEmpty())
+        name = xml.attribute(QStringLiteral("title"));
+    else
+        name = xml.attribute(QStringLiteral("name"));
+    QString genericName = xml.attribute(QStringLiteral("genericName"));
+
+    switch (m_nameFormat) {
+    case GenericNameOnly:
+        entry->name = genericName;
+        break;
+    case NameAndGenericName:
+        entry->name = QStringLiteral("%1 (%2)").arg(name).arg(genericName);
+        break;
+    case GenericNameAndName:
+        entry->name = QStringLiteral("%1 (%2)").arg(genericName).arg(name);
+        break;
+    default:
+        entry->name = name;
+        break;
+    }
+
+    entry->comment = xml.attribute(QStringLiteral("comment"));
+    entry->desktopFile = desktopFile;
+    entry->iconName = xml.attribute(QStringLiteral("icon"));
+    m_list.append(entry);
 }
 
 #include "moc_appsmodel.cpp"
