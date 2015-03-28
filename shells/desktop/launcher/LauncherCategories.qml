@@ -25,17 +25,59 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.launcher 0.1 as Launcher
 
 ListView {
+    Component {
+        id: categoryDelegate
+
+        Rectangle {
+            property bool hover: false
+
+            color: hover ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
+            width: Math.max(ListView.view.width, label.paintedWidth + (2 * Themes.Units.smallSpacing))
+            height: Math.max(icon.height, label.paintedHeight) + (2 * Themes.Units.smallSpacing)
+            radius: Themes.Units.dp(3)
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: hover = true
+                onExited: hover = false
+                onClicked: ListView.currentIndex = index
+            }
+
+            Row {
+                anchors {
+                    fill: parent
+                    margins: Themes.Units.smallSpacing
+                }
+                spacing: Themes.Units.smallSpacing
+
+                Components.Icon {
+                    id: icon
+                    iconName: model.iconName
+                    width: Themes.Units.iconSizes.smallMedium
+                    height: width
+                }
+
+                Text {
+                    id: label
+                    anchors.verticalCenter: icon.verticalCenter
+                    renderType: Text.NativeRendering
+                    text: model.display
+                    color: hover ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
+                    elide: Text.ElideRight
+                    font.bold: ListView.currentIndex == index
+                }
+            }
+        }
+    }
+
     model: Launcher.CategoriesModel {
         id: categoriesModel
     }
-    delegate: Text {
-        renderType: Text.NativeRendering
-        text: model.display
-        color: Themes.Theme.palette.panel.textColor
-        width: ListView.width
-    }
+    delegate: categoryDelegate
 }

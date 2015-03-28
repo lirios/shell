@@ -118,7 +118,7 @@ Components.Showable {
                 top: grid.top
                 margins: Themes.Units.largeSpacing
             }
-            width: Themes.Units.gu(5)
+            width: Themes.Units.gu(8)
             height: grid.height
         }
 
@@ -139,7 +139,7 @@ Components.Showable {
             id: pageSelector
             anchors {
                 top: grid.bottom
-                horizontalCenter: grid.horizontalCenter
+                horizontalCenter: parent.horizontalCenter
                 leftMargin: Themes.Units.largeSpacing
                 topMargin: Themes.Units.largeSpacing + Themes.Units.smallSpacing
                 rightMargin: Themes.Units.largeSpacing
@@ -183,7 +183,7 @@ Components.Showable {
             id: shutdownActions
             anchors {
                 top: pageSelector.bottom
-                horizontalCenter: grid.horizontalCenter
+                horizontalCenter: parent.horizontalCenter
                 leftMargin: Themes.Units.largeSpacing
                 topMargin: Themes.Units.largeSpacing + Themes.Units.smallSpacing
                 rightMargin: Themes.Units.largeSpacing
