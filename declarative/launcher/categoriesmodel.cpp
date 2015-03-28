@@ -47,6 +47,7 @@ public:
 
 CategoriesModel::CategoriesModel(QObject *parent)
     : QAbstractListModel(parent)
+    , m_allCategory(true)
 {
     refresh();
 }
@@ -54,6 +55,27 @@ CategoriesModel::CategoriesModel(QObject *parent)
 CategoriesModel::~CategoriesModel()
 {
     qDeleteAll(m_list);
+}
+
+bool CategoriesModel::isAllCategoryIncluded() const
+{
+    return m_allCategory;
+}
+
+void CategoriesModel::includeAllCategory(bool value)
+{
+    if (m_allCategory == value)
+        return;
+
+    // Remove the item if it was previously included
+    if (m_allCategory) {
+        beginResetModel();
+        delete m_list.takeAt(0);
+        endResetModel();
+    }
+
+    m_allCategory = value;
+    Q_EMIT allCategoryChanged();
 }
 
 QHash<int, QByteArray> CategoriesModel::roleNames() const
@@ -106,11 +128,13 @@ void CategoriesModel::refresh()
     qDeleteAll(m_list);
     m_list.clear();
 
-    CategoryEntry *allCategory = new CategoryEntry();
-    allCategory->name = tr("All");
-    allCategory->comment = tr("All categories");
-    allCategory->iconName = QStringLiteral("applications-other");
-    m_list.append(allCategory);
+    if (m_allCategory) {
+        CategoryEntry *allCategory = new CategoryEntry();
+        allCategory->name = tr("All");
+        allCategory->comment = tr("All categories");
+        allCategory->iconName = QStringLiteral("applications-other");
+        m_list.append(allCategory);
+    }
 
     XdgMenu xdgMenu;
     xdgMenu.setEnvironments(QStringLiteral("X-Hawaii"));
@@ -135,7 +159,10 @@ void CategoriesModel::refresh()
         }
     }
 
-    qSort(m_list.begin(), m_list.end(), CategoryEntry::lessThan);
+    if (m_allCategory)
+        qSort(m_list.begin() + 1, m_list.end(), CategoryEntry::lessThan);
+    else
+        qSort(m_list.begin(), m_list.end(), CategoryEntry::lessThan);
 
     endResetModel();
 }

@@ -35,6 +35,7 @@ class CategoryEntry;
 class CategoriesModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(bool allCategory READ isAllCategoryIncluded WRITE includeAllCategory NOTIFY allCategoryChanged)
     Q_ENUMS(Roles)
 public:
     enum Roles {
@@ -46,6 +47,9 @@ public:
     CategoriesModel(QObject *parent = 0);
     ~CategoriesModel();
 
+    bool isAllCategoryIncluded() const;
+    void includeAllCategory(bool value);
+
     QHash<int, QByteArray> roleNames() const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -53,10 +57,12 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
 Q_SIGNALS:
+    void allCategoryChanged();
     void refreshing();
 
 private:
     QList<CategoryEntry *> m_list;
+    bool m_allCategory;
 
     void refresh();
 };
