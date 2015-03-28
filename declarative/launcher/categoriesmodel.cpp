@@ -106,6 +106,12 @@ void CategoriesModel::refresh()
     qDeleteAll(m_list);
     m_list.clear();
 
+    CategoryEntry *allCategory = new CategoryEntry();
+    allCategory->name = tr("All");
+    allCategory->comment = tr("All categories");
+    allCategory->iconName = QStringLiteral("applications-other");
+    m_list.append(allCategory);
+
     XdgMenu xdgMenu;
     xdgMenu.setEnvironments(QStringLiteral("X-Hawaii"));
     if (!xdgMenu.read(XdgMenu::getMenuFileName()))
