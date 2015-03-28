@@ -28,8 +28,8 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include "libqtxdg/xdgautostart.h"
-#include "libqtxdg/xdgdesktopfile.h"
+#include <qt5xdg/xdgautostart.h>
+#include <qt5xdg/xdgdesktopfile.h>
 
 #include "cmakedirs.h"
 #include "processcontroller.h"

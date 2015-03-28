@@ -35,10 +35,6 @@ target_link_libraries(hawaii-session
     HawaiiSigWatch
 )
 
-if(QTXDG_FOUND)
-    target_link_libraries(hawaii-session ${QTXDG_LIBRARIES})
-else()
-    target_link_libraries(hawaii-session HawaiiQtXDG)
-endif()
+target_link_libraries(hawaii-session ${QTXDG_LIBRARIES})
 
 install(TARGETS hawaii-session DESTINATION ${BIN_INSTALL_DIR})

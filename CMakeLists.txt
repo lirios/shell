@@ -12,7 +12,6 @@ set(CMAKE_AUTOMOC ON)
 option(ENABLE_SYSTEMD "Enables systemd support" OFF)
 option(ENABLE_ALSA "Enables Alsa mixer backend" ON)
 option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
-option(ENABLE_MAINLINE_QTXDG "Use mainline libqtxdg found at https://github.com/lxde/libqtxdg" ON)
 
 # Set version
 set(HAWAII_VERSION_MAJOR 0)
@@ -96,9 +95,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 find_package(GreenIsland REQUIRED)
 
 # lxqt
-if(ENABLE_MAINLINE_QTXDG)
-    find_package(QT5XDG REQUIRED)
-endif()
+find_package(QT5XDG REQUIRED)
 
 # Wayland
 set(REQUIRED_WAYLAND_VERSION 1.2.0)

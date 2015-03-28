@@ -27,7 +27,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QStandardPaths>
 
-#include "libqtxdg/xdgdesktopfile.h"
+#include <qt5xdg/xdgdesktopfile.h>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
