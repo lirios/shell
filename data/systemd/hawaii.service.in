@@ -10,13 +10,11 @@
 #
 
 [Unit]
-Description=Hawaii (KMS)
+Description=Hawaii
 
 [Service]
 Type=notify
-Environment=QT_QPA_EGLFS_INTEGRATION=eglfs_kms
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session --mode=eglfs
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session
 
 [Install]
-Alias=hawaii.service
 WantedBy=hawaii.target

@@ -4,16 +4,9 @@
 #  - KMS (this requires Qt >= 5.5) and root privileges
 #  - Nested into Weston >= 1.5
 #
-# To make Hawaii run on KMS:
-#
-# systemctl --user enable hawaii-kms.service
-#
-# To make Hawaii run nested into Weston:
-#
-# systemctl --user enable hawaii-nested.service
-#
 # To start a Hawaii shell upon login:
 #
+# systemctl --user enable hawaii.service
 # systemctl --user enable hawaii.target
 #
 # Otherwise to run it on demand:
@@ -22,17 +15,12 @@
 #
 
 configure_file(
-    hawaii-kms.service.in
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-kms.service
-)
-configure_file(
-    hawaii-nested.service.in
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-nested.service
+    hawaii.service.in
+    ${CMAKE_CURRENT_BINARY_DIR}/hawaii.service
 )
 
 set(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-kms.service
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-nested.service
+    ${CMAKE_CURRENT_BINARY_DIR}/hawaii.service
     hawaii.target
 )
 
