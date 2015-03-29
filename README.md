@@ -40,6 +40,9 @@ And the following modules from KDE:
 * kconfig
 * kcoreaddons
 * solid
+
+These are runtime dependencies from KDE:
+
 * plasma-workspace
 * plasma-nm
 
@@ -64,7 +67,7 @@ In particular we currently need:
 More actions will be taken in the future to cut down those dependencies.
 
 KService is really slow and was replaced by libqtxdg for the applications menu.
-plasma-workspace is needed for the data engine and it's a plasma-nm dependency.
+For networking we need plasma-nm and plasma-workspace as runtime dependencies.
 
 Tier 1 frameworks on the other hand are usually safe.
 
