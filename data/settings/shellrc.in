@@ -1,6 +1,11 @@
 [UI]
 ColorScheme=Hawaii
 
+[Fonts]
+Font=Droid Sans,10,-1,5,50,0,0,0,0,0
+SmallFont=Droid Sans,9,-1,5,50,0,0,0,0,0
+MiniFont=Droid Sans,8,-1,5,50,0,0,0,0,0
+
 [Background]
 Mode=wallpaper
 PrimaryColor=51,102,153

@@ -26,12 +26,17 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
+#include <QtGui/QFont>
 #include <QtGui/QPalette>
 #include <qpa/qplatformtheme.h>
 
 #include <KConfigCore/KConfigGroup>
 
 #include "hawaiitheme_p.h"
+
+// Default fonts
+static const char defaultSystemFontName[] = "Droid Sans";
+static int defaultSystemFontSize = 11;
 
 HawaiiThemePrivate::HawaiiThemePrivate()
 {
@@ -98,6 +103,33 @@ void HawaiiThemePrivate::readPalette(QPalette *pal)
     pal->setBrush(QPalette::Dark, buttonBrushDark);
 }
 
+static QFont *readFont(const QVariant &fontValue)
+{
+    if (!fontValue.isValid())
+        return Q_NULLPTR;
+
+    QString fontFamily;
+    QString fontDescription;
+
+    if (fontValue.type() == QVariant::StringList) {
+        const QStringList list = fontValue.toStringList();
+        if (!list.isEmpty()) {
+            fontFamily = list.first();
+            fontDescription = list.join(QLatin1Char(','));
+        }
+    } else {
+        fontFamily = fontDescription = fontValue.toString();
+    }
+
+    if (!fontDescription.isEmpty()) {
+        QFont font(fontFamily);
+        if (font.fromString(fontDescription))
+            return new QFont(font);
+    }
+
+    return Q_NULLPTR;
+}
+
 void HawaiiThemePrivate::refresh()
 {
     resources.clear();
@@ -106,6 +138,42 @@ void HawaiiThemePrivate::refresh()
     QPalette systemPalette = QPalette();
     readPalette(&systemPalette);
     resources.palettes[QPlatformTheme::SystemPalette] = new QPalette(systemPalette);
+
+    // Fonts
+    KConfigGroup group = config->group("Font");
+    QVariant fontValue = group.readEntry(QStringLiteral("Font"), QStringList());
+    QVariant smallFontValue = group.readEntry(QStringLiteral("SmallFont"), QStringList());
+    QVariant miniFontValue = group.readEntry(QStringLiteral("MiniFont"), QStringList());
+
+    // System font
+    if (QFont *systemFont = readFont(fontValue))
+        resources.fonts[QPlatformTheme::SystemFont] = systemFont;
+    else
+        resources.fonts[QPlatformTheme::SystemFont] = new QFont(QLatin1String(defaultSystemFontName), defaultSystemFontSize);
+
+    // Small font
+    if (QFont *smallFont = readFont(smallFontValue))
+        resources.fonts[QPlatformTheme::SmallFont] = smallFont;
+    else
+        resources.fonts[QPlatformTheme::SmallFont] = new QFont(QLatin1String(defaultSystemFontName), defaultSystemFontSize);
+
+    // Mini font
+    if (QFont *miniFont = readFont(miniFontValue))
+        resources.fonts[QPlatformTheme::MiniFont] = miniFont;
+    else
+        resources.fonts[QPlatformTheme::MiniFont] = new QFont(QLatin1String(defaultSystemFontName), defaultSystemFontSize);
+
+    // Other fonts
+    QList<QPlatformTheme::Font> fonts;
+    fonts << QPlatformTheme::TitleBarFont << QPlatformTheme::MdiSubWindowTitleFont
+          << QPlatformTheme::DockWidgetTitleFont;
+    Q_FOREACH (QPlatformTheme::Font font, fonts) {
+        if (QFont *systemFont = readFont(fontValue))
+            resources.fonts[font] = systemFont;
+        else
+            resources.fonts[font] = new QFont(QLatin1String(defaultSystemFontName), defaultSystemFontSize);
+        resources.fonts[font]->setBold(true);
+    }
 }
 
 // Reads the color from the color scheme, and store it in the

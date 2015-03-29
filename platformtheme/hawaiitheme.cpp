@@ -39,12 +39,15 @@
 ResourceHelper::ResourceHelper()
 {
     std::fill(palettes, palettes + QPlatformTheme::NPalettes, static_cast<QPalette *>(0));
+    std::fill(fonts, fonts + QPlatformTheme::NFonts, static_cast<QFont *>(0));
 }
 
 void ResourceHelper::clear()
 {
     qDeleteAll(palettes, palettes + QPlatformTheme::NPalettes);
     std::fill(palettes, palettes + QPlatformTheme::NPalettes, static_cast<QPalette *>(0));
+    qDeleteAll(fonts, fonts + QPlatformTheme::NFonts);
+    std::fill(fonts, fonts + QPlatformTheme::NFonts, static_cast<QFont *>(0));
 }
 
 
@@ -80,39 +83,8 @@ const QPalette *HawaiiTheme::palette(Palette type) const
 
 const QFont *HawaiiTheme::font(Font type) const
 {
-    QString fontName = QStringLiteral("Droid Sans");
-    int fontSize = 11;
-
-    switch (type) {
-    case SystemFont:
-        fontName = m_settings->value("interface/font-name", fontName).toString();
-        fontSize = m_settings->value("interface/font-size", fontSize).toInt();
-        break;
-    case SmallFont:
-        fontName = m_settings->value("interface/small-font-name", fontName).toString();
-        fontSize = m_settings->value("interface/small-font-size", fontSize).toInt();
-        break;
-    case MiniFont:
-        fontName = m_settings->value("interface/mini-font-name", fontName).toString();
-        fontSize = m_settings->value("interface/mini-font-size", fontSize).toInt();
-        break;
-    default:
-        break;
-    }
-
-    QFont *font = new QFont(fontName, fontSize);
-
-    switch (type) {
-    case TitleBarFont:
-    case MdiSubWindowTitleFont:
-    case DockWidgetTitleFont:
-        font->setBold(true);
-        break;
-    default:
-        break;
-    }
-
-    return font;
+    Q_D(const HawaiiTheme);
+    return d->resources.fonts[type];
 }
 
 QVariant HawaiiTheme::themeHint(ThemeHint hint) const

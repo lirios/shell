@@ -40,6 +40,7 @@ public:
     void clear();
 
     QPalette *palettes[QPlatformTheme::NPalettes];
+    QFont *fonts[QPlatformTheme::NFonts];
 };
 
 class HawaiiThemePrivate;
