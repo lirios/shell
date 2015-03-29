@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
@@ -32,7 +33,7 @@
 #include <qt5xdg/xdgdesktopfile.h>
 
 #include "cmakedirs.h"
-#include "processcontroller.h"
+#include "compositorlauncher.h"
 #include "processlauncher.h"
 #include "screensaver.h"
 #include "sessionadaptor.h"
@@ -43,21 +44,21 @@
 
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 
-SessionManager::SessionManager(ProcessController *controller)
-    : QObject(controller)
-    , m_controller(controller)
+SessionManager::SessionManager(CompositorLauncher *compositorLauncher)
+    : QObject(compositorLauncher)
+    , m_compositorLauncher(compositorLauncher)
     , m_launcher(new ProcessLauncher(this))
     , m_screenSaver(new ScreenSaver(this))
     , m_locked(false)
 {
     // Autostart applications as soon as the compositor is ready
-    connect(m_controller, &ProcessController::started,
-            this, &SessionManager::autostart);
+    connect(m_compositorLauncher, &CompositorLauncher::started, this, [this] {
+        QTimer::singleShot(500, this, SLOT(autostart()));
+    });
 
-    // The compositor is stopped when a logout has been request,
-    // which happens after we killed all the processes so when this
-    // arrives we can emit the loggedOut signal
-    connect(m_controller, SIGNAL(stopped()), this, SIGNAL(loggedOut()));
+    // Log out when the compositor has finished
+    connect(m_compositorLauncher, &CompositorLauncher::finished,
+            this, &SessionManager::logOut);
 }
 
 void SessionManager::setupEnvironment()
@@ -101,6 +102,8 @@ void SessionManager::setupEnvironment()
     qputenv("QT_QPA_PLATFORMTHEME", QByteArray("Hawaii"));
     qputenv("XDG_MENU_PREFIX", QByteArray("hawaii-"));
     qputenv("XDG_CURRENT_DESKTOP", QByteArray("Hawaii"));
+    qputenv("XCURSOR_THEME", QByteArray("hawaii"));
+    qputenv("XCURSOR_SIZE", QByteArray("16"));
 }
 
 bool SessionManager::registerDBus()
@@ -159,7 +162,10 @@ void SessionManager::logOut()
     m_launcher->closeApplications();
 
     // Stop the compositor
-    m_controller->stop();
+    m_compositorLauncher->terminate();
+
+    // Exit
+    QCoreApplication::quit();
 }
 
 #include "moc_sessionmanager.cpp"

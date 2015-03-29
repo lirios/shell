@@ -4,9 +4,11 @@ include_directories(
 )
 
 set(SOURCES
+    compositorprocess.cpp
+    compositorlauncher.cpp
     main.cpp
-    processcontroller.cpp
     processlauncher.cpp
+    respawnprocess.cpp
     screensaver.cpp
     sessionadaptor.cpp
     sessionmanager.cpp

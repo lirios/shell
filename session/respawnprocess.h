@@ -24,55 +24,37 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#ifndef RESPAWNPROCESS_H
+#define RESPAWNPROCESS_H
 
 #include <QtCore/QObject>
-#include <QtCore/QLoggingCategory>
+#include <QtCore/QProcess>
+#include <QtCore/QProcessEnvironment>
 
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
-
-class CompositorLauncher;
-class ProcessLauncher;
-class ScreenSaver;
-
-class SessionManager : public QObject
+class RespawnProcess : public QObject
 {
     Q_OBJECT
 public:
-    SessionManager(CompositorLauncher *compositorLauncher);
-
-    CompositorLauncher *compositorLauncher() const {
-        return m_compositorLauncher;
-    }
-
-    void setupEnvironment();
-    bool registerDBus();
-
-    bool isLocked() const;
-
-    static constexpr const char *interfaceName = "org.hawaii.session";
-    static constexpr const char *objectPath = "/HawaiiSession";
-
-Q_SIGNALS:
-    void loggedOut();
+    RespawnProcess(QObject *parent = 0);
 
 public Q_SLOTS:
-    void logOut();
+    void start();
+    void stop();
+    void terminate();
 
-private:
-    CompositorLauncher *m_compositorLauncher;
-    ProcessLauncher *m_launcher;
-    ScreenSaver *m_screenSaver;
-    QList<qint64> m_processes;
-    bool m_locked;
+Q_SIGNALS:
+    void started();
+    void stopped();
+    void finished();
 
-    void setLocked(bool value);
-
-    friend class SessionAdaptor;
+protected:
+    QProcess *m_process;
+    int m_retries;
+    bool m_terminate;
 
 private Q_SLOTS:
-    void autostart();
+    void processError(QProcess::ProcessError error);
+    void processFinished(int exitCode, QProcess::ExitStatus status);
 };
 
-#endif // SESSIONMANAGER_H
+#endif // RESPAWNPROCESS_H

@@ -33,8 +33,8 @@
 #include "sigwatch/sigwatch.h"
 
 #include "cmakedirs.h"
+#include "compositorlauncher.h"
 #include "config.h"
-#include "processcontroller.h"
 #include "sessionmanager.h"
 
 #include <unistd.h>
@@ -74,24 +74,22 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // Empty mode is allowed only on X11 because we don't need much
-    if (parser.value(modeOption).isEmpty()) {
-        if (qEnvironmentVariableIsEmpty("DISPLAY"))
-            qFatal("Invalid mode specify, possible values are: nested or eglfs.\n" \
-                   "Empty mode is allowed only on X11.");
-    } else {
-        const QString mode = parser.value(modeOption);
-        if (mode != QStringLiteral("eglfs") &&
-                mode != QStringLiteral("hwcomposer") &&
-                mode != QStringLiteral("nested"))
-            qFatal("Invalid mode \"%s\"!", qPrintable(mode));
+    // Process controller that manages the compositor
+    CompositorLauncher *launcher = new CompositorLauncher();
+    QString mode = parser.value(modeOption);
+    if (mode == QStringLiteral("eglfs"))
+        launcher->setMode(CompositorLauncher::EglFSMode);
+    else if (mode == QStringLiteral("hwcomposer"))
+        launcher->setMode(CompositorLauncher::HwComposerMode);
+    else if (mode == QStringLiteral("nested"))
+        launcher->setMode(CompositorLauncher::NestedMode);
+    else if (!mode.isEmpty()) {
+        qWarning() << "Invalid mode argument" << mode;
+        return 1;
     }
 
-    // Process controller that manages the compositor
-    ProcessController processController(parser.value(modeOption));
-
     // Session manager
-    SessionManager *sessionManager = new SessionManager(&processController);
+    SessionManager *sessionManager = new SessionManager(launcher);
     sessionManager->setupEnvironment();
 
     // Restart with D-Bus session if necessary
@@ -132,12 +130,6 @@ int main(int argc, char *argv[])
         ::exit(EXIT_SUCCESS);
     }
 
-    // Log out when the application quits
-    QObject::connect(&app, &QCoreApplication::aboutToQuit, [=] {
-        qDebug() << "About to quit";
-        sessionManager->logOut();
-    });
-
     // Unix signals watcher
     UnixSignalWatcher sigwatch;
     sigwatch.watchForSignal(SIGINT);
@@ -146,7 +138,7 @@ int main(int argc, char *argv[])
     // Log out the session for SIGINT and SIGTERM
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [sessionManager](int signum) {
         qDebug() << "Log out caused by signal" << signum;
-        QCoreApplication::quit();
+        sessionManager->logOut();
     });
 
     // Register all D-Bus services
@@ -154,7 +146,7 @@ int main(int argc, char *argv[])
         return 1;
 
     // Start the compositor
-    processController.start();
+    launcher->start();
 
     return app.exec();
 }

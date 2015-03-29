@@ -32,7 +32,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include "processcontroller.h"
 #include "processlauncher.h"
 #include "sessionmanager.h"
 
@@ -67,6 +66,8 @@ bool ProcessLauncher::registerInterface()
 
 void ProcessLauncher::closeApplications()
 {
+    qCDebug(LAUNCHER) << "Terminate applications";
+
     // Terminate all process launched by us
     ApplicationMapIterator i(m_apps);
     while (i.hasNext()) {
@@ -130,27 +131,9 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
 
     qCDebug(LAUNCHER) << "Launching" << entry->expandExecString().join(" ") << "from" << entry->fileName();
 
-    // Prepare the environment to run applications into our compositor
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    for (const QString &key: env.keys()) {
-        if (key == QStringLiteral("QT_QPA_PLATFORMTHEME"))
-            continue;
-        if (key.startsWith(QStringLiteral("QT_QPA")) || key.startsWith(QStringLiteral("EGL")))
-            env.remove(key);
-    }
-    //env.insert(QStringLiteral("QT_WAYLAND_USE_XDG_SHELL"), QStringLiteral("1"));
-    env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-    env.insert(QStringLiteral("GDK_BACKEND"), QStringLiteral("wayland"));
-
-    // Set WAYLAND_DISPLAY only when nested, otherwise we don't need to do
-    // it because applications can detect the socket themselves
-    if (m_sessionManager->processController()->mode() == ProcessController::NestedMode)
-        env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_sessionManager->processController()->compositorSocket());
-
     QProcess *process = new QProcess(this);
     process->setProgram(command);
     process->setArguments(args);
-    process->setProcessEnvironment(env);
     process->setProcessChannelMode(QProcess::ForwardedChannels);
     m_apps[entry->fileName()] = process;
     connect(process, SIGNAL(finished(int)), this, SLOT(finished(int)));
