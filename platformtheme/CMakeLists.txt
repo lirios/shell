@@ -8,7 +8,7 @@ set(SOURCES
 
 add_library(HawaiiPlatformTheme SHARED ${SOURCES})
 set_target_properties(HawaiiPlatformTheme PROPERTIES PREFIX "")
-target_link_libraries(HawaiiPlatformTheme Qt5::Gui)
+target_link_libraries(HawaiiPlatformTheme Qt5::Gui KF5::ConfigCore)
 
 install(TARGETS HawaiiPlatformTheme LIBRARY
     DESTINATION ${QT_PLUGIN_INSTALL_DIR}/platformthemes)

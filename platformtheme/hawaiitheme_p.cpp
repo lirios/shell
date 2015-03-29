@@ -29,14 +29,18 @@
 #include <QtGui/QPalette>
 #include <qpa/qplatformtheme.h>
 
+#include <KConfigCore/KConfigGroup>
+
 #include "hawaiitheme_p.h"
 
 HawaiiThemePrivate::HawaiiThemePrivate()
 {
+    config = KSharedConfig::openConfig(QStringLiteral("hawaii/shellrc"));
 }
 
-void HawaiiThemePrivate::readPalette(const QString &scheme, QPalette *pal)
+void HawaiiThemePrivate::readPalette(QPalette *pal)
 {
+    QString scheme = config->group("UI").readEntry(QStringLiteral("ColorScheme"), QStringLiteral("Hawaii"));
     QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                               QString("color-schemes/%1.colors").arg(scheme));
     if (fileName.isEmpty())
@@ -100,7 +104,7 @@ void HawaiiThemePrivate::refresh()
 
     // Palette
     QPalette systemPalette = QPalette();
-    readPalette(QStringLiteral("Breeze"), &systemPalette);
+    readPalette(&systemPalette);
     resources.palettes[QPlatformTheme::SystemPalette] = new QPalette(systemPalette);
 }
 

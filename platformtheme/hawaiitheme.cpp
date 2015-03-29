@@ -51,8 +51,10 @@ void ResourceHelper::clear()
 HawaiiTheme::HawaiiTheme()
     : QPlatformTheme(new HawaiiThemePrivate())
 {
+    Q_D(HawaiiTheme);
+
     m_settings = new QSettings("Hawaii", "Desktop");
-    d_func()->refresh();
+    d->refresh();
 }
 
 HawaiiTheme::~HawaiiTheme()

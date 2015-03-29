@@ -29,6 +29,8 @@
 
 #include <qpa/qplatformtheme_p.h>
 
+#include <KConfigCore/KSharedConfig>
+
 #include "hawaiitheme.h"
 
 class HawaiiThemePrivate : public QPlatformThemePrivate
@@ -36,12 +38,13 @@ class HawaiiThemePrivate : public QPlatformThemePrivate
 public:
     HawaiiThemePrivate();
 
-    void readPalette(const QString &scheme, QPalette *pal);
+    void readPalette(QPalette *pal);
     void refresh();
 
     static bool readColor(QPalette *pal, QPalette::ColorRole role, const QVariant &value);
 
     ResourceHelper resources;
+    KSharedConfigPtr config;
 };
 
 #endif // HAWAIITHEME_P_H
