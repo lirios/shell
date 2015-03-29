@@ -1,5 +1,9 @@
 [UI]
 ColorScheme=Hawaii
+IconTheme=hawaii
+WidgetsStyle=Fusion
+ToolButtonStyle=icon-only
+ToolBarIconSize=24
 
 [Fonts]
 Font=Droid Sans,10,-1,5,50,0,0,0,0,0

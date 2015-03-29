@@ -29,8 +29,6 @@
 
 #include <qpa/qplatformtheme.h>
 
-class QSettings;
-
 class ResourceHelper
 {
 public:
@@ -50,7 +48,6 @@ class Q_GUI_EXPORT HawaiiTheme : public QPlatformTheme
     Q_DECLARE_PRIVATE(HawaiiTheme)
 public:
     HawaiiTheme();
-    ~HawaiiTheme();
 
     bool usePlatformNativeDialog(DialogType type) const;
     QPlatformDialogHelper *createPlatformDialogHelper(DialogType type) const;
@@ -59,9 +56,6 @@ public:
     const QFont *font(Font type = SystemFont) const;
 
     QVariant themeHint(ThemeHint hint) const;
-
-private:
-    QSettings *m_settings;
 };
 
 #endif // HAWAIITHEME_H

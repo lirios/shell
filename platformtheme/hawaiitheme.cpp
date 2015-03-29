@@ -27,11 +27,12 @@
 #include <QtCore/QEvent>
 #include <QtCore/QFileInfo>
 #include <QtCore/QVariant>
-#include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 #include <QtGui/QFont>
 #include <QtGui/QPalette>
 #include <QtGui/QTextCharFormat>
+
+#include <KConfigCore/KConfigGroup>
 
 #include "hawaiitheme.h"
 #include "hawaiitheme_p.h"
@@ -55,14 +56,7 @@ HawaiiTheme::HawaiiTheme()
     : QPlatformTheme(new HawaiiThemePrivate())
 {
     Q_D(HawaiiTheme);
-
-    m_settings = new QSettings("Hawaii", "Desktop");
     d->refresh();
-}
-
-HawaiiTheme::~HawaiiTheme()
-{
-    delete m_settings;
 }
 
 bool HawaiiTheme::usePlatformNativeDialog(DialogType type) const
@@ -89,11 +83,15 @@ const QFont *HawaiiTheme::font(Font type) const
 
 QVariant HawaiiTheme::themeHint(ThemeHint hint) const
 {
+    Q_D(const HawaiiTheme);
+
+    KConfigGroup group = d->config->group("UI");
+
     switch (hint) {
     case DropShadow:
         return QVariant(true);
     case ToolButtonStyle: {
-        QString val = m_settings->value("interface/toolbutton-style", "icon-only").toString();
+        QString val = group.readEntry(QStringLiteral("ToolButtonStyle"), QStringLiteral("icon-only"));
 
         if (val == "icon-only")
             return QVariant(int(Qt::ToolButtonIconOnly));
@@ -107,11 +105,11 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
         return QVariant(int(Qt::ToolButtonFollowStyle));
     }
     case ToolBarIconSize:
-        return m_settings->value("interface/toolbar-icon-size", 24);
+        return group.readEntry(QStringLiteral("ToolBarIconSize"), 24);
     case ItemViewActivateItemOnSingleClick:
         return QVariant(false);
     case SystemIconThemeName:
-        return m_settings->value("interface/icon-theme", "elegant");
+        return group.readEntry(QStringLiteral("IconTheme"), QStringLiteral("hawaii"));
     case SystemIconFallbackThemeName:
         return QVariant("hicolor");
     case IconThemeSearchPaths:
@@ -120,7 +118,7 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
                             "icons", QStandardPaths::LocateDirectory));
     case StyleNames: {
         QStringList styles;
-        styles << m_settings->value("interface/style", "Fusion").toString();
+        styles << group.readEntry(QStringLiteral("WidgetStyle"), QStringLiteral("Fusion"));
         return QVariant(styles);
     }
     case WindowAutoPlacement:
