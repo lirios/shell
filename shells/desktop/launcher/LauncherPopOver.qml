@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.2
+import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Components 1.0 as Components
@@ -102,13 +103,61 @@ Components.Showable {
 
     CustomComponents.Popover {
         id: popover
-        width: grid.width + categories.width + (Themes.Units.largeSpacing * 2) + (categories.visible ? Themes.Units.smallSpacing * 2 : 0)
-        height: grid.height + pageSelector.height + shutdownActions.height + (Themes.Units.largeSpacing * 4) + Themes.Units.smallSpacing
+        width: grid.width + (categories.visible ? categories.width : 0) + (Themes.Units.largeSpacing * 2) + (categories.visible ? Themes.Units.smallSpacing * 2 : 0)
+        height: searchBox.height + grid.height + pageSelector.height +
+                shutdownActions.height + (Themes.Units.largeSpacing * 4) +
+                (categories.visible ? Themes.Units.smallSpacing : Themes.Units.largeSpacing) +
+                Themes.Units.smallSpacing
         opacity: 0.0
 
         Controls.PopupBehavior {
             anchors.fill: parent
             onDismissed: root.dismissed()
+        }
+
+        RowLayout {
+            id: searchBox
+            anchors {
+                left: parent.left
+                top: parent.top
+                right: parent.right
+                leftMargin: Themes.Units.largeSpacing
+                topMargin: Themes.Units.largeSpacing
+                rightMargin: Themes.Units.largeSpacing
+                bottomMargin: Themes.Units.smallSpacing
+            }
+            height: Math.max(viewSelector.height, searchText.height)
+
+            Row {
+                id: viewSelector
+
+                ExclusiveGroup {
+                    id: viewGroup
+                }
+
+                ToolButton {
+                    iconName: "view-more-symbolic"
+                    checkable: true
+                    checked: categories.visible
+                    exclusiveGroup: viewGroup
+                    onClicked: categories.visible = true
+                }
+
+                ToolButton {
+                    iconName: "view-paged-symbolic"
+                    checkable: true
+                    checked: !categories.visible
+                    exclusiveGroup: viewGroup
+                    onClicked: categories.visible = false
+                }
+            }
+
+            TextField {
+                id: searchText
+                placeholderText: qsTr("Type an application name...")
+
+                Layout.fillWidth: true
+            }
         }
 
         LauncherCategories {
@@ -125,10 +174,10 @@ Components.Showable {
         LauncherGridView {
             id: grid
             anchors {
-                left: categories.right
-                top: parent.top
+                left: categories.visible ? categories.right : parent.left
+                top: searchBox.bottom
                 leftMargin: categories.visible ? Themes.Units.smallSpacing : Themes.Units.largeSpacing
-                topMargin: Themes.Units.largeSpacing
+                topMargin: categories.visible ? Themes.Units.smallSpacing : Themes.Units.largeSpacing
                 rightMargin: Themes.Units.largeSpacing
                 bottomMargin: Themes.Units.largeSpacing
             }
