@@ -24,41 +24,24 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef RESPAWNPROCESS_H
-#define RESPAWNPROCESS_H
+#ifndef SESSIONLEADER_H
+#define SESSIONLEADER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QProcessEnvironment>
+#include <QtCore/QProcess>
 
-#include "sessionleader.h"
-
-class RespawnProcess : public QObject
+class SessionLeader : public QProcess
 {
-    Q_OBJECT
 public:
-    RespawnProcess(bool sessionLeader, QObject *parent = 0);
+    SessionLeader(bool sessionLeader, QObject *parent = 0);
 
     bool isSessionLeader() const;
     void setSessionLeader(bool value);
 
-public Q_SLOTS:
-    void start();
-    void stop();
-    void terminate();
-
-Q_SIGNALS:
-    void started();
-    void stopped();
-    void finished();
-
 protected:
-    SessionLeader *m_process;
-    int m_retries;
-    bool m_terminate;
+    void setupChildProcess() Q_DECL_OVERRIDE;
 
-private Q_SLOTS:
-    void processError(QProcess::ProcessError error);
-    void processFinished(int exitCode, QProcess::ExitStatus status);
+private:
+    bool m_sessionLeader;
 };
 
-#endif // RESPAWNPROCESS_H
+#endif // SESSIONLEADER_H

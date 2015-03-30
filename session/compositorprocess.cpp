@@ -30,8 +30,8 @@
 #include "compositorlauncher.h"
 #include "compositorprocess.h"
 
-CompositorProcess::CompositorProcess(QObject *parent)
-    : RespawnProcess(parent)
+CompositorProcess::CompositorProcess(bool sessionLeader, QObject *parent)
+    : RespawnProcess(sessionLeader, parent)
     , m_xdgRuntimeDir(QString::fromUtf8(qgetenv("XDG_RUNTIME_DIR")))
     , m_watcher(new QFileSystemWatcher(this))
 {

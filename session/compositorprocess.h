@@ -35,7 +35,7 @@ class CompositorProcess : public RespawnProcess
 {
     Q_OBJECT
 public:
-    CompositorProcess(QObject *parent = 0);
+    CompositorProcess(bool sessionLeader, QObject *parent = 0);
 
     QString socketName() const;
     void setSocketName(const QString &name);

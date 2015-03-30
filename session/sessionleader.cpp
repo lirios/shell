@@ -24,41 +24,30 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef RESPAWNPROCESS_H
-#define RESPAWNPROCESS_H
-
-#include <QtCore/QObject>
-#include <QtCore/QProcessEnvironment>
-
 #include "sessionleader.h"
 
-class RespawnProcess : public QObject
+#include <unistd.h>
+
+SessionLeader::SessionLeader(bool sessionLeader, QObject *parent)
+    : QProcess(parent)
+    , m_sessionLeader(sessionLeader)
 {
-    Q_OBJECT
-public:
-    RespawnProcess(bool sessionLeader, QObject *parent = 0);
+}
 
-    bool isSessionLeader() const;
-    void setSessionLeader(bool value);
+bool SessionLeader::isSessionLeader() const
+{
+    return m_sessionLeader;
+}
 
-public Q_SLOTS:
-    void start();
-    void stop();
-    void terminate();
+void SessionLeader::setSessionLeader(bool value)
+{
+    m_sessionLeader = value;
+}
 
-Q_SIGNALS:
-    void started();
-    void stopped();
-    void finished();
-
-protected:
-    SessionLeader *m_process;
-    int m_retries;
-    bool m_terminate;
-
-private Q_SLOTS:
-    void processError(QProcess::ProcessError error);
-    void processFinished(int exitCode, QProcess::ExitStatus status);
-};
-
-#endif // RESPAWNPROCESS_H
+void SessionLeader::setupChildProcess()
+{
+    // Set session leader if requested to make logind
+    // integration work
+    if (m_sessionLeader)
+        ::setsid();
+}

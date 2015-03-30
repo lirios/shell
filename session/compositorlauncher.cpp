@@ -38,8 +38,8 @@ CompositorLauncher::CompositorLauncher(QObject *parent)
     , m_mode(UnknownMode)
     , m_hardware(UnknownHardware)
     , m_hasLibInputPlugin(false)
-    , m_weston(new CompositorProcess(this))
-    , m_compositor(new CompositorProcess(this))
+    , m_weston(new CompositorProcess(true, this))
+    , m_compositor(new CompositorProcess(false, this))
 {
     // Starts the compositor as soon as Weston is started
     connect(m_weston, &CompositorProcess::started,
@@ -101,6 +101,7 @@ void CompositorLauncher::start()
     } else {
         m_socketName = QStringLiteral("hawaii");
         m_compositor->setSocketName(m_socketName);
+        m_compositor->setSessionLeader(true);
     }
 
     // Summary

@@ -32,9 +32,9 @@
 
 #include <signal.h>
 
-RespawnProcess::RespawnProcess(QObject *parent)
+RespawnProcess::RespawnProcess(bool sessionLeader, QObject *parent)
     : QObject(parent)
-    , m_process(new QProcess(this))
+    , m_process(new SessionLeader(sessionLeader, this))
     , m_retries(5)
     , m_terminate(false)
 {
@@ -44,6 +44,16 @@ RespawnProcess::RespawnProcess(QObject *parent)
             this, SLOT(processError(QProcess::ProcessError)));
     connect(m_process, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(processFinished(int,QProcess::ExitStatus)));
+}
+
+bool RespawnProcess::isSessionLeader() const
+{
+    return m_process->isSessionLeader();
+}
+
+void RespawnProcess::setSessionLeader(bool value)
+{
+    m_process->setSessionLeader(value);
 }
 
 void RespawnProcess::start()
@@ -114,13 +124,13 @@ void RespawnProcess::processError(QProcess::ProcessError error)
 
 void RespawnProcess::processFinished(int exitCode, QProcess::ExitStatus status)
 {
-    Q_UNUSED(status)
-
     if (exitCode == 0) {
         qCWarning(COMPOSITOR)
                 << "Process" << m_process->program()
                 << "finished successfully";
         Q_EMIT finished();
+    } else if (status == QProcess::CrashExit) {
+        processError(QProcess::Crashed);
     } else {
         qCWarning(COMPOSITOR)
                 << "Process" << m_process->program()

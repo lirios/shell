@@ -11,6 +11,7 @@ set(SOURCES
     respawnprocess.cpp
     screensaver.cpp
     sessionadaptor.cpp
+    sessionleader.cpp
     sessionmanager.cpp
     loginmanager/loginmanager.cpp
     loginmanager/loginmanagerbackend.cpp
