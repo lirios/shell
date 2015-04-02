@@ -33,6 +33,12 @@ include(KDECompilerSettings)
 # Macro to print feature summary
 include(FeatureSummary)
 
+# systemd user unit directory
+if (NOT DEFINED SYSTEMD_USER_UNIT_DIR)
+    execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=systemduserunitdir systemd OUTPUT_VARIABLE SYSTEMD_USER_UNIT_DIR)
+    string(REGEX REPLACE "[ \t\n]+" "" SYSTEMD_USER_UNIT_DIR ${SYSTEMD_USER_UNIT_DIR})
+endif()
+
 # Require at least gcc 4.8
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.8")
