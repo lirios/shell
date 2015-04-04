@@ -181,7 +181,8 @@ Supports a couple of modes:
 * **hwcomposer:** runs the compositor directly with Android drivers
 * **nested:** runs the compositor inside Weston
 
-The **eglfs** mode requires Qt 5.5 and root privileges.
+The **eglfs** mode requires Qt 5.5 and your user must be in the video and input groups
+or you should use the root account.
 
 The **hwcomposer** mode requires root privileges only when using
 the libinput input plugin with Qt 5.5.
