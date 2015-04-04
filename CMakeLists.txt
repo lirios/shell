@@ -33,6 +33,9 @@ include(KDECompilerSettings)
 # Macro to print feature summary
 include(FeatureSummary)
 
+# Find pkg-config here so that it can be referenced soon
+find_package(PkgConfig)
+
 # systemd user unit directory
 if (NOT DEFINED SYSTEMD_USER_UNIT_DIR)
     execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=systemduserunitdir systemd OUTPUT_VARIABLE SYSTEMD_USER_UNIT_DIR)
