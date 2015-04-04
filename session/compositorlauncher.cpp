@@ -54,9 +54,6 @@ CompositorLauncher::CompositorLauncher(QObject *parent)
             this, &CompositorLauncher::finished);
     connect(m_compositor, &CompositorProcess::finished,
             this, &CompositorLauncher::finished);
-
-    // Set compositor program
-    m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
 }
 
 CompositorLauncher::Mode CompositorLauncher::mode() const
@@ -99,7 +96,7 @@ void CompositorLauncher::start()
                                << QStringLiteral("--shell=fullscreen-shell.so")
                                << QStringLiteral("--socket=%1").arg(m_weston->socketName()));
     } else {
-        m_socketName = QStringLiteral("hawaii");
+        m_socketName = QStringLiteral("wayland-0");
         m_compositor->setSocketName(m_socketName);
         m_compositor->setSessionLeader(true);
     }
@@ -108,6 +105,7 @@ void CompositorLauncher::start()
     printSummary();
 
     // Start the process
+    m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
     m_compositor->setArguments(compositorArgs());
     m_compositor->setEnvironment(compositorEnv());
     if (m_mode == NestedMode)

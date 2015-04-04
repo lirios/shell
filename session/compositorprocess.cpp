@@ -24,20 +24,40 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QFileSystemWatcher>
+#include <QtCore/QTimer>
 
 #include "compositorlauncher.h"
 #include "compositorprocess.h"
 
+#include <signal.h>
+
 CompositorProcess::CompositorProcess(bool sessionLeader, QObject *parent)
-    : RespawnProcess(sessionLeader, parent)
+    : QObject(parent)
+    , m_process(new SessionLeader(sessionLeader, this))
+    , m_retries(5)
+    , m_terminate(false)
     , m_xdgRuntimeDir(QString::fromUtf8(qgetenv("XDG_RUNTIME_DIR")))
     , m_watcher(new QFileSystemWatcher(this))
 {
+    connect(m_process, SIGNAL(error(QProcess::ProcessError)),
+            this, SLOT(processError(QProcess::ProcessError)));
+    connect(m_process, SIGNAL(finished(int,QProcess::ExitStatus)),
+            this, SLOT(processFinished(int,QProcess::ExitStatus)));
+
     m_watcher->addPath(m_xdgRuntimeDir);
-    connect(m_watcher, SIGNAL(directoryChanged(QString)),
-            this, SLOT(socketAvailable()));
+}
+
+bool CompositorProcess::isSessionLeader() const
+{
+    return m_process->isSessionLeader();
+}
+
+void CompositorProcess::setSessionLeader(bool value)
+{
+    m_process->setSessionLeader(value);
 }
 
 QString CompositorProcess::socketName() const
@@ -65,8 +85,104 @@ void CompositorProcess::setEnvironment(const QProcessEnvironment &env)
     m_process->setProcessEnvironment(env);
 }
 
+void CompositorProcess::start()
+{
+    qCWarning(COMPOSITOR)
+            << "Starting:"
+            << qPrintable(m_process->program())
+            << qPrintable(m_process->arguments().join(' '));
+
+    connect(m_watcher, SIGNAL(directoryChanged(QString)),
+            this, SLOT(socketAvailable()));
+
+    m_process->setProcessChannelMode(QProcess::ForwardedChannels);
+    m_process->start();
+}
+
+void CompositorProcess::stop()
+{
+    qCWarning(COMPOSITOR)
+            << "Stopping:"
+            << qPrintable(m_process->program())
+            << qPrintable(m_process->arguments().join(' '));
+
+    disconnect(m_watcher, SIGNAL(directoryChanged(QString)),
+               this, SLOT(socketAvailable()));
+
+    m_process->terminate();
+    if (!m_process->waitForFinished())
+        m_process->kill();
+    Q_EMIT stopped();
+}
+
+void CompositorProcess::terminate()
+{
+    qCWarning(COMPOSITOR)
+            << "Terminate:"
+            << qPrintable(m_process->program())
+            << qPrintable(m_process->arguments().join(' '));
+
+    disconnect(m_watcher, SIGNAL(directoryChanged(QString)),
+               this, SLOT(socketAvailable()));
+
+    m_terminate = true;
+    ::kill(m_process->processId(), SIGINT);
+}
+
+void CompositorProcess::processError(QProcess::ProcessError error)
+{
+    Q_UNUSED(error)
+
+    if (m_terminate) {
+        m_terminate = false;
+        return;
+    }
+
+    qCWarning(COMPOSITOR)
+            << "Process" << m_process->program()
+            << "had an error:" << m_process->errorString();
+
+    // Retry
+    if (m_retries > 0) {
+        qCDebug(COMPOSITOR)
+                << "Process" << m_process->program()
+                << "retries left:" << m_retries;
+        m_retries--;
+
+        // Restart the process after 3 seconds
+        QTimer::singleShot(3000, this, SLOT(start()));
+        return;
+    }
+
+    // Compositor failed to start, kill full screen shell and terminate
+    qCritical(COMPOSITOR)
+            << "Process" << m_process->program()
+            << "won't start, aborting...";
+    QCoreApplication::quit();
+}
+
+void CompositorProcess::processFinished(int exitCode, QProcess::ExitStatus status)
+{
+    if (exitCode == 0) {
+        qCWarning(COMPOSITOR)
+                << "Process" << m_process->program()
+                << "finished successfully";
+        Q_EMIT finished();
+    } else if (status == QProcess::CrashExit) {
+        processError(QProcess::Crashed);
+    } else {
+        qCWarning(COMPOSITOR)
+                << "Process" << m_process->program()
+                << "finished with exit code" << exitCode;
+        Q_EMIT stopped();
+    }
+}
+
 void CompositorProcess::socketAvailable()
 {
+    if (m_socketName.isEmpty())
+        return;
+
     // Check whether the socket was created
     const QString fileName = m_xdgRuntimeDir + QStringLiteral("/") + m_socketName;
     qCDebug(COMPOSITOR) << "Checking for Wayland socket:" << fileName;

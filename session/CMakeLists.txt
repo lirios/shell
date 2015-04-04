@@ -8,7 +8,6 @@ set(SOURCES
     compositorlauncher.cpp
     main.cpp
     processlauncher.cpp
-    respawnprocess.cpp
     screensaver.cpp
     sessionadaptor.cpp
     sessionleader.cpp

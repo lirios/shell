@@ -27,15 +27,21 @@
 #ifndef COMPOSITORPROCESS_H
 #define COMPOSITORPROCESS_H
 
-#include "respawnprocess.h"
+#include <QtCore/QObject>
+#include <QtCore/QProcessEnvironment>
+
+#include "sessionleader.h"
 
 class QFileSystemWatcher;
 
-class CompositorProcess : public RespawnProcess
+class CompositorProcess : public QObject
 {
     Q_OBJECT
 public:
     CompositorProcess(bool sessionLeader, QObject *parent = 0);
+
+    bool isSessionLeader() const;
+    void setSessionLeader(bool value);
 
     QString socketName() const;
     void setSocketName(const QString &name);
@@ -44,12 +50,27 @@ public:
     void setArguments(const QStringList &args);
     void setEnvironment(const QProcessEnvironment &env);
 
+Q_SIGNALS:
+    void started();
+    void stopped();
+    void finished();
+
+public Q_SLOTS:
+    void start();
+    void stop();
+    void terminate();
+
 private:
+    SessionLeader *m_process;
+    int m_retries;
+    bool m_terminate;
     QString m_xdgRuntimeDir;
     QString m_socketName;
     QFileSystemWatcher *m_watcher;
 
 private Q_SLOTS:
+    void processError(QProcess::ProcessError error);
+    void processFinished(int exitCode, QProcess::ExitStatus status);
     void socketAvailable();
 };
 
