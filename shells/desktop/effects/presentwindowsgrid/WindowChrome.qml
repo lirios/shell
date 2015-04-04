@@ -66,7 +66,7 @@ Item {
     Rectangle {
         anchors.centerIn: parent
         radius: Themes.Units.dp(6)
-        color: "black"
+        color: "#80000000"
         width: Math.max(parent.width * 0.8, titleLabel.paintedWidth) + Themes.Units.smallSpacing * 2
         height: titleLabel.paintedHeight + Themes.Units.smallSpacing * 2
         z: 4
@@ -94,7 +94,7 @@ Item {
         z: 4
 
         radius: Themes.Units.dp(6)
-        color: "black"
+        color: "#80000000"
         width: icon.width + Themes.Units.smallSpacing * 2
         height: width
 
