@@ -38,7 +38,7 @@ CompositorLauncher::CompositorLauncher(QObject *parent)
     , m_mode(UnknownMode)
     , m_hardware(UnknownHardware)
     , m_hasLibInputPlugin(false)
-    , m_weston(new CompositorProcess(true, this))
+    , m_weston(new CompositorProcess(false, this))
     , m_compositor(new CompositorProcess(false, this))
 {
     // Starts the compositor as soon as Weston is started
@@ -90,6 +90,11 @@ void CompositorLauncher::start()
         m_socketName = QStringLiteral("hawaii-slave");
         m_weston->setSocketName(QStringLiteral("hawaii-master"));
         m_compositor->setSocketName(m_socketName);
+
+        // Weston must be session leader when we are launched
+        // from gdm
+        if (qEnvironmentVariableIsSet("GDMSESSION"))
+            m_weston->setSessionLeader(true);
 
         m_weston->setProgram(QStringLiteral("weston"));
         m_weston->setArguments(QStringList()
