@@ -53,9 +53,12 @@ Item {
 
     // Hide the mouse pointer
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
-        cursorShape: Qt.BlankCursor
         z: 100
     }
+
+    Component.onCompleted: mouseArea.cursorShape = Qt.BlankCursor
+    Component.onDestruction: mouseArea.cursorShape = Qt.ArrowCursor
 }
