@@ -50,4 +50,12 @@ Item {
     BusyIndicator {
         anchors.centerIn: parent
     }
+
+    // Hide the mouse pointer
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton
+        cursorShape: Qt.BlankCursor
+        z: 100
+    }
 }
