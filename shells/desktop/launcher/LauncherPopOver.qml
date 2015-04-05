@@ -115,6 +115,27 @@ Components.Showable {
             onDismissed: root.dismissed()
         }
 
+        MouseArea {
+            anchors.fill: parent
+            onWheel: {
+                if (wheel.angleDelta.x > 0 || wheel.angleDelta.y > 0) {
+                    // Go to the next page
+                    if (grid.currentPage < grid.numPages - 1) {
+                        grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
+                        grid.currentPage++;
+                    }
+                } else if (wheel.angleDelta.x < 0 || wheel.angleDelta.y < 0) {
+                    // Go to the next page
+                    if (grid.currentPage > 0) {
+                        grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
+                        grid.currentPage--;
+                    }
+                }
+
+                wheel.accepted = true;
+            }
+        }
+
         RowLayout {
             id: searchBox
             anchors {
