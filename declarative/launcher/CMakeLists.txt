@@ -7,7 +7,7 @@ set(SOURCES
     categoriesmodel.cpp
     launcheritem.cpp
     launchermodel.cpp
-    launcherplugin.cpp
+    plugin.cpp
 )
 
 add_library(launcherplugin SHARED ${SOURCES})

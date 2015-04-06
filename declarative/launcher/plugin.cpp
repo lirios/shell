@@ -24,24 +24,29 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtQml>
+#include <QtQml/QtQml>
 
 #include "appsmodel.h"
 #include "categoriesmodel.h"
-#include "launcherplugin.h"
 #include "launchermodel.h"
 #include "launcheritem.h"
 
-void LauncherPlugin::registerTypes(const char *uri)
+class LauncherPlugin : public QQmlExtensionPlugin
 {
-    // @uri org.hawaii.launcher
-    Q_ASSERT(uri == QLatin1String("org.hawaii.launcher"));
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+public:
+    void registerTypes(const char *uri)
+    {
+        // @uri org.hawaii.launcher
+        Q_ASSERT(uri == QLatin1String("org.hawaii.launcher"));
 
-    qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
-    qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
-    qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
-    qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
-                                             QStringLiteral("Cannot create LauncherItem"));
-}
+        qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
+        qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
+        qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
+        qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
+                                                 QStringLiteral("Cannot instantiate LauncherItem"));
+    }
+};
 
-#include "moc_launcherplugin.cpp"
+#include "plugin.moc"
