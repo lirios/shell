@@ -20,7 +20,7 @@ target_link_libraries(launcherplugin
                       GreenIsland::GreenIsland)
 target_link_libraries(launcherplugin ${QTXDG_LIBRARIES})
 
-install(FILES qmldir
+install(FILES qmldir plugins.qmltypes
     DESTINATION ${QML_INSTALL_DIR}/org/hawaii/launcher)
 install(TARGETS launcherplugin
     DESTINATION ${QML_INSTALL_DIR}/org/hawaii/launcher)
