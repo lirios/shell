@@ -33,39 +33,122 @@ QtControlsPrivate.ToolButtonStyle {
     id: style
     panel: Item {
         id: styleitem
-        implicitWidth: (hasIcon ? icon.width : Math.max(label.implicitWidth + frame.border.left + frame.border.right, Units.dp(36)))
-                                 + (arrow.visible ? Units.dp(10) : 0)
-        implicitHeight: hasIcon ? icon.height : Math.max(label.implicitHeight, Units.dp(36))
+        implicitWidth: (hasIcon ? icon.width + Units.smallSpacing : 0) +
+                       label.paintedWidth +
+                       (arrow.visible ? arrow.width + Units.smallSpacing : 0) +
+                       frame.border.left + frame.border.right +
+                       (2 * Units.smallSpacing)
+        implicitHeight: Math.max(hasIcon ? icon.height : 0, label.paintedHeight) +
+                        (3 * Units.smallSpacing)
 
         readonly property bool hasIcon: icon.status === Image.Ready || icon.status === Image.Loading
+        readonly property real buttonRadius: Units.dp(4)
 
-        Rectangle {
-            property color c: Theme.palette.panel.backgroundColor
+        Component {
+            id: normalComponent
 
-            id: baserect
-            anchors.fill: parent
-            border.color: Qt.darker(baserect.c, 1.2)
-            radius: 4
-            gradient: Gradient {
-                GradientStop {
-                    position: 0.0
-                    color: style.pressed ? Qt.darker(baserect.c, 1.4) : Qt.lighter(baserect.c, 1.8)
+            Rectangle {
+                property color c: Theme.palette.panel.backgroundColor
+
+                id: baserect
+                anchors.fill: parent
+                border.color: Qt.darker(baserect.c, 1.2)
+                radius: buttonRadius
+                gradient: Gradient {
+                    GradientStop {
+                        position: 0.0
+                        color: style.pressed ? Qt.darker(baserect.c, 1.4) : Qt.lighter(baserect.c, 1.8)
+                    }
+                    GradientStop {
+                        position: 0.1
+                        color: style.pressed ? Qt.darker(baserect.c, 1.15) : Qt.lighter(baserect.c, 1.4)
+                    }
+                    GradientStop {
+                        position: 0.8
+                        color: style.pressed ? Qt.darker(baserect.c, 0.76) : baserect.c
+                    }
+                    GradientStop {
+                        position: 1.0
+                        color: pressed ? Qt.darker(baserect.c, 0.65) : Qt.darker(baserect.c, 1.3)
+                    }
                 }
-                GradientStop {
-                    position: 0.1
-                    color: style.pressed ? Qt.darker(baserect.c, 1.15) : Qt.lighter(baserect.c, 1.4)
-                }
-                GradientStop {
-                    position: 0.8
-                    color: style.pressed ? Qt.darker(baserect.c, 0.76) : baserect.c
-                }
-                GradientStop {
-                    position: 1.0
-                    color: pressed ? Qt.darker(baserect.c, 0.65) : Qt.darker(baserect.c, 1.3)
-                }
+                antialiasing: true
             }
-            antialiasing: true
-            visible: control.pressed || (control.checkable && control.checked)
+        }
+
+        Component {
+            id: pressedComponent
+
+            Rectangle {
+                property color c: Theme.palette.panel.backgroundColor
+
+                id: baserect
+                anchors.fill: parent
+                border.color: Qt.darker(baserect.c, 1.2)
+                radius: buttonRadius
+                gradient: Gradient {
+                    GradientStop {
+                        position: 1.0
+                        color: style.pressed ? Qt.darker(baserect.c, 1.4) : Qt.lighter(baserect.c, 1.8)
+                    }
+                    GradientStop {
+                        position: 0.8
+                        color: style.pressed ? Qt.darker(baserect.c, 1.15) : Qt.lighter(baserect.c, 1.4)
+                    }
+                    GradientStop {
+                        position: 0.1
+                        color: style.pressed ? Qt.darker(baserect.c, 0.76) : baserect.c
+                    }
+                    GradientStop {
+                        position: 0.0
+                        color: pressed ? Qt.darker(baserect.c, 0.65) : Qt.darker(baserect.c, 1.3)
+                    }
+                }
+                antialiasing: true
+            }
+        }
+
+        Component {
+            id: hoverComponent
+
+            Rectangle {
+                property color c: Theme.palette.panel.backgroundColor
+
+                id: baserect
+                anchors.fill: parent
+                border.color: Qt.darker(baserect.c, 1.2)
+                radius: buttonRadius
+                gradient: Gradient {
+                    GradientStop {
+                        position: 0.0
+                        color: style.pressed ? Qt.darker(baserect.c, 1.4) : Qt.lighter(baserect.c, 1.8)
+                    }
+                    GradientStop {
+                        position: 0.1
+                        color: style.pressed ? Qt.darker(baserect.c, 1.15) : Qt.lighter(baserect.c, 1.4)
+                    }
+                    GradientStop {
+                        position: 0.8
+                        color: style.pressed ? Qt.darker(baserect.c, 0.76) : baserect.c
+                    }
+                    GradientStop {
+                        position: 1.0
+                        color: pressed ? Qt.darker(baserect.c, 0.65) : Qt.darker(baserect.c, 1.3)
+                    }
+                }
+                antialiasing: true
+            }
+        }
+
+        Loader {
+            anchors.fill: parent
+            sourceComponent: {
+                if (control.pressed || (control.checkable && control.checked))
+                    return pressedComponent;
+                else if (control.hovered)
+                    return hoverComponent;
+                return normalComponent;
+            }
         }
 
         Item {
@@ -96,7 +179,7 @@ QtControlsPrivate.ToolButtonStyle {
                     return "";
                 }
                 color: Theme.palette.panel.textColor
-                width: control.iconSize > 0 ? control.iconSize : units.iconSizes.smallMedium
+                width: units.iconSizes.smallMedium
                 height: width
             }
         }
