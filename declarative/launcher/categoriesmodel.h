@@ -35,13 +35,14 @@ class CategoryEntry;
 class CategoriesModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(bool allCategory READ isAllCategoryIncluded WRITE includeAllCategory NOTIFY allCategoryChanged)
+    Q_PROPERTY(bool includeAllCategory READ isAllCategoryIncluded WRITE includeAllCategory NOTIFY includeAllCategoryChanged)
     Q_ENUMS(Roles)
 public:
     enum Roles {
         NameRole = Qt::UserRole +1,
         CommentRole,
-        IconNameRole
+        IconNameRole,
+        CategoryRole
     };
 
     CategoriesModel(QObject *parent = 0);
@@ -57,7 +58,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
 Q_SIGNALS:
-    void allCategoryChanged();
+    void includeAllCategoryChanged();
     void refreshing();
 
 private:

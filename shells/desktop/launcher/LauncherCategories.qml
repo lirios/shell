@@ -30,10 +30,16 @@ import Hawaii.Themes 1.0 as Themes
 import org.hawaii.launcher 0.1 as Launcher
 
 ListView {
+    signal selected(string category)
+
+    id: root
+    onCurrentIndexChanged: if (currentItem) root.selected(currentItem.category)
+
     Component {
         id: categoryDelegate
 
         Rectangle {
+            property string category: model.category
             property bool hover: false
 
             color: hover ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
@@ -46,7 +52,7 @@ ListView {
                 hoverEnabled: true
                 onEntered: hover = true
                 onExited: hover = false
-                onClicked: ListView.currentIndex = index
+                onClicked: root.currentIndex = index
             }
 
             Row {
@@ -70,7 +76,7 @@ ListView {
                     text: model.display
                     color: hover ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
                     elide: Text.ElideRight
-                    font.bold: ListView.currentIndex == index
+                    font.bold: root.currentIndex == index
                 }
             }
         }

@@ -70,5 +70,9 @@ GridView {
             onClicked: appsModel.trigger(index)
         }
     }
+
+    function filterByCategory(category) {
+        appsModel.categoryFilter = category;
+    }
 }
 

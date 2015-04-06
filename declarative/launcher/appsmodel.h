@@ -37,6 +37,7 @@ class AppsModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(NameFormat appNameFormat READ appNameFormat WRITE setAppNameFormat NOTIFY appNameFormatChanged)
+    Q_PROPERTY(QString categoryFilter READ categoryFilter WRITE setCategoryFilter NOTIFY categoryFilterChanged)
     Q_ENUMS(Roles NameFormat)
 public:
     enum Roles {
@@ -58,6 +59,9 @@ public:
     NameFormat appNameFormat() const;
     void setAppNameFormat(NameFormat format);
 
+    QString categoryFilter() const;
+    void setCategoryFilter(const QString &filter);
+
     QHash<int, QByteArray> roleNames() const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -68,12 +72,15 @@ public:
 
 Q_SIGNALS:
     void refreshing();
+    void refreshed();
     void appNameFormatChanged();
+    void categoryFilterChanged();
     void appLaunched(const QString &desktopFile);
 
 private:
     QList<AppEntry *> m_list;
     NameFormat m_nameFormat;
+    QString m_categoryFilter;
 
     void refresh();
     void readMenu(const QDomElement &xml);

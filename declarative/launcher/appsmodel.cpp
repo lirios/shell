@@ -76,6 +76,22 @@ void AppsModel::setAppNameFormat(NameFormat format)
     refresh();
 }
 
+QString AppsModel::categoryFilter() const
+{
+    return m_categoryFilter;
+}
+
+void AppsModel::setCategoryFilter(const QString &filter)
+{
+    if (m_categoryFilter == filter)
+        return;
+
+    m_categoryFilter = filter;
+    Q_EMIT categoryFilterChanged();
+
+    refresh();
+}
+
 QHash<int, QByteArray> AppsModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
@@ -145,6 +161,7 @@ void AppsModel::refresh()
     m_list.clear();
 
     XdgMenu xdgMenu;
+    xdgMenu.setLogDir("/tmp/");
     xdgMenu.setEnvironments(QStringLiteral("X-Hawaii"));
     if (!xdgMenu.read(XdgMenu::getMenuFileName()))
         return;
@@ -155,13 +172,22 @@ void AppsModel::refresh()
     while (it.hasNext()) {
         QDomElement xml = it.next();
 
-        if (xml.tagName() == QStringLiteral("Menu"))
-            readMenu(xml);
+        if (xml.tagName() == QStringLiteral("Menu")) {
+            if (m_categoryFilter.isEmpty()) {
+                readMenu(xml);
+            } else {
+                QString name = xml.attribute(QStringLiteral("name"));
+                if (name == QStringLiteral("Applications") || name == m_categoryFilter)
+                    readMenu(xml);
+            }
+        }
     }
 
     qSort(m_list.begin(), m_list.end(), AppEntry::lessThan);
 
     endResetModel();
+
+    Q_EMIT refreshed();
 }
 
 void AppsModel::readMenu(const QDomElement &xml)

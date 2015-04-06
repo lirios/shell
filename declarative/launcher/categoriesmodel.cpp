@@ -39,6 +39,7 @@ public:
     QString name;
     QString comment;
     QString iconName;
+    QString category;
 
     static bool lessThan(CategoryEntry *e1, CategoryEntry *e2) {
         return e1->name < e2->name;
@@ -75,7 +76,7 @@ void CategoriesModel::includeAllCategory(bool value)
     }
 
     m_allCategory = value;
-    Q_EMIT allCategoryChanged();
+    Q_EMIT includeAllCategoryChanged();
 }
 
 QHash<int, QByteArray> CategoriesModel::roleNames() const
@@ -86,6 +87,7 @@ QHash<int, QByteArray> CategoriesModel::roleNames() const
     roles.insert(NameRole, "name");
     roles.insert(CommentRole, "comment");
     roles.insert(IconNameRole, "iconName");
+    roles.insert(CategoryRole, "category");
     return roles;
 }
 
@@ -112,6 +114,8 @@ QVariant CategoriesModel::data(const QModelIndex &index, int role) const
         return item->comment;
     case IconNameRole:
         return item->iconName;
+    case CategoryRole:
+        return item->category;
     default:
         break;
     }
@@ -133,6 +137,7 @@ void CategoriesModel::refresh()
         allCategory->name = tr("All");
         allCategory->comment = tr("All categories");
         allCategory->iconName = QStringLiteral("applications-other");
+        allCategory->category = QString();
         m_list.append(allCategory);
     }
 
@@ -155,6 +160,7 @@ void CategoriesModel::refresh()
                 entry->name = xml.attribute(QStringLiteral("name"));
             entry->comment = xml.attribute(QStringLiteral("comment"));
             entry->iconName = xml.attribute(QStringLiteral("icon"));
+            entry->category = xml.attribute(QStringLiteral("name"));
             m_list.append(entry);
         }
     }

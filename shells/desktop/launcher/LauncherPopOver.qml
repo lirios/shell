@@ -161,7 +161,10 @@ Components.Showable {
                     checkable: true
                     checked: categories.visible
                     exclusiveGroup: viewGroup
-                    onClicked: categories.visible = true
+                    onClicked: {
+                        categories.currentIndex = 0;
+                        categories.visible = true;
+                    }
                 }
 
                 ToolButton {
@@ -169,7 +172,10 @@ Components.Showable {
                     checkable: true
                     checked: !categories.visible
                     exclusiveGroup: viewGroup
-                    onClicked: categories.visible = false
+                    onClicked: {
+                        categories.visible = false;
+                        categories.currentIndex = 0;
+                    }
                 }
             }
 
@@ -190,6 +196,8 @@ Components.Showable {
             }
             width: Themes.Units.gu(8)
             height: grid.height
+            visible: false
+            onSelected: grid.filterByCategory(category)
         }
 
         LauncherGridView {
