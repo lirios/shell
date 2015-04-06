@@ -39,4 +39,8 @@ target_link_libraries(hawaii-session
 
 target_link_libraries(hawaii-session ${QTXDG_LIBRARIES})
 
+# Git revision
+include(GetGitRevision)
+create_git_head_revision_file(gitsha1.h hawaii-session)
+
 install(TARGETS hawaii-session DESTINATION ${BIN_INSTALL_DIR})

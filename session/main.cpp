@@ -35,6 +35,7 @@
 #include "cmakedirs.h"
 #include "compositorlauncher.h"
 #include "config.h"
+#include "gitsha1.h"
 #include "sessionmanager.h"
 
 #include <unistd.h>
@@ -140,6 +141,13 @@ int main(int argc, char *argv[])
         qDebug() << "Log out caused by signal" << signum;
         sessionManager->logOut();
     });
+
+    // Print version information
+    qDebug() << qPrintable(QStringLiteral("== Hawaii Session v%1 ==\n").arg(HAWAII_VERSION_STRING))
+             << "** https://hawaii-desktop.github.io\n"
+             << "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
+             << qPrintable(QStringLiteral("** Build: %1-%2")
+                           .arg(HAWAII_VERSION_STRING).arg(GIT_REV));
 
     // Register all D-Bus services
     if (!sessionManager->registerDBus())

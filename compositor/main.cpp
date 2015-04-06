@@ -33,6 +33,9 @@
 
 #include "sigwatch/sigwatch.h"
 
+#include "config.h"
+#include "gitsha1.h"
+
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
 int main(int argc, char *argv[])
@@ -95,6 +98,13 @@ int main(int argc, char *argv[])
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [=] {
         GreenIsland::HomeApplication::quit();
     });
+
+    // Print version information
+    qDebug() << qPrintable(QStringLiteral("== Hawaii Compositor v%1 ==\n").arg(HAWAII_VERSION_STRING))
+             << "** https://hawaii-desktop.github.io\n"
+             << "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
+             << qPrintable(QStringLiteral("** Build: %1-%2")
+                           .arg(HAWAII_VERSION_STRING).arg(GIT_REV));
 
     return app.exec();
 }
