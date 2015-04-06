@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 
 Rectangle {
@@ -37,7 +36,7 @@ Rectangle {
     radius: Themes.Units.dp(6)
     antialiasing: true
 
-    Components.Icon {
+    Image {
         id: icon
         anchors {
             horizontalCenter: parent.horizontalCenter
@@ -47,7 +46,9 @@ Rectangle {
             rightMargin: Themes.Units.largeSpacing
         }
         height: width
-        iconName: model.iconName
+        sourceSize.width: width
+        sourceSize.height: height
+        source: "image://launcher/" + model.iconName
         cache: false
     }
 
