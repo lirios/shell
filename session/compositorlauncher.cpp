@@ -250,7 +250,8 @@ QStringList CompositorLauncher::compositorArgs() const
         if (m_hasLibInputPlugin)
             args << QStringLiteral("-plugin") << QStringLiteral("libinput");
         else
-            args << QStringLiteral("-plugin EvdevMouse") << QStringLiteral("-plugin EvdevKeyboard");
+            args << QStringLiteral("-plugin") << QStringLiteral("EvdevMouse")
+                 << QStringLiteral("-plugin") << QStringLiteral("EvdevKeyboard");
         break;
     case NestedMode:
         args << QStringLiteral("--socket=%1").arg(m_compositor->socketName());
