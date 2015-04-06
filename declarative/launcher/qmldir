@@ -1,3 +1,4 @@
 module org.hawaii.launcher
 plugin launcherplugin
+classname LauncherPlugin
 typeinfo plugins.qmltypes
