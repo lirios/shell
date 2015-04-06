@@ -1,6 +1,9 @@
 Hawaii Shell
 ============
 
+[![GitHub release](https://img.shields.io/github/release/hawaii-desktop/hawaii-shell.svg)](https://github.com/hawaii-desktop/hawaii-shell)
+[![GitHub issues](https://img.shields.io/github/issues/hawaii-desktop/hawaii-shell.svg)](https://github.com/hawaii-desktop/hawaii-shell/issues)
+
 This is the Hawaii desktop environment shell.
 
 It contains a Qt platform theme plugin, shells for different form
@@ -58,18 +61,19 @@ Optional dependencies:
 ## Notes for packagers
 
 We use modules from KDE to decrease technology debt.
-However some of those modules pull in too many dependencies.
 
-In particular we currently need:
+However some of those modules pull in too many dependencies or their
+performance are not acceptable.
+
+Tier 1 frameworks are usually safe, going beyond that is often too much.
+
+A lot has been done to reduce dependencies from KDE, one notable example
+is KService which is really slow and I/O intensive.
+It was replaced by libqtxdg for the applications menu.
+
+Unfortunately we still need the following:
 
 * Networking (plasma-nm, QML plugin only not plasmoid)
-
-More actions will be taken in the future to cut down those dependencies.
-
-KService is really slow and was replaced by libqtxdg for the applications menu.
-For networking we need plasma-nm and plasma-workspace as runtime dependencies.
-
-Tier 1 frameworks on the other hand are usually safe.
 
 ## Build
 
@@ -181,7 +185,7 @@ Supports a couple of modes:
 * **hwcomposer:** runs the compositor directly with Android drivers
 * **nested:** runs the compositor inside Weston
 
-The **eglfs** mode requires Qt 5.5 and your user must be in the video and input groups
+The **eglfs** mode requires Qt 5.5 and your user must be in the ``video`` and ``input`` groups
 or you should use the root account.
 
 The **hwcomposer** mode requires root privileges only when using
