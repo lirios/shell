@@ -7,6 +7,7 @@ set(SOURCES
     categoriesmodel.cpp
     launcheritem.cpp
     launchermodel.cpp
+    menuimageprovider.cpp
     plugin.cpp
 )
 

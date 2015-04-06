@@ -30,12 +30,20 @@
 #include "categoriesmodel.h"
 #include "launchermodel.h"
 #include "launcheritem.h"
+#include "menuimageprovider.h"
 
 class LauncherPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 public:
+    void initializeEngine(QQmlEngine *engine, const char *uri)
+    {
+        Q_ASSERT(uri == QLatin1String("org.hawaii.launcher"));
+
+        engine->addImageProvider(QStringLiteral("launcher"), new MenuImageProvider());
+    }
+
     void registerTypes(const char *uri)
     {
         // @uri org.hawaii.launcher
