@@ -46,6 +46,10 @@ QPixmap MenuImageProvider::requestPixmap(const QString &id, QSize *realSize, con
     if (realSize)
         *realSize = size;
 
+    // Is it a path?
+    if (id.startsWith('/'))
+        return QPixmap(id).scaled(size);
+
     // Return icon from theme or fallback to a generic icon
     QIcon icon = QIcon::fromTheme(id);
     if (icon.isNull())
