@@ -74,8 +74,8 @@ QString CompositorLauncher::socketName() const
 void CompositorLauncher::start()
 {
     // Try to detect mode and hardware
-    detectMode();
     detectHardware();
+    detectMode();
     if (m_mode == UnknownMode) {
         qCWarning(COMPOSITOR) << "No mode detected, please manually specify one!";
         QCoreApplication::quit();
@@ -164,6 +164,12 @@ void CompositorLauncher::detectMode()
         return;
     }
 
+    // Use eglfs mode if we detected a particular hardware
+    if (m_hardware != UnknownHardware) {
+        m_mode = EglFSMode;
+        return;
+    }
+
     // Detect drm
     if (QDir(QStringLiteral("/sys/class/drm")).exists()) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
@@ -198,6 +204,9 @@ void CompositorLauncher::detectHardware()
 
     // TODO: Detect Mali
     // TODO: Detect Vivante
+
+    // Unknown hardware
+    m_hardware = UnknownHardware;
 }
 
 QString CompositorLauncher::deviceModel() const
