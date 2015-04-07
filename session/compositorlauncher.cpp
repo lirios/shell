@@ -355,7 +355,19 @@ void CompositorLauncher::printSummary()
         }
     };
 
+    auto hwToString = [this] {
+        switch (m_hardware) {
+        case DrmHardware:
+            return QStringLiteral("drm");
+        case BroadcomHardware:
+            return QStringLiteral("broadcom");
+        default:
+            return QStringLiteral("unknown");
+        }
+    };
+
     qCDebug(COMPOSITOR) << "Mode:" << modeToString();
+    qCDebug(COMPOSITOR) << "Hardware:" << hwToString();
     qCDebug(COMPOSITOR) << "libinput:" << m_hasLibInputPlugin;
     if (m_mode == NestedMode)
         qCDebug(COMPOSITOR) << "Weston socket:" << m_weston->socketName();
