@@ -106,13 +106,15 @@ void CompositorLauncher::start()
         m_compositor->setSessionLeader(true);
     }
 
+    // Setup the process
+    m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
+    m_compositor->setArguments(compositorArgs());
+    m_compositor->setEnvironment(compositorEnv());
+
     // Summary
     printSummary();
 
     // Start the process
-    m_compositor->setProgram(QStringLiteral(INSTALL_BINDIR "/hawaii"));
-    m_compositor->setArguments(compositorArgs());
-    m_compositor->setEnvironment(compositorEnv());
     if (m_mode == NestedMode)
         m_weston->start();
     else
@@ -374,6 +376,10 @@ void CompositorLauncher::printSummary()
     qCDebug(COMPOSITOR) << "Compositor socket:" << m_compositor->socketName();
     if (m_mode == X11Mode)
         qCDebug(COMPOSITOR) << "X11 display:" << qgetenv("DISPLAY");
+    Q_FOREACH (const QString &key, m_compositor->environment().keys()) {
+        if (key.startsWith(QStringLiteral("QT_")))
+            qCDebug(COMPOSITOR, "%s=%s", qPrintable(key), qPrintable(m_compositor->environment().value(key)));
+    }
 }
 
 void CompositorLauncher::setupEnvironment()

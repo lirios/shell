@@ -48,6 +48,8 @@ public:
 
     void setProgram(const QString &prog);
     void setArguments(const QStringList &args);
+
+    QProcessEnvironment environment() const;
     void setEnvironment(const QProcessEnvironment &env);
 
 Q_SIGNALS:

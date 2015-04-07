@@ -42,6 +42,8 @@ CompositorProcess::CompositorProcess(bool sessionLeader, QObject *parent)
     , m_xdgRuntimeDir(QString::fromUtf8(qgetenv("XDG_RUNTIME_DIR")))
     , m_watcher(new QFileSystemWatcher(this))
 {
+    m_process->setProcessChannelMode(QProcess::ForwardedChannels);
+
     connect(m_process, SIGNAL(error(QProcess::ProcessError)),
             this, SLOT(processError(QProcess::ProcessError)));
     connect(m_process, SIGNAL(finished(int,QProcess::ExitStatus)),
@@ -80,6 +82,11 @@ void CompositorProcess::setArguments(const QStringList &args)
     m_process->setArguments(args);
 }
 
+QProcessEnvironment CompositorProcess::environment() const
+{
+    return m_process->processEnvironment();
+}
+
 void CompositorProcess::setEnvironment(const QProcessEnvironment &env)
 {
     m_process->setProcessEnvironment(env);
@@ -95,7 +102,6 @@ void CompositorProcess::start()
     connect(m_watcher, SIGNAL(directoryChanged(QString)),
             this, SLOT(socketAvailable()));
 
-    m_process->setProcessChannelMode(QProcess::ForwardedChannels);
     m_process->start();
 }
 
