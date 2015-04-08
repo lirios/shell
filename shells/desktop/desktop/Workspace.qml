@@ -27,11 +27,13 @@
 import QtQuick 2.0
 import ".."
 
-Item {
+MouseArea {
     property alias effects: effects
     property int workspaceIndex
 
     id: root
+    acceptedButtons: Qt.NoButton
+    cursorShape: Qt.ArrowCursor
 
     Effects {
         id: effects
