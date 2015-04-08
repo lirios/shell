@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQml.Models 2.1
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.launcher 0.1 as Launcher
 
@@ -52,26 +53,29 @@ GridView {
     preferredHighlightEnd: 0
     highlightRangeMode: GridView.StrictlyEnforceRange
     highlightFollowsCurrentItem: true
-    model: Launcher.AppsProxyModel {
-        id: appsProxyModel
-        sourceModel: Launcher.AppsModel {
-            id: appsModel
-            onAppLaunched: grid.appLaunched()
+    model: VisualDataModel {
+        id: visualModel
+        model: Launcher.AppsProxyModel {
+            id: appsProxyModel
+            sourceModel: Launcher.AppsModel {
+                id: appsModel
+                onAppLaunched: grid.appLaunched()
+            }
         }
-    }
-    delegate: LauncherGridDelegate {
-        id: delegate
-        iconSize: grid.iconSize
-        width: grid.cellWidth
-        height: grid.cellHeight
+        delegate: LauncherGridDelegate {
+            id: delegate
+            iconSize: grid.iconSize
+            width: grid.cellWidth
+            height: grid.cellHeight
 
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.LeftButton
-            hoverEnabled: true
-            onEntered: delegate.hovered = true
-            onExited: delegate.hovered = false
-            onClicked: appsModel.trigger(index)
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.LeftButton
+                hoverEnabled: true
+                onEntered: delegate.hovered = true
+                onExited: delegate.hovered = false
+                onClicked: appsModel.trigger(appsProxyModel.sourceIndex(visualModel.modelIndex(index)))
+            }
         }
     }
 

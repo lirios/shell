@@ -52,4 +52,9 @@ void AppsProxyModel::setQuery(const QString &query)
     Q_EMIT queryChanged();
 }
 
+QModelIndex AppsProxyModel::sourceIndex(const QModelIndex &proxyIndex) const
+{
+    return mapToSource(proxyIndex);
+}
+
 #include "moc_appsproxymodel.cpp"

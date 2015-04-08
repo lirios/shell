@@ -69,7 +69,7 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    Q_INVOKABLE bool trigger(int row);
+    Q_INVOKABLE bool trigger(const QModelIndex &index);
 
 Q_SIGNALS:
     void refreshing();

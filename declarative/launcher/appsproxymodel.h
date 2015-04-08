@@ -39,6 +39,8 @@ public:
     QString query() const;
     void setQuery(const QString &query);
 
+    Q_INVOKABLE QModelIndex sourceIndex(const QModelIndex &proxyIndex) const;
+
 Q_SIGNALS:
     void queryChanged();
 

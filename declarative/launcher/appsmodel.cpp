@@ -136,12 +136,14 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool AppsModel::trigger(int row)
+bool AppsModel::trigger(const QModelIndex &index)
 {
-    if (row < 0 || row >= m_list.count())
+    if (!index.isValid())
         return false;
 
-    AppEntry *entry = m_list.at(row);
+    AppEntry *entry = m_list.at(index.row());
+    if (!entry)
+        return false;
 
     const QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface interface("org.hawaii.session", "/HawaiiSession", "org.hawaii.launcher", bus);
