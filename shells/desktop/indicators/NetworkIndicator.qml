@@ -27,10 +27,10 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
+import org.hawaii.networkmanager 0.1 as NM
 import ".."
 import "network" as NetworkIndicator
 
@@ -53,8 +53,8 @@ Indicator {
 
             ScrollView {
                 ListView {
-                    model: PlasmaNM.AppletProxyModel {
-                        sourceModel: PlasmaNM.NetworkModel {}
+                    model: NM.AppletProxyModel {
+                        sourceModel: NM.NetworkModel {}
                     }
                     clip: true
                     currentIndex: -1
@@ -70,11 +70,11 @@ Indicator {
     }
     visible: connectionIconProvider.connectionIcon !== "network-unavailable"
 
-    PlasmaNM.ConnectionIcon {
+    NM.ConnectionIcon {
         id: connectionIconProvider
     }
 
-    PlasmaNM.Handler {
+    NM.Handler {
         id: handler
     }
 

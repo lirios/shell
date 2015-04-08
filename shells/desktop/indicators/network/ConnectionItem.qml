@@ -32,18 +32,18 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.kde.kcoreaddons 1.0 as KCoreAddons
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
+import org.hawaii.networkmanager 0.1 as NM
 
 Item {
-    property bool predictableWirelessPassword: !Uuid && Type === PlasmaNM.Enums.Wireless &&
-                                               (SecurityType === PlasmaNM.Enums.StaticWep || SecurityType === PlasmaNM.Enums.WpaPsk ||
-                                                SecurityType === PlasmaNM.Enums.Wpa2Psk)
-    property bool showSpeed: ConnectionState === PlasmaNM.Enums.Activated &&
-                             (Type === PlasmaNM.Enums.Wimax ||
-                              Type === PlasmaNM.Enums.Wired ||
-                              Type === PlasmaNM.Enums.Wireless ||
-                              Type === PlasmaNM.Enums.Gsm ||
-                              Type === PlasmaNM.Enums.Cdma)
+    property bool predictableWirelessPassword: !Uuid && Type === NM.Enums.Wireless &&
+                                               (SecurityType === NM.Enums.StaticWep || SecurityType === NM.Enums.WpaPsk ||
+                                                SecurityType === NM.Enums.Wpa2Psk)
+    property bool showSpeed: ConnectionState === NM.Enums.Activated &&
+                             (Type === NM.Enums.Wimax ||
+                              Type === NM.Enums.Wired ||
+                              Type === NM.Enums.Wireless ||
+                              Type === NM.Enums.Gsm ||
+                              Type === NM.Enums.Cdma)
     property bool detailsVisible: false
     property bool passwordDialogVisible: false
 
@@ -128,8 +128,8 @@ Item {
                     id: label
                     text: ItemUniqueName
                     elide: Text.ElideRight
-                    font.weight: ConnectionState === PlasmaNM.Enums.Activated ? Font.DemiBold : Font.Normal
-                    font.italic: ConnectionState === PlasmaNM.Enums.Activating ? true : false
+                    font.weight: ConnectionState === NM.Enums.Activated ? Font.DemiBold : Font.Normal
+                    font.italic: ConnectionState === NM.Enums.Activating ? true : false
                     color: Themes.Theme.palette.panel.textColor
 
                     Layout.fillWidth: true
@@ -138,22 +138,22 @@ Item {
                 Label {
                     id: statusLabel
                     text: {
-                        if (ConnectionState === PlasmaNM.Enums.Activating) {
-                            if (Type === PlasmaNM.Enums.Vpn)
+                        if (ConnectionState === NM.Enums.Activating) {
+                            if (Type === NM.Enums.Vpn)
                                 return VpnState;
                             else
                                 return DeviceState;
-                        } else if (ConnectionState === PlasmaNM.Enums.Deactivating) {
-                            if (Type === PlasmaNM.Enums.Vpn)
+                        } else if (ConnectionState === NM.Enums.Deactivating) {
+                            if (Type === NM.Enums.Vpn)
                                 return VpnState;
                             else
                                 return DeviceState;
-                        } else if (ConnectionState === PlasmaNM.Enums.Deactivated) {
+                        } else if (ConnectionState === NM.Enums.Deactivated) {
                             var result = LastUsed;
-                            if (SecurityType > PlasmaNM.Enums.None)
+                            if (SecurityType > NM.Enums.None)
                                 result += ", " + SecurityTypeString;
                             return result;
-                        } else if (ConnectionState === PlasmaNM.Enums.Activated) {
+                        } else if (ConnectionState === NM.Enums.Activated) {
                             if (showSpeed && dataSource.data && dataSource.data[dataSource.downloadSource] && dataSource.data[dataSource.uploadSource]) {
                                 var arg1 = KCoreAddons.Format.formatByteSize(dataSource.data[dataSource.downloadSource].value * 1024 || 0);
                                 var arg2 = KCoreAddons.Format.formatByteSize(dataSource.data[dataSource.uploadSource].value * 1024 || 0)
@@ -189,9 +189,9 @@ Item {
 
             ToolButton {
                 id: stateChangeButton
-                iconName: ConnectionState === PlasmaNM.Enums.Deactivated ? "network-connect" : "network-disconnect"
+                iconName: ConnectionState === NM.Enums.Deactivated ? "network-connect" : "network-disconnect"
                 //opacity: mouseArea.containsMouse ? 1.0 : 0.0
-                tooltip: ConnectionState === PlasmaNM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
+                tooltip: ConnectionState === NM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
                 visible: opacity == 1.0
                 onClicked: changeState()
 
@@ -251,7 +251,7 @@ Item {
                 placeholderText: qsTr("Password")
                 validator: RegExpValidator {
                     regExp: {
-                        if (SecurityType === PlasmaNM.Enums.StaticWep)
+                        if (SecurityType === NM.Enums.StaticWep)
                             /^(?:[\x20-\x7F]{5}|[0-9a-fA-F]{10}|[\x20-\x7F]{13}|[0-9a-fA-F]{26}){1}$/
                                                                                                    else
                                                                                                    /^(?:[\x20-\x7F]{8,64}){1}$/
@@ -285,7 +285,7 @@ Item {
         detailsVisible = false;
 
         if (Uuid || !predictableWirelessPassword || passwordDialogVisible) {
-            if (ConnectionState === PlasmaNM.Enums.Deactivated) {
+            if (ConnectionState === NM.Enums.Deactivated) {
                 if (!predictableWirelessPassword && !Uuid) {
                     handler.addAndActivateConnection(DevicePath, SpecificPath);
                 } else if (passwordDialogVisible) {

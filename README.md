@@ -44,11 +44,6 @@ And the following modules from KDE:
 * kcoreaddons
 * solid
 
-These are runtime dependencies from KDE:
-
-* plasma-workspace
-* plasma-nm
-
 Other dependencies:
 
 * pam

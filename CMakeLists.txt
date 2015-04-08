@@ -12,6 +12,8 @@ set(CMAKE_AUTOMOC ON)
 option(ENABLE_SYSTEMD "Enables systemd support" OFF)
 option(ENABLE_ALSA "Enables Alsa mixer backend" ON)
 option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
+option(ENABLE_NETWORK_MANAGER "Enables network indicator based on NetworkManager" ON)
+option(ENABLE_MODEMMANAGER_SUPPORT "Enables ModemManager support" OFF)
 
 # Set version
 set(HAWAII_VERSION_MAJOR 0)
@@ -53,6 +55,14 @@ endif()
 # Adjusting CMAKE_C_FLAGS to get Wayland protocols to compile
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
 
+# Build flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wno-unused-parameter -std=c++11")
+
+# Definitions
+#add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY)
+
 # Add custom uninstall target
 if ("${ECM_VERSION}" VERSION_LESS "1.7.0")
     # ECM 1.7.0 provides this target, so we can't roll our own (see issue #172)
@@ -72,9 +82,6 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSIO
 set(CPACK_SOURCE_IGNORE_FILES "/build/;/.git;/*.user;/.tx/;~$;${CPACK_SOURCE_IGNORE_FILES}")
 include(CPack)
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
-
-# Build flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wno-unused-parameter -std=c++11")
 
 # Assume release build by default
 if(NOT CMAKE_BUILD_TYPE)
@@ -100,6 +107,13 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
              Config
              CoreAddons
              Solid)
+
+# Find NetworkManager-Qt
+if(ENABLE_NETWORK_MANAGER)
+    find_package(KF5NetworkManagerQt 5.8.0)
+    set_package_properties(KF5NetworkManagerQt PROPERTIES
+                           TYPE OPTIONAL)
+endif()
 
 # Find Green Island
 find_package(GreenIsland REQUIRED)

@@ -1,0 +1,4 @@
+module org.hawaii.networkmanager
+plugin nmplugin
+classname NetworkManagerPlugin
+typeinfo plugins.qmltypes
