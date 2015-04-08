@@ -63,10 +63,10 @@ ConfigGroup::ConfigGroup(QQuickItem *parent)
     : QQuickItem(parent),
       d(new ConfigGroupPrivate(this))
 {
-    // Delay and compress everything within 5 seconds into one sync
+    // Delay and compress everything within 250 ms into one sync
     d->syncTimer = new QTimer(this);
     d->syncTimer->setSingleShot(true);
-    d->syncTimer->setInterval(1500);
+    d->syncTimer->setInterval(250);
     connect(d->syncTimer, &QTimer::timeout, this, &ConfigGroup::sync);
 
     // Watch for changes
@@ -74,8 +74,6 @@ ConfigGroup::ConfigGroup(QQuickItem *parent)
     connect(d->watcher, SIGNAL(created(QString)),
             this, SLOT(syncFile(QString)));
     connect(d->watcher, SIGNAL(deleted(QString)),
-            this, SLOT(syncFile(QString)));
-    connect(d->watcher, SIGNAL(dirty(QString)),
             this, SLOT(syncFile(QString)));
 }
 
