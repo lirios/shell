@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.appchooser 0.1 as AppChooser
+import org.hawaii.launcher 0.1 as Launcher
 import "../components"
 
 FocusScope {
@@ -37,12 +37,12 @@ FocusScope {
     id: root
     //height: Themes.Units.gu(17)
 
-    AppChooser.ProcessRunner {
+    Launcher.ProcessRunner {
         id: processRunner
 
         function executeSetting(name) {
             root.closed();
-            runSetting(name);
+            launchApplication("org.hawaii.systempreferences." + name);
         }
     }
 
