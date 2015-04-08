@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQml.Models 2.1
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.launcher 0.1 as Launcher
+import org.hawaii.launcher 0.1 as CppLauncher
 
 GridView {
     readonly property int iconSize: Themes.Units.iconSizes.large
@@ -55,9 +55,9 @@ GridView {
     highlightFollowsCurrentItem: true
     model: VisualDataModel {
         id: visualModel
-        model: Launcher.AppsProxyModel {
+        model: CppLauncher.AppsProxyModel {
             id: appsProxyModel
-            sourceModel: Launcher.AppsModel {
+            sourceModel: CppLauncher.AppsModel {
                 id: appsModel
                 onAppLaunched: grid.appLaunched()
             }

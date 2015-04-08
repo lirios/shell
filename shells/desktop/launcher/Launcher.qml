@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.launcher 0.1 as Launcher
+import org.hawaii.launcher 0.1 as CppLauncher
 
 Item {
     property real iconSize
@@ -75,7 +75,7 @@ Item {
         populate: Transition {
             NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Themes.Units.longDuration }
         }
-        model: Launcher.LauncherModel {
+        model: CppLauncher.LauncherModel {
             id: launcherModel
         }
         delegate: LauncherDelegate {}
