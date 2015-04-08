@@ -17,7 +17,8 @@ Module {
             values: {
                 "NameRole": 257,
                 "CommentRole": 258,
-                "IconNameRole": 259
+                "IconNameRole": 259,
+                "FilterInfoRole": 260
             }
         }
         Enum {
@@ -30,7 +31,9 @@ Module {
             }
         }
         Property { name: "appNameFormat"; type: "NameFormat" }
+        Property { name: "categoryFilter"; type: "string" }
         Signal { name: "refreshing" }
+        Signal { name: "refreshed" }
         Signal {
             name: "appLaunched"
             Parameter { name: "desktopFile"; type: "string" }
@@ -38,7 +41,19 @@ Module {
         Method {
             name: "trigger"
             type: "bool"
-            Parameter { name: "row"; type: "int" }
+            Parameter { name: "index"; type: "QModelIndex" }
+        }
+    }
+    Component {
+        name: "AppsProxyModel"
+        prototype: "QSortFilterProxyModel"
+        exports: ["org.hawaii.launcher/AppsProxyModel 0.1"]
+        exportMetaObjectRevisions: [0]
+        Property { name: "query"; type: "string" }
+        Method {
+            name: "sourceIndex"
+            type: "QModelIndex"
+            Parameter { name: "proxyIndex"; type: "QModelIndex" }
         }
     }
     Component {
@@ -51,10 +66,11 @@ Module {
             values: {
                 "NameRole": 257,
                 "CommentRole": 258,
-                "IconNameRole": 259
+                "IconNameRole": 259,
+                "CategoryRole": 260
             }
         }
-        Property { name: "allCategory"; type: "bool" }
+        Property { name: "includeAllCategory"; type: "bool" }
         Signal { name: "refreshing" }
     }
     Component {
@@ -117,5 +133,36 @@ Module {
             name: "unpin"
             Parameter { name: "appId"; type: "string" }
         }
+    }
+    Component {
+        name: "QAbstractProxyModel"
+        prototype: "QAbstractItemModel"
+        Property { name: "sourceModel"; type: "QAbstractItemModel"; isPointer: true }
+    }
+    Component {
+        name: "QSortFilterProxyModel"
+        prototype: "QAbstractProxyModel"
+        Property { name: "filterRegExp"; type: "QRegExp" }
+        Property { name: "filterKeyColumn"; type: "int" }
+        Property { name: "dynamicSortFilter"; type: "bool" }
+        Property { name: "filterCaseSensitivity"; type: "Qt::CaseSensitivity" }
+        Property { name: "sortCaseSensitivity"; type: "Qt::CaseSensitivity" }
+        Property { name: "isSortLocaleAware"; type: "bool" }
+        Property { name: "sortRole"; type: "int" }
+        Property { name: "filterRole"; type: "int" }
+        Method {
+            name: "setFilterRegExp"
+            Parameter { name: "pattern"; type: "string" }
+        }
+        Method {
+            name: "setFilterWildcard"
+            Parameter { name: "pattern"; type: "string" }
+        }
+        Method {
+            name: "setFilterFixedString"
+            Parameter { name: "pattern"; type: "string" }
+        }
+        Method { name: "clear" }
+        Method { name: "invalidate" }
     }
 }
