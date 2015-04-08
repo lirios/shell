@@ -47,15 +47,6 @@ Item {
         z: 1
         onHeightChanged: root.panelHeightChanged()
         onIndicatorTriggered: {
-            // AppChooser special case
-            if (indicator.name === "appchooser") {
-                // Load AppChooser component
-                if (leftDrawer.component == undefined)
-                    leftDrawer.component = indicator.component;
-                leftDrawer.toggle();
-                return;
-            }
-
             // Close drawer if the current indicator is triggered again
             if (indicator.selected) {
                 if (rightDrawer.expanded) {
