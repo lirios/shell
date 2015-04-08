@@ -10,6 +10,7 @@ set(SOURCES
     launchermodel.cpp
     menuimageprovider.cpp
     plugin.cpp
+    processrunner.cpp
 )
 
 add_library(launcherplugin SHARED ${SOURCES})

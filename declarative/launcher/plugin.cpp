@@ -32,6 +32,7 @@
 #include "launchermodel.h"
 #include "launcheritem.h"
 #include "menuimageprovider.h"
+#include "processrunner.h"
 
 class LauncherPlugin : public QQmlExtensionPlugin
 {
@@ -56,6 +57,7 @@ public:
         qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
         qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                                  QStringLiteral("Cannot instantiate LauncherItem"));
+        qmlRegisterType<ProcessRunner>(uri, 0, 1, "ProcessRunner");
     }
 };
 
