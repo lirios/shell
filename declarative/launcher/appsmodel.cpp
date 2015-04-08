@@ -161,7 +161,7 @@ void AppsModel::refresh()
     m_list.clear();
 
     XdgMenu xdgMenu;
-    xdgMenu.setLogDir("/tmp/");
+    //xdgMenu.setLogDir("/tmp/");
     xdgMenu.setEnvironments(QStringLiteral("X-Hawaii"));
     if (!xdgMenu.read(XdgMenu::getMenuFileName()))
         return;
