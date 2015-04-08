@@ -29,7 +29,10 @@ import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
 import "."
 
-Item {
+MouseArea {
+    acceptedButtons: Qt.NoButton
+    cursorShape: Qt.BlankCursor
+
     Image {
         id: picture
         anchors.fill: parent
@@ -50,15 +53,4 @@ Item {
     BusyIndicator {
         anchors.centerIn: parent
     }
-
-    // Hide the mouse pointer
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-        z: 100
-    }
-
-    Component.onCompleted: mouseArea.cursorShape = Qt.BlankCursor
-    Component.onDestruction: mouseArea.cursorShape = Qt.ArrowCursor
 }
