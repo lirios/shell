@@ -40,6 +40,7 @@ public:
 
     QString name;
     QString comment;
+    QString filterInfo;
     QString iconName;
     QString desktopFile;
 
@@ -126,6 +127,8 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
         return item->comment;
     case IconNameRole:
         return item->iconName;
+    case FilterInfoRole:
+        return item->filterInfo;
     default:
         break;
     }
@@ -236,6 +239,7 @@ void AppsModel::readAppLink(const QDomElement &xml)
     }
 
     entry->comment = xml.attribute(QStringLiteral("comment"));
+    entry->filterInfo = QStringLiteral("%1 %2").arg(entry->name).arg(entry->comment);
     entry->desktopFile = desktopFile;
     entry->iconName = xml.attribute(QStringLiteral("icon"));
     m_list.append(entry);

@@ -182,6 +182,7 @@ Components.Showable {
             TextField {
                 id: searchText
                 placeholderText: qsTr("Type an application name...")
+                onTextChanged: grid.query = text
 
                 Layout.fillWidth: true
             }

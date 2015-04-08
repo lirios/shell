@@ -27,6 +27,7 @@
 #include <QtQml/QtQml>
 
 #include "appsmodel.h"
+#include "appsproxymodel.h"
 #include "categoriesmodel.h"
 #include "launchermodel.h"
 #include "launcheritem.h"
@@ -50,6 +51,7 @@ public:
         Q_ASSERT(uri == QLatin1String("org.hawaii.launcher"));
 
         qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
+        qmlRegisterType<AppsProxyModel>(uri, 0, 1, "AppsProxyModel");
         qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
         qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
         qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",

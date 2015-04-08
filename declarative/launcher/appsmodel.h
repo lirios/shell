@@ -43,7 +43,8 @@ public:
     enum Roles {
         NameRole = Qt::UserRole + 1,
         CommentRole,
-        IconNameRole
+        IconNameRole,
+        FilterInfoRole
     };
 
     enum NameFormat {

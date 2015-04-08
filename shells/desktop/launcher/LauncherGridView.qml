@@ -35,6 +35,7 @@ GridView {
     readonly property int numItemsPerPage: numRows * numColumns
     readonly property int numPages: Math.ceil(grid.count / numItemsPerPage)
     property int currentPage: 0
+    property alias query: appsProxyModel.query
 
     signal appLaunched()
 
@@ -51,9 +52,12 @@ GridView {
     preferredHighlightEnd: 0
     highlightRangeMode: GridView.StrictlyEnforceRange
     highlightFollowsCurrentItem: true
-    model: Launcher.AppsModel {
-        id: appsModel
-        onAppLaunched: grid.appLaunched()
+    model: Launcher.AppsProxyModel {
+        id: appsProxyModel
+        sourceModel: Launcher.AppsModel {
+            id: appsModel
+            onAppLaunched: grid.appLaunched()
+        }
     }
     delegate: LauncherGridDelegate {
         id: delegate
