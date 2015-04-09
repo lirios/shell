@@ -272,10 +272,6 @@ Item {
             // A window was unmapped
             WindowManagement.windowDestroyed(id);
         }
-        onShellWindowMapped: {
-            // A shell window was mapped
-            WindowManagement.shellWindowMapped(window);
-        }
     }
 
     /*
