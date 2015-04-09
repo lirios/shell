@@ -26,6 +26,7 @@
 
 #include <QtQml>
 
+#include "formats.h"
 #include "miscplugin.h"
 #include "keyeventfilter.h"
 #include "standardpaths.h"
@@ -39,10 +40,19 @@ static QObject *standardpathsProvider(QQmlEngine *engine, QJSEngine *jsEngine)
     return paths;
 }
 
+static QObject *formatsProvider(QQmlEngine *, QJSEngine *)
+{
+    return new Formats();
+}
+
 void MiscPlugin::registerTypes(const char *uri)
 {
     // @uri org.hawaii.misc
     Q_ASSERT(uri == QLatin1String("org.hawaii.misc"));
+
+    qmlRegisterSingletonType<Formats>(uri, 0, 1, "Format", formatsProvider);
+    qRegisterMetaType<QLocale::FormatType>();
+    qmlRegisterUncreatableType<KFormat>(uri, 0, 1, "FormatTypes", "");
 
     qmlRegisterType<KeyEventFilter>(uri, 0, 1, "KeyEventFilter");
     qmlRegisterSingletonType<StandardPaths>(uri, 0, 1, "StandardPaths",
