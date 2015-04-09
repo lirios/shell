@@ -26,6 +26,7 @@
 
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QCommandLineParser>
+#include <QtWidgets/QApplication>
 #include <QtCompositor/QWaylandOutput>
 
 #include <GreenIsland/HomeApplication>
@@ -41,8 +42,11 @@
 int main(int argc, char *argv[])
 {
     // Application
-    GreenIsland::HomeApplication app(argc, argv);
+    QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Hawaii"));
+
+    // Home application
+    GreenIsland::HomeApplication homeApp;
 
     // Command line parser
     QCommandLineParser parser;
@@ -75,18 +79,18 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     // Socket
-    app.setSocket(parser.value(socketOption));
+    homeApp.setSocket(parser.value(socketOption));
 
     // Fake screen data
-    app.setFakeScreenData(parser.value(fakeScreenOption));
+    homeApp.setFakeScreenData(parser.value(fakeScreenOption));
 
     // Idle timer
     int idleInterval = parser.value(idleTimeOption).toInt();
     if (idleInterval >= 5)
-        app.setIdleTime(idleInterval * 1000);
+        homeApp.setIdleTime(idleInterval * 1000);
 
     // Create the compositor and run
-    if (!app.run(QStringLiteral("org.hawaii.desktop")))
+    if (!homeApp.run(QStringLiteral("org.hawaii.desktop")))
         return 1;
 
     // Unix signals watcher
@@ -96,7 +100,7 @@ int main(int argc, char *argv[])
 
     // Close all windows when the process is killed
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [=] {
-        GreenIsland::HomeApplication::quit();
+        QApplication::quit();
     });
 
     // Print version information
