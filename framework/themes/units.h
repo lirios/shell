@@ -41,7 +41,7 @@ class Units : public QObject
     Q_OBJECT
     Q_PROPERTY(qreal devicePixelRatio READ devicePixelRatio NOTIFY devicePixelRatioChanged)
     Q_PROPERTY(qreal gridUnit READ gridUnit NOTIFY gridUnitChanged)
-    Q_PROPERTY(QQmlPropertyMap *iconSizes READ iconSizes NOTIFY iconSizesChanged)
+    Q_PROPERTY(QObject *iconSizes READ iconSizes NOTIFY iconSizesChanged)
     Q_PROPERTY(qreal smallSpacing READ smallSpacing NOTIFY spacingChanged)
     Q_PROPERTY(qreal largeSpacing READ largeSpacing NOTIFY spacingChanged)
     Q_PROPERTY(int shortDuration READ shortDuration NOTIFY durationChanged)
