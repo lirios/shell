@@ -216,24 +216,12 @@ Item {
         event.accepted = false;
     }
 
-    Timer {
-        id: idleTimer
-        //interval: compositor.idleInterval
-        onIntervalChanged: {
-            if (running)
-                restart();
-        }
-    }
-
     ListModel {
         id: surfaceModel
     }
 
     Connections {
         target: compositor
-        onIdleInhibitResetRequested: compositor.idleInhibit = 0
-        onIdleTimerStartRequested: idleTimer.running = true
-        onIdleTimerStopRequested: idleTimer.running = false
         onLockedChanged: {
             if (compositor.locked)
                 compositorRoot.state = "lock";
@@ -255,10 +243,6 @@ Item {
         onFadeOut: {
             // Fade the desktop out
             compositorRoot.state = "splash";
-        }
-        onReady: {
-            // Start idle timer
-            idleTimer.running = true
         }
         onWindowMapped: {
             // A window was mapped
