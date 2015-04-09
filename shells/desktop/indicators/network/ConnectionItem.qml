@@ -30,7 +30,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.kde.plasma.core 2.0 as PlasmaCore
 import org.hawaii.misc 0.1 as Misc
 import org.hawaii.networkmanager 0.1 as NM
 
@@ -83,16 +82,6 @@ Item {
             }
         }
     ]
-
-    PlasmaCore.DataSource {
-        property string downloadSource: "network/interfaces/" + DeviceName + "/receiver/data"
-        property string uploadSource: "network/interfaces/" + DeviceName + "/transmitter/data"
-
-        id: dataSource
-        engine: "systemmonitor"
-        connectedSources: showSpeed && indicator.expanded ? [downloadSource, uploadSource] : []
-        interval: 2000
-    }
 
     MouseArea {
         id: mouseArea
@@ -154,13 +143,7 @@ Item {
                                 result += ", " + SecurityTypeString;
                             return result;
                         } else if (ConnectionState === NM.Enums.Activated) {
-                            if (showSpeed && dataSource.data && dataSource.data[dataSource.downloadSource] && dataSource.data[dataSource.uploadSource]) {
-                                var arg1 = Misc.Format.formatByteSize(dataSource.data[dataSource.downloadSource].value * 1024 || 0);
-                                var arg2 = Misc.Format.formatByteSize(dataSource.data[dataSource.uploadSource].value * 1024 || 0)
-                                return qsTr("Connected, ⬇ %1/s, ⬆ %2/s").arg(arg1).arg(arg2);
-                            } else {
-                                return qsTr("Connected");
-                            }
+                            return qsTr("Connected");
                         }
                     }
                     opacity: 0.6
