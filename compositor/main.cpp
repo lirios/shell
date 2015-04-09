@@ -31,6 +31,7 @@
 
 #include <GreenIsland/HomeApplication>
 #include <GreenIsland/Compositor>
+#include <greenisland/greenisland_version.h>
 
 #include "sigwatch/sigwatch.h"
 
@@ -104,11 +105,12 @@ int main(int argc, char *argv[])
     });
 
     // Print version information
-    qDebug() << qPrintable(QStringLiteral("== Hawaii Compositor v%1 ==\n").arg(HAWAII_VERSION_STRING))
-             << "** https://hawaii-desktop.github.io\n"
-             << "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
-             << qPrintable(QStringLiteral("** Build: %1-%2")
-                           .arg(HAWAII_VERSION_STRING).arg(GIT_REV));
+    qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
+           "** https://hawaii-desktop.github.io\n"
+           "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
+           "** Build: %s-%s",
+           HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
+           HAWAII_VERSION_STRING, GIT_REV);
 
     return app.exec();
 }
