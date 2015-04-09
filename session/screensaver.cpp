@@ -29,6 +29,7 @@
 
 #include "screensaver.h"
 #include "screensaveradaptor.h"
+#include "sessionmanager.h"
 
 Q_LOGGING_CATEGORY(SCREENSAVER, "hawaii.session.screensaver")
 
@@ -91,18 +92,27 @@ void ScreenSaver::SimulateUserActivity()
 
 uint ScreenSaver::Inhibit(const QString &appName, const QString &reason)
 {
-    // TODO:
-    return 0;
+    Q_UNUSED(appName)
+    Q_UNUSED(reason)
+
+    static uint cookieSeed = 0;
+    int newCookie = cookieSeed++;
+
+    SessionManager::instance()->idleInhibit();
+
+    return newCookie;
 }
 
 void ScreenSaver::UnInhibit(uint cookie)
 {
-    // TODO:
-    Q_UNUSED(cookie);
+    Q_UNUSED(cookie)
+
+    SessionManager::instance()->idleUninhibit();
 }
 
 void ScreenSaver::Lock()
 {
+    SessionManager::instance()->setLocked(true);
 }
 
 uint ScreenSaver::Throttle(const QString &appName, const QString &reason)
