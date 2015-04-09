@@ -134,7 +134,6 @@ void SessionAdaptor::activateSession(int index)
 void SessionAdaptor::logOut()
 {
     m_sessionManager->logOut();
-    ::exit(EXIT_SUCCESS);
 }
 
 void SessionAdaptor::powerOff()

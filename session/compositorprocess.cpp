@@ -133,6 +133,7 @@ void CompositorProcess::terminate()
 
     m_terminate = true;
     ::kill(m_process->processId(), SIGINT);
+    m_process->waitForFinished();
 }
 
 void CompositorProcess::processError(QProcess::ProcessError error)
