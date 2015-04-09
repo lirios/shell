@@ -50,9 +50,15 @@ Module {
         exports: ["org.hawaii.launcher/AppsProxyModel 0.1"]
         exportMetaObjectRevisions: [0]
         Property { name: "query"; type: "string" }
+        Signal { name: "appLaunched" }
         Method {
             name: "sourceIndex"
             type: "QModelIndex"
+            Parameter { name: "proxyIndex"; type: "QModelIndex" }
+        }
+        Method {
+            name: "trigger"
+            type: "bool"
             Parameter { name: "proxyIndex"; type: "QModelIndex" }
         }
     }
@@ -132,6 +138,17 @@ Module {
         Method {
             name: "unpin"
             Parameter { name: "appId"; type: "string" }
+        }
+    }
+    Component {
+        name: "ProcessRunner"
+        prototype: "QObject"
+        exports: ["org.hawaii.launcher/ProcessRunner 0.1"]
+        exportMetaObjectRevisions: [0]
+        Method {
+            name: "launchApplication"
+            type: "bool"
+            Parameter { name: "name"; type: "string" }
         }
     }
     Component {
