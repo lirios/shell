@@ -48,6 +48,9 @@ public:
     bool start(const QString &socketName);
     void stop();
 
+    void sendIdleInhibit();
+    void sendIdleUninhibit();
+
     void sendLock();
     void sendUnlock();
 

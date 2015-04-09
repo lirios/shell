@@ -96,6 +96,32 @@ void SocketServer::stop()
     qCDebug(SOCKETSERVER) << "Server stopped";
 }
 
+void SocketServer::sendIdleInhibit()
+{
+    if (!m_client)
+        return;
+
+    qCDebug(SOCKETSERVER) << "Send IdleInhibit";
+
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << quint32(SessionMessages::IdleInhibit);
+    m_client->write(data);
+}
+
+void SocketServer::sendIdleUninhibit()
+{
+    if (!m_client)
+        return;
+
+    qCDebug(SOCKETSERVER) << "Send IdleUninhibit";
+
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << quint32(SessionMessages::IdleUninhibit);
+    m_client->write(data);
+}
+
 void SocketServer::sendLock()
 {
     if (!m_client)

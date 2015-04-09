@@ -50,6 +50,9 @@ public:
     bool isIdle() const;
     void setIdle(bool value);
 
+    void idleInhibit();
+    void idleUninhibit();
+
     bool isLocked() const;
     void setLocked(bool value);
 

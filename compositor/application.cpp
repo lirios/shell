@@ -95,8 +95,11 @@ void Application::readyRead()
 
         // Read message
         switch (SessionMessages(type)) {
-        case SessionMessages::Inhibit:
-        case SessionMessages::UnInhibit:
+        case SessionMessages::IdleInhibit:
+            compositor()->incrementIdleInhibit();
+            break;
+        case SessionMessages::IdleUninhibit:
+            compositor()->decrementIdleInhibit();
             break;
         case SessionMessages::Lock:
             compositor()->setLocked(true);
