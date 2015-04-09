@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 #include <QtCore/QDataStream>
+#include <QtCore/QFile>
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
 
@@ -43,6 +44,7 @@ SocketServer::SocketServer(QObject *parent)
 
 SocketServer::~SocketServer()
 {
+    stop();
 }
 
 QString SocketServer::address() const
@@ -60,6 +62,7 @@ bool SocketServer::start(const QString &socketName)
 
     m_server = new QLocalServer(this);
     m_server->setSocketOptions(QLocalServer::UserAccessOption);
+    m_server->removeServer(socketName);
     if (m_server->listen(socketName)) {
         qCDebug(SOCKETSERVER) << "Listening on" << socketName;
         connect(m_server, &QLocalServer::newConnection,
@@ -79,8 +82,15 @@ void SocketServer::stop()
 
     qCDebug(SOCKETSERVER) << "Stopping server...";
 
+    m_server->close();
+
+    QString socketName = address();
+
     m_server->deleteLater();
     m_server = Q_NULLPTR;
+
+    qCDebug(SOCKETSERVER) << "Remove" << socketName;
+    QFile::remove(socketName);
 
     qCDebug(SOCKETSERVER) << "Server stopped";
 }
