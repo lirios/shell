@@ -32,7 +32,6 @@
 
 Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 
-class CompositorLauncher;
 class ProcessLauncher;
 class ScreenSaver;
 class SocketServer;
@@ -41,11 +40,9 @@ class SessionManager : public QObject
 {
     Q_OBJECT
 public:
-    SessionManager(CompositorLauncher *compositorLauncher);
+    SessionManager(QObject *parent = 0);
 
-    CompositorLauncher *compositorLauncher() const {
-        return m_compositorLauncher;
-    }
+    static SessionManager *instance();
 
     void setupEnvironment();
     bool registerDBus();
@@ -66,7 +63,6 @@ public Q_SLOTS:
     void logOut();
 
 private:
-    CompositorLauncher *m_compositorLauncher;
     ProcessLauncher *m_launcher;
     ScreenSaver *m_screenSaver;
     SocketServer *m_server;

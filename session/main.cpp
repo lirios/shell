@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
     }
 
     // Process controller that manages the compositor
-    CompositorLauncher *launcher = new CompositorLauncher();
+    CompositorLauncher *launcher = CompositorLauncher::instance();
     QString mode = parser.value(modeOption);
     if (mode == QStringLiteral("eglfs"))
         launcher->setMode(CompositorLauncher::EglFSMode);
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     }
 
     // Session manager
-    SessionManager *sessionManager = new SessionManager(launcher);
+    SessionManager *sessionManager = SessionManager::instance();
     sessionManager->setupEnvironment();
 
     // Restart with D-Bus session if necessary

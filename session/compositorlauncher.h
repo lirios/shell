@@ -55,6 +55,8 @@ public:
 
     CompositorLauncher(QObject *parent = 0);
 
+    static CompositorLauncher *instance();
+
     Mode mode() const;
     void setMode(const Mode &mode);
 

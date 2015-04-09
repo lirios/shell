@@ -45,22 +45,25 @@
 
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 
-SessionManager::SessionManager(CompositorLauncher *compositorLauncher)
-    : QObject(compositorLauncher)
-    , m_compositorLauncher(compositorLauncher)
+Q_GLOBAL_STATIC(SessionManager, s_sessionManager)
+
+SessionManager::SessionManager(QObject *parent)
+    : QObject(parent)
     , m_launcher(new ProcessLauncher(this))
     , m_screenSaver(new ScreenSaver(this))
     , m_server(new SocketServer(this))
     , m_idle(false)
     , m_locked(false)
 {
+    CompositorLauncher *compositorLauncher = CompositorLauncher::instance();
+
     // Autostart applications as soon as the compositor is ready
-    connect(m_compositorLauncher, &CompositorLauncher::started, this, [this] {
+    connect(compositorLauncher, &CompositorLauncher::started, this, [this] {
         QTimer::singleShot(500, this, SLOT(autostart()));
     });
 
     // Log out when the compositor has finished
-    connect(m_compositorLauncher, &CompositorLauncher::finished,
+    connect(compositorLauncher, &CompositorLauncher::finished,
             this, &SessionManager::logOut);
 
     // Communication between compositor and session manager
@@ -69,7 +72,12 @@ SessionManager::SessionManager(CompositorLauncher *compositorLauncher)
     });
 
     // Listen for compositor messages
-    m_server->start(m_compositorLauncher->sessionSocketName());
+    m_server->start(compositorLauncher->sessionSocketName());
+}
+
+SessionManager *SessionManager::instance()
+{
+    return s_sessionManager();
 }
 
 void SessionManager::setupEnvironment()
@@ -188,7 +196,7 @@ void SessionManager::logOut()
     m_launcher->closeApplications();
 
     // Stop the compositor
-    m_compositorLauncher->terminate();
+    CompositorLauncher::instance()->terminate();
 
     // Exit
     QCoreApplication::quit();

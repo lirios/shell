@@ -33,6 +33,8 @@
 
 Q_LOGGING_CATEGORY(COMPOSITOR, "hawaii.session.compositor")
 
+Q_GLOBAL_STATIC(CompositorLauncher, s_compositorLauncher)
+
 CompositorLauncher::CompositorLauncher(QObject *parent)
     : QObject(parent)
     , m_mode(UnknownMode)
@@ -55,6 +57,11 @@ CompositorLauncher::CompositorLauncher(QObject *parent)
             this, &CompositorLauncher::finished);
     connect(m_compositor, &CompositorProcess::finished,
             this, &CompositorLauncher::finished);
+}
+
+CompositorLauncher *CompositorLauncher::instance()
+{
+    return s_compositorLauncher();
 }
 
 CompositorLauncher::Mode CompositorLauncher::mode() const
