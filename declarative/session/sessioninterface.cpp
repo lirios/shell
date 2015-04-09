@@ -132,16 +132,6 @@ SessionInterface::~SessionInterface()
     delete m_interface;
 }
 
-bool SessionInterface::isIdle() const
-{
-    return m_interface->property("idle").toBool();
-}
-
-void SessionInterface::setIdle(bool value)
-{
-    m_interface->setProperty("idle", value);
-}
-
 bool SessionInterface::canLock() const
 {
     return m_canLock;

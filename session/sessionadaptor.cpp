@@ -32,7 +32,6 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     , m_sessionManager(sessionManager)
     , m_powerManager(new PowerManager(this))
     , m_loginManager(new LoginManager(this))
-    , m_idle(false)
 {
     // Relay session locked/unlocked signals
     connect(m_loginManager, &LoginManager::sessionLocked, this, [this] {
@@ -53,25 +52,13 @@ SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     });
 
     // Logout session before the system goes off
-    connect(m_loginManager, &LoginManager::logOutRequested, [=] {
-        logOut();
+    connect(m_loginManager, &LoginManager::logOutRequested,
+            this, &SessionAdaptor::logOut);
+
+    // Set idle
+    connect(m_sessionManager, &SessionManager::idleChanged, this, [this](bool value) {
+        m_loginManager->setIdle(value);
     });
-}
-
-bool SessionAdaptor::isIdle() const
-{
-    return m_idle;
-}
-
-void SessionAdaptor::setIdle(bool value)
-{
-    if (m_idle == value)
-        return;
-
-    m_loginManager->setIdle(value);
-
-    m_idle = value;
-    Q_EMIT idleChanged();
 }
 
 bool SessionAdaptor::isLocked() const

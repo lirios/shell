@@ -29,12 +29,12 @@
 #include <QtWidgets/QApplication>
 #include <QtCompositor/QWaylandOutput>
 
-#include <GreenIsland/HomeApplication>
 #include <GreenIsland/Compositor>
 #include <greenisland/greenisland_version.h>
 
 #include "sigwatch/sigwatch.h"
 
+#include "application.h"
 #include "config.h"
 #include "gitsha1.h"
 
@@ -46,14 +46,17 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Hawaii"));
 
-    // Home application
-    GreenIsland::HomeApplication homeApp;
-
     // Command line parser
     QCommandLineParser parser;
     parser.setApplicationDescription(TR("Wayland compositor for the Hawaii desktop environment"));
     parser.addHelpOption();
     parser.addVersionOption();
+
+    // Session manager socket
+    QCommandLineOption sessionSocketOption(QStringLiteral("session-socket"),
+                                           TR("Session manager socket."),
+                                           TR("name"));
+    parser.addOption(sessionSocketOption);
 
     // Wayland socket
     QCommandLineOption socketOption(QStringList() << QStringLiteral("s") << QStringLiteral("socket"),
@@ -78,6 +81,9 @@ int main(int argc, char *argv[])
 
     // Parse command line
     parser.process(app);
+
+    // Home application
+    Application homeApp(parser.value(sessionSocketOption));
 
     // Socket
     homeApp.setSocket(parser.value(socketOption));

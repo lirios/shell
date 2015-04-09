@@ -1,4 +1,5 @@
 include_directories(
+    ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_SOURCE_DIR}/3rdparty
 )
@@ -12,6 +13,7 @@ set(SOURCES
     sessionadaptor.cpp
     sessionleader.cpp
     sessionmanager.cpp
+    socketserver.cpp
     loginmanager/loginmanager.cpp
     loginmanager/loginmanagerbackend.cpp
     loginmanager/logindbackend.cpp
@@ -34,6 +36,7 @@ add_executable(hawaii-session ${SOURCES})
 target_link_libraries(hawaii-session
     Qt5::Core
     Qt5::DBus
+    Qt5::Network
     HawaiiSigWatch
 )
 

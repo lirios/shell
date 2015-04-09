@@ -37,6 +37,7 @@ CompositorLauncher::CompositorLauncher(QObject *parent)
     : QObject(parent)
     , m_mode(UnknownMode)
     , m_hardware(UnknownHardware)
+    , m_sessionSocketName(QStringLiteral("hawaii-session"))
     , m_hasLibInputPlugin(false)
     , m_weston(new CompositorProcess(false, this))
     , m_compositor(new CompositorProcess(false, this))
@@ -69,6 +70,11 @@ void CompositorLauncher::setMode(const Mode &mode)
 QString CompositorLauncher::socketName() const
 {
     return m_socketName;
+}
+
+QString CompositorLauncher::sessionSocketName() const
+{
+    return m_sessionSocketName;
 }
 
 void CompositorLauncher::start()
@@ -253,6 +259,7 @@ QStringList CompositorLauncher::compositorArgs() const
 
     // Standard arguments
     args << QStringLiteral("-platformtheme") << QStringLiteral("Hawaii");
+    args << QStringLiteral("--session-socket=%1").arg(m_sessionSocketName);
 
     // Specific arguments
     switch (m_mode) {

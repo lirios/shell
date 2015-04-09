@@ -228,14 +228,6 @@ Item {
             else
                 compositorRoot.state = "session";
         }
-        onIdle: {
-            // Set idle hint
-            session.idle = true;
-        }
-        onWake: {
-            // Unset idle hint
-            session.idle = false;
-        }
         onFadeIn: {
             // Bring user layer up
             compositorRoot.state = "session";

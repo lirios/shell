@@ -37,14 +37,10 @@ class SessionManager;
 class SessionAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_PROPERTY(bool idle READ isIdle WRITE setIdle NOTIFY idleChanged)
     Q_PROPERTY(bool locked READ isLocked NOTIFY lockedChanged)
     Q_CLASSINFO("D-Bus Interface", "org.hawaii.session")
 public:
     SessionAdaptor(SessionManager *sessionManager);
-
-    bool isIdle() const;
-    void setIdle(bool value);
 
     bool isLocked() const;
 
@@ -82,7 +78,6 @@ private:
     SessionManager *m_sessionManager;
     PowerManager *m_powerManager;
     LoginManager *m_loginManager;
-    bool m_idle;
 };
 
 #endif // SESSIONADAPTOR_H

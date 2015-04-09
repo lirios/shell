@@ -59,6 +59,7 @@ public:
     void setMode(const Mode &mode);
 
     QString socketName() const;
+    QString sessionSocketName() const;
 
 public Q_SLOTS:
     void start();
@@ -74,6 +75,7 @@ private:
     Mode m_mode;
     Hardware m_hardware;
     QString m_socketName;
+    QString m_sessionSocketName;
     bool m_hasLibInputPlugin;
     CompositorProcess *m_weston;
     CompositorProcess *m_compositor;

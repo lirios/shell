@@ -38,6 +38,7 @@
 #include "screensaver.h"
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
+#include "socketserver.h"
 
 #include <sys/types.h>
 #include <signal.h>
@@ -49,6 +50,8 @@ SessionManager::SessionManager(CompositorLauncher *compositorLauncher)
     , m_compositorLauncher(compositorLauncher)
     , m_launcher(new ProcessLauncher(this))
     , m_screenSaver(new ScreenSaver(this))
+    , m_server(new SocketServer(this))
+    , m_idle(false)
     , m_locked(false)
 {
     // Autostart applications as soon as the compositor is ready
@@ -59,6 +62,14 @@ SessionManager::SessionManager(CompositorLauncher *compositorLauncher)
     // Log out when the compositor has finished
     connect(m_compositorLauncher, &CompositorLauncher::finished,
             this, &SessionManager::logOut);
+
+    // Communication between compositor and session manager
+    connect(m_server, &SocketServer::idleChanged, this, [this](bool value) {
+        setIdle(value);
+    });
+
+    // Listen for compositor messages
+    m_server->start(m_compositorLauncher->sessionSocketName());
 }
 
 void SessionManager::setupEnvironment()
@@ -134,6 +145,20 @@ bool SessionManager::registerDBus()
         return false;
 
     return true;
+}
+
+bool SessionManager::isIdle() const
+{
+    return m_idle;
+}
+
+void SessionManager::setIdle(bool value)
+{
+    if (m_idle == value)
+        return;
+
+    m_idle = value;
+    Q_EMIT idleChanged(value);
 }
 
 bool SessionManager::isLocked() const

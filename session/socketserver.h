@@ -24,63 +24,39 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#ifndef SOCKETSERVER_H
+#define SOCKETSERVER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
+class QLocalServer;
 
-class CompositorLauncher;
-class ProcessLauncher;
-class ScreenSaver;
-class SocketServer;
+Q_DECLARE_LOGGING_CATEGORY(SERVERSOCKET)
 
-class SessionManager : public QObject
+class SocketServer : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(SocketServer)
 public:
-    SessionManager(CompositorLauncher *compositorLauncher);
+    SocketServer(QObject *parent = 0);
+    ~SocketServer();
 
-    CompositorLauncher *compositorLauncher() const {
-        return m_compositorLauncher;
-    }
+    QString address() const;
 
-    void setupEnvironment();
-    bool registerDBus();
-
-    bool isIdle() const;
-    void setIdle(bool value);
-
-    bool isLocked() const;
-
-    static constexpr const char *interfaceName = "org.hawaii.session";
-    static constexpr const char *objectPath = "/HawaiiSession";
+    bool start(const QString &socketName);
+    void stop();
 
 Q_SIGNALS:
-    void idleChanged(bool value);
-    void loggedOut();
-
-public Q_SLOTS:
-    void logOut();
+    void connected();
+    void idleChanged(bool idle);
 
 private:
-    CompositorLauncher *m_compositorLauncher;
-    ProcessLauncher *m_launcher;
-    ScreenSaver *m_screenSaver;
-    SocketServer *m_server;
-    QList<qint64> m_processes;
-
-    bool m_idle;
-    bool m_locked;
-
-    void setLocked(bool value);
-
-    friend class SessionAdaptor;
+    QLocalServer *m_server;
 
 private Q_SLOTS:
-    void autostart();
+    void newConnection();
+    void readyRead();
 };
 
-#endif // SESSIONMANAGER_H
+#endif // SOCKETSERVER_H

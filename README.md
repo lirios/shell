@@ -131,6 +131,7 @@ to learn how to enable them.
 * Session manager:
   * **hawaii.session.processcontroller:** Starts the compositor
   * **hawaii.session.manager:** Manages the session
+  * **hawaii.session.socket:** Session manager/Compositor communication
   * **hawaii.session.launcher:** Process launcher and application tracker
   * **hawaii.session.screensaver:** Lock, idle and inhibit interface
   * **hawaii.session.loginmanager:** login manager subsystem
