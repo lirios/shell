@@ -41,7 +41,10 @@ public:
 
     Q_INVOKABLE QModelIndex sourceIndex(const QModelIndex &proxyIndex) const;
 
+    Q_INVOKABLE bool trigger(const QModelIndex &proxyIndex);
+
 Q_SIGNALS:
+    void appLaunched();
     void queryChanged();
 
 private:

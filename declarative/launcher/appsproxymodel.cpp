@@ -35,6 +35,11 @@ AppsProxyModel::AppsProxyModel(QObject *parent)
 
     // Filter the right role
     setFilterRole(AppsModel::FilterInfoRole);
+
+    // Source model
+    AppsModel *model = new AppsModel(this);
+    connect(model, &AppsModel::appLaunched, this, &AppsProxyModel::appLaunched);
+    setSourceModel(model);
 }
 
 QString AppsProxyModel::query() const
@@ -55,6 +60,11 @@ void AppsProxyModel::setQuery(const QString &query)
 QModelIndex AppsProxyModel::sourceIndex(const QModelIndex &proxyIndex) const
 {
     return mapToSource(proxyIndex);
+}
+
+bool AppsProxyModel::trigger(const QModelIndex &proxyIndex)
+{
+    return static_cast<AppsModel *>(sourceModel())->trigger(sourceIndex(proxyIndex));
 }
 
 #include "moc_appsproxymodel.cpp"
