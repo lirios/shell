@@ -143,11 +143,11 @@ int main(int argc, char *argv[])
     });
 
     // Print version information
-    qDebug() << qPrintable(QStringLiteral("== Hawaii Session v%1 ==\n").arg(HAWAII_VERSION_STRING))
-             << "** https://hawaii-desktop.github.io\n"
-             << "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
-             << qPrintable(QStringLiteral("** Build: %1-%2")
-                           .arg(HAWAII_VERSION_STRING).arg(GIT_REV));
+    qDebug("== Hawaii Session v%s ==\n"
+           "** https://hawaii-desktop.github.io\n"
+           "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
+           "** Build: %s-%s",
+           HAWAII_VERSION_STRING, HAWAII_VERSION_STRING, GIT_REV);
 
     // Register all D-Bus services
     if (!sessionManager->registerDBus())
