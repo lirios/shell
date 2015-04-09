@@ -51,12 +51,14 @@ public:
     void setIdle(bool value);
 
     bool isLocked() const;
+    void setLocked(bool value);
 
     static constexpr const char *interfaceName = "org.hawaii.session";
     static constexpr const char *objectPath = "/HawaiiSession";
 
 Q_SIGNALS:
     void idleChanged(bool value);
+    void lockedChanged(bool value);
     void loggedOut();
 
 public Q_SLOTS:
@@ -70,10 +72,6 @@ private:
 
     bool m_idle;
     bool m_locked;
-
-    void setLocked(bool value);
-
-    friend class SessionAdaptor;
 
 private Q_SLOTS:
     void autostart();

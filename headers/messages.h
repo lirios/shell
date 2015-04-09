@@ -29,9 +29,18 @@
 
 namespace Hawaii {
 
+/*! Messages from compositor to session manager */
 enum class CompositorMessages {
     Connected = 0,
     SetIdle
+};
+
+/*! Messages from session manager to compositor */
+enum class SessionMessages {
+    Inhibit = 0,
+    UnInhibit,
+    Lock,
+    Unlock
 };
 
 } // namespace Hawaii

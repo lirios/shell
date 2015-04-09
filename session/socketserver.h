@@ -31,6 +31,7 @@
 #include <QtCore/QLoggingCategory>
 
 class QLocalServer;
+class QLocalSocket;
 
 Q_DECLARE_LOGGING_CATEGORY(SERVERSOCKET)
 
@@ -47,12 +48,16 @@ public:
     bool start(const QString &socketName);
     void stop();
 
+    void sendLock();
+    void sendUnlock();
+
 Q_SIGNALS:
     void connected();
     void idleChanged(bool idle);
 
 private:
     QLocalServer *m_server;
+    QLocalSocket *m_client;
 
 private Q_SLOTS:
     void newConnection();

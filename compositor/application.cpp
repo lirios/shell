@@ -86,6 +86,28 @@ void Application::disconnected()
 
 void Application::readyRead()
 {
+    QDataStream input(m_sessionSocket);
+
+    while (input.device()->bytesAvailable()) {
+        // Read type
+        quint32 type;
+        input >> type;
+
+        // Read message
+        switch (SessionMessages(type)) {
+        case SessionMessages::Inhibit:
+        case SessionMessages::UnInhibit:
+            break;
+        case SessionMessages::Lock:
+            compositor()->setLocked(true);
+            break;
+        case SessionMessages::Unlock:
+            compositor()->setLocked(false);
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void Application::error()

@@ -39,6 +39,7 @@ using namespace Hawaii;
 SocketServer::SocketServer(QObject *parent)
     : QObject(parent)
     , m_server(Q_NULLPTR)
+    , m_client(Q_NULLPTR)
 {
 }
 
@@ -95,13 +96,44 @@ void SocketServer::stop()
     qCDebug(SOCKETSERVER) << "Server stopped";
 }
 
+void SocketServer::sendLock()
+{
+    if (!m_client)
+        return;
+
+    qCDebug(SOCKETSERVER) << "Send Lock";
+
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << quint32(SessionMessages::Lock);
+    m_client->write(data);
+}
+
+void SocketServer::sendUnlock()
+{
+    if (!m_client)
+        return;
+
+    qCDebug(SOCKETSERVER) << "Send Unlock";
+
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << quint32(SessionMessages::Unlock);
+    m_client->write(data);
+}
+
 void SocketServer::newConnection()
 {
-    QLocalSocket *socket = m_server->nextPendingConnection();
-    connect(socket, &QLocalSocket::readyRead,
+    if (m_client)
+        return;
+
+    m_client = m_server->nextPendingConnection();
+    connect(m_client, &QLocalSocket::readyRead,
             this, &SocketServer::readyRead);
-    connect(socket, &QLocalSocket::disconnected,
-            socket, &QLocalSocket::deleteLater);
+    connect(m_client, &QLocalSocket::disconnected, this, [this] {
+        m_client->deleteLater();
+        m_client = Q_NULLPTR;
+    });
 }
 
 void SocketServer::readyRead()
