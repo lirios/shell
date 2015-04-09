@@ -27,28 +27,28 @@
 import QtQuick 2.0
 import QtQuick.Controls.Private 1.0 as QtControlsPrivate
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 
 QtControlsPrivate.ToolButtonStyle {
     id: style
     panel: Item {
         id: styleitem
-        implicitWidth: (hasIcon ? icon.width + Units.smallSpacing : 0) +
+        implicitWidth: (hasIcon ? icon.width + Themes.Units.smallSpacing : 0) +
                        label.paintedWidth +
-                       (arrow.visible ? arrow.width + Units.smallSpacing : 0) +
+                       (arrow.visible ? arrow.width + Themes.Units.smallSpacing : 0) +
                        frame.border.left + frame.border.right +
-                       (2 * Units.smallSpacing)
+                       (2 * Themes.Units.smallSpacing)
         implicitHeight: Math.max(hasIcon ? icon.height : 0, label.paintedHeight) +
-                        (3 * Units.smallSpacing)
+                        (3 * Themes.Units.smallSpacing)
 
         readonly property bool hasIcon: icon.status === Image.Ready || icon.status === Image.Loading
-        readonly property real buttonRadius: Units.dp(4)
+        readonly property real buttonRadius: Themes.Units.dp(4)
 
         Component {
             id: normalComponent
 
             Rectangle {
-                property color c: Theme.palette.panel.backgroundColor
+                property color c: Themes.Theme.palette.panel.backgroundColor
 
                 id: baserect
                 anchors.fill: parent
@@ -80,7 +80,7 @@ QtControlsPrivate.ToolButtonStyle {
             id: pressedComponent
 
             Rectangle {
-                property color c: Theme.palette.panel.backgroundColor
+                property color c: Themes.Theme.palette.panel.backgroundColor
 
                 id: baserect
                 anchors.fill: parent
@@ -112,7 +112,7 @@ QtControlsPrivate.ToolButtonStyle {
             id: hoverComponent
 
             Rectangle {
-                property color c: Theme.palette.panel.backgroundColor
+                property color c: Themes.Theme.palette.panel.backgroundColor
 
                 id: baserect
                 anchors.fill: parent
@@ -164,7 +164,7 @@ QtControlsPrivate.ToolButtonStyle {
                 anchors.centerIn: parent
                 text: control.text
                 renderType: QtControlsPrivate.Settings.isMobile ? Text.QtRendering : Text.NativeRendering
-                color: Theme.palette.panel.textColor
+                color: Themes.Theme.palette.panel.textColor
             }
 
             Components.Icon {
@@ -178,8 +178,8 @@ QtControlsPrivate.ToolButtonStyle {
                         return control.iconSource;
                     return "";
                 }
-                color: Theme.palette.panel.textColor
-                width: units.iconSizes.smallMedium
+                color: Themes.Theme.palette.panel.textColor
+                width: Themes.Units.iconSizes.smallMedium
                 height: width
             }
         }

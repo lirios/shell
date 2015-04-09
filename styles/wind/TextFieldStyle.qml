@@ -27,28 +27,28 @@
 import QtQuick 2.0
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 
 QtControlsStyle.TextFieldStyle {
     property QtObject clearButton: QtObject {
         property string iconName: "edit-clear-rtl-symbolic"
         property url iconSource: ""
-        property color color: Theme.palette.view.textColor
-        property real iconSize: units.iconSizes.small
+        property color color: Themes.Theme.palette.view.textColor
+        property real iconSize: Themes.Units.iconSizes.small
     }
 
     id: style
-    textColor: Theme.palette.view.textColor
-    selectionColor: Theme.palette.view.selectedBackgroundColor
-    selectedTextColor: Theme.palette.view.selectedTextColor
-    placeholderTextColor: Theme.palette.rgba(Theme.palette.view.textColor, 0.5)
+    textColor: Themes.Theme.palette.view.textColor
+    selectionColor: Themes.Theme.palette.view.selectedBackgroundColor
+    selectedTextColor: Themes.Theme.palette.view.selectedTextColor
+    placeholderTextColor: Themes.Theme.palette.rgba(Themes.Theme.palette.view.textColor, 0.5)
     background: Item {
         anchors.fill: parent
 
         Rectangle {
             anchors.fill: parent
             anchors.bottomMargin: -1
-            color: Theme.palette.rgba(Theme.palette.view.backgroundColor, 0.26)
+            color: Themes.Theme.palette.rgba(Themes.Theme.palette.view.backgroundColor, 0.26)
             radius: baserect.radius
         }
 
@@ -56,12 +56,12 @@ QtControlsStyle.TextFieldStyle {
             id: baserect
             anchors.fill: parent
             gradient: Gradient {
-                GradientStop { color: Qt.darker(Theme.palette.view.backgroundColor, 1.2); position: 0}
-                GradientStop { color: Theme.palette.view.backgroundColor; position: 0.1 }
-                GradientStop { color: Theme.palette.view.backgroundColor; position: 1 }
+                GradientStop { color: Qt.darker(Themes.Theme.palette.view.backgroundColor, 1.2); position: 0}
+                GradientStop { color: Themes.Theme.palette.view.backgroundColor; position: 0.1 }
+                GradientStop { color: Themes.Theme.palette.view.backgroundColor; position: 1 }
             }
             radius: 4
-            border.color: control.activeFocus ? Theme.palette.view.selectedBackgroundColor : Qt.darker(Theme.palette.view.backgroundColor, 1.5)
+            border.color: control.activeFocus ? Themes.Theme.palette.view.selectedBackgroundColor : Qt.darker(Themes.Theme.palette.view.backgroundColor, 1.5)
         }
     }
 }

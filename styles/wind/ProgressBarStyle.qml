@@ -26,16 +26,16 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 
 QtControlsStyle.ProgressBarStyle {
     id: style
     background: Rectangle {
-        property color baseColor: Theme.palette.panel.backgroundColor
-        property color highlightColor: Theme.palette.panel.selectedBackgroundColor
+        property color baseColor: Themes.Theme.palette.panel.backgroundColor
+        property color highlightColor: Themes.Theme.palette.panel.selectedBackgroundColor
 
-        implicitWidth: units.gridUnit * 20
-        implicitHeight: units.gridUnit
+        implicitWidth: Themes.Units.gu(20)
+        implicitHeight: Themes.Units.gu(1)
         border.color: Qt.darker(baseColor, 3.0)
         radius: 6
         gradient: Gradient {
@@ -62,7 +62,7 @@ QtControlsStyle.ProgressBarStyle {
         }
     }
     progress: Rectangle {
-        property color progressColor: Theme.palette.panel.selectedBackgroundColor
+        property color progressColor: Themes.Theme.palette.panel.selectedBackgroundColor
 
         anchors {
             fill: parent

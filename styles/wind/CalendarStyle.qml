@@ -29,20 +29,20 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.2 as QtControlsStyle
 import QtQuick.Controls.Private 1.0 as QtControlsPrivate
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 import Hawaii.Controls 1.0 as Controls
 
 QtControlsStyle.CalendarStyle {
     id: style
     background: Item {}
-    gridColor: Theme.palette.rgba(Theme.palette.panel.textColor, 0.3)
+    gridColor: Themes.Theme.palette.rgba(Themes.Theme.palette.panel.textColor, 0.3)
     gridVisible: true
     navigationBar: RowLayout {
         width: parent.width
-        spacing: units.smallSpacing
+        spacing: Themes.Units.smallSpacing
 
         ToolButton {
-            //iconSize: units.iconSizes.small
+            //iconSize: Themes.Units.iconSizes.small
             iconName: "go-previous-symbolic"
             //flat: true
             onClicked: control.showPreviousMonth()
@@ -62,7 +62,7 @@ QtControlsStyle.CalendarStyle {
         }
 
         ToolButton {
-            //iconSize: units.iconSizes.small
+            //iconSize: Themes.Units.iconSizes.small
             iconName: "go-next-symbolic"
             //flat: true
             onClicked: control.showNextMonth()
@@ -77,18 +77,18 @@ QtControlsStyle.CalendarStyle {
             anchors.fill: parent
             anchors.margins: styleData.selected ? -1 : 0
             border.color: "transparent"
-            color: styleData.date !== undefined && styleData.selected ? Theme.palette.panel.selectedBackgroundColor : "transparent"
+            color: styleData.date !== undefined && styleData.selected ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
         }
 
         Text {
             id: label
             anchors.centerIn: parent
             color: {
-                var theColor = Theme.palette.rgba(Theme.palette.panel.textColor, 0.5); //Qt.lighter(Theme.palette.panel.textColor, 1.4);
+                var theColor = Themes.Theme.palette.rgba(Themes.Theme.palette.panel.textColor, 0.5); //Qt.lighter(Themes.Theme.palette.panel.textColor, 1.4);
                 if (styleData.valid) {
-                    theColor = styleData.visibleMonth ? Qt.darker(Theme.palette.panel.textColor, 1.2) : Qt.ligther(Theme.palette.panel.textColor, 1.35);
+                    theColor = styleData.visibleMonth ? Qt.darker(Themes.Theme.palette.panel.textColor, 1.2) : Qt.ligther(Themes.Theme.palette.panel.textColor, 1.35);
                     if (styleData.selected)
-                        theColor = Theme.palette.panel.selectedBackgroundColor;
+                        theColor = Themes.Theme.palette.panel.selectedBackgroundColor;
                 }
                 return theColor;
             }
@@ -97,25 +97,25 @@ QtControlsStyle.CalendarStyle {
         }
     }
     dayOfWeekDelegate: Rectangle {
-        color: style.gridVisible ? Theme.palette.rgba(Theme.palette.panel.backgroundColor, 0.5) : "transparent"
-        implicitHeight: Theme.mSize(Theme.smallestFont).height
+        color: style.gridVisible ? Themes.Theme.palette.rgba(Themes.Theme.palette.panel.backgroundColor, 0.5) : "transparent"
+        implicitHeight: Themes.Theme.mSize(Themes.Theme.smallestFont).height
 
         Text {
             anchors.centerIn: parent
             text: control.__locale.dayName(styleData.dayOfWeek, control.dayOfWeekFormat)
-            font: Theme.smallestFont
-            color: Theme.palette.panel.textColor
+            font: Themes.Theme.smallestFont
+            color: Themes.Theme.palette.panel.textColor
             renderType: QtControlsPrivate.Settings.isMobile ? Text.QtRendering : Text.NativeRendering
         }
     }
     weekNumberDelegate: Item {
-        implicitWidth: 2 * Theme.mSize(Theme.smallestFont).width + units.smallSpacing
+        implicitWidth: 2 * Themes.Theme.mSize(Themes.Theme.smallestFont).width + Themes.Units.smallSpacing
 
         Text {
             anchors.centerIn: parent
             text: styleData.weekNumber
-            font: Theme.smallestFont
-            color: Theme.palette.panel.textColor
+            font: Themes.Theme.smallestFont
+            color: Themes.Theme.palette.panel.textColor
             renderType: QtControlsPrivate.Settings.isMobile ? Text.QtRendering : Text.NativeRendering
         }
     }

@@ -28,7 +28,7 @@ import QtQuick 2.2
 import QtQuick.Controls.Styles 1.1 as QtControlsStyle
 import QtQuick.Controls.Private 1.0 as QtControlsPrivate
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 
 QtControlsStyle.ScrollViewStyle {
     id: style
@@ -37,8 +37,8 @@ QtControlsStyle.ScrollViewStyle {
         property bool sticky: false
         property bool hovered: styleData.hovered
 
-        implicitWidth: units.gridUnit
-        implicitHeight: units.gridUnit * 12
+        implicitWidth: Themes.Units.gu(1)
+        implicitHeight: Themes.Units.gu(12)
         clip: true
         opacity: transientScrollBars ? 0.5 : 1.0
         visible: !QtControlsPrivate.Settings.hasTouchScreen && (!transientScrollBars || sticky)
@@ -51,17 +51,17 @@ QtControlsStyle.ScrollViewStyle {
             anchors.leftMargin: styleData.horizontal ? -2 : 0
             anchors.topMargin: styleData.horizontal ? 0 : -2
             anchors.bottomMargin: styleData.horizontal ? -1 : -2
-            border.color: Qt.darker(Theme.palette.panel.backgroundColor, 1.8)
-            color: Qt.lighter(Theme.palette.panel.backgroundColor, 1.5)
-            radius: units.gridUnit * 0.6
+            border.color: Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.8)
+            color: Qt.lighter(Themes.Theme.palette.panel.backgroundColor, 1.5)
+            radius: Themes.Units.gu(0.6)
         }
     }
     handle: Item {
         property bool sticky: false
         property bool hovered: __activeControl !== "none"
 
-        implicitWidth: units.gridUnit + 1
-        implicitHeight: units.gridUnit * 12 + 1
+        implicitWidth: Themes.Units.gu(1) + 1
+        implicitHeight: Themes.Units.gu(12) + 1
         onHoveredChanged: if (hovered) sticky = true
         onVisibleChanged: if (!visible) sticky = false
 
@@ -71,27 +71,27 @@ QtControlsStyle.ScrollViewStyle {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.left: styleData.horizontal ? parent.left : undefined
-            border.width: transientScrollBars ? units.gridUnit * 0.15 : units.gridUnit * 0.05
-            border.color: Qt.darker(Theme.palette.panel.backgroundColor, 1.8)
-            color: Qt.darker(Theme.palette.panel.backgroundColor, 1.4)
-            radius: units.gridUnit * 0.6
-            width: !styleData.horizontal && transientScrollBars ? sticky ? units.gridUnit * 1.3 : units.gridUnit : parent.width
-            height: styleData.horizontal && transientScrollBars ? sticky ? units.gridUnit * 1.3 : units.gridUnit : parent.height
+            border.width: transientScrollBars ? Themes.Units.gu(0.15) : Themes.Units.gu(0.05)
+            border.color: Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.8)
+            color: Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.4)
+            radius: Themes.Units.gu(0.6)
+            width: !styleData.horizontal && transientScrollBars ? sticky ? Themes.Units.gu(1.3) : Themes.Units.gu(1) : parent.width
+            height: styleData.horizontal && transientScrollBars ? sticky ? Themes.Units.gu(1.3) : Themes.Units.gu(1) : parent.height
 
             Behavior on width {
                 enabled: !styleData.horizontal && transientScrollBars
-                NumberAnimation { duration: units.longDuration }
+                NumberAnimation { duration: Themes.Units.longDuration }
             }
 
             Behavior on height {
                 enabled: !styleData.horizontal && transientScrollBars
-                NumberAnimation { duration: units.longDuration }
+                NumberAnimation { duration: Themes.Units.longDuration }
             }
         }
     }
     incrementControl: Item {
-        implicitWidth: transientScrollBars ? 0 : units.gridUnit
-        implicitHeight: transientScrollBars ? 0 : units.gridUnit
+        implicitWidth: transientScrollBars ? 0 : Themes.Units.gu(1)
+        implicitHeight: transientScrollBars ? 0 : Themes.Units.gu(1)
         visible: !transientScrollBars
 
         Item {
@@ -108,8 +108,8 @@ QtControlsStyle.ScrollViewStyle {
         }
     }
     decrementControl: Item {
-        implicitWidth: transientScrollBars ? 0 : units.gridUnit
-        implicitHeight: transientScrollBars ? 0 : units.gridUnit
+        implicitWidth: transientScrollBars ? 0 : Themes.Units.gu(1)
+        implicitHeight: transientScrollBars ? 0 : Themes.Units.gu(1)
         visible: !transientScrollBars
 
         Item {
