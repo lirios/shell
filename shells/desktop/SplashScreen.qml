@@ -31,7 +31,7 @@ import "."
 
 MouseArea {
     acceptedButtons: Qt.NoButton
-    cursorShape: Qt.BlankCursor
+    //cursorShape: Qt.BlankCursor
 
     Image {
         id: picture

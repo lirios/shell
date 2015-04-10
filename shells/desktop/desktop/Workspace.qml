@@ -33,7 +33,7 @@ MouseArea {
 
     id: root
     acceptedButtons: Qt.NoButton
-    cursorShape: Qt.ArrowCursor
+    //cursorShape: Qt.ArrowCursor
 
     Effects {
         id: effects
