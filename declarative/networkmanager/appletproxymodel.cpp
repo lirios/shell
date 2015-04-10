@@ -1,5 +1,6 @@
 /*
     Copyright 2013-2014 Jan Grulich <jgrulich@redhat.com>
+    Copyright 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -89,6 +90,16 @@ AppletProxyModel::AppletProxyModel(QObject* parent)
 
 AppletProxyModel::~AppletProxyModel()
 {
+}
+
+QAbstractItemModel *AppletProxyModel::sourceModel() const
+{
+    return QSortFilterProxyModel::sourceModel();
+}
+
+void AppletProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
+{
+    QSortFilterProxyModel::setSourceModel(sourceModel);
 }
 
 bool AppletProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const

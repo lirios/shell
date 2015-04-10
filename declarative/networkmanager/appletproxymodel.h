@@ -1,5 +1,6 @@
 /*
     Copyright 2013-2014 Jan Grulich <jgrulich@redhat.com>
+    Copyright 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -54,6 +55,9 @@ public:
 
     explicit AppletProxyModel(QObject* parent = 0);
     virtual ~AppletProxyModel();
+
+    virtual QAbstractItemModel *sourceModel() const;
+    virtual void setSourceModel(QAbstractItemModel *sourceModel);
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const Q_DECL_OVERRIDE;
