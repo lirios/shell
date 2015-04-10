@@ -245,6 +245,10 @@ void LogindBackend::getSession(QDBusPendingCallWatcher *watcher)
                                       login1SessionInterface,
                                       QStringLiteral("Unlock"),
                                       this, SIGNAL(sessionUnlocked()));
+
+    // Unset idle hint at startup so that the login manager
+    // will report the flag correctly
+    setIdle(false);
 }
 
 #include "moc_logindbackend.cpp"
