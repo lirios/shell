@@ -29,7 +29,6 @@
 class Q_DECL_EXPORT AppletProxyModel : public QSortFilterProxyModel
 {
 Q_OBJECT
-Q_PROPERTY(QAbstractItemModel * sourceModel READ sourceModel WRITE setSourceModel)
 public:
     enum SortedConnectionType {
         Wired,
@@ -55,9 +54,6 @@ public:
 
     explicit AppletProxyModel(QObject* parent = 0);
     virtual ~AppletProxyModel();
-
-    virtual QAbstractItemModel *sourceModel() const;
-    virtual void setSourceModel(QAbstractItemModel *sourceModel);
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const Q_DECL_OVERRIDE;

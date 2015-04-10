@@ -53,9 +53,7 @@ Indicator {
 
             ScrollView {
                 ListView {
-                    model: NM.AppletProxyModel {
-                        sourceModel: NM.NetworkModel {}
-                    }
+                    model: NM.AppletProxyModel {}
                     clip: true
                     currentIndex: -1
                     section.property: "Section"

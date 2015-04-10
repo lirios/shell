@@ -86,20 +86,11 @@ AppletProxyModel::AppletProxyModel(QObject* parent)
 {
     setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
+    setSourceModel(new NetworkModel);
 }
 
 AppletProxyModel::~AppletProxyModel()
 {
-}
-
-QAbstractItemModel *AppletProxyModel::sourceModel() const
-{
-    return QSortFilterProxyModel::sourceModel();
-}
-
-void AppletProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
-{
-    QSortFilterProxyModel::setSourceModel(sourceModel);
 }
 
 bool AppletProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
