@@ -114,7 +114,7 @@ void CompositorLauncher::start()
                                << QStringLiteral("--shell=fullscreen-shell.so")
                                << QStringLiteral("--socket=%1").arg(m_weston->socketName()));
     } else {
-        m_socketName = QStringLiteral("wayland-0");
+        m_socketName = QStringLiteral("hawaii");
         m_compositor->setSocketName(m_socketName);
         m_compositor->setSessionLeader(true);
     }
