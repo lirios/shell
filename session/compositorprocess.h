@@ -39,6 +39,7 @@ class CompositorProcess : public QObject
     Q_OBJECT
 public:
     CompositorProcess(bool sessionLeader, QObject *parent = 0);
+    ~CompositorProcess();
 
     bool isSessionLeader() const;
     void setSessionLeader(bool value);
@@ -63,7 +64,12 @@ public Q_SLOTS:
     void terminate();
 
 private:
+    bool m_sessionLeader;
     SessionLeader *m_process;
+    QString m_prog;
+    QStringList m_args;
+    QProcessEnvironment m_env;
+
     int m_retries;
     bool m_terminate;
     QString m_xdgRuntimeDir;
@@ -74,6 +80,7 @@ private Q_SLOTS:
     void processError(QProcess::ProcessError error);
     void processFinished(int exitCode, QProcess::ExitStatus status);
     void socketAvailable();
+    bool respawn();
 };
 
 #endif // COMPOSITORPROCESS_H
