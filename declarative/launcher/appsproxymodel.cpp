@@ -29,17 +29,10 @@
 
 AppsProxyModel::AppsProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
+    , m_sourceModel(Q_NULLPTR)
 {
     // Case insensitive filtering
     setFilterCaseSensitivity(Qt::CaseInsensitive);
-
-    // Filter the right role
-    setFilterRole(AppsModel::FilterInfoRole);
-
-    // Source model
-    AppsModel *model = new AppsModel(this);
-    connect(model, &AppsModel::appLaunched, this, &AppsProxyModel::appLaunched);
-    setSourceModel(model);
 }
 
 QString AppsProxyModel::query() const
@@ -57,14 +50,25 @@ void AppsProxyModel::setQuery(const QString &query)
     Q_EMIT queryChanged();
 }
 
+AppsModel *AppsProxyModel::model() const
+{
+    return m_sourceModel;
+}
+
+void AppsProxyModel::setModel(AppsModel *model)
+{
+    if (m_sourceModel == model)
+        return;
+
+    m_sourceModel = model;
+    setSourceModel(model);
+    setFilterRole(AppsModel::FilterInfoRole);
+    Q_EMIT modelChanged();
+}
+
 QModelIndex AppsProxyModel::sourceIndex(const QModelIndex &proxyIndex) const
 {
     return mapToSource(proxyIndex);
-}
-
-bool AppsProxyModel::trigger(const QModelIndex &proxyIndex)
-{
-    return static_cast<AppsModel *>(sourceModel())->trigger(sourceIndex(proxyIndex));
 }
 
 #include "moc_appsproxymodel.cpp"

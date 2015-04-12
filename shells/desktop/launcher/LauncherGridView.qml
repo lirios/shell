@@ -57,7 +57,10 @@ GridView {
         id: visualModel
         model: CppLauncher.AppsProxyModel {
             id: appsProxyModel
-            onAppLaunched: grid.appLaunched()
+            model: CppLauncher.AppsModel {
+                id: appsModel
+                onAppLaunched: grid.appLaunched()
+            }
         }
         delegate: LauncherGridDelegate {
             id: delegate
@@ -71,7 +74,7 @@ GridView {
                 hoverEnabled: true
                 onEntered: delegate.hovered = true
                 onExited: delegate.hovered = false
-                onClicked: appsProxyModel.trigger(visualModel.modelIndex(index))
+                onClicked: appsModel.trigger(visualModel.modelIndex(index))
             }
         }
     }

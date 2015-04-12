@@ -29,26 +29,31 @@
 
 #include <QtCore/QSortFilterProxyModel>
 
+class AppsModel;
+
 class AppsProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
+    Q_PROPERTY(AppsModel *model READ model WRITE setModel NOTIFY modelChanged)
 public:
     AppsProxyModel(QObject *parent = 0);
 
     QString query() const;
     void setQuery(const QString &query);
 
+    AppsModel *model() const;
+    void setModel(AppsModel *model);
+
     Q_INVOKABLE QModelIndex sourceIndex(const QModelIndex &proxyIndex) const;
 
-    Q_INVOKABLE bool trigger(const QModelIndex &proxyIndex);
-
 Q_SIGNALS:
-    void appLaunched();
     void queryChanged();
+    void modelChanged();
 
 private:
     QString m_query;
+    AppsModel *m_sourceModel;
 };
 
 #endif // APPSPROXYMODEL_H
