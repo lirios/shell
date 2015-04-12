@@ -61,6 +61,7 @@ Q_SIGNALS:
 private:
     QLocalServer *m_server;
     QLocalSocket *m_client;
+    QString m_socketName;
 
 private Q_SLOTS:
     void newConnection();

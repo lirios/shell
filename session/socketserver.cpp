@@ -61,6 +61,8 @@ bool SocketServer::start(const QString &socketName)
     if (m_server)
         return true;
 
+    m_socketName = socketName;
+
     m_server = new QLocalServer(this);
     m_server->setSocketOptions(QLocalServer::UserAccessOption);
     m_server->removeServer(socketName);
@@ -85,13 +87,15 @@ void SocketServer::stop()
 
     m_server->close();
 
-    QString socketName = address();
-
     m_server->deleteLater();
     m_server = Q_NULLPTR;
 
-    qCDebug(SOCKETSERVER) << "Remove" << socketName;
-    QFile::remove(socketName);
+    if (!m_socketName.isEmpty()) {
+        qCDebug(SOCKETSERVER) << "Remove" << m_socketName;
+        QFile::remove(m_socketName);
+    }
+
+    m_socketName = QString();
 
     qCDebug(SOCKETSERVER) << "Server stopped";
 }
