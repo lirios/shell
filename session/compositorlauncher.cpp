@@ -116,7 +116,6 @@ void CompositorLauncher::start()
     } else {
         m_socketName = QStringLiteral("hawaii");
         m_compositor->setSocketName(m_socketName);
-        m_compositor->setSessionLeader(true);
     }
 
     // Setup the process
