@@ -227,6 +227,12 @@ bool CompositorProcess::respawn()
     if (m_retries < 1)
         return false;
 
+    // QProcess will emit finished() after error() but this will make the
+    // session quit in nested mode because of the way the full screen shell
+    // compositor is connected to the real compositor
+    disconnect(m_process, SIGNAL(finished(int,QProcess::ExitStatus)),
+               this, SLOT(processFinished(int,QProcess::ExitStatus)));
+
     qCDebug(COMPOSITOR)
             << "Process" << m_prog
             << "retries left:" << m_retries;
