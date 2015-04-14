@@ -123,6 +123,21 @@ QSizeF Theme::mSize(const QFont &font)
     return QFontMetrics(font).boundingRect("M").size();
 }
 
+QQmlComponent *Theme::createStyleComponent(const QString &fileName, QObject *parent)
+{
+    QUrl url = QUrl::fromLocalFile(QDir(m_themeSettings.path()).absoluteFilePath(fileName));
+    QQmlComponent *component = new QQmlComponent(m_engine, url,
+                                                 QQmlComponent::PreferSynchronous, parent);
+    if (component->status() != QQmlComponent::Ready) {
+        qWarning("Unable to load style \"%s\" from theme \"%s\": %s",
+                 qPrintable(fileName), qPrintable(m_themeSettings.path()),
+                 qPrintable(component->errorString()));
+        return Q_NULLPTR;
+    }
+
+    return component;
+}
+
 QObject *Theme::createQmlObject(const QUrl &url, QQmlEngine *engine)
 {
     QQmlComponent *component = new QQmlComponent(engine, url, QQmlComponent::PreferSynchronous);

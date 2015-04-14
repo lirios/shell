@@ -68,6 +68,8 @@ public:
 
     Q_INVOKABLE QSizeF mSize(const QFont &font = QGuiApplication::font());
 
+    Q_INVOKABLE QQmlComponent *createStyleComponent(const QString &fileName, QObject *parent);
+
 Q_SIGNALS:
     void nameChanged();
     void pathChanged();
