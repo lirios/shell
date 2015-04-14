@@ -51,13 +51,9 @@ Private.PopupBase {
         property bool reallyShowing: false
     }
 
-    Rectangle {
+    Themes.StyledItem {
         anchors.fill: parent
-        color: Themes.Theme.palette.panel.backgroundColor
-        radius: Themes.Units.dp(6)
-        border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.5), 0.25)
-        border.width: Themes.Units.dp(1)
-        antialiasing: true
+        style: Themes.Theme.createStyleComponent("Tooltip.qml", root)
         opacity: __priv.reallyShowing ? 1.0 : 0.0
         visible: opacity > 0.0
 
