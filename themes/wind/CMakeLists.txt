@@ -3,6 +3,7 @@ set(FILES
     Palette.qml
     Popover.qml
     PopupMenu.qml
+    Tooltip.qml
 )
 install(FILES ${FILES}
     DESTINATION ${DATA_INSTALL_DIR}/hawaii/themes/Wind)
