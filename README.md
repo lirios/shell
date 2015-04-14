@@ -53,22 +53,18 @@ Optional dependencies:
 
 * alsa and/or libpulse for volume control
 
-## Notes for packagers
+## Dependency on KDE Frameworks
 
-We use modules from KDE to decrease technology debt.
+We use a few modules from KDE to decrease technology debt.
 
-However some of those modules pull in too many dependencies or their
-performance are not acceptable.
-
-Tier 1 frameworks are usually safe, going beyond that is often too much.
+We used more in the past but they were dropped because they either
+pull in too many dependencies or their performance are not acceptable.
 
 A lot has been done to reduce dependencies from KDE, one notable example
-is KService which is really slow and I/O intensive.
-It was replaced by libqtxdg for the applications menu.
+is KService which is really slow and I/O intensive.  It was replaced by
+libqtxdg for the applications menu with good results.
 
-Unfortunately we still need the following:
-
-* Networking (plasma-nm, QML plugin only not plasmoid)
+Chances are that the dependency on kcoreaddons will go away as well.
 
 ## Build
 
