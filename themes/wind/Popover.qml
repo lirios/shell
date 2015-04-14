@@ -28,6 +28,14 @@ import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
 
 Item {
+    BorderImage {
+        id: shadow
+        anchors.fill: parent
+        anchors.margins: -Themes.Units.gu(2)
+        source: "images/dropshadow.sci"
+        opacity: 0.8
+    }
+
     Rectangle {
         anchors.fill: parent
         color: Themes.Theme.palette.panel.backgroundColor
