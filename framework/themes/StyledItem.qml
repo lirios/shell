@@ -42,32 +42,18 @@ Item {
     property Component style
 
     /*! \internal */
-    property QtObject __style: styleLoader.item
+    readonly property Item __styleInstance: styleLoader.status == Loader.Ready ? styleLoader.item : null
 
-    /*! \internal */
-    property Item __panel: panelLoader.item
-
-    implicitWidth: __panel ? __panel.implicitWidth : 0
-    implicitHeight: __panel ? __panel.implicitHeight : 0
+    implicitWidth: __styleInstance ? __panel.implicitWidth : 0
+    implicitHeight: __styleInstance ? __panel.implicitHeight : 0
 
     Loader {
-        id: panelLoader
+        id: styleLoader
         anchors.fill: parent
-        sourceComponent: __style ? __style.panel : null
+        sourceComponent: style
         onStatusChanged: {
             if (status === Loader.Error)
-                console.error("Failed to load Style for", root);
-        }
-
-        Loader {
-            property Item __item: root
-
-            id: styleLoader
-            sourceComponent: style
-            onStatusChanged: {
-                if (status === Loader.Error)
-                    console.error("Failed to load Style for", root);
-            }
+                console.error("Failed to load style for", root);
         }
     }
 }
