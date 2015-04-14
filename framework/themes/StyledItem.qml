@@ -44,8 +44,8 @@ Item {
     /*! \internal */
     readonly property Item __styleInstance: styleLoader.status == Loader.Ready ? styleLoader.item : null
 
-    implicitWidth: __styleInstance ? __panel.implicitWidth : 0
-    implicitHeight: __styleInstance ? __panel.implicitHeight : 0
+    implicitWidth: __styleInstance ? __styleInstance.implicitWidth : 0
+    implicitHeight: __styleInstance ? __styleInstance.implicitHeight : 0
 
     Loader {
         id: styleLoader
