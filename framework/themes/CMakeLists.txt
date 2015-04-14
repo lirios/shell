@@ -24,6 +24,7 @@ set(MODULE_FILES
     qmldir
     Palette.qml
     PaletteValues.qml
+    StyledItem.qml
 )
 install(FILES ${MODULE_FILES}
         DESTINATION ${QML_INSTALL_DIR}/Hawaii/Themes)

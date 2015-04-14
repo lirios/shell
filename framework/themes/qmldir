@@ -2,3 +2,4 @@ module Hawaii.Themes
 plugin declarative_hawaiithemes
 Palette 1.0 Palette.qml
 PaletteValues 1.0 PaletteValues.qml
+StyledItem 1.0 StyledItem.qml
