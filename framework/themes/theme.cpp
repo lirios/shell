@@ -70,16 +70,23 @@ Theme::Theme(QQmlEngine *engine, QObject *parent)
                      MONOSPACE_FONT_WEIGHT, false);
 
     // Receive theme name and path changes
+    connect(&m_themeSettings, &ThemeSettings::nameChanged,
+            this, &Theme::nameChanged,
+            Qt::UniqueConnection);
+    connect(&m_themeSettings, &ThemeSettings::pathChanged,
+            this, &Theme::pathChanged);
     connect(&m_themeSettings, &ThemeSettings::pathChanged,
             this, &Theme::themePathChanged);
-    connect(&m_themeSettings, SIGNAL(nameChanged()),
-            this, SIGNAL(nameChanged()),
-            Qt::UniqueConnection);
 }
 
 QString Theme::name() const
 {
     return m_themeSettings.name();
+}
+
+QString Theme::path() const
+{
+    return m_themeSettings.path();
 }
 
 QString Theme::controlsStyle()

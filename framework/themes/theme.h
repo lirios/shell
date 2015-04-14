@@ -40,6 +40,7 @@ class Theme : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(QString path READ name NOTIFY pathChanged)
     Q_PROPERTY(QString controlsStyle READ controlsStyle NOTIFY controlsStyleChanged)
     Q_PROPERTY(QObject *palette READ palette NOTIFY paletteChanged)
     Q_PROPERTY(QFont defaultFont READ defaultFont NOTIFY defaultFontChanged)
@@ -55,6 +56,7 @@ public:
     Theme(QQmlEngine *engine, QObject *parent = 0);
 
     QString name() const;
+    QString path() const;
 
     QString controlsStyle();
 
@@ -68,6 +70,7 @@ public:
 
 Q_SIGNALS:
     void nameChanged();
+    void pathChanged();
     void controlsStyleChanged();
     void paletteChanged();
     void defaultFontChanged();
