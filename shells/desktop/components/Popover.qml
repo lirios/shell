@@ -27,8 +27,7 @@
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
 
-Rectangle {
+Themes.StyledItem {
     id: root
-    color: Themes.Theme.palette.panel.backgroundColor
-    radius: Themes.Units.dp(6)
+    style: Themes.Theme.createStyleComponent("Popover.qml", root)
 }
