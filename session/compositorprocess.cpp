@@ -121,6 +121,9 @@ void CompositorProcess::start()
 
 void CompositorProcess::stop()
 {
+    if (!m_process)
+        return;
+
     qCDebug(COMPOSITOR)
             << "Stopping:"
             << qPrintable(m_process->program())
@@ -141,6 +144,9 @@ void CompositorProcess::stop()
 
 void CompositorProcess::terminate()
 {
+    if (!m_process)
+        return;
+
     qCDebug(COMPOSITOR)
             << "Terminate:"
             << qPrintable(m_process->program())
