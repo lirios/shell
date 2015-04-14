@@ -19,8 +19,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLASMA_NM_UIUTILS_H
-#define PLASMA_NM_UIUTILS_H
+#ifndef HAWAII_NM_UIUTILS_H
+#define HAWAII_NM_UIUTILS_H
 
 
 #include <NetworkManagerQt/Device>

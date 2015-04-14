@@ -106,7 +106,7 @@ QString UiUtils::interfaceTypeLabel(const NetworkManager::Device::Type type, con
                 deviceText = QObject::tr("Mobile Broadband");
                 break;
             case NetworkManager::ModemDevice::NoCapability:
-                qCWarning(PLASMA_NM) << "Unhandled modem sub type: NetworkManager::ModemDevice::NoCapability";
+                qCWarning(NM) << "Unhandled modem sub type: NetworkManager::ModemDevice::NoCapability";
                 break;
             }
         }

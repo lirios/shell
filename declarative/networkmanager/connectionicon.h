@@ -18,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLASMA_NM_CONNECTION_ICON_H
-#define PLASMA_NM_CONNECTION_ICON_H
+#ifndef HAWAII_NM_CONNECTION_ICON_H
+#define HAWAII_NM_CONNECTION_ICON_H
 
 #include <config.h>
 
@@ -98,4 +98,4 @@ private:
 #endif
 };
 
-#endif // PLASMA_NM_CONNECTION_ICON_H
+#endif // HAWAII_NM_CONNECTION_ICON_H

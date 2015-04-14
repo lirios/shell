@@ -18,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLASMA_NM_MODEL_NETWORK_ITEMS_LIST_H
-#define PLASMA_NM_MODEL_NETWORK_ITEMS_LIST_H
+#ifndef HAWAII_NM_MODEL_NETWORK_ITEMS_LIST_H
+#define HAWAII_NM_MODEL_NETWORK_ITEMS_LIST_H
 
 #include <QAbstractListModel>
 
@@ -59,4 +59,4 @@ private:
     QList<NetworkModelItem*> m_items;
 };
 
-#endif // PLASMA_NM_MODEL_NETWORK_ITEMS_LIST_H
+#endif // HAWAII_NM_MODEL_NETWORK_ITEMS_LIST_H

@@ -21,4 +21,4 @@
 
 #include "debug.h"
 
-Q_LOGGING_CATEGORY(PLASMA_NM, "plasma-nm")
+Q_LOGGING_CATEGORY(NM, "hawaii.qml.networkmanager")

@@ -18,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLASMA_NM_ENUMS_H
-#define PLASMA_NM_ENUMS_H
+#ifndef HAWAII_NM_ENUMS_H
+#define HAWAII_NM_ENUMS_H
 
 #include <QObject>
 
@@ -73,4 +73,4 @@ public:
     };
 };
 
-#endif // PLASMA_NM_ENUMS_H
+#endif // HAWAII_NM_ENUMS_H

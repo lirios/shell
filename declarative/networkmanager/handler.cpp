@@ -68,20 +68,20 @@ void Handler::activateConnection(const QString& connection, const QString& devic
     NetworkManager::Connection::Ptr con = NetworkManager::findConnection(connection);
 
     if (!con) {
-        qCWarning(PLASMA_NM) << "Not possible to activate this connection";
+        qCWarning(NM) << "Not possible to activate this connection";
         return;
     }
 
     if (con->settings()->connectionType() == NetworkManager::ConnectionSettings::Vpn) {
         NetworkManager::VpnSetting::Ptr vpnSetting = con->settings()->setting(NetworkManager::Setting::Vpn).staticCast<NetworkManager::VpnSetting>();
         if (vpnSetting) {
-            qCDebug(PLASMA_NM) << "Checking VPN" << con->name() << "type:" << vpnSetting->serviceType();
+            qCDebug(NM) << "Checking VPN" << con->name() << "type:" << vpnSetting->serviceType();
 #if 0
             // get the list of supported VPN service types
             const KService::List services = KServiceTypeTrader::self()->query("PlasmaNetworkManagement/VpnUiPlugin",
                                                                               QString::fromLatin1("[X-NetworkManager-Services]=='%1'").arg(vpnSetting->serviceType()));
             if (services.isEmpty()) {
-                qCWarning(PLASMA_NM) << "VPN" << vpnSetting->serviceType() << "not found, skipping";
+                qCWarning(NM) << "VPN" << vpnSetting->serviceType() << "not found, skipping";
                 KNotification *notification = new KNotification("MissingVpnPlugin", KNotification::CloseOnTimeout, this);
                 notification->setComponentName("networkmanagement");
                 notification->setTitle(con->name());
@@ -246,7 +246,7 @@ void Handler::deactivateConnection(const QString& connection, const QString& dev
     NetworkManager::Connection::Ptr con = NetworkManager::findConnection(connection);
 
     if (!con) {
-        qCWarning(PLASMA_NM) << "Not possible to deactivate this connection";
+        qCWarning(NM) << "Not possible to deactivate this connection";
         return;
     }
 
@@ -334,18 +334,18 @@ bool Handler::isBtEnabled()
     if (reply.isValid()) {
         Q_FOREACH (const QDBusObjectPath &path, reply.value().keys()) {
             const QString objPath = path.path();
-            qCDebug(PLASMA_NM) << "inspecting path" << objPath;
+            qCDebug(NM) << "inspecting path" << objPath;
             const QStringList interfaces = reply.value().value(path).keys();
-            qCDebug(PLASMA_NM) << "interfaces:" << interfaces;
+            qCDebug(NM) << "interfaces:" << interfaces;
             if (interfaces.contains("org.bluez.Adapter1")) {
                 QDBusInterface adapterIface("org.bluez", objPath, "org.bluez.Adapter1", QDBusConnection::systemBus(), this);
                 const bool adapterEnabled = adapterIface.property("Powered").toBool();
-                qCDebug(PLASMA_NM) << "Adapter" << objPath << "enabled:" << adapterEnabled;
+                qCDebug(NM) << "Adapter" << objPath << "enabled:" << adapterEnabled;
                 result |= adapterEnabled;
             }
         }
     } else {
-        qCDebug(PLASMA_NM) << "Failed to enumerate BT adapters";
+        qCDebug(NM) << "Failed to enumerate BT adapters";
     }
 
     return result;
@@ -358,17 +358,17 @@ void Handler::enableBt(bool enable)
     if (reply.isValid()) {
         Q_FOREACH (const QDBusObjectPath &path, reply.value().keys()) {
             const QString objPath = path.path();
-            qCDebug(PLASMA_NM) << "inspecting path" << objPath;
+            qCDebug(NM) << "inspecting path" << objPath;
             const QStringList interfaces = reply.value().value(path).keys();
-            qCDebug(PLASMA_NM) << "interfaces:" << interfaces;
+            qCDebug(NM) << "interfaces:" << interfaces;
             if (interfaces.contains("org.bluez.Adapter1")) {
                 QDBusInterface adapterIface("org.bluez", objPath, "org.bluez.Adapter1", QDBusConnection::systemBus(), this);
-                qCDebug(PLASMA_NM) << "Enabling adapter:" << objPath << enable;
+                qCDebug(NM) << "Enabling adapter:" << objPath << enable;
                 adapterIface.setProperty("Powered", enable);
             }
         }
     } else {
-        qCDebug(PLASMA_NM) << "Failed to enumerate BT adapters";
+        qCDebug(NM) << "Failed to enumerate BT adapters";
     }
 }
 
@@ -377,7 +377,7 @@ void Handler::removeConnection(const QString& connection)
     NetworkManager::Connection::Ptr con = NetworkManager::findConnection(connection);
 
     if (!con || con->uuid().isEmpty()) {
-        qCWarning(PLASMA_NM) << "Not possible to remove connection " << connection;
+        qCWarning(NM) << "Not possible to remove connection " << connection;
         return;
     }
 

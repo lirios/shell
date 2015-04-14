@@ -19,8 +19,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLASMA_NM_APPLET_PROXY_MODEL_H
-#define PLASMA_NM_APPLET_PROXY_MODEL_H
+#ifndef HAWAII_NM_APPLET_PROXY_MODEL_H
+#define HAWAII_NM_APPLET_PROXY_MODEL_H
 
 #include <QSortFilterProxyModel>
 
@@ -61,4 +61,4 @@ protected:
 };
 
 
-#endif // PLASMA_NM_APPLET_PROXY_MODEL_H
+#endif // HAWAII_NM_APPLET_PROXY_MODEL_H

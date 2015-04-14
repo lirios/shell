@@ -33,8 +33,6 @@
 NetworkModel::NetworkModel(QObject* parent)
     : QAbstractListModel(parent)
 {
-    QLoggingCategory::setFilterRules(QStringLiteral("plasma-nm.debug = false"));
-
     initialize();
 }
 
@@ -311,7 +309,7 @@ void NetworkModel::addActiveConnection(const NetworkManager::ActiveConnection::P
                 item->setVpnState(state);
             }
             updateItem(item);
-            qCDebug(PLASMA_NM) << "Item " << item->name() << ": active connection state changed to " << item->connectionState();
+            qCDebug(NM) << "Item " << item->name() << ": active connection state changed to " << item->connectionState();
         }
     }
 }
@@ -333,7 +331,7 @@ void NetworkModel::addAvailableConnection(const QString& connection, const Netwo
         }
         item->setDevicePath(device->uni());
         item->setDeviceState(device->state());
-        qCDebug(PLASMA_NM) << "Item " << item->name() << ": device changed to " << item->devicePath();
+        qCDebug(NM) << "Item " << item->name() << ": device changed to " << item->devicePath();
 #if WITH_MODEMMANAGER_SUPPORT
         if (device->type() == NetworkManager::Device::Modem) {
             ModemManager::ModemDevice::Ptr modemDevice = ModemManager::findModemDevice(device->udi());
@@ -341,7 +339,7 @@ void NetworkModel::addAvailableConnection(const QString& connection, const Netwo
                 ModemManager::Modem::Ptr modemInterface = modemDevice->interface(ModemManager::ModemDevice::ModemInterface).objectCast<ModemManager::Modem>();
                 if (modemInterface) {
                     item->setSignal(modemInterface->signalQuality().signal);
-                    qCDebug(PLASMA_NM) << "Item " << item->name() << ": signal changed to " << item->signal();
+                    qCDebug(NM) << "Item " << item->name() << ": signal changed to " << item->signal();
                 }
             }
         }
@@ -351,7 +349,7 @@ void NetworkModel::addAvailableConnection(const QString& connection, const Netwo
             Q_FOREACH (NetworkModelItem * secondItem, m_list.returnItems(NetworkItemsList::Ssid, item->ssid())) {
                 if (secondItem->itemType() == NetworkModelItem::AvailableAccessPoint && secondItem->devicePath() == item->devicePath()) {
                     const int row = m_list.indexOf(secondItem);
-                    qCDebug(PLASMA_NM) << "Access point " << secondItem->name() << ": merged to " << item->name() << " connection";
+                    qCDebug(NM) << "Access point " << secondItem->name() << ": merged to " << item->name() << " connection";
                     if (row >= 0) {
                         beginRemoveRows(QModelIndex(), row, row);
                         m_list.removeItem(secondItem);
@@ -374,7 +372,7 @@ void NetworkModel::addAvailableConnection(const QString& connection, const Netwo
             Q_FOREACH (NetworkModelItem * secondItem, m_list.returnItems(NetworkItemsList::Nsp, item->nsp())) {
                 if (secondItem->itemType() == NetworkModelItem::AvailableNsp && secondItem->devicePath() == item->devicePath()) {
                     const int row = m_list.indexOf(secondItem);
-                    qCDebug(PLASMA_NM) << "Nsp " << secondItem->name() << ": merged to " << item->name() << " connection";
+                    qCDebug(NM) << "Nsp " << secondItem->name() << ": merged to " << item->name() << " connection";
                     if (row >= 0) {
                         beginRemoveRows(QModelIndex(), row, row);
                         m_list.removeItem(secondItem);
@@ -440,7 +438,7 @@ void NetworkModel::addConnection(const NetworkManager::Connection::Ptr& connecti
         beginInsertRows(QModelIndex(), index, index);
         m_list.insertItem(item);
         endInsertRows();
-        qCDebug(PLASMA_NM) << "New connection " << item->name() << " added";
+        qCDebug(NM) << "New connection " << item->name() << " added";
     }
 }
 
@@ -489,7 +487,7 @@ void NetworkModel::addWimaxNsp(const NetworkManager::WimaxNsp::Ptr& nsp, const N
     beginInsertRows(QModelIndex(), index, index);
     m_list.insertItem(item);
     endInsertRows();
-    qCDebug(PLASMA_NM) << "New wireless network " << item->name() << " added";
+    qCDebug(NM) << "New wireless network " << item->name() << " added";
 }
 
 void NetworkModel::addWirelessNetwork(const NetworkManager::WirelessNetwork::Ptr& network, const NetworkManager::WirelessDevice::Ptr& device)
@@ -531,7 +529,7 @@ void NetworkModel::addWirelessNetwork(const NetworkManager::WirelessNetwork::Ptr
     beginInsertRows(QModelIndex(), index, index);
     m_list.insertItem(item);
     endInsertRows();
-    qCDebug(PLASMA_NM) << "New wireless network " << item->name() << " added";
+    qCDebug(NM) << "New wireless network " << item->name() << " added";
 }
 
 void NetworkModel::checkAndCreateDuplicate(const QString& connection, const NetworkManager::Device::Ptr& device)
@@ -587,7 +585,7 @@ void NetworkModel::accessPointSignalStrengthChanged(int signal)
             if (item->specificPath() == apPtr->uni()) {
                 item->setSignal(signal);
                 updateItem(item);
-                qCDebug(PLASMA_NM) << "AccessPoint " << item->name() << ": signal changed to " << item->signal();
+                qCDebug(NM) << "AccessPoint " << item->name() << ": signal changed to " << item->signal();
             }
         }
     }
@@ -609,7 +607,7 @@ void NetworkModel::activeConnectionRemoved(const QString& activeConnection)
         item->setConnectionState(NetworkManager::ActiveConnection::Deactivated);
         item->setVpnState(NetworkManager::VpnConnection::Disconnected);
         updateItem(item);
-        qCDebug(PLASMA_NM) << "Item " << item->name() << ": active connection removed";
+        qCDebug(NM) << "Item " << item->name() << ": active connection removed";
     }
 }
 
@@ -620,7 +618,7 @@ void NetworkModel::activeConnectionStateChanged(NetworkManager::ActiveConnection
         Q_FOREACH (NetworkModelItem * item, m_list.returnItems(NetworkItemsList::ActiveConnection, activePtr->path())) {
             item->setConnectionState(state);
             updateItem(item);
-            qCDebug(PLASMA_NM) << "Item " << item->name() << ": active connection changed to " << item->connectionState();
+            qCDebug(NM) << "Item " << item->name() << ": active connection changed to " << item->connectionState();
         }
     }
 }
@@ -644,7 +642,7 @@ void NetworkModel::activeVpnConnectionStateChanged(NetworkManager::VpnConnection
             }
             item->setVpnState(state);
             updateItem(item);
-            qCDebug(PLASMA_NM) << "Item " << item->name() << ": active connection changed to " << item->connectionState();
+            qCDebug(NM) << "Item " << item->name() << ": active connection changed to " << item->connectionState();
         }
     }
 }
@@ -683,7 +681,7 @@ void NetworkModel::availableConnectionDisappeared(const QString& connection)
             item->setDeviceState(NetworkManager::Device::UnknownState);
             item->setSignal(0);
             item->setSpecificPath(QString());
-            qCDebug(PLASMA_NM) << "Item " << item->name() << " removed as available connection";
+            qCDebug(NM) << "Item " << item->name() << " removed as available connection";
             // Check whether the connection is still available as an access point, this happens
             // when we change its properties, like ssid, bssid, security etc.
             if (item->type() == NetworkManager::ConnectionSettings::Wireless && !specificPath.isEmpty()) {
@@ -714,7 +712,7 @@ void NetworkModel::availableConnectionDisappeared(const QString& connection)
             if (item->duplicate()) {
                 const int row = m_list.indexOf(item);
                 if (row >= 0) {
-                    qCDebug(PLASMA_NM) << "Duplicate item " << item->name() << " removed completely";
+                    qCDebug(NM) << "Duplicate item " << item->name() << " removed completely";
                     beginRemoveRows(QModelIndex(), row, row);
                     m_list.removeItem(item);
                     item->deleteLater();
@@ -763,7 +761,7 @@ void NetworkModel::connectionRemoved(const QString& connection)
                 item->setTimestamp(QDateTime());
                 item->setUuid(QString());
                 updateItem(item);
-                qCDebug(PLASMA_NM) << "Item " << item->name() << ": connection removed";
+                qCDebug(NM) << "Item " << item->name() << ": connection removed";
             }
         } else {
             remove = true;
@@ -772,7 +770,7 @@ void NetworkModel::connectionRemoved(const QString& connection)
         if (remove) {
             const int row = m_list.indexOf(item);
             if (row >= 0) {
-                qCDebug(PLASMA_NM) << "Item " << item->name() << " removed completely";
+                qCDebug(NM) << "Item " << item->name() << " removed completely";
                 beginRemoveRows(QModelIndex(), row, row);
                 m_list.removeItem(item);
                 item->deleteLater();
@@ -809,7 +807,7 @@ void NetworkModel::connectionUpdated()
             }
 
             updateItem(item);
-            qCDebug(PLASMA_NM) << "Item " << item->name() << ": connection updated";
+            qCDebug(NM) << "Item " << item->name() << ": connection updated";
         }
     }
 }
@@ -841,7 +839,7 @@ void NetworkModel::deviceStateChanged(NetworkManager::Device::State state, Netwo
         Q_FOREACH (NetworkModelItem * item, m_list.returnItems(NetworkItemsList::Device, device->uni())) {
             item->setDeviceState(state);
             updateItem(item);
-//             qCDebug(PLASMA_NM) << "Item " << item->name() << ": device state changed to " << item->deviceState();
+//             qCDebug(NM) << "Item " << item->name() << ": device state changed to " << item->deviceState();
         }
     }
 }
@@ -925,7 +923,7 @@ void NetworkModel::ipConfigChanged()
     if (device) {
         Q_FOREACH (NetworkModelItem * item, m_list.returnItems(NetworkItemsList::Device, device->uni())) {
             updateItem(item);
-//            qCDebug(PLASMA_NM) << "Item " << item->name() << ": device ipconfig changed";
+//            qCDebug(NM) << "Item " << item->name() << ": device ipconfig changed";
         }
     }
 }
@@ -948,7 +946,7 @@ void NetworkModel::statusChanged(NetworkManager::Status status)
 {
     Q_UNUSED(status);
 
-    qCDebug(PLASMA_NM) << "NetworkManager state changed to " << status;
+    qCDebug(NM) << "NetworkManager state changed to " << status;
     // This has probably effect only for VPN connections
     Q_FOREACH (NetworkModelItem * item, m_list.returnItems(NetworkItemsList::Type, NetworkManager::ConnectionSettings::Vpn)) {
         updateItem(item);
@@ -976,7 +974,7 @@ void NetworkModel::wimaxNspDisappeared(const QString& nsp)
             if (item->itemType() == NetworkModelItem::AvailableNsp || item->duplicate()) {
                 const int row = m_list.indexOf(item);
                 if (row >= 0) {
-                    qCDebug(PLASMA_NM) << "Wimax Nsp " << item->name() << " removed completely";
+                    qCDebug(NM) << "Wimax Nsp " << item->name() << " removed completely";
                     beginRemoveRows(QModelIndex(), row, row);
                     m_list.removeItem(item);
                     item->deleteLater();
@@ -989,7 +987,7 @@ void NetworkModel::wimaxNspDisappeared(const QString& nsp)
                 item->setSpecificPath(QString());
                 item->setSignal(0);
                 updateItem(item);
-                qCDebug(PLASMA_NM) << "Item " << item->name() << ": wimax Nsp removed";
+                qCDebug(NM) << "Item " << item->name() << ": wimax Nsp removed";
             }
         }
     }
@@ -1003,7 +1001,7 @@ void NetworkModel::wimaxNspSignalChanged(uint signal)
             if (item->specificPath() == nspPtr->uni()) {
                 item->setSignal(signal);
                 updateItem(item);
-//              qCDebug(PLASMA_NM) << "Wimax Nsp " << item->name() << ": signal changed to " << item->signal();
+//              qCDebug(NM) << "Wimax Nsp " << item->name() << ": signal changed to " << item->signal();
             }
         }
     }
@@ -1028,7 +1026,7 @@ void NetworkModel::wirelessNetworkDisappeared(const QString& ssid)
             if (item->itemType() == NetworkModelItem::AvailableAccessPoint || item->duplicate()) {
                 const int row = m_list.indexOf(item);
                 if (row >= 0) {
-                    qCDebug(PLASMA_NM) << "Wireless network " << item->name() << " removed completely";
+                    qCDebug(NM) << "Wireless network " << item->name() << " removed completely";
                     beginRemoveRows(QModelIndex(), row, row);
                     m_list.removeItem(item);
                     item->deleteLater();
@@ -1043,7 +1041,7 @@ void NetworkModel::wirelessNetworkDisappeared(const QString& ssid)
                 }
                 item->setSignal(0);
                 updateItem(item);
-                qCDebug(PLASMA_NM) << "Item " << item->name() << ": wireless network removed";
+                qCDebug(NM) << "Item " << item->name() << ": wireless network removed";
             }
         }
     }
@@ -1077,7 +1075,7 @@ void NetworkModel::wirelessNetworkSignalChanged(int signal)
             if (item->specificPath() == networkPtr->referenceAccessPoint()->uni()) {
                 item->setSignal(signal);
                 updateItem(item);
-//              qCDebug(PLASMA_NM) << "Wireless network " << item->name() << ": signal changed to " << item->signal();
+//              qCDebug(NM) << "Wireless network " << item->name() << ": signal changed to " << item->signal();
             }
         }
     }

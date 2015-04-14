@@ -18,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLASMA_NM_ENABLED_CONNECTIONS_H
-#define PLASMA_NM_ENABLED_CONNECTIONS_H
+#ifndef HAWAII_NM_ENABLED_CONNECTIONS_H
+#define HAWAII_NM_ENABLED_CONNECTIONS_H
 
 #include <QObject>
 
@@ -94,4 +94,4 @@ private:
     bool m_wwanHwEnabled;
 };
 
-#endif // PLASMA_NM_ENABLED_CONNECTIONS_H
+#endif // HAWAII_NM_ENABLED_CONNECTIONS_H

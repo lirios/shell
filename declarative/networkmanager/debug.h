@@ -19,11 +19,11 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PLASMA_NM_DEBUG_H
-#define PLASMA_NM_DEBUG_H
+#ifndef HAWAII_NM_DEBUG_H
+#define HAWAII_NM_DEBUG_H
 
 #include <QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(PLASMA_NM)
+Q_DECLARE_LOGGING_CATEGORY(NM)
 
-#endif // PLASMA_NM_DEBUG_H
+#endif // HAWAII_NM_DEBUG_H

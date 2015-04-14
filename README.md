@@ -152,6 +152,9 @@ to learn how to enable them.
 * Notifications QML plugin:
   * **hawaii.qml.notifications:** Notifications service.
 
+* Network QML plugin:
+  * **hawaii.qml.networkmanager:** NetworkManager support.
+
 * Hardware QML plugin:
   * **hawaii.qml.hardware:** Hardware service.
   * **hawaii.qml.hardware.battery:** Battery information.
