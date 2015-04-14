@@ -2,6 +2,7 @@ set(FILES
     theme.ini
     Palette.qml
     Popover.qml
+    PopupMenu.qml
 )
 install(FILES ${FILES}
     DESTINATION ${DATA_INSTALL_DIR}/hawaii/themes/Wind)
