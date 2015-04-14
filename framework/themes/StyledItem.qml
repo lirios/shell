@@ -1,7 +1,7 @@
 /****************************************************************************
- * This file is part of Hawaii Framework.
+ * This file is part of Hawaii.
  *
- * Copyright (C) 2013-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -29,7 +29,7 @@ import QtQuick 2.0
 /*!
     \qmltype StyledItem
     \qmlabstract
-    \inqmlmodule Hawaii.Controls.Styles 1.0
+    \inqmlmodule Hawaii.Themes 1.0
 */
 
 Item {
@@ -37,7 +37,7 @@ Item {
 
     /*! \qmlproperty Component StyledItem::style
         The style Component for this item.
-        \sa {Hawaii Controls Styles QML Types}
+        \sa {Hawaii Themes QML Types}
     */
     property Component style
 
