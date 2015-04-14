@@ -43,19 +43,15 @@ Private.PopupBase {
             hideAnimation.start();
     }
 
-    Rectangle {
+    Themes.StyledItem {
         id: container
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
             right: parent.right
         }
-        color: Themes.Theme.palette.panel.backgroundColor
-        radius: Themes.Units.dp(6)
+        style: Themes.Theme.createStyleComponent("PopupMenu.qml", container)
         height: parent.height
-        border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.5), 0.3)
-        border.width: Themes.Units.dp(1)
-        antialiasing: true
         visible: false
 
         Controls.PopupBehavior {
