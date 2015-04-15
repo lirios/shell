@@ -31,6 +31,9 @@
 #include <QObject>
 #include <QQuickItem>
 #include <QVariant>
+#include <QtCore/QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(CONFIGGROUP)
 
 class KConfigGroup;
 

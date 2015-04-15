@@ -156,6 +156,9 @@ to learn how to enable them.
   * **hawaii.qml.hardware.battery:** Battery information.
   * **hawaii.qml.hardware.storagedevice:** Storage device information.
 
+* Settings QML plugin:
+  * **hawaii.qml.settings:** Settings.
+
 ## Components
 
 *hawaii*

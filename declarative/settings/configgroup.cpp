@@ -32,7 +32,8 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KDirWatch>
-#include <QDebug>
+
+Q_LOGGING_CATEGORY(CONFIGGROUP, "hawaii.qml.settings")
 
 class ConfigGroupPrivate {
 
@@ -80,7 +81,7 @@ ConfigGroup::ConfigGroup(QQuickItem *parent)
 ConfigGroup::~ConfigGroup()
 {
     if (d->syncTimer->isActive()) {
-        qDebug() << "SYNC......";
+        qCDebug(CONFIGGROUP) << "Syncrhonization...";
         d->syncTimer->stop();
         d->configGroup->sync();
     }
@@ -125,7 +126,7 @@ void ConfigGroup::setGroup(const QString& groupname)
         return;
     }
     d->group = groupname;
-    qDebug() << "Set group name: " << groupname;
+    qCDebug(CONFIGGROUP) << "Set group name to" << groupname;
     readConfigFile();
     emit groupChanged();
     emit keyListChanged();
@@ -170,7 +171,7 @@ bool ConfigGroup::readConfigFile()
         }
         d->config = KSharedConfig::openConfig(d->file);
         d->configGroup = new KConfigGroup(d->config, d->group);
-        qDebug() << "Opened config" << d->configGroup->entryMap();
+        qCDebug(CONFIGGROUP) << "Opened config" << d->configGroup->entryMap();
 
         return true;
     }
@@ -195,7 +196,7 @@ QVariant ConfigGroup::readEntry(const QString& key, const QVariant &defaultValue
         return QVariant();
     }
     const QVariant value = d->configGroup->readEntry(key, defaultValue);
-    qDebug() << " reading setting: " << key << value;
+    //qCDebug(CONFIGGROUP) << "Read entry:" << key << value;
     return value;
 }
 
@@ -208,7 +209,7 @@ void ConfigGroup::deleteEntry(const QString& key)
 void ConfigGroup::sync()
 {
     if (d->configGroup) {
-        qDebug() << "synching config...";
+        qCDebug(CONFIGGROUP) << "Synchronizing config...";
         d->configGroup->sync();
     }
 }
