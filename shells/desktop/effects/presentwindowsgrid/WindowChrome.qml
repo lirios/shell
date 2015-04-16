@@ -116,6 +116,7 @@ Item {
             right: parent.right
             margins: -Themes.Units.gu(0.25)
         }
+        width: Themes.Units.iconSizes.medium
         z: 4
         opacity: mouseArea.containsMouse ? 1.0 : 0.0
         onClicked: window.child.surface.destroySurface()
