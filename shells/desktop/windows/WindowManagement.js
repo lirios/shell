@@ -99,8 +99,7 @@ function windowMapped(window) {
     // Create and setup window container
     var item = component.createObject(parentItem, {"clientWindow": window, "child": child});
     item.child.parent = item;
-    item.child.anchors.left = Qt.binding(function() { return item.left });
-    item.child.anchors.top = Qt.binding(function() { return item.top });
+    item.child.anchors.fill = Qt.binding(function() { return item });
     item.child.touchEventsEnabled = true;
     item.x = child.localX;
     item.y = child.localY;
