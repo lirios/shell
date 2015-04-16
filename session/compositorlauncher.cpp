@@ -106,8 +106,8 @@ void CompositorLauncher::start()
 
         // Weston must be session leader when we are launched
         // from gdm
-        if (qEnvironmentVariableIsSet("GDMSESSION"))
-            m_weston->setSessionLeader(true);
+        //if (qEnvironmentVariableIsSet("GDMSESSION"))
+            //m_weston->setSessionLeader(true);
 
         m_weston->setProgram(QStringLiteral("weston"));
         m_weston->setArguments(QStringList()
