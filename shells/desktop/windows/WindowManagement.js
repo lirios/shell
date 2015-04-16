@@ -90,7 +90,7 @@ function windowMapped(window) {
         break;
     case ClientWindow.Popup:
     case ClientWindow.Transient:
-        parentItem = window.parentWindow.viewForOutput(_greenisland_output).parent;
+        parentItem = window.parentViewForOutput(_greenisland_output).parent;
         break;
     default:
         break;
