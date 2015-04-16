@@ -140,6 +140,8 @@ WindowWrapper {
 
         property real x
         property real y
+        property real width
+        property real height
         property real scale
         property var chrome
         property bool bringToFront: false
