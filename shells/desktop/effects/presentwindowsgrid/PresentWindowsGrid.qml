@@ -217,7 +217,8 @@ Item {
             }
         }
 
+        // Activate selected window
         if (selectedWindow)
-            selectedWindow.child.takeFocus();
+            selectedWindow.clientWindow.activate();
     }
 }
