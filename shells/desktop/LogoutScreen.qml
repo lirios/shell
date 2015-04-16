@@ -98,6 +98,7 @@ Components.Showable {
             PropertyChanges { target: okButton; text: qsTr("Hibernate") }
         }
     ]
+    focus: true
     visible: true
     onLogOutRequested: session.logOut()
     onPowerOffRequested: session.powerOff()
