@@ -230,7 +230,7 @@ Components.Showable {
                 id: logoutButton
                 exclusiveGroup: group
                 iconName: "system-log-out-symbolic"
-                width: Themes.Units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "logout"
@@ -242,7 +242,7 @@ Components.Showable {
                 id: poweroffButton
                 exclusiveGroup: group
                 iconName: "system-shutdown-symbolic"
-                width: Themes.Units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "poweroff"
@@ -254,7 +254,7 @@ Components.Showable {
                 id: restartButton
                 exclusiveGroup: group
                 iconName: "system-reboot-symbolic"
-                width: Themes.Units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "restart"
@@ -266,7 +266,7 @@ Components.Showable {
                 id: suspendButton
                 exclusiveGroup: group
                 iconName: "system-suspend-symbolic"
-                width: Themes.Units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "suspend"
@@ -278,7 +278,7 @@ Components.Showable {
                 id: hibernateButton
                 exclusiveGroup: group
                 iconName: "system-suspend-hibernate-symbolic"
-                width: Themes.Units.iconSizes.smallMedium
+                width: Themes.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "hibernate"
