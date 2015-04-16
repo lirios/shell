@@ -87,12 +87,6 @@ Item {
         property bool saved: false
     }
 
-    SurfaceRenderer {
-        id: surfaceRenderer
-        anchors.fill: parent
-        source: child
-    }
-
     /*
      * Connections to client window, child or surface
      */
@@ -142,16 +136,10 @@ Item {
     Connections {
         target: animation
         onUnmapAnimationStopped: {
-            // Unset source since the actual surface went away
-            surfaceRenderer.source = null;
-
             // Destroy window representation
             window.destroy();
         }
         onDestroyAnimationStopped: {
-            // Unset source since the actual surface went away
-            surfaceRenderer.source = null;
-
             // Destroy window representation
             window.destroy();
         }
