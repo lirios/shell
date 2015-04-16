@@ -96,6 +96,14 @@ int main(int argc, char *argv[])
     if (idleInterval >= 5)
         homeApp.setIdleTime(idleInterval * 1000);
 
+    // Print version information
+    qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
+           "** https://hawaii-desktop.github.io\n"
+           "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
+           "** Build: %s-%s",
+           HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
+           HAWAII_VERSION_STRING, GIT_REV);
+
     // Create the compositor and run
     if (!homeApp.run(QStringLiteral("org.hawaii.desktop")))
         return 1;
@@ -109,14 +117,6 @@ int main(int argc, char *argv[])
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [=] {
         QApplication::quit();
     });
-
-    // Print version information
-    qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
-           "** https://hawaii-desktop.github.io\n"
-           "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
-           "** Build: %s-%s",
-           HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
-           HAWAII_VERSION_STRING, GIT_REV);
 
     return app.exec();
 }
