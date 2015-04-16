@@ -26,11 +26,20 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0
+import Hawaii.Themes 1.0 as Themes
 
 Item {
     property Item workspace: null
 
     id: root
+
+    QtObject {
+        id: __priv
+
+        property bool debug: false
+        readonly property real hmargin: Themes.Units.dp(48)
+        readonly property real vmargin: Themes.Units.dp(48)
+    }
 
     function run() {
         // Sanity check
@@ -74,18 +83,19 @@ Item {
         // Calculate rows and columns
         var columns = Math.ceil(Math.sqrt(num));
         var rows = Math.ceil(num / columns);
+        if (__priv.debug) console.log("rows:", rows, "columns:", columns);
 
         // Calculate cell size
-        var cellWidth = compositorRoot.width / columns;
-        var cellHeight = compositorRoot.height / rows;
+        var cellWidth = _greenisland_output.availableGeometry.width / columns;
+        var cellHeight = _greenisland_output.availableGeometry.height / rows;
+        if (__priv.debug) console.log("cellWidth:", cellWidth, "cellHeight:", cellHeight);
 
         // Loop over windows
-        var i, index = 0, ix = 0, iy = 0, lastDim = 1, window;
+        var i, window, scale;
+        var currentDim = 0, lastDim = 1, row = 0, column = 0;
         for (i = 0; i < num; i++) {
             // Find window
             window = workspace.children[i];
-
-            // Skip certain windows
             if (!isWindowFine(window))
                 continue;
 
@@ -93,6 +103,8 @@ Item {
             if (!window.savedProperties.saved) {
                 window.savedProperties.x = window.x;
                 window.savedProperties.y = window.y;
+                window.savedProperties.width = window.width;
+                window.savedProperties.height = window.height;
                 window.savedProperties.scale = window.scale;
                 window.savedProperties.chrome = window.chrome;
                 if (window.savedProperties.chrome)
@@ -101,26 +113,36 @@ Item {
             }
 
             // Calculate grid
-            if (index > 0) {
-                var currentDim = Math.ceil(Math.sqrt(i + 1));
+            if (i > 0) {
+                currentDim = Math.ceil(Math.sqrt(i + 1));
                 if (currentDim == lastDim) {
-                    if (iy < currentDim - 1) {
-                        ++iy;
+                    if (row < currentDim - 1) {
+                        ++row;
 
-                        if (iy == currentDim - 1)
-                            ix = 0;
+                        if (row == currentDim - 1)
+                            column = 0;
                     } else {
-                        ++ix;
+                        ++column;
                     }
                 } else {
-                    iy = 0;
-                    ix = currentDim - 1;
+                    row = 0;
+                    column = currentDim - 1;
                 }
                 lastDim = currentDim;
             }
+            if (__priv.debug) console.log("row:", row, "column:", column);
 
-            var cx = (ix + 0.5) * cellWidth;
-            var cy = (iy + 0.5) * cellHeight;
+            // Move window
+            window.x = (cellWidth * column) + __priv.hmargin;
+            window.y = (cellHeight * row) + __priv.vmargin;
+            //if (__priv.debug) console.log("x:", window.x, "y:", window.y);
+
+            // Resize window
+            scale = Math.min((cellWidth - __priv.hmargin) / window.child.surface.size.width,
+                             (cellHeight - __priv.vmargin) / window.child.surface.size.height) * 0.98;
+            window.width = window.child.surface.size.width * scale;
+            window.height = window.child.surface.size.height * scale;
+            //if (__priv.debug) console.log("window:", window.clientWindow.id, "scale:", scale);
 
             // Create a chrome
             if (!window.chrome) {
@@ -131,13 +153,6 @@ Item {
                     compositorRoot.endEffect("PresentWindowsGrid");
                 });
             }
-
-            // Apply new properties
-            window.x = cx - window.width / 2;
-            window.y = cy - window.height / 2;
-            window.scale = 0.98 * Math.min(cellWidth / window.width, cellHeight / window.height);
-
-            index++;
         }
     }
 
@@ -187,6 +202,8 @@ Item {
             // Restore saved properties
             window.x = window.savedProperties.x;
             window.y = window.savedProperties.y;
+            window.width = window.savedProperties.width;
+            window.height = window.savedProperties.height;
             window.scale = window.savedProperties.scale;
             window.chrome = window.savedProperties.chrome;
             if (window.chrome)
