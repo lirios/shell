@@ -10,6 +10,7 @@ set(SOURCES
 add_library(settingsplugin SHARED ${SOURCES})
 target_link_libraries(settingsplugin
                       Qt5::Core
+                      Qt5::Gui
                       Qt5::Qml
                       Qt5::Quick
                       KF5::CoreAddons
