@@ -522,8 +522,9 @@ Item {
     function disableInput() {
         var i;
         for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
-            var window = compositorRoot.surfaceModel.get(i).item;
-            window.child.focus = false;
+            var window = compositorRoot.surfaceModel.get(i).window;
+            window.deactivate();
         }
+        compositor.clearKeyboardFocus();
     }
 }
