@@ -37,6 +37,7 @@ Item {
         id: __priv
 
         property bool debug: false
+        property var selectedWindow: null
         readonly property real hmargin: Themes.Units.dp(48)
         readonly property real vmargin: Themes.Units.dp(48)
     }
@@ -58,6 +59,10 @@ Item {
 
         // Disable output zoom
         compositorRoot.screenView.zoomEnabled = false;
+
+        // Save currently active window, it will be activated again
+        // if the effect is stopped without clicking on a window
+        __priv.selectedWindow = compositorRoot.activeWindow
 
         // Layout
         gridLayout(num);
@@ -165,9 +170,6 @@ Item {
     }
 
     function end() {
-        // Enable input in windows
-        compositorRoot.enableInput();
-
         // Enable output zoom again
         compositorRoot.screenView.zoomEnabled = true;
 
@@ -181,9 +183,6 @@ Item {
         var num = workspace.children.length;
         if (num === 0)
             return 0;
-
-        // Window that was selected with a click before
-        var selectedWindow = null;
 
         // Loop over windows to restore saved properties
         var i, window;
@@ -212,13 +211,13 @@ Item {
 
             // Bring window to front
             if (window.savedProperties.bringToFront) {
-                selectedWindow = window;
+                __priv.selectedWindow = window;
                 window.savedProperties.bringToFront = false;
             }
         }
 
         // Activate selected window
-        if (selectedWindow)
-            selectedWindow.clientWindow.activate();
+        if (__priv.selectedWindow && __priv.selectedWindow.clientWindow)
+            __priv.selectedWindow.clientWindow.activate();
     }
 }
