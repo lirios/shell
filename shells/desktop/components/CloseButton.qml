@@ -29,6 +29,7 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 
 Rectangle {
+    property alias hovered: mouseArea.containsMouse
     signal clicked()
 
     id: root
@@ -52,7 +53,9 @@ Rectangle {
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
+        hoverEnabled: true
         onClicked: root.clicked()
     }
 }

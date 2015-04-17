@@ -52,7 +52,7 @@ Item {
         spread: 0.2
         color: Themes.Theme.palette.view.selectedBackgroundColor
         cornerRadius: Themes.Units.gu(0.2)
-        opacity: mouseArea.containsMouse ? 0.5 : 0.0
+        opacity: closeButton.opacity > 0.0 ? 0.5 : 0.0
         z: 3
 
         Behavior on opacity {
@@ -78,7 +78,7 @@ Item {
                 margins: Themes.Units.smallSpacing
             }
             renderType: Text.NativeRendering
-            text: window.clientWindow.title
+            text: window.clientWindow ? window.clientWindow.title : qsTr("n.a.")
             elide: Text.ElideRight
             color: "white"
         }
@@ -104,22 +104,23 @@ Item {
                 centerIn: parent
                 margins: Themes.Units.smallSpacing
             }
-            iconName: window.clientWindow.iconName
+            iconName: window.clientWindow ? window.clientWindow.iconName : ""
             width: Themes.Units.iconSizes.large
             height: width
         }
     }
 
     ShellComponents.CloseButton {
+        id: closeButton
         anchors {
-            top: parent.top
-            right: parent.right
-            margins: -Themes.Units.gu(0.25)
+            top: mouseArea.top
+            right: mouseArea.right
+            margins: -Themes.Units.gu(1)
         }
         width: Themes.Units.iconSizes.medium
-        z: 4
-        opacity: mouseArea.containsMouse ? 1.0 : 0.0
-        onClicked: window.child.surface.destroySurface()
+        z: 1001
+        opacity: mouseArea.containsMouse || hovered ? 1.0 : 0.0
+        onClicked: window.clientWindow.close()
 
         Behavior on opacity {
             NumberAnimation {
