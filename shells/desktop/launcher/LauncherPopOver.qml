@@ -179,7 +179,7 @@ Components.Showable {
                 }
             }
 
-            TextField {
+            CustomComponents.TextField {
                 id: searchText
                 placeholderText: qsTr("Type an application name...")
                 onTextChanged: grid.query = text

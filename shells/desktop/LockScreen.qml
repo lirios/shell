@@ -31,6 +31,7 @@ import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.session 0.1 as Session
+import "components" as CustomComponents
 import "."
 
 Components.Showable {
@@ -130,7 +131,7 @@ Components.Showable {
                 anchors.centerIn: parent
                 spacing: Themes.Units.smallSpacing
 
-                TextField {
+                CustomComponents.TextField {
                     id: passwordField
                     placeholderText: qsTr("Password")
                     width: Themes.Units.gu(20)

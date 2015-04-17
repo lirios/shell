@@ -32,6 +32,7 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1 as Misc
 import org.hawaii.networkmanager 0.1 as NM
+import "../../components" as CustomComponents
 
 Item {
     property bool predictableWirelessPassword: !Uuid && Type === NM.Enums.Wireless &&
@@ -228,7 +229,7 @@ Item {
 
             spacing: Themes.Units.smallSpacing
 
-            TextField {
+            CustomComponents.TextField {
                 id: passwordField
                 echoMode: showPasswordCheckbox.checked ? TextInput.Normal : TextInput.Password
                 placeholderText: qsTr("Password")
