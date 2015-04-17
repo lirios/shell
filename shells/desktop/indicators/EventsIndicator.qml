@@ -123,7 +123,11 @@ Indicator {
 
     Connections {
         target: NotificationsService
-        onNotificationReceived: addNotification(data)
+        onNotificationReceived: addNotification({id: notificationId, appName: appName,
+                                                appIcon: appIcon, hasIcon: hasIcon,
+                                                summary: summary, body: body,
+                                                actions: actions, isPersistent: isPersistent,
+                                                expireTimeout: expireTimeout, hints: hints})
         onNotificationClosed: repositionNotifications()
     }
 

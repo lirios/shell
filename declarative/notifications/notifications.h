@@ -61,7 +61,11 @@ public:
 Q_SIGNALS:
     void activeChanged();
 
-    void notificationReceived(QQmlPropertyMap *data);
+    void notificationReceived(uint notificationId, const QString &appName,
+                              const QString &appIcon, bool hasIcon,
+                              const QString &summary, const QString &body,
+                              const QVariantList &actions, bool isPersistent,
+                              int expireTimeout, const QVariantMap &hints);
     void notificationClosed(uint notificationId, uint reason);
 
     void actionInvoked(uint notificationId, const QString &actionKey);

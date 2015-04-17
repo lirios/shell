@@ -191,25 +191,14 @@ uint NotificationsDaemon::Notify(const QString &appName, uint replacesId,
         actionsList.append(actionsMap);
     }
 
-    // Populate data
-    QQmlPropertyMap *data = new QQmlPropertyMap(this);
-    data->setObjectName(QStringLiteral("notification-%1").arg(QString::number(id)));
-    data->insert(QStringLiteral("id"), id);
-    data->insert(QStringLiteral("appName"), realAppName);
-    data->insert(QStringLiteral("appIcon"), appIcon);
-    data->insert(QStringLiteral("hasIcon"), !notificationImage->image.isNull() ||
-                 !notificationImage->iconName.isEmpty() ||
-                 !notificationImage->entryIconName.isEmpty());
-    data->insert(QStringLiteral("summary"), summary);
-    data->insert(QStringLiteral("body"), body);
-    data->insert(QStringLiteral("actions"), actionsList);
-    data->insert(QStringLiteral("isPersistent"), isPersistent);
-    data->insert(QStringLiteral("expireTimeout"), timeout);
-    data->insert(QStringLiteral("hints"), hints);
-
     // Create notification
     m_notifications.insert(id, appName + summary);
-    Q_EMIT m_parent->notificationReceived(data);
+    bool hasIcon = !notificationImage->image.isNull() ||
+            !notificationImage->iconName.isEmpty() ||
+            !notificationImage->entryIconName.isEmpty();
+    Q_EMIT m_parent->notificationReceived(id, realAppName, appIcon, hasIcon,
+                                          summary, body, actionsList,
+                                          isPersistent, timeout, hints);
 
     return id;
 }
