@@ -195,11 +195,15 @@ void CompositorProcess::processFinished(int exitCode, QProcess::ExitStatus statu
                 << "Process" << m_prog
                 << "finished successfully";
         Q_EMIT finished();
+        m_process->deleteLater();
+        m_process = Q_NULLPTR;
     } else if (status == QProcess::NormalExit) {
         qCWarning(COMPOSITOR)
                 << "Process" << m_prog
                 << "finished with exit code" << exitCode;
         Q_EMIT stopped();
+        m_process->deleteLater();
+        m_process = Q_NULLPTR;
     }
 }
 
