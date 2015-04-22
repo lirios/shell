@@ -50,6 +50,7 @@ Rectangle {
         sourceSize.height: height
         source: "image://launcher/" + model.iconName
         cache: false
+        asynchronous: true
     }
 
     Text {
