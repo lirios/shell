@@ -61,6 +61,11 @@ int main(int argc, char *argv[])
                                   TR("Specify session mode (possible values: eglfs, hwcomposer, nested)."), TR("mode"));
     parser.addOption(modeOption);
 
+    // Login manager
+    QCommandLineOption lmOption(QStringLiteral("from-login-manager"),
+                                TR("Specify the session is launched from a login manager (for example gdm or sddm)."));
+    parser.addOption(lmOption);
+
     // Logout
     QCommandLineOption logoutOption(QStringLiteral("logout"), TR("Quit from an existing session."));
     parser.addOption(logoutOption);
@@ -154,7 +159,7 @@ int main(int argc, char *argv[])
         return 1;
 
     // Start the compositor
-    launcher->start();
+    launcher->start(parser.isSet(lmOption));
 
     return app.exec();
 }

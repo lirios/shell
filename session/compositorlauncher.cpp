@@ -84,7 +84,7 @@ QString CompositorLauncher::sessionSocketName() const
     return m_sessionSocketName;
 }
 
-void CompositorLauncher::start()
+void CompositorLauncher::start(bool fromLoginManager)
 {
     // Try to detect mode and hardware
     detectHardware();
@@ -104,10 +104,9 @@ void CompositorLauncher::start()
         m_weston->setSocketName(QStringLiteral("hawaii-master"));
         m_compositor->setSocketName(m_socketName);
 
-        // Weston must be session leader when we are launched
-        // from gdm
-        //if (qEnvironmentVariableIsSet("GDMSESSION"))
-            //m_weston->setSessionLeader(true);
+        // Weston must be session leader when we are launched from gdm
+        // (might be the same with other login managers though)
+        m_weston->setSessionLeader(fromLoginManager);
 
         m_weston->setProgram(QStringLiteral("weston"));
         m_weston->setArguments(QStringList()

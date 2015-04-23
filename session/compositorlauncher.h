@@ -64,7 +64,7 @@ public:
     QString sessionSocketName() const;
 
 public Q_SLOTS:
-    void start();
+    void start(bool fromLoginManager);
     void stop();
     void terminate();
 
