@@ -177,17 +177,18 @@ session with:
 hawaii-session --logout
 ```
 
-Supports a couple of modes:
+Supports the following modes:
 
-* **eglfs:** runs the compositor directly on KMS
+* **eglfs:** runs the compositor directly on KMS or other supported systems
 * **hwcomposer:** runs the compositor directly with Android drivers
 * **nested:** runs the compositor inside Weston
 
-The **eglfs** mode requires Qt 5.5 and your user must be in the ``video`` and ``input`` groups
-or you should use the root account.
+For **eglfs** mode the user must be in the ``video`` and ``input`` groups.
+KMS support requires Qt 5.5 or better.
+libinput is automatically used with Qt 5.5 or better, built with libinput support.
 
-The **hwcomposer** mode requires root privileges only when using
-the libinput input plugin with Qt 5.5.
+For **hwcomposer** mode the user must be in the ``video`` and ``input`` groups.
+libinput is automatically used with Qt 5.5 or better, built with libinput support.
 
 The mode can be specified with the ``--mode`` argument, here's an example:
 
@@ -195,8 +196,8 @@ The mode can be specified with the ``--mode`` argument, here's an example:
 hawaii-session --mode=eglfs
 ```
 
-The ``--mode`` argument can be avoid only on X11 where a specific mode
-is not required.
+The best mode is automatically detected if you run ``hawaii-session``
+without the ``--mode`` argument.
 
 ## QML JavaScript debugger
 
