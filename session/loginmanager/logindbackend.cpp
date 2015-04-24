@@ -107,6 +107,56 @@ void LogindBackend::setIdle(bool value)
     iface.asyncCall(QStringLiteral("SetIdleHint"), value);
 }
 
+void LogindBackend::takeControl()
+{
+    if (m_sessionPath.isEmpty() || m_sessionControl)
+        return;
+
+    QDBusMessage msg = QDBusMessage::createMethodCall(login1Service, m_sessionPath,
+                                                      login1SessionInterface,
+                                                      QStringLiteral("TakeControl"));
+    msg.setArguments(QVariantList() << QVariant(false));
+
+    QDBusPendingReply<void> call = m_interface->connection().asyncCall(msg);
+    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this,
+            [this](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<void> reply = *self;
+        self->deleteLater();
+
+        if (!reply.isValid()) {
+            qCWarning(LOGIND_BACKEND) << "Unable to take session control:" << reply.error().message();
+            Q_EMIT sessionControlChanged(false);
+            return;
+        }
+
+        qCDebug(LOGIND_BACKEND) << "Session control acquired";
+
+        m_sessionControl = true;
+        Q_EMIT sessionControlChanged(true);
+
+        m_interface->connection().connect(login1Service, m_sessionPath,
+                                          login1SessionInterface,
+                                          QStringLiteral("PauseDevice"),
+                                          this, SLOT(devicePaused(quint32,quint32,QString)));
+    });
+}
+
+void LogindBackend::releaseControl()
+{
+    if (m_sessionPath.isEmpty() || !m_sessionControl)
+        return;
+
+    QDBusInterface iface(login1Service, m_sessionPath, login1SessionInterface,
+                         m_interface->connection());
+    iface.asyncCall(QStringLiteral("ReleaseControl"));
+
+    qCDebug(LOGIND_BACKEND) << "Session control released";
+
+    m_sessionControl = false;
+    Q_EMIT sessionControlChanged(false);
+}
+
 void LogindBackend::lockSession()
 {
     QDBusInterface iface(login1Service, m_sessionPath, login1SessionInterface,

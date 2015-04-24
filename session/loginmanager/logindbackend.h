@@ -49,6 +49,9 @@ public:
 
     void setIdle(bool value);
 
+    void takeControl();
+    void releaseControl();
+
     void lockSession();
     void unlockSession();
 
