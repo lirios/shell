@@ -177,19 +177,16 @@ void CompositorLauncher::detectMode()
         return;
     }
 
-    // Use eglfs mode if we detected a particular hardware
+    // Use eglfs mode if we detected a particular hardware except
+    // for drm with Qt < 5.5 because eglfs_kms was not available
     if (m_hardware != UnknownHardware) {
-        m_mode = EglFSMode;
-        return;
-    }
-
-    // Detect drm
-    if (QDir(QStringLiteral("/sys/class/drm")).exists()) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        m_mode = EglFSMode;
-#else
-        m_mode = NestedMode;
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+        if (m_hardware == DrmHardware) {
+            m_mode = NestedMode;
+            return;
+        }
 #endif
+        m_mode = EglFSMode;
         return;
     }
 
@@ -217,6 +214,12 @@ void CompositorLauncher::detectHardware()
 
     // TODO: Detect Mali
     // TODO: Detect Vivante
+
+    // Detect DRM
+    if (QDir(QStringLiteral("/sys/class/drm")).exists()) {
+        m_hardware = DrmHardware;
+        return;
+    }
 
     // Unknown hardware
     m_hardware = UnknownHardware;
