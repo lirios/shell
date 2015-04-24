@@ -38,7 +38,12 @@ public:
 
     virtual QString name() const = 0;
 
+    bool hasSessionControl() const;
+
     virtual void setIdle(bool value) = 0;
+
+    virtual void takeControl();
+    virtual void releaseControl();
 
     virtual void lockSession() = 0;
     virtual void unlockSession() = 0;
@@ -50,8 +55,13 @@ public:
 
 Q_SIGNALS:
     void logOutRequested();
+    void sessionControlChanged(bool value);
     void sessionLocked();
     void sessionUnlocked();
+    void devicePaused(quint32 major, quint32 minor, const QString &type);
+
+protected:
+    bool m_sessionControl;
 };
 
 #endif // LOGINMANAGERBACKEND_H

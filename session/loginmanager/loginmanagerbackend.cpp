@@ -28,10 +28,24 @@
 
 LoginManagerBackend::LoginManagerBackend(QObject *parent)
     : QObject(parent)
+    , m_sessionControl(false)
 {
 }
 
 LoginManagerBackend::~LoginManagerBackend()
+{
+}
+
+bool LoginManagerBackend::hasSessionControl() const
+{
+    return m_sessionControl;
+}
+
+void LoginManagerBackend::takeControl()
+{
+}
+
+void LoginManagerBackend::releaseControl()
 {
 }
 
