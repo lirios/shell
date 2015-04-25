@@ -43,6 +43,9 @@ public:
 
     void setIdle(bool value);
 
+    int takeDevice(const QString &path);
+    void releaseDevice(int fd);
+
     void lockSession();
     void unlockSession();
 

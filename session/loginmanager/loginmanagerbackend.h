@@ -45,6 +45,9 @@ public:
     virtual void takeControl();
     virtual void releaseControl();
 
+    virtual int takeDevice(const QString &path);
+    virtual void releaseDevice(int fd);
+
     virtual void lockSession() = 0;
     virtual void unlockSession() = 0;
 

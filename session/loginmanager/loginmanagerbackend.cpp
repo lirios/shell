@@ -49,4 +49,15 @@ void LoginManagerBackend::releaseControl()
 {
 }
 
+int LoginManagerBackend::takeDevice(const QString &path)
+{
+    Q_UNUSED(path)
+    return false;
+}
+
+void LoginManagerBackend::releaseDevice(int fd)
+{
+    Q_UNUSED(fd)
+}
+
 #include "moc_loginmanagerbackend.cpp"

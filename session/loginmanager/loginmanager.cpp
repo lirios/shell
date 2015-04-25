@@ -59,6 +59,16 @@ void LoginManager::setIdle(bool value)
     m_backend->setIdle(value);
 }
 
+int LoginManager::takeDevice(const QString &path)
+{
+    return m_backend->takeDevice(path);
+}
+
+void LoginManager::releaseDevice(int fd)
+{
+    m_backend->releaseDevice(fd);
+}
+
 void LoginManager::lockSession()
 {
     m_backend->lockSession();
