@@ -52,6 +52,9 @@ public:
     void takeControl();
     void releaseControl();
 
+    int takeDevice(const QString &path);
+    void releaseDevice(int fd);
+
     void lockSession();
     void unlockSession();
 

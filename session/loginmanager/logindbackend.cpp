@@ -32,6 +32,7 @@
 #include "logindbackend.h"
 #include "logindsessioninfo.h"
 
+#include <sys/stat.h>
 #include <unistd.h>
 
 Q_LOGGING_CATEGORY(LOGIND_BACKEND, "hawaii.session.loginmanager.logind")
@@ -155,6 +156,48 @@ void LogindBackend::releaseControl()
 
     m_sessionControl = false;
     Q_EMIT sessionControlChanged(false);
+}
+
+int LogindBackend::takeDevice(const QString &path)
+{
+    struct stat s;
+
+    if (::stat(path.toLatin1().constData(), &s) < 0) {
+        qCWarning(LOGIND_BACKEND) << "Couldn't stat" << path;
+        return -1;
+    }
+
+    QDBusMessage msg = QDBusMessage::createMethodCall(login1Service, m_sessionPath,
+                                                      login1SessionInterface,
+                                                      QStringLiteral("TakeDevice"));
+    msg.setArguments(QVariantList() << QVariant(major(s.st_rdev)) << QVariant(minor(s.st_rdev)));
+
+    QDBusMessage reply = m_interface->connection().call(msg);
+    if (reply.type() == QDBusMessage::ErrorMessage) {
+        qCWarning(LOGIND_BACKEND,
+                "Couldn't take device \"%s\": %s",
+                qPrintable(path), qPrintable(reply.errorMessage()));
+        return -1;
+    }
+
+    return ::dup(reply.arguments().first().value<QDBusUnixFileDescriptor>().fileDescriptor());
+}
+
+void LogindBackend::releaseDevice(int fd)
+{
+    struct stat s;
+
+    if (::fstat(fd, &s) < 0) {
+        qCWarning(LOGIND_BACKEND) << "Couldn't stat file descriptor" << fd;
+        return;
+    }
+
+    QDBusMessage msg = QDBusMessage::createMethodCall(login1Service, m_sessionPath,
+                                                      login1SessionInterface,
+                                                      QStringLiteral("ReleaseDevice"));
+    msg.setArguments(QVariantList() << QVariant(major(s.st_rdev)) << QVariant(minor(s.st_rdev)));
+
+    m_interface->connection().asyncCall(msg);
 }
 
 void LogindBackend::lockSession()
