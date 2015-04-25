@@ -82,6 +82,65 @@ SessionManager *SessionManager::instance()
     return s_sessionManager();
 }
 
+bool SessionManager::initialize()
+{
+    // Setup environment
+    setupEnvironment();
+
+    // Register D-Bus services
+    if (!registerDBus())
+        return false;
+
+    return true;
+}
+
+VtHandler *SessionManager::vtHandler() const
+{
+    return m_vtHandler;
+}
+
+bool SessionManager::isIdle() const
+{
+    return m_idle;
+}
+
+void SessionManager::setIdle(bool value)
+{
+    if (m_idle == value)
+        return;
+
+    m_idle = value;
+    Q_EMIT idleChanged(value);
+}
+
+void SessionManager::idleInhibit()
+{
+    m_server->sendIdleInhibit();
+}
+
+void SessionManager::idleUninhibit()
+{
+    m_server->sendIdleUninhibit();
+}
+
+bool SessionManager::isLocked() const
+{
+    return m_locked;
+}
+
+void SessionManager::setLocked(bool value)
+{
+    if (m_locked == value)
+        return;
+
+    m_locked = value;
+    if (m_locked)
+        m_server->sendLock();
+    else
+        m_server->sendUnlock();
+    Q_EMIT lockedChanged(value);
+}
+
 void SessionManager::setupEnvironment()
 {
     // Set paths only if we are installed onto a non standard location
@@ -155,53 +214,6 @@ bool SessionManager::registerDBus()
         return false;
 
     return true;
-}
-
-VtHandler *SessionManager::vtHandler() const
-{
-    return m_vtHandler;
-}
-
-bool SessionManager::isIdle() const
-{
-    return m_idle;
-}
-
-void SessionManager::setIdle(bool value)
-{
-    if (m_idle == value)
-        return;
-
-    m_idle = value;
-    Q_EMIT idleChanged(value);
-}
-
-void SessionManager::idleInhibit()
-{
-    m_server->sendIdleInhibit();
-}
-
-void SessionManager::idleUninhibit()
-{
-    m_server->sendIdleUninhibit();
-}
-
-bool SessionManager::isLocked() const
-{
-    return m_locked;
-}
-
-void SessionManager::setLocked(bool value)
-{
-    if (m_locked == value)
-        return;
-
-    m_locked = value;
-    if (m_locked)
-        m_server->sendLock();
-    else
-        m_server->sendUnlock();
-    Q_EMIT lockedChanged(value);
 }
 
 void SessionManager::autostart()

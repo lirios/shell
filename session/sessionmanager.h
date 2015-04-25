@@ -44,8 +44,7 @@ class SessionManager : public QObject
 public:
     static SessionManager *instance();
 
-    void setupEnvironment();
-    bool registerDBus();
+    bool initialize();
 
     VtHandler *vtHandler() const;
 
@@ -81,6 +80,9 @@ private:
 
     bool m_idle;
     bool m_locked;
+
+    void setupEnvironment();
+    bool registerDBus();
 
 private Q_SLOTS:
     void autostart();

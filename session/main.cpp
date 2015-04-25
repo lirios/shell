@@ -80,24 +80,6 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // Process controller that manages the compositor
-    CompositorLauncher *launcher = CompositorLauncher::instance();
-    QString mode = parser.value(modeOption);
-    if (mode == QStringLiteral("eglfs"))
-        launcher->setMode(CompositorLauncher::EglFSMode);
-    else if (mode == QStringLiteral("hwcomposer"))
-        launcher->setMode(CompositorLauncher::HwComposerMode);
-    else if (mode == QStringLiteral("nested"))
-        launcher->setMode(CompositorLauncher::NestedMode);
-    else if (!mode.isEmpty()) {
-        qWarning() << "Invalid mode argument" << mode;
-        return 1;
-    }
-
-    // Session manager
-    SessionManager *sessionManager = SessionManager::instance();
-    sessionManager->setupEnvironment();
-
     // Restart with D-Bus session if necessary
     if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
         qDebug() << "No D-Bus session bus available, respawning with dbus-launch...";
@@ -136,6 +118,32 @@ int main(int argc, char *argv[])
         ::exit(EXIT_SUCCESS);
     }
 
+    // Print version information
+    qDebug("== Hawaii Session v%s ==\n"
+           "** https://hawaii-desktop.github.io\n"
+           "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
+           "** Build: %s-%s",
+           HAWAII_VERSION_STRING, HAWAII_VERSION_STRING, GIT_REV);
+
+    // Process controller that manages the compositor
+    CompositorLauncher *launcher = CompositorLauncher::instance();
+    QString mode = parser.value(modeOption);
+    if (mode == QStringLiteral("eglfs"))
+        launcher->setMode(CompositorLauncher::EglFSMode);
+    else if (mode == QStringLiteral("hwcomposer"))
+        launcher->setMode(CompositorLauncher::HwComposerMode);
+    else if (mode == QStringLiteral("nested"))
+        launcher->setMode(CompositorLauncher::NestedMode);
+    else if (!mode.isEmpty()) {
+        qWarning() << "Invalid mode argument" << mode;
+        return 1;
+    }
+
+    // Session manager
+    SessionManager *sessionManager = SessionManager::instance();
+    if (!sessionManager->initialize())
+        return 1;
+
     // Unix signals watcher
     UnixSignalWatcher sigwatch;
     sigwatch.watchForSignal(SIGINT);
@@ -146,17 +154,6 @@ int main(int argc, char *argv[])
         qDebug() << "Log out caused by signal" << signum;
         sessionManager->logOut();
     });
-
-    // Print version information
-    qDebug("== Hawaii Session v%s ==\n"
-           "** https://hawaii-desktop.github.io\n"
-           "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
-           "** Build: %s-%s",
-           HAWAII_VERSION_STRING, HAWAII_VERSION_STRING, GIT_REV);
-
-    // Register all D-Bus services
-    if (!sessionManager->registerDBus())
-        return 1;
 
     // Start the compositor
     launcher->start(parser.isSet(lmOption));
