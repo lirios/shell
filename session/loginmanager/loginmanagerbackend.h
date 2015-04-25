@@ -61,7 +61,6 @@ Q_SIGNALS:
     void sessionControlChanged(bool value);
     void sessionLocked();
     void sessionUnlocked();
-    void devicePaused(quint32 major, quint32 minor, const QString &type);
 
 protected:
     bool m_sessionControl;

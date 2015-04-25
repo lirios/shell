@@ -76,6 +76,7 @@ private Q_SLOTS:
     void prepareForSleep(bool arg);
     void prepareForShutdown(bool arg);
     void getSession(QDBusPendingCallWatcher *watcher);
+    void devicePaused(quint32 devMajor, quint32 devMinor, const QString &type);
 };
 
 #endif // LOGINDBACKEND_H

@@ -175,8 +175,8 @@ int LogindBackend::takeDevice(const QString &path)
     QDBusMessage reply = m_interface->connection().call(msg);
     if (reply.type() == QDBusMessage::ErrorMessage) {
         qCWarning(LOGIND_BACKEND,
-                "Couldn't take device \"%s\": %s",
-                qPrintable(path), qPrintable(reply.errorMessage()));
+                  "Couldn't take device \"%s\": %s",
+                  qPrintable(path), qPrintable(reply.errorMessage()));
         return -1;
     }
 
@@ -342,6 +342,17 @@ void LogindBackend::getSession(QDBusPendingCallWatcher *watcher)
     // Unset idle hint at startup so that the login manager
     // will report the flag correctly
     setIdle(false);
+}
+
+void LogindBackend::devicePaused(quint32 devMajor, quint32 devMinor, const QString &type)
+{
+    if (QString::compare(type, QStringLiteral("pause"), Qt::CaseInsensitive) == 0) {
+        QDBusMessage msg = QDBusMessage::createMethodCall(login1Service, m_sessionPath,
+                                                          login1SessionInterface,
+                                                          QStringLiteral("PauseDeviceComplete"));
+        msg.setArguments(QVariantList() << QVariant(devMajor) << QVariant(devMinor));
+        m_interface->connection().asyncCall(msg);
+    }
 }
 
 #include "moc_logindbackend.cpp"
