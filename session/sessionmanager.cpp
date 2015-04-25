@@ -54,6 +54,7 @@ SessionManager::SessionManager(QObject *parent)
     , m_server(new SocketServer(this))
     , m_idle(false)
     , m_locked(false)
+    , m_vtHandler(new VtHandler)
 {
     CompositorLauncher *compositorLauncher = CompositorLauncher::instance();
 
@@ -153,6 +154,11 @@ bool SessionManager::registerDBus()
         return false;
 
     return true;
+}
+
+VtHandler *SessionManager::vtHandler() const
+{
+    return m_vtHandler;
 }
 
 bool SessionManager::isIdle() const

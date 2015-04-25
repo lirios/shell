@@ -14,6 +14,7 @@ set(SOURCES
     sessionleader.cpp
     sessionmanager.cpp
     socketserver.cpp
+    vthandler.cpp
     loginmanager/loginmanager.cpp
     loginmanager/loginmanagerbackend.cpp
     loginmanager/logindbackend.cpp

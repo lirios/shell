@@ -30,6 +30,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
 
+#include "vthandler.h"
+
 Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 
 class ProcessLauncher;
@@ -46,6 +48,8 @@ public:
 
     void setupEnvironment();
     bool registerDBus();
+
+    VtHandler *vtHandler() const;
 
     bool isIdle() const;
     void setIdle(bool value);
@@ -72,6 +76,7 @@ private:
     ScreenSaver *m_screenSaver;
     SocketServer *m_server;
     QList<qint64> m_processes;
+    VtHandler *m_vtHandler;
 
     bool m_idle;
     bool m_locked;
