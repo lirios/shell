@@ -43,6 +43,9 @@ public:
 
     void setIdle(bool value);
 
+    void takeControl();
+    void releaseControl();
+
     int takeDevice(const QString &path);
     void releaseDevice(int fd);
 
