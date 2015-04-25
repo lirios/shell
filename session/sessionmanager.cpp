@@ -53,9 +53,9 @@ SessionManager::SessionManager(QObject *parent)
     , m_launcher(new ProcessLauncher(this))
     , m_screenSaver(new ScreenSaver(this))
     , m_server(new SocketServer(this))
+    , m_vtHandler(new VtHandler(this))
     , m_idle(false)
     , m_locked(false)
-    , m_vtHandler(new VtHandler)
 {
     CompositorLauncher *compositorLauncher = CompositorLauncher::instance();
 
