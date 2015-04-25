@@ -42,8 +42,6 @@ class SessionManager : public QObject
 {
     Q_OBJECT
 public:
-    SessionManager(QObject *parent = 0);
-
     static SessionManager *instance();
 
     void setupEnvironment();
@@ -70,6 +68,9 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void logOut();
+
+protected:
+    SessionManager(QObject *parent = 0);
 
 private:
     ProcessLauncher *m_launcher;

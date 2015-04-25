@@ -45,7 +45,8 @@
 
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 
-Q_GLOBAL_STATIC(SessionManager, s_sessionManager)
+class SessionManagerInternal : public SessionManager {};
+Q_GLOBAL_STATIC(SessionManagerInternal, s_sessionManager)
 
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
