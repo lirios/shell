@@ -214,7 +214,7 @@ bool SessionManager::registerDBus()
 
 void SessionManager::autostart()
 {
-    for (const XdgDesktopFile &entry: XdgAutoStart::desktopFileList()) {
+    Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
         if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
             continue;
 
