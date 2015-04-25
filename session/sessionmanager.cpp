@@ -231,6 +231,9 @@ void SessionManager::logOut()
     // Stop the compositor
     CompositorLauncher::instance()->terminate();
 
+    // Make sure the vt handler is destroyed
+    m_vtHandler->deleteLater();
+
     // Exit
     QCoreApplication::quit();
 }
