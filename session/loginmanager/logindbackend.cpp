@@ -31,6 +31,7 @@
 
 #include "logindbackend.h"
 #include "logindsessioninfo.h"
+#include "sessionmanager.h"
 
 #include <sys/stat.h>
 #include <unistd.h>
@@ -270,8 +271,7 @@ void LogindBackend::switchToVt(int index)
 void LogindBackend::setupInhibitors()
 {
     // Inhibit already in action or session already locked
-    //if (m_inhibitFd > 0 || SessionManager::instance()->isLocked())
-    if (m_inhibitFd > 0)
+    if (m_inhibitFd > 0 || SessionManager::instance()->isLocked())
         return;
 
     QDBusPendingCall call = m_interface->asyncCall(QStringLiteral("Inhibit"),
@@ -286,8 +286,8 @@ void LogindBackend::setupInhibitors()
 
         m_inhibitFd = -1;
 
-        //if (SessionManager::instance()->isLocked())
-        //return;
+        if (SessionManager::instance()->isLocked())
+            return;
 
         if (reply.isError()) {
             qCDebug(LOGIND_BACKEND) << "Inhibit error:" << reply.error().message();
