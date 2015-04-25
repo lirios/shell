@@ -64,10 +64,6 @@ SessionManager::SessionManager(QObject *parent)
         QTimer::singleShot(500, this, SLOT(autostart()));
     });
 
-    // Log out when the compositor has finished
-    connect(compositorLauncher, &CompositorLauncher::finished,
-            this, &SessionManager::logOut);
-
     // Communication between compositor and session manager
     connect(m_server, &SocketServer::idleChanged, this, [this](bool value) {
         setIdle(value);
