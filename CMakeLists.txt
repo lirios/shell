@@ -22,7 +22,7 @@ set(HAWAII_VERSION_PATCH 93)
 set(HAWAII_VERSION_STRING "${HAWAII_VERSION_MAJOR}.${HAWAII_VERSION_MINOR}.${HAWAII_VERSION_PATCH}")
 
 # ECM
-find_package(ECM 0.0.11 REQUIRED NO_MODULE)
+find_package(ECM 1.4.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
 # Installation directories
@@ -120,6 +120,9 @@ find_package(GreenIsland 0.5.93 REQUIRED)
 
 # lxqt
 find_package(QT5XDG REQUIRED)
+
+# gio (for the GSettings Qt wrapper)
+pkg_check_modules(gio gio-2.0 REQUIRED)
 
 # Wayland
 set(REQUIRED_WAYLAND_VERSION 1.2.0)

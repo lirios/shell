@@ -31,6 +31,7 @@ to work. If you have Qt >= 5.5 you won't likely need nested mode.
 
 The following modules and their dependencies are required:
 
+* [ECM >= 1.4.0](http://quickgit.kde.org/?p=extra-cmake-modules.git)
 * [greenisland](https://github.com/greenisland/greenisland)
 * [kconfig](http://quickgit.kde.org/?p=kconfig.git)
 * [kcoreaddons](http://quickgit.kde.org/?p=kcoreaddons.git)
