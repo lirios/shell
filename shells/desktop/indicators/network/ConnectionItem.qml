@@ -248,6 +248,7 @@ Item {
             }
 
             CheckBox {
+                id: showPasswordCheckbox
                 checked: false
                 text: qsTr("Show password")
 
@@ -273,8 +274,8 @@ Item {
                 if (!predictableWirelessPassword && !Uuid) {
                     handler.addAndActivateConnection(DevicePath, SpecificPath);
                 } else if (passwordDialogVisible) {
-                    if (expandableComponentLoader.item.password !== "") {
-                        handler.addAndActivateConnection(DevicePath, SpecificPath, expandableComponentLoader.item.password);
+                    if (expandableLoader.item.password !== "") {
+                        handler.addAndActivateConnection(DevicePath, SpecificPath, expandableLoader.item.password);
                         passwordDialogVisible = false;
                     } else {
                         connectionItem.clicked();
