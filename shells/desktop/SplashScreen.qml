@@ -30,8 +30,9 @@ import QtGraphicalEffects 1.0
 import "."
 
 MouseArea {
+    hoverEnabled: true
     acceptedButtons: Qt.NoButton
-    //cursorShape: Qt.BlankCursor
+    onPositionChanged: compositor.unsetMouseCursor()
 
     Image {
         id: picture
@@ -53,4 +54,6 @@ MouseArea {
     BusyIndicator {
         anchors.centerIn: parent
     }
+
+    Component.onDestruction: compositor.resetMouseCursor()
 }

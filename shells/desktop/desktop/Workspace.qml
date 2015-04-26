@@ -33,7 +33,8 @@ MouseArea {
 
     id: root
     acceptedButtons: Qt.NoButton
-    //cursorShape: Qt.ArrowCursor
+    hoverEnabled: true
+    onPositionChanged: compositor.resetMouseCursor()
 
     Effects {
         id: effects
