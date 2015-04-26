@@ -17,3 +17,5 @@ Please read the [list of dependencies](DEPENDENCIES.md) and how to
 [build and install](BUILD.md) this software.
 
 You may also be interested in reading some [notes](NOTES.md).
+
+List of [authors](AUTHORS.md) and [contributors](CONTRIBUTORS.md).
