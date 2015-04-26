@@ -13,45 +13,48 @@ Only the desktop shell is implemented at the moment though.
 
 ## Dependencies
 
-gcc >= 4.8 is required to build this software.
+Compiler requirements:
 
-You need the following modules and their dependencies:
+* [gcc >= 4.8](https://gcc.gnu.org/gcc-4.8/) or
+* [Clang](http://clang.llvm.org/)
+
+Qt >= 5.4 with at least the following modules is required:
+
+* [qtbase](http://code.qt.io/cgit/qt/qtbase.git)
+* [qtdeclarative](http://code.qt.io/cgit/qt/qtdeclarative.git)
+* [qtgraphicaleffects](http://code.qt.io/cgit/qt/qtgraphicaleffects.git)
+* [qtquickcontrols](http://code.qt.io/cgit/qt/qtquickcontrols.git)
+* [qtsvg](http://code.qt.io/cgit/qt/qtsvg.git)
+
+You may also need [Weston >= 1.5.0](http://wayland.freedesktop.org) for nested mode
+to work. If you have Qt >= 5.5 you won't likely need nested mode.
+
+The following modules and their dependencies are required:
 
 * [greenisland](https://github.com/greenisland/greenisland)
-
-Optional, but recommended dependencies:
-
-* [hawaii-icon-themes](https://github.com/hawaii-desktop/hawaii-icon-themes) (for the default icon theme)
-* [hawaii-wallpapers](https://github.com/hawaii-desktop/hawaii-wallpapers) (for the default wallpaper)
-
-If you do not install those dependencies, please configure Hawaii with an
-alternative icon theme and wallpaper.
-
-You may also need [Weston](http://wayland.freedesktop.org) for nested mode
-to work.
-
-Make sure you also have Qt 5.4 or better with the following modules:
-
-* qtbase
-* qtdeclarative
-* qtgraphicaleffects
-* qtquickcontrols
-* qtsvg
-
-And the following modules from KDE:
-
-* kconfig
-* kcoreaddons
-* solid
-
-Other dependencies:
-
-* pam
-* libqtxdg
+* [kconfig](http://quickgit.kde.org/?p=kconfig.git)
+* [kcoreaddons](http://quickgit.kde.org/?p=kcoreaddons.git)
+* [solid](http://quickgit.kde.org/?p=solid.git)
+* [pam](http://www.linux-pam.org/)
+* [libqtxdg](https://github.com/lxde/libqtxdg)
 
 Optional dependencies:
 
-* alsa and/or libpulse for volume control
+* Volume control
+  * [alsa](http://www.alsa-project.org/main/index.php/Main_Page) and/or
+  * [libpulse](https://wiki.freedesktop.org/www/Software/PulseAudio/)
+* Networking
+  * Network Manager support
+    * [networkmanager-qt](http://quickgit.kde.org/?p=networkmanager-qt.git)
+    * [modemmanager-qt](http://quickgit.kde.org/?p=modemmanager-qt.git) (optional)
+
+Optional, but recommended dependencies:
+
+* [hawaii-icon-themes](https://github.com/hawaii-desktop/hawaii-icon-themes) for the default icon theme
+* [hawaii-wallpapers](https://github.com/hawaii-desktop/hawaii-wallpapers) for the default wallpaper
+
+If you do not install those dependencies, please configure Hawaii with an
+alternative icon theme and wallpaper.
 
 ## Dependency on KDE Frameworks
 
