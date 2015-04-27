@@ -28,7 +28,7 @@ to learn how to enable them.
   * **hawaii.qml.mixer.pulseaudio:** PulseAudio backend
 
 * Launcher QML plugin:
-  * **hawaii.qml.launcher:**" Launcher model and items
+  * **hawaii.qml.launcher:** Launcher model and items
 
 * MPRIS2 QML plugin:
   * **hawaii.qml.mpris2:** MPRIS2 engine
