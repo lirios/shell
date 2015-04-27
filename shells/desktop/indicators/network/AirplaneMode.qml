@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.3
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 
@@ -44,6 +44,14 @@ RowLayout {
         property bool airplaneMode: false
     }
 
+    Switch {
+        id: airplaneSwitch
+        onClicked: {
+            __priv.airplaneMode = !__priv.airplaneMode;
+            root.clicked();
+        }
+    }
+
     Components.Icon {
         id: airplaneModeIcon
         iconName: airplaneMode ? "airplane-mode-symbolic" : "airplane-mode-disabled-symbolic"
@@ -55,13 +63,5 @@ RowLayout {
     Label {
         text: airplaneMode ? qsTr("Airplane mode enabled") : qsTr("Airplane mode disabled")
         color: Themes.Theme.palette.panel.textColor
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            __priv.airplaneMode = !__priv.airplaneMode;
-            root.clicked();
-        }
     }
 }
