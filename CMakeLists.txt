@@ -126,11 +126,12 @@ pkg_check_modules(gio gio-2.0 REQUIRED)
 
 # Wayland
 set(REQUIRED_WAYLAND_VERSION 1.2.0)
-find_package(Wayland ${REQUIRED_WAYLAND_VERSION} COMPONENTS Client)
+find_package(Wayland ${REQUIRED_WAYLAND_VERSION} COMPONENTS Client Cursor)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for protocols")
 add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for protocols")
+add_feature_info("Wayland-Cursor" Wayland_Cursor_FOUND "Required for changing cursors")
 
 # Wayland and QtWayland scanner
 find_package(QtWaylandScanner REQUIRED)
@@ -141,6 +142,7 @@ add_subdirectory(compositor)
 add_subdirectory(data)
 add_subdirectory(declarative)
 add_subdirectory(framework)
+add_subdirectory(libgsettings)
 add_subdirectory(headers)
 add_subdirectory(platformtheme)
 add_subdirectory(scripts)
