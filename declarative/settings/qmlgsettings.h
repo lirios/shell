@@ -24,27 +24,41 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtQml/QtQml>
+#ifndef QMLGSETTINGS_H
+#define QMLGSETTINGS_H
 
-#include "configgroup.h"
-#include "qmlgsettings.h"
-#include "qmlgsettingsschema.h"
+#include <QtQml/QQmlPropertyMap>
+#include <QtQml/QQmlParserStatus>
 
-class SettingsPlugin : public QQmlExtensionPlugin
+namespace Hawaii {
+class QGSettings;
+}
+
+class QmlGSettingsSchema;
+
+class QmlGSettings : public QQmlPropertyMap, public QQmlParserStatus
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+    Q_INTERFACES(QQmlParserStatus)
+    Q_PROPERTY(QmlGSettingsSchema *schema READ schema NOTIFY schemaChanged)
 public:
-    void registerTypes(const char *uri)
-    {
-        // @uri org.hawaii.settings
-        Q_ASSERT(uri == QStringLiteral("org.hawaii.settings"));
+    QmlGSettings(QObject *parent = 0);
 
-        qmlRegisterType<ConfigGroup>(uri, 0, 1, "ConfigGroup");
-        qmlRegisterType<QmlGSettings>(uri, 0, 2, "Settings");
-        qmlRegisterUncreatableType<QmlGSettingsSchema>(uri, 0, 2, "SettingsSchema",
-                                                       QStringLiteral("Cannot instantiate SettingsSchema objects"));
-    }
+    QmlGSettingsSchema *schema() const;
+
+    void classBegin() Q_DECL_OVERRIDE;
+    void componentComplete() Q_DECL_OVERRIDE;
+
+Q_SIGNALS:
+    void schemaChanged();
+    void settingsChanged();
+
+protected:
+    QVariant updateValue(const QString &key, const QVariant &input) Q_DECL_OVERRIDE;
+
+private:
+    QmlGSettingsSchema *m_schema;
+    Hawaii::QGSettings *m_settings;
 };
 
-#include "plugin.moc"
+#endif // QMLGSETTINGS_H

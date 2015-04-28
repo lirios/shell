@@ -24,27 +24,43 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtQml/QtQml>
+#ifndef QMLGSETTINGSSCHEMA_H
+#define QMLGSETTINGSSCHEMA_H
 
-#include "configgroup.h"
-#include "qmlgsettings.h"
-#include "qmlgsettingsschema.h"
+#include <QtCore/QLoggingCategory>
+#include <QtCore/QObject>
 
-class SettingsPlugin : public QQmlExtensionPlugin
+Q_DECLARE_LOGGING_CATEGORY(SETTINGS)
+
+class QmlGSettings;
+
+class QmlGSettingsSchema : public QObject
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+    Q_PROPERTY(bool valid READ isValid NOTIFY validChanged)
+    Q_PROPERTY(QString id READ id WRITE setId)
+    Q_PROPERTY(QString path READ path WRITE setPath)
 public:
-    void registerTypes(const char *uri)
-    {
-        // @uri org.hawaii.settings
-        Q_ASSERT(uri == QStringLiteral("org.hawaii.settings"));
+    QmlGSettingsSchema(QObject *parent = 0);
+    ~QmlGSettingsSchema();
 
-        qmlRegisterType<ConfigGroup>(uri, 0, 1, "ConfigGroup");
-        qmlRegisterType<QmlGSettings>(uri, 0, 2, "Settings");
-        qmlRegisterUncreatableType<QmlGSettingsSchema>(uri, 0, 2, "SettingsSchema",
-                                                       QStringLiteral("Cannot instantiate SettingsSchema objects"));
-    }
+    bool isValid() const;
+
+    QString id() const;
+    void setId(const QString &id);
+
+    QString path() const;
+    void setPath(const QString &path);
+
+Q_SIGNALS:
+    void validChanged();
+
+private:
+    bool m_valid;
+    QString m_schemaId;
+    QString m_path;
+
+    friend class QmlGSettings;
 };
 
-#include "plugin.moc"
+#endif // QMLGSETTINGSSCHEMA_H

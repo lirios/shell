@@ -24,27 +24,53 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtQml/QtQml>
-
-#include "configgroup.h"
-#include "qmlgsettings.h"
 #include "qmlgsettingsschema.h"
 
-class SettingsPlugin : public QQmlExtensionPlugin
+Q_LOGGING_CATEGORY(SETTINGS, "hawaii.qml.settings")
+
+QmlGSettingsSchema::QmlGSettingsSchema(QObject *parent)
+    : QObject(parent)
+    , m_valid(false)
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
-public:
-    void registerTypes(const char *uri)
-    {
-        // @uri org.hawaii.settings
-        Q_ASSERT(uri == QStringLiteral("org.hawaii.settings"));
+}
 
-        qmlRegisterType<ConfigGroup>(uri, 0, 1, "ConfigGroup");
-        qmlRegisterType<QmlGSettings>(uri, 0, 2, "Settings");
-        qmlRegisterUncreatableType<QmlGSettingsSchema>(uri, 0, 2, "SettingsSchema",
-                                                       QStringLiteral("Cannot instantiate SettingsSchema objects"));
+QmlGSettingsSchema::~QmlGSettingsSchema()
+{
+}
+
+bool QmlGSettingsSchema::isValid() const
+{
+    return m_valid;
+}
+
+QString QmlGSettingsSchema::id() const
+{
+    return m_schemaId;
+}
+
+void QmlGSettingsSchema::setId(const QString &id)
+{
+    if (!m_schemaId.isEmpty()) {
+        qCWarning(SETTINGS) << "Schema identifier can only be set once, at creation time";
+        return;
     }
-};
 
-#include "plugin.moc"
+    m_schemaId = id;
+}
+
+QString QmlGSettingsSchema::path() const
+{
+    return m_path;
+}
+
+void QmlGSettingsSchema::setPath(const QString &path)
+{
+    if (!m_path.isEmpty()) {
+        qCWarning(SETTINGS) << "Schema path can only be set once, at creation time";
+        return;
+    }
+
+    m_path = path;
+}
+
+#include "moc_qmlgsettingsschema.cpp"
