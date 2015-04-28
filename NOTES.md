@@ -22,6 +22,9 @@ to learn how to enable them.
   * **hawaii.session.loginmanager:** login manager subsystem
   * **hawaii.session.loginmanager.logind:** login manager subsystem (logind backend)
 
+* Library:
+  * **hawaii.qgsettings:** Qt GSettings wrapper
+
 * Mixer QML plugin:
   * **hawaii.qml.mixer:** Mixer service
   * **hawaii.qml.mixer.alsa:** Alsa backend

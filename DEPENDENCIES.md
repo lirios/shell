@@ -23,11 +23,10 @@ The following modules and their dependencies are required:
 
 * [ECM >= 1.4.0](http://quickgit.kde.org/?p=extra-cmake-modules.git)
 * [greenisland](https://github.com/greenisland/greenisland)
-* [kconfig](http://quickgit.kde.org/?p=kconfig.git)
-* [kcoreaddons](http://quickgit.kde.org/?p=kcoreaddons.git)
-* [solid](http://quickgit.kde.org/?p=solid.git)
 * [pam](http://www.linux-pam.org/)
+* [gio-2.0](https://git.gnome.org/browse/glib/)
 * [libqtxdg](https://github.com/lxde/libqtxdg)
+* [solid](http://quickgit.kde.org/?p=solid.git)
 
 Optional dependencies:
 

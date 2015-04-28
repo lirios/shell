@@ -1,12 +1,21 @@
 project(Hawaii)
 
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12)
 
-# Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Set version
+set(PROJECT_VERSION "0.4.93")
+set(PROJECT_VERSION_MAJOR 0)
+set(PROJECT_SOVERSION 0)
 
-# Instruct CMake to run moc automatically when needed
-set(CMAKE_AUTOMOC ON)
+# Set up packaging
+set(CPACK_PACKAGE_NAME "hawaii-shell")
+set(CPACK_PACKAGE_VERSION "${HAWAII_VERSION_STRING}")
+set(CPACK_GENERATOR "TGZ")
+set(CPACK_SET_DESTDIR FALSE)
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
+set(CPACK_SOURCE_IGNORE_FILES "/build/;/.git;/*.user;/.tx/;~$;${CPACK_SOURCE_IGNORE_FILES}")
+include(CPack)
+add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
 # Options
 option(ENABLE_SYSTEMD "Enables systemd support" OFF)
@@ -15,25 +24,15 @@ option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
 option(ENABLE_NETWORK_MANAGER "Enables network indicator based on NetworkManager" ON)
 option(ENABLE_MODEMMANAGER_SUPPORT "Enables ModemManager support" OFF)
 
-# Set version
-set(HAWAII_VERSION_MAJOR 0)
-set(HAWAII_VERSION_MINOR 4)
-set(HAWAII_VERSION_PATCH 93)
-set(HAWAII_VERSION_STRING "${HAWAII_VERSION_MAJOR}.${HAWAII_VERSION_MINOR}.${HAWAII_VERSION_PATCH}")
-
 # ECM
 find_package(ECM 1.4.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
-# Installation directories
-include(KDEInstallDirs)
-
-# Other macros
-include(KDECMakeSettings)
-include(KDECompilerSettings)
-
-# Macro to print feature summary
+# Macros
 include(FeatureSummary)
+include(KDEInstallDirs)
+include(KDECompilerSettings)
+include(KDECMakeSettings)
 
 # Find pkg-config here so that it can be referenced soon
 find_package(PkgConfig)
@@ -72,16 +71,6 @@ if ("${ECM_VERSION}" VERSION_LESS "1.7.0")
         IMMEDIATE @ONLY)
     add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 endif()
-
-# Set up packaging
-set(CPACK_PACKAGE_NAME "hawaii-shell")
-set(CPACK_PACKAGE_VERSION "${HAWAII_VERSION_STRING}")
-set(CPACK_GENERATOR "TGZ")
-set(CPACK_SET_DESTDIR FALSE)
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
-set(CPACK_SOURCE_IGNORE_FILES "/build/;/.git;/*.user;/.tx/;~$;${CPACK_SOURCE_IGNORE_FILES}")
-include(CPack)
-add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
 # Assume release build by default
 if(NOT CMAKE_BUILD_TYPE)
@@ -143,6 +132,7 @@ add_subdirectory(data)
 add_subdirectory(declarative)
 add_subdirectory(framework)
 add_subdirectory(headers)
+add_subdirectory(libhawaii)
 add_subdirectory(platformtheme)
 add_subdirectory(scripts)
 add_subdirectory(session)

@@ -1,10 +1,10 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2012-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2013-2015 Pier Luigi Fiorini
  *
  * Author(s):
- *    Pier Luigi Fiorini
+ *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
@@ -24,9 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef HAWAII_CONFIG_H
-#define HAWAII_CONFIG_H
+#ifndef QGVARIANTUTILS_H
+#define QGVARIANTUTILS_H
 
-#define HAWAII_VERSION_STRING "@PROJECT_VERSION@"
+#include <QtCore/QVariant>
 
-#endif // HAWAII_CONFIG_H
+extern "C" {
+#include <glib.h>
+}
+
+namespace Utils {
+
+QVariant convertValue(GVariant *value);
+GVariant *convertVariant(const QVariant &variant);
+}
+
+#endif // QGVARIANTUTILS_H

@@ -1,10 +1,10 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2012-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015 Pier Luigi Fiorini
  *
  * Author(s):
- *    Pier Luigi Fiorini
+ *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *
@@ -24,9 +24,21 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef HAWAII_CONFIG_H
-#define HAWAII_CONFIG_H
+#ifndef UTILS_H
+#define UTILS_H
 
-#define HAWAII_VERSION_STRING "@PROJECT_VERSION@"
+#include <QtCore/QString>
 
-#endif // HAWAII_CONFIG_H
+extern "C" {
+#include <glib.h>
+}
+
+namespace Utils {
+
+QString toCamelCase(const gchar *name);
+gchar *fromCamelCase(const QString &name);
+
+}
+
+#endif // UTILS_H
+
