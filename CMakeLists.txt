@@ -148,6 +148,7 @@ add_subdirectory(scripts)
 add_subdirectory(session)
 add_subdirectory(shells)
 add_subdirectory(styles)
+add_subdirectory(tests)
 add_subdirectory(themes)
 
 # Display featute summary
