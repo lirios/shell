@@ -29,9 +29,10 @@ pragma Singleton
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.settings 0.1 as Settings
+import org.hawaii.settings 0.2 as Settings
 
 Components.Object {
+    readonly property alias keyboard: keyboardSettings
     readonly property alias background: bgSettings
     readonly property alias lockScreen: lockSettings
 
@@ -39,110 +40,68 @@ Components.Object {
      * Keymap
      */
 
-    Settings.ConfigGroup {
-        id: keymapConfig
-        file: "hawaii/keyboardrc"
-        group: "Layout"
-        onConfigChanged: applySettings()
-
-        function applySettings() {
-            compositor.settings.keyboardLayout = keymapConfig.readEntry("Layout1", "us");
-            compositor.settings.keyboardVariant = keymapConfig.readEntry("Variant1");
-            compositor.settings.keyboardOptions = keymapConfig.readEntry("Options");
-            compositor.settings.keyboardRules = keymapConfig.readEntry("Rules", "evdev");
-            compositor.settings.keyboardModel = keymapConfig.readEntry("Model", "pc105");
-        }
-
-        Component.onCompleted: keymapConfig.applySettings()
+    Settings.Settings {
+        id: keyboardSettings
+        schema.id: "org.hawaii.desktop.keyboard"
+        schema.path: "/org/hawaii/desktop/keyboard/"
+        onSettingsChanged: applyKeymapSettings()
     }
 
     /*
      * Background
      */
 
-    Settings.ConfigGroup {
-        id: bgConfig
-        file: "hawaii/shellrc"
-        group: "Background"
-        onConfigChanged: applySettings()
-
-        function applySettings() {
-            bgSettings.mode = bgConfig.readEntry("Mode");
-            bgSettings.primaryColor = bgConfig.readEntry("PrimaryColor", Qt.rgba(0, 0, 0, 0));
-            bgSettings.secondaryColor = bgConfig.readEntry("SecondaryColor", Qt.rgba(0, 0, 0, 0));
-            bgSettings.pictureUrl = bgConfig.readEntry("PictureUrl");
-            bgSettings.fillMode = bgConfig.readEntry("FillMode");
-        }
-    }
-
-    QtObject {
+    Settings.Settings {
         id: bgSettings
-
-        property string mode
-        property color primaryColor
-        property color secondaryColor
-        property url pictureUrl
-        property int fillMode
-
-        Behavior on primaryColor {
-            ColorAnimation {
-                easing.type: Easing.OutQuad
-                duration: Themes.Units.mediumDuration
-            }
-        }
-
-        Behavior on secondaryColor {
-            ColorAnimation {
-                easing.type: Easing.OutQuad
-                duration: Themes.Units.mediumDuration
-            }
-        }
-
-        Component.onCompleted: bgConfig.applySettings()
+        schema.id: "org.hawaii.desktop.background"
+        schema.path: "/org/hawaii/desktop/background/"
     }
 
     /*
      * Lock screen
      */
 
-    Settings.ConfigGroup {
-        id: lockConfig
-        file: "hawaii/shellrc"
-        group: "LockScreen"
-        onConfigChanged: applySettings()
-
-        function applySettings() {
-            lockSettings.mode = lockConfig.readEntry("Mode");
-            lockSettings.primaryColor = lockConfig.readEntry("PrimaryColor", Qt.rgba(0, 0, 0, 0));
-            lockSettings.secondaryColor = lockConfig.readEntry("SecondaryColor", Qt.rgba(0, 0, 0, 0));
-            lockSettings.pictureUrl = lockConfig.readEntry("PictureUrl");
-            lockSettings.fillMode = lockConfig.readEntry("FillMode");
-        }
-    }
-
-    QtObject {
+    Settings.Settings {
         id: lockSettings
-
-        property string mode
-        property color primaryColor
-        property color secondaryColor
-        property url pictureUrl
-        property int fillMode
-
-        Behavior on primaryColor {
-            ColorAnimation {
-                easing.type: Easing.OutQuad
-                duration: Themes.Units.mediumDuration
-            }
-        }
-
-        Behavior on secondaryColor {
-            ColorAnimation {
-                easing.type: Easing.OutQuad
-                duration: Themes.Units.mediumDuration
-            }
-        }
-
-        Component.onCompleted: lockConfig.applySettings()
+        schema.id: "org.hawaii.desktop.lockscreen"
+        schema.path: "/org/hawaii/desktop/lockscreen/"
     }
+
+    /*
+     * Methods
+     */
+
+    function applyKeymapSettings() {
+        if (keyboardSettings.layouts[0] !== undefined)
+            compositor.settings.keyboardLayout = keyboardSettings.layouts[0];
+        if (keyboardSettings.variants[0] !== undefined)
+            compositor.settings.keyboardVariant = keyboardSettings.variants[0];
+        if (keyboardSettings.options[0] !== undefined)
+            compositor.settings.keyboardOptions = keyboardSettings.options[0];
+        if (keyboardSettings.rules[0] !== undefined)
+            compositor.settings.keyboardRules = keyboardSettings.rules[0];
+        if (keyboardSettings.model)
+            compositor.settings.keyboardModel = keyboardSettings.model;
+    }
+
+    function convertFillMode(fillMode) {
+        switch (fillMode) {
+        case "preserve-aspect-fit":
+            return Image.PreserveAspectFit;
+        case "preserve-aspect-crop":
+            return Image.PreserveAspectCrop;
+        case "tile":
+            return Image.Tile;
+        case "tile-vertically":
+            return Image.TileVertically;
+        case "tile-horizontally":
+            return Image.TileHorizontally;
+        case "pad":
+            return Image.Pad;
+        default:
+            return Image.Stretch;
+        }
+    }
+
+    Component.onCompleted: applyKeymapSettings()
 }

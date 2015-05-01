@@ -70,7 +70,7 @@ Components.Showable {
         source: ShellSettings.lockScreen.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
-        fillMode: Image.PreserveAspectCrop
+        fillMode: ShellSettings.convertFillMode(ShellSettings.lockScreen.fillMode)
         cache: false
         visible: false
     }

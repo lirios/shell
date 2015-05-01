@@ -40,6 +40,13 @@ Loader {
         Components.NoiseBackground {
             objectName: "solid"
             color: ShellSettings.background.primaryColor
+
+            Behavior on color {
+                ColorAnimation {
+                    easing.type: Easing.OutQuad
+                    duration: Themes.Units.mediumDuration
+                }
+            }
         }
     }
 
@@ -47,17 +54,31 @@ Loader {
         id: gradient
 
         Components.NoiseBackground {
-            property bool vertical: ShellSettings.background.mode == "vgradient"
+            property bool vertical: ShellSettings.background.mode === "vgradient"
 
             objectName: "gradient"
             gradient: Gradient {
                 GradientStop {
                     position: 0
                     color: ShellSettings.background.primaryColor
+
+                    Behavior on color {
+                        ColorAnimation {
+                            easing.type: Easing.OutQuad
+                            duration: Themes.Units.mediumDuration
+                        }
+                    }
                 }
                 GradientStop {
                     position: 1
                     color: ShellSettings.background.secondaryColor
+
+                    Behavior on color {
+                        ColorAnimation {
+                            easing.type: Easing.OutQuad
+                            duration: Themes.Units.mediumDuration
+                        }
+                    }
                 }
             }
             rotation: vertical ? 270 : 0
@@ -81,7 +102,7 @@ Loader {
                 sourceSize.height: 1024
                 smooth: true
                 clip: fillMode === Image.PreserveAspectCrop
-                fillMode: ShellSettings.background.fillMode
+                fillMode: ShellSettings.convertFillMode(ShellSettings.background.fillMode)
             }
         }
     }
