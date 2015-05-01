@@ -24,8 +24,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QDataStream>
-#include <QtCore/QDebug>
 #include <QtCore/QUrl>
 #include <QtCore/QStringList>
 
@@ -82,17 +80,20 @@ QVariant convertValue(GVariant *value)
                 list.append(QByteArray(item));
 
             return list;
-#ifndef QT_NO_DATASTREAM
         } else if (g_variant_is_of_type(value, G_VARIANT_TYPE_BYTESTRING)) {
-            QByteArray a(g_variant_get_bytestring(value));
-            QDataStream s(&a, QIODevice::ReadOnly);
-            s.setVersion(QDataStream::Qt_4_0);
-            QVariant result;
-            s >> result;
-            return result;
-#else
-        Q_ASSERT(!"QConfiguration: Cannot load custom types without QDataStream support");
-#endif
+            return QVariant(QByteArray(g_variant_get_bytestring(value)));
+        } else if (g_variant_is_of_type(value, G_VARIANT_TYPE("a{ss}"))) {
+            QMap<QString, QVariant> stringMap;
+
+            GVariantIter iter;
+            g_variant_iter_init(&iter, value);
+
+            const gchar *key;
+            const gchar *val;
+            while (g_variant_iter_next(&iter, "{&s&s}", &key, &val))
+                stringMap.insert(key, QVariant(val));
+
+            return stringMap;
         }
     default:
         break;
@@ -137,17 +138,23 @@ GVariant *convertVariant(const QVariant &variant)
         return g_variant_new_string(variant.toUrl().toString().toUtf8().constData());
     case QVariant::Color:
         return g_variant_new_string(variant.toString().toUtf8().constData());
+    case QVariant::Map: {
+        GVariantBuilder builder;
+        g_variant_builder_init(&builder, G_VARIANT_TYPE("a{ss}"));
+
+        QMapIterator<QString, QVariant> it(variant.toMap());
+        while (it.hasNext()) {
+            it.next();
+            QByteArray key = it.key().toUtf8();
+            QByteArray val = it.value().toByteArray();
+            g_variant_builder_add(&builder, "{ss}", key.constData(), val.constData());
+        }
+        return g_variant_builder_end(&builder);
+    }
     default: {
-#ifndef QT_NO_DATASTREAM
-        QByteArray a;
-        QDataStream s(&a, QIODevice::WriteOnly);
-        s.setVersion(QDataStream::Qt_4_0);
-        s << variant;
+        QByteArray a(variant.toByteArray());
         return g_variant_new_from_data(G_VARIANT_TYPE_BYTESTRING, a.constData(),
                                        a.size(), TRUE, NULL, NULL);
-#else
-        Q_ASSERT(!"QConfiguration: Cannot save custom types without QDataStream support");
-#endif
     }
     }
 
