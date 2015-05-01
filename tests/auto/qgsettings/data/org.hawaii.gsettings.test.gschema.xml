@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.hawaii.gsettings.test" path="/org/hawaii/gsettings/test/">
+    <key name="test-boolean" type="b">
+      <default>true</default>
+    </key>
+    <key name="test-integer" type="i">
+      <default>42</default>
+    </key>
+    <key name="test-double" type="d">
+      <default>42.69</default>
+    </key>
+    <key name="test-string" type="s">
+      <default>"howdy?"</default>
+    </key>
+    <key name="test-choices" type="s">
+      <choices>
+        <choice value='one'/>
+        <choice value='two'/>
+        <choice value='three'/>
+      </choices>
+      <default>'one'</default>
+    </key>
+    <key name="test-string-list" type="as">
+      <default>['one', 'two', 'three']</default>
+    </key>
+    <key name="test-string-map" type="a{ss}">
+      <default>{'key1': 'value1', 'key2': 'value2'}</default>
+    </key>
+    <key name="test-integer-map" type="a{si}">
+      <default>{'key1': 1, 'key2': 2}</default>
+    </key>
+  </schema>
+</schemalist>
