@@ -32,8 +32,6 @@
 #include <QtGui/QPalette>
 #include <QtGui/QTextCharFormat>
 
-#include <KConfigCore/KConfigGroup>
-
 #include "hawaiitheme.h"
 #include "hawaiitheme_p.h"
 
@@ -85,40 +83,44 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
 {
     Q_D(const HawaiiTheme);
 
-    KConfigGroup group = d->config->group("UI");
-
     switch (hint) {
     case DropShadow:
         return QVariant(true);
     case ToolButtonStyle: {
-        QString val = group.readEntry(QStringLiteral("ToolButtonStyle"), QStringLiteral("icon-only"));
+        QString val = d->uiSettings->value(QStringLiteral("tool-button-style")).toString();
 
-        if (val == "icon-only")
+        if (val == QStringLiteral("icon-only"))
             return QVariant(int(Qt::ToolButtonIconOnly));
-        else if (val == "text-only")
+        else if (val == QStringLiteral("text-only"))
             return QVariant(int(Qt::ToolButtonTextOnly));
-        else if (val == "text-beside-icon")
+        else if (val == QStringLiteral("text-beside-icon"))
             return QVariant(int(Qt::ToolButtonTextBesideIcon));
-        else if (val == "text-under-icon")
+        else if (val == QStringLiteral("text-under-icon"))
             return QVariant(int(Qt::ToolButtonTextUnderIcon));
 
         return QVariant(int(Qt::ToolButtonFollowStyle));
     }
-    case ToolBarIconSize:
-        return group.readEntry(QStringLiteral("ToolBarIconSize"), 24);
+    case ToolBarIconSize: {
+        QString val = d->uiSettings->value(QStringLiteral("toolbar-icons-size")).toString();
+
+        if (val == QStringLiteral("small"))
+            return 24;
+        return 48;
+    }
     case ItemViewActivateItemOnSingleClick:
         return QVariant(false);
     case SystemIconThemeName:
-        return group.readEntry(QStringLiteral("IconTheme"), QStringLiteral("hawaii"));
+        return d->uiSettings->value(QStringLiteral("icon-theme")).toString();
     case SystemIconFallbackThemeName:
-        return QVariant("hicolor");
+        return QStringLiteral("hicolor");
     case IconThemeSearchPaths:
         return QVariant(QStandardPaths::locateAll(
                             QStandardPaths::GenericDataLocation,
-                            "icons", QStandardPaths::LocateDirectory));
+                            QStringLiteral("icons"),
+                            QStandardPaths::LocateDirectory));
     case StyleNames: {
         QStringList styles;
-        styles << group.readEntry(QStringLiteral("WidgetStyle"), QStringLiteral("Fusion"));
+        styles << d->uiSettings->value(QStringLiteral("widgets-style")).toString();
         return QVariant(styles);
     }
     case WindowAutoPlacement:

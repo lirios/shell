@@ -29,14 +29,14 @@
 
 #include <qpa/qplatformtheme_p.h>
 
-#include <KConfigCore/KSharedConfig>
-
 #include "hawaiitheme.h"
+#include "qgsettings.h"
 
 class HawaiiThemePrivate : public QPlatformThemePrivate
 {
 public:
     HawaiiThemePrivate();
+    ~HawaiiThemePrivate();
 
     void readPalette(QPalette *pal);
     void refresh();
@@ -44,7 +44,8 @@ public:
     static bool readColor(QPalette *pal, QPalette::ColorRole role, const QVariant &value);
 
     ResourceHelper resources;
-    KSharedConfigPtr config;
+    Hawaii::QGSettings *uiSettings;
+    Hawaii::QGSettings *fontsSettings;
 };
 
 #endif // HAWAIITHEME_P_H

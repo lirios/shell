@@ -30,8 +30,6 @@
 #include <QtGui/QPalette>
 #include <qpa/qplatformtheme.h>
 
-#include <KConfigCore/KConfigGroup>
-
 #include "hawaiitheme_p.h"
 
 // Default fonts
@@ -40,12 +38,21 @@ static int defaultSystemFontSize = 11;
 
 HawaiiThemePrivate::HawaiiThemePrivate()
 {
-    config = KSharedConfig::openConfig(QStringLiteral("hawaii/shellrc"));
+    uiSettings = new Hawaii::QGSettings(QStringLiteral("org.hawaii.desktop.interface"),
+                                        QStringLiteral("/org/hawaii/desktop/interface/"));
+    fontsSettings = new Hawaii::QGSettings(QStringLiteral("org.hawaii.desktop.fonts"),
+                                           QStringLiteral("/org/hawaii/desktop/fonts/"));
+}
+
+HawaiiThemePrivate::~HawaiiThemePrivate()
+{
+    uiSettings->deleteLater();
+    fontsSettings->deleteLater();
 }
 
 void HawaiiThemePrivate::readPalette(QPalette *pal)
 {
-    QString scheme = config->group("UI").readEntry(QStringLiteral("ColorScheme"), QStringLiteral("Hawaii"));
+    QString scheme = uiSettings->value(QStringLiteral("color-scheme")).toString();
     QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                               QString("color-schemes/%1.colors").arg(scheme));
     if (fileName.isEmpty())
@@ -103,31 +110,10 @@ void HawaiiThemePrivate::readPalette(QPalette *pal)
     pal->setBrush(QPalette::Dark, buttonBrushDark);
 }
 
-static QFont *readFont(const QVariant &fontValue)
+static QFont *readFont(const QString &family, int size)
 {
-    if (!fontValue.isValid())
-        return Q_NULLPTR;
-
-    QString fontFamily;
-    QString fontDescription;
-
-    if (fontValue.type() == QVariant::StringList) {
-        const QStringList list = fontValue.toStringList();
-        if (!list.isEmpty()) {
-            fontFamily = list.first();
-            fontDescription = list.join(QLatin1Char(','));
-        }
-    } else {
-        fontFamily = fontDescription = fontValue.toString();
-    }
-
-    if (!fontDescription.isEmpty()) {
-        QFont font(fontFamily);
-        if (font.fromString(fontDescription))
-            return new QFont(font);
-    }
-
-    return Q_NULLPTR;
+    QFont font(family, size);
+    return new QFont(font);
 }
 
 void HawaiiThemePrivate::refresh()
@@ -140,25 +126,27 @@ void HawaiiThemePrivate::refresh()
     resources.palettes[QPlatformTheme::SystemPalette] = new QPalette(systemPalette);
 
     // Fonts
-    KConfigGroup group = config->group("Font");
-    QVariant fontValue = group.readEntry(QStringLiteral("Font"), QStringList());
-    QVariant smallFontValue = group.readEntry(QStringLiteral("SmallFont"), QStringList());
-    QVariant miniFontValue = group.readEntry(QStringLiteral("MiniFont"), QStringList());
+    QString fontFamily = fontsSettings->value(QStringLiteral("font-name")).toString();
+    int fontSize = fontsSettings->value(QStringLiteral("font-size")).toInt();
+    QString smallFontFamily = fontsSettings->value(QStringLiteral("small-font-name")).toString();
+    int smallFontSize = fontsSettings->value(QStringLiteral("small-font-size")).toInt();
+    QString miniFontFamily = fontsSettings->value(QStringLiteral("mini-font-name")).toString();
+    int miniFontSize = fontsSettings->value(QStringLiteral("mini-font-size")).toInt();
 
     // System font
-    if (QFont *systemFont = readFont(fontValue))
+    if (QFont *systemFont = readFont(fontFamily, fontSize))
         resources.fonts[QPlatformTheme::SystemFont] = systemFont;
     else
         resources.fonts[QPlatformTheme::SystemFont] = new QFont(QLatin1String(defaultSystemFontName), defaultSystemFontSize);
 
     // Small font
-    if (QFont *smallFont = readFont(smallFontValue))
+    if (QFont *smallFont = readFont(smallFontFamily, smallFontSize))
         resources.fonts[QPlatformTheme::SmallFont] = smallFont;
     else
         resources.fonts[QPlatformTheme::SmallFont] = new QFont(QLatin1String(defaultSystemFontName), defaultSystemFontSize);
 
     // Mini font
-    if (QFont *miniFont = readFont(miniFontValue))
+    if (QFont *miniFont = readFont(miniFontFamily, miniFontSize))
         resources.fonts[QPlatformTheme::MiniFont] = miniFont;
     else
         resources.fonts[QPlatformTheme::MiniFont] = new QFont(QLatin1String(defaultSystemFontName), defaultSystemFontSize);
@@ -168,7 +156,7 @@ void HawaiiThemePrivate::refresh()
     fonts << QPlatformTheme::TitleBarFont << QPlatformTheme::MdiSubWindowTitleFont
           << QPlatformTheme::DockWidgetTitleFont;
     Q_FOREACH (QPlatformTheme::Font font, fonts) {
-        if (QFont *systemFont = readFont(fontValue))
+        if (QFont *systemFont = readFont(fontFamily, fontSize))
             resources.fonts[font] = systemFont;
         else
             resources.fonts[font] = new QFont(QLatin1String(defaultSystemFontName), defaultSystemFontSize);
