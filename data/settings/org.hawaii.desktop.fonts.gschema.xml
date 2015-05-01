@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="hawaii">
+  <schema id="org.hawaii.desktop.fonts" path="/org/hawaii/desktop/fonts/">
+    <key name="font-name" type="s">
+      <default>'Droid Sans'</default>
+      <summary>Font Family</summary>
+      <description>
+        Font family for applications.
+      </description>
+    </key>
+    <key name="font-size" type="i">
+      <default>10</default>
+      <summary>Font Size</summary>
+      <description>
+        Font size for applications.
+      </description>
+    </key>
+    <key name="small-font-name" type="s">
+      <default>'Droid Sans'</default>
+      <summary>Small Font Family</summary>
+      <description>
+        Small font family for applications.
+      </description>
+    </key>
+    <key name="small-font-size" type="i">
+      <default>9</default>
+      <summary>Small Font Size</summary>
+      <description>
+        Small font size for applications.
+      </description>
+    </key>
+    <key name="mini-font-name" type="s">
+      <default>'Droid Sans'</default>
+      <summary>Mini Font Family</summary>
+      <description>
+        Mini font family for applications.
+      </description>
+    </key>
+    <key name="mini-font-size" type="i">
+      <default>8</default>
+      <summary>Mini Font Size</summary>
+      <description>
+        Mini font size for applications.
+      </description>
+    </key>
+  </schema>
+</schemalist>

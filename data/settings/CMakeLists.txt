@@ -1,8 +1,18 @@
-configure_file(shellrc.in ${CMAKE_CURRENT_BINARY_DIR}/shellrc)
-
-set(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/shellrc
+configure_file(
+    org.hawaii.desktop.background.gschema.xml.in
+    ${CMAKE_CURRENT_BINARY_DIR}/org.hawaii.desktop.background.gschema.xml
+)
+configure_file(
+    org.hawaii.desktop.lockscreen.gschema.xml.in
+    ${CMAKE_CURRENT_BINARY_DIR}/org.hawaii.desktop.lockscreen.gschema.xml
 )
 
-install(FILES ${FILES}
-    DESTINATION ${CONFIG_INSTALL_DIR}/hawaii)
+set(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/org.hawaii.desktop.background.gschema.xml
+    ${CMAKE_CURRENT_BINARY_DIR}/org.hawaii.desktop.lockscreen.gschema.xml
+    org.hawaii.desktop.interface.gschema.xml
+    org.hawaii.desktop.fonts.gschema.xml
+    org.hawaii.desktop.keyboard.gschema.xml
+)
+
+install(FILES ${FILES} DESTINATION ${GSETTINGS_SCHEMA_DIR})

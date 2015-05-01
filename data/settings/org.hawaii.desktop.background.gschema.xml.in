@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="hawaii">
+  <schema id="org.hawaii.desktop.background" path="/org/hawaii/desktop/background/">
+    <key name="mode" type="s">
+      <choices>
+        <choice value='solid'/>
+        <choice value='hgradient'/>
+        <choice value='vgradient'/>
+        <choice value='wallpaper'/>
+      </choices>
+      <default>'wallpaper'</default>
+      <summary>Background Mode</summary>
+      <description>
+        Determines which kind of background is rendered.
+        Possible values are "solid", "hgradient", "vgradient", "wallpaper".
+      </description>
+    </key>
+    <key name="primary-color" type="s">
+      <default>'#336688'</default>
+      <summary>Primary Color</summary>
+      <description>
+        Left or Top color when drawing gradients, or the solid color.
+      </description>
+    </key>
+    <key name="secondary-color" type="s">
+      <default>'#334455'</default>
+      <summary>Secondary Color</summary>
+      <description>
+        Right or Bottom color when drawing gradients, not used for solid color.
+      </description>
+    </key>
+    <key name="picture-url" type="s">
+      <default>'file://@KDE_INSTALL_FULL_DATADIR@/backgrounds/hawaii/Also_Calm.png'</default>
+      <summary>Picture URL</summary>
+      <description>
+        URL to use for the background image.
+      </description>
+    </key>
+    <key name="fill-mode" type="s">
+      <choices>
+        <choice value='stretch'/>
+        <choice value='preserve-aspect-fit'/>
+        <choice value='preserve-aspect-crop'/>
+        <choice value='tile'/>
+        <choice value='tile-vertically'/>
+        <choice value='tile-horizontally'/>
+        <choice value='pad'/>
+      </choices>
+      <default>'stretch'</default>
+      <summary>Picture Fill Mode</summary>
+      <description>
+        How to fill the picture. Possible values are "stretch",
+        "preserve-aspect-fit", "preserve-aspect-crop", "tile",
+        "tile-vertically", "tile-horizontally", "pad".
+      </description>
+    </key>
+  </schema>
+</schemalist>

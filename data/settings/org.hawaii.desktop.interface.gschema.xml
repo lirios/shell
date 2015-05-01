@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="hawaii">
+  <schema id="org.hawaii.desktop.interface" path="/org/hawaii/desktop/interface/">
+    <key name="color-scheme" type="s">
+      <default>'Hawaii'</default>
+      <summary>Color Scheme</summary>
+      <description>
+        Color scheme for applications.
+      </description>
+    </key>
+    <key name="icon-theme" type="s">
+      <default>'hawaii'</default>
+      <summary>Icon Theme</summary>
+      <description>
+        Icon theme for applications.
+      </description>
+    </key>
+    <key name="widgets-style" type="s">
+      <default>'Fusion'</default>
+      <summary>Widgets Style</summary>
+      <description>
+        Style for QtWidgets based applications.
+      </description>
+    </key>
+    <key name="tool-button-style" type="s">
+      <choices>
+        <choice value='icon-only'/>
+        <choice value='text-only'/>
+        <choice value='text-beside-icon'/>
+        <choice value='text-under-icon'/>
+        <choice value='follow-style'/>
+      </choices>
+      <default>'icon-only'</default>
+      <summary>Toolbar Style</summary>
+      <description>
+        Toolbar Style. Valid values are "icon-only", "text-only", "text-beside-icon",
+        "text-under-icon", "follow-style".
+      </description>
+    </key>
+    <key name="toolbar-icons-size" type="s">
+      <choices>
+        <choice value='small'/>
+        <choice value='large'/>
+      </choices>
+      <default>'large'</default>
+      <summary>Toolbar Icon Size</summary>
+      <description>
+        Size of icons in toolbars, either "small" or "large".
+      </description>
+    </key>
+  </schema>
+</schemalist>

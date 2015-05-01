@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="hawaii">
+  <schema id="org.hawaii.desktop.keyboard" path="/org/hawaii/desktop/keyboard/">
+    <key name="model" type="s">
+      <default>''</default>
+      <summary>Keyboard Model</summary>
+      <description>
+        keyboard model.
+      </description>
+    </key>
+    <key name="layouts" type="as">
+      <default>[]</default>
+      <summary>Keyboard Layouts</summary>
+      <description>
+        Keyboard layouts.
+      </description>
+    </key>
+    <key name="options" type="as">
+      <default>[]</default>
+      <summary>Keyboard Options</summary>
+      <description>
+        Keyboard options.
+      </description>
+    </key>
+    <key name="rules" type="as">
+      <default>[]</default>
+      <summary>Keyboard Rules</summary>
+      <description>
+        Keyboard rules.
+      </description>
+    </key>
+    <key name="variants" type="as">
+      <default>[]</default>
+      <summary>Keyboard Variants</summary>
+      <description>
+        Keyboard variants.
+      </description>
+    </key>
+  </schema>
+</schemalist>
