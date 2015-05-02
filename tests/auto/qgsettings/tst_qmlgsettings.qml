@@ -36,6 +36,7 @@ TestCase {
     name: "SettingsTest"
 
     property var changes: []
+    property int bindingTest: settings.testInteger
 
     Settings {
         id: settings
@@ -56,6 +57,7 @@ TestCase {
     function test_001_readDefaults() {
         compare(settings.testBoolean, true);
         compare(settings.testInteger, 42);
+        compare(bindingTest, settings.testInteger);
         compare(settings.testDouble, 42.69);
         compare(settings.testString, "howdy?");
         compare(settings.testChoices, "one");
@@ -70,6 +72,7 @@ TestCase {
 
         settings.testInteger = 69;
         compare(settings.testInteger, 69);
+        compare(bindingTest, settings.testInteger);
 
         settings.testDouble = 69.42;
         compare(settings.testDouble, 69.42);
@@ -113,6 +116,7 @@ TestCase {
         changes = [];
 
         settings.testInteger = 777;
+        compare(bindingTest, settings.testInteger);
         settings.testDouble = 77.7;
         settings.testString = "ciao";
         compare(changes, [["testInteger", 777], ["testDouble", 77.7], ["testString", "ciao"]]);
