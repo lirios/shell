@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  This file is part of Hawaii.
 
@@ -8,7 +9,6 @@
  the Free Software Foundation; either version 2.1 of the License, or
  (at your option) any later version.
 -->
-<?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="hawaii">
   <schema id="org.hawaii.desktop.interface" path="/org/hawaii/desktop/interface/">
     <key name="color-scheme" type="s">
