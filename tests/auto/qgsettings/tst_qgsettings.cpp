@@ -172,26 +172,30 @@ private Q_SLOTS:
         QCOMPARE(settings->value(name), value);
     }
 
+    void invalidSchemaNotInstalled()
+    {
+        QVERIFY2(!QGSettings::isSchemaInstalled("org.hawaii.gsettings.invalid.test"),
+                 "Schema org.hawaii.gsettings.invalid.test must not be installed");
+    }
+
     void invalidSchema()
     {
-        QSKIP("Crash for a gio bug");
+        QSKIP("Skipped because gio crashes");
 
-        QVERIFY2(!QGSettings::isSchemaInstalled("org.hawaii.gsettings.invalid-test"),
-                 "Schema org.hawaii.gsettings.invalid-test must not be installed");
-        QGSettings *invalidSettings = new QGSettings("org.hawaii.gsettings.invalid-test");
+        QGSettings *invalidSettings = new QGSettings("org.hawaii.gsettings.invalid.test");
         QVERIFY2(!invalidSettings->isValid(),
-                 "Settings for org.hawaii.gsettings.invalid-test must not be valid");
+                 "Settings for org.hawaii.gsettings.invalidtest must not be valid");
         invalidSettings->deleteLater();
     }
 
     void invalidPath()
     {
-        QSKIP("Crash for a gio bug");
+        QSKIP("Skipped because gio crashes");
 
         QGSettings *invalidSettings = new QGSettings("org.hawaii.gsettings.test",
-                                                     "/org/hawaii/gsettings/invalid-test/");
+                                                     "/org/hawaii/gsettings/invalid/test/");
         QVERIFY2(!invalidSettings->isValid(),
-                 "Settings for org.hawaii.gsettings.test must not be valid");
+                 "Path /org/hawaii/gsettings/invalid/test must not be found");
         invalidSettings->deleteLater();
     }
 
