@@ -11,7 +11,6 @@ set(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/org.hawaii.desktop.background.gschema.xml
     ${CMAKE_CURRENT_BINARY_DIR}/org.hawaii.desktop.lockscreen.gschema.xml
     org.hawaii.desktop.interface.gschema.xml
-    org.hawaii.desktop.fonts.gschema.xml
     org.hawaii.desktop.peripherals.gschema.xml
 )
 
