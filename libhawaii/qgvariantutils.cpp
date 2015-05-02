@@ -94,6 +94,18 @@ QVariant toQVariant(GVariant *value)
                 stringMap.insert(key, QVariant(val));
 
             return stringMap;
+        } else if (g_variant_is_of_type(value, G_VARIANT_TYPE("a{si}"))) {
+            QMap<QString, QVariant> intMap;
+
+            GVariantIter iter;
+            g_variant_iter_init(&iter, value);
+
+            const gchar *key;
+            int val;
+            while (g_variant_iter_next(&iter, "{&si}", &key, &val))
+                intMap.insert(key, QVariant(val));
+
+            return intMap;
         }
     default:
         break;
@@ -146,6 +158,20 @@ GVariant *toGVariant(const GVariantType *type, const QVariant &variant)
                 QByteArray key = it.key().toUtf8();
                 QByteArray value = it.value().toByteArray();
                 g_variant_builder_add(&builder, "{ss}", key.constData(), value.constData());
+            }
+
+            return g_variant_builder_end(&builder);
+        } else if (g_variant_type_equal(type, G_VARIANT_TYPE("a{si}"))) {
+            GVariantBuilder builder;
+            g_variant_builder_init(&builder, G_VARIANT_TYPE("a{si}"));
+
+            QMapIterator<QString, QVariant> it(variant.toMap());
+            while (it.hasNext()) {
+                it.next();
+
+                QByteArray key = it.key().toUtf8();
+                int value = it.value().toInt();
+                g_variant_builder_add(&builder, "{si}", key.constData(), value);
             }
 
             return g_variant_builder_end(&builder);
