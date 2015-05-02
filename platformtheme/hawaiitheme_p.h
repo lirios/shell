@@ -44,8 +44,7 @@ public:
     static bool readColor(QPalette *pal, QPalette::ColorRole role, const QVariant &value);
 
     ResourceHelper resources;
-    Hawaii::QGSettings *uiSettings;
-    Hawaii::QGSettings *fontsSettings;
+    Hawaii::QGSettings *settings;
 };
 
 #endif // HAWAIITHEME_P_H

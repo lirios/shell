@@ -38,21 +38,18 @@ static int defaultSystemFontSize = 11;
 
 HawaiiThemePrivate::HawaiiThemePrivate()
 {
-    uiSettings = new Hawaii::QGSettings(QStringLiteral("org.hawaii.desktop.interface"),
-                                        QStringLiteral("/org/hawaii/desktop/interface/"));
-    fontsSettings = new Hawaii::QGSettings(QStringLiteral("org.hawaii.desktop.fonts"),
-                                           QStringLiteral("/org/hawaii/desktop/fonts/"));
+    settings = new Hawaii::QGSettings(QStringLiteral("org.hawaii.desktop.interface"),
+                                      QStringLiteral("/org/hawaii/desktop/interface/"));
 }
 
 HawaiiThemePrivate::~HawaiiThemePrivate()
 {
-    uiSettings->deleteLater();
-    fontsSettings->deleteLater();
+    settings->deleteLater();
 }
 
 void HawaiiThemePrivate::readPalette(QPalette *pal)
 {
-    QString scheme = uiSettings->value(QStringLiteral("colorScheme")).toString();
+    QString scheme = settings->value(QStringLiteral("colorScheme")).toString();
     QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                               QString("color-schemes/%1.colors").arg(scheme));
     if (fileName.isEmpty())
@@ -126,12 +123,12 @@ void HawaiiThemePrivate::refresh()
     resources.palettes[QPlatformTheme::SystemPalette] = new QPalette(systemPalette);
 
     // Fonts
-    QString fontFamily = fontsSettings->value(QStringLiteral("fontName")).toString();
-    int fontSize = fontsSettings->value(QStringLiteral("fontSize")).toInt();
-    QString smallFontFamily = fontsSettings->value(QStringLiteral("smallFontName")).toString();
-    int smallFontSize = fontsSettings->value(QStringLiteral("smallFontSize")).toInt();
-    QString miniFontFamily = fontsSettings->value(QStringLiteral("miniFontName")).toString();
-    int miniFontSize = fontsSettings->value(QStringLiteral("miniFontSize")).toInt();
+    QString fontFamily = settings->value(QStringLiteral("fontName")).toString();
+    int fontSize = settings->value(QStringLiteral("fontSize")).toInt();
+    QString smallFontFamily = settings->value(QStringLiteral("smallFontName")).toString();
+    int smallFontSize = settings->value(QStringLiteral("smallFontSize")).toInt();
+    QString miniFontFamily = settings->value(QStringLiteral("miniFontName")).toString();
+    int miniFontSize = settings->value(QStringLiteral("miniFontSize")).toInt();
 
     // System font
     if (QFont *systemFont = readFont(fontFamily, fontSize))

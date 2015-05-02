@@ -87,7 +87,7 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
     case DropShadow:
         return QVariant(true);
     case ToolButtonStyle: {
-        QString val = d->uiSettings->value(QStringLiteral("toolButtonStyle")).toString();
+        QString val = d->settings->value(QStringLiteral("toolButtonStyle")).toString();
 
         if (val == QStringLiteral("icon-only"))
             return QVariant(int(Qt::ToolButtonIconOnly));
@@ -101,7 +101,7 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
         return QVariant(int(Qt::ToolButtonFollowStyle));
     }
     case ToolBarIconSize: {
-        QString val = d->uiSettings->value(QStringLiteral("toolbarIconsSize")).toString();
+        QString val = d->settings->value(QStringLiteral("toolbarIconsSize")).toString();
 
         if (val == QStringLiteral("small"))
             return 24;
@@ -110,7 +110,7 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
     case ItemViewActivateItemOnSingleClick:
         return QVariant(false);
     case SystemIconThemeName:
-        return d->uiSettings->value(QStringLiteral("iconTheme")).toString();
+        return d->settings->value(QStringLiteral("iconTheme")).toString();
     case SystemIconFallbackThemeName:
         return QStringLiteral("hicolor");
     case IconThemeSearchPaths:
@@ -120,7 +120,7 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
                             QStandardPaths::LocateDirectory));
     case StyleNames: {
         QStringList styles;
-        styles << d->uiSettings->value(QStringLiteral("widgetsStyle")).toString();
+        styles << d->settings->value(QStringLiteral("widgetsStyle")).toString();
         return QVariant(styles);
     }
     case WindowAutoPlacement:
