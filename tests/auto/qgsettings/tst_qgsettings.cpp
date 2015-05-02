@@ -172,6 +172,20 @@ private Q_SLOTS:
         QCOMPARE(settings->value(name), value);
     }
 
+    void keysList()
+    {
+        QStringList keys = settings->keys();
+        keys.sort();
+
+        QStringList cmpKeys = QStringList()
+                << "testBoolean" << "testInteger" << "testDouble"
+                << "testString" << "testChoices" << "testStringList"
+                << "testStringMap" << "testIntegerMap";
+        cmpKeys.sort();
+
+        QCOMPARE(keys, cmpKeys);
+    }
+
     void setOutOfRangeValue()
     {
         // Make sure test-choices contains a known value
