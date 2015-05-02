@@ -61,7 +61,6 @@ void QmlGSettings::componentComplete()
             if (value(key) != newValue) {
                 insert(key, newValue);
                 changed = true;
-                Q_EMIT valueChanged(key, newValue);
             }
             if (changed)
                 Q_EMIT settingsChanged();
