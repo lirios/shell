@@ -75,7 +75,7 @@ private Q_SLOTS:
         QTest::newRow("choices") << "test-choices";
         QTest::newRow("string-list") << "test-string-list";
         QTest::newRow("string-map") << "test-string-map";
-        //QTest::newRow("integer-map") << "test-integer-map";
+        QTest::newRow("integer-map") << "test-integer-map";
     }
 
     void gVariantToQVariant()
@@ -134,12 +134,9 @@ private Q_SLOTS:
 
     void readIntegerMap()
     {
-        QSKIP("We are unable to handle integer-map now");
-
         QMap<QString, QVariant> cmpValue;
         cmpValue.insert("key1", 1);
         cmpValue.insert("key2", 2);
-        cmpValue.insert("key3", 3);
         QVariant value = settings->defaultValue("test-integer-map");
         QCOMPARE(value.toMap(), cmpValue);
     }
@@ -160,12 +157,10 @@ private Q_SLOTS:
         stringMap.insert("another-key1", "one");
         stringMap.insert("another-key2", "two");
         QTest::newRow("string-map") << "test-string-map" << QVariant(stringMap);
-        /*
         QMap<QString, QVariant> intMap;
         intMap.insert("another-key1", 1);
         intMap.insert("another-key2", 2);
         QTest::newRow("integer-map") << "test-integer-map" << QVariant(intMap);
-        */
     }
 
     void setValue()

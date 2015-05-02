@@ -61,7 +61,7 @@ TestCase {
         compare(settings.testChoices, "one");
         compare(settings.testStringList, ["one", "two", "three"]);
         compare(settings.testStringMap, {"key1": "value1", "key2": "value2"});
-        //compare(settings.integerMap, {"key1": 1, "key2": 2});
+        compare(settings.testIntegerMap, {"key1": 1, "key2": 2});
     }
 
     function test_setValue() {
@@ -92,13 +92,11 @@ TestCase {
         settings.testStringMap = {};
         compare(settings.testStringMap, {});
 
-        /*
         settings.testIntegerMap = {"another-key1": 1, "another-key2": 2};
         compare(settings.testIntegerMap, {"another-key1": 1, "another-key2": 2});
 
         settings.testIntegerMap = {};
         compare(settings.testIntegerMap, {});
-        */
     }
 
     function test_changes() {
