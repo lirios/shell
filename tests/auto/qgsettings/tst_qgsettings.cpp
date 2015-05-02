@@ -68,14 +68,14 @@ private Q_SLOTS:
     {
         QTest::addColumn<QString>("name");
 
-        QTest::newRow("boolean") << "test-boolean";
-        QTest::newRow("integer") << "test-integer";
-        QTest::newRow("double") << "test-double";
-        QTest::newRow("string") << "test-string";
-        QTest::newRow("choices") << "test-choices";
-        QTest::newRow("string-list") << "test-string-list";
-        QTest::newRow("string-map") << "test-string-map";
-        QTest::newRow("integer-map") << "test-integer-map";
+        QTest::newRow("boolean") << "testBoolean";
+        QTest::newRow("integer") << "testInteger";
+        QTest::newRow("double") << "testDouble";
+        QTest::newRow("string") << "testString";
+        QTest::newRow("choices") << "testChoices";
+        QTest::newRow("string-list") << "testStringList";
+        QTest::newRow("string-map") << "testStringMap";
+        QTest::newRow("integer-map") << "testIntegerMap";
     }
 
     void gVariantToQVariant()
@@ -88,38 +88,38 @@ private Q_SLOTS:
 
     void readBoolean()
     {
-        QVariant value = settings->defaultValue("test-boolean");
+        QVariant value = settings->defaultValue("testBoolean");
         QCOMPARE(value.toBool(), true);
     }
 
     void readInteger()
     {
-        QVariant value = settings->defaultValue("test-integer");
+        QVariant value = settings->defaultValue("testInteger");
         QCOMPARE(value.toInt(), 42);
     }
 
     void readDouble()
     {
-        QVariant value = settings->defaultValue("test-double");
+        QVariant value = settings->defaultValue("testDouble");
         QCOMPARE(value.toDouble(), 42.69);
     }
 
     void readString()
     {
-        QVariant value = settings->defaultValue("test-string");
+        QVariant value = settings->defaultValue("testString");
         QCOMPARE(value.toString(), QStringLiteral("howdy?"));
     }
 
     void readChoices()
     {
-        QVariant value = settings->defaultValue(QStringLiteral("test-choices"));
+        QVariant value = settings->defaultValue(QStringLiteral("testChoices"));
         QCOMPARE(value.toString(), QStringLiteral("one"));
     }
 
     void readStringList()
     {
         QStringList cmpValue = QStringList() << "one" << "two" << "three";
-        QVariant value = settings->defaultValue("test-string-list");
+        QVariant value = settings->defaultValue("testStringList");
         QCOMPARE(value.toStringList(), cmpValue);
     }
 
@@ -128,7 +128,7 @@ private Q_SLOTS:
         QMap<QString, QVariant> cmpValue;
         cmpValue.insert("key1", "value1");
         cmpValue.insert("key2", "value2");
-        QVariant value = settings->defaultValue("test-string-map");
+        QVariant value = settings->defaultValue("testStringMap");
         QCOMPARE(value.toMap(), cmpValue);
     }
 
@@ -137,7 +137,7 @@ private Q_SLOTS:
         QMap<QString, QVariant> cmpValue;
         cmpValue.insert("key1", 1);
         cmpValue.insert("key2", 2);
-        QVariant value = settings->defaultValue("test-integer-map");
+        QVariant value = settings->defaultValue("testIntegerMap");
         QCOMPARE(value.toMap(), cmpValue);
     }
 
@@ -146,21 +146,21 @@ private Q_SLOTS:
         QTest::addColumn<QString>("name");
         QTest::addColumn<QVariant>("value");
 
-        QTest::newRow("boolean") << "test-boolean" << QVariant(false);
-        QTest::newRow("integer") << "test-integer" << QVariant(69);
-        QTest::newRow("double") << "test-double" << QVariant(69.42);
-        QTest::newRow("string") << "test-string" << QVariant("hello");
-        QTest::newRow("choices") << "test-choices" << QVariant("three");
+        QTest::newRow("boolean") << "testBoolean" << QVariant(false);
+        QTest::newRow("integer") << "testInteger" << QVariant(69);
+        QTest::newRow("double") << "testDouble" << QVariant(69.42);
+        QTest::newRow("string") << "testString" << QVariant("hello");
+        QTest::newRow("choices") << "testChoices" << QVariant("three");
         QStringList stringList = QStringList() << "another" << "value";
-        QTest::newRow("string-list") << "test-string-list" << QVariant(stringList);
+        QTest::newRow("string-list") << "testStringList" << QVariant(stringList);
         QMap<QString, QVariant> stringMap;
         stringMap.insert("another-key1", "one");
         stringMap.insert("another-key2", "two");
-        QTest::newRow("string-map") << "test-string-map" << QVariant(stringMap);
+        QTest::newRow("string-map") << "testStringMap" << QVariant(stringMap);
         QMap<QString, QVariant> intMap;
         intMap.insert("another-key1", 1);
         intMap.insert("another-key2", 2);
-        QTest::newRow("integer-map") << "test-integer-map" << QVariant(intMap);
+        QTest::newRow("integer-map") << "testIntegerMap" << QVariant(intMap);
     }
 
     void setValue()
@@ -189,13 +189,13 @@ private Q_SLOTS:
     void setOutOfRangeValue()
     {
         // Make sure test-choices contains a known value
-        settings->setValue("test-choices", "one");
+        settings->setValue("testChoices", "one");
 
         // Set a value that is out of range
-        settings->setValue("test-choices", "four");
+        settings->setValue("testChoices", "four");
 
         // Now the reported value should not be changed
-        QCOMPARE(settings->value("test-choices").toString(), QStringLiteral("one"));
+        QCOMPARE(settings->value("testChoices").toString(), QStringLiteral("one"));
     }
 
     void invalidSchemaNotInstalled()
@@ -227,7 +227,7 @@ private Q_SLOTS:
 
     void invalidKey()
     {
-        QCOMPARE(settings->value("key-that-does-not-exist"), QVariant());
+        QCOMPARE(settings->value("keyThatDoesNotExist"), QVariant());
     }
 
 private:
