@@ -35,8 +35,8 @@ extern "C" {
 
 namespace Utils {
 
-QVariant convertValue(GVariant *value);
-GVariant *convertVariant(const QVariant &variant);
+QVariant toQVariant(GVariant *value);
+GVariant *toGVariant(const GVariantType *type, const QVariant &variant);
 }
 
 #endif // QGVARIANTUTILS_H

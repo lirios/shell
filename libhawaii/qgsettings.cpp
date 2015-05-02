@@ -119,7 +119,7 @@ QVariant QGSettings::value(const QString &key) const
 
     gchar *keyName = Utils::fromCamelCase(key);
     GVariant *gvalue = g_settings_get_value(d->settings, keyName);
-    QVariant qvalue = Utils::convertValue(gvalue);
+    QVariant qvalue = Utils::toQVariant(gvalue);
     g_variant_unref(gvalue);
     g_free(keyName);
     return qvalue;
@@ -143,8 +143,14 @@ bool QGSettings::trySetValue(const QString &key, const QVariant &value)
     bool result = false;
 
     gchar *keyName = Utils::fromCamelCase(key);
+
+    // It might be hard to detect the right GVariant type from
+    // complext QVariant types such as string lists or more detailed
+    // types such as integers (GVariant has different sizes),
+    // therefore we get the current value for the key and convert
+    // to QVariant using the GVariant type
     GVariant *oldValue = g_settings_get_value(d->settings, keyName);
-    GVariant *newValue = Utils::convertVariant(value);
+    GVariant *newValue = Utils::toGVariant(g_variant_get_type(oldValue), value);
     if (newValue)
         result = g_settings_set_value(d->settings, keyName, newValue);
 
@@ -163,7 +169,7 @@ QVariant QGSettings::defaultValue(const QString &key) const
 
     gchar *keyName = Utils::fromCamelCase(key);
     GVariant *gvalue = g_settings_get_default_value(d->settings, keyName);
-    QVariant qvalue = Utils::convertValue(gvalue);
+    QVariant qvalue = Utils::toQVariant(gvalue);
     g_variant_unref(gvalue);
     g_free(keyName);
     return qvalue;
@@ -193,11 +199,11 @@ QVariantList QGSettings::choices(const QString &key) const
 
     if (g_str_equal(type, "enum")) {
         GVariantIter iter;
-        GVariant *child;
-
         g_variant_iter_init(&iter, value);
+
+        GVariant *child;
         while ((child = g_variant_iter_next_value(&iter))) {
-            choices.append(Utils::convertValue(child));
+            choices.append(Utils::toQVariant(child));
             g_variant_unref(child);
         }
     }

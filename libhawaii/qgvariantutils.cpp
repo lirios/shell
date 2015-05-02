@@ -31,7 +31,7 @@
 
 namespace Utils {
 
-QVariant convertValue(GVariant *value)
+QVariant toQVariant(GVariant *value)
 {
     if (!value)
         return QVariant(QVariant::Invalid);
@@ -59,27 +59,27 @@ QVariant convertValue(GVariant *value)
         return QVariant(QString::fromUtf8(g_variant_get_string(value, NULL)));
     case G_VARIANT_CLASS_ARRAY:
         if (g_variant_is_of_type(value, G_VARIANT_TYPE_STRING_ARRAY)) {
-            GVariantIter iter;
             QStringList list;
-            const gchar *str;
 
+            GVariantIter iter;
             g_variant_iter_init(&iter, value);
 
+            const gchar *str;
             while (g_variant_iter_next(&iter, "&s", &str))
                 list.append(QString::fromUtf8(str));
 
-            return QVariant(list);
+            return list;
         } else if (g_variant_is_of_type(value, G_VARIANT_TYPE_BYTESTRING_ARRAY)) {
-            GVariantIter iter;
-            QVariantList list;
-            const gchar *item;
+            QByteArrayList list;
 
+            GVariantIter iter;
             g_variant_iter_init(&iter, value);
 
+            const gchar *item;
             while (g_variant_iter_next(&iter, "&y", &item))
                 list.append(QByteArray(item));
 
-            return list;
+            return QVariant::fromValue(list);
         } else if (g_variant_is_of_type(value, G_VARIANT_TYPE_BYTESTRING)) {
             return QVariant(QByteArray(g_variant_get_bytestring(value)));
         } else if (g_variant_is_of_type(value, G_VARIANT_TYPE("a{ss}"))) {
@@ -102,60 +102,56 @@ QVariant convertValue(GVariant *value)
     return QVariant(QVariant::Invalid);
 }
 
-GVariant *convertVariant(const QVariant &variant)
+GVariant *toGVariant(const GVariantType *type, const QVariant &variant)
 {
-    switch (variant.type()) {
-    case QVariant::Bool:
+    switch (g_variant_type_peek_string(type)[0]) {
+    case G_VARIANT_CLASS_BOOLEAN:
         return g_variant_new_boolean(variant.toBool());
-    case QVariant::Char:
+    case G_VARIANT_CLASS_BYTE:
         return g_variant_new_byte(variant.toChar().toLatin1());
-    case QVariant::Int:
+    case G_VARIANT_CLASS_INT16:
+        return g_variant_new_int16(variant.toInt());
+    case G_VARIANT_CLASS_UINT16:
+        return g_variant_new_uint16(variant.toInt());
+    case G_VARIANT_CLASS_INT32:
         return g_variant_new_int32(variant.toInt());
-    case QVariant::UInt:
+    case G_VARIANT_CLASS_UINT32:
         return g_variant_new_uint32(variant.toUInt());
-    case QVariant::LongLong:
+    case G_VARIANT_CLASS_INT64:
         return g_variant_new_int64(variant.toLongLong());
-    case QVariant::ULongLong:
+    case G_VARIANT_CLASS_UINT64:
         return g_variant_new_uint64(variant.toULongLong());
-    case QVariant::Double:
+    case G_VARIANT_CLASS_DOUBLE:
         return g_variant_new_double(variant.toDouble());
-    case QVariant::String:
+    case G_VARIANT_CLASS_STRING:
         return g_variant_new_string(variant.toString().toUtf8().constData());
-    case QVariant::StringList: {
-        QStringList value = variant.toStringList();
+    case G_VARIANT_CLASS_ARRAY:
+        if (g_variant_type_equal(type, G_VARIANT_TYPE_STRING_ARRAY)) {
+            GVariantBuilder builder;
+            g_variant_builder_init(&builder, G_VARIANT_TYPE_STRING_ARRAY);
+            Q_FOREACH (const QString &item, variant.toStringList())
+                g_variant_builder_add(&builder, "s", item.toUtf8().constData());
 
-        GVariantBuilder *builder = g_variant_builder_new(G_VARIANT_TYPE("as"));
-        Q_FOREACH (const QString &item ,value)
-            g_variant_builder_add(builder, "s", item.toUtf8().constData());
+            return g_variant_builder_end(&builder);
+        } else if (g_variant_type_equal(type, G_VARIANT_TYPE_BYTESTRING)) {
+            return g_variant_new_bytestring(variant.toByteArray().constData());
+        } else if (g_variant_type_equal(type, G_VARIANT_TYPE("a{ss}"))) {
+            GVariantBuilder builder;
+            g_variant_builder_init(&builder, G_VARIANT_TYPE("a{ss}"));
 
-        GVariant *result = g_variant_new("as", builder);
-        g_variant_builder_unref(builder);
-        return result;
-    }
-    case QVariant::ByteArray:
-        return g_variant_new_bytestring(variant.toByteArray().constData());
-    case QVariant::Url:
-        return g_variant_new_string(variant.toUrl().toString().toUtf8().constData());
-    case QVariant::Color:
-        return g_variant_new_string(variant.toString().toUtf8().constData());
-    case QVariant::Map: {
-        GVariantBuilder builder;
-        g_variant_builder_init(&builder, G_VARIANT_TYPE("a{ss}"));
+            QMapIterator<QString, QVariant> it(variant.toMap());
+            while (it.hasNext()) {
+                it.next();
 
-        QMapIterator<QString, QVariant> it(variant.toMap());
-        while (it.hasNext()) {
-            it.next();
-            QByteArray key = it.key().toUtf8();
-            QByteArray val = it.value().toByteArray();
-            g_variant_builder_add(&builder, "{ss}", key.constData(), val.constData());
+                QByteArray key = it.key().toUtf8();
+                QByteArray value = it.value().toByteArray();
+                g_variant_builder_add(&builder, "{ss}", key.constData(), value.constData());
+            }
+
+            return g_variant_builder_end(&builder);
         }
-        return g_variant_builder_end(&builder);
-    }
-    default: {
-        QByteArray a(variant.toByteArray());
-        return g_variant_new_from_data(G_VARIANT_TYPE_BYTESTRING, a.constData(),
-                                       a.size(), TRUE, NULL, NULL);
-    }
+    default:
+        return Q_NULLPTR;
     }
 
     return 0;
