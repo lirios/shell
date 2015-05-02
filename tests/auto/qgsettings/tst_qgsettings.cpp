@@ -172,6 +172,18 @@ private Q_SLOTS:
         QCOMPARE(settings->value(name), value);
     }
 
+    void setOutOfRangeValue()
+    {
+        // Make sure test-choices contains a known value
+        settings->setValue("test-choices", "one");
+
+        // Set a value that is out of range
+        settings->setValue("test-choices", "four");
+
+        // Now the reported value should not be changed
+        QCOMPARE(settings->value("test-choices").toString(), QStringLiteral("one"));
+    }
+
     void invalidSchemaNotInstalled()
     {
         QVERIFY2(!QGSettings::isSchemaInstalled("org.hawaii.gsettings.invalid.test"),

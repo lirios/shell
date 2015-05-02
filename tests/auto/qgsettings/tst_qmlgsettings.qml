@@ -99,6 +99,16 @@ TestCase {
         compare(settings.testIntegerMap, {});
     }
 
+    function test_setOutOfRangeValue() {
+        // Set a known value first
+        settings.testChoices = "one";
+
+        // Try to set an out of range value and verify
+        // whether the first value is still reported
+        settings.testChoices = "four";
+        compare(settings.testChoices, "one");
+    }
+
     function test_changes() {
         changes = [];
 
