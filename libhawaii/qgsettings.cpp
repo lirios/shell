@@ -118,6 +118,12 @@ QVariant QGSettings::value(const QString &key) const
         return QVariant();
 
     gchar *keyName = Utils::fromCamelCase(key);
+
+    // Since gio crashes when setting a key that doesn't exist,
+    // we better check here and return an invalid value
+    if (!keys().contains(key))
+        return QVariant();
+
     GVariant *gvalue = g_settings_get_value(d->settings, keyName);
     QVariant qvalue = Utils::toQVariant(gvalue);
     g_variant_unref(gvalue);
@@ -140,9 +146,14 @@ bool QGSettings::trySetValue(const QString &key, const QVariant &value)
     if (!d->valid)
         return false;
 
-    bool result = false;
-
     gchar *keyName = Utils::fromCamelCase(key);
+
+    // Since gio crashes when setting a key that doesn't exist,
+    // we better check here and return false
+    if (!keys().contains(key))
+        return false;
+
+    bool result = false;
 
     // It might be hard to detect the right GVariant type from
     // complext QVariant types such as string lists or more detailed
