@@ -27,7 +27,7 @@
 #include "vthandler.h"
 
 #include <unistd.h>
-#include <stropts.h>
+#include <sys/ioctl.h>
 #include <linux/kd.h>
 #include <linux/vt.h>
 
