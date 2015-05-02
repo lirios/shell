@@ -5,7 +5,6 @@ include_directories(
 
 set(SOURCES
     plugin.cpp
-    configgroup.cpp
     qmlgsettings.cpp
     qmlgsettingsschema.cpp
 )
@@ -16,9 +15,6 @@ target_link_libraries(settingsplugin
                       Qt5::Gui
                       Qt5::Qml
                       Qt5::Quick
-                      KF5::ConfigCore
-                      KF5::ConfigGui
-                      KF5::CoreAddons
                       Hawaii::Hawaii)
 
 install(FILES qmldir plugins.qmltypes

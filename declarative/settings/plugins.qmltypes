@@ -8,39 +8,6 @@ import QtQuick.tooling 1.1
 
 Module {
     Component {
-        name: "ConfigGroup"
-        defaultProperty: "data"
-        prototype: "QQuickItem"
-        exports: ["org.hawaii.settings/ConfigGroup 0.1"]
-        exportMetaObjectRevisions: [0]
-        Property { name: "file"; type: "string" }
-        Property { name: "group"; type: "string" }
-        Property { name: "keyList"; type: "QStringList"; isReadonly: true }
-        Property { name: "groupList"; type: "QStringList"; isReadonly: true }
-        Signal { name: "configChanged" }
-        Method {
-            name: "readEntry"
-            type: "QVariant"
-            Parameter { name: "key"; type: "string" }
-            Parameter { name: "defaultValue"; type: "QVariant" }
-        }
-        Method {
-            name: "readEntry"
-            type: "QVariant"
-            Parameter { name: "key"; type: "string" }
-        }
-        Method {
-            name: "writeEntry"
-            type: "bool"
-            Parameter { name: "key"; type: "string" }
-            Parameter { name: "value"; type: "QVariant" }
-        }
-        Method {
-            name: "deleteEntry"
-            Parameter { name: "key"; type: "string" }
-        }
-    }
-    Component {
         name: "QQmlPropertyMap"
         prototype: "QObject"
         Signal {
@@ -56,6 +23,7 @@ Module {
         exports: ["org.hawaii.settings/Settings 0.2"]
         exportMetaObjectRevisions: [0]
         Property { name: "schema"; type: "QmlGSettingsSchema"; isReadonly: true; isPointer: true }
+        Signal { name: "settingsChanged" }
     }
     Component {
         name: "QmlGSettingsSchema"
@@ -64,7 +32,7 @@ Module {
         isCreatable: false
         exportMetaObjectRevisions: [0]
         Property { name: "valid"; type: "bool"; isReadonly: true }
-        Property { name: "schemaId"; type: "string" }
+        Property { name: "id"; type: "string" }
         Property { name: "path"; type: "string" }
     }
 }

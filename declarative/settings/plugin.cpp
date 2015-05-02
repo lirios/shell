@@ -26,7 +26,6 @@
 
 #include <QtQml/QtQml>
 
-#include "configgroup.h"
 #include "qmlgsettings.h"
 #include "qmlgsettingsschema.h"
 
@@ -40,7 +39,6 @@ public:
         // @uri org.hawaii.settings
         Q_ASSERT(uri == QStringLiteral("org.hawaii.settings"));
 
-        qmlRegisterType<ConfigGroup>(uri, 0, 1, "ConfigGroup");
         qmlRegisterType<QmlGSettings>(uri, 0, 2, "Settings");
         qmlRegisterUncreatableType<QmlGSettingsSchema>(uri, 0, 2, "SettingsSchema",
                                                        QStringLiteral("Cannot instantiate SettingsSchema objects"));
