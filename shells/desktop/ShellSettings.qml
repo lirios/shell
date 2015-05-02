@@ -42,8 +42,8 @@ Components.Object {
 
     Settings.Settings {
         id: keyboardSettings
-        schema.id: "org.hawaii.desktop.keyboard"
-        schema.path: "/org/hawaii/desktop/keyboard/"
+        schema.id: "org.hawaii.desktop.peripherals.keyboard"
+        schema.path: "/org/hawaii/desktop/peripherals/keyboard/"
         onSettingsChanged: applyKeymapSettings()
     }
 
