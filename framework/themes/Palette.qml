@@ -38,4 +38,8 @@ QtObject {
     function rgba(color, a) {
         return Qt.rgba(color.r, color.g, color.b, a);
     }
+
+    function luminance(color) {
+        return (color.r * 0.2126) + (color.g * 0.7152) + (color.b * 0.0722);
+    }
 }
