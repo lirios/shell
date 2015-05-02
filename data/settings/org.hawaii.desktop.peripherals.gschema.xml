@@ -10,7 +10,25 @@
  (at your option) any later version.
 -->
 <schemalist gettext-domain="hawaii">
-  <schema id="org.hawaii.desktop.keyboard" path="/org/hawaii/desktop/keyboard/">
+  <schema id="org.hawaii.desktop.peripherals" path="/org/hawaii/desktop/peripherals/">
+    <child name="keyboard" schema="org.hawaii.desktop.peripherals.keyboard"/>
+  </schema>
+  <schema id="org.hawaii.desktop.peripherals.keyboard" path="/org/hawaii/desktop/peripherals/keyboard/">
+    <key name="repeat" type="b">
+      <default>true</default>
+      <summary>Keyboard repeat</summary>
+      <description>Set this to TRUE to enable keyboard repeat.</description>
+    </key>
+    <key name="repeat-interval" type="u">
+      <default>30</default>
+      <summary>Key Repeat Interval</summary>
+      <description>Delay between repeats in milliseconds.</description>
+    </key>
+    <key name="delay" type="u">
+      <default>500</default>
+      <summary>Initial Key Repeat Delay</summary>
+      <description>Initial key repeat delay in milliseconds.</description>
+    </key>
     <key name="model" type="s">
       <default>''</default>
       <summary>Keyboard Model</summary>
@@ -21,30 +39,22 @@
     <key name="layouts" type="as">
       <default>[]</default>
       <summary>Keyboard Layouts</summary>
-      <description>
-        Keyboard layouts.
-      </description>
+      <description>Keyboard layouts.</description>
     </key>
     <key name="options" type="as">
       <default>[]</default>
       <summary>Keyboard Options</summary>
-      <description>
-        Keyboard options.
-      </description>
+      <description>Keyboard options.</description>
     </key>
     <key name="rules" type="as">
       <default>[]</default>
       <summary>Keyboard Rules</summary>
-      <description>
-        Keyboard rules.
-      </description>
+      <description>Keyboard rules.</description>
     </key>
     <key name="variants" type="as">
       <default>[]</default>
       <summary>Keyboard Variants</summary>
-      <description>
-        Keyboard variants.
-      </description>
+      <description>Keyboard variants.</description>
     </key>
   </schema>
 </schemalist>
