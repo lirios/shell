@@ -211,6 +211,11 @@ private Q_SLOTS:
         invalidSettings->deleteLater();
     }
 
+    void invalidKey()
+    {
+        QCOMPARE(settings->value("key-that-does-not-exist"), QVariant());
+    }
+
 private:
     QGSettings *settings;
 };

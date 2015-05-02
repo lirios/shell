@@ -126,4 +126,8 @@ TestCase {
         compare(invalidSettings.schema.valid, false, "Invalid schema must report to be invalid");
         compare(invalidSettings.someKey, undefined, "Invalid schema doesn't have any keys");
     }
+
+    function test_invalidKey() {
+        compare(settings.keyThatDoesNotExist, undefined);
+    }
 }
