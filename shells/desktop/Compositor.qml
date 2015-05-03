@@ -30,6 +30,7 @@ import GreenIsland 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
+import org.hawaii.session 0.1 as Session
 import "desktop"
 import "windows"
 import "windows/WindowManagement.js" as WindowManagement
@@ -278,6 +279,11 @@ Item {
 
         Keys.onPressed: compositorRoot.keyPressed(event)
         Keys.onReleased: compositorRoot.keyReleased(event)
+    }
+
+    // Session
+    Session.SessionInterface {
+        id: session
     }
 
     // Top level window component
