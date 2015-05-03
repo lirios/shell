@@ -61,7 +61,7 @@ install(
       ${Hawaii_HEADERS}
       qgsettings.h
     DESTINATION
-      ${GREENISLAND_INCLUDEDIR}/Hawaii
+      ${HAWAII_INCLUDEDIR}/Hawaii
     COMPONENT
       Devel
 )
@@ -84,4 +84,4 @@ install(EXPORT HawaiiTargets
         FILE HawaiiTargets.cmake NAMESPACE Hawaii::)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/hawaii_version.h
-        DESTINATION ${GREENISLAND_INCLUDEDIR}/hawaii COMPONENT Devel)
+        DESTINATION ${HAWAII_INCLUDEDIR}/hawaii COMPONENT Devel)
