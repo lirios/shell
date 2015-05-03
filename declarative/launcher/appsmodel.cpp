@@ -33,6 +33,8 @@
 
 #include "appsmodel.h"
 
+Q_LOGGING_CATEGORY(APPSMODEL, "hawaii.qml.launcher.appsmodel")
+
 class AppEntry
 {
 public:
@@ -168,7 +170,9 @@ void AppsModel::refresh()
     XdgMenu xdgMenu;
     //xdgMenu.setLogDir("/tmp/");
     xdgMenu.setEnvironments(QStringLiteral("X-Hawaii"));
-    if (!xdgMenu.read(XdgMenu::getMenuFileName()))
+    const QString &menuFileName = XdgMenu::getMenuFileName();
+    qCDebug(APPSMODEL) << "Menu file name:" << menuFileName;
+    if (!xdgMenu.read(menuFileName))
         return;
 
     QDomElement xml = xdgMenu.xml().documentElement();

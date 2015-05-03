@@ -32,6 +32,7 @@ to learn how to enable them.
 
 * Launcher QML plugin:
   * **hawaii.qml.launcher:** Launcher model and items
+  * **hawaii.qml.launcher.appsmodel:** Applications model
 
 * MPRIS2 QML plugin:
   * **hawaii.qml.mpris2:** MPRIS2 engine

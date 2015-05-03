@@ -28,10 +28,13 @@
 #define APPSMODEL_H
 
 #include <QtCore/QAbstractListModel>
+#include <QtCore/QLoggingCategory>
 #include <QtQml/QQmlComponent>
 
 class QDomElement;
 class AppEntry;
+
+Q_DECLARE_LOGGING_CATEGORY(APPSMODEL)
 
 class AppsModel : public QAbstractListModel
 {
