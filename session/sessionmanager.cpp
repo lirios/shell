@@ -59,8 +59,9 @@ SessionManager::SessionManager(QObject *parent)
 {
     CompositorLauncher *compositorLauncher = CompositorLauncher::instance();
 
-    // Autostart applications as soon as the compositor is ready
+    // Actions to do when the compositor is ready
     connect(compositorLauncher, &CompositorLauncher::started, this, [this] {
+        // Autostart applications as soon as the compositor is ready
         QTimer::singleShot(500, this, SLOT(autostart()));
     });
 

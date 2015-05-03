@@ -13,7 +13,8 @@
 Description=Hawaii
 
 [Service]
-Type=notify
+Type=dbus
+BusName=org.hawaii.session
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session
 
 [Install]

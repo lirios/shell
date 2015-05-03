@@ -59,6 +59,15 @@ public:
         IconSizeEnormous = 128
     };
 
+    enum FontSizeScale {
+        FontSizeTiny = 0,
+        FontSizeSmall,
+        FontSizeMedium,
+        FontSizeLarge,
+        FontSizeHuge,
+        FontSizeEnormous
+    };
+
     Units(QObject *parent = 0);
 
     qreal devicePixelRatio() const;
@@ -69,6 +78,8 @@ public:
     Q_INVOKABLE qreal gu(qreal value) const;
 
     QQmlPropertyMap *iconSizes() const;
+
+    Q_INVOKABLE qreal fontSize(FontSizeScale scale, const QFont &font = QGuiApplication::font());
 
     qreal smallSpacing() const;
     qreal largeSpacing() const;

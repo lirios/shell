@@ -75,6 +75,28 @@ QQmlPropertyMap *Units::iconSizes() const
     return m_iconSizes;
 }
 
+qreal Units::fontSize(FontSizeScale scale, const QFont &font)
+{
+    switch (scale) {
+    case FontSizeTiny:
+        return font.pointSize() * 0.677;
+    case FontSizeSmall:
+        return font.pointSize() * 0.677;
+    case FontSizeMedium:
+        return font.pointSize() * 0.677;
+    case FontSizeLarge:
+        return font.pointSize() * 0.677;
+    case FontSizeHuge:
+        return font.pointSize() * 0.677;
+    case FontSizeEnormous:
+        return font.pointSize() * 0.677;
+    default:
+        break;
+    }
+
+    return font.pointSize();
+}
+
 qreal Units::smallSpacing() const
 {
     return m_smallSpacing;
