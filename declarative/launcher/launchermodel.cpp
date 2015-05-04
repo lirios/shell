@@ -240,6 +240,8 @@ void LauncherModel::pin(const QString &appId)
     found->setPinned(true);
     QModelIndex modelIndex = index(m_list.indexOf(found));
     Q_EMIT dataChanged(modelIndex, modelIndex);
+
+    pinLauncher(appId, true);
 }
 
 void LauncherModel::unpin(const QString &appId)
@@ -269,6 +271,21 @@ void LauncherModel::unpin(const QString &appId)
         m_list.takeAt(i)->deleteLater();
         endRemoveRows();
     }
+
+    pinLauncher(appId, false);
+}
+
+void LauncherModel::pinLauncher(const QString &appId, bool pinned)
+{
+    // Currently pinned launchers
+    QStringList pinnedLaunchers = m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
+
+    // Add or remove from the pinned launchers
+    if (pinned)
+        pinnedLaunchers.append(appId);
+    else
+        pinnedLaunchers.removeOne(appId);
+    m_settings->setValue(QStringLiteral("pinnedLaunchers"), pinnedLaunchers);
 }
 
 #include "moc_launchermodel.cpp"

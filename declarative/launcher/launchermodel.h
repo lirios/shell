@@ -75,6 +75,8 @@ public:
 private:
     Hawaii::QGSettings *m_settings;
     QList<LauncherItem *> m_list;
+
+    void pinLauncher(const QString &appId, bool pinned);
 };
 
 QML_DECLARE_TYPE(LauncherModel)
