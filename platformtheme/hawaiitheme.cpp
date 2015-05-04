@@ -84,6 +84,8 @@ QVariant HawaiiTheme::themeHint(ThemeHint hint) const
     Q_D(const HawaiiTheme);
 
     switch (hint) {
+    case CursorFlashTime:
+        return d->settings->value(QStringLiteral("cursorBlinkTime"));
     case DropShadow:
         return QVariant(true);
     case ToolButtonStyle: {
