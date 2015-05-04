@@ -12,6 +12,7 @@ set(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/org.hawaii.desktop.lockscreen.gschema.xml
     org.hawaii.desktop.interface.gschema.xml
     org.hawaii.desktop.peripherals.gschema.xml
+    org.hawaii.desktop.panel.gschema.xml
 )
 
 install(FILES ${FILES} DESTINATION ${GSETTINGS_SCHEMA_DIR})

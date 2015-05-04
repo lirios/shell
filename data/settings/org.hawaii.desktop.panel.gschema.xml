@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ This file is part of Hawaii.
+
+ Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 2.1 of the License, or
+ (at your option) any later version.
+-->
+<schemalist gettext-domain="hawaii">
+  <schema id="org.hawaii.desktop.panel" path="/org/hawaii/desktop/panel/">
+    <key name="location" type="s">
+      <choices>
+        <choice value='top'/>
+        <choice value='bottom'/>
+        <choice value='left'/>
+        <choice value='right'/>
+      </choices>
+      <default>'bottom'</default>
+      <summary>Panel Location</summary>
+      <description>
+        Which screen edge to place the panel on.
+        Possible values are "top", "bottom", "left" or "right".
+      </description>
+    </key>
+    <key name="size" type="s">
+      <choices>
+        <choice value='small'/>
+        <choice value='medium'/>
+        <choice value='large'/>
+      </choices>
+      <default>'medium'</default>
+      <summary>Panel Size</summary>
+      <description>
+        Height of panel if horizontal, or the width if it is vertical.
+        Possible values are "small", "medium" or "large".
+      </description>
+    </key>
+    <key name="hide-policy" type="s">
+      <choices>
+        <choice value='never'/>
+        <choice value='automatic'/>
+      </choices>
+      <default>'never'</default>
+      <summary>Panel Hide Policy</summary>
+      <description>
+        Hide the panel when it isn't being used.
+      </description>
+    </key>
+    <key name="pinned-launchers" type="as">
+      <default>['org.kde.konsole', 'hawaii-system-preferences']</default>
+      <summary>Pinned launchers</summary>
+      <description>
+        Launchers that appear permanently on the panel, regardless of whether they are running or not.
+      </description>
+    </key>
+  </schema>
+</schemalist>
