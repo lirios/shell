@@ -31,6 +31,7 @@
 #include <qpa/qplatformtheme.h>
 
 #include "hawaiitheme_p.h"
+#include "hintssettings.h"
 
 // Default fonts
 static const char defaultSystemFontName[] = "Droid Sans";
@@ -40,10 +41,12 @@ HawaiiThemePrivate::HawaiiThemePrivate()
 {
     settings = new Hawaii::QGSettings(QStringLiteral("org.hawaii.desktop.interface"),
                                       QStringLiteral("/org/hawaii/desktop/interface/"));
+    hints = new HintsSettings(settings);
 }
 
 HawaiiThemePrivate::~HawaiiThemePrivate()
 {
+    hints->deleteLater();
     settings->deleteLater();
 }
 
@@ -116,6 +119,9 @@ static QFont *readFont(const QString &family, int size)
 void HawaiiThemePrivate::refresh()
 {
     resources.clear();
+
+    // Load hints
+    hints->collectHints();
 
     // Palette
     QPalette systemPalette = QPalette();

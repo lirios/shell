@@ -24,15 +24,12 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QEvent>
-#include <QtCore/QFileInfo>
-#include <QtCore/QStandardPaths>
 #include <QtGui/QFont>
 #include <QtGui/QPalette>
-#include <QtGui/QTextCharFormat>
 
 #include "hawaiitheme.h"
 #include "hawaiitheme_p.h"
+#include "hintssettings.h"
 
 ResourceHelper::ResourceHelper()
 {
@@ -54,7 +51,6 @@ HawaiiTheme::HawaiiTheme()
 {
     Q_D(HawaiiTheme);
     d->refresh();
-    collectHints();
 }
 
 bool HawaiiTheme::usePlatformNativeDialog(DialogType type) const
@@ -79,91 +75,12 @@ const QFont *HawaiiTheme::font(Font type) const
     return d->resources.fonts[type];
 }
 
-Qt::ToolButtonStyle HawaiiTheme::toolButtonStyle(const QString &style)
+QVariant HawaiiTheme::themeHint(ThemeHint hint) const
 {
-    if (style == QStringLiteral("icon-only"))
-        return Qt::ToolButtonIconOnly;
-    else if (style == QStringLiteral("text-only"))
-        return Qt::ToolButtonTextOnly;
-    else if (style == QStringLiteral("text-beside-icon"))
-        return Qt::ToolButtonTextBesideIcon;
-    else if (style == QStringLiteral("text-under-icon"))
-        return Qt::ToolButtonTextUnderIcon;
+    Q_D(const HawaiiTheme);
 
-    return Qt::ToolButtonFollowStyle;
-}
-
-int HawaiiTheme::toolBarIconSize(const QString &size)
-{
-    if (size == QStringLiteral("small"))
-        return 24;
-    return 48;
-}
-
-void HawaiiTheme::collectHints()
-{
-    Q_D(HawaiiTheme);
-
-    m_hints.clear();
-
-    m_hints.insert(CursorFlashTime,
-                   d->settings->value(QStringLiteral("cursorBlinkTime")));
-    m_hints.insert(DropShadow, true);
-    m_hints.insert(ToolButtonStyle, toolButtonStyle(
-                       d->settings->value(
-                           QStringLiteral("toolButtonStyle")).toString()));
-    m_hints.insert(ToolBarIconSize, toolBarIconSize(
-                       d->settings->value(
-                           QStringLiteral("toolbarIconsSize")).toString()));
-    m_hints.insert(ItemViewActivateItemOnSingleClick, false);
-    m_hints.insert(SystemIconThemeName, d->settings->value(QStringLiteral("iconTheme")));
-    m_hints.insert(SystemIconFallbackThemeName, QStringLiteral("hicolor"));
-    m_hints.insert(IconThemeSearchPaths,
-                   QStandardPaths::locateAll(
-                       QStandardPaths::GenericDataLocation,
-                       QStringLiteral("icons"),
-                       QStandardPaths::LocateDirectory));
-    m_hints.insert(StyleNames,
-                   QStringList() << d->settings->value(QStringLiteral("widgetsStyle")).toString());
-    m_hints.insert(WindowAutoPlacement, true);
-    m_hints.insert(DialogButtonBoxLayout, 1); // QDialogButtonBox::MacLayout
-    m_hints.insert(DialogButtonBoxButtonsHaveIcons, false);
-    m_hints.insert(UseFullScreenForPopupMenu, true);
-    // TODO: Use the Mac keyboard scheme only if an Apple keyboard is detected
-    // int(MacKeyboardScheme);
-    m_hints.insert(KeyboardScheme, int(GnomeKeyboardScheme));
-    m_hints.insert(UiEffects,
-                   AnimateMenuUiEffect | FadeMenuUiEffect |
-                   AnimateComboUiEffect | AnimateTooltipUiEffect |
-                   FadeTooltipUiEffect | AnimateToolBoxUiEffect);
-    m_hints.insert(SpellCheckUnderlineStyle,
-                   int(QTextCharFormat::SpellCheckUnderline));
-    m_hints.insert(TabAllWidgets, true);
-    QList<int> pixmapSizes;
-    pixmapSizes
-            << 512 << 256 << 128 << 64 << 48
-            << 32 << 24 << 22 << 16;
-    m_hints.insert(IconPixmapSizes, QVariant::fromValue(pixmapSizes));
-
-    // Default hints
-    QList<QPlatformTheme::ThemeHint> hints;
-    hints
-            << KeyboardInputInterval
-            << MouseDoubleClickInterval
-            << StartDragDistance
-            << StartDragTime
-            << KeyboardAutoRepeatRate
-            << PasswordMaskDelay
-            << StartDragVelocity
-            << TextCursorWidth
-            << MaximumScrollBarDragDistance
-            << TabFocusBehavior
-            << PasswordMaskCharacter
-            << DialogSnapToDefaultButton
-            << ContextMenuOnMouseRelease
-            << MousePressAndHoldInterval
-            << MouseDoubleClickDistance
-            << WheelScrollLines;
-    Q_FOREACH (const QPlatformTheme::ThemeHint hint, hints)
-        m_hints.insert(hint, QPlatformTheme::themeHint(hint));
+    QVariant value = d->hints->themeHint(hint);
+    if (value.isValid())
+        return value;
+    return QPlatformTheme::themeHint(hint);
 }

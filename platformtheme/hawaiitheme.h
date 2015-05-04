@@ -57,17 +57,7 @@ public:
     const QPalette *palette(Palette type = SystemPalette) const;
     const QFont *font(Font type = SystemFont) const;
 
-    inline QVariant themeHint(ThemeHint hint) const {
-        return m_hints[hint];
-    }
-
-private:
-    QHash<QPlatformTheme::ThemeHint, QVariant> m_hints;
-
-    Qt::ToolButtonStyle toolButtonStyle(const QString &style);
-    int toolBarIconSize(const QString &size);
-
-    void collectHints();
+    QVariant themeHint(ThemeHint hint) const;
 };
 
 #endif // HAWAIITHEME_H

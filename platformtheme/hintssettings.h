@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015 Pier Luigi Fiorini
+ * Copyright (C) 2010-2015 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
@@ -24,30 +24,42 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef HAWAIITHEME_P_H
-#define HAWAIITHEME_P_H
+#ifndef HINTSSETTINGS_H
+#define HINTSSETTINGS_H
 
-#include <qpa/qplatformtheme_p.h>
+#include <QtCore/QObject>
 
 #include "hawaiitheme.h"
-#include "qgsettings.h"
 
-class HintsSettings;
+namespace Hawaii {
+class QGSettings;
+}
 
-class HawaiiThemePrivate : public QPlatformThemePrivate
+class HintsSettings : public QObject
 {
+    Q_OBJECT
 public:
-    HawaiiThemePrivate();
-    ~HawaiiThemePrivate();
+    HintsSettings(Hawaii::QGSettings *settings, QObject *parent = 0);
 
-    void readPalette(QPalette *pal);
-    void refresh();
+    inline QVariant themeHint(QPlatformTheme::ThemeHint hint) const {
+        if (m_hints.contains(hint))
+            return m_hints[hint];
+        return QVariant();
+    }
 
-    static bool readColor(QPalette *pal, QPalette::ColorRole role, const QVariant &value);
+    void collectHints();
 
-    ResourceHelper resources;
-    Hawaii::QGSettings *settings;
-    HintsSettings *hints;
+private:
+    Hawaii::QGSettings *m_settings;
+    QHash<QPlatformTheme::ThemeHint, QVariant> m_hints;
+
+    Qt::ToolButtonStyle toolButtonStyle(const QVariant &value);
+    int toolBarIconSize(const QVariant &value);
+
+    void qtSettingsChanged();
+    void toolButtonStyleChanged();
+    void iconChanged();
+    void styleChanged();
 };
 
-#endif // HAWAIITHEME_P_H
+#endif // HINTSSETTINGS_H
