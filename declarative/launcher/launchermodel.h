@@ -30,6 +30,10 @@
 #include <QtCore/QAbstractListModel>
 #include <QtQml/QQmlComponent>
 
+namespace Hawaii {
+class QGSettings;
+}
+
 class LauncherItem;
 
 class LauncherModel : public QAbstractListModel
@@ -69,6 +73,7 @@ public:
     Q_INVOKABLE void unpin(const QString &appId);
 
 private:
+    Hawaii::QGSettings *m_settings;
     QList<LauncherItem *> m_list;
 };
 

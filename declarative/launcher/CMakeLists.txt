@@ -1,4 +1,8 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}/libhawaii
+    ${CMAKE_SOURCE_DIR}/libhawaii
+)
 
 set(SOURCES
     applicationaction.cpp
@@ -19,7 +23,8 @@ target_link_libraries(launcherplugin
                       Qt5::Xml
                       Qt5::Qml
                       Qt5::Quick
-                      GreenIsland::GreenIsland)
+                      GreenIsland::GreenIsland
+                      Hawaii::Hawaii)
 target_link_libraries(launcherplugin ${QTXDG_LIBRARIES})
 
 install(FILES qmldir plugins.qmltypes

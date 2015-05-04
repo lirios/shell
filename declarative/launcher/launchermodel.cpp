@@ -28,16 +28,24 @@
 #include <QDebug>
 
 #include <GreenIsland/ApplicationManager>
+#include <Hawaii/QGSettings>
 
 #include "applicationinfo.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
 
 using namespace GreenIsland;
+using namespace Hawaii;
 
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
 {
+    // Settings
+    m_settings = new QGSettings(QStringLiteral("org.hawaii.desktop.panel"),
+                                QStringLiteral("/org/hawaii/desktop/panel/"),
+                                this);
+
+    // Application manager instance
     ApplicationManager *appMan = ApplicationManager::instance();
 
     // Connect to application events
@@ -110,12 +118,11 @@ LauncherModel::LauncherModel(QObject *parent)
         }
     });
 
-    // Add static items
-    beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + 2);
-    m_list.append(new LauncherItem("chromium", true, this));
-    m_list.append(new LauncherItem("xchat", true, this));
-    m_list.append(new LauncherItem("org.kde.konsole", true, this));
-    m_list.append(new LauncherItem("weston-terminal", true, this));
+    // Add pinned launchers
+    const QStringList pinnedLaunchers = m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
+    beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + pinnedLaunchers.size());
+    Q_FOREACH (const QString &appId, pinnedLaunchers)
+        m_list.append(new LauncherItem(appId, true, this));
     endInsertRows();
 }
 
