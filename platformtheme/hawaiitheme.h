@@ -27,6 +27,8 @@
 #ifndef HAWAIITHEME_H
 #define HAWAIITHEME_H
 
+#include <QtCore/QHash>
+#include <QtCore/QVariant>
 #include <qpa/qplatformtheme.h>
 
 class ResourceHelper
@@ -55,7 +57,17 @@ public:
     const QPalette *palette(Palette type = SystemPalette) const;
     const QFont *font(Font type = SystemFont) const;
 
-    QVariant themeHint(ThemeHint hint) const;
+    inline QVariant themeHint(ThemeHint hint) const {
+        return m_hints[hint];
+    }
+
+private:
+    QHash<QPlatformTheme::ThemeHint, QVariant> m_hints;
+
+    Qt::ToolButtonStyle toolButtonStyle(const QString &style);
+    int toolBarIconSize(const QString &size);
+
+    void collectHints();
 };
 
 #endif // HAWAIITHEME_H

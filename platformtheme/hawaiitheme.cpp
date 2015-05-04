@@ -26,7 +26,6 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QFileInfo>
-#include <QtCore/QVariant>
 #include <QtCore/QStandardPaths>
 #include <QtGui/QFont>
 #include <QtGui/QPalette>
@@ -55,6 +54,7 @@ HawaiiTheme::HawaiiTheme()
 {
     Q_D(HawaiiTheme);
     d->refresh();
+    collectHints();
 }
 
 bool HawaiiTheme::usePlatformNativeDialog(DialogType type) const
@@ -79,80 +79,91 @@ const QFont *HawaiiTheme::font(Font type) const
     return d->resources.fonts[type];
 }
 
-QVariant HawaiiTheme::themeHint(ThemeHint hint) const
+Qt::ToolButtonStyle HawaiiTheme::toolButtonStyle(const QString &style)
 {
-    Q_D(const HawaiiTheme);
+    if (style == QStringLiteral("icon-only"))
+        return Qt::ToolButtonIconOnly;
+    else if (style == QStringLiteral("text-only"))
+        return Qt::ToolButtonTextOnly;
+    else if (style == QStringLiteral("text-beside-icon"))
+        return Qt::ToolButtonTextBesideIcon;
+    else if (style == QStringLiteral("text-under-icon"))
+        return Qt::ToolButtonTextUnderIcon;
 
-    switch (hint) {
-    case CursorFlashTime:
-        return d->settings->value(QStringLiteral("cursorBlinkTime"));
-    case DropShadow:
-        return QVariant(true);
-    case ToolButtonStyle: {
-        QString val = d->settings->value(QStringLiteral("toolButtonStyle")).toString();
+    return Qt::ToolButtonFollowStyle;
+}
 
-        if (val == QStringLiteral("icon-only"))
-            return QVariant(int(Qt::ToolButtonIconOnly));
-        else if (val == QStringLiteral("text-only"))
-            return QVariant(int(Qt::ToolButtonTextOnly));
-        else if (val == QStringLiteral("text-beside-icon"))
-            return QVariant(int(Qt::ToolButtonTextBesideIcon));
-        else if (val == QStringLiteral("text-under-icon"))
-            return QVariant(int(Qt::ToolButtonTextUnderIcon));
+int HawaiiTheme::toolBarIconSize(const QString &size)
+{
+    if (size == QStringLiteral("small"))
+        return 24;
+    return 48;
+}
 
-        return QVariant(int(Qt::ToolButtonFollowStyle));
-    }
-    case ToolBarIconSize: {
-        QString val = d->settings->value(QStringLiteral("toolbarIconsSize")).toString();
+void HawaiiTheme::collectHints()
+{
+    Q_D(HawaiiTheme);
 
-        if (val == QStringLiteral("small"))
-            return 24;
-        return 48;
-    }
-    case ItemViewActivateItemOnSingleClick:
-        return QVariant(false);
-    case SystemIconThemeName:
-        return d->settings->value(QStringLiteral("iconTheme")).toString();
-    case SystemIconFallbackThemeName:
-        return QStringLiteral("hicolor");
-    case IconThemeSearchPaths:
-        return QVariant(QStandardPaths::locateAll(
-                            QStandardPaths::GenericDataLocation,
-                            QStringLiteral("icons"),
-                            QStandardPaths::LocateDirectory));
-    case StyleNames: {
-        QStringList styles;
-        styles << d->settings->value(QStringLiteral("widgetsStyle")).toString();
-        return QVariant(styles);
-    }
-    case WindowAutoPlacement:
-        return QVariant(true);
-    case DialogButtonBoxLayout:
-        return QVariant(1); // QDialogButtonBox::MacLayout
-    case DialogButtonBoxButtonsHaveIcons:
-        return QVariant(false);
-    case UseFullScreenForPopupMenu:
-        return QVariant(true);
-    case KeyboardScheme:
-        // TODO: Use the Mac keyboard scheme only if an Apple keyboard is detected
-        //return QVariant(int(MacKeyboardScheme));
-        return QVariant(int(GnomeKeyboardScheme));
-    case UiEffects:
-        return AnimateMenuUiEffect | FadeMenuUiEffect |
-                AnimateComboUiEffect | AnimateTooltipUiEffect |
-                FadeTooltipUiEffect | AnimateToolBoxUiEffect;
-    case SpellCheckUnderlineStyle:
-        return QVariant(int(QTextCharFormat::SpellCheckUnderline));
-    case TabAllWidgets:
-        return QVariant(true);
-    case IconPixmapSizes: {
-        QList<int> list;
-        list << 16 << 22 << 24 << 32 << 48 << 64 << 128 << 256;
-        return QVariant::fromValue(list);
-    }
-    default:
-        break;
-    }
+    m_hints.clear();
 
-    return QPlatformTheme::themeHint(hint);
+    m_hints.insert(CursorFlashTime,
+                   d->settings->value(QStringLiteral("cursorBlinkTime")));
+    m_hints.insert(DropShadow, true);
+    m_hints.insert(ToolButtonStyle, toolButtonStyle(
+                       d->settings->value(
+                           QStringLiteral("toolButtonStyle")).toString()));
+    m_hints.insert(ToolBarIconSize, toolBarIconSize(
+                       d->settings->value(
+                           QStringLiteral("toolbarIconsSize")).toString()));
+    m_hints.insert(ItemViewActivateItemOnSingleClick, false);
+    m_hints.insert(SystemIconThemeName, d->settings->value(QStringLiteral("iconTheme")));
+    m_hints.insert(SystemIconFallbackThemeName, QStringLiteral("hicolor"));
+    m_hints.insert(IconThemeSearchPaths,
+                   QStandardPaths::locateAll(
+                       QStandardPaths::GenericDataLocation,
+                       QStringLiteral("icons"),
+                       QStandardPaths::LocateDirectory));
+    m_hints.insert(StyleNames,
+                   QStringList() << d->settings->value(QStringLiteral("widgetsStyle")).toString());
+    m_hints.insert(WindowAutoPlacement, true);
+    m_hints.insert(DialogButtonBoxLayout, 1); // QDialogButtonBox::MacLayout
+    m_hints.insert(DialogButtonBoxButtonsHaveIcons, false);
+    m_hints.insert(UseFullScreenForPopupMenu, true);
+    // TODO: Use the Mac keyboard scheme only if an Apple keyboard is detected
+    // int(MacKeyboardScheme);
+    m_hints.insert(KeyboardScheme, int(GnomeKeyboardScheme));
+    m_hints.insert(UiEffects,
+                   AnimateMenuUiEffect | FadeMenuUiEffect |
+                   AnimateComboUiEffect | AnimateTooltipUiEffect |
+                   FadeTooltipUiEffect | AnimateToolBoxUiEffect);
+    m_hints.insert(SpellCheckUnderlineStyle,
+                   int(QTextCharFormat::SpellCheckUnderline));
+    m_hints.insert(TabAllWidgets, true);
+    QList<int> pixmapSizes;
+    pixmapSizes
+            << 512 << 256 << 128 << 64 << 48
+            << 32 << 24 << 22 << 16;
+    m_hints.insert(IconPixmapSizes, QVariant::fromValue(pixmapSizes));
+
+    // Default hints
+    QList<QPlatformTheme::ThemeHint> hints;
+    hints
+            << KeyboardInputInterval
+            << MouseDoubleClickInterval
+            << StartDragDistance
+            << StartDragTime
+            << KeyboardAutoRepeatRate
+            << PasswordMaskDelay
+            << StartDragVelocity
+            << TextCursorWidth
+            << MaximumScrollBarDragDistance
+            << TabFocusBehavior
+            << PasswordMaskCharacter
+            << DialogSnapToDefaultButton
+            << ContextMenuOnMouseRelease
+            << MousePressAndHoldInterval
+            << MouseDoubleClickDistance
+            << WheelScrollLines;
+    Q_FOREACH (const QPlatformTheme::ThemeHint hint, hints)
+        m_hints.insert(hint, QPlatformTheme::themeHint(hint));
 }
