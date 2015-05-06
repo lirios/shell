@@ -70,6 +70,31 @@ Components.Object {
     }
 
     /*
+     * Key bindings
+     */
+
+    Settings.Settings {
+        id: wmKeybindings
+        schema.id: "org.hawaii.desktop.keybindings.wm"
+        schema.path: "/org/hawaii/desktop/keybindings/wm/"
+        onSettingsChanged: root.applyKeyBindings(wmKeybindings)
+    }
+
+    Settings.Settings {
+        id: smKeybindings
+        schema.id: "org.hawaii.desktop.keybindings.sm"
+        schema.path: "/org/hawaii/desktop/keybindings/sm/"
+        onSettingsChanged: root.applyKeyBindings(smKeybindings)
+    }
+
+    Settings.Settings {
+        id: mmKeybindings
+        schema.id: "org.hawaii.desktop.keybindings.multimedia"
+        schema.path: "/org/hawaii/desktop/keybindings/multimedia/"
+        onSettingsChanged: root.applyKeyBindings(mmKeybindings)
+    }
+
+    /*
      * Methods
      */
 
@@ -84,6 +109,19 @@ Components.Object {
             compositor.settings.keyboardRules = keyboardSettings.rules[0];
         if (keyboardSettings.model)
             compositor.settings.keyboardModel = keyboardSettings.model;
+    }
+
+    function applyKeyBindings(o) {
+        var i, j;
+        for (i = 0; i < o.schema.keys.length; i++) {
+            var name = o.schema.keys[i];
+            var bindings = o[name];
+
+            for (j = 0; j < bindings.length; j++)
+                compositor.registerKeyBinding(name, bindings[j]);
+            if (bindings.length === 0)
+                compositor.unregisterKeyBinding(name);
+        }
     }
 
     function convertFillMode(fillMode) {
@@ -105,5 +143,10 @@ Components.Object {
         }
     }
 
-    Component.onCompleted: applyKeymapSettings()
+    Component.onCompleted: {
+        applyKeymapSettings();
+        applyKeyBindings(wmKeybindings);
+        applyKeyBindings(smKeybindings);
+        applyKeyBindings(mmKeybindings);
+    }
 }
