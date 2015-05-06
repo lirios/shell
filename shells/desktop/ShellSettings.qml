@@ -72,13 +72,13 @@ Components.Object {
      */
 
     function applyKeymapSettings() {
-        if (keyboardSettings.layouts[0] !== undefined)
+        if (keyboardSettings.layouts[0])
             compositor.settings.keyboardLayout = keyboardSettings.layouts[0];
-        if (keyboardSettings.variants[0] !== undefined)
+        if (keyboardSettings.variants[0])
             compositor.settings.keyboardVariant = keyboardSettings.variants[0];
-        if (keyboardSettings.options[0] !== undefined)
+        if (keyboardSettings.options[0])
             compositor.settings.keyboardOptions = keyboardSettings.options[0];
-        if (keyboardSettings.rules[0] !== undefined)
+        if (keyboardSettings.rules[0])
             compositor.settings.keyboardRules = keyboardSettings.rules[0];
         if (keyboardSettings.model)
             compositor.settings.keyboardModel = keyboardSettings.model;
