@@ -113,62 +113,6 @@ Item {
             PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
         }
     ]
-    onKeyPressed: {
-        console.log("Key pressed:", event.key);
-
-        // Abort session
-        // TODO: Handle this as a keybinding
-        if (event.modifiers === (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Backspace) {
-            event.accepted = true;
-            compositor.abortSession();
-            return;
-        }
-
-        // Power off
-        if (event.modifiers === (Qt.ControlModifier | Qt.AltModifier) && event.key === Qt.Key_Delete && session.canPowerOff) {
-            state = "poweroff";
-            event.accepted = true;
-            return;
-        }
-
-        // Lock screen
-        if (event.modifiers === Qt.MetaModifier && event.key === Qt.Key_L) {
-            compositor.locked = true;
-            event.accepted = true;
-            return;
-        }
-
-        // Activate session
-        if (event.modifiers === (Qt.ControlModifier | Qt.AltModifier) && event.key >= Qt.Key_F1 && event.key <= Qt.Key_F12) {
-            var index = (event.key - Qt.Key_F1) + 1;
-            console.debug("About to activate session", index);
-            session.activateSession(index);
-            event.accepted = true;
-            return;
-        }
-
-        // Window switcher
-        if (event.modifiers === Qt.MetaModifier) {
-            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
-                if (state != "windowSwitcher" && surfaceModel.count >= 2) {
-                    // Activate only when two or more windows are available
-                    state = "windowSwitcher";
-                    event.accepted = true;
-                    return;
-                }
-            }
-        }
-
-        // Present windows
-        if (event.modifiers === Qt.MetaModifier && event.key === Qt.Key_S) {
-            compositorRoot.toggleEffect("PresentWindowsGrid");
-            event.accepted = true;
-            return;
-        }
-
-        // Let other components handle this
-        event.accepted = false;
-    }
     onKeyReleased: {
         console.log("Key released:", event.key);
 
@@ -188,26 +132,6 @@ Item {
                 state = "session";
             }
 
-            event.accepted = true;
-            return;
-        }
-
-        // Workspaces
-        if (event.modifiers === (Qt.MetaModifier | Qt.ControlModifier)) {
-            if (event.key === Qt.Key_Left) {
-                screenView.workspacesView.selectPrevious();
-                event.accepted = true;
-                return;
-            } else if (event.key === Qt.Key_Right) {
-                screenView.workspacesView.selectNext();
-                event.accepted = true;
-                return true;
-            }
-        }
-
-        // Minimize or unmimimize all windows
-        if (event.modifiers === Qt.MetaModifier && event.key === Qt.Key_X) {
-            compositorRoot.toggleEffect("RevealDesktop");
             event.accepted = true;
             return;
         }
@@ -247,6 +171,113 @@ Item {
         onWindowDestroyed: {
             // A window was unmapped
             WindowManagement.windowDestroyed(id);
+        }
+        onKeyBindingPressed: {
+            switch (name) {
+                // wm
+            case "showDesktop":
+                compositorRoot.toggleEffect("RevealDesktop");
+                break;
+            case "presentWindows":
+                compositorRoot.toggleEffect("PresentWindowsGrid");
+                break;
+            case "switchToWorkspace-1":
+                screenView.workspacesView.select(1);
+                break;
+            case "switchToWorkspace-2":
+                screenView.workspacesView.select(2);
+                break;
+            case "switchToWorkspace-3":
+                screenView.workspacesView.select(3);
+                break;
+            case "switchToWorkspace-4":
+                screenView.workspacesView.select(4);
+                break;
+            case "switchToWorkspace-5":
+                screenView.workspacesView.select(5);
+                break;
+            case "switchToWorkspace-6":
+                screenView.workspacesView.select(6);
+                break;
+            case "switchToWorkspace-7":
+                screenView.workspacesView.select(7);
+                break;
+            case "switchToWorkspace-8":
+                screenView.workspacesView.select(8);
+                break;
+            case "switchToWorkspace-9":
+                screenView.workspacesView.select(9);
+                break;
+            case "switchToWorkspace-10":
+                screenView.workspacesView.select(10);
+                break;
+            case "switchToWorkspace-11":
+                screenView.workspacesView.select(11);
+                break;
+            case "switchToWorkspace-12":
+                screenView.workspacesView.select(12);
+                break;
+            case "switchToWorkspaceLeft":
+                screenView.workspacesView.selectPrevious();
+                break;
+            case "switchToWorkspaceRight":
+                screenView.workspacesView.selectNext();
+                break;
+            case "switchWindows":
+            case "switchWindowsBackward":
+                if (compositorRoot.state != "windowSwitcher" && surfaceModel.count >= 2)
+                    // Activate only when two or more windows are available
+                    compositorRoot.state = "windowSwitcher";
+                break;
+                // sm
+            case "abortSession":
+                compositor.abortSession();
+                break;
+            case "powerOff":
+                compositorRoot.state = "poweroff";
+                break;
+            case "lockScreen":
+                compositor.locked = true;
+                break;
+            case "activateSession-1":
+                session.activateSession(1);
+                break;
+            case "activateSession-2":
+                session.activateSession(2);
+                break;
+            case "activateSession-3":
+                session.activateSession(3);
+                break;
+            case "activateSession-4":
+                session.activateSession(4);
+                break;
+            case "activateSession-5":
+                session.activateSession(5);
+                break;
+            case "activateSession-6":
+                session.activateSession(6);
+                break;
+            case "activateSession-7":
+                session.activateSession(7);
+                break;
+            case "activateSession-8":
+                session.activateSession(8);
+                break;
+            case "activateSession-9":
+                session.activateSession(9);
+                break;
+            case "activateSession-10":
+                session.activateSession(10);
+                break;
+            case "activateSession-11":
+                session.activateSession(11);
+                break;
+            case "activateSession-12":
+                session.activateSession(12);
+                break;
+            default:
+                break;
+            }
         }
     }
 

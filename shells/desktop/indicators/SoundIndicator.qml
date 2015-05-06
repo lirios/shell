@@ -115,23 +115,23 @@ Indicator {
 
 
     Connections {
-        target: compositorRoot
-        onKeyPressed: {
-            switch (event.key) {
-            case Qt.Key_VolumeUp:
+        target: compositor
+        onKeyBindingPressed: {
+            switch (name) {
+            case "volumeUp":
                 MixerService.Mixer.increaseMaster();
-                event.accepted = true;
                 break;
-            case Qt.Key_VolumeDown:
+            case "volumeDown":
                 MixerService.Mixer.decreaseMaster();
-                event.accepted = true;
                 break;
-            case Qt.Key_VolumeMute:
+            case "volumeMute":
                 MixerService.Mixer.muted = !MixerService.Mixer.muted;
-                event.accepted = true;
+                break;
+            case "mediaPlay":
+            case "mediaPrevious":
+            case "mediaNext":
                 break;
             default:
-                event.accepted = false;
                 break;
             }
         }

@@ -60,11 +60,9 @@ Indicator {
         }
     }
 
-    /*
     Connections {
         target: compositor
-        onModifierReleased: indicator.expanded = !indicator.expanded
+        onKeyBindingReleased: if (name == "mainMenu") __priv.shown = !__priv.shown
     }
-    */
 }
 
