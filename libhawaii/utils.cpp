@@ -48,7 +48,17 @@ QString toCamelCase(const gchar *name)
             // Characters following a dash are upper case
             nextUpperCase = true;
         } else if (nextUpperCase) {
-            result.append(QChar(*name).toUpper());
+            QChar c(*name);
+
+            // Leave the dash in front of numbers otherwise it
+            // won't be possible to do the inverse
+            if (c.isDigit()) {
+                result.append('-');
+                result.append(c);
+            } else {
+                result.append(c.toUpper());
+            }
+
             nextUpperCase = false;
         } else {
             result.append(*name);
