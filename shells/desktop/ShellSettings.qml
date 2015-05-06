@@ -36,6 +36,8 @@ Components.Object {
     readonly property alias background: bgSettings
     readonly property alias lockScreen: lockSettings
 
+    id: root
+
     /*
      * Keymap
      */
@@ -44,7 +46,7 @@ Components.Object {
         id: keyboardSettings
         schema.id: "org.hawaii.desktop.peripherals.keyboard"
         schema.path: "/org/hawaii/desktop/peripherals/keyboard/"
-        onSettingsChanged: applyKeymapSettings()
+        onSettingsChanged: root.applyKeymapSettings()
     }
 
     /*
