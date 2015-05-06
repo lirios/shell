@@ -73,4 +73,9 @@ void QmlGSettingsSchema::setPath(const QString &path)
     m_path = path;
 }
 
+QStringList QmlGSettingsSchema::keys() const
+{
+    return m_keys;
+}
+
 #include "moc_qmlgsettingsschema.cpp"

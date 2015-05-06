@@ -67,6 +67,7 @@ void QmlGSettings::componentComplete()
         });
 
         // Insert all the keys
+        m_schema->m_keys = m_settings->keys();
         Q_FOREACH (const QString &key, m_settings->keys())
             insert(key, m_settings->value(key));
     }
