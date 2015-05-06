@@ -13,6 +13,7 @@ set(FILES
     org.hawaii.desktop.interface.gschema.xml
     org.hawaii.desktop.peripherals.gschema.xml
     org.hawaii.desktop.panel.gschema.xml
+    org.hawaii.desktop.keybindings.gschema.xml
 )
 
 install(FILES ${FILES} DESTINATION ${GSETTINGS_SCHEMA_DIR})

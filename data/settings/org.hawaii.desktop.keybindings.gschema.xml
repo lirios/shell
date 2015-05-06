@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ This file is part of Hawaii.
+
+ Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 2.1 of the License, or
+ (at your option) any later version.
+-->
+<schemalist gettext-domain="hawaii">
+  <schema id="org.hawaii.desktop.keybindings" path="/org/hawaii/desktop/keybindings/">
+    <child name="window-manager" schema="org.hawaii.desktop.keybindings.wm"/>
+    <child name="session-manager" schema="org.hawaii.desktop.keybindings.sm"/>
+    <child name="multimedia" schema="org.hawaii.desktop.keybindings.multimedia"/>
+  </schema>
+  <schema id="org.hawaii.desktop.keybindings.wm" path="/org/hawaii/desktop/keybindings/wm/">
+    <key name="switch-to-workspace-1" type="as">
+      <default>['Meta+Home']</default>
+      <summary>Switch to workspace 1</summary>
+    </key>
+    <key name="switch-to-workspace-2" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 2</summary>
+    </key>
+    <key name="switch-to-workspace-3" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 3</summary>
+    </key>
+    <key name="switch-to-workspace-4" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 4</summary>
+    </key>
+    <key name="switch-to-workspace-5" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 5</summary>
+    </key>
+    <key name="switch-to-workspace-6" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 6</summary>
+    </key>
+    <key name="switch-to-workspace-7" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 7</summary>
+    </key>
+    <key name="switch-to-workspace-8" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 8</summary>
+    </key>
+    <key name="switch-to-workspace-9" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 9</summary>
+    </key>
+    <key name="switch-to-workspace-10" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 10</summary>
+    </key>
+    <key name="switch-to-workspace-11" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 11</summary>
+    </key>
+    <key name="switch-to-workspace-12" type="as">
+      <default>[]</default>
+      <summary>Switch to workspace 12</summary>
+    </key>
+    <key name="switch-to-workspace-left" type="as">
+      <default>['Ctrl+Alt+Left']</default>
+      <summary>Switch to workspace left</summary>
+    </key>
+    <key name="switch-to-workspace-right" type="as">
+      <default>['Ctrl+Alt+Right']</default>
+      <summary>Switch to workspace right</summary>
+    </key>
+    <key name="switch-to-workspace-up" type="as">
+      <default>['Meta+PgUp', 'Ctrl+Alt+Up']</default>
+      <summary>Switch to workspace above</summary>
+    </key>
+    <key name="switch-to-workspace-down" type="as">
+      <default>['Meta+PgDown', 'Ctrl+Alt+Down']</default>
+      <summary>Switch to workspace below</summary>
+    </key>
+    <key name="switch-to-workspace-last" type="as">
+      <default>['Meta+End']</default>
+      <summary>Switch to last workspace</summary>
+    </key>
+    <key name="switch-windows" type="as">
+      <default>['Meta+Tab', 'Alt+Tab']</default>
+      <summary>Switch windows</summary>
+    </key>
+    <key name="switch-windows-backward" type="as">
+      <default>['Meta+Shift+Tab', 'Alt+Shift+Tab']</default>
+      <summary>Reverse switch windows</summary>
+    </key>
+    <key name="show-desktop" type="as">
+      <default>['Meta+D']</default>
+      <summary>Hide all normal windows</summary>
+    </key>
+    <key name="present-windows" type="as">
+      <default>['Meta+S']</default>
+      <summary>Present all windows in a grid layout</summary>
+    </key>
+    <key name="main-menu" type="as">
+      <default>['Meta+Space']</default>
+      <summary>Show the main menu</summary>
+    </key>
+    <key name="activate-window-menu" type="as">
+      <default>['Alt+Space']</default>
+      <summary>Activate the window menu</summary>
+    </key>
+    <key name="toggle-fullscreen" type="as">
+      <default>[]</default>
+      <summary>Toggle fullscreen mode</summary>
+    </key>
+    <key name="toggle-maximized" type="as">
+      <default>['Alt+F10']</default>
+      <summary>Toggle maximization state</summary>
+    </key>
+    <key name="toggle-above" type="as">
+      <default>[]</default>
+      <summary>Toggle window always appearing on top</summary>
+    </key>
+    <key name="maximize" type="as">
+      <default>['Meta+Up']</default>
+      <summary>Maximize window</summary>
+    </key>
+    <key name="unmaximize" type="as">
+      <default>['Meta+Down', 'Alt+F5']</default>
+      <summary>Restore window</summary>
+    </key>
+    <key name="toggle-shaded" type="as">
+      <default>[]</default>
+      <summary>Toggle shaded state</summary>
+    </key>
+    <key name="minimize" type="as">
+      <default>['Meta+H']</default>
+      <summary>Minimize window</summary>
+    </key>
+    <key name="close" type="as">
+      <default>['Alt+F4']</default>
+      <summary>Close window</summary>
+    </key>
+    <key name="begin-move" type="as">
+      <default>['Alt+F7']</default>
+      <summary>Move window</summary>
+    </key>
+    <key name="begin-resize" type="as">
+      <default>['Alt+F8']</default>
+      <summary>Resize window</summary>
+    </key>
+    <key name="toggle-on-all-workspaces" type="as">
+      <default>[]</default>
+      <summary>Toggle window on all workspaces or one</summary>
+    </key>
+    <key name="move-to-workspace-1" type="as">
+      <default>['Meta+Shift+Home']</default>
+      <summary>Move window to workspace 1</summary>
+    </key>
+    <key name="move-to-workspace-2" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 2</summary>
+    </key>
+    <key name="move-to-workspace-3" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 3</summary>
+    </key>
+    <key name="move-to-workspace-4" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 4</summary>
+    </key>
+    <key name="move-to-workspace-5" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 5</summary>
+    </key>
+    <key name="move-to-workspace-6" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 6</summary>
+    </key>
+    <key name="move-to-workspace-7" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 7</summary>
+    </key>
+    <key name="move-to-workspace-8" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 8</summary>
+    </key>
+    <key name="move-to-workspace-9" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 9</summary>
+    </key>
+    <key name="move-to-workspace-10" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 10</summary>
+    </key>
+    <key name="move-to-workspace-11" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 11</summary>
+    </key>
+    <key name="move-to-workspace-12" type="as">
+      <default>[]</default>
+      <summary>Move window to workspace 12</summary>
+    </key>
+    <key name="move-to-workspace-last" type="as">
+      <default>['Meta+Shift+End']</default>
+      <summary>Move window to last workspace</summary>
+    </key>
+    <key name="move-to-workspace-left" type="as">
+      <default>['Ctrl+Alt+Shift+Left']</default>
+      <summary>Move window one workspace to the left</summary>
+    </key>
+    <key name="move-to-workspace-right" type="as">
+      <default>['Ctrl+Alt+Shift+Right']</default>
+      <summary>Move window one workspace to the right</summary>
+    </key>
+    <key name="move-to-workspace-up" type="as">
+      <default>['Meta+Shift+PgUp']</default>
+      <summary>Move window one workspace up</summary>
+    </key>
+    <key name="move-to-workspace-down" type="as">
+      <default>['Meta+Shift+PgDown']</default>
+      <summary>Move window one workspace down</summary>
+    </key>
+    <key name="move-to-monitor-left" type="as">
+      <default>['Meta+Shift+Left']</default>
+      <summary>Move window to the next monitor on the left</summary>
+    </key>
+    <key name="move-to-monitor-right" type="as">
+      <default>['Meta+Shift+Right']</default>
+      <summary>Move window to the next monitor on the right</summary>
+    </key>
+    <key name="move-to-monitor-up" type="as">
+      <default>['Meta+Shift+Up']</default>
+      <summary>Move window to the next monitor above</summary>
+    </key>
+    <key name="move-to-monitor-down" type="as">
+      <default>['Meta+Shift+Down']</default>
+      <summary>Move window to the next monitor below</summary>
+    </key>
+    <key name="raise-or-lower" type="as">
+      <default>[]</default>
+      <summary>Raise window if covered, otherwise lower it</summary>
+    </key>
+    <key name="raise" type="as">
+      <default>[]</default>
+      <summary>Raise window above other windows</summary>
+    </key>
+    <key name="lower" type="as">
+      <default>[]</default>
+      <summary>Lower window below other windows</summary>
+    </key>
+    <key name="maximize-vertically" type="as">
+      <default>[]</default>
+      <summary>Maximize window vertically</summary>
+    </key>
+    <key name="maximize-horizontally" type="as">
+      <default>[]</default>
+      <summary>Maximize window horizontally</summary>
+    </key>
+    <key name="move-to-corner-nw" type="as">
+      <default>[]</default>
+      <summary>Move window to top left corner</summary>
+    </key>
+    <key name="move-to-corner-ne" type="as">
+      <default>[]</default>
+      <summary>Move window to top right corner</summary>
+    </key>
+    <key name="move-to-corner-sw" type="as">
+      <default>[]</default>
+      <summary>Move window to bottom left corner</summary>
+    </key>
+    <key name="move-to-corner-se" type="as">
+      <default>[]</default>
+      <summary>Move window to bottom right corner</summary>
+    </key>
+    <key name="move-to-side-n" type="as">
+      <default>[]</default>
+      <summary>Move window to top edge of screen</summary>
+    </key>
+    <key name="move-to-side-s" type="as">
+      <default>[]</default>
+      <summary>Move window to bottom edge of screen</summary>
+    </key>
+    <key name="move-to-side-e" type="as">
+      <default>[]</default>
+      <summary>Move window to right side of screen</summary>
+    </key>
+    <key name="move-to-side-w" type="as">
+      <default>[]</default>
+      <summary>Move window to left side of screen</summary>
+    </key>
+    <key name="move-to-center" type="as">
+      <default>[]</default>
+      <summary>Move window to center of screen</summary>
+    </key>
+    <key name="always-on-top" type="as">
+      <default>[]</default>
+      <summary>Toggle window to be always on top</summary>
+      <description>Set or unset window to appear always on top.</description>
+    </key>
+  </schema>
+  <schema id="org.hawaii.desktop.keybindings.sm" path="/org/hawaii/desktop/keybindings/sm/">
+    <key name="abort-session" type="as">
+      <default>['Ctrl+Alt+Backspace']</default>
+      <summary>Abort session</summary>
+    </key>
+    <key name="power-off" type="as">
+      <default>['Ctrl+Alt+Delete']</default>
+      <summary>Power off</summary>
+      <description>Show the power off confirmation dialog</description>
+    </key>
+    <key name="lock-screen" type="as">
+      <default>['Meta+L']</default>
+      <summary>Lock the screen</summary>
+    </key>
+    <key name="activate-session-1" type="as">
+      <default>['Ctrl+Alt+F1']</default>
+      <summary>Activate session 1</summary>
+    </key>
+    <key name="activate-session-2" type="as">
+      <default>['Ctrl+Alt+F2']</default>
+      <summary>Activate session 2</summary>
+    </key>
+    <key name="activate-session-3" type="as">
+      <default>['Ctrl+Alt+F3']</default>
+      <summary>Activate session 3</summary>
+    </key>
+    <key name="activate-session-4" type="as">
+      <default>['Ctrl+Alt+F4']</default>
+      <summary>Activate session 4</summary>
+    </key>
+    <key name="activate-session-5" type="as">
+      <default>['Ctrl+Alt+F5']</default>
+      <summary>Activate session 5</summary>
+    </key>
+    <key name="activate-session-6" type="as">
+      <default>['Ctrl+Alt+F6']</default>
+      <summary>Activate session 6</summary>
+    </key>
+    <key name="activate-session-7" type="as">
+      <default>['Ctrl+Alt+F7']</default>
+      <summary>Activate session 7</summary>
+    </key>
+    <key name="activate-session-8" type="as">
+      <default>['Ctrl+Alt+F8']</default>
+      <summary>Activate session 8</summary>
+    </key>
+    <key name="activate-session-9" type="as">
+      <default>['Ctrl+Alt+F9']</default>
+      <summary>Activate session 9</summary>
+    </key>
+    <key name="activate-session-10" type="as">
+      <default>['Ctrl+Alt+F10']</default>
+      <summary>Activate session 10</summary>
+    </key>
+    <key name="activate-session-11" type="as">
+      <default>['Ctrl+Alt+F11']</default>
+      <summary>Activate session 11</summary>
+    </key>
+    <key name="activate-session-12" type="as">
+      <default>['Ctrl+Alt+F12']</default>
+      <summary>Activate session 12</summary>
+    </key>
+  </schema>
+  <schema id="org.hawaii.desktop.keybindings.multimedia" path="/org/hawaii/desktop/keybindings/multimedia/">
+    <key name="volume-mute" type="as">
+      <default>['Volume Mute']</default>
+      <summary>Mute volume</summary>
+    </key>
+    <key name="volume-up" type="as">
+      <default>['Volume Up']</default>
+      <summary>Increase volume</summary>
+    </key>
+    <key name="volume-down" type="as">
+      <default>['Volume Down']</default>
+      <summary>Decrease volume</summary>
+    </key>
+    <key name="media-play" type="as">
+      <default>['Media Play']</default>
+      <summary>Play media</summary>
+    </key>
+    <key name="media-previous" type="as">
+      <default>['Media Previous']</default>
+      <summary>Go to the previous track</summary>
+    </key>
+    <key name="media-next" type="as">
+      <default>['Media Next']</default>
+      <summary>Go to the next track</summary>
+    </key>
+  </schema>
+</schemalist>
