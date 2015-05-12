@@ -54,6 +54,7 @@
 import QtQuick 2.0
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
+import "../decoration"
 
 WindowWrapper {
     property var chrome: null
@@ -157,6 +158,17 @@ WindowWrapper {
         WindowMenu {}
     }
     */
+
+/*
+    property alias decoration: decoration
+    additionalWidth: decoraiton.additionalWidth
+    additionalHeight: decoration.additionalHeight
+    WindowDecoration {
+        id: decoration
+        anchors.fill: parent
+        clientWindow: window.clientWindow
+    }
+*/
 
     /*
      * Position and scale

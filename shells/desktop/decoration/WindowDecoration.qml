@@ -56,27 +56,22 @@ import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 
 Item {
-    readonly property string title: source.surface.title
-    readonly property bool active: source.focus
-    property alias source: renderer.source
-    readonly property real dropShadowExtents: Themes.Units.gridUnit
-    readonly property real additionalWidth: dropShadowExtents
-    readonly property real additionalHeight: dropShadowExtents + titleBar.height + frame.border.width
-
-    signal close()
-    signal minimize()
-    signal maximize()
+    property var clientWindow: null
+    property alias container: container
+    readonly property real additionalWidth: shadow.extents + (frame.border.width * 2)
+    readonly property real additionalHeight: shadow.extents + titleBar.height + (frame.border.height * 2)
 
     id: root
 
     BorderImage {
-        anchors {
-            fill: parent
-            margins: -dropShadowExtents
-        }
+        readonly property real extents: 20
+
+        id: shadow
+        anchors.fill: parent
+        anchors.margins: -extents
         source: "graphics/dropshadow.sci"
         cache: true
-        opacity: root.active ? 0.9 : 0.7
+        opacity: clientWindow && clientWindow.active ? 0.9 : 0.7
         smooth: true
         z: 0
 
@@ -93,11 +88,13 @@ Item {
         anchors {
             left: parent.left
             top: parent.top
+            margins: shadow.extents
         }
-        width: renderer.width + (border.width * 2)
-        height: renderer.height + (border.width * 2) + titleBar.height
+        width: container.width + (border.width * 2)
+        height: container.height + (border.width * 2) + titleBar.height
         border.color: Themes.Theme.palette.rgba(Themes.Theme.palette.window.secondaryColor, 0.5)
         border.width: 1
+        color: "transparent"
         z: 1
 
         WindowTitleBar {
@@ -107,23 +104,25 @@ Item {
                 top: parent.top
                 right: parent.right
             }
-            title: root.title
-            active: root.active
+            title: clientWindow ? clientWindow.title : ""
+            active: clientWindow && clientWindow.active
             height: Themes.Units.iconSizes.medium
             z: 0
-            onClose: root.close()
-            onMinimize: root.minimize()
-            onMaximize: root.maximize()
+            onClicked: if (clientWindow) clientWindow.activate()
+            onMoving: if (clientWindow) clientWindow.position = Qt.point(x, y)
+            onClose: if (clientWindow) clientWindow.close()
+            onMinimize: if (clientWindow) clientWindow.minimize()
+            onMaximize: if (clientWindow) clientWindow.maximize()
         }
 
-        SurfaceRenderer {
-            id: renderer
+        Item {
+            id: container
             anchors {
                 left: parent.left
                 top: titleBar.bottom
             }
-            width: source.surface.size.width
-            height: source.surface.size.height
+            width: clientWindow ? clientWindow.size.width : 0
+            height: clientWindow ? clientWindow.size.height : 0
             z: 1
         }
     }

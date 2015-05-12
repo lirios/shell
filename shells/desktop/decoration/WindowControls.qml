@@ -61,18 +61,18 @@ Row {
     signal maximize()
 
     id: root
-    spacing: Themes.Units.gu(0.5)
+    spacing: Themes.Units.dp(5)
 
     Rectangle {
-        height: parent.height
         width: height
+        height: parent.height
         radius: height / 2
         gradient: Gradient {
-            GradientStop { color: Themes.Theme.palette.window.closeButtonPrimaryColor; position: 0 }
-            GradientStop { color: Themes.Theme.palette.window.closeButtonSecondaryColor; position: 1 }
+            GradientStop { color: "#e12424"; position: 0 }
+            GradientStop { color: "#ab0000"; position: 1 }
         }
         border.width: 1
-        border.color: Qt.rgba(0, 0, 0, 0.5)
+        border.color: "#7f800000"
 
         Components.Icon {
             anchors {
@@ -89,13 +89,18 @@ Row {
         }
     }
 
-    Rectangle {
+    Item {
+        width: Themes.Units.dp(2)
         height: parent.height
+    }
+
+    Rectangle {
         width: height
+        height: parent.height
         radius: height / 2
         gradient: Gradient {
-            GradientStop { color: Themes.Theme.palette.window.buttonPrimaryColor; position: 0 }
-            GradientStop { color: Themes.Theme.palette.window.buttonSecondaryColor; position: 1 }
+            GradientStop { color: Qt.lighter(Themes.Theme.palette.window.primaryColor, 1.3); position: 0 }
+            GradientStop { color: Qt.darker(Themes.Theme.palette.window.primaryColor, 1.3); position: 1 }
         }
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
@@ -111,17 +116,17 @@ Row {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: root.minimize()
+            onClicked: root.maximize()
         }
     }
 
     Rectangle {
-        height: parent.height
         width: height
+        height: parent.height
         radius: height / 2
         gradient: Gradient {
-            GradientStop { color: Themes.Theme.palette.window.buttonPrimaryColor; position: 0 }
-            GradientStop { color: Themes.Theme.palette.window.buttonSecondaryColor; position: 1 }
+            GradientStop { color: Qt.lighter(Themes.Theme.palette.window.primaryColor, 1.3); position: 0 }
+            GradientStop { color: Qt.darker(Themes.Theme.palette.window.primaryColor, 1.3); position: 1 }
         }
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
@@ -137,7 +142,7 @@ Row {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: root.maximize()
+            onClicked: root.minimize()
         }
     }
 }

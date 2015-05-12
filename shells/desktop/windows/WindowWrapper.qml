@@ -60,6 +60,8 @@ Item {
     property var child
     property bool unresponsive: false
     property var animation: null
+    property real additionalWidth: 0
+    property real additionalHeight: 0
 
     id: window
     objectName: "clientWindow"
@@ -140,8 +142,8 @@ Item {
             }
         }
         onSizeChanged: {
-            window.width = clientWindow.size.width;
-            window.height = clientWindow.size.height;
+            window.width = clientWindow.size.width + additionalWidth;
+            window.height = clientWindow.size.height + additionalHeight;
         }
     }
 

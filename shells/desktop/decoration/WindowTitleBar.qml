@@ -52,7 +52,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
 
@@ -60,6 +59,8 @@ Rectangle {
     property alias title: titleLabel.text
     property bool active: false
 
+    signal clicked()
+    signal moving(int x, int y)
     signal close()
     signal minimize()
     signal maximize()
@@ -68,6 +69,17 @@ Rectangle {
     gradient: Gradient {
         GradientStop { color: Themes.Theme.palette.window.primaryColor; position: 0 }
         GradientStop { color: Themes.Theme.palette.window.secondaryColor; position: 1 }
+    }
+
+    MouseArea {
+        property bool moving: false
+
+        id: mouseArea
+        anchors.fill: parent
+        onPressAndHold: moving = true
+        onReleased: moving = false
+        onClicked: if (!moving) root.clicked()
+        onPositionChanged: root.moving(mouse.x, mouse.y)
     }
 
     RowLayout {
@@ -88,7 +100,7 @@ Rectangle {
             Layout.alignment: Qt.AlignVCenter
         }
 
-        Label {
+        Text {
             id: titleLabel
             color: Themes.Theme.palette.window.textColor
             font.bold: true
@@ -97,6 +109,7 @@ Rectangle {
             style: Text.Raised
             styleColor: Themes.Theme.palette.window.textEffectColor
             height: parent.height
+            renderType: Text.NativeRendering
 
             Layout.fillHeight: true
         }
