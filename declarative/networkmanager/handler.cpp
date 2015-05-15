@@ -51,12 +51,16 @@ Handler::Handler(QObject* parent)
     , m_tmpWimaxEnabled(NetworkManager::isWimaxEnabled())
     , m_tmpWirelessEnabled(NetworkManager::isWirelessEnabled())
     , m_tmpWwanEnabled(NetworkManager::isWwanEnabled())
+#if 0
     , m_agentIface(QStringLiteral("org.kde.kded5"), QStringLiteral("/modules/networkmanagement"),
                    QStringLiteral("org.kde.plasmanetworkmanagement"))
+#endif
 {
+#if 0
     initKdedModule();
     QDBusConnection::sessionBus().connect(m_agentIface.service(), m_agentIface.path(), m_agentIface.interface(), QStringLiteral("registered"),
                                           this, SLOT(initKdedModule()));
+#endif
 }
 
 Handler::~Handler()
@@ -429,7 +433,9 @@ void Handler::requestScan()
 
 void Handler::initKdedModule()
 {
+#if 0
     m_agentIface.call(QStringLiteral("init"));
+#endif
 }
 
 void Handler::replyFinished(QDBusPendingCallWatcher * watcher)

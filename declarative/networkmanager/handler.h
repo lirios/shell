@@ -130,7 +130,9 @@ private:
     QString m_tmpSpecificPath;
 
     bool isBtEnabled();
+#if 0
     QDBusInterface m_agentIface;
+#endif
 };
 
 #endif // HAWAII_NM_HANDLER_H
