@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtCompositor 1.0
-import GreenIsland 1.0
+import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
@@ -172,6 +172,10 @@ Item {
             // A window was unmapped
             WindowManagement.windowDestroyed(id);
         }
+    }
+
+    Connections {
+        target: GreenIsland.KeyBindings
         onKeyBindingPressed: {
             switch (name) {
                 // wm
@@ -299,7 +303,7 @@ Item {
         color: "white"
         visible: false
 
-        FpsCounter {
+        GreenIsland.FpsCounter {
             id: fpsCounter
         }
     }

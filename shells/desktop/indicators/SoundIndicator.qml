@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
+import GreenIsland 1.0 as GreenIsland
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.mixer 0.1 as MixerService
@@ -113,9 +114,8 @@ Indicator {
         }
     }
 
-
     Connections {
-        target: compositor
+        target: GreenIsland.KeyBindings
         onKeyBindingPressed: {
             switch (name) {
             case "volumeUp":

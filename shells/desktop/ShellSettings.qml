@@ -27,6 +27,7 @@
 pragma Singleton
 
 import QtQuick 2.0
+import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.settings 0.2 as Settings
@@ -118,9 +119,9 @@ Components.Object {
             var bindings = o[name];
 
             for (j = 0; j < bindings.length; j++)
-                compositor.registerKeyBinding(name, bindings[j]);
+                GreenIsland.KeyBindings.registerKeyBinding(name, bindings[j]);
             if (bindings.length === 0)
-                compositor.unregisterKeyBinding(name);
+                GreenIsland.KeyBindings.unregisterKeyBinding(name);
         }
     }
 

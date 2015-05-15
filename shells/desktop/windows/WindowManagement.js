@@ -40,13 +40,13 @@ function _printWindowInfo(window) {
     console.debug("\tposition:", window.x + "," + window.y);
     console.debug("\tsize:", window.size.width + "x" + window.size.height);
     switch (window.type) {
-    case ClientWindow.TopLevel:
+    case GreenIsland.ClientWindow.TopLevel:
         console.debug("\ttype: TopLevel");
         break;
-    case ClientWindow.Popup:
+    case GreenIsland.ClientWindow.Popup:
         console.debug("\ttype: Popup");
         break;
-    case ClientWindow.Transient:
+    case GreenIsland.ClientWindow.Transient:
         console.debug("\ttype: Transient");
         break;
     default:
@@ -63,13 +63,13 @@ function windowMapped(window) {
     // Create surface item
     var component = null;
     switch (window.type) {
-    case ClientWindow.TopLevel:
+    case GreenIsland.ClientWindow.TopLevel:
         component = compositorRoot.topLevelWindowComponent;
         break;
-    case ClientWindow.Popup:
+    case GreenIsland.ClientWindow.Popup:
         component = compositorRoot.popupWindowComponent;
         break;
-    case ClientWindow.Transient:
+    case GreenIsland.ClientWindow.Transient:
         component = compositorRoot.transientWindowComponent;
         break;
     default:
@@ -83,13 +83,13 @@ function windowMapped(window) {
     // Determine the parent
     var parentItem = compositorRoot;
     switch (window.type) {
-    case ClientWindow.TopLevel:
+    case GreenIsland.ClientWindow.TopLevel:
         parentItem = window.fullScreen
                 ? compositorRoot.screenView.layers.fullScreen
                 : compositorRoot.screenView.currentWorkspace
         break;
-    case ClientWindow.Popup:
-    case ClientWindow.Transient:
+    case GreenIsland.ClientWindow.Popup:
+    case GreenIsland.ClientWindow.Transient:
         parentItem = window.parentViewForOutput(_greenisland_output).parent;
         break;
     default:
@@ -109,20 +109,20 @@ function windowMapped(window) {
     console.debug("\titem position:", item.x + "," + item.y);
 
     // Set transient children so that the parent can be desaturated
-    if (window.type === ClientWindow.Transient)
+    if (window.type === GreenIsland.ClientWindow.Transient)
         parentItem.transientChildren = item;
     // Set popup child to enable dim effect
-    else if (window.type === ClientWindow.Popup)
+    else if (window.type === GreenIsland.ClientWindow.Popup)
         parentItem.popupChild = item;
 
     // Make it visible
     item.visible = true;
 
     // z-order and focus
-    if (window.type === ClientWindow.TopLevel) {
+    if (window.type === GreenIsland.ClientWindow.TopLevel) {
         item.z = windowList.length;
         window.activate();
-    } else if (window.type === ClientWindow.Transient) {
+    } else if (window.type === GreenIsland.ClientWindow.Transient) {
         item.child.takeFocus();
     }
 
@@ -221,7 +221,7 @@ function _forgetWindow(i, window, item, destruction) {
 
     // Remove from z-order list
     var j, windowIndex = -1;
-    if (window.type === ClientWindow.TopLevel) {
+    if (window.type === GreenIsland.ClientWindow.TopLevel) {
         for (j = 0; j < windowList.length; j++) {
             if (windowList[j] === item) {
                 windowList.splice(j, 1);
@@ -249,7 +249,7 @@ function _forgetWindow(i, window, item, destruction) {
 
     // Unset transient children so that the parent can go back to normal
     // and also bring the parent to front
-    if (window.type === ClientWindow.Transient) {
+    if (window.type === GreenIsland.ClientWindow.Transient) {
         var parentWindow = window.parentWindow;
         if (parentWindow) {
             var parentItem = parentWindow.viewForOutput(_greenisland_output).parent;
