@@ -38,9 +38,7 @@ enum class CompositorMessages {
 /*! Messages from session manager to compositor */
 enum class SessionMessages {
     IdleInhibit = 0,
-    IdleUninhibit,
-    Lock,
-    Unlock
+    IdleUninhibit
 };
 
 } // namespace Hawaii

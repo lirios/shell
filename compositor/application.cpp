@@ -65,18 +65,6 @@ Application::Application(const QString &sessionSocket)
     }
 }
 
-void Application::lockSession()
-{
-    Q_FOREACH (QWaylandOutput *output, compositor()->outputs())
-        static_cast<Output *>(output)->setLocked(true);
-}
-
-void Application::unlockSession()
-{
-    Q_FOREACH (QWaylandOutput *output, compositor()->outputs())
-        static_cast<Output *>(output)->setLocked(false);
-}
-
 void Application::compositorLaunched()
 {
     connect(compositor(), &Compositor::idle, this, [this] {
@@ -103,25 +91,10 @@ void Application::connected()
     stream << quint32(CompositorMessages::Connected);
     m_sessionSocket->write(data);
     m_sessionSocket->flush();
-
-    // Lock and unlock
-    SessionInterface *sessionInterface = SessionInterface::instance();
-    connect(sessionInterface, &SessionInterface::sessionLocked,
-            this, &Application::lockSession,
-            Qt::UniqueConnection);
-    connect(sessionInterface, &SessionInterface::sessionUnlocked,
-            this, &Application::unlockSession,
-            Qt::UniqueConnection);
 }
 
 void Application::disconnected()
 {
-    // Lock and unlock
-    SessionInterface *sessionInterface = SessionInterface::instance();
-    disconnect(sessionInterface, &SessionInterface::sessionLocked,
-               this, &Application::lockSession);
-    disconnect(sessionInterface, &SessionInterface::sessionUnlocked,
-               this, &Application::unlockSession);
 }
 
 void Application::readyRead()
@@ -140,12 +113,6 @@ void Application::readyRead()
             break;
         case SessionMessages::IdleUninhibit:
             compositor()->decrementIdleInhibit();
-            break;
-        case SessionMessages::Lock:
-            lockSession();
-            break;
-        case SessionMessages::Unlock:
-            unlockSession();
             break;
         default:
             break;

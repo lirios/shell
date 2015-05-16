@@ -169,16 +169,6 @@ Item {
     }
 
     Connections {
-        target: _greenisland_output
-        onLockedChanged: {
-            if (_greenisland_output.locked)
-                compositorRoot.state = "lock";
-            else
-                compositorRoot.state = "session";
-        }
-    }
-
-    Connections {
         target: GreenIsland.KeyBindings
         onKeyBindingPressed: {
             switch (name) {
@@ -245,7 +235,7 @@ Item {
                 Session.SessionInterface.requestPowerOff();
                 break;
             case "lockScreen":
-                _greenisland_output.locked = true;
+                Session.SessionInterface.lockSession();
                 break;
             case "activateSession-1":
                 Session.SessionInterface.activateSession(1);
@@ -291,6 +281,8 @@ Item {
 
     Connections {
         target: Session.SessionInterface
+        onSessionLocked: compositorRoot.state = "lock"
+        onSessionUnlocked: compositorRoot.state = "session"
         onShutdownRequestCanceled: compositorRoot.state = "session"
         onLogOutRequested: compositorRoot.state = "logout"
         onPowerOffRequested: compositorRoot.state = "poweroff"

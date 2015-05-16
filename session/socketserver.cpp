@@ -126,32 +126,6 @@ void SocketServer::sendIdleUninhibit()
     m_client->write(data);
 }
 
-void SocketServer::sendLock()
-{
-    if (!m_client)
-        return;
-
-    qCDebug(SOCKETSERVER) << "Send Lock";
-
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
-    stream << quint32(SessionMessages::Lock);
-    m_client->write(data);
-}
-
-void SocketServer::sendUnlock()
-{
-    if (!m_client)
-        return;
-
-    qCDebug(SOCKETSERVER) << "Send Unlock";
-
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
-    stream << quint32(SessionMessages::Unlock);
-    m_client->write(data);
-}
-
 void SocketServer::newConnection()
 {
     if (m_client)

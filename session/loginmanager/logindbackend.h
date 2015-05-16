@@ -58,6 +58,9 @@ public:
     void lockSession();
     void unlockSession();
 
+    void requestLockSession();
+    void requestUnlockSession();
+
     void locked();
     void unlocked();
 

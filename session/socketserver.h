@@ -51,9 +51,6 @@ public:
     void sendIdleInhibit();
     void sendIdleUninhibit();
 
-    void sendLock();
-    void sendUnlock();
-
 Q_SIGNALS:
     void connected();
     void idleChanged(bool idle);

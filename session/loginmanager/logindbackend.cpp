@@ -203,12 +203,22 @@ void LogindBackend::releaseDevice(int fd)
 
 void LogindBackend::lockSession()
 {
+    Q_EMIT sessionLocked();
+}
+
+void LogindBackend::unlockSession()
+{
+    Q_EMIT sessionUnlocked();
+}
+
+void LogindBackend::requestLockSession()
+{
     QDBusInterface iface(login1Service, m_sessionPath, login1SessionInterface,
                          m_interface->connection());
     iface.asyncCall(QStringLiteral("Lock"));
 }
 
-void LogindBackend::unlockSession()
+void LogindBackend::requestUnlockSession()
 {
     QDBusInterface iface(login1Service, m_sessionPath, login1SessionInterface,
                          m_interface->connection());

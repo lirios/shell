@@ -31,8 +31,6 @@ import Hawaii.Themes 1.0 as Themes
 import "."
 
 Components.Showable {
-    signal unlocked()
-
     id: root
     showAnimation: OpacityAnimator {
         target: root

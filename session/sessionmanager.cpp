@@ -131,10 +131,6 @@ void SessionManager::setLocked(bool value)
         return;
 
     m_locked = value;
-    if (m_locked)
-        m_server->sendLock();
-    else
-        m_server->sendUnlock();
     Q_EMIT lockedChanged(value);
 }
 
