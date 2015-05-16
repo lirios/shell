@@ -25,12 +25,14 @@
  ***************************************************************************/
 
 #include <QtNetwork/QLocalSocket>
+#include <QtQml/QQmlComponent>
 
 #include <GreenIsland/Compositor>
 #include <GreenIsland/Output>
 
 #include "application.h"
 #include "messages.h"
+#include "session/sessioninterface.h"
 
 using namespace Hawaii;
 
@@ -39,6 +41,11 @@ Application::Application(const QString &sessionSocket)
     , HomeApplication()
     , m_sessionSocket(Q_NULLPTR)
 {
+    // Register QML plugins
+    const char *uri = "org.hawaii.session";
+    qmlRegisterType<SessionInterface>(uri, 0, 1, "SessionInterface");
+
+    // Connect to the session manager
     if (!sessionSocket.isEmpty()) {
         m_sessionSocket = new QLocalSocket(this);
         connect(m_sessionSocket, &QLocalSocket::connected,

@@ -1,3 +1,5 @@
+find_package(PAM REQUIRED)
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
@@ -7,16 +9,20 @@ include_directories(
 set(SOURCES
     application.cpp
     main.cpp
+    session/authenticator.cpp
+    session/sessioninterface.cpp
 )
 
 add_executable(hawaii ${SOURCES})
 target_link_libraries(hawaii
     Qt5::Core
+    Qt5::DBus
     Qt5::Gui
     Qt5::Network
     Qt5::Widgets
     GreenIsland::GreenIsland
     HawaiiSigWatch
+    ${PAM_LIBRARIES}
 )
 
 # Git revision
