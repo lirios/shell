@@ -146,12 +146,6 @@ Item {
 
     Connections {
         target: compositor
-        onLockedChanged: {
-            if (compositor.locked)
-                compositorRoot.state = "lock";
-            else
-                compositorRoot.state = "session";
-        }
         onFadeIn: {
             // Bring user layer up
             compositorRoot.state = "session";
@@ -171,6 +165,16 @@ Item {
         onWindowDestroyed: {
             // A window was unmapped
             WindowManagement.windowDestroyed(id);
+        }
+    }
+
+    Connections {
+        target: _greenisland_output
+        onLockedChanged: {
+            if (_greenisland_output.locked)
+                compositorRoot.state = "lock";
+            else
+                compositorRoot.state = "session";
         }
     }
 
@@ -241,7 +245,7 @@ Item {
                 compositorRoot.state = "poweroff";
                 break;
             case "lockScreen":
-                compositor.locked = true;
+                _greenisland_output.locked = true;
                 break;
             case "activateSession-1":
                 session.activateSession(1);
@@ -513,7 +517,7 @@ Item {
 
     Connections {
         target: lockScreenLoader.item
-        onUnlocked: compositor.locked = false
+        onUnlocked: _greenisland_output.locked = false
     }
 
     /*

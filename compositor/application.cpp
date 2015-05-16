@@ -27,6 +27,7 @@
 #include <QtNetwork/QLocalSocket>
 
 #include <GreenIsland/Compositor>
+#include <GreenIsland/Output>
 
 #include "application.h"
 #include "messages.h"
@@ -102,10 +103,12 @@ void Application::readyRead()
             compositor()->decrementIdleInhibit();
             break;
         case SessionMessages::Lock:
-            compositor()->setLocked(true);
+            Q_FOREACH (QWaylandOutput *output, compositor()->outputs())
+                static_cast<Output *>(output)->setLocked(true);
             break;
         case SessionMessages::Unlock:
-            compositor()->setLocked(false);
+            Q_FOREACH (QWaylandOutput *output, compositor()->outputs())
+                static_cast<Output *>(output)->setLocked(false);
             break;
         default:
             break;
