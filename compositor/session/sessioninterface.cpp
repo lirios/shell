@@ -205,6 +205,53 @@ void SessionInterface::activateSession(int index)
     m_interface->asyncCall("activateSession", index);
 }
 
+void SessionInterface::requestLogOut()
+{
+    if (!canLogOut())
+        return;
+    Q_EMIT logOutRequested();
+}
+
+void SessionInterface::requestPowerOff()
+{
+    if (!canPowerOff())
+        return;
+    Q_EMIT powerOffRequested();
+}
+
+void SessionInterface::requestRestart()
+{
+    if (!canRestart())
+        return;
+    Q_EMIT restartRequested();
+}
+
+void SessionInterface::requestSuspend()
+{
+    if (!canSuspend())
+        return;
+    Q_EMIT suspendRequested();
+}
+
+void SessionInterface::requestHibernate()
+{
+    if (!canHibernate())
+        return;
+    Q_EMIT hibernateRequested();
+}
+
+void SessionInterface::requestHybridSleep()
+{
+    if (!canHybridSleep())
+        return;
+    Q_EMIT hybridSleepRequested();
+}
+
+void SessionInterface::cancelShutdownRequest()
+{
+    Q_EMIT shutdownRequestCanceled();
+}
+
 void SessionInterface::logOut()
 {
     m_interface->asyncCall("logOut");

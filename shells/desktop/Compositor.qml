@@ -239,10 +239,10 @@ Item {
                 break;
                 // sm
             case "abortSession":
-                compositor.abortSession();
+                Session.SessionInterface.requestLogOut();
                 break;
             case "powerOff":
-                compositorRoot.state = "poweroff";
+                Session.SessionInterface.requestPowerOff();
                 break;
             case "lockScreen":
                 _greenisland_output.locked = true;
@@ -287,6 +287,14 @@ Item {
                 break;
             }
         }
+    }
+
+    Connections {
+        target: Session.SessionInterface
+        onShutdownRequestCanceled: compositorRoot.state = "session"
+        onLogOutRequested: compositorRoot.state = "logout"
+        onPowerOffRequested: compositorRoot.state = "poweroff"
+        onRestartRequested: compositorRoot.state = "restart"
     }
 
     /*
@@ -477,7 +485,7 @@ Item {
     Connections {
         target: logoutLoader.item
         onSuspendRequested: compositorRoot.state = "lock"
-        onCancel: compositorRoot.state = "session"
+        onCancel: Session.SessionInterface.cancelShutdownRequest()
     }
 
     /*

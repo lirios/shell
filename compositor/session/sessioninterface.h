@@ -63,11 +63,27 @@ Q_SIGNALS:
     void sessionLocked();
     void sessionUnlocked();
 
+    void logOutRequested();
+    void powerOffRequested();
+    void restartRequested();
+    void suspendRequested();
+    void hibernateRequested();
+    void hybridSleepRequested();
+    void shutdownRequestCanceled();
+
 public Q_SLOTS:
     void lockSession();
     void unlockSession(const QString &password, const QJSValue &callback);
     void startNewSession();
     void activateSession(int index);
+
+    void requestLogOut();
+    void requestPowerOff();
+    void requestRestart();
+    void requestSuspend();
+    void requestHibernate();
+    void requestHybridSleep();
+    void cancelShutdownRequest();
 
     void logOut();
     void powerOff();

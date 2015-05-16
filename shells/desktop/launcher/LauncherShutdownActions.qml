@@ -42,7 +42,7 @@ RowLayout {
         tooltip: qsTr("Log out from current session")
         enabled: Session.SessionInterface.canLogOut
         onClicked: {
-            compositorRoot.state = "logout";
+            Session.SessionInterface.requestLogOut();
             if (indicator.expanded)
                 indicator.triggered(indicator);
         }
@@ -55,7 +55,7 @@ RowLayout {
         tooltip: qsTr("Power off the system")
         enabled: Session.SessionInterface.canPowerOff
         onClicked: {
-            compositorRoot.state = "poweroff";
+            Session.SessionInterface.requestPowerOff();
             if (indicator.expanded)
                 indicator.triggered(indicator);
         }
@@ -68,7 +68,7 @@ RowLayout {
         tooltip: qsTr("Restart the system")
         enabled: Session.SessionInterface.canRestart
         onClicked: {
-            compositorRoot.state = "restart";
+            Session.SessionInterface.requestRestart();
             if (indicator.expanded)
                 indicator.triggered(indicator);
         }
