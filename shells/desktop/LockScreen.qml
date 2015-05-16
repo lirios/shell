@@ -30,13 +30,11 @@ import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.session 0.1 as Session
+import org.hawaii.session 1.0 as Session
 import "components" as CustomComponents
 import "."
 
 Components.Showable {
-    signal unlocked()
-
     id: root
     showAnimation: YAnimator {
         target: root
@@ -58,10 +56,6 @@ Components.Showable {
         id: __priv
 
         property string timeFormat
-    }
-
-    Session.SessionInterface {
-        id: session
     }
 
     Image {
@@ -138,10 +132,8 @@ Components.Showable {
                     focus: true
                     echoMode: TextInput.Password
                     onAccepted: {
-                        session.unlockSession(text, function(succeded) {
-                            if (succeded)
-                                root.unlocked();
-                            else {
+                        Session.SessionInterface.unlockSession(text, function(succeded) {
+                            if (!succeded) {
                                 text = "";
                                 errorLabel.text = qsTr("Sorry, wrong password. Please try again.");
                                 errorTimer.start();

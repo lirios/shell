@@ -36,6 +36,11 @@
 
 using namespace Hawaii;
 
+static QObject *sessionInterfaceProvider(QQmlEngine *, QJSEngine *)
+{
+    return SessionInterface::instance();
+}
+
 Application::Application(const QString &sessionSocket)
     : QObject()
     , HomeApplication()
@@ -43,7 +48,7 @@ Application::Application(const QString &sessionSocket)
 {
     // Register QML plugins
     const char *uri = "org.hawaii.session";
-    qmlRegisterType<SessionInterface>(uri, 0, 1, "SessionInterface");
+    qmlRegisterSingletonType<SessionInterface>(uri, 1, 0, "SessionInterface", sessionInterfaceProvider);
 
     // Connect to the session manager
     if (!sessionSocket.isEmpty()) {
@@ -58,6 +63,18 @@ Application::Application(const QString &sessionSocket)
                 this, SLOT(error()));
         m_sessionSocket->connectToServer(sessionSocket);
     }
+}
+
+void Application::lockSession()
+{
+    Q_FOREACH (QWaylandOutput *output, compositor()->outputs())
+        static_cast<Output *>(output)->setLocked(true);
+}
+
+void Application::unlockSession()
+{
+    Q_FOREACH (QWaylandOutput *output, compositor()->outputs())
+        static_cast<Output *>(output)->setLocked(false);
 }
 
 void Application::compositorLaunched()
@@ -86,10 +103,25 @@ void Application::connected()
     stream << quint32(CompositorMessages::Connected);
     m_sessionSocket->write(data);
     m_sessionSocket->flush();
+
+    // Lock and unlock
+    SessionInterface *sessionInterface = SessionInterface::instance();
+    connect(sessionInterface, &SessionInterface::sessionLocked,
+            this, &Application::lockSession,
+            Qt::UniqueConnection);
+    connect(sessionInterface, &SessionInterface::sessionUnlocked,
+            this, &Application::unlockSession,
+            Qt::UniqueConnection);
 }
 
 void Application::disconnected()
 {
+    // Lock and unlock
+    SessionInterface *sessionInterface = SessionInterface::instance();
+    disconnect(sessionInterface, &SessionInterface::sessionLocked,
+               this, &Application::lockSession);
+    disconnect(sessionInterface, &SessionInterface::sessionUnlocked,
+               this, &Application::unlockSession);
 }
 
 void Application::readyRead()
@@ -110,12 +142,10 @@ void Application::readyRead()
             compositor()->decrementIdleInhibit();
             break;
         case SessionMessages::Lock:
-            Q_FOREACH (QWaylandOutput *output, compositor()->outputs())
-                static_cast<Output *>(output)->setLocked(true);
+            lockSession();
             break;
         case SessionMessages::Unlock:
-            Q_FOREACH (QWaylandOutput *output, compositor()->outputs())
-                static_cast<Output *>(output)->setLocked(false);
+            unlockSession();
             break;
         default:
             break;

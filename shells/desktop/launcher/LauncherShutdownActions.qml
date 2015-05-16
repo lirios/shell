@@ -28,23 +28,19 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.session 0.1 as Session
+import org.hawaii.session 1.0 as Session
 
 RowLayout {
     implicitWidth: (Themes.Units.iconSizes.large * 3) + (spacing * 3)
     implicitHeight: Themes.Units.iconSizes.large + (spacing * 2)
     spacing: Themes.Units.largeSpacing
 
-    Session.SessionInterface {
-        id: session
-    }
-
     ToolButton {
         width: Themes.Units.iconSizes.large
         height: width
         iconName: "system-log-out-symbolic"
         tooltip: qsTr("Log out from current session")
-        enabled: session.canLogOut
+        enabled: Session.SessionInterface.canLogOut
         onClicked: {
             compositorRoot.state = "logout";
             if (indicator.expanded)
@@ -57,7 +53,7 @@ RowLayout {
         height: width
         iconName: "system-shutdown-symbolic"
         tooltip: qsTr("Power off the system")
-        enabled: session.canPowerOff
+        enabled: Session.SessionInterface.canPowerOff
         onClicked: {
             compositorRoot.state = "poweroff";
             if (indicator.expanded)
@@ -70,7 +66,7 @@ RowLayout {
         height: width
         iconName: "system-reboot-symbolic"
         tooltip: qsTr("Restart the system")
-        enabled: session.canRestart
+        enabled: Session.SessionInterface.canRestart
         onClicked: {
             compositorRoot.state = "restart";
             if (indicator.expanded)

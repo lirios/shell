@@ -41,6 +41,10 @@ class Application : public QObject, public HomeApplication
 public:
     Application(const QString &sessionSocket = QString());
 
+public Q_SLOTS:
+    void lockSession();
+    void unlockSession();
+
 protected:
     void compositorLaunched() Q_DECL_OVERRIDE;
 

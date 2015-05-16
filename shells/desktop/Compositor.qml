@@ -30,7 +30,7 @@ import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
-import org.hawaii.session 0.1 as Session
+import org.hawaii.session 1.0 as Session
 import "desktop"
 import "windows"
 import "windows/WindowManagement.js" as WindowManagement
@@ -248,40 +248,40 @@ Item {
                 _greenisland_output.locked = true;
                 break;
             case "activateSession-1":
-                session.activateSession(1);
+                Session.SessionInterface.activateSession(1);
                 break;
             case "activateSession-2":
-                session.activateSession(2);
+                Session.SessionInterface.activateSession(2);
                 break;
             case "activateSession-3":
-                session.activateSession(3);
+                Session.SessionInterface.activateSession(3);
                 break;
             case "activateSession-4":
-                session.activateSession(4);
+                Session.SessionInterface.activateSession(4);
                 break;
             case "activateSession-5":
-                session.activateSession(5);
+                Session.SessionInterface.activateSession(5);
                 break;
             case "activateSession-6":
-                session.activateSession(6);
+                Session.SessionInterface.activateSession(6);
                 break;
             case "activateSession-7":
-                session.activateSession(7);
+                Session.SessionInterface.activateSession(7);
                 break;
             case "activateSession-8":
-                session.activateSession(8);
+                Session.SessionInterface.activateSession(8);
                 break;
             case "activateSession-9":
-                session.activateSession(9);
+                Session.SessionInterface.activateSession(9);
                 break;
             case "activateSession-10":
-                session.activateSession(10);
+                Session.SessionInterface.activateSession(10);
                 break;
             case "activateSession-11":
-                session.activateSession(11);
+                Session.SessionInterface.activateSession(11);
                 break;
             case "activateSession-12":
-                session.activateSession(12);
+                Session.SessionInterface.activateSession(12);
                 break;
             default:
                 break;
@@ -318,11 +318,6 @@ Item {
 
         Keys.onPressed: compositorRoot.keyPressed(event)
         Keys.onReleased: compositorRoot.keyReleased(event)
-    }
-
-    // Session
-    Session.SessionInterface {
-        id: session
     }
 
     // Top level window component
@@ -513,11 +508,6 @@ Item {
         component: _greenisland_output.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
         z: 910
         onLoadComponentChanged: if (loadComponent) show(); else hide();
-    }
-
-    Connections {
-        target: lockScreenLoader.item
-        onUnlocked: _greenisland_output.locked = false
     }
 
     /*

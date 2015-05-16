@@ -33,6 +33,9 @@
 
 const QDBusConnection bus = QDBusConnection::sessionBus();
 
+class SessionInterfaceSingleton : public SessionInterface {};
+Q_GLOBAL_STATIC(SessionInterfaceSingleton, s_sessionInterface)
+
 /*
  * CustomAuthenticator
  */
@@ -130,6 +133,11 @@ SessionInterface::~SessionInterface()
     m_authenticatorThread->wait();
     m_authenticator->deleteLater();
     delete m_interface;
+}
+
+SessionInterface *SessionInterface::instance()
+{
+    return s_sessionInterface();
 }
 
 bool SessionInterface::canLock() const

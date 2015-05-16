@@ -31,7 +31,7 @@ import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.session 0.1 as Session
+import org.hawaii.session 1.0 as Session
 import "."
 
 Components.Showable {
@@ -100,11 +100,11 @@ Components.Showable {
     ]
     focus: true
     visible: true
-    onLogOutRequested: session.logOut()
-    onPowerOffRequested: session.powerOff()
-    onRestartRequested: session.restart()
-    onSuspendRequested: session.suspend()
-    onHibernateRequested: session.hibernate()
+    onLogOutRequested: Session.SessionInterface.logOut()
+    onPowerOffRequested: Session.SessionInterface.powerOff()
+    onRestartRequested: Session.SessionInterface.restart()
+    onSuspendRequested: Session.SessionInterface.suspend()
+    onHibernateRequested: Session.SessionInterface.hibernate()
 
     QtObject {
         id: __priv
@@ -119,10 +119,6 @@ Components.Showable {
             if (remainingTime <= 0)
                 currentAction();
         }
-    }
-
-    Session.SessionInterface {
-        id: session
     }
 
     Timer {
@@ -223,7 +219,11 @@ Components.Showable {
 
         Row {
             spacing: Themes.Units.smallSpacing
-            visible: session.canLogOut || session.canPowerOff || session.canRestart || session.canSuspend || session.canHibernate
+            visible: Session.SessionInterface.canLogOut ||
+                     Session.SessionInterface.canPowerOff ||
+                     Session.SessionInterface.canRestart ||
+                     Session.SessionInterface.canSuspend ||
+                     Session.SessionInterface.canHibernate
 
             ExclusiveGroup { id: group }
 
@@ -235,7 +235,7 @@ Components.Showable {
                 height: width
                 checkable: true
                 checked: __priv.mode == "logout"
-                visible: session.canLogOut
+                visible: Session.SessionInterface.canLogOut
                 onClicked: __priv.mode = "logout"
             }
 
@@ -247,7 +247,7 @@ Components.Showable {
                 height: width
                 checkable: true
                 checked: __priv.mode == "poweroff"
-                visible: session.canPowerOff
+                visible: Session.SessionInterface.canPowerOff
                 onClicked: __priv.mode = "poweroff"
             }
 
@@ -259,7 +259,7 @@ Components.Showable {
                 height: width
                 checkable: true
                 checked: __priv.mode == "restart"
-                visible: session.canRestart
+                visible: Session.SessionInterface.canRestart
                 onClicked: __priv.mode = "restart"
             }
 
@@ -271,7 +271,7 @@ Components.Showable {
                 height: width
                 checkable: true
                 checked: __priv.mode == "suspend"
-                visible: session.canSuspend
+                visible: Session.SessionInterface.canSuspend
                 onClicked: __priv.mode = "suspend"
             }
 
@@ -283,7 +283,7 @@ Components.Showable {
                 height: width
                 checkable: true
                 checked: __priv.mode == "hibernate"
-                visible: session.canHibernate
+                visible: Session.SessionInterface.canHibernate
                 onClicked: __priv.mode = "hibernate"
             }
 

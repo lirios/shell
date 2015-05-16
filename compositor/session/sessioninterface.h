@@ -46,8 +46,9 @@ class SessionInterface : public QObject
     Q_PROPERTY(bool canHibernate READ canHibernate CONSTANT)
     Q_PROPERTY(bool canHybridSleep READ canHybridSleep CONSTANT)
 public:
-    SessionInterface(QObject *parent = 0);
-    ~SessionInterface();
+    virtual ~SessionInterface();
+
+    static SessionInterface *instance();
 
     bool canLock() const;
     bool canStartNewSession() const;
@@ -74,6 +75,9 @@ public Q_SLOTS:
     void suspend();
     void hibernate();
     void hybridSleep();
+
+protected:
+    SessionInterface(QObject *parent = 0);
 
 private:
     Authenticator *m_authenticator;
