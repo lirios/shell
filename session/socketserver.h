@@ -53,7 +53,6 @@ public:
 
 Q_SIGNALS:
     void connected();
-    void idleChanged(bool idle);
 
 private:
     QLocalServer *m_server;

@@ -31,6 +31,7 @@
 
 #include "messages.h"
 #include "socketserver.h"
+#include "sessionmanager.h"
 
 Q_LOGGING_CATEGORY(SOCKETSERVER, "hawaii.session.socket")
 
@@ -162,7 +163,7 @@ void SocketServer::readyRead()
         bool value;
         input >> value;
         qCDebug(SOCKETSERVER) << "SetIdle:" << value;
-        Q_EMIT idleChanged(value);
+        SessionManager::instance()->setIdle(value);
         break;
     }
     default:

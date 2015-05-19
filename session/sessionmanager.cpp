@@ -65,11 +65,6 @@ SessionManager::SessionManager(QObject *parent)
         QTimer::singleShot(500, this, SLOT(autostart()));
     });
 
-    // Communication between compositor and session manager
-    connect(m_server, &SocketServer::idleChanged, this, [this](bool value) {
-        setIdle(value);
-    });
-
     // Listen for compositor messages
     m_server->start(compositorLauncher->sessionSocketName());
 }
