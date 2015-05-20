@@ -1,1 +1,1 @@
-add_subdirectory(wind)
+add_subdirectory(shell)
