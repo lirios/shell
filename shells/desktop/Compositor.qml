@@ -281,7 +281,6 @@ Item {
 
     Connections {
         target: Session.SessionInterface
-        onIdleChanged: if (Session.SessionInterface
         onSessionLocked: compositorRoot.state = "lock"
         onSessionUnlocked: compositorRoot.state = "session"
         onShutdownRequestCanceled: compositorRoot.state = "session"
