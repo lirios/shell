@@ -1,0 +1,16 @@
+[SddmGreeterTheme]
+Type=sddm-theme
+Name=Hawaii
+Description=Official theme for Hawaii
+Author=Pier Luigi Fiorini
+Email=pierluigi.fiorini@gmail.com
+Copyright=(C) 2014-2015 Pier Luigi Fiorini
+License=CC-BY-SA
+Version=0.1
+Website=http://hawaii-desktop.github.io
+Screenshot=screenshot.jpg
+ConfigFile=theme.conf
+MainScript=Main.qml
+TranslationsDirectory=translations
+Theme-Id=hawaii
+Theme-API=2.0
