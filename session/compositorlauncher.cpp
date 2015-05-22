@@ -338,8 +338,8 @@ QProcessEnvironment CompositorLauncher::compositorEnv() const
     case HwComposerMode:
         env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("hwcomposer"));
         env.insert(QStringLiteral("EGL_PLATFORM"), QStringLiteral("hwcomposer"));
-        env.insert(QStringLiteral("QT_COMPOSITOR_NEGATE_INVERTED_Y"), QStringLiteral("0"));
-        env.insert(QStringLiteral("QT_QPA_EGLFS_DEPTH"), QStringLiteral("32"));
+        //env.insert(QStringLiteral("QT_COMPOSITOR_NEGATE_INVERTED_Y"), QStringLiteral("0"));
+        //env.insert(QStringLiteral("QT_QPA_EGLFS_DEPTH"), QStringLiteral("32"));
         if (m_hasLibInputPlugin)
             env.insert(QStringLiteral("QT_QPA_EGLFS_DISABLE_INPUT"), QStringLiteral("1"));
         break;
