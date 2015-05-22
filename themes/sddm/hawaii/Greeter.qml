@@ -35,8 +35,8 @@ import Hawaii.Components.ListItems 1.0 as ListItems
 Components.NoiseBackground {
     property var usersModel
     property int sessionIndex: sessionModel.lastIndex
-    property alias rebootVisible: shutdownOptions.rebootVisible
-    property alias powerOffVisible: shutdownOptions.powerOffVisible
+    property bool rebootVisible: true
+    property bool powerOffVisible: true
 
     signal loginRequested(string userName, string password, int sessionIndex)
     signal rebootRequested()
@@ -57,55 +57,30 @@ Components.NoiseBackground {
         }
     }
 
-    Item {
-        anchors {
-            centerIn: parent
-            bottomMargin: shutdownOptionsWrapper.height * Themes.Units.smallSpacing
-        }
-        width: mainLayout.implicitWidth
-        height: mainLayout.implicitHeight
+    LoginScreen {
+        id: loginScreen
+        anchors.centerIn: parent
+        width: greeter.width * 0.5
+        height: Themes.Units.gu(12)
+        actions: Column {
+            spacing: Themes.Units.largeSpacing
 
-        ColumnLayout {
-            id: mainLayout
-            anchors.fill: parent
+            ShutdownButtons {
+                spacing: Themes.Units.smallSpacing
+                rebootVisible: greeter.rebootVisible
+                powerOffVisible: greeter.powerOffVisible
+                onRebootRequested: greeter.rebootRequested()
+                onPowerOffRequested: greeter.powerOffRequested()
+            }
 
-            StackView {
-                id: stackView
-                width: greeter.width * 0.5
-                height: greeter.height * 0.5
-                initialItem: LoginScreen {
-                    id: loginScreen
-                    width: greeter.width * 0.5
-                    height: Themes.Units.largeSpacing * 14
-                    actions: Row {
-                        spacing: Themes.Units.smallSpacing
+            Row {
+                spacing: Themes.Units.smallSpacing
 
-                        //KeyboardLayoutButton {}
-                        SessionButton {}
-                    }
-                    model: greeter.usersModel
-                    onLoginRequested: greeter.loginRequested(userName, password, greeter.sessionIndex)
-                }
+                KeyboardLayoutButton {}
+                SessionButton {}
             }
         }
-    }
-
-    Item {
-        id: shutdownOptionsWrapper
-        anchors {
-            right: parent.right
-            bottom: parent.bottom
-            margins: Themes.Units.largeSpacing
-        }
-        width: shutdownOptions.implicitWidth
-        height: shutdownOptions.implicitHeight
-
-        ShutdownButtons {
-            id: shutdownOptions
-            anchors.fill: parent
-            spacing: Themes.Units.largeSpacing
-            onRebootRequested: greeter.rebootRequested()
-            onPowerOffRequested: greeter.powerOffRequested()
-        }
+        model: greeter.usersModel
+        onLoginRequested: greeter.loginRequested(userName, password, greeter.sessionIndex)
     }
 }

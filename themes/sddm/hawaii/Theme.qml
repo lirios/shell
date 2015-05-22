@@ -29,31 +29,27 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Private 1.0 as ControlsPrivate
 
 Item {
-    property alias usersModel: greeter.usersModel
+    property var usersModel
 
     id: root
 
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-        cursorShape: Qt.ArrowCursor
+    Component {
+        id: greeterComponent
+
+        Greeter {
+            usersModel: root.usersModel
+            rebootVisible: sddm.canReboot
+            powerOffVisible: sddm.canPowerOff
+            onLoginRequested: sddm.login(userName, password, sessionIndex)
+            onRebootRequested: sddm.reboot()
+            onPowerOffRequested: sddm.powerOff()
+        }
     }
 
-    Greeter {
-        id: greeter
-        width: root.width
-        height: root.height
-        rebootVisible: sddm.canReboot
-        powerOffVisible: sddm.canPowerOff
-        onLoginRequested: sddm.login(userName, password, sessionIndex)
-        onRebootRequested: sddm.reboot()
-        onPowerOffRequested: sddm.powerOff()
-    }
+    Component {
+        id: desktopStillComponent
 
-    DesktopStill {
-        id: desktopStill
-        width: root.width
-        height: root.height
+        DesktopStill {}
     }
 
     StackView {
@@ -79,9 +75,9 @@ Item {
 
         switch (index) {
         case 0:
-            return greeter;
+            return greeterComponent;
         case 1:
-            return desktopStill;
+            return desktopStillComponent;
         default:
             break;
         }

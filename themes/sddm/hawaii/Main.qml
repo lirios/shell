@@ -27,8 +27,13 @@
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
 
-Item {
+Components.NoiseBackground {
     id: container
+    color: "#272727"
+    gradient: Gradient {
+        GradientStop { position: 0; color: "#272727" }
+        GradientStop { position: 1; color: "#2b2b2b" }
+    }
     width: screenModel.geometry(screenModel.primary).width
     height: screenModel.geometry(screenModel.primary).height
 
@@ -37,18 +42,15 @@ Item {
         onLoginSucceeded: sddmTheme.slideToPageIndex(2)
     }
 
-    Components.NoiseBackground {
+    MouseArea {
         anchors.fill: parent
-        color: "#272727"
-        gradient: Gradient {
-            GradientStop { position: 0; color: "#272727" }
-            GradientStop { position: 1; color: "#2b2b2b" }
-        }
+        acceptedButtons: Qt.NoButton
+        cursorShape: Qt.ArrowCursor
+    }
 
-        Theme {
-            id: sddmTheme
-            anchors.fill: parent
-            usersModel: userModel
-        }
+    Theme {
+        id: sddmTheme
+        anchors.fill: parent
+        usersModel: userModel
     }
 }
