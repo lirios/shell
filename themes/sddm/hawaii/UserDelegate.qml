@@ -74,7 +74,8 @@ Item {
     Rectangle {
         id: container
         anchors.fill: parent
-        color: Themes.Theme.palette.panel.backgroundColor;
+        color: Themes.Theme.palette.panel.backgroundColor
+        border.color: Themes.Theme.palette.rgba(Qt.darker(color, 1.3), 0.7)
         radius: Themes.Units.gu(3)
         antialiasing: true
     }
