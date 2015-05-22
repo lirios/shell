@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtGraphicalEffects 1.0
 import Hawaii.Themes 1.0 as Themes
 import Hawaii.Components 1.0 as Components
 
@@ -65,7 +66,7 @@ Item {
 
     Behavior on opacity {
         NumberAnimation {
-            duration: 250
+            duration: Themes.Units.shortDuration
             easing.type: Easing.InOutQuad
         }
     }
@@ -74,14 +75,21 @@ Item {
         id: container
         anchors.fill: parent
         color: Themes.Theme.palette.panel.backgroundColor;
-        radius: Themes.Units.gu(6)
+        radius: Themes.Units.gu(3)
         antialiasing: true
+    }
 
-        Components.Icon {
-            id: icon
-            anchors.centerIn: parent
-            height: width
-        }
+    Components.Icon {
+        id: icon
+        anchors.fill: parent
+        height: width
+        visible: false
+    }
+
+    OpacityMask {
+        anchors.fill: icon
+        source: icon
+        maskSource: container
     }
 
     MouseArea {
