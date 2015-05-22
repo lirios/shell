@@ -33,6 +33,8 @@ qt5_add_dbus_adaptor(SOURCES
     org.freedesktop.ScreenSaver.xml
     screensaver.h ScreenSaver)
 
+qt5_add_resources(SOURCES hawaii-session.qrc)
+
 add_executable(hawaii-session ${SOURCES})
 target_link_libraries(hawaii-session
     Qt5::Core

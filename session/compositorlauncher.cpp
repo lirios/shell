@@ -327,6 +327,7 @@ QProcessEnvironment CompositorLauncher::compositorEnv() const
             break;
         default:
             env.insert(QStringLiteral("QT_QPA_EGLFS_INTEGRATION"), QStringLiteral("eglfs_kms"));
+            env.insert(QStringLiteral("QT_QPA_EGLFS_KMS_CONFIG"), QStringLiteral("qrc:/data/eglfs_kms.json"));
             break;
         }
 #endif
