@@ -27,6 +27,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QStandardPaths>
 
 #include "cmakedirs.h"
 #include "compositorlauncher.h"
@@ -327,7 +328,9 @@ QProcessEnvironment CompositorLauncher::compositorEnv() const
             break;
         default:
             env.insert(QStringLiteral("QT_QPA_EGLFS_INTEGRATION"), QStringLiteral("eglfs_kms"));
-            env.insert(QStringLiteral("QT_QPA_EGLFS_KMS_CONFIG"), QStringLiteral("qrc:/data/eglfs_kms.json"));
+            env.insert(QStringLiteral("QT_QPA_EGLFS_KMS_CONFIG"),
+                       QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                              QStringLiteral("hawaii/compositor/eglfs/eglfs_kms.json")));
             break;
         }
 #endif
