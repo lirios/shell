@@ -30,8 +30,8 @@
 SessionAdaptor::SessionAdaptor(SessionManager *sessionManager)
     : QDBusAbstractAdaptor(sessionManager)
     , m_sessionManager(sessionManager)
-    , m_powerManager(new PowerManager(this))
-    , m_loginManager(new LoginManager(this))
+    , m_powerManager(new PowerManager)
+    , m_loginManager(new LoginManager)
 {
     // Relay session locked/unlocked signals
     connect(m_loginManager, &LoginManager::sessionLocked, this, [this] {
