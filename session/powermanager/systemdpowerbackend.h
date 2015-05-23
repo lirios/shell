@@ -35,7 +35,7 @@ class SystemdPowerBackend : public PowerManagerBackend
 {
 public:
     SystemdPowerBackend();
-    ~SystemdPowerBackend();
+    virtual ~SystemdPowerBackend();
 
     static QString service();
 

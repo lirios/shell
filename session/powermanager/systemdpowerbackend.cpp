@@ -45,7 +45,7 @@ SystemdPowerBackend::SystemdPowerBackend()
 
 SystemdPowerBackend::~SystemdPowerBackend()
 {
-    delete m_interface;
+    m_interface->deleteLater();
 }
 
 QString SystemdPowerBackend::name() const

@@ -46,7 +46,7 @@ UPowerPowerBackend::UPowerPowerBackend()
 
 UPowerPowerBackend::~UPowerPowerBackend()
 {
-    delete m_interface;
+    m_interface->deleteLater();
 }
 
 QString UPowerPowerBackend::name() const

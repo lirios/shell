@@ -41,16 +41,16 @@ PowerManager::PowerManager(QObject *parent)
     if (interface->isServiceRegistered(UPowerPowerBackend::service()))
         m_backends.append(new UPowerPowerBackend());
 
-    connect(interface, SIGNAL(serviceRegistered(QString)),
-            this, SLOT(serviceRegistered(QString)));
-    connect(interface, SIGNAL(serviceUnregistered(QString)),
-            this, SLOT(serviceUnregistered(QString)));
+    connect(interface, &QDBusConnectionInterface::serviceRegistered,
+            this, &PowerManager::serviceRegistered);
+    connect(interface, &QDBusConnectionInterface::serviceUnregistered,
+            this, &PowerManager::serviceUnregistered);
 }
 
 PowerManager::~PowerManager()
 {
     while (!m_backends.isEmpty())
-        delete m_backends.takeFirst();
+        m_backends.takeFirst()->deleteLater();
 }
 
 PowerManager::Capabilities PowerManager::capabilities() const

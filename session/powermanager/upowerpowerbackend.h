@@ -35,7 +35,7 @@ class UPowerPowerBackend : public PowerManagerBackend
 {
 public:
     UPowerPowerBackend();
-    ~UPowerPowerBackend();
+    virtual ~UPowerPowerBackend();
 
     static QString service();
 
