@@ -29,7 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0
 
-Empty {
+Base {
     id: root
 
     property alias iconName: icon.iconName
