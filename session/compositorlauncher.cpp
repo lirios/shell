@@ -394,9 +394,17 @@ void CompositorLauncher::printSummary()
     qCDebug(COMPOSITOR) << "Compositor socket:" << m_compositor->socketName();
     if (m_mode == X11Mode)
         qCDebug(COMPOSITOR) << "X11 display:" << qgetenv("DISPLAY");
-    Q_FOREACH (const QString &key, m_compositor->environment().keys()) {
-        if (key.startsWith(QStringLiteral("QT_")))
-            qCDebug(COMPOSITOR, "%s=%s", qPrintable(key), qPrintable(m_compositor->environment().value(key)));
+
+    qCDebug(COMPOSITOR) << "Environment variables:";
+    QStringList sortedKeys = m_compositor->environment().keys();
+    qSort(sortedKeys);
+    Q_FOREACH (const QString &key, sortedKeys) {
+        if (key.startsWith(QStringLiteral("QT_")) ||
+                key.startsWith(QStringLiteral("QML2_")) ||
+                key.startsWith(QStringLiteral("XDG_")))
+        qCDebug(COMPOSITOR, "\t%s=%s",
+                qPrintable(key),
+                qPrintable(m_compositor->environment().value(key)));
     }
 }
 
