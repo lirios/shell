@@ -27,12 +27,13 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
+import GreenIsland 1.0 as GreenIsland
 import "."
 
 MouseArea {
     hoverEnabled: true
     acceptedButtons: Qt.NoButton
-    onPositionChanged: compositor.unsetMouseCursor()
+    onPositionChanged: GreenIsland.Compositor.unsetMouseCursor()
 
     Image {
         id: picture
@@ -55,5 +56,5 @@ MouseArea {
         anchors.centerIn: parent
     }
 
-    Component.onDestruction: compositor.resetMouseCursor()
+    Component.onDestruction: GreenIsland.Compositor.resetMouseCursor()
 }

@@ -101,15 +101,15 @@ Components.Object {
 
     function applyKeymapSettings() {
         if (keyboardSettings.layouts[0])
-            compositor.settings.keyboardLayout = keyboardSettings.layouts[0];
+            GreeIsland.Compositor.settings.keyboardLayout = keyboardSettings.layouts[0];
         if (keyboardSettings.variants[0])
-            compositor.settings.keyboardVariant = keyboardSettings.variants[0];
+            GreeIsland.Compositor.settings.keyboardVariant = keyboardSettings.variants[0];
         if (keyboardSettings.options[0])
-            compositor.settings.keyboardOptions = keyboardSettings.options[0];
+            GreeIsland.Compositor.settings.keyboardOptions = keyboardSettings.options[0];
         if (keyboardSettings.rules[0])
-            compositor.settings.keyboardRules = keyboardSettings.rules[0];
+            GreeIsland.Compositor.settings.keyboardRules = keyboardSettings.rules[0];
         if (keyboardSettings.model)
-            compositor.settings.keyboardModel = keyboardSettings.model;
+            GreeIsland.Compositor.settings.keyboardModel = keyboardSettings.model;
     }
 
     function applyKeyBindings(o) {

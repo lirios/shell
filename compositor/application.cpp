@@ -67,7 +67,7 @@ Application::Application(const QString &sessionSocket)
 
 void Application::compositorLaunched()
 {
-    connect(compositor(), &Compositor::idle, this, [this] {
+    connect(Compositor::instance(), &Compositor::idle, this, [this] {
         QByteArray data;
         QDataStream stream(&data, QIODevice::WriteOnly);
         stream << quint32(CompositorMessages::SetIdle) << true;
@@ -75,7 +75,7 @@ void Application::compositorLaunched()
         m_sessionSocket->flush();
     });
 
-    connect(compositor(), &Compositor::wake, this, [this] {
+    connect(Compositor::instance(), &Compositor::wake, this, [this] {
         QByteArray data;
         QDataStream stream(&data, QIODevice::WriteOnly);
         stream << quint32(CompositorMessages::SetIdle) << false;
@@ -109,10 +109,10 @@ void Application::readyRead()
         // Read message
         switch (SessionMessages(type)) {
         case SessionMessages::IdleInhibit:
-            compositor()->incrementIdleInhibit();
+            Compositor::instance()->incrementIdleInhibit();
             break;
         case SessionMessages::IdleUninhibit:
-            compositor()->decrementIdleInhibit();
+            Compositor::instance()->decrementIdleInhibit();
             break;
         default:
             break;
