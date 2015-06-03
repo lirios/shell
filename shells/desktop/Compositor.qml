@@ -145,7 +145,7 @@ Item {
     }
 
     Connections {
-        target: compositor
+        target: GreenIsland.Compositor
         onFadeIn: {
             // Bring user layer up
             compositorRoot.state = "session";
@@ -552,6 +552,6 @@ Item {
             var window = compositorRoot.surfaceModel.get(i).window;
             window.deactivate();
         }
-        compositor.clearKeyboardFocus();
+        GreenIsland.Compositor.clearKeyboardFocus();
     }
 }
