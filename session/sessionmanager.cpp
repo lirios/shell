@@ -134,41 +134,35 @@ void SessionManager::setupEnvironment()
     // Set paths only if we are installed onto a non standard location
     QString path;
 
-    if (qEnvironmentVariableIsEmpty("PATH"))
-        path = QString::fromUtf8(INSTALL_BINDIR);
-    else
+    if (qEnvironmentVariableIsSet("PATH")) {
         path = QStringLiteral("%1:%2").arg(INSTALL_BINDIR).arg(QString(qgetenv("PATH")));
-    qputenv("PATH", path.toUtf8());
+        qputenv("PATH", path.toUtf8());
+    }
 
-    if (qEnvironmentVariableIsEmpty("QT_PLUGIN_PATH"))
-        path = QString::fromUtf8(INSTALL_PLUGINDIR);
-    else
+    if (qEnvironmentVariableIsSet("QT_PLUGIN_PATH")) {
         path = QStringLiteral("%1:%2").arg(INSTALL_PLUGINDIR).arg(QString(qgetenv("QT_PLUGIN_PATH")));
-    qputenv("QT_PLUGIN_PATH", path.toUtf8());
+        qputenv("QT_PLUGIN_PATH", path.toUtf8());
+    }
 
-    if (qEnvironmentVariableIsEmpty("QML2_IMPORT_PATH"))
-        path = QString::fromUtf8(INSTALL_QMLDIR);
-    else
+    if (qEnvironmentVariableIsSet("QML2_IMPORT_PATH")) {
         path = QStringLiteral("%1:%2").arg(INSTALL_QMLDIR).arg(QString(qgetenv("QML2_IMPORT_PATH")));
-    qputenv("QML2_IMPORT_PATH", path.toUtf8());
+        qputenv("QML2_IMPORT_PATH", path.toUtf8());
+    }
 
-    if (qEnvironmentVariableIsEmpty("XDG_DATA_DIRS"))
-        path = QString::fromUtf8(INSTALL_DATADIR);
-    else
+    if (qEnvironmentVariableIsSet("XDG_DATA_DIRS")) {
         path = QStringLiteral("%1:%2").arg(INSTALL_DATADIR).arg(QString(qgetenv("XDG_DATA_DIRS")));
-    qputenv("XDG_DATA_DIRS", path.toUtf8());
+        qputenv("XDG_DATA_DIRS", path.toUtf8());
+    }
 
-    if (qEnvironmentVariableIsEmpty("XDG_CONFIG_DIRS"))
-        path = QString::fromUtf8(INSTALL_CONFIGDIR);
-    else
+    if (qEnvironmentVariableIsSet("XDG_CONFIG_DIRS")) {
         path = QStringLiteral("%1:%2:/etc/xdg").arg(INSTALL_CONFIGDIR).arg(QString(qgetenv("XDG_CONFIG_DIRS")));
-    qputenv("XDG_CONFIG_DIRS", path.toUtf8());
+        qputenv("XDG_CONFIG_DIRS", path.toUtf8());
+    }
 
-    if (qEnvironmentVariableIsEmpty("XCURSOR_PATH"))
-        path = QString::fromUtf8(INSTALL_DATADIR "/icons");
-    else
+    if (qEnvironmentVariableIsSet("XCURSOR_PATH")) {
        path = QStringLiteral("%1:%2").arg(INSTALL_DATADIR "/icons").arg(QString(qgetenv("XCURSOR_PATH")));
-    qputenv("XCURSOR_PATH", path.toUtf8());
+        qputenv("XCURSOR_PATH", path.toUtf8());
+    }
 
     // Set XDG environment variables
     if (qEnvironmentVariableIsEmpty("XDG_DATA_HOME")) {
