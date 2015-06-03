@@ -30,6 +30,7 @@
 #include <qpa/qplatformtheme_p.h>
 
 #include "hawaiitheme.h"
+#include "resourcehelper.h"
 #include "qgsettings.h"
 
 class HintsSettings;
@@ -40,10 +41,7 @@ public:
     HawaiiThemePrivate();
     ~HawaiiThemePrivate();
 
-    void readPalette(QPalette *pal);
     void refresh();
-
-    static bool readColor(QPalette *pal, QPalette::ColorRole role, const QVariant &value);
 
     ResourceHelper resources;
     Hawaii::QGSettings *settings;

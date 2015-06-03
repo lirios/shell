@@ -8,6 +8,7 @@ set(SOURCES
     hawaiitheme.cpp
     hawaiitheme_p.cpp
     hintssettings.cpp
+    resourcehelper.cpp
 )
 
 add_library(HawaiiPlatformTheme SHARED ${SOURCES})

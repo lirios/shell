@@ -25,26 +25,10 @@
  ***************************************************************************/
 
 #include <QtGui/QFont>
-#include <QtGui/QPalette>
 
 #include "hawaiitheme.h"
 #include "hawaiitheme_p.h"
 #include "hintssettings.h"
-
-ResourceHelper::ResourceHelper()
-{
-    std::fill(palettes, palettes + QPlatformTheme::NPalettes, static_cast<QPalette *>(0));
-    std::fill(fonts, fonts + QPlatformTheme::NFonts, static_cast<QFont *>(0));
-}
-
-void ResourceHelper::clear()
-{
-    qDeleteAll(palettes, palettes + QPlatformTheme::NPalettes);
-    std::fill(palettes, palettes + QPlatformTheme::NPalettes, static_cast<QPalette *>(0));
-    qDeleteAll(fonts, fonts + QPlatformTheme::NFonts);
-    std::fill(fonts, fonts + QPlatformTheme::NFonts, static_cast<QFont *>(0));
-}
-
 
 HawaiiTheme::HawaiiTheme()
     : QPlatformTheme(new HawaiiThemePrivate())

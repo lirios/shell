@@ -1,17 +1,18 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2010-2015 Pier Luigi Fiorini
+ * Copyright (C) 2015 Pier Luigi Fiorini
+ * Copyright (C) 2015 The Qt Company Ltd.
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
- * $BEGIN_LICENSE:LGPL2.1+$
+ * $BEGIN_LICENSE:LGPLQt21$
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 2.1 of the License, or
- * (at your option) any later version.
+ * (at your option) version 3.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,28 +25,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef HAWAIITHEME_H
-#define HAWAIITHEME_H
+#ifndef RESOURCEHELPER_H
+#define RESOURCEHELPER_H
 
-#include <QtCore/QHash>
-#include <QtCore/QVariant>
+#include <QtGui/QPalette>
 #include <qpa/qplatformtheme.h>
 
-class HawaiiThemePrivate;
-
-class Q_GUI_EXPORT HawaiiTheme : public QPlatformTheme
+class ResourceHelper
 {
-    Q_DECLARE_PRIVATE(HawaiiTheme)
 public:
-    HawaiiTheme();
+    ResourceHelper();
+    ~ResourceHelper() { clear(); }
 
-    bool usePlatformNativeDialog(DialogType type) const;
-    QPlatformDialogHelper *createPlatformDialogHelper(DialogType type) const;
+    void clear();
 
-    const QPalette *palette(Palette type = SystemPalette) const;
-    const QFont *font(Font type = SystemFont) const;
+    static void readPalette(const QString &fileName, QPalette *pal);
+    static bool readColor(QPalette *pal, QPalette::ColorRole role, const QVariant &value);
 
-    QVariant themeHint(ThemeHint hint) const;
+    QPalette *palettes[QPlatformTheme::NPalettes];
+    QFont *fonts[QPlatformTheme::NFonts];
 };
 
-#endif // HAWAIITHEME_H
+#endif // RESOURCEHELPER_H
