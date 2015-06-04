@@ -103,7 +103,7 @@ if(ENABLE_NETWORK_MANAGER)
 endif()
 
 # Find Green Island
-find_package(GreenIsland 0.5.93 REQUIRED)
+find_package(GreenIsland 0.5.94 REQUIRED)
 
 # lxqt
 find_package(QT5XDG REQUIRED)
