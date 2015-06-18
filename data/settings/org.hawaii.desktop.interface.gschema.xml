@@ -42,7 +42,7 @@
       </description>
     </key>
     <key name="icon-theme" type="s">
-      <default>'hawaii'</default>
+      <default>'Hawaii'</default>
       <summary>Icon Theme</summary>
       <description>
         Icon theme for applications.
