@@ -30,7 +30,7 @@ ListModel {
     ListElement {
         name: "imp"
         realName: "Tyrion Lannister"
-        icon: "tyrion.png"
+        icon: "../dummydata/tyrion.png"
         homeDir: ""
     }
 }
