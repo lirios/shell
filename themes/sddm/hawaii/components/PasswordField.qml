@@ -72,12 +72,12 @@ TextField {
         placeholderTextColor: Qt.rgba(passwordField.textColor.r, passwordField.textColor.g, passwordField.textColor.b, 0.5)
         selectionColor: passwordField.selectionColor
         selectedTextColor: passwordField.selectedTextColor
-        font.family: Themes.Theme.defaultFont.family
-        font.pointSize: 14
+        font.family: "Noto Sans" // Themes.Theme.defaultFont.family
+        font.pointSize: 12
         font.bold: true
         background: Item {
             implicitWidth: passwordField.width
-            implicitHeight: Themes.Theme.mSize(Themes.Theme.defaultFont).height + Themes.Units.gu(2)
+            implicitHeight: Themes.Theme.mSize(Themes.Theme.defaultFont).height + Themes.Units.gu(0.5)
 
             Rectangle {
                 anchors.fill: parent
@@ -89,7 +89,7 @@ TextField {
             Rectangle {
                 id: baserect
                 anchors.fill: parent
-                radius: 12
+                radius: Themes.Units.dp(4)
                 gradient: Gradient {
                     GradientStop { position: 0.0; color: Qt.lighter(passwordField.backgroundColor, 0.8) }
                     GradientStop { position: 0.3; color: passwordField.backgroundColor }

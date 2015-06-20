@@ -58,7 +58,7 @@ import Hawaii.Components 1.0 as Components
 import "screens" as Screens
 
 Components.NoiseBackground {
-    id: container
+    id: root
     color: "#272727"
     gradient: Gradient {
         GradientStop { position: 0; color: "#272727" }

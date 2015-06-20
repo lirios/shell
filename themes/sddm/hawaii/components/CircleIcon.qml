@@ -52,78 +52,31 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtGraphicalEffects 1.0
 import Hawaii.Themes 1.0 as Themes
 import Hawaii.Components 1.0 as Components
 
 Item {
-    property string userName
-    property string name
-    property string iconSource
-    property alias faceSize: icon.width
-    readonly property bool selected: ListView.isCurrentItem
+    property alias iconSize: icon.width
+    property alias iconName: icon.iconName
 
-    signal hovered()
-    signal clicked()
-
-    id: root
-    opacity: selected ? 1.0 : 0.625
-    onIconSourceChanged: {
-        // Defaults to avatar-default-symbolic
-        if (iconSource == "" || iconSource.indexOf("default.face.icon") != -1) {
-            icon.iconSource = "";
-            icon.iconName = "avatar-default-symbolic";
-            icon.color = Themes.Theme.palette.panel.textColor;
-            return;
-        }
-
-        // Configure icon for pictures or icon names
-        if (iconSource.indexOf("/") == 0) {
-            icon.iconSource = iconSource;
-            icon.iconName = "";
-            icon.color = Qt.rgba(0, 0, 0, 0);
-        } else {
-            icon.iconSource = "";
-            icon.iconName = iconSource;
-            icon.color = iconSource.indexOf("-symbolic") == -1
-                ? Qt.rgba(0, 0, 0, 0)
-                : Themes.Theme.palette.panel.textColor;
-        }
-    }
-
-    Behavior on opacity {
-        NumberAnimation {
-            duration: Themes.Units.shortDuration
-            easing.type: Easing.InOutQuad
-        }
-    }
+    width: iconSize * 1.5
+    height: width
 
     Rectangle {
         id: container
         anchors.fill: parent
         color: Themes.Theme.palette.panel.backgroundColor
-        border.color: Themes.Theme.palette.rgba(Qt.darker(color, 1.3), 0.7)
-        radius: Themes.Units.gu(3)
+        border.color: Themes.Theme.palette.rgba(Qt.darker(color, 1.3), 0.5)
+        border.width: Themes.Units.dp(1)
+        radius: width / 2
         antialiasing: true
     }
 
     Components.Icon {
         id: icon
-        anchors.fill: parent
+        anchors.centerIn: parent
+        iconName: "avatar-default-symbolic"
         height: width
-        visible: false
-    }
-
-    OpacityMask {
-        anchors.fill: icon
-        source: icon
-        maskSource: container
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        onEntered: root.hovered()
-        onClicked: root.clicked()
+        color: "white"
     }
 }

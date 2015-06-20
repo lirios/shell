@@ -51,35 +51,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
+import QtQuick 2.1
+import QtQuick.Controls 1.1 as QtControls
+import Hawaii.Controls 1.0 as Controls
+import SddmComponents 2.0
 
-ListView {
-    readonly property int userItemWidth: Themes.Units.largeSpacing * 8
-    readonly property int userItemHeight: Themes.Units.largeSpacing * 8
-    readonly property int userFaceSize: Themes.Units.largeSpacing * 6
+QtControls.ComboBox {
+    activeFocusOnTab: true
+    model: sessionModel
+    currentIndex: sessionModel.lastIndex
+    textRole: "name"
+    visible: sessionModel.count > 1
 
-    signal selected()
-
-    id: usersView
-    focus: true
-    spacing: Themes.Units.largeSpacing * 2
-    orientation: ListView.Horizontal
-    highlightRangeMode: ListView.StrictlyEnforceRange
-    delegate: UserDelegate {
-        name: (model.realName === "") ? model.name : model.realName
-        userName: model.name
-        iconSource: model.icon
-        faceSize: usersView.userFaceSize
-        width: usersView.userItemWidth
-        height: usersView.userItemHeight
-        onClicked: ListView.view.currentIndex = index
-    }
-    cacheBuffer: 100
-    currentIndex: usersView.model && usersView.model.lastIndex ? usersView.model.lastIndex : 0
-    onCurrentIndexChanged: usersView.selected()
-
-    Keys.onEscapePressed: usersView.selected()
-    Keys.onEnterPressed: usersView.selected()
-    Keys.onReturnPressed: usersView.selected()
+    //: Session indicator
+    //~ Session selector
+    Accessible.name: qsTr("Select a session")
 }

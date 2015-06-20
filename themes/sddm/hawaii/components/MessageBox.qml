@@ -75,7 +75,8 @@ RowLayout {
 
     Text {
         id: label
-        font.pointSize: Themes.Theme.defaultFont.pointSize * 1.5
+        font.family: "Noto Sans"
+        font.pointSize: Themes.Theme.defaultFont.pointSize * 1.2
         color: messageBox.color
         renderType: Text.NativeRendering
     }
@@ -83,7 +84,7 @@ RowLayout {
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InOutQuad
-            duration: 250
+            duration: Themes.Units.shortDuration
         }
     }
 

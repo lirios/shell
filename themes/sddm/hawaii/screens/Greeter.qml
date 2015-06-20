@@ -56,11 +56,9 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import SddmComponents 2.0 as SddmComponents
 import Hawaii.Themes 1.0 as Themes
-import Hawaii.Components 1.0 as Components
-import Hawaii.Components.ListItems 1.0 as ListItems
 import "../components" as Components
 
-Item {
+FocusScope {
     property int sessionIndex: sessionModel.lastIndex
     property bool rebootVisible: true
     property bool powerOffVisible: true
@@ -71,33 +69,101 @@ Item {
 
     id: greeter
 
-    Connections {
-        target: sddm
-        onLoginFailed: {
-            loginScreen.setErrorMessage(qsTr("Login Failed"));
-            loginScreen.clearPassword();
+    Rectangle {
+        id: stripe
+        anchors {
+            left: parent.left
+            right: parent.right
+            verticalCenter: parent.verticalCenter
         }
+        color: "#80000000"
+        height: usersView.itemSize
     }
 
-    LoginScreen {
-        id: loginScreen
-        anchors.centerIn: parent
-        width: greeter.width * 0.5
-        height: Themes.Units.gu(12)
-        actions: Column {
-            spacing: Themes.Units.largeSpacing
+    ListView {
+        property real faceSize: Themes.Units.iconSizes.huge
+        property real itemSize: faceSize * 1.8
+
+        id: usersView
+        anchors {
+            left: parent.left
+            top: stripe.top
+            right: parent.right
+            leftMargin: Themes.Units.dp(50)
+        }
+        height: itemSize * 2
+        z: 1
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        interactive: true
+        focus: true
+        model: userModel
+        currentIndex: model.lastIndex
+        spacing: Themes.Units.dp(40)
+        delegate: ColumnLayout {
+            Item { height: usersView.faceSize * 0.1 }
 
             Row {
-                spacing: Themes.Units.smallSpacing
+                spacing: Themes.Units.largeSpacing
 
-                Components.SessionButton {}
+                Components.CircleImage {
+                    id: image
+                    iconSize: usersView.faceSize
+                    iconSource: model.icon
+                    visible: status == Image.Ready
+                }
+
+                Components.CircleIcon {
+                    id: icon
+                    iconSize: usersView.faceSize
+                    iconName: "avatar-default-symbolic"
+                    visible: !image.visible
+                }
+
+                Column {
+                    spacing: Themes.Units.smallSpacing
+                    anchors.verticalCenter: image.visible ? image.verticalCenter : icon.verticalCenter
+
+                    Text {
+                        renderType: Text.NativeRendering
+                        color: "white"
+                        style: Text.Raised
+                        styleColor: "black"
+                        text: (model.realName === "") ? model.name : model.realName
+                        font.family: "Noto Sans"
+                        font.pointSize: 16
+                    }
+
+                    Components.PasswordField {
+                        id: passwordField
+                        width: Themes.Units.dp(250)
+                        focus: visible
+                        visible: usersView.currentIndex == index
+                        onAccepted: greeter.loginRequested(model.name, text, indicators.selectedSessionIndex)
+                        onVisibleChanged: if (visible) forceActiveFocus()
+
+                        Component.onCompleted: if (visible) forceActiveFocus()
+                    }
+
+                    Connections {
+                        target: sddm
+                        onLoginFailed: {
+                            messageBox.setErrorMessage(qsTr("Login Failed"));
+                            passwordField.selectAll();
+                            passwordField.forceActiveFocus();
+                        }
+                    }
+
+                    Components.MessageBox {
+                        id: messageBox
+                        visible: passwordField.visible
+                    }
+                }
             }
         }
-        model: userModel
-        onLoginRequested: greeter.loginRequested(userName, password, greeter.sessionIndex)
     }
 
     Components.Indicators {
+        id: indicators
         anchors {
             left: parent.left
             right: parent.right

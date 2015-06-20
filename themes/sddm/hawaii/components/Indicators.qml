@@ -61,6 +61,7 @@ Rectangle {
 
     property alias rebootVisible: rebootButton.visible
     property alias powerOffVisible: powerOffButton.visible
+    property alias selectedSessionIndex: sessionIndicator.currentIndex
 
     id: root
     color: "#80000000"
@@ -100,6 +101,11 @@ Rectangle {
             rightMargin: Themes.Units.largeSpacing
         }
         spacing: Themes.Units.largeSpacing
+
+        Indicators.Session {
+            id: sessionIndicator
+            //color: "white"
+        }
 
         Indicators.Keyboard {
             color: "white"

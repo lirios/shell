@@ -28,7 +28,7 @@ QtObject {
     }
 
     function login(user, password, sessionIndex) {
-        console.log("SDDM - logging in as ", user, password);
+        console.log("SDDM - logging into session index " + sessionIndex + " as [" + user + "] [" + password + "]");
 
         // Login
         if (user == "plfiorini" && password == "password")
