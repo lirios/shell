@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -52,19 +52,36 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
+import QtQuick.Controls 1.2 as QtQuickControls
+import QtQuick.Controls.Styles 1.2 as QtQuickControlsStyles
 import Hawaii.Components 1.0 as Components
+import Hawaii.Themes 1.0 as Themes
 
-Components.Icon {
-    signal clicked()
+QtQuickControls.Button {
+    property string iconName
+    property color color
 
-    id: iconButton
-    color: Themes.Theme.palette.panel.textColor
+    style: QtQuickControlsStyles.ButtonStyle {
+        background: Item {}
+        label: Row {
+            spacing: Themes.Units.smallSpacing
 
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
-        acceptedButtons: Qt.LeftButton
-        onClicked: iconButton.clicked()
+            Components.Icon {
+                id: icon
+                iconName: control.iconName
+                color: control.color
+                width: Themes.Units.iconSizes.smallMedium
+                height: width
+            }
+
+            Text {
+                id: label
+                anchors.verticalCenter: icon.verticalCenter
+                renderType: Text.NativeRendering
+                text: control.text
+                font.family: "Noto Sans"
+                color: control.color
+            }
+        }
     }
 }

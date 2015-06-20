@@ -87,14 +87,6 @@ Item {
         actions: Column {
             spacing: Themes.Units.largeSpacing
 
-            Components.ShutdownButtons {
-                spacing: Themes.Units.smallSpacing
-                rebootVisible: greeter.rebootVisible
-                powerOffVisible: greeter.powerOffVisible
-                onRebootRequested: greeter.rebootRequested()
-                onPowerOffRequested: greeter.powerOffRequested()
-            }
-
             Row {
                 spacing: Themes.Units.smallSpacing
 
@@ -104,5 +96,17 @@ Item {
         }
         model: userModel
         onLoginRequested: greeter.loginRequested(userName, password, greeter.sessionIndex)
+    }
+
+    Components.Indicators {
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        rebootVisible: greeter.rebootVisible
+        powerOffVisible: greeter.powerOffVisible
+        onRebootRequested: greeter.rebootRequested()
+        onPowerOffRequested: greeter.powerOffRequested()
     }
 }

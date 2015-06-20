@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini
@@ -54,32 +54,40 @@
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
 
-Row {
-    property alias rebootVisible: rebootButton.visible
-    property alias powerOffVisible: powerOffButton.visible
-
+Rectangle {
     signal rebootRequested()
     signal powerOffRequested()
 
+    property alias rebootVisible: rebootButton.visible
+    property alias powerOffVisible: powerOffButton.visible
+
     id: root
+    color: "#80000000"
+    height: Themes.Units.dp(48)
 
-    IconButton {
-        id: rebootButton
-        iconName: "system-reboot-symbolic"
-        width: Themes.Units.iconSizes.medium
-        height: width
-        color: Themes.Theme.palette.panel.textColor
-        visible: false
-        onClicked: root.rebootRequested()
-    }
+    Row {
+        anchors {
+            left: parent.left
+            verticalCenter: parent.verticalCenter
+            leftMargin: Themes.Units.largeSpacing
+            rightMargin: Themes.Units.largeSpacing
+        }
+        spacing: Themes.Units.largeSpacing
 
-    IconButton {
-        id: powerOffButton
-        iconName: "system-shutdown-symbolic"
-        width: Themes.Units.iconSizes.medium
-        height: width
-        color: Themes.Theme.palette.panel.textColor
-        visible: false
-        onClicked: root.powerOffRequested()
+        Button {
+            id: rebootButton
+            iconName: "system-reboot-symbolic"
+            text: qsTr("Restart")
+            color: "white"
+            onClicked: root.rebootRequested()
+        }
+
+        Button {
+            id: powerOffButton
+            iconName: "system-shutdown-symbolic"
+            text: qsTr("Shut down")
+            color: "white"
+            onClicked: root.powerOffRequested()
+        }
     }
 }
