@@ -53,6 +53,7 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
+import "../indicators" as Indicators
 
 Rectangle {
     signal rebootRequested()
@@ -88,6 +89,20 @@ Rectangle {
             text: qsTr("Shut down")
             color: "white"
             onClicked: root.powerOffRequested()
+        }
+    }
+
+    Row {
+        anchors {
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+            leftMargin: Themes.Units.largeSpacing
+            rightMargin: Themes.Units.largeSpacing
+        }
+        spacing: Themes.Units.largeSpacing
+
+        Indicators.Keyboard {
+            color: "white"
         }
     }
 }

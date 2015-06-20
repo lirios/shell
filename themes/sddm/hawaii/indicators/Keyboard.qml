@@ -53,27 +53,26 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import SddmComponents 2.0
 import Hawaii.Themes 1.0 as Themes
 import Hawaii.Controls 1.0 as Controls
-import SddmComponents 2.0
+import "../components" as Components
 
-ToolButton {
-    activeFocusOnTab: true
-    //iconName: "input-keyboard-symbolic"
-    /////iconSize: Themes.Units.iconSizes.small
-    //: Keyboard layout button text
-    //~ Button to change keyboard layout
+Components.Button {
+    iconName: "input-keyboard-symbolic"
     text: keyboard.layouts[keyboard.currentLayout].shortName
+    //: Keyboard layout indicator tooltip
+    //~ Indicator to change keyboard layout
     tooltip: qsTr("Change keyboard layout")
-    visible: keyboard.layouts.count > 1
+    visible: keyboard.layouts.length > 1
     onClicked: {
         var index = keyboard.currentLayout;
-        if (index == (keyboard.layouts.count - 1))
+        if (index == (keyboard.layouts.length - 1))
             index = -1;
         keyboard.currentLayout = index + 1;
     }
 
-    //: Keyboard layout button accessibility name
-    //~ Button to change keyboard layout
+    //: Keyboard layout indicator accessibility name
+    //~ Indicator to change keyboard layout
     Accessible.name: qsTr("Switch layout")
 }

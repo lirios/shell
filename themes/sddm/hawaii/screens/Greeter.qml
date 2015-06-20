@@ -90,7 +90,6 @@ Item {
             Row {
                 spacing: Themes.Units.smallSpacing
 
-                Components.KeyboardLayoutButton {}
                 Components.SessionButton {}
             }
         }
