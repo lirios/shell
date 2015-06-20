@@ -52,21 +52,57 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
+import SddmComponents 2.0 as SddmComponents
+import Hawaii.Themes 1.0 as Themes
 import Hawaii.Components 1.0 as Components
+import Hawaii.Components.ListItems 1.0 as ListItems
+import "../components" as Components
 
-Components.NoiseBackground {
-    color: "#272727"
-    gradient: Gradient {
-        GradientStop { position: 0; color: "#000000" }
-        GradientStop { position: 1; color: "#272727" }
+Item {
+    property int sessionIndex: sessionModel.lastIndex
+    property bool rebootVisible: true
+    property bool powerOffVisible: true
+
+    signal loginRequested(string userName, string password, int sessionIndex)
+    signal rebootRequested()
+    signal powerOffRequested()
+
+    id: greeter
+
+    Connections {
+        target: sddm
+        onLoginFailed: {
+            loginScreen.setErrorMessage(qsTr("Login Failed"));
+            loginScreen.clearPassword();
+        }
     }
 
-    Image {
+    LoginScreen {
+        id: loginScreen
         anchors.centerIn: parent
-        source: "logo.png"
-        sourceSize.width: 357
-        sourceSize.height: 350
-        fillMode: Image.PreserveAspectFit
-        smooth: true
+        width: greeter.width * 0.5
+        height: Themes.Units.gu(12)
+        actions: Column {
+            spacing: Themes.Units.largeSpacing
+
+            Components.ShutdownButtons {
+                spacing: Themes.Units.smallSpacing
+                rebootVisible: greeter.rebootVisible
+                powerOffVisible: greeter.powerOffVisible
+                onRebootRequested: greeter.rebootRequested()
+                onPowerOffRequested: greeter.powerOffRequested()
+            }
+
+            Row {
+                spacing: Themes.Units.smallSpacing
+
+                Components.KeyboardLayoutButton {}
+                Components.SessionButton {}
+            }
+        }
+        model: userModel
+        onLoginRequested: greeter.loginRequested(userName, password, greeter.sessionIndex)
     }
 }

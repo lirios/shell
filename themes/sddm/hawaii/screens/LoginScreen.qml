@@ -54,6 +54,8 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
+import "../components" as Components
+import "../views" as Views
 
 Item {
     property alias model: usersView.model
@@ -75,7 +77,7 @@ Item {
         }
         spacing: Themes.Units.smallSpacing
 
-        UsersView {
+        Views.UsersView {
             id: usersView
             height: userItemHeight
             preferredHighlightBegin: userItemWidth * 1
@@ -96,7 +98,7 @@ Item {
             Layout.fillWidth: true
         }
 
-        PasswordField {
+        Components.PasswordField {
             id: passwordField
             onAccepted: root.loginRequested(usersView.currentItem.userName, passwordField.text)
 
@@ -107,7 +109,7 @@ Item {
             id: details
             spacing: Themes.Units.largeSpacing
 
-            MessageBox {
+            Components.MessageBox {
                 id: messageBox
             }
 

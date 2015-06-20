@@ -52,7 +52,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 1.1
+import QtQuick.Controls.Private 1.0 as ControlsPrivate
 import Hawaii.Components 1.0 as Components
+import "screens" as Screens
 
 Components.NoiseBackground {
     id: container
@@ -66,7 +69,7 @@ Components.NoiseBackground {
 
     Connections {
         target: sddm
-        onLoginSucceeded: sddmTheme.slideToPageIndex(2)
+        onLoginSucceeded: stackView.push({"item": desktopStillComponent})
     }
 
     MouseArea {
@@ -75,9 +78,42 @@ Components.NoiseBackground {
         cursorShape: Qt.ArrowCursor
     }
 
-    Theme {
-        id: sddmTheme
+    Component {
+        id: bootSplashComponent
+
+        Screens.BootSplash {}
+    }
+
+    Component {
+        id: greeterComponent
+
+        Screens.Greeter {
+            rebootVisible: sddm.canReboot
+            powerOffVisible: sddm.canPowerOff
+            onLoginRequested: sddm.login(userName, password, sessionIndex)
+            onRebootRequested: sddm.reboot()
+            onPowerOffRequested: sddm.powerOff()
+        }
+    }
+
+    Component {
+        id: desktopStillComponent
+
+        Screens.DesktopStill {}
+    }
+
+    StackView {
+        id: stackView
         anchors.fill: parent
-        usersModel: userModel
+        initialItem: bootSplashComponent
+        delegate: ControlsPrivate.StackViewSlideDelegate {
+            horizontal: false
+        }
+    }
+
+    Timer {
+        interval: 2000
+        running: true
+        onTriggered: stackView.push({"item": greeterComponent})
     }
 }
