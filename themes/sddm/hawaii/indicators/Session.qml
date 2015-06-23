@@ -52,18 +52,23 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls 1.1 as QtControls
-import Hawaii.Controls 1.0 as Controls
 import SddmComponents 2.0
+import "../components" as Components
 
-QtControls.ComboBox {
-    activeFocusOnTab: true
-    model: sessionModel
-    currentIndex: sessionModel.lastIndex
-    textRole: "name"
+Components.Button {
+    property int currentIndex: sessionModel.lastIndex
+
+    iconName: "system-run-symbolic"
+    text: sessionModel.get(currentIndex).name
     visible: sessionModel.count > 1
+    onClicked: {
+        if (currentIndex + 1 >= sessionModel.count)
+            currentIndex = 0;
+        else
+            currentIndex++;
+    }
 
-    //: Session indicator
-    //~ Session selector
-    Accessible.name: qsTr("Select a session")
+    //: Session indicator accessibility name
+    //~ Indicator to select a session
+    Accessible.name: qsTr("Select session")
 }

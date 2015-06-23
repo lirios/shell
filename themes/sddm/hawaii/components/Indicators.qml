@@ -104,7 +104,7 @@ Rectangle {
 
         Indicators.Session {
             id: sessionIndicator
-            //color: "white"
+            color: "white"
         }
 
         Indicators.Keyboard {
