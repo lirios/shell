@@ -96,12 +96,6 @@ int main(int argc, char *argv[])
                                         TR("Synthesize touch for unhandled mouse events."));
     parser.addOption(synthesizeOption);
 
-    // Idle time
-    QCommandLineOption idleTimeOption(QStringList() << QStringLiteral("i") << QStringLiteral("idle-time"),
-                                      TR("Idle time in seconds (at least 5 seconds)."), TR("secs"));
-    idleTimeOption.setDefaultValue("300");
-    parser.addOption(idleTimeOption);
-
     // Fake screen configuration
     QCommandLineOption fakeScreenOption(QStringLiteral("fake-screen"),
                                         TR("Use fake screen configuration."), TR("filename"));
@@ -128,11 +122,6 @@ int main(int argc, char *argv[])
         if (!path.isEmpty())
             homeApp.setFakeScreenData(path);
     }
-
-    // Idle timer
-    int idleInterval = parser.value(idleTimeOption).toInt();
-    if (idleInterval >= 5)
-        homeApp.setIdleTime(idleInterval * 1000);
 
     // Print version information
     qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
