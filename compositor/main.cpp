@@ -84,39 +84,50 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    // Session manager socket
-    QCommandLineOption sessionSocketOption(QStringLiteral("session-socket"),
-                                           TR("Session manager socket."),
-                                           TR("name"));
-    parser.addOption(sessionSocketOption);
-
     // Wayland socket
-    QCommandLineOption socketOption(QStringList() << QStringLiteral("s") << QStringLiteral("socket"),
-                                    TR("Wayland socket."), TR("name"));
+    QCommandLineOption socketOption(QStringLiteral("wayland-socket-name"),
+                                    TR("Wayland socket"), TR("name"));
     parser.addOption(socketOption);
 
-    // Synthesize touch for unhandled mouse events
-    QCommandLineOption synthesizeOption(QStringLiteral("synthesize-touch"),
-                                        TR("Synthesize touch for unhandled mouse events."));
-    parser.addOption(synthesizeOption);
+    // Nested mode
+    QCommandLineOption nestedOption(QStringList() << QStringLiteral("n") << QStringLiteral("nested"),
+                                    TR("Nest into a compositor that supports _wl_fullscreen_shell"));
+    parser.addOption(nestedOption);
 
     // Fake screen configuration
     QCommandLineOption fakeScreenOption(QStringLiteral("fake-screen"),
-                                        TR("Use fake screen configuration."), TR("filename"));
+                                        TR("Use fake screen configuration"),
+                                        TR("filename"));
     parser.addOption(fakeScreenOption);
 
     // Parse command line
     parser.process(app);
 
-    // Home application
-    Application homeApp(parser.value(sessionSocketOption));
+    // Arguments
+    bool nested = parser.isSet(nestedOption);
+    QString socket = parser.value(socketOption);
+    QString fakeScreenData = parser.value(fakeScreenOption);
 
-    // Socket
-    homeApp.setSocket(parser.value(socketOption));
+    // Nested mode requires running from Wayland and a socket name
+    // and fake screen data cannot be used
+    if (nested) {
+        if (!QGuiApplication::platformName().startsWith(QStringLiteral("wayland"))) {
+            qCritical("Nested mode only make sense when running on Wayland.\n"
+                      "Please pass the \"-platform wayland\" argument.");
+            return 1;
+        }
 
-    // Fake screen data
-    if (parser.isSet(fakeScreenOption))
-        homeApp.setFakeScreenData(parser.value(fakeScreenOption));
+        if (socket.isEmpty()) {
+            qCritical("Nested mode requires you to specify a socket name.\n"
+                      "Please specify it with the \"--wayland-socket-name\" argument.");
+            return 1;
+        }
+
+        if (!fakeScreenData.isEmpty()) {
+            qCritical("Fake screen configuration cannot be used when nested");
+            return 1;
+        }
+    }
 
     // Print version information
     qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
@@ -126,8 +137,12 @@ int main(int argc, char *argv[])
            HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
            HAWAII_VERSION_STRING, GIT_REV);
 
+    // Home application
+    Application homeApp(parser.value(sessionSocketOption));
+    homeApp.setFakeScreenData(fakeScreenData);
+
     // Create the compositor and run
-    if (!homeApp.run(QStringLiteral("org.hawaii.desktop")))
+    if (!homeApp.run(nested, QStringLiteral("org.hawaii.desktop")))
         return 1;
 
     // Unix signals watcher
@@ -135,7 +150,7 @@ int main(int argc, char *argv[])
     sigwatch.watchForSignal(SIGINT);
     sigwatch.watchForSignal(SIGTERM);
 
-    // Close all windows when the process is killed
+    // Quit when the process is killed
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [=] {
         QApplication::quit();
     });
