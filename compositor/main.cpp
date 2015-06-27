@@ -114,15 +114,6 @@ int main(int argc, char *argv[])
     if (parser.isSet(fakeScreenOption))
         homeApp.setFakeScreenData(parser.value(fakeScreenOption));
 
-    // Use default fake screen data on X11
-    if (qEnvironmentVariableIsSet("DISPLAY") && homeApp.fakeScreenData().isEmpty()) {
-        const QString fileName = QString("greenisland/screen-data/one-1920x1080.json");
-        QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                              fileName);
-        if (!path.isEmpty())
-            homeApp.setFakeScreenData(path);
-    }
-
     // Print version information
     qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
            "** https://hawaii-desktop.github.io\n"
