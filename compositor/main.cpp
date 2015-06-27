@@ -73,6 +73,10 @@ int main(int argc, char *argv[])
     // Application
     QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Hawaii"));
+    app.setApplicationVersion(HAWAII_VERSION_STRING);
+    app.setOrganizationName(QStringLiteral("Hawaii"));
+    app.setOrganizationDomain(QStringLiteral("hawaiios.org"));
+    app.setQuitOnLastWindowClosed(false);
 
     // Command line parser
     QCommandLineParser parser;
@@ -116,7 +120,7 @@ int main(int argc, char *argv[])
 
     // Print version information
     qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
-           "** https://hawaii-desktop.github.io\n"
+           "** http://hawaiios.org\n"
            "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
            "** Build: %s-%s",
            HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
