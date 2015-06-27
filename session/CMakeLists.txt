@@ -5,16 +5,12 @@ include_directories(
 )
 
 set(SOURCES
-    compositorprocess.cpp
-    compositorlauncher.cpp
     main.cpp
     processlauncher.cpp
     screensaver.cpp
     sessionadaptor.cpp
-    sessionleader.cpp
     sessionmanager.cpp
-    socketserver.cpp
-    vthandler.cpp
+    socketclient.cpp
     loginmanager/loginmanager.cpp
     loginmanager/loginmanagerbackend.cpp
     loginmanager/logindbackend.cpp

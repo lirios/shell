@@ -51,30 +51,33 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include "sessionleader.h"
+#ifndef SOCKETCLIENT_H
+#define SOCKETCLIENT_H
 
-#include <unistd.h>
+#include <QtCore/QObject>
+#include <QtCore/QLoggingCategory>
 
-SessionLeader::SessionLeader(bool sessionLeader, QObject *parent)
-    : QProcess(parent)
-    , m_sessionLeader(sessionLeader)
+class QLocalSocket;
+
+Q_DECLARE_LOGGING_CATEGORY(SOCKET)
+
+class SocketClient : public QObject
 {
-}
+    Q_OBJECT
+public:
+    SocketClient(QObject *parent = 0);
 
-bool SessionLeader::isSessionLeader() const
-{
-    return m_sessionLeader;
-}
+    void sendIdleInhibit();
+    void sendIdleUninhibit();
 
-void SessionLeader::setSessionLeader(bool value)
-{
-    m_sessionLeader = value;
-}
+private:
+    QLocalSocket *m_socket;
 
-void SessionLeader::setupChildProcess()
-{
-    // Set session leader if requested to make logind
-    // integration work
-    if (m_sessionLeader)
-        ::setsid();
-}
+private Q_SLOTS:
+    void connected();
+    void disconnected();
+    void readyRead();
+    void error();
+};
+
+#endif // SOCKETCLIENT_H

@@ -57,13 +57,11 @@
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
 
-#include "vthandler.h"
-
 Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 
 class ProcessLauncher;
 class ScreenSaver;
-class SocketServer;
+class SocketClient;
 
 class SessionManager : public QObject
 {
@@ -72,8 +70,6 @@ public:
     static SessionManager *instance();
 
     bool initialize();
-
-    VtHandler *vtHandler() const;
 
     bool isIdle() const;
     void setIdle(bool value);
@@ -93,6 +89,7 @@ Q_SIGNALS:
     void loggedOut();
 
 public Q_SLOTS:
+    void autostart();
     void logOut();
 
 protected:
@@ -101,18 +98,14 @@ protected:
 private:
     ProcessLauncher *m_launcher;
     ScreenSaver *m_screenSaver;
-    SocketServer *m_server;
+    SocketClient *m_socketClient;
     QList<qint64> m_processes;
-    VtHandler *m_vtHandler;
 
     bool m_idle;
     bool m_locked;
 
     void setupEnvironment();
     bool registerDBus();
-
-private Q_SLOTS:
-    void autostart();
 };
 
 #endif // SESSIONMANAGER_H

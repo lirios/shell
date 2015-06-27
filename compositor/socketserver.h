@@ -51,60 +51,48 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include "vthandler.h"
+#ifndef SOCKETSERVER_H
+#define SOCKETSERVER_H
 
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/kd.h>
-#include <linux/vt.h>
+#include <QtCore/QObject>
+#include <QtCore/QLoggingCategory>
 
-#ifndef KDSKBMUTE
-#define KDSKBMUTE 0x4B51
-#endif
+class QLocalServer;
+class QLocalSocket;
 
-#ifdef K_OFF
-#define KBD_OFF_MODE K_OFF
-#else
-#define KBD_OFF_MODE K_RAW
-#endif
+Q_DECLARE_LOGGING_CATEGORY(SERVERSOCKET)
 
-VtHandler::VtHandler(QObject *parent)
-    : QObject(parent)
-    , m_active(false)
+class SocketServer : public QObject
 {
-    // Disable vt keyboard so that input doesn't bleed through
-    if (::isatty(0)) {
-        ::ioctl(0, KDGKBMODE, &m_oldKbdMode);
-        ::ioctl(0, KDSKBMUTE, 1);
-        ::ioctl(0, KDSKBMODE, KBD_OFF_MODE);
-    }
-}
+    Q_OBJECT
+    Q_DISABLE_COPY(SocketServer)
+public:
+    SocketServer(QObject *parent = 0);
+    ~SocketServer();
 
-VtHandler::~VtHandler()
-{
-    // Restore vt keyboard mode
-    ::ioctl(0, KDSKBMUTE, 0);
-    ::ioctl(0, KDSKBMODE, m_oldKbdMode);
-}
+    QString address() const;
+    QString errorString() const;
 
-bool VtHandler::isActive() const
-{
-    return m_active;
-}
+    bool start(const QString &socketName);
+    void stop();
 
-void VtHandler::activate(int vt)
-{
-    ::ioctl(0, VT_ACTIVATE, vt);
-    setActive(false);
-}
+    void sendSetIdle(bool flag);
 
-void VtHandler::setActive(bool value)
-{
-    if (m_active == value)
-        return;
+Q_SIGNALS:
+    void connected();
+    void disconnected();
 
-    m_active = value;
-    Q_EMIT activeChanged(value);
-}
+    void idleInhibitRequested();
+    void idleUninhibitRequested();
 
-#include "moc_vthandler.cpp"
+private:
+    QLocalServer *m_server;
+    QLocalSocket *m_client;
+    QString m_socketName;
+
+private Q_SLOTS:
+    void newConnection();
+    void readyRead();
+};
+
+#endif // SOCKETSERVER_H

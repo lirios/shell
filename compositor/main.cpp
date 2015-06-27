@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
            HAWAII_VERSION_STRING, GIT_REV);
 
     // Home application
-    Application homeApp(parser.value(sessionSocketOption));
+    Application homeApp;
     homeApp.setFakeScreenData(fakeScreenData);
 
     // Create the compositor and run

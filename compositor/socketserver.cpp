@@ -58,9 +58,8 @@
 
 #include "messages.h"
 #include "socketserver.h"
-#include "sessionmanager.h"
 
-Q_LOGGING_CATEGORY(SOCKETSERVER, "hawaii.session.socket")
+Q_LOGGING_CATEGORY(SOCKETSERVER, "hawaii.compositor.socket")
 
 using namespace Hawaii;
 
@@ -80,6 +79,13 @@ QString SocketServer::address() const
 {
     if (m_server)
         return m_server->fullServerName();
+    return QString();
+}
+
+QString SocketServer::errorString() const
+{
+    if (m_server)
+        return m_server->errorString();
     return QString();
 }
 
@@ -128,29 +134,16 @@ void SocketServer::stop()
     qCDebug(SOCKETSERVER) << "Server stopped";
 }
 
-void SocketServer::sendIdleInhibit()
+void SocketServer::sendSetIdle(bool flag)
 {
     if (!m_client)
         return;
 
-    qCDebug(SOCKETSERVER) << "Send IdleInhibit";
+    qCDebug(SOCKETSERVER) << "Send SetIdle" << flag;
 
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
-    stream << quint32(SessionMessages::IdleInhibit);
-    m_client->write(data);
-}
-
-void SocketServer::sendIdleUninhibit()
-{
-    if (!m_client)
-        return;
-
-    qCDebug(SOCKETSERVER) << "Send IdleUninhibit";
-
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
-    stream << quint32(SessionMessages::IdleUninhibit);
+    stream << quint32(CompositorMessages::SetIdle) << flag;
     m_client->write(data);
 }
 
@@ -163,6 +156,7 @@ void SocketServer::newConnection()
     connect(m_client, &QLocalSocket::readyRead,
             this, &SocketServer::readyRead);
     connect(m_client, &QLocalSocket::disconnected, this, [this] {
+        Q_EMIT disconnected();
         m_client->deleteLater();
         m_client = Q_NULLPTR;
     });
@@ -181,18 +175,17 @@ void SocketServer::readyRead()
     input >> type;
 
     // Read messages
-    switch (CompositorMessages(type)) {
-    case CompositorMessages::Connected:
-        qCDebug(SOCKETSERVER) << "Compositor connection established";
+    switch (SessionMessages(type)) {
+    case SessionMessages::Connected:
+        qCDebug(SOCKETSERVER) << "Session manager connection established";
         Q_EMIT connected();
         break;
-    case CompositorMessages::SetIdle: {
-        bool value;
-        input >> value;
-        qCDebug(SOCKETSERVER) << "SetIdle:" << value;
-        SessionManager::instance()->setIdle(value);
+    case SessionMessages::IdleInhibit:
+        Q_EMIT idleInhibitRequested();
         break;
-    }
+    case SessionMessages::IdleUninhibit:
+        Q_EMIT idleUninhibitRequested();
+        break;
     default:
         break;
     }

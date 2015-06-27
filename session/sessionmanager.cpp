@@ -60,12 +60,11 @@
 #include <qt5xdg/xdgdesktopfile.h>
 
 #include "cmakedirs.h"
-#include "compositorlauncher.h"
 #include "processlauncher.h"
 #include "screensaver.h"
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
-#include "socketserver.h"
+#include "socketclient.h"
 
 #include <sys/types.h>
 #include <signal.h>
@@ -79,21 +78,10 @@ SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
     , m_launcher(new ProcessLauncher(this))
     , m_screenSaver(new ScreenSaver(this))
-    , m_server(new SocketServer(this))
-    , m_vtHandler(new VtHandler(this))
+    , m_socketClient(new SocketClient(this))
     , m_idle(false)
     , m_locked(false)
 {
-    CompositorLauncher *compositorLauncher = CompositorLauncher::instance();
-
-    // Actions to do when the compositor is ready
-    connect(compositorLauncher, &CompositorLauncher::started, this, [this] {
-        // Autostart applications as soon as the compositor is ready
-        QTimer::singleShot(500, this, SLOT(autostart()));
-    });
-
-    // Listen for compositor messages
-    m_server->start(compositorLauncher->sessionSocketName());
 }
 
 SessionManager *SessionManager::instance()
@@ -113,11 +101,6 @@ bool SessionManager::initialize()
     return true;
 }
 
-VtHandler *SessionManager::vtHandler() const
-{
-    return m_vtHandler;
-}
-
 bool SessionManager::isIdle() const
 {
     return m_idle;
@@ -134,12 +117,12 @@ void SessionManager::setIdle(bool value)
 
 void SessionManager::idleInhibit()
 {
-    m_server->sendIdleInhibit();
+    m_socketClient->sendIdleInhibit();
 }
 
 void SessionManager::idleUninhibit()
 {
-    m_server->sendIdleUninhibit();
+    m_socketClient->sendIdleUninhibit();
 }
 
 bool SessionManager::isLocked() const
@@ -256,12 +239,6 @@ void SessionManager::logOut()
 {
     // Close all applications we launched
     m_launcher->closeApplications();
-
-    // Stop the compositor
-    CompositorLauncher::instance()->terminate();
-
-    // Make sure the vt handler is destroyed
-    m_vtHandler->deleteLater();
 
     // Exit
     QCoreApplication::quit();

@@ -9,6 +9,7 @@ include_directories(
 set(SOURCES
     application.cpp
     main.cpp
+    socketserver.cpp
     session/authenticator.cpp
     session/sessioninterface.cpp
 )

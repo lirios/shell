@@ -60,7 +60,6 @@
 #include "sigwatch/sigwatch.h"
 
 #include "cmakedirs.h"
-#include "compositorlauncher.h"
 #include "config.h"
 #include "gitsha1.h"
 #include "sessionmanager.h"
@@ -80,19 +79,9 @@ int main(int argc, char *argv[])
 
     // Command line parser
     QCommandLineParser parser;
-    parser.setApplicationDescription(TR("Prepares the environment for Hawaii and launches it"));
+    parser.setApplicationDescription(TR("Hawaii session manager"));
     parser.addHelpOption();
     parser.addVersionOption();
-
-    // Mode
-    QCommandLineOption modeOption(QStringList() << QStringLiteral("m") << QStringLiteral("mode"),
-                                  TR("Specify session mode (possible values: eglfs, hwcomposer, nested)."), TR("mode"));
-    parser.addOption(modeOption);
-
-    // Login manager
-    QCommandLineOption lmOption(QStringLiteral("from-login-manager"),
-                                TR("Specify the session is launched from a login manager (for example gdm or sddm)."));
-    parser.addOption(lmOption);
 
     // Logout
     QCommandLineOption logoutOption(QStringLiteral("logout"), TR("Quit from an existing session."));
@@ -153,20 +142,6 @@ int main(int argc, char *argv[])
            "** Build: %s-%s",
            HAWAII_VERSION_STRING, HAWAII_VERSION_STRING, GIT_REV);
 
-    // Process controller that manages the compositor
-    CompositorLauncher *launcher = CompositorLauncher::instance();
-    QString mode = parser.value(modeOption);
-    if (mode == QStringLiteral("eglfs"))
-        launcher->setMode(CompositorLauncher::EglFSMode);
-    else if (mode == QStringLiteral("hwcomposer"))
-        launcher->setMode(CompositorLauncher::HwComposerMode);
-    else if (mode == QStringLiteral("nested"))
-        launcher->setMode(CompositorLauncher::NestedMode);
-    else if (!mode.isEmpty()) {
-        qWarning() << "Invalid mode argument" << mode;
-        return 1;
-    }
-
     // Session manager
     SessionManager *sessionManager = SessionManager::instance();
     if (!sessionManager->initialize())
@@ -182,9 +157,6 @@ int main(int argc, char *argv[])
         qDebug() << "Log out caused by signal" << signum;
         sessionManager->logOut();
     });
-
-    // Start the compositor
-    launcher->start(parser.isSet(lmOption));
 
     return app.exec();
 }

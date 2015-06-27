@@ -13,8 +13,11 @@ to learn how to enable them.
 
 ### Available categories
 
+* Compositor:
+  * **hawaii.compositor:** Compositor
+  * **hawaii.compositor.socket:** Session manager/Compositor communication
+
 * Session manager:
-  * **hawaii.session.processcontroller:** Starts the compositor
   * **hawaii.session.manager:** Manages the session
   * **hawaii.session.socket:** Session manager/Compositor communication
   * **hawaii.session.launcher:** Process launcher and application tracker

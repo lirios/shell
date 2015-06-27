@@ -51,44 +51,95 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SOCKETSERVER_H
-#define SOCKETSERVER_H
+#include <QtCore/QDataStream>
+#include <QtNetwork/QLocalSocket>
 
-#include <QtCore/QObject>
-#include <QtCore/QLoggingCategory>
+#include "messages.h"
+#include "sessionmanager.h"
+#include "socketclient.h"
 
-class QLocalServer;
-class QLocalSocket;
+Q_LOGGING_CATEGORY(SOCKET, "hawaii.session.socket")
 
-Q_DECLARE_LOGGING_CATEGORY(SERVERSOCKET)
+using namespace Hawaii;
 
-class SocketServer : public QObject
+SocketClient::SocketClient(QObject *parent)
+    : QObject(parent)
+    , m_socket(new QLocalSocket(this))
 {
-    Q_OBJECT
-    Q_DISABLE_COPY(SocketServer)
-public:
-    SocketServer(QObject *parent = 0);
-    ~SocketServer();
+    const QString seat = QString::fromLatin1(qgetenv("XDG_SEAT"));
+    const QString socketName = QStringLiteral("hawaii-session-") + seat;
 
-    QString address() const;
+    connect(m_socket, &QLocalSocket::connected,
+            this, &SocketClient::connected);
+    connect(m_socket, &QLocalSocket::disconnected,
+            this, &SocketClient::disconnected);
+    connect(m_socket, &QLocalSocket::readyRead,
+            this, &SocketClient::readyRead);
+    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),
+            this, SLOT(error()));
+    m_socket->connectToServer(socketName);
+}
 
-    bool start(const QString &socketName);
-    void stop();
+void SocketClient::sendIdleInhibit()
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << quint32(SessionMessages::IdleInhibit);
+    m_socket->write(data);
+    m_socket->flush();
+}
 
-    void sendIdleInhibit();
-    void sendIdleUninhibit();
+void SocketClient::sendIdleUninhibit()
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << quint32(SessionMessages::IdleUninhibit);
+    m_socket->write(data);
+    m_socket->flush();
+}
 
-Q_SIGNALS:
-    void connected();
+void SocketClient::connected()
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << quint32(SessionMessages::Connected);
+    m_socket->write(data);
+    m_socket->flush();
 
-private:
-    QLocalServer *m_server;
-    QLocalSocket *m_client;
-    QString m_socketName;
+    qCDebug(SOCKET) << "Connected to" << m_socket->fullServerName();
+}
 
-private Q_SLOTS:
-    void newConnection();
-    void readyRead();
-};
+void SocketClient::disconnected()
+{
+    qCDebug(SOCKET) << "Disconnect from" << m_socket->fullServerName();
+}
 
-#endif // SOCKETSERVER_H
+void SocketClient::readyRead()
+{
+    QDataStream input(m_socket);
+
+    while (input.device()->bytesAvailable()) {
+        // Read type
+        quint32 type;
+        input >> type;
+
+        // Read message
+        switch (CompositorMessages(type)) {
+        case CompositorMessages::SetIdle: {
+            bool value;
+            input >> value;
+            SessionManager::instance()->setIdle(value);
+            break;
+        }
+        default:
+            break;
+        }
+    }
+}
+
+void SocketClient::error()
+{
+    qCWarning(SOCKET) << "Error:" << m_socket->errorString();
+}
+
+#include "moc_socketclient.cpp"

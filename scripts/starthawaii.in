@@ -26,4 +26,4 @@
 #
 
 # Start the actual session
-exec @CMAKE_INSTALL_FULL_BINDIR@/hawaii-session $@
+exec @CMAKE_INSTALL_FULL_BINDIR@/greenisland-launcher --execute "@CMAKE_INSTALL_FULL_BINDIR@/hawaii" $@

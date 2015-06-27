@@ -31,13 +31,13 @@ namespace Hawaii {
 
 /*! Messages from compositor to session manager */
 enum class CompositorMessages {
-    Connected = 0,
-    SetIdle
+    SetIdle = 0
 };
 
 /*! Messages from session manager to compositor */
 enum class SessionMessages {
-    IdleInhibit = 0,
+    Connected = 0,
+    IdleInhibit,
     IdleUninhibit
 };
 
