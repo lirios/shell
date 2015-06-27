@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
         *p = ::strdup("dbus-launch");
         ++p;
 
-        for (const QString &arg: args) {
+        Q_FOREACH (const QString &arg, args) {
             *p = new char[arg.length() + 1];
             ::strcpy(*p, qPrintable(arg));
             ++p;
