@@ -73,9 +73,10 @@ int main(int argc, char *argv[])
 {
     // Application
     QCoreApplication app(argc, argv);
-    app.setApplicationName(QStringLiteral("Hawaii"));
+    app.setApplicationName(QStringLiteral("Hawaii Session"));
     app.setApplicationVersion(QStringLiteral(HAWAII_VERSION_STRING));
     app.setOrganizationName(QStringLiteral("Hawaii"));
+    app.setOrganizationDomain(QStringLiteral("org.hawaiios"));
 
     // Command line parser
     QCommandLineParser parser;
