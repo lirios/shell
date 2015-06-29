@@ -68,6 +68,9 @@ public:
     SocketClient(QObject *parent = 0);
     ~SocketClient();
 
+    bool start();
+    bool stop();
+
     void sendIdleInhibit();
     void sendIdleUninhibit();
     void sendLogOut();

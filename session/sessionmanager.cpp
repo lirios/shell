@@ -98,6 +98,10 @@ bool SessionManager::initialize()
     if (!registerDBus())
         return false;
 
+    // Connect to the compositor socket
+    if (!m_socketClient->start())
+        return false;
+
     return true;
 }
 

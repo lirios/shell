@@ -66,23 +66,54 @@ SocketClient::SocketClient(QObject *parent)
     : QObject(parent)
     , m_socket(new QLocalSocket(this))
 {
-    const QString seat = QString::fromLatin1(qgetenv("XDG_SEAT"));
-    const QString socketName = QStringLiteral("hawaii-session-") + seat;
-
     connect(m_socket, &QLocalSocket::connected,
             this, &SocketClient::connected);
     connect(m_socket, &QLocalSocket::disconnected,
             this, &SocketClient::disconnected);
     connect(m_socket, &QLocalSocket::readyRead,
             this, &SocketClient::readyRead);
-    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),
-            this, SLOT(error()));
-    m_socket->connectToServer(socketName);
 }
 
 SocketClient::~SocketClient()
 {
+    stop();
+}
+
+bool SocketClient::start()
+{
+    const QString seat = QString::fromLatin1(qgetenv("XDG_SEAT"));
+    const QString socketName = QStringLiteral("hawaii-session-") + seat;
+
+    m_socket->connectToServer(socketName);
+    if (!m_socket->waitForConnected()) {
+        qCWarning(SOCKET, "Unable to connect to the compositor: %s",
+                  qPrintable(m_socket->errorString()));
+        qCWarning(SOCKET, "You may want to use 'starthawaii' to start a Hawaii session.");
+        return false;
+    }
+
+    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),
+            this, SLOT(error()));
+
+    return true;
+}
+
+bool SocketClient::stop()
+{
+    if (!m_socket->isOpen())
+        return true;
+
     m_socket->disconnectFromServer();
+    if (!m_socket->waitForDisconnected()) {
+        qCWarning(SOCKET, "Unable to disconnect from the compositor: %s",
+                  qPrintable(m_socket->errorString()));
+        return false;
+    }
+
+    disconnect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),
+               this, SLOT(error()));
+
+    return true;
 }
 
 void SocketClient::sendIdleInhibit()
