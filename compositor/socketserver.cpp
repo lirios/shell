@@ -53,6 +53,7 @@
 
 #include <QtCore/QDataStream>
 #include <QtCore/QFile>
+#include <QtGui/QGuiApplication>
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
 
@@ -185,6 +186,9 @@ void SocketServer::readyRead()
         break;
     case SessionMessages::IdleUninhibit:
         Q_EMIT idleUninhibitRequested();
+        break;
+    case SessionMessages::LogOut:
+        QGuiApplication::quit();
         break;
     default:
         break;
