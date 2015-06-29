@@ -66,6 +66,7 @@ class SocketClient : public QObject
     Q_OBJECT
 public:
     SocketClient(QObject *parent = 0);
+    ~SocketClient();
 
     void sendIdleInhibit();
     void sendIdleUninhibit();

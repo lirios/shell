@@ -80,6 +80,11 @@ SocketClient::SocketClient(QObject *parent)
     m_socket->connectToServer(socketName);
 }
 
+SocketClient::~SocketClient()
+{
+    m_socket->disconnectFromServer();
+}
+
 void SocketClient::sendIdleInhibit()
 {
     QByteArray data;
