@@ -194,7 +194,7 @@ void SessionManager::setupEnvironment()
     qputenv("QT_QPA_PLATFORMTHEME", QByteArray("Hawaii"));
     qputenv("QT_QUICK_CONTROLS_STYLE", QByteArray("Aluminium"));
     qputenv("XDG_MENU_PREFIX", QByteArray("hawaii-"));
-    qputenv("XDG_CURRENT_DESKTOP", QByteArray("Hawaii"));
+    qputenv("XDG_CURRENT_DESKTOP", QByteArray("X-Hawaii"));
     qputenv("XCURSOR_THEME", QByteArray("hawaii"));
     qputenv("XCURSOR_SIZE", QByteArray("16"));
 }
