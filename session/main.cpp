@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 
     // Print version information
     qDebug("== Hawaii Session v%s ==\n"
-           "** https://hawaii-desktop.github.io\n"
+           "** http://hawaiios.org\n"
            "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
            "** Build: %s-%s",
            HAWAII_VERSION_STRING, HAWAII_VERSION_STRING, GIT_REV);
