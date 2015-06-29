@@ -61,9 +61,12 @@ import Hawaii.Controls 1.0 as Controls
 
 QtControlsStyle.CalendarStyle {
     id: style
-    background: Item {}
-    gridColor: Themes.Theme.palette.rgba(Themes.Theme.palette.panel.textColor, 0.3)
-    gridVisible: true
+    gridColor: "transparent"
+    gridVisible: false
+    background: Item {
+        implicitWidth: Themes.Units.gu(14)
+        implicitHeight: Themes.Units.gu(20)
+    }
     navigationBar: RowLayout {
         width: parent.width
         spacing: Themes.Units.smallSpacing
@@ -83,6 +86,7 @@ QtControlsStyle.CalendarStyle {
             font.capitalization: Font.Capitalize
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
+            color: Themes.Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignCenter
             Layout.fillWidth: true
@@ -98,13 +102,13 @@ QtControlsStyle.CalendarStyle {
         }
     }
     dayDelegate: Item {
-        anchors.fill: parent
-
         Rectangle {
-            anchors.fill: parent
-            anchors.margins: styleData.selected ? -1 : 0
-            border.color: "transparent"
-            color: styleData.date !== undefined && styleData.selected ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
+            anchors.centerIn: parent
+            width: Math.min(parent.width, parent.height)
+            height: width
+            radius: width / 2
+            color: styleData.today ? Themes.Theme.palette.panel.primaryColor
+                                   : styleData.selected ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
         }
 
         Text {
@@ -113,7 +117,7 @@ QtControlsStyle.CalendarStyle {
             color: {
                 var theColor = Themes.Theme.palette.rgba(Themes.Theme.palette.panel.textColor, 0.5); //Qt.lighter(Themes.Theme.palette.panel.textColor, 1.4);
                 if (styleData.valid) {
-                    theColor = styleData.visibleMonth ? Qt.darker(Themes.Theme.palette.panel.textColor, 1.2) : Qt.ligther(Themes.Theme.palette.panel.textColor, 1.35);
+                    theColor = styleData.visibleMonth ? Qt.darker(Themes.Theme.palette.panel.textColor, 1.2) : Qt.lighter(Themes.Theme.palette.panel.textColor, 1.35);
                     if (styleData.selected)
                         theColor = Themes.Theme.palette.panel.selectedBackgroundColor;
                 }
