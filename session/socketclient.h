@@ -69,6 +69,7 @@ public:
 
     void sendIdleInhibit();
     void sendIdleUninhibit();
+    void sendLogOut();
 
 private:
     QLocalSocket *m_socket;

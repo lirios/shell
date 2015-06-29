@@ -98,6 +98,15 @@ void SocketClient::sendIdleUninhibit()
     m_socket->flush();
 }
 
+void SocketClient::sendLogOut()
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << quint32(SessionMessages::LogOut);
+    m_socket->write(data);
+    m_socket->flush();
+}
+
 void SocketClient::connected()
 {
     QByteArray data;

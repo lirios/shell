@@ -240,6 +240,9 @@ void SessionManager::logOut()
     // Close all applications we launched
     m_launcher->closeApplications();
 
+    // Close the compositor
+    m_socketClient->sendLogOut();
+
     // Exit
     QCoreApplication::quit();
 }

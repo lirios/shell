@@ -38,7 +38,8 @@ enum class CompositorMessages {
 enum class SessionMessages {
     Connected = 0,
     IdleInhibit,
-    IdleUninhibit
+    IdleUninhibit,
+    LogOut
 };
 
 } // namespace Hawaii
