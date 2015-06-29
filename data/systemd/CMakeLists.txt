@@ -19,8 +19,14 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/hawaii.service
 )
 
+configure_file(
+    hawaii-session.service.in
+    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-session.service
+)
+
 set(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/hawaii.service
+    ${CMAKE_CURRENT_BINARY_DIR}/hawaii-session.service
     hawaii.target
 )
 

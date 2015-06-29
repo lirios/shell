@@ -10,11 +10,13 @@
 #
 
 [Unit]
-Description=Hawaii
+Description=Hawaii Session Manager
+After=hawaii.service
 
 [Service]
-Type=forking
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/greenisland-launcher --execute "@CMAKE_INSTALL_FULL_BINDIR@/hawaii"
+Type=dbus
+BusName=org.hawaii.session
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/hawaii-session
 
 [Install]
 WantedBy=hawaii.target
