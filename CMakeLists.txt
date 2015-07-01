@@ -140,10 +140,12 @@ add_subdirectory(libhawaii)
 add_subdirectory(platformtheme)
 add_subdirectory(scripts)
 add_subdirectory(session)
-add_subdirectory(shells)
 add_subdirectory(styles)
 add_subdirectory(tests)
 add_subdirectory(themes)
+
+# Install the shell
+greenisland_install_shell(org.hawaiios.desktop shell)
 
 # Display featute summary
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

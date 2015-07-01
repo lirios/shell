@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
     homeApp.setFakeScreenData(fakeScreenData);
 
     // Create the compositor and run
-    if (!homeApp.run(nested, QStringLiteral("org.hawaii.desktop")))
+    if (!homeApp.run(nested, QStringLiteral("org.hawaiios.desktop")))
         return 1;
 
     // Unix signals watcher
