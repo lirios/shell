@@ -82,7 +82,7 @@ SocketClient::~SocketClient()
 bool SocketClient::start()
 {
     const QString seat = QString::fromLatin1(qgetenv("XDG_SEAT"));
-    const QString socketName = QStringLiteral("hawaii-session-") + seat;
+    const QString socketName = QStringLiteral("hawaii-") + seat;
 
     m_socket->connectToServer(socketName);
     if (!m_socket->waitForConnected()) {

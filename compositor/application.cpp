@@ -86,7 +86,7 @@ Application::Application()
 {
     // Start listening on the socket
     const QString seat = QString::fromLatin1(qgetenv("XDG_SEAT"));
-    if (!m_socketServer->start(QStringLiteral("hawaii-session-") + seat)) {
+    if (!m_socketServer->start(QStringLiteral("hawaii-") + seat)) {
         qCCritical(COMPOSITOR, "Failed to listen to socket: %s",
                    qPrintable(m_socketServer->errorString()));
         QGuiApplication::exit(1);
