@@ -66,6 +66,8 @@
 #include "config.h"
 #include "gitsha1.h"
 
+#include <unistd.h>
+
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
 int main(int argc, char *argv[])
@@ -102,6 +104,44 @@ int main(int argc, char *argv[])
 
     // Parse command line
     parser.process(app);
+
+    // Restart with D-Bus session if necessary
+    if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
+        qDebug() << "No D-Bus session bus available, respawning with dbus-launch...";
+
+        QStringList args = QStringList()
+                << QStringLiteral("--exit-with-session")
+                << QCoreApplication::arguments();
+
+        char **const argv_pointers = new char *[args.count() + 2];
+        char **p = argv_pointers;
+
+        *p = ::strdup("dbus-launch");
+        ++p;
+
+        Q_FOREACH (const QString &arg, args) {
+            *p = new char[arg.length() + 1];
+            ::strcpy(*p, qPrintable(arg));
+            ++p;
+        }
+
+        *p = 0;
+
+        // Respawn with D-Bus session bus
+        if (::execvp(argv_pointers[0], argv_pointers) == -1) {
+            // If we are here execvp failed so we cleanup and bail out
+            qWarning("Failed to respawn the session: %s", strerror(errno));
+
+            p = argv_pointers;
+            while (*p != 0)
+                delete [] *p++;
+            delete [] argv_pointers;
+
+            ::exit(EXIT_FAILURE);
+        }
+
+        ::exit(EXIT_SUCCESS);
+    }
 
     // Arguments
     bool nested = parser.isSet(nestedOption);
