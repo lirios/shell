@@ -211,6 +211,17 @@ function windowDestroyed(id) {
 }
 
 /*
+ * Surfaces
+ */
+
+function surfaceMapped(surface) {
+    // Only sub-surfaces
+    var child = GreenIsland.Compositor.subSurfaceForOutput(surface, _greenisland_output);
+    if (child)
+        child.visible = true;
+}
+
+/*
  * Window management
  */
 
