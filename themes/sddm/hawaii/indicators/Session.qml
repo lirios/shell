@@ -56,19 +56,30 @@ import SddmComponents 2.0
 import "../components" as Components
 
 Components.Button {
-    property int currentIndex: sessionModel.lastIndex
+    property alias currentIndex: listView.currentIndex
 
     iconName: "system-run-symbolic"
-    text: sessionModel.get(currentIndex).name
-    visible: sessionModel.count > 1
-    onClicked: {
-        if (currentIndex + 1 >= sessionModel.count)
-            currentIndex = 0;
-        else
-            currentIndex++;
-    }
+    text: listView.currentItem.sessionName
+    //text: listView.model.get(listView.currentIndex).name
+    visible: listView.count > 1
+    onClicked: listView.incrementCurrentIndex()
 
     //: Session indicator accessibility name
     //~ Indicator to select a session
     Accessible.name: qsTr("Select session")
+
+    ListView {
+        id: listView
+        model: sessionModel
+        currentIndex: sessionModel.lastIndex
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        orientation: ListView.Horizontal
+        interactive: false
+        clip: false
+        keyNavigationWraps: true
+        visible: false
+        delegate: Item {
+            property string sessionName: name
+        }
+    }
 }
