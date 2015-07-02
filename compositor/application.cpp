@@ -51,29 +51,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QProcess>
-#include <QtGui/QGuiApplication>
-#include <QtNetwork/QLocalSocket>
 #include <QtQml/QQmlComponent>
 
 #include <GreenIsland/Compositor>
-#include <GreenIsland/Output>
 
 #include "application.h"
-#include "cmakedirs.h"
-#include "messages.h"
 #include "session/sessioninterface.h"
-#include "socketserver.h"
+#include "sessionmanager.h"
 
-#include <wayland-client.h>
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-#define qCInfo qCDebug
-#endif
-
-Q_LOGGING_CATEGORY(COMPOSITOR, "hawaii.compositor")
-
-using namespace Hawaii;
+using namespace GreenIsland;
 
 static QObject *sessionInterfaceProvider(QQmlEngine *, QJSEngine *)
 {
@@ -83,81 +69,27 @@ static QObject *sessionInterfaceProvider(QQmlEngine *, QJSEngine *)
 Application::Application()
     : QObject()
     , HomeApplication()
-    , m_socketServer(new SocketServer(this))
-    , m_sessionManager(new QProcess(this))
+    , m_sessionManager(Q_NULLPTR)
 {
-    // Start listening on the socket
-    const QString seat = QString::fromLatin1(qgetenv("XDG_SEAT"));
-    if (!m_socketServer->start(QStringLiteral("hawaii-") + seat)) {
-        qCCritical(COMPOSITOR, "Failed to listen to socket: %s",
-                   qPrintable(m_socketServer->errorString()));
-        QGuiApplication::exit(1);
-    }
-    connect(m_socketServer, &SocketServer::connected, this, [this] {
-        qCDebug(COMPOSITOR) << "Session manager connected";
-    });
-    connect(m_socketServer, &SocketServer::disconnected, this, [this] {
-        qCDebug(COMPOSITOR) << "Session manager disconnected";
-    });
-    connect(m_socketServer, &SocketServer::idleInhibitRequested, this, [this] {
-        Compositor::instance()->incrementIdleInhibit();
-    });
-    connect(m_socketServer, &SocketServer::idleUninhibitRequested, this, [this] {
-        Compositor::instance()->decrementIdleInhibit();
-    });
-
-    // Setup the session manager arguments and connect
-    m_sessionManager->setProgram(INSTALL_BINDIR "/hawaii-session");
-    connect(m_sessionManager, &QProcess::started,
-            this, &Application::sessionManagerStarted);
-    connect(m_sessionManager, SIGNAL(finished(int)),
-            this, SLOT(sessionManagerStopped(int)));
-
-    // Set Wayland display for clients
-    int fd = wl_display_get_fd(Compositor::instance()->waylandDisplay());
-    qputenv("WAYLAND_DISPLAY", QByteArray::number(fd));
-
     // Register QML plugins
     const char *uri = "org.hawaii.session";
     qmlRegisterSingletonType<SessionInterface>(uri, 1, 0, "SessionInterface", sessionInterfaceProvider);
 }
 
-Application::~Application()
-{
-    // Stop the session manager
-    m_sessionManager->terminate();
-    if (!m_sessionManager->waitForFinished())
-        m_sessionManager->kill();
-}
-
 void Application::compositorLaunched()
 {
-    // Start the session manager
-    qCDebug(COMPOSITOR) << "Running:"
-                        << qPrintable(m_sessionManager->program())
-                        << qPrintable(m_sessionManager->arguments().join(' '));
-    m_sessionManager->start();
-}
+    // Session manager
+    m_sessionManager = new SessionManager(this);
+    if (!m_sessionManager->initialize())
+        QCoreApplication::exit(1);
 
-void Application::sessionManagerStarted()
-{
-    qCInfo(COMPOSITOR) << "Session manager start successfully";
-
-    // Send SetIdle to the session manager
-    m_idleConnection = connect(Compositor::instance(), &Compositor::idle, this, [this] {
-        m_socketServer->sendSetIdle(true);
+    // Idle and wake signals
+    connect(Compositor::instance(), &Compositor::idle, this, [this] {
+        m_sessionManager->setIdle(true);
     });
-    m_wakeConnection = connect(Compositor::instance(), &Compositor::wake, this, [this] {
-        m_socketServer->sendSetIdle(false);
+    connect(Compositor::instance(), &Compositor::wake, this, [this] {
+        m_sessionManager->setIdle(false);
     });
-}
-
-void Application::sessionManagerStopped(int exitCode)
-{
-    qCInfo(COMPOSITOR) << "Session manager stopped with exit code" << exitCode;
-
-    disconnect(m_idleConnection);
-    disconnect(m_wakeConnection);
 }
 
 #include "moc_application.cpp"

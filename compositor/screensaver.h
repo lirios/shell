@@ -84,9 +84,6 @@ public:
     uint Throttle(const QString &appName, const QString &reason);
     void UnThrottle(uint cookie);
 
-    static constexpr const char *interfaceName = "org.freedesktop.ScreenSaver";
-    static constexpr const char *objectPath = "/org/freedesktop/ScreenSaver";
-
 Q_SIGNALS:
     void ActiveChanged(bool in);
 

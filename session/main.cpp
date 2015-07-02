@@ -62,7 +62,6 @@
 #include "cmakedirs.h"
 #include "config.h"
 #include "gitsha1.h"
-#include "sessionmanager.h"
 
 #include <unistd.h>
 
@@ -83,19 +82,8 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    // Logout
-    QCommandLineOption logoutOption(QStringLiteral("logout"), TR("Quit from an existing session."));
-    parser.addOption(logoutOption);
-
     // Parse command line
     parser.process(app);
-
-    // Logout from an existing session
-    if (parser.isSet(logoutOption)) {
-        QDBusInterface interface(SessionManager::interfaceName, SessionManager::objectPath);
-        interface.call("logOut");
-        return 0;
-    }
 
     // Restart with D-Bus session if necessary
     if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
@@ -142,11 +130,6 @@ int main(int argc, char *argv[])
            "** Build: %s-%s",
            HAWAII_VERSION_STRING, HAWAII_VERSION_STRING, GIT_REV);
 
-    // Session manager
-    SessionManager *sessionManager = SessionManager::instance();
-    if (!sessionManager->initialize())
-        return 1;
-
     // Unix signals watcher
     UnixSignalWatcher sigwatch;
     sigwatch.watchForSignal(SIGINT);
@@ -155,7 +138,6 @@ int main(int argc, char *argv[])
     // Log out the session for SIGINT and SIGTERM
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [sessionManager](int signum) {
         qDebug() << "Log out caused by signal" << signum;
-        sessionManager->logOut();
     });
 
     return app.exec();

@@ -11,7 +11,19 @@ set(SOURCES
     main.cpp
     processlauncher.cpp
     screensaver.cpp
-    socketserver.cpp
+    sessionmanager.cpp
+    loginmanager/loginmanager.cpp
+    loginmanager/loginmanagerbackend.cpp
+    loginmanager/logindbackend.cpp
+    loginmanager/fakebackend.cpp
+    powermanager/powermanager.cpp
+    powermanager/powermanager.h
+    powermanager/powermanagerbackend.cpp
+    powermanager/powermanagerbackend.h
+    powermanager/systemdpowerbackend.cpp
+    powermanager/systemdpowerbackend.h
+    powermanager/upowerpowerbackend.cpp
+    powermanager/upowerpowerbackend.h
     session/authenticator.cpp
     session/sessioninterface.cpp
 )
@@ -28,7 +40,6 @@ target_link_libraries(hawaii
     Qt5::Core
     Qt5::DBus
     Qt5::Gui
-    Qt5::Network
     Qt5::Widgets
     GreenIsland::GreenIsland
     HawaiiSigWatch

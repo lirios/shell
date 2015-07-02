@@ -54,9 +54,13 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
+#include <GreenIsland/Compositor>
+
 #include "screensaver.h"
 
-Q_LOGGING_CATEGORY(SCREENSAVER, "hawaii.session.screensaver")
+Q_LOGGING_CATEGORY(SCREENSAVER, "hawaii.screensaver")
+
+using namespace GreenIsland;
 
 ScreenSaver::ScreenSaver(QObject *parent)
     : QObject(parent)
@@ -67,24 +71,6 @@ ScreenSaver::ScreenSaver(QObject *parent)
 ScreenSaver::~ScreenSaver()
 {
 }
-
-/*
-bool ScreenSaver::registerInterface()
-{
-    QDBusConnection bus = QDBusConnection::sessionBus();
-
-    if (!bus.registerObject(objectPath, this)) {
-        qCWarning(SCREENSAVER,
-                  "Couldn't register %s D-Bus object: %s",
-                  objectPath,
-                  qPrintable(bus.lastError().message()));
-        return false;
-    }
-
-    qCDebug(SCREENSAVER) << "Registered" << interfaceName << "D-Bus interface";
-    return true;
-}
-*/
 
 bool ScreenSaver::GetActive()
 {
@@ -123,7 +109,7 @@ uint ScreenSaver::Inhibit(const QString &appName, const QString &reason)
     static uint cookieSeed = 0;
     int newCookie = cookieSeed++;
 
-    //SessionManager::instance()->idleInhibit();
+    Compositor::instance()->incrementIdleInhibit();
 
     return newCookie;
 }
@@ -132,7 +118,7 @@ void ScreenSaver::UnInhibit(uint cookie)
 {
     Q_UNUSED(cookie)
 
-    //SessionManager::instance()->idleUninhibit();
+    Compositor::instance()->decrementIdleInhibit();
 }
 
 void ScreenSaver::Lock()

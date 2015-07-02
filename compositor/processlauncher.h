@@ -62,6 +62,7 @@ Q_DECLARE_LOGGING_CATEGORY(LAUNCHER)
 
 class QProcess;
 class XdgDesktopFile;
+class SessionManager;
 
 typedef QMap<QString, QProcess *> ApplicationMap;
 typedef QMutableMapIterator<QString, QProcess *> ApplicationMapIterator;
@@ -83,10 +84,13 @@ public Q_SLOTS:
     bool closeDesktopFile(const QString &fileName);
 
 private:
+    int m_fd;
     ApplicationMap m_apps;
 
     bool launchEntry(XdgDesktopFile *entry);
     bool closeEntry(const QString &fileName);
+
+    friend class SessionManager;
 
 private Q_SLOTS:
     void finished(int exitCode);

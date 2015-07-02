@@ -63,7 +63,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-Q_LOGGING_CATEGORY(LOGIND_BACKEND, "hawaii.session.loginmanager.logind")
+Q_LOGGING_CATEGORY(LOGIND_BACKEND, "hawaii.loginmanager.logind")
 
 const static QString login1Service = QStringLiteral("org.freedesktop.login1");
 const static QString login1Object = QStringLiteral("/org/freedesktop/login1");
@@ -84,11 +84,12 @@ LogindBackend::~LogindBackend()
     delete m_interface;
 }
 
-LogindBackend *LogindBackend::create(const QDBusConnection &connection)
+LogindBackend *LogindBackend::create(SessionManager *sm, const QDBusConnection &connection)
 {
     LogindBackend *backend = new LogindBackend();
     if (!backend)
         return Q_NULLPTR;
+    backend->m_sessionManager = sm;
 
     // Connect to logind if available
     backend->m_interface = new QDBusInterface(login1Service, login1Object,
@@ -308,7 +309,7 @@ void LogindBackend::switchToVt(int index)
 void LogindBackend::setupInhibitors()
 {
     // Inhibit already in action or session already locked
-    if (m_inhibitFd > 0 || SessionManager::instance()->isLocked())
+    if (m_inhibitFd > 0 || m_sessionManager->isLocked())
         return;
 
     QDBusPendingCall call = m_interface->asyncCall(QStringLiteral("Inhibit"),
@@ -323,7 +324,7 @@ void LogindBackend::setupInhibitors()
 
         m_inhibitFd = -1;
 
-        if (SessionManager::instance()->isLocked())
+        if (m_sessionManager->isLocked())
             return;
 
         if (reply.isError()) {

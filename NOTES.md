@@ -15,15 +15,11 @@ to learn how to enable them.
 
 * Compositor:
   * **hawaii.compositor:** Compositor
-  * **hawaii.compositor.socket:** Session manager/Compositor communication
-  * **hawaii.compositor.launcher:** Process launcher and application tracker
-
-* Session manager:
-  * **hawaii.session.manager:** Manages the session
-  * **hawaii.session.socket:** Session manager/Compositor communication
-  * **hawaii.session.screensaver:** Lock, idle and inhibit interface
-  * **hawaii.session.loginmanager:** login manager subsystem
-  * **hawaii.session.loginmanager.logind:** login manager subsystem (logind backend)
+  * **hawaii.processlauncher:** Process launcher and application tracker
+  * **hawaii.screensaver:** Lock, idle and inhibit interface
+  * **hawaii.session:** Manages the session
+  * **hawaii.loginmanager:** login manager subsystem
+  * **hawaii.loginmanager.logind:** login manager subsystem (logind backend)
 
 * Library:
   * **hawaii.qgsettings:** Qt GSettings wrapper

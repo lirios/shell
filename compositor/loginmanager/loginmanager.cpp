@@ -51,59 +51,84 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SESSIONMANAGER_H
-#define SESSIONMANAGER_H
+#include "fakebackend.h"
+#include "loginmanager.h"
+#include "logindbackend.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QLoggingCategory>
+Q_LOGGING_CATEGORY(LOGINMANAGER, "hawaii.loginmanager")
 
-Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
-
-class ScreenSaver;
-class SocketClient;
-
-class SessionManager : public QObject
+LoginManager::LoginManager(SessionManager *sm, QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    static SessionManager *instance();
+    // Create backend
+    m_backend = LogindBackend::create(sm);
+    if (!m_backend)
+        m_backend = FakeBackend::create();
+    qCDebug(LOGINMANAGER) << "Using" << m_backend->name() << "login manager backend";
 
-    bool initialize();
+    // Relay backend signals
+    connect(m_backend, SIGNAL(logOutRequested()),
+            this, SIGNAL(logOutRequested()));
+    connect(m_backend, SIGNAL(sessionLocked()),
+            this, SIGNAL(sessionLocked()));
+    connect(m_backend, SIGNAL(sessionUnlocked()),
+            this, SIGNAL(sessionUnlocked()));
+}
 
-    bool isIdle() const;
-    void setIdle(bool value);
+LoginManager::~LoginManager()
+{
+    if (m_backend)
+        m_backend->deleteLater();
+}
 
-    void idleInhibit();
-    void idleUninhibit();
+void LoginManager::setIdle(bool value)
+{
+    m_backend->setIdle(value);
+}
 
-    bool isLocked() const;
-    void setLocked(bool value);
+void LoginManager::takeControl()
+{
+    m_backend->takeControl();
+}
 
-    static constexpr const char *interfaceName = "org.hawaii.session";
-    static constexpr const char *objectPath = "/HawaiiSession";
+void LoginManager::releaseControl()
+{
+    m_backend->releaseControl();
+}
 
-Q_SIGNALS:
-    void idleChanged(bool value);
-    void lockedChanged(bool value);
-    void loggedOut();
+int LoginManager::takeDevice(const QString &path)
+{
+    return m_backend->takeDevice(path);
+}
 
-public Q_SLOTS:
-    void autostart();
-    void logOut();
+void LoginManager::releaseDevice(int fd)
+{
+    m_backend->releaseDevice(fd);
+}
 
-protected:
-    SessionManager(QObject *parent = 0);
+void LoginManager::lockSession()
+{
+    m_backend->lockSession();
+}
 
-private:
-    ScreenSaver *m_screenSaver;
-    SocketClient *m_socketClient;
-    QList<qint64> m_processes;
+void LoginManager::unlockSession()
+{
+    m_backend->unlockSession();
+}
 
-    bool m_idle;
-    bool m_locked;
+void LoginManager::switchToVt(int index)
+{
+    m_backend->switchToVt(index);
+}
 
-    void setupEnvironment();
-    bool registerDBus();
-};
+void LoginManager::locked()
+{
+    m_backend->locked();
+}
 
-#endif // SESSIONMANAGER_H
+void LoginManager::unlocked()
+{
+    m_backend->unlocked();
+}
+
+#include "moc_loginmanager.cpp"

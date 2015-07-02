@@ -53,19 +53,25 @@
 
 #include <QtCore/QProcess>
 #include <QtCore/QStandardPaths>
-
-#include <qt5xdg/xdgdesktopfile.h>
-
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
+#include <GreenIsland/Compositor>
+
+#include <qt5xdg/xdgdesktopfile.h>
+
 #include "processlauncher.h"
 
-Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.compositor.launcher")
+#include <wayland-client.h>
+
+Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.launcher")
+
+using namespace GreenIsland;
 
 ProcessLauncher::ProcessLauncher(QObject *parent)
     : QObject(parent)
 {
+    m_fd = wl_display_get_fd(Compositor::instance()->waylandDisplay());
 }
 
 ProcessLauncher::~ProcessLauncher()
@@ -73,23 +79,6 @@ ProcessLauncher::~ProcessLauncher()
     closeApplications();
 }
 
-/*
-bool ProcessLauncher::registerObject()
-{
-    QDBusConnection bus = QDBusConnection::sessionBus();
-
-    if (!bus.registerObject(QStringLiteral("/ProcessLauncher"), this)) {
-        qCWarning(LAUNCHER,
-                  "Couldn't register %s D-Bus object: %s",
-                  objectPath,
-                  qPrintable(bus.lastError().message()));
-        return false;
-    }
-
-    qCDebug(LAUNCHER) << "Registered" << interfaceName << "D-Bus interface";
-    return true;
-}
-*/
 void ProcessLauncher::closeApplications()
 {
     qCDebug(LAUNCHER) << "Terminate applications";
@@ -157,9 +146,23 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
 
     qCDebug(LAUNCHER) << "Launching" << entry->expandExecString().join(" ") << "from" << entry->fileName();
 
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert(QStringLiteral("WAYLAND_DISPLAY"), QString::number(m_fd));
+    env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
+    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
+    env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+    env.insert(QStringLiteral("QT_QPA_PLATFORMTHEME"), QStringLiteral("Hawaii"));
+    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Aluminium"));
+    env.insert(QStringLiteral("XDG_MENU_PREFIX"), QStringLiteral("hawaii-"));
+    env.insert(QStringLiteral("XDG_CURRENT_DESKTOP"), QStringLiteral("X-Hawaii"));
+    env.insert(QStringLiteral("XCURSOR_THEME"), QStringLiteral("hawaii"));
+    env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
+    env.remove(QStringLiteral("QSG_RENDER_LOOP"));
+
     QProcess *process = new QProcess(this);
     process->setProgram(command);
     process->setArguments(args);
+    process->setProcessEnvironment(env);
     process->setProcessChannelMode(QProcess::ForwardedChannels);
     m_apps[entry->fileName()] = process;
     connect(process, SIGNAL(finished(int)), this, SLOT(finished(int)));

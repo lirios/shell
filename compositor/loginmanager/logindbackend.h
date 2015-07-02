@@ -51,38 +51,66 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SOCKETCLIENT_H
-#define SOCKETCLIENT_H
+#ifndef LOGINDBACKEND_H
+#define LOGINDBACKEND_H
 
-#include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
+#include <QtDBus/QDBusConnection>
 
-class QLocalSocket;
+#include "loginmanagerbackend.h"
 
-Q_DECLARE_LOGGING_CATEGORY(SOCKET)
+Q_DECLARE_LOGGING_CATEGORY(LOGIND_BACKEND)
 
-class SocketClient : public QObject
+class QDBusInterface;
+class QDBusPendingCallWatcher;
+
+class SessionManager;
+
+class LogindBackend : public LoginManagerBackend
 {
     Q_OBJECT
 public:
-    SocketClient(QObject *parent = 0);
-    ~SocketClient();
+    ~LogindBackend();
 
-    bool start();
-    bool stop();
+    static LogindBackend *create(SessionManager *sm,
+                                 const QDBusConnection &connection = QDBusConnection::systemBus());
 
-    void sendIdleInhibit();
-    void sendIdleUninhibit();
-    void sendLogOut();
+    QString name() const;
+
+    void setIdle(bool value);
+
+    void takeControl();
+    void releaseControl();
+
+    int takeDevice(const QString &path);
+    void releaseDevice(int fd);
+
+    void lockSession();
+    void unlockSession();
+
+    void requestLockSession();
+    void requestUnlockSession();
+
+    void locked();
+    void unlocked();
+
+    void switchToVt(int index);
 
 private:
-    QLocalSocket *m_socket;
+    LogindBackend();
+
+    SessionManager *m_sessionManager;
+    QDBusInterface *m_interface;
+    QString m_sessionPath;
+    int m_inhibitFd;
+
+    void setupInhibitors();
 
 private Q_SLOTS:
-    void connected();
-    void disconnected();
-    void readyRead();
-    void error();
+    void prepareForSleep(bool arg);
+    void prepareForShutdown(bool arg);
+    void getSession(QDBusPendingCallWatcher *watcher);
+    void devicePaused(quint32 devMajor, quint32 devMinor, const QString &type);
 };
 
-#endif // SOCKETCLIENT_H
+#endif // LOGINDBACKEND_H

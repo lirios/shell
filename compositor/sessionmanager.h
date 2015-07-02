@@ -51,47 +51,58 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef LOGINMANAGER_H
-#define LOGINMANAGER_H
+#ifndef SESSIONMANAGER_H
+#define SESSIONMANAGER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
 
-#include "loginmanagerbackend.h"
+Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 
-Q_DECLARE_LOGGING_CATEGORY(LOGINMANAGER)
+class LoginManager;
+class PowerManager;
+class ProcessLauncher;
+class ScreenSaver;
 
-class LoginManager : public QObject
+class SessionManager : public QObject
 {
     Q_OBJECT
 public:
-    LoginManager(QObject *parent = 0);
-    ~LoginManager();
+    SessionManager(QObject *parent = 0);
 
+    bool initialize();
+
+    bool isIdle() const;
     void setIdle(bool value);
 
-    void takeControl();
-    void releaseControl();
+    void idleInhibit();
+    void idleUninhibit();
 
-    int takeDevice(const QString &path);
-    void releaseDevice(int fd);
+    bool isLocked() const;
+    void setLocked(bool value);
 
-    void lockSession();
-    void unlockSession();
-
-    void switchToVt(int index);
-
-public Q_SLOTS:
-    void locked();
-    void unlocked();
+    static void setupEnvironment();
 
 Q_SIGNALS:
-    void logOutRequested();
-    void sessionLocked();
-    void sessionUnlocked();
+    void idleChanged(bool value);
+    void lockedChanged(bool value);
+    void loggedOut();
+
+public Q_SLOTS:
+    void autostart();
+    void logOut();
 
 private:
-    LoginManagerBackend *m_backend;
+    LoginManager *m_loginManager;
+    PowerManager *m_powerManager;
+    ProcessLauncher *m_launcher;
+    ScreenSaver *m_screenSaver;
+    QList<qint64> m_processes;
+
+    bool m_idle;
+    bool m_locked;
+
+    bool registerDBus();
 };
 
-#endif // LOGINMANAGER_H
+#endif // SESSIONMANAGER_H

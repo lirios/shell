@@ -55,36 +55,22 @@
 #define APPLICATION_H
 
 #include <QtCore/QObject>
-#include <QtCore/QLoggingCategory>
 
 #include <GreenIsland/HomeApplication>
 
-Q_DECLARE_LOGGING_CATEGORY(COMPOSITOR)
+class SessionManager;
 
-using namespace GreenIsland;
-
-class QProcess;
-class SocketServer;
-
-class Application : public QObject, public HomeApplication
+class Application : public QObject, public GreenIsland::HomeApplication
 {
     Q_OBJECT
 public:
     Application();
-    ~Application();
 
 protected:
     void compositorLaunched() Q_DECL_OVERRIDE;
 
 private:
-    SocketServer *m_socketServer;
-    QProcess *m_sessionManager;
-    QMetaObject::Connection m_idleConnection;
-    QMetaObject::Connection m_wakeConnection;
-
-private Q_SLOTS:
-    void sessionManagerStarted();
-    void sessionManagerStopped(int exitCode);
+    SessionManager *m_sessionManager;
 };
 
 #endif // APPLICATION_H

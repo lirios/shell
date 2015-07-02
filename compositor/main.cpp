@@ -65,6 +65,7 @@
 #include "application.h"
 #include "config.h"
 #include "gitsha1.h"
+#include "sessionmanager.h"
 
 #include <unistd.h>
 
@@ -72,12 +73,8 @@
 
 int main(int argc, char *argv[])
 {
-    // Environment
-    qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
-    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
-    qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
-    qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
-    qputenv("QSG_RENDER_LOOP", QByteArrayLiteral("windows"));
+    // Setup the environment
+    SessionManager::setupEnvironment();
 
     // Application
     QApplication app(argc, argv);
@@ -176,6 +173,15 @@ int main(int argc, char *argv[])
         }
     }
 
+    // Unix signals watcher
+    UnixSignalWatcher sigwatch;
+    sigwatch.watchForSignal(SIGINT);
+    sigwatch.watchForSignal(SIGTERM);
+
+    // Quit when the process is killed
+    QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal,
+                     QApplication::instance(), &QApplication::quit);
+
     // Print version information
     qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
            "** http://hawaiios.org\n"
@@ -191,16 +197,6 @@ int main(int argc, char *argv[])
     // Create the compositor and run
     if (!homeApp.run(nested, QStringLiteral("org.hawaiios.desktop")))
         return 1;
-
-    // Unix signals watcher
-    UnixSignalWatcher sigwatch;
-    sigwatch.watchForSignal(SIGINT);
-    sigwatch.watchForSignal(SIGTERM);
-
-    // Quit when the process is killed
-    QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal, [=] {
-        QApplication::quit();
-    });
 
     return app.exec();
 }

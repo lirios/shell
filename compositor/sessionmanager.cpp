@@ -56,46 +56,53 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
+#include <GreenIsland/Compositor>
+
 #include <qt5xdg/xdgautostart.h>
 #include <qt5xdg/xdgdesktopfile.h>
 
 #include "cmakedirs.h"
-#include "sessionadaptor.h"
+#include "loginmanager/loginmanager.h"
+#include "powermanager/powermanager.h"
+#include "processlauncher.h"
+#include "processlauncheradaptor.h"
+#include "screensaver.h"
+#include "screensaveradaptor.h"
 #include "sessionmanager.h"
-#include "socketclient.h"
 
 #include <sys/types.h>
 #include <signal.h>
 
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 
-class SessionManagerInternal : public SessionManager {};
-Q_GLOBAL_STATIC(SessionManagerInternal, s_sessionManager)
+using namespace GreenIsland;
 
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
-    , m_socketClient(new SocketClient(this))
+    , m_loginManager(new LoginManager(this, this))
+    , m_powerManager(new PowerManager(this))
+    , m_launcher(new ProcessLauncher(this))
+    , m_screenSaver(new ScreenSaver(this))
     , m_idle(false)
     , m_locked(false)
 {
-}
+    // Lock and unlock the session
+    connect(m_loginManager, &LoginManager::sessionLocked, this, [this] {
+        setLocked(true);
+    });
+    connect(m_loginManager, &LoginManager::sessionUnlocked, this, [this] {
+        setLocked(false);
+    });
 
-SessionManager *SessionManager::instance()
-{
-    return s_sessionManager();
+    // Logout session before the system goes off
+    connect(m_loginManager, &LoginManager::logOutRequested,
+            this, &SessionManager::logOut);
 }
 
 bool SessionManager::initialize()
 {
-    // Setup environment
-    setupEnvironment();
-
     // Register D-Bus services
     if (!registerDBus())
-        return false;
-
-    // Connect to the compositor socket
-    if (!m_socketClient->start())
         return false;
 
     return true;
@@ -112,17 +119,18 @@ void SessionManager::setIdle(bool value)
         return;
 
     m_idle = value;
+    m_loginManager->setIdle(m_idle);
     Q_EMIT idleChanged(value);
 }
 
 void SessionManager::idleInhibit()
 {
-    m_socketClient->sendIdleInhibit();
+    Compositor::instance()->incrementIdleInhibit();
 }
 
 void SessionManager::idleUninhibit()
 {
-    m_socketClient->sendIdleUninhibit();
+    Compositor::instance()->decrementIdleInhibit();
 }
 
 bool SessionManager::isLocked() const
@@ -184,45 +192,43 @@ void SessionManager::setupEnvironment()
         qputenv("XDG_CONFIG_HOME", path.toUtf8());
     }
 
-    // Set platform integration
-    qputenv("SAL_USE_VCLPLUGIN", QByteArray("kde"));
-    qputenv("QT_PLATFORM_PLUGIN", QByteArray("Hawaii"));
-    qputenv("QT_QPA_PLATFORM", QByteArray("wayland"));
-    qputenv("QT_QPA_PLATFORMTHEME", QByteArray("Hawaii"));
-    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArray("Aluminium"));
-    qputenv("XDG_MENU_PREFIX", QByteArray("hawaii-"));
-    qputenv("XDG_CURRENT_DESKTOP", QByteArray("X-Hawaii"));
-    qputenv("XCURSOR_THEME", QByteArray("hawaii"));
-    qputenv("XCURSOR_SIZE", QByteArray("16"));
+    // Environment
+    qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
+    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
+    qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
+    qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
+    qputenv("QSG_RENDER_LOOP", QByteArrayLiteral("windows"));
 }
 
 bool SessionManager::registerDBus()
 {
     QDBusConnection bus = QDBusConnection::sessionBus();
 
-    // Start the D-Bus service
-    (void)new SessionAdaptor(this);
-    if (!bus.registerObject(objectPath, this)) {
-        qCWarning(SESSION_MANAGER) << "Couldn't register /HawaiiSession D-Bus object:"
-                                   << qPrintable(bus.lastError().message());
+    // Process launcher
+    new ProcessLauncherAdaptor(m_launcher);
+    if (!bus.registerObject(QStringLiteral("/ProcessLauncher"), m_launcher)) {
+        qCWarning(SESSION_MANAGER,
+                  "Couldn't register /ProcessLauncher D-Bus object: %s",
+                  qPrintable(bus.lastError().message()));
         return false;
     }
-    if (!bus.registerService(interfaceName)) {
-        qCWarning(SESSION_MANAGER) << "Couldn't register org.hawaii.session D-Bus service:"
-                                   << qPrintable(bus.lastError().message());
+
+    // Screen saver
+    new ScreenSaverAdaptor(m_screenSaver);
+    if (!bus.registerObject(QStringLiteral("/org/freedesktop/ScreenSaver"), m_screenSaver)) {
+        qCWarning(SESSION_MANAGER,
+                  "Couldn't register /org/freedesktop/ScreenSaver D-Bus object: %s",
+                  qPrintable(bus.lastError().message()));
         return false;
     }
-    qCDebug(SESSION_MANAGER) << "Registered" << interfaceName << "D-Bus interface";
 
-    /*
-    // Register process launcher service
-    if (!m_launcher->registerInterface())
+    // Service
+    if (!bus.registerService(QStringLiteral("org.hawaiios.Session"))) {
+        qCWarning(SESSION_MANAGER,
+                  "Couldn't register org.hawaiios.Session D-Bus service: %s",
+                  qPrintable(bus.lastError().message()));
         return false;
-
-    // Register screen saver interface
-    if (!m_screenSaver->registerInterface())
-        return false;
-    */
+    }
 
     return true;
 }
@@ -234,17 +240,14 @@ void SessionManager::autostart()
             continue;
 
         qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
-        //m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
+        m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
     }
 }
 
 void SessionManager::logOut()
 {
     // Close all applications we launched
-    //m_launcher->closeApplications();
-
-    // Close the compositor
-    m_socketClient->sendLogOut();
+    m_launcher->closeApplications();
 
     // Exit
     QCoreApplication::quit();
