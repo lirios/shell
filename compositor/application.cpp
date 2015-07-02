@@ -65,6 +65,8 @@
 #include "session/sessioninterface.h"
 #include "socketserver.h"
 
+#include <wayland-client.h>
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 #define qCInfo qCDebug
 #endif
@@ -110,6 +112,10 @@ Application::Application()
             this, &Application::sessionManagerStarted);
     connect(m_sessionManager, SIGNAL(finished(int)),
             this, SLOT(sessionManagerStopped(int)));
+
+    // Set Wayland display for clients
+    int fd = wl_display_get_fd(Compositor::instance()->waylandDisplay());
+    qputenv("WAYLAND_DISPLAY", QByteArray::number(fd));
 
     // Register QML plugins
     const char *uri = "org.hawaii.session";
