@@ -55,8 +55,6 @@
 #include <QtDBus/QDBusError>
 
 #include "screensaver.h"
-#include "screensaveradaptor.h"
-#include "sessionmanager.h"
 
 Q_LOGGING_CATEGORY(SCREENSAVER, "hawaii.session.screensaver")
 
@@ -64,14 +62,13 @@ ScreenSaver::ScreenSaver(QObject *parent)
     : QObject(parent)
     , m_active(false)
 {
-    new ScreenSaverAdaptor(this);
 }
 
 ScreenSaver::~ScreenSaver()
 {
-
 }
 
+/*
 bool ScreenSaver::registerInterface()
 {
     QDBusConnection bus = QDBusConnection::sessionBus();
@@ -87,6 +84,7 @@ bool ScreenSaver::registerInterface()
     qCDebug(SCREENSAVER) << "Registered" << interfaceName << "D-Bus interface";
     return true;
 }
+*/
 
 bool ScreenSaver::GetActive()
 {
@@ -125,7 +123,7 @@ uint ScreenSaver::Inhibit(const QString &appName, const QString &reason)
     static uint cookieSeed = 0;
     int newCookie = cookieSeed++;
 
-    SessionManager::instance()->idleInhibit();
+    //SessionManager::instance()->idleInhibit();
 
     return newCookie;
 }
@@ -134,12 +132,12 @@ void ScreenSaver::UnInhibit(uint cookie)
 {
     Q_UNUSED(cookie)
 
-    SessionManager::instance()->idleUninhibit();
+    //SessionManager::instance()->idleUninhibit();
 }
 
 void ScreenSaver::Lock()
 {
-    SessionManager::instance()->setLocked(true);
+    //SessionManager::instance()->setLocked(true);
 }
 
 uint ScreenSaver::Throttle(const QString &appName, const QString &reason)

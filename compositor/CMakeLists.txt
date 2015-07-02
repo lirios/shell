@@ -10,6 +10,7 @@ set(SOURCES
     application.cpp
     main.cpp
     processlauncher.cpp
+    screensaver.cpp
     socketserver.cpp
     session/authenticator.cpp
     session/sessioninterface.cpp
@@ -18,6 +19,9 @@ set(SOURCES
 qt5_add_dbus_adaptor(SOURCES org.hawaiios.ProcessLauncher.xml
                      processlauncher.h ProcessLauncher
                      processlauncheradaptor ProcessLauncherAdaptor)
+qt5_add_dbus_adaptor(SOURCES org.freedesktop.ScreenSaver.xml
+                     screensaver.h ScreenSaver
+                     screensaveradaptor ScreenSaverAdaptor)
 
 add_executable(hawaii ${SOURCES})
 target_link_libraries(hawaii

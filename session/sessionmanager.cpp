@@ -60,7 +60,6 @@
 #include <qt5xdg/xdgdesktopfile.h>
 
 #include "cmakedirs.h"
-#include "screensaver.h"
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
 #include "socketclient.h"
@@ -75,7 +74,6 @@ Q_GLOBAL_STATIC(SessionManagerInternal, s_sessionManager)
 
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
-    , m_screenSaver(new ScreenSaver(this))
     , m_socketClient(new SocketClient(this))
     , m_idle(false)
     , m_locked(false)
@@ -220,11 +218,11 @@ bool SessionManager::registerDBus()
     // Register process launcher service
     if (!m_launcher->registerInterface())
         return false;
-    */
 
     // Register screen saver interface
     if (!m_screenSaver->registerInterface())
         return false;
+    */
 
     return true;
 }

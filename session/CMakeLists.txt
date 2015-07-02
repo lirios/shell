@@ -6,7 +6,6 @@ include_directories(
 
 set(SOURCES
     main.cpp
-    screensaver.cpp
     sessionadaptor.cpp
     sessionmanager.cpp
     socketclient.cpp
@@ -23,10 +22,6 @@ set(SOURCES
     powermanager/upowerpowerbackend.cpp
     powermanager/upowerpowerbackend.h
 )
-
-qt5_add_dbus_adaptor(SOURCES
-    org.freedesktop.ScreenSaver.xml
-    screensaver.h ScreenSaver)
 
 add_executable(hawaii-session ${SOURCES})
 target_link_libraries(hawaii-session
