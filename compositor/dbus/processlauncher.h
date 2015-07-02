@@ -72,7 +72,7 @@ class ProcessLauncher : public QDBusAbstractAdaptor
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.hawaii.launcher")
 public:
-    ProcessLauncher(SessionManager *sessionManager);
+    ProcessLauncher(QObject *parent = 0);
     ~ProcessLauncher();
 
     bool registerInterface();
@@ -90,13 +90,10 @@ public Q_SLOTS:
     bool closeDesktopFile(const QString &fileName);
 
 private:
-    SessionManager *m_sessionManager;
     ApplicationMap m_apps;
 
     bool launchEntry(XdgDesktopFile *entry);
     bool closeEntry(const QString &fileName);
-
-    friend class SessionManager;
 
 private Q_SLOTS:
     void finished(int exitCode);

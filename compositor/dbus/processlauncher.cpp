@@ -60,13 +60,11 @@
 #include <QtDBus/QDBusError>
 
 #include "processlauncher.h"
-#include "sessionmanager.h"
 
-Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.session.launcher")
+Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.compositor.launcher")
 
-ProcessLauncher::ProcessLauncher(SessionManager *sessionManager)
-    : QDBusAbstractAdaptor(sessionManager)
-    , m_sessionManager(sessionManager)
+ProcessLauncher::ProcessLauncher(QObject *parent)
+    : QDBusAbstractAdaptor(parent)
 {
 }
 

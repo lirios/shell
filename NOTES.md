@@ -16,11 +16,11 @@ to learn how to enable them.
 * Compositor:
   * **hawaii.compositor:** Compositor
   * **hawaii.compositor.socket:** Session manager/Compositor communication
+  * **hawaii.compositor.launcher:** Process launcher and application tracker
 
 * Session manager:
   * **hawaii.session.manager:** Manages the session
   * **hawaii.session.socket:** Session manager/Compositor communication
-  * **hawaii.session.launcher:** Process launcher and application tracker
   * **hawaii.session.screensaver:** Lock, idle and inhibit interface
   * **hawaii.session.loginmanager:** login manager subsystem
   * **hawaii.session.loginmanager.logind:** login manager subsystem (logind backend)

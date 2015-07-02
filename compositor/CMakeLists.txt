@@ -10,6 +10,7 @@ set(SOURCES
     application.cpp
     main.cpp
     socketserver.cpp
+    dbus/processlauncher.cpp
     session/authenticator.cpp
     session/sessioninterface.cpp
 )
@@ -23,6 +24,7 @@ target_link_libraries(hawaii
     Qt5::Widgets
     GreenIsland::GreenIsland
     HawaiiSigWatch
+    ${QTXDG_LIBRARIES}
     ${PAM_LIBRARIES}
 )
 

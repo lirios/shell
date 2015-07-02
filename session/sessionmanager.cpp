@@ -60,7 +60,6 @@
 #include <qt5xdg/xdgdesktopfile.h>
 
 #include "cmakedirs.h"
-#include "processlauncher.h"
 #include "screensaver.h"
 #include "sessionadaptor.h"
 #include "sessionmanager.h"
@@ -76,7 +75,6 @@ Q_GLOBAL_STATIC(SessionManagerInternal, s_sessionManager)
 
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
-    , m_launcher(new ProcessLauncher(this))
     , m_screenSaver(new ScreenSaver(this))
     , m_socketClient(new SocketClient(this))
     , m_idle(false)
@@ -218,9 +216,11 @@ bool SessionManager::registerDBus()
     }
     qCDebug(SESSION_MANAGER) << "Registered" << interfaceName << "D-Bus interface";
 
+    /*
     // Register process launcher service
     if (!m_launcher->registerInterface())
         return false;
+    */
 
     // Register screen saver interface
     if (!m_screenSaver->registerInterface())
@@ -236,14 +236,14 @@ void SessionManager::autostart()
             continue;
 
         qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
-        m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
+        //m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
     }
 }
 
 void SessionManager::logOut()
 {
     // Close all applications we launched
-    m_launcher->closeApplications();
+    //m_launcher->closeApplications();
 
     // Close the compositor
     m_socketClient->sendLogOut();

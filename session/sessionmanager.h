@@ -59,7 +59,6 @@
 
 Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 
-class ProcessLauncher;
 class ScreenSaver;
 class SocketClient;
 
@@ -96,7 +95,6 @@ protected:
     SessionManager(QObject *parent = 0);
 
 private:
-    ProcessLauncher *m_launcher;
     ScreenSaver *m_screenSaver;
     SocketClient *m_socketClient;
     QList<qint64> m_processes;

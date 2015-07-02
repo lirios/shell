@@ -6,7 +6,6 @@ include_directories(
 
 set(SOURCES
     main.cpp
-    processlauncher.cpp
     screensaver.cpp
     sessionadaptor.cpp
     sessionmanager.cpp
