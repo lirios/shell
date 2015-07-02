@@ -72,6 +72,12 @@
 
 int main(int argc, char *argv[])
 {
+    // Environment
+    qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
+    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
+    qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
+    qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
+
     // Application
     QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Hawaii"));
