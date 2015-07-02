@@ -56,31 +56,24 @@
 
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QMap>
-#include <QtDBus/QDBusAbstractAdaptor>
+#include <QtCore/QObject>
 
 Q_DECLARE_LOGGING_CATEGORY(LAUNCHER)
 
 class QProcess;
 class XdgDesktopFile;
-class SessionManager;
 
 typedef QMap<QString, QProcess *> ApplicationMap;
 typedef QMutableMapIterator<QString, QProcess *> ApplicationMapIterator;
 
-class ProcessLauncher : public QDBusAbstractAdaptor
+class ProcessLauncher : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.hawaii.launcher")
 public:
     ProcessLauncher(QObject *parent = 0);
     ~ProcessLauncher();
 
-    bool registerInterface();
-
     void closeApplications();
-    
-    static constexpr const char *interfaceName = "org.hawaii.launcher";
-    static constexpr const char *objectPath = "/Launcher";
 
 public Q_SLOTS:
     bool launchApplication(const QString &appId);

@@ -64,7 +64,7 @@
 Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.compositor.launcher")
 
 ProcessLauncher::ProcessLauncher(QObject *parent)
-    : QDBusAbstractAdaptor(parent)
+    : QObject(parent)
 {
 }
 
@@ -73,11 +73,12 @@ ProcessLauncher::~ProcessLauncher()
     closeApplications();
 }
 
-bool ProcessLauncher::registerInterface()
+/*
+bool ProcessLauncher::registerObject()
 {
     QDBusConnection bus = QDBusConnection::sessionBus();
 
-    if (!bus.registerObject(objectPath, this)) {
+    if (!bus.registerObject(QStringLiteral("/ProcessLauncher"), this)) {
         qCWarning(LAUNCHER,
                   "Couldn't register %s D-Bus object: %s",
                   objectPath,
@@ -88,7 +89,7 @@ bool ProcessLauncher::registerInterface()
     qCDebug(LAUNCHER) << "Registered" << interfaceName << "D-Bus interface";
     return true;
 }
-
+*/
 void ProcessLauncher::closeApplications()
 {
     qCDebug(LAUNCHER) << "Terminate applications";

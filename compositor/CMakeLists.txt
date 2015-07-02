@@ -9,11 +9,15 @@ include_directories(
 set(SOURCES
     application.cpp
     main.cpp
+    processlauncher.cpp
     socketserver.cpp
-    dbus/processlauncher.cpp
     session/authenticator.cpp
     session/sessioninterface.cpp
 )
+
+qt5_add_dbus_adaptor(SOURCES org.hawaiios.ProcessLauncher.xml
+                     processlauncher.h ProcessLauncher
+                     processlauncheradaptor ProcessLauncherAdaptor)
 
 add_executable(hawaii ${SOURCES})
 target_link_libraries(hawaii
