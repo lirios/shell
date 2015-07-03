@@ -52,6 +52,8 @@
  ***************************************************************************/
 
 #include <QtQml/QQmlComponent>
+#include <QtQml/QQmlContext>
+#include <QtQml/QQmlEngine>
 
 #include <GreenIsland/Compositor>
 
@@ -61,19 +63,11 @@
 
 using namespace GreenIsland;
 
-static QObject *sessionInterfaceProvider(QQmlEngine *, QJSEngine *)
-{
-    return SessionInterface::instance();
-}
-
 Application::Application()
     : QObject()
     , HomeApplication()
     , m_sessionManager(Q_NULLPTR)
 {
-    // Register QML plugins
-    const char *uri = "org.hawaii.session";
-    qmlRegisterSingletonType<SessionInterface>(uri, 1, 0, "SessionInterface", sessionInterfaceProvider);
 }
 
 void Application::compositorLaunched()
@@ -90,6 +84,11 @@ void Application::compositorLaunched()
     connect(Compositor::instance(), &Compositor::wake, this, [this] {
         m_sessionManager->setIdle(false);
     });
+
+    // Register session interface as a fake singleton
+    QQmlContext *context = Compositor::instance()->engine()->rootContext();
+    context->setContextProperty(QStringLiteral("SessionInterface"),
+                                new SessionInterface(m_sessionManager));
 }
 
 #include "moc_application.cpp"

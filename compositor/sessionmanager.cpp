@@ -147,6 +147,105 @@ void SessionManager::setLocked(bool value)
     Q_EMIT lockedChanged(value);
 }
 
+bool SessionManager::canLock() const
+{
+    // Always true, but in the future we might consider blocking
+    // this; might come in handy for kiosk systems
+    return true;
+}
+
+bool SessionManager::canLogOut()
+{
+    // Always true, but in the future we might consider blocking
+    // logout; might come in handy for kiosk systems
+    return true;
+}
+
+bool SessionManager::canStartNewSession()
+{
+    // Always false, but in the future we might consider
+    // allowing this
+    return false;
+}
+
+bool SessionManager::canPowerOff()
+{
+    return m_powerManager->capabilities() & PowerManager::PowerOff;
+}
+
+bool SessionManager::canRestart()
+{
+    return m_powerManager->capabilities() & PowerManager::Restart;
+}
+
+bool SessionManager::canSuspend()
+{
+    return m_powerManager->capabilities() & PowerManager::Suspend;
+}
+
+bool SessionManager::canHibernate()
+{
+    return m_powerManager->capabilities() & PowerManager::Hibernate;
+}
+
+bool SessionManager::canHybridSleep()
+{
+    return m_powerManager->capabilities() & PowerManager::HybridSleep;
+}
+
+void SessionManager::lockSession()
+{
+    m_loginManager->lockSession();
+}
+
+void SessionManager::unlockSession()
+{
+    m_loginManager->unlockSession();
+}
+
+void SessionManager::startNewSession()
+{
+}
+
+void SessionManager::activateSession(int index)
+{
+    m_loginManager->switchToVt(index);
+}
+
+void SessionManager::logOut()
+{
+    // Close all applications we launched
+    m_launcher->closeApplications();
+
+    // Exit
+    QCoreApplication::quit();
+}
+
+void SessionManager::powerOff()
+{
+    m_powerManager->powerOff();
+}
+
+void SessionManager::restart()
+{
+    m_powerManager->restart();
+}
+
+void SessionManager::suspend()
+{
+    m_powerManager->suspend();
+}
+
+void SessionManager::hibernate()
+{
+    m_powerManager->hibernate();
+}
+
+void SessionManager::hybridSleep()
+{
+    m_powerManager->hybridSleep();
+}
+
 void SessionManager::setupEnvironment()
 {
     // Set paths only if we are installed onto a non standard location
@@ -242,15 +341,6 @@ void SessionManager::autostart()
         qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
         m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
     }
-}
-
-void SessionManager::logOut()
-{
-    // Close all applications we launched
-    m_launcher->closeApplications();
-
-    // Exit
-    QCoreApplication::quit();
 }
 
 #include "moc_sessionmanager.cpp"

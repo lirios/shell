@@ -57,7 +57,6 @@ import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaii.misc 0.1
-import org.hawaii.session 1.0 as Session
 import "desktop"
 import "windows"
 import "windows/WindowManagement.js" as WindowManagement
@@ -260,49 +259,49 @@ Item {
                 break;
                 // sm
             case "abortSession":
-                Session.SessionInterface.requestLogOut();
+                SessionInterface.requestLogOut();
                 break;
             case "powerOff":
-                Session.SessionInterface.requestPowerOff();
+                SessionInterface.requestPowerOff();
                 break;
             case "lockScreen":
-                Session.SessionInterface.lockSession();
+                SessionInterface.lockSession();
                 break;
             case "activateSession-1":
-                Session.SessionInterface.activateSession(1);
+                SessionInterface.activateSession(1);
                 break;
             case "activateSession-2":
-                Session.SessionInterface.activateSession(2);
+                SessionInterface.activateSession(2);
                 break;
             case "activateSession-3":
-                Session.SessionInterface.activateSession(3);
+                SessionInterface.activateSession(3);
                 break;
             case "activateSession-4":
-                Session.SessionInterface.activateSession(4);
+                SessionInterface.activateSession(4);
                 break;
             case "activateSession-5":
-                Session.SessionInterface.activateSession(5);
+                SessionInterface.activateSession(5);
                 break;
             case "activateSession-6":
-                Session.SessionInterface.activateSession(6);
+                SessionInterface.activateSession(6);
                 break;
             case "activateSession-7":
-                Session.SessionInterface.activateSession(7);
+                SessionInterface.activateSession(7);
                 break;
             case "activateSession-8":
-                Session.SessionInterface.activateSession(8);
+                SessionInterface.activateSession(8);
                 break;
             case "activateSession-9":
-                Session.SessionInterface.activateSession(9);
+                SessionInterface.activateSession(9);
                 break;
             case "activateSession-10":
-                Session.SessionInterface.activateSession(10);
+                SessionInterface.activateSession(10);
                 break;
             case "activateSession-11":
-                Session.SessionInterface.activateSession(11);
+                SessionInterface.activateSession(11);
                 break;
             case "activateSession-12":
-                Session.SessionInterface.activateSession(12);
+                SessionInterface.activateSession(12);
                 break;
             default:
                 break;
@@ -311,7 +310,7 @@ Item {
     }
 
     Connections {
-        target: Session.SessionInterface
+        target: SessionInterface
         onSessionLocked: compositorRoot.state = "lock"
         onSessionUnlocked: compositorRoot.state = "session"
         onShutdownRequestCanceled: compositorRoot.state = "session"
@@ -508,7 +507,7 @@ Item {
     Connections {
         target: logoutLoader.item
         onSuspendRequested: compositorRoot.state = "lock"
-        onCancel: Session.SessionInterface.cancelShutdownRequest()
+        onCancel: SessionInterface.cancelShutdownRequest()
     }
 
     /*

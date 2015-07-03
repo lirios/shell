@@ -81,6 +81,27 @@ public:
     bool isLocked() const;
     void setLocked(bool value);
 
+    bool canLock() const;
+    bool canStartNewSession();
+    bool canLogOut();
+    bool canPowerOff();
+    bool canRestart();
+    bool canSuspend();
+    bool canHibernate();
+    bool canHybridSleep();
+
+    void lockSession();
+    void unlockSession();
+    void startNewSession();
+    void activateSession(int index);
+
+    void logOut();
+    void powerOff();
+    void restart();
+    void suspend();
+    void hibernate();
+    void hybridSleep();
+
     static void setupEnvironment();
 
 Q_SIGNALS:
@@ -90,7 +111,6 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void autostart();
-    void logOut();
 
 private:
     LoginManager *m_loginManager;

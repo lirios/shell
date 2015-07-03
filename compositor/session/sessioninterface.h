@@ -54,12 +54,12 @@
 #ifndef SESSIONINTERFACE_H
 #define SESSIONINTERFACE_H
 
-#include <QtDBus/QDBusConnection>
+#include <QtCore/QThread>
 #include <QtQml/QJSValue>
 
 class Authenticator;
 class CustomAuthenticator;
-class QDBusInterface;
+class SessionManager;
 
 class SessionInterface : public QObject
 {
@@ -73,9 +73,8 @@ class SessionInterface : public QObject
     Q_PROPERTY(bool canHibernate READ canHibernate CONSTANT)
     Q_PROPERTY(bool canHybridSleep READ canHybridSleep CONSTANT)
 public:
+    SessionInterface(SessionManager *sm, QObject *parent = 0);
     virtual ~SessionInterface();
-
-    static SessionInterface *instance();
 
     bool canLock() const;
     bool canStartNewSession() const;
@@ -119,16 +118,13 @@ public Q_SLOTS:
     void hibernate();
     void hybridSleep();
 
-protected:
-    SessionInterface(QObject *parent = 0);
-
 private:
+    SessionManager *m_sessionManager;
     Authenticator *m_authenticator;
     QThread *m_authenticatorThread;
-
     bool m_authRequested;
 
-    QDBusInterface *m_interface;
+
     bool m_canLock;
     bool m_canStartNewSession;
     bool m_canLogOut;

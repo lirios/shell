@@ -57,7 +57,6 @@ import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.session 1.0 as Session
 import "components" as CustomComponents
 import "."
 
@@ -159,7 +158,7 @@ Components.Showable {
                     focus: true
                     echoMode: TextInput.Password
                     onAccepted: {
-                        Session.SessionInterface.unlockSession(text, function(succeded) {
+                        SessionInterface.unlockSession(text, function(succeded) {
                             if (!succeded) {
                                 text = "";
                                 errorLabel.text = qsTr("Sorry, wrong password. Please try again.");

@@ -54,7 +54,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
-import org.hawaii.session 1.0 as Session
 
 Rectangle {
     gradient: Gradient {
@@ -88,7 +87,7 @@ Rectangle {
 
         Button {
             text: qsTr("Quit")
-            onClicked: Session.SessionInterface.logOut()
+            onClicked: SessionInterface.logOut()
 
             Layout.alignment: Qt.AlignHCenter
         }

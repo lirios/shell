@@ -51,17 +51,9 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QThread>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusPendingCall>
-
 #include "authenticator.h"
 #include "sessioninterface.h"
-
-const QDBusConnection bus = QDBusConnection::sessionBus();
-
-class SessionInterfaceSingleton : public SessionInterface {};
-Q_GLOBAL_STATIC(SessionInterfaceSingleton, s_sessionInterface)
+#include "sessionmanager.h"
 
 /*
  * CustomAuthenticator
@@ -112,46 +104,24 @@ private Q_SLOTS:
  * SessionInterface
  */
 
-SessionInterface::SessionInterface(QObject *parent)
+SessionInterface::SessionInterface(SessionManager *sm, QObject *parent)
     : QObject(parent)
+    , m_sessionManager(sm)
     , m_authenticator(new Authenticator)
     , m_authenticatorThread(new QThread(this))
     , m_authRequested(false)
-    , m_interface(new QDBusInterface("org.hawaii.session", "/HawaiiSession", "org.hawaii.session", bus))
-    , m_canLock(true)
-    , m_canStartNewSession(false)
-    , m_canLogOut(false)
-    , m_canPowerOff(false)
-    , m_canRestart(false)
-    , m_canSuspend(false)
-    , m_canHibernate(false)
-    , m_canHybridSleep(false)
 {
     // Authenticate in a separate thread
     m_authenticator->moveToThread(m_authenticatorThread);
     m_authenticatorThread->start();
 
-    m_canLock = m_interface->call("canLock").arguments().at(0).toBool();
-    m_canStartNewSession = m_interface->call("canStartNewSession").arguments().at(0).toBool();
-    m_canLogOut = m_interface->call("canLogOut").arguments().at(0).toBool();
-    m_canPowerOff = m_interface->call("canPowerOff").arguments().at(0).toBool();
-    m_canRestart = m_interface->call("canRestart").arguments().at(0).toBool();
-    m_canSuspend = m_interface->call("canSuspend").arguments().at(0).toBool();
-    m_canHibernate = m_interface->call("canHibernate").arguments().at(0).toBool();
-    m_canHybridSleep = m_interface->call("canHybridSleep").arguments().at(0).toBool();
-
-    QDBusConnection::sessionBus().connect(
-                "org.hawaii.session", "/HawaiiSession",
-                "org.hawaii.session", "idleChanged",
-                this, SIGNAL(idleChanged()));
-    QDBusConnection::sessionBus().connect(
-                "org.hawaii.session", "/HawaiiSession",
-                "org.hawaii.session", "sessionLocked",
-                this, SIGNAL(sessionLocked()));
-    QDBusConnection::sessionBus().connect(
-                "org.hawaii.session", "/HawaiiSession",
-                "org.hawaii.session", "sessionUnlocked",
-                this, SIGNAL(sessionUnlocked()));
+    // Relay signals
+    connect(m_sessionManager, &SessionManager::lockedChanged, this, [this](bool locked) {
+        if (locked)
+            Q_EMIT sessionLocked();
+        else
+            Q_EMIT sessionUnlocked();
+    });
 }
 
 SessionInterface::~SessionInterface()
@@ -159,57 +129,51 @@ SessionInterface::~SessionInterface()
     m_authenticatorThread->quit();
     m_authenticatorThread->wait();
     m_authenticator->deleteLater();
-    delete m_interface;
-}
-
-SessionInterface *SessionInterface::instance()
-{
-    return s_sessionInterface();
 }
 
 bool SessionInterface::canLock() const
 {
-    return m_canLock;
+    return m_sessionManager->canLock();
 }
 
 bool SessionInterface::canStartNewSession() const
 {
-    return m_canStartNewSession;
+    return m_sessionManager->canStartNewSession();
 }
 
 bool SessionInterface::canLogOut() const
 {
-    return m_canLogOut;
+    return m_sessionManager->canLogOut();
 }
 
 bool SessionInterface::canPowerOff() const
 {
-    return m_canPowerOff;
+    return m_sessionManager->canPowerOff();
 }
 
 bool SessionInterface::canRestart() const
 {
-    return m_canRestart;
+    return m_sessionManager->canRestart();
 }
 
 bool SessionInterface::canSuspend() const
 {
-    return m_canSuspend;
+    return m_sessionManager->canSuspend();
 }
 
 bool SessionInterface::canHibernate() const
 {
-    return m_canHibernate;
+    return m_sessionManager->canHibernate();
 }
 
 bool SessionInterface::canHybridSleep() const
 {
-    return m_canHybridSleep;
+    return m_sessionManager->canHybridSleep();
 }
 
 void SessionInterface::lockSession()
 {
-    m_interface->asyncCall("lockSession");
+    m_sessionManager->lockSession();
 }
 
 void SessionInterface::unlockSession(const QString &password, const QJSValue &callback)
@@ -224,12 +188,12 @@ void SessionInterface::unlockSession(const QString &password, const QJSValue &ca
 
 void SessionInterface::startNewSession()
 {
-    m_interface->asyncCall("startNewSession");
+    m_sessionManager->startNewSession();
 }
 
 void SessionInterface::activateSession(int index)
 {
-    m_interface->asyncCall("activateSession", index);
+    m_sessionManager->activateSession(index);
 }
 
 void SessionInterface::requestLogOut()
@@ -281,32 +245,32 @@ void SessionInterface::cancelShutdownRequest()
 
 void SessionInterface::logOut()
 {
-    m_interface->asyncCall("logOut");
+    m_sessionManager->logOut();
 }
 
 void SessionInterface::powerOff()
 {
-    m_interface->asyncCall("powerOff");
+    m_sessionManager->powerOff();
 }
 
 void SessionInterface::restart()
 {
-    m_interface->asyncCall("restart");
+    m_sessionManager->restart();
 }
 
 void SessionInterface::suspend()
 {
-    m_interface->asyncCall("suspend");
+    m_sessionManager->suspend();
 }
 
 void SessionInterface::hibernate()
 {
-    m_interface->asyncCall("hibernate");
+    m_sessionManager->hibernate();
 }
 
 void SessionInterface::hybridSleep()
 {
-    m_interface->asyncCall("hybridSleep");
+    m_sessionManager->hybridSleep();
 }
 
 #include "moc_sessioninterface.cpp"
