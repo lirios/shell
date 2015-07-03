@@ -62,8 +62,6 @@
 
 #include "processlauncher.h"
 
-#include <wayland-client.h>
-
 Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.launcher")
 
 using namespace GreenIsland;
@@ -71,7 +69,6 @@ using namespace GreenIsland;
 ProcessLauncher::ProcessLauncher(QObject *parent)
     : QObject(parent)
 {
-    m_fd = wl_display_get_fd(Compositor::instance()->waylandDisplay());
 }
 
 ProcessLauncher::~ProcessLauncher()
@@ -146,8 +143,11 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
 
     qCDebug(LAUNCHER) << "Launching" << entry->expandExecString().join(" ") << "from" << entry->fileName();
 
+    const QString waylandDisplay = Compositor::instance()->socketName();
+
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert(QStringLiteral("WAYLAND_DISPLAY"), QString::number(m_fd));
+    if (!waylandDisplay.isEmpty())
+        env.insert(QStringLiteral("WAYLAND_DISPLAY"), waylandDisplay);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
     env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));

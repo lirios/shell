@@ -84,7 +84,6 @@ public Q_SLOTS:
     bool closeDesktopFile(const QString &fileName);
 
 private:
-    int m_fd;
     ApplicationMap m_apps;
 
     bool launchEntry(XdgDesktopFile *entry);
