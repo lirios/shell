@@ -126,7 +126,10 @@ bool LauncherItem::launch()
         return true;
 
     const QDBusConnection bus = QDBusConnection::sessionBus();
-    QDBusInterface interface("org.hawaii.session", "/HawaiiSession", "org.hawaii.launcher", bus);
+    QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
+                             QStringLiteral("/ProcessLauncher"),
+                             QStringLiteral("org.hawaiios.ProcessLauncher"),
+                             bus);
     QDBusMessage msg = interface.call("launchDesktopFile", m_info->fileName());
     bool ran = msg.arguments().at(0).toBool();
 

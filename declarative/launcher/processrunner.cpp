@@ -43,7 +43,10 @@ bool ProcessRunner::launchApplication(const QString &name)
         return false;
 
     const QDBusConnection bus = QDBusConnection::sessionBus();
-    QDBusInterface interface("org.hawaii.session", "/HawaiiSession", "org.hawaii.launcher", bus);
+    QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
+                             QStringLiteral("/ProcessLauncher"),
+                             QStringLiteral("org.hawaiios.ProcessLauncher"),
+                             bus);
     QDBusMessage msg = interface.call("launchDesktopFile", fileName);
     return msg.arguments().at(0).toBool();
 }
