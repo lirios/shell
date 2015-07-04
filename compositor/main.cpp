@@ -110,6 +110,7 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     // Restart with D-Bus session if necessary
+    /*
     if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
         qDebug() << "No D-Bus session bus available, respawning with dbus-launch...";
 
@@ -146,6 +147,7 @@ int main(int argc, char *argv[])
 
         ::exit(EXIT_SUCCESS);
     }
+*/
 
     // Arguments
     bool nested = parser.isSet(nestedOption);
