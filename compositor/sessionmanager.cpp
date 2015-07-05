@@ -251,6 +251,7 @@ void SessionManager::setupEnvironment()
     // Set paths only if we are installed onto a non standard location
     QString path;
 
+#if 0
     if (qEnvironmentVariableIsSet("PATH")) {
         path = QStringLiteral("%1:%2").arg(INSTALL_BINDIR).arg(QString(qgetenv("PATH")));
         qputenv("PATH", path.toUtf8());
@@ -280,6 +281,7 @@ void SessionManager::setupEnvironment()
        path = QStringLiteral("%1:%2").arg(INSTALL_DATADIR "/icons").arg(QString(qgetenv("XCURSOR_PATH")));
         qputenv("XCURSOR_PATH", path.toUtf8());
     }
+#endif
 
     // Set XDG environment variables
     if (qEnvironmentVariableIsEmpty("XDG_DATA_HOME")) {
