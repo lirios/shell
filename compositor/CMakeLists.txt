@@ -52,4 +52,3 @@ include(GetGitRevision)
 create_git_head_revision_file(gitsha1.h hawaii)
 
 install(TARGETS hawaii DESTINATION ${BIN_INSTALL_DIR})
-install(FILES data/eglfs_kms.json DESTINATION ${DATA_INSTALL_DIR}/hawaii/compositor/eglfs)
