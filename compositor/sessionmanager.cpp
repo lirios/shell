@@ -283,16 +283,6 @@ void SessionManager::setupEnvironment()
     }
 #endif
 
-    // Set XDG environment variables
-    if (qEnvironmentVariableIsEmpty("XDG_DATA_HOME")) {
-        QString path = QStringLiteral("%1/.local/share").arg(QString(qgetenv("HOME")));
-        qputenv("XDG_DATA_HOME", path.toUtf8());
-    }
-    if (qEnvironmentVariableIsEmpty("XDG_CONFIG_HOME")) {
-        QString path = QStringLiteral("%1/.config").arg(QString(qgetenv("HOME")));
-        qputenv("XDG_CONFIG_HOME", path.toUtf8());
-    }
-
     // Environment
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
     qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
