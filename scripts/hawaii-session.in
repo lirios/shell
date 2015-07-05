@@ -25,13 +25,5 @@
 # $END_LICENSE$
 #
 
-# This is a compatibility script for older versions,
-# drop when we know nobody is using it anymore
-echo
-echo "This script executes hawaii-session and it is still"
-echo "available for compatibility, please use hawaii-session"
-echo "instead.  This script will be removed in the future."
-echo
-
 # Start the actual session
-exec @CMAKE_INSTALL_FULL_BINDIR@/hawaii-session $@
+exec dbus-launch --exit-with-session @CMAKE_INSTALL_FULL_BINDIR@/greenisland-launcher --execute "@CMAKE_INSTALL_FULL_BINDIR@/hawaii" $@

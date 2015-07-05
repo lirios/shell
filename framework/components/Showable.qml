@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 
-Item {
+FocusScope {
     property var showAnimation
     property var hideAnimation
 
