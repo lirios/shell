@@ -26,4 +26,9 @@
 #
 
 # Start the actual session
-exec dbus-launch --exit-with-session @CMAKE_INSTALL_FULL_BINDIR@/greenisland-launcher --execute "@CMAKE_INSTALL_FULL_BINDIR@/hawaii" $@
+cmd="@CMAKE_INSTALL_FULL_BINDIR@/greenisland-launcher --execute @CMAKE_INSTALL_FULL_BINDIR@/hawaii $@"
+if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+    exec dbus-launch --exit-with-session $cmd
+else
+    exec $cmd
+fi
