@@ -283,6 +283,12 @@ void SessionManager::setupEnvironment()
     }
 #endif
 
+    // Set defaults
+    if (qEnvironmentVariableIsEmpty("XDG_DATA_DIRS"))
+        qputenv("XDG_DATA_DIRS", QByteArrayLiteral("/usr/local/share/:/usr/share/"));
+    if (qEnvironmentVariableIsEmpty("XDG_CONFIG_DIRS"))
+        qputenv("XDG_CONFIG_DIRS", QByteArrayLiteral("/etc/xdg"));
+
     // Environment
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
     qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
