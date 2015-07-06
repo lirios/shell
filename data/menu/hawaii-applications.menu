@@ -13,48 +13,35 @@
 	<DefaultMergeDirs/>
 	<MergeFile>applications-kmenuedit.menu</MergeFile>
 
-	<!-- Layout -->
-	<DefaultLayout>
-		<Merge type="menus"/>
-		<Merge type="files"/>
-		<Separator/>
-		<Menuname>More</Menuname>
-	</DefaultLayout>
-	<Layout>
-		<Merge type="menus"/>
-		<Menuname>Work</Menuname>
-		<Menuname>Internet</Menuname>
-		<Menuname>Entertainment</Menuname>
-		<Menuname>System</Menuname>
-	</Layout>
-
 	<!-- Menus -->
 	<Menu>
 		<Name>Work</Name>
 		<Directory>hawaii-work.directory</Directory>
 		<Include>
-			<Category>Development</Category>
-			<Category>WebDevelopment</Category>
-			<Category>Translation</Category>
-			<Category>X-KDE-KDevelopIDE</Category>
-			<Category>Astronomy</Category>
-			<Category>Biology</Category>
-			<Category>Chemistry</Category>
-			<Category>Geology</Category>
-			<Category>MedicalSoftware</Category>
-			<Category>Physics</Category>
-			<Category>Math</Category>
-			<Category>Science</Category>
-			<Category>Teaching</Category>
-			<Category>Education</Category>
-			<Category>Languages</Category>
-			<Category>X-KDE-Edu-Language</Category>
-			<Category>X-KDE-Edu-Teaching</Category>
-			<Category>Graphics</Category>
-			<Category>Audio</Category>
-			<Category>Video</Category>
-			<Category>AudioVideo</Category>
-			<Category>Office</Category>
+			<And>
+				<Category>Development</Category>
+				<Category>WebDevelopment</Category>
+				<Category>Translation</Category>
+				<Category>X-KDE-KDevelopIDE</Category>
+				<Category>Astronomy</Category>
+				<Category>Biology</Category>
+				<Category>Chemistry</Category>
+				<Category>Geology</Category>
+				<Category>MedicalSoftware</Category>
+				<Category>Physics</Category>
+				<Category>Math</Category>
+				<Category>Science</Category>
+				<Category>Teaching</Category>
+				<Category>Education</Category>
+				<Category>Languages</Category>
+				<Category>X-KDE-Edu-Language</Category>
+				<Category>X-KDE-Edu-Teaching</Category>
+				<Category>Graphics</Category>
+				<Category>Audio</Category>
+				<Category>Video</Category>
+				<Category>AudioVideo</Category>
+				<Category>Office</Category>
+			</And>
 		</Include>
 	</Menu>
 	<Menu>
@@ -71,31 +58,35 @@
 		<Name>Entertainment</Name>
 		<Directory>hawaii-entertainment.directory</Directory>
 		<Include>
-			<Category>Game</Category>
-			<Category>ArcadeGame</Category>
-			<Category>BoardGame</Category>
-			<Category>CardGame</Category>
-			<Category>X-KDE-KidsGame</Category>
-			<Category>KidsGame</Category>
-			<Category>StrategyGame</Category>
-			<Category>LogicGame</Category>
-			<Category>Amusement</Category>
+			<And>
+				<Category>Game</Category>
+				<Category>ArcadeGame</Category>
+				<Category>BoardGame</Category>
+				<Category>CardGame</Category>
+				<Category>X-KDE-KidsGame</Category>
+				<Category>KidsGame</Category>
+				<Category>StrategyGame</Category>
+				<Category>LogicGame</Category>
+				<Category>Amusement</Category>
+			</And>
 		</Include>
 	</Menu>
 	<Menu>
 		<Name>System</Name>
 		<Directory>hawaii-system.directory</Directory>
 		<Include>
-			<Category>System</Category>
-			<Category>Utility</Category>
-			<Category>TextEditor</Category>
-			<Category>Accessibility</Category>
-			<Category>X-KDE-Utilities-Desktop</Category>
-			<Category>X-KDE-Utilities-File</Category>
-			<Category>X-KDE-Utilities-Peripherals</Category>
-			<Category>X-KDE-Utilities-PIM</Category>
-			<Category>KDE</Category>
-			<Category>Core</Category>
+			<And>
+				<Category>System</Category>
+				<Category>Utility</Category>
+				<Category>TextEditor</Category>
+				<Category>Accessibility</Category>
+				<Category>X-KDE-Utilities-Desktop</Category>
+				<Category>X-KDE-Utilities-File</Category>
+				<Category>X-KDE-Utilities-Peripherals</Category>
+				<Category>X-KDE-Utilities-PIM</Category>
+				<Category>KDE</Category>
+				<Category>Core</Category>
+			</And>
 		</Include>
 		<Exclude>
 			<Filename>kfind.desktop</Filename>
@@ -107,4 +98,14 @@
 		<Filename>kfind.desktop</Filename>
 		<Filename>knetattach.desktop</Filename>
 	</Exclude>
+
+	<!-- Layout -->
+	<Layout>
+		<Merge type="files"/>
+		<Merge type="menus"/>
+		<Menuname>Work</Menuname>
+		<Menuname>Internet</Menuname>
+		<Menuname>Entertainment</Menuname>
+		<Menuname>System</Menuname>
+	</Layout>
 </Menu>
