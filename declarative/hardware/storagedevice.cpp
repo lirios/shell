@@ -33,10 +33,13 @@ Q_LOGGING_CATEGORY(DEVICE, "hawaii.qml.hardware.storagedevice")
 StorageDevice::StorageDevice(const QString &udi, QObject *parent)
     : QObject(parent)
     , m_device(Solid::Device(udi))
+    , m_ignored(false)
 {
     qCDebug(DEVICE) << "Added storage device" << udi;
 
     Solid::StorageAccess *access = m_device.as<Solid::StorageAccess>();
+    m_ignored = access->isIgnored();
+
     connect(access, &Solid::StorageAccess::setupDone,
             [this](Solid::ErrorType error, const QVariant &errorData, const QString &udi) {
         Q_UNUSED(error);
@@ -77,6 +80,11 @@ bool StorageDevice::isMounted() const
 {
     const Solid::StorageAccess *access = m_device.as<Solid::StorageAccess>();
     return access->isAccessible();
+}
+
+bool StorageDevice::isIgnored() const
+{
+    return m_ignored;
 }
 
 void StorageDevice::mount()

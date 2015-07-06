@@ -41,6 +41,7 @@ class StorageDevice : public QObject
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString iconName READ iconName CONSTANT)
     Q_PROPERTY(bool mounted READ isMounted NOTIFY mountedChanged)
+    Q_PROPERTY(bool ignored READ isIgnored CONSTANT)
 public:
     StorageDevice(const QString &udi, QObject *parent = 0);
     ~StorageDevice();
@@ -53,11 +54,14 @@ public:
     Q_INVOKABLE void mount();
     Q_INVOKABLE void unmount();
 
+    bool isIgnored() const;
+
 Q_SIGNALS:
     void mountedChanged();
 
 private:
     Solid::Device m_device;
+    bool m_ignored;
 };
 
 #endif // STORAGEDEVICE_H
