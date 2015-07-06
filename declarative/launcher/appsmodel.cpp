@@ -171,12 +171,16 @@ void AppsModel::refresh()
     m_list.clear();
 
     XdgMenu xdgMenu;
-    //xdgMenu.setLogDir("/tmp/");
-    xdgMenu.setEnvironments(QStringLiteral("X-Hawaii"));
-    const QString &menuFileName = XdgMenu::getMenuFileName();
+    xdgMenu.setLogDir("/tmp/");
+    xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii") << QStringLiteral("X-Hawaii"));
+    const QString menuFileName = XdgMenu::getMenuFileName();
     qCDebug(APPSMODEL) << "Menu file name:" << menuFileName;
-    if (!xdgMenu.read(menuFileName))
+    if (!xdgMenu.read(menuFileName)) {
+        qCWarning(APPSMODEL,
+                  "Failed to read menu \"%s\": %s", qPrintable(menuFileName),
+                  qPrintable(xdgMenu.errorString()));
         return;
+    }
 
     QDomElement xml = xdgMenu.xml().documentElement();
 

@@ -142,9 +142,14 @@ void CategoriesModel::refresh()
     }
 
     XdgMenu xdgMenu;
-    xdgMenu.setEnvironments(QStringLiteral("X-Hawaii"));
-    if (!xdgMenu.read(XdgMenu::getMenuFileName()))
+    xdgMenu.setLogDir("/tmp/");
+    xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii") << QStringLiteral("X-Hawaii"));
+    const QString menuFileName = XdgMenu::getMenuFileName();
+    if (!xdgMenu.read(menuFileName)) {
+        qWarning("Failed to read menu \"%s\": %s", qPrintable(menuFileName),
+                 qPrintable(xdgMenu.errorString()));
         return;
+    }
 
     QDomElement xml = xdgMenu.xml().documentElement();
 
