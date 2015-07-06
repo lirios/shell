@@ -39,6 +39,7 @@ StorageDevice::StorageDevice(const QString &udi, QObject *parent)
 
     Solid::StorageAccess *access = m_device.as<Solid::StorageAccess>();
     m_ignored = access->isIgnored();
+    m_filePath = access->filePath();
 
     connect(access, &Solid::StorageAccess::setupDone,
             [this](Solid::ErrorType error, const QVariant &errorData, const QString &udi) {
@@ -74,6 +75,11 @@ QString StorageDevice::name() const
 QString StorageDevice::iconName() const
 {
     return m_device.icon();
+}
+
+QString StorageDevice::filePath() const
+{
+    return m_filePath;
 }
 
 bool StorageDevice::isMounted() const

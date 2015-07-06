@@ -40,6 +40,7 @@ class StorageDevice : public QObject
     Q_PROPERTY(QString udi READ udi CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString iconName READ iconName CONSTANT)
+    Q_PROPERTY(QString filePath READ filePath CONSTANT)
     Q_PROPERTY(bool mounted READ isMounted NOTIFY mountedChanged)
     Q_PROPERTY(bool ignored READ isIgnored CONSTANT)
 public:
@@ -49,6 +50,7 @@ public:
     QString udi() const;
     QString name() const;
     QString iconName() const;
+    QString filePath() const;
 
     bool isMounted() const;
     Q_INVOKABLE void mount();
@@ -61,6 +63,7 @@ Q_SIGNALS:
 
 private:
     Solid::Device m_device;
+    QString m_filePath;
     bool m_ignored;
 };
 
