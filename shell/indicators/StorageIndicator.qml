@@ -86,12 +86,22 @@ Indicator {
                             width: Themes.Units.iconSizes.large
                             height: width
                             color: Themes.Theme.palette.panel.textColor
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: Qt.openUrlExternally(modelData.filePath)
+                            }
                         }
 
                         Text {
                             renderType: Text.NativeRendering
                             text: modelData.name
                             color: Themes.Theme.palette.panel.textColor
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: Qt.openUrlExternally(modelData.filePath)
+                            }
                         }
 
                         Item {
