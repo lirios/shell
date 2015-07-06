@@ -153,8 +153,6 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
     env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
     env.insert(QStringLiteral("QT_QPA_PLATFORMTHEME"), QStringLiteral("Hawaii"));
     env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Aluminium"));
-    env.insert(QStringLiteral("XDG_MENU_PREFIX"), QStringLiteral("hawaii-"));
-    env.insert(QStringLiteral("XDG_CURRENT_DESKTOP"), QStringLiteral("X-Hawaii"));
     env.insert(QStringLiteral("XCURSOR_THEME"), QStringLiteral("hawaii"));
     env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
