@@ -76,6 +76,10 @@ public:
     SessionInterface(SessionManager *sm, QObject *parent = 0);
     virtual ~SessionInterface();
 
+    inline SessionManager *sessionManager() const {
+        return m_sessionManager;
+    }
+
     bool canLock() const;
     bool canStartNewSession() const;
     bool canLogOut() const;

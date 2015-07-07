@@ -94,7 +94,7 @@ private Q_SLOTS:
         m_parent->m_authRequested = false;
 
         if (m_succeded)
-            Q_EMIT m_parent->sessionUnlocked();
+            m_parent->sessionManager()->setLocked(false);
 
         deleteLater();
     }
