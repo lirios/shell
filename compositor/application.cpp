@@ -76,6 +76,7 @@ void Application::compositorLaunched()
     m_sessionManager = new SessionManager(this);
     if (!m_sessionManager->initialize())
         QCoreApplication::exit(1);
+    m_sessionManager->autostart();
 
     // Idle and wake signals
     connect(Compositor::instance(), &Compositor::idle, this, [this] {
