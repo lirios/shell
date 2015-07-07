@@ -124,7 +124,6 @@ Components.Showable {
             PropertyChanges { target: okButton; text: qsTr("Hibernate") }
         }
     ]
-    focus: true
     visible: true
     onLogOutRequested: SessionInterface.logOut()
     onPowerOffRequested: SessionInterface.powerOff()
@@ -245,6 +244,7 @@ Components.Showable {
 
         Row {
             spacing: Themes.Units.smallSpacing
+            focus: true
             visible: SessionInterface.canLogOut ||
                      SessionInterface.canPowerOff ||
                      SessionInterface.canRestart ||
