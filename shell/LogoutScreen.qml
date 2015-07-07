@@ -206,7 +206,7 @@ Components.Showable {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        Label {
+        Text {
             id: actionText
             text: {
                 var msg = "";
@@ -233,6 +233,7 @@ Components.Showable {
 
                 return qsTr(msg).arg(__priv.remainingTime);
             }
+            renderType: Text.NativeRendering
             color: Themes.Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
