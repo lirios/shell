@@ -66,7 +66,12 @@ struct LogindSessionInfo
     QDBusObjectPath sessionPath;
 };
 
+Q_DECLARE_TYPEINFO(LogindSessionInfo, Q_PRIMITIVE_TYPE);
+Q_DECLARE_METATYPE(LogindSessionInfo)
+
 typedef QList<LogindSessionInfo> LogindSessionInfoList;
+
+Q_DECLARE_METATYPE(LogindSessionInfoList)
 
 inline QDBusArgument &operator<<(QDBusArgument &argument, const LogindSessionInfo &sessionInfo)
 {
@@ -93,9 +98,6 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, LogindSess
 
     return argument;
 }
-
-Q_DECLARE_METATYPE(LogindSessionInfo)
-Q_DECLARE_METATYPE(LogindSessionInfoList)
 
 #endif // LOGINDSESSIONINFO_H
 
