@@ -1,0 +1,14 @@
+[main]
+host = https://www.transifex.com
+
+[hawaii.shell-wayland-sessions-hawaii]
+type = DESKTOP
+source_lang = en
+source_file = data/wayland-sessions/hawaii.desktop.in
+file_filter = translations/data/wayland-sessions/hawaii_<lang>.desktop
+
+[hawaii.shell-qml]
+type = TS
+source_lang = en
+source_file = translations/shell/shell.ts
+file_filter = translations/shell/shell_<lang>.ts
