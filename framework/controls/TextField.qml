@@ -44,6 +44,7 @@ QtControls.TextField {
      */
     property bool clearButtonShown: false
 
+/*
     Components.Icon {
         id: clearButton
         anchors {
@@ -73,4 +74,5 @@ QtControls.TextField {
             }
         }
     }
+*/
 }
