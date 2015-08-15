@@ -124,6 +124,9 @@ void HintsSettings::collectHints()
     m_hints.insert(QPlatformTheme::SpellCheckUnderlineStyle,
                    int(QTextCharFormat::SpellCheckUnderline));
     m_hints.insert(QPlatformTheme::TabAllWidgets, true);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    m_hints.insert(QPlatformTheme::TabFocusBehavior, int(Qt::TabFocusAllControls));
+#endif
     QList<int> pixmapSizes;
     pixmapSizes
             << 512 << 256 << 128 << 64 << 48
