@@ -136,6 +136,7 @@ Components.Showable {
                 (categories.visible ? Themes.Units.smallSpacing : Themes.Units.largeSpacing) +
                 Themes.Units.smallSpacing
         opacity: 0.0
+        onOpacityChanged: if (opacity == 1.0) searchText.forceActiveFocus()
 
         Controls.PopupBehavior {
             anchors.fill: parent
@@ -209,6 +210,7 @@ Components.Showable {
             CustomComponents.TextField {
                 id: searchText
                 placeholderText: qsTr("Type an application name...")
+                focus: true
                 onTextChanged: grid.query = text
 
                 Layout.fillWidth: true
