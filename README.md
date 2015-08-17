@@ -1,6 +1,7 @@
 Hawaii Shell
 ============
 
+[![IRC Network](https://img.shields.io/badge/irc-freenode-blue.svg "IRC Freenode")](https://webchat.freenode.net/?channels=hawaii-desktop)
 [![GitHub release](https://img.shields.io/github/release/hawaii-desktop/hawaii-shell.svg)](https://github.com/hawaii-desktop/hawaii-shell)
 [![GitHub issues](https://img.shields.io/github/issues/hawaii-desktop/hawaii-shell.svg)](https://github.com/hawaii-desktop/hawaii-shell/issues)
 
