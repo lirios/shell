@@ -71,7 +71,7 @@ Item {
     SlidingPanel {
         id: topDrawer
         edge: Qt.TopEdge
-        height: Themes.Units.gu(15)
+        height: Themes.Units.gu(25)
         z: 1
 
         Loader {

@@ -59,7 +59,7 @@ import Hawaii.Themes 1.0 as Themes
 Item {
     property alias selectedDate: calendar.selectedDate
 
-    height: Themes.Units.gu(10)
+    height: Themes.Units.gu(20)
 
     Component {
         id: hourDelegate
