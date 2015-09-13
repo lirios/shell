@@ -2,6 +2,11 @@ project(Hawaii)
 
 cmake_minimum_required(VERSION 2.8.12)
 
+# Silence CMake warnings
+if(POLICY CMP0063)
+    cmake_policy(SET CMP0063 NEW)
+endif()
+
 # Set version
 set(PROJECT_VERSION "0.5.91")
 set(PROJECT_VERSION_MAJOR 0)
