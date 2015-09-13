@@ -25,7 +25,7 @@ target_link_libraries(launcherplugin
                       Qt5::Quick
                       GreenIsland::GreenIsland
                       Hawaii::Hawaii)
-target_link_libraries(launcherplugin ${QTXDG_LIBRARIES})
+target_link_libraries(launcherplugin Qt5Xdg)
 
 install(FILES qmldir plugins.qmltypes
     DESTINATION ${QML_INSTALL_DIR}/org/hawaii/launcher)
