@@ -61,8 +61,9 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QToolButton>
 
+#include <Hawaii/QGSettings>
+
 #include "hintssettings.h"
-#include "qgsettings.h"
 
 HintsSettings::HintsSettings(Hawaii::QGSettings *settings, QObject *parent)
     : QObject(parent)

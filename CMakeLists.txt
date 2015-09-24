@@ -110,6 +110,9 @@ endif()
 # Find Green Island
 find_package(GreenIsland 0.5.94 REQUIRED)
 
+# Find libhawaii
+find_package(Hawaii 0.5.90 REQUIRED)
+
 # lxqt
 find_package(QT5XDG REQUIRED)
 
@@ -141,7 +144,6 @@ add_subdirectory(data)
 add_subdirectory(declarative)
 add_subdirectory(framework)
 add_subdirectory(headers)
-add_subdirectory(libhawaii)
 add_subdirectory(platformtheme)
 add_subdirectory(scripts)
 add_subdirectory(styles)

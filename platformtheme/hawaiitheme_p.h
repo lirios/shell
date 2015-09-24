@@ -56,9 +56,10 @@
 
 #include <qpa/qplatformtheme_p.h>
 
+#include <Hawaii/QGSettings>
+
 #include "hawaiitheme.h"
 #include "resourcehelper.h"
-#include "qgsettings.h"
 
 class HintsSettings;
 
