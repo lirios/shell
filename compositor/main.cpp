@@ -30,8 +30,8 @@
 #include <QtWidgets/QApplication>
 #include <QtCompositor/QWaylandOutput>
 
-#include <GreenIsland/Compositor>
-#include <greenisland/greenisland_version.h>
+#include <GreenIsland/Server/Compositor>
+#include <greenisland_version.h>
 
 #include "sigwatch/sigwatch.h"
 

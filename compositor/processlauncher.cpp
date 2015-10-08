@@ -29,7 +29,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include <GreenIsland/Compositor>
+#include <GreenIsland/Server/Compositor>
 
 #include <qt5xdg/xdgdesktopfile.h>
 

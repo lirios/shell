@@ -29,7 +29,7 @@
 
 #include <QtCore/QObject>
 
-#include <GreenIsland/HomeApplication>
+#include <GreenIsland/Server/HomeApplication>
 
 class SessionManager;
 

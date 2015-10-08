@@ -29,7 +29,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
 
-#include <GreenIsland/ApplicationManager>
+#include <GreenIsland/Server/ApplicationManager>
 
 #include "applicationaction.h"
 #include "applicationinfo.h"

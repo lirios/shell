@@ -28,7 +28,7 @@
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>
 
-#include <GreenIsland/Compositor>
+#include <GreenIsland/Server/Compositor>
 
 #include "application.h"
 #include "session/sessioninterface.h"

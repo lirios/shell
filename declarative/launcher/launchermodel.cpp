@@ -27,7 +27,7 @@
 #include <QtGui/QIcon>
 #include <QDebug>
 
-#include <GreenIsland/ApplicationManager>
+#include <GreenIsland/Server/ApplicationManager>
 #include <Hawaii/QGSettings>
 
 #include "applicationinfo.h"

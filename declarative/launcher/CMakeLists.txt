@@ -23,7 +23,7 @@ target_link_libraries(launcherplugin
                       Qt5::Xml
                       Qt5::Qml
                       Qt5::Quick
-                      GreenIsland::GreenIsland
+		      GreenIsland::Server
                       Hawaii::Hawaii)
 target_link_libraries(launcherplugin Qt5Xdg)
 
