@@ -1,4 +1,6 @@
 add_subdirectory(menu)
 add_subdirectory(settings)
-add_subdirectory(systemd)
+if(ENABLE_SYSTEMD)
+    add_subdirectory(systemd)
+endif()
 add_subdirectory(wayland-sessions)
