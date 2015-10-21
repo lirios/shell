@@ -136,9 +136,6 @@ set_package_properties(Wayland PROPERTIES
 add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for protocols")
 add_feature_info("Wayland-Cursor" Wayland_Cursor_FOUND "Required for changing cursors")
 
-# Wayland and QtWayland scanner
-find_package(QtWaylandScanner REQUIRED)
-
 # Subdirectories
 add_subdirectory(3rdparty)
 add_subdirectory(compositor)
