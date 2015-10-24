@@ -52,7 +52,7 @@
 #define SMALLEST_FONT_POINT_SIZE 8
 #define SMALLEST_FONT_WEIGHT QFont::Normal
 
-#define MONOSPACE_FONT_FAMILY QStringLiteral("Droind Sans Mono")
+#define MONOSPACE_FONT_FAMILY QStringLiteral("Droid Sans Mono")
 #define MONOSPACE_FONT_POINT_SIZE 10
 #define MONOSPACE_FONT_WEIGHT QFont::Normal
 
