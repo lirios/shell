@@ -82,7 +82,7 @@
       </description>
     </key>
     <key name="font-name" type="s">
-      <default>'Droid Sans'</default>
+      <default>'Noto Sans'</default>
       <summary>Font Family</summary>
       <description>
         Font family for applications.
@@ -96,7 +96,7 @@
       </description>
     </key>
     <key name="small-font-name" type="s">
-      <default>'Droid Sans'</default>
+      <default>'Noto Sans'</default>
       <summary>Small Font Family</summary>
       <description>
         Small font family for applications.
@@ -110,7 +110,7 @@
       </description>
     </key>
     <key name="mini-font-name" type="s">
-      <default>'Droid Sans'</default>
+      <default>'Noto Sans'</default>
       <summary>Mini Font Family</summary>
       <description>
         Mini font family for applications.
