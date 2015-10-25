@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQml.Models 2.1
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.launcher 0.1 as CppLauncher
+import org.hawaiios.launcher 0.1 as CppLauncher
 
 GridView {
     readonly property int iconSize: Themes.Units.iconSizes.large

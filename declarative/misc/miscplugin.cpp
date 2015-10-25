@@ -47,8 +47,8 @@ static QObject *formatsProvider(QQmlEngine *, QJSEngine *)
 
 void MiscPlugin::registerTypes(const char *uri)
 {
-    // @uri org.hawaii.misc
-    Q_ASSERT(uri == QLatin1String("org.hawaii.misc"));
+    // @uri org.hawaiios.misc
+    Q_ASSERT(uri == QLatin1String("org.hawaiios.misc"));
 
     qmlRegisterSingletonType<Formats>(uri, 0, 1, "Format", formatsProvider);
     qRegisterMetaType<QLocale::FormatType>();

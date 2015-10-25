@@ -36,8 +36,8 @@ class NotificationsPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        // @uri org.hawaii.notifications
-        Q_ASSERT(uri == QStringLiteral("org.hawaii.notifications"));
+        // @uri org.hawaiios.notifications
+        Q_ASSERT(uri == QStringLiteral("org.hawaiios.notifications"));
 
         qmlRegisterSingletonType<Notifications>(uri, 0, 1, "NotificationsService", [](QQmlEngine *engine, QJSEngine *) {
             Notifications *notifications = new Notifications();

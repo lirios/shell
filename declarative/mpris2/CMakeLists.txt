@@ -21,6 +21,6 @@ target_link_libraries(mpris2plugin
                       Qt5::Qml)
 
 install(FILES qmldir plugins.qmltypes
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/mpris2)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/mpris2)
 install(TARGETS mpris2plugin
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/mpris2)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/mpris2)

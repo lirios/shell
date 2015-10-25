@@ -42,8 +42,8 @@ class NetworkManagerPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        // @uri org.hawaii.networkmanager
-        Q_ASSERT(uri == QStringLiteral("org.hawaii.networkmanager"));
+        // @uri org.hawaiios.networkmanager
+        Q_ASSERT(uri == QStringLiteral("org.hawaiios.networkmanager"));
 
         qmlRegisterType<AppletProxyModel>(uri, 0, 1, "AppletProxyModel");
         qmlRegisterType<AvailableDevices>(uri, 0, 1, "AvailableDevices");

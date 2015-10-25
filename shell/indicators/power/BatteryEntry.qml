@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.hardware 0.1
+import org.hawaiios.hardware 0.1
 
 Item {
     property var battery

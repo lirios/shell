@@ -30,8 +30,8 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.misc 0.1 as Misc
-import org.hawaii.networkmanager 0.1 as NM
+import org.hawaiios.misc 0.1 as Misc
+import org.hawaiios.networkmanager 0.1 as NM
 import "../../components" as CustomComponents
 
 Item {

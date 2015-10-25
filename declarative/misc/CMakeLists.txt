@@ -13,6 +13,6 @@ target_link_libraries(miscplugin
                       Qt5::Quick)
 
 install(FILES qmldir
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/misc)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/misc)
 install(TARGETS miscplugin
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/misc)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/misc)

@@ -45,6 +45,6 @@ if(PulseAudio_FOUND)
 endif()
 
 install(FILES qmldir
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/mixer)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/mixer)
 install(TARGETS mixerplugin
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/mixer)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/mixer)

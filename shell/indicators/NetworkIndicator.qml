@@ -30,7 +30,7 @@ import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.networkmanager 0.1 as NM
+import org.hawaiios.networkmanager 0.1 as NM
 import ".."
 import "network" as NetworkIndicator
 

@@ -69,6 +69,6 @@ if(WITH_MODEMMANAGER_SUPPORT)
 endif()
 
 install(FILES qmldir plugins.qmltypes
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/networkmanager)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/networkmanager)
 install(TARGETS nmplugin
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/networkmanager)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/networkmanager)

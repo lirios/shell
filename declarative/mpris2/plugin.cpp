@@ -36,8 +36,8 @@ class Mpris2Plugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        // @uri org.hawaii.mpris2
-        Q_ASSERT(uri == QStringLiteral("org.hawaii.mpris2"));
+        // @uri org.hawaiios.mpris2
+        Q_ASSERT(uri == QStringLiteral("org.hawaiios.mpris2"));
 
         qmlRegisterType<Mpris2Engine>(uri, 0, 1, "Mpris2");
         qmlRegisterUncreatableType<Mpris2Player>(uri, 0, 1, "Mpris2Player",

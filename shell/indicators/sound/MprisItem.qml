@@ -30,7 +30,7 @@ import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.mpris2 0.1
+import org.hawaiios.mpris2 0.1
 
 ColumnLayout {
     property var player

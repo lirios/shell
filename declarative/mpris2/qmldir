@@ -1,4 +1,4 @@
-module org.hawaii.mpris2
+module org.hawaiios.mpris2
 plugin mpris2plugin
 classname Mpris2Plugin
 typeinfo plugins.qmltypes

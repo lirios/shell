@@ -41,15 +41,15 @@ class LauncherPlugin : public QQmlExtensionPlugin
 public:
     void initializeEngine(QQmlEngine *engine, const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("org.hawaii.launcher"));
+        Q_ASSERT(uri == QLatin1String("org.hawaiios.launcher"));
 
         engine->addImageProvider(QStringLiteral("launcher"), new MenuImageProvider());
     }
 
     void registerTypes(const char *uri)
     {
-        // @uri org.hawaii.launcher
-        Q_ASSERT(uri == QLatin1String("org.hawaii.launcher"));
+        // @uri org.hawaiios.launcher
+        Q_ASSERT(uri == QLatin1String("org.hawaiios.launcher"));
 
         qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
         qmlRegisterType<AppsProxyModel>(uri, 0, 1, "AppsProxyModel");

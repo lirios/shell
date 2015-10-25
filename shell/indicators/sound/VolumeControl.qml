@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.mixer 0.1 as MixerService
+import org.hawaiios.mixer 0.1 as MixerService
 
 RowLayout {
     Components.Icon {

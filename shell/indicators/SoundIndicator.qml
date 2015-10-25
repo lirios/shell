@@ -29,8 +29,8 @@ import QtQuick.Layouts 1.0
 import GreenIsland 1.0 as GreenIsland
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.mixer 0.1 as MixerService
-import org.hawaii.mpris2 0.1
+import org.hawaiios.mixer 0.1 as MixerService
+import org.hawaiios.mpris2 0.1
 import ".."
 import "sound" as SoundIndicator
 

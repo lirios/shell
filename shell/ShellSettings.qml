@@ -30,7 +30,7 @@ import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.settings 0.2 as Settings
+import org.hawaiios.settings 0.2 as Settings
 
 Components.Object {
     readonly property alias keyboard: keyboardSettings

@@ -23,6 +23,6 @@ target_link_libraries(notificationsplugin
                       Qt5::Quick)
 
 install(FILES qmldir plugins.qmltypes
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/notifications)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/notifications)
 install(TARGETS notificationsplugin
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/notifications)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/notifications)

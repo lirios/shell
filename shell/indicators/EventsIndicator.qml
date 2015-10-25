@@ -30,7 +30,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.notifications 0.1
+import org.hawaiios.notifications 0.1
 import ".."
 import "events" as EventsIndicator
 

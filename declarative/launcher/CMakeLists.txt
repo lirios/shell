@@ -28,6 +28,6 @@ target_link_libraries(launcherplugin
 target_link_libraries(launcherplugin Qt5Xdg)
 
 install(FILES qmldir plugins.qmltypes
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/launcher)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/launcher)
 install(TARGETS launcherplugin
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaii/launcher)
+    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/launcher)

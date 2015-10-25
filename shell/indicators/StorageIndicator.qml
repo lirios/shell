@@ -30,7 +30,7 @@ import QtQuick.Controls 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.hardware 0.1 as Hardware
+import org.hawaiios.hardware 0.1 as Hardware
 import ".."
 
 Indicator {

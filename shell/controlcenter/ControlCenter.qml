@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
-import org.hawaii.launcher 0.1 as CppLauncher
+import org.hawaiios.launcher 0.1 as CppLauncher
 import "../components"
 
 FocusScope {

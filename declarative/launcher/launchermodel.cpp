@@ -41,8 +41,8 @@ LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     // Settings
-    m_settings = new QGSettings(QStringLiteral("org.hawaii.desktop.panel"),
-                                QStringLiteral("/org/hawaii/desktop/panel/"),
+    m_settings = new QGSettings(QStringLiteral("org.hawaiios.desktop.panel"),
+                                QStringLiteral("/org/hawaiios/desktop/panel/"),
                                 this);
 
     // Application manager instance

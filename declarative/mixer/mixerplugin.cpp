@@ -31,9 +31,9 @@
 
 void MixerPlugin::registerTypes(const char *uri)
 {
-    Q_ASSERT(uri == QStringLiteral("org.hawaii.mixer"));
+    Q_ASSERT(uri == QStringLiteral("org.hawaiios.mixer"));
 
-    // @uri org.hawaii.mixer
+    // @uri org.hawaiios.mixer
     qmlRegisterSingletonType<Mixer>(uri, 0, 1, "Mixer",
                                     MixerPlugin::mixerProvider);
 }
