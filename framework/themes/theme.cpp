@@ -61,22 +61,16 @@ Theme::Theme(QQmlEngine *engine, QObject *parent)
     , m_engine(engine)
     , m_palette(Q_NULLPTR)
 {
-    // Set default fonts
-    setDefaultFont(DEFAULT_FONT_FAMILY, DEFAULT_FONT_POINT_SIZE,
-                   DEFAULT_FONT_WEIGHT, false);
-    setSmallestFont(SMALLEST_FONT_FAMILY, SMALLEST_FONT_POINT_SIZE,
-                    SMALLEST_FONT_WEIGHT, false);
-    setMonospaceFont(MONOSPACE_FONT_FAMILY, MONOSPACE_FONT_POINT_SIZE,
-                     MONOSPACE_FONT_WEIGHT, false);
+    // Load settings for the first time
+    themePathChanged();
 
     // Receive theme name and path changes
-    connect(&m_themeSettings, &ThemeSettings::nameChanged,
-            this, &Theme::nameChanged,
-            Qt::UniqueConnection);
-    connect(&m_themeSettings, &ThemeSettings::pathChanged,
-            this, &Theme::pathChanged);
-    connect(&m_themeSettings, &ThemeSettings::pathChanged,
-            this, &Theme::themePathChanged);
+    connect(&m_themeSettings, SIGNAL(nameChanged()),
+            this, SIGNAL(nameChanged()));
+    connect(&m_themeSettings, SIGNAL(pathChanged()),
+            this, SIGNAL(pathChanged()));
+    connect(&m_themeSettings, SIGNAL(pathChanged()),
+            this, SLOT(themePathChanged()));
 }
 
 QString Theme::name() const
