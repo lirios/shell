@@ -10,7 +10,7 @@
  (at your option) any later version.
 -->
 <schemalist gettext-domain="hawaii">
-  <schema id="org.hawaii.session" path="/org/hawaii/session/">
+  <schema id="org.hawaiios.session" path="/org/hawaiios/session/">
     <key name="idle-delay" type="u">
       <default>300</default>
       <summary>Time before the session is considered idle</summary>

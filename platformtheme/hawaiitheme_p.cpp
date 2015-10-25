@@ -39,8 +39,8 @@ static int defaultSystemFontSize = 11;
 
 HawaiiThemePrivate::HawaiiThemePrivate()
 {
-    settings = new Hawaii::QGSettings(QStringLiteral("org.hawaii.desktop.interface"),
-                                      QStringLiteral("/org/hawaii/desktop/interface/"));
+    settings = new Hawaii::QGSettings(QStringLiteral("org.hawaiios.desktop.interface"),
+                                      QStringLiteral("/org/hawaiios/desktop/interface/"));
     hints = new HintsSettings(settings);
 }
 

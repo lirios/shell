@@ -10,7 +10,7 @@
  (at your option) any later version.
 -->
 <schemalist gettext-domain="hawaii">
-  <schema id="org.hawaii.desktop.panel" path="/org/hawaii/desktop/panel/">
+  <schema id="org.hawaiios.desktop.panel" path="/org/hawaiios/desktop/panel/">
     <key name="location" type="s">
       <choices>
         <choice value='top'/>

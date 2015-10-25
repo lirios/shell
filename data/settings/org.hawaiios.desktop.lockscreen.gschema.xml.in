@@ -10,7 +10,7 @@
  (at your option) any later version.
 -->
 <schemalist gettext-domain="hawaii">
-  <schema id="org.hawaii.desktop.background" path="/org/hawaii/desktop/background/">
+  <schema id="org.hawaiios.desktop.lockscreen" path="/org/hawaiios/desktop/lockscreen/">
     <key name="mode" type="s">
       <choices>
         <choice value='solid'/>

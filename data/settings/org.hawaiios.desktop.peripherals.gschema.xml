@@ -10,10 +10,10 @@
  (at your option) any later version.
 -->
 <schemalist gettext-domain="hawaii">
-  <schema id="org.hawaii.desktop.peripherals" path="/org/hawaii/desktop/peripherals/">
-    <child name="keyboard" schema="org.hawaii.desktop.peripherals.keyboard"/>
+  <schema id="org.hawaiios.desktop.peripherals" path="/org/hawaiios/desktop/peripherals/">
+    <child name="keyboard" schema="org.hawaiios.desktop.peripherals.keyboard"/>
   </schema>
-  <schema id="org.hawaii.desktop.peripherals.keyboard" path="/org/hawaii/desktop/peripherals/keyboard/">
+  <schema id="org.hawaiios.desktop.peripherals.keyboard" path="/org/hawaiios/desktop/peripherals/keyboard/">
     <key name="repeat" type="b">
       <default>true</default>
       <summary>Keyboard repeat</summary>

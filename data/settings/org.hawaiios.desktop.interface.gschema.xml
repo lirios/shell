@@ -10,7 +10,7 @@
  (at your option) any later version.
 -->
 <schemalist gettext-domain="hawaii">
-  <schema id="org.hawaii.desktop.interface" path="/org/hawaii/desktop/interface/">
+  <schema id="org.hawaiios.desktop.interface" path="/org/hawaiios/desktop/interface/">
     <key name="cursor-blink" type="b">
       <default>true</default>
       <summary>Cursor Blink</summary>

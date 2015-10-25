@@ -45,8 +45,8 @@ Components.Object {
 
     Settings.Settings {
         id: keyboardSettings
-        schema.id: "org.hawaii.desktop.peripherals.keyboard"
-        schema.path: "/org/hawaii/desktop/peripherals/keyboard/"
+        schema.id: "org.hawaiios.desktop.peripherals.keyboard"
+        schema.path: "/org/hawaiios/desktop/peripherals/keyboard/"
         onSettingsChanged: root.applyKeymapSettings()
     }
 
@@ -56,8 +56,8 @@ Components.Object {
 
     Settings.Settings {
         id: bgSettings
-        schema.id: "org.hawaii.desktop.background"
-        schema.path: "/org/hawaii/desktop/background/"
+        schema.id: "org.hawaiios.desktop.background"
+        schema.path: "/org/hawaiios/desktop/background/"
     }
 
     /*
@@ -66,8 +66,8 @@ Components.Object {
 
     Settings.Settings {
         id: lockSettings
-        schema.id: "org.hawaii.desktop.lockscreen"
-        schema.path: "/org/hawaii/desktop/lockscreen/"
+        schema.id: "org.hawaiios.desktop.lockscreen"
+        schema.path: "/org/hawaiios/desktop/lockscreen/"
     }
 
     /*
@@ -76,22 +76,22 @@ Components.Object {
 
     Settings.Settings {
         id: wmKeybindings
-        schema.id: "org.hawaii.desktop.keybindings.wm"
-        schema.path: "/org/hawaii/desktop/keybindings/wm/"
+        schema.id: "org.hawaiios.desktop.keybindings.wm"
+        schema.path: "/org/hawaiios/desktop/keybindings/wm/"
         onSettingsChanged: root.applyKeyBindings(wmKeybindings)
     }
 
     Settings.Settings {
         id: smKeybindings
-        schema.id: "org.hawaii.desktop.keybindings.sm"
-        schema.path: "/org/hawaii/desktop/keybindings/sm/"
+        schema.id: "org.hawaiios.desktop.keybindings.sm"
+        schema.path: "/org/hawaiios/desktop/keybindings/sm/"
         onSettingsChanged: root.applyKeyBindings(smKeybindings)
     }
 
     Settings.Settings {
         id: mmKeybindings
-        schema.id: "org.hawaii.desktop.keybindings.multimedia"
-        schema.path: "/org/hawaii/desktop/keybindings/multimedia/"
+        schema.id: "org.hawaiios.desktop.keybindings.multimedia"
+        schema.path: "/org/hawaiios/desktop/keybindings/multimedia/"
         onSettingsChanged: root.applyKeyBindings(mmKeybindings)
     }
 

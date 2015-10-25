@@ -10,12 +10,12 @@
  (at your option) any later version.
 -->
 <schemalist gettext-domain="hawaii">
-  <schema id="org.hawaii.desktop.keybindings" path="/org/hawaii/desktop/keybindings/">
-    <child name="window-manager" schema="org.hawaii.desktop.keybindings.wm"/>
-    <child name="session-manager" schema="org.hawaii.desktop.keybindings.sm"/>
-    <child name="multimedia" schema="org.hawaii.desktop.keybindings.multimedia"/>
+  <schema id="org.hawaiios.desktop.keybindings" path="/org/hawaiios/desktop/keybindings/">
+    <child name="window-manager" schema="org.hawaiios.desktop.keybindings.wm"/>
+    <child name="session-manager" schema="org.hawaiios.desktop.keybindings.sm"/>
+    <child name="multimedia" schema="org.hawaiios.desktop.keybindings.multimedia"/>
   </schema>
-  <schema id="org.hawaii.desktop.keybindings.wm" path="/org/hawaii/desktop/keybindings/wm/">
+  <schema id="org.hawaiios.desktop.keybindings.wm" path="/org/hawaiios/desktop/keybindings/wm/">
     <key name="switch-to-workspace-1" type="as">
       <default>['Meta+Home']</default>
       <summary>Switch to workspace 1</summary>
@@ -298,7 +298,7 @@
       <description>Set or unset window to appear always on top.</description>
     </key>
   </schema>
-  <schema id="org.hawaii.desktop.keybindings.sm" path="/org/hawaii/desktop/keybindings/sm/">
+  <schema id="org.hawaiios.desktop.keybindings.sm" path="/org/hawaiios/desktop/keybindings/sm/">
     <key name="abort-session" type="as">
       <default>['Ctrl+Alt+Backspace']</default>
       <summary>Abort session</summary>
@@ -361,7 +361,7 @@
       <summary>Activate session 12</summary>
     </key>
   </schema>
-  <schema id="org.hawaii.desktop.keybindings.multimedia" path="/org/hawaii/desktop/keybindings/multimedia/">
+  <schema id="org.hawaiios.desktop.keybindings.multimedia" path="/org/hawaiios/desktop/keybindings/multimedia/">
     <key name="volume-mute" type="as">
       <default>['Volume Mute']</default>
       <summary>Mute volume</summary>

@@ -42,7 +42,7 @@ FocusScope {
 
         function executeSetting(name) {
             root.closed();
-            launchApplication("org.hawaii.systempreferences." + name);
+            launchApplication("org.hawaiios.systempreferences." + name);
         }
     }
 

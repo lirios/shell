@@ -42,8 +42,8 @@ Item {
 
     Settings.Settings {
         id: bgSettings
-        schema.id: "org.hawaii.desktop.background"
-        schema.path: "/org/hawaii/desktop/background/"
+        schema.id: "org.hawaiios.desktop.background"
+        schema.path: "/org/hawaiios/desktop/background/"
     }
 
 
