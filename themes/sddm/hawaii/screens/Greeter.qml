@@ -114,7 +114,14 @@ FocusScope {
                         onAccepted: greeter.loginRequested(model.name, text, indicators.selectedSessionIndex)
                         onVisibleChanged: if (visible) forceActiveFocus()
 
-                        Component.onCompleted: if (visible) forceActiveFocus()
+                        // WORKAROUND: Focus works with qmlscene, however it's broken
+                        // with SDDM. To make it work we use the following hack.
+                        Timer {
+                            interval: 200
+                            running: true
+                            onTriggered: passwordField.forceActiveFocus()
+                        }
+                        // END WORKAROUND
                     }
 
                     Connections {
