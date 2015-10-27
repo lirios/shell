@@ -267,7 +267,6 @@ void SessionManager::setupEnvironment()
     qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
     qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
-    qputenv("QSG_RENDER_LOOP", QByteArrayLiteral("windows"));
     qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("hawaii-"));
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Hawaii"));
 }
