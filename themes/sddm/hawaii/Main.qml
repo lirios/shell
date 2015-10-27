@@ -37,8 +37,6 @@ Components.NoiseBackground {
         GradientStop { position: 0; color: "#272727" }
         GradientStop { position: 1; color: "#2b2b2b" }
     }
-    width: screenModel.geometry(screenModel.primary).width
-    height: screenModel.geometry(screenModel.primary).height
 
     Connections {
         target: sddm
@@ -70,6 +68,12 @@ Components.NoiseBackground {
     }
 
     Component {
+        id: emptyComponent
+
+        Item {}
+    }
+
+    Component {
         id: desktopStillComponent
 
         Screens.DesktopStill {}
@@ -87,6 +91,6 @@ Components.NoiseBackground {
     Timer {
         interval: 2000
         running: true
-        onTriggered: stackView.push({"item": greeterComponent})
+        onTriggered: stackView.push({"item": primaryScreen ? greeterComponent : emptyComponent})
     }
 }
