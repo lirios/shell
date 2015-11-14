@@ -28,7 +28,7 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QApplication>
-#include <QtCompositor/QWaylandOutput>
+#include <GreenIsland/Compositor/QWaylandOutput>
 
 #include <GreenIsland/Server/Compositor>
 #include <greenisland_version.h>
