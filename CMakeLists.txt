@@ -110,7 +110,7 @@ if(ENABLE_NETWORK_MANAGER)
 endif()
 
 # Find Green Island
-find_package(GreenIsland 0.6.90 REQUIRED)
+find_package(GreenIsland 0.7.90 REQUIRED)
 
 # Find libhawaii
 find_package(Hawaii 0.5.90 REQUIRED)
