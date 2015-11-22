@@ -7,33 +7,32 @@ include_directories(
 )
 
 set(SOURCES
-    application.cpp
     main.cpp
-    processlauncher.cpp
-    screensaver.cpp
-    sessionmanager.cpp
-    loginmanager/loginmanager.cpp
-    loginmanager/loginmanagerbackend.cpp
-    loginmanager/logindbackend.cpp
-    loginmanager/fakebackend.cpp
-    powermanager/powermanager.cpp
-    powermanager/powermanager.h
-    powermanager/powermanagerbackend.cpp
-    powermanager/powermanagerbackend.h
-    powermanager/systemdpowerbackend.cpp
-    powermanager/systemdpowerbackend.h
-    powermanager/upowerpowerbackend.cpp
-    powermanager/upowerpowerbackend.h
-    session/authenticator.cpp
-    session/sessioninterface.cpp
+#    processlauncher.cpp
+#    screensaver.cpp
+#    sessionmanager.cpp
+#    loginmanager/loginmanager.cpp
+#    loginmanager/loginmanagerbackend.cpp
+#    loginmanager/logindbackend.cpp
+#    loginmanager/fakebackend.cpp
+#    powermanager/powermanager.cpp
+#    powermanager/powermanager.h
+#    powermanager/powermanagerbackend.cpp
+#    powermanager/powermanagerbackend.h
+#    powermanager/systemdpowerbackend.cpp
+#    powermanager/systemdpowerbackend.h
+#    powermanager/upowerpowerbackend.cpp
+#    powermanager/upowerpowerbackend.h
+#    session/authenticator.cpp
+#    session/sessioninterface.cpp
 )
 
-qt5_add_dbus_adaptor(SOURCES org.hawaiios.ProcessLauncher.xml
-                     processlauncher.h ProcessLauncher
-                     processlauncheradaptor ProcessLauncherAdaptor)
-qt5_add_dbus_adaptor(SOURCES org.freedesktop.ScreenSaver.xml
-                     screensaver.h ScreenSaver
-                     screensaveradaptor ScreenSaverAdaptor)
+#qt5_add_dbus_adaptor(SOURCES org.hawaiios.ProcessLauncher.xml
+#                     processlauncher.h ProcessLauncher
+#                     processlauncheradaptor ProcessLauncherAdaptor)
+#qt5_add_dbus_adaptor(SOURCES org.freedesktop.ScreenSaver.xml
+#                     screensaver.h ScreenSaver
+#                     screensaveradaptor ScreenSaverAdaptor)
 
 add_executable(hawaii ${SOURCES})
 target_link_libraries(hawaii

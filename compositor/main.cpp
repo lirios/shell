@@ -28,16 +28,16 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QApplication>
-#include <GreenIsland/Compositor/QWaylandOutput>
+#include <QtQml/QQmlApplicationEngine>
 
-#include <GreenIsland/Server/Compositor>
-#include <greenisland_version.h>
+#include <Hawaii/greenisland_version.h>
+#include <GreenIsland/Server/HomeApplication>
 
 #include "sigwatch/sigwatch.h"
 
-#include "application.h"
 #include "config.h"
 #include "gitsha1.h"
+#include "session/sessioninterface.h"
 #include "sessionmanager.h"
 
 #include <unistd.h>
@@ -47,7 +47,7 @@
 int main(int argc, char *argv[])
 {
     // Setup the environment
-    SessionManager::setupEnvironment();
+    //SessionManager::setupEnvironment();
 
     // Application
     QApplication app(argc, argv);
@@ -132,11 +132,11 @@ int main(int argc, char *argv[])
            HAWAII_VERSION_STRING, GIT_REV);
 
     // Home application
-    Application homeApp;
-    homeApp.setFakeScreenData(fakeScreenData);
+    GreenIsland::Server::HomeApplication homeApp;
+    homeApp.setScreenConfiguration(fakeScreenData);
 
     // Create the compositor and run
-    if (!homeApp.run(nested, QStringLiteral("org.hawaiios.desktop")))
+    if (!homeApp.load(QStringLiteral("org.hawaiios.desktop")))
         return 1;
 
     return app.exec();
