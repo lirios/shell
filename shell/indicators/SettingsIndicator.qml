@@ -59,25 +59,25 @@ Indicator {
                 ToolButton {
                     text: qsTr("Small")
                     checkable: true
-                    checked: compositorRoot.screenView.panel.size === Themes.Units.iconSizes.medium
+                    checked: screenView.panel.size === Themes.Units.iconSizes.medium
                     exclusiveGroup: sizeGroup
-                    onClicked: compositorRoot.screenView.panel.size = Themes.Units.iconSizes.medium
+                    onClicked: screenView.panel.size = Themes.Units.iconSizes.medium
                 }
 
                 ToolButton {
                     text: qsTr("Medium")
                     checkable: true
-                    checked: compositorRoot.screenView.panel.size === Themes.Units.iconSizes.large
+                    checked: screenView.panel.size === Themes.Units.iconSizes.large
                     exclusiveGroup: sizeGroup
-                    onClicked: compositorRoot.screenView.panel.size = Themes.Units.iconSizes.large
+                    onClicked: screenView.panel.size = Themes.Units.iconSizes.large
                 }
 
                 ToolButton {
                     text: qsTr("Large")
                     checkable: true
-                    checked: compositorRoot.screenView.panel.size === Themes.Units.iconSizes.huge
+                    checked: screenView.panel.size === Themes.Units.iconSizes.huge
                     exclusiveGroup: sizeGroup
-                    onClicked: compositorRoot.screenView.panel.size = Themes.Units.iconSizes.huge
+                    onClicked: screenView.panel.size = Themes.Units.iconSizes.huge
                 }
             }
 
@@ -99,36 +99,36 @@ Indicator {
                     text: qsTr("Left")
                     iconName: "align-horizontal-left-symbolic"
                     checkable: true
-                    checked: compositorRoot.screenView.panel.alignment === Qt.AlignLeft
+                    checked: screenView.panel.alignment === Qt.AlignLeft
                     exclusiveGroup: posGroup
-                    onClicked: compositorRoot.screenView.panel.alignment = Qt.AlignLeft
+                    onClicked: screenView.panel.alignment = Qt.AlignLeft
                 }
 
                 ToolButton {
                     text: qsTr("Top")
                     iconName: "align-horizontal-top-symbolic"
                     checkable: true
-                    checked: compositorRoot.screenView.panel.alignment === Qt.AlignTop
+                    checked: screenView.panel.alignment === Qt.AlignTop
                     exclusiveGroup: posGroup
-                    onClicked: compositorRoot.screenView.panel.alignment = Qt.AlignTop
+                    onClicked: screenView.panel.alignment = Qt.AlignTop
                 }
 
                 ToolButton {
                     text: qsTr("Right")
                     iconName: "align-horizontal-right-symbolic"
                     checkable: true
-                    checked: compositorRoot.screenView.panel.alignment === Qt.AlignRight
+                    checked: screenView.panel.alignment === Qt.AlignRight
                     exclusiveGroup: posGroup
-                    onClicked: compositorRoot.screenView.panel.alignment = Qt.AlignRight
+                    onClicked: screenView.panel.alignment = Qt.AlignRight
                 }
 
                 ToolButton {
                     text: qsTr("Bottom")
                     iconName: "align-horizontal-bottom-symbolic"
                     checkable: true
-                    checked: compositorRoot.screenView.panel.alignment === Qt.AlignBottom
+                    checked: screenView.panel.alignment === Qt.AlignBottom
                     exclusiveGroup: posGroup
-                    onClicked: compositorRoot.screenView.panel.alignment = Qt.AlignBottom
+                    onClicked: screenView.panel.alignment = Qt.AlignBottom
                 }
             }
             */

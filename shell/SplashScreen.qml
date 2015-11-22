@@ -27,18 +27,16 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
-import GreenIsland 1.0 as GreenIsland
 import "."
 
 MouseArea {
     hoverEnabled: true
     acceptedButtons: Qt.NoButton
-    onPositionChanged: GreenIsland.Compositor.unsetMouseCursor()
 
     Image {
         id: picture
         anchors.fill: parent
-        source: ShellSettings.background.pictureUrl
+        source: hawaiiCompositor.settings.background.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
         fillMode: Image.PreserveAspectCrop
@@ -55,6 +53,4 @@ MouseArea {
     BusyIndicator {
         anchors.centerIn: parent
     }
-
-    Component.onDestruction: GreenIsland.Compositor.resetMouseCursor()
 }

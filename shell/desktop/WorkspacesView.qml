@@ -39,7 +39,7 @@ Item {
 
         function showOverlay(next) {
             // Show overlay
-            var overlay = compositorRoot.screenView.layers.overlays;
+            var overlay = screenView.layers.overlays;
             overlay.iconName = next ? "go-next-symbolic" : "go-previous-symbolic";
             overlay.value = "";
             overlay.showProgress = false;

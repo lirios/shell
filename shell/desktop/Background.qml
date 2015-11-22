@@ -31,7 +31,7 @@ import ".."
 
 Loader {
     Connections {
-        target: ShellSettings.background
+        target: hawaiiCompositor.settings.background
         onModeChanged: readSettings()
     }
 
@@ -40,7 +40,7 @@ Loader {
 
         Components.NoiseBackground {
             objectName: "solid"
-            color: ShellSettings.background.primaryColor
+            color: hawaiiCompositor.settings.background.primaryColor
 
             Behavior on color {
                 ColorAnimation {
@@ -55,13 +55,13 @@ Loader {
         id: gradient
 
         Components.NoiseBackground {
-            property bool vertical: ShellSettings.background.mode === "vgradient"
+            property bool vertical: hawaiiCompositor.settings.background.mode === "vgradient"
 
             objectName: "gradient"
             gradient: Gradient {
                 GradientStop {
                     position: 0
-                    color: ShellSettings.background.primaryColor
+                    color: hawaiiCompositor.settings.background.primaryColor
 
                     Behavior on color {
                         ColorAnimation {
@@ -72,7 +72,7 @@ Loader {
                 }
                 GradientStop {
                     position: 1
-                    color: ShellSettings.background.secondaryColor
+                    color: hawaiiCompositor.settings.background.secondaryColor
 
                     Behavior on color {
                         ColorAnimation {
@@ -92,24 +92,24 @@ Loader {
 
         Components.NoiseBackground {
             objectName: "wallpaper"
-            color: ShellSettings.background.primaryColor
+            color: hawaiiCompositor.settings.background.primaryColor
 
             Components.SmoothFadeImage {
                 readonly property real aspectRatio: width / height
 
                 anchors.fill: parent
-                source: ShellSettings.background.pictureUrl
+                source: hawaiiCompositor.settings.background.pictureUrl
                 sourceSize.width: aspectRatio * 1024
                 sourceSize.height: 1024
                 smooth: true
                 clip: fillMode === Image.PreserveAspectCrop
-                fillMode: ShellSettings.convertFillMode(ShellSettings.background.fillMode)
+                fillMode: hawaiiCompositor.settings.convertFillMode(hawaiiCompositor.settings.background.fillMode)
             }
         }
     }
 
     function readSettings() {
-        switch (ShellSettings.background.mode) {
+        switch (hawaiiCompositor.settings.background.mode) {
         case "solid":
             sourceComponent = solid;
             break;

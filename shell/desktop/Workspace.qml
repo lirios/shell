@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0 as GreenIsland
 import ".."
 
 MouseArea {
@@ -35,7 +34,6 @@ MouseArea {
     id: root
     acceptedButtons: Qt.NoButton
     hoverEnabled: true
-    onPositionChanged: GreenIsland.Compositor.resetMouseCursor()
 
     Effects {
         id: effects

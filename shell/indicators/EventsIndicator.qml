@@ -194,7 +194,7 @@ Indicator {
         // otherwise create a new window
         if (sameSource) {
             var i, found = false;
-            var popups = compositorRoot.screenView.layers.notifications.children;
+            var popups = screenView.layers.notifications.children;
             for (i = 0; i < popups.length; i++) {
                 var popup = popups[i];
                 if (popup.objectName !== "notificationWindow")
@@ -221,7 +221,7 @@ Indicator {
             return;
         }
 
-        var window = component.createObject(compositorRoot.screenView.layers.notifications);
+        var window = component.createObject(screenView.layers.notifications);
         window.heightChanged.connect(repositionNotifications);
         window.actionInvoked.connect(function(actionId) {
             NotificationsService.invokeAction(data["id"], actionId);
@@ -242,8 +242,8 @@ Indicator {
     }
 
     function repositionNotifications() {
-        var popups = compositorRoot.screenView.layers.notifications.children;
-        var workArea = _greenisland_output.availableGeometry;
+        var popups = screenView.layers.notifications.children;
+        var workArea = output.availableGeometry;
         var offset = Themes.Theme.mSize().height;
         var totalHeight = 0;
 

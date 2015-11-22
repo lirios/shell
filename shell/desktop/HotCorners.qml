@@ -39,7 +39,7 @@ Item {
 
     // Redirect events
     Connections {
-        target: _greenisland_output
+        target: output
         onHotSpotTriggered: {
             switch (hotSpot) {
             case Output.TopLeftHotSpot:

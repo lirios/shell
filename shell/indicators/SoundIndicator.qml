@@ -100,12 +100,8 @@ Indicator {
     Connections {
         target: MixerService.Mixer
         onMasterChanged: {
-            // Screen view is loaded asynchronously and might not be yet available
-            if (!compositorRoot.screenView)
-                return;
-
             // Show overlay
-            var overlay = compositorRoot.screenView.layers.overlays;
+            var overlay = screenView.layers.overlays;
             overlay.iconName = indicator.iconName;
             overlay.value = MixerService.Mixer.master;
             overlay.showProgress = true;
@@ -115,7 +111,7 @@ Indicator {
     }
 
     Connections {
-        target: GreenIsland.KeyBindings
+        target: hawaiiCompositor.keyBindingsManager
         onKeyBindingPressed: {
             switch (name) {
             case "volumeUp":

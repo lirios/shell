@@ -27,32 +27,31 @@
 import QtQuick 2.0
 
 Rectangle {
-    property int number
-    property bool primary
+    property alias model: modelLabel.text
+    property alias primary: primaryLine.visible
 
-    width: label.paintedWidth + 8
-    height: label.paintedHeight + 8
+    width: modelLabel.paintedWidth + 8
+    height: modelLabel.paintedHeight + 8
     color: "#80000000"
     radius: 8
 
     Text {
-        id: label
+        id: modelLabel
         anchors.centerIn: parent
         color: "white"
-        text: number
         font.pointSize: 36
     }
 
     Rectangle {
+        id: primaryLine
         anchors {
             left: parent.left
-            top: label.bottom
+            top: modelLabel.bottom
             right: parent.right
             leftMargin: 4
             rightMargin: 4
         }
         height: 1
         color: "green"
-        visible: primary
     }
 }

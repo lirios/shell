@@ -52,10 +52,10 @@ Components.Showable {
     Image {
         id: picture
         anchors.fill: parent
-        source: ShellSettings.lockScreen.pictureUrl
+        source: hawaiiCompositor.settings.lockScreen.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
-        fillMode: ShellSettings.convertFillMode(ShellSettings.lockScreen.fillMode)
+        fillMode: hawaiiCompositor.settings.convertFillMode(hawaiiCompositor.settings.lockScreen.fillMode)
         cache: false
         visible: false
     }

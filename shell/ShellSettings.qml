@@ -24,8 +24,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-pragma Singleton
-
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
@@ -37,17 +35,29 @@ Components.Object {
     readonly property alias background: bgSettings
     readonly property alias lockScreen: lockSettings
 
-    id: root
+    id: shellSettings
 
     /*
      * Keymap
      */
 
+    GreenIsland.CompositorSettings {
+        id: compositorSettings
+        compositor: hawaiiCompositor
+        keymap: GreenIsland.Keymap {
+            layout: keyboardSettings.layouts[0] ? keyboardSettings.layouts[0] : "en"
+            variant: keyboardSettings.variants[0] ? keyboardSettings.variants[0] : ""
+            options: keyboardSettings.options[0] ? keyboardSettings.options[0] : ""
+            model: keyboardSettings.model
+            rules: keyboardSettings.rules[0] ? keyboardSettings.rules[0] : ""
+        }
+    }
+
     Settings.Settings {
         id: keyboardSettings
         schema.id: "org.hawaiios.desktop.peripherals.keyboard"
         schema.path: "/org/hawaiios/desktop/peripherals/keyboard/"
-        onSettingsChanged: root.applyKeymapSettings()
+        onSettingsChanged: shellSettings.applyKeymapSettings()
     }
 
     /*
@@ -78,39 +88,26 @@ Components.Object {
         id: wmKeybindings
         schema.id: "org.hawaiios.desktop.keybindings.wm"
         schema.path: "/org/hawaiios/desktop/keybindings/wm/"
-        onSettingsChanged: root.applyKeyBindings(wmKeybindings)
+        onSettingsChanged: shellSettings.applyKeyBindings(wmKeybindings)
     }
 
     Settings.Settings {
         id: smKeybindings
         schema.id: "org.hawaiios.desktop.keybindings.sm"
         schema.path: "/org/hawaiios/desktop/keybindings/sm/"
-        onSettingsChanged: root.applyKeyBindings(smKeybindings)
+        onSettingsChanged: shellSettings.applyKeyBindings(smKeybindings)
     }
 
     Settings.Settings {
         id: mmKeybindings
         schema.id: "org.hawaiios.desktop.keybindings.multimedia"
         schema.path: "/org/hawaiios/desktop/keybindings/multimedia/"
-        onSettingsChanged: root.applyKeyBindings(mmKeybindings)
+        onSettingsChanged: shellSettings.applyKeyBindings(mmKeybindings)
     }
 
     /*
      * Methods
      */
-
-    function applyKeymapSettings() {
-        if (keyboardSettings.layouts[0])
-            GreenIsland.Compositor.settings.keyboardLayout = keyboardSettings.layouts[0];
-        if (keyboardSettings.variants[0])
-            GreenIsland.Compositor.settings.keyboardVariant = keyboardSettings.variants[0];
-        if (keyboardSettings.options[0])
-            GreenIsland.Compositor.settings.keyboardOptions = keyboardSettings.options[0];
-        if (keyboardSettings.rules[0])
-            GreenIsland.Compositor.settings.keyboardRules = keyboardSettings.rules[0];
-        if (keyboardSettings.model)
-            GreenIsland.Compositor.settings.keyboardModel = keyboardSettings.model;
-    }
 
     function applyKeyBindings(o) {
         var i, j;
@@ -118,10 +115,12 @@ Components.Object {
             var name = o.schema.keys[i];
             var bindings = o[name];
 
-            for (j = 0; j < bindings.length; j++)
-                GreenIsland.KeyBindings.registerKeyBinding(name, bindings[j]);
-            if (bindings.length === 0)
-                GreenIsland.KeyBindings.unregisterKeyBinding(name);
+            if (bindings.length === 0) {
+                hawaiiCompositor.keyBindingsManager.unregisterKeyBinding(name);
+            } else {
+                for (j = 0; j < bindings.length; j++)
+                    hawaiiCompositor.keyBindingsManager.registerKeyBinding(name, bindings[j]);
+            }
         }
     }
 
@@ -145,7 +144,6 @@ Components.Object {
     }
 
     Component.onCompleted: {
-        applyKeymapSettings();
         applyKeyBindings(wmKeybindings);
         applyKeyBindings(smKeybindings);
         applyKeyBindings(mmKeybindings);

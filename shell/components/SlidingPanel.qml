@@ -75,13 +75,13 @@ Item {
                 yAnimator.start();
                 break;
             case Qt.RightEdge:
-                xAnimator.from = open ? compositorRoot.screenView.width + slidingPanel.width : compositorRoot.screenView.width - slidingPanel.width;
-                xAnimator.to = open ? compositorRoot.screenView.width - slidingPanel.width : compositorRoot.screenView.width + slidingPanel.width;
+                xAnimator.from = open ? screenView.width + slidingPanel.width : screenView.width - slidingPanel.width;
+                xAnimator.to = open ? screenView.width - slidingPanel.width : screenView.width + slidingPanel.width;
                 xAnimator.start();
                 break;
             case Qt.BottomEdge:
-                yAnimator.from = open ? compositorRoot.screenView.height + slidingPanel.height : compositorRoot.screenView.height - slidingPanel.height;
-                yAnimator.to = open ? compositorRoot.screenView.height - slidingPanel.height : compositorRoot.screenView.height + slidingPanel.height;
+                yAnimator.from = open ? screenView.height + slidingPanel.height : screenView.height - slidingPanel.height;
+                yAnimator.to = open ? screenView.height - slidingPanel.height : screenView.height + slidingPanel.height;
                 yAnimator.start();
                 break;
             default:
@@ -91,13 +91,13 @@ Item {
 
         function calcWidth() {
             if (slidingPanel.edge == Qt.TopEdge || slidingPanel.edge == Qt.BottomEdge)
-                return _greenisland_output.availableGeometry.width;
+                return output.availableGeometry.width;
             return Math.max(Themes.Units.gu(10), slidingPanel.width, slidingPanel.childrenRect.width);
         }
 
         function calcHeight() {
             if (slidingPanel.edge == Qt.LeftEdge || slidingPanel.edge == Qt.RightEdge)
-                return _greenisland_output.availableGeometry.height;
+                return output.availableGeometry.height;
             return Math.max(Themes.Units.gu(10), slidingPanel.height, slidingPanel.childrenRect.height);
         }
     }

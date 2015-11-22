@@ -30,19 +30,14 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaiios.misc 0.1
 import "desktop"
-import "windows"
-import "windows/WindowManagement.js" as WindowManagement
 
-Item {
-    readonly property alias screenView: screenViewLoader.item
-    readonly property alias surfaceModel: surfaceModel
-    property var activeWindow: null
-    readonly property int activeWindowIndex: WindowManagement.getActiveWindowIndex()
-    readonly property var windowList: WindowManagement.windowList
+GreenIsland.WindowManager {
+    readonly property var screens: screenManager.screens
+    readonly property var primaryScreen: screenManager.primaryScreen
+    //readonly property alias screenView: screenViewLoader.item
 
-    readonly property alias topLevelWindowComponent: topLevelWindowComponent
-    readonly property alias popupWindowComponent: popupWindowComponent
-    readonly property alias transientWindowComponent: transientWindowComponent
+    readonly property alias keyBindingsManager: keyBindings
+    readonly property alias settings: settings
 
     signal keyPressed(var event)
     signal keyReleased(var event)
@@ -51,66 +46,14 @@ Item {
     signal windowSwitchNext()
     signal windowSwitchSelect()
 
-    id: compositorRoot
-    state: "splash"
-    states: [
-        State {
-            name: "splash"
-            PropertyChanges { target: splashScreen; opacity: 1.0 }
-            PropertyChanges { target: keyFilter; enabled: false }
-            StateChangeScript { script: disableInput() }
-        },
-        State {
-            name: "session"
-            PropertyChanges { target: keyFilter; enabled: true }
-            PropertyChanges { target: splashScreen; opacity: 0.0 }
-            PropertyChanges { target: windowSwitcherLoader; active: false }
-            PropertyChanges { target: shieldLoader; source: ""; visible: false }
-            PropertyChanges { target: logoutLoader; loadComponent: false }
-            PropertyChanges { target: lockScreenLoader; loadComponent: false }
-            PropertyChanges { target: splashScreen; opacity: 0.0 }
-            StateChangeScript { script: enableInput() }
-        },
-        State {
-            name: "windowSwitcher"
-            PropertyChanges { target: windowSwitcherLoader; active: true }
-            StateChangeScript { script: disableInput() }
-        },
-        State {
-            name: "logout"
-            PropertyChanges { target: keyFilter; enabled: false }
-            //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
-            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "logout" }
-            StateChangeScript { script: disableInput() }
-        },
-        State {
-            name: "poweroff"
-            PropertyChanges { target: keyFilter; enabled: false }
-            //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
-            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "poweroff" }
-            StateChangeScript { script: disableInput() }
-        },
-        State {
-            name: "restart"
-            PropertyChanges { target: keyFilter; enabled: false }
-            //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
-            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "restart" }
-            StateChangeScript { script: disableInput() }
-        },
-        State {
-            name: "lock"
-            PropertyChanges { target: keyFilter; enabled: false }
-            PropertyChanges { target: windowSwitcherLoader; active: false }
-            PropertyChanges { target: shieldLoader; source: ""; visible: false }
-            PropertyChanges { target: logoutLoader; loadComponent: false }
-            PropertyChanges { target: lockScreenLoader; loadComponent: true }
-            StateChangeScript { script: disableInput() }
-        },
-        State {
-            name: "shield"
-            PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
-        }
-    ]
+    id: hawaiiCompositor
+    onCreateSurface: {
+        var surface = surfaceComponent.createObject(hawaiiCompositor, {});
+        surface.initialize(hawaiiCompositor, client, id, version);
+    }
+
+/*
+
     onKeyReleased: {
         console.log("Key released:", event.key);
 
@@ -138,9 +81,6 @@ Item {
         event.accepted = false;
     }
 
-    ListModel {
-        id: surfaceModel
-    }
 
     Connections {
         target: GreenIsland.Compositor
@@ -152,26 +92,11 @@ Item {
             // Fade the desktop out
             compositorRoot.state = "splash";
         }
-        onWindowMapped: {
-            // A window was mapped
-            WindowManagement.windowMapped(window);
-        }
-        onWindowUnmapped: {
-            // A window was unmapped
-            WindowManagement.windowUnmapped(window);
-        }
-        onWindowDestroyed: {
-            // A window was unmapped
-            WindowManagement.windowDestroyed(id);
-        }
-        onSurfaceMapped: {
-            // A surface was mapped
-            WindowManagement.surfaceMapped(surface);
-        }
     }
+*/
 
-    Connections {
-        target: GreenIsland.KeyBindings
+    GreenIsland.KeyBindings {
+        id: keyBindings
         onKeyBindingPressed: {
             switch (name) {
                 // wm
@@ -281,6 +206,7 @@ Item {
         }
     }
 
+/*
     Connections {
         target: SessionInterface
         onSessionLocked: compositorRoot.state = "lock"
@@ -290,29 +216,68 @@ Item {
         onPowerOffRequested: compositorRoot.state = "poweroff"
         onRestartRequested: compositorRoot.state = "restart"
     }
+*/
 
     /*
      * Components
      */
 
-    // FPS counter
-    Text {
-        anchors {
-            top: parent.top
-            right: parent.right
-        }
-        z: 1000
-        text: fpsCounter.fps
-        font.pointSize: 36
-        style: Text.Raised
-        styleColor: "#222"
-        color: "white"
-        visible: false
+    // Private properties
+    QtObject {
+        id: d
 
-        GreenIsland.FpsCounter {
-            id: fpsCounter
+        property variant outputs: []
+    }
+
+    // Settings
+    ShellSettings {
+        id: settings
+    }
+
+    // Screen manager
+    GreenIsland.ScreenManager {
+        id: screenManager
+        onScreenAdded: {
+            var view = outputComponent.createObject(
+                        hawaiiCompositor, {
+                            "compositor": hawaiiCompositor,
+                            "nativeScreen": screen
+                        });
+            d.outputs.push(view);
+        }
+        onScreenRemoved: {
+            var index = screenManager.indexOf(screen);
+            if (index < d.outputs.length) {
+                var output = d.outputs[index];
+                d.outputs.splice(index, 1);
+                output.destroy();
+            }
+        }
+        onPrimaryScreenChanged: {
+            var index = screenManager.indexOf(screen);
+            if (index < d.outputs.length) {
+                hawaiiCompositor.primarySurfacesArea = d.outputs[index].surfacesArea;
+                hawaiiCompositor.defaultOutput = d.outputs[index];
+            }
         }
     }
+
+    // Surface component
+    Component {
+        id: surfaceComponent
+
+        GreenIsland.WaylandSurface {}
+    }
+
+    // Output component
+    Component {
+        id: outputComponent
+
+        Output {}
+    }
+
+/*
+
 
     // Key events filter
     KeyEventFilter {
@@ -321,106 +286,27 @@ Item {
         Keys.onPressed: compositorRoot.keyPressed(event)
         Keys.onReleased: compositorRoot.keyReleased(event)
     }
-
-    // Top level window component
-    Component {
-        id: topLevelWindowComponent
-
-        TopLevelWindow {}
-    }
-
-    // Popup window component
-    Component {
-        id: popupWindowComponent
-
-        PopupWindow {}
-    }
-
-    // Transient window component
-    Component {
-        id: transientWindowComponent
-
-        TransientWindow {}
-    }
+    */
 
     /*
      * Splash
      */
 
-    Loader {
-        id: splashScreen
-        anchors.fill: parent
-        opacity: 0.0
-        onOpacityChanged: {
-            if (opacity == 1.0) {
-                splashScreen.z = 910;
-                splashScreen.source = "SplashScreen.qml";
-            } else if (opacity == 0.0) {
-                splashScreenTimer.start();
-            }
-        }
 
-        // Unload after a while so that the opacity animation is visible
-        Timer {
-            id: splashScreenTimer
-            running: false
-            interval: 5000
-            onTriggered: {
-                splashScreen.z = 899;
-                splashScreen.source = "";
-            }
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InSine
-                duration: Themes.Units.longDuration
-            }
-        }
-    }
 
     /*
      * Screen view
      */
 
-    Loader {
-        property bool alreadyLoaded: false
+/*
 
-        id: screenViewLoader
-        anchors.fill: parent
-        asynchronous: true
-        source: "desktop/ScreenView.qml"
-        z: 900
-        onLoaded: {
-            // We asynchronously load the screen component when the splash state
-            // is reached. As soon as the component is loaded we switch to
-            // the session state
-            compositorRoot.state = "session";
-        }
-        onItemChanged: {
-            if (!item || alreadyLoaded)
-                return;
-
-            // Create default 4 workspaces
-            var i;
-            for (i = 0; i < 4; i++)
-                item.workspacesView.add();
-            item.workspacesView.select(0);
-
-            // Setup workspaces only once
-            alreadyLoaded = true;
-        }
-        onStatusChanged: {
-            // Show an error screen instead
-            if (status == Loader.Error)
-                source = "ErrorScreen.qml";
-        }
-    }
+    */
 
     /*
      * Window switcher
      */
 
+/*
     Loader {
         id: windowSwitcherLoader
         anchors {
@@ -455,11 +341,13 @@ Item {
             }
         }
     }
+    */
 
     /*
      * Logout screen
      */
 
+/*
     Components.Loadable {
         property bool loadComponent: false
         property string mode: "logout"
@@ -481,11 +369,13 @@ Item {
         onSuspendRequested: compositorRoot.state = "lock"
         onCancel: SessionInterface.cancelShutdownRequest()
     }
+    */
 
     /*
      * Lock screen
      */
 
+/*
     Component {
         id: primaryLockScreenComponent
 

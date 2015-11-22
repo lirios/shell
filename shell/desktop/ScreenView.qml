@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 import org.hawaiios.misc 0.1 as Misc
 import ".."
@@ -34,61 +33,19 @@ import "../components"
 import "../indicators"
 
 Item {
-    readonly property string name: _greenisland_output.name
-    readonly property int number: _greenisland_output.number
-    readonly property bool primary: _greenisland_output.primary
-    property alias showInformation: outputInfo.visible
-
-    readonly property alias workspacesView: workspacesLayer
-    readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
-    property alias zoomEnabled: zoomArea.enabled
-
     property var layers: QtObject {
-        readonly property alias panels: shellLoader.item
+        //readonly property alias panels: shellLoader.item
         readonly property alias workspaces: workspacesLayer
         readonly property alias fullScreen: fullScreenLayer
         readonly property alias overlays: overlaysLayer
         readonly property alias notifications: notificationsLayer
     }
 
+    //readonly property alias workspacesView: workspacesLayer
+    readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
+
     readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
 
-    id: root
-    transform: Scale {
-        id: screenScaler
-        origin.x: zoomArea.x2
-        origin.y: zoomArea.y2
-        xScale: zoomArea.zoom2
-        yScale: zoomArea.zoom2
-    }
-
-    /*
-     * Output information panel
-     */
-
-    OutputInfo {
-        id: outputInfo
-        anchors {
-            left: parent.left
-            top: parent.top
-        }
-        number: root.number
-        primary: root.primary
-        visible: false
-        z: 4000
-    }
-
-    /*
-     * Screen zoom handler
-     */
-
-    ScreenZoom {
-        id: zoomArea
-        anchors.fill: parent
-        scaler: screenScaler
-        enabled: true
-        z: 3000
-    }
 
     /*
      * Hot corners
@@ -172,9 +129,17 @@ Item {
 
     function setAvailableGeometry(h) {
         // Set available geometry so that windows are maximized properly
-        var pt = _greenisland_output.mapToGlobal(0, 0);
-        var g = Qt.rect(pt.x, pt.y, _greenisland_output.geometry.width, _greenisland_output.geometry.height - h);
-        _greenisland_output.availableGeometry = g;
-        console.debug("Available geometry for", name, "is:", _greenisland_output.availableGeometry);
+        var geometry = output.geometry;
+        geometry.height -= h;
+        output.availableGeometry = geometry;
+        console.debug("Available geometry for", output.model, "is:", output.availableGeometry);
+    }
+
+    Component.onCompleted: {
+        // Create default 4 workspaces
+        var i;
+        for (i = 0; i < 4; i++)
+            workspacesLayer.add();
+        workspacesLayer.select(0);
     }
 }
