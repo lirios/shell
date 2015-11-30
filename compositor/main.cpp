@@ -27,6 +27,8 @@
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QStandardPaths>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusError>
 #include <QtWidgets/QApplication>
 #include <QtQml/QQmlApplicationEngine>
 
@@ -148,6 +150,13 @@ int main(int argc, char *argv[])
            "** Build: %s-%s",
            HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
            HAWAII_VERSION_STRING, GIT_REV);
+
+    // Register D-Bus service
+    if (!QDBusConnection::sessionBus().registerService(QStringLiteral("org.hawaiios.Session"))) {
+        qCritical("Failed to register D-Bus service: %s",
+                qPrintable(QDBusConnection::sessionBus().lastError().message()));
+        return 1;
+    }
 
     // Home application
     GreenIsland::Server::HomeApplication homeApp;
