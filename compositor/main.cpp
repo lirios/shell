@@ -44,10 +44,27 @@
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
+static void setupEnvironment()
+{
+    // Set defaults
+    if (qEnvironmentVariableIsEmpty("XDG_DATA_DIRS"))
+        qputenv("XDG_DATA_DIRS", QByteArrayLiteral("/usr/local/share/:/usr/share/"));
+    if (qEnvironmentVariableIsEmpty("XDG_CONFIG_DIRS"))
+        qputenv("XDG_CONFIG_DIRS", QByteArrayLiteral("/etc/xdg"));
+
+    // Environment
+    qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
+    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
+    qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
+    qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
+    qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("hawaii-"));
+    qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Hawaii"));
+}
+
 int main(int argc, char *argv[])
 {
     // Setup the environment
-    //SessionManager::setupEnvironment();
+    setupEnvironment();
 
     // Application
     QApplication app(argc, argv);

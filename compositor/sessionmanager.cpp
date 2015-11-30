@@ -219,58 +219,6 @@ void SessionManager::hybridSleep()
     m_powerManager->hybridSleep();
 }
 
-void SessionManager::setupEnvironment()
-{
-    // Set paths only if we are installed onto a non standard location
-    QString path;
-
-#if 0
-    if (qEnvironmentVariableIsSet("PATH")) {
-        path = QStringLiteral("%1:%2").arg(INSTALL_BINDIR).arg(QString(qgetenv("PATH")));
-        qputenv("PATH", path.toUtf8());
-    }
-
-    if (qEnvironmentVariableIsSet("QT_PLUGIN_PATH")) {
-        path = QStringLiteral("%1:%2").arg(INSTALL_PLUGINDIR).arg(QString(qgetenv("QT_PLUGIN_PATH")));
-        qputenv("QT_PLUGIN_PATH", path.toUtf8());
-    }
-
-    if (qEnvironmentVariableIsSet("QML2_IMPORT_PATH")) {
-        path = QStringLiteral("%1:%2").arg(INSTALL_QMLDIR).arg(QString(qgetenv("QML2_IMPORT_PATH")));
-        qputenv("QML2_IMPORT_PATH", path.toUtf8());
-    }
-
-    if (qEnvironmentVariableIsSet("XDG_DATA_DIRS")) {
-        path = QStringLiteral("%1:%2").arg(INSTALL_DATADIR).arg(QString(qgetenv("XDG_DATA_DIRS")));
-        qputenv("XDG_DATA_DIRS", path.toUtf8());
-    }
-
-    if (qEnvironmentVariableIsSet("XDG_CONFIG_DIRS")) {
-        path = QStringLiteral("%1:%2:/etc/xdg").arg(INSTALL_CONFIGDIR).arg(QString(qgetenv("XDG_CONFIG_DIRS")));
-        qputenv("XDG_CONFIG_DIRS", path.toUtf8());
-    }
-
-    if (qEnvironmentVariableIsSet("XCURSOR_PATH")) {
-       path = QStringLiteral("%1:%2").arg(INSTALL_DATADIR "/icons").arg(QString(qgetenv("XCURSOR_PATH")));
-        qputenv("XCURSOR_PATH", path.toUtf8());
-    }
-#endif
-
-    // Set defaults
-    if (qEnvironmentVariableIsEmpty("XDG_DATA_DIRS"))
-        qputenv("XDG_DATA_DIRS", QByteArrayLiteral("/usr/local/share/:/usr/share/"));
-    if (qEnvironmentVariableIsEmpty("XDG_CONFIG_DIRS"))
-        qputenv("XDG_CONFIG_DIRS", QByteArrayLiteral("/etc/xdg"));
-
-    // Environment
-    qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
-    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
-    qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
-    qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
-    qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("hawaii-"));
-    qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Hawaii"));
-}
-
 bool SessionManager::registerDBus()
 {
     QDBusConnection bus = QDBusConnection::sessionBus();

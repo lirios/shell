@@ -75,8 +75,6 @@ public:
     void hibernate();
     void hybridSleep();
 
-    static void setupEnvironment();
-
 Q_SIGNALS:
     void idleChanged(bool value);
     void lockedChanged(bool value);
