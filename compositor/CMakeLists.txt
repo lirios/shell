@@ -8,7 +8,7 @@ include_directories(
 
 set(SOURCES
     main.cpp
-#    processlauncher.cpp
+    processlauncher/processlauncher.cpp
 #    screensaver.cpp
 #    sessionmanager.cpp
 #    loginmanager/loginmanager.cpp
@@ -27,9 +27,9 @@ set(SOURCES
 #    session/sessioninterface.cpp
 )
 
-#qt5_add_dbus_adaptor(SOURCES org.hawaiios.ProcessLauncher.xml
-#                     processlauncher.h ProcessLauncher
-#                     processlauncheradaptor ProcessLauncherAdaptor)
+qt5_add_dbus_adaptor(SOURCES processlauncher/org.hawaiios.ProcessLauncher.xml
+                     processlauncher/processlauncher.h ProcessLauncher
+                     processlauncheradaptor ProcessLauncherAdaptor)
 #qt5_add_dbus_adaptor(SOURCES org.freedesktop.ScreenSaver.xml
 #                     screensaver.h ScreenSaver
 #                     screensaveradaptor ScreenSaverAdaptor)
