@@ -27,96 +27,18 @@
 #include <QtGui/QIcon>
 #include <QDebug>
 
-#include <GreenIsland/Server/ApplicationManager>
-#include <Hawaii/QGSettings>
-
 #include "applicationinfo.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
 
-using namespace GreenIsland;
-using namespace Hawaii;
-
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
+    , m_appMan(Q_NULLPTR)
 {
     // Settings
     m_settings = new QGSettings(QStringLiteral("org.hawaiios.desktop.panel"),
                                 QStringLiteral("/org/hawaiios/desktop/panel/"),
                                 this);
-
-    // Application manager instance
-    ApplicationManager *appMan = ApplicationManager::instance();
-
-    // Connect to application events
-    connect(appMan, &ApplicationManager::applicationAdded, this, [this](const QString &appId, pid_t pid) {
-        // Do we have already an icon?
-        for (int i = 0; i < m_list.size(); i++) {
-            LauncherItem *item = m_list.at(i);
-            if (item->appId() == appId) {
-                item->m_pids.insert(pid);
-                item->setRunning(true);
-                QModelIndex modelIndex = index(i);
-                Q_EMIT dataChanged(modelIndex, modelIndex);
-                return;
-            }
-        }
-
-        // Otherwise create one
-        beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
-        LauncherItem *item = new LauncherItem(appId, this);
-        item->m_pids.insert(pid);
-        m_list.append(item);
-        endInsertRows();
-    });
-    connect(appMan, &ApplicationManager::applicationRemoved, this, [this](const QString &appId, pid_t pid) {
-        for (int i = 0; i < m_list.size(); i++) {
-            LauncherItem *item = m_list.at(i);
-            if (item->appId() == appId) {
-                // Remove this pid and determine if there are any processes left
-                item->m_pids.remove(pid);
-                if (item->m_pids.count() > 0)
-                    return;
-
-                if (item->isPinned()) {
-                    // If it's pinned we just unset the flags if all pids are gone
-                    item->setRunning(false);
-                    item->setActive(false);
-                    QModelIndex modelIndex = index(i);
-                    Q_EMIT dataChanged(modelIndex, modelIndex);
-                } else {
-                    // Otherwise the icon goes away because it wasn't meant
-                    // to stay
-                    beginRemoveRows(QModelIndex(), i, i);
-                    m_list.takeAt(i)->deleteLater();
-                    endRemoveRows();
-                }
-                break;
-            }
-        }
-    });
-    connect(appMan, &ApplicationManager::applicationFocused, this, [this](const QString &appId) {
-        for (int i = 0; i < m_list.size(); i++) {
-            LauncherItem *item = m_list.at(i);
-            if (item->appId() == appId) {
-                item->setActive(true);
-                QModelIndex modelIndex = index(i);
-                Q_EMIT dataChanged(modelIndex, modelIndex);
-                break;
-            }
-        }
-    });
-    connect(appMan, &ApplicationManager::applicationUnfocused, this, [this](const QString &appId) {
-        for (int i = 0; i < m_list.size(); i++) {
-            LauncherItem *item = m_list.at(i);
-            if (item->appId() == appId) {
-                item->setActive(false);
-                QModelIndex modelIndex = index(i);
-                Q_EMIT dataChanged(modelIndex, modelIndex);
-                break;
-            }
-        }
-    });
 
     // Add pinned launchers
     const QStringList pinnedLaunchers = m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
@@ -131,6 +53,42 @@ LauncherModel::~LauncherModel()
     // Delete the items
     while (!m_list.isEmpty())
         m_list.takeFirst()->deleteLater();
+}
+
+ApplicationManager *LauncherModel::applicationManager() const
+{
+    return m_appMan;
+}
+
+void LauncherModel::setApplicationManager(ApplicationManager *appMan)
+{
+    if (m_appMan == appMan)
+        return;
+
+    if (m_appMan) {
+        disconnect(m_appMan, &ApplicationManager::applicationAdded,
+                   this, &LauncherModel::handleApplicationAdded);
+        disconnect(m_appMan, &ApplicationManager::applicationRemoved,
+                   this, &LauncherModel::handleApplicationRemoved);
+        disconnect(m_appMan, &ApplicationManager::applicationFocused,
+                   this, &LauncherModel::handleApplicationFocused);
+        disconnect(m_appMan, &ApplicationManager::applicationUnfocused,
+                   this, &LauncherModel::handleApplicationUnfocused);
+    }
+
+    m_appMan = appMan;
+    Q_EMIT applicationManagerChanged();
+
+    if (appMan) {
+        connect(appMan, &ApplicationManager::applicationAdded,
+                this, &LauncherModel::handleApplicationAdded);
+        connect(appMan, &ApplicationManager::applicationRemoved,
+                this, &LauncherModel::handleApplicationRemoved);
+        connect(appMan, &ApplicationManager::applicationFocused,
+                this, &LauncherModel::handleApplicationFocused);
+        connect(appMan, &ApplicationManager::applicationUnfocused,
+                this, &LauncherModel::handleApplicationUnfocused);
+    }
 }
 
 QHash<int, QByteArray> LauncherModel::roleNames() const
@@ -286,6 +244,82 @@ void LauncherModel::pinLauncher(const QString &appId, bool pinned)
     else
         pinnedLaunchers.removeOne(appId);
     m_settings->setValue(QStringLiteral("pinnedLaunchers"), pinnedLaunchers);
+}
+
+void LauncherModel::handleApplicationAdded(const QString &appId, pid_t pid)
+{
+    // Do we have already an icon?
+    for (int i = 0; i < m_list.size(); i++) {
+        LauncherItem *item = m_list.at(i);
+        if (item->appId() == appId) {
+            item->m_pids.insert(pid);
+            item->setRunning(true);
+            QModelIndex modelIndex = index(i);
+            Q_EMIT dataChanged(modelIndex, modelIndex);
+            return;
+        }
+    }
+
+    // Otherwise create one
+    beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
+    LauncherItem *item = new LauncherItem(appId, this);
+    item->m_pids.insert(pid);
+    m_list.append(item);
+    endInsertRows();
+}
+
+void LauncherModel::handleApplicationRemoved(const QString &appId, pid_t pid)
+{
+    for (int i = 0; i < m_list.size(); i++) {
+        LauncherItem *item = m_list.at(i);
+        if (item->appId() == appId) {
+            // Remove this pid and determine if there are any processes left
+            item->m_pids.remove(pid);
+            if (item->m_pids.count() > 0)
+                return;
+
+            if (item->isPinned()) {
+                // If it's pinned we just unset the flags if all pids are gone
+                item->setRunning(false);
+                item->setActive(false);
+                QModelIndex modelIndex = index(i);
+                Q_EMIT dataChanged(modelIndex, modelIndex);
+            } else {
+                // Otherwise the icon goes away because it wasn't meant
+                // to stay
+                beginRemoveRows(QModelIndex(), i, i);
+                m_list.takeAt(i)->deleteLater();
+                endRemoveRows();
+            }
+            break;
+        }
+    }
+}
+
+void LauncherModel::handleApplicationFocused(const QString &appId)
+{
+    for (int i = 0; i < m_list.size(); i++) {
+        LauncherItem *item = m_list.at(i);
+        if (item->appId() == appId) {
+            item->setActive(true);
+            QModelIndex modelIndex = index(i);
+            Q_EMIT dataChanged(modelIndex, modelIndex);
+            break;
+        }
+    }
+}
+
+void LauncherModel::handleApplicationUnfocused(const QString &appId)
+{
+    for (int i = 0; i < m_list.size(); i++) {
+        LauncherItem *item = m_list.at(i);
+        if (item->appId() == appId) {
+            item->setActive(false);
+            QModelIndex modelIndex = index(i);
+            Q_EMIT dataChanged(modelIndex, modelIndex);
+            break;
+        }
+    }
 }
 
 #include "moc_launchermodel.cpp"

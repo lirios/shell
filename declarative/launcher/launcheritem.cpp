@@ -144,7 +144,7 @@ bool LauncherItem::quit()
     if (!isRunning())
         return false;
 
-    GreenIsland::ApplicationManager::instance()->quit(appId());
+    //GreenIsland::ApplicationManager::instance()->quit(appId());
     return true;
 }
 

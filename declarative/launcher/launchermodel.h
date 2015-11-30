@@ -30,15 +30,18 @@
 #include <QtCore/QAbstractListModel>
 #include <QtQml/QQmlComponent>
 
-namespace Hawaii {
-class QGSettings;
-}
+#include <GreenIsland/Server/ApplicationManager>
+#include <Hawaii/QGSettings>
+
+using namespace GreenIsland::Server;
+using namespace Hawaii;
 
 class LauncherItem;
 
 class LauncherModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
     Q_ENUMS(Roles)
 public:
     enum Roles {
@@ -60,6 +63,9 @@ public:
     LauncherModel(QObject *parent = 0);
     ~LauncherModel();
 
+    ApplicationManager *applicationManager() const;
+    void setApplicationManager(ApplicationManager *appMan);
+
     QHash<int, QByteArray> roleNames() const;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -72,11 +78,21 @@ public:
     Q_INVOKABLE void pin(const QString &appId);
     Q_INVOKABLE void unpin(const QString &appId);
 
+Q_SIGNALS:
+    void applicationManagerChanged();
+
 private:
-    Hawaii::QGSettings *m_settings;
+    QGSettings *m_settings;
+    ApplicationManager *m_appMan;
     QList<LauncherItem *> m_list;
 
     void pinLauncher(const QString &appId, bool pinned);
+
+private Q_SLOTS:
+    void handleApplicationAdded(const QString &appId, pid_t pid);
+    void handleApplicationRemoved(const QString &appId, pid_t pid);
+    void handleApplicationFocused(const QString &appId);
+    void handleApplicationUnfocused(const QString &appId);
 };
 
 QML_DECLARE_TYPE(LauncherModel)
