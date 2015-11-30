@@ -37,6 +37,7 @@
 
 #include "config.h"
 #include "gitsha1.h"
+#include "processlauncher/processlauncher.h"
 #include "session/sessioninterface.h"
 #include "sessionmanager.h"
 
@@ -151,6 +152,11 @@ int main(int argc, char *argv[])
     // Home application
     GreenIsland::Server::HomeApplication homeApp;
     homeApp.setScreenConfiguration(fakeScreenData);
+
+    // Process launcher
+    ProcessLauncher *processLauncher = new ProcessLauncher(&homeApp);
+    if (!ProcessLauncher::registerWithDBus(processLauncher))
+        return 1;
 
     // Create the compositor and run
     if (!homeApp.load(QStringLiteral("org.hawaiios.desktop")))

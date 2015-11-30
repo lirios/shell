@@ -29,15 +29,12 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include <GreenIsland/Server/Compositor>
-
 #include <qt5xdg/xdgdesktopfile.h>
 
 #include "processlauncher.h"
+#include "processlauncheradaptor.h"
 
 Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.launcher")
-
-using namespace GreenIsland;
 
 ProcessLauncher::ProcessLauncher(QObject *parent)
     : QObject(parent)
@@ -70,6 +67,21 @@ void ProcessLauncher::closeApplications()
             process->kill();
         process->deleteLater();
     }
+}
+
+bool ProcessLauncher::registerWithDBus(ProcessLauncher *instance)
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    new ProcessLauncherAdaptor(instance);
+    if (!bus.registerObject(QStringLiteral("/ProcessLauncher"), instance)) {
+        qCWarning(LAUNCHER,
+                  "Couldn't register /ProcessLauncher D-Bus object: %s",
+                  qPrintable(bus.lastError().message()));
+        return false;
+    }
+
+    return true;
 }
 
 bool ProcessLauncher::launchApplication(const QString &appId)
@@ -116,11 +128,13 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
 
     qCDebug(LAUNCHER) << "Launching" << entry->expandExecString().join(" ") << "from" << entry->fileName();
 
-    const QString waylandDisplay = Compositor::instance()->socketName();
+    //const QString waylandDisplay = Compositor::instance()->socketName();
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    /*
     if (!waylandDisplay.isEmpty())
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), waylandDisplay);
+    */
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
     env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
