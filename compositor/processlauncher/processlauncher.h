@@ -42,13 +42,20 @@ typedef QMutableMapIterator<QString, QProcess *> ApplicationMapIterator;
 class ProcessLauncher : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString waylandSocketName READ waylandSocketName WRITE setWaylandSocketName NOTIFY waylandSocketNameChanged)
 public:
     ProcessLauncher(QObject *parent = 0);
     ~ProcessLauncher();
 
+    QString waylandSocketName() const;
+    void setWaylandSocketName(const QString &name);
+
     void closeApplications();
 
     static bool registerWithDBus(ProcessLauncher *instance);
+
+Q_SIGNALS:
+    void waylandSocketNameChanged();
 
 public Q_SLOTS:
     bool launchApplication(const QString &appId);
@@ -58,6 +65,7 @@ public Q_SLOTS:
     bool closeDesktopFile(const QString &fileName);
 
 private:
+    QString m_waylandSocketName;
     ApplicationMap m_apps;
 
     bool launchEntry(XdgDesktopFile *entry);

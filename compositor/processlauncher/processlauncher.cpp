@@ -46,6 +46,20 @@ ProcessLauncher::~ProcessLauncher()
     closeApplications();
 }
 
+QString ProcessLauncher::waylandSocketName() const
+{
+    return m_waylandSocketName;
+}
+
+void ProcessLauncher::setWaylandSocketName(const QString &name)
+{
+    if (m_waylandSocketName == name)
+        return;
+
+    m_waylandSocketName = name;
+    Q_EMIT waylandSocketNameChanged();
+}
+
 void ProcessLauncher::closeApplications()
 {
     qCDebug(LAUNCHER) << "Terminate applications";
@@ -128,13 +142,9 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
 
     qCDebug(LAUNCHER) << "Launching" << entry->expandExecString().join(" ") << "from" << entry->fileName();
 
-    //const QString waylandDisplay = Compositor::instance()->socketName();
-
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    /*
-    if (!waylandDisplay.isEmpty())
-        env.insert(QStringLiteral("WAYLAND_DISPLAY"), waylandDisplay);
-    */
+    if (!m_waylandSocketName.isEmpty())
+        env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
     env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));

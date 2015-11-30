@@ -32,6 +32,8 @@
 #include <QtWidgets/QApplication>
 #include <QtQml/QQmlApplicationEngine>
 
+#include <GreenIsland/QtWaylandCompositor/QWaylandCompositor>
+
 #include <Hawaii/greenisland_version.h>
 #include <GreenIsland/Server/HomeApplication>
 
@@ -170,6 +172,11 @@ int main(int argc, char *argv[])
     // Create the compositor and run
     if (!homeApp.load(QStringLiteral("org.hawaiios.desktop")))
         return 1;
+
+    QObject *rootObject = homeApp.rootObjects().at(0);
+    QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
+    if (compositor)
+        processLauncher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
 
     return app.exec();
 }
