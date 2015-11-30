@@ -77,6 +77,7 @@ Item {
         }
         model: CppLauncher.LauncherModel {
             id: launcherModel
+            applicationManager: hawaiiCompositor.applicationManager
         }
         delegate: LauncherDelegate {}
         onContentWidthChanged: width = __priv.calcWidth()
