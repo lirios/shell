@@ -42,6 +42,7 @@
 #include "config.h"
 #include "gitsha1.h"
 #include "processlauncher/processlauncher.h"
+#include "screensaver/screensaver.h"
 #include "session/sessioninterface.h"
 #include "sessionmanager.h"
 
@@ -167,6 +168,11 @@ int main(int argc, char *argv[])
     // Process launcher
     ProcessLauncher *processLauncher = new ProcessLauncher(&homeApp);
     if (!ProcessLauncher::registerWithDBus(processLauncher))
+        return 1;
+
+    // Screen saver
+    ScreenSaver *screenSaver = new ScreenSaver(&homeApp);
+    if (!ScreenSaver::registerWithDBus(screenSaver))
         return 1;
 
     // Create the compositor and run

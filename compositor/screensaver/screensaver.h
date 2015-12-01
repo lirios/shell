@@ -57,6 +57,8 @@ public:
     uint Throttle(const QString &appName, const QString &reason);
     void UnThrottle(uint cookie);
 
+    static bool registerWithDBus(ScreenSaver *instance);
+
 Q_SIGNALS:
     void ActiveChanged(bool in);
 
