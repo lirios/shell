@@ -27,13 +27,9 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include <GreenIsland/Server/Compositor>
-
 #include "screensaver.h"
 
 Q_LOGGING_CATEGORY(SCREENSAVER, "hawaii.screensaver")
-
-using namespace GreenIsland;
 
 ScreenSaver::ScreenSaver(QObject *parent)
     : QObject(parent)
@@ -82,7 +78,7 @@ uint ScreenSaver::Inhibit(const QString &appName, const QString &reason)
     static uint cookieSeed = 0;
     int newCookie = cookieSeed++;
 
-    Compositor::instance()->incrementIdleInhibit();
+    //Compositor::instance()->incrementIdleInhibit();
 
     return newCookie;
 }
@@ -91,7 +87,7 @@ void ScreenSaver::UnInhibit(uint cookie)
 {
     Q_UNUSED(cookie)
 
-    Compositor::instance()->decrementIdleInhibit();
+    //Compositor::instance()->decrementIdleInhibit();
 }
 
 void ScreenSaver::Lock()
