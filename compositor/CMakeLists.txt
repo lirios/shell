@@ -10,6 +10,8 @@ set(SOURCES
     main.cpp
     processlauncher/processlauncher.cpp
     screensaver/screensaver.cpp
+    sessionmanager/authenticator.cpp
+    sessionmanager/sessioninterface.cpp
     sessionmanager/sessionmanager.cpp
     sessionmanager/loginmanager/loginmanager.cpp
     sessionmanager/loginmanager/loginmanagerbackend.cpp
@@ -23,8 +25,6 @@ set(SOURCES
     sessionmanager/powermanager/systemdpowerbackend.h
     sessionmanager/powermanager/upowerpowerbackend.cpp
     sessionmanager/powermanager/upowerpowerbackend.h
-#    session/authenticator.cpp
-#    session/sessioninterface.cpp
 )
 
 qt5_add_dbus_adaptor(SOURCES processlauncher/org.hawaiios.ProcessLauncher.xml

@@ -42,6 +42,8 @@
 #include "gitsha1.h"
 #include "processlauncher/processlauncher.h"
 #include "screensaver/screensaver.h"
+#include "sessionmanager/sessioninterface.h"
+#include "sessionmanager/sessionmanager.h"
 
 #include <unistd.h>
 
@@ -171,6 +173,11 @@ int main(int argc, char *argv[])
     ScreenSaver *screenSaver = new ScreenSaver(&homeApp);
     if (!ScreenSaver::registerWithDBus(screenSaver))
         return 1;
+
+    // Session interface
+    SessionManager *sessionManager = new SessionManager(&homeApp);
+    homeApp.setContextProperty(QStringLiteral("SessionInterface"),
+                               new SessionInterface(sessionManager));
 
     // Create the compositor and run
     if (!homeApp.load(QStringLiteral("org.hawaiios.desktop")))
