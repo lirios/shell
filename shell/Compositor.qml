@@ -206,18 +206,6 @@ GreenIsland.WindowManager {
         }
     }
 
-/*
-    Connections {
-        target: SessionInterface
-        onSessionLocked: compositorRoot.state = "lock"
-        onSessionUnlocked: compositorRoot.state = "session"
-        onShutdownRequestCanceled: compositorRoot.state = "session"
-        onLogOutRequested: compositorRoot.state = "logout"
-        onPowerOffRequested: compositorRoot.state = "poweroff"
-        onRestartRequested: compositorRoot.state = "restart"
-    }
-*/
-
     /*
      * Components
      */
@@ -227,6 +215,12 @@ GreenIsland.WindowManager {
         id: d
 
         property variant outputs: []
+    }
+
+    // Pointer tracking with global coordinates
+    GreenIsland.GlobalPointerTracker {
+        id: globalPointerTracker
+        compositor: hawaiiCompositor
     }
 
     // Settings
@@ -277,8 +271,6 @@ GreenIsland.WindowManager {
     }
 
 /*
-
-
     // Key events filter
     KeyEventFilter {
         id: keyFilter
@@ -286,20 +278,6 @@ GreenIsland.WindowManager {
         Keys.onPressed: compositorRoot.keyPressed(event)
         Keys.onReleased: compositorRoot.keyReleased(event)
     }
-    */
-
-    /*
-     * Splash
-     */
-
-
-
-    /*
-     * Screen view
-     */
-
-/*
-
     */
 
     /*
@@ -342,69 +320,6 @@ GreenIsland.WindowManager {
         }
     }
     */
-
-    /*
-     * Logout screen
-     */
-
-/*
-    Components.Loadable {
-        property bool loadComponent: false
-        property string mode: "logout"
-
-        id: logoutLoader
-        anchors.fill: parent
-        asynchronous: true
-        component: Component {
-            LogoutScreen {
-                mode: logoutLoader.mode
-            }
-        }
-        z: 910
-        onLoadComponentChanged: if (loadComponent) show(); else hide();
-    }
-
-    Connections {
-        target: logoutLoader.item
-        onSuspendRequested: compositorRoot.state = "lock"
-        onCancel: SessionInterface.cancelShutdownRequest()
-    }
-    */
-
-    /*
-     * Lock screen
-     */
-
-/*
-    Component {
-        id: primaryLockScreenComponent
-
-        LockScreen {}
-    }
-
-    Component {
-        id: secondaryLockScreenComponent
-
-        SecondaryLockScreen {}
-    }
-
-    Components.Loadable {
-        property bool loadComponent: false
-
-        id: lockScreenLoader
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
-        asynchronous: true
-        component: _greenisland_output.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
-        z: 910
-        onLoadComponentChanged: if (loadComponent) show(); else hide();
-    }
-
-    /*
-     * Component
-     */
 
     /*
      * Methods

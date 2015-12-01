@@ -24,38 +24,21 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.4
+import QtQuick 2.0
+import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
-import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0 as Themes
-import "."
 
-Components.Showable {
-    id: root
-    showAnimation: OpacityAnimator {
-        target: root
-        easing.type: Easing.InSine
-        duration: Themes.Units.longDuration
-        from: 0.0
-        to: 1.0
-    }
-    hideAnimation: OpacityAnimator {
-        target: root
-        easing.type: Easing.OutSine
-        duration: Themes.Units.longDuration
-        from: 1.0
-        to: 0.0
-    }
-    opacity: 0.0
-    visible: true
+MouseArea {
+    hoverEnabled: true
+    acceptedButtons: Qt.NoButton
 
     Image {
         id: picture
         anchors.fill: parent
-        source: hawaiiCompositor.settings.lockScreen.pictureUrl
+        source: hawaiiCompositor.settings.background.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
-        fillMode: hawaiiCompositor.settings.convertFillMode(hawaiiCompositor.settings.lockScreen.fillMode)
+        fillMode: Image.PreserveAspectCrop
         cache: false
         visible: false
     }
@@ -66,8 +49,7 @@ Components.Showable {
         radius: 32
     }
 
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.AllButtons
+    BusyIndicator {
+        anchors.centerIn: parent
     }
 }

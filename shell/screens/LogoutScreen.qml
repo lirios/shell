@@ -31,7 +31,6 @@ import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import "."
 
 Components.Showable {
     property alias mode: __priv.mode

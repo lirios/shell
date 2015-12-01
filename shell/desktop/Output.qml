@@ -27,7 +27,9 @@
 import QtQuick 2.0
 import QtQuick.Window 2.2
 import GreenIsland 1.0 as GreenIsland
+import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import "../screens"
 
 GreenIsland.WaylandOutput {
     readonly property bool primary: hawaiiCompositor.primaryScreen === nativeScreen
@@ -55,15 +57,25 @@ GreenIsland.WaylandOutput {
         height: nativeScreen.size.height
         flags: Qt.FramelessWindowHint
 
+        Connections {
+            target: SessionInterface
+            onSessionLocked: mainItem.state = "lock"
+            onSessionUnlocked: mainItem.state = "session"
+            onShutdownRequestCanceled: mainItem.state = "session"
+            onLogOutRequested: mainItem.state = "logout"
+            onPowerOffRequested: mainItem.state = "poweroff"
+            onRestartRequested: mainItem.state = "restart"
+        }
+
         GreenIsland.KeyBindingsFilter {
             anchors.fill: parent
             keyBindings: hawaiiCompositor.keyBindingsManager
         }
 
-        GreenIsland.WaylandMouseTracker {
-            id: mouseTracker
+        GreenIsland.LocalPointerTracker {
+            id: localPointerTracker
             anchors.fill: parent
-            enableWSCursor: true
+            globalTracker: globalPointerTracker
 
             Item {
                 id: mainItem
@@ -93,41 +105,41 @@ GreenIsland.WaylandOutput {
                         name: "windowSwitcher"
                         PropertyChanges { target: cursor; visible: true }
                         PropertyChanges { target: windowSwitcherLoader; active: true }
-                        StateChangeScript { script: disableInput() }
+                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "logout"
                         PropertyChanges { target: cursor; visible: true }
-                        PropertyChanges { target: keyFilter; enabled: false }
+                        //PropertyChanges { target: keyFilter; enabled: false }
                         //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
                         PropertyChanges { target: logoutLoader; loadComponent: true; mode: "logout" }
-                        StateChangeScript { script: disableInput() }
+                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "poweroff"
                         PropertyChanges { target: cursor; visible: true }
-                        PropertyChanges { target: keyFilter; enabled: false }
+                        //PropertyChanges { target: keyFilter; enabled: false }
                         //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
                         PropertyChanges { target: logoutLoader; loadComponent: true; mode: "poweroff" }
-                        StateChangeScript { script: disableInput() }
+                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "restart"
                         PropertyChanges { target: cursor; visible: true }
-                        PropertyChanges { target: keyFilter; enabled: false }
+                        //PropertyChanges { target: keyFilter; enabled: false }
                         //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
                         PropertyChanges { target: logoutLoader; loadComponent: true; mode: "restart" }
-                        StateChangeScript { script: disableInput() }
+                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "lock"
                         PropertyChanges { target: cursor; visible: true }
-                        PropertyChanges { target: keyFilter; enabled: false }
+                        //PropertyChanges { target: keyFilter; enabled: false }
                         PropertyChanges { target: windowSwitcherLoader; active: false }
-                        PropertyChanges { target: shieldLoader; source: ""; visible: false }
+                        //PropertyChanges { target: shieldLoader; source: ""; visible: false }
                         PropertyChanges { target: logoutLoader; loadComponent: false }
                         PropertyChanges { target: lockScreenLoader; loadComponent: true }
-                        StateChangeScript { script: disableInput() }
+                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "shield"
@@ -136,17 +148,20 @@ GreenIsland.WaylandOutput {
                     }
                 ]
 
+                /*
+                 * Splash screen
+                 */
+
                 Loader {
                     id: splashScreen
                     anchors.fill: parent
                     opacity: 0.0
+                    z: 900
                     onOpacityChanged: {
-                        if (opacity == 1.0) {
-                            splashScreen.z = 910;
-                            splashScreen.source = "../SplashScreen.qml";
-                        } else if (opacity == 0.0) {
+                        if (opacity == 1.0)
+                            splashScreen.source = "../screens/SplashScreen.qml";
+                        else if (opacity == 0.0)
                             splashScreenTimer.start();
-                        }
                     }
 
                     // Unload after a while so that the opacity animation is visible
@@ -155,7 +170,6 @@ GreenIsland.WaylandOutput {
                         running: false
                         interval: 5000
                         onTriggered: {
-                            splashScreen.z = 899;
                             splashScreen.source = "";
                         }
                     }
@@ -168,6 +182,68 @@ GreenIsland.WaylandOutput {
                     }
                 }
 
+                /*
+                 * Lock screen
+                 */
+
+                Component {
+                    id: primaryLockScreenComponent
+
+                    LockScreen {}
+                }
+
+                Component {
+                    id: secondaryLockScreenComponent
+
+                    SecondaryLockScreen {}
+                }
+
+                Components.Loadable {
+                    property bool loadComponent: false
+
+                    id: lockScreenLoader
+                    x: 0
+                    y: 0
+                    width: parent.width
+                    height: parent.height
+                    asynchronous: true
+                    component: output.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
+                    z: 900
+                    onLoadComponentChanged: if (loadComponent) show(); else hide();
+                }
+
+                /*
+                 * Logout screen
+                 */
+
+                Components.Loadable {
+                    property bool loadComponent: false
+                    // FIXME: mode should be empty by default and the LogoutScreen
+                    // component should handle an empty state, hiding the controls
+                    property string mode: "logout"
+
+                    id: logoutLoader
+                    anchors.fill: parent
+                    asynchronous: true
+                    component: Component {
+                        LogoutScreen {
+                            mode: logoutLoader.mode
+                        }
+                    }
+                    z: 900
+                    onLoadComponentChanged: if (loadComponent) show(); else hide();
+                }
+
+                Connections {
+                    target: logoutLoader.item
+                    onSuspendRequested: mainItem.state = "lock"
+                    onCancel: SessionInterface.cancelShutdownRequest()
+                }
+
+                /*
+                 * Screen view
+                 */
+
                 ScreenView {
                     id: screenView
                     anchors.fill: parent
@@ -178,6 +254,7 @@ GreenIsland.WaylandOutput {
                         xScale: zoomArea.zoom2
                         yScale: zoomArea.zoom2
                     }
+                    z: 800
 
                     ScreenZoom {
                         id: zoomArea
@@ -188,6 +265,10 @@ GreenIsland.WaylandOutput {
 
                     Component.onCompleted: mainItem.state = "session"
                 }
+
+                /*
+                 * Full screen indicators
+                 */
 
                 Text {
                     id: fpsIndicator
@@ -200,6 +281,7 @@ GreenIsland.WaylandOutput {
                     style: Text.Raised
                     styleColor: "#222"
                     color: "white"
+                    z: 1000
                     visible: false
 
                     GreenIsland.FpsCounter {
@@ -215,16 +297,17 @@ GreenIsland.WaylandOutput {
                     }
                     model: output.model
                     primary: output.primary
+                    z: 1000
                     visible: false
                 }
             }
 
-            GreenIsland.WaylandCursorItem {
+            GreenIsland.PointerItem {
                 id: cursor
                 inputDevice: output.compositor.defaultInputDevice
-                inputEventsEnabled: false
-                x: mouseTracker.mouseX - hotspotX
-                y: mouseTracker.mouseY - hotspotY
+                x: localPointerTracker.mouseX - hotspotX
+                y: localPointerTracker.mouseY - hotspotY
+                visible: globalPointerTracker.output === output
             }
         }
     }
