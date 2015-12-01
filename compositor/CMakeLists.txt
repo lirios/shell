@@ -10,19 +10,19 @@ set(SOURCES
     main.cpp
     processlauncher/processlauncher.cpp
     screensaver/screensaver.cpp
-#    sessionmanager.cpp
-#    loginmanager/loginmanager.cpp
-#    loginmanager/loginmanagerbackend.cpp
-#    loginmanager/logindbackend.cpp
-#    loginmanager/fakebackend.cpp
-#    powermanager/powermanager.cpp
-#    powermanager/powermanager.h
-#    powermanager/powermanagerbackend.cpp
-#    powermanager/powermanagerbackend.h
-#    powermanager/systemdpowerbackend.cpp
-#    powermanager/systemdpowerbackend.h
-#    powermanager/upowerpowerbackend.cpp
-#    powermanager/upowerpowerbackend.h
+    sessionmanager/sessionmanager.cpp
+    sessionmanager/loginmanager/loginmanager.cpp
+    sessionmanager/loginmanager/loginmanagerbackend.cpp
+    sessionmanager/loginmanager/logindbackend.cpp
+    sessionmanager/loginmanager/fakebackend.cpp
+    sessionmanager/powermanager/powermanager.cpp
+    sessionmanager/powermanager/powermanager.h
+    sessionmanager/powermanager/powermanagerbackend.cpp
+    sessionmanager/powermanager/powermanagerbackend.h
+    sessionmanager/powermanager/systemdpowerbackend.cpp
+    sessionmanager/powermanager/systemdpowerbackend.h
+    sessionmanager/powermanager/upowerpowerbackend.cpp
+    sessionmanager/powermanager/upowerpowerbackend.h
 #    session/authenticator.cpp
 #    session/sessioninterface.cpp
 )

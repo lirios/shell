@@ -29,8 +29,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include <GreenIsland/Server/Compositor>
-
 #include <qt5xdg/xdgautostart.h>
 #include <qt5xdg/xdgdesktopfile.h>
 
@@ -43,8 +41,6 @@
 #include <signal.h>
 
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
-
-using namespace GreenIsland;
 
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
@@ -83,12 +79,12 @@ void SessionManager::setIdle(bool value)
 
 void SessionManager::idleInhibit()
 {
-    Compositor::instance()->incrementIdleInhibit();
+    //Compositor::instance()->incrementIdleInhibit();
 }
 
 void SessionManager::idleUninhibit()
 {
-    Compositor::instance()->decrementIdleInhibit();
+    //Compositor::instance()->decrementIdleInhibit();
 }
 
 bool SessionManager::isLocked() const

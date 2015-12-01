@@ -30,7 +30,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 #include <QtWidgets/QApplication>
-#include <QtQml/QQmlApplicationEngine>
 
 #include <GreenIsland/QtWaylandCompositor/QWaylandCompositor>
 
@@ -43,8 +42,6 @@
 #include "gitsha1.h"
 #include "processlauncher/processlauncher.h"
 #include "screensaver/screensaver.h"
-#include "session/sessioninterface.h"
-#include "sessionmanager.h"
 
 #include <unistd.h>
 

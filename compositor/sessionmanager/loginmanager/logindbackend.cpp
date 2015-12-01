@@ -31,7 +31,7 @@
 
 #include "logindbackend.h"
 #include "logindsessioninfo.h"
-#include "sessionmanager.h"
+#include "sessionmanager/sessionmanager.h"
 
 #include <sys/stat.h>
 #include <unistd.h>
