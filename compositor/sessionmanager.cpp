@@ -37,10 +37,6 @@
 #include "cmakedirs.h"
 #include "loginmanager/loginmanager.h"
 #include "powermanager/powermanager.h"
-#include "processlauncher.h"
-#include "processlauncheradaptor.h"
-#include "screensaver.h"
-#include "screensaveradaptor.h"
 #include "sessionmanager.h"
 
 #include <sys/types.h>
@@ -54,8 +50,6 @@ SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
     , m_loginManager(new LoginManager(this, this))
     , m_powerManager(new PowerManager(this))
-    , m_launcher(new ProcessLauncher(this))
-    , m_screenSaver(new ScreenSaver(this))
     , m_idle(false)
     , m_locked(false)
 {
@@ -70,15 +64,6 @@ SessionManager::SessionManager(QObject *parent)
     // Logout session before the system goes off
     connect(m_loginManager, &LoginManager::logOutRequested,
             this, &SessionManager::logOut);
-}
-
-bool SessionManager::initialize()
-{
-    // Register D-Bus services
-    if (!registerDBus())
-        return false;
-
-    return true;
 }
 
 bool SessionManager::isIdle() const
@@ -188,7 +173,7 @@ void SessionManager::activateSession(int index)
 void SessionManager::logOut()
 {
     // Close all applications we launched
-    m_launcher->closeApplications();
+    //m_launcher->closeApplications();
 
     // Exit
     QCoreApplication::quit();
@@ -219,39 +204,6 @@ void SessionManager::hybridSleep()
     m_powerManager->hybridSleep();
 }
 
-bool SessionManager::registerDBus()
-{
-    QDBusConnection bus = QDBusConnection::sessionBus();
-
-    // Process launcher
-    new ProcessLauncherAdaptor(m_launcher);
-    if (!bus.registerObject(QStringLiteral("/ProcessLauncher"), m_launcher)) {
-        qCWarning(SESSION_MANAGER,
-                  "Couldn't register /ProcessLauncher D-Bus object: %s",
-                  qPrintable(bus.lastError().message()));
-        return false;
-    }
-
-    // Screen saver
-    new ScreenSaverAdaptor(m_screenSaver);
-    if (!bus.registerObject(QStringLiteral("/org/freedesktop/ScreenSaver"), m_screenSaver)) {
-        qCWarning(SESSION_MANAGER,
-                  "Couldn't register /org/freedesktop/ScreenSaver D-Bus object: %s",
-                  qPrintable(bus.lastError().message()));
-        return false;
-    }
-
-    // Service
-    if (!bus.registerService(QStringLiteral("org.hawaiios.Session"))) {
-        qCWarning(SESSION_MANAGER,
-                  "Couldn't register org.hawaiios.Session D-Bus service: %s",
-                  qPrintable(bus.lastError().message()));
-        return false;
-    }
-
-    return true;
-}
-
 void SessionManager::autostart()
 {
     Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
@@ -259,7 +211,7 @@ void SessionManager::autostart()
             continue;
 
         qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
-        m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
+        //m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
     }
 }
 
