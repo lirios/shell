@@ -25,18 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import ".."
 
-MouseArea {
-    property alias effects: effects
+Item {
     property int workspaceIndex
-
-    id: root
-    acceptedButtons: Qt.NoButton
-    hoverEnabled: true
-
-    Effects {
-        id: effects
-        workspace: root
-    }
 }

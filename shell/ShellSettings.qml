@@ -34,6 +34,7 @@ Components.Object {
     readonly property alias keyboard: keyboardSettings
     readonly property alias background: bgSettings
     readonly property alias lockScreen: lockSettings
+    readonly property int numWorkspaces: 4
 
     id: shellSettings
 

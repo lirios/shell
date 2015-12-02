@@ -133,12 +133,4 @@ Item {
         output.availableGeometry = geometry;
         console.debug("Available geometry for", output.model, "is:", output.availableGeometry);
     }
-
-    Component.onCompleted: {
-        // Create default 4 workspaces
-        var i;
-        for (i = 0; i < 4; i++)
-            workspacesLayer.add();
-        workspacesLayer.select(0);
-    }
 }

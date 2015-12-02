@@ -32,8 +32,8 @@ import org.hawaiios.misc 0.1
 import "desktop"
 
 GreenIsland.WindowManager {
-    readonly property var screens: screenManager.screens
-    readonly property var primaryScreen: screenManager.primaryScreen
+    readonly property alias outputs: d.outputs
+    readonly property alias primaryScreen: screenManager.primaryScreen
 
     readonly property alias keyBindingsManager: keyBindings
     readonly property alias settings: settings
@@ -265,7 +265,9 @@ GreenIsland.WindowManager {
         onPrimaryScreenChanged: {
             var index = screenManager.indexOf(screen);
             if (index < d.outputs.length) {
-                hawaiiCompositor.primarySurfacesArea = d.outputs[index].surfacesArea;
+                hawaiiCompositor.primarySurfacesArea = Qt.binding(function() {
+                    return d.outputs[index].surfacesArea;
+                });
                 hawaiiCompositor.defaultOutput = d.outputs[index];
             }
         }

@@ -27,70 +27,67 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 
-Item {
-    readonly property Item currentWorkspace: listView.currentItem
-    readonly property int currentIndex: listView.currentIndex
-    property alias view: listView
+Flickable {
+    readonly property alias currentIndex: d.currentIndex
+    readonly property alias currentWorkspace: d.currentWorkspace
+    readonly property alias count: workspaces.model
 
     id: root
+    interactive: false
+    contentX: currentIndex * width
+    contentY: 0
+    contentWidth: width
+    contentHeight: height
+    onCurrentIndexChanged: {
+        console.debug("Selected workspace", currentIndex + 1);
+        d.currentWorkspace = workspaces.itemAt(currentIndex);
+    }
+
+    Behavior on contentX {
+        NumberAnimation {
+            easing.type: Easing.InOutQuad
+            duration: 250
+        }
+    }
+
+    Item {
+        width: parent.width * workspaces.model
+        height: parent.height
+
+        function selectWorkspace(item) {
+            if (d.currentIndex !== item.workspaceIndex)
+                root.select(item.workspaceIndex);
+        }
+
+        Repeater {
+            id: workspaces
+            model: 0
+
+            Workspace {
+                x: index * width
+                y: 0
+                width: root.width
+                height: root.height
+                workspaceIndex: index
+            }
+        }
+    }
 
     QtObject {
-        id: __priv
+        id: d
+
+        property int currentIndex: -1
+        property Workspace currentWorkspace: null
 
         function showOverlay(next) {
             // Show overlay
-            var overlay = screenView.layers.overlays;
+            var overlay = output.screenView.layers.overlays;
             overlay.iconName = next ? "go-next-symbolic" : "go-previous-symbolic";
             overlay.value = "";
             overlay.showProgress = false;
             overlay.timeout = 1000;
             if (!overlay.visible)
                 overlay.show();
-        }
-    }
-
-    Flickable {
-        property int currentIndex: -1
-        property Workspace currentItem: workspaces.itemAt(currentIndex)
-        property int count: workspaces.model
-
-        id: listView
-        anchors.fill: parent
-        interactive: false
-        contentX: currentIndex * root.width
-        contentY: 0
-        contentWidth: root.width
-        contentHeight: root.height
-        onCurrentIndexChanged: console.debug("Selected workspace", currentIndex)
-
-        Behavior on contentX {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: 250
-            }
-        }
-
-        Item {
-            width: root.width * workspaces.model
-            height: root.height
-
-            function selectWorkspace(item) {
-                if (currentIndex !== item.workspaceIndex)
-                    root.select(item.workspaceIndex);
-            }
-
-            Repeater {
-                id: workspaces
-                model: 0
-
-                Workspace {
-                    x: index * width
-                    y: 0
-                    width: listView.width
-                    height: listView.height
-                    workspaceIndex: index
-                }
-            }
         }
     }
 
@@ -110,19 +107,24 @@ Item {
         }
 
         // Remove item
-        listView.currentIndex = prevIndex;
+        d.currentIndex = prevIndex;
         workspaces.model--;
     }
 
-    function select(index) {
-        listView.currentIndex = index;
+    function select(num) {
+        if (num < 1 || num > workspaces.count) {
+            console.warn("Attempt to select unknown workspace", num);
+            return;
+        }
+
+        d.currentIndex = num - 1;
     }
 
     function selectPrevious() {
         // Previous index (avoid overflow)
-        var prevIndex = view.currentIndex - 1;
+        var prevIndex = d.currentIndex - 1;
         if (prevIndex < 0)
-            prevIndex = view.count - 1;
+            prevIndex = root.count - 1;
         if (prevIndex < 0)
             prevIndex = 0;
 
@@ -130,19 +132,27 @@ Item {
         select(prevIndex);
 
         // Show overlay
-        __priv.showOverlay(false);
+        d.showOverlay(false);
     }
 
     function selectNext() {
         // Next index (avoid overflow)
-        var nextIndex = view.currentIndex + 1;
-        if (nextIndex >= view.count)
+        var nextIndex = d.currentIndex + 1;
+        if (nextIndex >= root.count)
             nextIndex = 0;
 
         // Select workspace
         select(nextIndex);
 
         // Show overlay
-        __priv.showOverlay(true);
+        d.showOverlay(true);
+    }
+
+    Component.onCompleted: {
+        // Create all workspaces
+        var i;
+        for (i = 1; i <= hawaiiCompositor.settings.numWorkspaces; i++)
+            add();
+        select(1);
     }
 }
