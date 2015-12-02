@@ -101,6 +101,14 @@ int main(int argc, char *argv[])
                                         TR("filename"));
     parser.addOption(fakeScreenOption);
 
+#if DEVELOPMENT_BUILD
+    // Load shell from an arbitrary path
+    QCommandLineOption qmlOption(QStringLiteral("qml"),
+                                 QStringLiteral("Load a shell main QML file"),
+                                 QStringLiteral("filename"));
+    parser.addOption(qmlOption);
+#endif
+
     // Parse command line
     parser.process(app);
 
@@ -156,7 +164,7 @@ int main(int argc, char *argv[])
     // Register D-Bus service
     if (!QDBusConnection::sessionBus().registerService(QStringLiteral("org.hawaiios.Session"))) {
         qCritical("Failed to register D-Bus service: %s",
-                qPrintable(QDBusConnection::sessionBus().lastError().message()));
+                  qPrintable(QDBusConnection::sessionBus().lastError().message()));
         return 1;
     }
 
@@ -180,8 +188,19 @@ int main(int argc, char *argv[])
                                new SessionInterface(sessionManager));
 
     // Create the compositor and run
-    if (!homeApp.load(QStringLiteral("org.hawaiios.desktop")))
-        return 1;
+    bool alreadyLoaded = false;
+#if DEVELOPMENT_BUILD
+    if (parser.isSet(qmlOption)) {
+        if (homeApp.loadFile(parser.value(qmlOption)))
+            alreadyLoaded = true;
+        else
+            return 1;
+    }
+#endif
+    if (!alreadyLoaded) {
+        if (!homeApp.load(QStringLiteral("org.hawaiios.desktop")))
+            return 1;
+    }
 
     QObject *rootObject = homeApp.rootObjects().at(0);
     QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
