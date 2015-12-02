@@ -23,6 +23,7 @@ include(CPack)
 add_custom_target(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
 # Options
+option(DEVELOPMENT_BUILD "Enable options for developers" OFF)
 option(ENABLE_SYSTEMD "Enables systemd support" ON)
 option(ENABLE_ALSA "Enables Alsa mixer backend" ON)
 option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
