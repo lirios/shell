@@ -82,7 +82,7 @@ ListModel {
                     return;
                 }
 
-                object.instance = component.createObject(compositorRoot, {
+                object.instance = component.createObject(hawaiiCompositor, {
                                                              "workspace": workspace
                                                          });
             }
@@ -119,7 +119,7 @@ ListModel {
                     return;
                 }
 
-                object.instance = component.createObject(compositorRoot, {
+                object.instance = component.createObject(hawaiiCompositor, {
                                                              "workspace": workspace
                                                          });
             }

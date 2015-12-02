@@ -34,7 +34,6 @@ import "desktop"
 GreenIsland.WindowManager {
     readonly property var screens: screenManager.screens
     readonly property var primaryScreen: screenManager.primaryScreen
-    //readonly property alias screenView: screenViewLoader.item
 
     readonly property alias keyBindingsManager: keyBindings
     readonly property alias settings: settings
@@ -98,55 +97,71 @@ GreenIsland.WindowManager {
     GreenIsland.KeyBindings {
         id: keyBindings
         onKeyBindingPressed: {
+            var i;
+
             switch (name) {
                 // wm
             case "showDesktop":
-                compositorRoot.toggleEffect("RevealDesktop");
+                toggleEffect("RevealDesktop");
                 break;
             case "presentWindows":
-                compositorRoot.toggleEffect("PresentWindowsGrid");
+                toggleEffect("PresentWindowsGrid");
                 break;
             case "switchToWorkspace-1":
-                screenView.workspacesView.select(1);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(1);
                 break;
             case "switchToWorkspace-2":
-                screenView.workspacesView.select(2);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(2);
                 break;
             case "switchToWorkspace-3":
-                screenView.workspacesView.select(3);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(3);
                 break;
             case "switchToWorkspace-4":
-                screenView.workspacesView.select(4);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(4);
                 break;
             case "switchToWorkspace-5":
-                screenView.workspacesView.select(5);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(5);
                 break;
             case "switchToWorkspace-6":
-                screenView.workspacesView.select(6);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(6);
                 break;
             case "switchToWorkspace-7":
-                screenView.workspacesView.select(7);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(7);
                 break;
             case "switchToWorkspace-8":
-                screenView.workspacesView.select(8);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(8);
                 break;
             case "switchToWorkspace-9":
-                screenView.workspacesView.select(9);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(9);
                 break;
             case "switchToWorkspace-10":
-                screenView.workspacesView.select(10);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(10);
                 break;
             case "switchToWorkspace-11":
-                screenView.workspacesView.select(11);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(11);
                 break;
             case "switchToWorkspace-12":
-                screenView.workspacesView.select(12);
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.select(12);
                 break;
             case "switchToWorkspaceLeft":
-                screenView.workspacesView.selectPrevious();
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.selectPrevious();
                 break;
             case "switchToWorkspaceRight":
-                screenView.workspacesView.selectNext();
+                for (i = 0; i < d.outputs.length; i++)
+                    d.outputs[i].screenView.layers.workspaces.selectNext();
                 break;
             case "switchWindows":
             case "switchWindowsBackward":

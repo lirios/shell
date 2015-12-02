@@ -46,8 +46,8 @@ Item {
             return 0;
 
         // Divide screen in 4 zones
-        var halfWidth = compositorRoot.width * 0.5;
-        var halfHeight = compositorRoot.height * 0.5;
+        var halfWidth = output.window.width * 0.5;
+        var halfHeight = output.window.height * 0.5;
         var topLeft = Qt.rect(0, 0, halfWidth, halfHeight);
         var topRight = Qt.rect(topLeft.width, 0, halfWidth, halfHeight);
         var bottomLeft = Qt.rect(0, topLeft.height, halfWidth, halfHeight);

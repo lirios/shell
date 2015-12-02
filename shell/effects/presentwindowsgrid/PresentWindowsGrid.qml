@@ -55,10 +55,10 @@ Item {
             return 0;
 
         // Disable input in windows
-        compositorRoot.disableInput();
+        hawaiiCompositor.disableInput();
 
         // Disable output zoom
-        compositorRoot.screenView.zoomEnabled = false;
+        output.zoomEnabled = false;
 
         // Save currently active window, it will be activated again
         // if the effect is stopped without clicking on a window
@@ -155,7 +155,7 @@ Item {
                 window.chrome = chromeComponent.createObject(window, {"window": window});
                 window.chrome.clicked.connect(function(w) {
                     w.savedProperties.bringToFront = true;
-                    compositorRoot.endEffect("PresentWindowsGrid");
+                    hawaiiCompositor.endEffect("PresentWindowsGrid");
                 });
             }
         }
@@ -171,7 +171,7 @@ Item {
 
     function end() {
         // Enable output zoom again
-        compositorRoot.screenView.zoomEnabled = true;
+        output.zoomEnabled = true;
 
         // Sanity check
         if (!workspace) {

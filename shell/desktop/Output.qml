@@ -34,7 +34,8 @@ import "../screens"
 GreenIsland.WaylandOutput {
     readonly property bool primary: hawaiiCompositor.primaryScreen === nativeScreen
 
-    property alias surfacesArea: screenView.currentWorkspace
+    readonly property alias surfacesArea: screenView.currentWorkspace
+    readonly property alias screenView: screenView
 
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible

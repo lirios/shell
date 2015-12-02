@@ -41,7 +41,6 @@ Item {
         readonly property alias notifications: notificationsLayer
     }
 
-    //readonly property alias workspacesView: workspacesLayer
     readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
 
     readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
@@ -57,7 +56,7 @@ Item {
         z: 2000
         onTopLeftTriggered: workspacesLayer.selectPrevious()
         onTopRightTriggered: workspacesLayer.selectNext()
-        onBottomLeftTriggered: compositorRoot.toggleEffect("PresentWindowsGrid")
+        onBottomLeftTriggered: currentWorkspace.effects.toggle("PresentWindowsGrid")
     }
 
     /*

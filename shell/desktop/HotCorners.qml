@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0
+import GreenIsland 1.0 as GreenIsland
 import Hawaii.Themes 1.0 as Themes
 
 Item {
@@ -42,16 +42,16 @@ Item {
         target: output
         onHotSpotTriggered: {
             switch (hotSpot) {
-            case Output.TopLeftHotSpot:
+            case GreenIsland.TopLeftHotSpot:
                 root.topLeftTriggered();
                 break;
-            case Output.TopRightHotSpot:
+            case GreenIsland.TopRightHotSpot:
                 root.topRightTriggered();
                 break;
-            case Output.BottomLeftHotSpot:
+            case GreenIsland.BottomLeftHotSpot:
                 root.bottomLeftTriggered();
                 break;
-            case Output.BottomRightHotSpot:
+            case GreenIsland.BottomRightHotSpot:
                 root.bottomRightTriggered();
                 break;
             default:
