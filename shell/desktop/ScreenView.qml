@@ -56,7 +56,7 @@ Item {
         z: 2000
         onTopLeftTriggered: workspacesLayer.selectPrevious()
         onTopRightTriggered: workspacesLayer.selectNext()
-        onBottomLeftTriggered: currentWorkspace.effects.toggle("PresentWindowsGrid")
+        onBottomLeftTriggered: currentWorkspace.state = "present";
     }
 
     /*

@@ -102,10 +102,20 @@ GreenIsland.WindowManager {
             switch (name) {
                 // wm
             case "showDesktop":
-                toggleEffect("RevealDesktop");
+                for (i = 0; i < d.outputs.length; i++) {
+                    if (d.outputs[i].screenView.currentWorkspace.state === "reveal")
+                        d.outputs[i].screenView.currentWorkspace.state = "normal";
+                    else
+                        d.outputs[i].screenView.currentWorkspace.state = "reveal";
+                }
                 break;
             case "presentWindows":
-                toggleEffect("PresentWindowsGrid");
+                for (i = 0; i < d.outputs.length; i++) {
+                    if (d.outputs[i].screenView.currentWorkspace.state === "present")
+                        d.outputs[i].screenView.currentWorkspace.state = "normal";
+                    else
+                        d.outputs[i].screenView.currentWorkspace.state = "present";
+                }
                 break;
             case "switchToWorkspace-1":
                 for (i = 0; i < d.outputs.length; i++)
@@ -341,26 +351,6 @@ GreenIsland.WindowManager {
     /*
      * Methods
      */
-
-    function toggleEffect(name) {
-        screenView.workspacesView.currentWorkspace.effects.toggle(name);
-    }
-
-    function endEffect(name) {
-        screenView.workspacesView.currentWorkspace.effects.end(name);
-    }
-
-    function addWindowToEffect(window) {
-        screenView.workspacesView.currentWorkspace.effects.addWindow(window);
-    }
-
-    function removeWindowFromEffect(window) {
-        screenView.workspacesView.currentWorkspace.effects.removeWindow(window);
-    }
-
-    function moveFront(window) {
-        return WindowManagement.moveFront(window);
-    }
 
     function enableInput() {
         var i;
