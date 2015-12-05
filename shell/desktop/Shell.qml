@@ -33,8 +33,6 @@ import "../components"
 Item {
     readonly property alias panel: panel
 
-    signal panelHeightChanged()
-
     id: root
 
     Panel {
@@ -45,7 +43,6 @@ Item {
             bottom: parent.bottom
         }
         z: 1
-        onHeightChanged: root.panelHeightChanged()
         onIndicatorTriggered: {
             // Close drawer if the current indicator is triggered again
             if (indicator.selected) {

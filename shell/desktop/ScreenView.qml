@@ -35,7 +35,6 @@ import "../indicators"
 
 Item {
     property var layers: QtObject {
-        //readonly property alias panels: shellLoader.item
         readonly property alias workspaces: workspacesLayer
         readonly property alias fullScreen: fullScreenLayer
         readonly property alias overlays: overlaysLayer
@@ -103,7 +102,10 @@ Item {
         anchors.fill: parent
         active: primary
         sourceComponent: Shell {
-            onPanelHeightChanged: setAvailableGeometry(panel.height)
+            Connections {
+                target: panel
+                onHeightChanged: setAvailableGeometry(height)
+            }
         }
         z: 3
         visible: status == Loader.Ready
@@ -183,9 +185,7 @@ Item {
 
     function setAvailableGeometry(h) {
         // Set available geometry so that windows are maximized properly
-        var geometry = output.geometry;
-        geometry.height -= h;
-        output.availableGeometry = geometry;
+        output.availableGeometry = Qt.rect(0, 0, output.window.width, output.window.height - h);
         console.debug("Available geometry for", output.model, "is:", output.availableGeometry);
     }
 }
