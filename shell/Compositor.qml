@@ -38,13 +38,6 @@ GreenIsland.WindowManager {
     readonly property alias keyBindingsManager: keyBindings
     readonly property alias settings: settings
 
-    signal keyPressed(var event)
-    signal keyReleased(var event)
-
-    signal windowSwitchPrev()
-    signal windowSwitchNext()
-    signal windowSwitchSelect()
-
     id: hawaiiCompositor
     onCreateSurface: {
         var surface = surfaceComponent.createObject(hawaiiCompositor, {});
@@ -52,35 +45,6 @@ GreenIsland.WindowManager {
     }
 
 /*
-
-    onKeyReleased: {
-        console.log("Key released:", event.key);
-
-        // Window switcher
-        if (state == "windowSwitcher") {
-            if (event.modifiers === Qt.MetaModifier) {
-                // Cycle between windows
-                if (event.key === Qt.Key_Tab)
-                    compositorRoot.windowSwitchNext();
-                else if (event.key === Qt.Key_Backtab)
-                    compositorRoot.windowSwitchPrev();
-            } else {
-                // Give focus to the selected window
-                compositorRoot.windowSwitchSelect();
-
-                // Keys released, deactivate switcher
-                state = "session";
-            }
-
-            event.accepted = true;
-            return;
-        }
-
-        // Let other components handle this
-        event.accepted = false;
-    }
-
-
     Connections {
         target: GreenIsland.Compositor
         onFadeIn: {
@@ -173,12 +137,14 @@ GreenIsland.WindowManager {
                 for (i = 0; i < d.outputs.length; i++)
                     d.outputs[i].screenView.layers.workspaces.selectNext();
                 break;
+                /*
             case "switchWindows":
             case "switchWindowsBackward":
                 if (compositorRoot.state != "windowSwitcher" && surfaceModel.count >= 2)
                     // Activate only when two or more windows are available
                     compositorRoot.state = "windowSwitcher";
                 break;
+                */
                 // sm
             case "abortSession":
                 SessionInterface.requestLogOut();
@@ -298,31 +264,7 @@ GreenIsland.WindowManager {
     }
 
 /*
-    // Key events filter
-    KeyEventFilter {
-        id: keyFilter
 
-        Keys.onPressed: compositorRoot.keyPressed(event)
-        Keys.onReleased: compositorRoot.keyReleased(event)
-    }
-    */
-
-    /*
-     * Window switcher
-     */
-
-/*
-    Loader {
-        id: windowSwitcherLoader
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-        }
-        active: false
-        asynchronous: true
-        source: "WindowSwitcher.qml"
-        z: active ? 910 : 899
-    }
 
     // Shield
     Loader {

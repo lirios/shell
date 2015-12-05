@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
+import GreenIsland 1.0 as GreenIsland
 import Hawaii.Themes 1.0 as Themes
 import org.hawaiios.misc 0.1 as Misc
 import ".."
@@ -45,6 +46,18 @@ Item {
 
     readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
 
+    id: screenView
+    state: "normal"
+    states: [
+        State {
+            name: "normal"
+        },
+        State {
+            name: "windowsSwitcher"
+            PropertyChanges { target: windowSwitcherLoader; active: true }
+            //StateChangeScript { script: disableInput() }
+        }
+    ]
 
     /*
      * Hot corners
@@ -124,6 +137,48 @@ Item {
         id: notificationsLayer
         anchors.fill: parent
         z: 5
+    }
+
+    // Key events filter
+    GreenIsland.KeyEventFilter {
+        id: keyFilter
+
+        Keys.onPressed: {
+            //console.debug("Key pressed:", event.key);
+
+            // Windows switcher
+            if (event.modifiers & Qt.MetaModifier) {
+                console.log("key", event.key, Qt.Key_Meta, Qt.Key_Tab, Qt.Key_Backtab);
+                if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
+                    if (!windowSwitcherLoader.active) {
+                    //if (screenView.state != "windowsSwitcher" && currentWorkspace.children.length >= 2) {
+                        // Activate only when two or more windows are available
+                        //screenView.state = "windowsSwitcher";
+                        windowSwitcherLoader.active = true;
+                        event.accepted = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    // Windows switcher
+    Loader {
+        id: windowSwitcherLoader
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+        }
+        active: false
+        asynchronous: true
+        source: "../WindowSwitcher.qml"
+        z: 1000
+
+        Connections {
+            target: windowSwitcherLoader.item
+            onClosed: windowSwitcherLoader.active = false
+        }
     }
 
     function setAvailableGeometry(h) {

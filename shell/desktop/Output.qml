@@ -103,12 +103,6 @@ GreenIsland.WaylandOutput {
                         //StateChangeScript { script: enableInput() }
                     },
                     State {
-                        name: "windowSwitcher"
-                        PropertyChanges { target: cursor; visible: true }
-                        PropertyChanges { target: windowSwitcherLoader; active: true }
-                        //StateChangeScript { script: disableInput() }
-                    },
-                    State {
                         name: "logout"
                         PropertyChanges { target: cursor; visible: true }
                         //PropertyChanges { target: keyFilter; enabled: false }

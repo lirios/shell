@@ -27,45 +27,58 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import GreenIsland 1.0
+import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 
 Rectangle {
+    signal closed()
+
     id: root
     color: "#80000000"
     radius: Themes.Units.gu(0.5)
     opacity: 0.0
-    width: Math.min(listView.count * (listView.thumbnailWidth + Themes.Units.largeSpacing * 2), compositorRoot.width * 0.7)
-    height: Math.min(listView.thumbnailHeight + label.paintedHeight * 2 + Themes.Units.largeSpacing * 2, compositorRoot.height * 0.5)
+    //width: Math.min(listView.count * (listView.thumbnailWidth + Themes.Units.largeSpacing * 2), screenView.width * 0.7)
+    //height: Math.min(listView.thumbnailHeight + label.paintedHeight * 2 + Themes.Units.largeSpacing * 2, screenView.height * 0.5)
+    width: screenView.width * 0.7
+    height: screenView.height * 0.5
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InSine
-            duration: Themes.Units.mediumDuration
+            duration: Themes.Units.shortDuration
         }
     }
 
     // Keyboard event handling
-    Connections {
-        target: compositorRoot
-        onWindowSwitchPrev: {
-            if (listView.currentIndex == 0)
-                listView.currentIndex = listView.count - 1;
-            else
-                listView.currentIndex--;
-        }
-        onWindowSwitchNext: {
-            if (listView.currentIndex == listView.count - 1)
-                listView.currentIndex = 0;
-            else
-                listView.currentIndex++;
-        }
-        onWindowSwitchSelect: {
-            // Give focus to the selected window
-            var item = compositorRoot.windowList[listView.currentIndex];
-            if (item && item.clientWindow)
-                item.clientWindow.activate();
+    GreenIsland.KeyEventFilter {
+        Keys.onReleased: {
+            if (event.modifiers & Qt.MetaModifier) {
+                // Cycle between windows
+                if (event.key === Qt.Key_Tab) {
+                    // Next
+                    if (listView.currentIndex == listView.count - 1)
+                        listView.currentIndex = 0;
+                    else
+                        listView.currentIndex++;
+                } else if (event.key === Qt.Key_Backtab) {
+                    // Previous
+                    if (listView.currentIndex == 0)
+                        listView.currentIndex = listView.count - 1;
+                    else
+                        listView.currentIndex--;
+                }
+            } else {
+                // Give focus to the selected window
+                var item = listModel.get(listView.currentIndex);
+                if (item && item.surface)
+                    item.surface.activate();
+
+                // Keys released, deactivate switcher
+                root.closed();
+            }
+
+            event.accepted = true;
         }
     }
 
@@ -74,6 +87,7 @@ Rectangle {
 
         Rectangle {
             readonly property string title: modelData.child.surface.title
+            readonly property alias surface: windowItem.surface
 
             id: wrapper
             width: listView.thumbnailWidth
@@ -81,12 +95,16 @@ Rectangle {
             color: wrapper.ListView.isCurrentItem ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
             radius: Themes.Units.gu(0.5)
 
-            SurfaceRenderer {
+            GreenIsland.WaylandQuickItem {
+                id: windowItem
                 anchors {
                     fill: parent
                     margins: Themes.Units.smallSpacing
                 }
-                source: modelData.child
+                surface: thumbnailSurface
+                sizeFollowsSurface: false
+                inputEventsEnabled: false
+                view.discardFrontBuffers: true
                 z: 0
 
                 MouseArea {
@@ -103,7 +121,7 @@ Rectangle {
                 }
                 width: Themes.Units.iconSizes.large
                 height: width
-                iconName: modelData.clientWindow.iconName
+                //iconName: modelData.clientWindow.iconName
                 cache: false
                 z: 1
             }
@@ -120,16 +138,18 @@ Rectangle {
         ListView {
             readonly property real thumbnailWidth: Themes.Units.gu(24)
             readonly property real thumbnailHeight: thumbnailWidth / ratio
-            readonly property real ratio: compositorRoot.width / compositorRoot.height
+            readonly property real ratio: screenView.width / screenView.height
 
             id: listView
             clip: true
             orientation: ListView.Horizontal
-            model: compositorRoot.windowList
+            model: ListModel {
+                id: listModel
+            }
             spacing: Themes.Units.smallSpacing
             highlightMoveDuration: Themes.Units.shortDuration
             delegate: thumbnailComponent
-            currentIndex: compositorRoot.activeWindowIndex
+            currentIndex: 0
 
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -151,6 +171,8 @@ Rectangle {
     }
 
     Component.onCompleted: {
+        // Populate list model
+
         // Show with an animtation
         opacity = 1.0;
     }
