@@ -31,14 +31,24 @@ import Hawaii.Themes 1.0 as Themes
 import org.hawaiios.misc 0.1
 import "desktop"
 
-GreenIsland.WindowManager {
+GreenIsland.WaylandCompositor {
     readonly property alias outputs: d.outputs
     readonly property alias primaryScreen: screenManager.primaryScreen
 
+    readonly property alias applicationManager: applicationManager
     readonly property alias keyBindingsManager: keyBindings
     readonly property alias settings: settings
 
     id: hawaiiCompositor
+    extensions: [
+        GreenIsland.ApplicationManager {
+            id: applicationManager
+
+            Component.onCompleted: {
+                initialize()
+            }
+        }
+    ]
     onCreateSurface: {
         var surface = surfaceComponent.createObject(hawaiiCompositor, {});
         surface.initialize(hawaiiCompositor, client, id, version);
@@ -229,6 +239,7 @@ GreenIsland.WindowManager {
                             "nativeScreen": screen
                         });
             d.outputs.push(view);
+            windowManager.recalculateVirtualGeometry
         }
         onScreenRemoved: {
             var index = screenManager.indexOf(screen);
@@ -236,6 +247,7 @@ GreenIsland.WindowManager {
                 var output = d.outputs[index];
                 d.outputs.splice(index, 1);
                 output.destroy();
+                windowManager.recalculateVirtualGeometry();
             }
         }
         onPrimaryScreenChanged: {
@@ -249,11 +261,36 @@ GreenIsland.WindowManager {
         }
     }
 
+    // Window manager
+    GreenIsland.WindowManager {
+        id: windowManager
+        compositor: hawaiiCompositor
+        onWindowCreated: {
+            var i, output, view;
+            for (i = 0; i < d.outputs.length; i++) {
+                output = d.outputs[i];
+                view = windowComponent.createObject(output.surfacesArea, {"window": window});
+                view.initialize(window, output);
+            }
+        }
+
+        Component.onCompleted: {
+            initialize();
+        }
+    }
+
     // Surface component
     Component {
         id: surfaceComponent
 
         GreenIsland.WaylandSurface {}
+    }
+
+    // Window component
+    Component {
+        id: windowComponent
+
+        GreenIsland.WaylandWindow {}
     }
 
     // Output component
