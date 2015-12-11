@@ -86,7 +86,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Minimum version requirements
-set(QT_MIN_VERSION "5.4.0")
+set(QT_MIN_VERSION "5.5.0")
 set(KF5_MIN_VERSION "5.1.0")
 
 # Find Qt5
