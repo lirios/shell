@@ -153,43 +153,43 @@
       <summary>Toggle window on all workspaces or one</summary>
     </key>
     <key name="move-to-workspace-1" type="as">
-      <default>['Meta+Shift+Home']</default>
+      <default>['Meta+Shift+Home', 'Meta+Shift+Home']</default>
       <summary>Move window to workspace 1</summary>
     </key>
     <key name="move-to-workspace-2" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+2']</default>
       <summary>Move window to workspace 2</summary>
     </key>
     <key name="move-to-workspace-3" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+3']</default>
       <summary>Move window to workspace 3</summary>
     </key>
     <key name="move-to-workspace-4" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+4']</default>
       <summary>Move window to workspace 4</summary>
     </key>
     <key name="move-to-workspace-5" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+5']</default>
       <summary>Move window to workspace 5</summary>
     </key>
     <key name="move-to-workspace-6" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+6']</default>
       <summary>Move window to workspace 6</summary>
     </key>
     <key name="move-to-workspace-7" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+7']</default>
       <summary>Move window to workspace 7</summary>
     </key>
     <key name="move-to-workspace-8" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+8']</default>
       <summary>Move window to workspace 8</summary>
     </key>
     <key name="move-to-workspace-9" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+9']</default>
       <summary>Move window to workspace 9</summary>
     </key>
     <key name="move-to-workspace-10" type="as">
-      <default>[]</default>
+      <default>['Meta+Shift+0']</default>
       <summary>Move window to workspace 10</summary>
     </key>
     <key name="move-to-workspace-11" type="as">
@@ -205,35 +205,35 @@
       <summary>Move window to last workspace</summary>
     </key>
     <key name="move-to-workspace-left" type="as">
-      <default>['Ctrl+Alt+Shift+Left']</default>
+      <default>['Meta+Shift+Left']</default>
       <summary>Move window one workspace to the left</summary>
     </key>
     <key name="move-to-workspace-right" type="as">
-      <default>['Ctrl+Alt+Shift+Right']</default>
+      <default>['Meta+Shift+Right']</default>
       <summary>Move window one workspace to the right</summary>
     </key>
     <key name="move-to-workspace-up" type="as">
-      <default>['Meta+Shift+PgUp']</default>
+      <default>['Meta+Shift+Up']</default>
       <summary>Move window one workspace up</summary>
     </key>
     <key name="move-to-workspace-down" type="as">
-      <default>['Meta+Shift+PgDown']</default>
+      <default>['Meta+Shift+Down']</default>
       <summary>Move window one workspace down</summary>
     </key>
     <key name="move-to-monitor-left" type="as">
-      <default>['Meta+Shift+Left']</default>
+      <default>['Meta+Alt+Left']</default>
       <summary>Move window to the next monitor on the left</summary>
     </key>
     <key name="move-to-monitor-right" type="as">
-      <default>['Meta+Shift+Right']</default>
+      <default>['Meta+Alt+Right']</default>
       <summary>Move window to the next monitor on the right</summary>
     </key>
     <key name="move-to-monitor-up" type="as">
-      <default>['Meta+Shift+Up']</default>
+      <default>['Meta+Alt+Up']</default>
       <summary>Move window to the next monitor above</summary>
     </key>
     <key name="move-to-monitor-down" type="as">
-      <default>['Meta+Shift+Down']</default>
+      <default>['Meta+Alt+Down']</default>
       <summary>Move window to the next monitor below</summary>
     </key>
     <key name="raise-or-lower" type="as">
