@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import ".."
@@ -59,11 +58,6 @@ Indicator {
             onAppLaunched: __priv.shown = false
             onDismissed: __priv.shown = false
         }
-    }
-
-    Connections {
-        target: GreenIsland.KeyBindings
-        onKeyBindingReleased: if (name == "mainMenu") __priv.shown = !__priv.shown
     }
 }
 

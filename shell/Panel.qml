@@ -35,6 +35,7 @@ import "launcher"
 Rectangle {
     property Indicator selectedIndicator: null
     property Indicator lastIndicator: null
+    readonly property alias launcherIndicator: launcherIndicator
     readonly property alias currentLauncherItem: launcher.currentItem
     property real size: Themes.Units.iconSizes.large
     property int alignment: Qt.AlignBottom
@@ -102,7 +103,9 @@ Rectangle {
                 onTriggered: indicatorTriggered(caller)
             }
             */
-            LauncherIndicator {}
+            LauncherIndicator {
+                id: launcherIndicator
+            }
 
             Layout.alignment: Qt.AlignLeft
         }

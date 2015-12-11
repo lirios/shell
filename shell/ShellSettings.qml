@@ -82,48 +82,8 @@ Components.Object {
     }
 
     /*
-     * Key bindings
-     */
-
-    Settings.Settings {
-        id: wmKeybindings
-        schema.id: "org.hawaiios.desktop.keybindings.wm"
-        schema.path: "/org/hawaiios/desktop/keybindings/wm/"
-        onSettingsChanged: shellSettings.applyKeyBindings(wmKeybindings)
-    }
-
-    Settings.Settings {
-        id: smKeybindings
-        schema.id: "org.hawaiios.desktop.keybindings.sm"
-        schema.path: "/org/hawaiios/desktop/keybindings/sm/"
-        onSettingsChanged: shellSettings.applyKeyBindings(smKeybindings)
-    }
-
-    Settings.Settings {
-        id: mmKeybindings
-        schema.id: "org.hawaiios.desktop.keybindings.multimedia"
-        schema.path: "/org/hawaiios/desktop/keybindings/multimedia/"
-        onSettingsChanged: shellSettings.applyKeyBindings(mmKeybindings)
-    }
-
-    /*
      * Methods
      */
-
-    function applyKeyBindings(o) {
-        var i, j;
-        for (i = 0; i < o.schema.keys.length; i++) {
-            var name = o.schema.keys[i];
-            var bindings = o[name];
-
-            if (bindings.length === 0) {
-                hawaiiCompositor.keyBindingsManager.unregisterKeyBinding(name);
-            } else {
-                for (j = 0; j < bindings.length; j++)
-                    hawaiiCompositor.keyBindingsManager.registerKeyBinding(name, bindings[j]);
-            }
-        }
-    }
 
     function convertFillMode(fillMode) {
         switch (fillMode) {
@@ -142,11 +102,5 @@ Components.Object {
         default:
             return Image.Stretch;
         }
-    }
-
-    Component.onCompleted: {
-        applyKeyBindings(wmKeybindings);
-        applyKeyBindings(smKeybindings);
-        applyKeyBindings(mmKeybindings);
     }
 }

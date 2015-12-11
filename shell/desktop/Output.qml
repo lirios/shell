@@ -68,11 +68,6 @@ GreenIsland.WaylandOutput {
             onRestartRequested: mainItem.state = "restart"
         }
 
-        GreenIsland.KeyBindingsFilter {
-            anchors.fill: parent
-            keyBindings: hawaiiCompositor.keyBindingsManager
-        }
-
         GreenIsland.LocalPointerTracker {
             id: localPointerTracker
             anchors.fill: parent

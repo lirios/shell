@@ -24,13 +24,13 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.5
 import QtQuick.Layouts 1.0
-import GreenIsland 1.0 as GreenIsland
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import org.hawaiios.mixer 0.1 as MixerService
 import org.hawaiios.mpris2 0.1
+import org.hawaiios.settings 0.2 as Settings
 import ".."
 import "sound" as SoundIndicator
 
@@ -110,26 +110,42 @@ Indicator {
         }
     }
 
-    Connections {
-        target: hawaiiCompositor.keyBindingsManager
-        onKeyBindingPressed: {
-            switch (name) {
-            case "volumeUp":
-                MixerService.Mixer.increaseMaster();
-                break;
-            case "volumeDown":
-                MixerService.Mixer.decreaseMaster();
-                break;
-            case "volumeMute":
-                MixerService.Mixer.muted = !MixerService.Mixer.muted;
-                break;
-            case "mediaPlay":
-            case "mediaPrevious":
-            case "mediaNext":
-                break;
-            default:
-                break;
-            }
-        }
+    Settings.Settings {
+        id: mmKeybindings
+        schema.id: "org.hawaiios.desktop.keybindings.multimedia"
+        schema.path: "/org/hawaiios/desktop/keybindings/multimedia/"
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.volumeMute
+        onActivated: MixerService.Mixer.muted = !MixerService.Mixer.muted
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.volumeUp
+        onActivated: MixerService.Mixer.increaseMaster()
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.volumeDown
+        onActivated: MixerService.Mixer.decreaseMaster()
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.mediaPlay
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.mediaPrevious
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.mediaNext
     }
 }

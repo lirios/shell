@@ -36,7 +36,6 @@ GreenIsland.WaylandCompositor {
     readonly property alias primaryScreen: screenManager.primaryScreen
 
     readonly property alias applicationManager: applicationManager
-    readonly property alias keyBindingsManager: keyBindings
     readonly property alias settings: settings
 
     id: hawaiiCompositor
@@ -68,145 +67,6 @@ GreenIsland.WaylandCompositor {
     }
 */
 
-    GreenIsland.KeyBindings {
-        id: keyBindings
-        onKeyBindingPressed: {
-            var i;
-
-            switch (name) {
-                // wm
-            case "showDesktop":
-                for (i = 0; i < d.outputs.length; i++) {
-                    if (d.outputs[i].screenView.currentWorkspace.state === "reveal")
-                        d.outputs[i].screenView.currentWorkspace.state = "normal";
-                    else
-                        d.outputs[i].screenView.currentWorkspace.state = "reveal";
-                }
-                break;
-            case "presentWindows":
-                for (i = 0; i < d.outputs.length; i++) {
-                    if (d.outputs[i].screenView.currentWorkspace.state === "present")
-                        d.outputs[i].screenView.currentWorkspace.state = "normal";
-                    else
-                        d.outputs[i].screenView.currentWorkspace.state = "present";
-                }
-                break;
-            case "switchToWorkspace-1":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(1);
-                break;
-            case "switchToWorkspace-2":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(2);
-                break;
-            case "switchToWorkspace-3":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(3);
-                break;
-            case "switchToWorkspace-4":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(4);
-                break;
-            case "switchToWorkspace-5":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(5);
-                break;
-            case "switchToWorkspace-6":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(6);
-                break;
-            case "switchToWorkspace-7":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(7);
-                break;
-            case "switchToWorkspace-8":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(8);
-                break;
-            case "switchToWorkspace-9":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(9);
-                break;
-            case "switchToWorkspace-10":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(10);
-                break;
-            case "switchToWorkspace-11":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(11);
-                break;
-            case "switchToWorkspace-12":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.select(12);
-                break;
-            case "switchToWorkspaceLeft":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.selectPrevious();
-                break;
-            case "switchToWorkspaceRight":
-                for (i = 0; i < d.outputs.length; i++)
-                    d.outputs[i].screenView.layers.workspaces.selectNext();
-                break;
-                /*
-            case "switchWindows":
-            case "switchWindowsBackward":
-                if (compositorRoot.state != "windowSwitcher" && surfaceModel.count >= 2)
-                    // Activate only when two or more windows are available
-                    compositorRoot.state = "windowSwitcher";
-                break;
-                */
-                // sm
-            case "abortSession":
-                SessionInterface.requestLogOut();
-                break;
-            case "powerOff":
-                SessionInterface.requestPowerOff();
-                break;
-            case "lockScreen":
-                SessionInterface.lockSession();
-                break;
-            case "activateSession-1":
-                SessionInterface.activateSession(1);
-                break;
-            case "activateSession-2":
-                SessionInterface.activateSession(2);
-                break;
-            case "activateSession-3":
-                SessionInterface.activateSession(3);
-                break;
-            case "activateSession-4":
-                SessionInterface.activateSession(4);
-                break;
-            case "activateSession-5":
-                SessionInterface.activateSession(5);
-                break;
-            case "activateSession-6":
-                SessionInterface.activateSession(6);
-                break;
-            case "activateSession-7":
-                SessionInterface.activateSession(7);
-                break;
-            case "activateSession-8":
-                SessionInterface.activateSession(8);
-                break;
-            case "activateSession-9":
-                SessionInterface.activateSession(9);
-                break;
-            case "activateSession-10":
-                SessionInterface.activateSession(10);
-                break;
-            case "activateSession-11":
-                SessionInterface.activateSession(11);
-                break;
-            case "activateSession-12":
-                SessionInterface.activateSession(12);
-                break;
-            default:
-                break;
-            }
-        }
-    }
-
     /*
      * Components
      */
@@ -228,6 +88,9 @@ GreenIsland.WaylandCompositor {
     ShellSettings {
         id: settings
     }
+
+    // Key bindings
+    KeyBindings {}
 
     // Screen manager
     GreenIsland.ScreenManager {
