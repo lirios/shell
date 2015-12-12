@@ -54,20 +54,6 @@ GreenIsland.WaylandCompositor {
         surface.initialize(hawaiiCompositor, client, id, version);
     }
 
-/*
-    Connections {
-        target: GreenIsland.Compositor
-        onFadeIn: {
-            // Bring user layer up
-            compositorRoot.state = "session";
-        }
-        onFadeOut: {
-            // Fade the desktop out
-            compositorRoot.state = "splash";
-        }
-    }
-*/
-
     /*
      * Components
      */
@@ -172,53 +158,5 @@ GreenIsland.WaylandCompositor {
         id: outputComponent
 
         Output {}
-    }
-
-/*
-
-
-    // Shield
-    Loader {
-        id: shieldLoader
-        anchors.fill: parent
-        asynchronous: true
-        z: progress > 0 ? 901 : 899
-        opacity: progress
-
-        Behavior on z {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: Themes.Units.longDuration
-            }
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InSine
-                duration: Themes.Units.longDuration
-            }
-        }
-    }
-    */
-
-    /*
-     * Methods
-     */
-
-    function enableInput() {
-        var i;
-        for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
-            var window = compositorRoot.surfaceModel.get(i).item;
-            window.child.focus = true;
-        }
-    }
-
-    function disableInput() {
-        var i;
-        for (i = 0; i < compositorRoot.surfaceModel.count; i++) {
-            var window = compositorRoot.surfaceModel.get(i).window;
-            window.deactivate();
-        }
-        GreenIsland.Compositor.clearKeyboardFocus();
     }
 }
