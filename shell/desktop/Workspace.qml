@@ -83,64 +83,50 @@ Item {
     }
 
     function restore() {
-        var num = children.length;
+        var windows = windowManager.windowsForOutput(output);
+        var i, j, window, view;
+        for (i = 0; i < windows.length; i++) {
+            window = windows[i];
 
-        var i, window;
-        for (i = 0; i < num; i++) {
-            window = children[i];
+            for (j = 0; j < window.views.length; j++) {
+                // Get a hold of the view
+                view = window.views[j];
 
-            // Restore saved properties
-            if (window.savedProperties.saved) {
-                window.x = window.savedProperties.x;
-                window.y = window.savedProperties.y;
-                window.width = window.savedProperties.width;
-                window.height = window.savedProperties.height;
-                window.scale = window.savedProperties.scale;
-                window.savedProperties.saved = false;
+                // Restore saved properties
+                if (view.savedProperties.saved) {
+                    view.x = view.savedProperties.x;
+                    view.y = view.savedProperties.y;
+                    view.scale = view.savedProperties.scale;
+                    view.visible = true;
+                    view.savedProperties.saved = false;
+                }
+
+                // Disable animations
+                view.animationsEnabled = false;
             }
-
-            // Disable animations
-            window.animationsEnabled = false;
         }
     }
 
     function present() {
         // Parameters
-        var num = children.length;
+        var windows = windowManager.windowsForOutput(output);
         var hmargin = Themes.Units.dp(48);
         var vmargin = Themes.Units.dp(48);
 
         // Calculate rows and columns
-        var columns = Math.ceil(Math.sqrt(num));
-        var rows = Math.ceil(num / columns);
+        var columns = Math.ceil(Math.sqrt(windows.length));
+        var rows = Math.ceil(windows.length / columns);
 
         // Calculate cell size
         var cellWidth = output.availableGeometry.width / columns;
         var cellHeight = output.availableGeometry.height / rows;
 
         // Loop over windows
-        var i, window, scale;
+        var i, j, window, view, x, y;
         var currentDim = 0, lastDim = 1, row = 0, column = 0;
-        for (i = 0; i < num; i++) {
-            // Find window
-            window = children[i];
-            /*
-            if (!isWindowFine(window))
-                continue;
-            */
-
-            // Enable animations
-            window.animationsEnabled = true;
-
-            // Save original properties
-            if (!window.savedProperties.saved) {
-                window.savedProperties.x = window.x;
-                window.savedProperties.y = window.y;
-                window.savedProperties.width = window.width;
-                window.savedProperties.height = window.height;
-                window.savedProperties.scale = window.scale;
-                window.savedProperties.saved = true;
-            }
+        for (i = 0; i < windows.length; i++) {
+            // Get a hold of the window
+            window = windows[i];
 
             // Calculate grid
             if (i > 0) {
@@ -161,13 +147,37 @@ Item {
                 lastDim = currentDim;
             }
 
-            // Move window
-            window.x = (cellWidth * column) + hmargin;
-            window.y = (cellHeight * row) + vmargin;
+            // Determine global coordinates
+            x = output.position.x + (cellWidth * column);
+            y = output.position.y + (cellHeight * row);
 
-            // Resize window
-            window.scale = Math.min((cellWidth - hmargin) / window.width,
-                                    (cellHeight - vmargin) / window.height) * 0.98;
+            for (j = 0; j < window.views.length; j++) {
+                // Get a hold of the view
+                view = window.views[j];
+
+                // Enable animations
+                view.animationsEnabled = true;
+
+                // Save original properties
+                if (!view.savedProperties.saved) {
+                    view.savedProperties.x = view.x;
+                    view.savedProperties.y = view.y;
+                    view.savedProperties.scale = view.scale;
+                    view.savedProperties.saved = true;
+                }
+
+                // Move this view in output coordinates space
+                view.x = x - view.output.position.x;
+                view.y = y - view.output.position.y;
+
+                // Scale view down
+                view.scale = Math.min((cellWidth - hmargin) / view.width,
+                                      (cellHeight - vmargin) / view.height) * 0.98;
+
+                // Hide on other outputs
+                if (view.output !== output)
+                    view.visible = false;
+            }
 
             // Create a chrome
             /*
@@ -184,16 +194,16 @@ Item {
     }
 
     function reveal() {
-        var num = children.length;
-        var margin = Themes.Units.dp(128);
+        var windows = windowManager.windowsForOutput(output);
+        var margin = Themes.Units.dp(96);
 
         // Divide screen in 4 zones
         var halfWidth = output.availableGeometry.width * 0.5;
         var halfHeight = output.availableGeometry.height * 0.5;
-        var topLeft = Qt.rect(0, 0, halfWidth, halfHeight);
-        var topRight = Qt.rect(topLeft.width, 0, halfWidth, halfHeight);
-        var bottomLeft = Qt.rect(0, topLeft.height, halfWidth, halfHeight);
-        var bottomRight = Qt.rect(bottomLeft.width, topLeft.height, halfWidth, halfHeight);
+        var topLeft = Qt.rect(output.position.x, output.position.y, halfWidth, halfHeight);
+        var topRight = Qt.rect(output.position.x + topLeft.width, output.position.y, halfWidth, halfHeight);
+        var bottomLeft = Qt.rect(output.position.x, output.position.y + topLeft.height, halfWidth, halfHeight);
+        var bottomRight = Qt.rect(output.position.x + bottomLeft.width, output.position.y + topLeft.height, halfWidth, halfHeight);
         var contains = function(r, x, y) {
             if (x <= r.x || x >= r.x + r.width)
                 return false;
@@ -203,43 +213,48 @@ Item {
         };
 
         // Loop over windows
-        var i, window, x, y;
-        for (i = 0; i < children.length; i++) {
-            // Find window
-            window = children[i];
+        var i, j, window, view, x, y;
+        for (i = 0; i < windows.length; i++) {
+            // Get a hold of the window
+            window = windows[i];
 
-            // Skip certain windows
-            /*
-            if (!isWindowFine(window))
-                continue;
-            */
-
-            // Enable animations
-            window.animationsEnabled = true;
-
-            // Save original properties
-            if (!window.savedProperties.saved) {
-                window.savedProperties.x = window.x;
-                window.savedProperties.y = window.y;
-                window.savedProperties.width = window.width;
-                window.savedProperties.height = window.height;
-                window.savedProperties.scale = window.scale;
-                window.savedProperties.saved = true;
+            // Determine global coordinates to the closest of the 4 zones
+            if (contains(topRight, window.x, window.y)) {
+                x = topRight.x + topRight.width - margin;
+                y = topRight.y - window.surface.size.height + margin;
+            } else if (contains(bottomLeft, window.x, window.y)) {
+                x = bottomLeft.x - window.surface.size.width + margin;
+                y = bottomLeft.y + bottomLeft.height - margin;
+            } else if (contains(bottomRight, window.x, window.y)) {
+                x = bottomRight.x + bottomRight.width - margin;
+                y = bottomRight.y + bottomRight.height - margin;
+            } else {
+                x = topLeft.x - window.surface.size.width + margin;
+                y = topLeft.y - window.surface.size.height + margin;
             }
 
-            // Move the window into the closest of the 4 zones
-            if (contains(topLeft, window.x, window.y)) {
-                window.x = topLeft.x - window.width + margin;
-                window.y = topLeft.y - window.height + margin;
-            } else if (contains(topRight, window.x, window.y)) {
-                window.x = topRight.x + topRight.width - margin;
-                window.y = topRight.y - window.height + margin;
-            } else if (contains(bottomLeft, window.x, window.y)) {
-                window.x = bottomLeft.x - window.width + margin;
-                window.y = bottomLeft.y + bottomLeft.height - margin;
-            } else if (contains(bottomRight, window.x, window.y)) {
-                window.x = bottomRight.x + bottomRight.width - margin;
-                window.y = bottomRight.y + bottomRight.height - margin;
+            for (j = 0; j < window.views.length; j++) {
+                // Get a hold of the view
+                view = window.views[j];
+
+                // Enable animations
+                view.animationsEnabled = true;
+
+                // Save original properties
+                if (!view.savedProperties.saved) {
+                    view.savedProperties.x = view.x;
+                    view.savedProperties.y = view.y;
+                    view.savedProperties.scale = view.scale;
+                    view.savedProperties.saved = true;
+                }
+
+                // Move this view in output coordinates space
+                view.x = x - view.output.position.x;
+                view.y = y - view.output.position.y;
+
+                // Hide on other outputs
+                if (view.output !== output)
+                    view.visible = false;
             }
         }
     }
