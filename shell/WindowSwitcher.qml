@@ -32,16 +32,16 @@ import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 
 Rectangle {
+    readonly property real thumbnailHeight: Themes.Units.dp(250)
+
     signal closed()
 
     id: root
     color: "#80000000"
     radius: Themes.Units.gu(0.5)
     opacity: 0.0
-    //width: Math.min(listView.count * (listView.thumbnailWidth + Themes.Units.largeSpacing * 2), screenView.width * 0.7)
-    //height: Math.min(listView.thumbnailHeight + label.paintedHeight * 2 + Themes.Units.largeSpacing * 2, screenView.height * 0.5)
-    width: screenView.width * 0.7
-    height: screenView.height * 0.5
+    width: output.availableGeometry.width * 0.7
+    height: Math.min(thumbnailHeight + layout.anchors.margins * 2 + layout.spacing * 2 + label.paintedHeight, output.availableGeometry.height * 0.7)
 
     Behavior on opacity {
         NumberAnimation {
@@ -53,32 +53,15 @@ Rectangle {
     // Keyboard event handling
     GreenIsland.KeyEventFilter {
         Keys.onReleased: {
-            if (event.modifiers & Qt.MetaModifier) {
-                // Cycle between windows
-                if (event.key === Qt.Key_Tab) {
-                    // Next
-                    if (listView.currentIndex == listView.count - 1)
-                        listView.currentIndex = 0;
-                    else
-                        listView.currentIndex++;
-                } else if (event.key === Qt.Key_Backtab) {
-                    // Previous
-                    if (listView.currentIndex == 0)
-                        listView.currentIndex = listView.count - 1;
-                    else
-                        listView.currentIndex--;
-                }
-            } else {
+            if (event.key == Qt.Key_Super_L || event.key == Qt.Key_Super_R) {
                 // Give focus to the selected window
-                var item = listModel.get(listView.currentIndex);
-                if (item && item.surface)
-                    item.surface.activate();
+                var window = listView.model.get(listView.currentIndex);
+                if (window)
+                    window.active = true;
 
                 // Keys released, deactivate switcher
                 root.closed();
             }
-
-            event.accepted = true;
         }
     }
 
@@ -86,12 +69,12 @@ Rectangle {
         id: thumbnailComponent
 
         Rectangle {
-            readonly property string title: modelData.child.surface.title
-            readonly property alias surface: windowItem.surface
+            readonly property string title: window.title
+            readonly property real ratio: window.surface.size.width / window.surface.size.height
 
             id: wrapper
-            width: listView.thumbnailWidth
-            height: listView.thumbnailHeight
+            width: thumbnailHeight * ratio
+            height: thumbnailHeight
             color: wrapper.ListView.isCurrentItem ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
             radius: Themes.Units.gu(0.5)
 
@@ -101,7 +84,7 @@ Rectangle {
                     fill: parent
                     margins: Themes.Units.smallSpacing
                 }
-                surface: thumbnailSurface
+                surface: window.surface
                 sizeFollowsSurface: false
                 inputEventsEnabled: false
                 view.discardFrontBuffers: true
@@ -121,7 +104,7 @@ Rectangle {
                 }
                 width: Themes.Units.iconSizes.large
                 height: width
-                //iconName: modelData.clientWindow.iconName
+                iconName: window.iconName
                 cache: false
                 z: 1
             }
@@ -129,6 +112,7 @@ Rectangle {
     }
 
     ColumnLayout {
+        id: layout
         anchors {
             fill: parent
             margins: Themes.Units.largeSpacing
@@ -136,16 +120,10 @@ Rectangle {
         spacing: Themes.Units.smallSpacing
 
         ListView {
-            readonly property real thumbnailWidth: Themes.Units.gu(24)
-            readonly property real thumbnailHeight: thumbnailWidth / ratio
-            readonly property real ratio: screenView.width / screenView.height
-
             id: listView
             clip: true
             orientation: ListView.Horizontal
-            model: ListModel {
-                id: listModel
-            }
+            model: hawaiiCompositor.windowsModel
             spacing: Themes.Units.smallSpacing
             highlightMoveDuration: Themes.Units.shortDuration
             delegate: thumbnailComponent
@@ -171,9 +149,21 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        // Populate list model
-
         // Show with an animtation
         opacity = 1.0;
+    }
+
+    function previous() {
+        if (listView.currentIndex == 0)
+            listView.currentIndex = listView.count - 1;
+        else
+            listView.currentIndex--;
+    }
+
+    function next() {
+        if (listView.currentIndex == listView.count - 1)
+            listView.currentIndex = 0;
+        else
+            listView.currentIndex++;
     }
 }

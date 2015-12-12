@@ -35,6 +35,7 @@ GreenIsland.WaylandCompositor {
     readonly property alias outputs: d.outputs
     readonly property alias primaryScreen: screenManager.primaryScreen
 
+    readonly property alias windowsModel: windowsModel
     readonly property alias applicationManager: applicationManager
     readonly property alias settings: settings
 
@@ -124,6 +125,11 @@ GreenIsland.WaylandCompositor {
         }
     }
 
+    // Windows
+    ListModel {
+        id: windowsModel
+    }
+
     // Window manager
     GreenIsland.WindowManager {
         id: windowManager
@@ -135,6 +141,11 @@ GreenIsland.WaylandCompositor {
                 view = windowComponent.createObject(output.surfacesArea, {"window": window});
                 view.initialize(window, output);
             }
+
+            window.typeChanged.connect(function() {
+                if (window.type == GreenIsland.ClientWindow.TopLevel)
+                    windowsModel.append({"window": window});
+            });
         }
 
         Component.onCompleted: {

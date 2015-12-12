@@ -42,21 +42,10 @@ Item {
     }
 
     readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
-
     readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
+    property alias windowsSwitcher: windowSwitcherLoader
 
     id: screenView
-    state: "normal"
-    states: [
-        State {
-            name: "normal"
-        },
-        State {
-            name: "windowsSwitcher"
-            PropertyChanges { target: windowSwitcherLoader; active: true }
-            //StateChangeScript { script: disableInput() }
-        }
-    ]
 
     /*
      * Hot corners
@@ -141,30 +130,6 @@ Item {
         z: 5
     }
 
-    // Key events filter
-    GreenIsland.KeyEventFilter {
-        id: keyFilter
-
-        Keys.onPressed: {
-            //console.debug("Key pressed:", event.key);
-
-            // Windows switcher
-            if (event.modifiers & Qt.MetaModifier) {
-                console.log("key", event.key, Qt.Key_Meta, Qt.Key_Tab, Qt.Key_Backtab);
-                if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
-                    if (!windowSwitcherLoader.active) {
-                    //if (screenView.state != "windowsSwitcher" && currentWorkspace.children.length >= 2) {
-                        // Activate only when two or more windows are available
-                        //screenView.state = "windowsSwitcher";
-                        windowSwitcherLoader.active = true;
-                        event.accepted = true;
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     // Windows switcher
     Loader {
         id: windowSwitcherLoader
@@ -180,6 +145,16 @@ Item {
         Connections {
             target: windowSwitcherLoader.item
             onClosed: windowSwitcherLoader.active = false
+        }
+
+        function previous() {
+            if (item)
+                item.previous();
+        }
+
+        function next() {
+            if (item)
+                item.next();
         }
     }
 

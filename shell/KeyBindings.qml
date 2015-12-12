@@ -53,10 +53,20 @@ Item {
                 hawaiiCompositor.outputs[i].screenView.layers.workspaces.select(number);
         }
 
-        function switchWindows() {
-            if (compositorRoot.state != "windowSwitcher" && surfaceModel.count >= 2)
-                // Activate only when two or more windows are available
-                compositorRoot.state = "windowSwitcher";
+        function switchWindowsBackward() {
+            // TODO: We should find out where the mouse pointer currently is
+            // and use that output instead of the primary one
+            if (!hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.active)
+                hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.active = true;
+            hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.previous();
+        }
+
+        function switchWindowsForward() {
+            // TODO: We should find out where the mouse pointer currently is
+            // and use that output instead of the primary one
+            if (!hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.active)
+                hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.active = true;
+            hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.next();
         }
     }
 
@@ -174,13 +184,13 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchWindows
-        onActivated: d.switchWindows()
+        onActivated: d.switchWindowsForward()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchWindowsBackward
-        onActivated: d.switchWindows()
+        onActivated: d.switchWindowsBackward()
     }
 
     Shortcut {
