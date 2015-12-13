@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
     }
 #endif
     if (!alreadyLoaded) {
-        if (!homeApp.load(QStringLiteral("org.hawaiios.desktop")))
+        if (!homeApp.loadUrl(QUrl(QStringLiteral("qrc:/Compositor.qml"))))
             return 1;
     }
 
