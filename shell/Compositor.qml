@@ -102,12 +102,8 @@ GreenIsland.WaylandCompositor {
         }
         onPrimaryScreenChanged: {
             var index = screenManager.indexOf(screen);
-            if (index < d.outputs.length) {
-                hawaiiCompositor.primarySurfacesArea = Qt.binding(function() {
-                    return d.outputs[index].surfacesArea;
-                });
+            if (index < d.outputs.length)
                 hawaiiCompositor.defaultOutput = d.outputs[index];
-            }
         }
     }
 
