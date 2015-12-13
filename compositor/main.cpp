@@ -49,6 +49,10 @@
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
+using namespace GreenIsland::Server;
+
+static bool failSafe = false;
+
 static void setupEnvironment()
 {
     // Set defaults
@@ -169,40 +173,49 @@ int main(int argc, char *argv[])
     }
 
     // Home application
-    GreenIsland::Server::HomeApplication homeApp;
-    homeApp.setScreenConfiguration(fakeScreenData);
+    HomeApplication *homeApp = new HomeApplication(&app);
+    homeApp->setScreenConfiguration(fakeScreenData);
 
     // Process launcher
-    ProcessLauncher *processLauncher = new ProcessLauncher(&homeApp);
+    ProcessLauncher *processLauncher = new ProcessLauncher(homeApp);
     if (!ProcessLauncher::registerWithDBus(processLauncher))
         return 1;
 
     // Screen saver
-    ScreenSaver *screenSaver = new ScreenSaver(&homeApp);
+    ScreenSaver *screenSaver = new ScreenSaver(homeApp);
     if (!ScreenSaver::registerWithDBus(screenSaver))
         return 1;
 
     // Session interface
-    SessionManager *sessionManager = new SessionManager(&homeApp);
-    homeApp.setContextProperty(QStringLiteral("SessionInterface"),
+    SessionManager *sessionManager = new SessionManager(homeApp);
+    homeApp->setContextProperty(QStringLiteral("SessionInterface"),
                                new SessionInterface(sessionManager));
+
+    // Fail safe mode
+    QObject::connect(homeApp, &HomeApplication::objectCreated, [homeApp](QObject *object, const QUrl &) {
+        // Load the error screen in case of error
+        if (!object && !failSafe) {
+            failSafe = true;
+            homeApp->loadUrl(QUrl(QStringLiteral("qrc:/error/ErrorCompositor.qml")));
+        }
+    });
 
     // Create the compositor and run
     bool alreadyLoaded = false;
 #if DEVELOPMENT_BUILD
     if (parser.isSet(qmlOption)) {
-        if (homeApp.loadUrl(QUrl::fromLocalFile(parser.value(qmlOption))))
+        if (homeApp->loadUrl(QUrl::fromLocalFile(parser.value(qmlOption))))
             alreadyLoaded = true;
         else
             return 1;
     }
 #endif
     if (!alreadyLoaded) {
-        if (!homeApp.loadUrl(QUrl(QStringLiteral("qrc:/Compositor.qml"))))
+        if (!homeApp->loadUrl(QUrl(QStringLiteral("qrc:/Compositor.qml"))))
             return 1;
     }
 
-    QObject *rootObject = homeApp.rootObjects().at(0);
+    QObject *rootObject = homeApp->rootObjects().at(0);
     QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
     if (compositor)
         processLauncher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));

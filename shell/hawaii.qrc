@@ -13,7 +13,9 @@
         <file>components/private/PopupBase.qml</file>
         <file>components/PopupMenu.qml</file>
         <file>windows/WindowMenu.qml</file>
-        <file>ErrorScreen.qml</file>
+        <file>error/ErrorCompositor.qml</file>
+        <file>error/ErrorOutput.qml</file>
+        <file>error/ErrorScreen.qml</file>
         <file>overlays/HelpOverlay.qml</file>
         <file>overlays/UnresponsiveOverlay.qml</file>
         <file>Panel.qml</file>
