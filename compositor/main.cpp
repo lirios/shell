@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
     bool alreadyLoaded = false;
 #if DEVELOPMENT_BUILD
     if (parser.isSet(qmlOption)) {
-        if (homeApp.loadFile(parser.value(qmlOption)))
+        if (homeApp.loadUrl(QUrl::fromLocalFile(parser.value(qmlOption))))
             alreadyLoaded = true;
         else
             return 1;
