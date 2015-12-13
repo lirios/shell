@@ -52,6 +52,7 @@ GreenIsland.WaylandOutput {
     transform: nativeScreen.transform
     scaleFactor: nativeScreen.scaleFactor
     sizeFollowsWindow: true
+    automaticFrameCallback: powerState === GreenIsland.WaylandOutput.PowerStateOn
     window: Window {
         id: window
         x: nativeScreen.position.x
