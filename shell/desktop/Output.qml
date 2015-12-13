@@ -37,6 +37,8 @@ GreenIsland.WaylandOutput {
     readonly property alias surfacesArea: screenView.currentWorkspace
     readonly property alias screenView: screenView
 
+    property QtObject activeWindow: null
+
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
     property alias zoomEnabled: zoomArea.enabled

@@ -81,12 +81,12 @@ Rectangle {
     }
 
     Connections {
-        target: compositorRoot
+        target: output
         onActiveWindowChanged: setup()
     }
 
     Connections {
-        target: compositorRoot.activeWindow ? compositorRoot.activeWindow.clientWindow : null
+        target: output.activeWindow
         onMaximizedChanged: setup()
     }
 
@@ -191,7 +191,7 @@ Rectangle {
     function setup() {
         // TODO: Don't resize the panel, the window is maximized before we change the available
         // geometry resulting in a "hole" between the window and the panel
-        if (compositorRoot.activeWindow && compositorRoot.activeWindow.clientWindow.maximized) {
+        if (output.activeWindow && output.activeWindow.maximized) {
             color = Themes.Theme.palette.rgba(Themes.Theme.palette.window.backgroundColor, 0.85);
             //launcher.iconSize = Themes.Units.iconSizes.medium;
         } else {
