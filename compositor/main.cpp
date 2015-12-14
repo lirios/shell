@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
 
     // Quit when the process is killed
     QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal,
-                     QApplication::instance(), &QApplication::quit);
+                     &app, &QApplication::quit);
 
     // Print version information
     qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
