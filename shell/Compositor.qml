@@ -47,6 +47,13 @@ GreenIsland.WaylandCompositor {
             Component.onCompleted: {
                 initialize()
             }
+        },
+        GreenIsland.Screenshooter {
+            id: screenshooter
+
+            Component.onCompleted: {
+                initialize()
+            }
         }
     ]
     onCreateSurface: {
