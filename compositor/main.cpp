@@ -189,14 +189,21 @@ int main(int argc, char *argv[])
     // Session interface
     SessionManager *sessionManager = new SessionManager(homeApp);
     homeApp->setContextProperty(QStringLiteral("SessionInterface"),
-                               new SessionInterface(sessionManager));
+                                new SessionInterface(sessionManager));
 
     // Fail safe mode
     QObject::connect(homeApp, &HomeApplication::objectCreated, [homeApp](QObject *object, const QUrl &) {
-        // Load the error screen in case of error
-        if (!object && !failSafe) {
-            failSafe = true;
-            homeApp->loadUrl(QUrl(QStringLiteral("qrc:/error/ErrorCompositor.qml")));
+        if (!object) {
+            if (failSafe) {
+                // We give up because even the error screen has an error
+                qWarning("A fatal error has occurred while running Hawaii, but the error "
+                         "screen has errors too. Giving up.");
+                ::exit(1);
+            } else {
+                // Load the error screen in case of error
+                failSafe = true;
+                homeApp->loadUrl(QUrl(QStringLiteral("qrc:/error/ErrorCompositor.qml")));
+            }
         }
     });
 
