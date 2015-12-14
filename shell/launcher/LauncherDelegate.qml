@@ -141,7 +141,7 @@ Item {
                     if (model.active)
                         toggleWindows();
                     else
-                        activeWindows();
+                        activateWindows();
                 } else {
                     if (!listView.model.get(index).launch())
                         console.warn("Failed to run:", model.appId);
@@ -165,19 +165,18 @@ Item {
         }
     }
 
-    function activeWindows() {
+    function activateWindows() {
         // Set index so that the window have a clue of which icon was clicked
         listView.currentIndex = index;
 
-        // Minimize or unminimize windows
-        var i, entry;
-        for (i = 0; i < surfaceModel.count; i++) {
-            entry = surfaceModel.get(i);
-            if (entry.window.appId === model.appId) {
-                if (entry.window.minimized)
-                    entry.window.unminimize();
-                if (!entry.window.active)
-                    entry.window.activate();
+        // Activate all windows of this application and unminimize
+        var i, window;
+        for (i = 0; i < hawaiiCompositor.windowsModel.count; i++) {
+            window = hawaiiCompositor.windowsModel.get(i).window;
+            if (window.appId === model.appId) {
+                if (window.minimized)
+                    window.minimized = false;
+                window.active = true;
             }
         }
 
@@ -190,15 +189,11 @@ Item {
         listView.currentIndex = index;
 
         // Minimize or unminimize windows
-        var i, entry;
-        for (i = 0; i < surfaceModel.count; i++) {
-            entry = surfaceModel.get(i);
-            if (entry.window.appId === model.appId) {
-                if (entry.window.minimized)
-                    entry.window.unminimize();
-                else
-                    entry.window.minimize();
-            }
+        var i, window;
+        for (i = 0; i < hawaiiCompositor.windowsModel.count; i++) {
+            window = hawaiiCompositor.windowsModel.get(i).window;
+            if (window.appId === model.appId)
+                window.minimized = !window.minimized;
         }
     }
 
