@@ -27,31 +27,15 @@
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QStandardPaths>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
 #include <QtWidgets/QApplication>
 
-#include <GreenIsland/QtWaylandCompositor/QWaylandCompositor>
-
 #include <Hawaii/greenisland_version.h>
-#include <GreenIsland/Server/HomeApplication>
 
-#include "sigwatch/sigwatch.h"
-
+#include "application.h"
 #include "config.h"
 #include "gitsha1.h"
-#include "processlauncher/processlauncher.h"
-#include "screensaver/screensaver.h"
-#include "sessionmanager/sessioninterface.h"
-#include "sessionmanager/sessionmanager.h"
-
-#include <unistd.h>
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
-
-using namespace GreenIsland::Server;
-
-static bool failSafe = false;
 
 static void setupEnvironment()
 {
@@ -148,15 +132,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Unix signals watcher
-    UnixSignalWatcher sigwatch;
-    sigwatch.watchForSignal(SIGINT);
-    sigwatch.watchForSignal(SIGTERM);
-
-    // Quit when the process is killed
-    QObject::connect(&sigwatch, &UnixSignalWatcher::unixSignal,
-                     &app, &QApplication::quit);
-
     // Print version information
     qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
            "** http://hawaiios.org\n"
@@ -165,67 +140,21 @@ int main(int argc, char *argv[])
            HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
            HAWAII_VERSION_STRING, GIT_REV);
 
-    // Register D-Bus service
-    if (!QDBusConnection::sessionBus().registerService(QStringLiteral("org.hawaiios.Session"))) {
-        qCritical("Failed to register D-Bus service: %s",
-                  qPrintable(QDBusConnection::sessionBus().lastError().message()));
-        return 1;
-    }
-
-    // Home application
-    HomeApplication *homeApp = new HomeApplication(&app);
-    homeApp->setScreenConfiguration(fakeScreenData);
-
-    // Process launcher
-    ProcessLauncher *processLauncher = new ProcessLauncher(homeApp);
-    if (!ProcessLauncher::registerWithDBus(processLauncher))
-        return 1;
-
-    // Screen saver
-    ScreenSaver *screenSaver = new ScreenSaver(homeApp);
-    if (!ScreenSaver::registerWithDBus(screenSaver))
-        return 1;
-
-    // Session interface
-    SessionManager *sessionManager = new SessionManager(homeApp);
-    homeApp->setContextProperty(QStringLiteral("SessionInterface"),
-                                new SessionInterface(sessionManager));
-
-    // Fail safe mode
-    QObject::connect(homeApp, &HomeApplication::objectCreated, [homeApp](QObject *object, const QUrl &) {
-        if (!object) {
-            if (failSafe) {
-                // We give up because even the error screen has an error
-                qWarning("A fatal error has occurred while running Hawaii, but the error "
-                         "screen has errors too. Giving up.");
-                ::exit(1);
-            } else {
-                // Load the error screen in case of error
-                failSafe = true;
-                homeApp->loadUrl(QUrl(QStringLiteral("qrc:/error/ErrorCompositor.qml")));
-            }
-        }
-    });
+    // Application
+    Application *hawaii = new Application();
+    hawaii->setScreenConfiguration(fakeScreenData);
 
     // Create the compositor and run
-    bool alreadyLoaded = false;
+    bool urlAlreadySet = false;
 #if DEVELOPMENT_BUILD
     if (parser.isSet(qmlOption)) {
-        if (homeApp->loadUrl(QUrl::fromLocalFile(parser.value(qmlOption))))
-            alreadyLoaded = true;
-        else
-            return 1;
+        urlAlreadySet = true;
+        hawaii->setUrl(QUrl::fromLocalFile(parser.value(qmlOption)));
     }
 #endif
-    if (!alreadyLoaded) {
-        if (!homeApp->loadUrl(QUrl(QStringLiteral("qrc:/Compositor.qml"))))
-            return 1;
-    }
-
-    QObject *rootObject = homeApp->rootObjects().at(0);
-    QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
-    if (compositor)
-        processLauncher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
+    if (!urlAlreadySet)
+        hawaii->setUrl(QUrl(QStringLiteral("qrc:/Compositor.qml")));
+    QCoreApplication::postEvent(hawaii, new StartupEvent());
 
     return app.exec();
 }

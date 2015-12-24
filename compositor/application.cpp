@@ -24,45 +24,151 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtQml/QQmlComponent>
-#include <QtQml/QQmlContext>
-#include <QtQml/QQmlEngine>
+#include <QtWidgets/QApplication>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusError>
 
-#include <GreenIsland/Server/Compositor>
+#include <GreenIsland/QtWaylandCompositor/QWaylandCompositor>
 
 #include "application.h"
-#include "session/sessioninterface.h"
-#include "sessionmanager.h"
+#include "processlauncher/processlauncher.h"
+#include "screensaver/screensaver.h"
+#include "sessionmanager/sessioninterface.h"
+#include "sessionmanager/sessionmanager.h"
+#include "sigwatch/sigwatch.h"
 
-using namespace GreenIsland;
+static const QEvent::Type StartupEventType = (QEvent::Type)QEvent::registerEventType();
 
-Application::Application()
-    : QObject()
-    , HomeApplication()
-    , m_sessionManager(Q_NULLPTR)
+Application::Application(QObject *parent)
+    : QObject(parent)
+    , m_failSafe(false)
+    , m_started(false)
 {
-}
+    // Unix signals watcher
+    UnixSignalWatcher *sigwatch = new UnixSignalWatcher(this);
+    sigwatch->watchForSignal(SIGINT);
+    sigwatch->watchForSignal(SIGTERM);
 
-void Application::compositorLaunched()
-{
+    // Quit when the process is killed
+    connect(sigwatch, &UnixSignalWatcher::unixSignal, this, &Application::unixSignal);
+
+    // Home application
+    m_homeApp = new HomeApplication(this);
+
+    // Process launcher
+    m_launcher = new ProcessLauncher(this);
+
+    // Screen saver
+    m_screenSaver = new ScreenSaver(this);
+
     // Session manager
     m_sessionManager = new SessionManager(this);
-    if (!m_sessionManager->initialize())
-        QCoreApplication::exit(1);
-    m_sessionManager->autostart();
 
-    // Idle and wake signals
-    connect(Compositor::instance(), &Compositor::idle, this, [this] {
-        m_sessionManager->setIdle(true);
-    });
-    connect(Compositor::instance(), &Compositor::wake, this, [this] {
-        m_sessionManager->setIdle(false);
-    });
+    // Fail safe mode
+    connect(m_homeApp, &HomeApplication::objectCreated,
+            this, &Application::objectCreated);
 
-    // Register session interface as a fake singleton
-    QQmlContext *context = Compositor::instance()->engine()->rootContext();
-    context->setContextProperty(QStringLiteral("SessionInterface"),
-                                new SessionInterface(m_sessionManager));
+    // Invole shutdown sequence when quitting
+    connect(QApplication::instance(), &QApplication::aboutToQuit,
+            this, &Application::shutdown);
+}
+
+void Application::setScreenConfiguration(const QString &fakeScreenData)
+{
+    m_homeApp->setScreenConfiguration(fakeScreenData);
+}
+
+void Application::setUrl(const QUrl &url)
+{
+    m_url = url;
+}
+
+void Application::customEvent(QEvent *event)
+{
+    if (event->type() == StartupEventType)
+        startup();
+}
+
+void Application::startup()
+{
+    // Can't do the startup sequence twice
+    if (m_started)
+        return;
+
+    // Register D-Bus service
+    if (!QDBusConnection::sessionBus().registerService(QStringLiteral("org.hawaiios.Session"))) {
+        qWarning("Failed to register D-Bus service: %s",
+                 qPrintable(QDBusConnection::sessionBus().lastError().message()));
+        QApplication::exit(1);
+    }
+
+    // Process launcher
+    if (!ProcessLauncher::registerWithDBus(m_launcher))
+        QApplication::exit(1);
+
+    // Screen saver
+    if (!ScreenSaver::registerWithDBus(m_screenSaver))
+        QApplication::exit(1);
+
+    // Session interface
+    m_homeApp->setContextProperty(QStringLiteral("SessionInterface"),
+                                  new SessionInterface(m_sessionManager));
+
+    // Load the compositor
+    if (!m_homeApp->loadUrl(m_url))
+        QApplication::exit(1);
+
+    // Set Wayland socket name
+    QObject *rootObject = m_homeApp->rootObjects().at(0);
+    QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
+    if (compositor)
+        m_launcher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
+
+    m_started = true;
+}
+
+void Application::shutdown()
+{
+    m_launcher->deleteLater();
+    m_launcher = Q_NULLPTR;
+
+    m_screenSaver->deleteLater();
+    m_screenSaver = Q_NULLPTR;
+
+    m_homeApp->deleteLater();
+    m_homeApp = Q_NULLPTR;
+
+    m_sessionManager->deleteLater();
+    m_sessionManager = Q_NULLPTR;
+}
+
+void Application::unixSignal()
+{
+    QApplication::quit();
+}
+
+void Application::objectCreated(QObject *object, const QUrl &)
+{
+    // All went fine
+    if (object)
+        return;
+
+    // Compositor failed to load
+    if (m_failSafe) {
+        // We give up because even the error screen has an error
+        qWarning("A fatal error has occurred while running Hawaii, but the error "
+                 "screen has errors too. Giving up.");
+        QApplication::exit(1);
+    } else {
+        // Load the error screen in case of error
+        m_failSafe = true;
+        m_homeApp->loadUrl(QUrl(QStringLiteral("qrc:/error/ErrorCompositor.qml")));
+    }
+}
+
+StartupEvent::StartupEvent()
+    : QEvent(StartupEventType)
+{
 }
 
 #include "moc_application.cpp"

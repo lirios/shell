@@ -7,6 +7,7 @@ include_directories(
 )
 
 set(SOURCES
+    application.cpp
     main.cpp
     processlauncher/processlauncher.cpp
     screensaver/screensaver.cpp

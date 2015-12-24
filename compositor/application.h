@@ -31,19 +31,44 @@
 
 #include <GreenIsland/Server/HomeApplication>
 
+using namespace GreenIsland::Server;
+
+class ProcessLauncher;
+class ScreenSaver;
 class SessionManager;
 
-class Application : public QObject, public GreenIsland::HomeApplication
+class Application : public QObject
 {
     Q_OBJECT
 public:
-    Application();
+    Application(QObject *parent = Q_NULLPTR);
+
+    void setScreenConfiguration(const QString &fakeScreenData);
+    void setUrl(const QUrl &url);
 
 protected:
-    void compositorLaunched() Q_DECL_OVERRIDE;
+    void customEvent(QEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    QUrl m_url;
+    HomeApplication *m_homeApp;
+    ProcessLauncher *m_launcher;
+    ScreenSaver *m_screenSaver;
     SessionManager *m_sessionManager;
+    bool m_failSafe;
+    bool m_started;
+
+private Q_SLOTS:
+    void startup();
+    void shutdown();
+    void unixSignal();
+    void objectCreated(QObject *object, const QUrl &);
+};
+
+class StartupEvent : public QEvent
+{
+public:
+    StartupEvent();
 };
 
 #endif // APPLICATION_H
