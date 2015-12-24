@@ -55,11 +55,12 @@ GreenIsland.WaylandOutput {
     automaticFrameCallback: powerState === GreenIsland.WaylandOutput.PowerStateOn
     window: Window {
         id: window
-        x: nativeScreen.position.x
-        y: nativeScreen.position.y
-        width: nativeScreen.size.width
-        height: nativeScreen.size.height
-        flags: Qt.FramelessWindowHint
+        width: 1024
+        height: 768
+        minimumWidth: width
+        minimumHeight: height
+        maximumWidth: nativeScreen.size.width
+        maximumHeight: nativeScreen.size.height
 
         Connections {
             target: SessionInterface
