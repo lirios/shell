@@ -50,9 +50,13 @@ GreenIsland.WaylandCompositor {
         },
         GreenIsland.Screenshooter {
             id: screenshooter
+            onCaptureRequested: {
+                // TODO: We might want to do something depending on the capture type - plfiorini
+                screenshot.createClientBuffer();
+            }
 
             Component.onCompleted: {
-                initialize()
+                initialize();
             }
         }
     ]
