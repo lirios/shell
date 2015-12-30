@@ -45,7 +45,7 @@ GreenIsland.WaylandCompositor {
             id: applicationManager
 
             Component.onCompleted: {
-                initialize()
+                initialize();
             }
         },
         GreenIsland.Screenshooter {
