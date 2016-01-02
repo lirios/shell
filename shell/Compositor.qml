@@ -48,6 +48,13 @@ GreenIsland.WaylandCompositor {
                 initialize();
             }
         },
+        GreenIsland.Screencaster {
+            id: screencaster
+
+            Component.onCompleted: {
+                initialize();
+            }
+        },
         GreenIsland.Screenshooter {
             id: screenshooter
             onCaptureRequested: {
