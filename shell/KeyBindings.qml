@@ -44,6 +44,12 @@ Item {
         schema.path: "/org/hawaiios/desktop/keybindings/sm/"
     }
 
+    Settings.Settings {
+        id: desktopKeybindings
+        schema.id: "org.hawaiios.desktop.keybindings.desktop"
+        schema.path: "/org/hawaiios/desktop/keybindings/desktop/"
+    }
+
     QtObject {
         id: d
 
@@ -564,5 +570,54 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: smKeybindings.activateSession12
         onActivated: SessionInterface.activateSession(12)
+    }
+
+    /*
+     * Desktop
+     */
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.screenshot
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.activeWindowScreenshot
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.windowScreenshot
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.areaScreenshot
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.screenshotClip
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.activeWindowScreenshotClip
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.windowScreenshotClip
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.areaScreenshotClip
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.screencast
     }
 }
