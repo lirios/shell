@@ -361,6 +361,53 @@
       <summary>Activate session 12</summary>
     </key>
   </schema>
+  <schema id="org.hawaiios.desktop.keybindings.desktop" path="/org/hawaiios/desktop/keybindings/desktop/">
+    <key name="screenshot" type="as">
+      <default>['Print']</default>
+      <summary>Take a screenshot</summary>
+      <description>Capture the screens and save into a picture</description>
+    </key>
+    <key name="active-window-screenshot" type="as">
+      <default>['Meta+Print']</default>
+      <summary>Take a screenshot of the active window</summary>
+      <description>Capture the active window and save into a picture</description>
+    </key>
+    <key name="window-screenshot" type="as">
+      <default>['Alt+Print']</default>
+      <summary>Take a screenshot of a window</summary>
+      <description>Capture a window and save into a picture</description>
+    </key>
+    <key name="area-screenshot" type="as">
+      <default>['Shift+Print']</default>
+      <summary>Take a screenshot of an area</summary>
+      <description>Capture an area of the screen and save into a picture</description>
+    </key>
+    <key name="screenshot-clip" type="as">
+      <default>['Ctrl+Print']</default>
+      <summary>Copy a screenshot to clipboard</summary>
+      <description>Capture the screens and copy to clipboard</description>
+    </key>
+    <key name="active-window-screenshot-clip" type="as">
+      <default>['Ctrl+Meta+Print']</default>
+      <summary>Copy a screenshot of the active window to clipboard</summary>
+      <description>Capture the active window and copy to clipboard</description>
+    </key>
+    <key name="window-screenshot-clip" type="as">
+      <default>['Ctrl+Alt+Print']</default>
+      <summary>Copy a screenshot of a window to clipboard</summary>
+      <description>Capture a window and copy to clipboard</description>
+    </key>
+    <key name="area-screenshot-clip" type="as">
+      <default>['Ctrl+Shift+Print']</default>
+      <summary>Copy a screenshot of an area to clipboard</summary>
+      <description>Capture an area of the screen and copy to clipboard</description>
+    </key>
+    <key name="screencast" type="as">
+      <default>['Ctrl+Shift+Alt+R']</default>
+      <summary>Record a short video of the screen</summary>
+      <description>Record a short video of the screen and save into a file</description>
+    </key>
+  </schema>
   <schema id="org.hawaiios.desktop.keybindings.multimedia" path="/org/hawaiios/desktop/keybindings/multimedia/">
     <key name="volume-mute" type="as">
       <default>['Volume Mute']</default>
