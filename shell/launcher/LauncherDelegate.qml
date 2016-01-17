@@ -192,8 +192,14 @@ Item {
         var i, window;
         for (i = 0; i < hawaiiCompositor.windowsModel.count; i++) {
             window = hawaiiCompositor.windowsModel.get(i).window;
-            if (window.appId === model.appId)
+            if (window.appId === model.appId) {
+                var pt = screenView.mapFromItem(root, root.width * 0.5, root.height * 0.5);
+                pt.x += output.position.x;
+                pt.y += output.position.y;
+
+                window.taskIconGeometry = Qt.rect(pt.x, pt.y, root.width, root.height);
                 window.minimized = !window.minimized;
+            }
         }
     }
 
