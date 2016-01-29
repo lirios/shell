@@ -128,15 +128,6 @@ if (NOT DEFINED GSETTINGS_SCHEMA_DIR)
 endif()
 message(STATUS "GSettings schemas directory: ${GSETTINGS_SCHEMA_DIR}")
 
-# Wayland
-set(REQUIRED_WAYLAND_VERSION 1.2.0)
-find_package(Wayland ${REQUIRED_WAYLAND_VERSION} COMPONENTS Client Cursor)
-set_package_properties(Wayland PROPERTIES
-    TYPE REQUIRED
-    PURPOSE "Required for protocols")
-add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for protocols")
-add_feature_info("Wayland-Cursor" Wayland_Cursor_FOUND "Required for changing cursors")
-
 # Subdirectories
 add_subdirectory(3rdparty)
 add_subdirectory(compositor)
