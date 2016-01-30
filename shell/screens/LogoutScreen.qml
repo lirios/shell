@@ -107,7 +107,7 @@ Components.Showable {
         id: __priv
 
         property string mode: "poweroff"
-        property real timeout: 60
+        property real timeout: 30
         property real remainingTime: timeout
         property var currentAction
 
