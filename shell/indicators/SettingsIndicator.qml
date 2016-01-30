@@ -99,36 +99,36 @@ Indicator {
                     text: qsTr("Left")
                     iconName: "align-horizontal-left-symbolic"
                     checkable: true
-                    checked: screenView.panel.alignment === Qt.AlignLeft
+                    checked: screenView.panel.state === "vleft"
                     exclusiveGroup: posGroup
-                    onClicked: screenView.panel.alignment = Qt.AlignLeft
+                    onClicked: screenView.panel.state = "vleft"
                 }
 
                 ToolButton {
                     text: qsTr("Top")
                     iconName: "align-horizontal-top-symbolic"
                     checkable: true
-                    checked: screenView.panel.alignment === Qt.AlignTop
+                    checked: screenView.panel.state === "htop"
                     exclusiveGroup: posGroup
-                    onClicked: screenView.panel.alignment = Qt.AlignTop
+                    onClicked: screenView.panel.state = "htop"
                 }
 
                 ToolButton {
                     text: qsTr("Right")
                     iconName: "align-horizontal-right-symbolic"
                     checkable: true
-                    checked: screenView.panel.alignment === Qt.AlignRight
+                    checked: screenView.panel.state === "vright"
                     exclusiveGroup: posGroup
-                    onClicked: screenView.panel.alignment = Qt.AlignRight
+                    onClicked: screenView.panel.state = "vright"
                 }
 
                 ToolButton {
                     text: qsTr("Bottom")
                     iconName: "align-horizontal-bottom-symbolic"
                     checkable: true
-                    checked: screenView.panel.alignment === Qt.AlignBottom
+                    checked: screenView.panel.state === "hbottom"
                     exclusiveGroup: posGroup
-                    onClicked: screenView.panel.alignment = Qt.AlignBottom
+                    onClicked: screenView.panel.state = "hbottom"
                 }
             }
             */

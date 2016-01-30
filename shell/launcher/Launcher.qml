@@ -31,42 +31,18 @@ import org.hawaiios.launcher 0.1 as CppLauncher
 
 Item {
     property real iconSize
-    property int alignment
-    readonly property real itemSize: iconSize + (iconSize * 0.25)
+    property real itemSize
     readonly property real itemPadding: Themes.Units.smallSpacing * 2
     property alias orientation: listView.orientation
+    property alias viewWidth: listView.width
+    property alias viewHeight: listView.height
     readonly property alias currentItem: listView.currentItem
 
     id: launcher
-    onOrientationChanged: {
-        listView.width = __priv.calcWidth();
-        listView.height = __priv.calcHeight();
-    }
-    onItemSizeChanged: {
-        listView.width = __priv.calcWidth();
-        listView.height = __priv.calcHeight();
-    }
-
-    QtObject {
-        id: __priv
-
-        function calcWidth() {
-            if (launcher.orientation == ListView.Horizontal)
-                return listView.contentWidth;
-            return launcher.itemSize + (launcher.itemPadding / 2);
-        }
-
-        function calcHeight() {
-            if (launcher.orientation == ListView.Vertical)
-                return listView.contentHeight;
-            return launcher.itemSize + (launcher.itemPadding / 2);
-        }
-    }
 
     ListView {
         id: listView
         anchors.centerIn: parent
-        orientation: alignment == Qt.AlignTop || alignment == Qt.AlignBottom ? ListView.Horizontal : ListView.Vertical
         spacing: Themes.Units.smallSpacing
         interactive: false
         add: Transition {
@@ -80,7 +56,5 @@ Item {
             applicationManager: hawaiiCompositor.applicationManager
         }
         delegate: LauncherDelegate {}
-        onContentWidthChanged: width = __priv.calcWidth()
-        onContentHeightChanged: height = __priv.calcHeight()
     }
 }

@@ -37,11 +37,6 @@ Item {
 
     Panel {
         id: panel
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
         z: 1
         onIndicatorTriggered: {
             // Close drawer if the current indicator is triggered again

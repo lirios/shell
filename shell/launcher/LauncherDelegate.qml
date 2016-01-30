@@ -55,6 +55,7 @@ Item {
     }
 
     Components.Icon {
+        id: icon
         anchors.centerIn: parent
         iconName: model.iconName
         width: iconSize

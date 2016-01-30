@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.1
-import QtQuick.Layouts 1.1
+import QtQml.Models 2.2
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 import "indicators"
@@ -38,23 +38,252 @@ Rectangle {
     readonly property alias launcherIndicator: launcherIndicator
     readonly property alias currentLauncherItem: launcher.currentItem
     property real size: Themes.Units.iconSizes.large
-    property int alignment: Qt.AlignBottom
-    readonly property int formFactor: (alignment == Qt.AlignLeft || alignment == Qt.AlignRight) ? Qt.Horizontal : Qt.Vertical
 
     signal indicatorTriggered(var indicator)
 
     id: root
     color: "transparent"
-    height: launcher.itemSize + launcher.itemPadding
+    state: "hbottom"
+    states: [
+        State {
+            name: "htop"
+
+            PropertyChanges {
+                target: root
+                width: undefined
+                height: launcher.itemSize + launcher.itemPadding
+            }
+            AnchorChanges {
+                target: root
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.bottom: undefined
+            }
+
+            PropertyChanges {
+                target: leftView
+                orientation: ListView.Horizontal
+                width: leftView.contentWidth
+                height: indicators.iconSize + Themes.Units.largeSpacing
+            }
+            AnchorChanges {
+                target: leftView
+                anchors.left: root.left
+                anchors.verticalCenter: root.verticalCenter
+            }
+
+            PropertyChanges {
+                target: launcher
+                orientation: ListView.Horizontal
+                width: root.width - leftView.width - indicatorsView.width
+                viewWidth: launcher.contentWidth
+                viewHeight: size + (launcher.itemPadding / 2)
+            }
+            AnchorChanges {
+                target: launcher
+                anchors.left: leftView.right
+                anchors.top: root.top
+                anchors.right: indicatorsView.left
+                anchors.bottom: root.bottom
+            }
+
+            PropertyChanges {
+                target: indicatorsView
+                orientation: ListView.Horizontal
+                width: indicatorsView.contentWidth
+                height: indicators.iconSize + Themes.Units.largeSpacing
+            }
+            AnchorChanges {
+                target: indicatorsView
+                anchors.right: root.right
+                anchors.verticalCenter: root.verticalCenter
+            }
+        },
+        State {
+            name: "hbottom"
+
+            PropertyChanges {
+                target: root
+                width: undefined
+                height: launcher.itemSize + launcher.itemPadding
+            }
+            AnchorChanges {
+                target: root
+                anchors.left: parent.left
+                anchors.top: undefined
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+            }
+
+            PropertyChanges {
+                target: leftView
+                orientation: ListView.Horizontal
+                width: leftView.contentWidth
+                height: indicators.iconSize + Themes.Units.largeSpacing
+            }
+            AnchorChanges {
+                target: leftView
+                anchors.left: root.left
+                anchors.verticalCenter: root.verticalCenter
+            }
+
+            PropertyChanges {
+                target: launcher
+                orientation: ListView.Horizontal
+                width: root.width - leftView.width - indicatorsView.width
+                viewWidth: launcher.contentWidth
+                viewHeight: size + (launcher.itemPadding / 2)
+            }
+            AnchorChanges {
+                target: launcher
+                anchors.left: leftView.right
+                anchors.top: root.top
+                anchors.right: indicatorsView.left
+                anchors.bottom: root.bottom
+            }
+
+            PropertyChanges {
+                target: indicatorsView
+                orientation: ListView.Horizontal
+                width: indicatorsView.contentWidth
+                height: indicators.iconSize + Themes.Units.largeSpacing
+            }
+            AnchorChanges {
+                target: indicatorsView
+                anchors.right: root.right
+                anchors.verticalCenter: root.verticalCenter
+            }
+        },
+        State {
+            name: "vleft"
+
+            PropertyChanges {
+                target: root
+                width: launcher.itemSize + launcher.itemPadding
+                height: undefined
+            }
+            AnchorChanges {
+                target: root
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.right: undefined
+                anchors.bottom: parent.bottom
+            }
+
+            PropertyChanges {
+                target: leftView
+                orientation: ListView.Vertical
+                width: indicators.iconSize + Themes.Units.largeSpacing
+                height: leftView.contentHeight
+            }
+            AnchorChanges {
+                target: leftView
+                anchors.top: root.top
+                anchors.horizontalCenter: root.horizontalCenter
+            }
+
+            PropertyChanges {
+                target: launcher
+                orientation: ListView.Vertical
+                height: root.height - leftView.height - indicatorsView.height
+                viewWidth: size + (launcher.itemPadding / 2)
+                viewHeight: launcher.contentHeight
+            }
+            AnchorChanges {
+                target: launcher
+                anchors.left: root.left
+                anchors.top: leftView.bottom
+                anchors.right: root.right
+                anchors.bottom: indicatorsView.top
+            }
+
+            PropertyChanges {
+                target: indicatorsView
+                orientation: ListView.Vertical
+                width: indicators.iconSize + Themes.Units.largeSpacing
+                height: indicatorsView.contentHeight
+            }
+            AnchorChanges {
+                target: indicatorsView
+                anchors.bottom: root.bottom
+                anchors.horizontalCenter: root.horizontalCenter
+            }
+        },
+        State {
+            name: "vright"
+
+            PropertyChanges {
+                target: root
+                width: launcher.itemSize + launcher.itemPadding
+                height: undefined
+            }
+            AnchorChanges {
+                target: root
+                anchors.left: undefined
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+            }
+
+            PropertyChanges {
+                target: leftView
+                orientation: ListView.Vertical
+                width: indicators.iconSize + Themes.Units.largeSpacing
+                height: leftView.contentHeight
+            }
+            AnchorChanges {
+                target: leftView
+                anchors.top: root.top
+                anchors.horizontalCenter: root.horizontalCenter
+            }
+
+            PropertyChanges {
+                target: launcher
+                orientation: ListView.Vertical
+                height: root.height - leftView.height - indicatorsView.height
+                viewWidth: size + (launcher.itemPadding / 2)
+                viewHeight: launcher.contentHeight
+            }
+            AnchorChanges {
+                target: launcher
+                anchors.left: root.left
+                anchors.top: leftView.bottom
+                anchors.right: root.right
+                anchors.bottom: indicatorsView.top
+            }
+
+            PropertyChanges {
+                target: indicatorsView
+                orientation: ListView.Vertical
+                width: indicators.iconSize + Themes.Units.largeSpacing
+                height: indicatorsView.contentHeight
+            }
+            AnchorChanges {
+                target: indicatorsView
+                anchors.bottom: root.bottom
+                anchors.horizontalCenter: root.horizontalCenter
+            }
+        }
+    ]
+    transitions: Transition {
+        AnchorAnimation {
+            easing.type: Easing.OutQuad
+            duration: Themes.Units.shortDuration
+        }
+    }
     onSizeChanged: {
-        switch (size) {
+        switch (this.size) {
         case Themes.Units.iconSizes.medium:
+            launcher.itemSize = this.size * 1.20;
             indicators.iconSize = Themes.Units.iconSizes.small;
             break;
         case Themes.Units.iconSizes.large:
+            launcher.itemSize = this.size * 1.25;
             indicators.iconSize = Themes.Units.iconSizes.smallMedium;
             break;
         case Themes.Units.iconSizes.huge:
+            launcher.itemSize = this.size * 1.16;
             indicators.iconSize = Themes.Units.iconSizes.medium;
             break;
         default:
@@ -68,14 +297,14 @@ Rectangle {
 
     Behavior on width {
         NumberAnimation {
-            easing.type: Easing.Linear
+            easing.type: Easing.OutQuad
             duration: Themes.Units.shortDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
-            easing.type: Easing.Linear
+            easing.type: Easing.OutQuad
             duration: Themes.Units.shortDuration
         }
     }
@@ -90,102 +319,93 @@ Rectangle {
         onMaximizedChanged: setup()
     }
 
-    RowLayout {
-        anchors.fill: parent
-        spacing: Themes.Units.smallSpacing
+    ObjectModel {
+        id: leftIndicators
 
-        RowLayout {
-            id: leftContainer
-            spacing: Themes.Units.largeSpacing
+        LauncherIndicator {
+            id: launcherIndicator
+        }
+    }
 
-            /*
-            AppChooserIndicator {
+    ObjectModel {
+        property real iconSize: Themes.Units.iconSizes.smallMedium
+
+        id: indicators
+
+        /*
+        Loader {
+            asynchronous: true
+            sourceComponent: ChatIndicator {
+                iconSize: indicators.iconSize
                 onTriggered: indicatorTriggered(caller)
             }
-            */
-            LauncherIndicator {
-                id: launcherIndicator
-            }
+        }
+        */
 
-            Layout.alignment: Qt.AlignLeft
+        Loader {
+            asynchronous: true
+            sourceComponent: EventsIndicator {
+                iconSize: indicators.iconSize
+                onTriggered: indicatorTriggered(caller)
+            }
         }
 
-        Launcher {
-            id: launcher
-            iconSize: root.size
-            alignment: root.alignment
-
-            Layout.fillWidth: true
-            //Layout.fillHeight: true
-            Layout.alignment: Qt.AlignVCenter
+        Loader {
+            asynchronous: true
+            sourceComponent: SettingsIndicator {
+                iconSize: indicators.iconSize
+                onTriggered: indicatorTriggered(caller)
+            }
         }
 
-        RowLayout {
-            property int iconSize
-
-            id: indicators
-            spacing: Themes.Units.smallSpacing
-
-            /*
-            Loader {
-                asynchronous: true
-                sourceComponent: ChatIndicator {
-                    iconSize: indicators.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
+        Loader {
+            asynchronous: true
+            sourceComponent: SoundIndicator {
+                iconSize: indicators.iconSize
+                onTriggered: indicatorTriggered(caller)
             }
-            */
-
-            Loader {
-                asynchronous: true
-                sourceComponent: EventsIndicator {
-                    iconSize: indicators.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
-            }
-
-            Loader {
-                asynchronous: true
-                sourceComponent: SettingsIndicator {
-                    iconSize: indicators.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
-            }
-
-            Loader {
-                asynchronous: true
-                sourceComponent: SoundIndicator {
-                    iconSize: indicators.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
-            }
-
-            Loader {
-                asynchronous: true
-                sourceComponent: NetworkIndicator {
-                    iconSize: indicators.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
-            }
-
-            Loader {
-                asynchronous: true
-                sourceComponent: StorageIndicator {
-                    iconSize: indicators.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
-            }
-
-            Loader {
-                asynchronous: true
-                sourceComponent: BatteryIndicator {
-                    iconSize: indicators.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
-            }
-
-            Layout.alignment: Qt.AlignRight
         }
+
+        Loader {
+            asynchronous: true
+            sourceComponent: NetworkIndicator {
+                iconSize: indicators.iconSize
+                onTriggered: indicatorTriggered(caller)
+            }
+        }
+
+        Loader {
+            asynchronous: true
+            sourceComponent: StorageIndicator {
+                iconSize: indicators.iconSize
+                onTriggered: indicatorTriggered(caller)
+            }
+        }
+
+        Loader {
+            asynchronous: true
+            sourceComponent: BatteryIndicator {
+                iconSize: indicators.iconSize
+                onTriggered: indicatorTriggered(caller)
+            }
+        }
+    }
+
+    ListView {
+        id: leftView
+        model: leftIndicators
+        interactive: false
+    }
+
+    Launcher {
+        id: launcher
+        iconSize: root.size
+    }
+
+    ListView {
+        id: indicatorsView
+        model: indicators
+        interactive: false
     }
 
     function setup() {
