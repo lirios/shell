@@ -97,7 +97,6 @@ Item {
             }
         }
         z: 3
-        visible: status == Loader.Ready
     }
 
     // Full screen windows can cover application windows and panels
