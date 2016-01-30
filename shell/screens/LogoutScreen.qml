@@ -131,7 +131,7 @@ Components.Showable {
         source: hawaiiCompositor.settings.background.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
-        fillMode: Image.PreserveAspectCrop
+        fillMode: hawaiiCompositor.settings.convertFillMode(hawaiiCompositor.settings.background.fillMode)
         cache: false
         visible: false
     }
