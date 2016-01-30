@@ -46,7 +46,7 @@ Components.Object {
         id: compositorSettings
         compositor: hawaiiCompositor
         keymap: GreenIsland.Keymap {
-            layout: keyboardSettings.layouts[0] ? keyboardSettings.layouts[0] : "en"
+            layout: keyboardSettings.layouts[0] ? keyboardSettings.layouts[0] : "us"
             variant: keyboardSettings.variants[0] ? keyboardSettings.variants[0] : ""
             options: keyboardSettings.options[0] ? keyboardSettings.options[0] : ""
             model: keyboardSettings.model
