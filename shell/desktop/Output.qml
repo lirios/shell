@@ -149,11 +149,13 @@ GreenIsland.WaylandOutput {
                 Loader {
                     id: splashScreen
                     anchors.fill: parent
+                    source: "../screens/SplashScreen.qml"
                     opacity: 0.0
+                    active: false
                     z: 900
                     onOpacityChanged: {
                         if (opacity == 1.0)
-                            splashScreen.source = "../screens/SplashScreen.qml";
+                            splashScreen.active = true;
                         else if (opacity == 0.0)
                             splashScreenTimer.start();
                     }
@@ -163,9 +165,7 @@ GreenIsland.WaylandOutput {
                         id: splashScreenTimer
                         running: false
                         interval: 5000
-                        onTriggered: {
-                            splashScreen.source = "";
-                        }
+                        onTriggered: splashScreen.active = false
                     }
 
                     Behavior on opacity {
