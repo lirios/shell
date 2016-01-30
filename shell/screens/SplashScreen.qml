@@ -28,10 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtGraphicalEffects 1.0
 
-MouseArea {
-    hoverEnabled: true
-    acceptedButtons: Qt.NoButton
-
+Item {
     Image {
         id: picture
         anchors.fill: parent
