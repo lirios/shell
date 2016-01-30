@@ -130,8 +130,10 @@ GreenIsland.WaylandCompositor {
         }
         onPrimaryScreenChanged: {
             var index = screenManager.indexOf(screen);
-            if (index < d.outputs.length)
+            if (index < d.outputs.length) {
+                console.debug("Setting screen", index, "as primary");
                 hawaiiCompositor.defaultOutput = d.outputs[index];
+            }
         }
     }
 
