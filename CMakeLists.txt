@@ -141,5 +141,10 @@ add_subdirectory(styles)
 add_subdirectory(tests)
 add_subdirectory(themes)
 
+# Install the shell with development builds
+if(DEVELOPMENT_BUILD)
+    greenisland_install_shell(org.hawaiios.desktop shell)
+endif()
+
 # Display featute summary
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
