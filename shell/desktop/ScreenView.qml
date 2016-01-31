@@ -91,10 +91,10 @@ Item {
                 sourceComponent: Shell {
                     Connections {
                         target: panel
-                        onHeightChanged: setAvailableGeometry(height)
+                        onHeightChanged: screenView.setAvailableGeometry(height)
                     }
 
-                    Component.onCompleted: setAvailableGeometry(panel.height)
+                    Component.onCompleted: screenView.setAvailableGeometry(panel.height)
                 }
                 z: 3
             }
@@ -161,7 +161,11 @@ Item {
 
     function setAvailableGeometry(h) {
         // Set available geometry so that windows are maximized properly
-        output.availableGeometry = Qt.rect(0, 0, output.window.width, output.window.height - h);
-        console.debug("Available geometry for", output.model, "is:", output.availableGeometry);
+        if (h > 0) {
+            output.availableGeometry = Qt.rect(0, 0, output.window.width, output.window.height - h);
+            console.debug("Available geometry for", output.model, "is:", output.availableGeometry);
+        } else {
+            console.warn("Trying to set available geometry from invalid height", h);
+        }
     }
 }
