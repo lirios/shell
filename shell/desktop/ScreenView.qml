@@ -64,39 +64,41 @@ Item {
      * Workspace
      */
 
-    // Background is below everything
+    // Background image or color
     Background {
         id: backgroundLayer
         anchors.fill: parent
         z: 0
-    }
 
-    // Desktop is only above background
-    Desktop {
-        id: desktopLayer
-        anchors.fill: parent
-        z: 1
-    }
+        // Desktop applets
+        Desktop {
+            id: desktopLayer
+            anchors.fill: parent
+            z: 1
+        }
 
-    // Workspaces
-    WorkspacesView {
-        id: workspacesLayer
-        anchors.fill: parent
-        z: 2
-    }
+        // Workspaces
+        WorkspacesView {
+            id: workspacesLayer
+            anchors.fill: parent
+            z: 2
 
-    // Panels
-    Loader {
-        id: shellLoader
-        anchors.fill: parent
-        active: primary
-        sourceComponent: Shell {
-            Connections {
-                target: panel
-                onHeightChanged: setAvailableGeometry(height)
+            // Panels
+            Loader {
+                id: shellLoader
+                anchors.fill: parent
+                active: primary
+                sourceComponent: Shell {
+                    Connections {
+                        target: panel
+                        onHeightChanged: setAvailableGeometry(height)
+                    }
+
+                    Component.onCompleted: setAvailableGeometry(panel.height)
+                }
+                z: 3
             }
         }
-        z: 3
     }
 
     // Full screen windows can cover application windows and panels
