@@ -64,22 +64,6 @@ Item {
     }
 
     SlidingPanel {
-        property alias component: loader.sourceComponent
-
-        id: leftDrawer
-        edge: Qt.LeftEdge
-        width: Themes.Units.gu(20)
-        z: 0
-
-        Loader {
-            id: loader
-            anchors.fill: parent
-            anchors.margins: Themes.Units.largeSpacing
-            active: leftDrawer.expanded
-        }
-    }
-
-    SlidingPanel {
         id: rightDrawer
         edge: Qt.RightEdge
         width: Themes.Units.gu(16)
