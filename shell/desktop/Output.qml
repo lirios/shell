@@ -94,7 +94,7 @@ GreenIsland.WaylandOutput {
                         PropertyChanges { target: cursor; visible: true }
                         //PropertyChanges { target: keyFilter; enabled: true }
                         PropertyChanges { target: splashScreen; opacity: 0.0 }
-                        PropertyChanges { target: screenView.windowsSwitcherLoader; active: false }
+                        PropertyChanges { target: screenView.windowsSwitcher; active: false }
                         //PropertyChanges { target: shieldLoader; source: ""; visible: false }
                         //PropertyChanges { target: logoutLoader; loadComponent: false }
                         //PropertyChanges { target: lockScreenLoader; loadComponent: false }
