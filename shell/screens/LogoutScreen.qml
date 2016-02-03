@@ -107,8 +107,9 @@ Components.Showable {
         id: __priv
 
         property string mode: "poweroff"
-        property real timeout: 30
-        property real remainingTime: timeout
+        property int timeout: 30
+        property int countDown: 10
+        property int remainingTime: timeout
         property var currentAction
 
         onModeChanged: remainingTime = timeout
@@ -121,8 +122,8 @@ Components.Showable {
     Timer {
         running: true
         repeat: true
-        interval: 10000
-        onTriggered: __priv.remainingTime -= 10
+        interval: __priv.countDown * 1000
+        onTriggered: __priv.remainingTime -= __priv.countDown
     }
 
     Image {
