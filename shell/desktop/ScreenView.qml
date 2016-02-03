@@ -88,14 +88,8 @@ Item {
                 id: shellLoader
                 anchors.fill: parent
                 active: primary
-                sourceComponent: Shell {
-                    Connections {
-                        target: panel
-                        onHeightChanged: screenView.setAvailableGeometry(height)
-                    }
+                sourceComponent: Shell {}
 
-                    Component.onCompleted: screenView.setAvailableGeometry(panel.height)
-                }
                 z: 3
             }
         }

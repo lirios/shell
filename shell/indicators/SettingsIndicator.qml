@@ -81,7 +81,6 @@ Indicator {
                 }
             }
 
-            /*
             Controls.Heading {
                 text: qsTr("Position")
                 color: Themes.Theme.palette.panel.textColor
@@ -97,41 +96,40 @@ Indicator {
 
                 ToolButton {
                     text: qsTr("Left")
-                    iconName: "align-horizontal-left-symbolic"
+                    //iconName: "align-horizontal-left-symbolic"
                     checkable: true
-                    checked: screenView.panel.state === "vleft"
+                    checked: screenView.panel.state === "left"
                     exclusiveGroup: posGroup
-                    onClicked: screenView.panel.state = "vleft"
+                    onClicked: screenView.panel.state = "left"
                 }
 
                 ToolButton {
                     text: qsTr("Top")
-                    iconName: "align-horizontal-top-symbolic"
+                    //iconName: "align-vertical-top-symbolic"
                     checkable: true
-                    checked: screenView.panel.state === "htop"
+                    checked: screenView.panel.state === "top"
                     exclusiveGroup: posGroup
-                    onClicked: screenView.panel.state = "htop"
+                    onClicked: screenView.panel.state = "top"
                 }
 
                 ToolButton {
                     text: qsTr("Right")
-                    iconName: "align-horizontal-right-symbolic"
+                    //iconName: "align-horizontal-right-symbolic"
                     checkable: true
-                    checked: screenView.panel.state === "vright"
+                    checked: screenView.panel.state === "right"
                     exclusiveGroup: posGroup
-                    onClicked: screenView.panel.state = "vright"
+                    onClicked: screenView.panel.state = "right"
                 }
 
                 ToolButton {
                     text: qsTr("Bottom")
-                    iconName: "align-horizontal-bottom-symbolic"
+                    //iconName: "align-vertical-bottom-symbolic"
                     checkable: true
-                    checked: screenView.panel.state === "hbottom"
+                    checked: screenView.panel.state === "bottom"
                     exclusiveGroup: posGroup
-                    onClicked: screenView.panel.state = "hbottom"
+                    onClicked: screenView.panel.state = "bottom"
                 }
             }
-            */
 
             Item {
                 Layout.fillHeight: true

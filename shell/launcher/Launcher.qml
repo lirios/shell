@@ -34,11 +34,31 @@ Item {
     property real itemSize
     readonly property real itemPadding: Themes.Units.smallSpacing * 2
     property alias orientation: listView.orientation
-    property alias viewWidth: listView.width
-    property alias viewHeight: listView.height
     readonly property alias currentItem: listView.currentItem
 
     id: launcher
+    states: [
+        State {
+            name: "horizontal"
+            when: listView.orientation == ListView.Horizontal
+
+            PropertyChanges {
+                target: listView
+                width: listView.contentWidth
+                height: launcher.height
+            }
+        },
+        State {
+            name: "vertical"
+            when: listView.orientation == ListView.Vertical
+
+            PropertyChanges {
+                target: listView
+                width: launcher.width
+                height: listView.contentHeight
+            }
+        }
+    ]
 
     ListView {
         id: listView
