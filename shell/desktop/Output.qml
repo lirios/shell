@@ -57,8 +57,8 @@ GreenIsland.WaylandOutput {
         id: window
         width: 1024
         height: 768
-        minimumWidth: width
-        minimumHeight: height
+        minimumWidth: Math.min(width, nativeScreen.size.width)
+        minimumHeight: Math.min(height, nativeScreen.size.height)
         maximumWidth: nativeScreen.size.width
         maximumHeight: nativeScreen.size.height
 
