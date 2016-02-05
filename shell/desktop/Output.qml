@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.5
 import QtQuick.Window 2.2
 import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
@@ -289,8 +289,6 @@ GreenIsland.WaylandOutput {
                         left: parent.left
                         top: parent.top
                     }
-                    model: output.model
-                    primary: output.primary
                     z: 1000
                     visible: false
                 }

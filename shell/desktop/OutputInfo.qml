@@ -24,34 +24,160 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.2
+import QtQuick.Layouts 1.1
+import QtQuick.Window 2.2
 
 Rectangle {
-    property alias model: modelLabel.text
-    property alias primary: primaryLine.visible
+    width: grid.implicitWidth + 16
+    height: grid.implicitHeight + 16
+    color: "#b2000000"
 
-    width: modelLabel.paintedWidth + 8
-    height: modelLabel.paintedHeight + 8
-    color: "#80000000"
-    radius: 8
+    GridLayout {
+        id: grid
+        columns: 2
+        rowSpacing: 8
+        columnSpacing: 8
+        x: rowSpacing
+        y: columnSpacing
 
-    Text {
-        id: modelLabel
-        anchors.centerIn: parent
-        color: "white"
-        font.pointSize: 36
+        Text {
+            text: "Name:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: Screen.name
+            font.bold: true
+            font.underline: true
+            color: "white"
+        }
+
+        Text {
+            text: "Primary:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: output.primary ? "Yes" : "No"
+            font.bold: true
+            color: output.primary ? "green" : "red"
+        }
+
+        Text {
+            text: "Size:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: Screen.width + "x" + Screen.height
+            color: "white"
+        }
+
+        Text {
+            text: "Pixel Density:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: Screen.pixelDensity.toFixed(2) + " dots/mm (" + (Screen.pixelDensity * 25.4).toFixed(2) + " dots/inch)"
+            color: "white"
+        }
+
+        Text {
+            text: "Logical Pixel Density:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: Screen.logicalPixelDensity.toFixed(2) + " dots/mm (" + (Screen.logicalPixelDensity * 25.4).toFixed(2) + " dots/inch)"
+            color: "white"
+        }
+
+        Text {
+            text: "Multiplier:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: (((Screen.pixelDensity * 25.4) / (Screen.logicalPixelDensity * 25.4)) / Screen.devicePixelRatio).toFixed(2)
+            color: "white"
+        }
+
+        Text {
+            text: "Device Pixel Ratio:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: Screen.devicePixelRatio.toFixed(2)
+            color: "white"
+        }
+
+        Text {
+            text: "Available Virtual Desktop:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: Screen.desktopAvailableWidth + "x" + Screen.desktopAvailableHeight
+            color: "white"
+        }
+
+        Text {
+            text: "Orientation:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: orientationToString(Screen.orientation) + " (" + Screen.orientation + ")"
+            color: "white"
+        }
+
+        Text {
+            text: "Primary Orientation"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: orientationToString(Screen.primaryOrientation) + " (" + Screen.primaryOrientation + ")"
+            color: "white"
+        }
     }
 
-    Rectangle {
-        id: primaryLine
-        anchors {
-            left: parent.left
-            top: modelLabel.bottom
-            right: parent.right
-            leftMargin: 4
-            rightMargin: 4
+    function orientationToString(o) {
+        switch (o) {
+        case Qt.PrimaryOrientation:
+            return "Primary";
+        case Qt.PortraitOrientation:
+            return "Portrait";
+        case Qt.LandscapeOrientation:
+            return "Landscape";
+        case Qt.InvertedPortraitOrientation:
+            return "Inverted Portrait";
+        case Qt.InvertedLandscapeOrientation:
+            return "Inverted Landscape";
         }
-        height: 1
-        color: "green"
+        return "Unknown";
     }
 }

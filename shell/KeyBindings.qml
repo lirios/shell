@@ -77,6 +77,24 @@ Item {
     }
 
     /*
+     * Special shortcuts
+     */
+
+    Shortcut {
+        property bool showInformation: false
+
+        context: Qt.ApplicationShortcut
+        sequence: "Ctrl+Alt+Meta+S"
+        onActivated: {
+            showInformation = !showInformation;
+
+            var i;
+            for (i = 0; i < hawaiiCompositor.outputs.length; i++)
+                hawaiiCompositor.outputs[i].showInformation = showInformation;
+        }
+    }
+
+    /*
      * Window Manager
      */
 
