@@ -66,6 +66,9 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(HAWAII_VERSION_STRING);
     app.setOrganizationName(QStringLiteral("Hawaii"));
     app.setOrganizationDomain(QStringLiteral("hawaiios.org"));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+    app.setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     app.setQuitOnLastWindowClosed(false);
 
     // Command line parser
