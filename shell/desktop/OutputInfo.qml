@@ -69,7 +69,7 @@ Rectangle {
         }
 
         Text {
-            text: "Size:"
+            text: "Resolution:"
             font.bold: true
             color: "white"
 
@@ -77,6 +77,18 @@ Rectangle {
         }
         Text {
             text: Screen.width + "x" + Screen.height
+            color: "white"
+        }
+
+        Text {
+            text: "Physical Size:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: output.physicalSize.width + "x" + output.physicalSize.height + " mm ("  + (output.physicalSize.width / 10).toFixed(2) + "x" + (output.physicalSize.height / 10).toFixed(2) + " cm)"
             color: "white"
         }
 
