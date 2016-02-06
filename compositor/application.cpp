@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtWidgets/QApplication>
+#include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
@@ -69,7 +69,7 @@ Application::Application(QObject *parent)
             this, &Application::objectCreated);
 
     // Invole shutdown sequence when quitting
-    connect(QApplication::instance(), &QApplication::aboutToQuit,
+    connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit,
             this, &Application::shutdown);
 }
 
@@ -99,16 +99,16 @@ void Application::startup()
     if (!QDBusConnection::sessionBus().registerService(QStringLiteral("org.hawaiios.Session"))) {
         qWarning("Failed to register D-Bus service: %s",
                  qPrintable(QDBusConnection::sessionBus().lastError().message()));
-        QApplication::exit(1);
+        QCoreApplication::exit(1);
     }
 
     // Process launcher
     if (!ProcessLauncher::registerWithDBus(m_launcher))
-        QApplication::exit(1);
+        QCoreApplication::exit(1);
 
     // Screen saver
     if (!ScreenSaver::registerWithDBus(m_screenSaver))
-        QApplication::exit(1);
+        QCoreApplication::exit(1);
 
     // Session interface
     m_homeApp->setContextProperty(QStringLiteral("SessionInterface"),
@@ -116,7 +116,7 @@ void Application::startup()
 
     // Load the compositor
     if (!m_homeApp->loadUrl(m_url))
-        QApplication::exit(1);
+        QCoreApplication::exit(1);
 
     // Set Wayland socket name
     QObject *rootObject = m_homeApp->rootObjects().at(0);
@@ -144,7 +144,7 @@ void Application::shutdown()
 
 void Application::unixSignal()
 {
-    QApplication::quit();
+    QCoreApplication::quit();
 }
 
 void Application::objectCreated(QObject *object, const QUrl &)
@@ -158,7 +158,7 @@ void Application::objectCreated(QObject *object, const QUrl &)
         // We give up because even the error screen has an error
         qWarning("A fatal error has occurred while running Hawaii, but the error "
                  "screen has errors too. Giving up.");
-        QApplication::exit(1);
+        QCoreApplication::exit(1);
     } else {
         // Load the error screen in case of error
         m_failSafe = true;
