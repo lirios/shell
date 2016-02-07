@@ -75,6 +75,7 @@ Rectangle {
                 target: launcher
                 orientation: ListView.Vertical
             }
+
             PropertyChanges {
                 target: indicatorsView
                 rows: 6
@@ -112,6 +113,7 @@ Rectangle {
                 target: launcher
                 orientation: ListView.Horizontal
             }
+
             PropertyChanges {
                 target: indicatorsView
                 rows: 1
@@ -149,6 +151,7 @@ Rectangle {
                 target: launcher
                 orientation: ListView.Vertical
             }
+
             PropertyChanges {
                 target: indicatorsView
                 rows: 6
@@ -186,6 +189,7 @@ Rectangle {
                 target: launcher
                 orientation: ListView.Horizontal
             }
+
             PropertyChanges {
                 target: indicatorsView
                 rows: 1
