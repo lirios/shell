@@ -1,11 +1,12 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013-2014 Giulio Camuffo <giuliocamuffo@gmail.com>
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini
+ * Copyright (C) 2013-2014 Giulio Camuffo
  *
  * Author(s):
- *    Pier Luigi Fiorini
+ *    Giulio Camuffo <giuliocamuffo@gmail.com>
+ *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:LGPL2.1+$
  *

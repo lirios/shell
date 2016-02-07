@@ -34,7 +34,7 @@
 # Since pre-1.0.0.
 
 #=============================================================================
-# Copyright 2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+# Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions

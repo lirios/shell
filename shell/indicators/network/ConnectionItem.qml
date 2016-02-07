@@ -1,11 +1,12 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2013-2014 Jan Grulich <jgrulich@redhat.com>
+ * Copyright (C) 2014-2016 Pier Luigi Fiorini
+ * Copyright (C) 2013-2014 Jan Grulich
  *
  * Author(s):
- *    Pier Luigi Fiorini
+ *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ *    Jan Grulich <jgrulich@redhat.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *

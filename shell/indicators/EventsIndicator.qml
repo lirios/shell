@@ -1,11 +1,11 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2012-2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014-2016 Pier Luigi Fiorini
  * Copyright (C) 2014 Aaron Seigo <aseigo@kde.org>
  *
  * Author(s):
- *    Pier Luigi Fiorini
+ *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
