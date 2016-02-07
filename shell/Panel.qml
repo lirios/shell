@@ -269,52 +269,34 @@ Rectangle {
 
             id: indicatorsView
 
-            Loader {
-                asynchronous: true
-                sourceComponent: EventsIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
+            EventsIndicator {
+                iconSize: indicatorsView.iconSize
+                onTriggered: indicatorTriggered(caller)
             }
 
-            Loader {
-                asynchronous: true
-                sourceComponent: SettingsIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
+            SettingsIndicator {
+                iconSize: indicatorsView.iconSize
+                onTriggered: indicatorTriggered(caller)
             }
 
-            Loader {
-                asynchronous: true
-                sourceComponent: SoundIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
+            SoundIndicator {
+                iconSize: indicatorsView.iconSize
+                onTriggered: indicatorTriggered(caller)
             }
 
-            Loader {
-                asynchronous: true
-                sourceComponent: NetworkIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
+            NetworkIndicator {
+                iconSize: indicatorsView.iconSize
+                onTriggered: indicatorTriggered(caller)
             }
 
-            Loader {
-                asynchronous: true
-                sourceComponent: StorageIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
+            StorageIndicator {
+                iconSize: indicatorsView.iconSize
+                onTriggered: indicatorTriggered(caller)
             }
 
-            Loader {
-                asynchronous: true
-                sourceComponent: BatteryIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
+            BatteryIndicator {
+                iconSize: indicatorsView.iconSize
+                onTriggered: indicatorTriggered(caller)
             }
         }
     }
