@@ -301,8 +301,6 @@ Rectangle {
         }
     }
 
-    Component.onCompleted: screenView.setAvailableGeometry(panel.height)
-
     function setup() {
         // TODO: Don't resize the panel, the window is maximized before we change the available
         // geometry resulting in a "hole" between the window and the panel
