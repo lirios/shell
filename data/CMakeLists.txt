@@ -1,5 +1,3 @@
-add_subdirectory(menu)
-add_subdirectory(settings)
 if(ENABLE_SYSTEMD)
     add_subdirectory(systemd)
 endif()

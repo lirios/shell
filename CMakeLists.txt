@@ -119,15 +119,6 @@ find_package(Hawaii 0.5.90 REQUIRED)
 # lxqt
 find_package(QT5XDG REQUIRED)
 
-# gio (for the GSettings Qt wrapper)
-pkg_check_modules(gio gio-2.0 REQUIRED)
-if (NOT DEFINED GSETTINGS_SCHEMA_DIR)
-    execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=prefix gio-2.0 OUTPUT_VARIABLE _gio_prefix)
-    string(REGEX REPLACE "[ \t\n]+" "" _gio_prefix ${_gio_prefix})
-    set(GSETTINGS_SCHEMA_DIR "${_gio_prefix}/share/glib-2.0/schemas")
-endif()
-message(STATUS "GSettings schemas directory: ${GSETTINGS_SCHEMA_DIR}")
-
 # Subdirectories
 add_subdirectory(3rdparty)
 add_subdirectory(compositor)
