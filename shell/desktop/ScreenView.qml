@@ -87,6 +87,7 @@ Item {
             Loader {
                 id: shellLoader
                 anchors.fill: parent
+                asynchronous: true
                 active: primary
                 sourceComponent: Shell {}
 
