@@ -68,6 +68,7 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain(QStringLiteral("hawaiios.org"));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
+    app.setFallbackSessionManagementEnabled(false);
 #endif
     app.setQuitOnLastWindowClosed(false);
 
