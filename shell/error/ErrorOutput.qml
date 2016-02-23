@@ -46,21 +46,21 @@ GreenIsland.WaylandOutput {
         height: nativeScreen.size.height
         flags: Qt.FramelessWindowHint
 
-        GreenIsland.WaylandMouseTracker {
-            id: mouseTracker
+        GreenIsland.LocalPointerTracker {
+            id: localPointerTracker
             anchors.fill: parent
-            enableWSCursor: true
+            globalTracker: globalPointerTracker
 
             ErrorScreen {
                 anchors.fill: parent
             }
 
-            GreenIsland.WaylandCursorItem {
+            GreenIsland.PointerItem {
                 id: cursor
                 inputDevice: output.compositor.defaultInputDevice
-                inputEventsEnabled: false
-                x: mouseTracker.mouseX - hotspotX
-                y: mouseTracker.mouseY - hotspotY
+                x: localPointerTracker.mouseX - hotspotX
+                y: localPointerTracker.mouseY - hotspotY
+                visible: globalPointerTracker.output === output
             }
         }
     }
