@@ -55,14 +55,10 @@ GreenIsland.WaylandOutput {
     automaticFrameCallback: powerState === GreenIsland.WaylandOutput.PowerStateOn
     window: Window {
         id: window
-        width: 1024
-        height: 768
-        /*
-        minimumWidth: Math.min(width, nativeScreen.size.width)
-        minimumHeight: Math.min(height, nativeScreen.size.height)
-        maximumWidth: nativeScreen.size.width
-        maximumHeight: nativeScreen.size.height
-        */
+        minimumWidth: 1024
+        minimumHeight: 768
+        maximumWidth: nativeScreen.width
+        maximumHeight: nativeScreen.height
 
         Connections {
             target: SessionInterface
