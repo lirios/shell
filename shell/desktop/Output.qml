@@ -125,6 +125,12 @@ GreenIsland.WaylandOutput {
             onTriggered: blackRect.fadeIn()
         }
 
+        GreenIsland.KeyEventFilter {
+            anchors.fill: parent
+
+            Keys.onPressed: blackRect.fadeOut()
+        }
+
         /*
          * Contents
          */
