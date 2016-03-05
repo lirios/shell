@@ -221,12 +221,13 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.showDesktop
         onActivated: {
-            var i;
+            var i, workspace;
             for (i = 0; i < hawaiiCompositor.outputs.length; i++) {
-                if (hawaiiCompositor.outputs[i].screenView.currentWorkspace.state === "reveal")
-                    hawaiiCompositor.outputs[i].screenView.currentWorkspace.state = "normal";
-                else
-                    hawaiiCompositor.outputs[i].screenView.currentWorkspace.state = "reveal";
+                workspace = hawaiiCompositor.outputs[i].screenView.currentWorkspace;
+                if (workspace.state === "reveal")
+                    workspace.state = "normal";
+                else if (workspace.state === "normal")
+                    workspace.state = "reveal";
             }
         }
     }
@@ -235,12 +236,13 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.presentWindows
         onActivated: {
-            var i;
+            var i, workspace;
             for (i = 0; i < hawaiiCompositor.outputs.length; i++) {
-                if (hawaiiCompositor.outputs[i].screenView.currentWorkspace.state === "present")
-                    hawaiiCompositor.outputs[i].screenView.currentWorkspace.state = "normal";
-                else
-                    hawaiiCompositor.outputs[i].screenView.currentWorkspace.state = "present";
+                workspace = hawaiiCompositor.outputs[i].screenView.currentWorkspace;
+                if (workspace.state === "present")
+                    workspace.state = "normal";
+                else if (workspace.state === "normal")
+                    workspace.state = "present";
             }
         }
     }

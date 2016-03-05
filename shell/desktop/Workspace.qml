@@ -35,38 +35,34 @@ Item {
     states: [
         State {
             name: "normal"
-            StateChangeScript {
-                name: "restore"
-                script: restore()
-            }
         },
         State {
             name: "present"
-            StateChangeScript {
-                name: "present"
-                script: present()
-            }
         },
         State {
             name: "reveal"
-            StateChangeScript {
-                name: "reveal"
-                script: reveal()
-            }
         }
     ]
     transitions: [
         Transition {
-            to: "normal"
-            ScriptAction { scriptName: "restore" }
-        },
-        Transition {
+            from: "normal"
             to: "present"
-            ScriptAction { scriptName: "present" }
+            ScriptAction { script: present() }
         },
         Transition {
+            from: "present"
+            to: "normal"
+            ScriptAction { script: presentRestore() }
+        },
+        Transition {
+            from: "normal"
             to: "reveal"
-            ScriptAction { scriptName: "reveal" }
+            ScriptAction { script: reveal() }
+        },
+        Transition {
+            from: "reveal"
+            to: "normal"
+            ScriptAction { script: revealRestore() }
         }
     ]
     onChildrenChanged: {
@@ -82,119 +78,157 @@ Item {
         }
     }
 
-    function restore() {
-        var windows = windowManager.windowsForOutput(output);
-        var i, j, window, view;
-        for (i = 0; i < windows.length; i++) {
-            window = windows[i];
+    Component {
+        id: chromeComponent
 
-            for (j = 0; j < window.views.length; j++) {
-                // Get a hold of the view
-                view = window.views[j];
+        PresentWindowsChrome {}
+    }
 
-                // Restore saved properties
-                if (view.savedProperties.saved) {
-                    view.x = view.savedProperties.x;
-                    view.y = view.savedProperties.y;
-                    view.scale = view.savedProperties.scale;
-                    view.visible = true;
-                    view.savedProperties.saved = false;
-                }
+    ListModel {
+        id: viewsModel
+    }
 
-                // Disable animations
-                view.animationsEnabled = false;
-            }
+    function windowsList() {
+        var windows = [];
+        var i, window;
+        for (i = 0; i < windowManager.windows.length; i++) {
+            window = windowManager.windows[i];
+            if (window.designedOutput === output)
+                windows.push(window);
         }
+        return windows;
     }
 
     function present() {
-        // Parameters
-        var windows = windowManager.windowsForOutput(output);
-        var hmargin = Themes.Units.dp(48);
-        var vmargin = Themes.Units.dp(48);
+        console.time("present " + output.model);
 
-        // Calculate rows and columns
-        var columns = Math.ceil(Math.sqrt(windows.length));
-        var rows = Math.ceil(windows.length / columns);
+        // Parameters
+        var windows = windowsList();
+        var hmargin = output.availableGeometry.width * 0.1;
+        var vmargin = output.availableGeometry.height * 0.1;
+        var padding = Themes.Units.gu(2);
+
+        var gridSize = Math.floor(Math.sqrt(windows.length));
+        if (Math.pow(gridSize, 2) !== windows.length)
+            gridSize++;
+        var lastRowRemoved = Math.pow(gridSize, 2) - windows.length;
 
         // Calculate cell size
-        var cellWidth = output.availableGeometry.width / columns;
-        var cellHeight = output.availableGeometry.height / rows;
+        var cellWidth = output.availableGeometry.width - (hmargin * 2);
+        cellWidth -= padding * (gridSize - 1);
+        cellWidth /= gridSize;
+        var cellHeight = output.availableGeometry.height - (vmargin * 2);
+        cellHeight -= padding * (gridSize - 1);
+        cellHeight /= gridSize;
+
+        // Chrome size can't exceed output available geometry
+        var chromeSize = cellWidth < cellHeight ? cellWidth : cellHeight;
+        if (chromeSize > output.availableGeometry.width / 2)
+            chromeSize = output.availableGeometry.width / 2;
+        if (chromeSize > output.availableGeometry.height / 2)
+            chromeSize = output.availableGeometry.height / 2;
+
+        // Padding between cells
+        var cellPadding = chromeSize + padding;
+
+        // Increase horizontal margin to center chromes
+        var maxColumns = Math.ceil(Math.sqrt(windows.length));
+        var maxWidth = maxColumns * cellPadding;
+        hmargin = (output.availableGeometry.width - maxWidth) / 2;
 
         // Loop over windows
-        var i, j, window, view, x, y;
-        var currentDim = 0, lastDim = 1, row = 0, column = 0;
+        console.time("present loop " + output.model);
+        var i, j, window;
         for (i = 0; i < windows.length; i++) {
             // Get a hold of the window
             window = windows[i];
 
-            // Calculate grid
-            if (i > 0) {
-                currentDim = Math.ceil(Math.sqrt(i + 1));
-                if (currentDim == lastDim) {
-                    if (row < currentDim - 1) {
-                        ++row;
+            // Determine row and column
+            var row = Math.floor(i / gridSize);
+            var column = Math.floor(i % gridSize);
 
-                        if (row == currentDim - 1)
-                            column = 0;
-                    } else {
-                        ++column;
+            // Output space starting coordinates
+            var x = window.x - window.designedOutput.geometry.x;
+            var y = window.y - window.designedOutput.geometry.y;
+
+            // Determine new coordinates
+            var x2 = hmargin + cellPadding * column;
+            var y2 = vmargin + cellPadding * row;
+
+            // Calculate window scale
+            if (row == gridSize - 1)
+                x2 += (chromeSize + padding) * lastRowRemoved / 2;
+            var scale = 1;
+            if (window.surface.size.width > window.surface.size.height)
+                scale = chromeSize / window.surface.size.width;
+            else
+                scale = chromeSize / window.surface.size.height;
+
+            // Hide all views
+            for (j = 0; j < window.views.length; j++)
+                window.views[j].visible = false;
+
+            // Create chrome or move an existing one
+            var chrome = null;
+            for (j = 0; j < viewsModel.count; j++) {
+                var thisChrome = viewsModel.get(j).chrome;
+                if (thisChrome.window === window) {
+                    chrome = thisChrome;
+                    break;
+                }
+            }
+            if (chrome) {
+                chrome.move(x2, y2);
+            } else {
+                chrome = chromeComponent.createObject(workspace, {"window": window, "x": x, "y": y});
+                if (chrome) {
+                    for (j = 0; j < window.views.length; j++) {
+                        if (window.views[j].designedOutput === output) {
+                            chrome.z = window.views[j].z;
+                            break;
+                        }
                     }
+                    chrome.move(x2, y2);
+                    chrome.resize(scale);
+                    chrome.activated.connect(function(window) {
+                        state = "normal";
+                        window.active = true;
+                    });
+                    chrome.closeRequested.connect(function(window) {
+                        state = "normal";
+                        window.close();
+                    });
+
+                    viewsModel.append({"chrome": chrome});
                 } else {
-                    row = 0;
-                    column = currentDim - 1;
+                    console.error("Failed to create chrome:", chromeComponent.errorString());
                 }
-                lastDim = currentDim;
             }
+        }
+        console.timeEnd("present loop " + output.model);
 
-            // Determine global coordinates
-            x = output.position.x + (cellWidth * column);
-            y = output.position.y + (cellHeight * row);
+        console.timeEnd("present " + output.model);
+    }
 
-            for (j = 0; j < window.views.length; j++) {
-                // Get a hold of the view
-                view = window.views[j];
-
-                // Enable animations
-                view.animationsEnabled = true;
-
-                // Save original properties
-                if (!view.savedProperties.saved) {
-                    view.savedProperties.x = view.x;
-                    view.savedProperties.y = view.y;
-                    view.savedProperties.scale = view.scale;
-                    view.savedProperties.saved = true;
-                }
-
-                // Move this view in output coordinates space
-                view.x = x - view.output.position.x;
-                view.y = y - view.output.position.y;
-
-                // Scale view down
-                view.scale = Math.min((cellWidth - hmargin) / view.width,
-                                      (cellHeight - vmargin) / view.height) * 0.98;
-
-                // Hide on other outputs
-                if (view.output !== output)
-                    view.visible = false;
-            }
-
-            // Create a chrome
-            /*
-            if (!window.chrome) {
-                var chromeComponent = Qt.createComponent("WindowChrome.qml");
-                window.chrome = chromeComponent.createObject(window, {"window": window});
-                window.chrome.clicked.connect(function(w) {
-                    w.savedProperties.bringToFront = true;
-                    hawaiiCompositor.endEffect("PresentWindowsGrid");
-                });
-            }
-            */
+    function presentRestore() {
+        // Destroy all chromes and show the views
+        var i, chrome, x, y;
+        while (viewsModel.count > 0) {
+            chrome = viewsModel.get(0).chrome;
+            x = chrome.window.x - chrome.window.designedOutput.geometry.x;
+            y = chrome.window.y - chrome.window.designedOutput.geometry.y;
+            chrome.move(x, y);
+            chrome.width = chrome.window.surface.size.width;
+            chrome.height = chrome.window.surface.size.height;
+            chrome.triggerAutodestruction();
+            viewsModel.remove(0);
         }
     }
 
     function reveal() {
-        var windows = windowManager.windowsForOutput(output);
+        console.time("reveal " + output.model);
+
+        var windows = windowsList();
         var margin = Themes.Units.dp(96);
 
         // Divide screen in 4 zones
@@ -213,6 +247,7 @@ Item {
         };
 
         // Loop over windows
+        console.time("reveal loop " + output.model);
         var i, j, window, view, x, y;
         for (i = 0; i < windows.length; i++) {
             // Get a hold of the window
@@ -244,7 +279,6 @@ Item {
                 if (!view.savedProperties.saved) {
                     view.savedProperties.x = view.x;
                     view.savedProperties.y = view.y;
-                    view.savedProperties.scale = view.scale;
                     view.savedProperties.saved = true;
                 }
 
@@ -255,6 +289,31 @@ Item {
                 // Hide on other outputs
                 if (view.output !== output)
                     view.visible = false;
+            }
+        }
+        console.timeEnd("reveal loop " + output.model);
+
+        console.timeEnd("reveal " + output.model);
+    }
+
+    function revealRestore() {
+        var windows = windowsList();
+        var i, j, window, view;
+        for (i = 0; i < windows.length; i++) {
+            window = windows[i];
+
+            for (j = 0; j < window.views.length; j++) {
+                view = window.views[j]
+
+                // Restore saved properties
+                if (view.savedProperties.saved) {
+                    view.x = view.savedProperties.x;
+                    view.y = view.savedProperties.y;
+                    view.savedProperties.saved = false;
+                }
+
+                // Disable animations
+                view.animationsEnabled = false;
             }
         }
     }
