@@ -70,12 +70,71 @@ GreenIsland.WaylandOutput {
             onRestartRequested: mainItem.state = "restart"
         }
 
+        /*
+         * Power output off
+         */
+
+        Rectangle {
+            id: blackRect
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.0
+            z: 1000
+            onOpacityChanged: {
+                if (opacity == 1.0)
+                    output.powerState = GreenIsland.WaylandOutput.PowerStateStandby;
+            }
+
+            OpacityAnimator {
+                id: blackRectAnimator
+                target: blackRect
+                easing.type: Easing.OutSine
+                duration: Themes.Units.longDuration
+            }
+
+            Timer {
+                id: fadeOutTimer
+                interval: 1000
+                onTriggered: {
+                    blackRectAnimator.from = 1.0;
+                    blackRectAnimator.to = 0.0;
+                    blackRectAnimator.start();
+                }
+            }
+
+            function fadeIn() {
+                if (opacity == 1.0)
+                    return;
+                blackRectAnimator.from = 0.0;
+                blackRectAnimator.to = 1.0;
+                blackRectAnimator.start();
+            }
+
+            function fadeOut() {
+                if (opacity == 0.0)
+                    return;
+                // Use a timer to compensate for power on time
+                output.powerState = GreenIsland.WaylandOutput.PowerStateOn;
+                fadeOutTimer.start();
+            }
+        }
+
+        Timer {
+            id: outputPowerOffTimer
+            interval: 1000
+            onTriggered: blackRect.fadeIn()
+        }
+
+        /*
+         * Contents
+         */
+
         GreenIsland.LocalPointerTracker {
             id: localPointerTracker
             anchors.fill: parent
             globalTracker: globalPointerTracker
-            onMouseXChanged: output.powerState = GreenIsland.WaylandOutput.PowerStateOn
-            onMouseYChanged: output.powerState = GreenIsland.WaylandOutput.PowerStateOn
+            onMouseXChanged: blackRect.fadeOut()
+            onMouseYChanged: blackRect.fadeOut()
 
             Item {
                 id: mainItem
@@ -186,12 +245,6 @@ GreenIsland.WaylandOutput {
                     component: output.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
                     z: 900
                     onLoadComponentChanged: if (loadComponent) show(); else hide();
-                }
-
-                Timer {
-                    id: outputPowerOffTimer
-                    interval: 1000
-                    onTriggered: output.powerState = GreenIsland.WaylandOutput.PowerStateStandby
                 }
 
                 /*
