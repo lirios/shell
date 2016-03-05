@@ -84,54 +84,35 @@ GreenIsland.WaylandOutput {
                         name: "splash"
                         PropertyChanges { target: cursor; visible: false }
                         PropertyChanges { target: splashScreen; opacity: 1.0 }
-                        //PropertyChanges { target: keyFilter; enabled: false }
-                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "session"
                         PropertyChanges { target: cursor; visible: true }
-                        //PropertyChanges { target: keyFilter; enabled: true }
                         PropertyChanges { target: splashScreen; opacity: 0.0 }
                         PropertyChanges { target: screenView.windowsSwitcher; active: false }
-                        //PropertyChanges { target: shieldLoader; source: ""; visible: false }
-                        //PropertyChanges { target: logoutLoader; loadComponent: false }
-                        //PropertyChanges { target: lockScreenLoader; loadComponent: false }
                         PropertyChanges { target: splashScreen; opacity: 0.0 }
-                        //StateChangeScript { script: enableInput() }
                     },
                     State {
                         name: "logout"
                         PropertyChanges { target: cursor; visible: true }
-                        //PropertyChanges { target: keyFilter; enabled: false }
-                        //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
                         PropertyChanges { target: logoutLoader; loadComponent: true; mode: "logout" }
-                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "poweroff"
                         PropertyChanges { target: cursor; visible: true }
-                        //PropertyChanges { target: keyFilter; enabled: false }
-                        //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
                         PropertyChanges { target: logoutLoader; loadComponent: true; mode: "poweroff" }
-                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "restart"
                         PropertyChanges { target: cursor; visible: true }
-                        //PropertyChanges { target: keyFilter; enabled: false }
-                        //PropertyChanges { target: shieldLoader; source: "Shield.qml"; z: 909 }
                         PropertyChanges { target: logoutLoader; loadComponent: true; mode: "restart" }
-                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "lock"
                         PropertyChanges { target: cursor; visible: true }
-                        //PropertyChanges { target: keyFilter; enabled: false }
                         PropertyChanges { target: screenView.windowsSwitcherLoader; active: false }
-                        //PropertyChanges { target: shieldLoader; source: ""; visible: false }
                         PropertyChanges { target: logoutLoader; loadComponent: false }
                         PropertyChanges { target: lockScreenLoader; loadComponent: true }
-                        //StateChangeScript { script: disableInput() }
                     },
                     State {
                         name: "shield"
