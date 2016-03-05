@@ -115,6 +115,7 @@ GreenIsland.WaylandOutput {
                         PropertyChanges { target: screenView.windowsSwitcherLoader; active: false }
                         PropertyChanges { target: logoutLoader; loadComponent: false }
                         PropertyChanges { target: lockScreenLoader; loadComponent: true }
+                        PropertyChanges { target: outputPowerOffTimer; running: true }
                     },
                     State {
                         name: "shield"
@@ -185,6 +186,12 @@ GreenIsland.WaylandOutput {
                     component: output.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
                     z: 900
                     onLoadComponentChanged: if (loadComponent) show(); else hide();
+                }
+
+                Timer {
+                    id: outputPowerOffTimer
+                    interval: 1000
+                    onTriggered: output.powerState = GreenIsland.WaylandOutput.PowerStateStandby
                 }
 
                 /*
