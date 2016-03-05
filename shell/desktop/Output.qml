@@ -74,6 +74,8 @@ GreenIsland.WaylandOutput {
             id: localPointerTracker
             anchors.fill: parent
             globalTracker: globalPointerTracker
+            onMouseXChanged: output.powerState = GreenIsland.WaylandOutput.PowerStateOn
+            onMouseYChanged: output.powerState = GreenIsland.WaylandOutput.PowerStateOn
 
             Item {
                 id: mainItem
