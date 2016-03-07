@@ -1,6 +1,0 @@
-module Hawaii.Components.ListItems
-Base 1.0 Base.qml
-Highlight 1.0 Highlight.qml
-Standard 1.0 Standard.qml
-Subtitled 1.0 Subtitled.qml
-ThinSeparator 1.0 ThinSeparator.qml
