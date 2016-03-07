@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import ".."
 
 Loader {
@@ -38,7 +38,7 @@ Loader {
     Component {
         id: solid
 
-        Components.NoiseBackground {
+        FluidUi.NoiseBackground {
             objectName: "solid"
             color: hawaiiCompositor.settings.background.primaryColor
 
@@ -54,7 +54,7 @@ Loader {
     Component {
         id: gradient
 
-        Components.NoiseBackground {
+        FluidUi.NoiseBackground {
             property bool vertical: hawaiiCompositor.settings.background.mode === "vgradient"
 
             objectName: "gradient"
@@ -90,11 +90,11 @@ Loader {
     Component {
         id: wallpaper
 
-        Components.NoiseBackground {
+        FluidUi.NoiseBackground {
             objectName: "wallpaper"
             color: hawaiiCompositor.settings.background.primaryColor
 
-            Components.SmoothFadeImage {
+            FluidUi.SmoothFadeImage {
                 readonly property real aspectRatio: width / height
 
                 anchors.fill: parent

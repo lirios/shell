@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import ".."
 import "../launcher" as Launcher
 
@@ -49,7 +49,7 @@ Indicator {
         }
     }
 
-    Components.Loadable {
+    FluidUi.Loadable {
         id: popover
         component: Launcher.LauncherPopOver {
             parent: panel.parent

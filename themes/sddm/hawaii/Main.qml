@@ -27,10 +27,10 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Private 1.0 as ControlsPrivate
-import Hawaii.Components 1.0 as Components
+import Fluid.Ui 1.0 as FluidUi
 import "screens" as Screens
 
-Components.NoiseBackground {
+FluidUi.NoiseBackground {
     id: root
     color: "#272727"
     gradient: Gradient {

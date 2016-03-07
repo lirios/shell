@@ -27,8 +27,8 @@
 import QtQuick 2.5
 import QtQuick.Window 2.2
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import "../screens"
 
 GreenIsland.WaylandOutput {
@@ -239,7 +239,7 @@ GreenIsland.WaylandOutput {
                     SecondaryLockScreen {}
                 }
 
-                Components.Loadable {
+                FluidUi.Loadable {
                     property bool loadComponent: false
 
                     id: lockScreenLoader
@@ -257,7 +257,7 @@ GreenIsland.WaylandOutput {
                  * Logout screen
                  */
 
-                Components.Loadable {
+                FluidUi.Loadable {
                     property bool loadComponent: false
                     // FIXME: mode should be empty by default and the LogoutScreen
                     // component should handle an empty state, hiding the controls
