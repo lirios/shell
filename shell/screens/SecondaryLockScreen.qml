@@ -28,6 +28,7 @@ import QtQuick 2.4
 import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Effects 1.0 as FluidEffects
 
 Components.Showable {
     id: root
@@ -60,9 +61,17 @@ Components.Showable {
     }
 
     FastBlur {
+        id: blur
         anchors.fill: picture
         source: picture
         radius: 32
+    }
+
+    FluidEffects.Vignette {
+        anchors.fill: parent
+        source: blur
+        radius: 8
+        brightness: 0.2
     }
 
     MouseArea {
