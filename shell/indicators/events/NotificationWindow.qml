@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import "../../components" as ShellComponents
 
 Item {
@@ -38,7 +39,7 @@ Item {
 
     id: root
     objectName: "notificationWindow"
-    width: Math.round(Themes.Units.gu(24))
+    width: Math.round(FluidUi.Units.gu(24))
     height: notificationItem.implicitHeight
     opacity: 0.0
     onOpacityChanged: {
@@ -52,21 +53,21 @@ Item {
     Behavior on y {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
         }
     }
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.OutSine
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
         }
     }
 
@@ -90,8 +91,8 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -Themes.Units.smallSpacing * 1.5
-            rightMargin: -Themes.Units.smallSpacing * 1.5
+            topMargin: -FluidUi.Units.smallSpacing * 1.5
+            rightMargin: -FluidUi.Units.smallSpacing * 1.5
         }
         z: 1
         onClicked: root.closed(root)
@@ -105,16 +106,16 @@ Item {
             GradientStop { position: 0; color: Qt.lighter(Themes.Theme.palette.panel.backgroundColor, 1.2) }
             GradientStop { position: 1; color: Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.1) }
         }
-        border.width: Themes.Units.gu(0.05)
+        border.width: FluidUi.Units.gu(0.05)
         border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.2), 0.5)
-        radius: Themes.Units.gu(0.4)
+        radius: FluidUi.Units.gu(0.4)
         antialiasing: true
         z: 0
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutSine
-                duration: Themes.Units.longDuration
+                duration: FluidUi.Units.longDuration
             }
         }
 
@@ -122,7 +123,7 @@ Item {
             id: notificationItem
             anchors {
                 fill: parent
-                margins: Themes.Units.smallSpacing
+                margins: FluidUi.Units.smallSpacing
             }
             onActionInvoked: root.actionInvoked(actionId)
         }

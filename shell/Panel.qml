@@ -29,6 +29,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQml.Models 2.2
 import GreenIsland 1.0
+import Fluid.Ui 1.0 as FluidUi
 import Hawaii.Themes 1.0 as Themes
 import "indicators"
 import "launcher"
@@ -38,8 +39,8 @@ Rectangle {
     property Indicator lastIndicator: null
     readonly property alias launcherIndicator: launcherIndicator
     readonly property alias currentLauncherItem: launcher.currentItem
-    property real size: Themes.Units.iconSizes.large
-    readonly property real spacing: Themes.Units.smallSpacing
+    property real size: FluidUi.Units.iconSizes.large
+    readonly property real spacing: FluidUi.Units.smallSpacing
 
     signal indicatorTriggered(var indicator)
 
@@ -69,7 +70,7 @@ Rectangle {
                 columns: 1
                 flow: GridLayout.TopToBottom
                 rowSpacing: 0
-                columnSpacing: Themes.Units.smallSpacing
+                columnSpacing: FluidUi.Units.smallSpacing
             }
             PropertyChanges {
                 target: launcher
@@ -81,7 +82,7 @@ Rectangle {
                 rows: 6
                 columns: 1
                 flow: GridLayout.LeftToRight
-                rowSpacing: Themes.Units.smallSpacing
+                rowSpacing: FluidUi.Units.smallSpacing
                 columnSpacing: 0
             }
         },
@@ -106,7 +107,7 @@ Rectangle {
                 rows: 1
                 columns: 3
                 flow: GridLayout.LeftToRight
-                rowSpacing: Themes.Units.smallSpacing
+                rowSpacing: FluidUi.Units.smallSpacing
                 columnSpacing: 0
             }
             PropertyChanges {
@@ -120,7 +121,7 @@ Rectangle {
                 columns: 6
                 flow: GridLayout.LeftToRight
                 rowSpacing: 0
-                columnSpacing: Themes.Units.smallSpacing
+                columnSpacing: FluidUi.Units.smallSpacing
             }
         },
         State {
@@ -145,7 +146,7 @@ Rectangle {
                 columns: 1
                 flow: GridLayout.TopToBottom
                 rowSpacing: 0
-                columnSpacing: Themes.Units.smallSpacing
+                columnSpacing: FluidUi.Units.smallSpacing
             }
             PropertyChanges {
                 target: launcher
@@ -157,7 +158,7 @@ Rectangle {
                 rows: 6
                 columns: 1
                 flow: GridLayout.LeftToRight
-                rowSpacing: Themes.Units.smallSpacing
+                rowSpacing: FluidUi.Units.smallSpacing
                 columnSpacing: 0
             }
         },
@@ -182,7 +183,7 @@ Rectangle {
                 rows: 1
                 columns: 3
                 flow: GridLayout.LeftToRight
-                rowSpacing: Themes.Units.smallSpacing
+                rowSpacing: FluidUi.Units.smallSpacing
                 columnSpacing: 0
             }
             PropertyChanges {
@@ -196,33 +197,33 @@ Rectangle {
                 columns: 6
                 flow: GridLayout.LeftToRight
                 rowSpacing: 0
-                columnSpacing: Themes.Units.smallSpacing
+                columnSpacing: FluidUi.Units.smallSpacing
             }
         }
     ]
     transitions: Transition {
         AnchorAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.shortDuration
+            duration: FluidUi.Units.shortDuration
         }
     }
     onHeightChanged: screenView.setAvailableGeometry(height)
 
     Behavior on color {
-        ColorAnimation { duration: Themes.Units.longDuration }
+        ColorAnimation { duration: FluidUi.Units.longDuration }
     }
 
     Behavior on width {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.shortDuration
+            duration: FluidUi.Units.shortDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.shortDuration
+            duration: FluidUi.Units.shortDuration
         }
     }
 
@@ -258,17 +259,17 @@ Rectangle {
         GridLayout {
             property real iconSize: {
                 switch (panel.size) {
-                case Themes.Units.iconSizes.medium:
-                    return Themes.Units.iconSizes.small;
-                case Themes.Units.iconSizes.large:
-                    return Themes.Units.iconSizes.smallMedium;
-                case Themes.Units.iconSizes.huge:
-                    return Themes.Units.iconSizes.medium;
+                case FluidUi.Units.iconSizes.medium:
+                    return FluidUi.Units.iconSizes.small;
+                case FluidUi.Units.iconSizes.large:
+                    return FluidUi.Units.iconSizes.smallMedium;
+                case FluidUi.Units.iconSizes.huge:
+                    return FluidUi.Units.iconSizes.medium;
                 default:
                     break;
                 }
 
-                return Themes.Units.iconSizes.smallMedium;
+                return FluidUi.Units.iconSizes.smallMedium;
             }
 
             id: indicatorsView
@@ -310,10 +311,10 @@ Rectangle {
         // geometry resulting in a "hole" between the window and the panel
         if (output.activeWindow && output.activeWindow.maximized) {
             color = Themes.Theme.palette.rgba(Themes.Theme.palette.window.backgroundColor, 0.85);
-            //launcher.iconSize = Themes.Units.iconSizes.medium;
+            //launcher.iconSize = FluidUi.Units.iconSizes.medium;
         } else {
             color = "transparent";
-            //launcher.iconSize = Themes.Units.iconSizes.large;
+            //launcher.iconSize = FluidUi.Units.iconSizes.large;
         }
     }
 }

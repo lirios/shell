@@ -27,7 +27,7 @@
 import QtQuick 2.4
 import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import Fluid.Effects 1.0 as FluidEffects
 
 Components.Showable {
@@ -35,14 +35,14 @@ Components.Showable {
     showAnimation: OpacityAnimator {
         target: root
         easing.type: Easing.InSine
-        duration: Themes.Units.longDuration
+        duration: FluidUi.Units.longDuration
         from: 0.0
         to: 1.0
     }
     hideAnimation: OpacityAnimator {
         target: root
         easing.type: Easing.OutSine
-        duration: Themes.Units.longDuration
+        duration: FluidUi.Units.longDuration
         from: 1.0
         to: 0.0
     }

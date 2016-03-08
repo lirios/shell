@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
     property alias title: titleLabel.text
@@ -58,9 +59,9 @@ Rectangle {
     RowLayout {
         anchors {
             fill: parent
-            margins: Themes.Units.gu(0.25)
+            margins: FluidUi.Units.gu(0.25)
         }
-        spacing: Themes.Units.gridUnit
+        spacing: FluidUi.Units.gridUnit
         opacity: root.active ? 1.0 : 0.5
 
         WindowControls {

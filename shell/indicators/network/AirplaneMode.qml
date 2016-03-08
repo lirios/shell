@@ -29,6 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 RowLayout {
     readonly property alias airplaneMode: __priv.airplaneMode
@@ -36,7 +37,7 @@ RowLayout {
     signal clicked()
 
     id: root
-    spacing: Themes.Units.smallSpacing
+    spacing: FluidUi.Units.smallSpacing
 
     QtObject {
         id: __priv
@@ -55,7 +56,7 @@ RowLayout {
     Components.Icon {
         id: airplaneModeIcon
         iconName: airplaneMode ? "airplane-mode-symbolic" : "airplane-mode-disabled-symbolic"
-        width: Themes.Units.iconSizes.smallMedium
+        width: FluidUi.Units.iconSizes.smallMedium
         height: width
         color: Themes.Theme.palette.panel.textColor
     }

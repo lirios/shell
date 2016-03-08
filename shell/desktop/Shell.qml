@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.1
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import ".."
 import "../components"
 
@@ -66,13 +66,13 @@ Item {
     SlidingPanel {
         id: rightDrawer
         edge: Qt.RightEdge
-        width: Themes.Units.gu(16)
+        width: FluidUi.Units.gu(16)
         z: 0
 
         StackView {
             id: stackView
             anchors.fill: parent
-            anchors.margins: Themes.Units.largeSpacing
+            anchors.margins: FluidUi.Units.largeSpacing
         }
     }
 }

@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Item {
     property string name
@@ -50,14 +51,14 @@ Item {
 
         var size = 0;
         if (iconName)
-            size += icon.width + (Themes.Units.smallSpacing * 2);
+            size += icon.width + (FluidUi.Units.smallSpacing * 2);
         if (text)
-            size += label.width + (Themes.Units.smallSpacing * 2);
+            size += label.width + (FluidUi.Units.smallSpacing * 2);
         if (iconName && text)
-            size += Themes.Units.smallSpacing * 2;
-        return Math.max(size, Themes.Units.smallSpacing * 10);
+            size += FluidUi.Units.smallSpacing * 2;
+        return Math.max(size, FluidUi.Units.smallSpacing * 10);
     }
-    height: Math.max(Math.max(icon.height, label.height) + (Themes.Units.smallSpacing * 2), Themes.Units.smallSpacing * 10)
+    height: Math.max(Math.max(icon.height, label.height) + (FluidUi.Units.smallSpacing * 2), FluidUi.Units.smallSpacing * 10)
     onTriggered: __priv.expanded = !__priv.expanded
 
     QtObject {
@@ -76,7 +77,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
     }
@@ -99,7 +100,7 @@ Item {
         id: label
         anchors.centerIn: parent
         color: Themes.Theme.palette.panel.textColor
-        font.pixelSize: Themes.Units.roundToIconSize(Themes.Units.iconSizes.small)
+        font.pixelSize: FluidUi.Units.roundToIconSize(FluidUi.Units.iconSizes.small)
     }
 
     Rectangle {
@@ -107,10 +108,10 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -(Themes.Units.smallSpacing * 0.5)
-            rightMargin: -(Themes.Units.largeSpacing * 0.5)
+            topMargin: -(FluidUi.Units.smallSpacing * 0.5)
+            rightMargin: -(FluidUi.Units.largeSpacing * 0.5)
         }
-        width: Themes.Units.iconSizes.smallMedium
+        width: FluidUi.Units.iconSizes.smallMedium
         height: width
         radius: width * 0.5
         color: "orangered"
@@ -119,13 +120,13 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
 
         Label {
             anchors.centerIn: parent
-            font.pixelSize: parent.width - Themes.Units.smallSpacing
+            font.pixelSize: parent.width - FluidUi.Units.smallSpacing
             color: "white"
             text: indicator.badgeCount
         }

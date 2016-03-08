@@ -29,12 +29,13 @@ import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import GreenIsland 1.0 as GreenIsland
+import Fluid.Ui 1.0 as FluidUi
 import "../components" as ShellComponents
 
 Item {
     property var window
     readonly property alias container: mouseArea
-    readonly property int margin: Themes.Units.dp(10)
+    readonly property int margin: FluidUi.Units.dp(10)
 
     signal activated(var window)
     signal closeRequested(var window)
@@ -48,7 +49,7 @@ Item {
         target: chrome
         from: x
         easing.type: Easing.OutQuad
-        duration: Themes.Units.mediumDuration
+        duration: FluidUi.Units.mediumDuration
         running: false
     }
 
@@ -57,21 +58,21 @@ Item {
         target: chrome
         from: y
         easing.type: Easing.OutQuad
-        duration: Themes.Units.mediumDuration
+        duration: FluidUi.Units.mediumDuration
         running: false
     }
 
     Behavior on width {
         SmoothedAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.mediumDuration
+            duration: FluidUi.Units.mediumDuration
         }
     }
 
     Behavior on height {
         SmoothedAnimation {
             easing.type: Easing.OutQuad
-            duration: Themes.Units.mediumDuration
+            duration: FluidUi.Units.mediumDuration
         }
     }
 
@@ -98,14 +99,14 @@ Item {
         glowRadius: margin
         spread: 0.2
         color: Themes.Theme.palette.view.selectedBackgroundColor
-        cornerRadius: Themes.Units.gu(0.2)
+        cornerRadius: FluidUi.Units.gu(0.2)
         opacity: closeButton.opacity > 0.0 ? 0.5 : 0.0
         z: 3
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
     }
@@ -113,17 +114,17 @@ Item {
     Rectangle {
         id: titleBadge
         anchors.centerIn: parent
-        radius: Themes.Units.dp(6)
+        radius: FluidUi.Units.dp(6)
         color: "#80000000"
-        width: Math.max(parent.width * 0.8, titleLabel.paintedWidth) + Themes.Units.smallSpacing * 2
-        height: titleLabel.paintedHeight + Themes.Units.smallSpacing * 2
+        width: Math.max(parent.width * 0.8, titleLabel.paintedWidth) + FluidUi.Units.smallSpacing * 2
+        height: titleLabel.paintedHeight + FluidUi.Units.smallSpacing * 2
         z: 4
 
         Text {
             id: titleLabel
             anchors {
                 centerIn: parent
-                margins: Themes.Units.smallSpacing
+                margins: FluidUi.Units.smallSpacing
             }
             renderType: Text.NativeRendering
             text: window.title ? window.title : qsTr("Unknown")
@@ -136,7 +137,7 @@ Item {
             target: titleBadge
             from: 0.0
             to: 1.0
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
             running: true
         }
     }
@@ -146,12 +147,12 @@ Item {
         anchors {
             right: parent.right
             bottom: parent.bottom
-            rightMargin: Themes.Units.largeSpacing
-            bottomMargin: Themes.Units.largeSpacing
+            rightMargin: FluidUi.Units.largeSpacing
+            bottomMargin: FluidUi.Units.largeSpacing
         }
-        radius: Themes.Units.dp(6)
+        radius: FluidUi.Units.dp(6)
         color: "#80000000"
-        width: icon.width + Themes.Units.smallSpacing * 2
+        width: icon.width + FluidUi.Units.smallSpacing * 2
         height: width
         z: 4
 
@@ -159,10 +160,10 @@ Item {
             id: icon
             anchors {
                 centerIn: parent
-                margins: Themes.Units.smallSpacing
+                margins: FluidUi.Units.smallSpacing
             }
             iconName: window.iconName ? window.iconName : "unknown"
-            width: Themes.Units.iconSizes.large
+            width: FluidUi.Units.iconSizes.large
             height: width
         }
 
@@ -171,7 +172,7 @@ Item {
             target: iconBadge
             from: 0.0
             to: 1.0
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
             running: true
         }
     }
@@ -181,9 +182,9 @@ Item {
         anchors {
             top: mouseArea.top
             right: mouseArea.right
-            margins: -Themes.Units.gu(1)
+            margins: -FluidUi.Units.gu(1)
         }
-        width: Themes.Units.iconSizes.medium
+        width: FluidUi.Units.iconSizes.medium
         z: 5
         opacity: mouseArea.containsMouse || hovered ? 1.0 : 0.0
         onClicked: chrome.closeRequested(window)
@@ -191,14 +192,14 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
     }
 
     Timer {
         id: hideBadgesTimer
-        interval: Themes.Units.longDuration * 0.5
+        interval: FluidUi.Units.longDuration * 0.5
         onTriggered: {
             // Hide the badges so that chrome will reseamble more the window
             titleBadgeOpacityAnimator.from = 1.0;
@@ -215,7 +216,7 @@ Item {
 
     Timer {
         id: autodestructionTimer
-        interval: Themes.Units.mediumDuration * 0.5
+        interval: FluidUi.Units.mediumDuration * 0.5
         onTriggered: {
             // Show original views
             var i;

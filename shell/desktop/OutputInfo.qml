@@ -27,6 +27,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
+import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
     width: grid.implicitWidth + 16
@@ -125,6 +126,30 @@ Rectangle {
         }
         Text {
             text: (((Screen.pixelDensity * 25.4) / (Screen.logicalPixelDensity * 25.4)) / Screen.devicePixelRatio).toFixed(2)
+            color: "white"
+        }
+
+        Text {
+            text: "Device Pixel:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: FluidUi.Units.dp(1).toFixed(2)
+            color: "white"
+        }
+
+        Text {
+            text: "Grid Unit:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: FluidUi.Units.gu(1).toFixed(2)
             color: "white"
         }
 

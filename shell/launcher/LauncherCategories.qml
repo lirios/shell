@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.launcher 0.1 as CppLauncher
 
 ListView {
@@ -43,9 +44,9 @@ ListView {
             property bool hover: false
 
             color: hover ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
-            width: Math.max(ListView.view.width, label.paintedWidth + (2 * Themes.Units.smallSpacing))
-            height: Math.max(icon.height, label.paintedHeight) + (2 * Themes.Units.smallSpacing)
-            radius: Themes.Units.dp(3)
+            width: Math.max(ListView.view.width, label.paintedWidth + (2 * FluidUi.Units.smallSpacing))
+            height: Math.max(icon.height, label.paintedHeight) + (2 * FluidUi.Units.smallSpacing)
+            radius: FluidUi.Units.dp(3)
 
             MouseArea {
                 anchors.fill: parent
@@ -58,14 +59,14 @@ ListView {
             Row {
                 anchors {
                     fill: parent
-                    margins: Themes.Units.smallSpacing
+                    margins: FluidUi.Units.smallSpacing
                 }
-                spacing: Themes.Units.smallSpacing
+                spacing: FluidUi.Units.smallSpacing
 
                 Components.Icon {
                     id: icon
                     iconName: model.iconName
-                    width: Themes.Units.iconSizes.smallMedium
+                    width: FluidUi.Units.iconSizes.smallMedium
                     height: width
                 }
 

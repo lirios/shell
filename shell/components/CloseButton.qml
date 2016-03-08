@@ -26,18 +26,18 @@
 
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
     property alias hovered: mouseArea.containsMouse
     signal clicked()
 
     id: root
-    width: Themes.Units.iconSizes.smallMedium
+    width: FluidUi.Units.iconSizes.smallMedium
     height: width
     radius: width * 0.5
     border.color: Qt.rgba(1, 1, 1, 0.35)
-    border.width: Themes.Units.gu(0.05)
+    border.width: FluidUi.Units.gu(0.05)
     gradient: Gradient {
         GradientStop { position: 0; color: "#666" }
         GradientStop { position: 1; color: "#222" }
@@ -48,7 +48,7 @@ Rectangle {
         anchors.centerIn: parent
         iconName: "window-close-symbolic"
         color: "white"
-        width: parent.width - Themes.Units.smallSpacing
+        width: parent.width - FluidUi.Units.smallSpacing
         height: width
     }
 

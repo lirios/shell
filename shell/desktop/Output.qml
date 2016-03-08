@@ -27,7 +27,6 @@
 import QtQuick 2.5
 import QtQuick.Window 2.2
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import "../screens"
 
@@ -89,7 +88,7 @@ GreenIsland.WaylandOutput {
                 id: blackRectAnimator
                 target: blackRect
                 easing.type: Easing.OutSine
-                duration: Themes.Units.longDuration
+                duration: FluidUi.Units.longDuration
             }
 
             Timer {
@@ -218,7 +217,7 @@ GreenIsland.WaylandOutput {
                     Behavior on opacity {
                         NumberAnimation {
                             easing.type: Easing.InSine
-                            duration: Themes.Units.longDuration
+                            duration: FluidUi.Units.longDuration
                         }
                     }
                 }

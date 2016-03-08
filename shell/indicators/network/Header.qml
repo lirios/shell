@@ -28,13 +28,14 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 RowLayout {
     property alias text: label.text
 
-    spacing: Themes.Units.smallSpacing
+    spacing: FluidUi.Units.smallSpacing
     width: ListView.view.width
-    height: Math.max(label.paintedHeight, refreshButton.height) + (Themes.Units.smallSpacing * 2)
+    height: Math.max(label.paintedHeight, refreshButton.height) + (FluidUi.Units.smallSpacing * 2)
 
     Label {
         id: label

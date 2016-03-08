@@ -30,15 +30,16 @@ import QtQuick.Layouts 1.0
 import GreenIsland 1.0 as GreenIsland
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
-    readonly property real thumbnailHeight: Themes.Units.dp(250)
+    readonly property real thumbnailHeight: FluidUi.Units.dp(250)
 
     signal closed()
 
     id: root
     color: "#80000000"
-    radius: Themes.Units.gu(0.5)
+    radius: FluidUi.Units.gu(0.5)
     opacity: 0.0
     width: output.availableGeometry.width * 0.7
     height: Math.min(thumbnailHeight + layout.anchors.margins * 2 + layout.spacing * 2 + label.paintedHeight, output.availableGeometry.height * 0.7)
@@ -46,7 +47,7 @@ Rectangle {
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InSine
-            duration: Themes.Units.shortDuration
+            duration: FluidUi.Units.shortDuration
         }
     }
 
@@ -76,13 +77,13 @@ Rectangle {
             width: thumbnailHeight * ratio
             height: thumbnailHeight
             color: wrapper.ListView.isCurrentItem ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
-            radius: Themes.Units.gu(0.5)
+            radius: FluidUi.Units.gu(0.5)
 
             GreenIsland.WaylandQuickItem {
                 id: windowItem
                 anchors {
                     fill: parent
-                    margins: Themes.Units.smallSpacing
+                    margins: FluidUi.Units.smallSpacing
                 }
                 surface: window.surface
                 sizeFollowsSurface: false
@@ -102,7 +103,7 @@ Rectangle {
                     right: parent.right
                     bottom: parent.bottom
                 }
-                width: Themes.Units.iconSizes.large
+                width: FluidUi.Units.iconSizes.large
                 height: width
                 iconName: window.iconName
                 cache: false
@@ -115,17 +116,17 @@ Rectangle {
         id: layout
         anchors {
             fill: parent
-            margins: Themes.Units.largeSpacing
+            margins: FluidUi.Units.largeSpacing
         }
-        spacing: Themes.Units.smallSpacing
+        spacing: FluidUi.Units.smallSpacing
 
         ListView {
             id: listView
             clip: true
             orientation: ListView.Horizontal
             model: hawaiiCompositor.windowsModel
-            spacing: Themes.Units.smallSpacing
-            highlightMoveDuration: Themes.Units.shortDuration
+            spacing: FluidUi.Units.smallSpacing
+            highlightMoveDuration: FluidUi.Units.shortDuration
             delegate: thumbnailComponent
             currentIndex: 0
 

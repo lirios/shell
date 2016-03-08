@@ -26,13 +26,13 @@
 
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.launcher 0.1 as CppLauncher
 
 Item {
     property real iconSize
     property real itemSize
-    readonly property real itemPadding: Themes.Units.smallSpacing * 2
+    readonly property real itemPadding: FluidUi.Units.smallSpacing * 2
     property alias orientation: listView.orientation
     readonly property alias currentItem: listView.currentItem
 
@@ -63,13 +63,13 @@ Item {
     ListView {
         id: listView
         anchors.centerIn: parent
-        spacing: Themes.Units.smallSpacing
+        spacing: FluidUi.Units.smallSpacing
         interactive: false
         add: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Themes.Units.shortDuration }
+            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: FluidUi.Units.shortDuration }
         }
         populate: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Themes.Units.longDuration }
+            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: FluidUi.Units.longDuration }
         }
         model: CppLauncher.LauncherModel {
             id: launcherModel

@@ -29,6 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Components.Showable {
     //! How long the overlay will stay on screen
@@ -49,19 +50,19 @@ Components.Showable {
     showAnimation: OpacityAnimator {
         target: rect
         easing.type: Easing.InSine
-        duration: Themes.Units.mediumDuration
+        duration: FluidUi.Units.mediumDuration
         from: 0.0
         to: 1.0
     }
     hideAnimation: OpacityAnimator {
         target: rect
         easing.type: Easing.InSine
-        duration: Themes.Units.mediumDuration
+        duration: FluidUi.Units.mediumDuration
         from: 1.0
         to: 0.0
     }
     width: height
-    height: Themes.Units.gu(15)
+    height: FluidUi.Units.gu(15)
     onIconNameChanged: if (timer.running) timer.restart()
     onValueChanged: if (timer.running) timer.restart()
     onShowProgressChanged: if (timer.running) timer.restart()
@@ -78,9 +79,9 @@ Components.Showable {
         id: rect
         anchors.fill: parent
         border.color: Themes.Theme.palette.rgba(Themes.Theme.palette.panel.backgroundColor, 0.5)
-        border.width: Themes.Units.dp(1)
+        border.width: FluidUi.Units.dp(1)
         color: Themes.Theme.palette.rgba(Themes.Theme.palette.panel.backgroundColor, 0.85)
-        radius: Themes.Units.dp(6)
+        radius: FluidUi.Units.dp(6)
         antialiasing: true
         opacity: 0.0
         onOpacityChanged: {
@@ -95,12 +96,12 @@ Components.Showable {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: Themes.Units.largeSpacing
-            spacing: Themes.Units.smallSpacing
+            anchors.margins: FluidUi.Units.largeSpacing
+            spacing: FluidUi.Units.smallSpacing
 
             Components.Icon {
                 id: icon
-                width: Themes.Units.iconSizes.enormous
+                width: FluidUi.Units.iconSizes.enormous
                 height: width
                 color: Themes.Theme.palette.panel.textColor
 

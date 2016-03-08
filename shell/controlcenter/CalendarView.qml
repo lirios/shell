@@ -28,22 +28,23 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Item {
     property alias selectedDate: calendar.selectedDate
 
-    height: Themes.Units.gu(20)
+    height: FluidUi.Units.gu(20)
 
     Component {
         id: hourDelegate
 
         Item {
-            height: Themes.Units.gu(2)
+            height: FluidUi.Units.gu(2)
 
             Label {
                 anchors.left: parent.left
                 anchors.top: parent.top
-                anchors.margins: Themes.Units.smallSpacing
+                anchors.margins: FluidUi.Units.smallSpacing
                 font: Themes.Theme.smallestFont
                 text: modelData + ":00"
             }
@@ -59,13 +60,13 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        anchors.margins: Themes.Units.smallSpacing
-        spacing: Themes.Units.largeSpacing
+        anchors.margins: FluidUi.Units.smallSpacing
+        spacing: FluidUi.Units.largeSpacing
 
         Calendar {
             id: calendar
-            width: Themes.Units.gu(18)
-            height: Themes.Units.gu(10)
+            width: FluidUi.Units.gu(18)
+            height: FluidUi.Units.gu(10)
             weekNumbersVisible: true
 
             Layout.fillHeight: true

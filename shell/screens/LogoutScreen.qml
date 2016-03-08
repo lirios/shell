@@ -31,6 +31,7 @@ import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Components.Showable {
     property alias mode: __priv.mode
@@ -47,14 +48,14 @@ Components.Showable {
     showAnimation: OpacityAnimator {
         target: root
         easing.type: Easing.InSine
-        duration: Themes.Units.longDuration
+        duration: FluidUi.Units.longDuration
         from: 0.0
         to: 1.0
     }
     hideAnimation: OpacityAnimator {
         target: root
         easing.type: Easing.InSine
-        duration: Themes.Units.longDuration
+        duration: FluidUi.Units.longDuration
         from: 1.0
         to: 0.0
     }
@@ -154,7 +155,7 @@ Components.Showable {
 
         Components.Icon {
             id: actionIcon
-            width: Themes.Units.iconSizes.enormous
+            width: FluidUi.Units.iconSizes.enormous
             height: width
             color: Themes.Theme.palette.panel.textColor
             cache: false
@@ -171,7 +172,7 @@ Components.Showable {
         }
 
         ProgressBar {
-            width: Themes.Units.largeSpacing * 5
+            width: FluidUi.Units.largeSpacing * 5
             minimumValue: 0
             maximumValue: __priv.timeout
             value: __priv.remainingTime
@@ -213,11 +214,11 @@ Components.Showable {
         }
 
         Item {
-            height: Themes.Units.largeSpacing * 2
+            height: FluidUi.Units.largeSpacing * 2
         }
 
         Row {
-            spacing: Themes.Units.smallSpacing
+            spacing: FluidUi.Units.smallSpacing
             focus: true
             visible: SessionInterface.canLogOut ||
                      SessionInterface.canPowerOff ||
@@ -231,7 +232,7 @@ Components.Showable {
                 id: logoutButton
                 exclusiveGroup: group
                 iconName: "system-log-out-symbolic"
-                width: Themes.Units.iconSizes.medium
+                width: FluidUi.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "logout"
@@ -243,7 +244,7 @@ Components.Showable {
                 id: poweroffButton
                 exclusiveGroup: group
                 iconName: "system-shutdown-symbolic"
-                width: Themes.Units.iconSizes.medium
+                width: FluidUi.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "poweroff"
@@ -255,7 +256,7 @@ Components.Showable {
                 id: restartButton
                 exclusiveGroup: group
                 iconName: "system-reboot-symbolic"
-                width: Themes.Units.iconSizes.medium
+                width: FluidUi.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "restart"
@@ -267,7 +268,7 @@ Components.Showable {
                 id: suspendButton
                 exclusiveGroup: group
                 iconName: "system-suspend-symbolic"
-                width: Themes.Units.iconSizes.medium
+                width: FluidUi.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "suspend"
@@ -279,7 +280,7 @@ Components.Showable {
                 id: hibernateButton
                 exclusiveGroup: group
                 iconName: "system-suspend-hibernate-symbolic"
-                width: Themes.Units.iconSizes.medium
+                width: FluidUi.Units.iconSizes.medium
                 height: width
                 checkable: true
                 checked: __priv.mode == "hibernate"
@@ -291,7 +292,7 @@ Components.Showable {
         }
 
         Item {
-            height: Themes.Units.largeSpacing * 2
+            height: FluidUi.Units.largeSpacing * 2
         }
 
         RowLayout {

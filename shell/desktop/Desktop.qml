@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import "../components"
 
 Item {
@@ -44,13 +45,13 @@ Item {
     SlidingPanel {
         id: topDrawer
         edge: Qt.TopEdge
-        height: Themes.Units.gu(25)
+        height: FluidUi.Units.gu(25)
         z: 1
 
         Loader {
             id: loader
             anchors.fill: parent
-            anchors.margins: Themes.Units.largeSpacing
+            anchors.margins: FluidUi.Units.largeSpacing
             active: topDrawer.expanded
             source: "../controlcenter/ControlCenter.qml"
 

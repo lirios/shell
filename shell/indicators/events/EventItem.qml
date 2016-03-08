@@ -30,13 +30,14 @@ import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 MouseArea {
     property bool expanded: false
 
     id: root
     width: parent.width
-    height: Themes.Units.gu(2)
+    height: FluidUi.Units.gu(2)
     drag.axis: Drag.XAxis
     drag.target: root
     states: [
@@ -52,8 +53,8 @@ MouseArea {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: Themes.Units.smallSpacing * 2
-                anchors.topMargin: Themes.Units.smallSpacing
+                anchors.leftMargin: FluidUi.Units.smallSpacing * 2
+                anchors.topMargin: FluidUi.Units.smallSpacing
             }
         },
         State {
@@ -77,15 +78,15 @@ MouseArea {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: imageItem.width + (Themes.Units.smallSpacing * 2)
+                anchors.leftMargin: imageItem.width + (FluidUi.Units.smallSpacing * 2)
             }
         }
     ]
     onExpandedChanged: {
         if (expanded && model.body)
-            height = Themes.Units.gu(4);
+            height = FluidUi.Units.gu(4);
         else
-            height = Themes.Units.gu(2);
+            height = FluidUi.Units.gu(2);
     }
     onReleased: {
         if (drag.active) {
@@ -117,10 +118,10 @@ MouseArea {
         anchors {
             left: parent.left
             top: parent.top
-            leftMargin: Themes.Units.smallSpacing
-            topMargin: Themes.Units.smallSpacing
+            leftMargin: FluidUi.Units.smallSpacing
+            topMargin: FluidUi.Units.smallSpacing
         }
-        width: Themes.Units.iconSizes.medium
+        width: FluidUi.Units.iconSizes.medium
         height: width
         source: width > 0 && height > 0 && model.hasIcon ? "image://notifications/" + model.id : ""
         sourceSize.width: width
@@ -149,9 +150,9 @@ MouseArea {
             top: titleLabel.bottom
             right: parent.right
             bottom: parent.bottom
-            leftMargin: Themes.Units.smallSpacing * 2
-            rightMargin: Themes.Units.smallSpacing * 2
-            bottomMargin: Themes.Units.smallSpacing
+            leftMargin: FluidUi.Units.smallSpacing * 2
+            rightMargin: FluidUi.Units.smallSpacing * 2
+            bottomMargin: FluidUi.Units.smallSpacing
         }
         level: 5
         wrapMode: Text.Wrap

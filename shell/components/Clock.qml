@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
-import Hawaii.Themes 1.0
+import Hawaii.Themes 1.0 as Themes
 
 ColumnLayout {
     property string timeFormat
@@ -59,7 +59,7 @@ ColumnLayout {
     Label {
         id: timeLabel
         font.pointSize: 36
-        color: Theme.palette.window.textColor
+        color: Themes.Theme.palette.window.textColor
 
         Layout.alignment: Qt.AlignCenter
     }
@@ -67,7 +67,7 @@ ColumnLayout {
     Label {
         id: dateLabel
         font.pointSize: 18
-        color: Theme.palette.window.textColor
+        color: Themes.Theme.palette.window.textColor
 
         Layout.alignment: Qt.AlignCenter
     }

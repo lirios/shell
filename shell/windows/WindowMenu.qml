@@ -25,14 +25,14 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
 CustomComponents.PopupMenu {
     property var window
 
     id: menu
-    width: Themes.Units.dp(200)
+    width: FluidUi.Units.dp(200)
     height: column.height
 
     Column {

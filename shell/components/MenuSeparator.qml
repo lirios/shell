@@ -26,11 +26,12 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
     id: root
     width: parent.width
-    height: Themes.Units.dp(1)
+    height: FluidUi.Units.dp(1)
     color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.5), 0.3)
     antialiasing: true
 }

@@ -31,6 +31,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
 import org.hawaiios.networkmanager 0.1 as NM
 import "../../components" as CustomComponents
@@ -98,14 +99,14 @@ Item {
 
     ColumnLayout {
         id: mainLayout
-        spacing: Themes.Units.largeSpacing
+        spacing: FluidUi.Units.largeSpacing
 
         RowLayout {
-            spacing: Themes.Units.smallSpacing
+            spacing: FluidUi.Units.smallSpacing
 
             Components.Icon {
                 iconName: indicator.massageIconName(ConnectionIcon)
-                width: Themes.Units.iconSizes.medium
+                width: FluidUi.Units.iconSizes.medium
                 height: width
                 color: Themes.Theme.palette.panel.textColor
 
@@ -113,7 +114,7 @@ Item {
             }
 
             ColumnLayout {
-                spacing: Themes.Units.smallSpacing
+                spacing: FluidUi.Units.smallSpacing
 
                 Label {
                     id: label
@@ -183,7 +184,7 @@ Item {
                 Behavior on opacity {
                     NumberAnimation {
                         easing.type: Easing.InOutQuad
-                        duration: Themes.Units.shortDuration
+                        duration: FluidUi.Units.shortDuration
                     }
                 }
 
@@ -196,13 +197,13 @@ Item {
         id: detailsComponent
 
         ColumnLayout {
-            spacing: Themes.Units.smallSpacing
+            spacing: FluidUi.Units.smallSpacing
 
             Repeater {
                 model: ConnectionDetails.length / 2
 
                 RowLayout {
-                    spacing: Themes.Units.smallSpacing
+                    spacing: FluidUi.Units.smallSpacing
 
                     Label {
                         text: ConnectionDetails[index * 2]
@@ -228,7 +229,7 @@ Item {
         ColumnLayout {
             property alias passwordField: passwordField
 
-            spacing: Themes.Units.smallSpacing
+            spacing: FluidUi.Units.smallSpacing
 
             CustomComponents.TextField {
                 id: passwordField

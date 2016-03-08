@@ -30,6 +30,7 @@ import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
 Components.Showable {
@@ -44,7 +45,7 @@ Components.Showable {
         XAnimator {
             target: popover
             easing.type: Easing.InQuad
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
             from: __priv.fromX
             to: __priv.toX
         }
@@ -52,7 +53,7 @@ Components.Showable {
         YAnimator {
             target: popover
             easing.type: Easing.InQuad
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
             from: __priv.fromY
             to: __priv.toY
         }
@@ -60,7 +61,7 @@ Components.Showable {
         OpacityAnimator {
             target: popover
             easing.type: Easing.InQuad
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
             from: 0.0
             to: 1.0
         }
@@ -69,7 +70,7 @@ Components.Showable {
         XAnimator {
             target: popover
             easing.type: Easing.InQuad
-            duration: Themes.Units.shortDuration
+            duration: FluidUi.Units.shortDuration
             from: __priv.toX
             to: __priv.fromX
         }
@@ -77,7 +78,7 @@ Components.Showable {
         YAnimator {
             target: popover
             easing.type: Easing.InQuad
-            duration: Themes.Units.shortDuration
+            duration: FluidUi.Units.shortDuration
             from: __priv.toY
             to: __priv.fromY
         }
@@ -85,7 +86,7 @@ Components.Showable {
         OpacityAnimator {
             target: popover
             easing.type: Easing.InQuad
-            duration: Themes.Units.longDuration
+            duration: FluidUi.Units.longDuration
             from: 1.0
             to: 0.0
         }
@@ -94,8 +95,8 @@ Components.Showable {
     QtObject {
         id: __priv
 
-        property real fromX: origin.x + Themes.Units.dp(5) // 5 is an arbitrary margin
-        property real fromY: origin.y + popover.height + Themes.Units.dp(5 + 6) // 6 is radius
+        property real fromX: origin.x + FluidUi.Units.dp(5) // 5 is an arbitrary margin
+        property real fromY: origin.y + popover.height + FluidUi.Units.dp(5 + 6) // 6 is radius
 
         property real toX: fromX
         property real toY: origin.y - popover.height
@@ -103,11 +104,11 @@ Components.Showable {
 
     CustomComponents.Popover {
         id: popover
-        width: grid.width + (categories.visible ? categories.width : 0) + (Themes.Units.largeSpacing * 2) + (categories.visible ? Themes.Units.smallSpacing * 2 : 0)
+        width: grid.width + (categories.visible ? categories.width : 0) + (FluidUi.Units.largeSpacing * 2) + (categories.visible ? FluidUi.Units.smallSpacing * 2 : 0)
         height: searchBox.height + grid.height + pageSelector.height +
-                shutdownActions.height + (Themes.Units.largeSpacing * 4) +
-                (categories.visible ? Themes.Units.smallSpacing : Themes.Units.largeSpacing) +
-                Themes.Units.smallSpacing
+                shutdownActions.height + (FluidUi.Units.largeSpacing * 4) +
+                (categories.visible ? FluidUi.Units.smallSpacing : FluidUi.Units.largeSpacing) +
+                FluidUi.Units.smallSpacing
         opacity: 0.0
         onOpacityChanged: if (opacity == 1.0) searchText.forceActiveFocus()
 
@@ -143,10 +144,10 @@ Components.Showable {
                 left: parent.left
                 top: parent.top
                 right: parent.right
-                leftMargin: Themes.Units.largeSpacing
-                topMargin: Themes.Units.largeSpacing
-                rightMargin: Themes.Units.largeSpacing
-                bottomMargin: Themes.Units.smallSpacing
+                leftMargin: FluidUi.Units.largeSpacing
+                topMargin: FluidUi.Units.largeSpacing
+                rightMargin: FluidUi.Units.largeSpacing
+                bottomMargin: FluidUi.Units.smallSpacing
             }
             height: Math.max(viewSelector.height, searchText.height)
 
@@ -195,9 +196,9 @@ Components.Showable {
             anchors {
                 left: parent.left
                 top: grid.top
-                margins: Themes.Units.largeSpacing
+                margins: FluidUi.Units.largeSpacing
             }
-            width: Themes.Units.gu(8)
+            width: FluidUi.Units.gu(8)
             height: grid.height
             visible: false
             onSelected: grid.filterByCategory(category)
@@ -208,10 +209,10 @@ Components.Showable {
             anchors {
                 left: categories.visible ? categories.right : parent.left
                 top: searchBox.bottom
-                leftMargin: categories.visible ? Themes.Units.smallSpacing : Themes.Units.largeSpacing
-                topMargin: categories.visible ? Themes.Units.smallSpacing : Themes.Units.largeSpacing
-                rightMargin: Themes.Units.largeSpacing
-                bottomMargin: Themes.Units.largeSpacing
+                leftMargin: categories.visible ? FluidUi.Units.smallSpacing : FluidUi.Units.largeSpacing
+                topMargin: categories.visible ? FluidUi.Units.smallSpacing : FluidUi.Units.largeSpacing
+                rightMargin: FluidUi.Units.largeSpacing
+                bottomMargin: FluidUi.Units.largeSpacing
             }
             onAppLaunched: root.appLaunched()
         }
@@ -221,19 +222,19 @@ Components.Showable {
             anchors {
                 top: grid.bottom
                 horizontalCenter: parent.horizontalCenter
-                leftMargin: Themes.Units.largeSpacing
-                topMargin: Themes.Units.largeSpacing + Themes.Units.smallSpacing
-                rightMargin: Themes.Units.largeSpacing
-                bottomMargin: Themes.Units.largeSpacing
+                leftMargin: FluidUi.Units.largeSpacing
+                topMargin: FluidUi.Units.largeSpacing + FluidUi.Units.smallSpacing
+                rightMargin: FluidUi.Units.largeSpacing
+                bottomMargin: FluidUi.Units.largeSpacing
             }
-            spacing: Themes.Units.largeSpacing
-            height: Themes.Units.dp(20)
+            spacing: FluidUi.Units.largeSpacing
+            height: FluidUi.Units.dp(20)
 
             Repeater {
                 id: repeater
                 model: grid.numPages
                 delegate: Rectangle {
-                    width: Themes.Units.dp(20)
+                    width: FluidUi.Units.dp(20)
                     height: width
                     radius: width
                     color: grid.currentPage === index
@@ -265,10 +266,10 @@ Components.Showable {
             anchors {
                 top: pageSelector.bottom
                 horizontalCenter: parent.horizontalCenter
-                leftMargin: Themes.Units.largeSpacing
-                topMargin: Themes.Units.largeSpacing + Themes.Units.smallSpacing
-                rightMargin: Themes.Units.largeSpacing
-                bottomMargin: Themes.Units.largeSpacing
+                leftMargin: FluidUi.Units.largeSpacing
+                topMargin: FluidUi.Units.largeSpacing + FluidUi.Units.smallSpacing
+                rightMargin: FluidUi.Units.largeSpacing
+                bottomMargin: FluidUi.Units.largeSpacing
             }
         }
     }

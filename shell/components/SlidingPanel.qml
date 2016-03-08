@@ -26,6 +26,7 @@
 
 import QtQuick 2.3
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Item {
     default property alias contents: background.children
@@ -40,14 +41,14 @@ Item {
         id: xAnimator
         target: slidingPanel
         easing.type: Easing.OutCubic
-        duration: Themes.Units.longDuration
+        duration: FluidUi.Units.longDuration
     }
 
     YAnimator {
         id: yAnimator
         target: slidingPanel
         easing.type: Easing.OutCubic
-        duration: Themes.Units.longDuration
+        duration: FluidUi.Units.longDuration
     }
 
     QtObject {
@@ -92,13 +93,13 @@ Item {
         function calcWidth() {
             if (slidingPanel.edge == Qt.TopEdge || slidingPanel.edge == Qt.BottomEdge)
                 return output.availableGeometry.width;
-            return Math.max(Themes.Units.gu(10), slidingPanel.width, slidingPanel.childrenRect.width);
+            return Math.max(FluidUi.Units.gu(10), slidingPanel.width, slidingPanel.childrenRect.width);
         }
 
         function calcHeight() {
             if (slidingPanel.edge == Qt.LeftEdge || slidingPanel.edge == Qt.RightEdge)
                 return output.availableGeometry.height;
-            return Math.max(Themes.Units.gu(10), slidingPanel.height, slidingPanel.childrenRect.height);
+            return Math.max(FluidUi.Units.gu(10), slidingPanel.height, slidingPanel.childrenRect.height);
         }
     }
 

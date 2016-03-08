@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import "private" as Private
 
 Private.PopupBase {
@@ -34,8 +35,8 @@ Private.PopupBase {
     signal closed()
 
     id: root
-    width: label.width + (Themes.Units.largeSpacing * 2)
-    height: label.height + (Themes.Units.smallSpacing * 2)
+    width: label.width + (FluidUi.Units.largeSpacing * 2)
+    height: label.height + (FluidUi.Units.smallSpacing * 2)
     onShowingChanged: {
         if (showing)
             showingTimer.start();
@@ -66,7 +67,7 @@ Private.PopupBase {
             style: Text.Raised
             styleColor: Themes.Theme.palette.panel.textEffectColor
             horizontalAlignment: Text.AlignHCenter
-            width: Math.min(implicitWidth, Themes.Units.dp(100))
+            width: Math.min(implicitWidth, FluidUi.Units.dp(100))
             height: implicitHeight
             renderType: Text.NativeRendering
         }
@@ -74,7 +75,7 @@ Private.PopupBase {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: Themes.Units.longDuration
+                duration: FluidUi.Units.longDuration
             }
         }
     }

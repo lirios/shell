@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Item {
     property int workspaceIndex
@@ -106,7 +106,7 @@ Item {
         var windows = windowsList();
         var hmargin = output.availableGeometry.width * 0.1;
         var vmargin = output.availableGeometry.height * 0.1;
-        var padding = Themes.Units.gu(2);
+        var padding = FluidUi.Units.gu(2);
 
         var gridSize = Math.floor(Math.sqrt(windows.length));
         if (Math.pow(gridSize, 2) !== windows.length)
@@ -229,7 +229,7 @@ Item {
         console.time("reveal " + output.model);
 
         var windows = windowsList();
-        var margin = Themes.Units.dp(96);
+        var margin = FluidUi.Units.dp(96);
 
         // Divide screen in 4 zones
         var halfWidth = output.availableGeometry.width * 0.5;

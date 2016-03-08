@@ -29,6 +29,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
 Item {
@@ -43,14 +44,14 @@ Item {
     Behavior on width {
         NumberAnimation {
             easing.type: Easing.Linear
-            duration: Themes.Units.shortDuration
+            duration: FluidUi.Units.shortDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.Linear
-            duration: Themes.Units.shortDuration
+            duration: FluidUi.Units.shortDuration
         }
     }
 
@@ -69,21 +70,21 @@ Item {
             right: parent.right
             bottom: parent.bottom
         }
-        height: Themes.Units.dp(2)
+        height: FluidUi.Units.dp(2)
         color: model.active ? Themes.Theme.palette.view.selectedBackgroundColor : "white"
         opacity: model.running ? 1.0 : 0.0
 
         Behavior on color {
             ColorAnimation {
                 easing.type: Easing.OutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
     }
@@ -93,10 +94,10 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -(Themes.Units.smallSpacing * 0.35)
-            rightMargin: -(Themes.Units.largeSpacing * 0.35)
+            topMargin: -(FluidUi.Units.smallSpacing * 0.35)
+            rightMargin: -(FluidUi.Units.largeSpacing * 0.35)
         }
-        width: Themes.Units.iconSizes.smallMedium
+        width: FluidUi.Units.iconSizes.smallMedium
         height: width
         radius: width * 0.5
         color: "orangered"
@@ -105,13 +106,13 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
 
         Label {
             anchors.centerIn: parent
-            font.pixelSize: parent.width - Themes.Units.smallSpacing
+            font.pixelSize: parent.width - FluidUi.Units.smallSpacing
             color: "white"
             text: model.count
         }

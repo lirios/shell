@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Item {
     signal topLeftTriggered()
@@ -70,14 +70,14 @@ Item {
         source: "../images/corner-ripple-ltr.png"
         sourceSize.width: width
         sourceSize.height: height
-        width: Themes.Units.dp(32)
+        width: FluidUi.Units.dp(32)
         height: width
         opacity: 0.0
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
 
@@ -100,14 +100,14 @@ Item {
         source: "../images/corner-ripple-rtl.png"
         sourceSize.width: width
         sourceSize.height: height
-        width: Themes.Units.dp(32)
+        width: FluidUi.Units.dp(32)
         height: width
         opacity: 0.0
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
 
@@ -130,7 +130,7 @@ Item {
         source: "../images/corner-ripple-ltr.png"
         sourceSize.width: width
         sourceSize.height: height
-        width: Themes.Units.dp(32)
+        width: FluidUi.Units.dp(32)
         height: width
         transform: Rotation { origin.x: width / 2; origin.y: height ; angle: -90 }
         opacity: 0.0
@@ -138,7 +138,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
 
@@ -161,7 +161,7 @@ Item {
         source: "../images/corner-ripple-rtl.png"
         sourceSize.width: width
         sourceSize.height: height
-        width: Themes.Units.dp(32)
+        width: FluidUi.Units.dp(32)
         height: width
         transform: Rotation { origin.x: width / 2; origin.y: height / 2; angle: 90 }
         opacity: 0.0
@@ -169,7 +169,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
 

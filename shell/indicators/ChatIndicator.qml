@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import ".."
 
 Indicator {
@@ -35,7 +36,7 @@ Indicator {
     iconName: "im-google"
     component: Component {
         ColumnLayout {
-            spacing: Themes.Units.largeSpacing
+            spacing: FluidUi.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Messages")

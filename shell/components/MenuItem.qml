@@ -29,6 +29,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Item {
     property alias text: label.text
@@ -38,25 +39,25 @@ Item {
     signal clicked()
 
     id: root
-    width: layout.implicitWidth + (Themes.Units.smallSpacing * 4)
-    height: layout.implicitHeight + (Themes.Units.smallSpacing * 4)
+    width: layout.implicitWidth + (FluidUi.Units.smallSpacing * 4)
+    height: layout.implicitHeight + (FluidUi.Units.smallSpacing * 4)
 
     Rectangle {
         id: container
         anchors {
             left: parent.left
             top: parent.top
-            margins: Themes.Units.smallSpacing
+            margins: FluidUi.Units.smallSpacing
         }
         gradient: Gradient {
             GradientStop { position: 0; color: Themes.Theme.palette.panel.selectedBackgroundColor }
             GradientStop { position: 1; color: Qt.darker(Themes.Theme.palette.panel.selectedBackgroundColor, 1.45) }
         }
-        width: Math.max(layout.implicitWidth + (Themes.Units.smallSpacing * 2), root.parent.width - (Themes.Units.smallSpacing * 2))
-        height: layout.implicitHeight + (Themes.Units.smallSpacing * 2)
-        radius: Themes.Units.dp(6)
+        width: Math.max(layout.implicitWidth + (FluidUi.Units.smallSpacing * 2), root.parent.width - (FluidUi.Units.smallSpacing * 2))
+        height: layout.implicitHeight + (FluidUi.Units.smallSpacing * 2)
+        radius: FluidUi.Units.dp(6)
         border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.selectedBackgroundColor, 1.3), 0.35)
-        border.width: Themes.Units.dp(1)
+        border.width: FluidUi.Units.dp(1)
         opacity: hover ? 1.0 : 0.0
         antialiasing: true
 
@@ -76,7 +77,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: Themes.Units.shortDuration
+                duration: FluidUi.Units.shortDuration
             }
         }
     }
@@ -86,20 +87,20 @@ Item {
         anchors {
             left: container.left
             top: container.top
-            margins: Themes.Units.smallSpacing
+            margins: FluidUi.Units.smallSpacing
         }
-        spacing: Themes.Units.smallSpacing
+        spacing: FluidUi.Units.smallSpacing
 
         Components.Icon {
             id: icon
-            width: Themes.Units.iconSizes.small
+            width: FluidUi.Units.iconSizes.small
             height: width
             color: hover ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
             visible: status == Image.Ready
 
             Behavior on color {
                 ColorAnimation {
-                    duration: Themes.Units.shortDuration
+                    duration: FluidUi.Units.shortDuration
                 }
             }
         }
@@ -110,7 +111,7 @@ Item {
 
             Behavior on color {
                 ColorAnimation {
-                    duration: Themes.Units.shortDuration
+                    duration: FluidUi.Units.shortDuration
                 }
             }
 

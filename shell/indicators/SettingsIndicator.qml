@@ -29,6 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import ".."
 
 Indicator {
@@ -36,7 +37,7 @@ Indicator {
     iconName: "preferences-system-symbolic"
     component: Component {
         ColumnLayout {
-            spacing: Themes.Units.largeSpacing
+            spacing: FluidUi.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Settings")
@@ -50,7 +51,7 @@ Indicator {
             }
 
             Row {
-                spacing: Themes.Units.smallSpacing
+                spacing: FluidUi.Units.smallSpacing
 
                 ExclusiveGroup {
                     id: sizeGroup
@@ -59,25 +60,25 @@ Indicator {
                 ToolButton {
                     text: qsTr("Small")
                     checkable: true
-                    checked: screenView.panel.size === Themes.Units.iconSizes.medium
+                    checked: screenView.panel.size === FluidUi.Units.iconSizes.medium
                     exclusiveGroup: sizeGroup
-                    onClicked: screenView.panel.size = Themes.Units.iconSizes.medium
+                    onClicked: screenView.panel.size = FluidUi.Units.iconSizes.medium
                 }
 
                 ToolButton {
                     text: qsTr("Medium")
                     checkable: true
-                    checked: screenView.panel.size === Themes.Units.iconSizes.large
+                    checked: screenView.panel.size === FluidUi.Units.iconSizes.large
                     exclusiveGroup: sizeGroup
-                    onClicked: screenView.panel.size = Themes.Units.iconSizes.large
+                    onClicked: screenView.panel.size = FluidUi.Units.iconSizes.large
                 }
 
                 ToolButton {
                     text: qsTr("Large")
                     checkable: true
-                    checked: screenView.panel.size === Themes.Units.iconSizes.huge
+                    checked: screenView.panel.size === FluidUi.Units.iconSizes.huge
                     exclusiveGroup: sizeGroup
-                    onClicked: screenView.panel.size = Themes.Units.iconSizes.huge
+                    onClicked: screenView.panel.size = FluidUi.Units.iconSizes.huge
                 }
             }
 
@@ -88,7 +89,7 @@ Indicator {
             }
 
             Row {
-                spacing: Themes.Units.smallSpacing
+                spacing: FluidUi.Units.smallSpacing
 
                 ExclusiveGroup {
                     id: posGroup

@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Row {
     signal close()
@@ -34,7 +35,7 @@ Row {
     signal maximize()
 
     id: root
-    spacing: Themes.Units.dp(5)
+    spacing: FluidUi.Units.dp(5)
 
     Rectangle {
         width: height
@@ -50,7 +51,7 @@ Row {
         Components.Icon {
             anchors {
                 fill: parent
-                margins: Themes.Units.gu(0.25)
+                margins: FluidUi.Units.gu(0.25)
             }
             iconName: "window-close-symbolic"
             color: Themes.Theme.palette.window.textColor
@@ -63,7 +64,7 @@ Row {
     }
 
     Item {
-        width: Themes.Units.dp(2)
+        width: FluidUi.Units.dp(2)
         height: parent.height
     }
 
@@ -81,7 +82,7 @@ Row {
         Components.Icon {
             anchors {
                 fill: parent
-                margins: Themes.Units.gu(0.25)
+                margins: FluidUi.Units.gu(0.25)
             }
             iconName: "window-maximize-symbolic"
             color: Themes.Theme.palette.window.textColor
@@ -107,7 +108,7 @@ Row {
         Components.Icon {
             anchors {
                 fill: parent
-                margins: Themes.Units.gu(0.25)
+                margins: FluidUi.Units.gu(0.25)
             }
             iconName: "window-minimize-symbolic"
             color: Themes.Theme.palette.window.textColor

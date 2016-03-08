@@ -27,13 +27,14 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
     property alias iconSize: icon.width
     property bool hovered: false
 
     color: hovered ? Themes.Theme.palette.rgba(Themes.Theme.palette.panel.selectedBackgroundColor, 0.7) : "transparent"
-    radius: Themes.Units.dp(6)
+    radius: FluidUi.Units.dp(6)
     antialiasing: true
 
     Image {
@@ -41,9 +42,9 @@ Rectangle {
         anchors {
             horizontalCenter: parent.horizontalCenter
             top: parent.top
-            leftMargin: Themes.Units.largeSpacing
-            topMargin: Themes.Units.largeSpacing
-            rightMargin: Themes.Units.largeSpacing
+            leftMargin: FluidUi.Units.largeSpacing
+            topMargin: FluidUi.Units.largeSpacing
+            rightMargin: FluidUi.Units.largeSpacing
         }
         height: width
         sourceSize.width: width
@@ -59,10 +60,10 @@ Rectangle {
             horizontalCenter: parent.horizontalCenter
             top: icon.bottom
             bottom: parent.bottom
-            leftMargin: Themes.Units.largeSpacing
-            topMargin: Themes.Units.smallSpacing
-            rightMargin: Themes.Units.largeSpacing
-            bottomMargin: Themes.Units.largeSpacing
+            leftMargin: FluidUi.Units.largeSpacing
+            topMargin: FluidUi.Units.smallSpacing
+            rightMargin: FluidUi.Units.largeSpacing
+            bottomMargin: FluidUi.Units.largeSpacing
         }
         text: model.name
         renderType: Text.NativeRendering
@@ -72,6 +73,6 @@ Rectangle {
         textFormat: Text.PlainText
         horizontalAlignment: Text.AlignHCenter
         width: iconSize * 1.5
-        height: Themes.Units.gu(2)
+        height: FluidUi.Units.gu(2)
     }
 }

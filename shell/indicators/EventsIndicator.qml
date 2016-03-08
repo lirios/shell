@@ -30,6 +30,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.notifications 0.1
 import ".."
 import "events" as EventsIndicator
@@ -42,7 +43,7 @@ Indicator {
     iconName: "dialog-information-symbolic"
     component: Component {
         ColumnLayout {
-            spacing: Themes.Units.largeSpacing
+            spacing: FluidUi.Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Events")
@@ -58,7 +59,7 @@ Indicator {
 
             ListView {
                 id: notificationView
-                spacing: Themes.Units.largeSpacing
+                spacing: FluidUi.Units.largeSpacing
                 clip: true
                 model: notificationsModel
                 delegate: EventsIndicator.EventItem {}
@@ -66,31 +67,31 @@ Indicator {
                     NumberAnimation {
                         properties: "x"
                         from: notificationView.width
-                        duration: Themes.Units.shortDuration
+                        duration: FluidUi.Units.shortDuration
                     }
                 }
                 remove: Transition {
                     NumberAnimation {
                         properties: "x"
                         to: notificationView.width
-                        duration: Themes.Units.longDuration
+                        duration: FluidUi.Units.longDuration
                     }
 
                     NumberAnimation {
                         properties: "opacity"
                         to: 0
-                        duration: Themes.Units.longDuration
+                        duration: FluidUi.Units.longDuration
                     }
                 }
                 removeDisplaced: Transition {
                     SequentialAnimation {
                         PauseAnimation {
-                            duration: Themes.Units.longDuration
+                            duration: FluidUi.Units.longDuration
                         }
 
                         NumberAnimation {
                             properties: "x,y"
-                            duration: Themes.Units.shortDuration
+                            duration: FluidUi.Units.shortDuration
                         }
                     }
                 }

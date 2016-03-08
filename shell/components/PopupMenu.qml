@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import "private" as Private
 
 Private.PopupBase {
@@ -35,7 +36,7 @@ Private.PopupBase {
     id: root
     width: implicitWidth
     height: implicitHeight
-    implicitWidth: Themes.Units.dp(300)
+    implicitWidth: FluidUi.Units.dp(300)
     onShowingChanged: {
         if (showing)
             showAnimation.start();

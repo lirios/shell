@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
 import ".."
 import "../components"
@@ -107,7 +107,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InSine
-                duration: Themes.Units.mediumDuration
+                duration: FluidUi.Units.mediumDuration
             }
         }
     }

@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import ".."
 
@@ -45,7 +44,7 @@ Loader {
             Behavior on color {
                 ColorAnimation {
                     easing.type: Easing.OutQuad
-                    duration: Themes.Units.mediumDuration
+                    duration: FluidUi.Units.mediumDuration
                 }
             }
         }
@@ -66,7 +65,7 @@ Loader {
                     Behavior on color {
                         ColorAnimation {
                             easing.type: Easing.OutQuad
-                            duration: Themes.Units.mediumDuration
+                            duration: FluidUi.Units.mediumDuration
                         }
                     }
                 }
@@ -77,7 +76,7 @@ Loader {
                     Behavior on color {
                         ColorAnimation {
                             easing.type: Easing.OutQuad
-                            duration: Themes.Units.mediumDuration
+                            duration: FluidUi.Units.mediumDuration
                         }
                     }
                 }

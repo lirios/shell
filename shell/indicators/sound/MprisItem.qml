@@ -30,6 +30,7 @@ import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.mpris2 0.1
 
 ColumnLayout {
@@ -37,13 +38,13 @@ ColumnLayout {
     readonly property int trackLength: player ? player.metadata["mpris:length"]||0 / 1000 : 0
     readonly property int trackPosition: player ? player.position : 0
 
-    spacing: Themes.Units.largeSpacing
+    spacing: FluidUi.Units.largeSpacing
 
     Row {
-        spacing: Themes.Units.smallSpacing
+        spacing: FluidUi.Units.smallSpacing
 
         Item {
-            width: Themes.Units.iconSizes.huge
+            width: FluidUi.Units.iconSizes.huge
             height: width
 
             Image {
@@ -72,7 +73,7 @@ ColumnLayout {
         }
 
         Column {
-            spacing: Themes.Units.smallSpacing
+            spacing: FluidUi.Units.smallSpacing
 
             Controls.Heading {
                 level: 3

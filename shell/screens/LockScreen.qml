@@ -30,6 +30,7 @@ import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
 import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 import Fluid.Effects 1.0 as FluidEffects
 import "../components" as CustomComponents
 
@@ -38,14 +39,14 @@ Components.Showable {
     showAnimation: YAnimator {
         target: root
         easing.type: Easing.OutQuad
-        duration: Themes.Units.longDuration
+        duration: FluidUi.Units.longDuration
         from: -root.height
         to: 0
     }
     hideAnimation: YAnimator {
         target: root
         easing.type: Easing.OutQuad
-        duration: Themes.Units.longDuration
+        duration: FluidUi.Units.longDuration
         from: 0
         to: -root.height
     }
@@ -130,12 +131,12 @@ Components.Showable {
 
             Column {
                 anchors.centerIn: parent
-                spacing: Themes.Units.smallSpacing
+                spacing: FluidUi.Units.smallSpacing
 
                 CustomComponents.TextField {
                     id: passwordField
                     placeholderText: qsTr("Password")
-                    width: Themes.Units.gu(20)
+                    width: FluidUi.Units.gu(20)
                     focus: true
                     echoMode: TextInput.Password
                     onAccepted: {
@@ -168,7 +169,7 @@ Components.Showable {
             }
 
             Layout.fillWidth: true
-            Layout.preferredHeight: Themes.Units.gu(5)
+            Layout.preferredHeight: FluidUi.Units.gu(5)
         }
 
         Item {
