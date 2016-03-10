@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.3
+import Qt.labs.controls 1.0 as LabsControls
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.mixer 0.1 as MixerService
 
@@ -44,10 +44,10 @@ RowLayout {
         }
     }
 
-    Slider {
+    LabsControls.Slider {
         id: slider
-        minimumValue: 0
-        maximumValue: 100
+        from: 0
+        to: 100
         value: 0
         opacity: MixerService.Mixer.available ? 1.0 : 0.6
         enabled: MixerService.Mixer.available

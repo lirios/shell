@@ -25,12 +25,14 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
+import QtQuick.Controls 1.1
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.mpris2 0.1
+import "../../components" as CustomComponents
 
 ColumnLayout {
     property var player
@@ -63,7 +65,7 @@ ColumnLayout {
                 visible: !albumArt.visible && iconName != ""
             }
 
-            BusyIndicator {
+            LabsControls.BusyIndicator {
                 anchors.fill: parent
                 visible: !albumArt.visible && !icon.visible
             }
@@ -91,36 +93,39 @@ ColumnLayout {
         }
     }
 
-    ProgressBar {
-        minimumValue: 0
-        maximumValue: trackLength
+    LabsControls.ProgressBar {
+        from: 0
+        to: trackLength
         value: trackPosition
 
         Layout.fillWidth: true
     }
 
     Row {
-        ToolButton {
+        CustomComponents.ToolButton {
             iconName: "media-skip-backward-symbolic"
-            tooltip: qsTr("Previous")
+            iconSize: FluidUi.Units.iconSizes.small
+            //tooltip: qsTr("Previous")
             onClicked: {
                 if (player)
                     player.previous();
             }
         }
 
-        ToolButton {
+        CustomComponents.ToolButton {
             iconName: player ? (player.status === "Playing" ? "media-playback-pause" : "media-playback-start") : ""
-            tooltip: qsTr(player.status == "Playing" ? "Pause" : "Play")
+            iconSize: FluidUi.Units.iconSizes.small
+            //tooltip: qsTr(player.status == "Playing" ? "Pause" : "Play")
             onClicked: {
                 if (player)
                     player.playPause();
             }
         }
 
-        ToolButton {
+        CustomComponents.ToolButton {
             iconName: "media-skip-forward-symbolic"
-            tooltip: qsTr("Next")
+            iconSize: FluidUi.Units.iconSizes.small
+            //tooltip: qsTr("Next")
             onClicked: {
                 if (player)
                     player.next();
