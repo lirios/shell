@@ -25,10 +25,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.1
+import Qt.labs.controls 1.0 as LabsControls
 import Fluid.Ui 1.0 as FluidUi
 import ".."
-import "../components"
+import "../components" as CustomComponents
 
 Item {
     readonly property alias panel: panel
@@ -51,7 +51,7 @@ Item {
 
             // Load indicator component
             if (indicator !== lastIndicator)
-                stackView.push({item: indicator.component, immediate:!rightDrawer.expanded});
+                stackView.push(indicator.component, {}, rightDrawer.expanded ? LabsControls.StackView.Transition : LabsControls.StackView.Immedite);
 
             // Open drawer if necessary
             if (!rightDrawer.expanded)
@@ -63,16 +63,22 @@ Item {
         }
     }
 
-    SlidingPanel {
+    LabsControls.Drawer {
         id: rightDrawer
         edge: Qt.RightEdge
-        width: FluidUi.Units.gu(16)
-        z: 0
+        //z: 0
+        onClicked: close()
 
-        StackView {
-            id: stackView
-            anchors.fill: parent
-            anchors.margins: FluidUi.Units.largeSpacing
+        //CustomComponents.Pane {
+        LabsControls.Pane {
+            width: FluidUi.Units.gu(16)
+            height: output.availableGeometry.height
+            padding: FluidUi.Units.largeSpacing
+
+            LabsControls.StackView {
+                id: stackView
+                anchors.fill: parent
+            }
         }
     }
 }

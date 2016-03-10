@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
+ * Copyright (C) 2016 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
@@ -27,43 +27,9 @@
 import QtQuick 2.0
 import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Ui 1.0 as FluidUi
-import "../components" as CustomComponents
 
-Item {
-    id: root
-
-    CustomComponents.Clock {
-        id: clock
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            top: parent.top
-        }
-        z: 0
-        onClicked: topDrawer.position == 0 ? topDrawer.open() : topDrawer.close()
-    }
-
-    LabsControls.Drawer {
-        id: topDrawer
-        edge: Qt.TopEdge
-        onClicked: close()
-
-        CustomComponents.Pane {
-            width: window.width
-            height: FluidUi.Units.gu(25)
-            padding: FluidUi.Units.largeSpacing
-
-            Loader {
-                id: loader
-                anchors.fill: parent
-                active: topDrawer.expanded
-                source: "../controlcenter/ControlCenter.qml"
-
-                Connections {
-                    target: loader.item
-                    onClosed: topDrawer.close()
-                }
-            }
-        }
+LabsControls.Pane {
+    background: Rectangle {
+        color: Themes.Theme.palette.panel.backgroundColor
     }
 }
