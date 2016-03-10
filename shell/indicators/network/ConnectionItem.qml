@@ -29,11 +29,11 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
 import org.hawaiios.networkmanager 0.1 as NM
-import "../../components" as CustomComponents
 
 Item {
     property bool predictableWirelessPassword: !Uuid && Type === NM.Enums.Wireless &&
@@ -230,7 +230,7 @@ Item {
 
             spacing: FluidUi.Units.smallSpacing
 
-            CustomComponents.TextField {
+            LabsControls.TextField {
                 id: passwordField
                 echoMode: showPasswordCheckbox.checked ? TextInput.Normal : TextInput.Password
                 placeholderText: qsTr("Password")

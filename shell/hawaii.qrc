@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>components/MenuItem.qml</file>
-        <file>components/TextField.qml</file>
         <file>components/CloseButton.qml</file>
         <file>components/Overlay.qml</file>
         <file>components/SlidingPanel.qml</file>

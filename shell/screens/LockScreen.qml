@@ -28,10 +28,10 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import Fluid.Effects 1.0 as FluidEffects
-import "../components" as CustomComponents
 
 FluidUi.Showable {
     id: root
@@ -132,7 +132,7 @@ FluidUi.Showable {
                 anchors.centerIn: parent
                 spacing: FluidUi.Units.smallSpacing
 
-                CustomComponents.TextField {
+                LabsControls.TextField {
                     id: passwordField
                     placeholderText: qsTr("Password")
                     width: FluidUi.Units.gu(20)

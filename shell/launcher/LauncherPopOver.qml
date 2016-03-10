@@ -27,6 +27,7 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -180,7 +181,7 @@ FluidUi.Showable {
                 }
             }
 
-            CustomComponents.TextField {
+            LabsControls.TextField {
                 id: searchText
                 placeholderText: qsTr("Type an application name...")
                 focus: true
