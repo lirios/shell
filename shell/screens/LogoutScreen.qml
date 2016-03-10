@@ -28,12 +28,11 @@ import QtQuick 2.4
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
-Components.Showable {
+FluidUi.Showable {
     property alias mode: __priv.mode
 
     signal cancel()
@@ -153,7 +152,7 @@ Components.Showable {
     ColumnLayout {
         anchors.centerIn: parent
 
-        Components.Icon {
+        FluidUi.Icon {
             id: actionIcon
             width: FluidUi.Units.iconSizes.enormous
             height: width

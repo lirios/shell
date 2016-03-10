@@ -28,13 +28,12 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import Fluid.Effects 1.0 as FluidEffects
 import "../components" as CustomComponents
 
-Components.Showable {
+FluidUi.Showable {
     id: root
     showAnimation: YAnimator {
         target: root

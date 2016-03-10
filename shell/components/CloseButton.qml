@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Components 1.0 as Components
 import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
@@ -44,7 +43,7 @@ Rectangle {
     }
     antialiasing: true
 
-    Components.Icon {
+    FluidUi.Icon {
         anchors.centerIn: parent
         iconName: "window-close-symbolic"
         color: "white"

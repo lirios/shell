@@ -27,7 +27,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
@@ -55,7 +54,7 @@ Item {
         }
     }
 
-    Components.Icon {
+    FluidUi.Icon {
         id: icon
         anchors.centerIn: parent
         iconName: model.iconName

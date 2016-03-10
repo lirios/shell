@@ -26,11 +26,10 @@
 
 import QtQuick 2.4
 import QtGraphicalEffects 1.0
-import Hawaii.Components 1.0 as Components
 import Fluid.Ui 1.0 as FluidUi
 import Fluid.Effects 1.0 as FluidEffects
 
-Components.Showable {
+FluidUi.Showable {
     id: root
     showAnimation: OpacityAnimator {
         target: root

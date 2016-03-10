@@ -26,7 +26,6 @@
 
 import QtQuick 2.2
 import QtGraphicalEffects 1.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
@@ -156,7 +155,7 @@ Item {
         height: width
         z: 4
 
-        Components.Icon {
+        FluidUi.Icon {
             id: icon
             anchors {
                 centerIn: parent

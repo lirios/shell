@@ -29,7 +29,6 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
@@ -104,7 +103,7 @@ Item {
         RowLayout {
             spacing: FluidUi.Units.smallSpacing
 
-            Components.Icon {
+            FluidUi.Icon {
                 iconName: indicator.massageIconName(ConnectionIcon)
                 width: FluidUi.Units.iconSizes.medium
                 height: width

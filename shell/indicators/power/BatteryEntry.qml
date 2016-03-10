@@ -27,7 +27,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.hardware 0.1
@@ -42,7 +41,7 @@ Item {
         }
         spacing: FluidUi.Units.smallSpacing
 
-        Components.Icon {
+        FluidUi.Icon {
             id: icon
             width: FluidUi.Units.iconSizes.large
             height: width

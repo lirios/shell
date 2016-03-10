@@ -28,12 +28,11 @@ import QtQuick 2.2
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
-Components.Showable {
+FluidUi.Showable {
     property var origin
     property int location
 

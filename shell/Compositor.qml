@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import org.hawaiios.misc 0.1
 import "desktop"

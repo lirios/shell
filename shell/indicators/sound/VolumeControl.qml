@@ -27,12 +27,11 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
-import Hawaii.Components 1.0 as Components
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.mixer 0.1 as MixerService
 
 RowLayout {
-    Components.Icon {
+    FluidUi.Icon {
         width: FluidUi.Units.iconSizes.small
         height: width
         iconName: "audio-volume-low-symbolic"
@@ -72,7 +71,7 @@ RowLayout {
         Component.onCompleted: value = MixerService.Mixer.master
     }
 
-    Components.Icon {
+    FluidUi.Icon {
         width: FluidUi.Units.iconSizes.small
         height: width
         iconName: "audio-volume-high-symbolic"

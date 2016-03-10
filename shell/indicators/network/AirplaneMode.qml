@@ -27,7 +27,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.3
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -53,7 +52,7 @@ RowLayout {
         }
     }
 
-    Components.Icon {
+    FluidUi.Icon {
         id: airplaneModeIcon
         iconName: airplaneMode ? "airplane-mode-symbolic" : "airplane-mode-disabled-symbolic"
         width: FluidUi.Units.iconSizes.smallMedium

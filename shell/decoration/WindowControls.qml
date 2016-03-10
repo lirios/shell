@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -48,7 +47,7 @@ Row {
         border.width: 1
         border.color: "#7f800000"
 
-        Components.Icon {
+        FluidUi.Icon {
             anchors {
                 fill: parent
                 margins: FluidUi.Units.gu(0.25)
@@ -79,7 +78,7 @@ Row {
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
 
-        Components.Icon {
+        FluidUi.Icon {
             anchors {
                 fill: parent
                 margins: FluidUi.Units.gu(0.25)
@@ -105,7 +104,7 @@ Row {
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
 
-        Components.Icon {
+        FluidUi.Icon {
             anchors {
                 fill: parent
                 margins: FluidUi.Units.gu(0.25)

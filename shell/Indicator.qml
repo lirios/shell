@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.0
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -88,7 +87,7 @@ Item {
         onClicked: indicator.triggered(indicator)
     }
 
-    Components.Icon {
+    FluidUi.Icon {
         id: icon
         anchors.centerIn: parent
         color: selected ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
