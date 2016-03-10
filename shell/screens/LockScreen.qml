@@ -26,7 +26,6 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
 import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
@@ -101,7 +100,7 @@ FluidUi.Showable {
             Layout.fillHeight: true
         }
 
-        Label {
+        LabsControls.Label {
             id: timeLabel
             font.pointSize: 42
             color: Themes.Theme.palette.window.textColor
@@ -111,7 +110,7 @@ FluidUi.Showable {
             Layout.alignment: Qt.AlignCenter
         }
 
-        Label {
+        LabsControls.Label {
             id: dateLabel
             font.pointSize: 36
             color: Themes.Theme.palette.window.textColor
@@ -149,12 +148,11 @@ FluidUi.Showable {
                     }
                 }
 
-                Text {
+                LabsControls.Label {
                     id: errorLabel
                     color: "red"
                     text: " "
                     height: paintedHeight
-                    renderType: Text.NativeRendering
 
                     Timer {
                         id: errorTimer

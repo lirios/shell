@@ -25,12 +25,13 @@
  ***************************************************************************/
 
 import QtQuick 2.4
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
+import "../components" as CustomComponents
 
 FluidUi.Showable {
     property alias mode: __priv.mode
@@ -166,20 +167,21 @@ FluidUi.Showable {
             id: actionLabel
             level: 2
             color: Themes.Theme.palette.panel.textColor
+            horizontalAlignment: Qt.AlignHCenter
 
-            Layout.alignment: Qt.AlignHCenter
+            Layout.fillWidth: true
         }
 
-        ProgressBar {
+        LabsControls.ProgressBar {
             width: FluidUi.Units.largeSpacing * 5
-            minimumValue: 0
-            maximumValue: __priv.timeout
+            from: 0
+            to: __priv.timeout
             value: __priv.remainingTime
 
             Layout.alignment: Qt.AlignHCenter
         }
 
-        Text {
+        LabsControls.Label {
             id: actionText
             text: {
                 var msg = "";
@@ -206,7 +208,6 @@ FluidUi.Showable {
 
                 return qsTr(msg).arg(__priv.remainingTime);
             }
-            renderType: Text.NativeRendering
             color: Themes.Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
@@ -217,6 +218,7 @@ FluidUi.Showable {
         }
 
         Row {
+            id: buttonsRow
             spacing: FluidUi.Units.smallSpacing
             focus: true
             visible: SessionInterface.canLogOut ||
@@ -225,62 +227,55 @@ FluidUi.Showable {
                      SessionInterface.canSuspend ||
                      SessionInterface.canHibernate
 
-            ExclusiveGroup { id: group }
-
-            ToolButton {
+            CustomComponents.ToolButton {
                 id: logoutButton
-                exclusiveGroup: group
                 iconName: "system-log-out-symbolic"
-                width: FluidUi.Units.iconSizes.medium
-                height: width
+                iconSize: FluidUi.Units.iconSizes.medium
+                autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "logout"
                 visible: SessionInterface.canLogOut
                 onClicked: __priv.mode = "logout"
             }
 
-            ToolButton {
+            CustomComponents.ToolButton {
                 id: poweroffButton
-                exclusiveGroup: group
                 iconName: "system-shutdown-symbolic"
-                width: FluidUi.Units.iconSizes.medium
-                height: width
+                iconSize: FluidUi.Units.iconSizes.medium
+                autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "poweroff"
                 visible: SessionInterface.canPowerOff
                 onClicked: __priv.mode = "poweroff"
             }
 
-            ToolButton {
+            CustomComponents.ToolButton {
                 id: restartButton
-                exclusiveGroup: group
                 iconName: "system-reboot-symbolic"
-                width: FluidUi.Units.iconSizes.medium
-                height: width
+                iconSize: FluidUi.Units.iconSizes.medium
+                autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "restart"
                 visible: SessionInterface.canRestart
                 onClicked: __priv.mode = "restart"
             }
 
-            ToolButton {
+            CustomComponents.ToolButton {
                 id: suspendButton
-                exclusiveGroup: group
                 iconName: "system-suspend-symbolic"
-                width: FluidUi.Units.iconSizes.medium
-                height: width
+                iconSize: FluidUi.Units.iconSizes.medium
+                autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "suspend"
                 visible: SessionInterface.canSuspend
                 onClicked: __priv.mode = "suspend"
             }
 
-            ToolButton {
+            CustomComponents.ToolButton {
                 id: hibernateButton
-                exclusiveGroup: group
                 iconName: "system-suspend-hibernate-symbolic"
-                width: FluidUi.Units.iconSizes.medium
-                height: width
+                iconSize: FluidUi.Units.iconSizes.medium
+                autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "hibernate"
                 visible: SessionInterface.canHibernate
@@ -295,14 +290,14 @@ FluidUi.Showable {
         }
 
         RowLayout {
-            Button {
+            LabsControls.Button {
                 text: qsTr("Cancel")
                 onClicked: root.cancel()
             }
 
-            Button {
+            LabsControls.Button {
                 id: okButton
-                isDefault: true
+                highlighted: true
                 onClicked: __priv.currentAction()
             }
 
