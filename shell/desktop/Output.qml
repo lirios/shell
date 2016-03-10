@@ -26,6 +26,7 @@
 
 import QtQuick 2.5
 import QtQuick.Window 2.2
+import Qt.labs.controls 1.0 as LabsControls
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 import "../screens"
@@ -52,7 +53,7 @@ GreenIsland.WaylandOutput {
     scaleFactor: nativeScreen.scaleFactor
     sizeFollowsWindow: true
     automaticFrameCallback: powerState === GreenIsland.WaylandOutput.PowerStateOn
-    window: Window {
+    window: LabsControls.ApplicationWindow {
         id: window
         minimumWidth: 1024
         minimumHeight: 768
