@@ -130,7 +130,7 @@ FocusScope {
         id: calendarComponent
 
         CalendarView {
-            selectedDate: new Date()
+            //selectedDate: new Date()
         }
     }
 
