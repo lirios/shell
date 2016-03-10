@@ -12,6 +12,7 @@
         <file>components/private</file>
         <file>components/private/PopupBase.qml</file>
         <file>components/PopupMenu.qml</file>
+        <file>components/ToolButton.qml</file>
         <file>windows/WindowMenu.qml</file>
         <file>error/ErrorCompositor.qml</file>
         <file>error/ErrorOutput.qml</file>
