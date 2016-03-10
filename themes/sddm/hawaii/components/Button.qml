@@ -27,8 +27,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.2 as QtQuickControls
 import QtQuick.Controls.Styles 1.2 as QtQuickControlsStyles
-import Hawaii.Components 1.0 as Components
 import Hawaii.Themes 1.0 as Themes
+import Fluid.Ui 1.0 as FluidUi
 
 QtQuickControls.Button {
     property string iconName
@@ -39,7 +39,7 @@ QtQuickControls.Button {
         label: Row {
             spacing: Themes.Units.smallSpacing
 
-            Components.Icon {
+            FluidUi.Icon {
                 id: icon
                 iconName: control.iconName
                 color: control.color

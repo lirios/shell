@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
-import Hawaii.Components 1.0 as Components
+import Fluid.Ui 1.0 as FluidUi
 
 RowLayout {
     property color color: Themes.Theme.palette.panel.textColor
@@ -39,7 +39,7 @@ RowLayout {
     spacing: Themes.Units.smallSpacing
     opacity: 0.0
 
-    Components.Icon {
+    FluidUi.Icon {
         id: icon
         width: Themes.Units.iconSizes.small
         height: width

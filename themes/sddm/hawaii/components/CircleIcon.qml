@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
-import Hawaii.Components 1.0 as Components
+import Fluid.Ui 1.0 as FluidUi
 
 Item {
     property alias iconSize: icon.width
@@ -45,7 +45,7 @@ Item {
         antialiasing: true
     }
 
-    Components.Icon {
+    FluidUi.Icon {
         id: icon
         anchors.centerIn: parent
         iconName: "avatar-default-symbolic"
