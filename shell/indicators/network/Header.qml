@@ -26,26 +26,26 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.1
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
+import "../../components" as CustomComponents
 
 RowLayout {
     property alias text: label.text
 
     spacing: FluidUi.Units.smallSpacing
-    width: ListView.view.width
-    height: Math.max(label.paintedHeight, refreshButton.height) + (FluidUi.Units.smallSpacing * 2)
+    implicitWidth: ListView.view.width
+    implicitHeight: Math.max(label.paintedHeight, refreshButton.height) + (FluidUi.Units.smallSpacing * 2)
 
-    Label {
+    LabsControls.Label {
         id: label
         font.weight: Font.DemiBold
-        color: Themes.Theme.palette.panel.textColor
 
         Layout.fillWidth: true
     }
 
-    ToolButton {
+    CustomComponents.ToolButton {
         id: refreshButton
         iconName: "view-refresh-symbolic"
     }

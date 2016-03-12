@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import ".."
 import "../launcher" as Launcher
@@ -34,21 +33,20 @@ Indicator {
     id: indicator
     name: "launcher"
     text: qsTr("Menu")
-    onTriggered: __priv.shown = !__priv.shown
-
-    QtObject {
-        id: __priv
-
-        property bool shown: false
-
-        onShownChanged: {
-            if (shown)
-                popover.show();
-            else
-                popover.hide();
-        }
+    onTriggered: {
+        if (expanded)
+            popover.open();
+        else
+            popover.close();
     }
 
+    Launcher.LauncherPopOver {
+        id: popover
+        x: FluidUi.Units.largeSpacing
+        y: 50 //-height - FluidUi.Units.largeSpacing
+    }
+
+    /*
     FluidUi.Loadable {
         id: popover
         component: Launcher.LauncherPopOver {
@@ -59,5 +57,6 @@ Indicator {
             onDismissed: __priv.shown = false
         }
     }
+    */
 }
 

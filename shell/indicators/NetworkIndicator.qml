@@ -26,9 +26,8 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.1
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.networkmanager 0.1 as NM
 import ".."
@@ -44,22 +43,22 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Network")
-                color: Themes.Theme.palette.panel.textColor
             }
 
             NetworkIndicator.AirplaneMode {
                 onClicked: handler.enableAirplaneMode(airplaneMode)
             }
 
-            ScrollView {
-                ListView {
-                    model: NM.AppletProxyModel {}
-                    clip: true
-                    currentIndex: -1
-                    section.property: "Section"
-                    section.delegate: NetworkIndicator.Header { text: section }
-                    delegate: NetworkIndicator.ConnectionItem {}
-                }
+            ListView {
+                model: NM.AppletProxyModel {}
+                clip: true
+                currentIndex: -1
+                section.property: "Section"
+                section.delegate: NetworkIndicator.Header { text: section }
+                delegate: NetworkIndicator.ConnectionItem {}
+
+                //LabsControls.ScrollBar.horizontal: LabsControls.ScrollBar {}
+                //LabsControls.ScrollBar.vertical: LabsControls.ScrollBar {}
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true

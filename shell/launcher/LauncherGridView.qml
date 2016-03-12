@@ -47,7 +47,7 @@ GridView {
     height: cellHeight * numColumns
     snapMode: GridView.SnapOneRow
     flow: GridView.LeftToRight
-    interactive: false
+    interactive: true
     clip: true
     preferredHighlightBegin: 0
     preferredHighlightEnd: 0

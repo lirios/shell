@@ -31,11 +31,17 @@ import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.mixer 0.1 as MixerService
 
 RowLayout {
+    LabsControls.Label {
+        id: label
+        visible: false
+    }
+
     FluidUi.Icon {
         width: FluidUi.Units.iconSizes.small
         height: width
         iconName: "audio-volume-low-symbolic"
         opacity: MixerService.Mixer.available ? 1.0 : 0.6
+        color: label.color
         cache: false
 
         MouseArea {
@@ -67,6 +73,7 @@ RowLayout {
         }
 
         Layout.fillWidth: true
+        Layout.minimumWidth: FluidUi.Units.gu(12)
 
         Component.onCompleted: value = MixerService.Mixer.master
     }
@@ -76,6 +83,7 @@ RowLayout {
         height: width
         iconName: "audio-volume-high-symbolic"
         opacity: MixerService.Mixer.available ? 1.0 : 0.6
+        color: label.color
         cache: false
 
         MouseArea {

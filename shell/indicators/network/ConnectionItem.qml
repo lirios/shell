@@ -28,12 +28,12 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.1
 import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
 import org.hawaiios.networkmanager 0.1 as NM
+import "../../components" as CustomComponents
 
 Item {
     property bool predictableWirelessPassword: !Uuid && Type === NM.Enums.Wireless &&
@@ -107,7 +107,7 @@ Item {
                 iconName: indicator.massageIconName(ConnectionIcon)
                 width: FluidUi.Units.iconSizes.medium
                 height: width
-                color: Themes.Theme.palette.panel.textColor
+                color: label.color
 
                 Layout.alignment: Qt.AlignTop
             }
@@ -115,18 +115,17 @@ Item {
             ColumnLayout {
                 spacing: FluidUi.Units.smallSpacing
 
-                Label {
+                LabsControls.Label {
                     id: label
                     text: ItemUniqueName
                     elide: Text.ElideRight
                     font.weight: ConnectionState === NM.Enums.Activated ? Font.DemiBold : Font.Normal
                     font.italic: ConnectionState === NM.Enums.Activating ? true : false
-                    color: Themes.Theme.palette.panel.textColor
 
                     Layout.fillWidth: true
                 }
 
-                Label {
+                LabsControls.Label {
                     id: statusLabel
                     text: {
                         if (ConnectionState === NM.Enums.Activating) {
@@ -151,7 +150,6 @@ Item {
                     opacity: 0.6
                     elide: Text.ElideRight
                     font.pointSize: label.font.pointSize * 0.8
-                    color: Themes.Theme.palette.panel.textColor
 
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignTop
@@ -172,11 +170,11 @@ Item {
                 Layout.fillWidth: true
             }
 
-            ToolButton {
+            CustomComponents.ToolButton {
                 id: stateChangeButton
                 iconName: ConnectionState === NM.Enums.Deactivated ? "network-connect" : "network-disconnect"
                 //opacity: mouseArea.containsMouse ? 1.0 : 0.0
-                tooltip: ConnectionState === NM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
+                //tooltip: ConnectionState === NM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
                 visible: opacity == 1.0
                 onClicked: changeState()
 
@@ -204,16 +202,14 @@ Item {
                 RowLayout {
                     spacing: FluidUi.Units.smallSpacing
 
-                    Label {
+                    LabsControls.Label {
                         text: ConnectionDetails[index * 2]
-                        color: Themes.Theme.palette.panel.textColor
                         font.weight: Font.Bold
                         opacity: 0.6
                     }
 
-                    Label {
+                    LabsControls.Label {
                         text: ConnectionDetails[(index * 2) + 1]
-                        color: Themes.Theme.palette.panel.textColor
                         textFormat: Text.StyledText
                         opacity: 0.6
                     }
@@ -248,7 +244,7 @@ Item {
                 Layout.fillWidth: true
             }
 
-            CheckBox {
+            LabsControls.CheckBox {
                 id: showPasswordCheckbox
                 checked: false
                 text: qsTr("Show password")

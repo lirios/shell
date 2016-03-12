@@ -25,91 +25,78 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Qt.labs.controls 1.0 as LabsControls
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
-CustomComponents.PopupMenu {
+LabsControls.Menu {
     id: menu
-    width: FluidUi.Units.dp(200)
-    height: column.height
-    visualLayer: panel.parent
-    visualParent: root
-    onShowingChanged: {
-        if (showing) {
-            mouseArea.hoverEnabled = false;
-            tooltip.close();
-        } else {
-            mouseArea.hoverEnabled = true;
+    transformOrigin: LabsControls.Menu.TopLeft
+
+    Repeater {
+        model: listView.model.get(root.indexOfThisDelegate).windows
+
+        LabsControls.MenuItem {
+            text: modelData.title
         }
     }
 
-    Column {
-        id: column
-        width: parent.width
+    CustomComponents.MenuSeparator {
+        visible: model.hasWindows
+    }
 
-        Repeater {
-            model: listView.model.get(root.indexOfThisDelegate).windows
+    Repeater {
+        model: menu.actionList ? menu.actionList : 0
 
-            CustomComponents.MenuItem {
-                text: modelData.title
-            }
+        LabsControls.MenuItem {
+            text: "Action " + index
         }
-        CustomComponents.MenuSeparator {
-            visible: model.hasWindows
+    }
+    CustomComponents.MenuSeparator {
+        visible: model.hasActionList
+    }
+    LabsControls.MenuItem {
+        text: qsTr("New Window")
+        visible: model.running
+    }
+    CustomComponents.MenuSeparator {}
+    LabsControls.MenuItem {
+        text: qsTr("Add To Launcher")
+        visible: !model.pinned
+        onClicked: {
+            listView.model.pin(model.appId);
+            menu.close();
         }
-        Repeater {
-            model: menu.actionList ? menu.actionList : 0
-
-            CustomComponents.MenuItem {
-                text: "Action " + index
-            }
+    }
+    LabsControls.MenuItem {
+        text: qsTr("Remove From Launcher")
+        visible: model.pinned
+        onClicked: {
+            listView.model.unpin(model.appId);
+            menu.close();
         }
-        CustomComponents.MenuSeparator {
-            visible: model.hasActionList
-        }
-        CustomComponents.MenuItem {
-            text: qsTr("New Window")
-            visible: model.running
-        }
-        CustomComponents.MenuSeparator {}
-        CustomComponents.MenuItem {
-            text: qsTr("Add To Launcher")
-            visible: !model.pinned
-            onClicked: {
-                listView.model.pin(model.appId);
-                menu.close();
-            }
-        }
-        CustomComponents.MenuItem {
-            text: qsTr("Remove From Launcher")
-            visible: model.pinned
-            onClicked: {
-                listView.model.unpin(model.appId);
-                menu.close();
-            }
-        }
-        CustomComponents.MenuSeparator {}
-        CustomComponents.MenuItem {
-            text: qsTr("Show All Windows")
-            visible: model.running
-        }
-        CustomComponents.MenuItem {
-            text: qsTr("Show")
-            visible: model.running && !model.active
-        }
-        CustomComponents.MenuItem {
-            text: qsTr("Hide")
-            visible: model.running && model.active
-        }
-        CustomComponents.MenuSeparator {}
-        CustomComponents.MenuItem {
-            text: qsTr("Quit")
-            visible: model.running
-            onClicked: {
-                if (!listView.model.get(index).quit())
-                    console.warn("Failed to quit:", model.appId);
-                menu.close();
-            }
+    }
+    CustomComponents.MenuSeparator {}
+    LabsControls.MenuItem {
+        text: qsTr("Show All Windows")
+        visible: model.running
+    }
+    LabsControls.MenuItem {
+        text: qsTr("Show")
+        visible: model.running && !model.active
+    }
+    LabsControls.MenuItem {
+        text: qsTr("Hide")
+        visible: model.running && model.active
+    }
+    CustomComponents.MenuSeparator {}
+    LabsControls.MenuItem {
+        text: qsTr("Quit")
+        visible: model.running
+        onClicked: {
+            if (!listView.model.get(index).quit())
+                console.warn("Failed to quit:", model.appId);
+            menu.close();
         }
     }
 }

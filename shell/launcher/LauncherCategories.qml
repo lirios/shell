@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
+import Qt.labs.controls 1.0 as LabsControls
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.launcher 0.1 as CppLauncher
 
@@ -33,57 +33,19 @@ ListView {
     signal selected(string category)
 
     id: root
-    onCurrentIndexChanged: if (currentItem) root.selected(currentItem.category)
-
-    Component {
-        id: categoryDelegate
-
-        Rectangle {
-            property string category: model.category
-            property bool hover: false
-
-            color: hover ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
-            width: Math.max(ListView.view.width, label.paintedWidth + (2 * FluidUi.Units.smallSpacing))
-            height: Math.max(icon.height, label.paintedHeight) + (2 * FluidUi.Units.smallSpacing)
-            radius: FluidUi.Units.dp(3)
-
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                onEntered: hover = true
-                onExited: hover = false
-                onClicked: root.currentIndex = index
-            }
-
-            Row {
-                anchors {
-                    fill: parent
-                    margins: FluidUi.Units.smallSpacing
-                }
-                spacing: FluidUi.Units.smallSpacing
-
-                FluidUi.Icon {
-                    id: icon
-                    iconName: model.iconName
-                    width: FluidUi.Units.iconSizes.smallMedium
-                    height: width
-                }
-
-                Text {
-                    id: label
-                    anchors.verticalCenter: icon.verticalCenter
-                    renderType: Text.NativeRendering
-                    text: model.display
-                    color: hover ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
-                    elide: Text.ElideRight
-                    font.bold: root.currentIndex == index
-                }
-            }
-        }
-    }
-
+    currentIndex: 0
     model: CppLauncher.CategoriesModel {
         id: categoriesModel
     }
-    delegate: categoryDelegate
+    delegate: LabsControls.ItemDelegate {
+        property string category: model.category
+
+        width: parent.width
+        text: model.display
+        highlighted: root.currentIndex == index
+        onClicked: root.currentIndex = index
+    }
+    onCurrentIndexChanged: if (currentItem) root.selected(currentItem.category)
+
+    //LabsControls.ScrollIndicator.vertical: LabsControls.ScrollIndicator {}
 }

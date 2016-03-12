@@ -26,11 +26,10 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.3
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import ".."
+import "../components" as CustomComponents
 
 Indicator {
     name: "settings"
@@ -41,93 +40,82 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Settings")
-                color: Themes.Theme.palette.panel.textColor
             }
 
             Controls.Heading {
                 text: qsTr("Size")
-                color: Themes.Theme.palette.panel.textColor
                 level: 3
             }
 
             Row {
                 spacing: FluidUi.Units.smallSpacing
 
-                ExclusiveGroup {
-                    id: sizeGroup
-                }
-
-                ToolButton {
+                CustomComponents.ToolButton {
                     text: qsTr("Small")
                     checkable: true
                     checked: screenView.panel.size === FluidUi.Units.iconSizes.medium
-                    exclusiveGroup: sizeGroup
+                    autoExclusive: true
                     onClicked: screenView.panel.size = FluidUi.Units.iconSizes.medium
                 }
 
-                ToolButton {
+                CustomComponents.ToolButton {
                     text: qsTr("Medium")
                     checkable: true
                     checked: screenView.panel.size === FluidUi.Units.iconSizes.large
-                    exclusiveGroup: sizeGroup
+                    autoExclusive: true
                     onClicked: screenView.panel.size = FluidUi.Units.iconSizes.large
                 }
 
-                ToolButton {
+                CustomComponents.ToolButton {
                     text: qsTr("Large")
                     checkable: true
                     checked: screenView.panel.size === FluidUi.Units.iconSizes.huge
-                    exclusiveGroup: sizeGroup
+                    autoExclusive: true
                     onClicked: screenView.panel.size = FluidUi.Units.iconSizes.huge
                 }
             }
 
             Controls.Heading {
                 text: qsTr("Position")
-                color: Themes.Theme.palette.panel.textColor
                 level: 3
             }
 
             Row {
                 spacing: FluidUi.Units.smallSpacing
 
-                ExclusiveGroup {
-                    id: posGroup
-                }
-
-                ToolButton {
+                CustomComponents.ToolButton {
                     text: qsTr("Left")
                     //iconName: "align-horizontal-left-symbolic"
                     checkable: true
                     checked: screenView.panel.state === "left"
-                    exclusiveGroup: posGroup
+                    autoExclusive: true
                     onClicked: screenView.panel.state = "left"
                 }
 
-                ToolButton {
+                CustomComponents.ToolButton {
                     text: qsTr("Top")
                     //iconName: "align-vertical-top-symbolic"
                     checkable: true
                     checked: screenView.panel.state === "top"
-                    exclusiveGroup: posGroup
+                    autoExclusive: true
                     onClicked: screenView.panel.state = "top"
                 }
 
-                ToolButton {
+                CustomComponents.ToolButton {
                     text: qsTr("Right")
                     //iconName: "align-horizontal-right-symbolic"
                     checkable: true
                     checked: screenView.panel.state === "right"
-                    exclusiveGroup: posGroup
+                    autoExclusive: true
                     onClicked: screenView.panel.state = "right"
                 }
 
-                ToolButton {
+                CustomComponents.ToolButton {
                     text: qsTr("Bottom")
                     //iconName: "align-vertical-bottom-symbolic"
                     checkable: true
                     checked: screenView.panel.state === "bottom"
-                    exclusiveGroup: posGroup
+                    autoExclusive: true
                     onClicked: screenView.panel.state = "bottom"
                 }
             }

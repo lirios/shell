@@ -48,7 +48,7 @@ Item {
         edge: Qt.TopEdge
         onClicked: close()
 
-        CustomComponents.Pane {
+        LabsControls.Pane {
             width: window.width
             height: FluidUi.Units.gu(25)
             padding: FluidUi.Units.largeSpacing

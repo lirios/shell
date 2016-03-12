@@ -28,7 +28,6 @@ import QtQuick 2.0
 import Qt.labs.controls 1.0 as LabsControls
 import Fluid.Ui 1.0 as FluidUi
 import ".."
-import "../components" as CustomComponents
 
 Item {
     readonly property alias panel: panel
@@ -66,18 +65,21 @@ Item {
     LabsControls.Drawer {
         id: rightDrawer
         edge: Qt.RightEdge
-        //z: 0
         onClicked: close()
 
-        //CustomComponents.Pane {
         LabsControls.Pane {
-            width: FluidUi.Units.gu(16)
+            y: output.availableGeometry.y
+            width: stackView.currentItem.implicitWidth + (2 * padding)
             height: output.availableGeometry.height
             padding: FluidUi.Units.largeSpacing
 
             LabsControls.StackView {
                 id: stackView
-                anchors.fill: parent
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                    bottom: parent.bottom
+                }
             }
         }
     }

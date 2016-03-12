@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -95,7 +95,7 @@ Item {
         cache: false
     }
 
-    Label {
+    LabsControls.Label {
         id: label
         anchors.centerIn: parent
         color: Themes.Theme.palette.panel.textColor
@@ -123,7 +123,7 @@ Item {
             }
         }
 
-        Label {
+        LabsControls.Label {
             anchors.centerIn: parent
             font.pixelSize: parent.width - FluidUi.Units.smallSpacing
             color: "white"

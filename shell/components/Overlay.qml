@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.2
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -107,19 +107,19 @@ FluidUi.Showable {
                 Layout.alignment: Qt.AlignHCenter
             }
 
-            ProgressBar {
+            LabsControls.ProgressBar {
                 id: progress
-                minimumValue: 0
-                maximumValue: 100
+                from: 0
+                to: 100
                 value: visible ? root.value : 0
                 visible: false
 
                 Layout.fillWidth: true
             }
 
-            Text {
-                renderType: Text.NativeRendering
+            LabsControls.Label {
                 text: progress.visible ? "" : (root.value ? root.value : "")
+                color: Themes.Theme.palette.panel.textColor
                 visible: !progress.visible
 
                 Layout.alignment: Qt.AlignHCenter

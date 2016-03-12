@@ -25,59 +25,29 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.2
+import Qt.labs.templates 1.0 as LabsTemplates
+import Fluid.Ui 1.0 as FluidUi
 
-Flickable {
-    readonly property alias currentIndex: d.currentIndex
-    readonly property alias currentWorkspace: d.currentWorkspace
-    readonly property alias count: workspaces.model
-
-    id: root
-    interactive: false
-    contentX: currentIndex * width
-    contentY: 0
-    contentWidth: width
-    contentHeight: height
-    onCurrentIndexChanged: {
-        console.debug("Selected workspace", currentIndex + 1);
-        d.currentWorkspace = workspaces.itemAt(currentIndex);
+LabsTemplates.SwipeView {
+    id: swipeView
+    spacing: 400
+    contentItem: ListView {
+        model: swipeView.contentModel
+        currentIndex: swipeView.currentIndex
+        spacing: swipeView.spacing
+        orientation: Qt.Horizontal
+        boundsBehavior: Flickable.StopAtBounds
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        preferredHighlightBegin: 0
+        preferredHighlightEnd: 0
+        highlightMoveDuration: FluidUi.Units.mediumDelay
+        interactive: false
     }
 
-    Behavior on contentX {
-        NumberAnimation {
-            easing.type: Easing.InOutQuad
-            duration: 250
-        }
-    }
-
-    Item {
-        width: parent.width * workspaces.model
-        height: parent.height
-
-        function selectWorkspace(item) {
-            if (d.currentIndex !== item.workspaceIndex)
-                root.select(item.workspaceIndex);
-        }
-
-        Repeater {
-            id: workspaces
-            model: 0
-
-            Workspace {
-                x: index * width
-                y: 0
-                width: root.width
-                height: root.height
-                workspaceIndex: index
-            }
-        }
-    }
+    onCurrentIndexChanged: console.debug("Selected workspace", currentIndex)
 
     QtObject {
         id: d
-
-        property int currentIndex: -1
-        property Workspace currentWorkspace: null
 
         function showOverlay(next) {
             // Show overlay
@@ -91,15 +61,31 @@ Flickable {
         }
     }
 
+    Component {
+        id: workspaceComponent
+
+        Workspace {}
+    }
+
+    Workspace {}
+
     function add() {
-        workspaces.model++;
+        var incubator = workspaceComponent.incubateObject(swipeView, {});
+        if (incubator.status !== Component.Ready) {
+            incubator.onStatusChange = function(status) {
+                if (status === Component.Ready)
+                    swipeView.add(incubator.object);
+            }
+        } else {
+            swipeView.add(incubator.object);
+        }
     }
 
     function remove(index) {
         // Reparent all windows to the previous or next workspace
-        var prevIndex = index === 0 ? 1 : index - 1;
-        var workspace = workspaces.itemAt(index);
-        var prevWorkspace = workspaces.itemAt(prevIndex);
+        var workspace = swipeView.itemAt(index);
+        var prevIndex = index === 0 ? swipeView.count - 1 : index - 1;
+        var prevWorkspace = swipeView.itemAt(prevIndex);
         var i;
         for (i = 0; i < workspace.children.length; i++) {
             var window = workspace.children[i];
@@ -107,24 +93,24 @@ Flickable {
         }
 
         // Remove item
-        d.currentIndex = prevIndex;
-        workspaces.model--;
+        swipeView.currentIndex = prevIndex;
+        swipeView.removeItem(index);
     }
 
     function select(num) {
-        if (num < 1 || num > workspaces.count) {
+        if (num < 0 || num >= swipeView.count) {
             console.warn("Attempt to select unknown workspace", num);
             return;
         }
 
-        d.currentIndex = num - 1;
+        swipeView.currentIndex = num;
     }
 
     function selectPrevious() {
         // Previous index (avoid overflow)
-        var prevIndex = d.currentIndex - 1;
+        var prevIndex = swipeView.currentIndex - 1;
         if (prevIndex < 0)
-            prevIndex = root.count - 1;
+            prevIndex = swipeView.count - 1;
         if (prevIndex < 0)
             prevIndex = 0;
 
@@ -137,8 +123,8 @@ Flickable {
 
     function selectNext() {
         // Next index (avoid overflow)
-        var nextIndex = d.currentIndex + 1;
-        if (nextIndex >= root.count)
+        var nextIndex = swipeView.currentIndex + 1;
+        if (nextIndex >= swipeView.count)
             nextIndex = 0;
 
         // Select workspace
@@ -151,8 +137,8 @@ Flickable {
     Component.onCompleted: {
         // Create all workspaces
         var i;
-        for (i = 1; i <= hawaiiCompositor.settings.numWorkspaces; i++)
+        for (i = swipeView.count; i < hawaiiCompositor.settings.numWorkspaces; i++)
             add();
-        select(1);
+        select(0);
     }
 }

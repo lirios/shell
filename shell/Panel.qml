@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.1
 import QtQml.Models 2.2
 import GreenIsland 1.0
 import Fluid.Ui 1.0 as FluidUi

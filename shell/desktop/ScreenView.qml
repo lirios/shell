@@ -41,7 +41,7 @@ Item {
         readonly property alias notifications: notificationsLayer
     }
 
-    readonly property alias currentWorkspace: workspacesLayer.currentWorkspace
+    readonly property alias currentWorkspace: workspacesLayer.currentItem
     readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
     property alias windowsSwitcher: windowSwitcherLoader
 
@@ -82,17 +82,17 @@ Item {
             id: workspacesLayer
             anchors.fill: parent
             z: 2
+        }
 
-            // Panels
-            Loader {
-                id: shellLoader
-                anchors.fill: parent
-                asynchronous: true
-                active: primary
-                sourceComponent: Shell {}
+        // Panels
+        Loader {
+            id: shellLoader
+            anchors.fill: parent
+            asynchronous: true
+            active: primary
+            sourceComponent: Shell {}
 
-                z: 3
-            }
+            z: 3
         }
     }
 

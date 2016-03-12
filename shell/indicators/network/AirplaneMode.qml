@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.3
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -44,7 +44,7 @@ RowLayout {
         property bool airplaneMode: false
     }
 
-    Switch {
+    LabsControls.Switch {
         id: airplaneSwitch
         onClicked: {
             __priv.airplaneMode = !__priv.airplaneMode;
@@ -54,14 +54,14 @@ RowLayout {
 
     FluidUi.Icon {
         id: airplaneModeIcon
-        iconName: airplaneMode ? "airplane-mode-symbolic" : "airplane-mode-disabled-symbolic"
+        iconName: "airplane-mode-symbolic"
         width: FluidUi.Units.iconSizes.smallMedium
         height: width
-        color: Themes.Theme.palette.panel.textColor
+        color: label.color
     }
 
-    Label {
+    LabsControls.Label {
+        id: label
         text: airplaneMode ? qsTr("Airplane mode enabled") : qsTr("Airplane mode disabled")
-        color: Themes.Theme.palette.panel.textColor
     }
 }

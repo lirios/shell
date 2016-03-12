@@ -26,12 +26,12 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.hardware 0.1 as Hardware
 import ".."
+import "../components" as CustomComponents
 
 Indicator {
     name: "storage"
@@ -42,7 +42,6 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Volumes")
-                color: Themes.Theme.palette.panel.textColor
             }
 
             Repeater {
@@ -58,7 +57,7 @@ Indicator {
                             iconName: modelData.iconName + "-symbolic"
                             width: FluidUi.Units.iconSizes.large
                             height: width
-                            color: Themes.Theme.palette.panel.textColor
+                            color: label.color
 
                             MouseArea {
                                 anchors.fill: parent
@@ -66,10 +65,9 @@ Indicator {
                             }
                         }
 
-                        Text {
-                            renderType: Text.NativeRendering
+                        LabsControls.Label {
+                            id: label
                             text: modelData.name
-                            color: Themes.Theme.palette.panel.textColor
 
                             MouseArea {
                                 anchors.fill: parent
@@ -81,7 +79,7 @@ Indicator {
                             Layout.fillWidth: true
                         }
 
-                        ToolButton {
+                        CustomComponents.ToolButton {
                             iconName: modelData.mounted ? "media-eject-symbolic" : "media-removable-symbolic"
                             onClicked: modelData.mounted ? modelData.unmount() : modelData.mount()
                         }

@@ -124,9 +124,7 @@ FluidUi.Showable {
             Layout.fillHeight: true
         }
 
-        Rectangle {
-            color: "#80000000"
-
+        LabsControls.Pane {
             Column {
                 anchors.centerIn: parent
                 spacing: FluidUi.Units.smallSpacing

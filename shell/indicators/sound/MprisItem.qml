@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.1
 import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
@@ -62,6 +61,7 @@ ColumnLayout {
                 id: icon
                 anchors.fill: parent
                 iconName: player ? player.iconName : ""
+                color: titleLabel.color
                 visible: !albumArt.visible && iconName != ""
             }
 
@@ -77,17 +77,16 @@ ColumnLayout {
             spacing: FluidUi.Units.smallSpacing
 
             Controls.Heading {
+                id: titleLabel
                 level: 3
-                text: player ? player.metadata["xesam:title"] : qsTr("Unknown Title")
-                color: Themes.Theme.palette.panel.textColor
+                text: player && player.metadata["xesam:title"] ? player.metadata["xesam:title"] : qsTr("Unknown Title")
                 font.weight: Font.Bold
                 elide: Text.ElideRight
             }
 
             Controls.Heading {
                 level: 4
-                text: player ? player.metadata["xesam:artist"] : qsTr("Unknown Artist")
-                color: Themes.Theme.palette.panel.textColor
+                text: player && player.metadata["xesam:artist"] ? player.metadata["xesam:artist"] : qsTr("Unknown Artist")
                 elide: Text.ElideRight
             }
         }
@@ -113,7 +112,7 @@ ColumnLayout {
         }
 
         CustomComponents.ToolButton {
-            iconName: player ? (player.status === "Playing" ? "media-playback-pause" : "media-playback-start") : ""
+            iconName: player ? (player.status === "Playing" ? "media-playback-pause-symbolic" : "media-playback-start-symbolic") : ""
             iconSize: FluidUi.Units.iconSizes.small
             //tooltip: qsTr(player.status == "Playing" ? "Pause" : "Play")
             onClicked: {

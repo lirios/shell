@@ -32,10 +32,12 @@ LabsControls.ToolButton {
     property alias iconName: indicator.iconName
     property alias iconSize: indicator.width
 
+    id: toolButton
     indicator: FluidUi.Icon {
         id: indicator
         anchors.centerIn: parent
         width: FluidUi.Units.iconSizes.small
         height: width
+        color: toolButton.label.color
     }
 }

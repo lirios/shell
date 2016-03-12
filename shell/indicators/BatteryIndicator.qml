@@ -41,7 +41,6 @@ Indicator {
 
             Controls.Heading {
                 text: qsTr("Power")
-                color: Themes.Theme.palette.panel.textColor
             }
 
             Repeater {

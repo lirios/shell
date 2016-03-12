@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.2
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Controls 1.0 as Controls
@@ -33,152 +32,45 @@ import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
-FluidUi.Showable {
-    property var origin
-    property int location
-
+LabsControls.Popup {
     signal appLaunched()
     signal dismissed()
 
-    id: root
-    showAnimation: ParallelAnimation {
-        XAnimator {
-            target: popover
-            easing.type: Easing.InQuad
-            duration: FluidUi.Units.longDuration
-            from: __priv.fromX
-            to: __priv.toX
-        }
+    id: launcherPopOver
+    focus: true
+    closePolicy: LabsControls.Popup.OnEscape | LabsControls.Popup.OnPressOutside
+    implicitWidth: mainLayout.implicitWidth +
+                   launcherPopOver.leftPadding + launcherPopOver.rightPadding +
+                   launcherPopOver.leftMargin + launcherPopOver.rightMargin
+    implicitHeight: mainLayout.implicitHeight +
+                    launcherPopOver.topPadding + launcherPopOver.bottomPadding +
+                    launcherPopOver.topMargin + launcherPopOver.bottomMargin
 
-        YAnimator {
-            target: popover
-            easing.type: Easing.InQuad
-            duration: FluidUi.Units.longDuration
-            from: __priv.fromY
-            to: __priv.toY
-        }
-
-        OpacityAnimator {
-            target: popover
-            easing.type: Easing.InQuad
-            duration: FluidUi.Units.longDuration
-            from: 0.0
-            to: 1.0
-        }
-    }
-    hideAnimation: ParallelAnimation {
-        XAnimator {
-            target: popover
-            easing.type: Easing.InQuad
-            duration: FluidUi.Units.shortDuration
-            from: __priv.toX
-            to: __priv.fromX
-        }
-
-        YAnimator {
-            target: popover
-            easing.type: Easing.InQuad
-            duration: FluidUi.Units.shortDuration
-            from: __priv.toY
-            to: __priv.fromY
-        }
-
-        OpacityAnimator {
-            target: popover
-            easing.type: Easing.InQuad
-            duration: FluidUi.Units.longDuration
-            from: 1.0
-            to: 0.0
-        }
-    }
-
-    QtObject {
-        id: __priv
-
-        property real fromX: origin.x + FluidUi.Units.dp(5) // 5 is an arbitrary margin
-        property real fromY: origin.y + popover.height + FluidUi.Units.dp(5 + 6) // 6 is radius
-
-        property real toX: fromX
-        property real toY: origin.y - popover.height
-    }
-
-    CustomComponents.Popover {
-        id: popover
-        width: grid.width + (categories.visible ? categories.width : 0) + (FluidUi.Units.largeSpacing * 2) + (categories.visible ? FluidUi.Units.smallSpacing * 2 : 0)
-        height: searchBox.height + grid.height + pageSelector.height +
-                shutdownActions.height + (FluidUi.Units.largeSpacing * 4) +
-                (categories.visible ? FluidUi.Units.smallSpacing : FluidUi.Units.largeSpacing) +
-                FluidUi.Units.smallSpacing
-        opacity: 0.0
-        onOpacityChanged: if (opacity == 1.0) searchText.forceActiveFocus()
-
-        Controls.PopupBehavior {
-            anchors.fill: parent
-            onDismissed: root.dismissed()
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onWheel: {
-                if (wheel.angleDelta.x > 0 || wheel.angleDelta.y > 0) {
-                    // Go to the next page
-                    if (grid.currentPage < grid.numPages - 1) {
-                        grid.currentPage++;
-                        grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
-                    }
-                } else if (wheel.angleDelta.x < 0 || wheel.angleDelta.y < 0) {
-                    // Go to the next page
-                    if (grid.currentPage > 0) {
-                        grid.currentPage--;
-                        grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
-                    }
-                }
-
-                wheel.accepted = true;
-            }
-        }
+    ColumnLayout {
+        id: mainLayout
+        spacing: FluidUi.Units.smallSpacing
 
         RowLayout {
-            id: searchBox
-            anchors {
-                left: parent.left
-                top: parent.top
-                right: parent.right
-                leftMargin: FluidUi.Units.largeSpacing
-                topMargin: FluidUi.Units.largeSpacing
-                rightMargin: FluidUi.Units.largeSpacing
-                bottomMargin: FluidUi.Units.smallSpacing
+            CustomComponents.ToolButton {
+                id: viewCategoriesButton
+                iconName: "view-more-symbolic"
+                checkable: true
+                checked: false
+                autoExclusive: true
+                onClicked: categories.currentIndex = 0
             }
-            height: Math.max(viewSelector.height, searchText.height)
 
-            Row {
-                id: viewSelector
+            CustomComponents.ToolButton {
+                id: viewPagedButton
+                iconName: "view-paged-symbolic"
+                checkable: true
+                checked: true
+                autoExclusive: true
+                onClicked: categories.currentIndex = 0
+            }
 
-                ExclusiveGroup {
-                    id: viewGroup
-                }
-
-                ToolButton {
-                    iconName: "view-more-symbolic"
-                    checkable: true
-                    checked: categories.visible
-                    exclusiveGroup: viewGroup
-                    onClicked: {
-                        categories.currentIndex = 0;
-                        categories.visible = true;
-                    }
-                }
-
-                ToolButton {
-                    iconName: "view-paged-symbolic"
-                    checkable: true
-                    checked: !categories.visible
-                    exclusiveGroup: viewGroup
-                    onClicked: {
-                        categories.visible = false;
-                        categories.currentIndex = 0;
-                    }
-                }
+            Item {
+                width: FluidUi.Units.smallSpacing
             }
 
             LabsControls.TextField {
@@ -189,88 +81,69 @@ FluidUi.Showable {
 
                 Layout.fillWidth: true
             }
+
+            Layout.fillWidth: true
         }
 
-        LauncherCategories {
-            id: categories
-            anchors {
-                left: parent.left
-                top: grid.top
-                margins: FluidUi.Units.largeSpacing
+        RowLayout {
+            LauncherCategories {
+                id: categories
+                clip: true
+                width: FluidUi.Units.gu(10)
+                visible: viewCategoriesButton.checked
+                onSelected: grid.filterByCategory(category)
+
+                Layout.fillHeight: true
             }
-            width: FluidUi.Units.gu(8)
-            height: grid.height
-            visible: false
-            onSelected: grid.filterByCategory(category)
-        }
 
-        LauncherGridView {
-            id: grid
-            anchors {
-                left: categories.visible ? categories.right : parent.left
-                top: searchBox.bottom
-                leftMargin: categories.visible ? FluidUi.Units.smallSpacing : FluidUi.Units.largeSpacing
-                topMargin: categories.visible ? FluidUi.Units.smallSpacing : FluidUi.Units.largeSpacing
-                rightMargin: FluidUi.Units.largeSpacing
-                bottomMargin: FluidUi.Units.largeSpacing
-            }
-            onAppLaunched: root.appLaunched()
-        }
-
-        Row {
-            id: pageSelector
-            anchors {
-                top: grid.bottom
-                horizontalCenter: parent.horizontalCenter
-                leftMargin: FluidUi.Units.largeSpacing
-                topMargin: FluidUi.Units.largeSpacing + FluidUi.Units.smallSpacing
-                rightMargin: FluidUi.Units.largeSpacing
-                bottomMargin: FluidUi.Units.largeSpacing
-            }
-            spacing: FluidUi.Units.largeSpacing
-            height: FluidUi.Units.dp(20)
-
-            Repeater {
-                id: repeater
-                model: grid.numPages
-                delegate: Rectangle {
-                    width: FluidUi.Units.dp(20)
-                    height: width
-                    radius: width
-                    color: grid.currentPage === index
-                           ? Themes.Theme.palette.panel.selectedBackgroundColor
-                           : Themes.Theme.palette.rgba(Qt.lighter(Themes.Theme.palette.panel.backgroundColor, 1.5), 0.7)
-                    antialiasing: true
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: index + 1
-                        color: Themes.Theme.palette.panel.selectedTextColor
-                        opacity: grid.currentPage === index ? 1.0 : 0.6
-                        font.pixelSize: parent.width * 0.6
-                    }
+            ColumnLayout {
+                LauncherGridView {
+                    id: grid
+                    onAppLaunched: launcherPopOver.appLaunched()
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: {
-                            grid.currentIndex = index * grid.numItemsPerPage + 1
-                            grid.currentPage = index;
+                        onWheel: {
+                            if (wheel.angleDelta.x > 0 || wheel.angleDelta.y > 0) {
+                                // Go to the next page
+                                if (grid.currentPage < grid.numPages - 1) {
+                                    grid.currentPage++;
+                                    grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
+                                }
+                            } else if (wheel.angleDelta.x < 0 || wheel.angleDelta.y < 0) {
+                                // Go to the next page
+                                if (grid.currentPage > 0) {
+                                    grid.currentPage--;
+                                    grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
+                                }
+                            }
+
+                            wheel.accepted = true;
                         }
                     }
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+
+                LabsControls.PageIndicator {
+                    id: pageIndicator
+                    count: grid.numPages
+                    currentIndex: grid.currentPage
+                    onCurrentIndexChanged: grid.currentPage = currentIndex
+
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                LauncherShutdownActions {
+                    id: shutdownActions
+
+                    Layout.alignment: Qt.AlignHCenter
                 }
             }
-        }
 
-        LauncherShutdownActions {
-            id: shutdownActions
-            anchors {
-                top: pageSelector.bottom
-                horizontalCenter: parent.horizontalCenter
-                leftMargin: FluidUi.Units.largeSpacing
-                topMargin: FluidUi.Units.largeSpacing + FluidUi.Units.smallSpacing
-                rightMargin: FluidUi.Units.largeSpacing
-                bottomMargin: FluidUi.Units.largeSpacing
-            }
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 }

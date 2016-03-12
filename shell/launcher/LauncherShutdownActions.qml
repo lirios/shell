@@ -26,19 +26,18 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 1.1
 import Fluid.Ui 1.0 as FluidUi
+import "../components" as CustomComponents
 
 RowLayout {
     implicitWidth: (FluidUi.Units.iconSizes.large * 3) + (spacing * 3)
     implicitHeight: FluidUi.Units.iconSizes.large + (spacing * 2)
     spacing: FluidUi.Units.largeSpacing
 
-    ToolButton {
-        width: FluidUi.Units.iconSizes.large
-        height: width
+    CustomComponents.ToolButton {
+        iconSize: FluidUi.Units.iconSizes.smallMedium
         iconName: "system-log-out-symbolic"
-        tooltip: qsTr("Log out from current session")
+        //tooltip: qsTr("Log out from current session")
         enabled: SessionInterface.canLogOut
         onClicked: {
             SessionInterface.requestLogOut();
@@ -47,11 +46,10 @@ RowLayout {
         }
     }
 
-    ToolButton {
-        width: FluidUi.Units.iconSizes.large
-        height: width
+    CustomComponents.ToolButton {
+        iconSize: FluidUi.Units.iconSizes.smallMedium
         iconName: "system-shutdown-symbolic"
-        tooltip: qsTr("Power off the system")
+        //tooltip: qsTr("Power off the system")
         enabled: SessionInterface.canPowerOff
         onClicked: {
             SessionInterface.requestPowerOff();
@@ -60,11 +58,10 @@ RowLayout {
         }
     }
 
-    ToolButton {
-        width: FluidUi.Units.iconSizes.large
-        height: width
+    CustomComponents.ToolButton {
+        iconSize: FluidUi.Units.iconSizes.smallMedium
         iconName: "system-reboot-symbolic"
-        tooltip: qsTr("Restart the system")
+        //tooltip: qsTr("Restart the system")
         enabled: SessionInterface.canRestart
         onClicked: {
             SessionInterface.requestRestart();

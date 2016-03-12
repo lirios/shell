@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import GreenIsland 1.0 as GreenIsland
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -133,7 +133,7 @@ Rectangle {
             Layout.fillHeight: true
         }
 
-        Label {
+        LabsControls.Label {
             id: label
             text: listView.currentItem ? listView.currentItem.title : qsTr("Untitled")
             wrapMode: Text.Wrap

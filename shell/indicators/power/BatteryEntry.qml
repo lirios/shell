@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.hardware 0.1
@@ -45,7 +45,7 @@ Item {
             id: icon
             width: FluidUi.Units.iconSizes.large
             height: width
-            color: Themes.Theme.palette.panel.textColor
+            color: chargeStateLabel.color
             cache: false
 
             Layout.alignment: Qt.AlignTop
@@ -54,9 +54,8 @@ Item {
         ColumnLayout {
             spacing: FluidUi.Units.smallSpacing
 
-            Label {
+            LabsControls.Label {
                 id: chargeStateLabel
-                color: Themes.Theme.palette.panel.textColor
 
                 Layout.fillWidth: true
             }
@@ -64,19 +63,17 @@ Item {
             RowLayout {
                 spacing: FluidUi.Units.smallSpacing
 
-                ProgressBar {
+                LabsControls.ProgressBar {
                     id: chargeProgress
-                    minimumValue: 0
-                    maximumValue: 100
+                    from: 0
+                    to: 100
                     value: battery ? battery.chargePercent : 0
 
                     Layout.fillWidth: true
                 }
 
-                Text {
-                    renderType: Text.NativeRendering
+                LabsControls.Label {
                     text: (battery ? battery.chargePercent : 0) + "%"
-                    color: Themes.Theme.palette.panel.textColor
                 }
 
                 Layout.fillWidth: true
@@ -88,58 +85,42 @@ Item {
                 opacity: 0.6
                 visible: battery !== null
 
-                Text {
-                    renderType: Text.NativeRendering
-                    color: Themes.Theme.palette.panel.textColor
+                LabsControls.Label {
                     text: qsTr("Time To Empty")
                 }
 
-                Text {
-                    renderType: Text.NativeRendering
-                    color: Themes.Theme.palette.panel.textColor
+                LabsControls.Label {
                     // TODO: Convert to time
                     text: battery ? battery.timeToEmpty : 0
                     horizontalAlignment: Qt.AlignRight
                 }
 
-                Text {
-                    renderType: Text.NativeRendering
-                    color: Themes.Theme.palette.panel.textColor
+                LabsControls.Label {
                     text: qsTr("Capacity")
                 }
 
-                Text {
-                    renderType: Text.NativeRendering
-                    color: Themes.Theme.palette.panel.textColor
+                LabsControls.Label {
                     text: (battery ? battery.capacity : 0) + "%"
                     horizontalAlignment: Qt.AlignRight
                 }
 
-                Text {
-                    renderType: Text.NativeRendering
-                    color: Themes.Theme.palette.panel.textColor
+                LabsControls.Label {
                     text: qsTr("Vendor")
                     visible: battery && battery.powerSupply
                 }
 
-                Text {
-                    renderType: Text.NativeRendering
-                    color: Themes.Theme.palette.panel.textColor
+                LabsControls.Label {
                     text: battery ? battery.vendor : qsTr("n.a.")
                     horizontalAlignment: Qt.AlignRight
                     visible: battery && battery.powerSupply
                 }
 
-                Text {
-                    renderType: Text.NativeRendering
-                    color: Themes.Theme.palette.panel.textColor
+                LabsControls.Label {
                     text: qsTr("Model")
                     visible: battery && battery.powerSupply
                 }
 
-                Text {
-                    renderType: Text.NativeRendering
-                    color: Themes.Theme.palette.panel.textColor
+                LabsControls.Label {
                     text: battery ? battery.product : qsTr("n.a.")
                     horizontalAlignment: Qt.AlignRight
                     visible: battery && battery.powerSupply

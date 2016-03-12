@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -137,7 +137,6 @@ MouseArea {
         font.weight: Font.Bold
         elide: Text.ElideRight
         text: model.summary
-        color: Themes.Theme.palette.panel.textColor
         visible: text.length > 0
         onLinkActivated: Qt.openUrlExternally(link)
     }
@@ -159,7 +158,6 @@ MouseArea {
         text: model.body
         maximumLineCount: 10
         verticalAlignment: Text.AlignTop
-        color: Themes.Theme.palette.panel.textColor
         visible: text.length > 0 && expanded
         onLinkActivated: Qt.openUrlExternally(link)
     }

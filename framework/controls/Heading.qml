@@ -26,7 +26,7 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls 1.2 as QtControls
+import Qt.labs.controls 1.0 as LabsControls
 import Hawaii.Themes 1.0
 
 /**
@@ -50,10 +50,10 @@ import Hawaii.Themes 1.0
  * @endcode
  *
  * The most important property is "text", which applies to the text property of
- * Label. See QtQuick Controls Label and primitive QML Text element API for
+ * Label. See Qt Labs Controls Label and primitive QML Text element API for
  * additional properties, methods and signals.
  */
-Text {
+LabsControls.Label {
     id: root
 
     /**
@@ -68,7 +68,6 @@ Text {
     font.pointSize: headerPointSize(level)
     font.weight: Font.Light
     wrapMode: Text.WordWrap
-    renderType: Text.NativeRendering
     opacity: 0.8
 
     function headerPointSize(l) {

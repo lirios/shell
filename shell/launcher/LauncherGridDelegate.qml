@@ -26,14 +26,15 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Hawaii.Themes 1.0 as Themes
+import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls.material 1.0 as LabsMaterial
 import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
     property alias iconSize: icon.width
     property bool hovered: false
 
-    color: hovered ? Themes.Theme.palette.rgba(Themes.Theme.palette.panel.selectedBackgroundColor, 0.7) : "transparent"
+    color: hovered ? LabsMaterial.Material.accent : "transparent"
     radius: FluidUi.Units.dp(6)
     antialiasing: true
 
@@ -42,9 +43,9 @@ Rectangle {
         anchors {
             horizontalCenter: parent.horizontalCenter
             top: parent.top
-            leftMargin: FluidUi.Units.largeSpacing
-            topMargin: FluidUi.Units.largeSpacing
-            rightMargin: FluidUi.Units.largeSpacing
+            leftMargin: FluidUi.Units.smallSpacing
+            topMargin: FluidUi.Units.smallSpacing
+            rightMargin: FluidUi.Units.smallSpacing
         }
         height: width
         sourceSize.width: width
@@ -54,20 +55,18 @@ Rectangle {
         asynchronous: true
     }
 
-    Text {
+    LabsControls.Label {
         id: label
         anchors {
             horizontalCenter: parent.horizontalCenter
             top: icon.bottom
             bottom: parent.bottom
-            leftMargin: FluidUi.Units.largeSpacing
+            leftMargin: FluidUi.Units.smallSpacing
             topMargin: FluidUi.Units.smallSpacing
-            rightMargin: FluidUi.Units.largeSpacing
-            bottomMargin: FluidUi.Units.largeSpacing
+            rightMargin: FluidUi.Units.smallSpacing
+            bottomMargin: FluidUi.Units.smallSpacing
         }
         text: model.name
-        renderType: Text.NativeRendering
-        color: Themes.Theme.palette.panel.textColor
         elide: Text.ElideRight
         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
         textFormat: Text.PlainText
