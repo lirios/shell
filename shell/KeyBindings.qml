@@ -203,6 +203,11 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspaceLast
+        onActivated: {
+            var i, index = hawaiiCompositor.settings.numWorkspaces - 1;
+            for (i = 0; i < hawaiiCompositor.outputs.length; i++)
+                hawaiiCompositor.outputs[i].screenView.layers.workspaces.select(index);
+        }
     }
 
     Shortcut {
