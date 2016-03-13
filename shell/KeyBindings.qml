@@ -101,73 +101,73 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace1
-        onActivated: d.switchToWorkspace(1)
+        onActivated: d.switchToWorkspace(0)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace2
-        onActivated: d.switchToWorkspace(2)
+        onActivated: d.switchToWorkspace(1)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace3
-        onActivated: d.switchToWorkspace(3)
+        onActivated: d.switchToWorkspace(2)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace4
-        onActivated: d.switchToWorkspace(4)
+        onActivated: d.switchToWorkspace(3)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace5
-        onActivated: d.switchToWorkspace(5)
+        onActivated: d.switchToWorkspace(4)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace6
-        onActivated: d.switchToWorkspace(6)
+        onActivated: d.switchToWorkspace(5)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace7
-        onActivated: d.switchToWorkspace(7)
+        onActivated: d.switchToWorkspace(6)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace8
-        onActivated: d.switchToWorkspace(8)
+        onActivated: d.switchToWorkspace(7)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace9
-        onActivated: d.switchToWorkspace(9)
+        onActivated: d.switchToWorkspace(8)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace10
-        onActivated: d.switchToWorkspace(10)
+        onActivated: d.switchToWorkspace(9)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace11
-        onActivated: d.switchToWorkspace(11)
+        onActivated: d.switchToWorkspace(10)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace12
-        onActivated: d.switchToWorkspace(12)
+        onActivated: d.switchToWorkspace(11)
     }
 
     Shortcut {
