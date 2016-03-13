@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Themes 1.0 as Themes
 import org.hawaiios.settings 0.2 as Settings
 import Fluid.Core 1.0 as FluidCore
 
