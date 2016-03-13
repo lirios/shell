@@ -34,8 +34,6 @@ import "indicators"
 import "launcher"
 
 Rectangle {
-    property Indicator selectedIndicator: null
-    property Indicator lastIndicator: null
     readonly property alias launcherIndicator: launcherIndicator
     readonly property alias currentLauncherItem: launcher.currentItem
     property real size: FluidUi.Units.iconSizes.large

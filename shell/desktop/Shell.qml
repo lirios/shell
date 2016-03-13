@@ -38,27 +38,12 @@ Item {
         id: panel
         z: 1
         onIndicatorTriggered: {
-            // Close drawer if the current indicator is triggered again
-            if (indicator.selected) {
-                if (rightDrawer.expanded) {
-                    rightDrawer.close();
-                    selectedIndicator = null;
-                }
-
-                return;
-            }
-
             // Load indicator component
-            if (indicator !== lastIndicator)
-                stackView.push(indicator.component, {}, rightDrawer.expanded ? LabsControls.StackView.Transition : LabsControls.StackView.Immedite);
-
-            // Open drawer if necessary
-            if (!rightDrawer.expanded)
-                rightDrawer.open();
-
-            // Save a reference to the currently open indicator
-            selectedIndicator = indicator;
-            lastIndicator = indicator;
+            if (rightDrawer.expanded)
+                stackView.push(indicator.component, {}, LabsControls.StackView.Transition);
+            else
+                stackView.push(indicator.component, {}, LabsControls.StackView.Immedite);
+            rightDrawer.open();
         }
     }
 
