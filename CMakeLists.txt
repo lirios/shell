@@ -39,6 +39,8 @@ include(FeatureSummary)
 include(KDEInstallDirs)
 include(KDECompilerSettings)
 include(KDECMakeSettings)
+include(CheckIncludeFile)
+include(CheckSymbolExists)
 
 # Find pkg-config here so that it can be referenced soon
 find_package(PkgConfig)
@@ -84,6 +86,11 @@ endif()
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "" FORCE)
 endif()
+
+# Check for prctl
+check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
+check_symbol_exists(PR_SET_DUMPABLE "sys/prctl.h" HAVE_PR_SET_DUMPABLE)
+add_feature_info("prctl-dumpable" HAVE_PR_SET_DUMPABLE "Required to prevent ptrace on the compositor process")
 
 # Minimum version requirements
 set(QT_MIN_VERSION "5.5.0")

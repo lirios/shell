@@ -26,6 +26,7 @@
 
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QCommandLineParser>
+#include <QtCore/QFileInfo>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QApplication>
 
@@ -35,7 +36,24 @@
 #include "config.h"
 #include "gitsha1.h"
 
+#if HAVE_SYS_PRCTL_H
+#include <sys/prctl.h>
+#endif
+
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
+
+static void disablePtrace()
+{
+#if HAVE_PR_SET_DUMPABLE
+    // Allow ptrace when running inside gdb
+    const qint64 pid = QCoreApplication::applicationPid();
+    const QFileInfo process(QStringLiteral("/proc/%1/exe").arg(pid));
+    if (process.isSymLink() && process.symLinkTarget().endsWith(QLatin1String("/gdb")))
+        return;
+
+    ::prctl(PR_SET_DUMPABLE, 0);
+#endif
+}
 
 static void setupEnvironment()
 {
@@ -57,6 +75,9 @@ static void setupEnvironment()
 
 int main(int argc, char *argv[])
 {
+    // Disable ptrace except for gdb
+    disablePtrace();
+
     // Setup the environment
     setupEnvironment();
 
