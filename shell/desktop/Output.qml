@@ -28,7 +28,6 @@ import QtQuick 2.5
 import QtQuick.Window 2.2
 import Qt.labs.controls 1.0 as LabsControls
 import Qt.labs.controls.material 1.0 as LabsMaterial
-import Qt.labs.controls.universal 1.0 as LabsUniversal
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 import "../screens"
@@ -65,9 +64,6 @@ GreenIsland.WaylandOutput {
         LabsMaterial.Material.theme: LabsMaterial.Material.Dark
         LabsMaterial.Material.primary: LabsMaterial.Material.Blue
         LabsMaterial.Material.accent: LabsMaterial.Material.LightBlue
-
-        LabsUniversal.Universal.theme: LabsUniversal.Universal.Dark
-        LabsUniversal.Universal.accent: LabsUniversal.Universal.Cobalt
 
         Connections {
             target: SessionInterface
