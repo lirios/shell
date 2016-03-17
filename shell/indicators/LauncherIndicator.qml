@@ -39,6 +39,7 @@ Indicator {
         id: popover
         x: FluidUi.Units.largeSpacing
         y: 50 //-height - FluidUi.Units.largeSpacing
+        onAppLaunched: close()
     }
 }
 
