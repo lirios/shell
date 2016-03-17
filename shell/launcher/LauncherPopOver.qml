@@ -102,6 +102,7 @@ LabsControls.Popup {
 
                     MouseArea {
                         anchors.fill: parent
+                        acceptedButtons: Qt.NoButton
                         onWheel: {
                             if (wheel.angleDelta.x > 0 || wheel.angleDelta.y > 0) {
                                 // Go to the next page
