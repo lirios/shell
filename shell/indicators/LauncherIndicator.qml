@@ -33,12 +33,7 @@ Indicator {
     id: indicator
     name: "launcher"
     text: qsTr("Menu")
-    onTriggered: {
-        if (expanded)
-            popover.open();
-        else
-            popover.close();
-    }
+    onTriggered: popover.open()
 
     Launcher.LauncherPopOver {
         id: popover
