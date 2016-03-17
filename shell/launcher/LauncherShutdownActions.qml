@@ -40,9 +40,8 @@ RowLayout {
         //tooltip: qsTr("Log out from current session")
         enabled: SessionInterface.canLogOut
         onClicked: {
+            launcherPopOver.close();
             SessionInterface.requestLogOut();
-            if (indicator.expanded)
-                indicator.triggered(indicator);
         }
     }
 
@@ -52,9 +51,8 @@ RowLayout {
         //tooltip: qsTr("Power off the system")
         enabled: SessionInterface.canPowerOff
         onClicked: {
+            launcherPopOver.close();
             SessionInterface.requestPowerOff();
-            if (indicator.expanded)
-                indicator.triggered(indicator);
         }
     }
 
@@ -64,9 +62,8 @@ RowLayout {
         //tooltip: qsTr("Restart the system")
         enabled: SessionInterface.canRestart
         onClicked: {
+            launcherPopOver.close();
             SessionInterface.requestRestart();
-            if (indicator.expanded)
-                indicator.triggered(indicator);
         }
     }
 }
