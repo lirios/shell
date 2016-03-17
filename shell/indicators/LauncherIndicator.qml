@@ -40,18 +40,5 @@ Indicator {
         x: FluidUi.Units.largeSpacing
         y: 50 //-height - FluidUi.Units.largeSpacing
     }
-
-    /*
-    FluidUi.Loadable {
-        id: popover
-        component: Launcher.LauncherPopOver {
-            parent: panel.parent
-            origin: panel.mapToItem(panel.parent, 0, 0)
-            location: Qt.AlignBottom
-            onAppLaunched: __priv.shown = false
-            onDismissed: __priv.shown = false
-        }
-    }
-    */
 }
 
