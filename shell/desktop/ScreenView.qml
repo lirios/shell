@@ -41,7 +41,7 @@ Item {
         readonly property alias notifications: notificationsLayer
     }
 
-    readonly property alias currentWorkspace: workspacesLayer.currentItem
+    readonly property alias currentWorkspace: workspace //workspacesLayer.currentItem
     readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
     property alias windowsSwitcher: windowSwitcherLoader
 
@@ -69,31 +69,38 @@ Item {
         id: backgroundLayer
         anchors.fill: parent
         z: 0
+    }
 
-        // Desktop applets
-        Desktop {
-            id: desktopLayer
-            anchors.fill: parent
-            z: 1
-        }
+    // Desktop applets
+    Desktop {
+        id: desktopLayer
+        anchors.fill: parent
+        z: 1
+    }
 
-        // Workspaces
-        WorkspacesView {
-            id: workspacesLayer
-            anchors.fill: parent
-            z: 2
-        }
+    // Workspaces
+    WorkspacesView {
+        id: workspacesLayer
+        anchors.fill: parent
+        z: 2
+    }
 
-        // Panels
-        Loader {
-            id: shellLoader
-            anchors.fill: parent
-            asynchronous: true
-            active: primary
-            sourceComponent: Shell {}
+    // FIXME: Temporary workaround to make keyboard input work,
+    // apparently SwipeView captures input. An Item instead make it work.
+    Item {
+        id: workspace
+        anchors.fill: parent
+        z: 3
+    }
 
-            z: 3
-        }
+    // Panels
+    Loader {
+        id: shellLoader
+        anchors.fill: parent
+        asynchronous: true
+        active: primary
+        sourceComponent: Shell {}
+        z: 5
     }
 
     // Full screen windows can cover application windows and panels
