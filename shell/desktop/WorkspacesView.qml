@@ -30,7 +30,6 @@ import Fluid.Ui 1.0 as FluidUi
 
 LabsTemplates.SwipeView {
     id: swipeView
-    spacing: 400
     contentItem: ListView {
         model: swipeView.contentModel
         currentIndex: swipeView.currentIndex
@@ -43,7 +42,6 @@ LabsTemplates.SwipeView {
         highlightMoveDuration: FluidUi.Units.mediumDelay
         interactive: false
     }
-
     onCurrentIndexChanged: console.debug("Selected workspace", currentIndex)
 
     QtObject {
