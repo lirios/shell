@@ -19,6 +19,7 @@
         <file>desktop/Output.qml</file>
         <file>desktop/Workspace.qml</file>
         <file>desktop/ScreenZoom.qml</file>
+        <file>desktop/HotCorner.qml</file>
         <file>desktop/HotCorners.qml</file>
         <file>desktop/Desktop.qml</file>
         <file>desktop/Background.qml</file>
@@ -69,7 +70,5 @@
         <file>indicators/BatteryIndicator.qml</file>
         <file>ShellSettings.qml</file>
         <file>images/wallpaper.png</file>
-        <file>images/corner-ripple-ltr.png</file>
-        <file>images/corner-ripple-rtl.png</file>
     </qresource>
 </RCC>

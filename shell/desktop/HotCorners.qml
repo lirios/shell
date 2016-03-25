@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
-import Fluid.Ui 1.0 as FluidUi
 
 Item {
     signal topLeftTriggered()
@@ -61,124 +60,46 @@ Item {
     }
 
     // Top-left corner
-    Image {
+    HotCorner {
         id: topLeftCorner
         anchors {
             left: parent.left
             top: parent.top
-        }
-        source: "../images/corner-ripple-ltr.png"
-        sourceSize.width: width
-        sourceSize.height: height
-        width: FluidUi.Units.dp(32)
-        height: width
-        opacity: 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: FluidUi.Units.shortDuration
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton
-            hoverEnabled: true
-            onEntered: parent.opacity = 1.0
-            onExited: parent.opacity = 0.0
+            leftMargin: -width / 2
+            topMargin: -height / 2
         }
     }
 
     // Top-right corner
-    Image {
+    HotCorner {
         id: topRightCorner
         anchors {
             right: parent.right
             top: parent.top
-        }
-        source: "../images/corner-ripple-rtl.png"
-        sourceSize.width: width
-        sourceSize.height: height
-        width: FluidUi.Units.dp(32)
-        height: width
-        opacity: 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: FluidUi.Units.shortDuration
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton
-            hoverEnabled: true
-            onEntered: parent.opacity = 1.0
-            onExited: parent.opacity = 0.0
+            topMargin: -height / 2
+            rightMargin: -width / 2
         }
     }
 
     // Bottom-left corner
-    Image {
+    HotCorner {
         id: bottomLeftCorner
         anchors {
             left: parent.left
             bottom: parent.bottom
-        }
-        source: "../images/corner-ripple-ltr.png"
-        sourceSize.width: width
-        sourceSize.height: height
-        width: FluidUi.Units.dp(32)
-        height: width
-        transform: Rotation { origin.x: width / 2; origin.y: height ; angle: -90 }
-        opacity: 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: FluidUi.Units.shortDuration
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton
-            hoverEnabled: true
-            onEntered: parent.opacity = 1.0
-            onExited: parent.opacity = 0.0
+            leftMargin: -width / 2
+            bottomMargin: -height / 2
         }
     }
 
     // Bottom-right corner
-    Image {
+    HotCorner {
         id: bottomRightCorner
         anchors {
             right: parent.right
             bottom: parent.bottom
-        }
-        source: "../images/corner-ripple-rtl.png"
-        sourceSize.width: width
-        sourceSize.height: height
-        width: FluidUi.Units.dp(32)
-        height: width
-        transform: Rotation { origin.x: width / 2; origin.y: height / 2; angle: 90 }
-        opacity: 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: FluidUi.Units.shortDuration
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton
-            hoverEnabled: true
-            onEntered: parent.opacity = 1.0
-            onExited: parent.opacity = 0.0
+            rightMargin: -width / 2
+            bottomMargin: -height / 2
         }
     }
 }
