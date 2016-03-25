@@ -58,22 +58,6 @@ Item {
             for (i = 0; i < hawaiiCompositor.outputs.length; i++)
                 hawaiiCompositor.outputs[i].screenView.layers.workspaces.select(number);
         }
-
-        function switchWindowsBackward() {
-            // TODO: We should find out where the mouse pointer currently is
-            // and use that output instead of the primary one
-            if (!hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.active)
-                hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.active = true;
-            hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.previous();
-        }
-
-        function switchWindowsForward() {
-            // TODO: We should find out where the mouse pointer currently is
-            // and use that output instead of the primary one
-            if (!hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.active)
-                hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.active = true;
-            hawaiiCompositor.defaultOutput.screenView.windowsSwitcher.next();
-        }
     }
 
     /*
@@ -210,6 +194,7 @@ Item {
         }
     }
 
+    /*
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchWindows
@@ -221,6 +206,7 @@ Item {
         sequence: wmKeybindings.switchWindowsBackward
         onActivated: d.switchWindowsBackward()
     }
+    */
 
     Shortcut {
         context: Qt.ApplicationShortcut

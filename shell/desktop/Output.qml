@@ -131,9 +131,40 @@ GreenIsland.WaylandOutput {
         }
 
         GreenIsland.KeyEventFilter {
-            anchors.fill: parent
+            Keys.onPressed: {
+                blackRect.fadeOut();
 
-            Keys.onPressed: blackRect.fadeOut()
+                if (event.modifiers & Qt.MetaModifier) {
+                    if (output.primary) {
+                        if (event.key === Qt.Key_Tab) {
+                            screenView.windowSwitcher.next();
+                            event.accept = true;
+                            return;
+                        } else if (event.key === Qt.Key_Backtab) {
+                            screenView.windowSwitcher.previous();
+                            event.accept = true;
+                            return;
+                        }
+                    }
+                }
+
+                event.accept = false;
+            }
+
+            Keys.onReleased: {
+                if (event.modifiers & Qt.MetaModifier) {
+                    if (output.primary) {
+                        if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
+                            screenView.windowSwitcher.close();
+                            screenView.windowSwitcher.activate();
+                            event.accept = true;
+                            return;
+                        }
+                    }
+                }
+
+                event.accept = false;
+            }
         }
 
         /*
@@ -161,7 +192,7 @@ GreenIsland.WaylandOutput {
                         name: "session"
                         PropertyChanges { target: cursor; visible: true }
                         PropertyChanges { target: splashScreen; opacity: 0.0 }
-                        PropertyChanges { target: screenView.windowsSwitcher; active: false }
+                        //PropertyChanges { target: screenView.windowsSwitcher; active: false }
                         PropertyChanges { target: splashScreen; opacity: 0.0 }
                     },
                     State {

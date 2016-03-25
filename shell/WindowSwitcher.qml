@@ -27,43 +27,18 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls.material 1.0 as LabsMaterial
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
-Rectangle {
-    readonly property real thumbnailHeight: FluidUi.Units.dp(250)
+LabsControls.Popup {
+    readonly property real thumbnailSize: FluidUi.Units.dp(200)
 
-    signal closed()
-
-    id: root
-    color: "#80000000"
-    radius: FluidUi.Units.gu(0.5)
-    opacity: 0.0
-    width: output.availableGeometry.width * 0.7
-    height: Math.min(thumbnailHeight + layout.anchors.margins * 2 + layout.spacing * 2 + label.paintedHeight, output.availableGeometry.height * 0.7)
-
-    Behavior on opacity {
-        NumberAnimation {
-            easing.type: Easing.InSine
-            duration: FluidUi.Units.shortDuration
-        }
-    }
-
-    // Keyboard event handling
-    GreenIsland.KeyEventFilter {
-        Keys.onReleased: {
-            if (event.key == Qt.Key_Super_L || event.key == Qt.Key_Super_R) {
-                // Give focus to the selected window
-                var window = listView.model.get(listView.currentIndex);
-                if (window)
-                    window.active = true;
-
-                // Keys released, deactivate switcher
-                root.closed();
-            }
-        }
-    }
+    id: windowSwitcher
+    focus: true
+    modal: true
+    implicitWidth: output.availableGeometry.width * 0.7
+    implicitHeight: thumbnailSize + label.paintedHeight + (2 * layout.spacing) + FluidUi.Units.largeSpacing
 
     Component {
         id: thumbnailComponent
@@ -73,10 +48,10 @@ Rectangle {
             readonly property real ratio: window.surface.size.width / window.surface.size.height
 
             id: wrapper
-            width: thumbnailHeight * ratio
-            height: thumbnailHeight
-            color: wrapper.ListView.isCurrentItem ? Themes.Theme.palette.panel.selectedBackgroundColor : "transparent"
-            radius: FluidUi.Units.gu(0.5)
+            width: height * ratio
+            height: thumbnailSize
+            color: wrapper.ListView.isCurrentItem ? LabsMaterial.Material.accent : "transparent"
+            radius: FluidUi.Units.dp(4)
 
             GreenIsland.WaylandQuickItem {
                 id: windowItem
@@ -113,21 +88,19 @@ Rectangle {
 
     ColumnLayout {
         id: layout
-        anchors {
-            fill: parent
-            margins: FluidUi.Units.largeSpacing
-        }
+        anchors.fill: parent
         spacing: FluidUi.Units.smallSpacing
 
         ListView {
             id: listView
             clip: true
+            focus: true
             orientation: ListView.Horizontal
             model: hawaiiCompositor.windowsModel
             spacing: FluidUi.Units.smallSpacing
             highlightMoveDuration: FluidUi.Units.shortDuration
             delegate: thumbnailComponent
-            currentIndex: 0
+            currentIndex: -1
 
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -137,10 +110,7 @@ Rectangle {
             id: label
             text: listView.currentItem ? listView.currentItem.title : qsTr("Untitled")
             wrapMode: Text.Wrap
-            color: Themes.Theme.palette.panel.textColor
             font.bold: true
-            style: Text.Raised
-            styleColor: Themes.Theme.palette.panel.textEffectColor
             maximumLineCount: 2
             horizontalAlignment: Text.AlignHCenter
 
@@ -148,16 +118,18 @@ Rectangle {
         }
     }
 
-    Component.onCompleted: {
-        // Show with an animtation
-        opacity = 1.0;
+    function activate() {
+        var window = listView.model.get(listView.currentIndex);
+        if (window)
+            window.active = true;
     }
 
     function previous() {
         if (listView.currentIndex == 0)
-            listView.currentIndex = listView.count - 1;
+            listView.currentIndex = listView.count == 0 ? 0 : listView.count - 1;
         else
             listView.currentIndex--;
+        open();
     }
 
     function next() {
@@ -165,5 +137,6 @@ Rectangle {
             listView.currentIndex = 0;
         else
             listView.currentIndex++;
+        open();
     }
 }

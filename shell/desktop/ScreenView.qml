@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
+import Qt.labs.controls 1.0 as LabsControls
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
@@ -43,7 +44,7 @@ Item {
 
     readonly property alias currentWorkspace: workspace //workspacesLayer.currentItem
     readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
-    property alias windowsSwitcher: windowSwitcherLoader
+    readonly property alias windowSwitcher: windowSwitcher
 
     id: screenView
 
@@ -134,31 +135,10 @@ Item {
     }
 
     // Windows switcher
-    Loader {
-        id: windowSwitcherLoader
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-        }
-        active: false
-        asynchronous: true
-        source: "../WindowSwitcher.qml"
-        z: 1000
-
-        Connections {
-            target: windowSwitcherLoader.item
-            onClosed: windowSwitcherLoader.active = false
-        }
-
-        function previous() {
-            if (item)
-                item.previous();
-        }
-
-        function next() {
-            if (item)
-                item.next();
-        }
+    WindowSwitcher {
+        id: windowSwitcher
+        x: (output.availableGeometry.width - width) / 2
+        y: (output.availableGeometry.height - height) / 2
     }
 
     function setAvailableGeometry(h) {
