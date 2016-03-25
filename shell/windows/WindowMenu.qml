@@ -25,46 +25,36 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Qt.labs.controls 1.0 as LabsControls
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
-CustomComponents.PopupMenu {
-    property var window
+LabsControls.Menu {
+    LabsControls.MenuItem {
+        text: qsTr("Minimize")
+    }
 
-    id: menu
-    width: FluidUi.Units.dp(200)
-    height: column.height
+    LabsControls.MenuItem {
+        text: qsTr("Restore")
+    }
 
-    Column {
-        id: column
-        width: parent.width
+    LabsControls.MenuItem {
+        text: qsTr("Maximize")
+    }
 
-        CustomComponents.MenuItem {
-            text: qsTr("Minimize")
-        }
+    CustomComponents.MenuSeparator {}
 
-        CustomComponents.MenuItem {
-            text: qsTr("Restore")
-        }
+    LabsControls.MenuItem {
+        text: qsTr("Move")
+    }
 
-        CustomComponents.MenuItem {
-            text: qsTr("Maximize")
-        }
+    LabsControls.MenuItem {
+        text: qsTr("Resize")
+    }
 
-        CustomComponents.MenuSeparator {}
+    CustomComponents.MenuSeparator {}
 
-        CustomComponents.MenuItem {
-            text: qsTr("Move")
-        }
-
-        CustomComponents.MenuItem {
-            text: qsTr("Resize")
-        }
-
-        CustomComponents.MenuSeparator {}
-
-        CustomComponents.MenuItem {
-            text: qsTr("Close")
-        }
+    LabsControls.MenuItem {
+        text: qsTr("Close")
     }
 }
