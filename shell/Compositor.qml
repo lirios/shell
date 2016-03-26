@@ -33,6 +33,8 @@ GreenIsland.WaylandCompositor {
     readonly property alias outputs: d.outputs
     readonly property alias primaryScreen: screenManager.primaryScreen
 
+    property int idleInhibit: 0
+
     readonly property alias windowsModel: windowsModel
     readonly property alias applicationManager: applicationManager
     readonly property alias settings: settings
@@ -135,6 +137,21 @@ GreenIsland.WaylandCompositor {
         }
     }
 
+    // Idle manager
+    Timer {
+        id: idleTimer
+        interval: settings.session.idleDelay * 1000
+        running: true
+        onTriggered: {
+            var i, output;
+            for (i = 0; i < d.outputs.length; i++) {
+                output = d.outputs[i];
+                if (idleInhibit + output.idleInhibit == 0)
+                    output.idle();
+            }
+        }
+    }
+
     // Windows
     ListModel {
         id: windowsModel
@@ -182,5 +199,23 @@ GreenIsland.WaylandCompositor {
         id: outputComponent
 
         Output {}
+    }
+
+    /*
+     * Methods
+     */
+
+    function wake() {
+        var i;
+        for (i = 0; i < d.outputs.length; i++) {
+            idleTimer.restart();
+            d.outputs[i].wake();
+        }
+    }
+
+    function idle() {
+        var i;
+        for (i = 0; i < d.outputs.length; i++)
+            d.outputs[i].idle();
     }
 }

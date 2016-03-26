@@ -35,6 +35,8 @@ import "../screens"
 GreenIsland.WaylandOutput {
     readonly property bool primary: hawaiiCompositor.primaryScreen === nativeScreen
 
+    property int idleInhibit: 0
+
     readonly property alias surfacesArea: screenView.currentWorkspace
     readonly property alias screenView: screenView
 
@@ -76,11 +78,12 @@ GreenIsland.WaylandOutput {
         }
 
         /*
-         * Power output off
+         * Idle manager
          */
 
         Rectangle {
             id: blackRect
+            parent: window.overlay
             anchors.fill: parent
             color: "black"
             opacity: 0.0
@@ -98,7 +101,7 @@ GreenIsland.WaylandOutput {
             }
 
             Timer {
-                id: fadeOutTimer
+                id: blackRectTimer
                 interval: 1000
                 onTriggered: {
                     blackRectAnimator.from = 1.0;
@@ -108,7 +111,7 @@ GreenIsland.WaylandOutput {
             }
 
             function fadeIn() {
-                if (opacity == 1.0)
+                if (blackRect.opacity == 1.0)
                     return;
                 blackRectAnimator.from = 0.0;
                 blackRectAnimator.to = 1.0;
@@ -116,25 +119,25 @@ GreenIsland.WaylandOutput {
             }
 
             function fadeOut() {
-                if (opacity == 0.0)
+                if (blackRect.opacity == 0.0)
                     return;
                 // Use a timer to compensate for power on time
-                output.powerState = GreenIsland.WaylandOutput.PowerStateOn;
-                fadeOutTimer.start();
+                blackRectTimer.start();
             }
         }
 
-        Timer {
-            id: outputPowerOffTimer
-            interval: 1000
-            onTriggered: blackRect.fadeIn()
-        }
+        /*
+         * Keyboard handler
+         */
 
         GreenIsland.KeyEventFilter {
             Keys.onPressed: {
-                blackRect.fadeOut();
+                // Input wakes the output
+                hawaiiCompositor.wake();
 
+                // Handle Meta modifier
                 if (event.modifiers & Qt.MetaModifier) {
+                    // Open window switcher
                     if (output.primary) {
                         if (event.key === Qt.Key_Tab) {
                             screenView.windowSwitcher.next();
@@ -152,7 +155,12 @@ GreenIsland.WaylandOutput {
             }
 
             Keys.onReleased: {
+                // Input wakes the output
+                hawaiiCompositor.wake();
+
+                // Handle Meta modifier
                 if (event.modifiers & Qt.MetaModifier) {
+                    // Close window switcher
                     if (output.primary) {
                         if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
                             screenView.windowSwitcher.close();
@@ -175,8 +183,14 @@ GreenIsland.WaylandOutput {
             id: localPointerTracker
             anchors.fill: parent
             globalTracker: globalPointerTracker
-            onMouseXChanged: blackRect.fadeOut()
-            onMouseYChanged: blackRect.fadeOut()
+            onMouseXChanged: {
+                // Input wakes the output
+                hawaiiCompositor.wake();
+            }
+            onMouseYChanged: {
+                // Input wakes the output
+                hawaiiCompositor.wake();
+            }
 
             Item {
                 id: mainItem
@@ -216,7 +230,7 @@ GreenIsland.WaylandOutput {
                         PropertyChanges { target: screenView.windowsSwitcherLoader; active: false }
                         PropertyChanges { target: logoutLoader; loadComponent: false }
                         PropertyChanges { target: lockScreenLoader; loadComponent: true }
-                        PropertyChanges { target: outputPowerOffTimer; running: true }
+                        StateChangeScript { script: output.idle() }
                     },
                     State {
                         name: "shield"
@@ -382,8 +396,22 @@ GreenIsland.WaylandOutput {
                 inputDevice: output.compositor.defaultInputDevice
                 x: localPointerTracker.mouseX - hotspotX
                 y: localPointerTracker.mouseY - hotspotY
-                visible: globalPointerTracker.output === output
+                visible: globalPointerTracker.output === output &&
+                         output.powerState === GreenIsland.WaylandOutput.PowerStateOn
             }
         }
+    }
+
+    /*
+     * Methods
+     */
+
+    function wake() {
+        blackRect.fadeOut();
+        output.powerState = GreenIsland.WaylandOutput.PowerStateOn;
+    }
+
+    function idle() {
+        blackRect.fadeIn();
     }
 }

@@ -33,6 +33,7 @@ FluidCore.Object {
     readonly property alias keyboard: keyboardSettings
     readonly property alias background: bgSettings
     readonly property alias lockScreen: lockSettings
+    readonly property alias session: sessionSettings
     readonly property int numWorkspaces: 4
 
     id: shellSettings
@@ -58,6 +59,16 @@ FluidCore.Object {
         schema.id: "org.hawaiios.desktop.peripherals.keyboard"
         schema.path: "/org/hawaiios/desktop/peripherals/keyboard/"
         onSettingsChanged: shellSettings.applyKeymapSettings()
+    }
+
+    /*
+     * Session
+     */
+
+    Settings.Settings {
+        id: sessionSettings
+        schema.id: "org.hawaiios.session"
+        schema.path: "/org/hawaiios/session/"
     }
 
     /*
