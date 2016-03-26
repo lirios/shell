@@ -36,6 +36,8 @@
 #include "loginmanager/loginmanager.h"
 #include "powermanager/powermanager.h"
 #include "sessionmanager.h"
+#include "sessionmanager/screensaver/screensaver.h"
+#include "sessionmanager/screensaver/screensaveradaptor.h"
 
 #include <sys/types.h>
 #include <signal.h>
@@ -46,6 +48,7 @@ SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
     , m_loginManager(new LoginManager(this, this))
     , m_powerManager(new PowerManager(this))
+    , m_screenSaver(new ScreenSaver(this))
     , m_idle(false)
     , m_locked(false)
 {
@@ -60,6 +63,21 @@ SessionManager::SessionManager(QObject *parent)
     // Logout session before the system goes off
     connect(m_loginManager, &LoginManager::logOutRequested,
             this, &SessionManager::logOut);
+}
+
+bool SessionManager::registerWithDBus()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    new ScreenSaverAdaptor(m_screenSaver);
+    if (!bus.registerObject(QStringLiteral("/org/freedesktop/ScreenSaver"), m_screenSaver)) {
+        qCWarning(SESSION_MANAGER,
+                  "Couldn't register /org/freedesktop/ScreenSaver D-Bus object: %s",
+                  qPrintable(bus.lastError().message()));
+        return false;
+    }
+
+    return true;
 }
 
 bool SessionManager::isIdle() const

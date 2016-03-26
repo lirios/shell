@@ -36,7 +36,7 @@ class ScreenSaver : public QObject
 {
     Q_OBJECT
 public:
-    ScreenSaver(QObject *parent = 0);
+    ScreenSaver(QObject *parent = Q_NULLPTR);
     ~ScreenSaver();
 
     bool GetActive();
@@ -54,8 +54,6 @@ public:
 
     uint Throttle(const QString &appName, const QString &reason);
     void UnThrottle(uint cookie);
-
-    static bool registerWithDBus(ScreenSaver *instance);
 
 Q_SIGNALS:
     void ActiveChanged(bool in);

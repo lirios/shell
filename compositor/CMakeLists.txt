@@ -4,13 +4,13 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/headers
     ${CMAKE_BINARY_DIR}/headers
     ${CMAKE_SOURCE_DIR}/3rdparty
+    ${CMAKE_CURRENT_BINARY_DIR}/sessionmanager/screensaver
 )
 
 set(SOURCES
     application.cpp
     main.cpp
     processlauncher/processlauncher.cpp
-    screensaver/screensaver.cpp
     sessionmanager/authenticator.cpp
     sessionmanager/sessioninterface.cpp
     sessionmanager/sessionmanager.cpp
@@ -26,14 +26,15 @@ set(SOURCES
     sessionmanager/powermanager/systemdpowerbackend.h
     sessionmanager/powermanager/upowerpowerbackend.cpp
     sessionmanager/powermanager/upowerpowerbackend.h
+    sessionmanager/screensaver/screensaver.cpp
 )
 
 qt5_add_dbus_adaptor(SOURCES processlauncher/org.hawaiios.ProcessLauncher.xml
                      processlauncher/processlauncher.h ProcessLauncher
                      processlauncheradaptor ProcessLauncherAdaptor)
-qt5_add_dbus_adaptor(SOURCES screensaver/org.freedesktop.ScreenSaver.xml
-                     screensaver/screensaver.h ScreenSaver
-                     screensaveradaptor ScreenSaverAdaptor)
+qt5_add_dbus_adaptor(SOURCES sessionmanager/screensaver/org.freedesktop.ScreenSaver.xml
+                     sessionmanager/screensaver/screensaver.h ScreenSaver
+                     sessionmanager/screensaver/screensaveradaptor ScreenSaverAdaptor)
 
 qt5_add_resources(RESOURCES ${CMAKE_SOURCE_DIR}/shell/hawaii.qrc)
 

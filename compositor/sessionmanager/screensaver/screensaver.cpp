@@ -28,7 +28,6 @@
 #include <QtDBus/QDBusError>
 
 #include "screensaver.h"
-#include "screensaveradaptor.h"
 
 Q_LOGGING_CATEGORY(SCREENSAVER, "hawaii.screensaver")
 
@@ -108,21 +107,6 @@ void ScreenSaver::UnThrottle(uint cookie)
 {
     // TODO:
     Q_UNUSED(cookie);
-}
-
-bool ScreenSaver::registerWithDBus(ScreenSaver *instance)
-{
-    QDBusConnection bus = QDBusConnection::sessionBus();
-
-    new ScreenSaverAdaptor(instance);
-    if (!bus.registerObject(QStringLiteral("/org/freedesktop/ScreenSaver"), instance)) {
-        qCWarning(SCREENSAVER,
-                  "Couldn't register /org/freedesktop/ScreenSaver D-Bus object: %s",
-                  qPrintable(bus.lastError().message()));
-        return false;
-    }
-
-    return true;
 }
 
 #include "moc_screensaver.cpp"

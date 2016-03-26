@@ -32,7 +32,6 @@
 
 #include "application.h"
 #include "processlauncher/processlauncher.h"
-#include "screensaver/screensaver.h"
 #include "sessionmanager/sessioninterface.h"
 #include "sessionmanager/sessionmanager.h"
 #include "sigwatch/sigwatch.h"
@@ -57,9 +56,6 @@ Application::Application(QObject *parent)
 
     // Process launcher
     m_launcher = new ProcessLauncher(this);
-
-    // Screen saver
-    m_screenSaver = new ScreenSaver(this);
 
     // Session manager
     m_sessionManager = new SessionManager(this);
@@ -102,12 +98,12 @@ void Application::startup()
         QCoreApplication::exit(1);
     }
 
-    // Process launcher
-    if (!ProcessLauncher::registerWithDBus(m_launcher))
+    // Session manager
+    if (!m_sessionManager->registerWithDBus())
         QCoreApplication::exit(1);
 
-    // Screen saver
-    if (!ScreenSaver::registerWithDBus(m_screenSaver))
+    // Process launcher
+    if (!ProcessLauncher::registerWithDBus(m_launcher))
         QCoreApplication::exit(1);
 
     // Session interface
@@ -131,9 +127,6 @@ void Application::shutdown()
 {
     m_launcher->deleteLater();
     m_launcher = Q_NULLPTR;
-
-    m_screenSaver->deleteLater();
-    m_screenSaver = Q_NULLPTR;
 
     m_homeApp->deleteLater();
     m_homeApp = Q_NULLPTR;

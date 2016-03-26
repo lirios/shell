@@ -53,7 +53,6 @@ private:
     QUrl m_url;
     HomeApplication *m_homeApp;
     ProcessLauncher *m_launcher;
-    ScreenSaver *m_screenSaver;
     SessionManager *m_sessionManager;
     bool m_failSafe;
     bool m_started;

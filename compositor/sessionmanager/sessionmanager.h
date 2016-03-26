@@ -34,12 +34,15 @@ Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 
 class LoginManager;
 class PowerManager;
+class ScreenSaver;
 
 class SessionManager : public QObject
 {
     Q_OBJECT
 public:
-    SessionManager(QObject *parent = 0);
+    SessionManager(QObject *parent = Q_NULLPTR);
+
+    bool registerWithDBus();
 
     bool isIdle() const;
     void setIdle(bool value);
@@ -82,6 +85,7 @@ public Q_SLOTS:
 private:
     LoginManager *m_loginManager;
     PowerManager *m_powerManager;
+    ScreenSaver *m_screenSaver;
     QList<qint64> m_processes;
 
     bool m_idle;
