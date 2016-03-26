@@ -39,8 +39,6 @@ public:
     ScreenSaver(QObject *parent = 0);
     ~ScreenSaver();
 
-    bool registerInterface();
-
     bool GetActive();
     bool SetActive(bool state);
 
