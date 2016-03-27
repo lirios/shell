@@ -142,6 +142,7 @@ GreenIsland.WaylandCompositor {
         id: idleTimer
         interval: settings.session.idleDelay * 1000
         running: true
+        repeat: true
         onTriggered: {
             var i, output;
             for (i = 0; i < d.outputs.length; i++) {
