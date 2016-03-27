@@ -71,6 +71,8 @@ GreenIsland.WaylandOutput {
             target: SessionInterface
             onSessionLocked: mainItem.state = "lock"
             onSessionUnlocked: mainItem.state = "session"
+            onIdleInhibitRequested: hawaiiCompositor.idleInhibit++
+            onIdleUninhibitRequested: hawaiiCompositor.idleInhibit--
             onShutdownRequestCanceled: mainItem.state = "session"
             onLogOutRequested: mainItem.state = "logout"
             onPowerOffRequested: mainItem.state = "poweroff"
