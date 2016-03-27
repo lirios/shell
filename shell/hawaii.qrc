@@ -5,7 +5,6 @@
         <file>components/Clock.qml</file>
         <file>components/Tooltip.qml</file>
         <file>components/MenuSeparator.qml</file>
-        <file>components/private</file>
         <file>components/private/PopupBase.qml</file>
         <file>components/ToolButton.qml</file>
         <file>windows/WindowMenu.qml</file>
