@@ -32,6 +32,7 @@
 #include <qt5xdg/xdgautostart.h>
 #include <qt5xdg/xdgdesktopfile.h>
 
+#include "authenticator.h"
 #include "cmakedirs.h"
 #include "loginmanager/loginmanager.h"
 #include "powermanager/powermanager.h"
@@ -44,8 +45,60 @@
 
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 
+/*
+ * CustomAuthenticator
+ */
+
+class CustomAuthenticator : public QObject
+{
+public:
+    CustomAuthenticator(SessionManager *parent, const QJSValue &callback)
+        : m_parent(parent)
+        , m_callback(callback)
+        , m_succeded(false)
+    {
+        connect(m_parent->m_authenticator, &Authenticator::authenticationSucceded, this, [=] {
+            m_succeded = true;
+            authenticate();
+        });
+        connect(m_parent->m_authenticator, &Authenticator::authenticationFailed, this, [=] {
+            m_succeded = false;
+            authenticate();
+        });
+        connect(m_parent->m_authenticator, &Authenticator::authenticationError, this, [=] {
+            m_succeded = false;
+            authenticate();
+        });
+    }
+
+private:
+    SessionManager *m_parent;
+    QJSValue m_callback;
+    bool m_succeded;
+
+private Q_SLOTS:
+    void authenticate() {
+        if (m_callback.isCallable())
+            m_callback.call(QJSValueList() << m_succeded);
+
+        m_parent->m_authRequested = false;
+
+        if (m_succeded)
+            m_parent->setLocked(false);
+
+        deleteLater();
+    }
+};
+
+/*
+ * SessionManager
+ */
+
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
+    , m_authenticatorThread(new QThread(this))
+    , m_authRequested(false)
+    , m_authenticator(new Authenticator)
     , m_loginManager(new LoginManager(this, this))
     , m_powerManager(new PowerManager(this))
     , m_screenSaver(new ScreenSaver(this))
@@ -63,6 +116,17 @@ SessionManager::SessionManager(QObject *parent)
     // Logout session before the system goes off
     connect(m_loginManager, &LoginManager::logOutRequested,
             this, &SessionManager::logOut);
+
+    // Authenticate in a separate thread
+    m_authenticator->moveToThread(m_authenticatorThread);
+    m_authenticatorThread->start();
+}
+
+SessionManager::~SessionManager()
+{
+    m_authenticatorThread->quit();
+    m_authenticatorThread->wait();
+    m_authenticator->deleteLater();
 }
 
 bool SessionManager::registerWithDBus()
@@ -117,6 +181,11 @@ void SessionManager::setLocked(bool value)
 
     m_locked = value;
     Q_EMIT lockedChanged(value);
+
+    if (value)
+        Q_EMIT sessionLocked();
+    else
+        Q_EMIT sessionUnlocked();
 }
 
 bool SessionManager::canLock() const
@@ -165,23 +234,15 @@ bool SessionManager::canHybridSleep()
     return m_powerManager->capabilities() & PowerManager::HybridSleep;
 }
 
-void SessionManager::lockSession()
+void SessionManager::autostart()
 {
-    m_loginManager->lockSession();
-}
+    Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
+        if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
+            continue;
 
-void SessionManager::unlockSession()
-{
-    m_loginManager->unlockSession();
-}
-
-void SessionManager::startNewSession()
-{
-}
-
-void SessionManager::activateSession(int index)
-{
-    m_loginManager->switchToVt(index);
+        qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
+        //m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
+    }
 }
 
 void SessionManager::logOut()
@@ -218,15 +279,77 @@ void SessionManager::hybridSleep()
     m_powerManager->hybridSleep();
 }
 
-void SessionManager::autostart()
+void SessionManager::lockSession()
 {
-    Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
-        if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
-            continue;
+    m_loginManager->lockSession();
+}
 
-        qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
-        //m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
-    }
+void SessionManager::unlockSession(const QString &password, const QJSValue &callback)
+{
+    if (m_authRequested)
+        return;
+
+    (void)new CustomAuthenticator(this, callback);
+    QMetaObject::invokeMethod(m_authenticator, "authenticate", Q_ARG(QString, password));
+    m_authRequested = true;
+}
+
+void SessionManager::startNewSession()
+{
+    // TODO: Implement
+    qWarning("SessionManager::startNewSession() is not implemented");
+}
+
+void SessionManager::activateSession(int index)
+{
+    m_loginManager->switchToVt(index);
+}
+
+void SessionManager::requestLogOut()
+{
+    if (!canLogOut())
+        return;
+    Q_EMIT logOutRequested();
+}
+
+void SessionManager::requestPowerOff()
+{
+    if (!canPowerOff())
+        return;
+    Q_EMIT powerOffRequested();
+}
+
+void SessionManager::requestRestart()
+{
+    if (!canRestart())
+        return;
+    Q_EMIT restartRequested();
+}
+
+void SessionManager::requestSuspend()
+{
+    if (!canSuspend())
+        return;
+    Q_EMIT suspendRequested();
+}
+
+void SessionManager::requestHibernate()
+{
+    if (!canHibernate())
+        return;
+    Q_EMIT hibernateRequested();
+}
+
+void SessionManager::requestHybridSleep()
+{
+    if (!canHybridSleep())
+        return;
+    Q_EMIT hybridSleepRequested();
+}
+
+void SessionManager::cancelShutdownRequest()
+{
+    Q_EMIT shutdownRequestCanceled();
 }
 
 #include "moc_sessionmanager.cpp"

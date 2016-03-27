@@ -29,9 +29,13 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
+#include <QtCore/QThread>
+#include <QtQml/QJSValue>
 
 Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 
+class Authenticator;
+class CustomAuthenticator;
 class LoginManager;
 class PowerManager;
 class ScreenSaver;
@@ -39,8 +43,18 @@ class ScreenSaver;
 class SessionManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool locked READ isLocked NOTIFY lockedChanged)
+    Q_PROPERTY(bool canLock READ canLock CONSTANT)
+    Q_PROPERTY(bool canStartNewSession READ canStartNewSession CONSTANT)
+    Q_PROPERTY(bool canLogOut READ canLogOut CONSTANT)
+    Q_PROPERTY(bool canPowerOff READ canPowerOff CONSTANT)
+    Q_PROPERTY(bool canRestart READ canRestart CONSTANT)
+    Q_PROPERTY(bool canSuspend READ canSuspend CONSTANT)
+    Q_PROPERTY(bool canHibernate READ canHibernate CONSTANT)
+    Q_PROPERTY(bool canHybridSleep READ canHybridSleep CONSTANT)
 public:
     SessionManager(QObject *parent = Q_NULLPTR);
+    virtual ~SessionManager();
 
     bool registerWithDBus();
 
@@ -51,7 +65,6 @@ public:
     void idleUninhibit();
 
     bool isLocked() const;
-    void setLocked(bool value);
 
     bool canLock() const;
     bool canStartNewSession();
@@ -62,10 +75,25 @@ public:
     bool canHibernate();
     bool canHybridSleep();
 
-    void lockSession();
-    void unlockSession();
-    void startNewSession();
-    void activateSession(int index);
+Q_SIGNALS:
+    void idleChanged(bool value);
+    void lockedChanged(bool value);
+
+    void sessionLocked();
+    void sessionUnlocked();
+
+    void loggedOut();
+
+    void logOutRequested();
+    void powerOffRequested();
+    void restartRequested();
+    void suspendRequested();
+    void hibernateRequested();
+    void hybridSleepRequested();
+    void shutdownRequestCanceled();
+
+public Q_SLOTS:
+    void autostart();
 
     void logOut();
     void powerOff();
@@ -74,15 +102,24 @@ public:
     void hibernate();
     void hybridSleep();
 
-Q_SIGNALS:
-    void idleChanged(bool value);
-    void lockedChanged(bool value);
-    void loggedOut();
+    void lockSession();
+    void unlockSession(const QString &password, const QJSValue &callback);
+    void startNewSession();
+    void activateSession(int index);
 
-public Q_SLOTS:
-    void autostart();
+    void requestLogOut();
+    void requestPowerOff();
+    void requestRestart();
+    void requestSuspend();
+    void requestHibernate();
+    void requestHybridSleep();
+    void cancelShutdownRequest();
 
 private:
+    QThread *m_authenticatorThread;
+    bool m_authRequested;
+    Authenticator *m_authenticator;
+
     LoginManager *m_loginManager;
     PowerManager *m_powerManager;
     ScreenSaver *m_screenSaver;
@@ -90,6 +127,10 @@ private:
 
     bool m_idle;
     bool m_locked;
+
+    void setLocked(bool value);
+
+    friend class CustomAuthenticator;
 };
 
 #endif // SESSIONMANAGER_H

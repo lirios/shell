@@ -32,7 +32,6 @@
 
 #include "application.h"
 #include "processlauncher/processlauncher.h"
-#include "sessionmanager/sessioninterface.h"
 #include "sessionmanager/sessionmanager.h"
 #include "sigwatch/sigwatch.h"
 
@@ -108,7 +107,7 @@ void Application::startup()
 
     // Session interface
     m_homeApp->setContextProperty(QStringLiteral("SessionInterface"),
-                                  new SessionInterface(m_sessionManager));
+                                  m_sessionManager);
 
     // Load the compositor
     if (!m_homeApp->loadUrl(m_url))

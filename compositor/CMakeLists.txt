@@ -12,7 +12,6 @@ set(SOURCES
     main.cpp
     processlauncher/processlauncher.cpp
     sessionmanager/authenticator.cpp
-    sessionmanager/sessioninterface.cpp
     sessionmanager/sessionmanager.cpp
     sessionmanager/loginmanager/loginmanager.cpp
     sessionmanager/loginmanager/loginmanagerbackend.cpp
