@@ -32,6 +32,8 @@
 
 Q_DECLARE_LOGGING_CATEGORY(SCREENSAVER)
 
+class SessionManager;
+
 class ScreenSaver : public QObject
 {
     Q_OBJECT
@@ -60,6 +62,7 @@ Q_SIGNALS:
 
 private:
     bool m_active;
+    SessionManager *m_sessionManager;
 };
 
 #endif // SCREENSAVER_H

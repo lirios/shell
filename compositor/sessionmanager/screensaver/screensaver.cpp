@@ -28,12 +28,14 @@
 #include <QtDBus/QDBusError>
 
 #include "screensaver.h"
+#include "sessionmanager/sessionmanager.h"
 
 Q_LOGGING_CATEGORY(SCREENSAVER, "hawaii.screensaver")
 
 ScreenSaver::ScreenSaver(QObject *parent)
     : QObject(parent)
     , m_active(false)
+    , m_sessionManager(qobject_cast<SessionManager *>(parent))
 {
 }
 
@@ -78,7 +80,7 @@ uint ScreenSaver::Inhibit(const QString &appName, const QString &reason)
     static uint cookieSeed = 0;
     int newCookie = cookieSeed++;
 
-    //Compositor::instance()->incrementIdleInhibit();
+    Q_EMIT m_sessionManager->idleInhibitRequested();
 
     return newCookie;
 }
@@ -87,7 +89,7 @@ void ScreenSaver::UnInhibit(uint cookie)
 {
     Q_UNUSED(cookie)
 
-    //Compositor::instance()->decrementIdleInhibit();
+    m_sessionManager->idleUninhibitRequested();
 }
 
 void ScreenSaver::Lock()

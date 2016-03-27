@@ -61,9 +61,6 @@ public:
     bool isIdle() const;
     void setIdle(bool value);
 
-    void idleInhibit();
-    void idleUninhibit();
-
     bool isLocked() const;
 
     bool canLock() const;
@@ -83,6 +80,9 @@ Q_SIGNALS:
     void sessionUnlocked();
 
     void loggedOut();
+
+    void idleInhibitRequested();
+    void idleUninhibitRequested();
 
     void logOutRequested();
     void powerOffRequested();

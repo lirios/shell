@@ -159,16 +159,6 @@ void SessionManager::setIdle(bool value)
     Q_EMIT idleChanged(value);
 }
 
-void SessionManager::idleInhibit()
-{
-    //Compositor::instance()->incrementIdleInhibit();
-}
-
-void SessionManager::idleUninhibit()
-{
-    //Compositor::instance()->decrementIdleInhibit();
-}
-
 bool SessionManager::isLocked() const
 {
     return m_locked;
