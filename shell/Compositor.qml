@@ -144,12 +144,16 @@ GreenIsland.WaylandCompositor {
         running: true
         repeat: true
         onTriggered: {
-            var i, output;
+            var i, output, idleHint = false;
             for (i = 0; i < d.outputs.length; i++) {
                 output = d.outputs[i];
-                if (idleInhibit + output.idleInhibit == 0)
+                if (idleInhibit + output.idleInhibit == 0) {
                     output.idle();
+                    idleHint = true;
+                }
             }
+
+            SessionInterface.idle = idleHint;
         }
     }
 
@@ -212,11 +216,15 @@ GreenIsland.WaylandCompositor {
             idleTimer.restart();
             d.outputs[i].wake();
         }
+
+        SessionInterface.idle = false;
     }
 
     function idle() {
         var i;
         for (i = 0; i < d.outputs.length; i++)
             d.outputs[i].idle();
+
+        SessionInterface.idle = true;
     }
 }

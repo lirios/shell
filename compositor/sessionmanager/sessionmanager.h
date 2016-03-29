@@ -43,6 +43,7 @@ class ScreenSaver;
 class SessionManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool idle READ isIdle WRITE setIdle NOTIFY idleChanged)
     Q_PROPERTY(bool locked READ isLocked NOTIFY lockedChanged)
     Q_PROPERTY(bool canLock READ canLock CONSTANT)
     Q_PROPERTY(bool canStartNewSession READ canStartNewSession CONSTANT)
