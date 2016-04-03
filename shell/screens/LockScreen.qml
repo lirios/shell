@@ -121,7 +121,7 @@ FluidUi.Showable {
         }
 
         Item {
-            Layout.fillHeight: true
+            Layout.preferredHeight: FluidUi.Units.dp(100)
         }
 
         LabsControls.Pane {

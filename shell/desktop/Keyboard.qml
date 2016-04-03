@@ -31,6 +31,5 @@ InputPanel {
     id: keyboard
     anchors.left: parent.left
     anchors.right: parent.right
-    y: active ? parent.height - keyboard.height : parent.height
     visible: active
 }

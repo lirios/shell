@@ -134,9 +134,11 @@ GreenIsland.WaylandOutput {
 
         Loader {
             parent: window.overlay
-            anchors.fill: parent
             source: "Keyboard.qml"
+            x: (parent.width - width) / 2
+            y: parent.height - height
             z: 999
+            width: Math.max(parent.width / 2, FluidUi.Units.dp(768))
         }
 
         /*
