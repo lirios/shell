@@ -26,6 +26,7 @@
         <file>desktop/ScreenView.qml</file>
         <file>desktop/OutputInfo.qml</file>
         <file>desktop/PresentWindowsChrome.qml</file>
+        <file>desktop/Keyboard.qml</file>
         <file>decoration/WindowDecoration.qml</file>
         <file>decoration/WindowControls.qml</file>
         <file>decoration/PopupWindowDecoration.qml</file>

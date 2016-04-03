@@ -129,6 +129,17 @@ GreenIsland.WaylandOutput {
         }
 
         /*
+         * Virtual keyboard
+         */
+
+        Loader {
+            parent: window.overlay
+            anchors.fill: parent
+            source: "Keyboard.qml"
+            z: 999
+        }
+
+        /*
          * Keyboard handler
          */
 
