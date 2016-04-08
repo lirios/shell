@@ -167,8 +167,8 @@ GreenIsland.WaylandCompositor {
         id: windowsModel
     }
 
-    // Window manager
-    GreenIsland.WindowManager {
+    // Shell
+    GreenIsland.UnifiedShell {
         id: windowManager
         compositor: hawaiiCompositor
         onWindowCreated: {
