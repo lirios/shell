@@ -41,6 +41,11 @@ GreenIsland.WaylandCompositor {
 
     id: hawaiiCompositor
     extensions: [
+        GreenIsland.WindowManager {
+            Component.onCompleted: {
+                initialize();
+            }
+        },
         GreenIsland.TextInputManager {
             Component.onCompleted: {
                 initialize();
