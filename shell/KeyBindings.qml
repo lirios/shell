@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import org.hawaiios.settings 0.2 as Settings
+import Hawaii.GSettings 1.0 as Settings
 
 Item {
     /*

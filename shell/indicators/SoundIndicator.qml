@@ -30,7 +30,7 @@ import Hawaii.Controls 1.0 as Controls
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.mixer 0.1 as MixerService
 import org.hawaiios.mpris2 0.1
-import org.hawaiios.settings 0.2 as Settings
+import Hawaii.GSettings 1.0 as Settings
 import ".."
 import "sound" as SoundIndicator
 

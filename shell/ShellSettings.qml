@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
-import org.hawaiios.settings 0.2 as Settings
+import Hawaii.GSettings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
 
 FluidCore.Object {
