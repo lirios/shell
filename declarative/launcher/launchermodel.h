@@ -31,7 +31,7 @@
 #include <QtQml/QQmlComponent>
 
 #include <GreenIsland/Server/ApplicationManager>
-#include <Hawaii/QGSettings>
+#include <Hawaii/GSettings/QGSettings>
 
 using namespace GreenIsland::Server;
 using namespace Hawaii;

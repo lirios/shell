@@ -121,7 +121,7 @@ endif()
 find_package(GreenIsland 0.7.90 REQUIRED COMPONENTS Server)
 
 # Find libhawaii
-find_package(Hawaii 0.6.0 REQUIRED)
+find_package(Hawaii 0.6.90 REQUIRED)
 
 # lxqt
 find_package(QT5XDG REQUIRED)

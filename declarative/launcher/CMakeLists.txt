@@ -24,7 +24,7 @@ target_link_libraries(launcherplugin
                       Qt5::Qml
                       Qt5::Quick
 		      GreenIsland::Server
-                      Hawaii::Hawaii)
+                      Hawaii::GSettings)
 target_link_libraries(launcherplugin Qt5Xdg)
 
 install(FILES qmldir plugins.qmltypes
