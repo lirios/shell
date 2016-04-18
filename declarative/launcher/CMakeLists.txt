@@ -1,7 +1,5 @@
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}/libhawaii
-    ${CMAKE_SOURCE_DIR}/libhawaii
 )
 
 set(SOURCES
