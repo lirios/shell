@@ -82,6 +82,10 @@ Rectangle {
                 rowSpacing: FluidUi.Units.smallSpacing
                 columnSpacing: 0
             }
+
+            StateChangeScript {
+                script: setAvailableGeometry()
+            }
         },
         State {
             name: "top"
@@ -119,6 +123,10 @@ Rectangle {
                 flow: GridLayout.LeftToRight
                 rowSpacing: 0
                 columnSpacing: FluidUi.Units.smallSpacing
+            }
+
+            StateChangeScript {
+                script: setAvailableGeometry()
             }
         },
         State {
@@ -158,6 +166,10 @@ Rectangle {
                 rowSpacing: FluidUi.Units.smallSpacing
                 columnSpacing: 0
             }
+
+            StateChangeScript {
+                script: setAvailableGeometry()
+            }
         },
         State {
             name: "bottom"
@@ -196,6 +208,10 @@ Rectangle {
                 rowSpacing: 0
                 columnSpacing: FluidUi.Units.smallSpacing
             }
+
+            StateChangeScript {
+                script: setAvailableGeometry()
+            }
         }
     ]
     transitions: Transition {
@@ -204,7 +220,8 @@ Rectangle {
             duration: FluidUi.Units.shortDuration
         }
     }
-    onHeightChanged: screenView.setAvailableGeometry(height)
+    onWidthChanged: setAvailableGeometry()
+    onHeightChanged: setAvailableGeometry()
 
     Behavior on color {
         ColorAnimation { duration: FluidUi.Units.longDuration }
@@ -303,6 +320,8 @@ Rectangle {
         }
     }
 
+    Component.onCompleted: setAvailableGeometry()
+
     function setup() {
         // TODO: Don't resize the panel, the window is maximized before we change the available
         // geometry resulting in a "hole" between the window and the panel
@@ -312,6 +331,23 @@ Rectangle {
         } else {
             color = "transparent";
             //launcher.iconSize = FluidUi.Units.iconSizes.large;
+        }
+    }
+
+    function setAvailableGeometry() {
+        switch (state) {
+        case "left":
+            output.availableGeometry = Qt.rect(width, 0, output.geometry.width - width, output.geometry.height);
+            break;
+        case "top":
+            output.availableGeometry = Qt.rect(0, height, output.geometry.width, output.geometry.height - height);
+            break;
+        case "right":
+            output.availableGeometry = Qt.rect(0, 0, output.geometry.width - width, output.geometry.height);
+            break;
+        case "bottom":
+            output.availableGeometry = Qt.rect(0, 0, output.geometry.width, output.geometry.height - height);
+            break;
         }
     }
 }
