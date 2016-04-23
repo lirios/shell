@@ -89,10 +89,10 @@ int main(int argc, char *argv[])
 
     // Application
     QApplication app(argc, argv);
-    app.setApplicationName(QStringLiteral("Hawaii"));
-    app.setApplicationVersion(HAWAII_VERSION_STRING);
-    app.setOrganizationName(QStringLiteral("Hawaii"));
-    app.setOrganizationDomain(QStringLiteral("hawaiios.org"));
+    app.setApplicationName(QLatin1String("Hawaii"));
+    app.setApplicationVersion(QLatin1String(HAWAII_VERSION_STRING));
+    app.setOrganizationName(QLatin1String("Hawaii"));
+    app.setOrganizationDomain(QLatin1String("hawaiios.org"));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     app.setAttribute(Qt::AA_EnableHighDpiScaling);
     app.setFallbackSessionManagementEnabled(false);
