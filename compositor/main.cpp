@@ -31,6 +31,7 @@
 #include <QtWidgets/QApplication>
 
 #include <Hawaii/greenisland_version.h>
+#include <Hawaii/GSettings/QGSettings>
 
 #include "application.h"
 #include "config.h"
@@ -71,6 +72,11 @@ static void setupEnvironment()
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
     qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("hawaii-"));
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Hawaii"));
+
+    // Load input method
+    Hawaii::QGSettings settings(QLatin1String("org.hawaiios.desktop.interface"),
+                                QLatin1String("/org/hawaiios/desktop/interface/"));
+    qputenv("QT_IM_MODULE", settings.value(QLatin1String("inputMethod")).toByteArray());
 }
 
 int main(int argc, char *argv[])
