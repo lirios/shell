@@ -54,7 +54,7 @@ GreenIsland.WaylandOutput {
     subpixel: nativeScreen.subpixel
     transform: nativeScreen.transform
     scaleFactor: nativeScreen.scaleFactor
-    sizeFollowsWindow: true
+    sizeFollowsWindow: false
     automaticFrameCallback: powerState === GreenIsland.WaylandOutput.PowerStateOn
     window: LabsControls.ApplicationWindow {
         id: window
