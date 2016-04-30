@@ -36,8 +36,10 @@ AvailableDevices::AvailableDevices(QObject* parent)
             m_modemDeviceAvailable = true;
         } else if (device->type() == NetworkManager::Device::Wifi) {
             m_wirelessDeviceAvailable = true;
+#if !NM_CHECK_VERSION(1, 2, 0)
         } else if (device->type() == NetworkManager::Device::Wimax) {
             m_wimaxDeviceAvailable = true;
+#endif
         } else if (device->type() == NetworkManager::Device::Ethernet) {
             m_wiredDeviceAvailable = true;
         } else if (device->type() == NetworkManager::Device::Bluetooth) {
