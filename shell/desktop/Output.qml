@@ -52,6 +52,7 @@ GreenIsland.WaylandOutput {
     manufacturer: nativeScreen.manufacturer
     model: nativeScreen.model
     position: nativeScreen.position
+    currentModeId: nativeScreen.currentMode
     physicalSize: nativeScreen.physicalSize
     subpixel: nativeScreen.subpixel
     transform: nativeScreen.transform

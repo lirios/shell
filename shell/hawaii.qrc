@@ -16,6 +16,7 @@
         <file>Panel.qml</file>
         <file>desktop/WorkspacesView.qml</file>
         <file>desktop/Output.qml</file>
+        <file>desktop/OutputConfiguration.qml</file>
         <file>desktop/Workspace.qml</file>
         <file>desktop/ScreenZoom.qml</file>
         <file>desktop/HotCorner.qml</file>

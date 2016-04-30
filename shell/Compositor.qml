@@ -58,6 +58,17 @@ GreenIsland.WaylandCompositor {
                 initialize();
             }
         },
+        GreenIsland.OutputManagement {
+            id: outputManagement
+            onCreateOutputConfiguration: {
+                var outputConfiguration = outputConfigurationComponent.createObject();
+                outputConfiguration.initialize(outputManagement, resource);
+            }
+
+            Component.onCompleted: {
+                initialize();
+            }
+        },
         GreenIsland.Screencaster {
             id: screencaster
 
@@ -214,6 +225,13 @@ GreenIsland.WaylandCompositor {
         id: outputComponent
 
         Output {}
+    }
+
+    // Output configuration component
+    Component {
+        id: outputConfigurationComponent
+
+        OutputConfiguration {}
     }
 
     /*
