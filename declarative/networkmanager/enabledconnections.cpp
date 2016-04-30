@@ -29,8 +29,13 @@ EnabledConnections::EnabledConnections(QObject* parent)
     , m_networkingEnabled(NetworkManager::isNetworkingEnabled())
     , m_wirelessEnabled(NetworkManager::isWirelessEnabled())
     , m_wirelessHwEnabled(NetworkManager::isWirelessHardwareEnabled())
+#if NM_CHECK_VERSION(1, 2, 0)
+    , m_wimaxEnabled(false)
+    , m_wimaxHwEnabled(false)
+#else
     , m_wimaxEnabled(NetworkManager::isWimaxEnabled())
     , m_wimaxHwEnabled(NetworkManager::isWimaxHardwareEnabled())
+#endif
     , m_wwanEnabled(NetworkManager::isWwanEnabled())
     , m_wwanHwEnabled(NetworkManager::isWwanHardwareEnabled())
 {
@@ -40,10 +45,12 @@ EnabledConnections::EnabledConnections(QObject* parent)
             SLOT(onWirelessEnabled(bool)));
     connect(NetworkManager::notifier(), SIGNAL(wirelessHardwareEnabledChanged(bool)),
             SLOT(onWirelessHwEnabled(bool)));
+#if !NM_CHECK_VERSION(1, 2, 0)
     connect(NetworkManager::notifier(), SIGNAL(wimaxEnabledChanged(bool)),
             SLOT(onWimaxEnabled(bool)));
     connect(NetworkManager::notifier(), SIGNAL(wimaxHardwareEnabledChanged(bool)),
             SLOT(onWimaxHwEnabled(bool)));
+#endif
     connect(NetworkManager::notifier(), SIGNAL(wwanEnabledChanged(bool)),
             SLOT(onWwanEnabled(bool)));
     connect(NetworkManager::notifier(), SIGNAL(wwanHardwareEnabledChanged(bool)),
