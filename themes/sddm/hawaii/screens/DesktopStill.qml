@@ -29,7 +29,7 @@ import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
 import Hawaii.Themes 1.0 as Themes
 import Hawaii.Controls 1.0 as Controls
-import org.hawaiios.settings 0.2 as Settings
+import Hawaii.GSettings 1.0 as Settings
 
 Item {
     property int stage: 0
