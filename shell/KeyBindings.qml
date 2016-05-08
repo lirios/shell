@@ -589,6 +589,12 @@ Item {
 
     Shortcut {
         context: Qt.ApplicationShortcut
+        sequence: desktopKeybindings.runCommand
+        onActivated: hawaiiCompositor.defaultOutput.runCommand.open()
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.screenshot
     }
 

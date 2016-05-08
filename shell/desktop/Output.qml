@@ -31,6 +31,7 @@ import Qt.labs.controls.material 1.0 as LabsMaterial
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 import "../screens"
+import ".."
 
 GreenIsland.WaylandOutput {
     readonly property bool primary: hawaiiCompositor.primaryScreen === nativeScreen
@@ -39,6 +40,7 @@ GreenIsland.WaylandOutput {
 
     readonly property alias surfacesArea: screenView.currentWorkspace
     readonly property alias screenView: screenView
+    readonly property alias runCommand: runCommand
 
     property QtObject activeWindow: null
 
@@ -188,6 +190,16 @@ GreenIsland.WaylandOutput {
 
                 event.accept = false;
             }
+        }
+
+        /*
+         * Run command dialog
+         */
+
+        RunCommand {
+            id: runCommand
+            x: (parent.width - height) / 2
+            y: (parent.height - height) / 2
         }
 
         /*

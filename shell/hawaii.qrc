@@ -70,5 +70,6 @@
         <file>indicators/BatteryIndicator.qml</file>
         <file>ShellSettings.qml</file>
         <file>images/wallpaper.png</file>
+        <file>RunCommand.qml</file>
     </qresource>
 </RCC>

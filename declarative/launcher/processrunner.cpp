@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QProcess>
 #include <QtCore/QStandardPaths>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
@@ -49,4 +50,9 @@ bool ProcessRunner::launchApplication(const QString &name)
                              bus);
     QDBusMessage msg = interface.call("launchDesktopFile", fileName);
     return msg.arguments().at(0).toBool();
+}
+
+bool ProcessRunner::launchCommand(const QString &command)
+{
+    return QProcess::startDetached(command);
 }

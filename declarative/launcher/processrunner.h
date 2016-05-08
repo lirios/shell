@@ -36,6 +36,7 @@ public:
     ProcessRunner(QObject *parent = 0);
 
     Q_INVOKABLE bool launchApplication(const QString &name);
+    Q_INVOKABLE bool launchCommand(const QString &command);
 };
 
 #endif // PROCESSRUNNER_H
