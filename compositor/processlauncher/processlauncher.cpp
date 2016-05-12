@@ -100,9 +100,19 @@ bool ProcessLauncher::registerWithDBus(ProcessLauncher *instance)
 
 bool ProcessLauncher::launchApplication(const QString &appId)
 {
+    if (appId.isEmpty()) {
+        qCWarning(LAUNCHER) << "Empty appId passed to ProcessLauncher::launchApplication()";
+        return false;
+    }
+
     const QString fileName =
             QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
                                    appId + QStringLiteral(".desktop"));
+    if (fileName.isEmpty()) {
+        qCWarning(LAUNCHER) << "Cannot find" << appId << "desktop entry";
+        return false;
+    }
+
     XdgDesktopFile *entry = XdgDesktopFileCache::getFile(fileName);
     if (!entry) {
         qCWarning(LAUNCHER) << "No desktop entry found for" << appId;
@@ -114,6 +124,11 @@ bool ProcessLauncher::launchApplication(const QString &appId)
 
 bool ProcessLauncher::launchDesktopFile(const QString &fileName)
 {
+    if (fileName.isEmpty()) {
+        qCWarning(LAUNCHER) << "Empty file name passed to ProcessLauncher::launchDesktopFile()";
+        return false;
+    }
+
     XdgDesktopFile *entry = XdgDesktopFileCache::getFile(fileName);
     if (!entry) {
         qCWarning(LAUNCHER) << "Failed to open desktop file" << fileName;

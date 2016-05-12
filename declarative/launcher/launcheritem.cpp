@@ -122,6 +122,9 @@ int LauncherItem::progress() const
 
 bool LauncherItem::launch()
 {
+    if (m_info->fileName().isEmpty())
+        return false;
+
     if (isRunning())
         return true;
 
