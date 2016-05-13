@@ -102,9 +102,11 @@ private Q_SLOTS:
     void ipConfigChanged();
     void ipInterfaceChanged();
     void statusChanged(NetworkManager::Status status);
+#if !NM_CHECK_VERSION(1, 2, 0)
     void wimaxNspAppeared(const QString& nsp);
     void wimaxNspDisappeared(const QString& nsp);
     void wimaxNspSignalChanged(uint signal);
+#endif
     void wirelessNetworkAppeared(const QString& ssid);
     void wirelessNetworkDisappeared(const QString& ssid);
     void wirelessNetworkSignalChanged(int signal);
@@ -118,17 +120,23 @@ private:
     void addAvailableConnection(const QString& connection, const NetworkManager::Device::Ptr& device);
     void addConnection(const NetworkManager::Connection::Ptr& connection);
     void addDevice(const NetworkManager::Device::Ptr& device);
+#if !NM_CHECK_VERSION(1, 2, 0)
     void addWimaxNsp(const NetworkManager::WimaxNsp::Ptr& nsp, const NetworkManager::WimaxDevice::Ptr& device);
+#endif
     void addWirelessNetwork(const NetworkManager::WirelessNetwork::Ptr& network, const NetworkManager::WirelessDevice::Ptr& device);
     void checkAndCreateDuplicate(const QString& connection, const NetworkManager::Device::Ptr& device);
     void initializeSignals();
     void initializeSignals(const NetworkManager::ActiveConnection::Ptr& activeConnection);
     void initializeSignals(const NetworkManager::Connection::Ptr& connection);
     void initializeSignals(const NetworkManager::Device::Ptr& device);
+#if !NM_CHECK_VERSION(1, 2, 0)
     void initializeSignals(const NetworkManager::WimaxNsp::Ptr& nsp);
+#endif
     void initializeSignals(const NetworkManager::WirelessNetwork::Ptr& network);
     void updateItem(NetworkModelItem * item);
+#if !NM_CHECK_VERSION(1, 2, 0)
     void updateFromWimaxNsp(NetworkModelItem * item, const NetworkManager::WimaxNsp::Ptr& nsp);
+#endif
     void updateFromWirelessNetwork(NetworkModelItem * item, const NetworkManager::WirelessNetwork::Ptr& network);
 
     NetworkManager::WirelessSecurityType alternativeWirelessSecurity(const NetworkManager::WirelessSecurityType type);

@@ -558,6 +558,7 @@ void NetworkModelItem::updateDetails()
             m_details << tr("MAC Address") << bluetoothDevice->hardwareAddress();
 
         }
+#if !NM_CHECK_VERSION(1, 2, 0)
     } else if (m_type == NetworkManager::ConnectionSettings::Wimax) {
         NetworkManager::WimaxDevice::Ptr wimaxDevice = device.objectCast<NetworkManager::WimaxDevice>();
         if (wimaxDevice) {
@@ -570,6 +571,7 @@ void NetworkModelItem::updateDetails()
             m_details << tr("Bsid") << wimaxDevice->bsid();
             m_details << tr("MAC Address") << wimaxDevice->hardwareAddress();
         }
+#endif
     } else if (m_type == NetworkManager::ConnectionSettings::Infiniband) {
         NetworkManager::InfinibandDevice::Ptr infinibandDevice = device.objectCast<NetworkManager::InfinibandDevice>();
         m_details << tr("Type") << tr("Infiniband");
