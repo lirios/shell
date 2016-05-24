@@ -93,7 +93,7 @@ check_symbol_exists(PR_SET_DUMPABLE "sys/prctl.h" HAVE_PR_SET_DUMPABLE)
 add_feature_info("prctl-dumpable" HAVE_PR_SET_DUMPABLE "Required to prevent ptrace on the compositor process")
 
 # Minimum version requirements
-set(QT_MIN_VERSION "5.6.0")
+set(QT_MIN_VERSION "5.7.0")
 set(KF5_MIN_VERSION "5.1.0")
 
 # Find Qt5
