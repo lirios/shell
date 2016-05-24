@@ -26,7 +26,7 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Qt.labs.calendar 1.0 as LabsCalendar
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -43,7 +43,7 @@ Item {
         Item {
             height: FluidUi.Units.gu(2)
 
-            LabsControls.Label {
+            Label {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.margins: FluidUi.Units.smallSpacing
@@ -122,8 +122,8 @@ Item {
             model: 25
             delegate: hourDelegate
 
-            //LabsControls.ScrollBar.horizontal: LabsControls.ScrollBar {}
-            //LabsControls.ScrollBar.vertical: LabsControls.ScrollBar {}
+            //ScrollBar.horizontal: ScrollBar {}
+            //ScrollBar.vertical: ScrollBar {}
 
             Layout.fillWidth: true
             Layout.fillHeight: true

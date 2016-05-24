@@ -25,36 +25,36 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
-LabsControls.Menu {
-    LabsControls.MenuItem {
+Menu {
+    MenuItem {
         text: qsTr("Minimize")
     }
 
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Restore")
     }
 
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Maximize")
     }
 
     CustomComponents.MenuSeparator {}
 
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Move")
     }
 
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Resize")
     }
 
     CustomComponents.MenuSeparator {}
 
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Close")
     }
 }

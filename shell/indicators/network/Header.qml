@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Fluid.Ui 1.0 as FluidUi
 import "../../components" as CustomComponents
 
@@ -37,7 +37,7 @@ RowLayout {
     implicitWidth: ListView.view.width
     implicitHeight: Math.max(label.paintedHeight, refreshButton.height) + (FluidUi.Units.smallSpacing * 2)
 
-    LabsControls.Label {
+    Label {
         id: label
         font.weight: Font.DemiBold
 

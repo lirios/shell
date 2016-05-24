@@ -25,18 +25,18 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
-LabsControls.Menu {
+Menu {
     id: menu
-    transformOrigin: LabsControls.Menu.TopLeft
+    transformOrigin: Menu.TopLeft
 
     Repeater {
         model: listView.model.get(root.indexOfThisDelegate).windows
 
-        LabsControls.MenuItem {
+        MenuItem {
             text: modelData.title
         }
     }
@@ -48,19 +48,19 @@ LabsControls.Menu {
     Repeater {
         model: menu.actionList ? menu.actionList : 0
 
-        LabsControls.MenuItem {
+        MenuItem {
             text: "Action " + index
         }
     }
     CustomComponents.MenuSeparator {
         visible: model.hasActionList
     }
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("New Window")
         visible: model.running
     }
     CustomComponents.MenuSeparator {}
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Add To Launcher")
         visible: !model.pinned
         onClicked: {
@@ -68,7 +68,7 @@ LabsControls.Menu {
             menu.close();
         }
     }
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Remove From Launcher")
         visible: model.pinned
         onClicked: {
@@ -77,20 +77,20 @@ LabsControls.Menu {
         }
     }
     CustomComponents.MenuSeparator {}
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Show All Windows")
         visible: model.running
     }
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Show")
         visible: model.running && !model.active
     }
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Hide")
         visible: model.running && model.active
     }
     CustomComponents.MenuSeparator {}
-    LabsControls.MenuItem {
+    MenuItem {
         text: qsTr("Quit")
         visible: model.running
         onClicked: {

@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Qt.labs.controls.material 1.0 as LabsMaterial
 import Fluid.Ui 1.0 as FluidUi
 
@@ -55,7 +55,7 @@ Rectangle {
         asynchronous: true
     }
 
-    LabsControls.Label {
+    Label {
         id: label
         anchors {
             horizontalCenter: parent.horizontalCenter

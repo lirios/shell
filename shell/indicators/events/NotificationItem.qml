@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.Ui 1.0 as FluidUi
 
@@ -152,7 +152,7 @@ Item {
             id: actionsRepeater
             model: actions
 
-            LabsControls.Button {
+            Button {
                 text: model.text
                 onClicked: root.actionInvoked(model.id)
             }

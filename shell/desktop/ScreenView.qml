@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc

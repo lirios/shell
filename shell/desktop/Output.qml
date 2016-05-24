@@ -26,7 +26,7 @@
 
 import QtQuick 2.5
 import QtQuick.Window 2.2
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Qt.labs.controls.material 1.0 as LabsMaterial
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
@@ -59,7 +59,7 @@ GreenIsland.WaylandOutput {
     scaleFactor: nativeScreen.scaleFactor
     sizeFollowsWindow: false
     automaticFrameCallback: powerState === GreenIsland.WaylandOutput.PowerStateOn
-    window: LabsControls.ApplicationWindow {
+    window: ApplicationWindow {
         id: window
         minimumWidth: 1024
         minimumHeight: 768

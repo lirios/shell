@@ -27,7 +27,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -49,7 +49,7 @@ Indicator {
                 text: qsTr("Events")
             }
 
-            LabsControls.Label {
+            Label {
                 opacity: 0.6
                 text: qsTr("No new events to see.")
                 visible: notificationView.count == 0

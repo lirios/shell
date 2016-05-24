@@ -26,12 +26,12 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Qt.labs.controls.material 1.0 as LabsMaterial
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 
-LabsControls.Popup {
+Popup {
     readonly property real thumbnailSize: FluidUi.Units.dp(200)
 
     id: windowSwitcher
@@ -106,7 +106,7 @@ LabsControls.Popup {
             Layout.fillHeight: true
         }
 
-        LabsControls.Label {
+        Label {
             id: label
             text: listView.currentItem ? listView.currentItem.title : qsTr("Untitled")
             wrapMode: Text.Wrap

@@ -28,7 +28,7 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
 import org.hawaiios.networkmanager 0.1 as NM
@@ -114,7 +114,7 @@ Item {
             ColumnLayout {
                 spacing: FluidUi.Units.smallSpacing
 
-                LabsControls.Label {
+                Label {
                     id: label
                     text: ItemUniqueName
                     elide: Text.ElideRight
@@ -124,7 +124,7 @@ Item {
                     Layout.fillWidth: true
                 }
 
-                LabsControls.Label {
+                Label {
                     id: statusLabel
                     text: {
                         if (ConnectionState === NM.Enums.Activating) {
@@ -201,13 +201,13 @@ Item {
                 RowLayout {
                     spacing: FluidUi.Units.smallSpacing
 
-                    LabsControls.Label {
+                    Label {
                         text: ConnectionDetails[index * 2]
                         font.weight: Font.Bold
                         opacity: 0.6
                     }
 
-                    LabsControls.Label {
+                    Label {
                         text: ConnectionDetails[(index * 2) + 1]
                         textFormat: Text.StyledText
                         opacity: 0.6
@@ -225,7 +225,7 @@ Item {
 
             spacing: FluidUi.Units.smallSpacing
 
-            LabsControls.TextField {
+            TextField {
                 id: passwordField
                 echoMode: showPasswordCheckbox.checked ? TextInput.Normal : TextInput.Password
                 placeholderText: qsTr("Password")
@@ -243,7 +243,7 @@ Item {
                 Layout.fillWidth: true
             }
 
-            LabsControls.CheckBox {
+            CheckBox {
                 id: showPasswordCheckbox
                 checked: false
                 text: qsTr("Show password")

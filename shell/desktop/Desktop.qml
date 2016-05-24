@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
@@ -43,12 +43,12 @@ Item {
         onClicked: topDrawer.position == 0 ? topDrawer.open() : topDrawer.close()
     }
 
-    LabsControls.Drawer {
+    Drawer {
         id: topDrawer
         edge: Qt.TopEdge
         onClicked: close()
 
-        LabsControls.Pane {
+        Pane {
             width: window.width
             height: FluidUi.Units.gu(25)
             padding: FluidUi.Units.largeSpacing

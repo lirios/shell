@@ -26,7 +26,7 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.networkmanager 0.1 as NM
@@ -57,8 +57,8 @@ Indicator {
                 section.delegate: NetworkIndicator.Header { text: section }
                 delegate: NetworkIndicator.ConnectionItem {}
 
-                //LabsControls.ScrollBar.horizontal: LabsControls.ScrollBar {}
-                //LabsControls.ScrollBar.vertical: LabsControls.ScrollBar {}
+                //ScrollBar.horizontal: ScrollBar {}
+                //ScrollBar.vertical: ScrollBar {}
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true

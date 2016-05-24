@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Fluid.Ui 1.0 as FluidUi
 
 RowLayout {
@@ -43,7 +43,7 @@ RowLayout {
         property bool airplaneMode: false
     }
 
-    LabsControls.Switch {
+    Switch {
         id: airplaneSwitch
         onClicked: {
             __priv.airplaneMode = !__priv.airplaneMode;
@@ -59,7 +59,7 @@ RowLayout {
         color: label.color
     }
 
-    LabsControls.Label {
+    Label {
         id: label
         text: airplaneMode ? qsTr("Airplane mode enabled") : qsTr("Airplane mode disabled")
     }

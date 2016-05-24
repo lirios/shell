@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Fluid.Ui 1.0 as FluidUi
 import ".."
 
@@ -40,25 +40,25 @@ Item {
         onIndicatorTriggered: {
             // Load indicator component
             if (rightDrawer.expanded)
-                stackView.push(indicator.component, {}, LabsControls.StackView.Transition);
+                stackView.push(indicator.component, {}, StackView.Transition);
             else
-                stackView.push(indicator.component, {}, LabsControls.StackView.Immedite);
+                stackView.push(indicator.component, {}, StackView.Immedite);
             rightDrawer.open();
         }
     }
 
-    LabsControls.Drawer {
+    Drawer {
         id: rightDrawer
         edge: Qt.RightEdge
         onClicked: close()
 
-        LabsControls.Pane {
+        Pane {
             y: output.availableGeometry.y
             width: stackView.currentItem.implicitWidth + (2 * padding)
             height: output.availableGeometry.height
             padding: FluidUi.Units.largeSpacing
 
-            LabsControls.StackView {
+            StackView {
                 id: stackView
                 anchors {
                     left: parent.left

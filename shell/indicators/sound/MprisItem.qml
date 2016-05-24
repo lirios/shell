@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.mpris2 0.1
@@ -64,7 +64,7 @@ ColumnLayout {
                 visible: !albumArt.visible && iconName != ""
             }
 
-            LabsControls.BusyIndicator {
+            BusyIndicator {
                 anchors.fill: parent
                 visible: !albumArt.visible && !icon.visible
             }
@@ -91,7 +91,7 @@ ColumnLayout {
         }
     }
 
-    LabsControls.ProgressBar {
+    ProgressBar {
         from: 0
         to: trackLength
         value: trackPosition
