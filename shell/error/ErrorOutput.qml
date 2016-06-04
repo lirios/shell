@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Window 2.2
 import GreenIsland 1.0 as GreenIsland
 
-GreenIsland.WaylandOutput {
+GreenIsland.ExtendedOutput {
     id: output
     manufacturer: nativeScreen.manufacturer
     model: nativeScreen.model
@@ -46,21 +46,20 @@ GreenIsland.WaylandOutput {
         height: nativeScreen.size.height
         flags: Qt.FramelessWindowHint
 
-        GreenIsland.LocalPointerTracker {
+        GreenIsland.WaylandMouseTracker {
             id: localPointerTracker
             anchors.fill: parent
-            globalTracker: globalPointerTracker
 
             ErrorScreen {
                 anchors.fill: parent
             }
 
-            GreenIsland.PointerItem {
+            GreenIsland.WaylandCursorItem {
                 id: cursor
                 inputDevice: output.compositor.defaultInputDevice
                 x: localPointerTracker.mouseX - hotspotX
                 y: localPointerTracker.mouseY - hotspotY
-                visible: globalPointerTracker.output === output
+                visible: localPointerTracker.containsMouse
             }
         }
     }

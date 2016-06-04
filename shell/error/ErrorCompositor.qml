@@ -47,12 +47,6 @@ GreenIsland.WaylandCompositor {
         onActivated: Qt.quit()
     }
 
-    // Pointer tracking with global coordinates
-    GreenIsland.GlobalPointerTracker {
-        id: globalPointerTracker
-        compositor: errorCompositor
-    }
-
     // Screen manager
     GreenIsland.ScreenManager {
         id: screenManager

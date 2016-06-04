@@ -33,7 +33,7 @@ import Fluid.Ui 1.0 as FluidUi
 import "../screens"
 import ".."
 
-GreenIsland.WaylandOutput {
+GreenIsland.ExtendedOutput {
     readonly property bool primary: hawaiiCompositor.primaryScreen === nativeScreen
 
     property int idleInhibit: 0
@@ -58,7 +58,7 @@ GreenIsland.WaylandOutput {
     transform: nativeScreen.transform
     scaleFactor: nativeScreen.scaleFactor
     sizeFollowsWindow: false
-    automaticFrameCallback: powerState === GreenIsland.WaylandOutput.PowerStateOn
+    automaticFrameCallback: powerState === GreenIsland.ExtendedOutput.PowerStateOn
     window: LabsControls.ApplicationWindow {
         id: window
         minimumWidth: 1024
@@ -95,7 +95,7 @@ GreenIsland.WaylandOutput {
             z: 1000
             onOpacityChanged: {
                 if (opacity == 1.0)
-                    output.powerState = GreenIsland.WaylandOutput.PowerStateStandby;
+                    output.powerState = GreenIsland.ExtendedOutput.PowerStateStandby;
             }
 
             OpacityAnimator {
@@ -207,10 +207,10 @@ GreenIsland.WaylandOutput {
          * Contents
          */
 
-        GreenIsland.LocalPointerTracker {
+        GreenIsland.WaylandMouseTracker {
             id: localPointerTracker
             anchors.fill: parent
-            globalTracker: globalPointerTracker
+            enableWSCursor: true
             onMouseXChanged: {
                 // Input wakes the output
                 hawaiiCompositor.wake();
@@ -419,13 +419,13 @@ GreenIsland.WaylandOutput {
                 }
             }
 
-            GreenIsland.PointerItem {
+            GreenIsland.WaylandCursorItem {
                 id: cursor
                 inputDevice: output.compositor.defaultInputDevice
                 x: localPointerTracker.mouseX - hotspotX
                 y: localPointerTracker.mouseY - hotspotY
-                visible: globalPointerTracker.output === output &&
-                         output.powerState === GreenIsland.WaylandOutput.PowerStateOn
+                visible: localPointerTracker.containsMouse &&
+                         output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
             }
         }
     }
@@ -436,7 +436,7 @@ GreenIsland.WaylandOutput {
 
     function wake() {
         blackRect.fadeOut();
-        output.powerState = GreenIsland.WaylandOutput.PowerStateOn;
+        output.powerState = GreenIsland.ExtendedOutput.PowerStateOn;
     }
 
     function idle() {
