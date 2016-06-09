@@ -41,22 +41,38 @@ GreenIsland.WaylandCompositor {
 
     id: hawaiiCompositor
     extensions: [
-        GreenIsland.WindowManager {
-            Component.onCompleted: {
-                initialize();
+        GreenIsland.QtWindowManager {
+            showIsFullScreen: false
+        },
+        GreenIsland.WlShell {
+            onShellSurfaceCreated: {
+                var window = windowManager.createWindow(shellSurface.surface);
+                windowsModel.append({"window": window});
+
+                var i, view;
+                for (i = 0; i < d.outputs.length; i++) {
+                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": shellSurface, "window": window});
+                    view.moveItem = window.moveItem;
+                    window.addWindowView(view);
+                }
             }
         },
-        GreenIsland.TextInputManager {
-            Component.onCompleted: {
-                initialize();
+        GreenIsland.XdgShell {
+            onXdgSurfaceCreated: {
+                var window = windowManager.createWindow(xdgSurface.surface);
+                windowsModel.append({"window": window});
+
+                var i, view;
+                for (i = 0; i < d.outputs.length; i++) {
+                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": xdgSurface, "window": window});
+                    view.moveItem = window.moveItem;
+                    window.addWindowView(view);
+                }
             }
         },
+        GreenIsland.TextInputManager {},
         GreenIsland.ApplicationManager {
             id: applicationManager
-
-            Component.onCompleted: {
-                initialize();
-            }
         },
         GreenIsland.OutputManagement {
             id: outputManagement
@@ -64,17 +80,9 @@ GreenIsland.WaylandCompositor {
                 var outputConfiguration = outputConfigurationComponent.createObject();
                 outputConfiguration.initialize(outputManagement, resource);
             }
-
-            Component.onCompleted: {
-                initialize();
-            }
         },
         GreenIsland.Screencaster {
             id: screencaster
-
-            Component.onCompleted: {
-                initialize();
-            }
         },
         GreenIsland.Screenshooter {
             id: screenshooter
@@ -92,10 +100,6 @@ GreenIsland.WaylandCompositor {
                 // Setup client buffer
                 screenshot.setup();
             }
-
-            Component.onCompleted: {
-                initialize();
-            }
         }
     ]
     onCreateSurface: {
@@ -112,12 +116,6 @@ GreenIsland.WaylandCompositor {
         id: d
 
         property variant outputs: []
-    }
-
-    // Pointer tracking with global coordinates
-    GreenIsland.GlobalPointerTracker {
-        id: globalPointerTracker
-        compositor: hawaiiCompositor
     }
 
     // Settings
@@ -138,7 +136,6 @@ GreenIsland.WaylandCompositor {
                             "nativeScreen": screen
                         });
             d.outputs.push(view);
-            windowManager.recalculateVirtualGeometry
         }
         onScreenRemoved: {
             var index = screenManager.indexOf(screen);
@@ -146,7 +143,6 @@ GreenIsland.WaylandCompositor {
                 var output = d.outputs[index];
                 d.outputs.splice(index, 1);
                 output.destroy();
-                windowManager.recalculateVirtualGeometry();
             }
         }
         onPrimaryScreenChanged: {
@@ -183,27 +179,10 @@ GreenIsland.WaylandCompositor {
         id: windowsModel
     }
 
-    // Shell
-    GreenIsland.UnifiedShell {
+    // Window manager
+    GreenIsland.WindowManager {
         id: windowManager
         compositor: hawaiiCompositor
-        onWindowCreated: {
-            var i, output, view;
-            for (i = 0; i < d.outputs.length; i++) {
-                output = d.outputs[i];
-                view = windowComponent.createObject(output.surfacesArea, {"window": window});
-                view.initialize(window, output);
-            }
-
-            window.typeChanged.connect(function() {
-                if (window.type == GreenIsland.ClientWindow.TopLevel)
-                    windowsModel.append({"window": window});
-            });
-        }
-
-        Component.onCompleted: {
-            initialize();
-        }
     }
 
     // Surface component
@@ -215,9 +194,9 @@ GreenIsland.WaylandCompositor {
 
     // Window component
     Component {
-        id: windowComponent
+        id: chromeComponent
 
-        GreenIsland.WaylandWindow {}
+        GreenIsland.WindowChrome {}
     }
 
     // Output component
