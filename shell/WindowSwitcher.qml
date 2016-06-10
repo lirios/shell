@@ -121,7 +121,7 @@ LabsControls.Popup {
     function activate() {
         var window = listView.model.get(listView.currentIndex);
         if (window)
-            window.active = true;
+            window.activate();
     }
 
     function previous() {
