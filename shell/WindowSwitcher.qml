@@ -125,6 +125,9 @@ LabsControls.Popup {
     }
 
     function previous() {
+        if (windowsModel.count < 2)
+            return;
+
         if (listView.currentIndex == 0)
             listView.currentIndex = listView.count == 0 ? 0 : listView.count - 1;
         else
@@ -133,6 +136,9 @@ LabsControls.Popup {
     }
 
     function next() {
+        if (windowsModel.count < 2)
+            return;
+
         if (listView.currentIndex == listView.count - 1)
             listView.currentIndex = 0;
         else
