@@ -44,7 +44,7 @@ LabsControls.Popup {
         id: thumbnailComponent
 
         Rectangle {
-            readonly property string title: window.title
+            readonly property string title: window.title ? window.title : qsTr("Untitled")
             readonly property real ratio: window.surface.size.width / window.surface.size.height
 
             id: wrapper
@@ -108,7 +108,7 @@ LabsControls.Popup {
 
         LabsControls.Label {
             id: label
-            text: listView.currentItem ? listView.currentItem.title : qsTr("Untitled")
+            text: listView.currentItem ? listView.currentItem.title : ""
             wrapMode: Text.Wrap
             font.bold: true
             maximumLineCount: 2
