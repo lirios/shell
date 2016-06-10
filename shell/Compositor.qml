@@ -47,7 +47,6 @@ GreenIsland.WaylandCompositor {
         GreenIsland.WlShell {
             onShellSurfaceCreated: {
                 var window = windowManager.createWindow(shellSurface.surface);
-                windowsModel.append({"window": window});
 
                 var i, view;
                 for (i = 0; i < d.outputs.length; i++) {
@@ -60,7 +59,6 @@ GreenIsland.WaylandCompositor {
         GreenIsland.XdgShell {
             onXdgSurfaceCreated: {
                 var window = windowManager.createWindow(xdgSurface.surface);
-                windowsModel.append({"window": window});
 
                 var i, view;
                 for (i = 0; i < d.outputs.length; i++) {
@@ -189,7 +187,25 @@ GreenIsland.WaylandCompositor {
     Component {
         id: surfaceComponent
 
-        GreenIsland.WaylandSurface {}
+        GreenIsland.WaylandSurface {
+            id: surface
+            onMappedChanged: {
+                if (!cursorSurface) {
+                    if (isMapped) {
+                        var window = windowManager.windowForSurface(surface);
+                        if (window)
+                            windowsModel.append({"window": window});
+                    } else {
+                        for (var i = 0; i < windowsModel.count; i++) {
+                            if (windowsModel.get(i).window.surface === surface) {
+                                windowsModel.remove(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Window component
