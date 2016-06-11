@@ -25,8 +25,6 @@
  ***************************************************************************/
 
 #include <QtGui/QIcon>
-#include <QDebug>
-
 #include "appidmapping_p.h"
 #include "applicationinfo.h"
 #include "launcheritem.h"
@@ -192,7 +190,6 @@ void LauncherModel::pin(const QString &appId)
         break;
     }
 
-    qDebug() << found;
     if (!found)
         return;
 
