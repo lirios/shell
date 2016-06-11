@@ -120,8 +120,8 @@ Item {
             model: 25
             delegate: hourDelegate
 
-            //ScrollBar.horizontal: ScrollBar {}
-            //ScrollBar.vertical: ScrollBar {}
+            ScrollBar.horizontal: ScrollBar {}
+            ScrollBar.vertical: ScrollBar {}
 
             Layout.fillWidth: true
             Layout.fillHeight: true

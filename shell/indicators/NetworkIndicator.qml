@@ -57,8 +57,8 @@ Indicator {
                 section.delegate: NetworkIndicator.Header { text: section }
                 delegate: NetworkIndicator.ConnectionItem {}
 
-                //ScrollBar.horizontal: ScrollBar {}
-                //ScrollBar.vertical: ScrollBar {}
+                ScrollBar.horizontal: ScrollBar {}
+                ScrollBar.vertical: ScrollBar {}
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
