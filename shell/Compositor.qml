@@ -68,6 +68,7 @@ GreenIsland.WaylandCompositor {
                 }
             }
         },
+        GreenIsland.GtkShell {},
         GreenIsland.TextInputManager {},
         GreenIsland.ApplicationManager {
             id: applicationManager
