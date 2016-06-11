@@ -31,7 +31,7 @@ import "../components" as CustomComponents
 
 Menu {
     id: menu
-    transformOrigin: Menu.TopLeft
+    transformOrigin: Menu.BottomLeft
 
     Repeater {
         model: listView.model.get(root.indexOfThisDelegate).windows
