@@ -57,12 +57,12 @@ Menu {
     }
     MenuItem {
         text: qsTr("New Window")
-        visible: model.running
+        enabled: model.running
     }
     CustomComponents.MenuSeparator {}
     MenuItem {
         text: qsTr("Add To Launcher")
-        visible: !model.pinned
+        enabled: !model.pinned
         onClicked: {
             listView.model.pin(model.appId);
             menu.close();
@@ -70,7 +70,7 @@ Menu {
     }
     MenuItem {
         text: qsTr("Remove From Launcher")
-        visible: model.pinned
+        enabled: model.pinned
         onClicked: {
             listView.model.unpin(model.appId);
             menu.close();
@@ -79,20 +79,20 @@ Menu {
     CustomComponents.MenuSeparator {}
     MenuItem {
         text: qsTr("Show All Windows")
-        visible: model.running
+        enabled: model.running
     }
     MenuItem {
         text: qsTr("Show")
-        visible: model.running && !model.active
+        enabled: model.running && !model.active
     }
     MenuItem {
         text: qsTr("Hide")
-        visible: model.running && model.active
+        enabled: model.running && model.active
     }
     CustomComponents.MenuSeparator {}
     MenuItem {
         text: qsTr("Quit")
-        visible: model.running
+        enabled: model.running
         onClicked: {
             if (!listView.model.get(index).quit())
                 console.warn("Failed to quit:", model.appId);
