@@ -25,9 +25,8 @@
  ***************************************************************************/
 
 #include <QtCore/QLocale>
-#include <QtCore/QStandardPaths>
-#include <QtCore/QDebug>
 
+#include "appidmapping_p.h"
 #include "applicationaction.h"
 #include "applicationinfo.h"
 #include "applicationinfo_p.h"
@@ -36,64 +35,14 @@
  * ApplicationInfoPrivate
  */
 
-ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &_appId, ApplicationInfo *parent)
-    : appId(_appId)
-    , state(ApplicationInfo::NotRunning)
+ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &origAppId, ApplicationInfo *parent)
+    : state(ApplicationInfo::NotRunning)
     , entry(Q_NULLPTR)
     , focused(false)
     , q_ptr(parent)
 {
-    // Map known identifiers to the correct ones
-    QMap<QString, QString> map;
-    map[QLatin1String("org.hawaiios.hawaii-system-preferences")] = QLatin1String("org.hawaiios.SystemPreferences");
-    if (map.contains(appId))
-        appId = map[appId];
-
-    // Replace '-' with '/' as mentioned here:
-    // http://standards.freedesktop.org/desktop-entry-spec/1.1/ape.html
-    // except for special cases
-    QStringList dashExclusions;
-    dashExclusions.append(QLatin1String("qterminal-qt5"));
-    const QString name = dashExclusions.contains(appId) ? appId : appId.replace('-', '/');
-
-    // Now the fun part begins: Qt sets app_id to program name + ".desktop",
-    // while GTK+ uses the program name starting with an upper case letter.
-    // It seems a pattern with D-Bus activatable it goes like this: let's take
-    // GNOME Clocks as an example: Gnome-clocks app_id and
-    // org.gnome.clocks.desktop desktop entry.
-
-    // Case 1: assume app_id is already the desktop file base name (Qt)
-    fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                      name);
-
-    // Case 2: try without changing the case appending ".desktop"
-    if (fileName.isEmpty()) {
-        fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                          name + QStringLiteral(".desktop"));
-    }
-
-    // Case 3: lower case and append ".desktop"
-    if (fileName.isEmpty()) {
-        fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                          name.toLower() + QStringLiteral(".desktop"));
-    }
-
-    // Case 4: lower case, do not replace '-' with '/' and append ".desktop" (GTK+)
-    if (fileName.isEmpty())
-        fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                          appId.toLower() + QStringLiteral(".desktop"));
-
-    // Case 5: D-Bus activatable applications: lower case appId, split with '-'
-    // and treat the first as a reverse domain name prepending org (yeah it might
-    // be another extension...)
-    QStringList pieces = appId.toLower().split('-', QString::SkipEmptyParts);
-    if (pieces.size() == 2) {
-        QString processedAppId = QStringLiteral("org.%1.%2")
-                .arg(pieces.at(0)).arg(pieces.at(1));
-        if (fileName.isEmpty())
-            fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                              processedAppId + QStringLiteral(".desktop"));
-    }
+    appId = AppIdMapping::mapAppId(origAppId);
+    fileName = AppIdMapping::desktopFileName(appId);
 
     if (!fileName.isEmpty()) {
         // Open the desktop file

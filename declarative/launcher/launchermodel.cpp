@@ -27,6 +27,7 @@
 #include <QtGui/QIcon>
 #include <QDebug>
 
+#include "appidmapping_p.h"
 #include "applicationinfo.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
@@ -246,8 +247,10 @@ void LauncherModel::pinLauncher(const QString &appId, bool pinned)
     m_settings->setValue(QStringLiteral("pinnedLaunchers"), pinnedLaunchers);
 }
 
-void LauncherModel::handleApplicationAdded(const QString &appId, pid_t pid)
+void LauncherModel::handleApplicationAdded(const QString &origAppId, pid_t pid)
 {
+    QString appId = AppIdMapping::mapAppId(origAppId);
+
     // Do we have already an icon?
     for (int i = 0; i < m_list.size(); i++) {
         LauncherItem *item = m_list.at(i);
@@ -268,8 +271,10 @@ void LauncherModel::handleApplicationAdded(const QString &appId, pid_t pid)
     endInsertRows();
 }
 
-void LauncherModel::handleApplicationRemoved(const QString &appId, pid_t pid)
+void LauncherModel::handleApplicationRemoved(const QString &origAppId, pid_t pid)
 {
+    QString appId = AppIdMapping::mapAppId(origAppId);
+
     for (int i = 0; i < m_list.size(); i++) {
         LauncherItem *item = m_list.at(i);
         if (item->appId() == appId) {
@@ -296,8 +301,10 @@ void LauncherModel::handleApplicationRemoved(const QString &appId, pid_t pid)
     }
 }
 
-void LauncherModel::handleApplicationFocused(const QString &appId)
+void LauncherModel::handleApplicationFocused(const QString &origAppId)
 {
+    QString appId = AppIdMapping::mapAppId(origAppId);
+
     for (int i = 0; i < m_list.size(); i++) {
         LauncherItem *item = m_list.at(i);
         if (item->appId() == appId) {
@@ -309,8 +316,10 @@ void LauncherModel::handleApplicationFocused(const QString &appId)
     }
 }
 
-void LauncherModel::handleApplicationUnfocused(const QString &appId)
+void LauncherModel::handleApplicationUnfocused(const QString &origAppId)
 {
+    QString appId = AppIdMapping::mapAppId(origAppId);
+
     for (int i = 0; i < m_list.size(); i++) {
         LauncherItem *item = m_list.at(i);
         if (item->appId() == appId) {
