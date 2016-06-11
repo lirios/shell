@@ -43,9 +43,18 @@ ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &_appId, Applicatio
     , focused(false)
     , q_ptr(parent)
 {
+    // Map known identifiers to the correct ones
+    QMap<QString, QString> map;
+    map[QLatin1String("org.hawaiios.hawaii-system-preferences")] = QLatin1String("org.hawaiios.SystemPreferences");
+    if (map.contains(appId))
+        appId = map[appId];
+
     // Replace '-' with '/' as mentioned here:
     // http://standards.freedesktop.org/desktop-entry-spec/1.1/ape.html
-    const QString name = QString(appId).replace('-', '/');
+    // except for special cases
+    QStringList dashExclusions;
+    dashExclusions.append(QLatin1String("qterminal-qt5"));
+    const QString name = dashExclusions.contains(appId) ? appId : appId.replace('-', '/');
 
     // Now the fun part begins: Qt sets app_id to program name + ".desktop",
     // while GTK+ uses the program name starting with an upper case letter.
