@@ -39,6 +39,11 @@ Rectangle {
     readonly property alias currentLauncherItem: launcher.currentItem
     property real size: FluidUi.Units.iconSizes.large
     readonly property real spacing: FluidUi.Units.smallSpacing
+    readonly property int orientation: {
+        if (state == "left" || state == "right")
+            return Qt.Vertical;
+        return Qt.Horizontal;
+    }
 
     signal indicatorTriggered(var indicator)
 
