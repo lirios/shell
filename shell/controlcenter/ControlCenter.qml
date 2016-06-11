@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Qt.labs.controls 1.0
+import Qt.labs.controls.material 1.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.launcher 0.1 as CppLauncher
@@ -60,7 +61,6 @@ FocusScope {
                 Label {
                     text: "Weather: 20 C, Clear"
                     font.pointSize: Themes.Theme.defaultFont.pointSize * 0.9
-                    color: Themes.Theme.palette.panel.textColor
 
                     MouseArea {
                         anchors.fill: parent
@@ -103,8 +103,7 @@ FocusScope {
 
                 Label {
                     text: "System Language: English"
-                    font.pointSize: Themes.Theme.defaultFont.pointSize * 0.9
-                    color: Themes.Theme.palette.panel.textColor
+                    scale: 0.9
 
                     MouseArea {
                         anchors.fill: parent
@@ -141,7 +140,6 @@ FocusScope {
             Label {
                 anchors.centerIn: parent
                 text: "Not implemented yet"
-                color: Themes.Theme.palette.panel.textColor
             }
         }
     }
@@ -153,7 +151,6 @@ FocusScope {
             Label {
                 anchors.centerIn: parent
                 text: "Not implemented yet"
-                color: Themes.Theme.palette.panel.textColor
             }
         }
     }
@@ -165,7 +162,6 @@ FocusScope {
             Label {
                 anchors.centerIn: parent
                 text: "Not implemented yet"
-                color: Themes.Theme.palette.panel.textColor
             }
         }
     }
@@ -177,7 +173,6 @@ FocusScope {
             Label {
                 anchors.centerIn: parent
                 text: "Not implemented yet"
-                color: Themes.Theme.palette.panel.textColor
             }
         }
     }

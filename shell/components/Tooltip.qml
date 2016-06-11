@@ -25,6 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Qt.labs.controls 1.0
+import Qt.labs.controls.material 1.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import "private" as Private
@@ -58,18 +60,16 @@ Private.PopupBase {
         opacity: __priv.reallyShowing ? 1.0 : 0.0
         visible: opacity > 0.0
 
-        Text {
+        Label {
             id: label
             anchors.centerIn: parent
-            color: Themes.Theme.palette.panel.textColor
             elide: Text.ElideRight
             wrapMode: Text.NoWrap
             style: Text.Raised
-            styleColor: Themes.Theme.palette.panel.textEffectColor
+            styleColor: Material.secondaryTextColor
             horizontalAlignment: Text.AlignHCenter
             width: Math.min(implicitWidth, FluidUi.Units.dp(100))
             height: implicitHeight
-            renderType: Text.NativeRendering
         }
 
         Behavior on opacity {

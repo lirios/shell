@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
+import Qt.labs.controls.material 1.0
 import Fluid.Ui 1.0 as FluidUi
 
 Row {
@@ -53,7 +53,7 @@ Row {
                 margins: FluidUi.Units.gu(0.25)
             }
             iconName: "window-close-symbolic"
-            color: Themes.Theme.palette.window.textColor
+            color: Material.primaryTextColor
         }
 
         MouseArea {
@@ -72,8 +72,8 @@ Row {
         height: parent.height
         radius: height / 2
         gradient: Gradient {
-            GradientStop { color: Qt.lighter(Themes.Theme.palette.window.primaryColor, 1.3); position: 0 }
-            GradientStop { color: Qt.darker(Themes.Theme.palette.window.primaryColor, 1.3); position: 1 }
+            GradientStop { color: Qt.lighter(Material.dialogColor, 1.3); position: 0 }
+            GradientStop { color: Qt.darker(Material.dialogColor, 1.3); position: 1 }
         }
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
@@ -84,7 +84,7 @@ Row {
                 margins: FluidUi.Units.gu(0.25)
             }
             iconName: "window-maximize-symbolic"
-            color: Themes.Theme.palette.window.textColor
+            color: Material.primaryTextColor
         }
 
         MouseArea {
@@ -98,8 +98,8 @@ Row {
         height: parent.height
         radius: height / 2
         gradient: Gradient {
-            GradientStop { color: Qt.lighter(Themes.Theme.palette.window.primaryColor, 1.3); position: 0 }
-            GradientStop { color: Qt.darker(Themes.Theme.palette.window.primaryColor, 1.3); position: 1 }
+            GradientStop { color: Qt.lighter(Material.dialogColor, 1.3); position: 0 }
+            GradientStop { color: Qt.darker(Material.dialogColor, 1.3); position: 1 }
         }
         border.width: 1
         border.color: Qt.rgba(0, 0, 0, 0.5)
@@ -110,7 +110,7 @@ Row {
                 margins: FluidUi.Units.gu(0.25)
             }
             iconName: "window-minimize-symbolic"
-            color: Themes.Theme.palette.window.textColor
+            color: Material.primaryTextColor
         }
 
         MouseArea {

@@ -25,8 +25,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Qt.labs.controls 1.0
+import Qt.labs.controls.material 1.0
 import QtQuick.Layouts 1.0
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
@@ -41,8 +42,8 @@ Rectangle {
 
     id: root
     gradient: Gradient {
-        GradientStop { color: Themes.Theme.palette.window.primaryColor; position: 0 }
-        GradientStop { color: Themes.Theme.palette.window.secondaryColor; position: 1 }
+        GradientStop { color: Material.dialogColor; position: 0 }
+        GradientStop { color: Material.drawerBackgroundColor; position: 1 }
     }
 
     MouseArea {
@@ -74,14 +75,13 @@ Rectangle {
             Layout.alignment: Qt.AlignVCenter
         }
 
-        Text {
+        Label {
             id: titleLabel
-            color: Themes.Theme.palette.window.textColor
             font.bold: true
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             style: Text.Raised
-            styleColor: Themes.Theme.palette.window.textEffectColor
+            styleColor: Material.secondaryTextColor
             height: parent.height
             renderType: Text.NativeRendering
 

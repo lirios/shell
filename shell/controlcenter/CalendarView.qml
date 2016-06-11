@@ -27,6 +27,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import Qt.labs.controls 1.0
+import Qt.labs.controls.material 1.0
 import Qt.labs.calendar 1.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -53,7 +54,7 @@ Item {
 
             Rectangle {
                 anchors.bottom: parent.bottom
-                color: Themes.Theme.palette.panel.textColor
+                color: Material.dividerColor
                 opacity: 0.4
                 height: 1
             }
@@ -71,12 +72,11 @@ Item {
             DayOfWeekRow {
                 id: dayOfWeek
                 locale: calendar.locale
-                delegate: Text {
+                delegate: Label {
                     text: model.shortName
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font: dayOfWeek.font
-                    color: Themes.Theme.palette.panel.textColor
                 }
 
                 Layout.column: 1
@@ -89,12 +89,11 @@ Item {
                 year: calendar.year
                 locale: calendar.locale
                 font.bold: true
-                delegate: Text {
+                delegate: Label {
                     text: model.weekNumber
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font: weekNumber.font
-                    color: Themes.Theme.palette.panel.textColor
                 }
 
                 Layout.fillHeight: true
@@ -102,12 +101,11 @@ Item {
 
             MonthGrid {
                 id: calendar
-                delegate: Text {
+                delegate: Label {
                     text: model.day
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font: calendar.font
-                    color: Themes.Theme.palette.panel.textColor
                     opacity: model.month === calendar.month ? 1 : 0
                 }
 

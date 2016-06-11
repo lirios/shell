@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Qt.labs.controls.material 1.0
 import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 import GreenIsland 1.0
@@ -326,7 +327,7 @@ Rectangle {
         // TODO: Don't resize the panel, the window is maximized before we change the available
         // geometry resulting in a "hole" between the window and the panel
         if (output.activeWindow && output.activeWindow.maximized) {
-            color = Themes.Theme.palette.rgba(Themes.Theme.palette.window.backgroundColor, 0.85);
+            color = Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.85);
             //launcher.iconSize = FluidUi.Units.iconSizes.medium;
         } else {
             color = "transparent";
