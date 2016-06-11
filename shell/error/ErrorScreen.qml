@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls 1.0
 
 Rectangle {
     gradient: Gradient {
@@ -37,7 +37,7 @@ Rectangle {
     ColumnLayout {
         anchors.centerIn: parent
 
-        LabsControls.Label {
+        Label {
             text: qsTr(":(")
             color: "white"
             font.pointSize: 42
@@ -45,7 +45,7 @@ Rectangle {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        LabsControls.Label {
+        Label {
             text: qsTr("The system ran into a problem that it couldn't handle.\n" +
                        "Press the button to quit.")
             color: "white"
@@ -58,7 +58,7 @@ Rectangle {
             Layout.minimumHeight: 100
         }
 
-        LabsControls.Button {
+        Button {
             text: qsTr("Quit")
             onClicked: Qt.quit()
 

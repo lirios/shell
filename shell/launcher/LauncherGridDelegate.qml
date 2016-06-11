@@ -26,15 +26,15 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
-import Qt.labs.controls.material 1.0 as LabsMaterial
+import Qt.labs.controls 1.0
+import Qt.labs.controls.material 1.0
 import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
     property alias iconSize: icon.width
     property bool hovered: false
 
-    color: hovered ? LabsMaterial.Material.accent : "transparent"
+    color: hovered ? Material.accent : "transparent"
     radius: FluidUi.Units.dp(6)
     antialiasing: true
 
@@ -55,7 +55,7 @@ Rectangle {
         asynchronous: true
     }
 
-    LabsControls.Label {
+    Label {
         id: label
         anchors {
             horizontalCenter: parent.horizontalCenter

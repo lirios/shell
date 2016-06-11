@@ -26,8 +26,8 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
-import Qt.labs.calendar 1.0 as LabsCalendar
+import Qt.labs.controls 1.0
+import Qt.labs.calendar 1.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -43,7 +43,7 @@ Item {
         Item {
             height: FluidUi.Units.gu(2)
 
-            LabsControls.Label {
+            Label {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.margins: FluidUi.Units.smallSpacing
@@ -68,7 +68,7 @@ Item {
         GridLayout {
             columns: 2
 
-            LabsCalendar.DayOfWeekRow {
+            DayOfWeekRow {
                 id: dayOfWeek
                 locale: calendar.locale
                 delegate: Text {
@@ -83,7 +83,7 @@ Item {
                 Layout.fillWidth: true
             }
 
-            LabsCalendar.WeekNumberColumn {
+            WeekNumberColumn {
                 id: weekNumber
                 month: calendar.month
                 year: calendar.year
@@ -100,7 +100,7 @@ Item {
                 Layout.fillHeight: true
             }
 
-            LabsCalendar.MonthGrid {
+            MonthGrid {
                 id: calendar
                 delegate: Text {
                     text: model.day
@@ -122,8 +122,8 @@ Item {
             model: 25
             delegate: hourDelegate
 
-            //LabsControls.ScrollBar.horizontal: LabsControls.ScrollBar {}
-            //LabsControls.ScrollBar.vertical: LabsControls.ScrollBar {}
+            //ScrollBar.horizontal: ScrollBar {}
+            //ScrollBar.vertical: ScrollBar {}
 
             Layout.fillWidth: true
             Layout.fillHeight: true

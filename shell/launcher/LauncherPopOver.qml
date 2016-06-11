@@ -26,18 +26,18 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls 1.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
-LabsControls.Popup {
+Popup {
     signal appLaunched()
     signal dismissed()
 
     id: launcherPopOver
     focus: true
-    closePolicy: LabsControls.Popup.OnEscape | LabsControls.Popup.OnPressOutside
+    closePolicy: Popup.OnEscape | Popup.OnPressOutside
     implicitWidth: mainLayout.implicitWidth +
                    launcherPopOver.leftPadding + launcherPopOver.rightPadding +
                    launcherPopOver.leftMargin + launcherPopOver.rightMargin
@@ -72,7 +72,7 @@ LabsControls.Popup {
                 width: FluidUi.Units.smallSpacing
             }
 
-            LabsControls.TextField {
+            TextField {
                 id: searchText
                 placeholderText: qsTr("Type an application name...")
                 focus: true
@@ -126,7 +126,7 @@ LabsControls.Popup {
                     Layout.fillHeight: true
                 }
 
-                LabsControls.PageIndicator {
+                PageIndicator {
                     id: pageIndicator
                     count: grid.numPages
                     currentIndex: grid.currentPage

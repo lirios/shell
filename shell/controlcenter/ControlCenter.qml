@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls 1.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.launcher 0.1 as CppLauncher
@@ -57,7 +57,7 @@ FocusScope {
             RowLayout {
                 spacing: FluidUi.Units.largeSpacing
 
-                LabsControls.Label {
+                Label {
                     text: "Weather: 20 C, Clear"
                     font.pointSize: Themes.Theme.defaultFont.pointSize * 0.9
                     color: Themes.Theme.palette.panel.textColor
@@ -72,7 +72,7 @@ FocusScope {
                     Layout.fillWidth: true
                 }
 
-                LabsControls.Button {
+                Button {
                     text: "Clock Settings"
                     //onClicked: stackView.push(clockSettingsComponent)
                     onClicked: processRunner.executeSetting("clock")
@@ -92,7 +92,7 @@ FocusScope {
             RowLayout {
                 spacing: FluidUi.Units.largeSpacing
 
-                LabsControls.Button {
+                Button {
                     text: "Add Appointment"
                     onClicked: stackView.push(appointmentComponent)
                 }
@@ -101,7 +101,7 @@ FocusScope {
                     Layout.fillWidth: true
                 }
 
-                LabsControls.Label {
+                Label {
                     text: "System Language: English"
                     font.pointSize: Themes.Theme.defaultFont.pointSize * 0.9
                     color: Themes.Theme.palette.panel.textColor
@@ -117,7 +117,7 @@ FocusScope {
             }
         }
 
-        LabsControls.StackView {
+        StackView {
             id: stackView
             initialItem: calendarComponent
 
@@ -138,7 +138,7 @@ FocusScope {
         id: weatherComponent
 
         Item {
-            LabsControls.Label {
+            Label {
                 anchors.centerIn: parent
                 text: "Not implemented yet"
                 color: Themes.Theme.palette.panel.textColor
@@ -150,7 +150,7 @@ FocusScope {
         id: clockSettingsComponent
 
         Item {
-            LabsControls.Label {
+            Label {
                 anchors.centerIn: parent
                 text: "Not implemented yet"
                 color: Themes.Theme.palette.panel.textColor
@@ -162,7 +162,7 @@ FocusScope {
         id: appointmentComponent
 
         Item {
-            LabsControls.Label {
+            Label {
                 anchors.centerIn: parent
                 text: "Not implemented yet"
                 color: Themes.Theme.palette.panel.textColor
@@ -174,7 +174,7 @@ FocusScope {
         id: languageComponent
 
         Item {
-            LabsControls.Label {
+            Label {
                 anchors.centerIn: parent
                 text: "Not implemented yet"
                 color: Themes.Theme.palette.panel.textColor

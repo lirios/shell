@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls 1.0
 
 Item {
     Image {
@@ -46,7 +46,7 @@ Item {
         radius: 32
     }
 
-    LabsControls.BusyIndicator {
+    BusyIndicator {
         anchors.centerIn: parent
     }
 }

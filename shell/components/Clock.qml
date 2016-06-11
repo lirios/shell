@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls 1.0
 import Hawaii.Themes 1.0 as Themes
 
 ColumnLayout {
@@ -56,7 +56,7 @@ ColumnLayout {
         onDoubleClicked: root.doubleClicked()
     }
 
-    LabsControls.Label {
+    Label {
         id: timeLabel
         font.pointSize: 36
         color: Themes.Theme.palette.panel.textColor
@@ -64,7 +64,7 @@ ColumnLayout {
         Layout.alignment: Qt.AlignCenter
     }
 
-    LabsControls.Label {
+    Label {
         id: dateLabel
         font.pointSize: 18
         color: Themes.Theme.palette.panel.textColor

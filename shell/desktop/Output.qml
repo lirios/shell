@@ -26,8 +26,8 @@
 
 import QtQuick 2.5
 import QtQuick.Window 2.2
-import Qt.labs.controls 1.0 as LabsControls
-import Qt.labs.controls.material 1.0 as LabsMaterial
+import Qt.labs.controls 1.0
+import Qt.labs.controls.material 1.0
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 import "../screens"
@@ -59,16 +59,16 @@ GreenIsland.ExtendedOutput {
     scaleFactor: nativeScreen.scaleFactor
     sizeFollowsWindow: false
     automaticFrameCallback: powerState === GreenIsland.ExtendedOutput.PowerStateOn
-    window: LabsControls.ApplicationWindow {
+    window: ApplicationWindow {
         id: window
         minimumWidth: 1024
         minimumHeight: 768
         maximumWidth: nativeScreen.width
         maximumHeight: nativeScreen.height
 
-        LabsMaterial.Material.theme: LabsMaterial.Material.Dark
-        LabsMaterial.Material.primary: LabsMaterial.Material.Blue
-        LabsMaterial.Material.accent: LabsMaterial.Material.LightBlue
+        Material.theme: Material.Dark
+        Material.primary: Material.Blue
+        Material.accent: Material.LightBlue
 
         Connections {
             target: SessionInterface

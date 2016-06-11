@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls.material 1.0 as LabsMaterial
+import Qt.labs.controls.material 1.0
 import Fluid.Ui 1.0 as FluidUi
 
 Rectangle {
@@ -33,7 +33,7 @@ Rectangle {
     height: width
     radius: width / 2
     antialiasing: true
-    color: LabsMaterial.Material.accent
+    color: Material.accent
     opacity: 0.0
 
     Behavior on opacity {

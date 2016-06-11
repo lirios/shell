@@ -25,10 +25,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls 1.0
 import Fluid.Ui 1.0 as FluidUi
 
-LabsControls.ToolButton {
+ToolButton {
     property alias iconName: indicator.iconName
     property alias iconSize: indicator.width
 

@@ -27,7 +27,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls 1.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -172,7 +172,7 @@ FluidUi.Showable {
             Layout.fillWidth: true
         }
 
-        LabsControls.ProgressBar {
+        ProgressBar {
             width: FluidUi.Units.largeSpacing * 5
             from: 0
             to: __priv.timeout
@@ -181,7 +181,7 @@ FluidUi.Showable {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        LabsControls.Label {
+        Label {
             id: actionText
             text: {
                 var msg = "";
@@ -290,12 +290,12 @@ FluidUi.Showable {
         }
 
         RowLayout {
-            LabsControls.Button {
+            Button {
                 text: qsTr("Cancel")
                 onClicked: root.cancel()
             }
 
-            LabsControls.Button {
+            Button {
                 id: okButton
                 highlighted: true
                 onClicked: __priv.currentAction()

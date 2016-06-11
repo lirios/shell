@@ -27,7 +27,7 @@
 import QtQuick 2.4
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
-import Qt.labs.controls 1.0 as LabsControls
+import Qt.labs.controls 1.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import Fluid.Effects 1.0 as FluidEffects
@@ -100,7 +100,7 @@ FluidUi.Showable {
             Layout.fillHeight: true
         }
 
-        LabsControls.Label {
+        Label {
             id: timeLabel
             font.pointSize: 42
             color: Themes.Theme.palette.window.textColor
@@ -110,7 +110,7 @@ FluidUi.Showable {
             Layout.alignment: Qt.AlignCenter
         }
 
-        LabsControls.Label {
+        Label {
             id: dateLabel
             font.pointSize: 36
             color: Themes.Theme.palette.window.textColor
@@ -124,12 +124,12 @@ FluidUi.Showable {
             Layout.preferredHeight: FluidUi.Units.dp(100)
         }
 
-        LabsControls.Pane {
+        Pane {
             Column {
                 anchors.centerIn: parent
                 spacing: FluidUi.Units.smallSpacing
 
-                LabsControls.TextField {
+                TextField {
                     id: passwordField
                     placeholderText: qsTr("Password")
                     width: FluidUi.Units.gu(20)
@@ -146,7 +146,7 @@ FluidUi.Showable {
                     }
                 }
 
-                LabsControls.Label {
+                Label {
                     id: errorLabel
                     color: "red"
                     text: " "
