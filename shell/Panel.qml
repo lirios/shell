@@ -261,8 +261,15 @@ Rectangle {
         id: mainLayout
         anchors.fill: parent
 
-        LauncherIndicator {
-            id: launcherIndicator
+        Rectangle {
+            radius: FluidUi.Units.dp(6)
+            color: Material.dialogColor
+            implicitWidth: launcherIndicator.width + FluidUi.Units.smallSpacing
+            implicitHeight: launcherIndicator.height + FluidUi.Units.smallSpacing
+
+            LauncherIndicator {
+                id: launcherIndicator
+            }
 
             Layout.alignment: Qt.AlignCenter
         }
@@ -276,52 +283,61 @@ Rectangle {
             Layout.fillHeight: true
         }
 
-        GridLayout {
-            property real iconSize: {
-                switch (panel.size) {
-                case FluidUi.Units.iconSizes.medium:
-                    return FluidUi.Units.iconSizes.small;
-                case FluidUi.Units.iconSizes.large:
+        Rectangle {
+            radius: FluidUi.Units.dp(6)
+            color: Material.dialogColor
+            implicitWidth: indicatorsView.implicitWidth + FluidUi.Units.smallSpacing
+            implicitHeight: indicatorsView.implicitHeight + FluidUi.Units.smallSpacing
+
+            GridLayout {
+                property real iconSize: {
+                    switch (panel.size) {
+                    case FluidUi.Units.iconSizes.medium:
+                        return FluidUi.Units.iconSizes.small;
+                    case FluidUi.Units.iconSizes.large:
+                        return FluidUi.Units.iconSizes.smallMedium;
+                    case FluidUi.Units.iconSizes.huge:
+                        return FluidUi.Units.iconSizes.medium;
+                    default:
+                        break;
+                    }
+
                     return FluidUi.Units.iconSizes.smallMedium;
-                case FluidUi.Units.iconSizes.huge:
-                    return FluidUi.Units.iconSizes.medium;
-                default:
-                    break;
                 }
 
-                return FluidUi.Units.iconSizes.smallMedium;
-            }
+                id: indicatorsView
 
-            id: indicatorsView
+                EventsIndicator {
+                    iconSize: indicatorsView.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
 
-            EventsIndicator {
-                iconSize: indicatorsView.iconSize
-                onTriggered: indicatorTriggered(caller)
-            }
+                SettingsIndicator {
+                    iconSize: indicatorsView.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
 
-            SettingsIndicator {
-                iconSize: indicatorsView.iconSize
-                onTriggered: indicatorTriggered(caller)
-            }
+                SoundIndicator {
+                    iconSize: indicatorsView.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
 
-            SoundIndicator {
-                iconSize: indicatorsView.iconSize
-                onTriggered: indicatorTriggered(caller)
-            }
+                NetworkIndicator {
+                    iconSize: indicatorsView.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
 
-            NetworkIndicator {
-                iconSize: indicatorsView.iconSize
-                onTriggered: indicatorTriggered(caller)
-            }
+                StorageIndicator {
+                    iconSize: indicatorsView.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
 
-            StorageIndicator {
-                iconSize: indicatorsView.iconSize
-                onTriggered: indicatorTriggered(caller)
-            }
+                BatteryIndicator {
+                    iconSize: indicatorsView.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
 
-            BatteryIndicator {
-                iconSize: indicatorsView.iconSize
-                onTriggered: indicatorTriggered(caller)
+                Layout.alignment: Qt.AlignCenter
             }
         }
     }
