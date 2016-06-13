@@ -26,6 +26,7 @@
 
 #include <QtQml/QtQml>
 
+#include "applicationaction.h"
 #include "appsmodel.h"
 #include "appsproxymodel.h"
 #include "categoriesmodel.h"
@@ -55,6 +56,8 @@ public:
         qmlRegisterType<AppsProxyModel>(uri, 0, 1, "AppsProxyModel");
         qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
         qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
+        qmlRegisterUncreatableType<ApplicationAction>(uri, 0, 1, "ApplicationAction",
+                                                      QStringLiteral("Cannot instantiate ApplicationAction"));
         qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
                                                  QStringLiteral("Cannot instantiate LauncherItem"));
         qmlRegisterType<ProcessRunner>(uri, 0, 1, "ProcessRunner");

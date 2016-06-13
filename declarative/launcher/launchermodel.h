@@ -56,8 +56,7 @@ public:
         HasCountRole,
         CountRole,
         HasProgressRole,
-        ProgressRole,
-        HasActionsRole
+        ProgressRole
     };
 
     LauncherModel(QObject *parent = 0);

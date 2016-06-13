@@ -105,7 +105,6 @@ QHash<int, QByteArray> LauncherModel::roleNames() const
     roles.insert(CountRole, "count");
     roles.insert(HasProgressRole, "hasProgress");
     roles.insert(ProgressRole, "progress");
-    roles.insert(HasActionsRole, "hasActions");
     return roles;
 }
 
@@ -148,12 +147,6 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
         return item->progress() >= 0;
     case ProgressRole:
         return item->progress();
-        /*
-    case HasActionListRole:
-        return item->actionsCount();
-    case ActionListRole:
-        return item->actions();
-        */
     default:
         break;
     }

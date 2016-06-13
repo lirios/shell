@@ -120,6 +120,27 @@ int LauncherItem::progress() const
     return m_progress;
 }
 
+QQmlListProperty<ApplicationAction> LauncherItem::actions()
+{
+    return QQmlListProperty<ApplicationAction>(this, Q_NULLPTR, actionsCount, actionAt);
+}
+
+int LauncherItem::actionsCount(QQmlListProperty<ApplicationAction> *prop)
+{
+    LauncherItem *that = static_cast<LauncherItem *>(prop->object);
+    if (!that || !that->m_info)
+        return 0;
+    return that->m_info->actions().count();
+}
+
+ApplicationAction *LauncherItem::actionAt(QQmlListProperty<ApplicationAction> *prop, int index)
+{
+    LauncherItem *that = static_cast<LauncherItem *>(prop->object);
+    if (!that || !that->m_info)
+        return Q_NULLPTR;
+    return that->m_info->actions().at(index);
+}
+
 bool LauncherItem::launch()
 {
     if (m_info->fileName().isEmpty())

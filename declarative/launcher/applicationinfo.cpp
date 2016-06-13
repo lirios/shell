@@ -51,9 +51,6 @@ ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &origAppId, Applica
 
         // Actions
         retrieveActions();
-
-        // Read from the main section from now on
-        entry->beginGroup(QStringLiteral("Desktop Entry"));
     }
 }
 
@@ -64,17 +61,24 @@ ApplicationInfoPrivate::~ApplicationInfoPrivate()
     entry->deleteLater();
 }
 
-QVariant ApplicationInfoPrivate::value(const QString &key, const QVariant &defaultValue) const
+QVariant ApplicationInfoPrivate::value(const QString &group, const QString &key, const QVariant &defaultValue) const
 {
     if (!entry)
         return defaultValue;
-    return entry->value(key, defaultValue);
+
+    entry->beginGroup(group);
+    QVariant value = entry->value(key, defaultValue);
+    entry->endGroup();
+
+    return value;
 }
 
-QVariant ApplicationInfoPrivate::localizedValue(const QString &key, const QVariant &defaultValue) const
+QVariant ApplicationInfoPrivate::localizedValue(const QString &group, const QString &key, const QVariant &defaultValue) const
 {
     if (!entry)
         return defaultValue;
+
+    QVariant value = defaultValue;
 
     QString locale = QLocale().name();
     QString shortLocale = locale.split('_').first();
@@ -82,13 +86,20 @@ QVariant ApplicationInfoPrivate::localizedValue(const QString &key, const QVaria
     const QString longKey = QStringLiteral("%1[%2]").arg(key).arg(locale);
     const QString shortKey = QStringLiteral("%1[%2]").arg(key).arg(shortLocale);
 
+    entry->beginGroup(group);
+
     // First try with Key[xx_YY], then Key[XX] and fall
     // back to just Key
     if (locale != shortLocale && entry->contains(longKey))
-        return entry->value(longKey, defaultValue);
-    if (entry->contains(shortKey))
-        return entry->value(shortKey, defaultValue);
-    return entry->value(key, defaultValue);
+        value = entry->value(longKey, defaultValue);
+    else if (entry->contains(shortKey))
+        value = entry->value(shortKey, defaultValue);
+    else
+        value = entry->value(key, defaultValue);
+
+    entry->endGroup();
+
+    return value;
 }
 
 void ApplicationInfoPrivate::setState(ApplicationInfo::State value)
@@ -104,27 +115,26 @@ void ApplicationInfoPrivate::setState(ApplicationInfo::State value)
 
 void ApplicationInfoPrivate::retrieveActions()
 {
-    if (!entry || !entry->contains(QStringLiteral("Actions")))
+    if (!entry)
         return;
 
     Q_Q(ApplicationInfo);
 
-    QStringList actionNames = entry->value(QStringLiteral("Actions")).toString().split(';', QString::SkipEmptyParts);
-    for (const QString &actionName: actionNames) {
-        entry->beginGroup(QStringLiteral("Desktop Action %1").arg(actionName));
+    QStringList actionNames = value(QLatin1String("Desktop Entry"),
+                                    QLatin1String("Actions")).toString().split(';', QString::SkipEmptyParts);
+    Q_FOREACH (const QString &actionName, actionNames) {
+        const QString group = QStringLiteral("Desktop Action %1").arg(actionName);
 
         // Name is mandatory, the specification says to ignore actions without it
-        if (!entry->childKeys().contains(QStringLiteral("Name")))
+        if (localizedValue(group, QLatin1String("Name")).toString().isEmpty())
             continue;
 
         ApplicationAction *action = new ApplicationAction(
-                    localizedValue(QStringLiteral("Name")).toString(),
-                    localizedValue(QStringLiteral("Icon")).toString(),
-                    localizedValue(QStringLiteral("Exec")).toString(),
+                    localizedValue(group, QLatin1String("Name")).toString(),
+                    localizedValue(group, QLatin1String("Icon")).toString(),
+                    localizedValue(group, QLatin1String("Exec")).toString(),
                     q);
         actions.append(action);
-
-        entry->endGroup();
     }
 }
 
@@ -168,20 +178,23 @@ QString ApplicationInfo::fileName() const
 QString ApplicationInfo::name() const
 {
     Q_D(const ApplicationInfo);
-    return d->localizedValue(QStringLiteral("Name")).toString();
+    return d->localizedValue(QLatin1String("Desktop Entry"),
+                             QLatin1String("Name")).toString();
 }
 
 QString ApplicationInfo::comment() const
 {
     Q_D(const ApplicationInfo);
-    return d->localizedValue(QStringLiteral("Comment")).toString();
+    return d->localizedValue(QLatin1String("Desktop Entry"),
+                             QLatin1String("Comment")).toString();
 }
 
 QString ApplicationInfo::iconName() const
 {
     Q_D(const ApplicationInfo);
-    return d->value(QStringLiteral("Icon"),
-                    QStringLiteral("application-octet-stream")).toString();
+    return d->value(QLatin1String("Desktop Entry"),
+                    QLatin1String("Icon"),
+                    QLatin1String("application-octet-stream")).toString();
 }
 
 bool ApplicationInfo::isFocused() const
