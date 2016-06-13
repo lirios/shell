@@ -27,34 +27,53 @@
 import QtQuick 2.0
 import Qt.labs.controls 1.0
 import Fluid.Ui 1.0 as FluidUi
+import org.hawaiios.launcher 0.1 as CppLauncher
 import "../components" as CustomComponents
 
 Menu {
+    readonly property var launcherItem: listView.model.get(root.indexOfThisDelegate)
+
     id: menu
     transformOrigin: Menu.BottomLeft
 
+    CppLauncher.ProcessRunner {
+        id: process
+    }
+
+    // Component to create application actions
+    Component {
+        id: actionItemComponent
+
+        MenuItem {
+            property string command
+            onClicked: {
+                if (command) {
+                    process.launchCommand(command);
+                    menu.close();
+                }
+            }
+        }
+    }
+
+    // Component for separators
+    Component {
+        id: separatorComponent
+
+        CustomComponents.MenuSeparator {}
+    }
+
+    /*
     Repeater {
-        model: listView.model.get(root.indexOfThisDelegate).windows
+        model: launcherItem.windows
 
         MenuItem {
             text: modelData.title
         }
     }
-
     CustomComponents.MenuSeparator {
         visible: model.hasWindows
     }
-
-    Repeater {
-        model: menu.actionList ? menu.actionList : 0
-
-        MenuItem {
-            text: "Action " + index
-        }
-    }
-    CustomComponents.MenuSeparator {
-        visible: model.hasActionList
-    }
+    */
     MenuItem {
         text: qsTr("New Window")
         enabled: model.running
@@ -97,6 +116,25 @@ Menu {
             if (!listView.model.get(index).quit())
                 console.warn("Failed to quit:", model.appId);
             menu.close();
+        }
+    }
+
+    Component.onCompleted: {
+        var i, item;
+
+        // Add application actions
+        for (i = launcherItem.actions.length - 1; i >= 0; i--) {
+            item = actionItemComponent.createObject(menu);
+            item.text = launcherItem.actions[i].name;
+            item.command = launcherItem.actions[i].command;
+            menu.insertItem(0, item);
+        }
+
+        // Add a separator if needed
+        if (launcherItem.actions.length > 0) {
+            console.warn(launcherItem.actions.length);
+            item = separatorComponent.createObject(menu);
+            menu.insertItem(launcherItem.actions.length, item);
         }
     }
 }
