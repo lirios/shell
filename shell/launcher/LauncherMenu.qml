@@ -133,7 +133,6 @@ Menu {
 
         // Add a separator if needed
         if (launcherItem.actions.length > 0) {
-            console.warn(launcherItem.actions.length);
             item = separatorComponent.createObject(menu);
             menu.insertItem(launcherItem.actions.length, item);
         }
