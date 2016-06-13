@@ -111,6 +111,7 @@ Menu {
     }
     CustomComponents.MenuSeparator {}
     MenuItem {
+        id: ciao
         text: qsTr("Quit")
         enabled: model.running
         onTriggered: {
@@ -125,7 +126,7 @@ Menu {
 
         // Add application actions
         for (i = launcherItem.actions.length - 1; i >= 0; i--) {
-            item = actionItemComponent.createObject(menu);
+            item = actionItemComponent.createObject(menu.contentItem);
             item.text = launcherItem.actions[i].name;
             item.command = launcherItem.actions[i].command;
             menu.insertItem(0, item);
@@ -133,7 +134,7 @@ Menu {
 
         // Add a separator if needed
         if (launcherItem.actions.length > 0) {
-            item = separatorComponent.createObject(menu);
+            item = separatorComponent.createObject(menu.contentItem);
             menu.insertItem(launcherItem.actions.length, item);
         }
     }
