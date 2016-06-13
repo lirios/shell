@@ -46,7 +46,8 @@ Menu {
 
         MenuItem {
             property string command
-            onClicked: {
+
+            onTriggered: {
                 if (command) {
                     process.launchCommand(command);
                     menu.close();
@@ -82,7 +83,7 @@ Menu {
     MenuItem {
         text: qsTr("Add To Launcher")
         enabled: !model.pinned
-        onClicked: {
+        onTriggered: {
             listView.model.pin(model.appId);
             menu.close();
         }
@@ -90,7 +91,7 @@ Menu {
     MenuItem {
         text: qsTr("Remove From Launcher")
         enabled: model.pinned
-        onClicked: {
+        onTriggered: {
             listView.model.unpin(model.appId);
             menu.close();
         }
@@ -112,7 +113,7 @@ Menu {
     MenuItem {
         text: qsTr("Quit")
         enabled: model.running
-        onClicked: {
+        onTriggered: {
             if (!listView.model.get(index).quit())
                 console.warn("Failed to quit:", model.appId);
             menu.close();
