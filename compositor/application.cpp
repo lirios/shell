@@ -63,7 +63,7 @@ Application::Application(QObject *parent)
     connect(m_homeApp, &HomeApplication::objectCreated,
             this, &Application::objectCreated);
 
-    // Invole shutdown sequence when quitting
+    // Invoke shutdown sequence when quitting
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit,
             this, &Application::shutdown);
 }
