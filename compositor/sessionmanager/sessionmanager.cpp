@@ -29,9 +29,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include <qt5xdg/xdgautostart.h>
-#include <qt5xdg/xdgdesktopfile.h>
-
 #include "authenticator.h"
 #include "cmakedirs.h"
 #include "loginmanager/loginmanager.h"
@@ -224,22 +221,8 @@ bool SessionManager::canHybridSleep()
     return m_powerManager->capabilities() & PowerManager::HybridSleep;
 }
 
-void SessionManager::autostart()
-{
-    Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
-        if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
-            continue;
-
-        qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
-        //m_launcher->launchEntry(const_cast<XdgDesktopFile *>(&entry));
-    }
-}
-
 void SessionManager::logOut()
 {
-    // Close all applications we launched
-    //m_launcher->closeApplications();
-
     // Exit
     QCoreApplication::quit();
 }
