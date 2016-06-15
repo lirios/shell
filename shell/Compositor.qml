@@ -57,6 +57,8 @@ GreenIsland.WaylandCompositor {
             }
         },
         GreenIsland.XdgShell {
+            property variant viewsBySurface: ({})
+
             onXdgSurfaceCreated: {
                 var window = windowManager.createWindow(xdgSurface.surface);
 
@@ -64,7 +66,26 @@ GreenIsland.WaylandCompositor {
                 for (i = 0; i < d.outputs.length; i++) {
                     view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": xdgSurface, "window": window});
                     view.moveItem = window.moveItem;
+                    if (viewsBySurface[xdgSurface.surface] == undefined)
+                        viewsBySurface[xdgSurface.surface] = new Array();
+                    viewsBySurface[xdgSurface.surface].push({"output": d.outputs[i], "view": view});
                     window.addWindowView(view);
+                }
+            }
+            onXdgPopupCreated: {
+                var window = windowManager.createWindow(xdgPopup.surface);
+
+                var i, j, parentView, view, parentViews = viewsBySurface[xdgPopup.parentSurface];
+                for (i = 0; i < d.outputs.length; i++) {
+                    for (j = 0; j < parentViews.length; j++) {
+                        if (parentViews[j].output == d.outputs[i]) {
+                            view = chromeComponent.createObject(parentViews[j].view, {"shellSurface": xdgPopup, "window": window});
+                            view.x = xdgPopup.position.x;
+                            view.y = xdgPopup.position.y;
+                            view.moveItem = window.moveItem;
+                            window.addWindowView(view);
+                        }
+                    }
                 }
             }
         },
