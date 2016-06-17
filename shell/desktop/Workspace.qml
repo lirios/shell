@@ -89,8 +89,8 @@ Item {
     function windowsList() {
         var windows = [];
         var i, window;
-        for (i = 0; i < windowManager.windows.length; i++) {
-            window = windowManager.windows[i];
+        for (i = 0; i < applicationManager.windows.length; i++) {
+            window = applicationManager.windows[i];
             if (window.designedOutput === output)
                 windows.push(window);
         }

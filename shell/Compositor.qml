@@ -46,7 +46,7 @@ GreenIsland.WaylandCompositor {
         },
         GreenIsland.WlShell {
             onShellSurfaceCreated: {
-                var window = windowManager.createWindow(shellSurface.surface);
+                var window = applicationManager.createWindow(shellSurface.surface);
 
                 var i, view;
                 for (i = 0; i < d.outputs.length; i++) {
@@ -60,7 +60,7 @@ GreenIsland.WaylandCompositor {
             property variant viewsBySurface: ({})
 
             onXdgSurfaceCreated: {
-                var window = windowManager.createWindow(xdgSurface.surface);
+                var window = applicationManager.createWindow(xdgSurface.surface);
 
                 var i, view;
                 for (i = 0; i < d.outputs.length; i++) {
@@ -73,7 +73,7 @@ GreenIsland.WaylandCompositor {
                 }
             }
             onXdgPopupCreated: {
-                var window = windowManager.createWindow(xdgPopup.surface);
+                var window = applicationManager.createWindow(xdgPopup.surface);
 
                 var i, j, parentView, view, parentViews = viewsBySurface[xdgPopup.parentSurface];
                 for (i = 0; i < d.outputs.length; i++) {
@@ -199,12 +199,6 @@ GreenIsland.WaylandCompositor {
         id: windowsModel
     }
 
-    // Window manager
-    GreenIsland.WindowManager {
-        id: windowManager
-        compositor: hawaiiCompositor
-    }
-
     // Surface component
     Component {
         id: surfaceComponent
@@ -214,7 +208,7 @@ GreenIsland.WaylandCompositor {
             onMappedChanged: {
                 if (!cursorSurface) {
                     if (isMapped) {
-                        var window = windowManager.windowForSurface(surface);
+                        var window = applicationManager.windowForSurface(surface);
                         if (window)
                             windowsModel.append({"window": window});
                     } else {
