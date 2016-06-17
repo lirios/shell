@@ -99,6 +99,9 @@ int main(int argc, char *argv[])
 #endif
     app.setQuitOnLastWindowClosed(false);
 
+    // Set Qt platform for applications that will be executed from here
+    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
+
     // Command line parser
     QCommandLineParser parser;
     parser.setApplicationDescription(TR("Wayland compositor for the Hawaii desktop environment"));
