@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
 import org.hawaiios.misc 0.1
+import org.hawaiios.launcher 0.1 as CppLauncher
 import "desktop"
 
 GreenIsland.WaylandCompositor {
@@ -43,6 +44,11 @@ GreenIsland.WaylandCompositor {
     extensions: [
         GreenIsland.QtWindowManager {
             showIsFullScreen: false
+            onOpenUrl: {
+                // Execute url with xdg-open
+                console.warn("Run", url, "with xdg-open");
+                processRunner.launchCommand("xdg-open " + url);
+            }
         },
         GreenIsland.WlShell {
             onShellSurfaceCreated: {
@@ -141,6 +147,11 @@ GreenIsland.WaylandCompositor {
     // Settings
     ShellSettings {
         id: settings
+    }
+
+    // Process launcher
+    CppLauncher.ProcessRunner {
+        id: processRunner
     }
 
     // Key bindings
