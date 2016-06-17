@@ -71,8 +71,6 @@ void LauncherModel::setApplicationManager(ApplicationManager *appMan)
                    this, &LauncherModel::handleApplicationRemoved);
         disconnect(m_appMan, &ApplicationManager::applicationFocused,
                    this, &LauncherModel::handleApplicationFocused);
-        disconnect(m_appMan, &ApplicationManager::applicationUnfocused,
-                   this, &LauncherModel::handleApplicationUnfocused);
     }
 
     m_appMan = appMan;
@@ -85,8 +83,6 @@ void LauncherModel::setApplicationManager(ApplicationManager *appMan)
                 this, &LauncherModel::handleApplicationRemoved);
         connect(appMan, &ApplicationManager::applicationFocused,
                 this, &LauncherModel::handleApplicationFocused);
-        connect(appMan, &ApplicationManager::applicationUnfocused,
-                this, &LauncherModel::handleApplicationUnfocused);
     }
 }
 
@@ -297,26 +293,19 @@ void LauncherModel::handleApplicationFocused(const QString &origAppId)
 
     for (int i = 0; i < m_list.size(); i++) {
         LauncherItem *item = m_list.at(i);
+        bool changed = false;
+
         if (item->appId() == appId) {
+            changed = !item->isActive();
             item->setActive(true);
-            QModelIndex modelIndex = index(i);
-            Q_EMIT dataChanged(modelIndex, modelIndex);
-            break;
-        }
-    }
-}
-
-void LauncherModel::handleApplicationUnfocused(const QString &origAppId)
-{
-    QString appId = AppIdMapping::mapAppId(origAppId);
-
-    for (int i = 0; i < m_list.size(); i++) {
-        LauncherItem *item = m_list.at(i);
-        if (item->appId() == appId) {
+        } else {
+            changed = item->isActive();
             item->setActive(false);
+        }
+
+        if (changed) {
             QModelIndex modelIndex = index(i);
             Q_EMIT dataChanged(modelIndex, modelIndex);
-            break;
         }
     }
 }
