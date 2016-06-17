@@ -162,11 +162,7 @@ bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
-    env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-    env.insert(QStringLiteral("QT_QPA_PLATFORMTHEME"), QStringLiteral("Hawaii"));
-    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Aluminium"));
-    env.insert(QStringLiteral("XCURSOR_THEME"), QStringLiteral("hawaii"));
-    env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
+    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Base"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
 
     QProcess *process = new QProcess(this);
