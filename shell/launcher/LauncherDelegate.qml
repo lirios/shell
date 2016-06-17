@@ -177,9 +177,8 @@ Item {
         for (i = 0; i < hawaiiCompositor.windowsModel.count; i++) {
             window = hawaiiCompositor.windowsModel.get(i).window;
             if (window.appId === model.appId) {
-                if (window.minimized)
-                    window.minimized = false;
-                window.active = true;
+                window.minimized = false;
+                window.activate();
             }
         }
 

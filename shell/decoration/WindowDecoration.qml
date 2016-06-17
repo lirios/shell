@@ -46,7 +46,7 @@ Item {
         anchors.margins: -extents
         source: "graphics/dropshadow.sci"
         cache: true
-        opacity: clientWindow && clientWindow.active ? 0.9 : 0.7
+        opacity: clientWindow && clientWindow.activated ? 0.9 : 0.7
         smooth: true
         z: 0
 

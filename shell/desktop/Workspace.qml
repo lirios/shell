@@ -190,7 +190,7 @@ Item {
                     chrome.resize(scale);
                     chrome.activated.connect(function(window) {
                         state = "normal";
-                        window.active = true;
+                        window.active();
                     });
                     chrome.closeRequested.connect(function(window) {
                         state = "normal";
