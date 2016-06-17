@@ -120,8 +120,8 @@ Popup {
 
     function activate() {
         var window = listView.model.get(listView.currentIndex);
-        if (window)
-            window.activate();
+        if (window && window)
+            window.window.activate();
     }
 
     function previous() {
