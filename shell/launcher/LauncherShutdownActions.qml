@@ -32,7 +32,7 @@ import "../components" as CustomComponents
 RowLayout {
     implicitWidth: (FluidUi.Units.iconSizes.large * 3) + (spacing * 3)
     implicitHeight: FluidUi.Units.iconSizes.large + (spacing * 2)
-    spacing: FluidUi.Units.largeSpacing
+    spacing: FluidUi.Units.smallSpacing
 
     CustomComponents.ToolButton {
         iconSize: FluidUi.Units.iconSizes.smallMedium
