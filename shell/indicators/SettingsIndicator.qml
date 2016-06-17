@@ -102,15 +102,6 @@ Indicator {
                 }
 
                 CustomComponents.ToolButton {
-                    text: qsTr("Right")
-                    //iconName: "align-horizontal-right-symbolic"
-                    checkable: true
-                    checked: screenView.panel.state === "right"
-                    autoExclusive: true
-                    onClicked: screenView.panel.state = "right"
-                }
-
-                CustomComponents.ToolButton {
                     text: qsTr("Bottom")
                     //iconName: "align-vertical-bottom-symbolic"
                     checkable: true
