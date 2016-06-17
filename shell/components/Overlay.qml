@@ -62,7 +62,7 @@ FluidUi.Showable {
         to: 0.0
     }
     width: height
-    height: FluidUi.Units.gu(15)
+    height: FluidUi.Units.dp(256)
     onIconNameChanged: if (timer.running) timer.restart()
     onValueChanged: if (timer.running) timer.restart()
     onShowProgressChanged: if (timer.running) timer.restart()
