@@ -33,17 +33,6 @@
 class AppIdMapping
 {
 public:
-    static QString mapAppId(const QString &origAppId)
-    {
-        // Map known identifiers to the correct ones
-        QMap<QString, QString> map;
-        map[QLatin1String("org.hawaiios.hawaii-system-preferences")] = QLatin1String("org.hawaiios.SystemPreferences");
-        map[QLatin1String("org.qterminal.qterminal-qt5")] = QLatin1String("qterminal-qt5");
-        if (map.contains(origAppId))
-            return map[origAppId];
-        return origAppId;
-    }
-
     static QString appIdToName(const QString &appId)
     {
         // Replace '-' with '/' as mentioned here:

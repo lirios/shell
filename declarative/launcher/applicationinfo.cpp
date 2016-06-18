@@ -41,7 +41,7 @@ ApplicationInfoPrivate::ApplicationInfoPrivate(const QString &origAppId, Applica
     , focused(false)
     , q_ptr(parent)
 {
-    appId = AppIdMapping::mapAppId(origAppId);
+    appId = origAppId;
     fileName = AppIdMapping::desktopFileName(appId);
 
     if (!fileName.isEmpty()) {
