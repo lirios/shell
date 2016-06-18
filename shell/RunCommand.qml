@@ -61,7 +61,7 @@ Popup {
                 close();
             }
 
-            Layout.minimumWidth: FluidUi.Units.gu(12)
+            Layout.minimumWidth: FluidUi.Units.dp(350)
             Layout.fillWidth: true
         }
 
