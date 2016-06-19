@@ -76,6 +76,12 @@ Item {
         }
     }
 
+    QtObject {
+        id: __private
+
+        property var storage: ({})
+    }
+
     Component {
         id: chromeComponent
 
@@ -266,28 +272,9 @@ Item {
                 y = topLeft.y - window.surface.size.height + margin;
             }
 
-            for (j = 0; j < window.views.length; j++) {
-                // Get a hold of the view
-                view = window.views[j];
-
-                // Enable animations
-                view.animationsEnabled = true;
-
-                // Save original properties
-                if (!view.savedProperties.saved) {
-                    view.savedProperties.x = view.x;
-                    view.savedProperties.y = view.y;
-                    view.savedProperties.saved = true;
-                }
-
-                // Move this view in output coordinates space
-                view.x = x - view.output.position.x;
-                view.y = y - view.output.position.y;
-
-                // Hide on other outputs
-                if (view.output !== output)
-                    view.visible = false;
-            }
+            __private.storage[window] = {"x": window.x, "y": window.y};
+            console.warn(window.x, window.y, x, y)
+            window.move(x, y);
         }
         console.timeEnd("reveal loop " + output.model);
 
@@ -300,19 +287,9 @@ Item {
         for (i = 0; i < windows.length; i++) {
             window = windows[i];
 
-            for (j = 0; j < window.views.length; j++) {
-                view = window.views[j]
-
-                // Restore saved properties
-                if (view.savedProperties.saved) {
-                    view.x = view.savedProperties.x;
-                    view.y = view.savedProperties.y;
-                    view.savedProperties.saved = false;
-                }
-
-                // Disable animations
-                view.animationsEnabled = false;
-            }
+            var pos = __private.storage[window];
+            console.warn(";;;", pos, window.x, window.y, pos.x, pos.y)
+            window.move(pos.x, pos.y);
         }
     }
 }
