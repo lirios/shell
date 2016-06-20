@@ -61,7 +61,7 @@ Indicator {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: Qt.openUrlExternally(modelData.filePath)
+                                onClicked: processRunner.launchCommand("xdg-open file://" + modelData.filePath)
                             }
                         }
 
@@ -71,7 +71,7 @@ Indicator {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: Qt.openUrlExternally(modelData.filePath)
+                                onClicked: processRunner.launchCommand("xdg-open file://" + modelData.filePath)
                             }
                         }
 
