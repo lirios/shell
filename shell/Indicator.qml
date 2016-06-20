@@ -69,8 +69,9 @@ Item {
     Rectangle {
         id: container
         anchors.fill: parent
-        radius: width * 0.5
+        anchors.margins: FluidUi.Units.smallSpacing
         color: Material.accentColor
+        radius: FluidUi.Units.dp(6)
         opacity: active ? 1.0 : 0.0
 
         Behavior on opacity {
@@ -90,7 +91,7 @@ Item {
     FluidUi.Icon {
         id: icon
         anchors.centerIn: parent
-        color: selected ? Material.primaryHighlightedTextColor : Material.primaryTextColor
+        color: active ? Material.primaryHighlightedTextColor : Material.primaryTextColor
         height: width
         cache: false
     }
