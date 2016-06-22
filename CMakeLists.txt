@@ -104,7 +104,8 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
              Gui
              Widgets
              Qml
-             Quick)
+             Quick
+             WaylandClient)
 
 # Find KF5
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -131,6 +132,7 @@ add_subdirectory(3rdparty)
 add_subdirectory(compositor)
 add_subdirectory(data)
 add_subdirectory(declarative)
+add_subdirectory(decorations)
 add_subdirectory(framework)
 add_subdirectory(headers)
 add_subdirectory(scripts)

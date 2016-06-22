@@ -96,7 +96,7 @@ void QWaylandMaterialDecoration::paint(QPaintDevice *device)
     QPainterPath borderPath;
     borderPath.addRect(0, margins().top(), margins().left(), frameGeometry.height() - margins().top());
     borderPath.addRect(0, frameGeometry.height() - margins().bottom(), frameGeometry.width(), margins().bottom());
-    borderPath.addRect(frameGeometry.width() - margins().right(), frameGeometry.height() - margins().top(), frameGeometry.width(), frameGeometry.height());
+    borderPath.addRect(frameGeometry.width() - margins().right(), margins().top(), margins().right(), frameGeometry.height() - margins().bottom());
     p.fillPath(borderPath, m_backgroundColor);
 
     // Window title
