@@ -56,7 +56,7 @@ GreenIsland.WaylandCompositor {
 
                 var i, view;
                 for (i = 0; i < d.outputs.length; i++) {
-                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": shellSurface, "window": window});
+                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": shellSurface, "window": window, "decorated": true});
                     view.moveItem = window.moveItem;
                     window.addWindowView(view);
                 }
@@ -70,7 +70,7 @@ GreenIsland.WaylandCompositor {
 
                 var i, view;
                 for (i = 0; i < d.outputs.length; i++) {
-                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": xdgSurface, "window": window});
+                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": xdgSurface, "window": window, "decorated": false});
                     view.moveItem = window.moveItem;
                     if (viewsBySurface[xdgSurface.surface] == undefined)
                         viewsBySurface[xdgSurface.surface] = new Array();
