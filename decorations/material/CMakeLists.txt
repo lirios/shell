@@ -16,5 +16,3 @@ target_link_libraries(HawaiiMaterialDecoration
 
 install(TARGETS HawaiiMaterialDecoration
         LIBRARY DESTINATION ${QT_PLUGIN_INSTALL_DIR}/wayland-decoration-client)
-
-message("${Qt5WaylandClient_INCLUDE_DIRS} ${Qt5WaylandClient_PRIVATE_INCLUDE_DIRS}")
