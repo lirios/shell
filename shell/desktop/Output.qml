@@ -76,9 +76,9 @@ GreenIsland.ExtendedOutput {
             onIdleInhibitRequested: hawaiiCompositor.idleInhibit++
             onIdleUninhibitRequested: hawaiiCompositor.idleInhibit--
             onShutdownRequestCanceled: mainItem.state = "session"
-            onLogOutRequested: mainItem.state = "logout"
-            onPowerOffRequested: mainItem.state = "poweroff"
-            onRestartRequested: mainItem.state = "restart"
+            onLogOutRequested: if (mainItem.state != "lock") mainItem.state = "logout"
+            onPowerOffRequested: if (mainItem.state != "lock") mainItem.state = "poweroff"
+            onRestartRequested: if (mainItem.state != "lock") mainItem.state = "restart"
         }
 
         /*
