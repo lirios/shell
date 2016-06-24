@@ -72,5 +72,6 @@
         <file>ShellSettings.qml</file>
         <file>images/wallpaper.png</file>
         <file>RunCommand.qml</file>
+        <file>XWayland.qml</file>
     </qresource>
 </RCC>

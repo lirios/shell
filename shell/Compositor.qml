@@ -210,6 +210,22 @@ GreenIsland.WaylandCompositor {
         id: windowsModel
     }
 
+    // XWayland
+    Loader {
+        active: false
+        asynchronous: true
+        onStatusChanged: {
+            if (status === Loader.Error)
+                console.warn("Error loading XWayland support:", sourceComponent.errorString())
+        }
+
+        Component.onCompleted: {
+            var component = Qt.createComponent(Qt.resolvedUrl("XWayland.qml"),
+                                               Component.Asynchronous);
+            sourceComponent = component;
+        }
+    }
+
     // Surface component
     Component {
         id: surfaceComponent
