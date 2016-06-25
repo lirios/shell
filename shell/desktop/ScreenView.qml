@@ -91,7 +91,7 @@ Item {
 
     // FIXME: Temporary workaround to make keyboard input work,
     // apparently SwipeView captures input. An Item instead make it work.
-    Item {
+    Workspace {
         id: workspace
         anchors.fill: parent
         z: 3
