@@ -28,6 +28,8 @@ import QtQuick 2.0
 import Fluid.Ui 1.0 as FluidUi
 
 Item {
+    readonly property alias animateWindows: __private.animationsEnabled
+
     id: workspace
     state: "normal"
     states: [
@@ -80,6 +82,7 @@ Item {
         id: __private
 
         property var storage: ({})
+        property bool animationsEnabled: false
     }
 
     Component {
@@ -232,6 +235,9 @@ Item {
     function reveal() {
         console.time("reveal " + output.model);
 
+        // Enable window animations
+        __private.animationsEnabled = true;
+
         var windows = windowsList();
         var margin = FluidUi.Units.dp(96);
 
@@ -282,6 +288,7 @@ Item {
     }
 
     function revealRestore() {
+        // Restore windows position
         var windows = windowsList();
         var i, j, window, view;
         for (i = 0; i < windows.length; i++) {
@@ -292,5 +299,8 @@ Item {
             window.moveItem.y = pos.y;
             delete __private.storage[window];
         }
+
+        // Disable window animations
+        __private.animationsEnabled = false;
     }
 }

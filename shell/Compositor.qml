@@ -255,7 +255,9 @@ GreenIsland.WaylandCompositor {
     Component {
         id: chromeComponent
 
-        GreenIsland.WindowChrome {}
+        GreenIsland.WindowChrome {
+            animationsEnabled: parent.animateWindows
+        }
     }
 
     // Output component
