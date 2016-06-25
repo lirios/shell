@@ -82,6 +82,21 @@ Item {
         z: 1
     }
 
+    // Dim desktop in present mode
+    Rectangle {
+        anchors.fill: parent
+        z: 2
+        color: "black"
+        opacity: workspace.state == "present" ? 0.7 : 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: 250
+            }
+        }
+    }
+
     // Workspaces
     WorkspacesView {
         id: workspacesLayer
