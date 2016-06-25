@@ -118,7 +118,16 @@ Item {
         anchors.fill: parent
         asynchronous: true
         active: primary
-        sourceComponent: Shell {}
+        sourceComponent: Shell {
+            opacity: workspace.state == "present" ? 0.0 : 1.0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    easing.type: Easing.InOutQuad
+                    duration: 250
+                }
+            }
+        }
         z: 5
     }
 
