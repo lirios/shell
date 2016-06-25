@@ -254,7 +254,6 @@ GreenIsland.ExtendedOutput {
                     State {
                         name: "lock"
                         PropertyChanges { target: cursor; visible: true }
-                        PropertyChanges { target: screenView.windowsSwitcherLoader; active: false }
                         PropertyChanges { target: logoutLoader; loadComponent: false }
                         PropertyChanges { target: lockScreenLoader; loadComponent: true }
                         StateChangeScript { script: output.idle() }
