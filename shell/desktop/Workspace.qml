@@ -272,9 +272,9 @@ Item {
                 y = topLeft.y - window.surface.size.height + margin;
             }
 
-            __private.storage[window] = {"x": window.x, "y": window.y};
-            console.warn(window.x, window.y, x, y)
-            window.move(x, y);
+            __private.storage[window] = {"x": window.moveItem.x, "y": window.moveItem.y};
+            window.moveItem.x = x;
+            window.moveItem.y = y;
         }
         console.timeEnd("reveal loop " + output.model);
 
@@ -288,8 +288,9 @@ Item {
             window = windows[i];
 
             var pos = __private.storage[window];
-            console.warn(";;;", pos, window.x, window.y, pos.x, pos.y)
-            window.move(pos.x, pos.y);
+            window.moveItem.x = pos.x;
+            window.moveItem.y = pos.y;
+            delete __private.storage[window];
         }
     }
 }
