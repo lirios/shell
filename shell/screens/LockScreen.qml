@@ -49,6 +49,11 @@ FluidUi.Showable {
         to: -root.height
     }
     visible: true
+    onVisibleChanged: {
+        // Activate password field
+        if (visible)
+            passwordField.forceActiveFocus();
+    }
 
     Material.theme: Material.Dark
 
