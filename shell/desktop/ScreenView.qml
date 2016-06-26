@@ -101,7 +101,7 @@ Item {
     WorkspacesView {
         id: workspacesLayer
         anchors.fill: parent
-        z: 2
+        z: 5
     }
 
     // FIXME: Temporary workaround to make keyboard input work,
@@ -109,7 +109,7 @@ Item {
     Workspace {
         id: workspace
         anchors.fill: parent
-        z: 3
+        z: 6
     }
 
     // Panels
@@ -128,7 +128,7 @@ Item {
                 }
             }
         }
-        z: 5
+        z: 10
     }
 
     // Full screen windows can cover application windows and panels
@@ -136,7 +136,7 @@ Item {
         id: fullScreenLayer
         anchors.fill: parent
         color: "black"
-        z: 10
+        z: 20
         opacity: children.length > 0 ? 1.0 : 0.0
 
         Behavior on opacity {
@@ -151,14 +151,14 @@ Item {
     Overlay {
         id: overlaysLayer
         anchors.centerIn: parent
-        z: 5
+        z: 10
     }
 
     // Notifications are behind the panel
     Item {
         id: notificationsLayer
         anchors.fill: parent
-        z: 5
+        z: 10
     }
 
     // Windows switcher
