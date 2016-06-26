@@ -91,7 +91,7 @@ Item {
 
         Behavior on opacity {
             NumberAnimation {
-                easing.type: Easing.InOutQuad
+                easing.type: Easing.OutQuad
                 duration: 250
             }
         }
@@ -123,7 +123,7 @@ Item {
 
             Behavior on opacity {
                 NumberAnimation {
-                    easing.type: Easing.InOutQuad
+                    easing.type: Easing.OutQuad
                     duration: 250
                 }
             }
