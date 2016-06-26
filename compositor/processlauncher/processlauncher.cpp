@@ -119,7 +119,7 @@ bool ProcessLauncher::launchApplication(const QString &appId)
         return false;
     }
 
-    return launchEntry(entry);
+    return launchEntry(*entry);
 }
 
 bool ProcessLauncher::launchDesktopFile(const QString &fileName)
@@ -135,7 +135,7 @@ bool ProcessLauncher::launchDesktopFile(const QString &fileName)
         return false;
     }
 
-    return launchEntry(entry);
+    return launchEntry(*entry);
 }
 
 bool ProcessLauncher::closeApplication(const QString &appId)
@@ -150,23 +150,19 @@ bool ProcessLauncher::closeDesktopFile(const QString &fileName)
     return closeEntry(fileName);
 }
 
-bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
+bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
 {
-    QStringList args = entry->expandExecString();
+    QStringList args = entry.expandExecString();
     QString command = args.takeAt(0);
 
-    qCDebug(LAUNCHER) << "Launching" << entry->expandExecString().join(" ") << "from" << entry->fileName();
+    qCDebug(LAUNCHER) << "Launching" << entry.expandExecString().join(" ") << "from" << entry.fileName();
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     if (!m_waylandSocketName.isEmpty())
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
-    env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-    env.insert(QStringLiteral("QT_QPA_PLATFORMTHEME"), QStringLiteral("Hawaii"));
-    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Aluminium"));
-    env.insert(QStringLiteral("XCURSOR_THEME"), QStringLiteral("hawaii"));
-    env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
+    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Base"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
 
     QProcess *process = new QProcess(this);
@@ -174,21 +170,21 @@ bool ProcessLauncher::launchEntry(XdgDesktopFile *entry)
     process->setArguments(args);
     process->setProcessEnvironment(env);
     process->setProcessChannelMode(QProcess::ForwardedChannels);
-    m_apps[entry->fileName()] = process;
+    m_apps[entry.fileName()] = process;
     connect(process, SIGNAL(finished(int)), this, SLOT(finished(int)));
     process->start();
     if (!process->waitForStarted()) {
         qCWarning(LAUNCHER,
                   "Failed to launch \"%s\" (%s)",
-                  qPrintable(entry->fileName()),
-                  qPrintable(entry->name()));
+                  qPrintable(entry.fileName()),
+                  qPrintable(entry.name()));
         return false;
     }
 
     qCDebug(LAUNCHER,
             "Launched \"%s\" (%s) with pid %lld",
-            qPrintable(entry->fileName()),
-            qPrintable(entry->name()),
+            qPrintable(entry.fileName()),
+            qPrintable(entry.name()),
             process->pid());
 
     return true;

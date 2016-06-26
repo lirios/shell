@@ -27,51 +27,71 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import Fluid.Ui 1.0 as FluidUi
+import org.hawaiios.launcher 0.1 as CppLauncher
 import "../components" as CustomComponents
 
 Menu {
-    id: menu
-    transformOrigin: Menu.TopLeft
+    readonly property var launcherItem: listView.model.get(root.indexOfThisDelegate)
 
+    id: menu
+    transformOrigin: Menu.BottomLeft
+
+    CppLauncher.ProcessRunner {
+        id: process
+    }
+
+    // Component to create application actions
+    Component {
+        id: actionItemComponent
+
+        MenuItem {
+            property string command
+
+            onTriggered: {
+                if (command) {
+                    process.launchCommand(command);
+                    menu.close();
+                }
+            }
+        }
+    }
+
+    // Component for separators
+    Component {
+        id: separatorComponent
+
+        CustomComponents.MenuSeparator {}
+    }
+
+    /*
     Repeater {
-        model: listView.model.get(root.indexOfThisDelegate).windows
+        model: launcherItem.windows
 
         MenuItem {
             text: modelData.title
         }
     }
-
     CustomComponents.MenuSeparator {
         visible: model.hasWindows
     }
-
-    Repeater {
-        model: menu.actionList ? menu.actionList : 0
-
-        MenuItem {
-            text: "Action " + index
-        }
-    }
-    CustomComponents.MenuSeparator {
-        visible: model.hasActionList
-    }
+    */
     MenuItem {
         text: qsTr("New Window")
-        visible: model.running
+        enabled: model.running
     }
     CustomComponents.MenuSeparator {}
     MenuItem {
         text: qsTr("Add To Launcher")
-        visible: !model.pinned
-        onClicked: {
+        enabled: !model.pinned
+        onTriggered: {
             listView.model.pin(model.appId);
             menu.close();
         }
     }
     MenuItem {
         text: qsTr("Remove From Launcher")
-        visible: model.pinned
-        onClicked: {
+        enabled: model.pinned
+        onTriggered: {
             listView.model.unpin(model.appId);
             menu.close();
         }
@@ -79,24 +99,43 @@ Menu {
     CustomComponents.MenuSeparator {}
     MenuItem {
         text: qsTr("Show All Windows")
-        visible: model.running
+        enabled: model.running
     }
     MenuItem {
         text: qsTr("Show")
-        visible: model.running && !model.active
+        enabled: model.running && !model.active
     }
     MenuItem {
         text: qsTr("Hide")
-        visible: model.running && model.active
+        enabled: model.running && model.active
     }
     CustomComponents.MenuSeparator {}
     MenuItem {
+        id: ciao
         text: qsTr("Quit")
-        visible: model.running
-        onClicked: {
+        enabled: model.running
+        onTriggered: {
             if (!listView.model.get(index).quit())
                 console.warn("Failed to quit:", model.appId);
             menu.close();
+        }
+    }
+
+    Component.onCompleted: {
+        var i, item;
+
+        // Add application actions
+        for (i = launcherItem.actions.length - 1; i >= 0; i--) {
+            item = actionItemComponent.createObject(menu.contentItem);
+            item.text = launcherItem.actions[i].name;
+            item.command = launcherItem.actions[i].command;
+            menu.insertItem(0, item);
+        }
+
+        // Add a separator if needed
+        if (launcherItem.actions.length > 0) {
+            item = separatorComponent.createObject(menu.contentItem);
+            menu.insertItem(launcherItem.actions.length, item);
         }
     }
 }

@@ -1,6 +1,5 @@
 /*
     Copyright 2013 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HAWAII_NM_AVAILABLE_DEVICES_H
-#define HAWAII_NM_AVAILABLE_DEVICES_H
+#ifndef PLASMA_NM_AVAILABLE_DEVICES_H
+#define PLASMA_NM_AVAILABLE_DEVICES_H
 
 #include <QObject>
 
@@ -36,10 +35,14 @@ Q_PROPERTY(bool wiredDeviceAvailable READ isWiredDeviceAvailable NOTIFY wiredDev
  * Return true when there is present wireless device
  */
 Q_PROPERTY(bool wirelessDeviceAvailable READ isWirelessDeviceAvailable NOTIFY wirelessDeviceAvailableChanged)
+
+#if !NM_CHECK_VERSION(1, 2, 0)
 /**
  * Return true when there is present wimax device
  */
 Q_PROPERTY(bool wimaxDeviceAvailable READ isWimaxDeviceAvailable NOTIFY wimaxDeviceAvailableChanged)
+#endif
+
 /**
  * Return true when there is present modem device
  */
@@ -57,7 +60,9 @@ public:
 public Q_SLOTS:
     bool isWiredDeviceAvailable() const;
     bool isWirelessDeviceAvailable() const;
+#if !NM_CHECK_VERSION(1, 2, 0)
     bool isWimaxDeviceAvailable() const;
+#endif
     bool isModemDeviceAvailable() const;
     bool isBluetoothDeviceAvailable() const;
 
@@ -68,16 +73,20 @@ private Q_SLOTS:
 Q_SIGNALS:
     void wiredDeviceAvailableChanged(bool available);
     void wirelessDeviceAvailableChanged(bool available);
+#if !NM_CHECK_VERSION(1, 2, 0)
     void wimaxDeviceAvailableChanged(bool available);
+#endif
     void modemDeviceAvailableChanged(bool available);
     void bluetoothDeviceAvailableChanged(bool available);
 
 private:
     bool m_wiredDeviceAvailable;
     bool m_wirelessDeviceAvailable;
+#if !NM_CHECK_VERSION(1, 2, 0)
     bool m_wimaxDeviceAvailable;
+#endif
     bool m_modemDeviceAvailable;
     bool m_bluetoothDeviceAvailable;
 };
 
-#endif // HAWAII_NM_AVAILABLE_DEVICES_H
+#endif // PLASMA_NM_AVAILABLE_DEVICES_H

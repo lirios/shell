@@ -20,7 +20,9 @@
 */
 
 #include "handler.h"
-//#include "connectiondetaileditor.h"
+#if 0
+#include "connectiondetaileditor.h"
+#endif
 #include "uiutils.h"
 #include "debug.h"
 
@@ -43,27 +45,29 @@
 #endif
 
 #include <QDBusError>
+#include <QDBusPendingReply>
 #include <QIcon>
 
-Handler::Handler(QObject* parent)
+#define AGENT_SERVICE "org.kde.kded5"
+#define AGENT_PATH "/modules/networkmanagement"
+#define AGENT_IFACE "org.kde.plasmanetworkmanagement"
+
+
+Handler::Handler(QObject *parent)
     : QObject(parent)
-    , m_tmpBluetoothEnabled(isBtEnabled())
-#if NM_CHECK_VERSION(1, 2, 0)
-    , m_tmpWimaxEnabled(false)
-#else
+#if !NM_CHECK_VERSION(1, 2, 0)
     , m_tmpWimaxEnabled(NetworkManager::isWimaxEnabled())
 #endif
     , m_tmpWirelessEnabled(NetworkManager::isWirelessEnabled())
     , m_tmpWwanEnabled(NetworkManager::isWwanEnabled())
-#if 0
-    , m_agentIface(QStringLiteral("org.kde.kded5"), QStringLiteral("/modules/networkmanagement"),
-                   QStringLiteral("org.kde.plasmanetworkmanagement"))
-#endif
 {
-#if 0
     initKdedModule();
-    QDBusConnection::sessionBus().connect(m_agentIface.service(), m_agentIface.path(), m_agentIface.interface(), QStringLiteral("registered"),
-                                          this, SLOT(initKdedModule()));
+#if 0
+    QDBusConnection::sessionBus().connect(QStringLiteral(AGENT_SERVICE),
+                                            QStringLiteral(AGENT_PATH),
+                                            QStringLiteral(AGENT_IFACE),
+                                            QStringLiteral("registered"),
+                                            this, SLOT(initKdedModule()));
 #endif
 }
 
@@ -76,20 +80,20 @@ void Handler::activateConnection(const QString& connection, const QString& devic
     NetworkManager::Connection::Ptr con = NetworkManager::findConnection(connection);
 
     if (!con) {
-        qCWarning(NM) << "Not possible to activate this connection";
+        qCWarning(PLASMA_NM) << "Not possible to activate this connection";
         return;
     }
 
+#if 0
     if (con->settings()->connectionType() == NetworkManager::ConnectionSettings::Vpn) {
         NetworkManager::VpnSetting::Ptr vpnSetting = con->settings()->setting(NetworkManager::Setting::Vpn).staticCast<NetworkManager::VpnSetting>();
         if (vpnSetting) {
-            qCDebug(NM) << "Checking VPN" << con->name() << "type:" << vpnSetting->serviceType();
-#if 0
+            qCDebug(PLASMA_NM) << "Checking VPN" << con->name() << "type:" << vpnSetting->serviceType();
             // get the list of supported VPN service types
             const KService::List services = KServiceTypeTrader::self()->query("PlasmaNetworkManagement/VpnUiPlugin",
                                                                               QString::fromLatin1("[X-NetworkManager-Services]=='%1'").arg(vpnSetting->serviceType()));
             if (services.isEmpty()) {
-                qCWarning(NM) << "VPN" << vpnSetting->serviceType() << "not found, skipping";
+                qCWarning(PLASMA_NM) << "VPN" << vpnSetting->serviceType() << "not found, skipping";
                 KNotification *notification = new KNotification("MissingVpnPlugin", KNotification::CloseOnTimeout, this);
                 notification->setComponentName("networkmanagement");
                 notification->setTitle(con->name());
@@ -98,9 +102,9 @@ void Handler::activateConnection(const QString& connection, const QString& devic
                 notification->sendEvent();
                 return;
             }
-#endif
         }
     }
+#endif
 
 #if WITH_MODEMMANAGER_SUPPORT
     if (con->settings()->connectionType() == NetworkManager::ConnectionSettings::Gsm) {
@@ -254,7 +258,7 @@ void Handler::deactivateConnection(const QString& connection, const QString& dev
     NetworkManager::Connection::Ptr con = NetworkManager::findConnection(connection);
 
     if (!con) {
-        qCWarning(NM) << "Not possible to deactivate this connection";
+        qCWarning(PLASMA_NM) << "Not possible to deactivate this connection";
         return;
     }
 
@@ -288,25 +292,24 @@ void Handler::disconnectAll()
 void Handler::enableAirplaneMode(bool enable)
 {
     if (enable) {
-        m_tmpBluetoothEnabled = isBtEnabled();
-#if NM_CHECK_VERSION(1, 2, 0)
-        m_tmpWimaxEnabled = false;
-#else
+#if !NM_CHECK_VERSION(1, 2, 0)
         m_tmpWimaxEnabled = NetworkManager::isWimaxEnabled();
 #endif
         m_tmpWirelessEnabled = NetworkManager::isWirelessEnabled();
         m_tmpWwanEnabled = NetworkManager::isWwanEnabled();
-        enableBt(false);
+        enableBluetooth(false);
+#if !NM_CHECK_VERSION(1, 2, 0)
         enableWimax(false);
+#endif
         enableWireless(false);
         enableWwan(false);
     } else {
-        if (m_tmpBluetoothEnabled) {
-            enableBt(true);
-        }
+        enableBluetooth(true);
+#if !NM_CHECK_VERSION(1, 2, 0)
         if (m_tmpWimaxEnabled) {
             enableWimax(true);
         }
+#endif
         if (m_tmpWirelessEnabled) {
             enableWireless(true);
         }
@@ -314,6 +317,64 @@ void Handler::enableAirplaneMode(bool enable)
             enableWwan(true);
         }
     }
+}
+
+void Handler::enableBluetooth(bool enable)
+{
+    qDBusRegisterMetaType< QMap<QDBusObjectPath, NMVariantMapMap > >();
+
+    QDBusMessage message = QDBusMessage::createMethodCall("org.bluez", "/", "org.freedesktop.DBus.ObjectManager", "GetManagedObjects");
+    QDBusPendingReply<QMap<QDBusObjectPath, NMVariantMapMap> > reply = QDBusConnection::systemBus().asyncCall(message);
+    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished,
+        [this, enable] (QDBusPendingCallWatcher *watcher) {
+            QDBusPendingReply<QMap<QDBusObjectPath, NMVariantMapMap> > reply = *watcher;
+            if (reply.isValid()) {
+                Q_FOREACH (const QDBusObjectPath &path, reply.value().keys()) {
+                    const QString objPath = path.path();
+                    qCDebug(PLASMA_NM) << "inspecting path" << objPath;
+                    const QStringList interfaces = reply.value().value(path).keys();
+                    qCDebug(PLASMA_NM) << "interfaces:" << interfaces;
+                    if (interfaces.contains("org.bluez.Adapter1")) {
+                        // We need to check previous state first
+                        if (!enable) {
+                            QDBusMessage message = QDBusMessage::createMethodCall("org.bluez", objPath, "org.freedesktop.DBus.Properties", "Get");
+                            QList<QVariant> arguments;
+                            arguments << QLatin1Literal("org.bluez.Adapter1");
+                            arguments << QLatin1Literal("Powered");
+                            message.setArguments(arguments);
+                            QDBusPendingReply<QVariant> getReply = QDBusConnection::systemBus().asyncCall(message);
+                            QDBusPendingCallWatcher *getWatcher = new QDBusPendingCallWatcher(getReply, this);
+                                connect(getWatcher, &QDBusPendingCallWatcher::finished,
+                                    [this, objPath] (QDBusPendingCallWatcher *watcher) {
+                                        QDBusPendingReply<QVariant> reply = *watcher;
+                                        if (reply.isValid()) {
+                                            m_bluetoothAdapters.insert(objPath, reply.value().toBool());
+                                            QDBusMessage message = QDBusMessage::createMethodCall("org.bluez", objPath, "org.freedesktop.DBus.Properties", "Set");
+                                            QList<QVariant> arguments;
+                                            arguments << QLatin1Literal("org.bluez.Adapter1");
+                                            arguments << QLatin1Literal("Powered");
+                                            arguments << QVariant::fromValue(QDBusVariant(QVariant(false)));
+                                            message.setArguments(arguments);
+                                            QDBusConnection::systemBus().asyncCall(message);
+                                        }
+
+                                    });
+                            getWatcher->deleteLater();
+                        } else if (enable && m_bluetoothAdapters.value(objPath)) {
+                            QDBusMessage message = QDBusMessage::createMethodCall("org.bluez", objPath, "org.freedesktop.DBus.Properties", "Set");
+                            QList<QVariant> arguments;
+                            arguments << QLatin1Literal("org.bluez.Adapter1");
+                            arguments << QLatin1Literal("Powered");
+                            arguments << QVariant::fromValue(QDBusVariant(QVariant(enable)));
+                            message.setArguments(arguments);
+                            QDBusConnection::systemBus().asyncCall(message);
+                        }
+                    }
+                }
+            }
+        });
+    watcher->deleteLater();
 }
 
 void Handler::enableNetworking(bool enable)
@@ -326,72 +387,31 @@ void Handler::enableWireless(bool enable)
     NetworkManager::setWirelessEnabled(enable);
 }
 
+#if !NM_CHECK_VERSION(1, 2, 0)
 void Handler::enableWimax(bool enable)
 {
-#if !NM_CHECK_VERSION(1, 2, 0)
     NetworkManager::setWimaxEnabled(enable);
-#endif
 }
+#endif
 
 void Handler::enableWwan(bool enable)
 {
     NetworkManager::setWwanEnabled(enable);
 }
 
-bool Handler::isBtEnabled()
-{
-    qDBusRegisterMetaType< QMap<QDBusObjectPath, NMVariantMapMap > >();
-    bool result = false;
-
-    QDBusInterface managerIface("org.bluez", "/", "org.freedesktop.DBus.ObjectManager", QDBusConnection::systemBus(), this);
-    QDBusReply<QMap<QDBusObjectPath, NMVariantMapMap> > reply = managerIface.call("GetManagedObjects");
-    if (reply.isValid()) {
-        Q_FOREACH (const QDBusObjectPath &path, reply.value().keys()) {
-            const QString objPath = path.path();
-            qCDebug(NM) << "inspecting path" << objPath;
-            const QStringList interfaces = reply.value().value(path).keys();
-            qCDebug(NM) << "interfaces:" << interfaces;
-            if (interfaces.contains("org.bluez.Adapter1")) {
-                QDBusInterface adapterIface("org.bluez", objPath, "org.bluez.Adapter1", QDBusConnection::systemBus(), this);
-                const bool adapterEnabled = adapterIface.property("Powered").toBool();
-                qCDebug(NM) << "Adapter" << objPath << "enabled:" << adapterEnabled;
-                result |= adapterEnabled;
-            }
-        }
-    } else {
-        qCDebug(NM) << "Failed to enumerate BT adapters";
-    }
-
-    return result;
-}
-
-void Handler::enableBt(bool enable)
-{
-    QDBusInterface managerIface("org.bluez", "/", "org.freedesktop.DBus.ObjectManager", QDBusConnection::systemBus(), this);
-    QDBusReply<QMap<QDBusObjectPath, NMVariantMapMap> > reply = managerIface.call("GetManagedObjects");
-    if (reply.isValid()) {
-        Q_FOREACH (const QDBusObjectPath &path, reply.value().keys()) {
-            const QString objPath = path.path();
-            qCDebug(NM) << "inspecting path" << objPath;
-            const QStringList interfaces = reply.value().value(path).keys();
-            qCDebug(NM) << "interfaces:" << interfaces;
-            if (interfaces.contains("org.bluez.Adapter1")) {
-                QDBusInterface adapterIface("org.bluez", objPath, "org.bluez.Adapter1", QDBusConnection::systemBus(), this);
-                qCDebug(NM) << "Enabling adapter:" << objPath << enable;
-                adapterIface.setProperty("Powered", enable);
-            }
-        }
-    } else {
-        qCDebug(NM) << "Failed to enumerate BT adapters";
-    }
-}
+// void Handler::editConnection(const QString& uuid)
+// {
+//     QStringList args;
+//     args << uuid;
+//     KProcess::startDetached("kde5-nm-connection-editor", args);
+// }
 
 void Handler::removeConnection(const QString& connection)
 {
     NetworkManager::Connection::Ptr con = NetworkManager::findConnection(connection);
 
     if (!con || con->uuid().isEmpty()) {
-        qCWarning(NM) << "Not possible to remove connection " << connection;
+        qCWarning(PLASMA_NM) << "Not possible to remove connection " << connection;
         return;
     }
 
@@ -435,7 +455,7 @@ void Handler::requestScan()
                 QDBusPendingReply<> reply = wifiDevice->requestScan();
                 QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
                 watcher->setProperty("action", Handler::RequestScan);
-                connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), this, SLOT(replyFinished(QDBusPendingCallWatcher*)));
+                connect(watcher, &QDBusPendingCallWatcher::finished, this, &Handler::replyFinished);
             }
         }
     }
@@ -444,7 +464,11 @@ void Handler::requestScan()
 void Handler::initKdedModule()
 {
 #if 0
-    m_agentIface.call(QStringLiteral("init"));
+    QDBusMessage initMsg = QDBusMessage::createMethodCall(QStringLiteral(AGENT_SERVICE),
+                                                          QStringLiteral(AGENT_PATH),
+                                                          QStringLiteral(AGENT_IFACE),
+                                                          QStringLiteral("init"));
+    QDBusConnection::sessionBus().send(initMsg);
 #endif
 }
 

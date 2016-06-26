@@ -25,8 +25,7 @@
  ***************************************************************************/
 
 #include <QtGui/QIcon>
-#include <QDebug>
-
+#include "appidmapping_p.h"
 #include "applicationinfo.h"
 #include "launcheritem.h"
 #include "launchermodel.h"
@@ -72,8 +71,6 @@ void LauncherModel::setApplicationManager(ApplicationManager *appMan)
                    this, &LauncherModel::handleApplicationRemoved);
         disconnect(m_appMan, &ApplicationManager::applicationFocused,
                    this, &LauncherModel::handleApplicationFocused);
-        disconnect(m_appMan, &ApplicationManager::applicationUnfocused,
-                   this, &LauncherModel::handleApplicationUnfocused);
     }
 
     m_appMan = appMan;
@@ -86,8 +83,6 @@ void LauncherModel::setApplicationManager(ApplicationManager *appMan)
                 this, &LauncherModel::handleApplicationRemoved);
         connect(appMan, &ApplicationManager::applicationFocused,
                 this, &LauncherModel::handleApplicationFocused);
-        connect(appMan, &ApplicationManager::applicationUnfocused,
-                this, &LauncherModel::handleApplicationUnfocused);
     }
 }
 
@@ -106,7 +101,6 @@ QHash<int, QByteArray> LauncherModel::roleNames() const
     roles.insert(CountRole, "count");
     roles.insert(HasProgressRole, "hasProgress");
     roles.insert(ProgressRole, "progress");
-    roles.insert(HasActionsRole, "hasActions");
     return roles;
 }
 
@@ -149,12 +143,6 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
         return item->progress() >= 0;
     case ProgressRole:
         return item->progress();
-        /*
-    case HasActionListRole:
-        return item->actionsCount();
-    case ActionListRole:
-        return item->actions();
-        */
     default:
         break;
     }
@@ -191,7 +179,6 @@ void LauncherModel::pin(const QString &appId)
         break;
     }
 
-    qDebug() << found;
     if (!found)
         return;
 
@@ -300,24 +287,19 @@ void LauncherModel::handleApplicationFocused(const QString &appId)
 {
     for (int i = 0; i < m_list.size(); i++) {
         LauncherItem *item = m_list.at(i);
-        if (item->appId() == appId) {
-            item->setActive(true);
-            QModelIndex modelIndex = index(i);
-            Q_EMIT dataChanged(modelIndex, modelIndex);
-            break;
-        }
-    }
-}
+        bool changed = false;
 
-void LauncherModel::handleApplicationUnfocused(const QString &appId)
-{
-    for (int i = 0; i < m_list.size(); i++) {
-        LauncherItem *item = m_list.at(i);
         if (item->appId() == appId) {
+            changed = !item->isActive();
+            item->setActive(true);
+        } else {
+            changed = item->isActive();
             item->setActive(false);
+        }
+
+        if (changed) {
             QModelIndex modelIndex = index(i);
             Q_EMIT dataChanged(modelIndex, modelIndex);
-            break;
         }
     }
 }

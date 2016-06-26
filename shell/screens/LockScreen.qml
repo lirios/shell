@@ -28,7 +28,7 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
-import Hawaii.Themes 1.0 as Themes
+import QtQuick.Controls.Material 2.0
 import Fluid.Ui 1.0 as FluidUi
 import Fluid.Effects 1.0 as FluidEffects
 
@@ -49,6 +49,13 @@ FluidUi.Showable {
         to: -root.height
     }
     visible: true
+    onVisibleChanged: {
+        // Activate password field
+        if (visible)
+            passwordField.forceActiveFocus();
+    }
+
+    Material.theme: Material.Dark
 
     QtObject {
         id: __priv
@@ -103,9 +110,8 @@ FluidUi.Showable {
         Label {
             id: timeLabel
             font.pointSize: 42
-            color: Themes.Theme.palette.window.textColor
             style: Text.Raised
-            styleColor: Themes.Theme.palette.window.textEffectColor
+            styleColor: Material.backgroundTextColor
 
             Layout.alignment: Qt.AlignCenter
         }
@@ -113,9 +119,8 @@ FluidUi.Showable {
         Label {
             id: dateLabel
             font.pointSize: 36
-            color: Themes.Theme.palette.window.textColor
             style: Text.Raised
-            styleColor: Themes.Theme.palette.window.textEffectColor
+            styleColor: Material.backgroundTextColor
 
             Layout.alignment: Qt.AlignCenter
         }

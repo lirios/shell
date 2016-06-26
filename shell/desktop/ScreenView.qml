@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
@@ -47,6 +48,8 @@ Item {
     readonly property alias windowSwitcher: windowSwitcher
 
     id: screenView
+
+    Material.theme: Material.Dark
 
     /*
      * Hot corners
@@ -79,19 +82,82 @@ Item {
         z: 1
     }
 
+    // Dim desktop in present mode
+    Rectangle {
+        anchors.fill: parent
+        z: 2
+        color: "black"
+        opacity: workspace.state == "present" ? 0.7 : 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: 250
+            }
+        }
+    }
+
+    // Workspaces selector for present
+    // FIXME: Only one workspace for now
+    Pane {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: FluidUi.Units.gu(20)
+        z: 3
+        opacity: workspace.state == "present" ? 1.0 : 0.0
+
+        ListView {
+            anchors.fill: parent
+            anchors.margins: FluidUi.Units.smallSpacing
+            model: 1
+            delegate: Item {
+                readonly property real ratio: workspace.width / workspace.height
+
+                width: ListView.view.width
+                height: width / ratio
+
+                ShaderEffectSource {
+                    anchors.fill: parent
+                    smooth: true
+                    sourceItem: backgroundLayer
+                    live: true
+                    hideSource: false
+
+                    ShaderEffectSource {
+                        anchors.fill: parent
+                        smooth: true
+                        sourceItem: workspace
+                        live: true
+                        hideSource: false
+                    }
+                }
+            }
+
+            ScrollBar.vertical: ScrollBar {}
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: 250
+            }
+        }
+    }
+
     // Workspaces
     WorkspacesView {
         id: workspacesLayer
         anchors.fill: parent
-        z: 2
+        z: 5
     }
 
     // FIXME: Temporary workaround to make keyboard input work,
     // apparently SwipeView captures input. An Item instead make it work.
-    Item {
+    Workspace {
         id: workspace
         anchors.fill: parent
-        z: 3
+        z: 6
     }
 
     // Panels
@@ -100,8 +166,17 @@ Item {
         anchors.fill: parent
         asynchronous: true
         active: primary
-        sourceComponent: Shell {}
-        z: 5
+        sourceComponent: Shell {
+            opacity: workspace.state == "present" ? 0.0 : 1.0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    easing.type: Easing.OutQuad
+                    duration: 250
+                }
+            }
+        }
+        z: 10
     }
 
     // Full screen windows can cover application windows and panels
@@ -109,7 +184,7 @@ Item {
         id: fullScreenLayer
         anchors.fill: parent
         color: "black"
-        z: 10
+        z: 20
         opacity: children.length > 0 ? 1.0 : 0.0
 
         Behavior on opacity {
@@ -124,14 +199,14 @@ Item {
     Overlay {
         id: overlaysLayer
         anchors.centerIn: parent
-        z: 5
+        z: 10
     }
 
     // Notifications are behind the panel
     Item {
         id: notificationsLayer
         anchors.fill: parent
-        z: 5
+        z: 10
     }
 
     // Windows switcher

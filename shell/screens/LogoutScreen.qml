@@ -28,8 +28,8 @@ import QtQuick 2.4
 import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
@@ -104,6 +104,8 @@ FluidUi.Showable {
     onSuspendRequested: SessionInterface.suspend()
     onHibernateRequested: SessionInterface.hibernate()
 
+    Material.theme: Material.Dark
+
     QtObject {
         id: __priv
 
@@ -157,7 +159,7 @@ FluidUi.Showable {
             id: actionIcon
             width: FluidUi.Units.iconSizes.enormous
             height: width
-            color: Themes.Theme.palette.panel.textColor
+            color: Material.primaryTextColor
             cache: false
 
             Layout.alignment: Qt.AlignHCenter
@@ -166,7 +168,6 @@ FluidUi.Showable {
         Controls.Heading {
             id: actionLabel
             level: 2
-            color: Themes.Theme.palette.panel.textColor
             horizontalAlignment: Qt.AlignHCenter
 
             Layout.fillWidth: true
@@ -208,7 +209,6 @@ FluidUi.Showable {
 
                 return qsTr(msg).arg(__priv.remainingTime);
             }
-            color: Themes.Theme.palette.panel.textColor
 
             Layout.alignment: Qt.AlignHCenter
         }

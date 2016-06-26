@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Qt.labs.controls 1.0
+import Qt.labs.controls.material 1.0
 import Fluid.Ui 1.0 as FluidUi
 import org.hawaiios.launcher 0.1 as CppLauncher
 
@@ -36,6 +37,8 @@ Popup {
     focus: true
     implicitWidth: layout.width + (2 * FluidUi.Units.largeSpacing)
     implicitHeight: layout.height + (2 * FluidUi.Units.largeSpacing)
+
+    Material.theme: Material.Dark
 
     CppLauncher.ProcessRunner {
         id: process
@@ -58,7 +61,7 @@ Popup {
                 close();
             }
 
-            Layout.minimumWidth: FluidUi.Units.gu(12)
+            Layout.minimumWidth: FluidUi.Units.dp(350)
             Layout.fillWidth: true
         }
 

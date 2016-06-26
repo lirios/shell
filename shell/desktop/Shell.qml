@@ -38,6 +38,10 @@ Item {
         id: panel
         z: 1
         onIndicatorTriggered: {
+            // Set the last indicator
+            rightDrawer.lastIndicator = indicator;
+            indicator.active = true;
+
             // Load indicator component
             if (rightDrawer.expanded)
                 stackView.push(indicator.component, {}, StackView.Transition);
@@ -48,9 +52,15 @@ Item {
     }
 
     Drawer {
+        property var lastIndicator: null
+
         id: rightDrawer
         edge: Qt.RightEdge
-        onClicked: close()
+        onClicked: {
+            if (lastIndicator)
+                lastIndicator.active = false;
+            close();
+        }
 
         Pane {
             y: output.availableGeometry.y

@@ -49,8 +49,8 @@ public:
     ApplicationInfoPrivate(const QString &_appId, ApplicationInfo *parent);
     ~ApplicationInfoPrivate();
 
-    QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
-    QVariant localizedValue(const QString &key, const QVariant &defaultValue = QVariant()) const;
+    QVariant value(const QString &group, const QString &key, const QVariant &defaultValue = QVariant()) const;
+    QVariant localizedValue(const QString &group, const QString &key, const QVariant &defaultValue = QVariant()) const;
 
     void setState(ApplicationInfo::State value);
 

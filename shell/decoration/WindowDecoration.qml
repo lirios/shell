@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Qt.labs.controls.material 1.0
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -45,7 +46,7 @@ Item {
         anchors.margins: -extents
         source: "graphics/dropshadow.sci"
         cache: true
-        opacity: clientWindow && clientWindow.active ? 0.9 : 0.7
+        opacity: clientWindow && clientWindow.activated ? 0.9 : 0.7
         smooth: true
         z: 0
 
@@ -66,7 +67,7 @@ Item {
         }
         width: container.width + (border.width * 2)
         height: container.height + (border.width * 2) + titleBar.height
-        border.color: Themes.Theme.palette.rgba(Themes.Theme.palette.window.secondaryColor, 0.5)
+        border.color: Themes.Theme.palette.rgba(Material.dialogColor, 0.5)
         border.width: 1
         color: "transparent"
         z: 1

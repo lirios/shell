@@ -47,6 +47,7 @@ class LauncherItem : public QObject
     Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
+    Q_PROPERTY(QQmlListProperty<ApplicationAction> actions READ actions)
 public:
     LauncherItem(const QString &appId, QObject *parent = 0);
     explicit LauncherItem(const QString &appId, bool pinned, QObject *parent = 0);
@@ -67,6 +68,11 @@ public:
 
     int count() const;
     int progress() const;
+
+    QQmlListProperty<ApplicationAction> actions();
+
+    static int actionsCount(QQmlListProperty<ApplicationAction> *prop);
+    static ApplicationAction *actionAt(QQmlListProperty<ApplicationAction> *prop, int index);
 
     Q_INVOKABLE bool launch();
     Q_INVOKABLE bool quit();

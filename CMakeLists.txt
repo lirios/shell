@@ -8,7 +8,7 @@ if(POLICY CMP0063)
 endif()
 
 # Set version
-set(PROJECT_VERSION "0.6.90")
+set(PROJECT_VERSION "0.6.91")
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_SOVERSION 0)
 
@@ -104,7 +104,8 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
              Gui
              Widgets
              Qml
-             Quick)
+             Quick
+             WaylandClient)
 
 # Find KF5
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -131,10 +132,11 @@ add_subdirectory(3rdparty)
 add_subdirectory(compositor)
 add_subdirectory(data)
 add_subdirectory(declarative)
+add_subdirectory(decorations)
 add_subdirectory(framework)
 add_subdirectory(headers)
 add_subdirectory(scripts)
-add_subdirectory(styles)
+#add_subdirectory(styles)
 add_subdirectory(tests)
 add_subdirectory(themes)
 

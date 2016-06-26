@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Qt.labs.controls.material 1.0 as LabsMaterial
+import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 
@@ -44,13 +44,13 @@ Popup {
         id: thumbnailComponent
 
         Rectangle {
-            readonly property string title: window.title
+            readonly property string title: window.title ? window.title : qsTr("Untitled")
             readonly property real ratio: window.surface.size.width / window.surface.size.height
 
             id: wrapper
             width: height * ratio
             height: thumbnailSize
-            color: wrapper.ListView.isCurrentItem ? LabsMaterial.Material.accent : "transparent"
+            color: wrapper.ListView.isCurrentItem ? Material.accent : "transparent"
             radius: FluidUi.Units.dp(4)
 
             GreenIsland.WaylandQuickItem {
@@ -108,7 +108,7 @@ Popup {
 
         Label {
             id: label
-            text: listView.currentItem ? listView.currentItem.title : qsTr("Untitled")
+            text: listView.currentItem ? listView.currentItem.title : ""
             wrapMode: Text.Wrap
             font.bold: true
             maximumLineCount: 2
@@ -120,11 +120,14 @@ Popup {
 
     function activate() {
         var window = listView.model.get(listView.currentIndex);
-        if (window)
-            window.active = true;
+        if (window && window)
+            window.window.activate();
     }
 
     function previous() {
+        if (windowsModel.count < 2)
+            return;
+
         if (listView.currentIndex == 0)
             listView.currentIndex = listView.count == 0 ? 0 : listView.count - 1;
         else
@@ -133,6 +136,9 @@ Popup {
     }
 
     function next() {
+        if (windowsModel.count < 2)
+            return;
+
         if (listView.currentIndex == listView.count - 1)
             listView.currentIndex = 0;
         else

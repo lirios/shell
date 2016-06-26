@@ -81,6 +81,16 @@ Popup {
                 Layout.fillWidth: true
             }
 
+            Item {
+                Layout.fillWidth: true
+            }
+
+            LauncherShutdownActions {
+                id: shutdownActions
+
+                Layout.alignment: Qt.AlignHCenter
+            }
+
             Layout.fillWidth: true
         }
 
@@ -135,10 +145,8 @@ Popup {
                     Layout.alignment: Qt.AlignHCenter
                 }
 
-                LauncherShutdownActions {
-                    id: shutdownActions
-
-                    Layout.alignment: Qt.AlignHCenter
+                Item {
+                    height: FluidUi.Units.smallSpacing
                 }
             }
 

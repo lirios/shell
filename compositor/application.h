@@ -60,6 +60,7 @@ private:
 private Q_SLOTS:
     void startup();
     void shutdown();
+    void autostart();
     void unixSignal();
     void objectCreated(QObject *object, const QUrl &);
 };

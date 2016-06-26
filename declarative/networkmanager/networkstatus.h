@@ -1,6 +1,5 @@
 /*
     Copyright 2013 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HAWAII_NM_NETWORK_STATUS_H
-#define HAWAII_NM_NETWORK_STATUS_H
+#ifndef PLASMA_NM_NETWORK_STATUS_H
+#define PLASMA_NM_NETWORK_STATUS_H
 
 #include <QObject>
 
@@ -38,6 +37,22 @@ Q_PROPERTY(QString activeConnections READ activeConnections NOTIFY activeConnect
 Q_PROPERTY(QString networkStatus READ networkStatus NOTIFY networkStatusChanged)
 Q_OBJECT
 public:
+    enum SortedConnectionType {
+        Wired,
+        Wireless,
+        Wimax,
+        Gsm,
+        Cdma,
+        Pppoe,
+        Adsl,
+        Infiniband,
+        OLPCMesh,
+        Bluetooth,
+        Vpn,
+        Other };
+
+    static SortedConnectionType connectionTypeToSortedType(NetworkManager::ConnectionSettings::ConnectionType type);
+
     explicit NetworkStatus(QObject* parent = 0);
     virtual ~NetworkStatus();
 

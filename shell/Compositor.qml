@@ -27,6 +27,7 @@
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
 import org.hawaiios.misc 0.1
+import org.hawaiios.launcher 0.1 as CppLauncher
 import "desktop"
 
 GreenIsland.WaylandCompositor {
@@ -43,33 +44,58 @@ GreenIsland.WaylandCompositor {
     extensions: [
         GreenIsland.QtWindowManager {
             showIsFullScreen: false
+            onOpenUrl: {
+                // Execute url with xdg-open
+                console.warn("Run", url, "with xdg-open");
+                processRunner.launchCommand("xdg-open " + url);
+            }
         },
         GreenIsland.WlShell {
             onShellSurfaceCreated: {
-                var window = windowManager.createWindow(shellSurface.surface);
-                windowsModel.append({"window": window});
+                var window = applicationManager.createWindow(shellSurface.surface);
 
                 var i, view;
                 for (i = 0; i < d.outputs.length; i++) {
-                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": shellSurface, "window": window});
+                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": shellSurface, "window": window, "decorated": true});
                     view.moveItem = window.moveItem;
                     window.addWindowView(view);
                 }
             }
         },
         GreenIsland.XdgShell {
+            property variant viewsBySurface: ({})
+
             onXdgSurfaceCreated: {
-                var window = windowManager.createWindow(xdgSurface.surface);
-                windowsModel.append({"window": window});
+                var window = applicationManager.createWindow(xdgSurface.surface);
 
                 var i, view;
                 for (i = 0; i < d.outputs.length; i++) {
-                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": xdgSurface, "window": window});
+                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": xdgSurface, "window": window, "decorated": false});
                     view.moveItem = window.moveItem;
+                    if (viewsBySurface[xdgSurface.surface] == undefined)
+                        viewsBySurface[xdgSurface.surface] = new Array();
+                    viewsBySurface[xdgSurface.surface].push({"output": d.outputs[i], "view": view});
                     window.addWindowView(view);
                 }
             }
+            onXdgPopupCreated: {
+                var window = applicationManager.createWindow(xdgPopup.surface);
+
+                var i, j, parentView, view, parentViews = viewsBySurface[xdgPopup.parentSurface];
+                for (i = 0; i < d.outputs.length; i++) {
+                    for (j = 0; j < parentViews.length; j++) {
+                        if (parentViews[j].output == d.outputs[i]) {
+                            view = chromeComponent.createObject(parentViews[j].view, {"shellSurface": xdgPopup, "window": window});
+                            view.x = xdgPopup.position.x;
+                            view.y = xdgPopup.position.y;
+                            view.moveItem = window.moveItem;
+                            window.addWindowView(view);
+                        }
+                    }
+                }
+            }
         },
+        GreenIsland.GtkShell {},
         GreenIsland.TextInputManager {},
         GreenIsland.ApplicationManager {
             id: applicationManager
@@ -121,6 +147,11 @@ GreenIsland.WaylandCompositor {
     // Settings
     ShellSettings {
         id: settings
+    }
+
+    // Process launcher
+    CppLauncher.ProcessRunner {
+        id: processRunner
     }
 
     // Key bindings
@@ -179,24 +210,54 @@ GreenIsland.WaylandCompositor {
         id: windowsModel
     }
 
-    // Window manager
-    GreenIsland.WindowManager {
-        id: windowManager
-        compositor: hawaiiCompositor
+    // XWayland
+    Loader {
+        active: false
+        asynchronous: true
+        onStatusChanged: {
+            if (status === Loader.Error)
+                console.warn("Error loading XWayland support:", sourceComponent.errorString())
+        }
+
+        Component.onCompleted: {
+            var component = Qt.createComponent(Qt.resolvedUrl("XWayland.qml"),
+                                               Component.Asynchronous);
+            sourceComponent = component;
+        }
     }
 
     // Surface component
     Component {
         id: surfaceComponent
 
-        GreenIsland.WaylandSurface {}
+        GreenIsland.WaylandSurface {
+            id: surface
+            onMappedChanged: {
+                if (!cursorSurface) {
+                    if (isMapped) {
+                        var window = applicationManager.windowForSurface(surface);
+                        if (window)
+                            windowsModel.append({"window": window});
+                    } else {
+                        for (var i = 0; i < windowsModel.count; i++) {
+                            if (windowsModel.get(i).window.surface === surface) {
+                                windowsModel.remove(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Window component
     Component {
         id: chromeComponent
 
-        GreenIsland.WindowChrome {}
+        GreenIsland.WindowChrome {
+            animationsEnabled: parent.animateWindows
+        }
     }
 
     // Output component

@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -69,8 +70,9 @@ Item {
     Rectangle {
         id: container
         anchors.fill: parent
-        radius: width * 0.5
-        color: Themes.Theme.palette.panel.selectedBackgroundColor
+        anchors.margins: FluidUi.Units.smallSpacing
+        color: Material.accentColor
+        radius: FluidUi.Units.dp(6)
         opacity: active ? 1.0 : 0.0
 
         Behavior on opacity {
@@ -90,7 +92,7 @@ Item {
     FluidUi.Icon {
         id: icon
         anchors.centerIn: parent
-        color: selected ? Themes.Theme.palette.panel.selectedTextColor : Themes.Theme.palette.panel.textColor
+        color: active ? Material.primaryHighlightedTextColor : Material.primaryTextColor
         height: width
         cache: false
     }
@@ -98,7 +100,6 @@ Item {
     Label {
         id: label
         anchors.centerIn: parent
-        color: Themes.Theme.palette.panel.textColor
         font.pixelSize: FluidUi.Units.roundToIconSize(FluidUi.Units.iconSizes.small)
     }
 

@@ -1,6 +1,5 @@
 /*
     Copyright 2013 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HAWAII_NM_CONNECTION_ICON_H
-#define HAWAII_NM_CONNECTION_ICON_H
+#ifndef PLASMA_NM_CONNECTION_ICON_H
+#define PLASMA_NM_CONNECTION_ICON_H
 
 #include <config.h>
 
@@ -59,7 +58,7 @@ private Q_SLOTS:
     void primaryConnectionChanged(const QString & connection);
 #if WITH_MODEMMANAGER_SUPPORT
     void modemNetworkRemoved();
-    void modemSignalChanged(uint signal);
+    void modemSignalChanged(const ModemManager::SignalQualityPair &signalQuality);
     void setIconForModem();
 #endif
     void statusChanged(NetworkManager::Status status);
@@ -99,4 +98,4 @@ private:
 #endif
 };
 
-#endif // HAWAII_NM_CONNECTION_ICON_H
+#endif // PLASMA_NM_CONNECTION_ICON_H

@@ -27,6 +27,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Qt.labs.calendar 1.0 as LabsCalendar
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
@@ -53,7 +54,7 @@ Item {
 
             Rectangle {
                 anchors.bottom: parent.bottom
-                color: Themes.Theme.palette.panel.textColor
+                color: Material.dividerColor
                 opacity: 0.4
                 height: 1
             }
@@ -68,46 +69,43 @@ Item {
         GridLayout {
             columns: 2
 
-            LabsCalendar.DayOfWeekRow {
+            DayOfWeekRow {
                 id: dayOfWeek
                 locale: calendar.locale
-                delegate: Text {
+                delegate: Label {
                     text: model.shortName
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font: dayOfWeek.font
-                    color: Themes.Theme.palette.panel.textColor
                 }
 
                 Layout.column: 1
                 Layout.fillWidth: true
             }
 
-            LabsCalendar.WeekNumberColumn {
+            WeekNumberColumn {
                 id: weekNumber
                 month: calendar.month
                 year: calendar.year
                 locale: calendar.locale
                 font.bold: true
-                delegate: Text {
+                delegate: Label {
                     text: model.weekNumber
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font: weekNumber.font
-                    color: Themes.Theme.palette.panel.textColor
                 }
 
                 Layout.fillHeight: true
             }
 
-            LabsCalendar.MonthGrid {
+            MonthGrid {
                 id: calendar
-                delegate: Text {
+                delegate: Label {
                     text: model.day
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font: calendar.font
-                    color: Themes.Theme.palette.panel.textColor
                     opacity: model.month === calendar.month ? 1 : 0
                 }
 
@@ -122,8 +120,8 @@ Item {
             model: 25
             delegate: hourDelegate
 
-            //ScrollBar.horizontal: ScrollBar {}
-            //ScrollBar.vertical: ScrollBar {}
+            ScrollBar.horizontal: ScrollBar {}
+            ScrollBar.vertical: ScrollBar {}
 
             Layout.fillWidth: true
             Layout.fillHeight: true

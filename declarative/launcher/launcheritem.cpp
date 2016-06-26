@@ -41,7 +41,7 @@ LauncherItem::LauncherItem(const QString &appId, QObject *parent)
     : QObject(parent)
     , m_pinned(false)
     , m_running(true)
-    , m_active(true)
+    , m_active(false)
     , m_count(0)
     , m_progress(-1)
     , m_info(new ApplicationInfo(appId, this))
@@ -118,6 +118,27 @@ int LauncherItem::count() const
 int LauncherItem::progress() const
 {
     return m_progress;
+}
+
+QQmlListProperty<ApplicationAction> LauncherItem::actions()
+{
+    return QQmlListProperty<ApplicationAction>(this, Q_NULLPTR, actionsCount, actionAt);
+}
+
+int LauncherItem::actionsCount(QQmlListProperty<ApplicationAction> *prop)
+{
+    LauncherItem *that = static_cast<LauncherItem *>(prop->object);
+    if (!that || !that->m_info)
+        return 0;
+    return that->m_info->actions().count();
+}
+
+ApplicationAction *LauncherItem::actionAt(QQmlListProperty<ApplicationAction> *prop, int index)
+{
+    LauncherItem *that = static_cast<LauncherItem *>(prop->object);
+    if (!that || !that->m_info)
+        return Q_NULLPTR;
+    return that->m_info->actions().at(index);
 }
 
 bool LauncherItem::launch()

@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
-import Hawaii.Themes 1.0 as Themes
+import QtQuick.Controls.Material 2.0
 import Fluid.Ui 1.0 as FluidUi
 import "../components" as CustomComponents
 
@@ -70,7 +70,7 @@ Item {
             bottom: parent.bottom
         }
         height: FluidUi.Units.dp(2)
-        color: model.active ? Themes.Theme.palette.view.selectedBackgroundColor : "white"
+        color: model.active ? Material.accentColor : "white"
         opacity: model.running ? 1.0 : 0.0
 
         Behavior on color {
@@ -177,9 +177,8 @@ Item {
         for (i = 0; i < hawaiiCompositor.windowsModel.count; i++) {
             window = hawaiiCompositor.windowsModel.get(i).window;
             if (window.appId === model.appId) {
-                if (window.minimized)
-                    window.minimized = false;
-                window.active = true;
+                window.minimized = false;
+                window.activate();
             }
         }
 

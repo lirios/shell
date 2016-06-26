@@ -56,8 +56,7 @@ public:
         HasCountRole,
         CountRole,
         HasProgressRole,
-        ProgressRole,
-        HasActionsRole
+        ProgressRole
     };
 
     LauncherModel(QObject *parent = 0);
@@ -92,7 +91,6 @@ private Q_SLOTS:
     void handleApplicationAdded(const QString &appId, pid_t pid);
     void handleApplicationRemoved(const QString &appId, pid_t pid);
     void handleApplicationFocused(const QString &appId);
-    void handleApplicationUnfocused(const QString &appId);
 };
 
 QML_DECLARE_TYPE(LauncherModel)

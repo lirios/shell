@@ -94,8 +94,6 @@ Q_SIGNALS:
     void shutdownRequestCanceled();
 
 public Q_SLOTS:
-    void autostart();
-
     void logOut();
     void powerOff();
     void restart();

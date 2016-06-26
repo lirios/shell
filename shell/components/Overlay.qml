@@ -27,6 +27,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Materials 2.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 
@@ -61,10 +62,12 @@ FluidUi.Showable {
         to: 0.0
     }
     width: height
-    height: FluidUi.Units.gu(15)
+    height: FluidUi.Units.dp(256)
     onIconNameChanged: if (timer.running) timer.restart()
     onValueChanged: if (timer.running) timer.restart()
     onShowProgressChanged: if (timer.running) timer.restart()
+
+    Material.theme: Material.Dark
 
     // Hide automatically after the timeout
     Timer {
@@ -77,9 +80,9 @@ FluidUi.Showable {
     Rectangle {
         id: rect
         anchors.fill: parent
-        border.color: Themes.Theme.palette.rgba(Themes.Theme.palette.panel.backgroundColor, 0.5)
+        border.color: Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.5)
         border.width: FluidUi.Units.dp(1)
-        color: Themes.Theme.palette.rgba(Themes.Theme.palette.panel.backgroundColor, 0.85)
+        color: Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.85)
         radius: FluidUi.Units.dp(6)
         antialiasing: true
         opacity: 0.0
@@ -102,7 +105,7 @@ FluidUi.Showable {
                 id: icon
                 width: FluidUi.Units.iconSizes.enormous
                 height: width
-                color: Themes.Theme.palette.panel.textColor
+                color: Material.primaryTextColor
 
                 Layout.alignment: Qt.AlignHCenter
             }
@@ -119,7 +122,6 @@ FluidUi.Showable {
 
             Label {
                 text: progress.visible ? "" : (root.value ? root.value : "")
-                color: Themes.Theme.palette.panel.textColor
                 visible: !progress.visible
 
                 Layout.alignment: Qt.AlignHCenter

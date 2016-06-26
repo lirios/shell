@@ -27,7 +27,7 @@
 import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
-import Qt.labs.controls.material 1.0 as LabsMaterial
+import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Ui 1.0 as FluidUi
 import "../screens"
@@ -66,9 +66,8 @@ GreenIsland.ExtendedOutput {
         maximumWidth: nativeScreen.width
         maximumHeight: nativeScreen.height
 
-        LabsMaterial.Material.theme: LabsMaterial.Material.Dark
-        LabsMaterial.Material.primary: LabsMaterial.Material.Blue
-        LabsMaterial.Material.accent: LabsMaterial.Material.LightBlue
+        Material.primary: Material.Blue
+        Material.accent: Material.LightBlue
 
         Connections {
             target: SessionInterface
@@ -77,9 +76,9 @@ GreenIsland.ExtendedOutput {
             onIdleInhibitRequested: hawaiiCompositor.idleInhibit++
             onIdleUninhibitRequested: hawaiiCompositor.idleInhibit--
             onShutdownRequestCanceled: mainItem.state = "session"
-            onLogOutRequested: mainItem.state = "logout"
-            onPowerOffRequested: mainItem.state = "poweroff"
-            onRestartRequested: mainItem.state = "restart"
+            onLogOutRequested: if (mainItem.state != "lock") mainItem.state = "logout"
+            onPowerOffRequested: if (mainItem.state != "lock") mainItem.state = "poweroff"
+            onRestartRequested: if (mainItem.state != "lock") mainItem.state = "restart"
         }
 
         /*
@@ -255,7 +254,6 @@ GreenIsland.ExtendedOutput {
                     State {
                         name: "lock"
                         PropertyChanges { target: cursor; visible: true }
-                        PropertyChanges { target: screenView.windowsSwitcherLoader; active: false }
                         PropertyChanges { target: logoutLoader; loadComponent: false }
                         PropertyChanges { target: lockScreenLoader; loadComponent: true }
                         StateChangeScript { script: output.idle() }

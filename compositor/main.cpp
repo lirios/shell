@@ -66,8 +66,9 @@ static void setupEnvironment()
 
     // Environment
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
-    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Wind"));
+    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Base"));
     qputenv("QT_LABS_CONTROLS_STYLE", QByteArrayLiteral("material"));
+    qputenv("QT_WAYLAND_DECORATION", QByteArrayLiteral("HawaiiMaterialDecoration"));
     qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
     qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("hawaii-"));
@@ -98,6 +99,9 @@ int main(int argc, char *argv[])
     app.setFallbackSessionManagementEnabled(false);
 #endif
     app.setQuitOnLastWindowClosed(false);
+
+    // Set Qt platform for applications that will be executed from here
+    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
 
     // Command line parser
     QCommandLineParser parser;

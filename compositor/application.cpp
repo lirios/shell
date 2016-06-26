@@ -28,6 +28,9 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
+#include <qt5xdg/xdgautostart.h>
+#include <qt5xdg/xdgdesktopfile.h>
+
 #include <GreenIsland/QtWaylandCompositor/QWaylandCompositor>
 
 #include "application.h"
@@ -63,7 +66,7 @@ Application::Application(QObject *parent)
     connect(m_homeApp, &HomeApplication::objectCreated,
             this, &Application::objectCreated);
 
-    // Invole shutdown sequence when quitting
+    // Invoke shutdown sequence when quitting
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit,
             this, &Application::shutdown);
 }
@@ -119,6 +122,9 @@ void Application::startup()
     if (compositor)
         m_launcher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
 
+    // Launch autostart applications
+    autostart();
+
     m_started = true;
 }
 
@@ -134,8 +140,23 @@ void Application::shutdown()
     m_sessionManager = Q_NULLPTR;
 }
 
+void Application::autostart()
+{
+    Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
+        if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
+            continue;
+
+        qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
+        m_launcher->launchEntry(entry);
+    }
+}
+
 void Application::unixSignal()
 {
+    // Close all applications we launched
+    m_launcher->closeApplications();
+
+    // Exit
     QCoreApplication::quit();
 }
 

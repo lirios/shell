@@ -50,15 +50,17 @@ Indicator {
             }
 
             ListView {
-                model: NM.AppletProxyModel {}
+                model: NM.AppletProxyModel {
+                    sourceModel: NM.NetworkModel {}
+                }
                 clip: true
                 currentIndex: -1
                 section.property: "Section"
                 section.delegate: NetworkIndicator.Header { text: section }
                 delegate: NetworkIndicator.ConnectionItem {}
 
-                //ScrollBar.horizontal: ScrollBar {}
-                //ScrollBar.vertical: ScrollBar {}
+                ScrollBar.horizontal: ScrollBar {}
+                ScrollBar.vertical: ScrollBar {}
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true

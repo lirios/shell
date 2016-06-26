@@ -50,6 +50,12 @@ public:
     QString waylandSocketName() const;
     void setWaylandSocketName(const QString &name);
 
+    Q_INVOKABLE bool launchApplication(const QString &appId);
+    Q_INVOKABLE bool launchDesktopFile(const QString &fileName);
+    bool launchEntry(const XdgDesktopFile &entry);
+
+    Q_INVOKABLE bool closeApplication(const QString &appId);
+    Q_INVOKABLE bool closeDesktopFile(const QString &fileName);
     void closeApplications();
 
     static bool registerWithDBus(ProcessLauncher *instance);
@@ -57,18 +63,10 @@ public:
 Q_SIGNALS:
     void waylandSocketNameChanged();
 
-public Q_SLOTS:
-    bool launchApplication(const QString &appId);
-    bool launchDesktopFile(const QString &fileName);
-
-    bool closeApplication(const QString &appId);
-    bool closeDesktopFile(const QString &fileName);
-
 private:
     QString m_waylandSocketName;
     ApplicationMap m_apps;
 
-    bool launchEntry(XdgDesktopFile *entry);
     bool closeEntry(const QString &fileName);
 
 private Q_SLOTS:

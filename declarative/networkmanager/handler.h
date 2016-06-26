@@ -1,6 +1,5 @@
 /*
     Copyright 2013-2014 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HAWAII_NM_HANDLER_H
-#define HAWAII_NM_HANDLER_H
+#ifndef PLASMA_NM_HANDLER_H
+#define PLASMA_NM_HANDLER_H
 
 #include <QDBusInterface>
 
@@ -85,10 +84,11 @@ public Q_SLOTS:
      */
     void disconnectAll();
     void enableAirplaneMode(bool enable);
-    void enableBt(bool enable);
     void enableNetworking(bool enable);
     void enableWireless(bool enable);
+#if !NM_CHECK_VERSION(1, 2, 0)
     void enableWimax(bool enable);
+#endif
     void enableWwan(bool enable);
 
 //     /**
@@ -112,14 +112,15 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void initKdedModule();
-    void replyFinished(QDBusPendingCallWatcher * watcher);
+    void replyFinished(QDBusPendingCallWatcher *watcher);
 #if WITH_MODEMMANAGER_SUPPORT
     void unlockRequiredChanged(MMModemLock modemLock);
 #endif
 
 private:
-    bool m_tmpBluetoothEnabled;
+#if !NM_CHECK_VERSION(1, 2, 0)
     bool m_tmpWimaxEnabled;
+#endif
     bool m_tmpWirelessEnabled;
     bool m_tmpWwanEnabled;
 #if WITH_MODEMMANAGER_SUPPORT
@@ -128,11 +129,9 @@ private:
     QString m_tmpConnectionUuid;
     QString m_tmpDevicePath;
     QString m_tmpSpecificPath;
+    QMap<QString, bool> m_bluetoothAdapters;
 
-    bool isBtEnabled();
-#if 0
-    QDBusInterface m_agentIface;
-#endif
+    void enableBluetooth(bool enable);
 };
 
-#endif // HAWAII_NM_HANDLER_H
+#endif // PLASMA_NM_HANDLER_H

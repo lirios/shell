@@ -25,6 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Qt.labs.controls.material 1.0
 import Hawaii.Themes 1.0 as Themes
 import Fluid.Ui 1.0 as FluidUi
 import "../../components" as ShellComponents
@@ -49,6 +50,8 @@ Item {
             root.destroy();
         }
     }
+
+    Material.theme: Material.Dark
 
     Behavior on y {
         NumberAnimation {
@@ -101,13 +104,13 @@ Item {
     Rectangle {
         id: bubble
         anchors.fill: parent
-        color: Themes.Theme.palette.panel.backgroundColor
+        color: Material.dialogColor
         gradient: Gradient {
-            GradientStop { position: 0; color: Qt.lighter(Themes.Theme.palette.panel.backgroundColor, 1.2) }
-            GradientStop { position: 1; color: Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.1) }
+            GradientStop { position: 0; color: Qt.lighter(Material.dialogColor, 1.2) }
+            GradientStop { position: 1; color: Qt.darker(Material.dialogColor, 1.1) }
         }
         border.width: FluidUi.Units.gu(0.05)
-        border.color: Themes.Theme.palette.rgba(Qt.darker(Themes.Theme.palette.panel.backgroundColor, 1.2), 0.5)
+        border.color: Themes.Theme.palette.rgba(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
         radius: FluidUi.Units.gu(0.4)
         antialiasing: true
         z: 0

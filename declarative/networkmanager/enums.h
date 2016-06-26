@@ -1,6 +1,5 @@
 /*
     Copyright 2013 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,8 +18,8 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HAWAII_NM_ENUMS_H
-#define HAWAII_NM_ENUMS_H
+#ifndef PLASMA_NM_ENUMS_H
+#define PLASMA_NM_ENUMS_H
 
 #include <QObject>
 
@@ -74,4 +73,4 @@ public:
     };
 };
 
-#endif // HAWAII_NM_ENUMS_H
+#endif // PLASMA_NM_ENUMS_H
