@@ -106,8 +106,8 @@ Item {
         anchors.fill: parent
         color: Material.dialogColor
         gradient: Gradient {
-            GradientStop { position: 0; color: Qt.lighter(Material.drawerBackgroundColor, 1.2) }
-            GradientStop { position: 1; color: Qt.darker(Material.drawerBackgroundColor, 1.1) }
+            GradientStop { position: 0; color: Qt.lighter(Material.dialogColor, 1.2) }
+            GradientStop { position: 1; color: Qt.darker(Material.dialogColor, 1.1) }
         }
         border.width: FluidUi.Units.gu(0.05)
         border.color: Themes.Theme.palette.rgba(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
