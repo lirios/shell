@@ -50,7 +50,9 @@ Indicator {
             }
 
             ListView {
-                model: NM.AppletProxyModel {}
+                model: NM.AppletProxyModel {
+                    sourceModel: NM.NetworkModel {}
+                }
                 clip: true
                 currentIndex: -1
                 section.property: "Section"
