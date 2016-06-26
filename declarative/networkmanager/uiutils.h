@@ -1,7 +1,6 @@
 /*
     Copyright 2008-2010 Sebastian Kügler <sebas@kde.org>
     Copyright 2013-2014 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -20,8 +19,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HAWAII_NM_UIUTILS_H
-#define HAWAII_NM_UIUTILS_H
+#ifndef PLASMA_NM_UIUTILS_H
+#define PLASMA_NM_UIUTILS_H
 
 
 #include <NetworkManagerQt/Device>
@@ -102,8 +101,9 @@ public:
     static QString convertLockReasonToString(MMModemLock reason);
 #endif
     static NetworkManager::ModemDevice::Capability modemSubType(NetworkManager::ModemDevice::Capabilities modemCaps);
+#if !NM_CHECK_VERSION(1, 2, 0)
     static QString convertNspTypeToString(NetworkManager::WimaxNsp::NetworkType type);
-
+#endif
     static QString labelFromWirelessSecurity(NetworkManager::WirelessSecurityType type);
 
     static QString formatDateRelative(const QDateTime & lastUsed);

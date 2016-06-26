@@ -1,6 +1,5 @@
 /*
     Copyright 2014 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,11 +18,11 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HAWAII_NM_DEBUG_H
-#define HAWAII_NM_DEBUG_H
+#ifndef PLASMA_NM_DEBUG_H
+#define PLASMA_NM_DEBUG_H
 
 #include <QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(NM)
+Q_DECLARE_LOGGING_CATEGORY(PLASMA_NM)
 
-#endif // HAWAII_NM_DEBUG_H
+#endif // PLASMA_NM_DEBUG_H

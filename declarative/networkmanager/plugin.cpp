@@ -45,15 +45,15 @@ public:
         // @uri org.hawaiios.networkmanager
         Q_ASSERT(uri == QStringLiteral("org.hawaiios.networkmanager"));
 
-        qmlRegisterType<AppletProxyModel>(uri, 0, 1, "AppletProxyModel");
         qmlRegisterType<AvailableDevices>(uri, 0, 1, "AvailableDevices");
         qmlRegisterType<ConnectionIcon>(uri, 0, 1, "ConnectionIcon");
         qmlRegisterType<EnabledConnections>(uri, 0, 1, "EnabledConnections");
         qmlRegisterUncreatableType<Enums>(uri, 0, 1, "Enums",
-                                          QStringLiteral("Can't instantiate Enums objects"));
+                                          QLatin1String("Cannot instantiate Enums"));
+        qmlRegisterType<NetworkStatus>(uri, 0, 1, "NetworkStatus");
         qmlRegisterType<Handler>(uri, 0, 1, "Handler");
         qmlRegisterType<NetworkModel>(uri, 0, 1, "NetworkModel");
-        qmlRegisterType<NetworkStatus>(uri, 0, 1, "NetworkStatus");
+        qmlRegisterType<AppletProxyModel>(uri, 0, 1, "AppletProxyModel");
     }
 };
 

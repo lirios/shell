@@ -37,7 +37,9 @@
 #include <NetworkManagerQt/VlanDevice>
 #include <NetworkManagerQt/VpnConnection>
 #include <NetworkManagerQt/VpnSetting>
+#if !NM_CHECK_VERSION(1, 2, 0)
 #include <NetworkManagerQt/WimaxDevice>
+#endif
 #include <NetworkManagerQt/WiredDevice>
 #include <NetworkManagerQt/WirelessDevice>
 #include <NetworkManagerQt/WirelessSetting>

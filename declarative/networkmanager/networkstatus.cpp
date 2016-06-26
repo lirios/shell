@@ -1,6 +1,5 @@
 /*
     Copyright 2013 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -27,13 +26,53 @@
 #include <NetworkManagerQt/ActiveConnection>
 #include <NetworkManagerQt/Connection>
 
+NetworkStatus::SortedConnectionType NetworkStatus::connectionTypeToSortedType(NetworkManager::ConnectionSettings::ConnectionType type)
+{
+    switch (type) {
+        case NetworkManager::ConnectionSettings::Adsl:
+            return NetworkStatus::NetworkStatus::Adsl;
+            break;
+        case NetworkManager::ConnectionSettings::Bluetooth:
+            return NetworkStatus::Bluetooth;
+            break;
+        case NetworkManager::ConnectionSettings::Cdma:
+            return NetworkStatus::Cdma;
+            break;
+        case NetworkManager::ConnectionSettings::Gsm:
+            return NetworkStatus::Gsm;
+            break;
+        case NetworkManager::ConnectionSettings::Infiniband:
+            return NetworkStatus::Infiniband;
+            break;
+        case NetworkManager::ConnectionSettings::OLPCMesh:
+            return NetworkStatus::OLPCMesh;
+            break;
+        case NetworkManager::ConnectionSettings::Pppoe:
+            return NetworkStatus::Pppoe;
+            break;
+        case NetworkManager::ConnectionSettings::Vpn:
+            return NetworkStatus::Vpn;
+            break;
+        case NetworkManager::ConnectionSettings::Wimax:
+            return NetworkStatus::Wimax;
+            break;
+        case NetworkManager::ConnectionSettings::Wired:
+            return NetworkStatus::Wired;
+            break;
+        case NetworkManager::ConnectionSettings::Wireless:
+            return NetworkStatus::Wireless;
+            break;
+        default:
+            return NetworkStatus::Other;
+            break;
+    }
+}
+
 NetworkStatus::NetworkStatus(QObject* parent)
     : QObject(parent)
 {
-    connect(NetworkManager::notifier(), SIGNAL(statusChanged(NetworkManager::Status)),
-            SLOT(statusChanged(NetworkManager::Status)));
-    connect(NetworkManager::notifier(), SIGNAL(activeConnectionsChanged()),
-            SLOT(activeConnectionsChanged()));
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::statusChanged, this, &NetworkStatus::statusChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::activeConnectionsChanged, this, static_cast<void (NetworkStatus::*)(void)>(&NetworkStatus::activeConnectionsChanged));
 
     activeConnectionsChanged();
     statusChanged(NetworkManager::status());
@@ -56,12 +95,9 @@ QString NetworkStatus::networkStatus() const
 void NetworkStatus::activeConnectionsChanged()
 {
     Q_FOREACH (const NetworkManager::ActiveConnection::Ptr & active, NetworkManager::activeConnections()) {
-        connect(active.data(), SIGNAL(default4Changed(bool)),
-                SLOT(defaultChanged()), Qt::UniqueConnection);
-        connect(active.data(), SIGNAL(default6Changed(bool)),
-                SLOT(defaultChanged()), Qt::UniqueConnection);
-        connect(active.data(), SIGNAL(stateChanged(NetworkManager::ActiveConnection::State)),
-                SLOT(changeActiveConnections()));
+        connect(active.data(), &NetworkManager::ActiveConnection::default4Changed, this, &NetworkStatus::defaultChanged, Qt::UniqueConnection);
+        connect(active.data(), &NetworkManager::ActiveConnection::default6Changed, this, &NetworkStatus::defaultChanged, Qt::UniqueConnection);
+        connect(active.data(), &NetworkManager::ActiveConnection::stateChanged, this, &NetworkStatus::changeActiveConnections);
     }
 
     changeActiveConnections();
@@ -128,12 +164,36 @@ void NetworkStatus::changeActiveConnections()
         return;
     }
 
-    QString activeConnections = QStringLiteral("<qt>");
-    const QString format = QStringLiteral("%1: %2<br>");
-    const QString formatDefault = QStringLiteral("%1: %2<br>");
+    QString activeConnections;
+    const QString format = QStringLiteral("%1: %2\n");
 
-    Q_FOREACH (const NetworkManager::ActiveConnection::Ptr & active, NetworkManager::activeConnections()) {
-        if (!active->devices().isEmpty()) {
+    QList<NetworkManager::ActiveConnection::Ptr> activeConnectionList = NetworkManager::activeConnections();
+    std::sort(activeConnectionList.begin(), activeConnectionList.end(), [] (const NetworkManager::ActiveConnection::Ptr &left, const NetworkManager::ActiveConnection::Ptr &right)
+    {
+        return NetworkStatus::connectionTypeToSortedType(left->type()) <= NetworkStatus::connectionTypeToSortedType(right->type());
+    });
+
+    Q_FOREACH (const NetworkManager::ActiveConnection::Ptr & active, activeConnectionList) {
+#if NM_CHECK_VERSION(0, 9, 10)
+        if (!active->devices().isEmpty() &&
+            active->type() != NetworkManager::ConnectionSettings::Bond &&
+            active->type() != NetworkManager::ConnectionSettings::Bridge &&
+            active->type() != NetworkManager::ConnectionSettings::Generic &&
+            active->type() != NetworkManager::ConnectionSettings::Infiniband &&
+            active->type() != NetworkManager::ConnectionSettings::Team &&
+#if NM_CHECK_VERSION(1, 1, 92)
+            active->type() != NetworkManager::ConnectionSettings::Vlan &&
+            active->type() != NetworkManager::ConnectionSettings::Tun) {
+#else
+            active->type() != NetworkManager::ConnectionSettings::Vlan) {
+#endif
+#else
+        if (!active->devices().isEmpty() &&
+            active->type() != NetworkManager::ConnectionSettings::Bond &&
+            active->type() != NetworkManager::ConnectionSettings::Bridge &&
+            active->type() != NetworkManager::ConnectionSettings::Infiniband &&
+            active->type() != NetworkManager::ConnectionSettings::Vlan) {
+#endif
             NetworkManager::Device::Ptr device = NetworkManager::findNetworkInterface(active->devices().first());
 #if NM_CHECK_VERSION(0, 9, 10)
             if (device && device->type() != NetworkManager::Device::Generic && device->type() <= NetworkManager::Device::Team) {
@@ -168,25 +228,20 @@ void NetworkStatus::changeActiveConnections()
                     }
                 }
 
-                const QString connectionName = active->connection()->name().replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;");
+                NetworkManager::Connection::Ptr connection = active->connection();
+                const QString connectionName = connection->name().replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;");
                 if (connecting) {
                     status = tr("Connecting to %1").arg(connectionName);
                 } else if (connected) {
                     status = tr("Connected to %1").arg(connectionName);
                 }
 
-                if (active->default4() || active->default6()) {
-                    activeConnections += formatDefault.arg(conType, status);
-                } else {
-                    activeConnections += format.arg(conType, status);
-                }
+                activeConnections += format.arg(conType, status);
+
+                connect(connection.data(), &NetworkManager::Connection::updated, this, &NetworkStatus::changeActiveConnections, Qt::UniqueConnection);
             }
         }
     }
-
-    activeConnections += "</qt>";
-    // Remove the last two new lines
-    activeConnections.replace("<br></qt>", "</qt>");
 
     m_activeConnections = activeConnections;
     Q_EMIT activeConnectionsChanged(activeConnections);

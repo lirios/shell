@@ -1,6 +1,5 @@
 /*
     Copyright 2013 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -47,45 +46,30 @@ ConnectionIcon::ConnectionIcon(QObject* parent)
     , m_modemNetwork(0)
 #endif
 {
-    connect(NetworkManager::notifier(), SIGNAL(primaryConnectionChanged(QString)),
-            SLOT(primaryConnectionChanged(QString)));
-    connect(NetworkManager::notifier(), SIGNAL(activatingConnectionChanged(QString)),
-            SLOT(activatingConnectionChanged(QString)));
-    connect(NetworkManager::notifier(), SIGNAL(activeConnectionAdded(QString)),
-            SLOT(activeConnectionAdded(QString)));
-    connect(NetworkManager::notifier(), SIGNAL(connectivityChanged(NetworkManager::Connectivity)),
-            SLOT(connectivityChanged()));
-    connect(NetworkManager::notifier(), SIGNAL(deviceAdded(QString)),
-            SLOT(deviceAdded(QString)));
-    connect(NetworkManager::notifier(), SIGNAL(deviceRemoved(QString)),
-            SLOT(deviceRemoved(QString)));
-    connect(NetworkManager::notifier(), SIGNAL(networkingEnabledChanged(bool)),
-            SLOT(networkingEnabledChanged(bool)));
-    connect(NetworkManager::notifier(), SIGNAL(statusChanged(NetworkManager::Status)),
-            SLOT(statusChanged(NetworkManager::Status)));
-    connect(NetworkManager::notifier(), SIGNAL(wirelessEnabledChanged(bool)),
-            SLOT(wirelessEnabledChanged(bool)));
-    connect(NetworkManager::notifier(), SIGNAL(wirelessHardwareEnabledChanged(bool)),
-            SLOT(wirelessEnabledChanged(bool)));
-    connect(NetworkManager::notifier(), SIGNAL(wwanEnabledChanged(bool)),
-            SLOT(wwanEnabledChanged(bool)));
-    connect(NetworkManager::notifier(), SIGNAL(wwanHardwareEnabledChanged(bool)),
-            SLOT(wwanEnabledChanged(bool)));
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::primaryConnectionChanged, this, &ConnectionIcon::primaryConnectionChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::activatingConnectionChanged, this, &ConnectionIcon::activatingConnectionChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::activeConnectionAdded, this, &ConnectionIcon::activeConnectionAdded);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::connectivityChanged, this, &ConnectionIcon::connectivityChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::deviceAdded, this, &ConnectionIcon::deviceAdded);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::deviceRemoved, this, &ConnectionIcon::deviceRemoved);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::networkingEnabledChanged, this, &ConnectionIcon::networkingEnabledChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::statusChanged, this, &ConnectionIcon::statusChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wirelessEnabledChanged, this, &ConnectionIcon::wirelessEnabledChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wirelessHardwareEnabledChanged, this, &ConnectionIcon::wirelessEnabledChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wwanEnabledChanged, this, &ConnectionIcon::wwanEnabledChanged);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wwanHardwareEnabledChanged, this, &ConnectionIcon::wwanEnabledChanged);
 
     Q_FOREACH (NetworkManager::Device::Ptr device, NetworkManager::networkInterfaces()) {
         if (device->type() == NetworkManager::Device::Ethernet) {
             NetworkManager::WiredDevice::Ptr wiredDevice = device.staticCast<NetworkManager::WiredDevice>();
             if (wiredDevice) {
-                connect(wiredDevice.data(), SIGNAL(carrierChanged(bool)),
-                        SLOT(carrierChanged(bool)));
+                connect(wiredDevice.data(), &NetworkManager::WiredDevice::carrierChanged, this, &ConnectionIcon::carrierChanged);
             }
         } else if (device->type() == NetworkManager::Device::Wifi) {
             NetworkManager::WirelessDevice::Ptr wifiDevice = device.staticCast<NetworkManager::WirelessDevice>();
             if (wifiDevice) {
-                connect(wifiDevice.data(), SIGNAL(availableConnectionAppeared(QString)),
-                        SLOT(wirelessNetworkAppeared(QString)));
-                connect(wifiDevice.data(), SIGNAL(networkAppeared(QString)),
-                        SLOT(wirelessNetworkAppeared(QString)));
+                connect(wifiDevice.data(), &NetworkManager::WirelessDevice::availableConnectionAppeared, this, &ConnectionIcon::wirelessNetworkAppeared);
+                connect(wifiDevice.data(), &NetworkManager::WirelessDevice::networkAppeared, this, &ConnectionIcon::wirelessNetworkAppeared);
             }
         }
     }
@@ -137,15 +121,12 @@ void ConnectionIcon::addActiveConnection(const QString &activeConnection)
 
     if (active) {
         NetworkManager::VpnConnection::Ptr vpnConnection;
-        connect(active.data(), SIGNAL(destroyed(QObject*)),
-                SLOT(activeConnectionDestroyed()));
+        connect(active.data(), &NetworkManager::ActiveConnection::destroyed, this, &ConnectionIcon::activeConnectionDestroyed);
         if (active->vpn()) {
             vpnConnection = active.objectCast<NetworkManager::VpnConnection>();
-            connect(vpnConnection.data(), SIGNAL(stateChanged(NetworkManager::VpnConnection::State,NetworkManager::VpnConnection::StateChangeReason)),
-                    SLOT(vpnConnectionStateChanged(NetworkManager::VpnConnection::State,NetworkManager::VpnConnection::StateChangeReason)), Qt::UniqueConnection);
+            connect(vpnConnection.data(), &NetworkManager::VpnConnection::stateChanged, this, &ConnectionIcon::vpnConnectionStateChanged);
         } else {
-            connect(active.data(), SIGNAL(stateChanged(NetworkManager::ActiveConnection::State)),
-                    SLOT(activeConnectionStateChanged(NetworkManager::ActiveConnection::State)), Qt::UniqueConnection);
+            connect(active.data(), &NetworkManager::ActiveConnection::stateChanged, this, &ConnectionIcon::activeConnectionStateChanged, Qt::UniqueConnection);
         }
     }
 }
@@ -170,9 +151,7 @@ void ConnectionIcon::activeConnectionDestroyed()
 void ConnectionIcon::carrierChanged(bool carrier)
 {
     Q_UNUSED(carrier);
-    if (NetworkManager::status() == NetworkManager::Disconnected) {
-        setDisconnectedIcon();
-    }
+    setIcons();
 }
 
 void ConnectionIcon::connectivityChanged()
@@ -192,8 +171,7 @@ void ConnectionIcon::deviceAdded(const QString& device)
 
     if (dev->type() == NetworkManager::Device::Ethernet) {
         NetworkManager::WiredDevice::Ptr wiredDev = dev.objectCast<NetworkManager::WiredDevice>();
-        connect(wiredDev.data(), SIGNAL(carrierChanged(bool)),
-                SLOT(carrierChanged(bool)));
+        connect(wiredDev.data(), &NetworkManager::WiredDevice::carrierChanged, this, &ConnectionIcon::carrierChanged);
     }
 }
 
@@ -212,13 +190,13 @@ void ConnectionIcon::modemNetworkRemoved()
     m_modemNetwork.clear();
 }
 
-void ConnectionIcon::modemSignalChanged(uint signal)
+void ConnectionIcon::modemSignalChanged(const ModemManager::SignalQualityPair &signalQuality)
 {
-    int diff = m_signal - signal;
+    int diff = m_signal - signalQuality.signal;
 
     if (diff >= 10 ||
         diff <= -10) {
-        m_signal = signal;
+        m_signal = signalQuality.signal;
 
         setIconForModem();
     }
@@ -257,25 +235,20 @@ void ConnectionIcon::vpnConnectionStateChanged(NetworkManager::VpnConnection::St
 void ConnectionIcon::wirelessEnabledChanged(bool enabled)
 {
     Q_UNUSED(enabled);
-    if (NetworkManager::status() == NetworkManager::Disconnected) {
-        setDisconnectedIcon();
-    }
+    setIcons();
 }
 
 void ConnectionIcon::wwanEnabledChanged(bool enabled)
 {
     Q_UNUSED(enabled);
-    if (NetworkManager::status() == NetworkManager::Disconnected) {
-        setDisconnectedIcon();
-    }
+    setIcons();
+
 }
 
 void ConnectionIcon::wirelessNetworkAppeared(const QString& network)
 {
     Q_UNUSED(network);
-    if (NetworkManager::status() == NetworkManager::Disconnected) {
-        setDisconnectedIcon();
-    }
+    setIcons();
 }
 
 void ConnectionIcon::setStates()
@@ -289,7 +262,21 @@ void ConnectionIcon::setStates()
         }
 
         if (!vpnConnection) {
-            if (activeConnection->state() == NetworkManager::ActiveConnection::Activating) {
+#if NM_CHECK_VERSION(0, 9, 10)
+            if (activeConnection->state() == NetworkManager::ActiveConnection::Activating &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Bond &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Bridge &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Generic &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Infiniband &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Team &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Vlan) {
+#else
+            if (activeConnection->state() == NetworkManager::ActiveConnection::Activating &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Bond &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Bridge &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Infiniband &&
+                activeConnection->type() != NetworkManager::ConnectionSettings::Vlan) {
+#endif
                 connecting = true;
             }
         } else {
@@ -361,6 +348,50 @@ void ConnectionIcon::setIcons()
     }
 #endif
 
+    /* Fallback: If we still don't have an active connection with default route or the default route goes through a connection
+                 of generic type (some type of VPNs) we need to go through all other active connections and pick the one with
+                 hightest probability of being the main one (order is: vpn, wired, wireless, gsm, cdma, bluetooth) */
+#if NM_CHECK_VERSION(1, 2, 0)
+    if ((!connection && !NetworkManager::activeConnections().isEmpty()) || (connection && connection->type() == NetworkManager::ConnectionSettings::Generic)
+                                                                        || (connection && connection->type() == NetworkManager::ConnectionSettings::Tun)) {
+#elif NM_CHECK_VERSION(0, 9, 10)
+    if ((!connection && !NetworkManager::activeConnections().isEmpty()) || (connection && connection->type() == NetworkManager::ConnectionSettings::Generic)) {
+#else
+    if (!connection && !NetworkManager::activeConnections().isEmpty()) {
+#endif
+#if NM_CHECK_VERSION(0, 9, 10)
+        Q_FOREACH (const NetworkManager::ActiveConnection::Ptr &activeConnection, NetworkManager::activeConnections()) {
+            const NetworkManager::ConnectionSettings::ConnectionType type = activeConnection->type();
+            if (type == NetworkManager::ConnectionSettings::Bluetooth) {
+                if (connection && connection->type() <= NetworkManager::ConnectionSettings::Bluetooth) {
+                    connection = activeConnection;
+                }
+            } else if (type == NetworkManager::ConnectionSettings::Cdma) {
+                if (connection && connection->type() <= NetworkManager::ConnectionSettings::Cdma) {
+                    connection = activeConnection;
+                }
+            } else if (type == NetworkManager::ConnectionSettings::Gsm) {
+                if (connection && connection->type() <= NetworkManager::ConnectionSettings::Gsm) {
+                    connection = activeConnection;
+                }
+            } else if (type == NetworkManager::ConnectionSettings::Vpn) {
+                connection = activeConnection;
+            } else if (type == NetworkManager::ConnectionSettings::Wired) {
+                if (connection && connection->type() != NetworkManager::ConnectionSettings::Vpn) {
+                    connection = activeConnection;
+                }
+            } else if (type == NetworkManager::ConnectionSettings::Wireless) {
+                if (connection && (connection->type() != NetworkManager::ConnectionSettings::Vpn &&
+                                  (connection->type() != NetworkManager::ConnectionSettings::Wired))) {
+                    connection = activeConnection;
+                }
+            }
+        }
+#else
+        connection = NetworkManager::activeConnections().first();
+#endif
+    }
+
     if (connection && !connection->devices().isEmpty()) {
         NetworkManager::Device::Ptr device = NetworkManager::findNetworkInterface(connection->devices().first());
 
@@ -402,8 +433,8 @@ void ConnectionIcon::setIcons()
                     }
                 }
             } else {
-                setConnectionIcon("network-wired-activated");
-                setConnectionTooltipIcon("network-wired-activated");
+                // Ignore other devices (bond/bridge/team etc.)
+                setDisconnectedIcon();
             }
         }
     } else {
@@ -483,12 +514,9 @@ void ConnectionIcon::setModemIcon(const NetworkManager::Device::Ptr & device)
     }
 
     if (m_modemNetwork) {
-        connect(m_modemNetwork.data(), SIGNAL(signalQualityChanged(uint)),
-                SLOT(modemSignalChanged(uint)), Qt::UniqueConnection);
-        connect(m_modemNetwork.data(), SIGNAL(accessTechnologyChanged(ModemManager::Modem::AccessTechnologies)),
-                SLOT(setIconForModem()), Qt::UniqueConnection);
-        connect(m_modemNetwork.data(), SIGNAL(destroyed(QObject*)),
-                SLOT(modemNetworkRemoved()));
+        connect(m_modemNetwork.data(), &ModemManager::Modem::signalQualityChanged, this, &ConnectionIcon::modemSignalChanged, Qt::UniqueConnection);
+        connect(m_modemNetwork.data(), &ModemManager::Modem::accessTechnologiesChanged, this, &ConnectionIcon::setIconForModem, Qt::UniqueConnection);
+        connect(m_modemNetwork.data(), &ModemManager::Modem::destroyed, this, &ConnectionIcon::modemNetworkRemoved);
 
         m_signal = m_modemNetwork->signalQuality().signal;
         setIconForModem();
@@ -569,8 +597,7 @@ void ConnectionIcon::setWirelessIcon(const NetworkManager::Device::Ptr &device, 
     }
 
     if (m_wirelessNetwork) {
-        connect(m_wirelessNetwork.data(), SIGNAL(signalStrengthChanged(int)),
-                SLOT(setWirelessIconForSignalStrength(int)), Qt::UniqueConnection);
+        connect(m_wirelessNetwork.data(), &NetworkManager::WirelessNetwork::signalStrengthChanged, this, &ConnectionIcon::setWirelessIconForSignalStrength, Qt::UniqueConnection);
 
         setWirelessIconForSignalStrength(m_wirelessNetwork->signalStrength());
     } else {

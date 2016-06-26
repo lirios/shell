@@ -106,7 +106,7 @@ QString UiUtils::interfaceTypeLabel(const NetworkManager::Device::Type type, con
                 deviceText = QObject::tr("Mobile Broadband");
                 break;
             case NetworkManager::ModemDevice::NoCapability:
-                qCWarning(NM) << "Unhandled modem sub type: NetworkManager::ModemDevice::NoCapability";
+                qCWarning(PLASMA_NM) << "Unhandled modem sub type: NetworkManager::ModemDevice::NoCapability";
                 break;
             }
         }
@@ -580,6 +580,7 @@ QString UiUtils::convertLockReasonToString(MMModemLock reason)
 }
 #endif
 
+#if !NM_CHECK_VERSION(1, 2, 0)
 QString UiUtils::convertNspTypeToString(WimaxNsp::NetworkType type)
 {
     switch (type) {
@@ -593,6 +594,7 @@ QString UiUtils::convertNspTypeToString(WimaxNsp::NetworkType type)
     /*: Unknown */
     return QObject::tr("Unknown Wimax NSP type");
 }
+#endif
 
 NetworkManager::ModemDevice::Capability UiUtils::modemSubType(NetworkManager::ModemDevice::Capabilities modemCaps)
 {

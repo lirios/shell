@@ -1,6 +1,5 @@
 /*
     Copyright 2013 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -22,39 +21,27 @@
 
 #include "enabledconnections.h"
 
-#include <NetworkManagerQt/Manager>
-
 EnabledConnections::EnabledConnections(QObject* parent)
     : QObject(parent)
     , m_networkingEnabled(NetworkManager::isNetworkingEnabled())
     , m_wirelessEnabled(NetworkManager::isWirelessEnabled())
     , m_wirelessHwEnabled(NetworkManager::isWirelessHardwareEnabled())
-#if NM_CHECK_VERSION(1, 2, 0)
-    , m_wimaxEnabled(false)
-    , m_wimaxHwEnabled(false)
-#else
+#if !NM_CHECK_VERSION(1, 2, 0)
     , m_wimaxEnabled(NetworkManager::isWimaxEnabled())
     , m_wimaxHwEnabled(NetworkManager::isWimaxHardwareEnabled())
 #endif
     , m_wwanEnabled(NetworkManager::isWwanEnabled())
     , m_wwanHwEnabled(NetworkManager::isWwanHardwareEnabled())
 {
-    connect(NetworkManager::notifier(), SIGNAL(networkingEnabledChanged(bool)),
-            SLOT(onNetworkingEnabled(bool)));
-    connect(NetworkManager::notifier(), SIGNAL(wirelessEnabledChanged(bool)),
-            SLOT(onWirelessEnabled(bool)));
-    connect(NetworkManager::notifier(), SIGNAL(wirelessHardwareEnabledChanged(bool)),
-            SLOT(onWirelessHwEnabled(bool)));
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::networkingEnabledChanged, this, &EnabledConnections::onNetworkingEnabled);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wirelessEnabledChanged, this, &EnabledConnections::onWirelessEnabled);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wirelessHardwareEnabledChanged, this, &EnabledConnections::onWirelessHwEnabled);
 #if !NM_CHECK_VERSION(1, 2, 0)
-    connect(NetworkManager::notifier(), SIGNAL(wimaxEnabledChanged(bool)),
-            SLOT(onWimaxEnabled(bool)));
-    connect(NetworkManager::notifier(), SIGNAL(wimaxHardwareEnabledChanged(bool)),
-            SLOT(onWimaxHwEnabled(bool)));
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wimaxEnabledChanged, this, &EnabledConnections::onWimaxEnabled);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wimaxHardwareEnabledChanged, this, &EnabledConnections::onWimaxHwEnabled);
 #endif
-    connect(NetworkManager::notifier(), SIGNAL(wwanEnabledChanged(bool)),
-            SLOT(onWwanEnabled(bool)));
-    connect(NetworkManager::notifier(), SIGNAL(wwanHardwareEnabledChanged(bool)),
-            SLOT(onWwanHwEnabled(bool)));
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wwanEnabledChanged, this, &EnabledConnections::onWwanEnabled);
+    connect(NetworkManager::notifier(), &NetworkManager::Notifier::wwanHardwareEnabledChanged, this, &EnabledConnections::onWwanHwEnabled);
 }
 
 EnabledConnections::~EnabledConnections()
@@ -76,6 +63,7 @@ bool EnabledConnections::isWirelessHwEnabled() const
     return m_wirelessHwEnabled;
 }
 
+#if !NM_CHECK_VERSION(1, 2, 0)
 bool EnabledConnections::isWimaxEnabled() const
 {
     return m_wimaxEnabled;
@@ -85,6 +73,7 @@ bool EnabledConnections::isWimaxHwEnabled() const
 {
     return m_wimaxHwEnabled;
 }
+#endif
 
 bool EnabledConnections::isWwanEnabled() const
 {
@@ -114,6 +103,7 @@ void EnabledConnections::onWirelessHwEnabled(bool enabled)
     Q_EMIT wirelessHwEnabled(enabled);
 }
 
+#if !NM_CHECK_VERSION(1, 2, 0)
 void EnabledConnections::onWimaxEnabled(bool enabled)
 {
     m_wimaxEnabled = enabled;
@@ -125,6 +115,7 @@ void EnabledConnections::onWimaxHwEnabled(bool enabled)
     m_wimaxHwEnabled = enabled;
     Q_EMIT wimaxHwEnabled(enabled);
 }
+#endif
 
 void EnabledConnections::onWwanEnabled(bool enabled)
 {

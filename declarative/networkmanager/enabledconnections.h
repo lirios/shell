@@ -1,6 +1,5 @@
 /*
     Copyright 2013 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,10 +18,12 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HAWAII_NM_ENABLED_CONNECTIONS_H
-#define HAWAII_NM_ENABLED_CONNECTIONS_H
+#ifndef PLASMA_NM_ENABLED_CONNECTIONS_H
+#define PLASMA_NM_ENABLED_CONNECTIONS_H
 
 #include <QObject>
+
+#include <NetworkManagerQt/Manager>
 
 class EnabledConnections : public QObject
 {
@@ -38,6 +39,8 @@ Q_PROPERTY(bool wirelessEnabled READ isWirelessEnabled NOTIFY wirelessEnabled)
  * Indicates if the wireless hardware is currently enabled, i.e. the state of the RF kill switch
  */
 Q_PROPERTY(bool wirelessHwEnabled READ isWirelessHwEnabled NOTIFY wirelessHwEnabled)
+
+#if !NM_CHECK_VERSION(1, 2, 0)
 /**
  * Indicates if WiMAX devices are currently enabled or not
  */
@@ -46,6 +49,8 @@ Q_PROPERTY(bool wimaxEnabled READ isWimaxEnabled NOTIFY wimaxEnabled)
  * Indicates if the WiMAX hardware is currently enabled, i.e. the state of the RF kill switch.
  */
 Q_PROPERTY(bool wimaxHwEnabled READ isWimaxHwEnabled NOTIFY wimaxHwEnabled)
+#endif
+
 /**
  * Indicates if mobile broadband devices are currently enabled or not.
  */
@@ -62,8 +67,10 @@ public:
     bool isNetworkingEnabled() const;
     bool isWirelessEnabled() const;
     bool isWirelessHwEnabled() const;
+#if !NM_CHECK_VERSION(1, 2, 0)
     bool isWimaxEnabled() const;
     bool isWimaxHwEnabled() const;
+#endif
     bool isWwanEnabled() const;
     bool isWwanHwEnabled() const;
 
@@ -71,8 +78,10 @@ public Q_SLOTS:
     void onNetworkingEnabled(bool enabled);
     void onWirelessEnabled(bool enabled);
     void onWirelessHwEnabled(bool enabled);
+#if !NM_CHECK_VERSION(1, 2, 0)
     void onWimaxEnabled(bool enabled);
     void onWimaxHwEnabled(bool enabled);
+#endif
     void onWwanEnabled(bool enabled);
     void onWwanHwEnabled(bool enabled);
 
@@ -80,8 +89,10 @@ Q_SIGNALS:
     void networkingEnabled(bool enabled);
     void wirelessEnabled(bool enabled);
     void wirelessHwEnabled(bool enabled);
+#if !NM_CHECK_VERSION(1, 2, 0)
     void wimaxEnabled(bool enabled);
     void wimaxHwEnabled(bool enabled);
+#endif
     void wwanEnabled(bool enabled);
     void wwanHwEnabled(bool enabled);
 
@@ -89,10 +100,12 @@ private:
     bool m_networkingEnabled;
     bool m_wirelessEnabled;
     bool m_wirelessHwEnabled;
+#if !NM_CHECK_VERSION(1, 2, 0)
     bool m_wimaxEnabled;
     bool m_wimaxHwEnabled;
+#endif
     bool m_wwanEnabled;
     bool m_wwanHwEnabled;
 };
 
-#endif // HAWAII_NM_ENABLED_CONNECTIONS_H
+#endif // PLASMA_NM_ENABLED_CONNECTIONS_H

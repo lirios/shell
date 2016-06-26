@@ -1,6 +1,5 @@
 /*
     Copyright 2013-2014 Jan Grulich <jgrulich@redhat.com>
-    Copyright 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -86,7 +85,6 @@ AppletProxyModel::AppletProxyModel(QObject* parent)
 {
     setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
-    setSourceModel(new NetworkModel);
 }
 
 AppletProxyModel::~AppletProxyModel()
@@ -105,7 +103,17 @@ bool AppletProxyModel::filterAcceptsRow(int source_row, const QModelIndex& sourc
 
 #if NM_CHECK_VERSION(0, 9, 10)
     const NetworkManager::ConnectionSettings::ConnectionType type = (NetworkManager::ConnectionSettings::ConnectionType) sourceModel()->data(index, NetworkModel::TypeRole).toUInt();
-    if (type == NetworkManager::ConnectionSettings::Generic) {
+    if (type == NetworkManager::ConnectionSettings::Bond ||
+        type == NetworkManager::ConnectionSettings::Bridge ||
+        type == NetworkManager::ConnectionSettings::Generic ||
+        type == NetworkManager::ConnectionSettings::Infiniband ||
+        type == NetworkManager::ConnectionSettings::Team ||
+#if NM_CHECK_VERSION(1, 1, 92)
+        type == NetworkManager::ConnectionSettings::Vlan ||
+        type == NetworkManager::ConnectionSettings::Tun) {
+#else
+        type == NetworkManager::ConnectionSettings::Vlan) {
+#endif
         return false;
     }
 #endif
