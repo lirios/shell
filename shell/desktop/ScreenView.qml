@@ -97,6 +97,54 @@ Item {
         }
     }
 
+    // Workspaces selector for present
+    // FIXME: Only one workspace for now
+    Pane {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: FluidUi.Units.gu(20)
+        z: 3
+        opacity: workspace.state == "present" ? 1.0 : 0.0
+
+        ListView {
+            anchors.fill: parent
+            anchors.margins: FluidUi.Units.smallSpacing
+            model: 1
+            delegate: Item {
+                readonly property real ratio: workspace.width / workspace.height
+
+                width: ListView.view.width
+                height: width / ratio
+
+                ShaderEffectSource {
+                    anchors.fill: parent
+                    smooth: true
+                    sourceItem: backgroundLayer
+                    live: true
+                    hideSource: false
+
+                    ShaderEffectSource {
+                        anchors.fill: parent
+                        smooth: true
+                        sourceItem: workspace
+                        live: true
+                        hideSource: false
+                    }
+                }
+            }
+
+            ScrollBar.vertical: ScrollBar {}
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: 250
+            }
+        }
+    }
+
     // Workspaces
     WorkspacesView {
         id: workspacesLayer

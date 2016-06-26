@@ -82,6 +82,7 @@ Item {
         id: __private
 
         property var storage: ({})
+        property var chromes: ({})
         property bool animationsEnabled: false
     }
 
@@ -89,10 +90,6 @@ Item {
         id: chromeComponent
 
         PresentWindowsChrome {}
-    }
-
-    ListModel {
-        id: viewsModel
     }
 
     function windowsList() {
@@ -109,107 +106,65 @@ Item {
     function present() {
         console.time("present " + output.model);
 
+        // Enable window animations
+        __private.animationsEnabled = true;
+
         // Parameters
         var windows = windowsList();
-        var hmargin = output.availableGeometry.width * 0.1;
-        var vmargin = output.availableGeometry.height * 0.1;
-        var padding = FluidUi.Units.gu(2);
+        var grid = Math.ceil(windows.length / 2);
+        var maxWidth = Math.floor(output.availableGeometry.width / grid);
+        var maxHeight = Math.floor(output.availableGeometry.height / 2);
+        var scale, x, y;
 
-        var gridSize = Math.floor(Math.sqrt(windows.length));
-        if (Math.pow(gridSize, 2) !== windows.length)
-            gridSize++;
-        var lastRowRemoved = Math.pow(gridSize, 2) - windows.length;
-
-        // Calculate cell size
-        var cellWidth = output.availableGeometry.width - (hmargin * 2);
-        cellWidth -= padding * (gridSize - 1);
-        cellWidth /= gridSize;
-        var cellHeight = output.availableGeometry.height - (vmargin * 2);
-        cellHeight -= padding * (gridSize - 1);
-        cellHeight /= gridSize;
-
-        // Chrome size can't exceed output available geometry
-        var chromeSize = cellWidth < cellHeight ? cellWidth : cellHeight;
-        if (chromeSize > output.availableGeometry.width / 2)
-            chromeSize = output.availableGeometry.width / 2;
-        if (chromeSize > output.availableGeometry.height / 2)
-            chromeSize = output.availableGeometry.height / 2;
-
-        // Padding between cells
-        var cellPadding = chromeSize + padding;
-
-        // Increase horizontal margin to center chromes
-        var maxColumns = Math.ceil(Math.sqrt(windows.length));
-        var maxWidth = maxColumns * cellPadding;
-        hmargin = (output.availableGeometry.width - maxWidth) / 2;
-
-        // Loop over windows
-        console.time("present loop " + output.model);
+        // Loop over the windows
         var i, j, window;
         for (i = 0; i < windows.length; i++) {
             // Get a hold of the window
             window = windows[i];
 
-            // Determine row and column
-            var row = Math.floor(i / gridSize);
-            var column = Math.floor(i % gridSize);
+            // Window size
+            var width = window.surface.size.width;
+            var height = window.surface.size.height;
 
-            // Output space starting coordinates
-            var x = window.x - window.designedOutput.geometry.x;
-            var y = window.y - window.designedOutput.geometry.y;
-
-            // Determine new coordinates
-            var x2 = hmargin + cellPadding * column;
-            var y2 = vmargin + cellPadding * row;
-
-            // Calculate window scale
-            if (row == gridSize - 1)
-                x2 += (chromeSize + padding) * lastRowRemoved / 2;
-            var scale = 1;
-            if (window.surface.size.width > window.surface.size.height)
-                scale = chromeSize / window.surface.size.width;
+            // Calculate scale factor
+            if (width >= height)
+                scale = width > maxWidth ? maxWidth / width : 0.85;
             else
-                scale = chromeSize / window.surface.size.height;
+                scale = height > maxHeight ? maxHeight / height : 0.85;
 
-            // Hide all views
-            for (j = 0; j < window.views.length; j++)
-                window.views[j].visible = false;
+            // Add a little margin
+            scale -= 0.15;
 
-            // Create chrome or move an existing one
-            var chrome = null;
-            for (j = 0; j < viewsModel.count; j++) {
-                var thisChrome = viewsModel.get(j).chrome;
-                if (thisChrome.window === window) {
-                    chrome = thisChrome;
-                    break;
-                }
-            }
-            if (chrome) {
-                chrome.move(x2, y2);
-            } else {
-                chrome = chromeComponent.createObject(workspace, {"window": window, "x": x, "y": y});
-                if (chrome) {
-                    for (j = 0; j < window.views.length; j++) {
-                        if (window.views[j].designedOutput === output) {
-                            chrome.z = window.views[j].z;
-                            break;
-                        }
-                    }
-                    chrome.move(x2, y2);
-                    chrome.resize(scale);
-                    chrome.activated.connect(function(window) {
-                        state = "normal";
-                        window.active();
-                    });
-                    chrome.closeRequested.connect(function(window) {
-                        state = "normal";
-                        window.close();
-                    });
+            // Calculate position
+            x = ((i % grid) * maxWidth) + Math.floor((maxWidth - scale * width) / 2);
+            y = ((i < grid ? 0 : 1) * maxHeight) + Math.floor((maxHeight - scale * height) / 2);
 
-                    viewsModel.append({"chrome": chrome});
-                } else {
-                    console.error("Failed to create chrome:", chromeComponent.errorString());
-                }
+            // Save window position
+            __private.storage[window] = {"x": window.moveItem.x, "y": window.moveItem.y};
+
+            // Move the window
+            window.moveItem.x = output.position.x + x;
+            window.moveItem.y = output.position.y + y;
+
+            // Scale shell surface items down
+            for (j = 0; j < window.views.length; j++) {
+                window.views[j].sizeFollowsSurface = false;
+                window.views[j].inputEventsEnabled = false;
+                window.views[j].scale = scale;
+
+                // Create the chrome
+                var chrome = chromeComponent.createObject(window.views[j], {"window": window});
+                __private.chromes[window.views[j]] = chrome;
+
+                // Handle chrome events
+                chrome.activated.connect(function(window) {
+                    state = "normal";
+                    window.activate();
+                });
+                chrome.closeRequested.connect(function(window) {
+                    state = "normal";
+                    window.close();
+                });
             }
         }
         console.timeEnd("present loop " + output.model);
@@ -218,18 +173,33 @@ Item {
     }
 
     function presentRestore() {
-        // Destroy all chromes and show the views
-        var i, chrome, x, y;
-        while (viewsModel.count > 0) {
-            chrome = viewsModel.get(0).chrome;
-            x = chrome.window.x - chrome.window.designedOutput.geometry.x;
-            y = chrome.window.y - chrome.window.designedOutput.geometry.y;
-            chrome.move(x, y);
-            chrome.width = chrome.window.surface.size.width;
-            chrome.height = chrome.window.surface.size.height;
-            chrome.triggerAutodestruction();
-            viewsModel.remove(0);
+        // Restore windows
+        var windows = windowsList();
+        var i, j, window, view;
+        for (i = 0; i < windows.length; i++) {
+            // Get a hold of the window
+            window = windows[i];
+
+            // Restore position
+            var pos = __private.storage[window];
+            window.moveItem.x = pos.x;
+            window.moveItem.y = pos.y;
+            delete __private.storage[window];
+
+            // Scale shell surface items up
+            for (j = 0; j < window.views.length; j++) {
+                window.views[j].sizeFollowsSurface = true;
+                window.views[j].inputEventsEnabled = true;
+                window.views[j].scale = 1.0;
+
+                // Destroy the chrome
+                __private.chromes[window.views[j]].destroy();
+                delete __private.chromes[window.views[j]];
+            }
         }
+
+        // Disable window animations
+        __private.animationsEnabled = false;
     }
 
     function reveal() {
