@@ -157,12 +157,12 @@ GreenIsland.ExtendedOutput {
                     // Open window switcher
                     if (output.primary) {
                         if (event.key === Qt.Key_Tab) {
-                            screenView.windowSwitcher.next();
                             event.accept = true;
+                            screenView.windowSwitcher.next();
                             return;
                         } else if (event.key === Qt.Key_Backtab) {
-                            screenView.windowSwitcher.previous();
                             event.accept = true;
+                            screenView.windowSwitcher.previous();
                             return;
                         }
                     }
@@ -180,9 +180,9 @@ GreenIsland.ExtendedOutput {
                     // Close window switcher
                     if (output.primary) {
                         if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
+                            event.accept = true;
                             screenView.windowSwitcher.close();
                             screenView.windowSwitcher.activate();
-                            event.accept = true;
                             return;
                         }
                     }
