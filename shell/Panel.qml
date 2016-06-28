@@ -357,7 +357,7 @@ Rectangle {
         // geometry resulting in a "hole" between the window and the panel
         var window = hawaiiCompositor.applicationManager.focusedWindow;
         if (window && window.maximized) {
-            color = Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.85);
+            color = Themes.Theme.palette.rgba(Material.dialogColor, 0.9);
             //launcher.iconSize = FluidUi.Units.iconSizes.medium;
         } else {
             color = "transparent";
