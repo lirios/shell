@@ -247,15 +247,23 @@ Rectangle {
         }
     }
 
+    /*
+     * Focused window
+     */
+
     Connections {
-        target: output
-        onActiveWindowChanged: setup()
+        target: hawaiiCompositor.applicationManager
+        onFocusedWindowChanged: setup()
     }
 
     Connections {
-        target: output.activeWindow
+        target: hawaiiCompositor.applicationManager.focusedWindow
         onMaximizedChanged: setup()
     }
+
+    /*
+     * Layout
+     */
 
     GridLayout {
         id: mainLayout
@@ -347,7 +355,8 @@ Rectangle {
     function setup() {
         // TODO: Don't resize the panel, the window is maximized before we change the available
         // geometry resulting in a "hole" between the window and the panel
-        if (output.activeWindow && output.activeWindow.maximized) {
+        var window = hawaiiCompositor.applicationManager.focusedWindow;
+        if (window && window.maximized) {
             color = Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.85);
             //launcher.iconSize = FluidUi.Units.iconSizes.medium;
         } else {

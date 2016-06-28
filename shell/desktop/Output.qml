@@ -42,8 +42,6 @@ GreenIsland.ExtendedOutput {
     readonly property alias screenView: screenView
     readonly property alias runCommand: runCommand
 
-    property QtObject activeWindow: null
-
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
     property alias zoomEnabled: zoomArea.enabled
