@@ -57,6 +57,12 @@ GreenIsland.ExtendedOutput {
     scaleFactor: nativeScreen.scaleFactor
     sizeFollowsWindow: false
     automaticFrameCallback: powerState === GreenIsland.ExtendedOutput.PowerStateOn
+    onPowerStateChanged: {
+        // Show the screen when the power goes back
+        if (output.powerState === GreenIsland.ExtendedOutput.PowerStateOn)
+            blackRect.fadeOut();
+    }
+
     window: ApplicationWindow {
         id: window
         minimumWidth: 1024
