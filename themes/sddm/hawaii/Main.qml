@@ -89,7 +89,7 @@ FluidUi.NoiseBackground {
     }
 
     Timer {
-        interval: 2000
+        interval: 2 // 2000
         running: true
         onTriggered: stackView.push({"item": primaryScreen ? greeterComponent : emptyComponent})
     }

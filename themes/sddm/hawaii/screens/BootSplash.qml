@@ -27,6 +27,7 @@
 import QtQuick 2.0
 
 Item {
+/*
     Image {
         anchors.centerIn: parent
         source: "../artwork/logo.png"
@@ -35,4 +36,5 @@ Item {
         fillMode: Image.PreserveAspectFit
         smooth: true
     }
+*/
 }
