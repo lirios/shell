@@ -178,7 +178,6 @@ bool ProcessLauncher::closeApplication(const QString &appId)
 
 bool ProcessLauncher::closeDesktopFile(const QString &fileName)
 {
-    qCDebug(LAUNCHER) << "Closing application for" << fileName;
     return closeEntry(fileName);
 }
 
@@ -227,6 +226,8 @@ bool ProcessLauncher::closeEntry(const QString &fileName)
     if (!m_apps.contains(fileName))
         return false;
 
+    qCInfo(LAUNCHER) << "Closing application for" << fileName;
+
     QProcess *process = m_apps[fileName];
     process->terminate();
     if (!process->waitForFinished())
@@ -241,12 +242,12 @@ void ProcessLauncher::finished(int exitCode)
         return;
 
     QString fileName = m_apps.key(process);
-    XdgDesktopFile *entry = XdgDesktopFileCache::getFile(fileName);
-    if (entry) {
+    if (!fileName.isEmpty()) {
         qCDebug(LAUNCHER) << "Application for" << fileName << "finished with exit code" << exitCode;
         m_apps.remove(fileName);
-        process->deleteLater();
     }
+
+    process->deleteLater();
 }
 
 #include "moc_processlauncher.cpp"
