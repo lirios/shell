@@ -138,6 +138,38 @@ bool ProcessLauncher::launchDesktopFile(const QString &fileName)
     return launchEntry(*entry);
 }
 
+bool ProcessLauncher::launchCommand(const QString &command)
+{
+    if (command.isEmpty()) {
+        qCWarning(LAUNCHER) << "Empty command passed to ProcessLauncher::launchCommand()";
+        return false;
+    }
+
+    qCInfo(LAUNCHER) << "Launching command" << command;
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    if (!m_waylandSocketName.isEmpty())
+        env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
+    env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
+    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
+    env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("Base"));
+    env.remove(QStringLiteral("QSG_RENDER_LOOP"));
+
+    QProcess *process = new QProcess(this);
+    process->setProcessEnvironment(env);
+    process->setProcessChannelMode(QProcess::ForwardedChannels);
+    connect(process, SIGNAL(finished(int)), this, SLOT(finished(int)));
+    process->start(command);
+    if (!process->waitForStarted()) {
+        qCWarning(LAUNCHER) << "Failed to launch command" << command;
+        return false;
+    }
+
+    qCInfo(LAUNCHER) << "Launched command" << command << "with pid" << process->pid();
+
+    return true;
+}
+
 bool ProcessLauncher::closeApplication(const QString &appId)
 {
     const QString fileName = appId + QStringLiteral(".desktop");

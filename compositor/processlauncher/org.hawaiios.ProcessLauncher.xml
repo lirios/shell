@@ -9,6 +9,10 @@
       <arg type="b" direction="out"/>
       <arg name="fileName" type="s" direction="in"/>
     </method>
+    <method name="launchCommand">
+      <arg type="b" direction="out"/>
+      <arg name="command" type="s" direction="in"/>
+    </method>
     <method name="closeApplication">
       <arg type="b" direction="out"/>
       <arg name="appId" type="s" direction="in"/>
