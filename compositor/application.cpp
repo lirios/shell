@@ -150,8 +150,8 @@ void Application::autostart()
         // If it's neither suitable for GNOME nor KDE then it's probably not meant
         // for us too, some utilities like those from XFCE have an explicit list
         // of desktop that are not supported instead of show them on XFCE
-        if (!entry.isSuitable(true, QLatin1String("GNOME")) && !entry.isSuitable(true, QLatin1String("KDE")))
-            continue;
+        //if (!entry.isSuitable(true, QLatin1String("GNOME")) && !entry.isSuitable(true, QLatin1String("KDE")))
+            //continue;
 
         qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
         m_launcher->launchEntry(entry);
