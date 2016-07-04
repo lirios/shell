@@ -260,7 +260,10 @@ GreenIsland.ExtendedOutput {
                         PropertyChanges { target: cursor; visible: true }
                         PropertyChanges { target: logoutLoader; loadComponent: false }
                         PropertyChanges { target: lockScreenLoader; loadComponent: true }
-                        StateChangeScript { script: output.idle() }
+                        // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
+                        // when the system is resumed it won't flip so we comment this out but unfortunately
+                        // it means that the lock screen will not turn off the screen
+                        //StateChangeScript { script: output.idle() }
                     },
                     State {
                         name: "shield"
