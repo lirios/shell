@@ -28,6 +28,7 @@
 #include <QtCore/QStandardPaths>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
+#include <QDebug>
 
 #include "processrunner.h"
 
@@ -54,5 +55,11 @@ bool ProcessRunner::launchApplication(const QString &name)
 
 bool ProcessRunner::launchCommand(const QString &command)
 {
-    return QProcess::startDetached(command);
+    const QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
+                             QStringLiteral("/ProcessLauncher"),
+                             QStringLiteral("org.hawaiios.ProcessLauncher"),
+                             bus);
+    QDBusMessage msg = interface.call("launchCommand", command);
+    return msg.arguments().at(0).toBool();
 }

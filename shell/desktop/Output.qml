@@ -42,8 +42,6 @@ GreenIsland.ExtendedOutput {
     readonly property alias screenView: screenView
     readonly property alias runCommand: runCommand
 
-    property QtObject activeWindow: null
-
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
     property alias zoomEnabled: zoomArea.enabled
@@ -59,6 +57,12 @@ GreenIsland.ExtendedOutput {
     scaleFactor: nativeScreen.scaleFactor
     sizeFollowsWindow: false
     automaticFrameCallback: powerState === GreenIsland.ExtendedOutput.PowerStateOn
+    onPowerStateChanged: {
+        // Show the screen when the power goes back
+        if (output.powerState === GreenIsland.ExtendedOutput.PowerStateOn)
+            blackRect.fadeOut();
+    }
+
     window: ApplicationWindow {
         id: window
         minimumWidth: 1024
@@ -157,12 +161,12 @@ GreenIsland.ExtendedOutput {
                     // Open window switcher
                     if (output.primary) {
                         if (event.key === Qt.Key_Tab) {
-                            screenView.windowSwitcher.next();
                             event.accept = true;
+                            screenView.windowSwitcher.next();
                             return;
                         } else if (event.key === Qt.Key_Backtab) {
-                            screenView.windowSwitcher.previous();
                             event.accept = true;
+                            screenView.windowSwitcher.previous();
                             return;
                         }
                     }
@@ -180,9 +184,9 @@ GreenIsland.ExtendedOutput {
                     // Close window switcher
                     if (output.primary) {
                         if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
+                            event.accept = true;
                             screenView.windowSwitcher.close();
                             screenView.windowSwitcher.activate();
-                            event.accept = true;
                             return;
                         }
                     }
@@ -256,7 +260,10 @@ GreenIsland.ExtendedOutput {
                         PropertyChanges { target: cursor; visible: true }
                         PropertyChanges { target: logoutLoader; loadComponent: false }
                         PropertyChanges { target: lockScreenLoader; loadComponent: true }
-                        StateChangeScript { script: output.idle() }
+                        // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
+                        // when the system is resumed it won't flip so we comment this out but unfortunately
+                        // it means that the lock screen will not turn off the screen
+                        //StateChangeScript { script: output.idle() }
                     },
                     State {
                         name: "shield"

@@ -52,6 +52,7 @@ public:
 
     Q_INVOKABLE bool launchApplication(const QString &appId);
     Q_INVOKABLE bool launchDesktopFile(const QString &fileName);
+    Q_INVOKABLE bool launchCommand(const QString &command);
     bool launchEntry(const XdgDesktopFile &entry);
 
     Q_INVOKABLE bool closeApplication(const QString &appId);

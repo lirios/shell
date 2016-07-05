@@ -143,8 +143,15 @@ void Application::shutdown()
 void Application::autostart()
 {
     Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
-        if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
+        // Ignore entries that are explicitely not meant for Hawaii
+        if (!entry.isSuitable(true, QLatin1String("X-Hawaii")))
             continue;
+
+        // If it's neither suitable for GNOME nor KDE then it's probably not meant
+        // for us too, some utilities like those from XFCE have an explicit list
+        // of desktop that are not supported instead of show them on XFCE
+        //if (!entry.isSuitable(true, QLatin1String("GNOME")) && !entry.isSuitable(true, QLatin1String("KDE")))
+            //continue;
 
         qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
         m_launcher->launchEntry(entry);

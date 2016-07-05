@@ -64,7 +64,7 @@ Item {
 
         Pane {
             y: output.availableGeometry.y
-            width: stackView.currentItem.implicitWidth + (2 * padding)
+            width: Math.max(FluidUi.Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
             height: output.availableGeometry.height
             padding: FluidUi.Units.largeSpacing
 
