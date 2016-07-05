@@ -8,7 +8,7 @@ if(POLICY CMP0063)
 endif()
 
 # Set version
-set(PROJECT_VERSION "0.7.0")
+set(PROJECT_VERSION "0.7.90")
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_SOVERSION 0)
 
