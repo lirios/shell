@@ -21,6 +21,7 @@ The following modules and their dependencies are required:
 
 * [ECM >= 1.4.0](http://quickgit.kde.org/?p=extra-cmake-modules.git)
 * [greenisland](https://github.com/greenisland/greenisland)
+* [hawaii-workspace](https://github.com/hawaii-desktop/hawaii-workspace)
 * [pam](http://www.linux-pam.org/)
 * [libqtxdg](https://github.com/lxde/libqtxdg)
 * [solid](http://quickgit.kde.org/?p=solid.git)
