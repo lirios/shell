@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 import org.hawaiios.launcher 0.1 as CppLauncher
 import "../components"
 

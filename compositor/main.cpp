@@ -31,7 +31,7 @@
 #include <QtWidgets/QApplication>
 
 #include <Hawaii/greenisland_version.h>
-#include <Hawaii/GSettings/QGSettings>
+#include <Hawaii/Settings/QGSettings>
 
 #include "application.h"
 #include "config.h"

@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 import org.hawaiios.mpris2 0.1
 import "../../components" as CustomComponents
 
@@ -59,7 +59,7 @@ ColumnLayout {
             FluidUi.Icon {
                 id: icon
                 anchors.fill: parent
-                iconName: player ? player.iconName : ""
+                name: player ? player.iconName : ""
                 color: titleLabel.color
                 visible: !albumArt.visible && iconName != ""
             }

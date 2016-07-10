@@ -45,7 +45,7 @@ target_link_libraries(hawaii
     Qt5::Widgets
     GreenIsland::Server
     HawaiiSigWatch
-    Hawaii::GSettings
+    Hawaii::Settings
     Qt5Xdg
     ${PAM_LIBRARIES}
 )

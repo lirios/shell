@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 import "../components" as CustomComponents
 
 Item {
@@ -57,7 +57,7 @@ Item {
     FluidUi.Icon {
         id: icon
         anchors.centerIn: parent
-        iconName: model.iconName
+        name: model.iconName
         width: iconSize
         height: width
         cache: false

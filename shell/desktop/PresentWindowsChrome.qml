@@ -26,11 +26,11 @@
 
 import QtQuick 2.2
 import QtGraphicalEffects 1.0
-import Qt.labs.controls 1.0
-import Qt.labs.controls.material 1.0
+import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
 import GreenIsland 1.0 as GreenIsland
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 import "../components" as ShellComponents
 
 Item {
@@ -121,7 +121,7 @@ Item {
                 centerIn: parent
                 margins: FluidUi.Units.smallSpacing
             }
-            iconName: window.iconName ? window.iconName : "unknown"
+            name: window.iconName ? window.iconName : "unknown"
             width: FluidUi.Units.iconSizes.large
             height: width
         }

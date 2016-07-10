@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 import org.hawaiios.mixer 0.1 as MixerService
 
 RowLayout {
@@ -39,7 +39,7 @@ RowLayout {
     FluidUi.Icon {
         width: FluidUi.Units.iconSizes.small
         height: width
-        iconName: "audio-volume-low-symbolic"
+        name: "audio-volume-low-symbolic"
         opacity: MixerService.Mixer.available ? 1.0 : 0.6
         color: label.color
         cache: false

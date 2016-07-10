@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls.material 1.0
-import Fluid.Ui 1.0 as FluidUi
+import QtQuick.Controls.Material 2.0
+import Fluid.UI 1.0 as FluidUi
 
 Row {
     signal close()
@@ -52,7 +52,7 @@ Row {
                 fill: parent
                 margins: FluidUi.Units.gu(0.25)
             }
-            iconName: "window-close-symbolic"
+            name: "window-close-symbolic"
             color: Material.primaryTextColor
         }
 
@@ -83,7 +83,7 @@ Row {
                 fill: parent
                 margins: FluidUi.Units.gu(0.25)
             }
-            iconName: "window-maximize-symbolic"
+            name: "window-maximize-symbolic"
             color: Material.primaryTextColor
         }
 
@@ -109,7 +109,7 @@ Row {
                 fill: parent
                 margins: FluidUi.Units.gu(0.25)
             }
-            iconName: "window-minimize-symbolic"
+            name: "window-minimize-symbolic"
             color: Material.primaryTextColor
         }
 

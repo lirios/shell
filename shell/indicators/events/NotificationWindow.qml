@@ -25,9 +25,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls.material 1.0
+import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 import "../../components" as ShellComponents
 
 Item {

@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2 as QtQuickControls
 import QtQuick.Controls.Styles 1.2 as QtQuickControlsStyles
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 
 QtQuickControls.Button {
     property string iconName
@@ -41,7 +41,7 @@ QtQuickControls.Button {
 
             FluidUi.Icon {
                 id: icon
-                iconName: control.iconName
+                name: control.iconName
                 color: control.color
                 width: Themes.Units.iconSizes.smallMedium
                 height: width

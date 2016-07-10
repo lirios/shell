@@ -27,11 +27,11 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 
 RowLayout {
     property color color: Themes.Theme.palette.panel.textColor
-    property alias iconName: icon.iconName
+    property alias iconName: icon.name
     property alias iconSource: icon.iconSource
     property alias message: label.text
 

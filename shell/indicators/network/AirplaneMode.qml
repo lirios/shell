@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 
 RowLayout {
     readonly property alias airplaneMode: __priv.airplaneMode
@@ -53,7 +53,7 @@ RowLayout {
 
     FluidUi.Icon {
         id: airplaneModeIcon
-        iconName: "airplane-mode-symbolic"
+        name: "airplane-mode-symbolic"
         width: FluidUi.Units.iconSizes.smallMedium
         height: width
         color: label.color

@@ -170,8 +170,8 @@ QtControlsPrivate.ToolButtonStyle {
             Components.Icon {
                 id: icon
                 anchors.centerIn: parent
-                iconName: control.__action.iconName ? control.__action.iconName : control.iconName ? control.iconName : ""
-                iconSource: {
+                name: control.__action.iconName ? control.__action.iconName : control.iconName ? control.iconName : ""
+                source: {
                     if (control.__action && !control.__action.iconName)
                         return control.__action.iconSource;
                     if (control.iconSource)

@@ -27,16 +27,16 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import QtQuick.Controls.Materials 2.0
+import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 
 FluidUi.Showable {
     //! How long the overlay will stay on screen
     property alias timeout: timer.interval
 
     //! Name of the icon to show (see XDG icon naming specification)
-    property alias iconName: icon.iconName
+    property alias iconName: icon.name
 
     //! Overlay value, either text or number
     property var value

@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.Ui 1.0 as FluidUi
+import Fluid.UI 1.0 as FluidUi
 
 Rectangle {
     property alias hovered: mouseArea.containsMouse
@@ -45,7 +45,7 @@ Rectangle {
 
     FluidUi.Icon {
         anchors.centerIn: parent
-        iconName: "window-close-symbolic"
+        name: "window-close-symbolic"
         color: "white"
         width: parent.width - FluidUi.Units.smallSpacing
         height: width
@@ -58,4 +58,3 @@ Rectangle {
         onClicked: root.clicked()
     }
 }
-
