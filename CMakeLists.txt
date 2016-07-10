@@ -105,6 +105,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
              Widgets
              Qml
              Quick
+             QuickControls2
              WaylandClient)
 
 # Find KF5

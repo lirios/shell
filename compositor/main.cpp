@@ -29,6 +29,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QStandardPaths>
 #include <QtWidgets/QApplication>
+#include <QQuickStyle>
 
 #include <Hawaii/greenisland_version.h>
 #include <Hawaii/Settings/QGSettings>
@@ -88,6 +89,8 @@ int main(int argc, char *argv[])
     // Setup the environment
     setupEnvironment();
 
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     // Application
     QApplication app(argc, argv);
     app.setApplicationName(QLatin1String("Hawaii"));
@@ -95,10 +98,11 @@ int main(int argc, char *argv[])
     app.setOrganizationName(QLatin1String("Hawaii"));
     app.setOrganizationDomain(QLatin1String("hawaiios.org"));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    app.setAttribute(Qt::AA_EnableHighDpiScaling);
     app.setFallbackSessionManagementEnabled(false);
 #endif
     app.setQuitOnLastWindowClosed(false);
+
+    QQuickStyle::setStyle("Material");
 
     // Set Qt platform for applications that will be executed from here
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));

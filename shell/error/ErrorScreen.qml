@@ -2,9 +2,11 @@
  * This file is part of Hawaii.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ *    Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -27,35 +29,48 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
+import Fluid.UI 1.0
 
 Rectangle {
-    gradient: Gradient {
-        GradientStop { position: 0; color: Qt.darker("firebrick", 1.8) }
-        GradientStop { position: 1; color: Qt.darker("firebrick", 1.1) }
-    }
+    Material.theme: Material.Dark
+
+    color: Material.color(Material.Red)
 
     ColumnLayout {
         anchors.centerIn: parent
 
-        Label {
-            text: qsTr(":(")
-            color: "white"
-            font.pointSize: 42
+        spacing: 0
 
-            Layout.alignment: Qt.AlignHCenter
-        }
-
-        Label {
-            text: qsTr("The system ran into a problem that it couldn't handle.\n" +
-                       "Press the button to quit.")
-            color: "white"
-            font.pointSize: 24
+        Icon {
+            name: "alert/warning"
+            size: 96
 
             Layout.alignment: Qt.AlignHCenter
         }
 
         Item {
-            Layout.minimumHeight: 100
+            Layout.minimumHeight: 8
+        }
+
+        Label {
+            text: qsTr("Oh no!")
+            font: FluidStyle.display1Font
+            color: Material.primaryTextColor
+
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        Label {
+            text: qsTr("Something went wrong and the desktop failed to load.")
+            font: FluidStyle.subheadingFont
+            color: Material.primaryTextColor
+
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        Item {
+            Layout.minimumHeight: 24
         }
 
         Button {
@@ -63,6 +78,10 @@ Rectangle {
             onClicked: Qt.quit()
 
             Layout.alignment: Qt.AlignHCenter
+
+            Material.background: "white"
+            Material.theme: Material.Light
+            Material.elevation: 2
         }
     }
 }
