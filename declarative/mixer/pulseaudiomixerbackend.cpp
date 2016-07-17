@@ -132,6 +132,8 @@ void PulseAudioMixerBackend::contextStateCallback(pa_context *context)
 
 void PulseAudioMixerBackend::subscribeCallback(pa_context *context, pa_subscription_event_type_t t, uint32_t index)
 {
+    Q_UNUSED(index);
+
     switch (t & PA_SUBSCRIPTION_EVENT_FACILITY_MASK) {
     case PA_SUBSCRIPTION_EVENT_SINK:
         pa_context_get_sink_info_list(context, [](pa_context *c, const pa_sink_info *i, int eol, void *data) {

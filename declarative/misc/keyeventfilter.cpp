@@ -48,6 +48,8 @@ KeyEventFilter::KeyEventFilter(QQuickItem *parent)
 
 bool KeyEventFilter::eventFilter(QObject *object, QEvent *event)
 {
+    Q_UNUSED(object);
+
     // Discard events not related to keyboard
     if (event->type() != QEvent::KeyPress && event->type() != QEvent::KeyRelease)
         return false;

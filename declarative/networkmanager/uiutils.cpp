@@ -108,6 +108,8 @@ QString UiUtils::interfaceTypeLabel(const NetworkManager::Device::Type type, con
             case NetworkManager::ModemDevice::NoCapability:
                 qCWarning(PLASMA_NM) << "Unhandled modem sub type: NetworkManager::ModemDevice::NoCapability";
                 break;
+            default:
+                break;
             }
         }
     }
@@ -432,6 +434,8 @@ QString UiUtils::wirelessBandToString(NetworkManager::WirelessSetting::Frequency
             break;
         case NetworkManager::WirelessSetting::Bg:
             return QLatin1String("b/g");
+            break;
+        default:
             break;
     }
 

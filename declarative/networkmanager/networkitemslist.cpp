@@ -170,6 +170,8 @@ QList< NetworkModelItem* > NetworkItemsList::returnItems(const NetworkItemsList:
                 break;
             case NetworkItemsList::Type:
                 break;
+            default:
+                break;
         }
     }
 
