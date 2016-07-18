@@ -32,7 +32,7 @@ The following modules and their dependencies are required:
  * [libqtxdg](https://github.com/lxde/libqtxdg)
  * [solid](http://quickgit.kde.org/?p=solid.git)
 
- Optional dependencies:
+Optional dependencies:
 
  * Volume control
    * [alsa](http://www.alsa-project.org/main/index.php/Main_Page) and/or
