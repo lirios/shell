@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Qt.labs.controls.material 1.0
+import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 import GreenIsland 1.0
