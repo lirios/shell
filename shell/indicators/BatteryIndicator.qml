@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.UI 1.0 as FluidUi
-import org.hawaiios.hardware 0.1
+import Hawaii.Hardware 1.0
 import ".."
 import "power" as PowerIndicator
 

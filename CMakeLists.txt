@@ -90,11 +90,6 @@ set(REQUIRED_QT_VERSION "5.7.0")
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
              DBus Xml Widgets Qml Quick QuickControls2 WaylandClient)
 
-# Find KF5
-set(REQUIRED_KF5_VERSION "5.1.0")
-find_package(KF5 ${REQUIRED_KF5_VERSION} REQUIRED COMPONENTS
-             Solid)
-
 # Find NetworkManager-Qt
 if(ENABLE_NETWORK_MANAGER)
     find_package(KF5NetworkManagerQt 5.8.0)
