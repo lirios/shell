@@ -89,15 +89,13 @@ int main(int argc, char *argv[])
     setupEnvironment();
 
     // Application
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     app.setApplicationName(QLatin1String("Hawaii"));
     app.setApplicationVersion(QLatin1String(HAWAII_VERSION_STRING));
     app.setOrganizationName(QLatin1String("Hawaii"));
     app.setOrganizationDomain(QLatin1String("hawaiios.org"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    app.setAttribute(Qt::AA_EnableHighDpiScaling);
     app.setFallbackSessionManagementEnabled(false);
-#endif
     app.setQuitOnLastWindowClosed(false);
 
     // Set Qt platform for applications that will be executed from here
