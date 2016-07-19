@@ -97,9 +97,7 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(QLatin1String(HAWAII_VERSION_STRING));
     app.setOrganizationName(QLatin1String("Hawaii"));
     app.setOrganizationDomain(QLatin1String("hawaiios.org"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     app.setFallbackSessionManagementEnabled(false);
-#endif
     app.setQuitOnLastWindowClosed(false);
 
     QQuickStyle::setStyle("Material");
