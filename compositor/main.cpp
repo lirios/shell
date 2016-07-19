@@ -67,8 +67,8 @@ static void setupEnvironment()
 
     // Environment
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
-    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("Base"));
-    qputenv("QT_LABS_CONTROLS_STYLE", QByteArrayLiteral("material"));
+    qputenv("QT_QUICK_CONTROLS_1_STYLE", QByteArrayLiteral("Flat"));
+    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("material"));
     qputenv("QT_WAYLAND_DECORATION", QByteArrayLiteral("HawaiiMaterialDecoration"));
     qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
