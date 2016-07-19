@@ -31,7 +31,7 @@ import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
 import Fluid.UI 1.0 as FluidUi
-import org.hawaiios.notifications 0.1
+import Hawaii.Notifications 1.0
 import ".."
 import "events" as EventsIndicator
 
