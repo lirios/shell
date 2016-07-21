@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.UI 1.0 as FluidUi
-import org.hawaiios.mpris2 0.1
+import Hawaii.Mpris 1.0
 import "../../components" as CustomComponents
 
 ColumnLayout {

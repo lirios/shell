@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.UI 1.0 as FluidUi
 import org.hawaiios.mixer 0.1 as MixerService
-import org.hawaiios.mpris2 0.1
+import Hawaii.Mpris 1.0
 import Hawaii.Settings 1.0 as Settings
 import ".."
 import "sound" as SoundIndicator
