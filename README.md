@@ -102,10 +102,6 @@ to learn how to enable them.
    * **hawaii.qml.launcher:** Launcher model and items
    * **hawaii.qml.launcher.appsmodel:** Applications model
 
- * MPRIS2 QML plugin:
-   * **hawaii.qml.mpris2:** MPRIS2 engine
-   * **hawaii.qml.mpris2.player:** MPRIS2 player interface
-
  * Network QML plugin:
    * **hawaii.qml.networkmanager:** NetworkManager support.
 
