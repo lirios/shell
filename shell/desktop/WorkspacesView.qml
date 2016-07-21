@@ -135,7 +135,7 @@ T.SwipeView {
     Component.onCompleted: {
         // Create all workspaces
         var i;
-        for (i = swipeView.count; i < hawaiiCompositor.settings.numWorkspaces; i++)
+        for (i = swipeView.count; i < compositor.settings.numWorkspaces; i++)
             add();
         select(0);
     }

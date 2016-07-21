@@ -31,9 +31,9 @@ Item {
     XWayland {
         id: xwayland
         enabled: true
-        compositor: hawaiiCompositor
+        compositor: compositor
         onShellSurfaceCreated: {
-            var item = xwindowComponent.createObject(hawaiiCompositor.defaultOutput.surfacesArea, {"shellSurface": shellSurface});
+            var item = xwindowComponent.createObject(compositor.defaultOutput.surfacesArea, {"shellSurface": shellSurface});
         }
     }
 

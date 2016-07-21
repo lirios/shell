@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2016 Pier Luigi Fiorini
+ * Copyright (C) 2014-2016 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
@@ -25,18 +25,43 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0 as GreenIsland
+import QtQuick.Controls 2.0
+import Fluid.UI 1.0 as FluidUi
+import "../components" as CustomComponents
 
-GreenIsland.OutputConfiguration {
-    id: config
-    onChangeRequested: {
-        var i, changeset;
-        for (i = 0; i < config.changes.length; i++) {
-            changeset = config.changes[i];
-            if (!changeset.output.nativeScreen.applyChangeset(changeset)) {
-                changeset.output.nativeScreen.discardChangeset(changeset);
-                config.setFailed();
-                break;
+Item {
+    id: root
+
+    CustomComponents.Clock {
+        id: clock
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+        }
+        z: 0
+        onClicked: topDrawer.position == 0 ? topDrawer.open() : topDrawer.close()
+    }
+
+    Drawer {
+        id: topDrawer
+        edge: Qt.TopEdge
+        // onClicked: close()
+
+        Pane {
+            width: window.width
+            height: FluidUi.Units.gu(25)
+            padding: FluidUi.Units.largeSpacing
+
+            Loader {
+                id: loader
+                anchors.fill: parent
+                active: topDrawer.expanded
+                source: "../controlcenter/ControlCenter.qml"
+
+                Connections {
+                    target: loader.item
+                    onClosed: topDrawer.close()
+                }
             }
         }
     }

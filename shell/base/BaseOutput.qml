@@ -1,10 +1,8 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -25,11 +23,16 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Window 2.2
 import GreenIsland 1.0 as GreenIsland
 
 GreenIsland.ExtendedOutput {
     id: output
+
+    readonly property bool primary: compositor.primaryScreen === nativeScreen
+
+    property alias screenViewComponent: outputWindow.screenViewComponent
+    property alias screenView: outputWindow.screenView
+
     manufacturer: nativeScreen.manufacturer
     model: nativeScreen.model
     position: nativeScreen.position
@@ -37,30 +40,12 @@ GreenIsland.ExtendedOutput {
     subpixel: nativeScreen.subpixel
     transform: nativeScreen.transform
     scaleFactor: nativeScreen.scaleFactor
+    // TODO: this was true for ErrorOutput, false for desktop.Output
     sizeFollowsWindow: true
-    window: Window {
-        id: window
-        x: nativeScreen.position.x
-        y: nativeScreen.position.y
-        width: nativeScreen.size.width
-        height: nativeScreen.size.height
-        flags: Qt.FramelessWindowHint
 
-        GreenIsland.WaylandMouseTracker {
-            id: localPointerTracker
-            anchors.fill: parent
+    window: OutputWindow {
+        id: outputWindow
 
-            ErrorScreen {
-                anchors.fill: parent
-            }
-
-            GreenIsland.WaylandCursorItem {
-                id: cursor
-                inputDevice: output.compositor.defaultInputDevice
-                x: localPointerTracker.mouseX - hotspotX
-                y: localPointerTracker.mouseY - hotspotY
-                visible: localPointerTracker.containsMouse
-            }
-        }
+        output: output
     }
 }

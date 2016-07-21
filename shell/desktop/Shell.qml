@@ -1,10 +1,8 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -23,20 +21,22 @@
  *
  * $END_LICENSE$
  ***************************************************************************/
-
+ 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import Fluid.UI 1.0 as FluidUi
 import ".."
 
 Item {
-    readonly property alias panel: panel
+    id: shell
 
-    id: root
+    readonly property alias panel: panel
 
     Panel {
         id: panel
+
         z: 1
+
         onIndicatorTriggered: {
             // Set the last indicator
             rightDrawer.lastIndicator = indicator;
@@ -56,11 +56,13 @@ Item {
 
         id: rightDrawer
         edge: Qt.RightEdge
-        onClicked: {
-            if (lastIndicator)
-                lastIndicator.active = false;
-            close();
-        }
+
+        // FIXME: onClicked doesn't exist
+        // onClicked: {
+        //     if (lastIndicator)
+        //         lastIndicator.active = false;
+        //     close();
+        // }
 
         Pane {
             y: output.availableGeometry.y

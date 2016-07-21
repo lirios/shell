@@ -96,7 +96,7 @@ Popup {
             clip: true
             focus: true
             orientation: ListView.Horizontal
-            model: hawaiiCompositor.windowsModel
+            model: compositor.windowsModel
             spacing: FluidUi.Units.smallSpacing
             highlightMoveDuration: FluidUi.Units.shortDuration
             delegate: thumbnailComponent

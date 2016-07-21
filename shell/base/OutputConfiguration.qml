@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -24,12 +21,20 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.5
-import QtQuick.Enterprise.VirtualKeyboard 2.0
+import QtQuick 2.0
+import GreenIsland 1.0 as GreenIsland
 
-InputPanel {
-    id: keyboard
-    anchors.left: parent.left
-    anchors.right: parent.right
-    visible: active
+GreenIsland.OutputConfiguration {
+    id: config
+    onChangeRequested: {
+        var i, changeset;
+        for (i = 0; i < config.changes.length; i++) {
+            changeset = config.changes[i];
+            if (!changeset.output.nativeScreen.applyChangeset(changeset)) {
+                changeset.output.nativeScreen.discardChangeset(changeset);
+                config.setFailed();
+                break;
+            }
+        }
+    }
 }

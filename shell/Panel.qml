@@ -35,6 +35,8 @@ import "indicators"
 import "launcher"
 
 Rectangle {
+    id: panel
+
     readonly property alias launcherIndicator: launcherIndicator
     readonly property alias currentLauncherItem: launcher.currentItem
     property real size: FluidUi.Units.iconSizes.large
@@ -47,7 +49,6 @@ Rectangle {
 
     signal indicatorTriggered(var indicator)
 
-    id: panel
     color: "transparent"
     state: "bottom"
     states: [
@@ -251,13 +252,15 @@ Rectangle {
      * Focused window
      */
 
+    // FIXME: The following two connections don't work
+
     Connections {
-        target: hawaiiCompositor.applicationManager
+        target: compositor.applicationManager
         onFocusedWindowChanged: setup()
     }
 
     Connections {
-        target: hawaiiCompositor.applicationManager.focusedWindow
+        target: compositor.applicationManager.focusedWindow
         onMaximizedChanged: setup()
     }
 
@@ -330,10 +333,11 @@ Rectangle {
                     onTriggered: indicatorTriggered(caller)
                 }
 
-                NetworkIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
-                }
+                // FIXME: This crashes the shell
+                // NetworkIndicator {
+                //     iconSize: indicatorsView.iconSize
+                //     onTriggered: indicatorTriggered(caller)
+                // }
 
                 StorageIndicator {
                     iconSize: indicatorsView.iconSize
@@ -355,7 +359,7 @@ Rectangle {
     function setup() {
         // TODO: Don't resize the panel, the window is maximized before we change the available
         // geometry resulting in a "hole" between the window and the panel
-        var window = hawaiiCompositor.applicationManager.focusedWindow;
+        var window = compositor.applicationManager.focusedWindow;
         if (window && window.maximized) {
             color = Themes.Theme.palette.rgba(Material.dialogColor, 0.9);
             //launcher.iconSize = FluidUi.Units.iconSizes.medium;

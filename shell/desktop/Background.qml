@@ -1,10 +1,8 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -25,26 +23,34 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.UI 1.0 as FluidUi
-import ".."
+import Fluid.UI 1.0
 
 Loader {
-    Connections {
-        target: hawaiiCompositor.settings.background
-        onModeChanged: readSettings()
+    sourceComponent: {
+        switch (compositor.settings.background.mode) {
+        case "solid":
+            return solid
+        case "hgradient":
+        case "vgradient":
+            return gradient
+        case "wallpaper":
+            return wallpaper
+        default:
+            return null
+        }
     }
 
     Component {
         id: solid
 
-        FluidUi.NoiseBackground {
+        NoiseBackground {
             objectName: "solid"
-            color: hawaiiCompositor.settings.background.primaryColor
+            color: compositor.settings.background.primaryColor
 
             Behavior on color {
                 ColorAnimation {
                     easing.type: Easing.OutQuad
-                    duration: FluidUi.Units.mediumDuration
+                    duration: Units.mediumDuration
                 }
             }
         }
@@ -53,77 +59,57 @@ Loader {
     Component {
         id: gradient
 
-        FluidUi.NoiseBackground {
-            property bool vertical: hawaiiCompositor.settings.background.mode === "vgradient"
+        NoiseBackground {
+            property bool vertical: compositor.settings.background.mode === "vgradient"
 
             objectName: "gradient"
+            rotation: vertical ? 270 : 0
+            scale: vertical ? 2 : 1
             gradient: Gradient {
                 GradientStop {
                     position: 0
-                    color: hawaiiCompositor.settings.background.primaryColor
+                    color: compositor.settings.background.primaryColor
 
                     Behavior on color {
                         ColorAnimation {
                             easing.type: Easing.OutQuad
-                            duration: FluidUi.Units.mediumDuration
+                            duration: Units.mediumDuration
                         }
                     }
                 }
                 GradientStop {
                     position: 1
-                    color: hawaiiCompositor.settings.background.secondaryColor
+                    color: compositor.settings.background.secondaryColor
 
                     Behavior on color {
                         ColorAnimation {
                             easing.type: Easing.OutQuad
-                            duration: FluidUi.Units.mediumDuration
+                            duration: Units.mediumDuration
                         }
                     }
                 }
             }
-            rotation: vertical ? 270 : 0
-            scale: vertical ? 2 : 1
         }
     }
 
     Component {
         id: wallpaper
 
-        FluidUi.NoiseBackground {
+        NoiseBackground {
             objectName: "wallpaper"
-            color: hawaiiCompositor.settings.background.primaryColor
+            color: compositor.settings.background.primaryColor
 
-            FluidUi.SmoothFadeImage {
+            SmoothFadeImage {
                 readonly property real aspectRatio: width / height
 
                 anchors.fill: parent
-                source: hawaiiCompositor.settings.background.pictureUrl
+                source: compositor.settings.background.pictureUrl
                 sourceSize.width: aspectRatio * 1024
                 sourceSize.height: 1024
                 smooth: true
                 clip: fillMode === Image.PreserveAspectCrop
-                fillMode: hawaiiCompositor.settings.convertFillMode(hawaiiCompositor.settings.background.fillMode)
+                fillMode: compositor.settings.convertFillMode(compositor.settings.background.fillMode)
             }
         }
     }
-
-    function readSettings() {
-        switch (hawaiiCompositor.settings.background.mode) {
-        case "solid":
-            sourceComponent = solid;
-            break;
-        case "hgradient":
-        case "vgradient":
-            sourceComponent = gradient;
-            break;
-        case "wallpaper":
-            sourceComponent = wallpaper;
-            break;
-        default:
-            sourceComponent = null;
-            break;
-        }
-    }
-
-    Component.onCompleted: readSettings()
 }

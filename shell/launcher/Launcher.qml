@@ -72,7 +72,7 @@ Item {
         }
         model: CppLauncher.LauncherModel {
             id: launcherModel
-            applicationManager: hawaiiCompositor.applicationManager
+            applicationManager: compositor.applicationManager
         }
         delegate: LauncherDelegate {}
     }

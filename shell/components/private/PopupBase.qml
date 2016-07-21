@@ -52,7 +52,7 @@ Item {
         if (showing)
             return;
 
-        var pt = mainItem.mapFromItem(visualParent, x, y);
+        var pt = screen.mapFromItem(visualParent, x, y);
         popup.parent = visualLayer;
         popup.x = pt.x;
         popup.y = pt.y;

@@ -81,7 +81,7 @@ RowLayout {
     FluidUi.Icon {
         width: FluidUi.Units.iconSizes.small
         height: width
-        iconName: "audio-volume-high-symbolic"
+        name: "audio-volume-high-symbolic"
         opacity: MixerService.Mixer.available ? 1.0 : 0.6
         color: label.color
         cache: false

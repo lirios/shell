@@ -55,8 +55,8 @@ Item {
 
         function switchToWorkspace(number) {
             var i;
-            for (i = 0; i < hawaiiCompositor.outputs.length; i++)
-                hawaiiCompositor.outputs[i].screenView.layers.workspaces.select(number);
+            for (i = 0; i < compositor.outputs.length; i++)
+                compositor.outputs[i].screenView.layers.workspaces.select(number);
         }
     }
 
@@ -73,8 +73,8 @@ Item {
             showInformation = !showInformation;
 
             var i;
-            for (i = 0; i < hawaiiCompositor.outputs.length; i++)
-                hawaiiCompositor.outputs[i].showInformation = showInformation;
+            for (i = 0; i < compositor.outputs.length; i++)
+                compositor.outputs[i].showInformation = showInformation;
         }
     }
 
@@ -159,8 +159,8 @@ Item {
         sequence: wmKeybindings.switchToWorkspaceLeft
         onActivated: {
             var i;
-            for (i = 0; i < hawaiiCompositor.outputs.length; i++)
-                hawaiiCompositor.outputs[i].screenView.layers.workspaces.selectPrevious();
+            for (i = 0; i < compositor.outputs.length; i++)
+                compositor.outputs[i].screenView.layers.workspaces.selectPrevious();
         }
     }
 
@@ -169,8 +169,8 @@ Item {
         sequence: wmKeybindings.switchToWorkspaceRight
         onActivated: {
             var i;
-            for (i = 0; i < hawaiiCompositor.outputs.length; i++)
-                hawaiiCompositor.outputs[i].screenView.layers.workspaces.selectNext();
+            for (i = 0; i < compositor.outputs.length; i++)
+                compositor.outputs[i].screenView.layers.workspaces.selectNext();
         }
     }
 
@@ -188,9 +188,9 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspaceLast
         onActivated: {
-            var i, index = hawaiiCompositor.settings.numWorkspaces - 1;
-            for (i = 0; i < hawaiiCompositor.outputs.length; i++)
-                hawaiiCompositor.outputs[i].screenView.layers.workspaces.select(index);
+            var i, index = compositor.settings.numWorkspaces - 1;
+            for (i = 0; i < compositor.outputs.length; i++)
+                compositor.outputs[i].screenView.layers.workspaces.select(index);
         }
     }
 
@@ -213,8 +213,8 @@ Item {
         sequence: wmKeybindings.showDesktop
         onActivated: {
             var i, workspace;
-            for (i = 0; i < hawaiiCompositor.outputs.length; i++) {
-                workspace = hawaiiCompositor.outputs[i].screenView.currentWorkspace;
+            for (i = 0; i < compositor.outputs.length; i++) {
+                workspace = compositor.outputs[i].screenView.currentWorkspace;
                 if (workspace.state === "reveal")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")
@@ -228,8 +228,8 @@ Item {
         sequence: wmKeybindings.presentWindows
         onActivated: {
             var i, workspace;
-            for (i = 0; i < hawaiiCompositor.outputs.length; i++) {
-                workspace = hawaiiCompositor.outputs[i].screenView.currentWorkspace;
+            for (i = 0; i < compositor.outputs.length; i++) {
+                workspace = compositor.outputs[i].screenView.currentWorkspace;
                 if (workspace.state === "present")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")
@@ -241,7 +241,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.mainMenu
-        onActivated: hawaiiCompositor.defaultOutput.screenView.panel.launcherIndicator.triggered(null)
+        onActivated: compositor.defaultOutput.screenView.panel.launcherIndicator.triggered(null)
     }
 
     Shortcut {
@@ -590,7 +590,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.runCommand
-        onActivated: hawaiiCompositor.defaultOutput.runCommand.open()
+        onActivated: compositor.defaultOutput.runCommand.open()
     }
 
     Shortcut {

@@ -24,195 +24,280 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtGraphicalEffects 1.0
+import QtQuick 2.5
+import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0 as GreenIsland
-import Fluid.UI 1.0 as FluidUi
-import org.hawaiios.misc 0.1 as Misc
+import Fluid.Controls 1.0
+import "../base"
+import "../screens"
 import ".."
-import "../components"
-import "../indicators"
 
-Item {
-    property var layers: QtObject {
-        readonly property alias workspaces: workspacesLayer
-        readonly property alias fullScreen: fullScreenLayer
-        readonly property alias overlays: overlaysLayer
-        readonly property alias notifications: notificationsLayer
-    }
-
-    readonly property alias currentWorkspace: workspace //workspacesLayer.currentItem
-    readonly property var panel: shellLoader.item ? shellLoader.item.panel : null
-    readonly property alias windowSwitcher: windowSwitcher
-
+BaseScreenView {
     id: screenView
 
-    Material.theme: Material.Dark
+    readonly property alias surfacesArea: desktop.currentWorkspace
+    readonly property alias desktop: desktop
+    readonly property alias runCommand: runCommand
 
-    /*
-     * Hot corners
-     */
+    property alias showFps: fpsIndicator.visible
+    property alias showInformation: outputInfo.visible
+    property alias zoomEnabled: zoomArea.enabled
 
-    HotCorners {
-        id: hotCorners
-        anchors.fill: parent
-        z: 2000
-        onTopLeftTriggered: workspacesLayer.selectPrevious()
-        onTopRightTriggered: workspacesLayer.selectNext()
-        onBottomLeftTriggered: currentWorkspace.state = "present";
+    state: "splash"
+    states: [
+        State {
+            name: "splash"
+            PropertyChanges { target: cursor; visible: false }
+            PropertyChanges { target: splashScreen; opacity: 1.0 }
+        },
+        State {
+            name: "session"
+        },
+        State {
+            name: "logout"
+            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "logout" }
+        },
+        State {
+            name: "poweroff"
+            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "poweroff" }
+        },
+        State {
+            name: "restart"
+            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "restart" }
+        },
+        State {
+            name: "lock"
+            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: logoutLoader; loadComponent: false }
+            PropertyChanges { target: lockScreenLoader; loadComponent: true }
+            // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
+            // when the system is resumed it won't flip so we comment this out but unfortunately
+            // it means that the lock screen will not turn off the screen
+            //StateChangeScript { script: output.idle() }
+        },
+        State {
+            name: "shield"
+            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
+        }
+    ]
+
+    onKeyPressed: {
+        // Handle Meta modifier
+        if (event.modifiers & Qt.MetaModifier) {
+            // Open window switcher
+            if (output.primary) {
+                if (event.key === Qt.Key_Tab) {
+                    event.accept = true;
+                    screenView.windowSwitcher.next();
+                    return;
+                } else if (event.key === Qt.Key_Backtab) {
+                    event.accept = true;
+                    screenView.windowSwitcher.previous();
+                    return;
+                }
+            }
+        }
+
+        event.accept = false;
+    }
+
+    onKeyReleased: {
+        // Handle Meta modifier
+        if (event.modifiers & Qt.MetaModifier) {
+            // Close window switcher
+            if (output.primary) {
+                if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
+                    event.accept = true;
+                    desktop.windowSwitcher.close();
+                    desktop.windowSwitcher.activate();
+                    return;
+                }
+            }
+        }
+
+        event.accept = false;
+    }
+
+    Connections {
+        target: SessionInterface
+        onSessionLocked: screenView.state = "lock"
+        onSessionUnlocked: screenView.state = "session"
+        onIdleInhibitRequested: compositor.idleInhibit++
+        onIdleUninhibitRequested: compositor.idleInhibit--
+        onShutdownRequestCanceled: screenView.state = "session"
+        onLogOutRequested: if (screenView.state != "lock") screenView.state = "logout"
+        onPowerOffRequested: if (screenView.state != "lock") screenView.state = "poweroff"
+        onRestartRequested: if (screenView.state != "lock") screenView.state = "restart"
     }
 
     /*
-     * Workspace
+     * Run command dialog
      */
 
-    // Background image or color
-    Background {
-        id: backgroundLayer
-        anchors.fill: parent
-        z: 0
+    RunCommand {
+        id: runCommand
+        x: (parent.width - height) / 2
+        y: (parent.height - height) / 2
     }
 
-    // Desktop applets
     Desktop {
-        id: desktopLayer
-        anchors.fill: parent
-        z: 1
-    }
+        id: desktop
 
-    // Dim desktop in present mode
-    Rectangle {
         anchors.fill: parent
-        z: 2
-        color: "black"
-        opacity: workspace.state == "present" ? 0.7 : 0.0
 
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.OutQuad
-                duration: 250
-            }
+        transform: Scale {
+            id: screenScaler
+            origin.x: zoomArea.x2
+            origin.y: zoomArea.y2
+            xScale: zoomArea.zoom2
+            yScale: zoomArea.zoom2
         }
-    }
 
-    // Workspaces selector for present
-    // FIXME: Only one workspace for now
-    Pane {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: FluidUi.Units.gu(20)
-        z: 3
-        opacity: workspace.state == "present" ? 1.0 : 0.0
 
-        ListView {
+        ScreenZoom {
+            id: zoomArea
             anchors.fill: parent
-            anchors.margins: FluidUi.Units.smallSpacing
-            model: 1
-            delegate: Item {
-                readonly property real ratio: workspace.width / workspace.height
-
-                width: ListView.view.width
-                height: width / ratio
-
-                ShaderEffectSource {
-                    anchors.fill: parent
-                    smooth: true
-                    sourceItem: backgroundLayer
-                    live: true
-                    hideSource: false
-
-                    ShaderEffectSource {
-                        anchors.fill: parent
-                        smooth: true
-                        sourceItem: workspace
-                        live: true
-                        hideSource: false
-                    }
-                }
-            }
-
-            ScrollBar.vertical: ScrollBar {}
+            scaler: screenScaler
+            enabled: false
         }
 
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.OutQuad
-                duration: 250
-            }
-        }
+        Component.onCompleted: screenView.state = "session"
     }
 
-    // Workspaces
-    WorkspacesView {
-        id: workspacesLayer
-        anchors.fill: parent
-        z: 5
-    }
+    /*
+     * Splash screen
+     */
 
-    // FIXME: Temporary workaround to make keyboard input work,
-    // apparently SwipeView captures input. An Item instead make it work.
-    Workspace {
-        id: workspace
-        anchors.fill: parent
-        z: 6
-    }
-
-    // Panels
     Loader {
-        id: shellLoader
+        id: splashScreen
         anchors.fill: parent
-        asynchronous: true
-        active: primary
-        sourceComponent: Shell {
-            opacity: workspace.state == "present" ? 0.0 : 1.0
-
-            Behavior on opacity {
-                NumberAnimation {
-                    easing.type: Easing.OutQuad
-                    duration: 250
-                }
-            }
+        source: "../screens/SplashScreen.qml"
+        opacity: 0.0
+        active: false
+        z: 900
+        onOpacityChanged: {
+            if (opacity == 1.0)
+                splashScreen.active = true;
+            else if (opacity == 0.0)
+                splashScreenTimer.start();
         }
-        z: 10
-    }
 
-    // Full screen windows can cover application windows and panels
-    Rectangle {
-        id: fullScreenLayer
-        anchors.fill: parent
-        color: "black"
-        z: 20
-        opacity: children.length > 0 ? 1.0 : 0.0
+        // Unload after a while so that the opacity animation is visible
+        Timer {
+            id: splashScreenTimer
+            running: false
+            interval: 5000
+            onTriggered: splashScreen.active = false
+        }
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InSine
-                duration: FluidUi.Units.mediumDuration
+                duration: Units.longDuration
             }
         }
     }
 
-    // Overlays are above the panel
-    Overlay {
-        id: overlaysLayer
-        anchors.centerIn: parent
-        z: 10
+    /*
+     * Lock screen
+     */
+
+    Component {
+        id: primaryLockScreenComponent
+
+        LockScreen {}
     }
 
-    // Notifications are behind the panel
-    Item {
-        id: notificationsLayer
+    Component {
+        id: secondaryLockScreenComponent
+
+        SecondaryLockScreen {}
+    }
+
+    Loadable {
+        property bool loadComponent: false
+
+        id: lockScreenLoader
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
+        asynchronous: true
+        component: output.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
+        z: 900
+        onLoadComponentChanged: if (loadComponent) show(); else hide();
+    }
+
+    /*
+     * Logout screen
+     */
+
+    Loadable {
+        property bool loadComponent: false
+        // FIXME: mode should be empty by default and the LogoutScreen
+        // component should handle an empty state, hiding the controls
+        property string mode: "logout"
+
+        id: logoutLoader
         anchors.fill: parent
-        z: 10
+        asynchronous: true
+        component: Component {
+            LogoutScreen {
+                mode: logoutLoader.mode
+            }
+        }
+        z: 900
+        onLoadComponentChanged: if (loadComponent) show(); else hide();
     }
 
-    // Windows switcher
-    WindowSwitcher {
-        id: windowSwitcher
-        x: (output.availableGeometry.width - width) / 2
-        y: (output.availableGeometry.height - height) / 2
+    Connections {
+        target: logoutLoader.item
+        onSuspendRequested: mainItem.state = "lock"
+        onCancel: SessionInterface.cancelShutdownRequest()
+    }
+
+    /*
+     * Screen view
+     */
+
+
+
+    /*
+     * Full screen indicators
+     */
+
+    Text {
+        id: fpsIndicator
+        anchors {
+            top: parent.top
+            right: parent.right
+        }
+        text: fpsCounter.fps
+        font.pointSize: 36
+        style: Text.Raised
+        styleColor: "#222"
+        color: "white"
+        z: 1000
+        visible: false
+
+        GreenIsland.FpsCounter {
+            id: fpsCounter
+        }
+    }
+
+    OutputInfo {
+        id: outputInfo
+        anchors {
+            left: parent.left
+            top: parent.top
+        }
+        z: 1000
+        visible: false
     }
 }

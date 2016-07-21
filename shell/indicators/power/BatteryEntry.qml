@@ -142,15 +142,15 @@ Item {
     function setIconName() {
         var total = battery.chargePercent;
         if (total < 5)
-            icon.iconName = "battery-empty-symbolic"
+            icon.name = "battery-empty-symbolic"
         else if (total < 20)
-            icon.iconName = "battery-low-symbolic";
+            icon.name = "battery-low-symbolic";
         else if (total < 40)
-            icon.iconName = "battery-caution-symbolic";
+            icon.name = "battery-caution-symbolic";
         else if (total < 80)
-            icon.iconName = "battery-good-symbolic";
+            icon.name = "battery-good-symbolic";
         else
-            icon.iconName = "battery-full-symbolic";
+            icon.name = "battery-full-symbolic";
     }
 
     function setChargeState() {

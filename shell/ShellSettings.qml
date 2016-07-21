@@ -44,7 +44,7 @@ FluidCore.Object {
 
     GreenIsland.CompositorSettings {
         id: compositorSettings
-        compositor: hawaiiCompositor
+        compositor: compositor
         keymap: GreenIsland.Keymap {
             layout: keyboardSettings.layouts[0] ? keyboardSettings.layouts[0] : "us"
             variant: keyboardSettings.variants[0] ? keyboardSettings.variants[0] : ""

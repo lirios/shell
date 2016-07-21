@@ -66,10 +66,10 @@ FluidUi.Showable {
     Image {
         id: picture
         anchors.fill: parent
-        source: hawaiiCompositor.settings.lockScreen.pictureUrl
+        source: compositor.settings.lockScreen.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
-        fillMode: hawaiiCompositor.settings.convertFillMode(hawaiiCompositor.settings.lockScreen.fillMode)
+        fillMode: compositor.settings.convertFillMode(compositor.settings.lockScreen.fillMode)
         cache: false
         visible: false
     }

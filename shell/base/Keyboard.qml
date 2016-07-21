@@ -1,8 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
+ * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -23,8 +22,11 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import "../base"
+import QtQuick.Enterprise.VirtualKeyboard 2.0
 
-BaseCompositor {
-    screenViewComponent: ErrorScreenView {}
+InputPanel {
+    id: keyboard
+    anchors.left: parent.left
+    anchors.right: parent.right
+    visible: active
 }

@@ -32,10 +32,10 @@ Item {
     Image {
         id: picture
         anchors.fill: parent
-        source: hawaiiCompositor.settings.background.pictureUrl
+        source: compositor.settings.background.pictureUrl
         sourceSize.width: width * 0.75
         sourceSize.height: height * 0.75
-        fillMode: hawaiiCompositor.settings.convertFillMode(hawaiiCompositor.settings.background.fillMode)
+        fillMode: compositor.settings.convertFillMode(compositor.settings.background.fillMode)
         cache: false
         visible: false
     }

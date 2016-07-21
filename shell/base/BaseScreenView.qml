@@ -1,7 +1,6 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
@@ -23,8 +22,10 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import "../base"
 
-BaseCompositor {
-    screenViewComponent: ErrorScreenView {}
+Rectangle {
+    property var output
+
+    signal keyPressed(var event)
+    signal keyReleased(var event)
 }

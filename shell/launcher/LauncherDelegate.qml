@@ -174,8 +174,8 @@ Item {
 
         // Activate all windows of this application and unminimize
         var i, window;
-        for (i = 0; i < hawaiiCompositor.windowsModel.count; i++) {
-            window = hawaiiCompositor.windowsModel.get(i).window;
+        for (i = 0; i < compositor.windowsModel.count; i++) {
+            window = compositor.windowsModel.get(i).window;
             if (window.appId === model.appId) {
                 window.minimized = false;
                 window.activate();
@@ -192,8 +192,8 @@ Item {
 
         // Minimize or unminimize windows
         var i, window;
-        for (i = 0; i < hawaiiCompositor.windowsModel.count; i++) {
-            window = hawaiiCompositor.windowsModel.get(i).window;
+        for (i = 0; i < compositor.windowsModel.count; i++) {
+            window = compositor.windowsModel.get(i).window;
             if (window.appId === model.appId) {
                 var pt = screenView.mapFromItem(root, root.width * 0.5, root.height * 0.5);
                 pt.x += output.position.x;

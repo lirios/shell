@@ -1,10 +1,8 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -25,44 +23,193 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
-import Fluid.UI 1.0 as FluidUi
-import "../components" as CustomComponents
+import QtQuick.Controls.Material 2.0
+import GreenIsland 1.0 as GreenIsland
+import Fluid.UI 1.0
+import org.hawaiios.misc 0.1 as Misc
+import ".."
+import "../components"
+import "../indicators"
 
 Item {
-    id: root
+    id: desktop
 
-    CustomComponents.Clock {
-        id: clock
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            top: parent.top
-        }
-        z: 0
-        onClicked: topDrawer.position == 0 ? topDrawer.open() : topDrawer.close()
+    Material.theme: Material.Dark
+
+    readonly property var layers: QtObject {
+        readonly property alias workspaces: workspacesLayer
+        readonly property alias fullScreen: fullScreenLayer
+        readonly property alias overlays: overlaysLayer
+        readonly property alias notifications: notificationsLayer
     }
 
-    Drawer {
-        id: topDrawer
-        edge: Qt.TopEdge
-        // onClicked: close()
+    readonly property alias shell: shellLoader.item
+    readonly property alias currentWorkspace: workspace
+    readonly property var panel: shell ? shell.panel : null
+    readonly property alias windowSwitcher: windowSwitcher
 
-        Pane {
-            width: window.width
-            height: FluidUi.Units.gu(25)
-            padding: FluidUi.Units.largeSpacing
+    /*
+     * Hot corners
+     */
 
-            Loader {
-                id: loader
-                anchors.fill: parent
-                active: topDrawer.expanded
-                source: "../controlcenter/ControlCenter.qml"
+    HotCorners {
+        id: hotCorners
+        anchors.fill: parent
+        z: 2000
+        onTopLeftTriggered: workspacesLayer.selectPrevious()
+        onTopRightTriggered: workspacesLayer.selectNext()
+        onBottomLeftTriggered: currentWorkspace.state = "present";
+    }
 
-                Connections {
-                    target: loader.item
-                    onClosed: topDrawer.close()
+    /*
+     * Workspace
+     */
+
+    Background {
+        id: backgroundLayer
+        anchors.fill: parent
+        z: 0
+    }
+
+    DesktopWidgets {
+        id: desktopLayer
+        anchors.fill: parent
+        z: 1
+    }
+
+    // Dim desktop in present mode
+    Rectangle {
+        anchors.fill: parent
+        z: 2
+        color: "black"
+        opacity: workspace.state == "present" ? 0.7 : 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: 250
+            }
+        }
+    }
+
+    // Workspaces selector for present
+    // FIXME: Only one workspace for now
+    Pane {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: Units.gu(20)
+        z: 3
+        opacity: workspace.state == "present" ? 1.0 : 0.0
+
+        ListView {
+            anchors.fill: parent
+            anchors.margins: Units.smallSpacing
+            model: 1
+            delegate: Item {
+                readonly property real ratio: workspace.width / workspace.height
+
+                width: ListView.view.width
+                height: width / ratio
+
+                ShaderEffectSource {
+                    anchors.fill: parent
+                    smooth: true
+                    sourceItem: backgroundLayer
+                    live: true
+                    hideSource: false
+
+                    ShaderEffectSource {
+                        anchors.fill: parent
+                        smooth: true
+                        sourceItem: workspace
+                        live: true
+                        hideSource: false
+                    }
+                }
+            }
+
+            ScrollBar.vertical: ScrollBar {}
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: 250
+            }
+        }
+    }
+
+    // Workspaces
+    WorkspacesView {
+        id: workspacesLayer
+        anchors.fill: parent
+        z: 5
+    }
+
+    // FIXME: Temporary workaround to make keyboard input work,
+    // apparently SwipeView captures input. An Item instead make it work.
+    Workspace {
+        id: workspace
+        anchors.fill: parent
+        z: 6
+    }
+
+    // Panels
+    Loader {
+        id: shellLoader
+        anchors.fill: parent
+        asynchronous: true
+        active: output.primary
+        sourceComponent: Shell {
+            opacity: workspace.state == "present" ? 0.0 : 1.0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    easing.type: Easing.OutQuad
+                    duration: 250
                 }
             }
         }
+        z: 10
+    }
+
+    // Full screen windows can cover application windows and panels
+    Rectangle {
+        id: fullScreenLayer
+        anchors.fill: parent
+        color: "black"
+        z: 20
+        opacity: children.length > 0 ? 1.0 : 0.0
+
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.InSine
+                duration: Units.mediumDuration
+            }
+        }
+    }
+
+    // Overlays are above the panel
+    Overlay {
+        id: overlaysLayer
+        anchors.centerIn: parent
+        z: 10
+    }
+
+    // Notifications are behind the panel
+    Item {
+        id: notificationsLayer
+        anchors.fill: parent
+        z: 10
+    }
+
+    // Windows switcher
+    WindowSwitcher {
+        id: windowSwitcher
+        x: (output.availableGeometry.width - width) / 2
+        y: (output.availableGeometry.height - height) / 2
     }
 }
