@@ -30,7 +30,6 @@ The following modules and their dependencies are required:
  * [qmlos-workspace](https://github.com/qmlos/workspace)
  * [pam](http://www.linux-pam.org/)
  * [libqtxdg](https://github.com/lxde/libqtxdg)
- * [solid](http://quickgit.kde.org/?p=solid.git)
 
 Optional dependencies:
 
@@ -107,16 +106,8 @@ to learn how to enable them.
    * **hawaii.qml.mpris2:** MPRIS2 engine
    * **hawaii.qml.mpris2.player:** MPRIS2 player interface
 
- * Notifications QML plugin:
-   * **hawaii.qml.notifications:** Notifications service.
-
  * Network QML plugin:
    * **hawaii.qml.networkmanager:** NetworkManager support.
-
- * Hardware QML plugin:
-   * **hawaii.qml.hardware:** Hardware service.
-   * **hawaii.qml.hardware.battery:** Battery information.
-   * **hawaii.qml.hardware.storagedevice:** Storage device information.
 
 ## Components
 
