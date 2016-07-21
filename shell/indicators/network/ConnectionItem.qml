@@ -31,7 +31,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
 import Fluid.UI 1.0 as FluidUi
 import org.hawaiios.misc 0.1 as Misc
-import org.hawaiios.networkmanager 0.1 as NM
+import Hawaii.NetworkManager 1.0 as NM
 import "../../components" as CustomComponents
 
 Item {
