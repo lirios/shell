@@ -108,7 +108,6 @@ add_subdirectory(decorations)
 add_subdirectory(framework)
 add_subdirectory(headers)
 add_subdirectory(scripts)
-#add_subdirectory(styles)
 add_subdirectory(tests)
 add_subdirectory(themes)
 
