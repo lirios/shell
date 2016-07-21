@@ -36,10 +36,6 @@ Optional dependencies:
  * Volume control
    * [alsa](http://www.alsa-project.org/main/index.php/Main_Page) and/or
    * [libpulse](https://wiki.freedesktop.org/www/Software/PulseAudio/)
- * Networking
-   * Network Manager support
-     * [networkmanager-qt](http://quickgit.kde.org/?p=networkmanager-qt.git)
-     * [modemmanager-qt](http://quickgit.kde.org/?p=modemmanager-qt.git) (optional)
 
 Optional, but recommended dependencies:
 
@@ -101,9 +97,6 @@ to learn how to enable them.
  * Launcher QML plugin:
    * **hawaii.qml.launcher:** Launcher model and items
    * **hawaii.qml.launcher.appsmodel:** Applications model
-
- * Network QML plugin:
-   * **hawaii.qml.networkmanager:** NetworkManager support.
 
 ## Components
 

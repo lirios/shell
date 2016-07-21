@@ -1,4 +1,0 @@
-module org.hawaiios.networkmanager
-plugin nmplugin
-classname NetworkManagerPlugin
-typeinfo plugins.qmltypes

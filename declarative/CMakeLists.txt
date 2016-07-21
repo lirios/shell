@@ -1,7 +1,4 @@
 add_subdirectory(misc)
 add_subdirectory(launcher)
 add_subdirectory(mixer)
-if(KF5NetworkManagerQt_FOUND)
-    add_subdirectory(networkmanager)
-endif()
 #add_subdirectory(styles)

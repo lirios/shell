@@ -55,8 +55,6 @@ option(DEVELOPMENT_BUILD "Enable options for developers" OFF)
 option(ENABLE_SYSTEMD "Enables systemd support" ON)
 option(ENABLE_ALSA "Enables Alsa mixer backend" ON)
 option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
-option(ENABLE_NETWORK_MANAGER "Enables network indicator based on NetworkManager" ON)
-option(ENABLE_MODEMMANAGER_SUPPORT "Enables ModemManager support" OFF)
 
 # Find pkg-config here so that it can be referenced soon
 find_package(PkgConfig)
@@ -89,13 +87,6 @@ add_feature_info("prctl-dumpable" HAVE_PR_SET_DUMPABLE "Required to prevent ptra
 set(REQUIRED_QT_VERSION "5.7.0")
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
              DBus Xml Widgets Qml Quick QuickControls2 WaylandClient)
-
-# Find NetworkManager-Qt
-if(ENABLE_NETWORK_MANAGER)
-    find_package(KF5NetworkManagerQt 5.8.0)
-    set_package_properties(KF5NetworkManagerQt PROPERTIES
-                           TYPE OPTIONAL)
-endif()
 
 # Find Green Island
 set(REQUIRED_GREENISLAND_VERSION "0.8.0")
