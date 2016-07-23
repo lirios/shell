@@ -45,17 +45,17 @@ Item {
     Drawer {
         id: topDrawer
         edge: Qt.TopEdge
-        onClicked: close()
+        width: window.width
+        height: FluidUi.Units.gu(25)
 
         Pane {
-            width: window.width
-            height: FluidUi.Units.gu(25)
+            anchors.fill: parent
             padding: FluidUi.Units.largeSpacing
 
             Loader {
                 id: loader
                 anchors.fill: parent
-                active: topDrawer.expanded
+                active: topDrawer.position > 0.0
                 source: "../controlcenter/ControlCenter.qml"
 
                 Connections {

@@ -56,16 +56,16 @@ Item {
 
         id: rightDrawer
         edge: Qt.RightEdge
-        onClicked: {
-            if (lastIndicator)
+        y: output.availableGeometry.y
+        width: Math.max(FluidUi.Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
+        height: output.availableGeometry.height
+        onPositionChanged: {
+            if (position == 0.0 && lastIndicator)
                 lastIndicator.active = false;
-            close();
         }
 
         Pane {
-            y: output.availableGeometry.y
-            width: Math.max(FluidUi.Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
-            height: output.availableGeometry.height
+            anchors.fill: parent
             padding: FluidUi.Units.largeSpacing
 
             StackView {
