@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Fluid.Ui 1.0 as FluidUi
 import ".."
 
@@ -53,6 +54,8 @@ Item {
 
     Drawer {
         property var lastIndicator: null
+
+        Material.theme: Material.Dark
 
         id: rightDrawer
         edge: Qt.RightEdge
