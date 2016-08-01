@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.Controls 1.0 as FluidUi
-import Hawaii.Hardware as Hardware
+import Hawaii.Hardware 1.0 as Hardware
 import ".."
 import "../components" as CustomComponents
 

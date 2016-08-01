@@ -90,7 +90,7 @@ Indicator {
     }
     visible: MixerService.Mixer.available || mpris2.players.length > 0
 
-    Mpris2 {
+    Mpris {
         id: mpris2
     }
 
