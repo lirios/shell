@@ -26,16 +26,16 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "../components" as CustomComponents
 
 RowLayout {
-    implicitWidth: (FluidUi.Units.iconSizes.large * 3) + (spacing * 3)
-    implicitHeight: FluidUi.Units.iconSizes.large + (spacing * 2)
-    spacing: FluidUi.Units.smallSpacing
+    implicitWidth: (Units.iconSizes.large * 3) + (spacing * 3)
+    implicitHeight: Units.iconSizes.large + (spacing * 2)
+    spacing: Units.smallSpacing
 
     CustomComponents.ToolButton {
-        iconSize: FluidUi.Units.iconSizes.smallMedium
+        iconSize: Units.iconSizes.smallMedium
         iconName: "system-log-out-symbolic"
         //tooltip: qsTr("Log out from current session")
         enabled: SessionInterface.canLogOut
@@ -46,7 +46,7 @@ RowLayout {
     }
 
     CustomComponents.ToolButton {
-        iconSize: FluidUi.Units.iconSizes.smallMedium
+        iconSize: Units.iconSizes.smallMedium
         iconName: "system-shutdown-symbolic"
         //tooltip: qsTr("Power off the system")
         enabled: SessionInterface.canPowerOff
@@ -57,7 +57,7 @@ RowLayout {
     }
 
     CustomComponents.ToolButton {
-        iconSize: FluidUi.Units.iconSizes.smallMedium
+        iconSize: Units.iconSizes.smallMedium
         iconName: "system-reboot-symbolic"
         //tooltip: qsTr("Restart the system")
         enabled: SessionInterface.canRestart

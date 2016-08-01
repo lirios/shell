@@ -26,12 +26,12 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Rectangle {
     id: root
     width: parent.width
-    height: FluidUi.Units.dp(1)
+    height: Units.dp(1)
     color: Material.dividerColor
     antialiasing: true
 }

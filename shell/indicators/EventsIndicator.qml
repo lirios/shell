@@ -30,7 +30,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import Hawaii.Notifications 1.0
 import ".."
 import "events" as EventsIndicator
@@ -43,7 +43,7 @@ Indicator {
     iconName: "dialog-information-symbolic"
     component: Component {
         ColumnLayout {
-            spacing: FluidUi.Units.largeSpacing
+            spacing: Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Events")
@@ -57,7 +57,7 @@ Indicator {
 
             ListView {
                 id: notificationView
-                spacing: FluidUi.Units.largeSpacing
+                spacing: Units.largeSpacing
                 clip: true
                 model: notificationsModel
                 delegate: EventsIndicator.EventItem {}
@@ -65,31 +65,31 @@ Indicator {
                     NumberAnimation {
                         properties: "x"
                         from: notificationView.width
-                        duration: FluidUi.Units.shortDuration
+                        duration: Units.shortDuration
                     }
                 }
                 remove: Transition {
                     NumberAnimation {
                         properties: "x"
                         to: notificationView.width
-                        duration: FluidUi.Units.longDuration
+                        duration: Units.longDuration
                     }
 
                     NumberAnimation {
                         properties: "opacity"
                         to: 0
-                        duration: FluidUi.Units.longDuration
+                        duration: Units.longDuration
                     }
                 }
                 removeDisplaced: Transition {
                     SequentialAnimation {
                         PauseAnimation {
-                            duration: FluidUi.Units.longDuration
+                            duration: Units.longDuration
                         }
 
                         NumberAnimation {
                             properties: "x,y"
-                            duration: FluidUi.Units.shortDuration
+                            duration: Units.shortDuration
                         }
                     }
                 }

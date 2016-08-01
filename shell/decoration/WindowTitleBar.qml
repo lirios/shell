@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Rectangle {
     property alias title: titleLabel.text
@@ -60,9 +60,9 @@ Rectangle {
     RowLayout {
         anchors {
             fill: parent
-            margins: FluidUi.Units.gu(0.25)
+            margins: Units.gu(0.25)
         }
-        spacing: FluidUi.Units.gridUnit
+        spacing: Units.gridUnit
         opacity: root.active ? 1.0 : 0.5
 
         WindowControls {

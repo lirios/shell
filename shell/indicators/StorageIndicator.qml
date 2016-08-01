@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import Hawaii.Hardware 1.0 as Hardware
 import ".."
 import "../components" as CustomComponents
@@ -38,7 +38,7 @@ Indicator {
     iconName: "drive-harddisk-symbolic"
     component: Component {
         ColumnLayout {
-            spacing: FluidUi.Units.largeSpacing
+            spacing: Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Volumes")
@@ -48,14 +48,14 @@ Indicator {
                 model: hardware.storageDevices
 
                 RowLayout {
-                    spacing: FluidUi.Units.smallSpacing
+                    spacing: Units.smallSpacing
 
                     RowLayout {
-                        spacing: FluidUi.Units.smallSpacing
+                        spacing: Units.smallSpacing
 
-                        FluidUi.Icon {
+                        Icon {
                             name: modelData.iconName + "-symbolic"
-                            width: FluidUi.Units.iconSizes.large
+                            width: Units.iconSizes.large
                             height: width
                             color: label.color
 

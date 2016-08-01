@@ -29,9 +29,9 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
-FluidUi.Showable {
+Showable {
     //! How long the overlay will stay on screen
     property alias timeout: timer.interval
 
@@ -50,19 +50,19 @@ FluidUi.Showable {
     showAnimation: OpacityAnimator {
         target: rect
         easing.type: Easing.InSine
-        duration: FluidUi.Units.mediumDuration
+        duration: Units.mediumDuration
         from: 0.0
         to: 1.0
     }
     hideAnimation: OpacityAnimator {
         target: rect
         easing.type: Easing.InSine
-        duration: FluidUi.Units.mediumDuration
+        duration: Units.mediumDuration
         from: 1.0
         to: 0.0
     }
     width: height
-    height: FluidUi.Units.dp(256)
+    height: Units.dp(256)
     onIconNameChanged: if (timer.running) timer.restart()
     onValueChanged: if (timer.running) timer.restart()
     onShowProgressChanged: if (timer.running) timer.restart()
@@ -81,9 +81,9 @@ FluidUi.Showable {
         id: rect
         anchors.fill: parent
         border.color: Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.5)
-        border.width: FluidUi.Units.dp(1)
+        border.width: Units.dp(1)
         color: Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.85)
-        radius: FluidUi.Units.dp(6)
+        radius: Units.dp(6)
         antialiasing: true
         opacity: 0.0
         onOpacityChanged: {
@@ -98,12 +98,12 @@ FluidUi.Showable {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: FluidUi.Units.largeSpacing
-            spacing: FluidUi.Units.smallSpacing
+            anchors.margins: Units.largeSpacing
+            spacing: Units.smallSpacing
 
-            FluidUi.Icon {
+            Icon {
                 id: icon
-                width: FluidUi.Units.iconSizes.enormous
+                width: Units.iconSizes.enormous
                 height: width
                 color: Material.primaryTextColor
 

@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import Hawaii.Hardware 1.0
 
 Item {
@@ -36,13 +36,13 @@ Item {
     RowLayout {
         anchors {
             fill: parent
-            margins: FluidUi.Units.largeSpacing
+            margins: Units.largeSpacing
         }
-        spacing: FluidUi.Units.smallSpacing
+        spacing: Units.smallSpacing
 
-        FluidUi.Icon {
+        Icon {
             id: icon
-            width: FluidUi.Units.iconSizes.large
+            width: Units.iconSizes.large
             height: width
             color: chargeStateLabel.color
             cache: false
@@ -51,7 +51,7 @@ Item {
         }
 
         ColumnLayout {
-            spacing: FluidUi.Units.smallSpacing
+            spacing: Units.smallSpacing
 
             Label {
                 id: chargeStateLabel
@@ -60,7 +60,7 @@ Item {
             }
 
             RowLayout {
-                spacing: FluidUi.Units.smallSpacing
+                spacing: Units.smallSpacing
 
                 ProgressBar {
                     id: chargeProgress

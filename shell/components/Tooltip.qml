@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "private" as Private
 
 Private.PopupBase {
@@ -37,8 +37,8 @@ Private.PopupBase {
     signal closed()
 
     id: root
-    width: label.width + (FluidUi.Units.largeSpacing * 2)
-    height: label.height + (FluidUi.Units.smallSpacing * 2)
+    width: label.width + (Units.largeSpacing * 2)
+    height: label.height + (Units.smallSpacing * 2)
     onShowingChanged: {
         if (showing)
             showingTimer.start();
@@ -68,14 +68,14 @@ Private.PopupBase {
             style: Text.Raised
             styleColor: Material.secondaryTextColor
             horizontalAlignment: Text.AlignHCenter
-            width: Math.min(implicitWidth, FluidUi.Units.dp(100))
+            width: Math.min(implicitWidth, Units.dp(100))
             height: implicitHeight
         }
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: FluidUi.Units.longDuration
+                duration: Units.longDuration
             }
         }
     }

@@ -29,16 +29,16 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0 as GreenIsland
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Popup {
-    readonly property real thumbnailSize: FluidUi.Units.dp(200)
+    readonly property real thumbnailSize: Units.dp(200)
 
     id: windowSwitcher
     focus: true
     modal: true
     implicitWidth: output.availableGeometry.width * 0.7
-    implicitHeight: thumbnailSize + label.paintedHeight + (2 * layout.spacing) + FluidUi.Units.largeSpacing
+    implicitHeight: thumbnailSize + label.paintedHeight + (2 * layout.spacing) + Units.largeSpacing
 
     Component {
         id: thumbnailComponent
@@ -51,13 +51,13 @@ Popup {
             width: height * ratio
             height: thumbnailSize
             color: wrapper.ListView.isCurrentItem ? Material.accent : "transparent"
-            radius: FluidUi.Units.dp(4)
+            radius: Units.dp(4)
 
             GreenIsland.WaylandQuickItem {
                 id: windowItem
                 anchors {
                     fill: parent
-                    margins: FluidUi.Units.smallSpacing
+                    margins: Units.smallSpacing
                 }
                 surface: window.surface
                 sizeFollowsSurface: false
@@ -72,12 +72,12 @@ Popup {
                 }
             }
 
-            FluidUi.Icon {
+            Icon {
                 anchors {
                     right: parent.right
                     bottom: parent.bottom
                 }
-                width: FluidUi.Units.iconSizes.large
+                width: Units.iconSizes.large
                 height: width
                 name: window.iconName
                 cache: false
@@ -89,7 +89,7 @@ Popup {
     ColumnLayout {
         id: layout
         anchors.fill: parent
-        spacing: FluidUi.Units.smallSpacing
+        spacing: Units.smallSpacing
 
         ListView {
             id: listView
@@ -97,8 +97,8 @@ Popup {
             focus: true
             orientation: ListView.Horizontal
             model: compositor.windowsModel
-            spacing: FluidUi.Units.smallSpacing
-            highlightMoveDuration: FluidUi.Units.shortDuration
+            spacing: Units.smallSpacing
+            highlightMoveDuration: Units.shortDuration
             delegate: thumbnailComponent
             currentIndex: -1
 

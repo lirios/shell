@@ -25,13 +25,13 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import org.hawaiios.launcher 0.1 as CppLauncher
 
 Item {
     property real iconSize
     property real itemSize
-    readonly property real itemPadding: FluidUi.Units.smallSpacing * 2
+    readonly property real itemPadding: Units.smallSpacing * 2
     property alias orientation: listView.orientation
     readonly property alias currentItem: listView.currentItem
 
@@ -62,13 +62,13 @@ Item {
     ListView {
         id: listView
         anchors.centerIn: parent
-        spacing: FluidUi.Units.smallSpacing
+        spacing: Units.smallSpacing
         interactive: false
         add: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: FluidUi.Units.shortDuration }
+            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Units.shortDuration }
         }
         populate: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: FluidUi.Units.longDuration }
+            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Units.longDuration }
         }
         model: CppLauncher.LauncherModel {
             id: launcherModel

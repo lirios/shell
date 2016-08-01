@@ -27,15 +27,15 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "../../components" as CustomComponents
 
 RowLayout {
     property alias text: label.text
 
-    spacing: FluidUi.Units.smallSpacing
+    spacing: Units.smallSpacing
     implicitWidth: ListView.view.width
-    implicitHeight: Math.max(label.paintedHeight, refreshButton.height) + (FluidUi.Units.smallSpacing * 2)
+    implicitHeight: Math.max(label.paintedHeight, refreshButton.height) + (Units.smallSpacing * 2)
 
     Label {
         id: label

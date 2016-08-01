@@ -26,22 +26,22 @@
 
 import QtQuick 2.4
 import QtGraphicalEffects 1.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import Fluid.Effects 1.0 as FluidEffects
 
-FluidUi.Showable {
+Showable {
     id: root
     showAnimation: OpacityAnimator {
         target: root
         easing.type: Easing.InSine
-        duration: FluidUi.Units.longDuration
+        duration: Units.longDuration
         from: 0.0
         to: 1.0
     }
     hideAnimation: OpacityAnimator {
         target: root
         easing.type: Easing.OutSine
-        duration: FluidUi.Units.longDuration
+        duration: Units.longDuration
         from: 1.0
         to: 0.0
     }

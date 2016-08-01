@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Item {
     property string name
@@ -51,14 +51,14 @@ Item {
 
         var size = 0;
         if (iconName)
-            size += icon.width + (FluidUi.Units.smallSpacing * 2);
+            size += icon.width + (Units.smallSpacing * 2);
         if (text)
-            size += label.width + (FluidUi.Units.smallSpacing * 2);
+            size += label.width + (Units.smallSpacing * 2);
         if (iconName && text)
-            size += FluidUi.Units.smallSpacing * 2;
-        return Math.max(size, FluidUi.Units.smallSpacing * 10);
+            size += Units.smallSpacing * 2;
+        return Math.max(size, Units.smallSpacing * 10);
     }
-    height: Math.max(Math.max(icon.height, label.height) + (FluidUi.Units.smallSpacing * 2), FluidUi.Units.smallSpacing * 10)
+    height: Math.max(Math.max(icon.height, label.height) + (Units.smallSpacing * 2), Units.smallSpacing * 10)
     onTriggered: __priv.expanded = !__priv.expanded
 
     QtObject {
@@ -70,15 +70,15 @@ Item {
     Rectangle {
         id: container
         anchors.fill: parent
-        anchors.margins: FluidUi.Units.smallSpacing
+        anchors.margins: Units.smallSpacing
         color: Material.accentColor
-        radius: FluidUi.Units.dp(6)
+        radius: Units.dp(6)
         opacity: active ? 1.0 : 0.0
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: FluidUi.Units.shortDuration
+                duration: Units.shortDuration
             }
         }
     }
@@ -89,7 +89,7 @@ Item {
         onClicked: indicator.triggered(indicator)
     }
 
-    FluidUi.Icon {
+    Icon {
         id: icon
         anchors.centerIn: parent
         color: active ? Material.primaryHighlightedTextColor : Material.primaryTextColor
@@ -100,7 +100,7 @@ Item {
     Label {
         id: label
         anchors.centerIn: parent
-        font.pixelSize: FluidUi.Units.roundToIconSize(FluidUi.Units.iconSizes.small)
+        font.pixelSize: Units.roundToIconSize(Units.iconSizes.small)
     }
 
     Rectangle {
@@ -108,10 +108,10 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -(FluidUi.Units.smallSpacing * 0.5)
-            rightMargin: -(FluidUi.Units.largeSpacing * 0.5)
+            topMargin: -(Units.smallSpacing * 0.5)
+            rightMargin: -(Units.largeSpacing * 0.5)
         }
-        width: FluidUi.Units.iconSizes.smallMedium
+        width: Units.iconSizes.smallMedium
         height: width
         radius: width * 0.5
         color: "orangered"
@@ -120,13 +120,13 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: FluidUi.Units.shortDuration
+                duration: Units.shortDuration
             }
         }
 
         Label {
             anchors.centerIn: parent
-            font.pixelSize: parent.width - FluidUi.Units.smallSpacing
+            font.pixelSize: parent.width - Units.smallSpacing
             color: "white"
             text: indicator.badgeCount
         }

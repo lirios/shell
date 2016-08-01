@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Item {
     property var clientWindow: null
@@ -53,7 +53,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: FluidUi.Units.shortDuration
+                duration: Units.shortDuration
             }
         }
     }
@@ -81,7 +81,7 @@ Item {
             }
             title: clientWindow ? clientWindow.title : ""
             active: clientWindow && clientWindow.active
-            height: FluidUi.Units.iconSizes.medium
+            height: Units.iconSizes.medium
             z: 0
             onClicked: if (clientWindow) clientWindow.activate()
             onMoving: if (clientWindow) clientWindow.position = Qt.point(x, y)

@@ -25,29 +25,29 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Rectangle {
     property alias hovered: mouseArea.containsMouse
     signal clicked()
 
     id: root
-    width: FluidUi.Units.iconSizes.smallMedium
+    width: Units.iconSizes.smallMedium
     height: width
     radius: width * 0.5
     border.color: Qt.rgba(1, 1, 1, 0.35)
-    border.width: FluidUi.Units.gu(0.05)
+    border.width: Units.gu(0.05)
     gradient: Gradient {
         GradientStop { position: 0; color: "#666" }
         GradientStop { position: 1; color: "#222" }
     }
     antialiasing: true
 
-    FluidUi.Icon {
+    Icon {
         anchors.centerIn: parent
         name: "window-close-symbolic"
         color: "white"
-        width: parent.width - FluidUi.Units.smallSpacing
+        width: parent.width - Units.smallSpacing
         height: width
     }
 

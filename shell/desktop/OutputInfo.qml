@@ -27,7 +27,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Rectangle {
     width: grid.implicitWidth + 16
@@ -137,7 +137,7 @@ Rectangle {
             Layout.alignment: Qt.AlignRight
         }
         Text {
-            text: FluidUi.Units.dp(1).toFixed(2)
+            text: Units.dp(1).toFixed(2)
             color: "white"
         }
 
@@ -149,7 +149,7 @@ Rectangle {
             Layout.alignment: Qt.AlignRight
         }
         Text {
-            text: FluidUi.Units.gu(1).toFixed(2)
+            text: Units.gu(1).toFixed(2)
             color: "white"
         }
 

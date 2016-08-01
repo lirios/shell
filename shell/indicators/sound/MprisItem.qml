@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import Hawaii.Mpris 1.0
 import "../../components" as CustomComponents
 
@@ -37,13 +37,13 @@ ColumnLayout {
     readonly property int trackLength: player ? player.metadata["mpris:length"]||0 / 1000 : 0
     readonly property int trackPosition: player ? player.position : 0
 
-    spacing: FluidUi.Units.largeSpacing
+    spacing: Units.largeSpacing
 
     Row {
-        spacing: FluidUi.Units.smallSpacing
+        spacing: Units.smallSpacing
 
         Item {
-            width: FluidUi.Units.iconSizes.huge
+            width: Units.iconSizes.huge
             height: width
 
             Image {
@@ -56,7 +56,7 @@ ColumnLayout {
                 visible: status == Image.Ready
             }
 
-            FluidUi.Icon {
+            Icon {
                 id: icon
                 anchors.fill: parent
                 name: player ? player.iconName : ""
@@ -73,7 +73,7 @@ ColumnLayout {
         }
 
         Column {
-            spacing: FluidUi.Units.smallSpacing
+            spacing: Units.smallSpacing
 
             Controls.Heading {
                 id: titleLabel
@@ -102,7 +102,7 @@ ColumnLayout {
     Row {
         CustomComponents.ToolButton {
             iconName: "media-skip-backward-symbolic"
-            iconSize: FluidUi.Units.iconSizes.small
+            iconSize: Units.iconSizes.small
             //tooltip: qsTr("Previous")
             onClicked: {
                 if (player)
@@ -112,7 +112,7 @@ ColumnLayout {
 
         CustomComponents.ToolButton {
             iconName: player ? (player.status === "Playing" ? "media-playback-pause-symbolic" : "media-playback-start-symbolic") : ""
-            iconSize: FluidUi.Units.iconSizes.small
+            iconSize: Units.iconSizes.small
             //tooltip: qsTr(player.status == "Playing" ? "Pause" : "Play")
             onClicked: {
                 if (player)
@@ -122,7 +122,7 @@ ColumnLayout {
 
         CustomComponents.ToolButton {
             iconName: "media-skip-forward-symbolic"
-            iconSize: FluidUi.Units.iconSizes.small
+            iconSize: Units.iconSizes.small
             //tooltip: qsTr("Next")
             onClicked: {
                 if (player)

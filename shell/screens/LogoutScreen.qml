@@ -30,10 +30,10 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "../components" as CustomComponents
 
-FluidUi.Showable {
+Showable {
     property alias mode: __priv.mode
 
     signal cancel()
@@ -48,14 +48,14 @@ FluidUi.Showable {
     showAnimation: OpacityAnimator {
         target: root
         easing.type: Easing.InSine
-        duration: FluidUi.Units.longDuration
+        duration: Units.longDuration
         from: 0.0
         to: 1.0
     }
     hideAnimation: OpacityAnimator {
         target: root
         easing.type: Easing.InSine
-        duration: FluidUi.Units.longDuration
+        duration: Units.longDuration
         from: 1.0
         to: 0.0
     }
@@ -155,9 +155,9 @@ FluidUi.Showable {
     ColumnLayout {
         anchors.centerIn: parent
 
-        FluidUi.Icon {
+        Icon {
             id: actionIcon
-            width: FluidUi.Units.iconSizes.enormous
+            width: Units.iconSizes.enormous
             height: width
             color: Material.primaryTextColor
             cache: false
@@ -174,7 +174,7 @@ FluidUi.Showable {
         }
 
         ProgressBar {
-            width: FluidUi.Units.largeSpacing * 5
+            width: Units.largeSpacing * 5
             from: 0
             to: __priv.timeout
             value: __priv.remainingTime
@@ -214,12 +214,12 @@ FluidUi.Showable {
         }
 
         Item {
-            height: FluidUi.Units.largeSpacing * 2
+            height: Units.largeSpacing * 2
         }
 
         Row {
             id: buttonsRow
-            spacing: FluidUi.Units.smallSpacing
+            spacing: Units.smallSpacing
             focus: true
             visible: SessionInterface.canLogOut ||
                      SessionInterface.canPowerOff ||
@@ -230,7 +230,7 @@ FluidUi.Showable {
             CustomComponents.ToolButton {
                 id: logoutButton
                 iconName: "system-log-out-symbolic"
-                iconSize: FluidUi.Units.iconSizes.medium
+                iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "logout"
@@ -241,7 +241,7 @@ FluidUi.Showable {
             CustomComponents.ToolButton {
                 id: poweroffButton
                 iconName: "system-shutdown-symbolic"
-                iconSize: FluidUi.Units.iconSizes.medium
+                iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "poweroff"
@@ -252,7 +252,7 @@ FluidUi.Showable {
             CustomComponents.ToolButton {
                 id: restartButton
                 iconName: "system-reboot-symbolic"
-                iconSize: FluidUi.Units.iconSizes.medium
+                iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "restart"
@@ -263,7 +263,7 @@ FluidUi.Showable {
             CustomComponents.ToolButton {
                 id: suspendButton
                 iconName: "system-suspend-symbolic"
-                iconSize: FluidUi.Units.iconSizes.medium
+                iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "suspend"
@@ -274,7 +274,7 @@ FluidUi.Showable {
             CustomComponents.ToolButton {
                 id: hibernateButton
                 iconName: "system-suspend-hibernate-symbolic"
-                iconSize: FluidUi.Units.iconSizes.medium
+                iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
                 checked: __priv.mode == "hibernate"
@@ -286,7 +286,7 @@ FluidUi.Showable {
         }
 
         Item {
-            height: FluidUi.Units.largeSpacing * 2
+            height: Units.largeSpacing * 2
         }
 
         RowLayout {

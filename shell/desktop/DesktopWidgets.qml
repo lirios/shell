@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "../components" as CustomComponents
 
 Item {
@@ -49,8 +49,8 @@ Item {
 
         Pane {
             width: window.width
-            height: FluidUi.Units.gu(25)
-            padding: FluidUi.Units.largeSpacing
+            height: Units.gu(25)
+            padding: Units.largeSpacing
 
             Loader {
                 id: loader

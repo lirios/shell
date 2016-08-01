@@ -29,7 +29,7 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import org.hawaiios.misc 0.1 as Misc
 import Hawaii.NetworkManager 1.0 as NM
 import "../../components" as CustomComponents
@@ -97,14 +97,14 @@ Item {
 
     ColumnLayout {
         id: mainLayout
-        spacing: FluidUi.Units.largeSpacing
+        spacing: Units.largeSpacing
 
         RowLayout {
-            spacing: FluidUi.Units.smallSpacing
+            spacing: Units.smallSpacing
 
-            FluidUi.Icon {
+            Icon {
                 name: indicator.massageIconName(ConnectionIcon)
-                width: FluidUi.Units.iconSizes.medium
+                width: Units.iconSizes.medium
                 height: width
                 color: label.color
 
@@ -112,7 +112,7 @@ Item {
             }
 
             ColumnLayout {
-                spacing: FluidUi.Units.smallSpacing
+                spacing: Units.smallSpacing
 
                 Label {
                     id: label
@@ -180,7 +180,7 @@ Item {
                 Behavior on opacity {
                     NumberAnimation {
                         easing.type: Easing.InOutQuad
-                        duration: FluidUi.Units.shortDuration
+                        duration: Units.shortDuration
                     }
                 }
 
@@ -193,13 +193,13 @@ Item {
         id: detailsComponent
 
         ColumnLayout {
-            spacing: FluidUi.Units.smallSpacing
+            spacing: Units.smallSpacing
 
             Repeater {
                 model: ConnectionDetails.length / 2
 
                 RowLayout {
-                    spacing: FluidUi.Units.smallSpacing
+                    spacing: Units.smallSpacing
 
                     Label {
                         text: ConnectionDetails[index * 2]
@@ -223,7 +223,7 @@ Item {
         ColumnLayout {
             property alias passwordField: passwordField
 
-            spacing: FluidUi.Units.smallSpacing
+            spacing: Units.smallSpacing
 
             TextField {
                 id: passwordField

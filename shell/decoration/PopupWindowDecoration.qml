@@ -26,11 +26,11 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Item {
     property alias source: renderer.source
-    readonly property real dropShadowExtents: FluidUi.Units.gridUnit
+    readonly property real dropShadowExtents: Units.gridUnit
     readonly property real additionalWidth: dropShadowExtents
     readonly property real additionalHeight: dropShadowExtents
 
@@ -50,7 +50,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InOutQuad
-                duration: FluidUi.Units.shortDuration
+                duration: Units.shortDuration
             }
         }
     }

@@ -28,14 +28,14 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Rectangle {
     property alias iconSize: icon.width
     property bool hovered: false
 
     color: hovered ? Material.accent : "transparent"
-    radius: FluidUi.Units.dp(6)
+    radius: Units.dp(6)
     antialiasing: true
 
     Image {
@@ -43,9 +43,9 @@ Rectangle {
         anchors {
             horizontalCenter: parent.horizontalCenter
             top: parent.top
-            leftMargin: FluidUi.Units.smallSpacing
-            topMargin: FluidUi.Units.smallSpacing
-            rightMargin: FluidUi.Units.smallSpacing
+            leftMargin: Units.smallSpacing
+            topMargin: Units.smallSpacing
+            rightMargin: Units.smallSpacing
         }
         height: width
         sourceSize.width: width
@@ -61,10 +61,10 @@ Rectangle {
             horizontalCenter: parent.horizontalCenter
             top: icon.bottom
             bottom: parent.bottom
-            leftMargin: FluidUi.Units.smallSpacing
-            topMargin: FluidUi.Units.smallSpacing
-            rightMargin: FluidUi.Units.smallSpacing
-            bottomMargin: FluidUi.Units.smallSpacing
+            leftMargin: Units.smallSpacing
+            topMargin: Units.smallSpacing
+            rightMargin: Units.smallSpacing
+            bottomMargin: Units.smallSpacing
         }
         text: model.name
         elide: Text.ElideRight
@@ -72,6 +72,6 @@ Rectangle {
         textFormat: Text.PlainText
         horizontalAlignment: Text.AlignHCenter
         width: iconSize * 1.5
-        height: FluidUi.Units.gu(2)
+        height: Units.gu(2)
     }
 }

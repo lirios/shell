@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import org.hawaiios.launcher 0.1 as CppLauncher
 import "../components"
 
@@ -37,7 +37,7 @@ FocusScope {
     signal closed()
 
     id: root
-    //height: FluidUi.Units.gu(17)
+    //height: Units.gu(17)
 
     CppLauncher.ProcessRunner {
         id: processRunner
@@ -50,13 +50,13 @@ FocusScope {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: FluidUi.Units.largeSpacing
+        spacing: Units.largeSpacing
 
         RowLayout {
-            spacing: FluidUi.Units.largeSpacing
+            spacing: Units.largeSpacing
 
             RowLayout {
-                spacing: FluidUi.Units.largeSpacing
+                spacing: Units.largeSpacing
 
                 Label {
                     text: "Weather: 20 C, Clear"
@@ -90,7 +90,7 @@ FocusScope {
             }
 
             RowLayout {
-                spacing: FluidUi.Units.largeSpacing
+                spacing: Units.largeSpacing
 
                 Button {
                     text: "Add Appointment"

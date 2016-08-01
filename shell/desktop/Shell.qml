@@ -25,7 +25,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import ".."
 
 Item {
@@ -61,7 +61,7 @@ Item {
         edge: Qt.RightEdge
 
         y: output.availableGeometry.y
-        width: Math.max(FluidUi.Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
+        width: Math.max(Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
         height: output.availableGeometry.height
         onPositionChanged: {
             if (position == 0.0 && lastIndicator)
@@ -70,7 +70,7 @@ Item {
 
         Pane {
             anchors.fill: parent
-            padding: FluidUi.Units.largeSpacing
+            padding: Units.largeSpacing
 
             StackView {
                 id: stackView

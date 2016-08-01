@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Item {
     property alias icon: imageItem.source
@@ -43,9 +43,9 @@ Item {
     height: implicitHeight
     implicitHeight: {
         // Return maximum height possible, at least 5 grid units
-        var minHeight = actionsColumn.height + (FluidUi.Units.smallSpacing * 4);
-        var maxHeight = Math.max(imageItem.height, titleLabel.paintedHeight + bodyLabel.implicitHeight) + (FluidUi.Units.smallSpacing * 4);
-        return Math.max(minHeight, Math.min(maxHeight, FluidUi.Units.gu(5)));
+        var minHeight = actionsColumn.height + (Units.smallSpacing * 4);
+        var maxHeight = Math.max(imageItem.height, titleLabel.paintedHeight + bodyLabel.implicitHeight) + (Units.smallSpacing * 4);
+        return Math.max(minHeight, Math.min(maxHeight, Units.gu(5)));
     }
     states: [
         State {
@@ -60,8 +60,8 @@ Item {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: FluidUi.Units.smallSpacing * 2
-                anchors.topMargin: FluidUi.Units.smallSpacing
+                anchors.leftMargin: Units.smallSpacing * 2
+                anchors.topMargin: Units.smallSpacing
             }
         },
         State {
@@ -85,7 +85,7 @@ Item {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: imageItem.width + (FluidUi.Units.smallSpacing * 2)
+                anchors.leftMargin: imageItem.width + (Units.smallSpacing * 2)
             }
         }
     ]
@@ -95,10 +95,10 @@ Item {
         anchors {
             left: parent.left
             top: parent.top
-            leftMargin: FluidUi.Units.smallSpacing
-            topMargin: FluidUi.Units.smallSpacing
+            leftMargin: Units.smallSpacing
+            topMargin: Units.smallSpacing
         }
-        width: FluidUi.Units.iconSizes.large
+        width: Units.iconSizes.large
         height: width
         sourceSize.width: width
         sourceSize.height: height
@@ -124,9 +124,9 @@ Item {
             top: titleLabel.bottom
             right: actionsColumn.visible ? actionsColumn.left : parent.right
             bottom: parent.bottom
-            leftMargin: FluidUi.Units.smallSpacing * 2
-            rightMargin: FluidUi.Units.smallSpacing * 2
-            bottomMargin: FluidUi.Units.smallSpacing
+            leftMargin: Units.smallSpacing * 2
+            rightMargin: Units.smallSpacing * 2
+            bottomMargin: Units.smallSpacing
         }
         level: 5
         wrapMode: Text.Wrap
@@ -142,9 +142,9 @@ Item {
         anchors {
             top: titleLabel.bottom
             right: parent.right
-            topMargin: FluidUi.Units.smallSpacing
+            topMargin: Units.smallSpacing
         }
-        spacing: FluidUi.Units.smallSpacing
+        spacing: Units.smallSpacing
         height: childrenRect.height
         visible: actions.count > 0
 

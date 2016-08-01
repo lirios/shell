@@ -28,14 +28,14 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 MouseArea {
     property bool expanded: false
 
     id: root
     width: parent.width
-    height: FluidUi.Units.gu(2)
+    height: Units.gu(2)
     drag.axis: Drag.XAxis
     drag.target: root
     states: [
@@ -51,8 +51,8 @@ MouseArea {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: FluidUi.Units.smallSpacing * 2
-                anchors.topMargin: FluidUi.Units.smallSpacing
+                anchors.leftMargin: Units.smallSpacing * 2
+                anchors.topMargin: Units.smallSpacing
             }
         },
         State {
@@ -76,15 +76,15 @@ MouseArea {
             }
             PropertyChanges {
                 target: titleLabel
-                anchors.leftMargin: imageItem.width + (FluidUi.Units.smallSpacing * 2)
+                anchors.leftMargin: imageItem.width + (Units.smallSpacing * 2)
             }
         }
     ]
     onExpandedChanged: {
         if (expanded && model.body)
-            height = FluidUi.Units.gu(4);
+            height = Units.gu(4);
         else
-            height = FluidUi.Units.gu(2);
+            height = Units.gu(2);
     }
     onReleased: {
         if (drag.active) {
@@ -116,10 +116,10 @@ MouseArea {
         anchors {
             left: parent.left
             top: parent.top
-            leftMargin: FluidUi.Units.smallSpacing
-            topMargin: FluidUi.Units.smallSpacing
+            leftMargin: Units.smallSpacing
+            topMargin: Units.smallSpacing
         }
-        width: FluidUi.Units.iconSizes.medium
+        width: Units.iconSizes.medium
         height: width
         source: width > 0 && height > 0 && model.hasIcon ? "image://notifications/" + model.id : ""
         sourceSize.width: width
@@ -147,9 +147,9 @@ MouseArea {
             top: titleLabel.bottom
             right: parent.right
             bottom: parent.bottom
-            leftMargin: FluidUi.Units.smallSpacing * 2
-            rightMargin: FluidUi.Units.smallSpacing * 2
-            bottomMargin: FluidUi.Units.smallSpacing
+            leftMargin: Units.smallSpacing * 2
+            rightMargin: Units.smallSpacing * 2
+            bottomMargin: Units.smallSpacing
         }
         level: 5
         wrapMode: Text.Wrap

@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import ".."
 import "../components" as CustomComponents
 
@@ -36,7 +36,7 @@ Indicator {
     iconName: "preferences-system-symbolic"
     component: Component {
         ColumnLayout {
-            spacing: FluidUi.Units.largeSpacing
+            spacing: Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Settings")
@@ -48,30 +48,30 @@ Indicator {
             }
 
             Row {
-                spacing: FluidUi.Units.smallSpacing
+                spacing: Units.smallSpacing
 
                 CustomComponents.ToolButton {
                     text: qsTr("Small")
                     checkable: true
-                    checked: screenView.panel.size === FluidUi.Units.iconSizes.medium
+                    checked: screenView.panel.size === Units.iconSizes.medium
                     autoExclusive: true
-                    onClicked: screenView.panel.size = FluidUi.Units.iconSizes.medium
+                    onClicked: screenView.panel.size = Units.iconSizes.medium
                 }
 
                 CustomComponents.ToolButton {
                     text: qsTr("Medium")
                     checkable: true
-                    checked: screenView.panel.size === FluidUi.Units.iconSizes.large
+                    checked: screenView.panel.size === Units.iconSizes.large
                     autoExclusive: true
-                    onClicked: screenView.panel.size = FluidUi.Units.iconSizes.large
+                    onClicked: screenView.panel.size = Units.iconSizes.large
                 }
 
                 CustomComponents.ToolButton {
                     text: qsTr("Large")
                     checkable: true
-                    checked: screenView.panel.size === FluidUi.Units.iconSizes.huge
+                    checked: screenView.panel.size === Units.iconSizes.huge
                     autoExclusive: true
-                    onClicked: screenView.panel.size = FluidUi.Units.iconSizes.huge
+                    onClicked: screenView.panel.size = Units.iconSizes.huge
                 }
             }
 
@@ -81,7 +81,7 @@ Indicator {
             }
 
             Row {
-                spacing: FluidUi.Units.smallSpacing
+                spacing: Units.smallSpacing
 
                 CustomComponents.ToolButton {
                     text: qsTr("Left")

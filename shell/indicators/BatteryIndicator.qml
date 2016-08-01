@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import Hawaii.Hardware 1.0
 import ".."
 import "power" as PowerIndicator
@@ -37,7 +37,7 @@ Indicator {
     iconName: "battery-missing-symbolic"
     component: Component {
         ColumnLayout {
-            spacing: FluidUi.Units.largeSpacing
+            spacing: Units.largeSpacing
 
             Controls.Heading {
                 text: qsTr("Power")

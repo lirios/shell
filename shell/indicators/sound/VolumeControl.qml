@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import org.hawaiios.mixer 0.1 as MixerService
 
 RowLayout {
@@ -36,8 +36,8 @@ RowLayout {
         visible: false
     }
 
-    FluidUi.Icon {
-        width: FluidUi.Units.iconSizes.small
+    Icon {
+        width: Units.iconSizes.small
         height: width
         name: "audio-volume-low-symbolic"
         opacity: MixerService.Mixer.available ? 1.0 : 0.6
@@ -73,13 +73,13 @@ RowLayout {
         }
 
         Layout.fillWidth: true
-        Layout.minimumWidth: FluidUi.Units.gu(12)
+        Layout.minimumWidth: Units.gu(12)
 
         Component.onCompleted: value = MixerService.Mixer.master
     }
 
-    FluidUi.Icon {
-        width: FluidUi.Units.iconSizes.small
+    Icon {
+        width: Units.iconSizes.small
         height: width
         name: "audio-volume-high-symbolic"
         opacity: MixerService.Mixer.available ? 1.0 : 0.6

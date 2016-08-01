@@ -30,24 +30,24 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Qt.labs.calendar 1.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Item {
     property alias month: calendar.month
     property alias year: calendar.year
 
-    height: FluidUi.Units.gu(20)
+    height: Units.gu(20)
 
     Component {
         id: hourDelegate
 
         Item {
-            height: FluidUi.Units.gu(2)
+            height: Units.gu(2)
 
             Label {
                 anchors.left: parent.left
                 anchors.top: parent.top
-                anchors.margins: FluidUi.Units.smallSpacing
+                anchors.margins: Units.smallSpacing
                 font: Themes.Theme.smallestFont
                 text: modelData + ":00"
             }
@@ -63,8 +63,8 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        anchors.margins: FluidUi.Units.smallSpacing
-        spacing: FluidUi.Units.largeSpacing
+        anchors.margins: Units.smallSpacing
+        spacing: Units.largeSpacing
 
         ColumnLayout {
             Layout.fillHeight: true
@@ -79,7 +79,7 @@ Item {
                     font: dayOfWeek.font
                 }
 
-                Layout.preferredWidth: FluidUi.Units.gu(20)
+                Layout.preferredWidth: Units.gu(20)
                 Layout.fillHeight: true
             }
 
@@ -93,7 +93,7 @@ Item {
                     opacity: model.month === calendar.month ? 1 : 0
                 }
 
-                Layout.preferredWidth: FluidUi.Units.gu(20)
+                Layout.preferredWidth: Units.gu(20)
                 Layout.fillHeight: true
             }
         }

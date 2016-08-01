@@ -28,15 +28,15 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import org.hawaiios.launcher 0.1 as CppLauncher
 
 Popup {
     closePolicy: Popup.OnEscape | Popup.OnPressOutside
     modal: true
     focus: true
-    implicitWidth: layout.width + (2 * FluidUi.Units.largeSpacing)
-    implicitHeight: layout.height + (2 * FluidUi.Units.largeSpacing)
+    implicitWidth: layout.width + (2 * Units.largeSpacing)
+    implicitHeight: layout.height + (2 * Units.largeSpacing)
 
     Material.theme: Material.Dark
 
@@ -47,7 +47,7 @@ Popup {
     ColumnLayout {
         id: layout
         anchors.centerIn: parent
-        spacing: FluidUi.Units.smallSpacing
+        spacing: Units.smallSpacing
 
         Label {
             text: qsTr("Enter a Command")
@@ -61,7 +61,7 @@ Popup {
                 close();
             }
 
-            Layout.minimumWidth: FluidUi.Units.dp(350)
+            Layout.minimumWidth: Units.dp(350)
             Layout.fillWidth: true
         }
 

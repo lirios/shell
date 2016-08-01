@@ -29,22 +29,22 @@ import QtQuick.Layouts 1.0
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import Fluid.Effects 1.0 as FluidEffects
 
-FluidUi.Showable {
+Showable {
     id: root
     showAnimation: YAnimator {
         target: root
         easing.type: Easing.OutQuad
-        duration: FluidUi.Units.longDuration
+        duration: Units.longDuration
         from: -root.height
         to: 0
     }
     hideAnimation: YAnimator {
         target: root
         easing.type: Easing.OutQuad
-        duration: FluidUi.Units.longDuration
+        duration: Units.longDuration
         from: 0
         to: -root.height
     }
@@ -126,18 +126,18 @@ FluidUi.Showable {
         }
 
         Item {
-            Layout.preferredHeight: FluidUi.Units.dp(100)
+            Layout.preferredHeight: Units.dp(100)
         }
 
         Pane {
             Column {
                 anchors.centerIn: parent
-                spacing: FluidUi.Units.smallSpacing
+                spacing: Units.smallSpacing
 
                 TextField {
                     id: passwordField
                     placeholderText: qsTr("Password")
-                    width: FluidUi.Units.gu(20)
+                    width: Units.gu(20)
                     focus: true
                     echoMode: TextInput.Password
                     onAccepted: {
@@ -169,7 +169,7 @@ FluidUi.Showable {
             }
 
             Layout.fillWidth: true
-            Layout.preferredHeight: FluidUi.Units.gu(5)
+            Layout.preferredHeight: Units.gu(5)
         }
 
         Item {

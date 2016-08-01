@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Controls 1.0 as Controls
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "../components" as CustomComponents
 
 Popup {
@@ -50,7 +50,7 @@ Popup {
 
     ColumnLayout {
         id: mainLayout
-        spacing: FluidUi.Units.smallSpacing
+        spacing: Units.smallSpacing
 
         RowLayout {
             CustomComponents.ToolButton {
@@ -72,7 +72,7 @@ Popup {
             }
 
             Item {
-                width: FluidUi.Units.smallSpacing
+                width: Units.smallSpacing
             }
 
             TextField {
@@ -101,7 +101,7 @@ Popup {
             LauncherCategories {
                 id: categories
                 clip: true
-                width: FluidUi.Units.gu(10)
+                width: Units.gu(10)
                 visible: viewCategoriesButton.checked
                 onSelected: grid.filterByCategory(category)
 
@@ -149,7 +149,7 @@ Popup {
                 }
 
                 Item {
-                    height: FluidUi.Units.smallSpacing
+                    height: Units.smallSpacing
                 }
             }
 

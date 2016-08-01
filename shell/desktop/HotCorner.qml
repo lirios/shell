@@ -26,10 +26,10 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Rectangle {
-    width: FluidUi.Units.dp(32)
+    width: Units.dp(32)
     height: width
     radius: width / 2
     antialiasing: true
@@ -39,7 +39,7 @@ Rectangle {
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InOutQuad
-            duration: FluidUi.Units.shortDuration
+            duration: Units.shortDuration
         }
     }
 

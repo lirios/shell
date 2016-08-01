@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "../../components" as ShellComponents
 
 Item {
@@ -40,7 +40,7 @@ Item {
 
     id: root
     objectName: "notificationWindow"
-    width: Math.round(FluidUi.Units.gu(24))
+    width: Math.round(Units.gu(24))
     height: notificationItem.implicitHeight
     opacity: 0.0
     onOpacityChanged: {
@@ -56,21 +56,21 @@ Item {
     Behavior on y {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: FluidUi.Units.longDuration
+            duration: Units.longDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: FluidUi.Units.longDuration
+            duration: Units.longDuration
         }
     }
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.OutSine
-            duration: FluidUi.Units.longDuration
+            duration: Units.longDuration
         }
     }
 
@@ -94,8 +94,8 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -FluidUi.Units.smallSpacing * 1.5
-            rightMargin: -FluidUi.Units.smallSpacing * 1.5
+            topMargin: -Units.smallSpacing * 1.5
+            rightMargin: -Units.smallSpacing * 1.5
         }
         z: 1
         onClicked: root.closed(root)
@@ -109,16 +109,16 @@ Item {
             GradientStop { position: 0; color: Qt.lighter(Material.dialogColor, 1.2) }
             GradientStop { position: 1; color: Qt.darker(Material.dialogColor, 1.1) }
         }
-        border.width: FluidUi.Units.gu(0.05)
+        border.width: Units.gu(0.05)
         border.color: Themes.Theme.palette.rgba(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
-        radius: FluidUi.Units.gu(0.4)
+        radius: Units.gu(0.4)
         antialiasing: true
         z: 0
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutSine
-                duration: FluidUi.Units.longDuration
+                duration: Units.longDuration
             }
         }
 
@@ -126,7 +126,7 @@ Item {
             id: notificationItem
             anchors {
                 fill: parent
-                margins: FluidUi.Units.smallSpacing
+                margins: Units.smallSpacing
             }
             onActionInvoked: root.actionInvoked(actionId)
         }

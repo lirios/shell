@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "../components" as CustomComponents
 
 Item {
@@ -43,18 +43,18 @@ Item {
     Behavior on width {
         NumberAnimation {
             easing.type: Easing.Linear
-            duration: FluidUi.Units.shortDuration
+            duration: Units.shortDuration
         }
     }
 
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.Linear
-            duration: FluidUi.Units.shortDuration
+            duration: Units.shortDuration
         }
     }
 
-    FluidUi.Icon {
+    Icon {
         id: icon
         anchors.centerIn: parent
         name: model.iconName
@@ -69,21 +69,21 @@ Item {
             right: parent.right
             bottom: parent.bottom
         }
-        height: FluidUi.Units.dp(2)
+        height: Units.dp(2)
         color: model.active ? Material.accentColor : "white"
         opacity: model.running ? 1.0 : 0.0
 
         Behavior on color {
             ColorAnimation {
                 easing.type: Easing.OutQuad
-                duration: FluidUi.Units.shortDuration
+                duration: Units.shortDuration
             }
         }
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: FluidUi.Units.shortDuration
+                duration: Units.shortDuration
             }
         }
     }
@@ -93,10 +93,10 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -(FluidUi.Units.smallSpacing * 0.35)
-            rightMargin: -(FluidUi.Units.largeSpacing * 0.35)
+            topMargin: -(Units.smallSpacing * 0.35)
+            rightMargin: -(Units.largeSpacing * 0.35)
         }
-        width: FluidUi.Units.iconSizes.smallMedium
+        width: Units.iconSizes.smallMedium
         height: width
         radius: width * 0.5
         color: "orangered"
@@ -105,13 +105,13 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: FluidUi.Units.shortDuration
+                duration: Units.shortDuration
             }
         }
 
         Label {
             anchors.centerIn: parent
-            font.pixelSize: parent.width - FluidUi.Units.smallSpacing
+            font.pixelSize: parent.width - Units.smallSpacing
             color: "white"
             text: model.count
         }

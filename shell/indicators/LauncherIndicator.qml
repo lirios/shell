@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import ".."
 import "../launcher" as Launcher
 
@@ -37,8 +37,8 @@ Indicator {
 
     Launcher.LauncherPopOver {
         id: popover
-        x: FluidUi.Units.largeSpacing
-        y: -height - FluidUi.Units.largeSpacing
+        x: Units.largeSpacing
+        y: -height - Units.largeSpacing
         onAppLaunched: close()
     }
 }

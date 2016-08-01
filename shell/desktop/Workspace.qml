@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 Item {
     readonly property alias animateWindows: __private.animationsEnabled
@@ -209,7 +209,7 @@ Item {
         __private.animationsEnabled = true;
 
         var windows = windowsList();
-        var margin = FluidUi.Units.dp(96);
+        var margin = Units.dp(96);
 
         // Divide screen in 4 zones
         var halfWidth = output.availableGeometry.width * 0.5;

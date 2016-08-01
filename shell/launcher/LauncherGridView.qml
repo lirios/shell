@@ -26,11 +26,11 @@
 
 import QtQuick 2.0
 import QtQml.Models 2.1
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import org.hawaiios.launcher 0.1 as CppLauncher
 
 GridView {
-    readonly property int iconSize: FluidUi.Units.iconSizes.large
+    readonly property int iconSize: Units.iconSizes.large
     readonly property int numRows: 5
     readonly property int numColumns: 3
     readonly property int numItemsPerPage: numRows * numColumns
@@ -41,8 +41,8 @@ GridView {
     signal appLaunched()
 
     id: grid
-    cellWidth: (iconSize * 1.5) + (FluidUi.Units.largeSpacing * 2)
-    cellHeight: iconSize + FluidUi.Units.gu(2) + (FluidUi.Units.largeSpacing * 2) + FluidUi.Units.smallSpacing
+    cellWidth: (iconSize * 1.5) + (Units.largeSpacing * 2)
+    cellHeight: iconSize + Units.gu(2) + (Units.largeSpacing * 2) + Units.smallSpacing
     width: cellWidth * numRows
     height: cellHeight * numColumns
     snapMode: GridView.SnapOneRow

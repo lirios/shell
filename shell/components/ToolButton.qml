@@ -26,17 +26,17 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 
 ToolButton {
     property alias iconName: indicator.name
     property alias iconSize: indicator.size
 
     id: toolButton
-    indicator: FluidUi.Icon {
+    indicator: Icon {
         id: indicator
         anchors.centerIn: parent
-        width: FluidUi.Units.iconSizes.small
+        width: Units.iconSizes.small
         height: width
         color: toolButton.contentItem.color
     }
