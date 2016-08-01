@@ -27,6 +27,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Hawaii.Controls 1.0 as Controls
 import Fluid.Controls 1.0 as FluidUi
 import "../components" as CustomComponents
@@ -37,13 +38,15 @@ Popup {
 
     id: launcherPopOver
     focus: true
-    closePolicy: Popup.OnEscape | Popup.OnPressOutside
+    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     implicitWidth: mainLayout.implicitWidth +
                    launcherPopOver.leftPadding + launcherPopOver.rightPadding +
                    launcherPopOver.leftMargin + launcherPopOver.rightMargin
     implicitHeight: mainLayout.implicitHeight +
                     launcherPopOver.topPadding + launcherPopOver.bottomPadding +
                     launcherPopOver.topMargin + launcherPopOver.bottomMargin
+
+    Material.theme: Material.Dark
 
     ColumnLayout {
         id: mainLayout

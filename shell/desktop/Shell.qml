@@ -54,20 +54,21 @@ Item {
     Drawer {
         property var lastIndicator: null
 
+        Material.theme: Material.Dark
+
         id: rightDrawer
         edge: Qt.RightEdge
 
-        // FIXME: onClicked doesn't exist
-        // onClicked: {
-        //     if (lastIndicator)
-        //         lastIndicator.active = false;
-        //     close();
-        // }
+        y: output.availableGeometry.y
+        width: Math.max(FluidUi.Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
+        height: output.availableGeometry.height
+        onPositionChanged: {
+            if (position == 0.0 && lastIndicator)
+                lastIndicator.active = false;
+        }
 
         Pane {
-            y: output.availableGeometry.y
-            width: Math.max(FluidUi.Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
-            height: output.availableGeometry.height
+            anchors.fill: parent
             padding: FluidUi.Units.largeSpacing
 
             StackView {

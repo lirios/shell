@@ -38,7 +38,7 @@ Indicator {
     Launcher.LauncherPopOver {
         id: popover
         x: FluidUi.Units.largeSpacing
-        y: 50 //-height - FluidUi.Units.largeSpacing
+        y: -height - FluidUi.Units.largeSpacing
         onAppLaunched: close()
     }
 }
