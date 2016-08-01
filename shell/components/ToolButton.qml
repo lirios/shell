@@ -38,6 +38,6 @@ ToolButton {
         anchors.centerIn: parent
         width: FluidUi.Units.iconSizes.small
         height: width
-        color: toolButton.label.color
+        color: toolButton.contentItem.color
     }
 }
