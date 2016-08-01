@@ -1,9 +1,0 @@
-module Hawaii.Controls
-plugin controlsplugin
-classname ControlsPlugin
-typeinfo plugins.qmltypes
-Calendar 1.0 Calendar.qml
-Heading 1.0 Heading.qml
-TextField 1.0 TextField.qml
-ToolButton 1.0 ToolButton.qml
-SidePanel 1.0 SidePanel.qml

@@ -27,7 +27,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Hawaii.Controls 1.0 as Controls
 import Fluid.Controls 1.0
 import Hawaii.Mpris 1.0
 import "../../components" as CustomComponents
@@ -75,16 +74,14 @@ ColumnLayout {
         Column {
             spacing: Units.smallSpacing
 
-            Controls.Heading {
+            SubheadingLabel {
                 id: titleLabel
-                level: 3
                 text: player && player.metadata["xesam:title"] ? player.metadata["xesam:title"] : qsTr("Unknown Title")
                 font.weight: Font.Bold
                 elide: Text.ElideRight
             }
 
-            Controls.Heading {
-                level: 4
+            SubheadingLabel {
                 text: player && player.metadata["xesam:artist"] ? player.metadata["xesam:artist"] : qsTr("Unknown Artist")
                 elide: Text.ElideRight
             }

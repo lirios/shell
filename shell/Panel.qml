@@ -30,7 +30,6 @@ import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 import GreenIsland 1.0
 import Fluid.Controls 1.0
-import Hawaii.Themes 1.0 as Themes
 import "indicators"
 import "launcher"
 
@@ -361,7 +360,7 @@ Rectangle {
         // geometry resulting in a "hole" between the window and the panel
         var window = compositor.applicationManager.focusedWindow;
         if (window && window.maximized) {
-            color = Themes.Theme.palette.rgba(Material.dialogColor, 0.9);
+            color = Utils.alpha(Material.dialogColor, 0.9);
             //launcher.iconSize = Units.iconSizes.medium;
         } else {
             color = "transparent";

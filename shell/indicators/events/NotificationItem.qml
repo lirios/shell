@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
-import Hawaii.Controls 1.0 as Controls
 import Fluid.Controls 1.0
 
 Item {
@@ -108,16 +107,15 @@ Item {
         visible: hasIcon
     }
 
-    Controls.Heading {
+    SubheadingLabel {
         id: titleLabel
-        level: 4
         font.weight: Font.Bold
         elide: Text.ElideRight
         visible: text.length > 0
         onLinkActivated: Qt.openUrlExternally(link)
     }
 
-    Controls.Heading {
+    BodyLabel {
         id: bodyLabel
         anchors {
             left: hasIcon ? imageItem.right : parent.left
@@ -128,7 +126,6 @@ Item {
             rightMargin: Units.smallSpacing * 2
             bottomMargin: Units.smallSpacing
         }
-        level: 5
         wrapMode: Text.Wrap
         elide: Text.ElideRight
         maximumLineCount: 10

@@ -28,7 +28,7 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Core 1.0
 import Fluid.Controls 1.0
 
 Showable {
@@ -80,9 +80,9 @@ Showable {
     Rectangle {
         id: rect
         anchors.fill: parent
-        border.color: Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.5)
+        border.color: Utils.alpha(Material.drawerBackgroundColor, 0.5)
         border.width: 1
-        color: Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.85)
+        color: Units.alpha(Material.drawerBackgroundColor, 0.85)
         radius: 6
         antialiasing: true
         opacity: 0.0

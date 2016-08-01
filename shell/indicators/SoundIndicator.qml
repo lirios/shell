@@ -26,7 +26,6 @@
 
 import QtQuick 2.5
 import QtQuick.Layouts 1.0
-import Hawaii.Controls 1.0 as Controls
 import Fluid.Controls 1.0
 import org.hawaiios.mixer 0.1 as MixerService
 import Hawaii.Mpris 1.0
@@ -50,13 +49,12 @@ Indicator {
         ColumnLayout {
             spacing: Units.largeSpacing
 
-            Controls.Heading {
+            HeadlineLabel {
                 text: qsTr("Sound")
             }
 
-            Controls.Heading {
+            SubheadingLabel {
                 text: qsTr("Volume")
-                level: 3
                 visible: volumeControl.visible
             }
 
@@ -67,9 +65,8 @@ Indicator {
                 Layout.fillWidth: true
             }
 
-            Controls.Heading {
+            SubheadingLabel {
                 text: qsTr("Playback")
-                level: 3
                 visible: mpris2.players.length > 0
             }
 

@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Hawaii.Controls 1.0 as Controls
 import Fluid.Controls 1.0
 import Hawaii.Hardware 1.0
 import ".."
@@ -39,7 +38,7 @@ Indicator {
         ColumnLayout {
             spacing: Units.largeSpacing
 
-            Controls.Heading {
+            HeadlineLabel {
                 text: qsTr("Power")
             }
 

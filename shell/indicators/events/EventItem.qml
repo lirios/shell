@@ -27,7 +27,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Hawaii.Controls 1.0 as Controls
 import Fluid.Controls 1.0
 
 MouseArea {
@@ -130,9 +129,8 @@ MouseArea {
         visible: model.hasIcon
     }
 
-    Controls.Heading {
+    SubheadingLabel {
         id: titleLabel
-        level: 4
         font.weight: Font.Bold
         elide: Text.ElideRight
         text: model.summary
@@ -140,7 +138,7 @@ MouseArea {
         onLinkActivated: Qt.openUrlExternally(link)
     }
 
-    Controls.Heading {
+    BodyLabel {
         id: bodyLabel
         anchors {
             left: model.hasIcon ? imageItem.right : parent.left
@@ -151,7 +149,6 @@ MouseArea {
             rightMargin: Units.smallSpacing * 2
             bottomMargin: Units.smallSpacing
         }
-        level: 5
         wrapMode: Text.Wrap
         elide: Text.ElideRight
         text: model.body

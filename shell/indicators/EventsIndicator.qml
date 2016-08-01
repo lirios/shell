@@ -28,8 +28,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Hawaii.Controls 1.0 as Controls
-import Hawaii.Themes 1.0 as Themes
 import Fluid.Controls 1.0
 import Hawaii.Notifications 1.0
 import ".."
@@ -45,7 +43,7 @@ Indicator {
         ColumnLayout {
             spacing: Units.largeSpacing
 
-            Controls.Heading {
+            HeadlineLabel {
                 text: qsTr("Events")
             }
 
@@ -243,7 +241,7 @@ Indicator {
     function repositionNotifications() {
         var popups = screenView.layers.notifications.children;
         var workArea = output.availableGeometry;
-        var offset = Themes.Theme.mSize().height;
+        var offset = Units.gridUnit;
         var totalHeight = 0;
 
         var i;

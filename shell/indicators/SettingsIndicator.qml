@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Hawaii.Controls 1.0 as Controls
 import Fluid.Controls 1.0
 import ".."
 import "../components" as CustomComponents
@@ -38,13 +37,12 @@ Indicator {
         ColumnLayout {
             spacing: Units.largeSpacing
 
-            Controls.Heading {
+            HeadlineLabel {
                 text: qsTr("Settings")
             }
 
-            Controls.Heading {
+            Subheader {
                 text: qsTr("Size")
-                level: 3
             }
 
             Row {
@@ -75,9 +73,8 @@ Indicator {
                 }
             }
 
-            Controls.Heading {
+            Subheader {
                 text: qsTr("Position")
-                level: 3
             }
 
             Row {

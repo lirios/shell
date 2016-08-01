@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Core 1.0
 import Fluid.Controls 1.0
 import "../../components" as ShellComponents
 
@@ -110,7 +110,7 @@ Item {
             GradientStop { position: 1; color: Qt.darker(Material.dialogColor, 1.1) }
         }
         border.width: Units.gu(0.05)
-        border.color: Themes.Theme.palette.rgba(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
+        border.color: Utils.alpha(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
         radius: Units.gu(0.4)
         antialiasing: true
         z: 0
