@@ -209,7 +209,7 @@ Item {
         __private.animationsEnabled = true;
 
         var windows = windowsList();
-        var margin = Units.dp(96);
+        var margin = 96;
 
         // Divide screen in 4 zones
         var halfWidth = output.availableGeometry.width * 0.5;

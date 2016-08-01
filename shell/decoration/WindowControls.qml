@@ -34,7 +34,7 @@ Row {
     signal maximize()
 
     id: root
-    spacing: Units.dp(5)
+    spacing: 5
 
     Rectangle {
         width: height
@@ -63,7 +63,7 @@ Row {
     }
 
     Item {
-        width: Units.dp(2)
+        width: 2
         height: parent.height
     }
 

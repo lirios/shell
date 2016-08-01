@@ -118,30 +118,6 @@ Rectangle {
         }
 
         Text {
-            text: "Multiplier:"
-            font.bold: true
-            color: "white"
-
-            Layout.alignment: Qt.AlignRight
-        }
-        Text {
-            text: (((Screen.pixelDensity * 25.4) / (Screen.logicalPixelDensity * 25.4)) / Screen.devicePixelRatio).toFixed(2)
-            color: "white"
-        }
-
-        Text {
-            text: "Device Pixel:"
-            font.bold: true
-            color: "white"
-
-            Layout.alignment: Qt.AlignRight
-        }
-        Text {
-            text: Units.dp(1).toFixed(2)
-            color: "white"
-        }
-
-        Text {
             text: "Grid Unit:"
             font.bold: true
             color: "white"

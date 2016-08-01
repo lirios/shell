@@ -69,7 +69,7 @@ Item {
             right: parent.right
             bottom: parent.bottom
         }
-        height: Units.dp(2)
+        height: 2
         color: model.active ? Material.accentColor : "white"
         opacity: model.running ? 1.0 : 0.0
 

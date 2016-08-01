@@ -68,7 +68,7 @@ Private.PopupBase {
             style: Text.Raised
             styleColor: Material.secondaryTextColor
             horizontalAlignment: Text.AlignHCenter
-            width: Math.min(implicitWidth, Units.dp(100))
+            width: Math.min(implicitWidth, 100)
             height: implicitHeight
         }
 

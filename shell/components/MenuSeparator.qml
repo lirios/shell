@@ -31,7 +31,7 @@ import Fluid.Controls 1.0
 Rectangle {
     id: root
     width: parent.width
-    height: Units.dp(1)
+    height: 1
     color: Material.dividerColor
     antialiasing: true
 }

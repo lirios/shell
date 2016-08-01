@@ -61,7 +61,7 @@ Item {
         edge: Qt.RightEdge
 
         y: output.availableGeometry.y
-        width: Math.max(Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
+        width: Math.max(250, stackView.currentItem.implicitWidth) + (2 * padding)
         height: output.availableGeometry.height
         onPositionChanged: {
             if (position == 0.0 && lastIndicator)

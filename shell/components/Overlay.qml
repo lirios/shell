@@ -62,7 +62,7 @@ Showable {
         to: 0.0
     }
     width: height
-    height: Units.dp(256)
+    height: 256
     onIconNameChanged: if (timer.running) timer.restart()
     onValueChanged: if (timer.running) timer.restart()
     onShowProgressChanged: if (timer.running) timer.restart()
@@ -81,9 +81,9 @@ Showable {
         id: rect
         anchors.fill: parent
         border.color: Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.5)
-        border.width: Units.dp(1)
+        border.width: 1
         color: Themes.Theme.palette.rgba(Material.drawerBackgroundColor, 0.85)
-        radius: Units.dp(6)
+        radius: 6
         antialiasing: true
         opacity: 0.0
         onOpacityChanged: {

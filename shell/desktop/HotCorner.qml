@@ -29,7 +29,7 @@ import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
 
 Rectangle {
-    width: Units.dp(32)
+    width: 32
     height: width
     radius: width / 2
     antialiasing: true

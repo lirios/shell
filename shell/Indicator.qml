@@ -72,7 +72,7 @@ Item {
         anchors.fill: parent
         anchors.margins: Units.smallSpacing
         color: Material.accentColor
-        radius: Units.dp(6)
+        radius: 6
         opacity: active ? 1.0 : 0.0
 
         Behavior on opacity {

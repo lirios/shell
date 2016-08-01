@@ -35,7 +35,7 @@ Rectangle {
     property bool hovered: false
 
     color: hovered ? Material.accent : "transparent"
-    radius: Units.dp(6)
+    radius: 6
     antialiasing: true
 
     Image {

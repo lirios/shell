@@ -32,7 +32,7 @@ import GreenIsland 1.0 as GreenIsland
 import Fluid.Controls 1.0
 
 Popup {
-    readonly property real thumbnailSize: Units.dp(200)
+    readonly property real thumbnailSize: 200
 
     id: windowSwitcher
     focus: true
@@ -51,7 +51,7 @@ Popup {
             width: height * ratio
             height: thumbnailSize
             color: wrapper.ListView.isCurrentItem ? Material.accent : "transparent"
-            radius: Units.dp(4)
+            radius: 4
 
             GreenIsland.WaylandQuickItem {
                 id: windowItem

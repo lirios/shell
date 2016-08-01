@@ -126,7 +126,7 @@ Showable {
         }
 
         Item {
-            Layout.preferredHeight: Units.dp(100)
+            Layout.preferredHeight: 100
         }
 
         Pane {

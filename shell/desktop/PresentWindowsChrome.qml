@@ -36,7 +36,7 @@ import "../components" as ShellComponents
 Item {
     property var window
     readonly property alias container: mouseArea
-    readonly property int margin: Units.dp(10)
+    readonly property int margin: 10
 
     signal activated(var window)
     signal closeRequested(var window)
@@ -75,7 +75,7 @@ Item {
     Rectangle {
         id: titleBadge
         anchors.centerIn: parent
-        radius: Units.dp(6)
+        radius: 6
         color: Material.dialogColor
         width: Math.max(parent.width * 0.8, titleLabel.paintedWidth) + Units.smallSpacing * 2
         height: titleLabel.paintedHeight + Units.smallSpacing * 2
@@ -109,7 +109,7 @@ Item {
             rightMargin: Units.largeSpacing
             bottomMargin: Units.largeSpacing
         }
-        radius: Units.dp(6)
+        radius: 6
         color: Material.dialogColor
         width: icon.width + Units.smallSpacing * 2
         height: width

@@ -61,7 +61,7 @@ Popup {
                 close();
             }
 
-            Layout.minimumWidth: Units.dp(350)
+            Layout.minimumWidth: 350
             Layout.fillWidth: true
         }
 

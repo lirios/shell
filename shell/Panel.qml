@@ -273,7 +273,7 @@ Rectangle {
         anchors.fill: parent
 
         Rectangle {
-            radius: Units.dp(6)
+            radius: 6
             color: Material.dialogColor
             implicitWidth: launcherIndicator.width + Units.smallSpacing
             implicitHeight: launcherIndicator.height + Units.smallSpacing
@@ -295,7 +295,7 @@ Rectangle {
         }
 
         Rectangle {
-            radius: Units.dp(6)
+            radius: 6
             color: Material.dialogColor
             implicitWidth: indicatorsView.implicitWidth + Units.smallSpacing
             implicitHeight: indicatorsView.implicitHeight + Units.smallSpacing
