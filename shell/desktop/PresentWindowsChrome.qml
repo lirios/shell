@@ -30,7 +30,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Hawaii.Themes 1.0 as Themes
 import GreenIsland 1.0 as GreenIsland
-import Fluid.UI 1.0 as FluidUi
+import Fluid.Controls 1.0 as FluidUi
 import "../components" as ShellComponents
 
 Item {

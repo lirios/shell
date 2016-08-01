@@ -23,7 +23,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.UI 1.0
+import Fluid.Controls 1.0
 
 Loader {
     sourceComponent: {

@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.UI 1.0 as FluidUi
+import Fluid.Controls 1.0 as FluidUi
 
 Rectangle {
     property alias hovered: mouseArea.containsMouse

@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0 as GreenIsland
-import Fluid.UI 1.0 as FluidUi
+import Fluid.Controls 1.0 as FluidUi
 
 Popup {
     readonly property real thumbnailSize: FluidUi.Units.dp(200)

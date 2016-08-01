@@ -26,7 +26,7 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import Fluid.UI 1.0 as FluidUi
+import Fluid.Controls 1.0 as FluidUi
 import "../components" as CustomComponents
 
 RowLayout {

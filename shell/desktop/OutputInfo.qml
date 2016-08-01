@@ -27,7 +27,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
-import Fluid.UI 1.0 as FluidUi
+import Fluid.Controls 1.0 as FluidUi
 
 Rectangle {
     width: grid.implicitWidth + 16

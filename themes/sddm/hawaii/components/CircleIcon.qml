@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import Hawaii.Themes 1.0 as Themes
-import Fluid.UI 1.0 as FluidUi
+import Fluid.Controls 1.0 as FluidUi
 
 Item {
     property alias iconSize: icon.width

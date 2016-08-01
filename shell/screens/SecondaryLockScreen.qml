@@ -26,7 +26,7 @@
 
 import QtQuick 2.4
 import QtGraphicalEffects 1.0
-import Fluid.UI 1.0 as FluidUi
+import Fluid.Controls 1.0 as FluidUi
 import Fluid.Effects 1.0 as FluidEffects
 
 FluidUi.Showable {
