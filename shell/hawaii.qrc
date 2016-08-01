@@ -23,7 +23,6 @@
 	<file>components/MenuSeparator.qml</file>
 	<file>components/Overlay.qml</file>
 	<file>components/ToolButton.qml</file>
-	<file>components/Tooltip.qml</file>
 	<file>components/private/PopupBase.qml</file>
 	<file>decoration/PopupWindowDecoration.qml</file>
 	<file>decoration/WindowControls.qml</file>

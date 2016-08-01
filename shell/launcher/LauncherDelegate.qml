@@ -40,6 +40,11 @@ Item {
     width: itemSize
     height: width
 
+    ToolTip.delay: 2000
+    ToolTip.timeout: 3000
+    ToolTip.visible: mouseArea.containsMouse && !menu.showing
+    ToolTip.text: model.name
+
     Behavior on width {
         NumberAnimation {
             easing.type: Easing.Linear
@@ -117,13 +122,6 @@ Item {
         }
     }
 
-    CustomComponents.Tooltip {
-        id: tooltip
-        text: model.name
-        visualLayer: panel.parent
-        visualParent: root
-    }
-
     LauncherMenu {
         id: menu
         x: 0
@@ -135,8 +133,6 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
-        onEntered: tooltip.open()
-        onExited: tooltip.close()
         onClicked: {
             switch (mouse.button) {
             case Qt.LeftButton:
@@ -206,7 +202,6 @@ Item {
     }
 
     Component.onDestruction: {
-        tooltip.close();
         menu.close();
     }
 }
