@@ -19,15 +19,12 @@
 	<file>base/OutputConfiguration.qml</file>
 	<file>base/OutputWindow.qml</file>
 	<file>base/WindowCompositor.qml</file>
-	<file>components/Clock.qml</file>
 	<file>components/CloseButton.qml</file>
 	<file>components/MenuSeparator.qml</file>
 	<file>components/Overlay.qml</file>
 	<file>components/ToolButton.qml</file>
 	<file>components/Tooltip.qml</file>
 	<file>components/private/PopupBase.qml</file>
-	<file>controlcenter/CalendarView.qml</file>
-	<file>controlcenter/ControlCenter.qml</file>
 	<file>decoration/PopupWindowDecoration.qml</file>
 	<file>decoration/WindowControls.qml</file>
 	<file>decoration/WindowDecoration.qml</file>

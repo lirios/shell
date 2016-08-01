@@ -25,44 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 2.0
-import Fluid.Controls 1.0
-import "../components" as CustomComponents
 
 Item {
-    id: root
-
-    CustomComponents.Clock {
-        id: clock
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            top: parent.top
-        }
-        z: 0
-        onClicked: topDrawer.position == 0 ? topDrawer.open() : topDrawer.close()
-    }
-
-    Drawer {
-        id: topDrawer
-        edge: Qt.TopEdge
-        // onClicked: close()
-
-        Pane {
-            width: window.width
-            height: Units.gu(25)
-            padding: Units.largeSpacing
-
-            Loader {
-                id: loader
-                anchors.fill: parent
-                active: topDrawer.expanded
-                source: "../controlcenter/ControlCenter.qml"
-
-                Connections {
-                    target: loader.item
-                    onClosed: topDrawer.close()
-                }
-            }
-        }
-    }
 }
