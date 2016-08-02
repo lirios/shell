@@ -35,7 +35,7 @@ import "network" as NetworkIndicator
 Indicator {
     id: indicator
     name: "network"
-    iconName: massageIconName(connectionIconProvider.connectionIcon)
+    iconName: materialIconName(connectionIconProvider.connectionIcon)
     component: Component {
         ColumnLayout {
             spacing: Units.largeSpacing
@@ -76,10 +76,26 @@ Indicator {
         id: handler
     }
 
-    function massageIconName(iconName) {
-        var newName = iconName.replace("-activated", "");
-        if (newName !== "")
-            return newName + "-symbolic";
-        return newName;
+    function materialIconName(iconName) {
+        return icons[iconName]
+    }
+
+    readonly property var icons: {
+        "": "device/signal_wifi_0_bar",
+        "network-wireless-100-locked": "device/signal_wifi_4_bar",
+        "network-wireless-80-locked": "device/signal_wifi_3_bar",
+        "network-wireless-60-locked": "device/signal_wifi_2_bar",
+        "network-wireless-40-locked": "device/signal_wifi_2_bar",
+        "network-wireless-20-locked": "device/signal_wifi_1_bar",
+        "network-wireless-0-locked": "device/signal_wifi_0_bar",
+        "network-wireless-connected-100": "device/signal_wifi_4_bar",
+        "network-wireless-connected-80": "device/signal_wifi_3_bar",
+        "network-wireless-connected-60": "device/signal_wifi_2_bar",
+        "network-wireless-connected-40": "device/signal_wifi_2_bar",
+        "network-wireless-connected-20": "device/signal_wifi_1_bar",
+        "network-wireless-connected-0": "device/signal_wifi_0_bar",
+        "network-wired-activated": "action/settings_ethernet",
+        "network-wired": "action/settings_ethernet",
+        "network-vpn": "action/lock"
     }
 }

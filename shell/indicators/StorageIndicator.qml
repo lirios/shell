@@ -34,7 +34,7 @@ import "../components" as CustomComponents
 
 Indicator {
     name: "storage"
-    iconName: "drive-harddisk-symbolic"
+    iconName: Qt.resolvedUrl("../images/harddisk.svg")
     component: Component {
         ColumnLayout {
             spacing: Units.largeSpacing

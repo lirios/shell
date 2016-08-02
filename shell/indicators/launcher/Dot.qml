@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -25,23 +22,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.Controls 1.0
-import "launcher"
-import ".."
-import "../launcher" as Launcher
 
-Indicator {
-    id: indicator
-    name: "launcher"
-    iconView: AppsIcon {}
-    tooltip: qsTr("Applications")
-    active: popover.visible
-    onTriggered: popover.open()
-    
-    Launcher.LauncherPopOver {
-        id: popover
-        x: Units.largeSpacing
-        y: -height - Units.largeSpacing
-        onAppLaunched: close()
-    }
+Rectangle {
+    width: iconSize/5
+    height: width
+    radius: width/2
 }

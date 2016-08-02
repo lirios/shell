@@ -32,7 +32,7 @@ import "../components" as CustomComponents
 
 Indicator {
     name: "settings"
-    iconName: "preferences-system-symbolic"
+    iconName: "action/settings"
     component: Component {
         ColumnLayout {
             spacing: Units.largeSpacing

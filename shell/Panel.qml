@@ -30,215 +30,42 @@ import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 import GreenIsland 1.0
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
 import "indicators"
 import "launcher"
 
-Rectangle {
+Item {
     id: panel
 
     readonly property alias launcherIndicator: launcherIndicator
     readonly property alias currentLauncherItem: launcher.currentItem
-    property real size: Units.iconSizes.large
-    readonly property real spacing: Units.smallSpacing
-    readonly property int orientation: {
-        if (state == "left" || state == "right")
-            return Qt.Vertical;
-        return Qt.Horizontal;
-    }
+
+    property real size: 56
+    property color color: "#263238"
+
+    property bool showing
 
     signal indicatorTriggered(var indicator)
 
-    color: "transparent"
-    state: "bottom"
-    states: [
-        State {
-            name: "left"
+    anchors {
+        left: parent.left
+        right: parent.right
+        bottom: parent.bottom
+        bottomMargin: showing ? Units.smallSpacing : -height
+        margins: Units.smallSpacing
 
-            PropertyChanges {
-                target: panel
-                width: panel.size + panel.spacing
-                height: parent.height
+        Behavior on bottomMargin {
+            NumberAnimation {
+                easing.type: Easing.InOutCubic
+                duration: Units.mediumDuration
             }
-            AnchorChanges {
-                target: panel
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.right: undefined
-                anchors.bottom: parent.bottom
-            }
-
-            PropertyChanges {
-                target: mainLayout
-                rows: 3
-                columns: 1
-                flow: GridLayout.TopToBottom
-                rowSpacing: 0
-                columnSpacing: Units.smallSpacing
-            }
-            PropertyChanges {
-                target: launcher
-                orientation: ListView.Vertical
-            }
-
-            PropertyChanges {
-                target: indicatorsView
-                rows: 6
-                columns: 1
-                flow: GridLayout.LeftToRight
-                rowSpacing: Units.smallSpacing
-                columnSpacing: 0
-            }
-
-            StateChangeScript {
-                script: setAvailableGeometry()
-            }
-        },
-        State {
-            name: "top"
-
-            PropertyChanges {
-                target: panel
-                width: parent.width
-                height: panel.size + panel.spacing
-            }
-            AnchorChanges {
-                target: panel
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.bottom: undefined
-            }
-
-            PropertyChanges {
-                target: mainLayout
-                rows: 1
-                columns: 3
-                flow: GridLayout.LeftToRight
-                rowSpacing: Units.smallSpacing
-                columnSpacing: 0
-            }
-            PropertyChanges {
-                target: launcher
-                orientation: ListView.Horizontal
-            }
-
-            PropertyChanges {
-                target: indicatorsView
-                rows: 1
-                columns: 6
-                flow: GridLayout.LeftToRight
-                rowSpacing: 0
-                columnSpacing: Units.smallSpacing
-            }
-
-            StateChangeScript {
-                script: setAvailableGeometry()
-            }
-        },
-        State {
-            name: "right"
-
-            PropertyChanges {
-                target: panel
-                width: panel.size + panel.spacing
-                height: parent.height
-            }
-            AnchorChanges {
-                target: panel
-                anchors.left: undefined
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-            }
-
-            PropertyChanges {
-                target: mainLayout
-                rows: 3
-                columns: 1
-                flow: GridLayout.TopToBottom
-                rowSpacing: 0
-                columnSpacing: Units.smallSpacing
-            }
-            PropertyChanges {
-                target: launcher
-                orientation: ListView.Vertical
-            }
-
-            PropertyChanges {
-                target: indicatorsView
-                rows: 6
-                columns: 1
-                flow: GridLayout.LeftToRight
-                rowSpacing: Units.smallSpacing
-                columnSpacing: 0
-            }
-
-            StateChangeScript {
-                script: setAvailableGeometry()
-            }
-        },
-        State {
-            name: "bottom"
-
-            PropertyChanges {
-                target: panel
-                width: parent.width
-                height: panel.size + panel.spacing
-            }
-            AnchorChanges {
-                target: panel
-                anchors.left: parent.left
-                anchors.top: undefined
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-            }
-
-            PropertyChanges {
-                target: mainLayout
-                rows: 1
-                columns: 3
-                flow: GridLayout.LeftToRight
-                rowSpacing: Units.smallSpacing
-                columnSpacing: 0
-            }
-            PropertyChanges {
-                target: launcher
-                orientation: ListView.Horizontal
-            }
-
-            PropertyChanges {
-                target: indicatorsView
-                rows: 1
-                columns: 6
-                flow: GridLayout.LeftToRight
-                rowSpacing: 0
-                columnSpacing: Units.smallSpacing
-            }
-
-            StateChangeScript {
-                script: setAvailableGeometry()
-            }
-        }
-    ]
-    transitions: Transition {
-        AnchorAnimation {
-            easing.type: Easing.OutQuad
-            duration: Units.shortDuration
         }
     }
+
+    height: size
+
     onWidthChanged: setAvailableGeometry()
     onHeightChanged: setAvailableGeometry()
-
-    Behavior on color {
-        ColorAnimation { duration: Units.longDuration }
-    }
-
-    Behavior on width {
-        NumberAnimation {
-            easing.type: Easing.OutQuad
-            duration: Units.shortDuration
-        }
-    }
 
     Behavior on height {
         NumberAnimation {
@@ -267,55 +94,61 @@ Rectangle {
      * Layout
      */
 
-    GridLayout {
-        id: mainLayout
+    RowLayout {
         anchors.fill: parent
 
         Rectangle {
-            radius: 6
-            color: Material.dialogColor
-            implicitWidth: launcherIndicator.width + Units.smallSpacing
-            implicitHeight: launcherIndicator.height + Units.smallSpacing
+            Layout.fillHeight: true
+            Layout.preferredWidth: launcherIndicator.width
+
+            radius: 2
+            color: panel.color
+            layer.enabled: true
+            layer.effect: ElevationEffect {
+                elevation: 8
+            }
 
             LauncherIndicator {
                 id: launcherIndicator
+                width: height
             }
-
-            Layout.alignment: Qt.AlignCenter
         }
 
         Launcher {
             id: launcher
-            iconSize: panel.size
-            itemSize: panel.size + panel.spacing
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            iconSize: panel.size
+            itemSize: panel.size + panel.spacing
         }
 
         Rectangle {
-            radius: 6
-            color: Material.dialogColor
-            implicitWidth: indicatorsView.implicitWidth + Units.smallSpacing
-            implicitHeight: indicatorsView.implicitHeight + Units.smallSpacing
+            Layout.fillHeight: true
+            Layout.preferredWidth: indicatorsView.implicitWidth + Units.smallSpacing * 2
 
-            GridLayout {
-                property real iconSize: {
-                    switch (panel.size) {
-                    case Units.iconSizes.medium:
-                        return Units.iconSizes.small;
-                    case Units.iconSizes.large:
-                        return Units.iconSizes.smallMedium;
-                    case Units.iconSizes.huge:
-                        return Units.iconSizes.medium;
-                    default:
-                        break;
-                    }
+            radius: 2
+            color: panel.color
+            layer.enabled: true
+            layer.effect: ElevationEffect {
+                elevation: 8
+            }
 
-                    return Units.iconSizes.smallMedium;
-                }
-
+            RowLayout {
                 id: indicatorsView
+
+                anchors.centerIn: parent
+
+                spacing: 0
+                height: parent.height
+
+                property real iconSize: 24
+
+                DateTimeIndicator {
+                    iconSize: indicatorsView.iconSize
+                    onTriggered: indicatorTriggered(caller)
+                }
 
                 EventsIndicator {
                     iconSize: indicatorsView.iconSize
@@ -347,13 +180,14 @@ Rectangle {
                     iconSize: indicatorsView.iconSize
                     onTriggered: indicatorTriggered(caller)
                 }
-
-                Layout.alignment: Qt.AlignCenter
             }
         }
     }
 
-    Component.onCompleted: setAvailableGeometry()
+    Component.onCompleted: {
+        setAvailableGeometry()
+        showing = true
+    }
 
     function setup() {
         // TODO: Don't resize the panel, the window is maximized before we change the available
@@ -369,19 +203,7 @@ Rectangle {
     }
 
     function setAvailableGeometry() {
-        switch (state) {
-        case "left":
-            output.availableGeometry = Qt.rect(width, 0, output.geometry.width - width, output.geometry.height);
-            break;
-        case "top":
-            output.availableGeometry = Qt.rect(0, height, output.geometry.width, output.geometry.height - height);
-            break;
-        case "right":
-            output.availableGeometry = Qt.rect(0, 0, output.geometry.width - width, output.geometry.height);
-            break;
-        case "bottom":
-            output.availableGeometry = Qt.rect(0, 0, output.geometry.width, output.geometry.height - height);
-            break;
-        }
+        output.availableGeometry = Qt.rect(0, 0, output.geometry.width, output.geometry.height - height -
+                                           2 * panel.anchors.margins)
     }
 }

@@ -42,10 +42,9 @@ Item {
 
         Icon {
             id: icon
-            width: Units.iconSizes.large
-            height: width
+            size: Units.iconSizes.large
             color: chargeStateLabel.color
-            cache: false
+            name: deviceChargeIcon(battery)
 
             Layout.alignment: Qt.AlignTop
         }
@@ -135,22 +134,7 @@ Item {
 
     Connections {
         target: battery
-        onChargePercentChanged: setIconName()
         onChargeStateChanged: setChargeState()
-    }
-
-    function setIconName() {
-        var total = battery.chargePercent;
-        if (total < 5)
-            icon.name = "battery-empty-symbolic"
-        else if (total < 20)
-            icon.name = "battery-low-symbolic";
-        else if (total < 40)
-            icon.name = "battery-caution-symbolic";
-        else if (total < 80)
-            icon.name = "battery-good-symbolic";
-        else
-            icon.name = "battery-full-symbolic";
     }
 
     function setChargeState() {
@@ -172,7 +156,6 @@ Item {
     }
 
     Component.onCompleted: {
-        setIconName();
         setChargeState();
     }
 }

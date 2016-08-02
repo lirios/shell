@@ -33,7 +33,7 @@ import "power" as PowerIndicator
 
 Indicator {
     name: "battery"
-    iconName: "battery-missing-symbolic"
+    iconName: deviceChargeIcon(hardwareEngine.primaryBattery)
     component: Component {
         ColumnLayout {
             spacing: Units.largeSpacing
@@ -59,34 +59,33 @@ Indicator {
     }
     visible: hardwareEngine.batteries.length > 0
 
+    function deviceChargeIcon(device) {
+        if (!device)
+            return "device/battery_unknown"
+
+        var level = "full"
+
+        if (device.chargePercent < 25)
+            level = "20"
+        else if (device.chargePercent < 35)
+            level = "30"
+        else if (device.chargePercent < 55)
+            level = "50"
+        else if (device.chargePercent < 65)
+            level = "60"
+        else if (device.chargePercent < 85)
+            level = "80"
+        else if (device.chargePercent < 95)
+            level = "90"
+
+        if (device.chargeState == Battery.Charging ||
+                device.chargeState == Battery.FullyCharged)
+            return "device/battery_charging_" + level
+        else
+            return "device/battery_" + level
+    }
+
     HardwareEngine {
         id: hardwareEngine
-        onBatteriesChanged: determineIconName()
     }
-
-    function determineIconName() {
-        var i, total = 0, battery = null;
-        var charging = false, fullyCharged = false;
-        for (i = 0; i < hardwareEngine.batteries.length; i++) {
-            battery = hardwareEngine.batteries[i];
-            total = Math.max(battery.chargePercent, total);
-
-            if (battery.chargeState == Battery.Charging)
-                charging = true;
-            fullyCharged = battery.chargeState == Battery.FullyCharged;
-        }
-
-        if (total < 5)
-            iconName = "battery-empty-" + (charging ? "charging-" : "") + "symbolic"
-        else if (total < 20)
-            iconName = "battery-low-" + (charging ? "charging-" : "") + "symbolic";
-        else if (total < 40)
-            iconName = "battery-caution-" + (charging ? "charging-" : "") + "symbolic";
-        else if (total < 80)
-            iconName = "battery-good-" + (charging ? "charging-" : "") + "symbolic";
-        else
-            iconName = "battery-full-" + (fullyCharged ? "charged-" : (charging ? "charging-" : "")) + "symbolic";
-    }
-
-    Component.onCompleted: determineIconName()
 }

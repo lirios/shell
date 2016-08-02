@@ -37,8 +37,13 @@ Indicator {
     property int notificationId: 0
     property var pendingRemovals: []
 
+    readonly property bool hasNotifications: notificationsView.count > 0
+    readonly property bool silentMode: false
+
     name: "events"
-    iconName: "dialog-information-symbolic"
+    iconName: silentMode ? "social/notifications_off"
+                         : hasNotifications ? "social/notifications"
+                                            : "social/notifications_none"
     component: Component {
         ColumnLayout {
             spacing: Units.largeSpacing

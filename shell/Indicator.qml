@@ -28,50 +28,62 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
 
-Item {
+Rectangle {
+    id: indicator
+
     property string name
-    property alias iconName: icon.name
-    property alias iconSize: icon.width
+
     property alias text: label.text
-    property int badgeCount: 0
-    property bool active: false
+    property alias iconName: icon.name
+    property alias iconSize: icon.size
     property string tooltip
+    property Component iconView
+
+    property int badgeCount: 0
+
+    property Component component
+
+    property bool active: false
+
     readonly property bool selected: selectedIndicator == indicator
     readonly property bool expanded: __priv.expanded
-    property Component component
 
     signal triggered(var caller)
 
-    id: indicator
-    width: {
-        if (!visible)
-            return 0;
+    width: visible ? indicator.text ? label.width + (32 - label.height) : 32 : 0
+    height: 56
 
-        var size = 0;
-        if (iconName)
-            size += icon.width + (Units.smallSpacing * 2);
-        if (text)
-            size += label.width + (Units.smallSpacing * 2);
-        if (iconName && text)
-            size += Units.smallSpacing * 2;
-        return Math.max(size, Units.smallSpacing * 10);
-    }
-    height: Math.max(Math.max(icon.height, label.height) + (Units.smallSpacing * 2), Units.smallSpacing * 10)
+    color: __priv.highlighted ? Qt.rgba(0,0,0,0.1) : Qt.rgba(0,0,0,0)
+
     onTriggered: __priv.expanded = !__priv.expanded
+
+    Behavior on color {
+        ColorAnimation {
+            duration: Units.mediumDuration
+        }
+    }
 
     QtObject {
         id: __priv
 
         property bool expanded: false
+        property bool highlighted: false
+
+        onExpandedChanged: highlighted = expanded
     }
 
     Rectangle {
-        id: container
-        anchors.fill: parent
-        anchors.margins: Units.smallSpacing
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+
+        height: 2
         color: Material.accentColor
-        radius: 6
+
         opacity: active ? 1.0 : 0.0
 
         Behavior on opacity {
@@ -82,10 +94,21 @@ Item {
         }
     }
 
-    MouseArea {
+    Ripple {
+        id: ripple
         anchors.fill: parent
         hoverEnabled: true
         onClicked: indicator.triggered(indicator)
+
+        onContainsMouseChanged: __priv.highlighted = containsMouse
+    }
+
+    Loader {
+        id: iconView
+        anchors.centerIn: parent
+        sourceComponent: indicator.iconView
+
+        property alias iconSize: indicator.iconSize
     }
 
     Icon {

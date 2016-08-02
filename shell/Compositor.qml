@@ -27,6 +27,7 @@ import GreenIsland 1.0 as GreenIsland
 import org.hawaiios.misc 0.1
 import org.hawaiios.launcher 0.1
 import "base"
+import "components"
 import "desktop"
 
 WindowCompositor {
@@ -57,6 +58,10 @@ WindowCompositor {
             __private.outputs[i].idle();
 
         SessionInterface.idle = true;
+    }
+
+    DateTime {
+        id: dateTime
     }
 
     ShellSettings {

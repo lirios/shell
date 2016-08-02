@@ -37,6 +37,8 @@ Item {
     id: desktop
 
     Material.theme: Material.Dark
+    Material.primary: Material.Blue
+    Material.accent: Material.Blue
 
     readonly property var layers: QtObject {
         readonly property alias workspaces: workspacesLayer

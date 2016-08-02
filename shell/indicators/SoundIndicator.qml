@@ -38,12 +38,12 @@ Indicator {
     name: "sound"
     iconName: {
         if (MixerService.Mixer.muted || MixerService.Mixer.master == 0)
-            return "audio-volume-muted-symbolic";
-        if (MixerService.Mixer.master < 50)
-            return "audio-volume-low-symbolic";
-        if (MixerService.Mixer.master < 75)
-            return "audio-volume-medium-symbolic";
-        return "audio-volume-high-symbolic";
+            return "av/volume_off"
+        if (MixerService.Mixer.master < 33)
+            return "av/volume_mute"
+        if (MixerService.Mixer.master < 66)
+            return "av/volume_down"
+        return "av/volume_up"
     }
     component: Component {
         ColumnLayout {

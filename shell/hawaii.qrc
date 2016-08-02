@@ -20,6 +20,7 @@
 	<file>base/OutputWindow.qml</file>
 	<file>base/WindowCompositor.qml</file>
 	<file>components/CloseButton.qml</file>
+	<file>components/DateTime.qml</file>
 	<file>components/MenuSeparator.qml</file>
 	<file>components/Overlay.qml</file>
 	<file>components/ToolButton.qml</file>
@@ -44,9 +45,11 @@
 	<file>desktop/WorkspacesView.qml</file>
 	<file>error/ErrorCompositor.qml</file>
 	<file>error/ErrorScreenView.qml</file>
+	<file>images/harddisk.svg</file>
 	<file>images/wallpaper.png</file>
 	<file>indicators/BatteryIndicator.qml</file>
 	<file>indicators/ChatIndicator.qml</file>
+	<file>indicators/DateTimeIndicator.qml</file>
 	<file>indicators/EventsIndicator.qml</file>
 	<file>indicators/LauncherIndicator.qml</file>
 	<file>indicators/NetworkIndicator.qml</file>
@@ -56,6 +59,8 @@
 	<file>indicators/events/EventItem.qml</file>
 	<file>indicators/events/NotificationItem.qml</file>
 	<file>indicators/events/NotificationWindow.qml</file>
+	<file>indicators/launcher/AppsIcon.qml</file>
+	<file>indicators/launcher/Dot.qml</file>
 	<file>indicators/network/AirplaneMode.qml</file>
 	<file>indicators/network/ConnectionItem.qml</file>
 	<file>indicators/network/Header.qml</file>
