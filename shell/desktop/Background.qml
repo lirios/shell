@@ -104,8 +104,6 @@ Loader {
 
                 anchors.fill: parent
                 source: compositor.settings.background.pictureUrl
-                sourceSize.width: aspectRatio * 1024
-                sourceSize.height: 1024
                 smooth: true
                 clip: fillMode === Image.PreserveAspectCrop
                 fillMode: compositor.settings.convertFillMode(compositor.settings.background.fillMode)
