@@ -27,14 +27,13 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import Fluid.Controls 1.0
-import "../components" as CustomComponents
 
 RowLayout {
     implicitWidth: (Units.iconSizes.large * 3) + (spacing * 3)
     implicitHeight: Units.iconSizes.large + (spacing * 2)
     spacing: Units.smallSpacing
 
-    CustomComponents.ToolButton {
+    IconButton {
         iconSize: Units.iconSizes.smallMedium
         iconName: "system-log-out-symbolic"
         //tooltip: qsTr("Log out from current session")
@@ -45,7 +44,7 @@ RowLayout {
         }
     }
 
-    CustomComponents.ToolButton {
+    IconButton {
         iconSize: Units.iconSizes.smallMedium
         iconName: "system-shutdown-symbolic"
         //tooltip: qsTr("Power off the system")
@@ -56,7 +55,7 @@ RowLayout {
         }
     }
 
-    CustomComponents.ToolButton {
+    IconButton {
         iconSize: Units.iconSizes.smallMedium
         iconName: "system-reboot-symbolic"
         //tooltip: qsTr("Restart the system")

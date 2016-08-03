@@ -29,7 +29,6 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
-import "../components" as CustomComponents
 
 Popup {
     signal appLaunched()
@@ -52,18 +51,18 @@ Popup {
         spacing: Units.smallSpacing
 
         RowLayout {
-            CustomComponents.ToolButton {
+            IconButton {
                 id: viewCategoriesButton
-                iconName: "view-more-symbolic"
+                iconName: "action/view_list"
                 checkable: true
                 checked: false
                 autoExclusive: true
                 onClicked: categories.currentIndex = 0
             }
 
-            CustomComponents.ToolButton {
+            IconButton {
                 id: viewPagedButton
-                iconName: "view-paged-symbolic"
+                iconName: "action/view_module"
                 checkable: true
                 checked: true
                 autoExclusive: true
