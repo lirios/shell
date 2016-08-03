@@ -36,15 +36,7 @@ import "sound" as SoundIndicator
 Indicator {
     id: indicator
     name: "sound"
-    iconName: {
-        if (MixerService.Mixer.muted || MixerService.Mixer.master == 0)
-            return "av/volume_off"
-        if (MixerService.Mixer.master < 33)
-            return "av/volume_mute"
-        if (MixerService.Mixer.master < 66)
-            return "av/volume_down"
-        return "av/volume_up"
-    }
+    iconName: getIconName()
     component: Component {
         ColumnLayout {
             spacing: Units.largeSpacing
@@ -87,6 +79,16 @@ Indicator {
     }
     visible: MixerService.Mixer.available || mpris2.players.length > 0
 
+    function getIconName() {
+        if (MixerService.Mixer.muted || MixerService.Mixer.master == 0)
+            return "av/volume_off"
+        if (MixerService.Mixer.master < 33)
+            return "av/volume_mute"
+        if (MixerService.Mixer.master < 66)
+            return "av/volume_down"
+        return "av/volume_up"
+    }
+
     Mpris {
         id: mpris2
     }
@@ -95,8 +97,8 @@ Indicator {
         target: MixerService.Mixer
         onMasterChanged: {
             // Show overlay
-            var overlay = screenView.layers.overlays;
-            overlay.iconName = indicator.iconName;
+            var overlay = desktop.layers.overlays;
+            overlay.iconName = getIconName();
             overlay.value = MixerService.Mixer.master;
             overlay.showProgress = true;
             if (!overlay.visible)

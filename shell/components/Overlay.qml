@@ -30,6 +30,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Core 1.0
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
 
 Showable {
     //! How long the overlay will stay on screen
@@ -79,13 +80,18 @@ Showable {
 
     Rectangle {
         id: rect
+
         anchors.fill: parent
-        border.color: Utils.alpha(Material.drawerBackgroundColor, 0.5)
-        border.width: 1
-        color: Units.alpha(Material.drawerBackgroundColor, 0.85)
+        color: Material.dialogColor
         radius: 6
         antialiasing: true
         opacity: 0.0
+
+        layer.enabled: true
+        layer.effect: ElevationEffect {
+            elevation: 8
+        }
+
         onOpacityChanged: {
             if (opacity == 0.0) {
                 // Reset values to prevent fading from old values
@@ -103,9 +109,7 @@ Showable {
 
             Icon {
                 id: icon
-                width: Units.iconSizes.enormous
-                height: width
-                color: Material.primaryTextColor
+                size: Units.iconSizes.enormous
 
                 Layout.alignment: Qt.AlignHCenter
             }
