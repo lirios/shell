@@ -102,7 +102,7 @@ Indicator {
             }
         }
     }
-    onTriggered: badgeCount = 0
+    onClicked: badgeCount = 0
 
     Timer {
         id: pendingTimer

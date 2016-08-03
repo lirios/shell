@@ -24,8 +24,8 @@
  import QtQuick 2.0
  import ".."
 
- Indicator {
-     name: "datetime"
-     text: Qt.formatTime(dateTime.now)
-     tooltip: Qt.formatDate(dateTime.now, Locale.LongFormat)
- }
+Indicator {
+    name: "datetime"
+    text: Qt.formatTime(dateTime.now)
+    tooltip: Qt.formatDate(dateTime.now, Locale.LongFormat)
+}

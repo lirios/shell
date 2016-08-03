@@ -31,8 +31,8 @@ import QtQml.Models 2.2
 import GreenIsland 1.0
 import Fluid.Controls 1.0
 import Fluid.Material 1.0
-import "indicators"
-import "launcher"
+import "../indicators"
+import "../launcher"
 
 Item {
     id: panel
@@ -41,7 +41,7 @@ Item {
     readonly property alias currentLauncherItem: launcher.currentItem
 
     property real size: 56
-    property color color: "#263238"
+    property color color: Material.dialogColor
 
     property bool showing
 
@@ -119,9 +119,6 @@ Item {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
-
-            iconSize: panel.size
-            itemSize: panel.size + panel.spacing
         }
 
         Rectangle {
@@ -147,38 +144,41 @@ Item {
 
                 DateTimeIndicator {
                     iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
+                    onClicked: {
+                        console.log("CLICKED", caller)
+                        indicatorTriggered(caller)
+                    }
                 }
 
                 EventsIndicator {
                     iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
+                    onClicked: indicatorTriggered(caller)
                 }
 
                 SettingsIndicator {
                     iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
+                    onClicked: indicatorTriggered(caller)
                 }
 
                 SoundIndicator {
                     iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
+                    onClicked: indicatorTriggered(caller)
                 }
 
                 // FIXME: This crashes the shell
                 // NetworkIndicator {
                 //     iconSize: indicatorsView.iconSize
-                //     onTriggered: indicatorTriggered(caller)
+                //     onClicked: indicatorTriggered(caller)
                 // }
 
                 StorageIndicator {
                     iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
+                    onClicked: indicatorTriggered(caller)
                 }
 
                 BatteryIndicator {
                     iconSize: indicatorsView.iconSize
-                    onTriggered: indicatorTriggered(caller)
+                    onClicked: indicatorTriggered(caller)
                 }
             }
         }

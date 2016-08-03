@@ -21,12 +21,12 @@
  *
  * $END_LICENSE$
  ***************************************************************************/
- 
+
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
-import ".."
+import "../panel"
 
 Item {
     id: shell
@@ -39,6 +39,7 @@ Item {
         z: 1
 
         onIndicatorTriggered: {
+            console.log('Triggered!')
             // Set the last indicator
             rightDrawer.lastIndicator = indicator;
             indicator.active = true;

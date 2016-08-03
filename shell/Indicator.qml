@@ -29,8 +29,9 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
 import Fluid.Material 1.0
+import "panel"
 
-Rectangle {
+PanelItem {
     id: indicator
 
     property string name
@@ -45,63 +46,7 @@ Rectangle {
 
     property Component component
 
-    property bool active: false
-
-    readonly property bool selected: selectedIndicator == indicator
-    readonly property bool expanded: __priv.expanded
-
-    signal triggered(var caller)
-
     width: visible ? indicator.text ? label.width + (32 - label.height) : 32 : 0
-    height: 56
-
-    color: __priv.highlighted ? Qt.rgba(0,0,0,0.1) : Qt.rgba(0,0,0,0)
-
-    onTriggered: __priv.expanded = !__priv.expanded
-
-    Behavior on color {
-        ColorAnimation {
-            duration: Units.mediumDuration
-        }
-    }
-
-    QtObject {
-        id: __priv
-
-        property bool expanded: false
-        property bool highlighted: false
-
-        onExpandedChanged: highlighted = expanded
-    }
-
-    Rectangle {
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-
-        height: 2
-        color: Material.accentColor
-
-        opacity: active ? 1.0 : 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InOutQuad
-                duration: Units.shortDuration
-            }
-        }
-    }
-
-    Ripple {
-        id: ripple
-        anchors.fill: parent
-        hoverEnabled: true
-        onClicked: indicator.triggered(indicator)
-
-        onContainsMouseChanged: __priv.highlighted = containsMouse
-    }
 
     Loader {
         id: iconView
@@ -114,9 +59,6 @@ Rectangle {
     Icon {
         id: icon
         anchors.centerIn: parent
-        color: active ? Material.primaryHighlightedTextColor : Material.primaryTextColor
-        height: width
-        cache: false
     }
 
     Label {

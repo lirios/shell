@@ -36,8 +36,8 @@ Indicator {
     iconView: AppsIcon {}
     tooltip: qsTr("Applications")
     active: popover.visible
-    onTriggered: popover.open()
-    
+    onClicked: popover.open()
+
     Launcher.LauncherPopOver {
         id: popover
         x: Units.largeSpacing
