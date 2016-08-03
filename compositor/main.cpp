@@ -89,10 +89,10 @@ int main(int argc, char *argv[])
     // Setup the environment
     setupEnvironment();
 
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    // Automatically support HiDPI
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     // Application
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     app.setApplicationName(QLatin1String("Hawaii"));
     app.setApplicationVersion(QLatin1String(HAWAII_VERSION_STRING));
