@@ -26,6 +26,7 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
+import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 
 RowLayout {
@@ -36,33 +37,36 @@ RowLayout {
     IconButton {
         iconSize: Units.iconSizes.smallMedium
         iconName: "system-log-out-symbolic"
-        //tooltip: qsTr("Log out from current session")
         enabled: SessionInterface.canLogOut
         onClicked: {
             launcherPopOver.close();
             SessionInterface.requestLogOut();
         }
+
+        ToolTip.text: qsTr("Log out from current session")
     }
 
     IconButton {
         iconSize: Units.iconSizes.smallMedium
         iconName: "system-shutdown-symbolic"
-        //tooltip: qsTr("Power off the system")
         enabled: SessionInterface.canPowerOff
         onClicked: {
             launcherPopOver.close();
             SessionInterface.requestPowerOff();
         }
+
+        ToolTip.text: qsTr("Power off the system")
     }
 
     IconButton {
         iconSize: Units.iconSizes.smallMedium
         iconName: "system-reboot-symbolic"
-        //tooltip: qsTr("Restart the system")
         enabled: SessionInterface.canRestart
         onClicked: {
             launcherPopOver.close();
             SessionInterface.requestRestart();
         }
+
+        ToolTip.text: qsTr("Restart the system")
     }
 }
