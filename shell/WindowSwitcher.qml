@@ -40,6 +40,8 @@ Popup {
     implicitWidth: output.availableGeometry.width * 0.7
     implicitHeight: thumbnailSize + label.paintedHeight + (2 * layout.spacing) + FluidUi.Units.largeSpacing
 
+    Material.theme: Material.Dark
+
     Component {
         id: thumbnailComponent
 
