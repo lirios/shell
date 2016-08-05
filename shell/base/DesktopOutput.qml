@@ -31,6 +31,7 @@ BaseOutput {
     property int idleInhibit: 0
 
     property alias screenView: outputWindow.screenView
+    property alias surfacesArea: outputWindow.screenView
     property alias idleDimmer: outputWindow.idleDimmer
 
     property alias screenViewComponent: outputWindow.screenViewComponent
