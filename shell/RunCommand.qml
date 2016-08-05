@@ -32,7 +32,7 @@ import Fluid.Controls 1.0
 import org.hawaiios.launcher 0.1 as CppLauncher
 
 Popup {
-    closePolicy: Popup.OnEscape | Popup.OnPressOutside
+    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     modal: true
     focus: true
     implicitWidth: layout.width + (2 * Units.largeSpacing)
