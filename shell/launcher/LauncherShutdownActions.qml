@@ -36,7 +36,7 @@ RowLayout {
 
     IconButton {
         iconSize: Units.iconSizes.smallMedium
-        iconName: "system-log-out-symbolic"
+        iconName: Qt.resolvedUrl("../images/logout.svg")
         enabled: SessionInterface.canLogOut
         onClicked: {
             launcherPopOver.close();
@@ -48,7 +48,7 @@ RowLayout {
 
     IconButton {
         iconSize: Units.iconSizes.smallMedium
-        iconName: "system-shutdown-symbolic"
+        iconName: "action/power_settings_new"
         enabled: SessionInterface.canPowerOff
         onClicked: {
             launcherPopOver.close();
@@ -60,7 +60,7 @@ RowLayout {
 
     IconButton {
         iconSize: Units.iconSizes.smallMedium
-        iconName: "system-reboot-symbolic"
+        iconName: Qt.resolvedUrl("../images/reload.svg")
         enabled: SessionInterface.canRestart
         onClicked: {
             launcherPopOver.close();
