@@ -44,7 +44,7 @@ Rectangle {
     width: height
     height: parent.height
 
-    color: __priv.highlighted ? Qt.rgba(0,0,0,0.1) : Qt.rgba(0,0,0,0)
+    color: __priv.highlighted ? Qt.rgba(0,0,0,0.2) : Qt.rgba(0,0,0,0)
 
     onActiveChanged: __priv.highlighted = active
 
@@ -69,14 +69,16 @@ Rectangle {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onClicked: {
-            console.log("MAYBE CLICKED")
             if (mouse.button == Qt.RightButton)
                 item.rightClicked(item)
             else
                 item.clicked(item)
         }
 
-        onContainsMouseChanged: __priv.highlighted = containsMouse
+        onContainsMouseChanged: {
+            if (!item.active)
+                __priv.highlighted = containsMouse
+        }
     }
 
     Rectangle {

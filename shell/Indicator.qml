@@ -66,7 +66,7 @@ PanelItem {
     Label {
         id: label
         anchors.centerIn: parent
-        font.pixelSize: Units.roundToIconSize(Units.iconSizes.small)
+        font.pixelSize: 15
     }
 
     Rectangle {
