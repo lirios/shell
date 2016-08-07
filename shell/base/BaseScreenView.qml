@@ -26,6 +26,30 @@ import QtQuick 2.5
 Rectangle {
     property var output
 
+    readonly property var windows: {
+        var windows = []
+
+        for (var i = 0; i < windowsModel.count; i++) {
+            var window = windowsModel.get(i).window
+
+            if (window.designedOutput === output)
+                windows.push(window)
+        }
+
+        return windows
+    }
+
+    readonly property bool hasMaximizedWindow: {
+        for (var i = 0; i < windows.length; i++) {
+            var window = windows[i]
+
+            if (window.maximized)
+                return true
+        }
+
+        return false
+    }
+
     signal keyPressed(var event)
     signal keyReleased(var event)
 }

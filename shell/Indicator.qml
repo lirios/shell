@@ -38,9 +38,10 @@ PanelItem {
 
     property alias text: label.text
     property alias iconName: icon.name
-    property alias iconSize: icon.size
     property string tooltip
     property Component iconView
+
+    readonly property int iconSize: height >= 40 ? 56 * 0.36 : height * 0.45
 
     property int badgeCount: 0
 
@@ -58,6 +59,7 @@ PanelItem {
 
     Icon {
         id: icon
+        size: indicator.iconSize
         anchors.centerIn: parent
     }
 

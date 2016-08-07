@@ -34,16 +34,19 @@ import Fluid.Material 1.0
 import "../indicators"
 import "../launcher"
 
-Item {
+Rectangle {
     id: panel
 
     readonly property alias launcherIndicator: launcherIndicator
     readonly property alias currentLauncherItem: launcher.currentItem
 
     property real size: 56
-    property color color: Material.dialogColor
+    property color darkColor: Material.dialogColor
 
     property bool showing
+    property bool maximized: screenView.hasMaximizedWindow
+
+    color: maximized ? darkColor : "transparent"
 
     signal indicatorTriggered(var indicator)
 
@@ -51,8 +54,7 @@ Item {
         left: parent.left
         right: parent.right
         bottom: parent.bottom
-        bottomMargin: showing ? Units.smallSpacing : -height
-        margins: Units.smallSpacing
+        bottomMargin: showing ? 0 : -height
 
         Behavior on bottomMargin {
             NumberAnimation {
@@ -78,18 +80,6 @@ Item {
      * Focused window
      */
 
-    // FIXME: The following two connections don't work
-
-    Connections {
-        target: compositor.applicationManager
-        onFocusedWindowChanged: setup()
-    }
-
-    Connections {
-        target: compositor.applicationManager.focusedWindow
-        onMaximizedChanged: setup()
-    }
-
     /*
      * Layout
      */
@@ -97,20 +87,27 @@ Item {
     RowLayout {
         anchors.fill: parent
 
-        Rectangle {
+        Item {
             Layout.fillHeight: true
-            Layout.preferredWidth: launcherIndicator.width
+            Layout.preferredWidth: height
 
-            radius: 2
-            color: panel.color
-            layer.enabled: true
-            layer.effect: ElevationEffect {
-                elevation: 8
-            }
+            Rectangle {
+                anchors {
+                    fill: parent
+                    margins: panel.maximized ? 0 : 8
+                }
 
-            LauncherIndicator {
-                id: launcherIndicator
-                width: height
+                radius: 2
+                color: panel.darkColor
+                layer.enabled: !panel.maximized
+                layer.effect: ElevationEffect {
+                    elevation: 8
+                }
+
+                LauncherIndicator {
+                    id: launcherIndicator
+                    width: height
+                }
             }
         }
 
@@ -121,64 +118,64 @@ Item {
             Layout.fillHeight: true
         }
 
-        Rectangle {
+        Item {
             Layout.fillHeight: true
-            Layout.preferredWidth: indicatorsView.implicitWidth + Units.smallSpacing * 2
+            Layout.preferredWidth: indicatorsRect.implicitWidth + indicatorsRect.anchors.margins * 2
 
-            radius: 2
-            color: panel.color
-            layer.enabled: true
-            layer.effect: ElevationEffect {
-                elevation: 8
-            }
+            Rectangle {
+                id: indicatorsRect
 
-            RowLayout {
-                id: indicatorsView
+                anchors {
+                    fill: parent
+                    margins: panel.maximized ? 0 : 8
+                }
 
-                anchors.centerIn: parent
+                implicitWidth: indicatorsView.width + 2 * Units.smallSpacing
 
-                spacing: 0
-                height: parent.height
+                radius: 2
+                color: panel.darkColor
+                layer.enabled: !panel.maximized
+                layer.effect: ElevationEffect {
+                    elevation: 8
+                }
 
-                property real iconSize: 24
+                Row {
+                    id: indicatorsView
 
-                DateTimeIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onClicked: {
-                        console.log("CLICKED", caller)
-                        indicatorTriggered(caller)
+                    anchors.centerIn: parent
+
+                    height: parent.height
+
+                    DateTimeIndicator {
+                        onClicked: {
+                            indicatorTriggered(caller)
+                        }
                     }
-                }
 
-                EventsIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onClicked: indicatorTriggered(caller)
-                }
+                    EventsIndicator {
+                        onClicked: indicatorTriggered(caller)
+                    }
 
-                SettingsIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onClicked: indicatorTriggered(caller)
-                }
+                    SettingsIndicator {
+                        onClicked: indicatorTriggered(caller)
+                    }
 
-                SoundIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onClicked: indicatorTriggered(caller)
-                }
+                    SoundIndicator {
+                        onClicked: indicatorTriggered(caller)
+                    }
 
-                // FIXME: This crashes the shell
-                // NetworkIndicator {
-                //     iconSize: indicatorsView.iconSize
-                //     onClicked: indicatorTriggered(caller)
-                // }
+                    // FIXME: This crashes the shell
+                    // NetworkIndicator {
+                    //     onClicked: indicatorTriggered(caller)
+                    // }
 
-                StorageIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onClicked: indicatorTriggered(caller)
-                }
+                    StorageIndicator {
+                        onClicked: indicatorTriggered(caller)
+                    }
 
-                BatteryIndicator {
-                    iconSize: indicatorsView.iconSize
-                    onClicked: indicatorTriggered(caller)
+                    BatteryIndicator {
+                        onClicked: indicatorTriggered(caller)
+                    }
                 }
             }
         }
@@ -187,19 +184,6 @@ Item {
     Component.onCompleted: {
         setAvailableGeometry()
         showing = true
-    }
-
-    function setup() {
-        // TODO: Don't resize the panel, the window is maximized before we change the available
-        // geometry resulting in a "hole" between the window and the panel
-        var window = compositor.applicationManager.focusedWindow;
-        if (window && window.maximized) {
-            color = Utils.alpha(Material.dialogColor, 0.9);
-            //launcher.iconSize = Units.iconSizes.medium;
-        } else {
-            color = "transparent";
-            //launcher.iconSize = Units.iconSizes.large;
-        }
     }
 
     function setAvailableGeometry() {

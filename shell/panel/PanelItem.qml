@@ -42,7 +42,7 @@ Rectangle {
     signal rightClicked(var caller)
 
     width: height
-    height: 56
+    height: parent.height
 
     color: __priv.highlighted ? Qt.rgba(0,0,0,0.1) : Qt.rgba(0,0,0,0)
 
