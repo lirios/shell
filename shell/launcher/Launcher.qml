@@ -26,54 +26,52 @@
 
 import QtQuick 2.0
 import Fluid.Controls 1.0
-import org.hawaiios.launcher 0.1 as CppLauncher
+import org.hawaiios.launcher 0.1
 
-Item {
-    property real iconSize
-    property real itemSize
-    readonly property real itemPadding: Units.smallSpacing * 2
-    property alias orientation: listView.orientation
-    readonly property alias currentItem: listView.currentItem
-
+ListView {
     id: launcher
-    states: [
-        State {
-            name: "horizontal"
-            when: listView.orientation == ListView.Horizontal
 
-            PropertyChanges {
-                target: listView
-                width: listView.contentWidth
-                height: launcher.height
-            }
-        },
-        State {
-            name: "vertical"
-            when: listView.orientation == ListView.Vertical
+    orientation: Qt.Horizontal
+    interactive: contentWidth > width
 
-            PropertyChanges {
-                target: listView
-                width: launcher.width
-                height: listView.contentHeight
-            }
-        }
-    ]
+    model: LauncherModel {
+        id: launcherModel
+        applicationManager: compositor.applicationManager
+    }
+    delegate: LauncherDelegate {}
 
-    ListView {
-        id: listView
-        anchors.centerIn: parent
-        spacing: Units.smallSpacing
-        interactive: false
-        add: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Units.shortDuration }
+    remove: Transition {
+        ParallelAnimation {
+            NumberAnimation { property: "opacity"; to: 0; duration: 250 }
+            NumberAnimation { properties: "y"; to: height; duration: 250 }
         }
-        populate: Transition {
-            NumberAnimation { properties: "scale"; from: 0.1; to: 1.0; duration: Units.longDuration }
+    }
+
+    removeDisplaced: Transition {
+        SequentialAnimation {
+            PauseAnimation { duration: 250 }
+            NumberAnimation { properties: "x,y"; duration: 250 }
         }
-        model: CppLauncher.LauncherModel {
-            id: launcherModel
-            applicationManager: compositor.applicationManager
+    }
+
+    move: Transition {
+        SequentialAnimation {
+            PauseAnimation { duration: 250 }
+            NumberAnimation { properties: "x,y"; duration: 250 }
         }
-        delegate: LauncherDelegate {}
+    }
+
+    moveDisplaced: Transition {
+        SequentialAnimation {
+            PauseAnimation { duration: 250 }
+            NumberAnimation { properties: "x,y"; duration: 250 }
+        }
+    }
+
+    add: Transition {
+        ParallelAnimation {
+            NumberAnimation { property: "opacity"; to: 1; from: 0; duration: 250 }
+            NumberAnimation { properties: "y"; to: 0; from: height; duration: 250 }
+        }
     }
 }

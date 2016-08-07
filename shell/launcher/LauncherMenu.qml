@@ -31,7 +31,7 @@ import org.hawaiios.launcher 0.1 as CppLauncher
 import "../components" as CustomComponents
 
 Menu {
-    readonly property var launcherItem: listView.model.get(root.indexOfThisDelegate)
+    readonly property var launcherItem: launcher.model.get(root.indexOfThisDelegate)
 
     id: menu
     transformOrigin: Menu.BottomLeft
@@ -84,7 +84,7 @@ Menu {
         text: qsTr("Add To Launcher")
         enabled: !model.pinned
         onTriggered: {
-            listView.model.pin(model.appId);
+            launcher.model.pin(model.appId);
             menu.close();
         }
     }
@@ -92,7 +92,7 @@ Menu {
         text: qsTr("Remove From Launcher")
         enabled: model.pinned
         onTriggered: {
-            listView.model.unpin(model.appId);
+            launcher.model.unpin(model.appId);
             menu.close();
         }
     }
@@ -115,7 +115,7 @@ Menu {
         text: qsTr("Quit")
         enabled: model.running
         onTriggered: {
-            if (!listView.model.get(index).quit())
+            if (!launcher.model.get(index).quit())
                 console.warn("Failed to quit:", model.appId);
             menu.close();
         }

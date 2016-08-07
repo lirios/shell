@@ -27,67 +27,47 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
+import "../panel"
 
-Item {
+PanelItem {
+    id: launcherItem
+
     property int indexOfThisDelegate: index
     property string appId: model.appId
-    property bool active: true
 
-    id: root
-    width: itemSize
-    height: width
+    // TODO: Implement starting
+    highlightColor: /* model.starting ? Palette.colors.orange["500"] : */ "white"
+    highlightOpacity: model.active /*|| model.starting*/ ? 1 : model.running ? 0.4 : 0
 
     ToolTip.delay: 2000
     ToolTip.timeout: 3000
-    ToolTip.visible: mouseArea.containsMouse && !menu.showing
+    ToolTip.visible: containsMouse && !menu.showing
     ToolTip.text: model.name
 
-    Behavior on width {
-        NumberAnimation {
-            easing.type: Easing.Linear
-            duration: Units.shortDuration
+    onClicked: {
+        if (model.running) {
+            if (model.active)
+                toggleWindows();
+            else
+                activateWindows();
+        } else {
+            if (!launcher.model.get(index).launch())
+                console.warn("Failed to run:", model.appId);
         }
     }
 
-    Behavior on height {
-        NumberAnimation {
-            easing.type: Easing.Linear
-            duration: Units.shortDuration
-        }
+    onRightClicked: {
+        if (menu.showing)
+            menu.close();
+        else
+            menu.open();
     }
 
     Icon {
         id: icon
         anchors.centerIn: parent
         name: model.iconName
-        width: iconSize
-        height: width
-        cache: false
-    }
-
-    Rectangle {
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-        height: 2
-        color: model.active ? Material.accentColor : "white"
-        opacity: model.running ? 1.0 : 0.0
-
-        Behavior on color {
-            ColorAnimation {
-                easing.type: Easing.OutQuad
-                duration: Units.shortDuration
-            }
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.OutQuad
-                duration: Units.shortDuration
-            }
-        }
+        size: parent.height * 0.55
     }
 
     Rectangle {
@@ -125,45 +105,9 @@ Item {
         y: -height
     }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        hoverEnabled: true
-        onClicked: {
-            switch (mouse.button) {
-            case Qt.LeftButton:
-                if (model.running) {
-                    if (model.active)
-                        toggleWindows();
-                    else
-                        activateWindows();
-                } else {
-                    if (!listView.model.get(index).launch())
-                        console.warn("Failed to run:", model.appId);
-                }
-                break;
-            case Qt.RightButton:
-                if (menu.showing)
-                    menu.close();
-                else
-                    menu.open();
-                break;
-            default:
-                break;
-            }
-        }
-        onPressAndHold: {
-            if (menu.showing)
-                menu.close();
-            else
-                menu.open();
-        }
-    }
-
     function activateWindows() {
         // Set index so that the window have a clue of which icon was clicked
-        listView.currentIndex = index;
+        launcher.currentIndex = index;
 
         // Activate all windows of this application and unminimize
         var i, window;
@@ -176,23 +120,23 @@ Item {
         }
 
         // Toggle active flag
-        root.active = !root.active;
+        launcherItem.active = !launcherItem.active;
     }
 
     function toggleWindows() {
         // Set index so that the window have a clue of which icon was clicked
-        listView.currentIndex = index;
+        launcher.currentIndex = index;
 
         // Minimize or unminimize windows
         var i, window;
         for (i = 0; i < compositor.windowsModel.count; i++) {
             window = compositor.windowsModel.get(i).window;
             if (window.appId === model.appId) {
-                var pt = screenView.mapFromItem(root, root.width * 0.5, root.height * 0.5);
+                var pt = screenView.mapFromItem(launcherItem, launcherItem.width * 0.5, launcherItem.height * 0.5);
                 pt.x += output.position.x;
                 pt.y += output.position.y;
 
-                window.taskIconGeometry = Qt.rect(pt.x, pt.y, root.width, root.height);
+                window.taskIconGeometry = Qt.rect(pt.x, pt.y, launcherItem.width, launcherItem.height);
                 window.minimized = !window.minimized;
             }
         }
