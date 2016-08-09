@@ -30,7 +30,6 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
-import "../components" as CustomComponents
 
 Showable {
     property alias mode: __priv.mode
@@ -63,35 +62,35 @@ Showable {
         State {
             name: "logout"
             PropertyChanges { target: __priv; currentAction: logOutRequested }
-            PropertyChanges { target: actionIcon; iconName: "system-log-out-symbolic" }
+            PropertyChanges { target: actionIcon; name: Qt.resolvedUrl("../images/logout.svg") }
             PropertyChanges { target: actionLabel; text: qsTr("Log Out") }
             PropertyChanges { target: okButton; text: qsTr("Log out") }
         },
         State {
             name: "poweroff"
             PropertyChanges { target: __priv; currentAction: powerOffRequested }
-            PropertyChanges { target: actionIcon; iconName: "system-shutdown-symbolic" }
+            PropertyChanges { target: actionIcon; name: "action/power_settings_new" }
             PropertyChanges { target: actionLabel; text: qsTr("Power Off") }
             PropertyChanges { target: okButton; text: qsTr("Power off") }
         },
         State {
             name: "restart"
             PropertyChanges { target: __priv; currentAction: restartRequested }
-            PropertyChanges { target: actionIcon; iconName: "system-reboot-symbolic" }
+            PropertyChanges { target: actionIcon; name: Qt.resolvedUrl("../images/reload.svg") }
             PropertyChanges { target: actionLabel; text: qsTr("Restart") }
             PropertyChanges { target: okButton; text: qsTr("Restart") }
         },
         State {
             name: "suspend"
             PropertyChanges { target: __priv; currentAction: suspendRequested }
-            PropertyChanges { target: actionIcon; iconName: "system-suspend-symbolic" }
+            PropertyChanges { target: actionIcon; name: Qt.resolvedUrl("../images/sleep.svg") }
             PropertyChanges { target: actionLabel; text: qsTr("Suspend") }
             PropertyChanges { target: okButton; text: qsTr("Suspend") }
         },
         State {
             name: "hibernate"
             PropertyChanges { target: __priv; currentAction: hibernateRequested }
-            PropertyChanges { target: actionIcon; iconName: "system-suspend-hibernate-symbolic" }
+            PropertyChanges { target: actionIcon; name: Qt.resolvedUrl("../images/hibernate.svg") }
             PropertyChanges { target: actionLabel; text: qsTr("Hibernate") }
             PropertyChanges { target: okButton; text: qsTr("Hibernate") }
         }
@@ -156,10 +155,7 @@ Showable {
 
         Icon {
             id: actionIcon
-            width: Units.iconSizes.enormous
-            height: width
-            color: Material.primaryTextColor
-            cache: false
+            size: Units.iconSizes.enormous
 
             Layout.alignment: Qt.AlignHCenter
         }
@@ -225,9 +221,9 @@ Showable {
                      SessionInterface.canSuspend ||
                      SessionInterface.canHibernate
 
-            CustomComponents.ToolButton {
+            IconButton {
                 id: logoutButton
-                iconName: "system-log-out-symbolic"
+                iconName: Qt.resolvedUrl("../images/logout.svg")
                 iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
@@ -236,9 +232,9 @@ Showable {
                 onClicked: __priv.mode = "logout"
             }
 
-            CustomComponents.ToolButton {
+            IconButton {
                 id: poweroffButton
-                iconName: "system-shutdown-symbolic"
+                iconName: "action/power_settings_new"
                 iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
@@ -247,9 +243,9 @@ Showable {
                 onClicked: __priv.mode = "poweroff"
             }
 
-            CustomComponents.ToolButton {
+            IconButton {
                 id: restartButton
-                iconName: "system-reboot-symbolic"
+                iconName: Qt.resolvedUrl("../images/reload.svg")
                 iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
@@ -258,9 +254,9 @@ Showable {
                 onClicked: __priv.mode = "restart"
             }
 
-            CustomComponents.ToolButton {
+            IconButton {
                 id: suspendButton
-                iconName: "system-suspend-symbolic"
+                iconName: Qt.resolvedUrl("../images/sleep.svg")
                 iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true
@@ -269,9 +265,9 @@ Showable {
                 onClicked: __priv.mode = "suspend"
             }
 
-            CustomComponents.ToolButton {
+            IconButton {
                 id: hibernateButton
-                iconName: "system-suspend-hibernate-symbolic"
+                iconName: Qt.resolvedUrl("../images/hibernate.svg")
                 iconSize: Units.iconSizes.medium
                 autoExclusive: true
                 checkable: true

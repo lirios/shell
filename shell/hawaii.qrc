@@ -45,8 +45,10 @@
 	<file>error/ErrorCompositor.qml</file>
 	<file>error/ErrorScreenView.qml</file>
 	<file>images/harddisk.svg</file>
+	<file>images/hibernate.svg</file>
 	<file>images/logout.svg</file>
 	<file>images/reload.svg</file>
+	<file>images/sleep.svg</file>
 	<file>images/wallpaper.png</file>
 	<file>indicators/BatteryIndicator.qml</file>
 	<file>indicators/ChatIndicator.qml</file>
