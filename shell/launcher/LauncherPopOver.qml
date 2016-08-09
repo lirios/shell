@@ -29,12 +29,14 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
 
 Popup {
+    id: launcherPopOver
+
     signal appLaunched()
     signal dismissed()
 
-    id: launcherPopOver
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
     implicitWidth: mainLayout.implicitWidth +
@@ -44,115 +46,165 @@ Popup {
                     launcherPopOver.topPadding + launcherPopOver.bottomPadding +
                     launcherPopOver.topMargin + launcherPopOver.bottomMargin
 
-    Material.theme: Material.Dark
+    padding: 0
+    rightPadding: 2
 
-    ColumnLayout {
-        id: mainLayout
-        spacing: Units.smallSpacing
+    Material.theme: Material.Light
+    Material.accent: Material.Blue
 
-        RowLayout {
-            IconButton {
-                id: viewCategoriesButton
-                iconName: "action/view_list"
-                checkable: true
-                checked: false
-                autoExclusive: true
-                onClicked: categories.currentIndex = 0
-            }
+    Rectangle {
+        radius: 2
+        color: "#eee"
+        width: mainLayout.width
+        height: mainLayout.height
 
-            IconButton {
-                id: viewPagedButton
-                iconName: "action/view_module"
-                checkable: true
-                checked: true
-                autoExclusive: true
-                onClicked: categories.currentIndex = 0
-            }
+        ColumnLayout {
+            id: mainLayout
 
-            Item {
-                width: Units.smallSpacing
-            }
+            spacing: 0
 
-            TextField {
-                id: searchText
-                placeholderText: qsTr("Type an application name...")
-                focus: true
-                onTextChanged: grid.query = text
-
+            Rectangle {
                 Layout.fillWidth: true
-            }
+                Layout.preferredHeight: topRow.implicitHeight + 2 * topRow.anchors.margins
 
-            Item {
-                Layout.fillWidth: true
-            }
+                color: "white"
+                radius: 2
 
-            LauncherShutdownActions {
-                id: shutdownActions
+                Item {
+                    width: parent.width
+                    height: parent.height + 20
+                    y: parent.radius
+                    clip: true
 
-                Layout.alignment: Qt.AlignHCenter
-            }
+                    Rectangle {
+                        x: -5
+                        y: -parent.y
+                        width: parent.width - 2 * x
+                        height: parent.parent.height
 
-            Layout.fillWidth: true
-        }
-
-        RowLayout {
-            LauncherCategories {
-                id: categories
-                clip: true
-                width: Units.gu(10)
-                visible: viewCategoriesButton.checked
-                onSelected: grid.filterByCategory(category)
-
-                Layout.fillHeight: true
-            }
-
-            ColumnLayout {
-                LauncherGridView {
-                    id: grid
-                    onAppLaunched: launcherPopOver.appLaunched()
-
-                    MouseArea {
-                        anchors.fill: parent
-                        acceptedButtons: Qt.NoButton
-                        onWheel: {
-                            if (wheel.angleDelta.x > 0 || wheel.angleDelta.y > 0) {
-                                // Go to the next page
-                                if (grid.currentPage < grid.numPages - 1) {
-                                    grid.currentPage++;
-                                    grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
-                                }
-                            } else if (wheel.angleDelta.x < 0 || wheel.angleDelta.y < 0) {
-                                // Go to the next page
-                                if (grid.currentPage > 0) {
-                                    grid.currentPage--;
-                                    grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
-                                }
-                            }
-
-                            wheel.accepted = true;
+                        layer.enabled: true
+                        layer.effect: ElevationEffect {
+                            elevation: 2
                         }
+                    }
+                }
+
+                RowLayout {
+                    id: topRow
+                    anchors {
+                        fill: parent
+                        margins: Units.smallSpacing
+                    }
+
+                    IconButton {
+                        id: viewCategoriesButton
+                        iconName: "action/view_list"
+                        checkable: true
+                        checked: false
+                        autoExclusive: true
+                        onClicked: categories.currentIndex = 0
+                    }
+
+                    IconButton {
+                        id: viewPagedButton
+                        iconName: "action/view_module"
+                        checkable: true
+                        checked: true
+                        autoExclusive: true
+                        onClicked: categories.currentIndex = 0
+                    }
+
+                    Item {
+                        width: Units.smallSpacing
+                    }
+
+                    TextField {
+                        id: searchText
+                        placeholderText: qsTr("Type an application name...")
+                        focus: true
+                        onTextChanged: grid.query = text
+
+                        Layout.fillWidth: true
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    LauncherShutdownActions {
+                        id: shutdownActions
+
+                        Layout.alignment: Qt.AlignHCenter
                     }
 
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
-
-                PageIndicator {
-                    id: pageIndicator
-                    count: grid.numPages
-                    currentIndex: grid.currentPage
-                    onCurrentIndexChanged: grid.currentPage = currentIndex
-
-                    Layout.alignment: Qt.AlignHCenter
-                }
-
-                Item {
-                    height: Units.smallSpacing
                 }
             }
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            Item {
+                Layout.preferredWidth: contentRow.implicitWidth + 2 * contentRow.anchors.margins
+                Layout.preferredHeight: contentRow.implicitHeight + 2 * contentRow.anchors.margins
+
+                RowLayout {
+                    id: contentRow
+
+                    anchors {
+                        fill: parent
+                        margins: Units.smallSpacing
+                    }
+
+                    LauncherCategories {
+                        id: categories
+                        clip: true
+                        width: Units.gu(10)
+                        visible: viewCategoriesButton.checked
+                        onSelected: grid.filterByCategory(category)
+
+                        Layout.fillHeight: true
+                    }
+
+                    ColumnLayout {
+                        LauncherGridView {
+                            id: grid
+                            onAppLaunched: launcherPopOver.appLaunched()
+
+                            MouseArea {
+                                anchors.fill: parent
+                                acceptedButtons: Qt.NoButton
+                                onWheel: {
+                                    if (wheel.angleDelta.x > 0 || wheel.angleDelta.y > 0) {
+                                        // Go to the next page
+                                        if (grid.currentPage < grid.numPages - 1) {
+                                            grid.currentPage++;
+                                            grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
+                                        }
+                                    } else if (wheel.angleDelta.x < 0 || wheel.angleDelta.y < 0) {
+                                        // Go to the next page
+                                        if (grid.currentPage > 0) {
+                                            grid.currentPage--;
+                                            grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
+                                        }
+                                    }
+
+                                    wheel.accepted = true;
+                                }
+                            }
+
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                        }
+
+                        PageIndicator {
+                            id: pageIndicator
+                            count: grid.numPages
+                            currentIndex: grid.currentPage
+                            onCurrentIndexChanged: grid.currentPage = currentIndex
+
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+                    }
+                }
+            }
         }
     }
 }

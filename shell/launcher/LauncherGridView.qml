@@ -27,12 +27,14 @@
 import QtQuick 2.0
 import QtQml.Models 2.1
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
 import org.hawaiios.launcher 0.1 as CppLauncher
 
 GridView {
-    readonly property int iconSize: Units.iconSizes.large
-    readonly property int numRows: 5
-    readonly property int numColumns: 3
+    id: grid
+
+    readonly property int numRows: 6
+    readonly property int numColumns: 4
     readonly property int numItemsPerPage: numRows * numColumns
     readonly property int numPages: Math.ceil(grid.count / numItemsPerPage)
     property int currentPage: 0
@@ -40,9 +42,8 @@ GridView {
 
     signal appLaunched()
 
-    id: grid
-    cellWidth: (iconSize * 1.5) + (Units.largeSpacing * 2)
-    cellHeight: iconSize + Units.gu(2) + (Units.largeSpacing * 2) + Units.smallSpacing
+    cellWidth: 130
+    cellHeight: cellWidth
     width: cellWidth * numRows
     height: cellHeight * numColumns
     snapMode: GridView.SnapOneRow
@@ -62,19 +63,26 @@ GridView {
                 onAppLaunched: grid.appLaunched()
             }
         }
-        delegate: LauncherGridDelegate {
-            id: delegate
-            iconSize: grid.iconSize
+        delegate: Item {
             width: grid.cellWidth
             height: grid.cellHeight
 
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton
-                hoverEnabled: true
-                onEntered: delegate.hovered = true
-                onExited: delegate.hovered = false
-                onClicked: appsModel.trigger(visualModel.modelIndex(index))
+            LauncherGridDelegate {
+                id: delegate
+
+                anchors {
+                    fill: parent
+                    margins: Units.smallSpacing
+                }
+
+                Ripple {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton
+                    hoverEnabled: true
+                    onEntered: delegate.hovered = true
+                    onExited: delegate.hovered = false
+                    onClicked: appsModel.trigger(visualModel.modelIndex(index))
+                }
             }
         }
     }
@@ -83,4 +91,3 @@ GridView {
         appsModel.categoryFilter = category;
     }
 }
-
