@@ -31,12 +31,6 @@ The following modules and their dependencies are required:
  * [pam](http://www.linux-pam.org/)
  * [libqtxdg](https://github.com/lxde/libqtxdg)
 
-Optional dependencies:
-
- * Volume control
-   * [alsa](http://www.alsa-project.org/main/index.php/Main_Page) and/or
-   * [libpulse](https://wiki.freedesktop.org/www/Software/PulseAudio/)
-
 Optional, but recommended dependencies:
 
  * [hawaii-icon-themes](https://github.com/hawaii-desktop/hawaii-icon-themes) for the default icon theme
@@ -88,11 +82,6 @@ to learn how to enable them.
    * **hawaii.session:** Manages the session
    * **hawaii.loginmanager:** login manager subsystem
    * **hawaii.loginmanager.logind:** login manager subsystem (logind backend)
-
- * Mixer QML plugin:
-   * **hawaii.qml.mixer:** Mixer service
-   * **hawaii.qml.mixer.alsa:** Alsa backend
-   * **hawaii.qml.mixer.pulseaudio:** PulseAudio backend
 
  * Launcher QML plugin:
    * **hawaii.qml.launcher:** Launcher model and items

@@ -1,4 +1,3 @@
 add_subdirectory(misc)
 add_subdirectory(launcher)
-add_subdirectory(mixer)
 #add_subdirectory(styles)

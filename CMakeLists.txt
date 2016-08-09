@@ -53,8 +53,6 @@ endif()
 # Options
 option(DEVELOPMENT_BUILD "Enable options for developers" OFF)
 option(ENABLE_SYSTEMD "Enables systemd support" ON)
-option(ENABLE_ALSA "Enables Alsa mixer backend" ON)
-option(ENABLE_PULSEAUDIO "Enables PulseAudio mixer backend" ON)
 
 # Find pkg-config here so that it can be referenced soon
 find_package(PkgConfig)
