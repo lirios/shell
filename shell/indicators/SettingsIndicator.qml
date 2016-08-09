@@ -26,9 +26,9 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
+import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 import ".."
-import "../components" as CustomComponents
 
 Indicator {
     name: "settings"
@@ -48,27 +48,30 @@ Indicator {
             Row {
                 spacing: Units.smallSpacing
 
-                CustomComponents.ToolButton {
+                Button {
                     text: qsTr("Small")
                     checkable: true
                     checked: screenView.panel.size === Units.iconSizes.medium
                     autoExclusive: true
+                    flat: true
                     onClicked: screenView.panel.size = Units.iconSizes.medium
                 }
 
-                CustomComponents.ToolButton {
+                Button {
                     text: qsTr("Medium")
                     checkable: true
                     checked: screenView.panel.size === Units.iconSizes.large
                     autoExclusive: true
+                    flat: true
                     onClicked: screenView.panel.size = Units.iconSizes.large
                 }
 
-                CustomComponents.ToolButton {
+                Button {
                     text: qsTr("Large")
                     checkable: true
                     checked: screenView.panel.size === Units.iconSizes.huge
                     autoExclusive: true
+                    flat: true
                     onClicked: screenView.panel.size = Units.iconSizes.huge
                 }
             }
@@ -80,30 +83,33 @@ Indicator {
             Row {
                 spacing: Units.smallSpacing
 
-                CustomComponents.ToolButton {
+                Button {
                     text: qsTr("Left")
                     //iconName: "align-horizontal-left-symbolic"
                     checkable: true
                     checked: screenView.panel.state === "left"
                     autoExclusive: true
+                    flat: true
                     onClicked: screenView.panel.state = "left"
                 }
 
-                CustomComponents.ToolButton {
+                Button {
                     text: qsTr("Top")
                     //iconName: "align-vertical-top-symbolic"
                     checkable: true
                     checked: screenView.panel.state === "top"
                     autoExclusive: true
+                    flat: true
                     onClicked: screenView.panel.state = "top"
                 }
 
-                CustomComponents.ToolButton {
+                Button {
                     text: qsTr("Bottom")
                     //iconName: "align-vertical-bottom-symbolic"
                     checkable: true
                     checked: screenView.panel.state === "bottom"
                     autoExclusive: true
+                    flat: true
                     onClicked: screenView.panel.state = "bottom"
                 }
             }

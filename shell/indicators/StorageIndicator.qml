@@ -30,7 +30,6 @@ import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 import Hawaii.Hardware 1.0 as Hardware
 import ".."
-import "../components" as CustomComponents
 
 Indicator {
     name: "storage"
@@ -54,9 +53,7 @@ Indicator {
 
                         Icon {
                             name: modelData.iconName + "-symbolic"
-                            width: Units.iconSizes.large
-                            height: width
-                            color: label.color
+                            size: Units.iconSizes.large
 
                             MouseArea {
                                 anchors.fill: parent
@@ -78,8 +75,11 @@ Indicator {
                             Layout.fillWidth: true
                         }
 
-                        CustomComponents.ToolButton {
-                            iconName: modelData.mounted ? "media-eject-symbolic" : "media-removable-symbolic"
+                        IconButton {
+                            ToolTip.text: modelData.mounted ? qsTr("Eject") : qsTr("Mount")
+                            ToolTip.visible: hovered
+
+                            iconName: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disc.svg"))
                             onClicked: modelData.mounted ? modelData.unmount() : modelData.mount()
                         }
                     }

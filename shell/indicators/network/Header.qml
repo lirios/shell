@@ -28,7 +28,6 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
-import "../../components" as CustomComponents
 
 RowLayout {
     property alias text: label.text
@@ -44,8 +43,8 @@ RowLayout {
         Layout.fillWidth: true
     }
 
-    CustomComponents.ToolButton {
+    IconButton {
         id: refreshButton
-        iconName: "view-refresh-symbolic"
+        iconName: "navigation/refresh"
     }
 }

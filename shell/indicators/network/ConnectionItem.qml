@@ -32,7 +32,6 @@ import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 import org.hawaiios.misc 0.1 as Misc
 import Hawaii.NetworkManager 1.0 as NM
-import "../../components" as CustomComponents
 
 Item {
     property bool predictableWirelessPassword: !Uuid && Type === NM.Enums.Wireless &&
@@ -104,9 +103,7 @@ Item {
 
             Icon {
                 name: indicator.massageIconName(ConnectionIcon)
-                width: Units.iconSizes.medium
-                height: width
-                color: label.color
+                size: Units.iconSizes.medium
 
                 Layout.alignment: Qt.AlignTop
             }
@@ -169,11 +166,13 @@ Item {
                 Layout.fillWidth: true
             }
 
-            CustomComponents.ToolButton {
+            IconButton {
+                ToolTip.text: ConnectionState === NM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
+                ToolTip.visible: hovered
+
                 id: stateChangeButton
-                iconName: ConnectionState === NM.Enums.Deactivated ? "network-connect" : "network-disconnect"
-                //opacity: mouseArea.containsMouse ? 1.0 : 0.0
-                //tooltip: ConnectionState === NM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
+                iconName: Qt.resolvedUrl("../images/lan-" + (ConnectionState === NM.Enums.Deactivated ? "connect" : "disconnect") + ".svg")
+                opacity: hovered ? 1.0 : 0.0
                 visible: opacity == 1.0
                 onClicked: changeState()
 

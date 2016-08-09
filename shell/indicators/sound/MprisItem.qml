@@ -29,7 +29,6 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 import Hawaii.Mpris 1.0
-import "../../components" as CustomComponents
 
 ColumnLayout {
     property var player
@@ -59,8 +58,7 @@ ColumnLayout {
                 id: icon
                 anchors.fill: parent
                 name: player ? player.iconName : ""
-                color: titleLabel.color
-                visible: !albumArt.visible && iconName != ""
+                visible: !albumArt.visible && name !== ""
             }
 
             BusyIndicator {
@@ -97,30 +95,36 @@ ColumnLayout {
     }
 
     Row {
-        CustomComponents.ToolButton {
-            iconName: "media-skip-backward-symbolic"
-            iconSize: Units.iconSizes.small
-            //tooltip: qsTr("Previous")
+        IconButton {
+            ToolTip.text: qsTr("Previous")
+            ToolTip.visible: hovered
+
+            iconName: "av/skip_previous"
+            iconSize: Units.iconSizes.smallMedium
             onClicked: {
                 if (player)
                     player.previous();
             }
         }
 
-        CustomComponents.ToolButton {
-            iconName: player ? (player.status === "Playing" ? "media-playback-pause-symbolic" : "media-playback-start-symbolic") : ""
-            iconSize: Units.iconSizes.small
-            //tooltip: qsTr(player.status == "Playing" ? "Pause" : "Play")
+        IconButton {
+            ToolTip.text: player.status === "Playing" ? qsTr("Pause") : qsTr("Play")
+            ToolTip.visible: hovered
+
+            iconName: player ? (player.status === "Playing" ? "av/pause" : "av/play_arrow") : ""
+            iconSize: Units.iconSizes.smallMedium
             onClicked: {
                 if (player)
                     player.playPause();
             }
         }
 
-        CustomComponents.ToolButton {
-            iconName: "media-skip-forward-symbolic"
-            iconSize: Units.iconSizes.small
-            //tooltip: qsTr("Next")
+        IconButton {
+            ToolTip.text: qsTr("Next")
+            ToolTip.visible: hovered
+
+            iconName: "av/skip_next"
+            iconSize: Units.iconSizes.smallMedium
             onClicked: {
                 if (player)
                     player.next();

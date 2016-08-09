@@ -22,7 +22,6 @@
 	<file>components/DateTime.qml</file>
 	<file>components/MenuSeparator.qml</file>
 	<file>components/Overlay.qml</file>
-	<file>components/ToolButton.qml</file>
 	<file>components/private/PopupBase.qml</file>
 	<file>decoration/PopupWindowDecoration.qml</file>
 	<file>decoration/WindowControls.qml</file>
@@ -44,8 +43,12 @@
 	<file>desktop/WorkspacesView.qml</file>
 	<file>error/ErrorCompositor.qml</file>
 	<file>error/ErrorScreenView.qml</file>
+	<file>images/eject.svg</file>
+	<file>images/disk.svg</file>
 	<file>images/harddisk.svg</file>
 	<file>images/hibernate.svg</file>
+	<file>images/lan-connect.svg</file>
+	<file>images/lan-disconnect.svg</file>
 	<file>images/logout.svg</file>
 	<file>images/reload.svg</file>
 	<file>images/sleep.svg</file>
