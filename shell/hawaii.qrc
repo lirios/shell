@@ -22,7 +22,6 @@
 	<file>components/DateTime.qml</file>
 	<file>components/MenuSeparator.qml</file>
 	<file>components/Overlay.qml</file>
-	<file>components/private/PopupBase.qml</file>
 	<file>decoration/PopupWindowDecoration.qml</file>
 	<file>decoration/WindowControls.qml</file>
 	<file>decoration/WindowDecoration.qml</file>
