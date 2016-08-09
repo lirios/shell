@@ -27,7 +27,6 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.0
 import Fluid.Controls 1.0
-import org.hawaiios.mixer 0.1 as MixerService
 import Hawaii.Mpris 1.0
 import Hawaii.Settings 1.0 as Settings
 import ".."
@@ -36,7 +35,7 @@ import "sound" as SoundIndicator
 Indicator {
     id: indicator
     name: "sound"
-    iconName: getIconName()
+    iconName: volumeControl.getIconName()
     component: Component {
         ColumnLayout {
             spacing: Units.largeSpacing
@@ -50,9 +49,9 @@ Indicator {
                 visible: volumeControl.visible
             }
 
-            SoundIndicator.VolumeControl {
-                id: volumeControl
-                visible: MixerService.Mixer.available
+            SoundIndicator.VolumeSlider {
+                id: volumeSlider
+                visible: volumeControl.visible
 
                 Layout.fillWidth: true
             }
@@ -77,33 +76,14 @@ Indicator {
             }
         }
     }
-    visible: MixerService.Mixer.available || mpris2.players.length > 0
+    visible: volumeControl.visible || mpris2.players.length > 0
 
-    function getIconName() {
-        if (MixerService.Mixer.muted || MixerService.Mixer.master == 0)
-            return "av/volume_off"
-        if (MixerService.Mixer.master < 33)
-            return "av/volume_mute"
-        if (MixerService.Mixer.master < 66)
-            return "av/volume_down"
-        return "av/volume_up"
+    SoundIndicator.VolumeControl {
+        id: volumeControl
     }
 
     Mpris {
         id: mpris2
-    }
-
-    Connections {
-        target: MixerService.Mixer
-        onMasterChanged: {
-            // Show overlay
-            var overlay = desktop.layers.overlays;
-            overlay.iconName = getIconName();
-            overlay.value = MixerService.Mixer.master;
-            overlay.showProgress = true;
-            if (!overlay.visible)
-                overlay.show();
-        }
     }
 
     Settings.Settings {
@@ -115,19 +95,19 @@ Indicator {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeMute
-        onActivated: MixerService.Mixer.muted = !MixerService.Mixer.muted
+        onActivated: volumeControl.toggleMute()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeUp
-        onActivated: MixerService.Mixer.increaseMaster()
+        onActivated: volumeControl.increase()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeDown
-        onActivated: MixerService.Mixer.decreaseMaster()
+        onActivated: volumeControl.decrease()
     }
 
     Shortcut {

@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL2+$
  *
@@ -25,70 +22,79 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.0
+import Fluid.Core 1.0
 import Fluid.Controls 1.0
-import org.hawaiios.mixer 0.1 as MixerService
+import Hawaii.PulseAudio 1.0
 
-RowLayout {
-    Label {
-        id: label
-        visible: false
+Object {
+    readonly property real from: 0
+    readonly property real to: 100
+    readonly property real stepSize: Math.round(5 * PulseAudio.NormalVolume / 100.0)
+    readonly property bool visible: sinkModel.defaultSink !== null
+
+    signal volumeChanged(real volume)
+
+    SinkModel {
+        id: sinkModel
     }
 
-    Icon {
-        width: Units.iconSizes.small
-        height: width
-        name: "audio-volume-low-symbolic"
-        opacity: MixerService.Mixer.available ? 1.0 : 0.6
-        color: label.color
-        cache: false
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: MixerService.Mixer.decreaseMaster()
-        }
+    // Set volume as soon as the default sink is available
+    Connections {
+        target: sinkModel
+        onDefaultSinkChanged: volumeChanged(getVolumePercentage())
     }
 
-    Slider {
-        id: slider
-        from: 0
-        to: 100
-        value: 0
-        opacity: MixerService.Mixer.available ? 1.0 : 0.6
-        enabled: MixerService.Mixer.available
-        onValueChanged: {
-            // Set mixer value only if pressed to avoid loops
-            if (slider.pressed)
-                MixerService.Mixer.master = slider.value;
-        }
-
-        Connections {
-            target: MixerService.Mixer
-            onMasterChanged: {
-                // Set mixer value only if not pressed to avoid loops
-                if (!slider.pressed)
-                    slider.value = MixerService.Mixer.master;
-            }
-        }
-
-        Layout.fillWidth: true
-        Layout.minimumWidth: Units.gu(12)
-
-        Component.onCompleted: value = MixerService.Mixer.master
+    // Set volume every time it changes
+    Connections {
+        target: sinkModel.defaultSink
+        onVolumeChanged: volumeChanged(getVolumePercentage())
     }
 
-    Icon {
-        width: Units.iconSizes.small
-        height: width
-        name: "audio-volume-high-symbolic"
-        opacity: MixerService.Mixer.available ? 1.0 : 0.6
-        color: label.color
-        cache: false
+    function getIconName() {
+        if (sinkModel.defaultSink.muted || sinkModel.defaultSink.volume === PulseAudio.MinimalVolume)
+            return "av/volume_off"
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: MixerService.Mixer.increaseMaster()
-        }
+        var volume = getVolumePercentage()
+        if (volume < 33.0)
+            return "av/volume_mute"
+        else if (volume < 66.0)
+            return "av/volume_down"
+
+        return "av/volume_up"
+    }
+
+    function getVolumePercentage() {
+        if (!sinkModel.defaultSink)
+            return 0.0
+        return (sinkModel.defaultSink.volume / PulseAudio.NormalVolume) * 100.0
+    }
+
+    function setVolumePercentage(value) {
+        if (!sinkModel.defaultSink)
+            return
+        sinkModel.defaultSink.volume = (PulseAudio.NormalVolume * value) / 100.0
+    }
+
+    function setMinimumVolume() {
+        if (sinkModel.defaultSink)
+            sinkModel.defaultSink.volume = PulseAudio.MinimalVolume
+    }
+
+    function setMaximumVolume() {
+        if (sinkModel.defaultSink)
+            sinkModel.defaultSink.volume = PulseAudio.NormalVolume
+    }
+
+    function toggleMute() {
+        if (sinkModel.defaultSink)
+            sinkModel.defaultSink.muted = !sinkModel.defaultSink.muted
+    }
+
+    function increase() {
+        slider.increase()
+    }
+
+    function decrease() {
+        slider.decrease()
     }
 }
