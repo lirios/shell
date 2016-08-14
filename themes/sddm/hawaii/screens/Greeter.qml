@@ -27,8 +27,8 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import Fluid.Controls 1.0
 import SddmComponents 2.0 as SddmComponents
-import Hawaii.Themes 1.0 as Themes
 import "../components" as Components
 
 FocusScope {
@@ -54,7 +54,7 @@ FocusScope {
     }
 
     ListView {
-        property real faceSize: Themes.Units.iconSizes.huge
+        property real faceSize: Units.iconSizes.huge
         property real itemSize: faceSize * 1.8
 
         id: usersView
@@ -71,12 +71,12 @@ FocusScope {
         focus: true
         model: userModel
         currentIndex: model.lastIndex
-        spacing: Themes.Units.dp(40)
+        spacing: Units.largeSpacing
         delegate: ColumnLayout {
             Item { height: usersView.faceSize * 0.1 }
 
             Row {
-                spacing: Themes.Units.largeSpacing
+                spacing: Units.largeSpacing
 
                 Components.CircleImage {
                     id: image
@@ -93,7 +93,7 @@ FocusScope {
                 }
 
                 Column {
-                    spacing: Themes.Units.smallSpacing
+                    spacing: Units.smallSpacing
                     anchors.verticalCenter: image.visible ? image.verticalCenter : icon.verticalCenter
 
                     Text {
@@ -108,7 +108,7 @@ FocusScope {
 
                     Components.PasswordField {
                         id: passwordField
-                        width: Themes.Units.dp(250)
+                        width: 250
                         focus: visible
                         visible: usersView.currentIndex == index
                         onAccepted: greeter.loginRequested(model.name, text, indicators.selectedSessionIndex)

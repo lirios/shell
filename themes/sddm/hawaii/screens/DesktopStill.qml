@@ -25,10 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 1.0
 import QtGraphicalEffects 1.0
-import Hawaii.Themes 1.0 as Themes
-import Hawaii.Controls 1.0 as Controls
 import Hawaii.Settings 1.0 as Settings
 
 Item {

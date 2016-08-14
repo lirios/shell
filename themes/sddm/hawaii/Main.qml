@@ -27,10 +27,10 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Private 1.0 as ControlsPrivate
-import Fluid.Controls 1.0 as FluidUi
+import Fluid.Controls 1.0
 import "screens" as Screens
 
-FluidUi.NoiseBackground {
+NoiseBackground {
     id: root
     color: "#272727"
     gradient: Gradient {

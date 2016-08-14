@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Controls 1.0
 import "../indicators" as Indicators
 
 Rectangle {
@@ -38,16 +38,16 @@ Rectangle {
 
     id: root
     color: "#80000000"
-    height: Themes.Units.dp(48)
+    height: Units.iconSizes.medium
 
     Row {
         anchors {
             left: parent.left
             verticalCenter: parent.verticalCenter
-            leftMargin: Themes.Units.largeSpacing
-            rightMargin: Themes.Units.largeSpacing
+            leftMargin: Units.largeSpacing
+            rightMargin: Units.largeSpacing
         }
-        spacing: Themes.Units.largeSpacing
+        spacing: Units.largeSpacing
 
         Button {
             id: rebootButton
@@ -70,10 +70,10 @@ Rectangle {
         anchors {
             right: parent.right
             verticalCenter: parent.verticalCenter
-            leftMargin: Themes.Units.largeSpacing
-            rightMargin: Themes.Units.largeSpacing
+            leftMargin: Units.largeSpacing
+            rightMargin: Units.largeSpacing
         }
-        spacing: Themes.Units.largeSpacing
+        spacing: Units.largeSpacing
 
         Indicators.Session {
             id: sessionIndicator

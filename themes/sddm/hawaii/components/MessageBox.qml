@@ -26,38 +26,36 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
+import Fluid.Controls 1.0
 
 RowLayout {
-    property color color: Themes.Theme.palette.panel.textColor
+    property color color: Material.primaryTextColor
     property alias iconName: icon.name
     property alias iconSource: icon.iconSource
     property alias message: label.text
 
     id: messageBox
-    spacing: Themes.Units.smallSpacing
+    spacing: Units.smallSpacing
     opacity: 0.0
 
-    FluidUi.Icon {
+    Icon {
         id: icon
-        width: Themes.Units.iconSizes.small
+        size: Units.iconSizes.small
         height: width
         color: messageBox.color
     }
 
-    Text {
+    TitleLabel {
         id: label
-        font.family: "Noto Sans"
-        font.pointSize: Themes.Theme.defaultFont.pointSize * 1.2
         color: messageBox.color
-        renderType: Text.NativeRendering
     }
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InOutQuad
-            duration: Themes.Units.shortDuration
+            duration: Units.shortDuration
         }
     }
 
