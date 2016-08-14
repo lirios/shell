@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -25,32 +22,17 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls.Material 2.0
-import Fluid.Core 1.0
-import Fluid.Controls 1.0
+import QtQuick.Controls 2.0
+import Hawaii.Desktop 1.0
 
-Item {
-    property alias iconSize: icon.width
-    property alias iconName: icon.name
+Indicator {
+    iconName: "action/power_settings_new"
 
-    width: iconSize * 1.5
-    height: width
+    //: Shut down indicator tooltip
+    //~ Indicator to shut the system down from SDDM
+    tooltip: qsTr("Shut down")
 
-    Rectangle {
-        id: container
-        anchors.fill: parent
-        color: Material.dialogColor
-        border.color: Utils.alpha(Qt.darker(color, 1.3), 0.5)
-        border.width: 1
-        radius: width / 2
-        antialiasing: true
-    }
-
-    Icon {
-        id: icon
-        anchors.centerIn: parent
-        name: "avatar-default-symbolic"
-        size: iconSize
-        color: "white"
-    }
+    //: Shut down indicator accessibility name
+    //~ Indicator to shut the system down from SDDM
+    Accessible.name: qsTr("Shut down the system")
 }

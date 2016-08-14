@@ -25,34 +25,11 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtGraphicalEffects 1.0
-import Hawaii.Settings 1.0 as Settings
+import QtQuick.Controls.Material 2.0
 
-Item {
-    property int stage: 0
-
-    id: root
-    onStageChanged: {
-        if (stage == 6)
-            desaturate.desaturation = 0.4;
-    }
-
-    Settings.Settings {
-        id: bgSettings
-        schema.id: "org.hawaiios.desktop.background"
-        schema.path: "/org/hawaiios/desktop/background/"
-    }
-
-
-    // TODO: Load a copy of user selecter wallpaper with blur
-    // and remove the FastBlur here
-    Image {
-        id: image
-        anchors.fill: parent
-        source: bgSettings.pictureUrl
-        sourceSize.width: width
-        sourceSize.height: height
-        smooth: true
-        visible: false
-    }
+Rectangle {
+    // TODO: We would show the last screenshot of the desktop, or
+    // at least the user wallpaper if there wasn't a problem with
+    // permissions
+    color: Material.color(Material.Blue, Material.Shade800)
 }

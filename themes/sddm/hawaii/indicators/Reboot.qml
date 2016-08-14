@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -25,16 +22,17 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls 2.0
+import Hawaii.Desktop 1.0
 
-Item {
-/*
-    Image {
-        anchors.centerIn: parent
-        source: "../artwork/logo.png"
-        sourceSize.width: 357
-        sourceSize.height: 350
-        fillMode: Image.PreserveAspectFit
-        smooth: true
-    }
-*/
+Indicator {
+    iconName: Qt.resolvedUrl("../images/reload.svg")
+
+    //: Reboot indicator tooltip
+    //~ Indicator to restart the system from SDDM
+    tooltip: qsTr("Restart")
+
+    //: Reboot indicator accessibility name
+    //~ Indicator to restart the system from SDDM
+    Accessible.name: qsTr("Reboot the system")
 }

@@ -25,27 +25,52 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.0 as QQC
 import Fluid.Controls 1.0
+import Hawaii.Desktop 1.0
 import SddmComponents 2.0
 
-IconButton {
-    iconName: "input-keyboard-symbolic"
-    text: keyboard.layouts[keyboard.currentLayout].shortName
+Indicator {
+    id: keyboardIndicator
+
+    iconName: "hardware/keyboard"
     visible: keyboard.layouts.length > 1
-    onClicked: {
-        var index = keyboard.currentLayout;
-        if (index == (keyboard.layouts.length - 1))
-            index = -1;
-        keyboard.currentLayout = index + 1;
-    }
 
     //: Keyboard layout indicator tooltip
     //~ Indicator to change keyboard layout
-    ToolTip.text: qsTr("Change keyboard layout")
-    ToolTip.visible: hovered
+    tooltip: qsTr("Change keyboard layout")
 
     //: Keyboard layout indicator accessibility name
     //~ Indicator to change keyboard layout
     Accessible.name: qsTr("Switch layout")
+
+    active: popup.visible
+    onClicked: popup.open()
+
+    // TODO: SDDM uses QQuickView not Application, so Drawer
+    // doesn't work, let's use Popup for now even if it doesn't
+    // show the modal background
+    QQC.Popup {
+        id: popup
+        parent: greeter
+        modal: true
+        x: (greeter.width - width) / 2
+        y: (greeter.height - height) / 2
+        width: 250
+        height: 250
+
+        Column {
+            anchors.fill: parent
+
+            Repeater {
+                model: keyboard.layouts
+
+                ListItem {
+                    text: modelData.longName
+                    highlighted: index === keyboard.currentLayout
+                    onClicked: keyboard.currentLayout = index
+                }
+            }
+        }
+    }
 }

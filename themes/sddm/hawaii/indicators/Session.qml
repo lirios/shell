@@ -25,25 +25,55 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.0 as QQC
 import Fluid.Controls 1.0
+import Hawaii.Desktop 1.0
+import SddmComponents 2.0
 
-Row {
-    property alias currentIndex: comboBox.currentIndex
+Indicator {
+    id: sessionIndicator
 
-    visible: listView.count > 1
+    property int currentIndex: sessionModel.lastIndex
 
-    Icon {
-        name: "system-run-symbolic"
-    }
+    iconName: "action/settings_applications"
+    visible: sessions.count > 1
 
-    ComboBox {
-        id: comboBox
-        model: sessionModel
-        currentIndex: sessionModel.lastIndex
+    //: Session indicator tooltip
+    //~ Indicator to select a session
+    tooltip: qsTr("Select a session")
 
-        //: Session indicator accessibility name
-        //~ Indicator to select a session
-        Accessible.name: qsTr("Select session")
+    //: Session indicator accessibility name
+    //~ Indicator to select a session
+    Accessible.name: qsTr("Select session")
+
+    active: popup.visible
+    onClicked: popup.open()
+
+    // TODO: SDDM uses QQuickView not Application, so Drawer
+    // doesn't work, let's use Popup for now even if it doesn't
+    // show the modal background
+    QQC.Popup {
+        id: popup
+        parent: greeter
+        modal: true
+        x: (greeter.width - width) / 2
+        y: (greeter.height - height) / 2
+        width: 250
+        height: 250
+
+        Column {
+            anchors.fill: parent
+
+            Repeater {
+                id: sessions
+                model: sessionModel
+
+                ListItem {
+                    text: name
+                    highlighted: currentIndex == index
+                    onClicked: currentIndex = index
+                }
+            }
+        }
     }
 }

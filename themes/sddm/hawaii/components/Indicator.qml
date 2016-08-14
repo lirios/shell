@@ -25,40 +25,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls.Material 2.0
-import QtGraphicalEffects 1.0
-import Fluid.Core 1.0
+import QtQuick.Controls 2.0
 
-Item {
-    property alias iconSize: image.width
-    property alias iconSource: image.source
-    property alias status: image.status
+MouseArea {
+    hoverEnabled: true
 
-    width: iconSize * 1.5
-    height: width
-
-    Rectangle {
-        id: container
-        anchors.fill: parent
-        color: Material.dialogColor
-        border.color: Utils.alpha(Qt.darker(color, 1.3), 0.5)
-        border.width: 1
-        radius: width / 2
-        antialiasing: true
-
-        Image {
-            id: image
-            anchors.centerIn: parent
-            sourceSize.width: width
-            sourceSize.height: height
-            height: width
-            visible: false
-        }
-    }
-
-    OpacityMask {
-        anchors.fill: parent
-        source: image
-        maskSource: container
-    }
+    ToolTip.visible: containsMouse
 }

@@ -1,6 +1,8 @@
 import QtQuick 2.0
 
 ListModel {
+    id: userModel
+
     property int lastIndex: 1
 
     ListElement {
@@ -30,7 +32,16 @@ ListModel {
     ListElement {
         name: "imp"
         realName: "Tyrion Lannister"
-        icon: "../dummydata/tyrion.png"
+        icon: ""
         homeDir: ""
+    }
+
+    Component.onCompleted: {
+        for (var i = 0; i < userModel.count; i++) {
+            if (userModel.get(i).name == "imp") {
+                userModel.get(i).icon = Qt.resolvedUrl("tyrion.png")
+                break
+            }
+        }
     }
 }
