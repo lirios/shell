@@ -74,7 +74,7 @@ Item {
 
             var i;
             for (i = 0; i < compositor.outputs.length; i++)
-                compositor.outputs[i].showInformation = showInformation;
+                compositor.outputs[i].screenView.showInformation = showInformation;
         }
     }
 
@@ -214,7 +214,7 @@ Item {
         onActivated: {
             var i, workspace;
             for (i = 0; i < compositor.outputs.length; i++) {
-                workspace = compositor.outputs[i].screenView.currentWorkspace;
+                workspace = compositor.outputs[i].screenView.surfacesArea;
                 if (workspace.state === "reveal")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")
@@ -229,7 +229,7 @@ Item {
         onActivated: {
             var i, workspace;
             for (i = 0; i < compositor.outputs.length; i++) {
-                workspace = compositor.outputs[i].screenView.currentWorkspace;
+                workspace = compositor.outputs[i].screenView.surfacesArea;
                 if (workspace.state === "present")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")
@@ -590,7 +590,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.runCommand
-        onActivated: compositor.defaultOutput.runCommand.open()
+        onActivated: compositor.defaultOutput.screenView.runCommand.open()
     }
 
     Shortcut {
