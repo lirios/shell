@@ -213,7 +213,7 @@ GreenIsland.ExtendedOutput {
         GreenIsland.WaylandMouseTracker {
             id: localPointerTracker
             anchors.fill: parent
-            enableWSCursor: true
+            windowSystemCursorEnabled: true
             onMouseXChanged: {
                 // Input wakes the output
                 hawaiiCompositor.wake();
@@ -426,7 +426,7 @@ GreenIsland.ExtendedOutput {
 
             GreenIsland.WaylandCursorItem {
                 id: cursor
-                inputDevice: output.compositor.defaultInputDevice
+                seat: output.compositor.defaultSeat
                 x: localPointerTracker.mouseX - hotspotX
                 y: localPointerTracker.mouseY - hotspotY
                 visible: localPointerTracker.containsMouse &&

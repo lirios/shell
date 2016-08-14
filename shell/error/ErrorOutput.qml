@@ -56,7 +56,7 @@ GreenIsland.ExtendedOutput {
 
             GreenIsland.WaylandCursorItem {
                 id: cursor
-                inputDevice: output.compositor.defaultInputDevice
+                seat: output.compositor.defaultSeat
                 x: localPointerTracker.mouseX - hotspotX
                 y: localPointerTracker.mouseY - hotspotY
                 visible: localPointerTracker.containsMouse

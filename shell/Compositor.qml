@@ -41,96 +41,107 @@ GreenIsland.WaylandCompositor {
     readonly property alias settings: settings
 
     id: hawaiiCompositor
-    extensions: [
-        GreenIsland.QtWindowManager {
-            showIsFullScreen: false
-            onOpenUrl: {
-                // Execute url with xdg-open
-                console.warn("Run", url, "with xdg-open");
-                processRunner.launchCommand("xdg-open " + url);
+    onSurfaceRequested: {
+        var surface = surfaceComponent.createObject(hawaiiCompositor, {});
+        surface.initialize(hawaiiCompositor, client, id, version);
+    }
+
+    /*
+     * Extensions
+     */
+
+    GreenIsland.QtWindowManager {
+        showIsFullScreen: false
+        onOpenUrl: {
+            // Execute url with xdg-open
+            console.warn("Run", url, "with xdg-open");
+            processRunner.launchCommand("xdg-open " + url);
+        }
+    }
+
+    GreenIsland.WlShell {
+        onWlShellSurfaceCreated: {
+            var window = applicationManager.createWindow(shellSurface.surface);
+
+            var i, view;
+            for (i = 0; i < d.outputs.length; i++) {
+                view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": shellSurface, "window": window, "decorated": true});
+                view.moveItem = window.moveItem;
+                window.addWindowView(view);
             }
-        },
-        GreenIsland.WlShell {
-            onShellSurfaceCreated: {
-                var window = applicationManager.createWindow(shellSurface.surface);
+        }
+    }
 
-                var i, view;
-                for (i = 0; i < d.outputs.length; i++) {
-                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": shellSurface, "window": window, "decorated": true});
-                    view.moveItem = window.moveItem;
-                    window.addWindowView(view);
-                }
+    GreenIsland.XdgShell {
+        property variant viewsBySurface: ({})
+
+        onXdgSurfaceCreated: {
+            var window = applicationManager.createWindow(xdgSurface.surface);
+
+            var i, view;
+            for (i = 0; i < d.outputs.length; i++) {
+                view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": xdgSurface, "window": window, "decorated": false});
+                view.moveItem = window.moveItem;
+                if (viewsBySurface[xdgSurface.surface] == undefined)
+                    viewsBySurface[xdgSurface.surface] = new Array();
+                viewsBySurface[xdgSurface.surface].push({"output": d.outputs[i], "view": view});
+                window.addWindowView(view);
             }
-        },
-        GreenIsland.XdgShell {
-            property variant viewsBySurface: ({})
+        }
+        onXdgPopupCreated: {
+            var window = applicationManager.createWindow(xdgPopup.surface);
 
-            onXdgSurfaceCreated: {
-                var window = applicationManager.createWindow(xdgSurface.surface);
-
-                var i, view;
-                for (i = 0; i < d.outputs.length; i++) {
-                    view = chromeComponent.createObject(d.outputs[i].surfacesArea, {"shellSurface": xdgSurface, "window": window, "decorated": false});
-                    view.moveItem = window.moveItem;
-                    if (viewsBySurface[xdgSurface.surface] == undefined)
-                        viewsBySurface[xdgSurface.surface] = new Array();
-                    viewsBySurface[xdgSurface.surface].push({"output": d.outputs[i], "view": view});
-                    window.addWindowView(view);
-                }
-            }
-            onXdgPopupCreated: {
-                var window = applicationManager.createWindow(xdgPopup.surface);
-
-                var i, j, parentView, view, parentViews = viewsBySurface[xdgPopup.parentSurface];
-                for (i = 0; i < d.outputs.length; i++) {
-                    for (j = 0; j < parentViews.length; j++) {
-                        if (parentViews[j].output == d.outputs[i]) {
-                            view = chromeComponent.createObject(parentViews[j].view, {"shellSurface": xdgPopup, "window": window});
-                            view.x = xdgPopup.position.x;
-                            view.y = xdgPopup.position.y;
-                            view.moveItem = window.moveItem;
-                            window.addWindowView(view);
-                        }
+            var i, j, parentView, view, parentViews = viewsBySurface[xdgPopup.parentSurface];
+            for (i = 0; i < d.outputs.length; i++) {
+                for (j = 0; j < parentViews.length; j++) {
+                    if (parentViews[j].output == d.outputs[i]) {
+                        view = chromeComponent.createObject(parentViews[j].view, {"shellSurface": xdgPopup, "window": window});
+                        view.x = xdgPopup.position.x;
+                        view.y = xdgPopup.position.y;
+                        view.moveItem = window.moveItem;
+                        window.addWindowView(view);
                     }
                 }
             }
-        },
-        GreenIsland.GtkShell {},
-        GreenIsland.TextInputManager {},
-        GreenIsland.ApplicationManager {
-            id: applicationManager
-        },
-        GreenIsland.OutputManagement {
-            id: outputManagement
-            onCreateOutputConfiguration: {
-                var outputConfiguration = outputConfigurationComponent.createObject();
-                outputConfiguration.initialize(outputManagement, resource);
-            }
-        },
-        GreenIsland.Screencaster {
-            id: screencaster
-        },
-        GreenIsland.Screenshooter {
-            id: screenshooter
-            onCaptureRequested: {
-                // TODO: We might want to do something depending on the capture type - plfiorini
-                switch (screenshot.captureType) {
-                case GreenIsland.Screenshot.CaptureActiveWindow:
-                case GreenIsland.Screenshot.CaptureWindow:
-                case GreenIsland.Screenshot.CaptureArea:
-                    break;
-                default:
-                    break;
-                }
-
-                // Setup client buffer
-                screenshot.setup();
-            }
         }
-    ]
-    onCreateSurface: {
-        var surface = surfaceComponent.createObject(hawaiiCompositor, {});
-        surface.initialize(hawaiiCompositor, client, id, version);
+    }
+
+    GreenIsland.GtkShell {}
+
+    GreenIsland.TextInputManager {}
+
+    GreenIsland.ApplicationManager {
+        id: applicationManager
+    }
+
+    GreenIsland.OutputManagement {
+        id: outputManagement
+        onCreateOutputConfiguration: {
+            var outputConfiguration = outputConfigurationComponent.createObject();
+            outputConfiguration.initialize(outputManagement, resource);
+        }
+    }
+
+    GreenIsland.Screencaster {
+        id: screencaster
+    }
+
+    GreenIsland.Screenshooter {
+        id: screenshooter
+        onCaptureRequested: {
+            // TODO: We might want to do something depending on the capture type - plfiorini
+            switch (screenshot.captureType) {
+            case GreenIsland.Screenshot.CaptureActiveWindow:
+            case GreenIsland.Screenshot.CaptureWindow:
+            case GreenIsland.Screenshot.CaptureArea:
+                break;
+            default:
+                break;
+            }
+
+            // Setup client buffer
+            screenshot.setup();
+        }
     }
 
     /*
