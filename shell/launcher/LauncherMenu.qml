@@ -122,6 +122,9 @@ Menu {
     }
 
     Component.onCompleted: {
+        if (launcherItem == undefined)
+            return
+
         var i, item;
 
         // Add application actions
