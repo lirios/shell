@@ -69,6 +69,12 @@ Rectangle {
     onWidthChanged: setAvailableGeometry()
     onHeightChanged: setAvailableGeometry()
 
+    Behavior on color {
+        ColorAnimation {
+            duration: Units.shortDuration
+        }
+    }
+
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.OutQuad
