@@ -25,34 +25,25 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import SddmComponents 2.0
-import "../components" as Components
+import QtQuick.Controls 2.0
+import Fluid.Controls 1.0
 
-Components.Button {
-    property alias currentIndex: listView.currentIndex
+Row {
+    property alias currentIndex: comboBox.currentIndex
 
-    iconName: "system-run-symbolic"
-    text: listView.currentItem.sessionName
-    //text: listView.model.get(listView.currentIndex).name
     visible: listView.count > 1
-    onClicked: listView.incrementCurrentIndex()
 
-    //: Session indicator accessibility name
-    //~ Indicator to select a session
-    Accessible.name: qsTr("Select session")
+    Icon {
+        name: "system-run-symbolic"
+    }
 
-    ListView {
-        id: listView
+    ComboBox {
+        id: comboBox
         model: sessionModel
         currentIndex: sessionModel.lastIndex
-        highlightRangeMode: ListView.StrictlyEnforceRange
-        orientation: ListView.Horizontal
-        interactive: false
-        clip: false
-        keyNavigationWraps: true
-        visible: false
-        delegate: Item {
-            property string sessionName: name
-        }
+
+        //: Session indicator accessibility name
+        //~ Indicator to select a session
+        Accessible.name: qsTr("Select session")
     }
 }

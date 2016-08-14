@@ -25,8 +25,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Themes 1.0 as Themes
-import Fluid.Controls 1.0 as FluidUi
+import QtQuick.Controls.Material 2.0
+import Fluid.Core 1.0
+import Fluid.Controls 1.0
 
 Item {
     property alias iconSize: icon.width
@@ -38,18 +39,18 @@ Item {
     Rectangle {
         id: container
         anchors.fill: parent
-        color: Themes.Theme.palette.panel.backgroundColor
-        border.color: Themes.Theme.palette.rgba(Qt.darker(color, 1.3), 0.5)
-        border.width: Themes.Units.dp(1)
+        color: Material.dialogColor
+        border.color: Utils.alpha(Qt.darker(color, 1.3), 0.5)
+        border.width: 1
         radius: width / 2
         antialiasing: true
     }
 
-    FluidUi.Icon {
+    Icon {
         id: icon
         anchors.centerIn: parent
-        iconName: "avatar-default-symbolic"
-        height: width
+        name: "avatar-default-symbolic"
+        size: iconSize
         color: "white"
     }
 }

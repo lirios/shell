@@ -25,7 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.0
 import Fluid.Controls 1.0
 import SddmComponents 2.0 as SddmComponents
@@ -41,6 +42,10 @@ FocusScope {
     signal powerOffRequested()
 
     id: greeter
+
+    Material.theme: Material.Light
+    Material.primary: Material.color(Material.Blue, Material.Shade500)
+    Material.accent: Material.color(Material.Blue, Material.Shade500)
 
     Rectangle {
         id: stripe
@@ -78,10 +83,11 @@ FocusScope {
             Row {
                 spacing: Units.largeSpacing
 
-                Components.CircleImage {
+                CircleImage {
                     id: image
-                    iconSize: usersView.faceSize
-                    iconSource: model.icon
+                    width: usersView.faceSize
+                    height: width
+                    source: model.icon
                     visible: status == Image.Ready
                 }
 
@@ -106,10 +112,12 @@ FocusScope {
                         font.pointSize: 16
                     }
 
-                    Components.PasswordField {
+                    TextField {
                         id: passwordField
                         width: 250
                         focus: visible
+                        placeholderText: qsTr("Password")
+                        echoMode: TextInput.Password
                         visible: usersView.currentIndex == index
                         onAccepted: greeter.loginRequested(model.name, text, indicators.selectedSessionIndex)
                         onVisibleChanged: if (visible) forceActiveFocus()

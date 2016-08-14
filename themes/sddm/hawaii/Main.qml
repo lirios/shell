@@ -24,14 +24,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Controls 1.1
-import QtQuick.Controls.Private 1.0 as ControlsPrivate
+import QtQuick 2.5
+import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 import "screens" as Screens
 
 NoiseBackground {
     id: root
+    width: 1024
+    height: 768
     color: "#272727"
     gradient: Gradient {
         GradientStop { position: 0; color: "#272727" }
@@ -40,7 +41,7 @@ NoiseBackground {
 
     Connections {
         target: sddm
-        onLoginSucceeded: stackView.push({"item": desktopStillComponent})
+        onLoginSucceeded: stackView.replace(desktopStillComponent)
     }
 
     MouseArea {
@@ -83,15 +84,24 @@ NoiseBackground {
         id: stackView
         anchors.fill: parent
         initialItem: bootSplashComponent
-        delegate: ControlsPrivate.StackViewSlideDelegate {
-            horizontal: false
+        replaceEnter: Transition {
+            YAnimator {
+                from: height
+                to: 0
+            }
+        }
+        replaceExit: Transition {
+            YAnimator {
+                from: 0
+                to: -height
+            }
         }
     }
 
     Timer {
         interval: 2 // 2000
         running: true
-        //onTriggered: stackView.push({"item": primaryScreen ? greeterComponent : emptyComponent})
-        onTriggered: stackView.push({"item": greeterComponent})
+        //onTriggered: stackView.replace(primaryScreen ? greeterComponent : emptyComponent)
+        onTriggered: stackView.replace(greeterComponent)
     }
 }

@@ -49,19 +49,17 @@ Rectangle {
         }
         spacing: Units.largeSpacing
 
-        Button {
+        IconButton {
             id: rebootButton
             iconName: "system-reboot-symbolic"
             text: qsTr("Restart")
-            color: "white"
             onClicked: root.rebootRequested()
         }
 
-        Button {
+        IconButton {
             id: powerOffButton
             iconName: "system-shutdown-symbolic"
             text: qsTr("Shut down")
-            color: "white"
             onClicked: root.powerOffRequested()
         }
     }
@@ -77,11 +75,9 @@ Rectangle {
 
         Indicators.Session {
             id: sessionIndicator
-            color: "white"
         }
 
         Indicators.Keyboard {
-            color: "white"
         }
     }
 }

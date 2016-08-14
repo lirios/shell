@@ -25,8 +25,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls.Material 2.0
 import QtGraphicalEffects 1.0
-import Hawaii.Themes 1.0 as Themes
+import Fluid.Core 1.0
 
 Item {
     property alias iconSize: image.width
@@ -39,9 +40,9 @@ Item {
     Rectangle {
         id: container
         anchors.fill: parent
-        color: Themes.Theme.palette.panel.backgroundColor
-        border.color: Themes.Theme.palette.rgba(Qt.darker(color, 1.3), 0.5)
-        border.width: Themes.Units.dp(1)
+        color: Material.dialogColor
+        border.color: Utils.alpha(Qt.darker(color, 1.3), 0.5)
+        border.width: 1
         radius: width / 2
         antialiasing: true
 

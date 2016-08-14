@@ -33,7 +33,7 @@ import Fluid.Controls 1.0
 RowLayout {
     property color color: Material.primaryTextColor
     property alias iconName: icon.name
-    property alias iconSource: icon.iconSource
+    property alias iconSource: icon.name
     property alias message: label.text
 
     id: messageBox

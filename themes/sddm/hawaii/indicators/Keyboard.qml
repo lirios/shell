@@ -25,18 +25,13 @@
  ***************************************************************************/
 
 import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick.Controls 2.0
+import Fluid.Controls 1.0
 import SddmComponents 2.0
-import Hawaii.Themes 1.0 as Themes
-import Hawaii.Controls 1.0 as Controls
-import "../components" as Components
 
-Components.Button {
+IconButton {
     iconName: "input-keyboard-symbolic"
     text: keyboard.layouts[keyboard.currentLayout].shortName
-    //: Keyboard layout indicator tooltip
-    //~ Indicator to change keyboard layout
-    tooltip: qsTr("Change keyboard layout")
     visible: keyboard.layouts.length > 1
     onClicked: {
         var index = keyboard.currentLayout;
@@ -44,6 +39,11 @@ Components.Button {
             index = -1;
         keyboard.currentLayout = index + 1;
     }
+
+    //: Keyboard layout indicator tooltip
+    //~ Indicator to change keyboard layout
+    ToolTip.text: qsTr("Change keyboard layout")
+    ToolTip.visible: hovered
 
     //: Keyboard layout indicator accessibility name
     //~ Indicator to change keyboard layout
