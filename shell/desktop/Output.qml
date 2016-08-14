@@ -70,6 +70,7 @@ GreenIsland.ExtendedOutput {
         maximumWidth: nativeScreen.width
         maximumHeight: nativeScreen.height
 
+        Material.theme: Material.Dark
         Material.primary: Material.Blue
         Material.accent: Material.LightBlue
 
