@@ -61,7 +61,7 @@ Window {
             seat: output.compositor.defaultSeat
             x: localPointerTracker.mouseX - hotspotX
             y: localPointerTracker.mouseY - hotspotY
-            visible: localPointerTracker.containsMouse
+            visible: localPointerTracker.containsMouse && screenView.cursorVisible
         }
     }
 }

@@ -49,30 +49,31 @@ BaseScreenView {
     states: [
         State {
             name: "splash"
-            PropertyChanges { target: cursor; visible: false }
+            PropertyChanges { target: screenView; cursorVisible: false }
             PropertyChanges { target: splashScreen; opacity: 1.0 }
         },
         State {
             name: "session"
+            PropertyChanges { target: screenView; cursorVisible: true }
         },
         State {
             name: "logout"
-            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: screenView; cursorVisible: true }
             PropertyChanges { target: logoutLoader; loadComponent: true; mode: "logout" }
         },
         State {
             name: "poweroff"
-            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: screenView; cursorVisible: true }
             PropertyChanges { target: logoutLoader; loadComponent: true; mode: "poweroff" }
         },
         State {
             name: "restart"
-            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: screenView; cursorVisible: true }
             PropertyChanges { target: logoutLoader; loadComponent: true; mode: "restart" }
         },
         State {
             name: "lock"
-            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: screenView; cursorVisible: true }
             PropertyChanges { target: logoutLoader; loadComponent: false }
             PropertyChanges { target: lockScreenLoader; loadComponent: true }
             // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
@@ -82,7 +83,7 @@ BaseScreenView {
         },
         State {
             name: "shield"
-            PropertyChanges { target: cursor; visible: true }
+            PropertyChanges { target: screenView; cursorVisible: true }
             PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
         }
     ]

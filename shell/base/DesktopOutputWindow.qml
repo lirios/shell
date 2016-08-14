@@ -103,6 +103,7 @@ ApplicationWindow {
             x: localPointerTracker.mouseX - hotspotX
             y: localPointerTracker.mouseY - hotspotY
             visible: localPointerTracker.containsMouse &&
+                     screenView.cursorVisible &&
                      output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
         }
     }

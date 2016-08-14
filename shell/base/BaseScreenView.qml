@@ -27,6 +27,8 @@ import QtQuick 2.5
 Rectangle {
     property var output
 
+    property bool cursorVisible: true
+
     readonly property var windows: {
         var windows = []
 
