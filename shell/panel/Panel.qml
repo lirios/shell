@@ -77,8 +77,13 @@ Rectangle {
     }
 
     /*
-     * Focused window
+     * Connections
      */
+
+    Connections {
+        target: screenView
+        onHasFullscreenWindowChanged: showing = !screenView.hasFullscreenWindow
+    }
 
     /*
      * Layout

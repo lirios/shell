@@ -1,6 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
+ * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
@@ -44,6 +45,17 @@ Rectangle {
             var window = windows[i]
 
             if (window.maximized)
+                return true
+        }
+
+        return false
+    }
+
+    readonly property bool hasFullscreenWindow: {
+        for (var i = 0; i < windows.length; i++) {
+            var window = windows[i]
+
+            if (window.fullscreen)
                 return true
         }
 
