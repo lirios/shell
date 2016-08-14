@@ -87,7 +87,7 @@ ApplicationWindow {
         id: localPointerTracker
 
         anchors.fill: parent
-        enableWSCursor: true
+        windowSystemCursorEnabled: true
 
         onMouseXChanged: compositor.wake()
         onMouseYChanged: compositor.wake()
