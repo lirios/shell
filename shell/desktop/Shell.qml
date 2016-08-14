@@ -45,9 +45,9 @@ Item {
 
             // Load indicator component
             if (rightDrawer.expanded)
-                stackView.push(indicator.component, {}, StackView.Transition);
+                loader.sourceComponent = indicator.component;
             else
-                stackView.push(indicator.component, {}, StackView.Immedite);
+                loader.sourceComponent = indicator.component;
             rightDrawer.open();
         }
     }
@@ -60,7 +60,7 @@ Item {
         id: rightDrawer
         edge: Qt.RightEdge
         y: output.availableGeometry.y
-        width: Math.max(FluidUi.Units.dp(250), stackView.currentItem.implicitWidth) + (2 * padding)
+        width: loader.implicitWidth + (2 * FluidUi.Units.largeSpacing)
         height: output.availableGeometry.height
         onPositionChanged: {
             if (position == 0.0 && lastIndicator)
@@ -68,11 +68,16 @@ Item {
         }
 
         Pane {
-            anchors.fill: parent
+            anchors {
+                left: parent.left
+                top: parent.top
+                bottom: parent.bottom
+            }
+            width: loader.implicitWidth
             padding: FluidUi.Units.largeSpacing
 
-            StackView {
-                id: stackView
+            Loader {
+                id: loader
                 anchors {
                     left: parent.left
                     top: parent.top
