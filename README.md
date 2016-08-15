@@ -11,6 +11,8 @@ Shell
 
 Responsive shell for qmlOS.
 
+![Desktop](desktop.png)
+
 ## Dependencies
 
 Qt >= 5.7.0 with at least the following modules is required:
