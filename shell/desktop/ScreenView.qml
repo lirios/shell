@@ -212,13 +212,17 @@ BaseScreenView {
     Component {
         id: primaryLockScreenComponent
 
-        LockScreen {}
+        LockScreen {
+            primary: true
+        }
     }
 
     Component {
         id: secondaryLockScreenComponent
 
-        SecondaryLockScreen {}
+        LockScreen {
+            primary: false
+        }
     }
 
     Loadable {

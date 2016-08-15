@@ -33,6 +33,8 @@ import Fluid.Controls 1.0
 import Fluid.Effects 1.0 as FluidEffects
 
 Showable {
+    property alias primary: loader.active
+
     id: root
     showAnimation: YAnimator {
         target: root
@@ -52,10 +54,12 @@ Showable {
     onVisibleChanged: {
         // Activate password field
         if (visible)
-            passwordField.forceActiveFocus();
+            loader.activatePasswordField()
     }
 
     Material.theme: Material.Dark
+
+    Keys.onPressed: loader.activatePasswordField()
 
     QtObject {
         id: __priv
@@ -93,94 +97,120 @@ Showable {
         running: false
         triggeredOnStart: true
         interval: 30000
-        onTriggered: {
-            var now = new Date();
-            timeLabel.text = Qt.formatTime(now, __priv.timeFormat);
-            dateLabel.text = Qt.formatDate(now, Locale.LongFormat);
-        }
+        onTriggered: loader.setDateTime()
     }
 
-    ColumnLayout {
-        anchors.fill: parent
+    Component {
+        id: passwordComponent
 
-        Item {
-            Layout.fillHeight: true
-        }
+        ColumnLayout {
+            property alias passwordField: passwordField
+            property alias timeLabel: timeLabel
+            property alias dateLabel: dateLabel
 
-        Label {
-            id: timeLabel
-            font.pointSize: 42
-            style: Text.Raised
-            styleColor: Material.backgroundTextColor
+            anchors.fill: parent
 
-            Layout.alignment: Qt.AlignCenter
-        }
+            Component.onCompleted: passwordField.forceActiveFocus()
 
-        Label {
-            id: dateLabel
-            font.pointSize: 36
-            style: Text.Raised
-            styleColor: Material.backgroundTextColor
+            Item {
+                Layout.fillHeight: true
+            }
 
-            Layout.alignment: Qt.AlignCenter
-        }
+            Label {
+                id: timeLabel
+                font.pointSize: 42
+                style: Text.Raised
+                styleColor: Material.backgroundTextColor
 
-        Item {
-            Layout.preferredHeight: 100
-        }
+                Layout.alignment: Qt.AlignCenter
+            }
 
-        Pane {
-            Column {
-                anchors.centerIn: parent
-                spacing: Units.smallSpacing
+            Label {
+                id: dateLabel
+                font.pointSize: 36
+                style: Text.Raised
+                styleColor: Material.backgroundTextColor
 
-                TextField {
-                    id: passwordField
-                    placeholderText: qsTr("Password")
-                    width: Units.gu(20)
-                    focus: true
-                    echoMode: TextInput.Password
-                    onAccepted: {
-                        SessionInterface.unlockSession(text, function(succeded) {
-                            if (!succeded) {
-                                text = "";
-                                errorLabel.text = qsTr("Sorry, wrong password. Please try again.");
-                                errorTimer.start();
-                            }
-                        });
+                Layout.alignment: Qt.AlignCenter
+            }
+
+            Item {
+                Layout.preferredHeight: 100
+            }
+
+            Pane {
+                Column {
+                    anchors.centerIn: parent
+                    spacing: Units.smallSpacing
+
+                    TextField {
+                        id: passwordField
+                        placeholderText: qsTr("Password")
+                        width: Units.gu(20)
+                        focus: true
+                        echoMode: TextInput.Password
+                        onAccepted: {
+                            SessionInterface.unlockSession(text, function(succeded) {
+                                if (!succeded) {
+                                    text = "";
+                                    errorLabel.text = qsTr("Sorry, wrong password. Please try again.");
+                                    errorTimer.start();
+                                }
+                            });
+                        }
                     }
-                }
 
-                Label {
-                    id: errorLabel
-                    color: "red"
-                    text: " "
-                    height: paintedHeight
+                    Label {
+                        id: errorLabel
+                        color: "red"
+                        text: " "
+                        height: paintedHeight
 
-                    Timer {
-                        id: errorTimer
-                        interval: 5000
-                        onTriggered: {
-                            errorLabel.text = " ";
-                            running = false;
+                        Timer {
+                            id: errorTimer
+                            interval: 5000
+                            onTriggered: {
+                                errorLabel.text = " ";
+                                running = false;
+                            }
                         }
                     }
                 }
+
+                Layout.fillWidth: true
+                Layout.preferredHeight: Units.gu(5)
             }
 
-            Layout.fillWidth: true
-            Layout.preferredHeight: Units.gu(5)
+            Item {
+                Layout.fillHeight: true
+            }
+        }
+    }
+
+    Loader {
+        id: loader
+        anchors.fill: parent
+        active: primary
+        sourceComponent: passwordComponent
+
+        function activatePasswordField() {
+            if (item)
+                item.passwordField.forceActiveFocus()
         }
 
-        Item {
-            Layout.fillHeight: true
+        function setDateTime() {
+            if (!item)
+                return
+            var now = new Date()
+            item.timeLabel.text = Qt.formatTime(now, __priv.timeFormat)
+            item.dateLabel.text = Qt.formatDate(now, Locale.LongFormat)
         }
     }
 
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
-        onClicked: passwordField.forceActiveFocus()
+        onClicked: if (primary) loader.activatePasswordField()
     }
 
     Component.onCompleted: {
@@ -189,8 +219,5 @@ Showable {
 
         // Start timer
         timer.start();
-
-        // Activate password field
-        passwordField.forceActiveFocus();
     }
 }

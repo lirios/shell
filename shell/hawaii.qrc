@@ -87,7 +87,6 @@
 	<file>panel/PanelItem.qml</file>
 	<file>screens/LockScreen.qml</file>
 	<file>screens/LogoutScreen.qml</file>
-	<file>screens/SecondaryLockScreen.qml</file>
 	<file>screens/SplashScreen.qml</file>
 	<file>windows/WindowMenu.qml</file>
 </qresource>
