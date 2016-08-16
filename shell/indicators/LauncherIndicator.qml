@@ -45,6 +45,8 @@ Indicator {
 
         parent: screenView
 
+        modal: true
+
         onAppLaunched: close()
     }
 }
