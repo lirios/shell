@@ -31,47 +31,40 @@ import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
 
 Rectangle {
-    property alias iconSize: icon.width
     property bool hovered: false
 
-    color: hovered ? Material.accent : "transparent"
-    radius: 6
+    color: hovered ? Qt.rgba(0,0,0,0.1) : "transparent"
+    radius: 2
     antialiasing: true
 
-    Image {
+    Behavior on color {
+        ColorAnimation { duration: Units.mediumDuration }
+    }
+
+    Icon {
         id: icon
         anchors {
             horizontalCenter: parent.horizontalCenter
             top: parent.top
-            leftMargin: Units.smallSpacing
-            topMargin: Units.smallSpacing
-            rightMargin: Units.smallSpacing
+            bottom: label.top
+            margins: 2 * Units.smallSpacing
         }
-        height: width
-        sourceSize.width: width
-        sourceSize.height: height
-        source: "image://launcher/" + model.iconName
-        cache: false
-        asynchronous: true
+        width: height
+        name: model.iconName
     }
 
     Label {
         id: label
+
         anchors {
             horizontalCenter: parent.horizontalCenter
-            top: icon.bottom
             bottom: parent.bottom
-            leftMargin: Units.smallSpacing
-            topMargin: Units.smallSpacing
-            rightMargin: Units.smallSpacing
-            bottomMargin: Units.smallSpacing
+            margins: Units.smallSpacing
         }
         text: model.name
         elide: Text.ElideRight
-        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
         textFormat: Text.PlainText
         horizontalAlignment: Text.AlignHCenter
-        width: iconSize * 1.5
-        height: Units.gu(2)
+        width: parent.width - 2 * Units.smallSpacing
     }
 }

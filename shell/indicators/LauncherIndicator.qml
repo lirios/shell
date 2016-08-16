@@ -40,8 +40,13 @@ Indicator {
 
     Launcher.LauncherPopOver {
         id: popover
-        x: Units.largeSpacing
-        y: -height - Units.largeSpacing
+        x: (output.availableGeometry.width - width)/2
+        y: (output.availableGeometry.height - height)/2
+
+        parent: screenView
+
+        modal: true
+
         onAppLaunched: close()
     }
 }
