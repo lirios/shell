@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtQml.Models 2.1
+import Fluid.Core 1.0
 import Fluid.Controls 1.0
 import Fluid.Material 1.0
 import org.hawaiios.launcher 0.1 as CppLauncher
@@ -38,7 +39,7 @@ GridView {
     readonly property int numItemsPerPage: numRows * numColumns
     readonly property int numPages: Math.ceil(grid.count / numItemsPerPage)
     property int currentPage: 0
-    property alias query: appsProxyModel.query
+    property alias query: appsProxyModel.filterPattern
 
     signal appLaunched()
 
@@ -54,35 +55,38 @@ GridView {
     preferredHighlightEnd: 0
     highlightRangeMode: GridView.StrictlyEnforceRange
     highlightFollowsCurrentItem: true
-    model: VisualDataModel {
-        id: visualModel
-        model: CppLauncher.AppsProxyModel {
-            id: appsProxyModel
-            model: CppLauncher.AppsModel {
-                id: appsModel
-                onAppLaunched: grid.appLaunched()
-            }
+    model: SortFilterProxyModel {
+        id: appsProxyModel
+        sourceModel: CppLauncher.AppsModel {
+            id: appsModel
+            onAppLaunched: grid.appLaunched()
         }
-        delegate: Item {
-            width: grid.cellWidth
-            height: grid.cellHeight
+        filterRoleName: "filterInfo"
+        filterCaseSensitivity: Qt.CaseInsensitive
+        isSortLocaleAware: true
+        sortCaseSensitivity: Qt.CaseSensitive
+        sortOrder: Qt.AscendingOrder
+        sortRoleName: "name"
+    }
+    delegate: Item {
+        width: grid.cellWidth
+        height: grid.cellHeight
 
-            LauncherGridDelegate {
-                id: delegate
+        LauncherGridDelegate {
+            id: delegate
 
-                anchors {
-                    fill: parent
-                    margins: Units.smallSpacing
-                }
+            anchors {
+                fill: parent
+                margins: Units.smallSpacing
+            }
 
-                Ripple {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.LeftButton
-                    hoverEnabled: true
-                    onEntered: delegate.hovered = true
-                    onExited: delegate.hovered = false
-                    onClicked: appsModel.trigger(visualModel.modelIndex(index))
-                }
+            Ripple {
+                anchors.fill: parent
+                acceptedButtons: Qt.LeftButton
+                hoverEnabled: true
+                onEntered: delegate.hovered = true
+                onExited: delegate.hovered = false
+                onClicked: appsModel.trigger(appsProxyModel.mapToSource(index))
             }
         }
     }

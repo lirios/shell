@@ -6,7 +6,6 @@ set(SOURCES
     applicationaction.cpp
     applicationinfo.cpp
     appsmodel.cpp
-    appsproxymodel.cpp
     categoriesmodel.cpp
     launcheritem.cpp
     launchermodel.cpp
