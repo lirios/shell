@@ -43,7 +43,7 @@ RowLayout {
             SessionInterface.requestLogOut();
         }
 
-        ToolTip.text: qsTr("Log out from current session")
+        ToolTip.text: qsTr("Log out")
     }
 
     IconButton {
@@ -55,18 +55,6 @@ RowLayout {
             SessionInterface.requestPowerOff();
         }
 
-        ToolTip.text: qsTr("Power off the system")
-    }
-
-    IconButton {
-        iconSize: Units.iconSizes.smallMedium
-        iconName: Qt.resolvedUrl("../images/reload.svg")
-        enabled: SessionInterface.canRestart
-        onClicked: {
-            launcherPopOver.close();
-            SessionInterface.requestRestart();
-        }
-
-        ToolTip.text: qsTr("Restart the system")
+        ToolTip.text: qsTr("Power off")
     }
 }

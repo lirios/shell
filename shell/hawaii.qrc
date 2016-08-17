@@ -42,8 +42,8 @@
 	<file>desktop/WorkspacesView.qml</file>
 	<file>error/ErrorCompositor.qml</file>
 	<file>error/ErrorScreenView.qml</file>
-	<file>images/eject.svg</file>
 	<file>images/disk.svg</file>
+	<file>images/eject.svg</file>
 	<file>images/harddisk.svg</file>
 	<file>images/hibernate.svg</file>
 	<file>images/lan-connect.svg</file>
@@ -87,6 +87,8 @@
 	<file>panel/PanelItem.qml</file>
 	<file>screens/LockScreen.qml</file>
 	<file>screens/LogoutScreen.qml</file>
+	<file>screens/PowerDialog.qml</file>
+	<file>screens/PowerScreen.qml</file>
 	<file>screens/SplashScreen.qml</file>
 	<file>windows/WindowMenu.qml</file>
 </qresource>

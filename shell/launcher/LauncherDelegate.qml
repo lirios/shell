@@ -42,7 +42,7 @@ PanelItem {
     ToolTip.delay: 2000
     ToolTip.timeout: 3000
     ToolTip.visible: containsMouse && !menu.showing
-    ToolTip.text: model.name
+    ToolTip.text: model.name || model.appId
 
     onClicked: {
         if (model.running) {

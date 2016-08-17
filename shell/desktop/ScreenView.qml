@@ -59,32 +59,26 @@ BaseScreenView {
         State {
             name: "logout"
             PropertyChanges { target: screenView; cursorVisible: true }
-            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "logout" }
+            PropertyChanges { target: logoutScreen; active: true }
         },
         State {
             name: "poweroff"
             PropertyChanges { target: screenView; cursorVisible: true }
-            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "poweroff" }
+            PropertyChanges { target: powerScreen; active: true; mode: "poweroff" }
         },
         State {
             name: "restart"
             PropertyChanges { target: screenView; cursorVisible: true }
-            PropertyChanges { target: logoutLoader; loadComponent: true; mode: "restart" }
+            PropertyChanges { target: powerScreen; active: true; mode: "restart" }
         },
         State {
             name: "lock"
             PropertyChanges { target: screenView; cursorVisible: true }
-            PropertyChanges { target: logoutLoader; loadComponent: false }
             PropertyChanges { target: lockScreenLoader; loadComponent: true }
             // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
             // when the system is resumed it won't flip so we comment this out but unfortunately
             // it means that the lock screen will not turn off the screen
             //StateChangeScript { script: output.idle() }
-        },
-        State {
-            name: "shield"
-            PropertyChanges { target: screenView; cursorVisible: true }
-            PropertyChanges { target: shieldLoader; source: "Shield.qml"; visible: true }
         }
     ]
 
@@ -239,32 +233,16 @@ BaseScreenView {
         onLoadComponentChanged: if (loadComponent) show(); else hide();
     }
 
-    /*
-     * Logout screen
-     */
+    LogoutScreen {
+        id: logoutScreen
 
-    Loadable {
-        property bool loadComponent: false
-        // FIXME: mode should be empty by default and the LogoutScreen
-        // component should handle an empty state, hiding the controls
-        property string mode: "logout"
-
-        id: logoutLoader
-        anchors.fill: parent
-        asynchronous: true
-        component: Component {
-            LogoutScreen {
-                mode: logoutLoader.mode
-            }
-        }
-        z: 900
-        onLoadComponentChanged: if (loadComponent) show(); else hide();
+        onCanceled: SessionInterface.cancelShutdownRequest()
     }
 
-    Connections {
-        target: logoutLoader.item
-        onSuspendRequested: mainItem.state = "lock"
-        onCancel: SessionInterface.cancelShutdownRequest()
+    PowerScreen {
+        id: powerScreen
+
+        onCanceled: SessionInterface.cancelShutdownRequest()
     }
 
     /*

@@ -54,11 +54,12 @@ Item {
     }
 
     Drawer {
+        id: rightDrawer
+
         property var lastIndicator: null
 
         Material.theme: Material.Dark
 
-        id: rightDrawer
         edge: Qt.RightEdge
 
         y: output.availableGeometry.y
