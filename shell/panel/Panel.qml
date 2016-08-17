@@ -175,10 +175,9 @@ Rectangle {
                         onClicked: indicatorTriggered(caller)
                     }
 
-                    // FIXME: This crashes the shell
-                    // NetworkIndicator {
-                    //     onClicked: indicatorTriggered(caller)
-                    // }
+                    NetworkIndicator {
+                        onClicked: indicatorTriggered(caller)
+                    }
 
                     StorageIndicator {
                         onClicked: indicatorTriggered(caller)
