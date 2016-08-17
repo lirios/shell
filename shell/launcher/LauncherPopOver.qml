@@ -166,7 +166,10 @@ Popup {
                     ColumnLayout {
                         LauncherGridView {
                             id: grid
-                            onAppLaunched: launcherPopOver.appLaunched()
+                            onAppLaunched: {
+                                launcherPopOver.appLaunched()
+                                searchText.text = ""
+                            }
 
                             MouseArea {
                                 anchors.fill: parent
