@@ -99,6 +99,13 @@ BaseScreenView {
             }
         }
 
+        if (event.key == Qt.Key_PowerOff || event.key == Qt.Key_PowerDown ||
+                event.key == Qt.Key_Suspend || event.key == Qt.Key_Hibernate) {
+            screenView.state = "poweroff"
+            event.accepted = true
+            return
+        }
+
         event.accept = false;
     }
 

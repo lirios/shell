@@ -75,8 +75,10 @@ private:
     SessionManager *m_sessionManager;
     QDBusInterface *m_interface;
     QString m_sessionPath;
+    int m_powerButtonFd;
     int m_inhibitFd;
 
+    void setupPowerButton();
     void setupInhibitors();
 
 private Q_SLOTS:
