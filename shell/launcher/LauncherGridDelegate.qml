@@ -49,7 +49,7 @@ Rectangle {
             bottom: label.top
             margins: 2 * Units.smallSpacing
         }
-        width: height
+        size: height
         name: model.iconName
     }
 
