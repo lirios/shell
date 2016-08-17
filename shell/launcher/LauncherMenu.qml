@@ -63,53 +63,28 @@ Menu {
         CustomComponents.MenuSeparator {}
     }
 
-    /*
-    Repeater {
-        model: launcherItem.windows
 
-        MenuItem {
-            text: modelData.title
-        }
-    }
-    CustomComponents.MenuSeparator {
-        visible: model.hasWindows
-    }
-    */
     MenuItem {
         text: qsTr("New Window")
         enabled: model.running
     }
+
     CustomComponents.MenuSeparator {}
+
     MenuItem {
-        text: qsTr("Add To Launcher")
-        enabled: !model.pinned
+        text: model.pinned ? qsTr("Unpin from Launcher") : qsTr("Pin to Launcher")
+        enabled: model.name
         onTriggered: {
-            launcher.model.pin(model.appId);
-            menu.close();
+            if (model.pinned)
+                launcher.model.unpin(model.appId)
+            else
+                launcher.model.pin(model.appId)
+            menu.close()
         }
     }
-    MenuItem {
-        text: qsTr("Remove From Launcher")
-        enabled: model.pinned
-        onTriggered: {
-            launcher.model.unpin(model.appId);
-            menu.close();
-        }
-    }
+
     CustomComponents.MenuSeparator {}
-    MenuItem {
-        text: qsTr("Show All Windows")
-        enabled: model.running
-    }
-    MenuItem {
-        text: qsTr("Show")
-        enabled: model.running && !model.active
-    }
-    MenuItem {
-        text: qsTr("Hide")
-        enabled: model.running && model.active
-    }
-    CustomComponents.MenuSeparator {}
+
     MenuItem {
         id: ciao
         text: qsTr("Quit")
