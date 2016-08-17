@@ -103,6 +103,7 @@ QHash<int, QByteArray> AppsModel::roleNames() const
     roles.insert(NameRole, "name");
     roles.insert(CommentRole, "comment");
     roles.insert(IconNameRole, "iconName");
+    roles.insert(DesktopFileRole, "desktopFile");
     roles.insert(FilterInfoRole, "filterInfo");
     return roles;
 }
@@ -130,6 +131,8 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
         return item->comment;
     case IconNameRole:
         return item->iconName;
+    case DesktopFileRole:
+        return item->desktopFile;
     case FilterInfoRole:
         return item->filterInfo;
     default:
@@ -139,25 +142,23 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool AppsModel::trigger(const QModelIndex &index)
+bool AppsModel::trigger(const QString &desktopFile)
 {
-    if (!index.isValid())
+    if (desktopFile.isEmpty()) {
+        qCWarning(APPSMODEL, "Cannot launch an unknown application");
         return false;
-
-    AppEntry *entry = m_list.at(index.row());
-    if (!entry)
-        return false;
+    }
 
     const QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
                              QStringLiteral("/ProcessLauncher"),
                              QStringLiteral("org.hawaiios.ProcessLauncher"),
                              bus);
-    QDBusMessage msg = interface.call("launchDesktopFile", entry->desktopFile);
+    QDBusMessage msg = interface.call("launchDesktopFile", desktopFile);
     bool ran = msg.arguments().at(0).toBool();
 
     if (ran)
-        Q_EMIT appLaunched(entry->desktopFile);
+        Q_EMIT appLaunched(desktopFile);
 
     return ran;
 }

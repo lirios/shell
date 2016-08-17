@@ -69,6 +69,10 @@ GridView {
         sortRoleName: "name"
     }
     delegate: Item {
+        // Child items don't have access to model roles,
+        // let's solve the issue with property binding
+        property string desktopFileName: desktopFile
+
         width: grid.cellWidth
         height: grid.cellHeight
 
@@ -86,7 +90,7 @@ GridView {
                 hoverEnabled: true
                 onEntered: delegate.hovered = true
                 onExited: delegate.hovered = false
-                onClicked: appsModel.trigger(appsProxyModel.mapToSource(index))
+                onClicked: appsModel.trigger(desktopFileName)
             }
         }
     }

@@ -47,6 +47,7 @@ public:
         NameRole = Qt::UserRole + 1,
         CommentRole,
         IconNameRole,
+        DesktopFileRole,
         FilterInfoRole
     };
 
@@ -72,7 +73,7 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    Q_INVOKABLE bool trigger(const QModelIndex &index);
+    Q_INVOKABLE bool trigger(const QString &desktopFile);
 
 Q_SIGNALS:
     void refreshing();
