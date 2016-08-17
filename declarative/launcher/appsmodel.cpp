@@ -103,6 +103,7 @@ QHash<int, QByteArray> AppsModel::roleNames() const
     roles.insert(NameRole, "name");
     roles.insert(CommentRole, "comment");
     roles.insert(IconNameRole, "iconName");
+    roles.insert(FilterInfoRole, "filterInfo");
     return roles;
 }
 
