@@ -41,10 +41,12 @@ class LauncherItem;
 class LauncherModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
+    Q_PROPERTY(ApplicationManager *applicationManager READ applicationManager WRITE
+                       setApplicationManager NOTIFY applicationManagerChanged)
     Q_ENUMS(Roles)
 public:
-    enum Roles {
+    enum Roles
+    {
         AppIdRole = Qt::UserRole + 1,
         NameRole,
         CommentRole,
@@ -86,6 +88,10 @@ private:
     QList<LauncherItem *> m_list;
 
     void pinLauncher(const QString &appId, bool pinned);
+
+    bool moveRows(int sourceRow, int count, int destinationChild);
+    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
+                  const QModelIndex &destinationParent, int destinationChild) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void handleApplicationAdded(const QString &appId, pid_t pid);

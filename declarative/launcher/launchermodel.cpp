@@ -24,23 +24,21 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtGui/QIcon>
+#include "launchermodel.h"
 #include "appidmapping_p.h"
 #include "applicationinfo.h"
 #include "launcheritem.h"
-#include "launchermodel.h"
+#include <QtGui/QIcon>
 
-LauncherModel::LauncherModel(QObject *parent)
-    : QAbstractListModel(parent)
-    , m_appMan(Q_NULLPTR)
+LauncherModel::LauncherModel(QObject *parent) : QAbstractListModel(parent), m_appMan(Q_NULLPTR)
 {
     // Settings
     m_settings = new QGSettings(QStringLiteral("org.hawaiios.desktop.panel"),
-                                QStringLiteral("/org/hawaiios/desktop/panel/"),
-                                this);
+                                QStringLiteral("/org/hawaiios/desktop/panel/"), this);
 
     // Add pinned launchers
-    const QStringList pinnedLaunchers = m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
+    const QStringList pinnedLaunchers =
+            m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + pinnedLaunchers.size());
     Q_FOREACH (const QString &appId, pinnedLaunchers)
         m_list.append(new LauncherItem(appId, true, this));
@@ -54,10 +52,7 @@ LauncherModel::~LauncherModel()
         m_list.takeFirst()->deleteLater();
 }
 
-ApplicationManager *LauncherModel::applicationManager() const
-{
-    return m_appMan;
-}
+ApplicationManager *LauncherModel::applicationManager() const { return m_appMan; }
 
 void LauncherModel::setApplicationManager(ApplicationManager *appMan)
 {
@@ -65,24 +60,24 @@ void LauncherModel::setApplicationManager(ApplicationManager *appMan)
         return;
 
     if (m_appMan) {
-        disconnect(m_appMan, &ApplicationManager::applicationAdded,
-                   this, &LauncherModel::handleApplicationAdded);
-        disconnect(m_appMan, &ApplicationManager::applicationRemoved,
-                   this, &LauncherModel::handleApplicationRemoved);
-        disconnect(m_appMan, &ApplicationManager::applicationFocused,
-                   this, &LauncherModel::handleApplicationFocused);
+        disconnect(m_appMan, &ApplicationManager::applicationAdded, this,
+                   &LauncherModel::handleApplicationAdded);
+        disconnect(m_appMan, &ApplicationManager::applicationRemoved, this,
+                   &LauncherModel::handleApplicationRemoved);
+        disconnect(m_appMan, &ApplicationManager::applicationFocused, this,
+                   &LauncherModel::handleApplicationFocused);
     }
 
     m_appMan = appMan;
     Q_EMIT applicationManagerChanged();
 
     if (appMan) {
-        connect(appMan, &ApplicationManager::applicationAdded,
-                this, &LauncherModel::handleApplicationAdded);
-        connect(appMan, &ApplicationManager::applicationRemoved,
-                this, &LauncherModel::handleApplicationRemoved);
-        connect(appMan, &ApplicationManager::applicationFocused,
-                this, &LauncherModel::handleApplicationFocused);
+        connect(appMan, &ApplicationManager::applicationAdded, this,
+                &LauncherModel::handleApplicationAdded);
+        connect(appMan, &ApplicationManager::applicationRemoved, this,
+                &LauncherModel::handleApplicationRemoved);
+        connect(appMan, &ApplicationManager::applicationFocused, this,
+                &LauncherModel::handleApplicationFocused);
     }
 }
 
@@ -153,7 +148,7 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
 LauncherItem *LauncherModel::get(int index) const
 {
     if (index < 0 || index >= m_list.size())
-        return Q_NULLPTR;
+        return nullptr;
     return m_list.at(index);
 }
 
@@ -169,47 +164,67 @@ int LauncherModel::indexFromAppId(const QString &appId) const
 
 void LauncherModel::pin(const QString &appId)
 {
-    LauncherItem *found = Q_NULLPTR;
+    LauncherItem *found = nullptr;
+    int pinAtIndex = 0;
 
     Q_FOREACH (LauncherItem *item, m_list) {
-        if (item->appId() != appId)
-            continue;
+        if (item->isPinned())
+            pinAtIndex++;
 
-        found = item;
-        break;
+        if (item->appId() == appId) {
+            found = item;
+            break;
+        }
     }
 
     if (!found)
         return;
 
     found->setPinned(true);
-    QModelIndex modelIndex = index(m_list.indexOf(found));
-    Q_EMIT dataChanged(modelIndex, modelIndex);
+
+    int foundIndex = m_list.indexOf(found);
+
+    if (foundIndex != pinAtIndex) {
+        moveRows(foundIndex, 1, pinAtIndex);
+
+        QModelIndex modelIndex = index(pinAtIndex);
+        Q_EMIT dataChanged(modelIndex, modelIndex);
+    } else {
+        QModelIndex modelIndex = index(foundIndex);
+        Q_EMIT dataChanged(modelIndex, modelIndex);
+    }
 
     pinLauncher(appId, true);
 }
 
 void LauncherModel::unpin(const QString &appId)
 {
-    LauncherItem *found = Q_NULLPTR;
+    LauncherItem *found = nullptr;
 
     Q_FOREACH (LauncherItem *item, m_list) {
-        if (item->appId() != appId)
-            continue;
+        if (!item->isPinned())
+            break;
 
-        found = item;
-        break;
+        if (item->appId() == appId) {
+            found = item;
+            break;
+        }
     }
 
     if (!found)
         return;
+
+    Q_ASSERT(found->isPinned());
 
     int i = m_list.indexOf(found);
 
     // Remove the item when unpinned and not running
     if (found->isRunning()) {
         found->setPinned(false);
-        QModelIndex modelIndex = index(i);
+        found->setPinned(false);
+        moveRows(i, 1, m_list.size() - 1);
+
+        QModelIndex modelIndex = index(m_list.size() - 1);
         Q_EMIT dataChanged(modelIndex, modelIndex);
     } else {
         beginRemoveRows(QModelIndex(), i, i);
@@ -223,7 +238,8 @@ void LauncherModel::unpin(const QString &appId)
 void LauncherModel::pinLauncher(const QString &appId, bool pinned)
 {
     // Currently pinned launchers
-    QStringList pinnedLaunchers = m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
+    QStringList pinnedLaunchers =
+            m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
 
     // Add or remove from the pinned launchers
     if (pinned)
@@ -302,6 +318,47 @@ void LauncherModel::handleApplicationFocused(const QString &appId)
             Q_EMIT dataChanged(modelIndex, modelIndex);
         }
     }
+}
+
+bool LauncherModel::moveRows(int sourceRow, int count, int destinationChild)
+{
+    return moveRows(QModelIndex(), sourceRow, count, QModelIndex(), destinationChild);
+}
+
+bool LauncherModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
+                             const QModelIndex &destinationParent, int destinationChild)
+{
+    QList<LauncherItem *> tmp;
+
+    Q_UNUSED(sourceParent);
+    Q_UNUSED(destinationParent);
+
+    if (sourceRow + count - 1 < destinationChild) {
+        beginMoveRows(QModelIndex(), sourceRow, sourceRow + count - 1, QModelIndex(),
+                      destinationChild + 1);
+        for (int i = sourceRow; i < sourceRow + count; i++) {
+            Q_ASSERT(m_list[i]);
+            tmp << m_list.takeAt(i);
+        }
+        for (int i = 0; i < count; i++) {
+            Q_ASSERT(tmp[i]);
+            m_list.insert(destinationChild - count + 2 + i, tmp[i]);
+        }
+        endMoveRows();
+    } else if (sourceRow > destinationChild) {
+        beginMoveRows(QModelIndex(), sourceRow, sourceRow + count - 1, QModelIndex(),
+                      destinationChild);
+        for (int i = sourceRow; i < sourceRow + count; i++) {
+            Q_ASSERT(m_list[i]);
+            tmp << m_list.takeAt(i);
+        }
+        for (int i = 0; i < count; i++) {
+            Q_ASSERT(tmp[i]);
+            m_list.insert(destinationChild + i, tmp[i]);
+        }
+        endMoveRows();
+    }
+    return true;
 }
 
 #include "moc_launchermodel.cpp"
