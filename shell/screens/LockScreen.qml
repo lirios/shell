@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -26,16 +23,20 @@
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.0
-import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
-import Fluid.Effects 1.0 as FluidEffects
+import Fluid.Effects 1.0
+import Fluid.Material 1.0
+import QtAccountsService 1.0
+import Hawaii.Desktop 1.0
+import "../indicators"
 
 Showable {
     property alias primary: loader.active
 
     id: root
+    y: -root.height
     showAnimation: YAnimator {
         target: root
         easing.type: Easing.OutQuad
@@ -51,173 +52,156 @@ Showable {
         to: -root.height
     }
     visible: true
-    onVisibleChanged: {
-        // Activate password field
-        if (visible)
-            loader.activatePasswordField()
-    }
 
     Material.theme: Material.Dark
+    Material.primary: Material.color(Material.Blue, Material.Shade500)
+    Material.accent: Material.color(Material.Blue, Material.Shade500)
 
-    Keys.onPressed: loader.activatePasswordField()
-
-    QtObject {
-        id: __priv
-
-        property string timeFormat
-    }
-
-    Image {
-        id: picture
-        anchors.fill: parent
-        source: compositor.settings.lockScreen.pictureUrl
-        sourceSize.width: width * 0.75
-        sourceSize.height: height * 0.75
-        fillMode: compositor.settings.convertFillMode(compositor.settings.lockScreen.fillMode)
-        cache: false
-        visible: false
-    }
-
-    FastBlur {
-        id: blur
-        anchors.fill: picture
-        source: picture
-        radius: 32
-    }
-
-    FluidEffects.Vignette {
-        anchors.fill: parent
-        source: blur
-        radius: 8
-        brightness: 0.2
-    }
-
-    Timer {
-        id: timer
-        running: false
-        triggeredOnStart: true
-        interval: 30000
-        onTriggered: loader.setDateTime()
-    }
-
-    Component {
-        id: passwordComponent
-
-        ColumnLayout {
-            property alias passwordField: passwordField
-            property alias timeLabel: timeLabel
-            property alias dateLabel: dateLabel
-
-            anchors.fill: parent
-
-            Component.onCompleted: passwordField.forceActiveFocus()
-
-            Item {
-                Layout.fillHeight: true
-            }
-
-            Label {
-                id: timeLabel
-                font.pointSize: 42
-                style: Text.Raised
-                styleColor: Material.backgroundTextColor
-
-                Layout.alignment: Qt.AlignCenter
-            }
-
-            Label {
-                id: dateLabel
-                font.pointSize: 36
-                style: Text.Raised
-                styleColor: Material.backgroundTextColor
-
-                Layout.alignment: Qt.AlignCenter
-            }
-
-            Item {
-                Layout.preferredHeight: 100
-            }
-
-            Pane {
-                Column {
-                    anchors.centerIn: parent
-                    spacing: Units.smallSpacing
-
-                    TextField {
-                        id: passwordField
-                        placeholderText: qsTr("Password")
-                        width: Units.gu(20)
-                        focus: true
-                        echoMode: TextInput.Password
-                        onAccepted: {
-                            SessionInterface.unlockSession(text, function(succeded) {
-                                if (!succeded) {
-                                    text = "";
-                                    errorLabel.text = qsTr("Sorry, wrong password. Please try again.");
-                                    errorTimer.start();
-                                }
-                            });
-                        }
-                    }
-
-                    Label {
-                        id: errorLabel
-                        color: "red"
-                        text: " "
-                        height: paintedHeight
-
-                        Timer {
-                            id: errorTimer
-                            interval: 5000
-                            onTriggered: {
-                                errorLabel.text = " ";
-                                running = false;
-                            }
-                        }
-                    }
-                }
-
-                Layout.fillWidth: true
-                Layout.preferredHeight: Units.gu(5)
-            }
-
-            Item {
-                Layout.fillHeight: true
-            }
-        }
-    }
-
-    Loader {
-        id: loader
-        anchors.fill: parent
-        active: primary
-        sourceComponent: passwordComponent
-
-        function activatePasswordField() {
-            if (item)
-                item.passwordField.forceActiveFocus()
-        }
-
-        function setDateTime() {
-            if (!item)
-                return
-            var now = new Date()
-            item.timeLabel.text = Qt.formatTime(now, __priv.timeFormat)
-            item.dateLabel.text = Qt.formatDate(now, Locale.LongFormat)
-        }
-    }
-
+    // Prevent mouse input from leaking through the lock screen
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
-        onClicked: if (primary) loader.activatePasswordField()
+        hoverEnabled: true
+        onPressed: mouse.accept = false
     }
 
-    Component.onCompleted: {
-        // Remove seconds from time format
-        __priv.timeFormat = Qt.locale().timeFormat(Locale.ShortFormat).replace(/.ss?/i, "");
+    Background {
+        id: background
+        anchors.fill: parent
+        mode: compositor.settings.lockScreen.mode
+        pictureUrl: compositor.settings.lockScreen.pictureUrl
+        primaryColor: compositor.settings.lockScreen.primaryColor
+        secondaryColor: compositor.settings.lockScreen.secondaryColor
+        fillMode: compositor.settings.lockScreen.fillMode
+        blur: true
+        visible: !vignette.visible
+    }
 
-        // Start timer
-        timer.start();
+    Vignette {
+        id: vignette
+        anchors.fill: parent
+        source: background
+        radius: 4
+        brightness: 0.4
+        visible: background.mode === "wallpaper" && background.imageLoaded
+    }
+
+    Item {
+        anchors.fill: parent
+
+        Loader {
+            id: loader
+            anchors.centerIn: parent
+            active: primary
+            z: 1
+            sourceComponent: LoginGreeter {
+                id: usersListView
+
+                UserAccount {
+                    id: currentUser
+                }
+
+                model: ListModel {
+                    id: usersModel
+
+                    Component.onCompleted: {
+                        usersModel.append({
+                                              "realName": currentUser.realName,
+                                              "userName": currentUser.userName,
+                                              "iconFileName": currentUser.iconFileName
+                                          })
+                    }
+                }
+                onLoginRequested: {
+                    SessionInterface.unlockSession(password, function(succeded) {
+                        if (succeded) {
+                            usersListView.currentItem.busyIndicator.opacity = 0.0
+                            usersListView.loginSucceeded()
+                        } else {
+                            usersListView.currentItem.busyIndicator.opacity = 0.0
+                            usersListView.currentItem.field.text = ""
+                            usersListView.currentItem.field.forceActiveFocus()
+                            usersListView.loginFailed(qsTr("Sorry, wrong password. Please try again."))
+                        }
+                    })
+                }
+                onLoginFailed: errorBar.open(message)
+            }
+        }
+
+        Item {
+            id: panel
+
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+            }
+
+            height: 56
+
+            opacity: root.y === 0 ? 1.0 : 0.0
+            visible: opacity > 0.0
+
+            OpacityAnimator on opacity {
+                duration: Units.shortDuration
+            }
+
+            RowLayout {
+                anchors.fill: parent
+
+                Item {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                }
+
+                Item {
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: indicatorsRect.implicitWidth + indicatorsRect.anchors.margins * 2
+
+                    Rectangle {
+                        id: indicatorsRect
+
+                        anchors {
+                            fill: parent
+                            margins: Units.smallSpacing
+                        }
+
+                        implicitWidth: indicatorsView.width + 2 * Units.smallSpacing
+
+                        radius: 2
+                        color: Material.dialogColor
+                        layer.enabled: true
+                        layer.effect: ElevationEffect {
+                            elevation: 8
+                        }
+
+                        Row {
+                            id: indicatorsView
+
+                            anchors.centerIn: parent
+
+                            height: parent.height
+
+                            DateTimeIndicator {}
+
+                            EventsIndicator {}
+
+                            SoundIndicator {}
+
+                            NetworkIndicator {}
+
+                            StorageIndicator {}
+
+                            BatteryIndicator {}
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    InfoBar {
+        id: errorBar
     }
 }
