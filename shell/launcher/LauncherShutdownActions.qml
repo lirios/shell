@@ -48,6 +48,17 @@ RowLayout {
 
     IconButton {
         iconSize: Units.iconSizes.smallMedium
+        iconName: "action/lock"
+        onClicked: {
+            launcherPopOver.close();
+            SessionInterface.lockSession()
+        }
+
+        ToolTip.text: qsTr("Lock Session")
+    }
+
+    IconButton {
+        iconSize: Units.iconSizes.smallMedium
         iconName: "action/power_settings_new"
         enabled: SessionInterface.canPowerOff
         onClicked: {
