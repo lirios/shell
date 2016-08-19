@@ -26,26 +26,18 @@
 
 #include <QtQml/QtQml>
 
-#include "applicationaction.h"
+#include "application.h"
 #include "appsmodel.h"
 #include "categoriesmodel.h"
 #include "launchermodel.h"
-#include "launcheritem.h"
-#include "menuimageprovider.h"
 #include "processrunner.h"
 
 class LauncherPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+
 public:
-    void initializeEngine(QQmlEngine *engine, const char *uri)
-    {
-        Q_ASSERT(uri == QLatin1String("org.hawaiios.launcher"));
-
-        engine->addImageProvider(QStringLiteral("launcher"), new MenuImageProvider());
-    }
-
     void registerTypes(const char *uri)
     {
         // @uri org.hawaiios.launcher
@@ -54,11 +46,9 @@ public:
         qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
         qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
         qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
-        qmlRegisterUncreatableType<ApplicationAction>(uri, 0, 1, "ApplicationAction",
-                                                      QStringLiteral("Cannot instantiate ApplicationAction"));
-        qmlRegisterUncreatableType<LauncherItem>(uri, 0, 1, "LauncherItem",
-                                                 QStringLiteral("Cannot instantiate LauncherItem"));
         qmlRegisterType<ProcessRunner>(uri, 0, 1, "ProcessRunner");
+        qmlRegisterUncreatableType<Application>(uri, 0, 1, "Application",
+                                                QStringLiteral("Cannot instantiate Application"));
     }
 };
 

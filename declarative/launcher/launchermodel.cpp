@@ -25,12 +25,16 @@
  ***************************************************************************/
 
 #include "launchermodel.h"
-#include "appidmapping_p.h"
-#include "applicationinfo.h"
-#include "launcheritem.h"
+
+#include <Hawaii/Core/DesktopFile>
 #include <QtGui/QIcon>
 
-LauncherModel::LauncherModel(QObject *parent) : QAbstractListModel(parent), m_appMan(Q_NULLPTR)
+#include "application.h"
+
+using namespace Hawaii;
+
+LauncherModel::LauncherModel(QObject *parent)
+    : QAbstractListModel(parent)
 {
     // Settings
     m_settings = new QGSettings(QStringLiteral("org.hawaiios.desktop.panel"),
@@ -41,15 +45,8 @@ LauncherModel::LauncherModel(QObject *parent) : QAbstractListModel(parent), m_ap
             m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + pinnedLaunchers.size());
     Q_FOREACH (const QString &appId, pinnedLaunchers)
-        m_list.append(new LauncherItem(appId, true, this));
+        m_list << new Application(appId, true, this);
     endInsertRows();
-}
-
-LauncherModel::~LauncherModel()
-{
-    // Delete the items
-    while (!m_list.isEmpty())
-        m_list.takeFirst()->deleteLater();
 }
 
 ApplicationManager *LauncherModel::applicationManager() const { return m_appMan; }
@@ -85,11 +82,13 @@ QHash<int, QByteArray> LauncherModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles.insert(AppIdRole, "appId");
+    roles.insert(DesktopFileRole, "desktopFile");
     roles.insert(NameRole, "name");
     roles.insert(CommentRole, "comment");
     roles.insert(IconNameRole, "iconName");
     roles.insert(PinnedRole, "pinned");
     roles.insert(RunningRole, "running");
+    roles.insert(StartingRole, "starting");
     roles.insert(ActiveRole, "active");
     roles.insert(HasWindowsRole, "hasWindows");
     roles.insert(HasCountRole, "hasCount");
@@ -110,34 +109,35 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    LauncherItem *item = m_list.at(index.row());
+    Application *app = m_list.at(index.row());
 
     switch (role) {
-    case Qt::DecorationRole:
-        return QIcon::fromTheme(item->iconName());
-    case Qt::DisplayRole:
+    case DesktopFileRole:
+        return QVariant::fromValue(app->desktopFile());
     case NameRole:
-        return item->name();
+        return app->desktopFile()->name();
     case IconNameRole:
-        return item->iconName();
+        return app->desktopFile()->iconName();
     case AppIdRole:
-        return item->appId();
+        return app->appId();
     case PinnedRole:
-        return item->isPinned();
+        return app->isPinned();
     case RunningRole:
-        return item->isRunning();
+        return app->isRunning();
+    case StartingRole:
+        return app->isStarting();
     case ActiveRole:
-        return item->isActive();
+        return app->isActive();
     case HasWindowsRole:
         return false;
     case HasCountRole:
-        return item->count() > 0;
+        return app->count() > 0;
     case CountRole:
-        return item->count();
+        return app->count();
     case HasProgressRole:
-        return item->progress() >= 0;
+        return app->progress() >= 0;
     case ProgressRole:
-        return item->progress();
+        return app->progress();
     default:
         break;
     }
@@ -145,7 +145,7 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-LauncherItem *LauncherModel::get(int index) const
+Application *LauncherModel::get(int index) const
 {
     if (index < 0 || index >= m_list.size())
         return nullptr;
@@ -164,15 +164,15 @@ int LauncherModel::indexFromAppId(const QString &appId) const
 
 void LauncherModel::pin(const QString &appId)
 {
-    LauncherItem *found = nullptr;
+    Application *found = nullptr;
     int pinAtIndex = 0;
 
-    Q_FOREACH (LauncherItem *item, m_list) {
-        if (item->isPinned())
+    Q_FOREACH (Application *app, m_list) {
+        if (app->isPinned())
             pinAtIndex++;
 
-        if (item->appId() == appId) {
-            found = item;
+        if (app->appId() == appId) {
+            found = app;
             break;
         }
     }
@@ -199,14 +199,14 @@ void LauncherModel::pin(const QString &appId)
 
 void LauncherModel::unpin(const QString &appId)
 {
-    LauncherItem *found = nullptr;
+    Application *found = nullptr;
 
-    Q_FOREACH (LauncherItem *item, m_list) {
-        if (!item->isPinned())
+    Q_FOREACH (Application *app, m_list) {
+        if (!app->isPinned())
             break;
 
-        if (item->appId() == appId) {
-            found = item;
+        if (app->appId() == appId) {
+            found = app;
             break;
         }
     }
@@ -249,14 +249,16 @@ void LauncherModel::pinLauncher(const QString &appId, bool pinned)
     m_settings->setValue(QStringLiteral("pinnedLaunchers"), pinnedLaunchers);
 }
 
-void LauncherModel::handleApplicationAdded(const QString &appId, pid_t pid)
+void LauncherModel::handleApplicationAdded(QString appId, pid_t pid)
 {
+    appId = DesktopFile::canonicalAppId(appId);
+
     // Do we have already an icon?
     for (int i = 0; i < m_list.size(); i++) {
-        LauncherItem *item = m_list.at(i);
-        if (item->appId() == appId) {
-            item->m_pids.insert(pid);
-            item->setRunning(true);
+        Application *app = m_list.at(i);
+        if (app->appId() == appId) {
+            app->m_pids.insert(pid);
+            app->setState(Application::Running);
             QModelIndex modelIndex = index(i);
             Q_EMIT dataChanged(modelIndex, modelIndex);
             return;
@@ -265,26 +267,29 @@ void LauncherModel::handleApplicationAdded(const QString &appId, pid_t pid)
 
     // Otherwise create one
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
-    LauncherItem *item = new LauncherItem(appId, this);
-    item->m_pids.insert(pid);
-    m_list.append(item);
+    Application *app = new Application(appId, this);
+    app->setState(Application::Running);
+    app->m_pids.insert(pid);
+    m_list.append(app);
     endInsertRows();
 }
 
-void LauncherModel::handleApplicationRemoved(const QString &appId, pid_t pid)
+void LauncherModel::handleApplicationRemoved(QString appId, pid_t pid)
 {
+    appId = DesktopFile::canonicalAppId(appId);
+
     for (int i = 0; i < m_list.size(); i++) {
-        LauncherItem *item = m_list.at(i);
-        if (item->appId() == appId) {
+        Application *app = m_list.at(i);
+        if (app->appId() == appId) {
             // Remove this pid and determine if there are any processes left
-            item->m_pids.remove(pid);
-            if (item->m_pids.count() > 0)
+            app->m_pids.remove(pid);
+            if (app->m_pids.count() > 0)
                 return;
 
-            if (item->isPinned()) {
+            if (app->isPinned()) {
                 // If it's pinned we just unset the flags if all pids are gone
-                item->setRunning(false);
-                item->setActive(false);
+                app->setState(Application::NotRunning);
+                app->setActive(false);
                 QModelIndex modelIndex = index(i);
                 Q_EMIT dataChanged(modelIndex, modelIndex);
             } else {
@@ -299,18 +304,23 @@ void LauncherModel::handleApplicationRemoved(const QString &appId, pid_t pid)
     }
 }
 
-void LauncherModel::handleApplicationFocused(const QString &appId)
+void LauncherModel::handleApplicationFocused(QString appId)
 {
+    appId = DesktopFile::canonicalAppId(appId);
+
+    Application *found = nullptr;
+
     for (int i = 0; i < m_list.size(); i++) {
-        LauncherItem *item = m_list.at(i);
+        Application *app = m_list.at(i);
         bool changed = false;
 
-        if (item->appId() == appId) {
-            changed = !item->isActive();
-            item->setActive(true);
+        if (app->appId() == appId) {
+            found = app;
+            changed = !app->isActive();
+            app->setActive(true);
         } else {
-            changed = item->isActive();
-            item->setActive(false);
+            changed = app->isActive();
+            app->setActive(false);
         }
 
         if (changed) {
@@ -328,7 +338,7 @@ bool LauncherModel::moveRows(int sourceRow, int count, int destinationChild)
 bool LauncherModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
                              const QModelIndex &destinationParent, int destinationChild)
 {
-    QList<LauncherItem *> tmp;
+    QList<Application *> tmp;
 
     Q_UNUSED(sourceParent);
     Q_UNUSED(destinationParent);

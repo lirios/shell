@@ -36,7 +36,7 @@
 using namespace GreenIsland::Server;
 using namespace Hawaii;
 
-class LauncherItem;
+class Application;
 
 class LauncherModel : public QAbstractListModel
 {
@@ -48,11 +48,13 @@ public:
     enum Roles
     {
         AppIdRole = Qt::UserRole + 1,
+        DesktopFileRole,
         NameRole,
         CommentRole,
         IconNameRole,
         PinnedRole,
         RunningRole,
+        StartingRole,
         ActiveRole,
         HasWindowsRole,
         HasCountRole,
@@ -61,8 +63,7 @@ public:
         ProgressRole
     };
 
-    LauncherModel(QObject *parent = 0);
-    ~LauncherModel();
+    LauncherModel(QObject *parent = nullptr);
 
     ApplicationManager *applicationManager() const;
     void setApplicationManager(ApplicationManager *appMan);
@@ -73,7 +74,7 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    Q_INVOKABLE LauncherItem *get(int index) const;
+    Q_INVOKABLE Application *get(int index) const;
     Q_INVOKABLE int indexFromAppId(const QString &appId) const;
 
     Q_INVOKABLE void pin(const QString &appId);
@@ -83,9 +84,9 @@ Q_SIGNALS:
     void applicationManagerChanged();
 
 private:
-    QGSettings *m_settings;
-    ApplicationManager *m_appMan;
-    QList<LauncherItem *> m_list;
+    QGSettings *m_settings = nullptr;
+    ApplicationManager *m_appMan = nullptr;
+    QList<Application *> m_list;
 
     void pinLauncher(const QString &appId, bool pinned);
 
@@ -94,9 +95,9 @@ private:
                   const QModelIndex &destinationParent, int destinationChild) Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void handleApplicationAdded(const QString &appId, pid_t pid);
-    void handleApplicationRemoved(const QString &appId, pid_t pid);
-    void handleApplicationFocused(const QString &appId);
+    void handleApplicationAdded(QString appId, pid_t pid);
+    void handleApplicationRemoved(QString appId, pid_t pid);
+    void handleApplicationFocused(QString appId);
 };
 
 QML_DECLARE_TYPE(LauncherModel)

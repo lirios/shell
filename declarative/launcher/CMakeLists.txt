@@ -3,13 +3,10 @@ include_directories(
 )
 
 set(SOURCES
-    applicationaction.cpp
-    applicationinfo.cpp
+    application.cpp
     appsmodel.cpp
     categoriesmodel.cpp
-    launcheritem.cpp
     launchermodel.cpp
-    menuimageprovider.cpp
     plugin.cpp
     processrunner.cpp
 )
@@ -20,9 +17,11 @@ target_link_libraries(launcherplugin
                       Qt5::Xml
                       Qt5::Qml
                       Qt5::Quick
+                      Qt5::Sql
                       GreenIsland::Server
-                      Hawaii::Settings)
-target_link_libraries(launcherplugin Qt5Xdg)
+                      Hawaii::Core
+                      Hawaii::Settings
+                      Qt5Xdg)
 
 install(FILES qmldir plugins.qmltypes
     DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/launcher)
