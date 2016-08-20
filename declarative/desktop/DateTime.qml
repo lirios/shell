@@ -21,11 +21,16 @@
  * $END_LICENSE$
  ***************************************************************************/
 
- import QtQuick 2.0
- import ".."
+import QtQuick 2.0
+import Fluid.Core 1.0
 
-Indicator {
-    name: "datetime"
-    text: Qt.formatTime(dateTime.now)
-    tooltip: Qt.formatDate(dateTime.now, Locale.LongFormat)
+Object {
+    property var now: new Date()
+
+    Timer {
+        interval: 1000
+        repeat: true
+        running: true
+        onTriggered: now = new Date()
+    }
 }

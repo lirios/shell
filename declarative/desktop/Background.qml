@@ -23,11 +23,24 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtGraphicalEffects 1.0
+import Fluid.Core 1.0
 import Fluid.Controls 1.0
 
 Loader {
+    id: background
+
+    property string mode
+    property url pictureUrl
+    property string primaryColor
+    property string secondaryColor
+    property string fillMode
+    property bool blur: false
+    property real blurRadius: 32
+    readonly property bool imageLoaded: __private.imageLoaded
+
     sourceComponent: {
-        switch (compositor.settings.background.mode) {
+        switch (background.mode) {
         case "solid":
             return solid
         case "hgradient":
@@ -36,8 +49,15 @@ Loader {
         case "wallpaper":
             return wallpaper
         default:
-            return null
+            break
         }
+        return null
+    }
+
+    QtObject {
+        id: __private
+
+        property bool imageLoaded: false
     }
 
     Component {
@@ -45,7 +65,7 @@ Loader {
 
         NoiseBackground {
             objectName: "solid"
-            color: compositor.settings.background.primaryColor
+            color: Utils.asColor(background.primaryColor)
 
             Behavior on color {
                 ColorAnimation {
@@ -60,7 +80,7 @@ Loader {
         id: gradient
 
         NoiseBackground {
-            property bool vertical: compositor.settings.background.mode === "vgradient"
+            property bool vertical: background.mode === "vgradient"
 
             objectName: "gradient"
             rotation: vertical ? 270 : 0
@@ -68,7 +88,7 @@ Loader {
             gradient: Gradient {
                 GradientStop {
                     position: 0
-                    color: compositor.settings.background.primaryColor
+                    color: Utils.asColor(background.primaryColor)
 
                     Behavior on color {
                         ColorAnimation {
@@ -79,7 +99,7 @@ Loader {
                 }
                 GradientStop {
                     position: 1
-                    color: compositor.settings.background.secondaryColor
+                    color: Utils.asColor(background.secondaryColor)
 
                     Behavior on color {
                         ColorAnimation {
@@ -95,19 +115,61 @@ Loader {
     Component {
         id: wallpaper
 
-        NoiseBackground {
+        Item {
             objectName: "wallpaper"
-            color: compositor.settings.background.primaryColor
+
+            NoiseBackground {
+                anchors.fill: parent
+                color: Utils.asColor(background.primaryColor)
+                visible: picture.status !== Image.Loading
+
+                Behavior on color {
+                    ColorAnimation {
+                        easing.type: Easing.OutQuad
+                        duration: Units.mediumDuration
+                    }
+                }
+            }
 
             SmoothFadeImage {
                 readonly property real aspectRatio: width / height
 
+                id: picture
                 anchors.fill: parent
-                source: compositor.settings.background.pictureUrl
+                source: background.pictureUrl
                 smooth: true
                 clip: fillMode === Image.PreserveAspectCrop
-                fillMode: compositor.settings.convertFillMode(compositor.settings.background.fillMode)
+                fillMode: background.convertFillMode(background.fillMode)
+                onStatusChanged: __private.imageLoaded = picture.status === Image.Ready
+                visible: !blur.visible
             }
+
+            FastBlur {
+                id: blur
+                anchors.fill: parent
+                source: picture
+                radius: background.blurRadius
+                visible: background.blur
+            }
+        }
+    }
+
+    function convertFillMode(fillMode) {
+        switch (fillMode) {
+        case "preserve-aspect-fit":
+            return Image.PreserveAspectFit;
+        case "preserve-aspect-crop":
+            return Image.PreserveAspectCrop;
+        case "tile":
+            return Image.Tile;
+        case "tile-vertically":
+            return Image.TileVertically;
+        case "tile-horizontally":
+            return Image.TileHorizontally;
+        case "pad":
+            return Image.Pad;
+        default:
+            return Image.Stretch;
         }
     }
 }

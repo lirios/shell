@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -25,25 +22,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Layouts 1.0
-import Fluid.Controls 1.0
 import Hawaii.Desktop 1.0
 
 Indicator {
-    name: "chat"
-    iconName: "im-google"
-    component: Component {
-        ColumnLayout {
-            spacing: Units.largeSpacing
-
-            HeadlineLabel {
-                text: qsTr("Messages")
-            }
-
-            Item {
-                Layout.fillHeight: true
-            }
-        }
-    }
-    visible: false
+    name: "datetime"
+    text: Qt.formatTime(dateTime.now)
+    tooltip: Qt.formatDate(dateTime.now, Locale.LongFormat)
 }

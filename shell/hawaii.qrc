@@ -3,7 +3,6 @@
 
 <qresource>
 	<file>Compositor.qml</file>
-	<file>Indicator.qml</file>
 	<file>KeyBindings.qml</file>
 	<file>RunCommand.qml</file>
 	<file>ShellSettings.qml</file>
@@ -19,7 +18,6 @@
 	<file>base/OutputWindow.qml</file>
 	<file>base/WindowCompositor.qml</file>
 	<file>components/CloseButton.qml</file>
-	<file>components/DateTime.qml</file>
 	<file>components/MenuSeparator.qml</file>
 	<file>components/Overlay.qml</file>
 	<file>components/PagedGrid.qml</file>
@@ -28,7 +26,6 @@
 	<file>decoration/WindowDecoration.qml</file>
 	<file>decoration/WindowTitleBar.qml</file>
 	<file>decoration/graphics/dropshadow.png</file>
-	<file>desktop/Background.qml</file>
 	<file>desktop/Desktop.qml</file>
 	<file>desktop/DesktopWidgets.qml</file>
 	<file>desktop/HotCorner.qml</file>
@@ -55,7 +52,6 @@
 	<file>images/wallpaper.png</file>
 	<file>indicators/BatteryIndicator.qml</file>
 	<file>indicators/ChatIndicator.qml</file>
-	<file>indicators/DateTimeIndicator.qml</file>
 	<file>indicators/EventsIndicator.qml</file>
 	<file>indicators/LauncherIndicator.qml</file>
 	<file>indicators/NetworkIndicator.qml</file>
@@ -86,7 +82,6 @@
 	<file>overlays/HelpOverlay.qml</file>
 	<file>overlays/UnresponsiveOverlay.qml</file>
 	<file>panel/Panel.qml</file>
-	<file>panel/PanelItem.qml</file>
 	<file>screens/LockScreen.qml</file>
 	<file>screens/LogoutScreen.qml</file>
 	<file>screens/PowerDialog.qml</file>

@@ -1,0 +1,9 @@
+module Hawaii.Desktop
+
+Background 1.0 Background.qml
+DateTime 1.0 DateTime.qml
+DateTimeIndicator 1.0 DateTimeIndicator.qml
+Indicator 1.0 Indicator.qml
+LoginGreeter 1.0 LoginGreeter.qml
+PanelItem 1.0 PanelItem.qml
+UserDelegate 1.0 UserDelegate.qml

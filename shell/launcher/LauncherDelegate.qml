@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
-import "../panel"
+import Hawaii.Desktop 1.0
 
 PanelItem {
     id: launcherItem

@@ -29,8 +29,8 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
+import Hawaii.Desktop 1.0
 import Hawaii.Notifications 1.0
-import ".."
 import "events" as EventsIndicator
 
 Indicator {

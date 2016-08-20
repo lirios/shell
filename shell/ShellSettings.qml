@@ -90,27 +90,4 @@ FluidCore.Object {
         schema.id: "org.hawaiios.desktop.lockscreen"
         schema.path: "/org/hawaiios/desktop/lockscreen/"
     }
-
-    /*
-     * Methods
-     */
-
-    function convertFillMode(fillMode) {
-        switch (fillMode) {
-        case "preserve-aspect-fit":
-            return Image.PreserveAspectFit;
-        case "preserve-aspect-crop":
-            return Image.PreserveAspectCrop;
-        case "tile":
-            return Image.Tile;
-        case "tile-vertically":
-            return Image.TileVertically;
-        case "tile-horizontally":
-            return Image.TileHorizontally;
-        case "pad":
-            return Image.Pad;
-        default:
-            return Image.Stretch;
-        }
-    }
 }

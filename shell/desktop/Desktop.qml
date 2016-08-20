@@ -28,6 +28,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Controls 1.0
+import Hawaii.Desktop 1.0
 import org.hawaiios.misc 0.1 as Misc
 import ".."
 import "../components"
@@ -72,6 +73,12 @@ Item {
     Background {
         id: backgroundLayer
         anchors.fill: parent
+        mode: compositor.settings.background.mode
+        pictureUrl: compositor.settings.background.pictureUrl
+        primaryColor: compositor.settings.background.primaryColor
+        secondaryColor: compositor.settings.background.secondaryColor
+        fillMode: compositor.settings.background.fillMode
+        blur: false
         z: 0
     }
 

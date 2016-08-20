@@ -28,8 +28,8 @@ import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
+import Hawaii.Desktop 1.0
 import Hawaii.NetworkManager 1.0 as NM
-import ".."
 import "network" as NetworkIndicator
 
 Indicator {
