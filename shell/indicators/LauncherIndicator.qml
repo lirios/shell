@@ -32,9 +32,8 @@ import "../launcher" as Launcher
 
 Indicator {
     id: indicator
-    name: "launcher"
+    title: qsTr("Applications")
     iconView: AppsIcon {}
-    tooltip: qsTr("Applications")
     active: popover.visible
     onClicked: popover.open()
 

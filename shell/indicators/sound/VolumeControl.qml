@@ -31,6 +31,7 @@ Object {
     readonly property real to: 100
     readonly property real stepSize: Math.round(5 * PulseAudio.NormalVolume / 100.0)
     readonly property bool visible: sinkModel.defaultSink !== null
+    readonly property bool muted: sinkModel.defaultSink.muted || sinkModel.defaultSink.volume === PulseAudio.MinimalVolume
 
     signal volumeChanged(real volume)
 

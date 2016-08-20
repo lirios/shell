@@ -30,21 +30,25 @@ import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 import Hawaii.PulseAudio 1.0
 
-RowLayout {
+ListItem {
     visible: volumeControl.visible
 
-    Icon {
-        size: Units.iconSizes.small
-        name: "av/volume_off"
+    leftItem: IconButton {
+        anchors.centerIn: parent
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: volumeControl.setMinimumVolume()
-        }
+        iconName: "av/volume_off"
+        onClicked: volumeControl.setMinimumVolume()
+    }
+
+    rightItem: IconButton {
+        anchors.centerIn: parent
+
+        iconName: "av/volume_up"
+        onClicked: volumeControl.setMaximumVolume()
     }
 
     // Remember that position is in the 0:1 range and value is in the 0:100 range
-    Slider {
+    secondaryItem: Slider {
         id: slider
         from: volumeControl.from
         to: volumeControl.to
@@ -75,17 +79,10 @@ RowLayout {
             Component.onCompleted: slider.value = volumeControl.getVolumePercentage()
         }
 
-        Layout.fillWidth: true
-        Layout.minimumWidth: Units.gu(12)
-    }
-
-    Icon {
-        size: Units.iconSizes.small
-        name: "av/volume_up"
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: volumeControl.setMaximumVolume()
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            right: parent.right
         }
     }
 }

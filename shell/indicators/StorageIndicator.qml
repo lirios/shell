@@ -32,68 +32,29 @@ import Hawaii.Desktop 1.0
 import Hawaii.Hardware 1.0 as Hardware
 
 Indicator {
-    name: "storage"
+    title: qsTr("Storage")
     iconName: Qt.resolvedUrl("../images/harddisk.svg")
-    component: Component {
-        ColumnLayout {
-            spacing: Units.largeSpacing
+    visible: hardware.storageDevices.length > 0
+    component: ListView {
+        model: hardware.storageDevices
+        clip: true
 
-            HeadlineLabel {
-                text: qsTr("Volumes")
-            }
+        delegate: ListItem {
+            iconName: modelData.iconName + "-symbolic"
+            text: modelData.name
+            onClicked: processRunner.launchCommand("xdg-open file://" + modelData.filePath)
 
-            Repeater {
-                model: hardware.storageDevices
+            rightItem: IconButton {
+                anchors.centerIn: parent
 
-                RowLayout {
-                    spacing: Units.smallSpacing
+                ToolTip.text: modelData.mounted ? qsTr("Eject") : qsTr("Mount")
+                ToolTip.visible: hovered
 
-                    RowLayout {
-                        spacing: Units.smallSpacing
-
-                        Icon {
-                            name: modelData.iconName + "-symbolic"
-                            size: Units.iconSizes.large
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: processRunner.launchCommand("xdg-open file://" + modelData.filePath)
-                            }
-                        }
-
-                        Label {
-                            id: label
-                            text: modelData.name
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: processRunner.launchCommand("xdg-open file://" + modelData.filePath)
-                            }
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        IconButton {
-                            ToolTip.text: modelData.mounted ? qsTr("Eject") : qsTr("Mount")
-                            ToolTip.visible: hovered
-
-                            iconName: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disc.svg"))
-                            onClicked: modelData.mounted ? modelData.unmount() : modelData.mount()
-                        }
-                    }
-
-                    Layout.fillWidth: true
-                }
-            }
-
-            Item {
-                Layout.fillHeight: true
+                iconName: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disc.svg"))
+                onClicked: modelData.mounted ? modelData.unmount() : modelData.mount()
             }
         }
     }
-    visible: hardware.storageDevices.length > 0
 
     Hardware.HardwareEngine {
         id: hardware

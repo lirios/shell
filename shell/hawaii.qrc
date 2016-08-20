@@ -52,20 +52,19 @@
 	<file>images/wallpaper.png</file>
 	<file>indicators/BatteryIndicator.qml</file>
 	<file>indicators/ChatIndicator.qml</file>
-	<file>indicators/EventsIndicator.qml</file>
 	<file>indicators/LauncherIndicator.qml</file>
 	<file>indicators/NetworkIndicator.qml</file>
+	<file>indicators/NotificationsIndicator.qml</file>
 	<file>indicators/SettingsIndicator.qml</file>
 	<file>indicators/SoundIndicator.qml</file>
 	<file>indicators/StorageIndicator.qml</file>
-	<file>indicators/events/EventItem.qml</file>
-	<file>indicators/events/NotificationItem.qml</file>
-	<file>indicators/events/NotificationWindow.qml</file>
 	<file>indicators/launcher/AppsIcon.qml</file>
 	<file>indicators/launcher/Dot.qml</file>
 	<file>indicators/network/AirplaneMode.qml</file>
 	<file>indicators/network/ConnectionItem.qml</file>
-	<file>indicators/network/Header.qml</file>
+	<file>indicators/notifications/NotificationItem.qml</file>
+	<file>indicators/notifications/NotificationListItem.qml</file>
+	<file>indicators/notifications/NotificationWindow.qml</file>
 	<file>indicators/power/BatteryEntry.qml</file>
 	<file>indicators/sound/MprisItem.qml</file>
 	<file>indicators/sound/VolumeControl.qml</file>
@@ -81,6 +80,7 @@
 	<file>launcher/LauncherShutdownActions.qml</file>
 	<file>overlays/HelpOverlay.qml</file>
 	<file>overlays/UnresponsiveOverlay.qml</file>
+	<file>panel/IndicatorsRow.qml</file>
 	<file>panel/Panel.qml</file>
 	<file>screens/LockScreen.qml</file>
 	<file>screens/LogoutScreen.qml</file>

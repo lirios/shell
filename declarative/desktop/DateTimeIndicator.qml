@@ -25,7 +25,7 @@ import QtQuick 2.0
 import Hawaii.Desktop 1.0
 
 Indicator {
-    name: "datetime"
+    title: qsTr("Date & Time")
     text: Qt.formatTime(dateTime.now)
     tooltip: Qt.formatDate(dateTime.now, Locale.LongFormat)
 }

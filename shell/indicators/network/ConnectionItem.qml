@@ -33,7 +33,9 @@ import Fluid.Controls 1.0
 import org.hawaiios.misc 0.1 as Misc
 import Hawaii.NetworkManager 1.0 as NM
 
-Item {
+ListItem {
+    id: listItem
+
     property bool predictableWirelessPassword: !Uuid && Type === NM.Enums.Wireless &&
                                                (SecurityType === NM.Enums.StaticWep || SecurityType === NM.Enums.WpaPsk ||
                                                 SecurityType === NM.Enums.Wpa2Psk)
@@ -43,186 +45,63 @@ Item {
                               Type === NM.Enums.Wireless ||
                               Type === NM.Enums.Gsm ||
                               Type === NM.Enums.Cdma)
-    property bool detailsVisible: false
-    property bool passwordDialogVisible: false
 
-    width: ListView.view.width
-    height: mainLayout.implicitHeight
-    states: [
-        State {
-            name: "collapsed"
-            when: !(detailsVisible || passwordDialogVisible)
-
-            StateChangeScript {
-                script: {
-                    if (expandableLoader.status === Loader.Ready)
-                        expandableLoader.sourceComponent = undefined;
-                }
+    onClicked: {
+        if (ConnectionState === NM.Enums.Deactivated) {
+            if (predictableWirelessPassword) {
+                passwordDialog.open()
+            } else if (Uuid) {
+                handler.activateConnection(ConnectionPath, DevicePath, SpecificPath)
+            } else {
+                handler.addAndActivateConnection(DevicePath, SpecificPath)
             }
-        },
-        State {
-            name: "expandedDetails"
-            when: detailsVisible
-
-            StateChangeScript {
-                script: createContent()
-            }
-        },
-        State {
-            name: "expandedPasswordDialog"
-            when: passwordDialogVisible
-
-            StateChangeScript {
-                script: createContent()
-            }
-
-            PropertyChanges {
-                target: stateChangeButton
-                opacity: 1.0
-            }
+        } else {
+            handler.deactivateConnection(ConnectionPath, DevicePath)
         }
-    ]
+    }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        onClicked: {
-            if (passwordDialogVisible)
-                passwordDialogVisible = false;
+    iconName: materialIconName(ConnectionIcon)
+    text: ItemUniqueName
+    subText: {
+        if (ConnectionState === NM.Enums.Activating) {
+            if (Type === NM.Enums.Vpn)
+                return VpnState;
             else
-                detailsVisible = !detailsVisible;
+                return DeviceState;
+        } else if (ConnectionState === NM.Enums.Deactivating) {
+            if (Type === NM.Enums.Vpn)
+                return VpnState;
+            else
+                return DeviceState;
+        } else if (ConnectionState === NM.Enums.Deactivated) {
+            var result = LastUsed;
+            if (SecurityType > NM.Enums.None)
+                result += ", " + SecurityTypeString;
+            return result;
+        } else if (ConnectionState === NM.Enums.Activated) {
+            return qsTr("Connected");
         }
     }
 
-    ColumnLayout {
-        id: mainLayout
-        spacing: Units.largeSpacing
+    Dialog {
+        id: passwordDialog
+        title: qsTr("Connect to Network")
+        text: listItem.text
 
-        RowLayout {
-            spacing: Units.smallSpacing
+        parent: screenView
+        x: (output.availableGeometry.width - width)/2
+        y: (output.availableGeometry.height - height)/2
 
-            Icon {
-                name: indicator.massageIconName(ConnectionIcon)
-                size: Units.iconSizes.medium
+        positiveButtonText: qsTr("Connect")
+        positiveButton.enabled: passwordField.acceptableInput
 
-                Layout.alignment: Qt.AlignTop
-            }
+        onOpened: passwordField.text = ""
+        onAccepted: handler.addAndActivateConnection(DevicePath, SpecificPath, passwordField.text)
 
-            ColumnLayout {
-                spacing: Units.smallSpacing
-
-                Label {
-                    id: label
-                    text: ItemUniqueName
-                    elide: Text.ElideRight
-                    font.weight: ConnectionState === NM.Enums.Activated ? Font.DemiBold : Font.Normal
-                    font.italic: ConnectionState === NM.Enums.Activating ? true : false
-
-                    Layout.fillWidth: true
-                }
-
-                Label {
-                    id: statusLabel
-                    text: {
-                        if (ConnectionState === NM.Enums.Activating) {
-                            if (Type === NM.Enums.Vpn)
-                                return VpnState;
-                            else
-                                return DeviceState;
-                        } else if (ConnectionState === NM.Enums.Deactivating) {
-                            if (Type === NM.Enums.Vpn)
-                                return VpnState;
-                            else
-                                return DeviceState;
-                        } else if (ConnectionState === NM.Enums.Deactivated) {
-                            var result = LastUsed;
-                            if (SecurityType > NM.Enums.None)
-                                result += ", " + SecurityTypeString;
-                            return result;
-                        } else if (ConnectionState === NM.Enums.Activated) {
-                            return qsTr("Connected");
-                        }
-                    }
-                    opacity: 0.6
-                    elide: Text.ElideRight
-                    font.pointSize: label.font.pointSize * 0.8
-
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignTop
-                }
-
-                Loader {
-                    id: expandableLoader
-                    visible: status == Loader.Ready
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
-
-                Layout.fillWidth: true
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-
-            IconButton {
-                ToolTip.text: ConnectionState === NM.Enums.Deactivated ? qsTr("Connect") : qsTr("Disconnect")
-                ToolTip.visible: hovered
-
-                id: stateChangeButton
-                iconName: Qt.resolvedUrl("../images/lan-" + (ConnectionState === NM.Enums.Deactivated ? "connect" : "disconnect") + ".svg")
-                opacity: hovered ? 1.0 : 0.0
-                visible: opacity == 1.0
-                onClicked: changeState()
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        easing.type: Easing.InOutQuad
-                        duration: Units.shortDuration
-                    }
-                }
-
-                Layout.alignment: Qt.AlignTop
-            }
-        }
-    }
-
-    Component {
-        id: detailsComponent
+        implicitWidth: 400
 
         ColumnLayout {
-            spacing: Units.smallSpacing
-
-            Repeater {
-                model: ConnectionDetails.length / 2
-
-                RowLayout {
-                    spacing: Units.smallSpacing
-
-                    Label {
-                        text: ConnectionDetails[index * 2]
-                        font.weight: Font.Bold
-                        opacity: 0.6
-                    }
-
-                    Label {
-                        text: ConnectionDetails[(index * 2) + 1]
-                        textFormat: Text.StyledText
-                        opacity: 0.6
-                    }
-                }
-            }
-        }
-    }
-
-    Component {
-        id: passwordDialogComponent
-
-        ColumnLayout {
-            property alias passwordField: passwordField
-
-            spacing: Units.smallSpacing
+            width: parent.width
 
             TextField {
                 id: passwordField
@@ -231,13 +110,12 @@ Item {
                 validator: RegExpValidator {
                     regExp: {
                         if (SecurityType === NM.Enums.StaticWep)
-                            /^(?:[\x20-\x7F]{5}|[0-9a-fA-F]{10}|[\x20-\x7F]{13}|[0-9a-fA-F]{26}){1}$/
-                                                                                                   else
-                                                                                                   /^(?:[\x20-\x7F]{8,64}){1}$/
+                            return /^(?:[\x20-\x7F]{5}|[0-9a-fA-F]{10}|[\x20-\x7F]{13}|[0-9a-fA-F]{26}){1}$/
+                        else
+                            return /^(?:[\x20-\x7F]{8,64}){1}$/
                     }
                 }
-                onAccepted: changeState()
-                onAcceptableInputChanged: stateChangeButton.enabled = acceptableInput
+                onAccepted: passwordDialog.accepted()
 
                 Layout.fillWidth: true
             }
@@ -246,43 +124,7 @@ Item {
                 id: showPasswordCheckbox
                 checked: false
                 text: qsTr("Show password")
-
-                Layout.alignment: Qt.AlignHCenter
             }
-        }
-    }
-
-    function createContent() {
-        if (detailsVisible) {
-            expandableLoader.sourceComponent = detailsComponent;
-        } else if (passwordDialogVisible) {
-            expandableLoader.sourceComponent = passwordDialogComponent;
-            expandableLoader.item.passwordField.forceActiveFocus();
-        }
-    }
-
-    function changeState() {
-        detailsVisible = false;
-
-        if (Uuid || !predictableWirelessPassword || passwordDialogVisible) {
-            if (ConnectionState === NM.Enums.Deactivated) {
-                if (!predictableWirelessPassword && !Uuid) {
-                    handler.addAndActivateConnection(DevicePath, SpecificPath);
-                } else if (passwordDialogVisible) {
-                    if (expandableLoader.item.password !== "") {
-                        handler.addAndActivateConnection(DevicePath, SpecificPath, expandableLoader.item.password);
-                        passwordDialogVisible = false;
-                    } else {
-                        connectionItem.clicked();
-                    }
-                } else {
-                    handler.activateConnection(ConnectionPath, DevicePath, SpecificPath);
-                }
-            } else {
-                handler.deactivateConnection(ConnectionPath, DevicePath);
-            }
-        } else if (predictableWirelessPassword) {
-            passwordDialogVisible = true;
         }
     }
 }

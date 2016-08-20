@@ -39,8 +39,6 @@ PanelItem {
     highlightColor: /* model.starting ? Palette.colors.orange["500"] : */ "white"
     highlightOpacity: model.active /*|| model.starting*/ ? 1 : model.running ? 0.4 : 0
 
-    ToolTip.delay: 2000
-    ToolTip.timeout: 3000
     ToolTip.visible: containsMouse && !menu.showing
     ToolTip.text: model.name || model.appId
 

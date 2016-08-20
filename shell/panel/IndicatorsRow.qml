@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -25,26 +22,43 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0
+import QtQml.Models 2.2
+import GreenIsland 1.0
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
+import "../indicators"
+import "../launcher"
 
-RowLayout {
-    property alias text: label.text
+Row {
+    id: indicatorsView
 
-    spacing: Units.smallSpacing
-    implicitWidth: ListView.view.width
-    implicitHeight: Math.max(label.paintedHeight, refreshButton.height) + (Units.smallSpacing * 2)
+    height: parent.height
 
-    Label {
-        id: label
-        font.weight: Font.DemiBold
+    signal indicatorTriggered(var indicator)
 
-        Layout.fillWidth: true
+    DateTimeIndicator {
+        onClicked: indicatorTriggered(caller)
     }
 
-    IconButton {
-        id: refreshButton
-        iconName: "navigation/refresh"
+    NotificationsIndicator {
+        onClicked: indicatorTriggered(caller)
+    }
+
+    SoundIndicator {
+        onClicked: indicatorTriggered(caller)
+    }
+
+    NetworkIndicator {
+        onClicked: indicatorTriggered(caller)
+    }
+
+    StorageIndicator {
+        onClicked: indicatorTriggered(caller)
+    }
+
+    BatteryIndicator {
+        onClicked: indicatorTriggered(caller)
     }
 }

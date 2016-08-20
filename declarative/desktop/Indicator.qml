@@ -31,7 +31,12 @@ import Hawaii.Desktop 1.0
 PanelItem {
     id: indicator
 
-    property string name
+    ToolTip.text: tooltip || title
+    ToolTip.visible: containsMouse && shell.indicator == null
+
+    active: shell.indicator && shell.indicator.title == title
+
+    property string title
 
     property alias text: label.text
     property alias iconName: icon.name

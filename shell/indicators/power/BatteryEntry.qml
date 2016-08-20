@@ -30,132 +30,22 @@ import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 import Hawaii.Hardware 1.0
 
-Item {
+ListItem {
     property var battery
 
-    RowLayout {
+    iconName: battery.iconName
+    text: battery.name
+    valueText: battery.summary
+
+    secondaryItem: ProgressBar {
+        from: 0
+        to: 100
+        value: battery.chargePercent
+
         anchors {
-            fill: parent
-            margins: Units.largeSpacing
+            left: parent.left
+            right: parent.right
+            verticalCenter: parent.verticalCenter
         }
-        spacing: Units.smallSpacing
-
-        Icon {
-            id: icon
-            size: Units.iconSizes.large
-            color: chargeStateLabel.color
-            name: deviceChargeIcon(battery)
-
-            Layout.alignment: Qt.AlignTop
-        }
-
-        ColumnLayout {
-            spacing: Units.smallSpacing
-
-            Label {
-                id: chargeStateLabel
-
-                Layout.fillWidth: true
-            }
-
-            RowLayout {
-                spacing: Units.smallSpacing
-
-                ProgressBar {
-                    id: chargeProgress
-                    from: 0
-                    to: 100
-                    value: battery ? battery.chargePercent : 0
-
-                    Layout.fillWidth: true
-                }
-
-                Label {
-                    text: (battery ? battery.chargePercent : 0) + "%"
-                }
-
-                Layout.fillWidth: true
-            }
-
-            GridLayout {
-                rows: battery && battery.powerSupply ? 2 : 4
-                columns: 2
-                opacity: 0.6
-                visible: battery !== null
-
-                Label {
-                    text: qsTr("Time To Empty")
-                }
-
-                Label {
-                    // TODO: Convert to time
-                    text: battery ? battery.timeToEmpty : 0
-                    horizontalAlignment: Qt.AlignRight
-                }
-
-                Label {
-                    text: qsTr("Capacity")
-                }
-
-                Label {
-                    text: (battery ? battery.capacity : 0) + "%"
-                    horizontalAlignment: Qt.AlignRight
-                }
-
-                Label {
-                    text: qsTr("Vendor")
-                    visible: battery && battery.powerSupply
-                }
-
-                Label {
-                    text: battery ? battery.vendor : qsTr("n.a.")
-                    horizontalAlignment: Qt.AlignRight
-                    visible: battery && battery.powerSupply
-                }
-
-                Label {
-                    text: qsTr("Model")
-                    visible: battery && battery.powerSupply
-                }
-
-                Label {
-                    text: battery ? battery.product : qsTr("n.a.")
-                    horizontalAlignment: Qt.AlignRight
-                    visible: battery && battery.powerSupply
-                }
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-            }
-
-            Layout.fillWidth: true
-        }
-    }
-
-    Connections {
-        target: battery
-        onChargeStateChanged: setChargeState()
-    }
-
-    function setChargeState() {
-        var state = battery.chargeState;
-        switch (state) {
-        case Battery.Charging:
-            chargeStateLabel.text = qsTr("Charging");
-            break;
-        case Battery.Discharging:
-            chargeStateLabel.text = qsTr("Discharging");
-            break;
-        case Battery.FullyCharged:
-            chargeStateLabel.text = qsTr("Fully charged");
-            break;
-        default:
-            chargeStateLabel.text = qsTr("Stable");
-            break;
-        }
-    }
-
-    Component.onCompleted: {
-        setChargeState();
     }
 }

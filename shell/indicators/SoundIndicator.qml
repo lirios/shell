@@ -34,49 +34,45 @@ import "sound" as SoundIndicator
 
 Indicator {
     id: indicator
-    name: "sound"
+
+    title: qsTr("Sound")
     iconName: volumeControl.getIconName()
-    component: Component {
-        ColumnLayout {
-            spacing: Units.largeSpacing
+    tooltip: volumeControl.visible
+            ? volumeControl.muted ? qsTr("Muted")
+                                  : qsTr("Volume at %1%").arg(Math.round(volumeControl.getVolumePercentage()))
+            : ""
+    visible: volumeControl.visible || mpris2.players.length > 0
 
-            HeadlineLabel {
-                text: qsTr("Sound")
-            }
+    component: ColumnLayout {
+        spacing: 0
 
-            SubheadingLabel {
-                text: qsTr("Volume")
-                visible: volumeControl.visible
-            }
+        Subheader {
+            text: qsTr("Volume")
+            visible: volumeControl.visible
+        }
 
-            SoundIndicator.VolumeSlider {
-                id: volumeSlider
-                visible: volumeControl.visible
+        SoundIndicator.VolumeSlider {
+            id: volumeSlider
+            visible: volumeControl.visible
+        }
 
-                Layout.fillWidth: true
-            }
+        Subheader {
+            text: qsTr("Music")
+            visible: mpris2.players.length > 0
+        }
 
-            SubheadingLabel {
-                text: qsTr("Playback")
-                visible: mpris2.players.length > 0
-            }
+        Repeater {
+            model: mpris2.players
 
-            Repeater {
-                model: mpris2.players
-
-                SoundIndicator.MprisItem {
-                    player: modelData
-
-                    Layout.alignment: Qt.AlignHCenter
-                }
-            }
-
-            Item {
-                Layout.fillHeight: true
+            SoundIndicator.MprisItem {
+                player: modelData
             }
         }
+
+        Item {
+            Layout.fillHeight: true
+        }
     }
-    visible: volumeControl.visible || mpris2.players.length > 0
 
     SoundIndicator.VolumeControl {
         id: volumeControl

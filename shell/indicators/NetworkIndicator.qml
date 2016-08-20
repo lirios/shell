@@ -34,42 +34,44 @@ import "network" as NetworkIndicator
 
 Indicator {
     id: indicator
-    name: "network"
-    iconName: materialIconName(connectionIconProvider.connectionIcon)
-    component: Component {
-        ColumnLayout {
-            spacing: Units.largeSpacing
 
-            HeadlineLabel {
-                text: qsTr("Network")
+    title: qsTr("Network")
+    iconName: materialIconName(connectionIconProvider.connectionTooltipIcon)
+    tooltip: networkStatus.activeConnections
+    // visible: connectionIconProvider.connectionIcon !== "network-unavailable"
+
+    component: ColumnLayout {
+        spacing: 0
+
+        NetworkIndicator.AirplaneMode {
+            onClicked: handler.enableAirplaneMode(airplaneMode)
+        }
+
+        ListView {
+            model: NM.AppletProxyModel {
+                sourceModel: NM.NetworkModel {}
             }
+            clip: true
+            currentIndex: -1
+            section.property: "Section"
+            section.delegate: Subheader { text: section }
 
-            NetworkIndicator.AirplaneMode {
-                onClicked: handler.enableAirplaneMode(airplaneMode)
-            }
+            delegate: NetworkIndicator.ConnectionItem {}
 
-            ListView {
-                model: NM.AppletProxyModel {
-                    sourceModel: NM.NetworkModel {}
-                }
-                clip: true
-                currentIndex: -1
-                section.property: "Section"
-                section.delegate: NetworkIndicator.Header { text: section }
-                delegate: NetworkIndicator.ConnectionItem {}
+            ScrollBar.horizontal: ScrollBar {}
+            ScrollBar.vertical: ScrollBar {}
 
-                ScrollBar.horizontal: ScrollBar {}
-                ScrollBar.vertical: ScrollBar {}
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-            }
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
-    visible: connectionIconProvider.connectionIcon !== "network-unavailable"
 
     NM.ConnectionIcon {
         id: connectionIconProvider
+    }
+
+    NM.NetworkStatus {
+        id: networkStatus
     }
 
     NM.Handler {
@@ -77,25 +79,37 @@ Indicator {
     }
 
     function materialIconName(iconName) {
-        return icons[iconName]
+        if (icons[iconName]) {
+            return icons[iconName]
+        } else {
+            console.error("Icon not mapped: " + iconName)
+        }
     }
 
     readonly property var icons: {
         "": "device/signal_wifi_0_bar",
-        "network-wireless-100-locked": "device/signal_wifi_4_bar",
-        "network-wireless-80-locked": "device/signal_wifi_3_bar",
-        "network-wireless-60-locked": "device/signal_wifi_2_bar",
-        "network-wireless-40-locked": "device/signal_wifi_2_bar",
-        "network-wireless-20-locked": "device/signal_wifi_1_bar",
-        "network-wireless-0-locked": "device/signal_wifi_0_bar",
+        "network-wireless-100-locked": "device/signal_wifi_4_bar_lock",
+        "network-wireless-80-locked": "device/signal_wifi_3_bar_lock",
+        "network-wireless-60-locked": "device/signal_wifi_2_bar_lock",
+        "network-wireless-40-locked": "device/signal_wifi_2_bar_lock",
+        "network-wireless-20-locked": "device/signal_wifi_1_bar_lock",
+        "network-wireless-0-locked": "device/signal_wifi_0_bar_lock",
         "network-wireless-connected-100": "device/signal_wifi_4_bar",
         "network-wireless-connected-80": "device/signal_wifi_3_bar",
         "network-wireless-connected-60": "device/signal_wifi_2_bar",
         "network-wireless-connected-40": "device/signal_wifi_2_bar",
         "network-wireless-connected-20": "device/signal_wifi_1_bar",
         "network-wireless-connected-0": "device/signal_wifi_0_bar",
+        "network-wireless-100": "device/signal_wifi_4_bar",
+        "network-wireless-60": "device/signal_wifi_2_bar",
+        "network-wireless-40": "device/signal_wifi_2_bar",
+        "network-wireless-80": "device/signal_wifi_3_bar",
+        "network-wireless-20": "device/signal_wifi_1_bar",
+        "network-wireless-0": "device/signal_wifi_0_bar",
         "network-wired-activated": "action/settings_ethernet",
         "network-wired": "action/settings_ethernet",
-        "network-vpn": "action/lock"
+        "network-vpn": "action/lock",
+        "network-bluetooth": "device/bluetooth",
+        "network-unavailable": "device/signal_wifi_off",
     }
 }

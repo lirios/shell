@@ -29,13 +29,11 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 
-RowLayout {
+ListItem {
+    id: listItem
     readonly property alias airplaneMode: __priv.airplaneMode
 
-    signal clicked()
-
-    id: root
-    spacing: Units.smallSpacing
+    onClicked: __priv.airplaneMode = !__priv.airplaneMode
 
     QtObject {
         id: __priv
@@ -43,24 +41,12 @@ RowLayout {
         property bool airplaneMode: false
     }
 
-    Switch {
-        id: airplaneSwitch
-        onClicked: {
-            __priv.airplaneMode = !__priv.airplaneMode;
-            root.clicked();
-        }
-    }
+    iconName: "device/airplanemode_active"
+    text: qsTr("Airplane mode")
 
-    Icon {
-        id: airplaneModeIcon
-        name: "airplane-mode-symbolic"
-        width: Units.iconSizes.smallMedium
-        height: width
-        color: label.color
-    }
+    rightItem: Switch {
+        anchors.centerIn: parent
 
-    Label {
-        id: label
-        text: airplaneMode ? qsTr("Airplane mode enabled") : qsTr("Airplane mode disabled")
+        onClicked: listItem.clicked()
     }
 }

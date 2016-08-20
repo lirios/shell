@@ -1,10 +1,8 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2014-2016  Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -40,6 +38,7 @@ Rectangle {
 
     readonly property alias launcherIndicator: launcherIndicator
     readonly property alias currentLauncherItem: launcher.currentItem
+    readonly property int rightWidth: indicatorsRect.implicitWidth + indicatorsRect.anchors.margins * 2
 
     property real size: 56
     property color darkColor: Material.dialogColor
@@ -139,7 +138,7 @@ Rectangle {
 
                 anchors {
                     fill: parent
-                    margins: panel.maximized ? 0 : 8
+                    margins: panel.maximized ? 0 : Units.smallSpacing
                 }
 
                 implicitWidth: indicatorsView.width + 2 * Units.smallSpacing
@@ -151,42 +150,11 @@ Rectangle {
                     elevation: 8
                 }
 
-                Row {
+                IndicatorsRow {
                     id: indicatorsView
-
                     anchors.centerIn: parent
 
-                    height: parent.height
-
-                    DateTimeIndicator {
-                        onClicked: {
-                            indicatorTriggered(caller)
-                        }
-                    }
-
-                    EventsIndicator {
-                        onClicked: indicatorTriggered(caller)
-                    }
-
-                    SettingsIndicator {
-                        onClicked: indicatorTriggered(caller)
-                    }
-
-                    SoundIndicator {
-                        onClicked: indicatorTriggered(caller)
-                    }
-
-                    NetworkIndicator {
-                        onClicked: indicatorTriggered(caller)
-                    }
-
-                    StorageIndicator {
-                        onClicked: indicatorTriggered(caller)
-                    }
-
-                    BatteryIndicator {
-                        onClicked: indicatorTriggered(caller)
-                    }
+                    onIndicatorTriggered: panel.indicatorTriggered(indicator)
                 }
             }
         }

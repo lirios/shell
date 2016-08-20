@@ -26,63 +26,25 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
+import Fluid.Core 1.0
 import Fluid.Controls 1.0
 import Hawaii.Desktop 1.0
 import Hawaii.Hardware 1.0
 import "power" as PowerIndicator
 
 Indicator {
-    name: "battery"
-    iconName: deviceChargeIcon(hardwareEngine.primaryBattery)
-    component: Component {
-        ColumnLayout {
-            spacing: Units.largeSpacing
-
-            HeadlineLabel {
-                text: qsTr("Power")
-            }
-
-            Repeater {
-                model: hardwareEngine.batteries
-
-                PowerIndicator.BatteryEntry {
-                    battery: modelData
-
-                    Layout.fillWidth: true
-                }
-            }
-
-            Item {
-                Layout.fillHeight: true
-            }
-        }
-    }
+    title: qsTr("Power")
+    iconName: hardwareEngine.primaryBattery ? hardwareEngine.primaryBattery.chargeIconName
+                                            : "device/battery_unknown"
+    tooltip: hardwareEngine.primaryBattery ? hardwareEngine.primaryBattery.summary : ""
     visible: hardwareEngine.batteries.length > 0
+    component: ListView {
+        model: hardwareEngine.batteries
+        clip: true
 
-    function deviceChargeIcon(device) {
-        if (!device)
-            return "device/battery_unknown"
-
-        var level = "full"
-
-        if (device.chargePercent < 25)
-            level = "20"
-        else if (device.chargePercent < 35)
-            level = "30"
-        else if (device.chargePercent < 55)
-            level = "50"
-        else if (device.chargePercent < 65)
-            level = "60"
-        else if (device.chargePercent < 85)
-            level = "80"
-        else if (device.chargePercent < 95)
-            level = "90"
-
-        if (device.chargeState == Battery.Charging ||
-                device.chargeState == Battery.FullyCharged)
-            return "device/battery_charging_" + level
-        else
-            return "device/battery_" + level
+        delegate: PowerIndicator.BatteryEntry {
+            battery: modelData
+        }
     }
 
     HardwareEngine {

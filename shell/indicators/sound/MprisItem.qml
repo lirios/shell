@@ -27,110 +27,112 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
 import Hawaii.Mpris 1.0
 
-ColumnLayout {
+BaseListItem {
     property var player
-    readonly property int trackLength: player ? player.metadata["mpris:length"]||0 / 1000 : 0
-    readonly property int trackPosition: player ? player.position : 0
 
-    spacing: Units.largeSpacing
+    topPadding: 16
+    bottomPadding: 8
 
-    Row {
-        spacing: Units.smallSpacing
+    contentItem: ColumnLayout {
+        RowLayout {
+            Layout.fillWidth: true
 
-        Item {
-            width: Units.iconSizes.huge
-            height: width
+            spacing: Units.smallSpacing * 2
 
-            Image {
-                id: albumArt
-                anchors.fill: parent
-                source: player ? player.metadata["mpris:artUrl"] : ""
-                sourceSize.width: width
-                sourceSize.height: height
-                fillMode: Image.PreserveAspectFit
-                visible: status == Image.Ready
+            Item {
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 40
+
+                Image {
+                    id: albumArt
+
+                    anchors.fill: parent
+
+                    source: player ? player.metadata["mpris:artUrl"] : ""
+                    // TODO: Multiply by screen ratio
+                    sourceSize.width: width
+                    sourceSize.height: height
+                    fillMode: Image.PreserveAspectFit
+                    visible: status == Image.Ready
+                }
+
+                Icon {
+                    id: icon
+                    anchors.centerIn: parent
+                    name: player && player.iconName || "image/music_note"
+                    visible: !albumArt.visible
+                    size: 40
+                }
             }
 
-            Icon {
-                id: icon
-                anchors.fill: parent
-                name: player ? player.iconName : ""
-                visible: !albumArt.visible && name !== ""
-            }
+            ColumnLayout {
+                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                Layout.fillWidth: true
 
-            BusyIndicator {
-                anchors.fill: parent
-                visible: !albumArt.visible && !icon.visible
-            }
+                spacing: 0
 
+                SubheadingLabel {
+                    Layout.fillWidth: true
+
+                    color: Material.primaryTextColor
+                    text: player && player.metadata["xesam:title"] || qsTr("Unknown Title")
+                    elide: Text.ElideRight
+                }
+
+                BodyLabel {
+                    Layout.fillWidth: true
+
+                    color: Material.secondaryTextColor
+                    elide: Text.ElideRight
+                    wrapMode: Text.WordWrap
+
+                    text: player && player.metadata["xesam:artist"] || qsTr("Unknown Artist")
+                }
+            }
+        }
+
+        Row {
             Layout.alignment: Qt.AlignHCenter
-        }
 
-        Column {
-            spacing: Units.smallSpacing
+            IconButton {
+                ToolTip.text: qsTr("Previous")
+                ToolTip.visible: hovered
 
-            SubheadingLabel {
-                id: titleLabel
-                text: player && player.metadata["xesam:title"] ? player.metadata["xesam:title"] : qsTr("Unknown Title")
-                font.weight: Font.Bold
-                elide: Text.ElideRight
+                iconName: "av/skip_previous"
+                iconSize: Units.iconSizes.smallMedium
+                onClicked: {
+                    if (player)
+                        player.previous();
+                }
             }
 
-            SubheadingLabel {
-                text: player && player.metadata["xesam:artist"] ? player.metadata["xesam:artist"] : qsTr("Unknown Artist")
-                elide: Text.ElideRight
+            IconButton {
+                ToolTip.text: player.status === "Playing" ? qsTr("Pause") : qsTr("Play")
+                ToolTip.visible: hovered
+
+                iconName: player ? (player.status === "Playing" ? "av/pause" : "av/play_arrow") : ""
+                iconSize: Units.iconSizes.smallMedium
+                onClicked: {
+                    if (player)
+                        player.playPause();
+                }
+            }
+
+            IconButton {
+                ToolTip.text: qsTr("Next")
+                ToolTip.visible: hovered
+
+                iconName: "av/skip_next"
+                iconSize: Units.iconSizes.smallMedium
+                onClicked: {
+                    if (player)
+                        player.next();
+                }
             }
         }
-    }
-
-    ProgressBar {
-        from: 0
-        to: trackLength
-        value: trackPosition
-
-        Layout.fillWidth: true
-    }
-
-    Row {
-        IconButton {
-            ToolTip.text: qsTr("Previous")
-            ToolTip.visible: hovered
-
-            iconName: "av/skip_previous"
-            iconSize: Units.iconSizes.smallMedium
-            onClicked: {
-                if (player)
-                    player.previous();
-            }
-        }
-
-        IconButton {
-            ToolTip.text: player.status === "Playing" ? qsTr("Pause") : qsTr("Play")
-            ToolTip.visible: hovered
-
-            iconName: player ? (player.status === "Playing" ? "av/pause" : "av/play_arrow") : ""
-            iconSize: Units.iconSizes.smallMedium
-            onClicked: {
-                if (player)
-                    player.playPause();
-            }
-        }
-
-        IconButton {
-            ToolTip.text: qsTr("Next")
-            ToolTip.visible: hovered
-
-            iconName: "av/skip_next"
-            iconSize: Units.iconSizes.smallMedium
-            onClicked: {
-                if (player)
-                    player.next();
-            }
-        }
-
-        Layout.alignment: Qt.AlignHCenter
     }
 }

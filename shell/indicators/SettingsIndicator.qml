@@ -31,8 +31,9 @@ import Fluid.Controls 1.0
 import Hawaii.Desktop 1.0
 
 Indicator {
-    name: "settings"
+    title: "Quick Settings"
     iconName: "action/settings"
+
     component: Component {
         ColumnLayout {
             spacing: Units.largeSpacing

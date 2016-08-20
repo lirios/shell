@@ -31,7 +31,7 @@ import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
 import Hawaii.Desktop 1.0
 import Hawaii.Notifications 1.0
-import "events" as EventsIndicator
+import "notifications" as NotificationsIndicator
 
 Indicator {
     property int notificationId: 0
@@ -40,66 +40,64 @@ Indicator {
     readonly property bool hasNotifications: notificationsView.count > 0
     readonly property bool silentMode: false
 
-    name: "events"
+    title: qsTr("Notifications")
     iconName: silentMode ? "social/notifications_off"
                          : hasNotifications ? "social/notifications"
                                             : "social/notifications_none"
-    component: Component {
-        ColumnLayout {
+    component: ColumnLayout {
+        spacing: 0
+
+        Placeholder {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            iconName: "social/notifications_none"
+            text: qsTr("No notifications")
+            visible: notificationView.count == 0
+        }
+
+        ListView {
+            id: notificationView
             spacing: Units.largeSpacing
-
-            HeadlineLabel {
-                text: qsTr("Events")
+            clip: true
+            model: notificationsModel
+            visible: count > 0
+            delegate: NotificationsIndicator.NotificationListItem {}
+            add: Transition {
+                NumberAnimation {
+                    properties: "x"
+                    from: notificationView.width
+                    duration: Units.shortDuration
+                }
             }
+            remove: Transition {
+                NumberAnimation {
+                    properties: "x"
+                    to: notificationView.width
+                    duration: Units.longDuration
+                }
 
-            Label {
-                opacity: 0.6
-                text: qsTr("No new events to see.")
-                visible: notificationView.count == 0
+                NumberAnimation {
+                    properties: "opacity"
+                    to: 0
+                    duration: Units.longDuration
+                }
             }
+            removeDisplaced: Transition {
+                SequentialAnimation {
+                    PauseAnimation {
+                        duration: Units.longDuration
+                    }
 
-            ListView {
-                id: notificationView
-                spacing: Units.largeSpacing
-                clip: true
-                model: notificationsModel
-                delegate: EventsIndicator.EventItem {}
-                add: Transition {
                     NumberAnimation {
-                        properties: "x"
-                        from: notificationView.width
+                        properties: "x,y"
                         duration: Units.shortDuration
                     }
                 }
-                remove: Transition {
-                    NumberAnimation {
-                        properties: "x"
-                        to: notificationView.width
-                        duration: Units.longDuration
-                    }
-
-                    NumberAnimation {
-                        properties: "opacity"
-                        to: 0
-                        duration: Units.longDuration
-                    }
-                }
-                removeDisplaced: Transition {
-                    SequentialAnimation {
-                        PauseAnimation {
-                            duration: Units.longDuration
-                        }
-
-                        NumberAnimation {
-                            properties: "x,y"
-                            duration: Units.shortDuration
-                        }
-                    }
-                }
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
             }
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
     onClicked: badgeCount = 0

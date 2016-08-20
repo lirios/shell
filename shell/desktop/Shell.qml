@@ -23,68 +23,108 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
+import Fluid.Core 1.0
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
 import "../panel"
 
 Item {
     id: shell
 
     readonly property alias panel: panel
+    readonly property alias indicator: rightDrawer.indicator
 
     Panel {
         id: panel
 
-        z: 1
-
-        onIndicatorTriggered: {
-            console.log('Triggered!')
-            // Set the last indicator
-            rightDrawer.lastIndicator = indicator;
-            indicator.active = true;
-
-            // Load indicator component
-            if (rightDrawer.expanded)
-                loader.sourceComponent = indicator.component;
-            else
-                loader.sourceComponent = indicator.component;
-            rightDrawer.open();
-        }
+        onIndicatorTriggered: rightDrawer.indicator = indicator
     }
 
     Drawer {
         id: rightDrawer
 
-        property var lastIndicator: null
+        property var indicator: null
 
         Material.theme: Material.Dark
+        Material.primary: Material.Blue
+        Material.accent: Material.Blue
+
+        onIndicatorChanged: {
+            if (indicator != null)
+                rightDrawer.open()
+            else
+                rightDrawer.close()
+        }
+
+        onClosed: indicator = null
 
         edge: Qt.RightEdge
 
-        y: output.availableGeometry.y
-        width: loader.implicitWidth + (2 * FluidUi.Units.largeSpacing)
-        height: output.availableGeometry.height
-        onPositionChanged: {
-            if (position == 0.0 && lastIndicator)
-                lastIndicator.active = false;
-        }
+        y: screenView.width
+        width: Math.max(320, panel.rightWidth)
+        height: screenView.height
 
-        Pane {
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
+        Item {
+            anchors.fill: parent
+
+            clip: true
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
+                Item {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: titleLabel.implicitHeight + 2 * titleLabel.anchors.margins
+
+                    HeadlineLabel {
+                        id: titleLabel
+                        text: rightDrawer.indicator && rightDrawer.indicator.title
+                        verticalAlignment: Qt.AlignVCenter
+                        anchors {
+                            fill: parent
+                            margins: 2 * Units.smallSpacing
+                        }
+                    }
+                }
+
+                Loader {
+                    id: loader
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    sourceComponent: rightDrawer.indicator && rightDrawer.indicator.component
+                }
             }
-            width: loader.implicitWidth
-            padding: FluidUi.Units.largeSpacing
 
-            Loader {
-                id: loader
+            Item {
                 anchors {
-                    left: parent.left
-                    top: parent.top
                     bottom: parent.bottom
+                    right: parent.right
+                    rightMargin: Units.smallSpacing + (1 - rightDrawer.position) * rightDrawer.width
+                }
+
+                height: panel.height
+
+                IndicatorsRow {
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        right: parent.right
+                        rightMargin: Units.smallSpacing + 1
+                    }
+
+                    height: Utils.scale(rightDrawer.position, parent.height - 2 * Units.smallSpacing, parent.height)
+
+                    onIndicatorTriggered: {
+                        if (indicator.active)
+                            rightDrawer.close()
+                        else
+                            rightDrawer.indicator = indicator
+                    }
                 }
             }
         }
