@@ -32,6 +32,7 @@ The following modules and their dependencies are required:
  * [qmlos-workspace](https://github.com/qmlos/workspace)
  * [pam](http://www.linux-pam.org/)
  * [libqtxdg](https://github.com/lxde/libqtxdg)
+ * [qtaccountsservice](https://github.com/hawaii-desktop/qtaccountsservice)
 
 Optional, but recommended dependencies:
 

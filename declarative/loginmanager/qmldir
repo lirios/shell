@@ -1,0 +1,4 @@
+module Hawaii.LoginManager
+plugin loginmanagerplugin
+classname LoginManagerPlugin
+typeinfo plugins.qmltypes
