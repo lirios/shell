@@ -84,6 +84,8 @@ Item {
         title: qsTr("Log out")
         text: qsTr("You will be logged out in %1 seconds").arg(logoutScreen.remainingSeconds)
 
+        positiveButtonText: qsTr("Log out")
+
         onOpened: {
             logoutScreen.startTime = new Date()
             logoutScreen.remainingSeconds = logoutScreen.totalSeconds - (new Date() - logoutScreen.startTime)/1000
