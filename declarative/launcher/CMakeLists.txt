@@ -7,6 +7,7 @@ set(SOURCES
     appsmodel.cpp
     appusage.cpp
     categoriesmodel.cpp
+    frequentmodel.cpp
     launchermodel.cpp
     pagemodel.cpp
     plugin.cpp
