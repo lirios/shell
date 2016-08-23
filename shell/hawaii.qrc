@@ -74,6 +74,7 @@
 	<file>indicators/sound/MprisItem.qml</file>
 	<file>indicators/sound/VolumeControl.qml</file>
 	<file>indicators/sound/VolumeSlider.qml</file>
+	<file>launcher/FrequentAppsView.qml</file>
 	<file>launcher/Launcher.qml</file>
 	<file>launcher/LauncherCategories.qml</file>
 	<file>launcher/LauncherDelegate.qml</file>

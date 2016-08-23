@@ -37,14 +37,11 @@ Popup {
     signal appLaunched()
     signal dismissed()
 
+    // Not really sure why this is necessary, popup blows up in width when switching modes
+    width: implicitWidth
+
     focus: true
     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-    implicitWidth: mainLayout.implicitWidth +
-                   launcherPopOver.leftPadding + launcherPopOver.rightPadding +
-                   launcherPopOver.leftMargin + launcherPopOver.rightMargin
-    implicitHeight: mainLayout.implicitHeight +
-                    launcherPopOver.topPadding + launcherPopOver.bottomPadding +
-                    launcherPopOver.topMargin + launcherPopOver.bottomMargin
 
     padding: 0
     rightPadding: 2
@@ -55,8 +52,8 @@ Popup {
     Rectangle {
         radius: 2
         color: "#eee"
-        width: mainLayout.width
-        height: mainLayout.height
+        implicitWidth: mainLayout.width
+        implicitHeight: mainLayout.height
 
         ColumnLayout {
             id: mainLayout
@@ -97,19 +94,27 @@ Popup {
                     }
 
                     IconButton {
-                        id: viewCategoriesButton
-                        iconName: "action/view_list"
+                        id: frequentAppsButton
+                        iconName: "action/history"
                         checkable: true
-                        checked: false
+                        checked: frequentApps.count > 0
                         autoExclusive: true
                         onClicked: categories.currentIndex = 0
                     }
 
                     IconButton {
-                        id: viewPagedButton
-                        iconName: "action/view_module"
+                        id: allAppsButton
+                        iconName: "navigation/apps"
                         checkable: true
-                        checked: true
+                        checked: frequentApps.count === 0
+                        autoExclusive: true
+                        onClicked: categories.currentIndex = 0
+                    }
+
+                    IconButton {
+                        id: categoriesButton
+                        iconName: "action/list"
+                        checkable: true
                         autoExclusive: true
                         onClicked: categories.currentIndex = 0
                     }
@@ -122,7 +127,12 @@ Popup {
                         id: searchText
                         placeholderText: qsTr("Type an application name...")
                         focus: true
-                        onTextChanged: grid.query = text
+                        onTextChanged: {
+                            grid.query = text
+
+                            if (frequentAppsButton.checked)
+                                allAppsButton.checked = true
+                        }
 
                         Layout.fillWidth: true
                     }
@@ -153,17 +163,31 @@ Popup {
                         margins: Units.smallSpacing
                     }
 
+                    FrequentAppsView {
+                        id: frequentApps
+
+                        onAppLaunched: {
+                            launcherPopOver.appLaunched()
+                            searchText.text = ""
+                        }
+
+                        visible: frequentAppsButton.checked
+                    }
+
                     LauncherCategories {
                         id: categories
-                        clip: true
-                        width: Units.gu(10)
-                        visible: viewCategoriesButton.checked
-                        onSelected: grid.filterByCategory(category)
 
+                        Layout.preferredWidth: Units.gu(10)
                         Layout.fillHeight: true
+
+                        clip: true
+                        visible: categoriesButton.checked
+                        onSelected: grid.filterByCategory(category)
                     }
 
                     ColumnLayout {
+                        visible: !frequentAppsButton.checked
+
                         LauncherGridView {
                             id: grid
                             onAppLaunched: {

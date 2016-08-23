@@ -29,6 +29,7 @@
 #include "application.h"
 #include "appsmodel.h"
 #include "categoriesmodel.h"
+#include "frequentmodel.h"
 #include "launchermodel.h"
 #include "pagemodel.h"
 #include "processrunner.h"
@@ -48,6 +49,7 @@ public:
         qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
         qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
         qmlRegisterType<PageModel>(uri, 0, 1, "PageModel");
+        qmlRegisterType<FrequentAppsModel>(uri, 0, 1, "FrequentAppsModel");
         qmlRegisterType<ProcessRunner>(uri, 0, 1, "ProcessRunner");
         qmlRegisterUncreatableType<Application>(uri, 0, 1, "Application",
                                                 QStringLiteral("Cannot instantiate Application"));
