@@ -7,6 +7,7 @@ set(SOURCES
     appsmodel.cpp
     categoriesmodel.cpp
     launchermodel.cpp
+    pagemodel.cpp
     plugin.cpp
     processrunner.cpp
 )

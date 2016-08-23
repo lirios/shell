@@ -170,36 +170,11 @@ Popup {
                                 launcherPopOver.appLaunched()
                                 searchText.text = ""
                             }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                acceptedButtons: Qt.NoButton
-                                onWheel: {
-                                    if (wheel.angleDelta.x > 0 || wheel.angleDelta.y > 0) {
-                                        // Go to the next page
-                                        if (grid.currentPage < grid.numPages - 1) {
-                                            grid.currentPage++;
-                                            grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
-                                        }
-                                    } else if (wheel.angleDelta.x < 0 || wheel.angleDelta.y < 0) {
-                                        // Go to the next page
-                                        if (grid.currentPage > 0) {
-                                            grid.currentPage--;
-                                            grid.currentIndex = grid.currentPage * grid.numItemsPerPage + 1;
-                                        }
-                                    }
-
-                                    wheel.accepted = true;
-                                }
-                            }
-
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
                         }
 
                         PageIndicator {
                             id: pageIndicator
-                            count: grid.numPages
+                            count: grid.pages
                             currentIndex: grid.currentPage
                             onCurrentIndexChanged: grid.currentPage = currentIndex
 

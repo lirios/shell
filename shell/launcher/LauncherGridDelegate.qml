@@ -29,6 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
 
 Rectangle {
     property bool hovered: false
@@ -66,5 +67,10 @@ Rectangle {
         textFormat: Text.PlainText
         horizontalAlignment: Text.AlignHCenter
         width: parent.width - 2 * Units.smallSpacing
+    }
+
+    Ripple {
+        anchors.fill: parent
+        onClicked: appsModel.trigger(model.desktopFile)
     }
 }

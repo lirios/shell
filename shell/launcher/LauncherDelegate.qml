@@ -66,7 +66,7 @@ PanelItem {
     Icon {
         id: icon
         anchors.centerIn: parent
-        name: model.iconName
+        name: model.iconName || "application-x-executable"
         size: parent.height * 0.55
     }
 

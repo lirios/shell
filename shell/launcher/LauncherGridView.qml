@@ -1,10 +1,8 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -28,39 +26,36 @@ import QtQuick 2.0
 import QtQml.Models 2.1
 import Fluid.Core 1.0
 import Fluid.Controls 1.0
-import Fluid.Material 1.0
-import org.hawaiios.launcher 0.1 as CppLauncher
+import org.hawaiios.launcher 0.1
+import "../components"
 
-GridView {
-    id: grid
+PagedGrid {
+    id: gridView
 
-    readonly property int numRows: 6
-    readonly property int numColumns: 4
-    readonly property int numItemsPerPage: numRows * numColumns
-    readonly property int numPages: Math.ceil(grid.count / numItemsPerPage)
-    property int currentPage: 0
     property alias query: appsProxyModel.filterPattern
+
+    property int cellSize: 130
+
+    width: columns * cellSize
+    height: rows * cellSize
+
+    rows: 4
+    columns: 6
 
     signal appLaunched()
 
-    cellWidth: 130
-    cellHeight: cellWidth
-    width: cellWidth * numRows
-    height: cellHeight * numColumns
-    snapMode: GridView.SnapOneRow
-    flow: GridView.LeftToRight
-    interactive: true
-    clip: true
-    preferredHighlightBegin: 0
-    preferredHighlightEnd: 0
-    highlightRangeMode: GridView.StrictlyEnforceRange
-    highlightFollowsCurrentItem: true
+    function filterByCategory(category) {
+        appsModel.categoryFilter = category;
+    }
+
+    AppsModel {
+        id: appsModel
+        onAppLaunched: gridView.appLaunched()
+    }
+
     model: SortFilterProxyModel {
         id: appsProxyModel
-        sourceModel: CppLauncher.AppsModel {
-            id: appsModel
-            onAppLaunched: grid.appLaunched()
-        }
+        sourceModel: appsModel
         filterRoleName: "filterInfo"
         filterCaseSensitivity: Qt.CaseInsensitive
         isSortLocaleAware: true
@@ -68,13 +63,11 @@ GridView {
         sortOrder: Qt.AscendingOrder
         sortRoleName: "name"
     }
-    delegate: Item {
-        // Child items don't have access to model roles,
-        // let's solve the issue with property binding
-        property string desktopFileName: desktopFile
 
-        width: grid.cellWidth
-        height: grid.cellHeight
+    delegate: Item {
+
+        width: 130
+        height: width
 
         LauncherGridDelegate {
             id: delegate
@@ -83,19 +76,6 @@ GridView {
                 fill: parent
                 margins: Units.smallSpacing
             }
-
-            Ripple {
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton
-                hoverEnabled: true
-                onEntered: delegate.hovered = true
-                onExited: delegate.hovered = false
-                onClicked: appsModel.trigger(desktopFileName)
-            }
         }
-    }
-
-    function filterByCategory(category) {
-        appsModel.categoryFilter = category;
     }
 }
