@@ -99,7 +99,10 @@ Popup {
                         checkable: true
                         checked: frequentApps.count > 0
                         autoExclusive: true
-                        onClicked: categories.currentIndex = 0
+                        onClicked: {
+                            categories.currentIndex = 0
+                            searchText.forceActiveFocus()
+                        }
                     }
 
                     IconButton {
@@ -108,7 +111,10 @@ Popup {
                         checkable: true
                         checked: frequentApps.count === 0
                         autoExclusive: true
-                        onClicked: categories.currentIndex = 0
+                        onClicked: {
+                            categories.currentIndex = 0
+                            searchText.forceActiveFocus()
+                        }
                     }
 
                     IconButton {
@@ -116,7 +122,10 @@ Popup {
                         iconName: "action/list"
                         checkable: true
                         autoExclusive: true
-                        onClicked: categories.currentIndex = 0
+                        onClicked: {
+                            categories.currentIndex = 0
+                            searchText.forceActiveFocus()
+                        }
                     }
 
                     Item {
