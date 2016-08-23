@@ -74,7 +74,7 @@ add_feature_info("prctl-dumpable" HAVE_PR_SET_DUMPABLE "Required to prevent ptra
 # Find Qt5
 set(REQUIRED_QT_VERSION "5.7.0")
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
-             DBus Xml Widgets Qml Quick QuickControls2 WaylandClient)
+             DBus Xml Widgets Qml Quick QuickControls2 WaylandClient Sql)
 
 # Find Green Island
 set(REQUIRED_GREENISLAND_VERSION "0.8.0")

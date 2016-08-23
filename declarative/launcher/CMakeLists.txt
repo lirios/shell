@@ -5,11 +5,13 @@ include_directories(
 set(SOURCES
     application.cpp
     appsmodel.cpp
+    appusage.cpp
     categoriesmodel.cpp
     launchermodel.cpp
     pagemodel.cpp
     plugin.cpp
     processrunner.cpp
+    usagetracker.cpp
 )
 
 add_library(launcherplugin SHARED ${SOURCES})

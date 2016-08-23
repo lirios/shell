@@ -30,6 +30,7 @@
 #include <QtGui/QIcon>
 
 #include "application.h"
+#include "usagetracker.h"
 
 using namespace Hawaii;
 
@@ -272,11 +273,16 @@ void LauncherModel::handleApplicationAdded(QString appId, pid_t pid)
     app->m_pids.insert(pid);
     m_list.append(app);
     endInsertRows();
+
+    if (!app->desktopFile()->noDisplay())
+        UsageTracker::instance()->applicationLaunched(appId);
 }
 
 void LauncherModel::handleApplicationRemoved(QString appId, pid_t pid)
 {
     appId = DesktopFile::canonicalAppId(appId);
+
+    UsageTracker::instance()->applicationFocused(QString());
 
     for (int i = 0; i < m_list.size(); i++) {
         Application *app = m_list.at(i);
@@ -328,6 +334,11 @@ void LauncherModel::handleApplicationFocused(QString appId)
             Q_EMIT dataChanged(modelIndex, modelIndex);
         }
     }
+
+    if (found != nullptr && !found->desktopFile()->noDisplay())
+        UsageTracker::instance()->applicationFocused(appId);
+    else
+        UsageTracker::instance()->applicationFocused(QString());
 }
 
 bool LauncherModel::moveRows(int sourceRow, int count, int destinationChild)
