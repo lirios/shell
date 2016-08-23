@@ -22,8 +22,7 @@ FrequentAppsModel::FrequentAppsModel(QObject *parent)
 bool FrequentAppsModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     QModelIndex sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
-    QString appId = appIdFromDesktopFile(
-            sourceModel()->data(sourceIndex, AppsModel::DesktopFileRole).toString());
+    QString appId = sourceModel()->data(sourceIndex, AppsModel::AppIdRole).toString();
 
     AppUsage *app = UsageTracker::instance()->usageForAppId(appId);
 
@@ -33,10 +32,8 @@ bool FrequentAppsModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
 bool FrequentAppsModel::lessThan(const QModelIndex &source_left,
                                  const QModelIndex &source_right) const
 {
-    QString leftAppId = appIdFromDesktopFile(
-            sourceModel()->data(source_left, AppsModel::DesktopFileRole).toString());
-    QString rightAppId = appIdFromDesktopFile(
-            sourceModel()->data(source_right, AppsModel::DesktopFileRole).toString());
+    QString leftAppId = sourceModel()->data(source_left, AppsModel::AppIdRole).toString();
+    QString rightAppId = sourceModel()->data(source_right, AppsModel::AppIdRole).toString();
 
     AppUsage *leftApp = UsageTracker::instance()->usageForAppId(leftAppId);
     AppUsage *rightApp = UsageTracker::instance()->usageForAppId(rightAppId);

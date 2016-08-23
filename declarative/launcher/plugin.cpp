@@ -27,6 +27,7 @@
 #include <QtQml/QtQml>
 
 #include "application.h"
+#include "applicationmanager.h"
 #include "appsmodel.h"
 #include "categoriesmodel.h"
 #include "frequentmodel.h"
@@ -45,6 +46,7 @@ public:
         // @uri org.hawaiios.launcher
         Q_ASSERT(uri == QLatin1String("org.hawaiios.launcher"));
 
+        qmlRegisterType<ApplicationManager>(uri, 0, 1, "ApplicationManager");
         qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
         qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
         qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");

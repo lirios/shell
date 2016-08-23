@@ -27,9 +27,11 @@
 #include "launchermodel.h"
 
 #include <Hawaii/Core/DesktopFile>
+#include <QtCore/QTimer>
 #include <QtGui/QIcon>
 
 #include "application.h"
+#include "appsmodel.h"
 #include "usagetracker.h"
 
 using namespace Hawaii;
@@ -37,17 +39,6 @@ using namespace Hawaii;
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)
 {
-    // Settings
-    m_settings = new QGSettings(QStringLiteral("org.hawaiios.desktop.panel"),
-                                QStringLiteral("/org/hawaiios/desktop/panel/"), this);
-
-    // Add pinned launchers
-    const QStringList pinnedLaunchers =
-        m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
-    beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + pinnedLaunchers.size());
-    Q_FOREACH (const QString &appId, pinnedLaunchers)
-        m_list << new Application(appId, true, this);
-    endInsertRows();
 }
 
 ApplicationManager *LauncherModel::applicationManager() const
@@ -60,26 +51,98 @@ void LauncherModel::setApplicationManager(ApplicationManager *appMan)
     if (m_appMan == appMan)
         return;
 
-    if (m_appMan) {
-        disconnect(m_appMan, &ApplicationManager::applicationAdded, this,
-                   &LauncherModel::handleApplicationAdded);
-        disconnect(m_appMan, &ApplicationManager::applicationRemoved, this,
-                   &LauncherModel::handleApplicationRemoved);
-        disconnect(m_appMan, &ApplicationManager::applicationFocused, this,
-                   &LauncherModel::handleApplicationFocused);
-    }
-
     m_appMan = appMan;
     Q_EMIT applicationManagerChanged();
 
-    if (appMan) {
-        connect(appMan, &ApplicationManager::applicationAdded, this,
-                &LauncherModel::handleApplicationAdded);
-        connect(appMan, &ApplicationManager::applicationRemoved, this,
-                &LauncherModel::handleApplicationRemoved);
-        connect(appMan, &ApplicationManager::applicationFocused, this,
-                &LauncherModel::handleApplicationFocused);
+    if (appMan != nullptr) {
+        connect(appMan, &ApplicationManager::applicationAdded,
+                this, &LauncherModel::setupConnections);
+
+        Q_FOREACH (Application *app, appMan->applications()) {
+            setupConnections(app);
+        }
+
+        m_apps = appMan->pinnedApps();
     }
+}
+
+void LauncherModel::setupConnections(Application *app)
+{
+    connect(app, &Application::stateChanged, this, [this, app] {
+        int i = m_apps.indexOf(app);
+
+        if (i >= 0) {
+            if (app->state() == Application::NotRunning && !app->isPinned()) {
+                beginRemoveRows(QModelIndex(), i, i);
+                m_apps.removeAt(i);
+                endRemoveRows();
+            } else {
+                QModelIndex modelIndex = index(i);
+                Q_EMIT dataChanged(modelIndex, modelIndex);
+            }
+        } else {
+            if (app->state() != Application::NotRunning) {
+                beginInsertRows(QModelIndex(), m_apps.size(), m_apps.size());
+                m_apps.append(app);
+                endInsertRows();
+            }
+        }
+    });
+
+    connect(app, &Application::activeChanged, this, [this, app] {
+        int i = m_apps.indexOf(app);
+
+        if (i >= 0) {
+            QModelIndex modelIndex = index(i);
+            Q_EMIT dataChanged(modelIndex, modelIndex);
+        }
+    });
+
+    connect(app, &Application::pinnedChanged, this, [this, app] {
+        int i = m_apps.indexOf(app);
+
+        if (i >= 0) {
+            QModelIndex modelIndex = index(i);
+            Q_EMIT dataChanged(modelIndex, modelIndex);
+
+            // App is in the launcher.
+            if (app->isPinned()) {
+                // If pinned, move to the pinned section,
+                moveRows(i, 1, pinAtIndex());
+            } else if (app->isRunning()) {
+                // Otherwise, if running, move the end
+                moveRows(i, 1, m_apps.size() - 1);
+            } else {
+                // Otherwise, remove
+                beginRemoveRows(QModelIndex(), i, i);
+                m_apps.removeAt(i);
+                endRemoveRows();
+            }
+        } else {
+            // App is not in the launcher
+            // If pinned, add to the launcher
+            if (app->isPinned()) {
+                int i = pinAtIndex();
+                beginInsertRows(QModelIndex(), i, i);
+                m_apps.insert(i, app);
+                endInsertRows();
+            }
+        }
+    });
+}
+
+int LauncherModel::pinAtIndex() const
+{
+    int lastIndex = 0;
+
+    Q_FOREACH (Application *app, m_apps) {
+        if (!app->isPinned())
+            return lastIndex;
+
+        lastIndex++;
+    }
+
+    return lastIndex;
 }
 
 QHash<int, QByteArray> LauncherModel::roleNames() const
@@ -105,7 +168,7 @@ QHash<int, QByteArray> LauncherModel::roleNames() const
 int LauncherModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return m_list.size();
+    return m_apps.size();
 }
 
 QVariant LauncherModel::data(const QModelIndex &index, int role) const
@@ -113,7 +176,7 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    Application *app = m_list.at(index.row());
+    Application *app = m_apps.at(index.row());
 
     switch (role) {
     case DesktopFileRole:
@@ -151,197 +214,19 @@ QVariant LauncherModel::data(const QModelIndex &index, int role) const
 
 Application *LauncherModel::get(int index) const
 {
-    if (index < 0 || index >= m_list.size())
+    if (index < 0 || index >= m_apps.size())
         return nullptr;
-    return m_list.at(index);
+    return m_apps.at(index);
 }
 
 int LauncherModel::indexFromAppId(const QString &appId) const
 {
-    for (int i = 0; i < m_list.size(); i++) {
-        if (m_list.at(i)->appId() == appId)
-            return 0;
+    for (int i = 0; i < m_apps.size(); i++) {
+        if (m_apps.at(i)->appId() == appId)
+            return i;
     }
 
     return -1;
-}
-
-void LauncherModel::pin(const QString &appId)
-{
-    Application *found = nullptr;
-    int pinAtIndex = 0;
-
-    Q_FOREACH (Application *app, m_list) {
-        if (app->isPinned())
-            pinAtIndex++;
-
-        if (app->appId() == appId) {
-            found = app;
-            break;
-        }
-    }
-
-    if (!found)
-        return;
-
-    found->setPinned(true);
-
-    int foundIndex = m_list.indexOf(found);
-
-    if (foundIndex != pinAtIndex) {
-        moveRows(foundIndex, 1, pinAtIndex);
-
-        QModelIndex modelIndex = index(pinAtIndex);
-        Q_EMIT dataChanged(modelIndex, modelIndex);
-    } else {
-        QModelIndex modelIndex = index(foundIndex);
-        Q_EMIT dataChanged(modelIndex, modelIndex);
-    }
-
-    pinLauncher(appId, true);
-}
-
-void LauncherModel::unpin(const QString &appId)
-{
-    Application *found = nullptr;
-
-    Q_FOREACH (Application *app, m_list) {
-        if (!app->isPinned())
-            break;
-
-        if (app->appId() == appId) {
-            found = app;
-            break;
-        }
-    }
-
-    if (!found)
-        return;
-
-    Q_ASSERT(found->isPinned());
-
-    int i = m_list.indexOf(found);
-
-    // Remove the item when unpinned and not running
-    if (found->isRunning()) {
-        found->setPinned(false);
-        found->setPinned(false);
-        moveRows(i, 1, m_list.size() - 1);
-
-        QModelIndex modelIndex = index(m_list.size() - 1);
-        Q_EMIT dataChanged(modelIndex, modelIndex);
-    } else {
-        beginRemoveRows(QModelIndex(), i, i);
-        m_list.takeAt(i)->deleteLater();
-        endRemoveRows();
-    }
-
-    pinLauncher(appId, false);
-}
-
-void LauncherModel::pinLauncher(const QString &appId, bool pinned)
-{
-    // Currently pinned launchers
-    QStringList pinnedLaunchers =
-        m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
-
-    // Add or remove from the pinned launchers
-    if (pinned)
-        pinnedLaunchers.append(appId);
-    else
-        pinnedLaunchers.removeOne(appId);
-    m_settings->setValue(QStringLiteral("pinnedLaunchers"), pinnedLaunchers);
-}
-
-void LauncherModel::handleApplicationAdded(QString appId, pid_t pid)
-{
-    appId = DesktopFile::canonicalAppId(appId);
-
-    // Do we have already an icon?
-    for (int i = 0; i < m_list.size(); i++) {
-        Application *app = m_list.at(i);
-        if (app->appId() == appId) {
-            app->m_pids.insert(pid);
-            app->setState(Application::Running);
-            QModelIndex modelIndex = index(i);
-            Q_EMIT dataChanged(modelIndex, modelIndex);
-            return;
-        }
-    }
-
-    // Otherwise create one
-    beginInsertRows(QModelIndex(), m_list.size(), m_list.size());
-    Application *app = new Application(appId, this);
-    app->setState(Application::Running);
-    app->m_pids.insert(pid);
-    m_list.append(app);
-    endInsertRows();
-
-    if (!app->desktopFile()->noDisplay())
-        UsageTracker::instance()->applicationLaunched(appId);
-}
-
-void LauncherModel::handleApplicationRemoved(QString appId, pid_t pid)
-{
-    appId = DesktopFile::canonicalAppId(appId);
-
-    UsageTracker::instance()->applicationFocused(QString());
-
-    for (int i = 0; i < m_list.size(); i++) {
-        Application *app = m_list.at(i);
-        if (app->appId() == appId) {
-            // Remove this pid and determine if there are any processes left
-            app->m_pids.remove(pid);
-            if (app->m_pids.count() > 0)
-                return;
-
-            if (app->isPinned()) {
-                // If it's pinned we just unset the flags if all pids are gone
-                app->setState(Application::NotRunning);
-                app->setActive(false);
-                QModelIndex modelIndex = index(i);
-                Q_EMIT dataChanged(modelIndex, modelIndex);
-            } else {
-                // Otherwise the icon goes away because it wasn't meant
-                // to stay
-                beginRemoveRows(QModelIndex(), i, i);
-                m_list.takeAt(i)->deleteLater();
-                endRemoveRows();
-            }
-            break;
-        }
-    }
-}
-
-void LauncherModel::handleApplicationFocused(QString appId)
-{
-    appId = DesktopFile::canonicalAppId(appId);
-
-    Application *found = nullptr;
-
-    for (int i = 0; i < m_list.size(); i++) {
-        Application *app = m_list.at(i);
-        bool changed = false;
-
-        if (app->appId() == appId) {
-            found = app;
-            changed = !app->isActive();
-            app->setActive(true);
-        } else {
-            changed = app->isActive();
-            app->setActive(false);
-        }
-
-        if (changed) {
-            QModelIndex modelIndex = index(i);
-            Q_EMIT dataChanged(modelIndex, modelIndex);
-        }
-    }
-
-    if (found != nullptr && !found->desktopFile()->noDisplay())
-        UsageTracker::instance()->applicationFocused(appId);
-    else
-        UsageTracker::instance()->applicationFocused(QString());
 }
 
 bool LauncherModel::moveRows(int sourceRow, int count, int destinationChild)
@@ -362,12 +247,12 @@ bool LauncherModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int
                       destinationChild + 1);
         tmp.reserve(count);
         for (int i = sourceRow; i < sourceRow + count; i++) {
-            Q_ASSERT(m_list[i]);
-            tmp << m_list.takeAt(i);
+            Q_ASSERT(m_apps[i]);
+            tmp << m_apps.takeAt(i);
         }
         for (int i = 0; i < count; i++) {
             Q_ASSERT(tmp[i]);
-            m_list.insert(destinationChild - count + 2 + i, tmp[i]);
+            m_apps.insert(destinationChild - count + 2 + i, tmp[i]);
         }
         endMoveRows();
     } else if (sourceRow > destinationChild) {
@@ -375,12 +260,12 @@ bool LauncherModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int
                       destinationChild);
         tmp.reserve(count);
         for (int i = sourceRow; i < sourceRow + count; i++) {
-            Q_ASSERT(m_list[i]);
-            tmp << m_list.takeAt(i);
+            Q_ASSERT(m_apps[i]);
+            tmp << m_apps.takeAt(i);
         }
         for (int i = 0; i < count; i++) {
             Q_ASSERT(tmp[i]);
-            m_list.insert(destinationChild + i, tmp[i]);
+            m_apps.insert(destinationChild + i, tmp[i]);
         }
         endMoveRows();
     }

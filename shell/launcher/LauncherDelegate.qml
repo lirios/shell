@@ -26,6 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
 import Hawaii.Shell 1.0
 
@@ -35,9 +36,9 @@ PanelItem {
     property int indexOfThisDelegate: index
     property string appId: model.appId
 
-    // TODO: Implement starting
-    highlightColor: /* model.starting ? Palette.colors.orange["500"] : */ "white"
-    highlightOpacity: model.active /*|| model.starting*/ ? 1 : model.running ? 0.4 : 0
+    highlightColor: model.starting ? Material.color(Material.Orange) : "white"
+    highlightOpacity: model.active || model.starting ? 1 : model.running ? 0.4 : 0
+    active: model.active
 
     ToolTip.visible: containsMouse && !menu.showing
     ToolTip.text: model.name || model.appId
@@ -47,7 +48,7 @@ PanelItem {
             if (model.active)
                 toggleWindows();
             else
-                activateWindows();
+                activateWindows(model.appId);
         } else {
             if (!launcher.model.get(index).launch())
                 console.warn("Failed to run:", model.appId);
@@ -59,6 +60,24 @@ PanelItem {
             menu.close();
         else
             menu.open();
+    }
+
+    SequentialAnimation on y {
+        loops: Animation.Infinite
+        running: model.starting
+        alwaysRunToEnd: true
+
+        NumberAnimation {
+            from: 0; to: -launcherItem.height/2
+            easing.type: Easing.OutExpo; duration: 300
+        }
+
+        NumberAnimation {
+            from: -launcherItem.height/2; to: 0
+            easing.type: Easing.OutBounce; duration: 1000
+        }
+
+        PauseAnimation { duration: 500 }
     }
 
     Icon {
@@ -101,24 +120,6 @@ PanelItem {
         id: menu
         x: 0
         y: -height
-    }
-
-    function activateWindows() {
-        // Set index so that the window have a clue of which icon was clicked
-        launcher.currentIndex = index;
-
-        // Activate all windows of this application and unminimize
-        var i, window;
-        for (i = 0; i < compositor.windowsModel.count; i++) {
-            window = compositor.windowsModel.get(i).window;
-            if (window.appId === model.appId) {
-                window.minimized = false;
-                window.activate();
-            }
-        }
-
-        // Toggle active flag
-        launcherItem.active = !launcherItem.active;
     }
 
     function toggleWindows() {

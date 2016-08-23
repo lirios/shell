@@ -42,15 +42,8 @@ PagedGrid {
     rows: 4
     columns: 6
 
-    signal appLaunched()
-
     function filterByCategory(category) {
         appsModel.categoryFilter = category;
-    }
-
-    AppsModel {
-        id: appsModel
-        onAppLaunched: gridView.appLaunched()
     }
 
     model: SortFilterProxyModel {

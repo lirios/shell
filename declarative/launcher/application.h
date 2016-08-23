@@ -22,12 +22,13 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSet>
+#include <QtCore/QStringList>
 
 #include <Hawaii/Core/DesktopFile>
 
 using namespace Hawaii;
 
-class LauncherModel;
+class ApplicationManager;
 
 class Application : public QObject
 {
@@ -39,14 +40,23 @@ class Application : public QObject
     Q_PROPERTY(DesktopFile *desktopFile READ desktopFile CONSTANT)
     Q_PROPERTY(bool valid READ isValid CONSTANT)
 
+    Q_PROPERTY(QString name READ name NOTIFY dataChanged)
+    Q_PROPERTY(QString genericName READ genericName NOTIFY dataChanged)
+    Q_PROPERTY(QString comment READ comment NOTIFY dataChanged)
+    Q_PROPERTY(QString iconName READ iconName NOTIFY dataChanged)
+    Q_PROPERTY(QStringList categories READ categories NOTIFY dataChanged)
+
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
     Q_PROPERTY(bool running READ isRunning NOTIFY stateChanged)
+    Q_PROPERTY(bool starting READ isStarting NOTIFY stateChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
     Q_PROPERTY(bool pinned READ isPinned WRITE setPinned NOTIFY pinnedChanged)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 
-    friend LauncherModel;
+    Q_ENUMS(State)
+
+    friend ApplicationManager;
 
 public:
     enum State
@@ -68,10 +78,18 @@ public:
     };
     Q_ENUM(State)
 
-    Application(const QString &appId, LauncherModel *LauncherModel);
-    Application(const QString &appId, bool pinned, LauncherModel *LauncherModel);
+    Application(const QString &appId, const QStringList &categories,
+                ApplicationManager *applicationManager);
 
     bool isValid() const { return m_desktopFile != nullptr && m_desktopFile->isValid(); }
+
+    bool hasCategory(const QString &category) const;
+
+    QString name() const { return m_desktopFile->name(); }
+    QString genericName() const { return m_desktopFile->genericName(); }
+    QString comment() const { return m_desktopFile->comment(); }
+    QString iconName() const { return m_desktopFile->iconName(); }
+    QStringList categories() const { return m_categories; }
 
     /*!
      * \brief Application state.
@@ -129,13 +147,15 @@ Q_SIGNALS:
     void countChanged();
     void progressChanged();
     void launched();
+    void dataChanged();
 
 protected:
     QSet<pid_t> m_pids;
 
 private:
-    LauncherModel *m_launcherModel = nullptr;
+    ApplicationManager *m_appMan = nullptr;
     QString m_appId;
+    QStringList m_categories;
     DesktopFile *m_desktopFile = nullptr;
     bool m_active = false;
     bool m_pinned = false;

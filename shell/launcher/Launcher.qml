@@ -34,10 +34,7 @@ ListView {
     orientation: Qt.Horizontal
     interactive: contentWidth > width
 
-    model: LauncherModel {
-        id: launcherModel
-        applicationManager: compositor.applicationManager
-    }
+    model: launcherModel
     delegate: LauncherDelegate {}
 
     remove: Transition {

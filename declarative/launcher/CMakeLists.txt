@@ -4,6 +4,7 @@ include_directories(
 
 set(SOURCES
     application.cpp
+    applicationmanager.cpp
     appsmodel.cpp
     appusage.cpp
     categoriesmodel.cpp

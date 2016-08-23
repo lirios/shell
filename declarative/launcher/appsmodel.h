@@ -1,10 +1,8 @@
 /****************************************************************************
  * This file is part of Hawaii Shell.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -24,53 +22,34 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef APPSMODEL_H
-#define APPSMODEL_H
+#pragma once
 
 #include <QtCore/QAbstractListModel>
-#include <QtCore/QLoggingCategory>
 #include <QtQml/QQmlComponent>
 
-class QDomElement;
-class AppEntry;
-
-Q_DECLARE_LOGGING_CATEGORY(APPSMODEL)
+#include "applicationmanager.h"
 
 class AppsModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(NameFormat appNameFormat READ appNameFormat WRITE setAppNameFormat NOTIFY
-                       appNameFormatChanged)
-    Q_PROPERTY(QString categoryFilter READ categoryFilter WRITE setCategoryFilter NOTIFY
-                       categoryFilterChanged)
+    Q_PROPERTY(ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
 public:
     enum Roles
     {
         NameRole = Qt::UserRole + 1,
+        GenericNameRole,
         CommentRole,
         IconNameRole,
-        DesktopFileRole,
+        AppIdRole,
+        CategoriesRole,
+        RunningRole,
         FilterInfoRole
     };
     Q_ENUM(Roles)
 
-    enum NameFormat
-    {
-        NameOnly = 0,
-        GenericNameOnly,
-        NameAndGenericName,
-        GenericNameAndName
-    };
-    Q_ENUM(NameFormat)
+    AppsModel(QObject *parent = nullptr);
 
-    AppsModel(QObject *parent = 0);
-    ~AppsModel();
-
-    NameFormat appNameFormat() const;
-    void setAppNameFormat(NameFormat format);
-
-    QString categoryFilter() const;
-    void setCategoryFilter(const QString &filter);
+    ApplicationManager *applicationManager() const;
 
     QHash<int, QByteArray> roleNames() const override;
 
@@ -78,25 +57,19 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    Q_INVOKABLE bool trigger(const QString &desktopFile);
+public Q_SLOTS:
+    void setApplicationManager(ApplicationManager *appMan);
 
 Q_SIGNALS:
-    void refreshing();
-    void refreshed();
-    void appNameFormatChanged();
-    void categoryFilterChanged();
-    void appLaunched(const QString &desktopFile);
+    void appLaunched(Application *app);
+    void applicationManagerChanged();
+
+private Q_SLOTS:
+    void setupConnections(Application *app);
 
 private:
-    QList<AppEntry *> m_list;
-    NameFormat m_nameFormat;
-    QString m_categoryFilter;
-
-    void refresh();
-    void readMenu(const QDomElement &xml);
-    void readAppLink(const QDomElement &xml);
+    ApplicationManager *m_appMan = nullptr;
+    QList<Application *> m_apps;
 };
 
 QML_DECLARE_TYPE(AppsModel)
-
-#endif // APPSMODEL_H

@@ -31,9 +31,9 @@ import org.hawaiios.launcher 0.1 as CppLauncher
 import "../components" as CustomComponents
 
 Menu {
-    readonly property var launcherItem: launcher.model.get(root.indexOfThisDelegate)
-
     id: menu
+    readonly property var app: launcher.model.get(index)
+
     transformOrigin: Menu.BottomLeft
 
     CppLauncher.ProcessRunner {
@@ -72,13 +72,10 @@ Menu {
     CustomComponents.MenuSeparator {}
 
     MenuItem {
-        text: model.pinned ? qsTr("Unpin from Launcher") : qsTr("Pin to Launcher")
+        text: app.pinned ? qsTr("Unpin from Launcher") : qsTr("Pin to Launcher")
         enabled: model.name
         onTriggered: {
-            if (model.pinned)
-                launcher.model.unpin(model.appId)
-            else
-                launcher.model.pin(model.appId)
+            app.pinned = !app.pinned
             menu.close()
         }
     }
@@ -88,9 +85,9 @@ Menu {
     MenuItem {
         id: ciao
         text: qsTr("Quit")
-        enabled: model.running
+        enabled: app.running
         onTriggered: {
-            if (!launcher.model.get(index).quit())
+            if (!app.quit())
                 console.warn("Failed to quit:", model.appId);
             menu.close();
         }
@@ -103,17 +100,17 @@ Menu {
         var i, item;
 
         // Add application actions
-        for (i = launcherItem.actions.length - 1; i >= 0; i--) {
+        for (i = app.actions.length - 1; i >= 0; i--) {
             item = actionItemComponent.createObject(menu.contentItem);
-            item.text = launcherItem.actions[i].name;
-            item.command = launcherItem.actions[i].command;
+            item.text = app.actions[i].name;
+            item.command = app.actions[i].command;
             menu.insertItem(0, item);
         }
 
         // Add a separator if needed
-        if (launcherItem.actions.length > 0) {
+        if (app.actions.length > 0) {
             item = separatorComponent.createObject(menu.contentItem);
-            menu.insertItem(launcherItem.actions.length, item);
+            menu.insertItem(app.actions.length, item);
         }
     }
 }

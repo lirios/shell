@@ -17,28 +17,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "application.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QLocale>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
 
-#include "application.h"
+#include "applicationmanager.h"
 
-#include "launchermodel.h"
+// Applications have 5 seconds to start up before the start animation ends
+#define MAX_APPLICATION_STARTUP_TIME (5 * 1000)
 
-Application::Application(const QString &appId, bool pinned, LauncherModel *launcherModel)
-    : QObject(launcherModel)
-    , m_launcherModel(launcherModel)
+Application::Application(const QString &appId, const QStringList &categories,
+                         ApplicationManager *appMan)
+    : QObject(appMan)
+    , m_appMan(appMan)
     , m_appId(appId)
-    , m_pinned(pinned)
+    , m_categories(categories)
 {
     m_desktopFile = new DesktopFile(appId, this);
+
+    connect(m_desktopFile, &DesktopFile::dataChanged, this, &Application::dataChanged);
 }
 
-Application::Application(const QString &appId, LauncherModel *launcherModel)
-    : Application(appId, false, launcherModel)
+bool Application::hasCategory(const QString &category) const
 {
+    return m_categories.contains(category);
 }
 
 void Application::setPinned(bool pinned)
@@ -89,6 +96,11 @@ bool Application::launch(const QStringList &urls)
     if (ran) {
         setState(Application::Starting);
 
+        QTimer::singleShot(MAX_APPLICATION_STARTUP_TIME, [=]() {
+            if (isStarting())
+                setState(Application::NotRunning);
+        });
+
         Q_EMIT launched();
     }
 
@@ -100,7 +112,7 @@ bool Application::quit()
     if (!isRunning())
         return false;
 
-    m_launcherModel->applicationManager()->quit(appId());
+    m_appMan->quit(appId());
 
     return true;
 }

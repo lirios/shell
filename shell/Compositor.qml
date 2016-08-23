@@ -59,6 +59,34 @@ WindowCompositor {
         SessionInterface.idle = true;
     }
 
+    function activateWindows(appId) {
+        // Activate all windows of this application and unminimize
+        for (var i = 0; i < compositor.windowsModel.count; i++) {
+            var window = compositor.windowsModel.get(i).window
+
+            if (window.appId === appId) {
+                window.minimized = false
+                window.activate()
+            }
+        }
+    }
+
+    ApplicationManager {
+        id: applicationManager
+
+        applicationManager: compositor.applicationManager
+    }
+
+    LauncherModel {
+        id: launcherModel
+        applicationManager: applicationManager
+    }
+
+    AppsModel {
+        id: appsModel
+        applicationManager: applicationManager
+    }
+
     DateTime {
         id: dateTime
     }

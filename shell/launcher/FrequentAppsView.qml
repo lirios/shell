@@ -7,8 +7,6 @@ import org.hawaiios.launcher 0.1
 Item {
     id: frequentApps
 
-    signal appLaunched()
-
     readonly property alias count: repeater.count
 
     width: 130 * grid.columns
@@ -38,10 +36,7 @@ Item {
                 limitCount: grid.rows * grid.columns
                 sourceModel: FrequentAppsModel {
                     id: frequentAppsModel
-                    sourceModel: AppsModel {
-                        id: appsModel
-                        onAppLaunched: frequentApps.appLaunched()
-                    }
+                    sourceModel: appsModel
                 }
             }
 

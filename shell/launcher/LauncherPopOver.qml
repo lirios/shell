@@ -49,6 +49,14 @@ Popup {
     Material.theme: Material.Light
     Material.accent: Material.Blue
 
+    Connections {
+        target: applicationManager
+        onApplicationLaunched: {
+            searchText.text = ""
+            launcherPopOver.appLaunched()
+        }
+    }
+
     Rectangle {
         radius: 2
         color: "#eee"
@@ -175,11 +183,6 @@ Popup {
                     FrequentAppsView {
                         id: frequentApps
 
-                        onAppLaunched: {
-                            launcherPopOver.appLaunched()
-                            searchText.text = ""
-                        }
-
                         visible: frequentAppsButton.checked
                     }
 
@@ -199,10 +202,6 @@ Popup {
 
                         LauncherGridView {
                             id: grid
-                            onAppLaunched: {
-                                launcherPopOver.appLaunched()
-                                searchText.text = ""
-                            }
                         }
 
                         PageIndicator {
