@@ -185,8 +185,6 @@ void UsageTracker::incrementUsageForApp(AppUsage *app)
  */
 void UsageTracker::incrementUsageForApp(AppUsage *app, QDateTime time)
 {
-    QDateTime now = QDateTime::currentDateTime();
-
     app->lastSeen = time;
 
     int elapsedSeconds = m_watchStartTime.secsTo(time);
