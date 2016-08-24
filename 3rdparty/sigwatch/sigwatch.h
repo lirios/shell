@@ -30,7 +30,6 @@
 
 class UnixSignalWatcherPrivate;
 
-
 /*!
  * \brief The UnixSignalWatcher class converts Unix signals to Qt signals.
  *
@@ -41,19 +40,14 @@ class UnixSignalWatcherPrivate;
 class UnixSignalWatcher : public QObject
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(UnixSignalWatcher)
 public:
-    explicit UnixSignalWatcher(QObject *parent = 0);
-    ~UnixSignalWatcher();
+    explicit UnixSignalWatcher(QObject *parent = nullptr);
 
     void watchForSignal(int signal);
 
-signals:
+Q_SIGNALS:
     void unixSignal(int signal);
-
-private:
-    UnixSignalWatcherPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(UnixSignalWatcher)
-    Q_PRIVATE_SLOT(d_func(), void _q_onNotify(int))
 };
 
 #endif // SIGWATCH_H
