@@ -39,11 +39,14 @@ Q_DECLARE_LOGGING_CATEGORY(APPSMODEL)
 class AppsModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(NameFormat appNameFormat READ appNameFormat WRITE setAppNameFormat NOTIFY appNameFormatChanged)
-    Q_PROPERTY(QString categoryFilter READ categoryFilter WRITE setCategoryFilter NOTIFY categoryFilterChanged)
+    Q_PROPERTY(NameFormat appNameFormat READ appNameFormat WRITE setAppNameFormat NOTIFY
+                       appNameFormatChanged)
+    Q_PROPERTY(QString categoryFilter READ categoryFilter WRITE setCategoryFilter NOTIFY
+                       categoryFilterChanged)
     Q_ENUMS(Roles NameFormat)
 public:
-    enum Roles {
+    enum Roles
+    {
         NameRole = Qt::UserRole + 1,
         CommentRole,
         IconNameRole,
@@ -51,7 +54,8 @@ public:
         FilterInfoRole
     };
 
-    enum NameFormat {
+    enum NameFormat
+    {
         NameOnly = 0,
         GenericNameOnly,
         NameAndGenericName,
@@ -67,11 +71,11 @@ public:
     QString categoryFilter() const;
     void setCategoryFilter(const QString &filter);
 
-    QHash<int, QByteArray> roleNames() const;
+    QHash<int, QByteArray> roleNames() const override;
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     Q_INVOKABLE bool trigger(const QString &desktopFile);
 

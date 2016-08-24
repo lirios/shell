@@ -68,11 +68,11 @@ public:
     ApplicationManager *applicationManager() const;
     void setApplicationManager(ApplicationManager *appMan);
 
-    QHash<int, QByteArray> roleNames() const;
+    QHash<int, QByteArray> roleNames() const override;
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     Q_INVOKABLE Application *get(int index) const;
     Q_INVOKABLE int indexFromAppId(const QString &appId) const;
