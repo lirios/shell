@@ -46,9 +46,7 @@ public:
     QString iconName;
     QString desktopFile;
 
-    static bool lessThan(AppEntry *e1, AppEntry *e2) {
-        return e1->name < e2->name;
-    }
+    static bool lessThan(AppEntry *e1, AppEntry *e2) { return e1->name < e2->name; }
 };
 
 AppsModel::AppsModel(QObject *parent)
@@ -58,15 +56,9 @@ AppsModel::AppsModel(QObject *parent)
     refresh();
 }
 
-AppsModel::~AppsModel()
-{
-    qDeleteAll(m_list);
-}
+AppsModel::~AppsModel() { qDeleteAll(m_list); }
 
-AppsModel::NameFormat AppsModel::appNameFormat() const
-{
-    return m_nameFormat;
-}
+AppsModel::NameFormat AppsModel::appNameFormat() const { return m_nameFormat; }
 
 void AppsModel::setAppNameFormat(NameFormat format)
 {
@@ -79,10 +71,7 @@ void AppsModel::setAppNameFormat(NameFormat format)
     refresh();
 }
 
-QString AppsModel::categoryFilter() const
-{
-    return m_categoryFilter;
-}
+QString AppsModel::categoryFilter() const { return m_categoryFilter; }
 
 void AppsModel::setCategoryFilter(const QString &filter)
 {
@@ -152,8 +141,7 @@ bool AppsModel::trigger(const QString &desktopFile)
     const QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
                              QStringLiteral("/ProcessLauncher"),
-                             QStringLiteral("org.hawaiios.ProcessLauncher"),
-                             bus);
+                             QStringLiteral("org.hawaiios.ProcessLauncher"), bus);
     QDBusMessage msg = interface.call("launchDesktopFile", desktopFile);
     bool ran = msg.arguments().at(0).toBool();
 
@@ -174,12 +162,12 @@ void AppsModel::refresh()
 
     XdgMenu xdgMenu;
     //xdgMenu.setLogDir("/tmp/");
-    xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii") << QStringLiteral("X-Hawaii"));
+    xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii")
+                                          << QStringLiteral("X-Hawaii"));
     const QString menuFileName = XdgMenu::getMenuFileName();
     qCDebug(APPSMODEL) << "Menu file name:" << menuFileName;
     if (!xdgMenu.read(menuFileName)) {
-        qCWarning(APPSMODEL,
-                  "Failed to read menu \"%s\": %s", qPrintable(menuFileName),
+        qCWarning(APPSMODEL, "Failed to read menu \"%s\": %s", qPrintable(menuFileName),
                   qPrintable(xdgMenu.errorString()));
         return;
     }
@@ -243,10 +231,10 @@ void AppsModel::readAppLink(const QDomElement &xml)
         entry->name = genericName;
         break;
     case NameAndGenericName:
-        entry->name = QStringLiteral("%1 (%2)").arg(name).arg(genericName);
+        entry->name = QStringLiteral("%1 (%2)").arg(name, genericName);
         break;
     case GenericNameAndName:
-        entry->name = QStringLiteral("%1 (%2)").arg(genericName).arg(name);
+        entry->name = QStringLiteral("%1 (%2)").arg(genericName, name);
         break;
     default:
         entry->name = name;
@@ -254,7 +242,7 @@ void AppsModel::readAppLink(const QDomElement &xml)
     }
 
     entry->comment = xml.attribute(QStringLiteral("comment"));
-    entry->filterInfo = QStringLiteral("%1 %2").arg(entry->name).arg(entry->comment);
+    entry->filterInfo = QStringLiteral("%1 %2").arg(entry->name, entry->comment);
     entry->desktopFile = desktopFile;
     entry->iconName = xml.attribute(QStringLiteral("icon"));
     m_list.append(entry);
