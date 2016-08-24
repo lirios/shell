@@ -33,25 +33,31 @@ import Hawaii.Desktop 1.0
 import "../indicators"
 
 Showable {
+    id: root
+
     property alias primary: loader.active
 
-    id: root
+    clip: true
     y: -root.height
-    showAnimation: YAnimator {
+    visible: true
+
+    showAnimation: NumberAnimation {
         target: root
+        property: "y"
         easing.type: Easing.OutQuad
         duration: Units.longDuration
         from: -root.height
         to: 0
     }
-    hideAnimation: YAnimator {
+
+    hideAnimation: NumberAnimation {
         target: root
+        property: "y"
         easing.type: Easing.OutQuad
         duration: Units.longDuration
         from: 0
         to: -root.height
     }
-    visible: true
 
     Material.theme: Material.Dark
     Material.primary: Material.color(Material.Blue, Material.Shade500)
@@ -136,16 +142,10 @@ Showable {
                 left: parent.left
                 right: parent.right
                 bottom: parent.bottom
+                bottomMargin: root.y
             }
 
             height: 56
-
-            opacity: root.y === 0 ? 1.0 : 0.0
-            visible: opacity > 0.0
-
-            OpacityAnimator on opacity {
-                duration: Units.shortDuration
-            }
 
             RowLayout {
                 anchors.fill: parent
