@@ -27,13 +27,15 @@
 #ifndef POWERMANAGERBACKEND_H
 #define POWERMANAGERBACKEND_H
 
-#include <QtCore/QtGlobal>
 #include <QtCore/QObject>
+#include <QtCore/QtGlobal>
 
 #include "powermanager.h"
 
 class PowerManagerBackend : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit PowerManagerBackend();
     virtual ~PowerManagerBackend();

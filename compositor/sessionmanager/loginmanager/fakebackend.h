@@ -31,6 +31,8 @@
 
 class FakeBackend : public LoginManagerBackend
 {
+    Q_OBJECT
+
 public:
     static FakeBackend *create();
 

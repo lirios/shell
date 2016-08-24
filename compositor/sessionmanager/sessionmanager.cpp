@@ -37,8 +37,8 @@
 #include "sessionmanager/screensaver/screensaver.h"
 #include "sessionmanager/screensaver/screensaveradaptor.h"
 
-#include <sys/types.h>
 #include <signal.h>
+#include <sys/types.h>
 
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 
@@ -48,6 +48,8 @@ Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 
 class CustomAuthenticator : public QObject
 {
+    Q_OBJECT
+
 public:
     CustomAuthenticator(SessionManager *parent, const QJSValue &callback)
         : m_parent(parent)
@@ -74,7 +76,8 @@ private:
     bool m_succeded;
 
 private Q_SLOTS:
-    void authenticate() {
+    void authenticate()
+    {
         if (m_callback.isCallable())
             m_callback.call(QJSValueList() << m_succeded);
 
@@ -103,16 +106,11 @@ SessionManager::SessionManager(QObject *parent)
     , m_locked(false)
 {
     // Lock and unlock the session
-    connect(m_loginManager, &LoginManager::sessionLocked, this, [this] {
-        setLocked(true);
-    });
-    connect(m_loginManager, &LoginManager::sessionUnlocked, this, [this] {
-        setLocked(false);
-    });
+    connect(m_loginManager, &LoginManager::sessionLocked, this, [this] { setLocked(true); });
+    connect(m_loginManager, &LoginManager::sessionUnlocked, this, [this] { setLocked(false); });
 
     // Logout session before the system goes off
-    connect(m_loginManager, &LoginManager::logOutRequested,
-            this, &SessionManager::logOut);
+    connect(m_loginManager, &LoginManager::logOutRequested, this, &SessionManager::logOut);
 
     // Authenticate in a separate thread
     m_authenticator->moveToThread(m_authenticatorThread);
@@ -325,4 +323,4 @@ void SessionManager::cancelShutdownRequest()
     Q_EMIT shutdownRequestCanceled();
 }
 
-#include "moc_sessionmanager.cpp"
+#include "sessionmanager.moc"

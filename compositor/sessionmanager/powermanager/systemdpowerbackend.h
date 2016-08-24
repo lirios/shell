@@ -33,6 +33,8 @@
 
 class SystemdPowerBackend : public PowerManagerBackend
 {
+    Q_OBJECT
+
 public:
     SystemdPowerBackend();
     virtual ~SystemdPowerBackend();

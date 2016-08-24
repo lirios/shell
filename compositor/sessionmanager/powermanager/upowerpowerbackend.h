@@ -33,6 +33,8 @@
 
 class UPowerPowerBackend : public PowerManagerBackend
 {
+    Q_OBJECT
+
 public:
     UPowerPowerBackend();
     virtual ~UPowerPowerBackend();
