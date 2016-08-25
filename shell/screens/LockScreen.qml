@@ -185,7 +185,7 @@ Showable {
 
                             DateTimeIndicator {}
 
-                            EventsIndicator {}
+                            NotificationsIndicator {}
 
                             SoundIndicator {}
 

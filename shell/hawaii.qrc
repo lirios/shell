@@ -51,7 +51,6 @@
 	<file>images/sleep.svg</file>
 	<file>images/wallpaper.png</file>
 	<file>indicators/BatteryIndicator.qml</file>
-	<file>indicators/ChatIndicator.qml</file>
 	<file>indicators/LauncherIndicator.qml</file>
 	<file>indicators/NetworkIndicator.qml</file>
 	<file>indicators/NotificationsIndicator.qml</file>

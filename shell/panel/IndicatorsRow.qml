@@ -28,6 +28,7 @@ import QtQml.Models 2.2
 import GreenIsland 1.0
 import Fluid.Controls 1.0
 import Fluid.Material 1.0
+import Hawaii.Desktop 1.0
 import "../indicators"
 import "../launcher"
 
