@@ -1,21 +1,19 @@
-/*  This file is part of the KDE Frameworks
+// clang-format off
 
+/*  This file is part of the KDE Frameworks
     Copyright (C) 2013 Alex Merry <alex.merry@kdemail.net>
     Copyright (C) 2013 John Layt <jlayt@kde.org>
     Copyright (C) 2010 Michael Leupold <lemma@confuego.org>
     Copyright (C) 2009 Michael Pyne <mpyne@kde.org>
     Copyright (C) 2008 Albert Astals Cid <aacid@kde.org>
-
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
-
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
-
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -60,7 +58,7 @@ QString KFormatPrivate::formatByteSize(double size, int precision,
     // If a specific unit conversion is given, use it directly.  Otherwise
     // search until the result is in [0, multiplier] (or out of our range).
     if (units == KFormat::DefaultBinaryUnits) {
-        while (qAbs(size) >= multiplier && unit < (int) KFormat::UnitYottaByte) {
+        while (qAbs(size) >= multiplier && unit < int(KFormat::UnitYottaByte)) {
             size /= multiplier;
             ++unit;
         }
@@ -110,8 +108,6 @@ QString KFormatPrivate::formatByteSize(double size, int precision,
         case KFormat::UnitYottaByte:
             //: MetricBinaryDialect size in 10^24 bytes
             return tr("%1 YB", "MetricBinaryDialect").arg(numString);
-        default:
-            break;
         }
     } else if (dialect == KFormat::JEDECBinaryDialect) {
         switch (unit) {
@@ -142,8 +138,6 @@ QString KFormatPrivate::formatByteSize(double size, int precision,
         case KFormat::UnitYottaByte:
             //: JEDECBinaryDialect memory size in 10^80 bytes
             return tr("%1 YB", "JEDECBinaryDialect").arg(numString);
-        default:
-            break;
         }
     } else {  // KFormat::IECBinaryDialect, KFormat::DefaultBinaryDialect
         switch (unit) {
@@ -174,8 +168,6 @@ QString KFormatPrivate::formatByteSize(double size, int precision,
         case KFormat::UnitYottaByte:
             //: IECBinaryDialect size in 10^80 bytes
             return tr("%1 YiB", "IECBinaryDialect").arg(numString);
-        default:
-            break;
         }
     }
 
@@ -263,8 +255,7 @@ QString KFormatPrivate::formatDuration(quint64 msecs, KFormat::DurationFormatOpt
 
     }
 
-    // Should never reach here
-    Q_ASSERT(false);
+    Q_UNREACHABLE();
     return QString();
 }
 
@@ -286,7 +277,7 @@ QString KFormatPrivate::formatDecimalDuration(quint64 msecs, int decimalPlaces) 
     //: @item:intext %1 is a whole number
     //~ singular %n millisecond
     //~ plural %n milliseconds
-    return tr("%n millisecond(s)", 0, msecs).arg(msecs);
+    return tr("%n millisecond(s)", 0, msecs);
 }
 
 enum DurationUnits {
@@ -320,8 +311,6 @@ static QString formatSingleDuration(DurationUnits units, int n)
         //~ singular %n second
         //~ plural %n seconds
         return KFormatPrivate::tr("%n second(s)", 0, n);
-    default:
-        break;
     }
     Q_ASSERT(false);
     return QString();
@@ -371,7 +360,7 @@ QString KFormatPrivate::formatSpelloutDuration(quint64 msecs) const
 
 QString KFormatPrivate::formatRelativeDate(const QDate &date, QLocale::FormatType format) const
 {
-    int daysTo = QDate::currentDate().daysTo(date);
+    const int daysTo = QDate::currentDate().daysTo(date);
     if (daysTo > 7 || daysTo < -7) {
         return m_locale.toString(date, format);
     }
@@ -383,8 +372,6 @@ QString KFormatPrivate::formatRelativeDate(const QDate &date, QLocale::FormatTyp
         return tr("Today");
     case -1:
         return tr("Yesterday");
-    default:
-        break;
     }
 
     if (daysTo < -1)
@@ -398,8 +385,7 @@ QString KFormatPrivate::formatRelativeDate(const QDate &date, QLocale::FormatTyp
     {
         return tr("Next %1").arg(m_locale.dayName(date.dayOfWeek(), format));
     }
-
-    return m_locale.toString(date, format);
+    Q_UNREACHABLE();
 }
 
 QString KFormatPrivate::formatRelativeDateTime(const QDateTime &dateTime, QLocale::FormatType format) const

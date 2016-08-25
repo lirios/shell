@@ -1,21 +1,19 @@
-/*  This file is part of the KDE Frameworks
+// clang-format off
 
+/*  This file is part of the KDE Frameworks
     Copyright (C) 2013 Alex Merry <alex.merry@kdemail.net>
     Copyright (C) 2013 John Layt <jlayt@kde.org>
     Copyright (C) 2010 Michael Leupold <lemma@confuego.org>
     Copyright (C) 2009 Michael Pyne <mpyne@kde.org>
     Copyright (C) 2008 Albert Astals Cid <aacid@kde.org>
-
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
     version 2 of the License, or (at your option) any later version.
-
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     Library General Public License for more details.
-
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -42,12 +40,9 @@ class KFormatPrivate;
    The code in this class was copied from the old KLocale and modified
    by John Layt (and also Alex Merry) in the KDELIBS 4 to KDE
    Frameworks 5 transition in 2013.
-
    Albert Astals Cid is the original author of formatSpelloutDuration()
    originally named KLocale::prettyFormatDuration().
-
    Michael Pyne is the original author of formatByteSize().
-
    Michael Leupold is the original author of formatRelativeDate(()
    originally part of KFormat::formatDate().
 */
@@ -156,6 +151,8 @@ public:
      * Copy constructor
      */
     KFormat(const KFormat &other);
+
+    KFormat& operator=(const KFormat &other);
 
     /**
      * Destructor
