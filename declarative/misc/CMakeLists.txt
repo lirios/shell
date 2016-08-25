@@ -1,10 +1,8 @@
 set(SOURCES
     formats.cpp
-    keyeventfilter.cpp
     kformat.cpp
     kformatprivate.cpp
     miscplugin.cpp
-    standardpaths.cpp
 )
 
 add_library(miscplugin SHARED ${SOURCES})

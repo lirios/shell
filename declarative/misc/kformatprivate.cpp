@@ -108,6 +108,8 @@ QString KFormatPrivate::formatByteSize(double size, int precision,
         case KFormat::UnitYottaByte:
             //: MetricBinaryDialect size in 10^24 bytes
             return tr("%1 YB", "MetricBinaryDialect").arg(numString);
+        default:
+            break;
         }
     } else if (dialect == KFormat::JEDECBinaryDialect) {
         switch (unit) {
@@ -138,6 +140,8 @@ QString KFormatPrivate::formatByteSize(double size, int precision,
         case KFormat::UnitYottaByte:
             //: JEDECBinaryDialect memory size in 10^80 bytes
             return tr("%1 YB", "JEDECBinaryDialect").arg(numString);
+        default:
+            break;
         }
     } else {  // KFormat::IECBinaryDialect, KFormat::DefaultBinaryDialect
         switch (unit) {
@@ -168,6 +172,8 @@ QString KFormatPrivate::formatByteSize(double size, int precision,
         case KFormat::UnitYottaByte:
             //: IECBinaryDialect size in 10^80 bytes
             return tr("%1 YiB", "IECBinaryDialect").arg(numString);
+        default:
+            break;
         }
     }
 
@@ -311,6 +317,8 @@ static QString formatSingleDuration(DurationUnits units, int n)
         //~ singular %n second
         //~ plural %n seconds
         return KFormatPrivate::tr("%n second(s)", 0, n);
+    default:
+        break;
     }
     Q_ASSERT(false);
     return QString();
@@ -372,6 +380,8 @@ QString KFormatPrivate::formatRelativeDate(const QDate &date, QLocale::FormatTyp
         return tr("Today");
     case -1:
         return tr("Yesterday");
+    default:
+        break;
     }
 
     if (daysTo < -1)

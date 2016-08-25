@@ -29,7 +29,6 @@ import QtQuick.Controls.Material 2.0
 import GreenIsland 1.0 as GreenIsland
 import Fluid.Controls 1.0
 import Hawaii.Desktop 1.0
-import org.hawaiios.misc 0.1 as Misc
 import ".."
 import "../components"
 import "../indicators"
