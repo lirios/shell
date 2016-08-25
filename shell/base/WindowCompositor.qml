@@ -204,6 +204,7 @@ BaseCompositor {
 
         GreenIsland.WindowChrome {
             animationsEnabled: parent.animateWindows
+            inputEventsEnabled: !output.screenView.locked
         }
     }
 }

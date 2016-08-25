@@ -28,6 +28,7 @@ Rectangle {
     property var output
 
     property bool cursorVisible: true
+    property bool locked: false
 
     readonly property var windows: {
         var windows = []

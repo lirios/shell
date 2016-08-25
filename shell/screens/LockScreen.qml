@@ -41,22 +41,28 @@ Showable {
     y: -root.height
     visible: true
 
-    showAnimation: NumberAnimation {
-        target: root
-        property: "y"
-        easing.type: Easing.OutQuad
-        duration: Units.longDuration
-        from: -root.height
-        to: 0
+    showAnimation: SequentialAnimation {
+        NumberAnimation {
+            target: root
+            property: "y"
+            easing.type: Easing.OutQuad
+            duration: Units.longDuration
+            from: -root.height
+            to: 0
+        }
+        ScriptAction { script: output.screenView.locked = true }
     }
 
-    hideAnimation: NumberAnimation {
-        target: root
-        property: "y"
-        easing.type: Easing.OutQuad
-        duration: Units.longDuration
-        from: 0
-        to: -root.height
+    hideAnimation: SequentialAnimation {
+        NumberAnimation {
+            target: root
+            property: "y"
+            easing.type: Easing.OutQuad
+            duration: Units.longDuration
+            from: 0
+            to: -root.height
+        }
+        ScriptAction { script: output.screenView.locked = false }
     }
 
     Material.theme: Material.Dark
@@ -67,8 +73,10 @@ Showable {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.AllButtons
-        hoverEnabled: true
-        onPressed: mouse.accept = false
+        onPressed: {
+            usersListView.currentItem.field.forceActiveFocus()
+            mouse.accept = false
+        }
     }
 
     Background {
