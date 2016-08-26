@@ -40,12 +40,12 @@ LoginManager::LoginManager(SessionManager *sm, QObject *parent)
     qCDebug(LOGINMANAGER) << "Using" << m_backend->name() << "login manager backend";
 
     // Relay backend signals
-    connect(m_backend, SIGNAL(logOutRequested()),
-            this, SIGNAL(logOutRequested()));
-    connect(m_backend, SIGNAL(sessionLocked()),
-            this, SIGNAL(sessionLocked()));
-    connect(m_backend, SIGNAL(sessionUnlocked()),
-            this, SIGNAL(sessionUnlocked()));
+    connect(m_backend, &LoginManagerBackend::logOutRequested,
+            this, &LoginManager::logOutRequested);
+    connect(m_backend, &LoginManagerBackend::sessionLocked,
+            this, &LoginManager::sessionLocked);
+    connect(m_backend, &LoginManagerBackend::sessionUnlocked,
+            this, &LoginManager::sessionUnlocked);
 }
 
 LoginManager::~LoginManager()

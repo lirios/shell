@@ -30,6 +30,7 @@
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QMap>
 #include <QtCore/QObject>
+#include <QtCore/QProcess>
 
 Q_DECLARE_LOGGING_CATEGORY(LAUNCHER)
 
@@ -42,7 +43,8 @@ typedef QMutableMapIterator<QString, QProcess *> ApplicationMapIterator;
 class ProcessLauncher : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString waylandSocketName READ waylandSocketName WRITE setWaylandSocketName NOTIFY waylandSocketNameChanged)
+    Q_PROPERTY(QString waylandSocketName READ waylandSocketName WRITE setWaylandSocketName NOTIFY
+                   waylandSocketNameChanged)
 public:
     ProcessLauncher(QObject *parent = 0);
     ~ProcessLauncher();
@@ -71,7 +73,7 @@ private:
     bool closeEntry(const QString &fileName);
 
 private Q_SLOTS:
-    void finished(int exitCode);
+    void finished(int exitCode, QProcess::ExitStatus exitStatus);
 };
 
 #endif // PROCESSLAUNCHER_H
