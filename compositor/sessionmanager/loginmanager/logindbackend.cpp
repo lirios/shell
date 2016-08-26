@@ -45,7 +45,11 @@ const static QString login1SeatInterface = QStringLiteral("org.freedesktop.login
 const static QString login1SessionInterface = QStringLiteral("org.freedesktop.login1.Session");
 const static QString dbusPropertiesInterface = QStringLiteral("org.freedesktop.DBus.Properties");
 
-LogindBackend::LogindBackend() : LoginManagerBackend(), m_inhibitFd(-1) {}
+LogindBackend::LogindBackend()
+    : LoginManagerBackend()
+    , m_inhibitFd(-1)
+{
+}
 
 LogindBackend::~LogindBackend()
 {
@@ -65,7 +69,7 @@ LogindBackend *LogindBackend::create(SessionManager *sm, const QDBusConnection &
 
     // Connect to logind if available
     backend->m_interface =
-            new QDBusInterface(login1Service, login1Object, login1ManagerInterface, connection);
+        new QDBusInterface(login1Service, login1Object, login1ManagerInterface, connection);
     if (!backend->m_interface || !backend->m_interface->isValid()) {
         delete backend;
         return Q_NULLPTR;
@@ -83,7 +87,7 @@ LogindBackend *LogindBackend::create(SessionManager *sm, const QDBusConnection &
 
     // Get a hold of the session
     QDBusPendingCall call =
-            backend->m_interface->asyncCall(QStringLiteral("GetSessionByPID"), (quint32) getpid());
+        backend->m_interface->asyncCall(QStringLiteral("GetSessionByPID"), (quint32)getpid());
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call);
     backend->connect(watcher, &QDBusPendingCallWatcher::finished, backend,
                      &LogindBackend::getSession);
@@ -95,7 +99,10 @@ LogindBackend *LogindBackend::create(SessionManager *sm, const QDBusConnection &
     return backend;
 }
 
-QString LogindBackend::name() const { return QStringLiteral("logind"); }
+QString LogindBackend::name() const
+{
+    return QStringLiteral("logind");
+}
 
 void LogindBackend::setIdle(bool value)
 {
@@ -110,33 +117,32 @@ void LogindBackend::takeControl()
         return;
 
     QDBusMessage msg = QDBusMessage::createMethodCall(
-            login1Service, m_sessionPath, login1SessionInterface, QStringLiteral("TakeControl"));
+        login1Service, m_sessionPath, login1SessionInterface, QStringLiteral("TakeControl"));
     msg.setArguments(QVariantList() << QVariant(false));
 
     QDBusPendingReply<void> call = m_interface->connection().asyncCall(msg);
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this,
-            [this](QDBusPendingCallWatcher *self) {
-                QDBusPendingReply<void> reply = *self;
-                self->deleteLater();
+    connect(
+        watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *self) {
+            QDBusPendingReply<void> reply = *self;
+            self->deleteLater();
 
-                if (!reply.isValid()) {
-                    qCWarning(LOGIND_BACKEND) << "Unable to take session control:"
-                                              << reply.error().message();
-                    Q_EMIT sessionControlChanged(false);
-                    return;
-                }
+            if (!reply.isValid()) {
+                qCWarning(LOGIND_BACKEND) << "Unable to take session control:"
+                                          << reply.error().message();
+                Q_EMIT sessionControlChanged(false);
+                return;
+            }
 
-                qCDebug(LOGIND_BACKEND) << "Session control acquired";
+            qCDebug(LOGIND_BACKEND) << "Session control acquired";
 
-                m_sessionControl = true;
-                Q_EMIT sessionControlChanged(true);
+            m_sessionControl = true;
+            Q_EMIT sessionControlChanged(true);
 
-                m_interface->connection().connect(login1Service, m_sessionPath,
-                                                  login1SessionInterface,
-                                                  QStringLiteral("PauseDevice"), this,
-                                                  SLOT(devicePaused(quint32, quint32, QString)));
-            });
+            m_interface->connection().connect(login1Service, m_sessionPath, login1SessionInterface,
+                                              QStringLiteral("PauseDevice"), this,
+                                              SLOT(devicePaused(quint32, quint32, QString)));
+        });
 }
 
 void LogindBackend::releaseControl()
@@ -164,7 +170,7 @@ int LogindBackend::takeDevice(const QString &path)
     }
 
     QDBusMessage msg = QDBusMessage::createMethodCall(
-            login1Service, m_sessionPath, login1SessionInterface, QStringLiteral("TakeDevice"));
+        login1Service, m_sessionPath, login1SessionInterface, QStringLiteral("TakeDevice"));
     msg.setArguments(QVariantList() << QVariant(major(s.st_rdev)) << QVariant(minor(s.st_rdev)));
 
     QDBusMessage reply = m_interface->connection().call(msg);
@@ -174,7 +180,7 @@ int LogindBackend::takeDevice(const QString &path)
         return -1;
     }
 
-    return ::dup(reply.arguments().first().value<QDBusUnixFileDescriptor>().fileDescriptor());
+    return ::dup(reply.arguments().constFirst().value<QDBusUnixFileDescriptor>().fileDescriptor());
 }
 
 void LogindBackend::releaseDevice(int fd)
@@ -187,15 +193,21 @@ void LogindBackend::releaseDevice(int fd)
     }
 
     QDBusMessage msg = QDBusMessage::createMethodCall(
-            login1Service, m_sessionPath, login1SessionInterface, QStringLiteral("ReleaseDevice"));
+        login1Service, m_sessionPath, login1SessionInterface, QStringLiteral("ReleaseDevice"));
     msg.setArguments(QVariantList() << QVariant(major(s.st_rdev)) << QVariant(minor(s.st_rdev)));
 
     m_interface->connection().asyncCall(msg);
 }
 
-void LogindBackend::lockSession() { Q_EMIT sessionLocked(); }
+void LogindBackend::lockSession()
+{
+    Q_EMIT sessionLocked();
+}
 
-void LogindBackend::unlockSession() { Q_EMIT sessionUnlocked(); }
+void LogindBackend::unlockSession()
+{
+    Q_EMIT sessionUnlocked();
+}
 
 void LogindBackend::requestLockSession()
 {
@@ -219,7 +231,10 @@ void LogindBackend::locked()
     }
 }
 
-void LogindBackend::unlocked() { setupInhibitors(); }
+void LogindBackend::unlocked()
+{
+    setupInhibitors();
+}
 
 void LogindBackend::switchToVt(quint32 vt)
 {
@@ -236,10 +251,10 @@ void LogindBackend::switchToVt(quint32 vt)
 void LogindBackend::setupPowerButton()
 {
     QDBusPendingCall call = m_interface->asyncCall(
-            QStringLiteral("Inhibit"),
-            QStringLiteral("handle-power-key:handle-suspend-key:handle-hibernate-key"),
-            QStringLiteral("Hawaii"), QStringLiteral("Hawaii handles the power button itself"),
-            QStringLiteral("block"));
+        QStringLiteral("Inhibit"),
+        QStringLiteral("handle-power-key:handle-suspend-key:handle-hibernate-key"),
+        QStringLiteral("Hawaii"), QStringLiteral("Hawaii handles the power button itself"),
+        QStringLiteral("block"));
     QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(call);
     connect(w, &QDBusPendingCallWatcher::finished, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<QDBusUnixFileDescriptor> reply = *watcher;
@@ -268,10 +283,9 @@ void LogindBackend::setupInhibitors()
         return;
 
     QDBusPendingCall call = m_interface->asyncCall(
-            QStringLiteral("Inhibit"), QStringLiteral("shutdown:sleep"), QStringLiteral("Hawaii"),
-            QStringLiteral(
-                    "Hawaii needs to logout before shutdown and lock the screen before sleep"),
-            QStringLiteral("delay"));
+        QStringLiteral("Inhibit"), QStringLiteral("shutdown:sleep"), QStringLiteral("Hawaii"),
+        QStringLiteral("Hawaii needs to logout before shutdown and lock the screen before sleep"),
+        QStringLiteral("delay"));
     QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(call);
     connect(w, &QDBusPendingCallWatcher::finished, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<QDBusUnixFileDescriptor> reply = *watcher;
@@ -337,8 +351,8 @@ void LogindBackend::devicePaused(quint32 devMajor, quint32 devMinor, const QStri
 {
     if (QString::compare(type, QStringLiteral("pause"), Qt::CaseInsensitive) == 0) {
         QDBusMessage msg =
-                QDBusMessage::createMethodCall(login1Service, m_sessionPath, login1SessionInterface,
-                                               QStringLiteral("PauseDeviceComplete"));
+            QDBusMessage::createMethodCall(login1Service, m_sessionPath, login1SessionInterface,
+                                           QStringLiteral("PauseDeviceComplete"));
         msg.setArguments(QVariantList() << QVariant(devMajor) << QVariant(devMinor));
         m_interface->connection().asyncCall(msg);
     }
