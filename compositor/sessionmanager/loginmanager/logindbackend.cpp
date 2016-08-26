@@ -38,6 +38,7 @@
 
 Q_LOGGING_CATEGORY(LOGIND_BACKEND, "hawaii.loginmanager.logind")
 
+// clazy:excludeall=non-pod-global-static
 const static QString login1Service = QStringLiteral("org.freedesktop.login1");
 const static QString login1Object = QStringLiteral("/org/freedesktop/login1");
 const static QString login1ManagerInterface = QStringLiteral("org.freedesktop.login1.Manager");
