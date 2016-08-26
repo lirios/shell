@@ -43,14 +43,17 @@ LauncherModel::LauncherModel(QObject *parent)
 
     // Add pinned launchers
     const QStringList pinnedLaunchers =
-            m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
+        m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
     beginInsertRows(QModelIndex(), m_list.size(), m_list.size() + pinnedLaunchers.size());
     Q_FOREACH (const QString &appId, pinnedLaunchers)
         m_list << new Application(appId, true, this);
     endInsertRows();
 }
 
-ApplicationManager *LauncherModel::applicationManager() const { return m_appMan; }
+ApplicationManager *LauncherModel::applicationManager() const
+{
+    return m_appMan;
+}
 
 void LauncherModel::setApplicationManager(ApplicationManager *appMan)
 {
@@ -240,7 +243,7 @@ void LauncherModel::pinLauncher(const QString &appId, bool pinned)
 {
     // Currently pinned launchers
     QStringList pinnedLaunchers =
-            m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
+        m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
 
     // Add or remove from the pinned launchers
     if (pinned)
@@ -357,6 +360,7 @@ bool LauncherModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int
     if (sourceRow + count - 1 < destinationChild) {
         beginMoveRows(QModelIndex(), sourceRow, sourceRow + count - 1, QModelIndex(),
                       destinationChild + 1);
+        tmp.reserve(count);
         for (int i = sourceRow; i < sourceRow + count; i++) {
             Q_ASSERT(m_list[i]);
             tmp << m_list.takeAt(i);
@@ -369,6 +373,7 @@ bool LauncherModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int
     } else if (sourceRow > destinationChild) {
         beginMoveRows(QModelIndex(), sourceRow, sourceRow + count - 1, QModelIndex(),
                       destinationChild);
+        tmp.reserve(count);
         for (int i = sourceRow; i < sourceRow + count; i++) {
             Q_ASSERT(m_list[i]);
             tmp << m_list.takeAt(i);
