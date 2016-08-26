@@ -61,7 +61,7 @@ private:
     void normalizeScores();
 
     void incrementUsageForApp(AppUsage *app);
-    void incrementUsageForApp(AppUsage *app, QDateTime time);
+    void incrementUsageForApp(AppUsage *app, const QDateTime &time);
 
     void openDatabase();
     void migrate();

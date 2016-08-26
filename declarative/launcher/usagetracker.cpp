@@ -183,7 +183,7 @@ void UsageTracker::incrementUsageForApp(AppUsage *app)
  * Update the score for the application based on the number of seconds since we started watching the
  * app last.
  */
-void UsageTracker::incrementUsageForApp(AppUsage *app, QDateTime time)
+void UsageTracker::incrementUsageForApp(AppUsage *app, const QDateTime &time)
 {
     app->lastSeen = time;
 
@@ -265,4 +265,7 @@ AppUsage *UsageTracker::usageForAppId(const QString &appId, bool createIfNew)
     return app;
 }
 
-UsageTracker *UsageTracker::instance() { return s_usageTracker; }
+UsageTracker *UsageTracker::instance()
+{
+    return s_usageTracker;
+}
