@@ -142,7 +142,7 @@ void CategoriesModel::refresh()
     }
 
     XdgMenu xdgMenu;
-    //xdgMenu.setLogDir("/tmp/");
+    //xdgMenu.setLogDir(QStringLiteral("/tmp/"));
     xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii") << QStringLiteral("X-Hawaii"));
     const QString menuFileName = XdgMenu::getMenuFileName();
     if (!xdgMenu.read(menuFileName)) {

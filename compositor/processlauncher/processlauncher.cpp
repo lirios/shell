@@ -185,7 +185,7 @@ bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
     QStringList args = entry.expandExecString();
     QString command = args.takeAt(0);
 
-    qCDebug(LAUNCHER) << "Launching" << entry.expandExecString().join(" ") << "from" << entry.fileName();
+    qCDebug(LAUNCHER) << "Launching" << entry.expandExecString().join(QStringLiteral(" ")) << "from" << entry.fileName();
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     if (!m_waylandSocketName.isEmpty())

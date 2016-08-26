@@ -58,30 +58,30 @@ QVariant UsersModel::data(const QModelIndex &index, int role) const
     if (!user)
         return QVariant();
 
-    const QDir backgroundDir = QDir::home().absoluteFilePath(QLatin1String(".local/share/sddm/backgrounds"));
+    const QDir backgroundDir = QDir::home().absoluteFilePath(QStringLiteral(".local/share/sddm/backgrounds"));
     const QString confFileName = backgroundDir.absoluteFilePath(user->userName() + QLatin1String(".conf"));
 
     // Read the configuration even if the file doesn't exist,
     // in that case we'll return default values to avoid QML errors
     // of assigning null or undefined values to color properties
     QSettings conf(confFileName, QSettings::IniFormat);
-    conf.beginGroup(QLatin1String("Background"));
+    conf.beginGroup(QStringLiteral("Background"));
 
     switch (role) {
     case BackgroundModeRole:
-        return conf.value(QLatin1String("Mode"), QString());
+        return conf.value(QStringLiteral("Mode"), QString());
     case PictureUrlRole: {
-        const QString fileName = conf.value(QLatin1String("PictureUrl"), QString()).toString();
+        const QString fileName = conf.value(QStringLiteral("PictureUrl"), QString()).toString();
         if (fileName.isEmpty())
             return QUrl();
         return QUrl::fromLocalFile(backgroundDir.absoluteFilePath(fileName));
     }
     case FillModeRole:
-        return conf.value(QLatin1String("FillMode"), QLatin1String("preserve-aspect-crop"));
+        return conf.value(QStringLiteral("FillMode"), QLatin1String("preserve-aspect-crop"));
     case PrimaryColorRole:
-        return conf.value(QLatin1String("PrimaryColor"), QLatin1String("#336699"));
+        return conf.value(QStringLiteral("PrimaryColor"), QLatin1String("#336699"));
     case SecondaryColorRole:
-        return conf.value(QLatin1String("SecondaryColor"), QLatin1String("#336699"));
+        return conf.value(QStringLiteral("SecondaryColor"), QLatin1String("#336699"));
     default:
         break;
     }

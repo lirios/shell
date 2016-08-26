@@ -38,7 +38,7 @@ class AppUsage : QObject
 public:
     AppUsage(const QString &appId, QObject *parent = nullptr);
 
-    QString appId = "";
+    QString appId;
     QDateTime lastSeen;
     int score = 0;
 

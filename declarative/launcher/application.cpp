@@ -83,7 +83,7 @@ bool Application::launch(const QStringList &urls)
     QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
                              QStringLiteral("/ProcessLauncher"),
                              QStringLiteral("org.hawaiios.ProcessLauncher"), bus);
-    QDBusMessage msg = interface.call("launchDesktopFile", m_desktopFile->path());
+    QDBusMessage msg = interface.call(QStringLiteral("launchDesktopFile"), m_desktopFile->path());
     bool ran = msg.arguments().at(0).toBool();
 
     if (ran) {

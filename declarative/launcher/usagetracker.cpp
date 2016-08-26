@@ -99,11 +99,11 @@ void UsageTracker::openDatabase()
     QDir dataDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
 
     if (!dataDir.exists()) {
-        dataDir.mkpath(".");
+        dataDir.mkpath(QStringLiteral("."));
     }
 
-    m_db = QSqlDatabase::addDatabase("QSQLITE", "app_usage");
-    m_db.setDatabaseName(dataDir.filePath("app_usage.db"));
+    m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), QStringLiteral("app_usage"));
+    m_db.setDatabaseName(dataDir.filePath(QStringLiteral("app_usage.db")));
 
     if (!m_db.open()) {
         qCWarning(USAGE_TRACKER, "Unable to open database: %s",
@@ -210,12 +210,12 @@ void UsageTracker::loadUsage()
 {
     Q_ASSERT(m_apps.isEmpty());
 
-    QSqlQuery query("SELECT * from app_usage", m_db);
+    QSqlQuery query(QStringLiteral("SELECT * from app_usage"), m_db);
     QSqlRecord rec = query.record();
 
-    int idColumn = rec.indexOf("id");
-    int lastSeenColumn = rec.indexOf("last_seen");
-    int scoreColumn = rec.indexOf("score");
+    int idColumn = rec.indexOf(QStringLiteral("id"));
+    int lastSeenColumn = rec.indexOf(QStringLiteral("last_seen"));
+    int scoreColumn = rec.indexOf(QStringLiteral("score"));
 
     while (query.next()) {
         QDateTime lastSeen;

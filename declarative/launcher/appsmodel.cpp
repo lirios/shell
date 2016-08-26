@@ -142,7 +142,7 @@ bool AppsModel::trigger(const QString &desktopFile)
     QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
                              QStringLiteral("/ProcessLauncher"),
                              QStringLiteral("org.hawaiios.ProcessLauncher"), bus);
-    QDBusMessage msg = interface.call("launchDesktopFile", desktopFile);
+    QDBusMessage msg = interface.call(QStringLiteral("launchDesktopFile"), desktopFile);
     bool ran = msg.arguments().at(0).toBool();
 
     if (ran)
@@ -161,7 +161,7 @@ void AppsModel::refresh()
     m_list.clear();
 
     XdgMenu xdgMenu;
-    //xdgMenu.setLogDir("/tmp/");
+    //xdgMenu.setLogDir(QStringLiteral("/tmp/"));
     xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii")
                                           << QStringLiteral("X-Hawaii"));
     const QString menuFileName = XdgMenu::getMenuFileName();

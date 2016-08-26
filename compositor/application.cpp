@@ -144,7 +144,7 @@ void Application::autostart()
 {
     Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
         // Ignore entries that are explicitely not meant for Hawaii
-        if (!entry.isSuitable(true, QLatin1String("X-Hawaii")))
+        if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
             continue;
 
         // If it's neither suitable for GNOME nor KDE then it's probably not meant

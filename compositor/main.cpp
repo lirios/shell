@@ -76,9 +76,9 @@ static void setupEnvironment()
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Hawaii"));
 
     // Load input method
-    Hawaii::QGSettings settings(QLatin1String("org.hawaiios.desktop.interface"),
-                                QLatin1String("/org/hawaiios/desktop/interface/"));
-    qputenv("QT_IM_MODULE", settings.value(QLatin1String("inputMethod")).toByteArray());
+    Hawaii::QGSettings settings(QStringLiteral("org.hawaiios.desktop.interface"),
+                                QStringLiteral("/org/hawaiios/desktop/interface/"));
+    qputenv("QT_IM_MODULE", settings.value(QStringLiteral("inputMethod")).toByteArray());
 }
 
 int main(int argc, char *argv[])
@@ -94,14 +94,14 @@ int main(int argc, char *argv[])
 
     // Application
     QApplication app(argc, argv);
-    app.setApplicationName(QLatin1String("Hawaii"));
-    app.setApplicationVersion(QLatin1String(HAWAII_VERSION_STRING));
-    app.setOrganizationName(QLatin1String("Hawaii"));
-    app.setOrganizationDomain(QLatin1String("hawaiios.org"));
+    app.setApplicationName(QStringLiteral("Hawaii"));
+    app.setApplicationVersion(QStringLiteral(HAWAII_VERSION_STRING));
+    app.setOrganizationName(QStringLiteral("Hawaii"));
+    app.setOrganizationDomain(QStringLiteral("hawaiios.org"));
     app.setFallbackSessionManagementEnabled(false);
     app.setQuitOnLastWindowClosed(false);
 
-    QQuickStyle::setStyle("Material");
+    QQuickStyle::setStyle(QStringLiteral("Material"));
 
     // Set Qt platform for applications that will be executed from here
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));

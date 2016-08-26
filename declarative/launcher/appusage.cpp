@@ -33,7 +33,7 @@ AppUsage::AppUsage(const QString &appId, QObject *parent)
     : QObject(parent)
     , appId(appId)
 {
-    m_db = QSqlDatabase::database("app_usage");
+    m_db = QSqlDatabase::database(QStringLiteral("app_usage"));
 }
 
 void AppUsage::save() const
@@ -42,10 +42,10 @@ void AppUsage::save() const
         return;
 
     QSqlQuery query(m_db);
-    query.prepare("INSERT OR REPLACE INTO app_usage VALUES (:id, :last_seen, :score)");
-    query.bindValue(":id", appId);
-    query.bindValue(":last_seen", lastSeen.toTime_t());
-    query.bindValue(":score", score);
+    query.prepare(QStringLiteral("INSERT OR REPLACE INTO app_usage VALUES (:id, :last_seen, :score)"));
+    query.bindValue(QStringLiteral(":id"), appId);
+    query.bindValue(QStringLiteral(":last_seen"), lastSeen.toTime_t());
+    query.bindValue(QStringLiteral(":score"), score);
     query.exec();
 }
 
@@ -55,7 +55,7 @@ void AppUsage::destroy() const
         return;
 
     QSqlQuery query(m_db);
-    query.prepare("DELETE FROM app_usage WHERE app_id = :id");
-    query.bindValue(":id", appId);
+    query.prepare(QStringLiteral("DELETE FROM app_usage WHERE app_id = :id"));
+    query.bindValue(QStringLiteral(":id"), appId);
     query.exec();
 }

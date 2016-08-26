@@ -49,7 +49,7 @@ bool ProcessRunner::launchApplication(const QString &name)
                              QStringLiteral("/ProcessLauncher"),
                              QStringLiteral("org.hawaiios.ProcessLauncher"),
                              bus);
-    QDBusMessage msg = interface.call("launchDesktopFile", fileName);
+    QDBusMessage msg = interface.call(QStringLiteral("launchDesktopFile"), fileName);
     return msg.arguments().at(0).toBool();
 }
 
@@ -60,6 +60,6 @@ bool ProcessRunner::launchCommand(const QString &command)
                              QStringLiteral("/ProcessLauncher"),
                              QStringLiteral("org.hawaiios.ProcessLauncher"),
                              bus);
-    QDBusMessage msg = interface.call("launchCommand", command);
+    QDBusMessage msg = interface.call(QStringLiteral("launchCommand"), command);
     return msg.arguments().at(0).toBool();
 }
