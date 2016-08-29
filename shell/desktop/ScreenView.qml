@@ -40,6 +40,7 @@ BaseScreenView {
     readonly property alias surfacesArea: desktop.currentWorkspace
     readonly property alias desktop: desktop
     readonly property alias runCommand: runCommand
+    readonly property alias authDialog: authDialog
 
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
@@ -204,6 +205,14 @@ BaseScreenView {
                 duration: Units.longDuration
             }
         }
+    }
+
+    /*
+     * Authentication
+     */
+
+    AuthDialog {
+        id: authDialog
     }
 
     /*

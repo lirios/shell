@@ -81,6 +81,7 @@
 	<file>overlays/UnresponsiveOverlay.qml</file>
 	<file>panel/IndicatorsRow.qml</file>
 	<file>panel/Panel.qml</file>
+	<file>screens/AuthDialog.qml</file>
 	<file>screens/LockScreen.qml</file>
 	<file>screens/LogoutScreen.qml</file>
 	<file>screens/PowerDialog.qml</file>

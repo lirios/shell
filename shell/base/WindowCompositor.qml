@@ -24,6 +24,7 @@
 
 import QtQuick 2.5
 import GreenIsland 1.0 as GreenIsland
+import Hawaii.PolicyKit 1.0
 
 BaseCompositor {
     id: compositor
@@ -40,6 +41,7 @@ BaseCompositor {
 
     readonly property alias windowsModel: windowsModel
     readonly property alias applicationManager: applicationManager
+    readonly property alias policyKitAgent: policyKitAgent
 
     signal openUrl(var url)
 
@@ -168,6 +170,36 @@ BaseCompositor {
             if (status === Loader.Error)
                 console.warn("Error loading XWayland support:", sourceComponent.errorString())
         }
+    }
+
+    // PolicyKit
+    PolicyKitAgent {
+        id: policyKitAgent
+        onAuthenticationInitiated: {
+            var authDialog = compositor.defaultOutput.screenView.authDialog
+            authDialog.actionId = actionId
+            authDialog.message = message
+            authDialog.iconName = iconName
+            authDialog.realName = realName
+        }
+        onAuthenticationRequested: {
+            var authDialog = compositor.defaultOutput.screenView.authDialog
+            authDialog.prompt = prompt
+            authDialog.echo = echo
+            authDialog.open()
+        }
+        onAuthenticationCanceled: compositor.defaultOutput.screenView.authDialog.close()
+        onAuthenticationFinished: compositor.defaultOutput.screenView.authDialog.close()
+        onAuthorizationGained: compositor.defaultOutput.screenView.authDialog.close()
+        onAuthorizationFailed: {
+            var authDialog = compositor.defaultOutput.screenView.authDialog
+            authDialog.errorMessage = qsTr("Sorry, that didn't work. Please try again.")
+        }
+        onAuthorizationCanceled: compositor.defaultOutput.screenView.authDialog.close()
+        onInformation: compositor.defaultOutput.screenView.authDialog.infoMessage = message
+        onError: compositor.defaultOutput.screenView.authDialog.errorMessage = message
+
+        Component.onCompleted: registerAgent()
     }
 
     // Surface component
