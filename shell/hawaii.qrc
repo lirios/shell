@@ -6,7 +6,6 @@
 	<file>KeyBindings.qml</file>
 	<file>RunCommand.qml</file>
 	<file>ShellSettings.qml</file>
-	<file>WindowSwitcher.qml</file>
 	<file>XWayland.qml</file>
 	<file>base/BaseCompositor.qml</file>
 	<file>base/BaseOutput.qml</file>
@@ -36,6 +35,7 @@
 	<file>desktop/ScreenView.qml</file>
 	<file>desktop/ScreenZoom.qml</file>
 	<file>desktop/Shell.qml</file>
+	<file>desktop/WindowSwitcher.qml</file>
 	<file>desktop/Workspace.qml</file>
 	<file>desktop/WorkspacesView.qml</file>
 	<file>error/ErrorCompositor.qml</file>
