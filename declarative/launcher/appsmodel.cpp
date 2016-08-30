@@ -173,7 +173,7 @@ void AppsModel::refresh()
     m_list.clear();
 
     XdgMenu xdgMenu;
-    xdgMenu.setLogDir("/tmp/");
+    //xdgMenu.setLogDir("/tmp/");
     xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii") << QStringLiteral("X-Hawaii"));
     const QString menuFileName = XdgMenu::getMenuFileName();
     qCDebug(APPSMODEL) << "Menu file name:" << menuFileName;
