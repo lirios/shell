@@ -89,13 +89,13 @@ BaseScreenView {
             // Open window switcher
             if (output.primary) {
                 if (event.key === Qt.Key_Tab) {
-                    event.accept = true;
-                    desktop.windowSwitcher.next();
-                    return;
+                    event.accept = true
+                    desktop.windowSwitcher.next()
+                    return
                 } else if (event.key === Qt.Key_Backtab) {
-                    event.accept = true;
-                    desktop.windowSwitcher.previous();
-                    return;
+                    event.accept = true
+                    desktop.windowSwitcher.previous()
+                    return
                 }
             }
         }
@@ -113,7 +113,7 @@ BaseScreenView {
             break
         }
 
-        event.accept = false;
+        event.accept = false
     }
 
     onKeyReleased: {
@@ -122,15 +122,15 @@ BaseScreenView {
             // Close window switcher
             if (output.primary) {
                 if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
-                    event.accept = true;
-                    desktop.windowSwitcher.close();
-                    desktop.windowSwitcher.activate();
-                    return;
+                    event.accept = true
+                    desktop.windowSwitcher.close()
+                    desktop.windowSwitcher.activate()
+                    return
                 }
             }
         }
 
-        event.accept = false;
+        event.accept = false
     }
 
     Connections {
