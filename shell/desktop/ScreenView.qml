@@ -90,21 +90,27 @@ BaseScreenView {
             if (output.primary) {
                 if (event.key === Qt.Key_Tab) {
                     event.accept = true;
-                    screenView.windowSwitcher.next();
+                    desktop.windowSwitcher.next();
                     return;
                 } else if (event.key === Qt.Key_Backtab) {
                     event.accept = true;
-                    screenView.windowSwitcher.previous();
+                    desktop.windowSwitcher.previous();
                     return;
                 }
             }
         }
 
-        if (event.key == Qt.Key_PowerOff || event.key == Qt.Key_PowerDown ||
-                event.key == Qt.Key_Suspend || event.key == Qt.Key_Hibernate) {
+        // Power off and suspend
+        switch (event.key) {
+        case Qt.Key_PowerOff:
+        case Qt.Key_PowerDown:
+        case Qt.Key_Suspend:
+        case Qt.Key_Hibernate:
             screenView.state = "poweroff"
             event.accepted = true
             return
+        default:
+            break
         }
 
         event.accept = false;
@@ -149,6 +155,10 @@ BaseScreenView {
         y: (parent.height - height) / 2
     }
 
+    /*
+     * Desktop
+     */
+
     Desktop {
         id: desktop
 
@@ -161,7 +171,6 @@ BaseScreenView {
             xScale: zoomArea.zoom2
             yScale: zoomArea.zoom2
         }
-
 
         ScreenZoom {
             id: zoomArea
@@ -249,6 +258,10 @@ BaseScreenView {
         onLoadComponentChanged: if (loadComponent) show(); else hide();
     }
 
+    /*
+     * Logout and power off
+     */
+
     LogoutScreen {
         id: logoutScreen
 
@@ -260,12 +273,6 @@ BaseScreenView {
 
         onCanceled: SessionInterface.cancelShutdownRequest()
     }
-
-    /*
-     * Screen view
-     */
-
-
 
     /*
      * Full screen indicators
