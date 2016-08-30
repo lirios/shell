@@ -44,7 +44,7 @@ public:
     void locked();
     void unlocked();
 
-    void switchToVt(int index);
+    void switchToVt(quint32 vt);
 
 private:
     FakeBackend();

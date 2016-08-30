@@ -41,6 +41,7 @@ Q_LOGGING_CATEGORY(LOGIND_BACKEND, "hawaii.loginmanager.logind")
 const static QString login1Service = QStringLiteral("org.freedesktop.login1");
 const static QString login1Object = QStringLiteral("/org/freedesktop/login1");
 const static QString login1ManagerInterface = QStringLiteral("org.freedesktop.login1.Manager");
+const static QString login1SeatInterface = QStringLiteral("org.freedesktop.login1.Seat");
 const static QString login1SessionInterface = QStringLiteral("org.freedesktop.login1.Session");
 const static QString dbusPropertiesInterface = QStringLiteral("org.freedesktop.DBus.Properties");
 
@@ -220,46 +221,16 @@ void LogindBackend::locked()
 
 void LogindBackend::unlocked() { setupInhibitors(); }
 
-void LogindBackend::switchToVt(int index)
+void LogindBackend::switchToVt(quint32 vt)
 {
-    // Find a session whose VTNr is equal to index and activate it
-    QDBusPendingCall call = m_interface->asyncCall(QStringLiteral("ListSessions"));
-    QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(call);
-    connect(w, &QDBusPendingCallWatcher::finished, this, [this,
-                                                          index](QDBusPendingCallWatcher *watcher) {
-        QDBusPendingReply<LogindSessionInfoList> reply = *watcher;
-        watcher->deleteLater();
-        if (!reply.isValid())
-            return;
+    QDBusMessage message =
+            QDBusMessage::createMethodCall(login1Service,
+                                           QLatin1String("/org/freedesktop/login1/seat/self"),
+                                           login1SeatInterface,
+                                           QLatin1String("SwitchTo"));
+    message.setArguments(QVariantList() << QVariant(vt));
 
-        Q_FOREACH (const LogindSessionInfo &sessionInfo, reply.value()) {
-            QDBusMessage msg = QDBusMessage::createMethodCall(
-                    login1Service, sessionInfo.sessionPath.path(), dbusPropertiesInterface,
-                    QStringLiteral("GetAll"));
-            msg.setArguments(QList<QVariant>() << login1SessionInterface);
-
-            QDBusPendingCall call = m_interface->connection().asyncCall(msg, 3000);
-            QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(call);
-            connect(w, &QDBusPendingCallWatcher::finished, this,
-                    [this, index, sessionInfo](QDBusPendingCallWatcher *watcher) {
-                        QDBusPendingReply<QVariantMap> reply = *watcher;
-                        watcher->deleteLater();
-                        if (!reply.isValid())
-                            return;
-
-                        QVariantMap props = reply.value();
-
-                        bool ok = false;
-                        int vtNr = props.value(QStringLiteral("VTNr")).toInt(&ok);
-                        if (ok && vtNr == index) {
-                            qCDebug(LOGIND_BACKEND) << "Switching to session"
-                                                    << sessionInfo.sessionId << "on vt" << vtNr;
-                            m_interface->asyncCall(QStringLiteral("ActivateSession"),
-                                                   sessionInfo.sessionId);
-                        }
-                    });
-        }
-    });
+    m_interface->connection().asyncCall(message);
 }
 
 void LogindBackend::setupPowerButton()

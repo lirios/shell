@@ -54,7 +54,7 @@ public:
     virtual void locked() = 0;
     virtual void unlocked() = 0;
 
-    virtual void switchToVt(int index) = 0;
+    virtual void switchToVt(quint32 vt) = 0;
 
 Q_SIGNALS:
     void logOutRequested();

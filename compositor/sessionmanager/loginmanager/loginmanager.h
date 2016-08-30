@@ -54,7 +54,7 @@ public:
     void lockSession();
     void unlockSession();
 
-    void switchToVt(int index);
+    void switchToVt(quint32 vt);
 
 public Q_SLOTS:
     void locked();

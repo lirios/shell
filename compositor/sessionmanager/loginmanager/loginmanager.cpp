@@ -89,9 +89,9 @@ void LoginManager::unlockSession()
     m_backend->unlockSession();
 }
 
-void LoginManager::switchToVt(int index)
+void LoginManager::switchToVt(quint32 vt)
 {
-    m_backend->switchToVt(index);
+    m_backend->switchToVt(vt);
 }
 
 void LoginManager::locked()

@@ -62,7 +62,7 @@ void FakeBackend::unlocked()
 {
 }
 
-void FakeBackend::switchToVt(int index)
+void FakeBackend::switchToVt(quint32 vt)
 {
-    Q_UNUSED(index)
+    Q_UNUSED(vt)
 }
