@@ -241,7 +241,10 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.mainMenu
-        onActivated: compositor.defaultOutput.screenView.panel.launcherIndicator.triggered(null)
+        onActivated: {
+            var panel = compositor.defaultOutput.screenView.desktop.panel
+            panel.launcherIndicator.clicked(null)
+        }
     }
 
     Shortcut {
