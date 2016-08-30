@@ -41,6 +41,8 @@ Popup {
     implicitHeight: thumbnailSize + label.paintedHeight + (2 * layout.spacing) + Units.largeSpacing
 
     Material.theme: Material.Dark
+    Material.primary: Material.Blue
+    Material.accent: Material.Blue
 
     Component {
         id: thumbnailComponent
