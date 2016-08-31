@@ -35,7 +35,7 @@ qt5_add_dbus_adaptor(SOURCES sessionmanager/screensaver/org.freedesktop.ScreenSa
                      sessionmanager/screensaver/screensaver.h ScreenSaver
                      sessionmanager/screensaver/screensaveradaptor ScreenSaverAdaptor)
 
-qt5_add_resources(RESOURCES ${CMAKE_SOURCE_DIR}/shell/hawaii.qrc)
+qt5_add_resources(RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../shell/hawaii.qrc")
 
 add_executable(hawaii ${SOURCES} ${RESOURCES})
 target_link_libraries(hawaii
