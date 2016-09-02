@@ -25,27 +25,28 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
 
 Rectangle {
+    id: root
+
     property alias hovered: mouseArea.containsMouse
     signal clicked()
 
-    id: root
+    Material.theme: Material.Dark
+
     width: Units.iconSizes.smallMedium
     height: width
     radius: width * 0.5
     border.color: Qt.rgba(1, 1, 1, 0.35)
     border.width: Units.gu(0.05)
-    gradient: Gradient {
-        GradientStop { position: 0; color: "#666" }
-        GradientStop { position: 1; color: "#222" }
-    }
+    color: Material.dialogColor
     antialiasing: true
 
     Icon {
         anchors.centerIn: parent
-        name: "window-close-symbolic"
+        name: "navigation/close"
         color: "white"
         width: parent.width - Units.smallSpacing
         height: width

@@ -29,39 +29,21 @@ import QtQuick.Controls.Material 2.0
 import Fluid.Core 1.0
 import Fluid.Controls 1.0
 import Fluid.Material 1.0
-import "../../components" as ShellComponents
+import "../components" as ShellComponents
 
 Item {
-    property var notificationData
-    readonly property alias closing: __priv.closing
-
-    signal expired(Item notificationWindow)
-    signal closed(Item notificationWindow)
+    signal expired()
+    signal closed()
     signal actionInvoked(string actionId)
 
-    id: root
+    id: notification
     objectName: "notificationWindow"
-    width: Math.round(Units.gu(24))
+    width: Units.gu(24)
     height: notificationItem.implicitHeight
-    opacity: 0.0
-    onOpacityChanged: {
-        if (opacity == 0.0 && __priv.closing) {
-            // Destroy notification
-            root.parent = null;
-            root.destroy();
-        }
-    }
 
     Material.theme: Material.Dark
     Material.primary: Material.Blue
     Material.accent: Material.Blue
-
-    Behavior on y {
-        NumberAnimation {
-            easing.type: Easing.OutQuad
-            duration: Units.longDuration
-        }
-    }
 
     Behavior on height {
         NumberAnimation {
@@ -77,18 +59,14 @@ Item {
         }
     }
 
-    QtObject {
-        id: __priv
-
-        property bool closing: false
-    }
-
     Timer {
         id: timer
+        interval: model.expireTimeout
+        running: !model.isPersistent
         onTriggered: {
-            if (!notificationData.isPersistent) {
-                timer.running = false;
-                root.expired(root);
+            if (!model.isPersistent) {
+                timer.running = false
+                notification.expired()
             }
         }
     }
@@ -101,7 +79,7 @@ Item {
             rightMargin: -Units.smallSpacing * 1.5
         }
         z: 1
-        onClicked: root.closed(root)
+        onClicked: notification.closed()
     }
 
     Rectangle {
@@ -115,13 +93,9 @@ Item {
         }
 
         color: Material.dialogColor
-        gradient: Gradient {
-            GradientStop { position: 0; color: Qt.lighter(Material.dialogColor, 1.2) }
-            GradientStop { position: 1; color: Qt.darker(Material.dialogColor, 1.1) }
-        }
-        border.width: Units.gu(0.05)
+        border.width: 1
         border.color: Utils.alpha(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
-        radius: Units.gu(0.4)
+        radius: 6
         antialiasing: true
         z: 0
 
@@ -138,7 +112,12 @@ Item {
                 fill: parent
                 margins: Units.smallSpacing
             }
-            onActionInvoked: root.actionInvoked(actionId)
+            summary: model.summary
+            body: model.body
+            hasIcon: model.hasIcon
+            icon: "image://notifications/%1/%2".arg(model.id).arg(Date.now() / 1000 | 0)
+            actions: model.actions
+            onActionInvoked: notification.actionInvoked(actionId)
         }
     }
 
@@ -150,26 +129,5 @@ Item {
         hoverEnabled: true
         onEntered: bubble.opacity = 0.5
         onExited: bubble.opacity = 1.0
-    }
-
-    function show() {
-        opacity = 1.0;
-    }
-
-    function close() {
-        __priv.closing = true;
-        opacity = 0.0;
-    }
-
-    function populateNotification(notification) {
-        root.notificationData = notification;
-        notificationItem.summary = notification.summary;
-        notificationItem.body = notification.body;
-        notificationItem.hasIcon = notification.hasIcon;
-        notificationItem.icon = "image://notifications/%1/%2".arg(notification.id).arg(Date.now() / 1000 | 0);
-        timer.interval = notification.expireTimeout;
-        timer.restart();
-        notificationItem.actions.clear();
-        notificationItem.actions.append(notification.actions);
     }
 }

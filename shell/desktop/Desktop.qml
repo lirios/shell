@@ -32,6 +32,7 @@ import Hawaii.Shell 1.0
 import ".."
 import "../components"
 import "../indicators"
+import "../notifications"
 
 Item {
     id: desktop
@@ -208,9 +209,16 @@ Item {
     }
 
     // Notifications are behind the panel
-    Item {
+    Notifications {
         id: notificationsLayer
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
+            topMargin: Units.largeSpacing * 3
+            bottomMargin: 56 + Units.smallSpacing
+        }
+        width: Units.gu(24) + (2 * Units.smallSpacing)
         z: 10
     }
 

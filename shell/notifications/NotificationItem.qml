@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
@@ -25,26 +25,35 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
+import Hawaii.Notifications 1.0
 
-MouseArea {
-    property bool expanded: false
+Item {
+    property alias icon: imageItem.source
+    property bool hasIcon: false
+    property alias summary: titleLabel.text
+    property alias body: bodyLabel.text
+    property ListModel actions: ListModel {}
+
+    signal actionInvoked(string actionId)
 
     id: root
-    width: parent.width
-    height: Units.gu(2)
-    drag.axis: Drag.XAxis
-    drag.target: root
+    height: implicitHeight
+    implicitHeight: {
+        // Return maximum height possible, at least 5 grid units
+        var minHeight = actionsColumn.height + (Units.smallSpacing * 4);
+        var maxHeight = Math.max(imageItem.height, titleLabel.paintedHeight + bodyLabel.implicitHeight) + (Units.smallSpacing * 4);
+        return Math.max(minHeight, Math.min(maxHeight, Units.gu(5)));
+    }
     states: [
         State {
             name: "default"
-            when: model.hasIcon && (model.body.length > 0)
+            when: hasIcon && (bodyLabel.visible || actionsColumn.visible)
 
             AnchorChanges {
                 target: titleLabel
-                anchors.left: model.hasIcon ? imageItem.right : parent.left
+                anchors.left: hasIcon ? imageItem.right : parent.left
                 anchors.top: parent.top
                 anchors.right: parent.right
             }
@@ -56,7 +65,7 @@ MouseArea {
         },
         State {
             name: "summaryOnly"
-            when: !model.hasIcon && (model.body.length === 0)
+            when: !hasIcon && !bodyLabel.visible && !actionsColumn.visible
 
             AnchorChanges {
                 target: titleLabel
@@ -66,7 +75,7 @@ MouseArea {
         },
         State {
             name: "summaryWithIcons"
-            when: model.hasIcon && (model.body.length === 0)
+            when: hasIcon && !bodyLabel.visible && !actionsColumn.visible
 
             AnchorChanges {
                 target: titleLabel
@@ -79,36 +88,6 @@ MouseArea {
             }
         }
     ]
-    onExpandedChanged: {
-        if (expanded && model.body)
-            height = Units.gu(4);
-        else
-            height = Units.gu(2);
-    }
-    onReleased: {
-        if (drag.active) {
-            if (x > width / 4 || x < width / -4)
-                notificationsModel.remove(index);
-            else
-                x = 0;
-        } else if (model.body) {
-            expanded = !expanded;
-        }
-    }
-
-    Behavior on x {
-        SpringAnimation {
-            spring: 2
-            damping: 0.2
-        }
-    }
-
-    Behavior on height {
-        SpringAnimation {
-            spring: 5
-            damping: 0.3
-        }
-    }
 
     Image {
         id: imageItem
@@ -118,22 +97,20 @@ MouseArea {
             leftMargin: Units.smallSpacing
             topMargin: Units.smallSpacing
         }
-        width: Units.iconSizes.medium
+        width: Units.iconSizes.large
         height: width
-        source: width > 0 && height > 0 && model.hasIcon ? "image://notifications/" + model.id : ""
         sourceSize.width: width
         sourceSize.height: height
         fillMode: Image.PreserveAspectFit
         cache: false
         smooth: false
-        visible: model.hasIcon
+        visible: hasIcon
     }
 
     SubheadingLabel {
         id: titleLabel
         font.weight: Font.Bold
         elide: Text.ElideRight
-        text: model.summary
         visible: text.length > 0
         onLinkActivated: Qt.openUrlExternally(link)
     }
@@ -141,9 +118,9 @@ MouseArea {
     BodyLabel {
         id: bodyLabel
         anchors {
-            left: model.hasIcon ? imageItem.right : parent.left
+            left: hasIcon ? imageItem.right : parent.left
             top: titleLabel.bottom
-            right: parent.right
+            right: actionsColumn.visible ? actionsColumn.left : parent.right
             bottom: parent.bottom
             leftMargin: Units.smallSpacing * 2
             rightMargin: Units.smallSpacing * 2
@@ -151,10 +128,31 @@ MouseArea {
         }
         wrapMode: Text.Wrap
         elide: Text.ElideRight
-        text: model.body
         maximumLineCount: 10
         verticalAlignment: Text.AlignTop
-        visible: text.length > 0 && expanded
+        visible: text.length > 0
         onLinkActivated: Qt.openUrlExternally(link)
+    }
+
+    Column {
+        id: actionsColumn
+        anchors {
+            top: titleLabel.bottom
+            right: parent.right
+            topMargin: Units.smallSpacing
+        }
+        spacing: Units.smallSpacing
+        height: childrenRect.height
+        visible: actions.count > 0
+
+        Repeater {
+            id: actionsRepeater
+            model: actions
+
+            Button {
+                text: model.text
+                onClicked: root.actionInvoked(model.id)
+            }
+        }
     }
 }

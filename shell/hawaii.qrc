@@ -61,9 +61,6 @@
 	<file>indicators/launcher/Dot.qml</file>
 	<file>indicators/network/AirplaneMode.qml</file>
 	<file>indicators/network/ConnectionItem.qml</file>
-	<file>indicators/notifications/NotificationItem.qml</file>
-	<file>indicators/notifications/NotificationListItem.qml</file>
-	<file>indicators/notifications/NotificationWindow.qml</file>
 	<file>indicators/power/BatteryEntry.qml</file>
 	<file>indicators/sound/MprisItem.qml</file>
 	<file>indicators/sound/VolumeSlider.qml</file>
@@ -76,6 +73,9 @@
 	<file>launcher/LauncherMenu.qml</file>
 	<file>launcher/LauncherPopOver.qml</file>
 	<file>launcher/LauncherShutdownActions.qml</file>
+	<file>notifications/Notifications.qml</file>
+	<file>notifications/NotificationDelegate.qml</file>
+	<file>notifications/NotificationItem.qml</file>
 	<file>overlays/HelpOverlay.qml</file>
 	<file>overlays/UnresponsiveOverlay.qml</file>
 	<file>panel/IndicatorsRow.qml</file>
