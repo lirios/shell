@@ -27,24 +27,13 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
+import Hawaii.Desktop 1.0
 
-Item {
-    Image {
-        id: picture
-        anchors.fill: parent
-        source: compositor.settings.background.pictureUrl
-        sourceSize.width: width * 0.75
-        sourceSize.height: height * 0.75
-        fillMode: compositor.settings.convertFillMode(compositor.settings.background.fillMode)
-        cache: false
-        visible: false
-    }
-
-    FastBlur {
-        anchors.fill: picture
-        source: picture
-        radius: 32
-    }
+Background {
+    Material.theme: Material.Dark
+    Material.primary: Material.Blue
+    Material.accent: Material.Blue
 
     BusyIndicator {
         anchors.centerIn: parent
