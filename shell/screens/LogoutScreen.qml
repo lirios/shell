@@ -78,8 +78,8 @@ Item {
     Dialog {
         id: logoutDialog
 
-        x: (output.availableGeometry.width - width)/2
-        y: (output.availableGeometry.height - height)/2
+        x: (parent.width - width)/2
+        y: (parent.height - height)/2
 
         title: qsTr("Log out")
         text: qsTr("You will be logged out in %1 seconds").arg(logoutScreen.remainingSeconds)

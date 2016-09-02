@@ -39,8 +39,8 @@ Indicator {
 
     Launcher.LauncherPopOver {
         id: popover
-        x: (output.availableGeometry.width - width)/2
-        y: (output.availableGeometry.height - height)/2
+        x: (parent.width - width)/2
+        y: (parent.height - height)/2
 
         parent: screenView
 
