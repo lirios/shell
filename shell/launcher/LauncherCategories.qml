@@ -37,10 +37,9 @@ ListView {
     model: CppLauncher.CategoriesModel {
         id: categoriesModel
     }
-    delegate: ItemDelegate {
+    delegate: ListItem {
         property string category: model.category
 
-        width: parent.width
         text: model.display
         highlighted: root.currentIndex == index
         onClicked: root.currentIndex = index
