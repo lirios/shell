@@ -10,4 +10,4 @@ set(FILES
 )
 
 install(FILES ${FILES}
-        DESTINATION ${QML_INSTALL_DIR}/Hawaii/Desktop)
+	DESTINATION ${QML_INSTALL_DIR}/Hawaii/Shell)

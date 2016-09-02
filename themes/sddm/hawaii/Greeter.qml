@@ -27,7 +27,7 @@ import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.0
 import Fluid.Controls 1.0
 import Fluid.Material 1.0
-import Hawaii.Desktop 1.0
+import Hawaii.Shell 1.0
 import Hawaii.LoginManager 1.0
 import SddmComponents 2.0 as SddmComponents
 import "indicators" as Indicators

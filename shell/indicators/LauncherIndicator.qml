@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import Fluid.Controls 1.0
 import "launcher"
-import Hawaii.Desktop 1.0
+import Hawaii.Shell 1.0
 import "../launcher" as Launcher
 
 Indicator {

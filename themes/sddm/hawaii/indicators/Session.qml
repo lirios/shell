@@ -27,7 +27,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 2.0 as QQC
 import Fluid.Controls 1.0
-import Hawaii.Desktop 1.0
+import Hawaii.Session 1.0
 import SddmComponents 2.0
 
 Indicator {

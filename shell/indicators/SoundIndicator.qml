@@ -27,7 +27,7 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.0
 import Fluid.Controls 1.0
-import Hawaii.Desktop 1.0
+import Hawaii.Shell 1.0
 import Hawaii.Mpris 1.0
 import Hawaii.Settings 1.0 as Settings
 import "sound" as SoundIndicator

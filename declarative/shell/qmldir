@@ -1,4 +1,4 @@
-module Hawaii.Desktop
+module Hawaii.Shell
 
 Background 1.0 Background.qml
 DateTime 1.0 DateTime.qml

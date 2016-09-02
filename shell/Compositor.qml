@@ -25,7 +25,7 @@
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
 import org.hawaiios.launcher 0.1
-import Hawaii.Desktop 1.0
+import Hawaii.Shell 1.0
 import "base"
 import "desktop"
 

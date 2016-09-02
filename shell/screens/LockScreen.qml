@@ -29,7 +29,7 @@ import Fluid.Controls 1.0
 import Fluid.Effects 1.0
 import Fluid.Material 1.0
 import QtAccountsService 1.0
-import Hawaii.Desktop 1.0
+import Hawaii.Shell 1.0
 import "../indicators"
 
 Showable {

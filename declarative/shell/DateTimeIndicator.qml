@@ -22,7 +22,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Desktop 1.0
+import Hawaii.Shell 1.0
 
 Indicator {
     title: qsTr("Date & Time")
