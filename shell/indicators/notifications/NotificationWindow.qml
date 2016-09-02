@@ -28,6 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Core 1.0
 import Fluid.Controls 1.0
+import Fluid.Material 1.0
 import "../../components" as ShellComponents
 
 Item {
@@ -52,6 +53,8 @@ Item {
     }
 
     Material.theme: Material.Dark
+    Material.primary: Material.Blue
+    Material.accent: Material.Blue
 
     Behavior on y {
         NumberAnimation {
@@ -103,7 +106,14 @@ Item {
 
     Rectangle {
         id: bubble
+
         anchors.fill: parent
+
+        layer.enabled: true
+        layer.effect: ElevationEffect {
+            elevation: 8
+        }
+
         color: Material.dialogColor
         gradient: Gradient {
             GradientStop { position: 0; color: Qt.lighter(Material.dialogColor, 1.2) }
