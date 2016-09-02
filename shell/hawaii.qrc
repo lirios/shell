@@ -4,7 +4,6 @@
 <qresource>
 	<file>Compositor.qml</file>
 	<file>KeyBindings.qml</file>
-	<file>RunCommand.qml</file>
 	<file>ShellSettings.qml</file>
 	<file>XWayland.qml</file>
 	<file>base/BaseCompositor.qml</file>
@@ -32,6 +31,7 @@
 	<file>desktop/IdleDimmer.qml</file>
 	<file>desktop/OutputInfo.qml</file>
 	<file>desktop/PresentWindowsChrome.qml</file>
+	<file>desktop/RunCommand.qml</file>
 	<file>desktop/ScreenView.qml</file>
 	<file>desktop/ScreenZoom.qml</file>
 	<file>desktop/Shell.qml</file>

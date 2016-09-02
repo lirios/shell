@@ -32,7 +32,6 @@ import GreenIsland 1.0 as GreenIsland
 import Fluid.Controls 1.0
 import "../base"
 import "../screens"
-import ".."
 
 BaseScreenView {
     id: screenView
