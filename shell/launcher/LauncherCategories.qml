@@ -46,5 +46,5 @@ ListView {
     }
     onCurrentIndexChanged: if (currentItem) root.selected(currentItem.category)
 
-    //ScrollIndicator.vertical: ScrollIndicator {}
+    ScrollBar.vertical: ScrollBar {}
 }
