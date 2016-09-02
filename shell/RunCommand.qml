@@ -39,6 +39,8 @@ Popup {
     implicitHeight: layout.height + (2 * Units.largeSpacing)
 
     Material.theme: Material.Dark
+    Material.primary: Material.Blue
+    Material.accent: Material.Blue
 
     CppLauncher.ProcessRunner {
         id: process
