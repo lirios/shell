@@ -40,9 +40,6 @@ Popup {
     property alias infoMessage: infoLabel.text
     property alias errorMessage: errorLabel.text
 
-    x: (output.availableGeometry.width - width)/2
-    y: (output.availableGeometry.height - height)/2
-
     parent: screenView
 
     modal: true
