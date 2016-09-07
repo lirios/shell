@@ -20,8 +20,7 @@ public:
     void watchForSignal(int signal);
     static void signalHandler(int signal);
 
-private Q_SLOTS:
-    void onNotify(int sockfd);
+    void _q_handleNotify(int sockfd);
 
 private:
     static int sockpair[2];

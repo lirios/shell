@@ -47,7 +47,7 @@ UnixSignalWatcherPrivate::UnixSignalWatcherPrivate()
 
     // Create a notifier for the read end of the pair
     notifier = new QSocketNotifier(sockpair[1], QSocketNotifier::Read, q);
-    connect(notifier, &QSocketNotifier::activated, this, &UnixSignalWatcherPrivate::onNotify);
+    QObject::connect(notifier, SIGNAL(activated(int)), q, SLOT(_q_handleNotify(int)));
     notifier->setEnabled(true);
 }
 
@@ -91,7 +91,7 @@ void UnixSignalWatcherPrivate::signalHandler(int signal)
  * Called when the signal handler has written to the socket pair. Emits the Unix
  * signal as a Qt signal.
  */
-void UnixSignalWatcherPrivate::onNotify(int sockfd)
+void UnixSignalWatcherPrivate::_q_handleNotify(int sockfd)
 {
     Q_Q(UnixSignalWatcher);
 
@@ -132,3 +132,5 @@ void UnixSignalWatcher::watchForSignal(int signal)
  * received, and the \a signal argument can be inspected to find out which one
  * was actually received.
  */
+
+#include "moc_sigwatch.cpp"

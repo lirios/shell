@@ -48,6 +48,9 @@ public:
 
 Q_SIGNALS:
     void unixSignal(int signal);
+
+private:
+    Q_PRIVATE_SLOT(d_func(), void _q_handleNotify(int))
 };
 
 #endif // SIGWATCH_H
