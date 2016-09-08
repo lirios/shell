@@ -81,43 +81,4 @@ Indicator {
     Mpris {
         id: mpris2
     }
-
-    Settings.Settings {
-        id: mmKeybindings
-        schema.id: "org.hawaiios.desktop.keybindings.multimedia"
-        schema.path: "/org/hawaiios/desktop/keybindings/multimedia/"
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
-        sequence: mmKeybindings.volumeMute
-        onActivated: volumeControl.toggleMute()
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
-        sequence: mmKeybindings.volumeUp
-        onActivated: volumeControl.increase()
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
-        sequence: mmKeybindings.volumeDown
-        onActivated: volumeControl.decrease()
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
-        sequence: mmKeybindings.mediaPlay
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
-        sequence: mmKeybindings.mediaPrevious
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
-        sequence: mmKeybindings.mediaNext
-    }
 }

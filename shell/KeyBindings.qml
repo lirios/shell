@@ -26,6 +26,7 @@
 
 import QtQuick 2.5
 import Hawaii.Settings 1.0 as Settings
+import "indicators/sound" as SoundIndicator
 
 Item {
     /*
@@ -50,6 +51,12 @@ Item {
         schema.path: "/org/hawaiios/desktop/keybindings/desktop/"
     }
 
+    Settings.Settings {
+        id: mmKeybindings
+        schema.id: "org.hawaiios.desktop.keybindings.multimedia"
+        schema.path: "/org/hawaiios/desktop/keybindings/multimedia/"
+    }
+
     QtObject {
         id: d
 
@@ -58,6 +65,14 @@ Item {
             for (i = 0; i < compositor.outputs.length; i++)
                 compositor.outputs[i].screenView.layers.workspaces.select(number);
         }
+    }
+
+    /*
+     * Objects
+     */
+
+    SoundIndicator.VolumeControl {
+        id: volumeControl
     }
 
     /*
@@ -640,5 +655,42 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.screencast
+    }
+
+    /*
+     * Multimedia
+     */
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.volumeMute
+        onActivated: volumeControl.toggleMute()
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.volumeUp
+        onActivated: volumeControl.increase()
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.volumeDown
+        onActivated: volumeControl.decrease()
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.mediaPlay
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.mediaPrevious
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: mmKeybindings.mediaNext
     }
 }
