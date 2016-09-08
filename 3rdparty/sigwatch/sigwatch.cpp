@@ -1,6 +1,7 @@
 /*
  * Unix signal watcher for Qt.
  *
+ * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2014 Simon Knopp
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36,6 +37,10 @@
 int UnixSignalWatcherPrivate::sockpair[2];
 
 UnixSignalWatcherPrivate::UnixSignalWatcherPrivate()
+{
+}
+
+void UnixSignalWatcherPrivate::initialize()
 {
     Q_Q(UnixSignalWatcher);
 
@@ -108,6 +113,7 @@ void UnixSignalWatcherPrivate::_q_handleNotify(int sockfd)
 UnixSignalWatcher::UnixSignalWatcher(QObject *parent)
     : QObject(*new UnixSignalWatcherPrivate(), parent)
 {
+    d_func()->initialize();
 }
 
 /*!

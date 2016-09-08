@@ -17,6 +17,8 @@ class UnixSignalWatcherPrivate : public QObjectPrivate
 public:
     UnixSignalWatcherPrivate();
 
+    void initialize();
+
     void watchForSignal(int signal);
     static void signalHandler(int signal);
 
