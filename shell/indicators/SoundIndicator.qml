@@ -74,10 +74,6 @@ Indicator {
         }
     }
 
-    SoundIndicator.VolumeControl {
-        id: volumeControl
-    }
-
     Mpris {
         id: mpris2
     }

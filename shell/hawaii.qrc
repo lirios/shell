@@ -66,7 +66,6 @@
 	<file>indicators/notifications/NotificationWindow.qml</file>
 	<file>indicators/power/BatteryEntry.qml</file>
 	<file>indicators/sound/MprisItem.qml</file>
-	<file>indicators/sound/VolumeControl.qml</file>
 	<file>indicators/sound/VolumeSlider.qml</file>
 	<file>launcher/FrequentAppsView.qml</file>
 	<file>launcher/Launcher.qml</file>

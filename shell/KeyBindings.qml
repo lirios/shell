@@ -26,7 +26,6 @@
 
 import QtQuick 2.5
 import Hawaii.Settings 1.0 as Settings
-import "indicators/sound" as SoundIndicator
 
 Item {
     /*
@@ -65,14 +64,6 @@ Item {
             for (i = 0; i < compositor.outputs.length; i++)
                 compositor.outputs[i].screenView.layers.workspaces.select(number);
         }
-    }
-
-    /*
-     * Objects
-     */
-
-    SoundIndicator.VolumeControl {
-        id: volumeControl
     }
 
     /*

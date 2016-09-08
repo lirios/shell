@@ -28,7 +28,6 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
-import Hawaii.PulseAudio 1.0
 
 ListItem {
     visible: volumeControl.visible
@@ -66,14 +65,6 @@ ListItem {
                 // Change the slider value for external events to avoid loops
                 if (!slider.pressed)
                     slider.value = volume
-
-                // Show overlay
-                var overlay = desktop.layers.overlays
-                overlay.iconName = volumeControl.getIconName()
-                overlay.value = slider.value
-                overlay.showProgress = true
-                if (!overlay.visible)
-                    overlay.show()
             }
 
             Component.onCompleted: slider.value = volumeControl.getVolumePercentage()
