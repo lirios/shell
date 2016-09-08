@@ -39,8 +39,11 @@ Showable {
     //! Name of the icon to show (see XDG icon naming specification)
     property alias iconName: icon.name
 
-    //! Overlay value, either text or number
-    property var value
+    //! Overlay value (a percentage value in the 0:100 range)
+    property alias value: progress.value
+
+    //! Overlay text to display when \a showProgress is false
+    property alias text: label.text
 
     //! Set to true if the value is a number used for progress,
     // otherwise the value will be assumed to be a string to
@@ -98,6 +101,7 @@ Showable {
                 root.timeout = 2500;
                 root.iconName = "";
                 root.value = 0;
+                root.text = ""
                 root.showProgress = false;
             }
         }
@@ -118,15 +122,14 @@ Showable {
                 id: progress
                 from: 0
                 to: 100
-                value: visible ? root.value : 0
                 visible: false
 
                 Layout.fillWidth: true
             }
 
             Label {
-                text: progress.visible ? "" : (root.value ? root.value : "")
-                visible: !progress.visible
+                id: label
+                visible: !progress.visible && text != ""
 
                 Layout.alignment: Qt.AlignHCenter
             }
