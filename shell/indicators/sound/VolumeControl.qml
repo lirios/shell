@@ -29,7 +29,8 @@ import Hawaii.PulseAudio 1.0
 Object {
     readonly property real from: 0
     readonly property real to: 100
-    readonly property real stepSize: Math.round(5 * PulseAudio.NormalVolume / 100.0)
+    readonly property real stepPercentage: 5
+    readonly property real stepSize: Math.round(stepPercentage * PulseAudio.NormalVolume / 100.0)
     readonly property bool visible: sinkModel.defaultSink !== null
     readonly property bool muted: sinkModel.defaultSink.muted || sinkModel.defaultSink.volume === PulseAudio.MinimalVolume
 
@@ -71,7 +72,7 @@ Object {
     }
 
     function setVolumePercentage(value) {
-        if (!sinkModel.defaultSink)
+        if (!sinkModel.defaultSink || value < 0 || value > 100)
             return
         sinkModel.defaultSink.volume = (PulseAudio.NormalVolume * value) / 100.0
     }
@@ -92,10 +93,12 @@ Object {
     }
 
     function increase() {
-        slider.increase()
+        if (sinkModel.defaultSink)
+            setVolumePercentage(getVolumePercentage() + stepPercentage)
     }
 
     function decrease() {
-        slider.decrease()
+        if (sinkModel.defaultSink)
+            setVolumePercentage(getVolumePercentage() - stepPercentage)
     }
 }
