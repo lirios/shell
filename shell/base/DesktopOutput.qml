@@ -31,22 +31,14 @@ BaseOutput {
     property int idleInhibit: 0
 
     property alias screenView: outputWindow.screenView
-    property alias idleDimmer: outputWindow.idleDimmer
 
     readonly property Item surfacesArea: screenView.surfacesArea
 
     property alias screenViewComponent: outputWindow.screenViewComponent
-    property alias idleDimmerComponent: outputWindow.idleDimmerComponent
 
     // TODO: this was true for ErrorOutput, false for desktop.Output
     sizeFollowsWindow: false
     automaticFrameCallback: powerState === GreenIsland.ExtendedOutput.PowerStateOn
-
-    onPowerStateChanged: {
-        // Show the screen when the power goes back
-        if (output.powerState === GreenIsland.ExtendedOutput.PowerStateOn)
-            idleDimmer.fadeOut()
-    }
 
     window: DesktopOutputWindow {
         id: outputWindow
@@ -54,12 +46,28 @@ BaseOutput {
         output: output
     }
 
+    QtObject {
+        id: __private
+
+        property bool idle: false
+    }
+
     function wake() {
-        idleDimmer.fadeOut()
+        if (!__private.idle)
+            return
+
+        console.debug("Power on output", manufacturer, model)
+        outputWindow.idleDimmer.fadeOut()
         output.powerState = GreenIsland.ExtendedOutput.PowerStateOn
+        __private.idle = false
     }
 
     function idle() {
-        idleDimmer.fadeIn()
+        if (__private.idle)
+            return;
+
+        console.debug("Standby output", manufacturer, model)
+        outputWindow.idleDimmer.fadeIn()
+        __private.idle = true
     }
 }

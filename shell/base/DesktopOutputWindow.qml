@@ -25,6 +25,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import GreenIsland 1.0 as GreenIsland
+import "../desktop"
 
 ApplicationWindow {
     id: window
@@ -32,11 +33,10 @@ ApplicationWindow {
     property var output
 
     property alias screenView: screenViewLoader.item
-    property alias idleDimmer: idleLoader.item
+    property alias idleDimmer: idleDimmer
     property alias cursor: cursor
 
     property alias screenViewComponent: screenViewLoader.sourceComponent
-    property alias idleDimmerComponent: idleLoader.sourceComponent
 
     x: nativeScreen.position.x
     y: nativeScreen.position.y
@@ -48,12 +48,6 @@ ApplicationWindow {
         target: screenView
         property: "output"
         value: window.output
-    }
-
-    // Idle dimmer
-    Loader {
-        id: idleLoader
-        anchors.fill: parent
     }
 
     // Virtual Keyboard
@@ -91,6 +85,7 @@ ApplicationWindow {
 
         onMouseXChanged: compositor.wake()
         onMouseYChanged: compositor.wake()
+        // TODO: Need to wake up with mouse button pressed, released and wheel
 
         Loader {
             id: screenViewLoader
@@ -106,5 +101,12 @@ ApplicationWindow {
                      screenView.cursorVisible &&
                      output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
         }
+    }
+
+    // Idle dimmer
+    IdleDimmer {
+        id: idleDimmer
+        anchors.fill: parent
+        output: window.output
     }
 }

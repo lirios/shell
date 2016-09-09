@@ -40,7 +40,6 @@ WindowCompositor {
     onOpenUrl: processRunner.launchCommand("xdg-open %1".arg(url))
 
     screenViewComponent: ScreenView {}
-    idleDimmerComponent: IdleDimmer {}
 
     function wake() {
         var i;

@@ -30,11 +30,9 @@ BaseCompositor {
     id: compositor
 
     property Component screenViewComponent
-    property Component idleDimmerComponent
 
     outputComponent: DesktopOutput {
         screenViewComponent: compositor.screenViewComponent
-        idleDimmerComponent: compositor.idleDimmerComponent
     }
 
     property Component outputConfigurationComponent: OutputConfiguration {}

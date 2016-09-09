@@ -24,17 +24,22 @@
 
 import QtQuick 2.7
 import GreenIsland 1.0 as GreenIsland
-import Fluid.Core 1.0
+import Fluid.Controls 1.0
 
 Rectangle {
     id: idleDimmer
+
+    property var output
 
     color: "black"
     opacity: 0.0
 
     function fadeIn() {
-        if (idleDimmer.opacity == 1.0)
+        if (idleDimmer.opacity > 0.0)
             return
+
+        // Make sure the power on timer is stopped
+        idleDimmerTimer.stop()
 
         idleDimmerAnimator.from = 0.0
         idleDimmerAnimator.to = 1.0
@@ -42,14 +47,15 @@ Rectangle {
     }
 
     function fadeOut() {
-        if (idleDimmer.opacity == 0.0)
-            return;
+        if (idleDimmer.opacity < 1.0)
+            return
 
         // Use a timer to compensate for power on time
         idleDimmerTimer.start()
     }
 
     onOpacityChanged: {
+        // Power off output when fade out has finished
         if (opacity == 1.0)
             output.powerState = GreenIsland.ExtendedOutput.PowerStateStandby
     }
@@ -64,6 +70,7 @@ Rectangle {
     Timer {
         id: idleDimmerTimer
         interval: 1000
+        repeat: false
         onTriggered: {
             idleDimmerAnimator.from = 1.0
             idleDimmerAnimator.to = 0.0
