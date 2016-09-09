@@ -15,6 +15,7 @@ arch:
     - greenisland-git
     - libhawaii
     - libqtxdg
+    - qtaccountsservice-git
     - xorg-server-xvfb
     - git
     - clang
