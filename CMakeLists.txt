@@ -113,7 +113,6 @@ add_subdirectory(declarative)
 add_subdirectory(headers)
 add_subdirectory(scripts)
 add_subdirectory(tests)
-add_subdirectory(themes)
 
 # Install the shell with development builds
 if(DEVELOPMENT_BUILD)
