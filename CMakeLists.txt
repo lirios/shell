@@ -46,7 +46,6 @@ include(CheckSymbolExists)
 # Build flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Werror -Wall -Wextra -Wformat -Wswitch-default -Wunused-parameter -pedantic -std=c++11")
 
-
 # qCDebug() uses zero variadic arguments, so we need to disable this warning
 # as it would become an error with -Werror
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
