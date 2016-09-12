@@ -19,8 +19,8 @@ arch:
     - clang
     - clazy-git
   script:
-    - sudo curl -L "https://dl.bintray.com/greenisland/ci/greenisland.tar.xz" | tar xJf - -C /
-    - sudo curl -L "https://dl.bintray.com/hawaii/ci/qtaccountsservice-$CC.tar.xz" | tar xJf - -C /
+    - curl -L "https://dl.bintray.com/greenisland/ci/greenisland.tar.xz" | sudo tar xJf - -C /
+    - curl -L "https://dl.bintray.com/hawaii/ci/qtaccountsservice-$CC.tar.xz" | sudo tar xJf - -C /
     - if [ "$CC" = "gcc" ]; then cmake . -DKDE_INSTALL_USE_QT_SYS_PATHS=ON -DCMAKE_INSTALL_PREFIX=/usr; fi
     - if [ "$CC" = "clang" ]; then env CLAZY_CHECKS="level1" cmake . -DCMAKE_CXX_COMPILER=clazy -DKDE_INSTALL_USE_QT_SYS_PATHS=ON -DCMAKE_INSTALL_PREFIX=/usr; fi
     - make
