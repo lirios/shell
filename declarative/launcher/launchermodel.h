@@ -43,7 +43,6 @@ class LauncherModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(ApplicationManager *applicationManager READ applicationManager WRITE
                        setApplicationManager NOTIFY applicationManagerChanged)
-    Q_ENUMS(Roles)
 public:
     enum Roles
     {
@@ -62,6 +61,7 @@ public:
         HasProgressRole,
         ProgressRole
     };
+    Q_ENUM(Roles)
 
     LauncherModel(QObject *parent = nullptr);
 

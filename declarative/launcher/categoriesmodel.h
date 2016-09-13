@@ -36,7 +36,6 @@ class CategoriesModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(bool includeAllCategory READ isAllCategoryIncluded WRITE includeAllCategory NOTIFY includeAllCategoryChanged)
-    Q_ENUMS(Roles)
 public:
     enum Roles {
         NameRole = Qt::UserRole +1,
@@ -44,6 +43,7 @@ public:
         IconNameRole,
         CategoryRole
     };
+    Q_ENUM(Roles)
 
     CategoriesModel(QObject *parent = 0);
     ~CategoriesModel();

@@ -43,7 +43,6 @@ class AppsModel : public QAbstractListModel
                        appNameFormatChanged)
     Q_PROPERTY(QString categoryFilter READ categoryFilter WRITE setCategoryFilter NOTIFY
                        categoryFilterChanged)
-    Q_ENUMS(Roles NameFormat)
 public:
     enum Roles
     {
@@ -53,6 +52,7 @@ public:
         DesktopFileRole,
         FilterInfoRole
     };
+    Q_ENUM(Roles)
 
     enum NameFormat
     {
@@ -61,6 +61,7 @@ public:
         NameAndGenericName,
         GenericNameAndName
     };
+    Q_ENUM(NameFormat)
 
     AppsModel(QObject *parent = 0);
     ~AppsModel();

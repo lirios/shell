@@ -46,8 +46,6 @@ class Application : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 
-    Q_ENUMS(State)
-
     friend LauncherModel;
 
 public:
@@ -68,6 +66,7 @@ public:
         //! restored.
         Stopped
     };
+    Q_ENUM(State)
 
     Application(const QString &appId, LauncherModel *LauncherModel);
     Application(const QString &appId, bool pinned, LauncherModel *LauncherModel);

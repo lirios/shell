@@ -34,7 +34,6 @@ class PowerManagerBackend;
 class PowerManager : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Capability)
     Q_PROPERTY(Capabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
 public:
     enum Capability {
@@ -45,6 +44,7 @@ public:
         Hibernate = 0x08,
         HybridSleep = 0x10
     };
+    Q_ENUM(Capability)
 
     Q_DECLARE_FLAGS(Capabilities, Capability)
     Q_FLAGS(Capabilities)
