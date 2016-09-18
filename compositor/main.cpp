@@ -31,7 +31,7 @@
 #include <QtWidgets/QApplication>
 #include <QQuickStyle>
 
-#include <Hawaii/greenisland_version.h>
+#include <GreenIsland/greenisland_version.h>
 #include <Hawaii/Settings/QGSettings>
 
 #include "application.h"
