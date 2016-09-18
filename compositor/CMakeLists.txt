@@ -1,10 +1,10 @@
 find_package(PAM REQUIRED)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/headers
-    ${CMAKE_BINARY_DIR}/headers
-    ${CMAKE_SOURCE_DIR}/3rdparty
-    ${CMAKE_CURRENT_BINARY_DIR}/sessionmanager/screensaver
+    "${CMAKE_CURRENT_SOURCE_DIR}/../headers"
+    "${CMAKE_CURRENT_BINARY_DIR}/../headers"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty"
+    "${CMAKE_CURRENT_BINARY_DIR}/sessionmanager/screensaver"
 )
 
 set(SOURCES
