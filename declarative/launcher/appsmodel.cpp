@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QFileSystemWatcher>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
 #include <QtGui/QIcon>
@@ -32,6 +33,7 @@
 #include <qt5xdg/xmlhelper.h>
 
 #include "appsmodel.h"
+#include "utils.h"
 
 Q_LOGGING_CATEGORY(APPSMODEL, "hawaii.qml.launcher.appsmodel")
 
@@ -54,6 +56,12 @@ AppsModel::AppsModel(QObject *parent)
     , m_nameFormat(NameOnly)
 {
     refresh();
+
+    QFileSystemWatcher *watcher = new QFileSystemWatcher(this);
+    watcher->addPaths(xdgApplicationsPaths());
+    connect(watcher, &QFileSystemWatcher::directoryChanged, this, [this](const QString &) {
+        refresh();
+    });
 }
 
 AppsModel::~AppsModel() { qDeleteAll(m_list); }

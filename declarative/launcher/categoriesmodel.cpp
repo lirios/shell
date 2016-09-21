@@ -24,12 +24,14 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QFileSystemWatcher>
 #include <QtGui/QIcon>
 
 #include <qt5xdg/xdgmenu.h>
 #include <qt5xdg/xmlhelper.h>
 
 #include "categoriesmodel.h"
+#include "utils.h"
 
 class CategoryEntry
 {
@@ -51,6 +53,12 @@ CategoriesModel::CategoriesModel(QObject *parent)
     , m_allCategory(true)
 {
     refresh();
+
+    QFileSystemWatcher *watcher = new QFileSystemWatcher(this);
+    watcher->addPaths(xdgApplicationsPaths());
+    connect(watcher, &QFileSystemWatcher::directoryChanged, this, [this](const QString &) {
+        refresh();
+    });
 }
 
 CategoriesModel::~CategoriesModel()

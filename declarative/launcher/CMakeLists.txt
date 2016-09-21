@@ -13,6 +13,7 @@ set(SOURCES
     plugin.cpp
     processrunner.cpp
     usagetracker.cpp
+    utils.cpp
 )
 
 add_library(launcherplugin SHARED ${SOURCES})
