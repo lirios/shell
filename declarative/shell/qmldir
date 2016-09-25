@@ -1,4 +1,7 @@
 module Hawaii.Shell
+plugin shellplugin
+classname ShellPlugin
+typeinfo plugins.qmltypes
 
 Background 1.0 Background.qml
 DateTime 1.0 DateTime.qml

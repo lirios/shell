@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2012-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -24,15 +21,24 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef CMAKEDIRS_H
-#define CMAKEDIRS_H
+#pragma once
 
-#define INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
-#define INSTALL_BINDIR "@CMAKE_INSTALL_FULL_BINDIR@"
-#define INSTALL_DATADIR "@CMAKE_INSTALL_FULL_DATADIR@"
-#define INSTALL_CONFIGDIR "@KDE_INSTALL_FULL_CONFDIR@"
-#define INSTALL_QMLDIR "@CMAKE_INSTALL_FULL_QMLDIR@"
-#define INSTALL_PLUGINDIR "@CMAKE_INSTALL_FULL_PLUGINDIR@"
-#define INSTALL_LIBEXECDIR "@KDE_INSTALL_FULL_LIBEXECDIR@"
+#include <QtCore/QObject>
 
-#endif // CMAKEDIRS_H
+#include "shellhelperclient.h"
+
+class ShellHelperApplicationPrivate;
+
+class ShellHelperApplication : public QObject
+{
+    Q_OBJECT
+    Q_DECLARE_PRIVATE(ShellHelperApplication)
+public:
+    explicit ShellHelperApplication(QObject *parent = nullptr);
+
+private:
+    void initialize();
+
+private Q_SLOTS:
+    void handleCursorChangeRequest(ShellHelperClient::GrabCursor cursor);
+};

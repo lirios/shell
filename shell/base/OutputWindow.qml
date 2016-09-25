@@ -22,9 +22,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
- import QtQuick 2.0
- import QtQuick.Window 2.0
- import GreenIsland 1.0 as GreenIsland
+import QtQuick 2.0
+import QtQuick.Window 2.0
+import GreenIsland 1.0 as GreenIsland
+import Hawaii.Shell 1.0
 
 Window {
     id: window
@@ -33,6 +34,8 @@ Window {
     property alias screenView: screenViewLoader.item
 
     property var output
+
+    readonly property alias grabItem: grabItem
 
     x: nativeScreen.position.x
     y: nativeScreen.position.y
@@ -46,9 +49,18 @@ Window {
         value: window.output
     }
 
+    // Grab surface from shell helper
+    GreenIsland.WaylandQuickItem {
+        id: grabItem
+        anchors.fill: parent
+        focusOnClick: false
+        onSurfaceChanged: output.compositor.shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
+    }
+
     GreenIsland.WaylandMouseTracker {
         id: localPointerTracker
         anchors.fill: parent
+        windowSystemCursorEnabled: false
 
         Loader {
             id: screenViewLoader
@@ -57,11 +69,10 @@ Window {
 
         GreenIsland.WaylandCursorItem {
             id: cursor
-
             seat: output.compositor.defaultSeat
             x: localPointerTracker.mouseX - hotspotX
             y: localPointerTracker.mouseY - hotspotY
-            visible: localPointerTracker.containsMouse && screenView.cursorVisible
+            visible: localPointerTracker.containsMouse
         }
     }
 }

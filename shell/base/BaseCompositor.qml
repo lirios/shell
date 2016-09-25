@@ -24,6 +24,7 @@
 
 import QtQuick 2.5
 import GreenIsland 1.0 as GreenIsland
+import Hawaii.Shell 1.0
 
 GreenIsland.WaylandCompositor {
     id: compositor
@@ -36,7 +37,14 @@ GreenIsland.WaylandCompositor {
     readonly property alias outputs: __private.outputs
     readonly property alias primaryScreen: screenManager.primaryScreen
 
+    readonly property alias shellHelper: shellHelper
+
     property alias __private: __private
+
+    onCreatedChanged: {
+        if (compositor.created)
+            shellHelper.start(compositor.socketName)
+    }
 
     QtObject {
         id: __private
@@ -75,6 +83,14 @@ GreenIsland.WaylandCompositor {
 
             if (index < __private.outputs.length)
                 compositor.defaultOutput = __private.outputs[index]
+        }
+    }
+
+    ShellHelper {
+        id: shellHelper
+        onGrabSurfaceAdded: {
+            for (var i = 0; i < __private.outputs.length; i++)
+                __private.outputs[i].grabItem.surface = surface
         }
     }
 }

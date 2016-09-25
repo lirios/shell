@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="shell_helper">
+  <copyright><![CDATA[
+    Copyright (C) Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+
+    Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated documentation files
+    (the "Software"), to deal in the Software without restriction,
+    including without limitation the rights to use, copy, modify, merge,
+    publish, distribute, sublicense, and/or sell copies of the Software,
+    and to permit persons to whom the Software is furnished to do so,
+    subject to the following conditions:
+
+    The above copyright notice and this permission notice (including the
+    next paragraph) shall be included in all copies or substantial
+    portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+    BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+    ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+  ]]></copyright>
+
+  <interface name="hawaii_shell" version="1">
+    <description summary="create widgets and shell helpers">
+      This interface is bound by a special client called shell helper
+      that is responsible for helping the compositor draw its user interface.
+      It can only be bound once and only shell helper is allowed.
+    </description>
+
+    <request name="set_grab_surface">
+      <description summary="set grab surface">
+        The surface set by this request will receive a fake
+        pointer.enter event at position 0, 0 and is expected to
+        set an appropriate cursor image every time the grab_cursor
+        event is sent by the compositor.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
+    <enum name="cursor">
+      <entry name="none" value="0"/>
+      <entry name="resize_top" value="1"/>
+      <entry name="resize_bottom" value="2"/>
+      <entry name="arrow" value="3"/>
+      <entry name="resize_left" value="4"/>
+      <entry name="resize_top_left" value="5"/>
+      <entry name="resize_bottom_left" value="6"/>
+      <entry name="move" value="7"/>
+      <entry name="resize_right" value="8"/>
+      <entry name="resize_top_right" value="9"/>
+      <entry name="resize_bottom_right" value="10"/>
+      <entry name="busy" value="11"/>
+    </enum>
+
+    <event name="grab_cursor">
+      <description summary="tell client what cursor to show during a grab">
+        This event will be sent immediately before a fake enter event on the
+        grab surface.
+      </description>
+      <arg name="cursor" type="uint"/>
+    </event>
+  </interface>
+</protocol>

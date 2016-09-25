@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Hawaii.
  *
- * Copyright (C) 2012-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -24,15 +21,26 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef CMAKEDIRS_H
-#define CMAKEDIRS_H
+#include <QtQml/QtQml>
 
-#define INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@"
-#define INSTALL_BINDIR "@CMAKE_INSTALL_FULL_BINDIR@"
-#define INSTALL_DATADIR "@CMAKE_INSTALL_FULL_DATADIR@"
-#define INSTALL_CONFIGDIR "@KDE_INSTALL_FULL_CONFDIR@"
-#define INSTALL_QMLDIR "@CMAKE_INSTALL_FULL_QMLDIR@"
-#define INSTALL_PLUGINDIR "@CMAKE_INSTALL_FULL_PLUGINDIR@"
-#define INSTALL_LIBEXECDIR "@KDE_INSTALL_FULL_LIBEXECDIR@"
+#include <GreenIsland/QtWaylandCompositor/QWaylandQuickExtension>
 
-#endif // CMAKEDIRS_H
+#include "shellhelper.h"
+
+Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(ShellHelper)
+
+class ShellPlugin : public QQmlExtensionPlugin
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
+public:
+    void registerTypes(const char *uri)
+    {
+        // @uri Hawaii.LoginManager
+        Q_ASSERT(uri == QLatin1String("Hawaii.Shell"));
+
+        qmlRegisterType<ShellHelperQuickExtension>(uri, 1, 0, "ShellHelper");
+    }
+};
+
+#include "plugin.moc"

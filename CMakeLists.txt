@@ -43,6 +43,16 @@ include(KDECMakeSettings)
 include(CheckIncludeFile)
 include(CheckSymbolExists)
 
+# Require at least gcc 4.8
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.8")
+        message(SEND_ERROR "Version ${CMAKE_CXX_COMPILER_VERSION} of the ${CMAKE_CXX_COMPILER_ID} C++ compiler is not supported. Please use version 4.8 or later.")
+    endif()
+endif()
+
+# Adjusting CMAKE_C_FLAGS to get Wayland protocols to compile
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
+
 # Build flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden -Werror -Wall -Wextra -Wformat -Wswitch-default -Wunused-parameter -pedantic -std=c++11")
 
@@ -90,7 +100,7 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
 
 # Find Green Island
 set(REQUIRED_GREENISLAND_VERSION "0.8.0")
-find_package(GreenIsland ${REQUIRED_GREENISLAND_VERSION} REQUIRED COMPONENTS Server)
+find_package(GreenIsland ${REQUIRED_GREENISLAND_VERSION} REQUIRED COMPONENTS Client Server)
 
 # Find libhawaii
 set(REQUIRED_HAWAII_VERSION "0.7.0")
@@ -105,6 +115,7 @@ find_package(QT5XDG REQUIRED)
 
 # Subdirectories
 add_subdirectory(3rdparty)
+add_subdirectory(client)
 add_subdirectory(compositor)
 add_subdirectory(data)
 add_subdirectory(declarative)

@@ -25,6 +25,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import GreenIsland 1.0 as GreenIsland
+import Hawaii.Shell 1.0
 import "../desktop"
 
 ApplicationWindow {
@@ -38,6 +39,8 @@ ApplicationWindow {
 
     property alias screenViewComponent: screenViewLoader.sourceComponent
 
+    readonly property alias grabItem: grabItem
+
     x: nativeScreen.position.x
     y: nativeScreen.position.y
     width: nativeScreen.size.width
@@ -48,6 +51,14 @@ ApplicationWindow {
         target: screenView
         property: "output"
         value: window.output
+    }
+
+    // Grab surface from shell helper
+    GreenIsland.WaylandQuickItem {
+        id: grabItem
+        anchors.fill: parent
+        focusOnClick: false
+        onSurfaceChanged: compositor.shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
     }
 
     // Virtual Keyboard
@@ -81,7 +92,7 @@ ApplicationWindow {
         id: localPointerTracker
 
         anchors.fill: parent
-        windowSystemCursorEnabled: true
+        windowSystemCursorEnabled: false
 
         onMouseXChanged: compositor.wake()
         onMouseYChanged: compositor.wake()

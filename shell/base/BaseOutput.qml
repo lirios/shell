@@ -33,6 +33,8 @@ GreenIsland.ExtendedOutput {
     property alias screenViewComponent: outputWindow.screenViewComponent
     property alias screenView: outputWindow.screenView
 
+    readonly property alias grabItem: outputWindow.grabItem
+
     manufacturer: nativeScreen.manufacturer
     model: nativeScreen.model
     position: nativeScreen.position

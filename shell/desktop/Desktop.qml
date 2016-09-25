@@ -88,6 +88,16 @@ Item {
         z: 1
     }
 
+    // Change pointer cursor when needed
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.NoButton
+        hoverEnabled: true
+        onEntered: {
+            compositor.shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
+        }
+    }
+
     // Dim desktop in present mode
     Rectangle {
         anchors.fill: parent
