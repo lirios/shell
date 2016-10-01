@@ -88,8 +88,9 @@ ApplicationWindow {
         }
     }
 
-    GreenIsland.WaylandMouseTracker {
-        id: localPointerTracker
+    // Mouse tracker
+    WindowMouseTracker {
+        id: mouseTracker
 
         anchors.fill: parent
         windowSystemCursorEnabled: false
@@ -97,27 +98,39 @@ ApplicationWindow {
         onMouseXChanged: compositor.wake()
         onMouseYChanged: compositor.wake()
         // TODO: Need to wake up with mouse button pressed, released and wheel
+    }
 
-        Loader {
-            id: screenViewLoader
-            anchors.fill: parent
-        }
+    // User interface
+    Loader {
+        id: screenViewLoader
+        anchors.fill: parent
+    }
 
-        GreenIsland.WaylandCursorItem {
-            id: cursor
-            seat: output.compositor.defaultSeat
-            x: localPointerTracker.mouseX - hotspotX
-            y: localPointerTracker.mouseY - hotspotY
-            visible: localPointerTracker.containsMouse &&
-                     screenView.cursorVisible &&
-                     output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
-        }
+    // Pointer cursor
+    GreenIsland.WaylandCursorItem {
+        id: cursor
+
+        parent: ApplicationWindow.overlay
+        seat: output.compositor.defaultSeat
+
+        x: mouseTracker.mouseX - hotspotX
+        y: mouseTracker.mouseY - hotspotY
+        z: 1000001
+
+        visible: mouseTracker.containsMouse &&
+                 screenView.cursorVisible &&
+                 output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
     }
 
     // Idle dimmer
     IdleDimmer {
         id: idleDimmer
+
+        parent: ApplicationWindow.overlay
         anchors.fill: parent
+
         output: window.output
+
+        z: 1000002
     }
 }

@@ -26,6 +26,7 @@
 #include <GreenIsland/QtWaylandCompositor/QWaylandQuickExtension>
 
 #include "shellhelper.h"
+#include "windowmousetracker.h"
 
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(ShellHelper)
 
@@ -40,6 +41,7 @@ public:
         Q_ASSERT(uri == QLatin1String("Liri.Shell"));
 
         qmlRegisterType<ShellHelperQuickExtension>(uri, 1, 0, "ShellHelper");
+        qmlRegisterType<WindowMouseTracker>(uri, 1, 0, "WindowMouseTracker");
     }
 };
 

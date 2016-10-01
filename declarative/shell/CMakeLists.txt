@@ -19,6 +19,7 @@ set(SOURCES
     logging_p.cpp
     plugin.cpp
     shellhelper.cpp
+    windowmousetracker.cpp
 )
 
 greenisland_add_server_protocol(SOURCES
