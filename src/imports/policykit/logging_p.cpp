@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Vibe.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -23,4 +23,4 @@
 
 #include "logging_p.h"
 
-Q_LOGGING_CATEGORY(POLKITAGENT, "hawaii.qml.policykit")
+Q_LOGGING_CATEGORY(POLKITAGENT, "vibe.policykit")

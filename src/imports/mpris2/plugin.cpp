@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Vibe.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -36,9 +36,9 @@ class Mpris2Plugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("Hawaii.Mpris"));
+        Q_ASSERT(uri == QLatin1String("Vibe.Mpris"));
 
-        // @uri Hawaii.Mpris
+        // @uri Vibe.Mpris
         qmlRegisterType<Mpris2Engine>(uri, 1, 0, "Mpris");
         qmlRegisterUncreatableType<Mpris2Player>(uri, 1, 0, "MprisPlayer",
                                                  QStringLiteral("Cannot create MprisPlayer object"));

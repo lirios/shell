@@ -1,5 +1,5 @@
 /****************************************************************************
-* This file is part of Hawaii.
+* This file is part of Vibe.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -43,7 +43,7 @@ const QString objectPath("/org/mpris/MediaPlayer2");
 const QString playerInterface("org.mpris.MediaPlayer2.Player");
 const QString mprisInterface("org.mpris.MediaPlayer2");
 
-Q_LOGGING_CATEGORY(MPRIS2_PLAYER, "hawaii.qml.mpris2.player")
+Q_LOGGING_CATEGORY(MPRIS2_PLAYER, "vibe.mpris2.player")
 
 static QVariant::Type propertyType(const QString &name)
 {

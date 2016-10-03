@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Vibe.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -32,8 +32,8 @@ class PolicyKitPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        // @uri Hawaii.PolicyKit
-        Q_ASSERT(uri == QByteArray("Hawaii.PolicyKit"));
+        // @uri Vibe.PolicyKit
+        Q_ASSERT(uri == QByteArray("Vibe.PolicyKit"));
 
         qmlRegisterType<PolicyKitAgent>(uri, 1, 0, "PolicyKitAgent");
     }

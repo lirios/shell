@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Vibe.
  *
  * Copyright (C) 2012-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -34,7 +34,7 @@
 
 Listener::Listener(QObject *parent)
     : PolkitQt1::Agent::Listener(parent)
-    , m_objectPath(QLatin1String("/org/hawaiios/PolicyKit1/AuthenticationAgent"))
+    , m_objectPath(QLatin1String("/io/liri/PolicyKit1/AuthenticationAgent"))
     , m_progressing(false)
     , m_canceled(false)
     , m_session(nullptr)
