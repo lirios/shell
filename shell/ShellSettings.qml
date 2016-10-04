@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Settings 1.0 as Settings
+import Vibe.Settings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
 
 FluidCore.Object {
@@ -56,8 +56,8 @@ FluidCore.Object {
 
     Settings.Settings {
         id: keyboardSettings
-        schema.id: "org.hawaiios.desktop.peripherals.keyboard"
-        schema.path: "/org/hawaiios/desktop/peripherals/keyboard/"
+        schema.id: "io.liri.desktop.peripherals.keyboard"
+        schema.path: "/io/liri/desktop/peripherals/keyboard/"
         onSettingsChanged: shellSettings.applyKeymapSettings()
     }
 
@@ -67,8 +67,8 @@ FluidCore.Object {
 
     Settings.Settings {
         id: sessionSettings
-        schema.id: "org.hawaiios.session"
-        schema.path: "/org/hawaiios/session/"
+        schema.id: "io.liri.session"
+        schema.path: "/io/liri/session/"
     }
 
     /*
@@ -77,8 +77,8 @@ FluidCore.Object {
 
     Settings.Settings {
         id: bgSettings
-        schema.id: "org.hawaiios.desktop.background"
-        schema.path: "/org/hawaiios/desktop/background/"
+        schema.id: "io.liri.desktop.background"
+        schema.path: "/io/liri/desktop/background/"
     }
 
     /*
@@ -87,7 +87,7 @@ FluidCore.Object {
 
     Settings.Settings {
         id: lockSettings
-        schema.id: "org.hawaiios.desktop.lockscreen"
-        schema.path: "/org/hawaiios/desktop/lockscreen/"
+        schema.id: "io.liri.desktop.lockscreen"
+        schema.path: "/io/liri/desktop/lockscreen/"
     }
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -28,7 +28,7 @@
 #include "loginmanager.h"
 #include "logindbackend.h"
 
-Q_LOGGING_CATEGORY(LOGINMANAGER, "hawaii.loginmanager")
+Q_LOGGING_CATEGORY(LOGINMANAGER, "liri.loginmanager")
 
 LoginManager::LoginManager(SessionManager *sm, QObject *parent)
     : QObject(parent)

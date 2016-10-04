@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -36,7 +36,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-Q_LOGGING_CATEGORY(LOGIND_BACKEND, "hawaii.loginmanager.logind")
+Q_LOGGING_CATEGORY(LOGIND_BACKEND, "liri.loginmanager.logind")
 
 // clazy:excludeall=non-pod-global-static
 const static QString login1Service = QStringLiteral("org.freedesktop.login1");
@@ -254,7 +254,7 @@ void LogindBackend::setupPowerButton()
     QDBusPendingCall call = m_interface->asyncCall(
         QStringLiteral("Inhibit"),
         QStringLiteral("handle-power-key:handle-suspend-key:handle-hibernate-key"),
-        QStringLiteral("Hawaii"), QStringLiteral("Hawaii handles the power button itself"),
+        QStringLiteral("Liri Shell"), QStringLiteral("Liri Shell handles the power button itself"),
         QStringLiteral("block"));
     QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(call);
     connect(w, &QDBusPendingCallWatcher::finished, [this](QDBusPendingCallWatcher *watcher) {
@@ -284,8 +284,8 @@ void LogindBackend::setupInhibitors()
         return;
 
     QDBusPendingCall call = m_interface->asyncCall(
-        QStringLiteral("Inhibit"), QStringLiteral("shutdown:sleep"), QStringLiteral("Hawaii"),
-        QStringLiteral("Hawaii needs to logout before shutdown and lock the screen before sleep"),
+        QStringLiteral("Inhibit"), QStringLiteral("shutdown:sleep"), QStringLiteral("Liri Shell"),
+        QStringLiteral("Liri Shell needs to logout before shutdown and lock the screen before sleep"),
         QStringLiteral("delay"));
     QDBusPendingCallWatcher *w = new QDBusPendingCallWatcher(call);
     connect(w, &QDBusPendingCallWatcher::finished, [this](QDBusPendingCallWatcher *watcher) {

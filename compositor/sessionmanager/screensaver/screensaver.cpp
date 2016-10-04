@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2014-2016 Pier Luigi Fiorini
  *
@@ -30,7 +30,7 @@
 #include "screensaver.h"
 #include "sessionmanager/sessionmanager.h"
 
-Q_LOGGING_CATEGORY(SCREENSAVER, "hawaii.screensaver")
+Q_LOGGING_CATEGORY(SCREENSAVER, "liri.screensaver")
 
 ScreenSaver::ScreenSaver(QObject *parent)
     : QObject(parent)

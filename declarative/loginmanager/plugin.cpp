@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -32,8 +32,8 @@ class LoginManagerPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        // @uri Hawaii.LoginManager
-        Q_ASSERT(uri == QLatin1String("Hawaii.LoginManager"));
+        // @uri Liri.LoginManager
+        Q_ASSERT(uri == QLatin1String("Liri.LoginManager"));
 
         qmlRegisterType<UsersModel>(uri, 1, 0, "UsersModel");
     }

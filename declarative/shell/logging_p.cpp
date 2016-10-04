@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -23,4 +23,4 @@
 
 #include "logging_p.h"
 
-Q_LOGGING_CATEGORY(gLcShell, "hawaii.shell", QtDebugMsg)
+Q_LOGGING_CATEGORY(gLcShell, "liri.shell", QtDebugMsg)

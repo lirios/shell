@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
@@ -25,14 +25,14 @@
 #pragma once
 
 #include <GreenIsland/Server/ApplicationManager>
-#include <Hawaii/Settings/QGSettings>
+#include <Vibe/Settings/QGSettings>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QObject>
 
 class QDomElement;
 class Application;
 
-using namespace Hawaii;
+using namespace Vibe;
 
 Q_DECLARE_LOGGING_CATEGORY(APPLICATION_MANAGER)
 

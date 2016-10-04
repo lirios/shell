@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -45,9 +45,9 @@ bool ProcessRunner::launchApplication(const QString &name)
         return false;
 
     const QDBusConnection bus = QDBusConnection::sessionBus();
-    QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
+    QDBusInterface interface(QStringLiteral("io.liri.Session"),
                              QStringLiteral("/ProcessLauncher"),
-                             QStringLiteral("org.hawaiios.ProcessLauncher"),
+                             QStringLiteral("io.liri.ProcessLauncher"),
                              bus);
     QDBusMessage msg = interface.call(QStringLiteral("launchDesktopFile"), fileName);
     return msg.arguments().at(0).toBool();
@@ -56,9 +56,9 @@ bool ProcessRunner::launchApplication(const QString &name)
 bool ProcessRunner::launchCommand(const QString &command)
 {
     const QDBusConnection bus = QDBusConnection::sessionBus();
-    QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
+    QDBusInterface interface(QStringLiteral("io.liri.Session"),
                              QStringLiteral("/ProcessLauncher"),
-                             QStringLiteral("org.hawaiios.ProcessLauncher"),
+                             QStringLiteral("io.liri.ProcessLauncher"),
                              bus);
     QDBusMessage msg = interface.call(QStringLiteral("launchCommand"), command);
     return msg.arguments().at(0).toBool();

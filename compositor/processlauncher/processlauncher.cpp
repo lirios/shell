@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -33,7 +33,7 @@
 #include "processlauncher.h"
 #include "processlauncheradaptor.h"
 
-Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.launcher")
+Q_LOGGING_CATEGORY(LAUNCHER, "liri.launcher")
 
 ProcessLauncher::ProcessLauncher(QObject *parent)
     : QObject(parent)
@@ -149,7 +149,7 @@ bool ProcessLauncher::launchCommand(const QString &command)
     if (!m_waylandSocketName.isEmpty())
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
-    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
+    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("liri"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
 
     QProcess *process = new QProcess(this);
@@ -192,7 +192,7 @@ bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
     if (!m_waylandSocketName.isEmpty())
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
-    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
+    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("liri"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
 
     QProcess *process = new QProcess(this);

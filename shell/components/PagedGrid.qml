@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
@@ -22,7 +22,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import org.hawaiios.launcher 0.1
+import Liri.Launcher 0.1
 
 Item {
     id: pagedGrid

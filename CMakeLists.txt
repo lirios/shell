@@ -17,7 +17,7 @@ set(PROJECT_SOVERSION 0)
 
 if(NOT USE_SUPERBUILD)
     # Set up packaging
-    set(CPACK_PACKAGE_NAME "qmlos-shell")
+    set(CPACK_PACKAGE_NAME "liri-shell")
     set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
     set(CPACK_GENERATOR "TGZ")
     set(CPACK_SET_DESTDIR FALSE)
@@ -102,9 +102,9 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
 set(REQUIRED_GREENISLAND_VERSION "0.8.0")
 find_package(GreenIsland ${REQUIRED_GREENISLAND_VERSION} REQUIRED COMPONENTS Client Server)
 
-# Find libhawaii
-set(REQUIRED_HAWAII_VERSION "0.7.0")
-find_package(Hawaii ${REQUIRED_HAWAII_VERSION} REQUIRED)
+# Find Vibe
+set(REQUIRED_VIBE_VERSION "0.7.0")
+find_package(Vibe ${REQUIRED_HAWAII_VERSION} REQUIRED)
 
 # Find QtAccountsService
 set(REQUIRED_QTACCOUNTSSERVICE "0.6.0")
@@ -115,18 +115,18 @@ find_package(QT5XDG REQUIRED)
 
 # Subdirectories
 add_subdirectory(3rdparty)
-add_subdirectory(client)
 add_subdirectory(compositor)
 add_subdirectory(data)
 add_subdirectory(declarative)
 #add_subdirectory(decorations)
 add_subdirectory(headers)
+add_subdirectory(helper)
 add_subdirectory(scripts)
 add_subdirectory(tests)
 
 # Install the shell with development builds
 if(DEVELOPMENT_BUILD)
-    greenisland_install_shell(org.hawaiios.desktop shell)
+    greenisland_install_shell(io.liri.desktop shell)
 endif()
 
 # Display featute summary

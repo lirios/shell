@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2014-2016 Pier Luigi Fiorini
  *
@@ -43,8 +43,8 @@ class LauncherPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        // @uri org.hawaiios.launcher
-        Q_ASSERT(uri == QLatin1String("org.hawaiios.launcher"));
+        // @uri Liri.Launcher
+        Q_ASSERT(uri == QLatin1String("Liri.Launcher"));
 
         qmlRegisterType<ApplicationManager>(uri, 0, 1, "ApplicationManager");
         qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");

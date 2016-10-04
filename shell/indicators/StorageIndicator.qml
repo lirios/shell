@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -28,8 +28,8 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
-import Hawaii.Shell 1.0
-import Hawaii.Hardware 1.0 as Hardware
+import Liri.Shell 1.0
+import Vibe.Hardware 1.0 as Hardware
 
 Indicator {
     title: qsTr("Storage")

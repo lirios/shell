@@ -24,9 +24,9 @@
 #include <QtCore/QSet>
 #include <QtCore/QStringList>
 
-#include <Hawaii/Core/DesktopFile>
+#include <Vibe/Core/DesktopFile>
 
-using namespace Hawaii;
+using namespace Vibe;
 
 class ApplicationManager;
 

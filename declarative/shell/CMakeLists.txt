@@ -33,6 +33,6 @@ target_link_libraries(shellplugin
                       GreenIsland::Server)
 
 install(FILES ${FILES}
-	DESTINATION ${QML_INSTALL_DIR}/Hawaii/Shell)
+	DESTINATION ${QML_INSTALL_DIR}/Liri/Shell)
 install(TARGETS shellplugin
-        DESTINATION ${QML_INSTALL_DIR}/Hawaii/Shell)
+        DESTINATION ${QML_INSTALL_DIR}/Liri/Shell)

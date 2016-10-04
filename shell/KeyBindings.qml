@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import Hawaii.Settings 1.0 as Settings
+import Vibe.Settings 1.0 as Settings
 
 Item {
     /*
@@ -34,26 +34,26 @@ Item {
 
     Settings.Settings {
         id: wmKeybindings
-        schema.id: "org.hawaiios.desktop.keybindings.wm"
-        schema.path: "/org/hawaiios/desktop/keybindings/wm/"
+        schema.id: "io.liri.desktop.keybindings.wm"
+        schema.path: "/io/liri/desktop/keybindings/wm/"
     }
 
     Settings.Settings {
         id: smKeybindings
-        schema.id: "org.hawaiios.desktop.keybindings.sm"
-        schema.path: "/org/hawaiios/desktop/keybindings/sm/"
+        schema.id: "io.liri.desktop.keybindings.sm"
+        schema.path: "/io/liri/desktop/keybindings/sm/"
     }
 
     Settings.Settings {
         id: desktopKeybindings
-        schema.id: "org.hawaiios.desktop.keybindings.desktop"
-        schema.path: "/org/hawaiios/desktop/keybindings/desktop/"
+        schema.id: "io.liri.desktop.keybindings.desktop"
+        schema.path: "/io/liri/desktop/keybindings/desktop/"
     }
 
     Settings.Settings {
         id: mmKeybindings
-        schema.id: "org.hawaiios.desktop.keybindings.multimedia"
-        schema.path: "/org/hawaiios/desktop/keybindings/multimedia/"
+        schema.id: "io.liri.desktop.keybindings.multimedia"
+        schema.path: "/io/liri/desktop/keybindings/multimedia/"
     }
 
     QtObject {
@@ -605,7 +605,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.screenshot
-        onActivated: processRunner.launchApplication("org.hawaiios.Screenshot")
+        onActivated: processRunner.launchApplication("io.liri.Screenshot")
     }
 
     Shortcut {

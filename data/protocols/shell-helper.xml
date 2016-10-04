@@ -25,7 +25,7 @@
     SOFTWARE.
   ]]></copyright>
 
-  <interface name="hawaii_shell" version="1">
+  <interface name="liri_shell" version="1">
     <description summary="create widgets and shell helpers">
       This interface is bound by a special client called shell helper
       that is responsible for helping the compositor draw its user interface.

@@ -23,16 +23,18 @@
 
 #pragma once
 
-#include <GreenIsland/QtWaylandCompositor/QWaylandCompositorExtension>
+#include <QtCore/QObject>
 
-class QWaylandSurface;
+#include <GreenIsland/Client/Registry>
 
-class ShellHelperPrivate;
+class QWindow;
 
-class ShellHelper : public QWaylandCompositorExtensionTemplate<ShellHelper>
+class ShellHelperClientPrivate;
+
+class ShellHelperClient : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(ShellHelper)
+    Q_DECLARE_PRIVATE(ShellHelperClient)
 public:
     enum GrabCursor {
         NoGrabCursor = 0,
@@ -50,18 +52,19 @@ public:
     };
     Q_ENUM(GrabCursor)
 
-    ShellHelper();
-    explicit ShellHelper(QWaylandCompositor *compositor);
+    ShellHelperClient(QObject *parent = nullptr);
 
-    void initialize() Q_DECL_OVERRIDE;
+    quint32 name() const;
 
-    Q_INVOKABLE void start(const QString &socketName);
+    void initialize(GreenIsland::Client::Registry *registry, quint32 name, quint32 version);
 
-    Q_INVOKABLE void grabCursor(GrabCursor cursor);
+    void registerGrabSurface(QWindow *window);
 
-    static const struct wl_interface *interface();
     static QByteArray interfaceName();
 
 Q_SIGNALS:
-    void grabSurfaceAdded(QWaylandSurface *surface);
+    void cursorChangeRequested(GrabCursor cursor);
+
+private:
+    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 };

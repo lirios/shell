@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2014-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -23,7 +23,7 @@
 
 import QtQuick 2.5
 import Fluid.Controls 1.0
-import Hawaii.Notifications 1.0
+import Vibe.Notifications 1.0
 
 ListView {
     id: listView

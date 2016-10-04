@@ -10,6 +10,6 @@ target_link_libraries(loginmanagerplugin
                       QtAccountsService::QtAccountsService)
 
 install(FILES qmldir plugins.qmltypes
-        DESTINATION ${QML_INSTALL_DIR}/Hawaii/LoginManager)
+        DESTINATION ${QML_INSTALL_DIR}/Liri/LoginManager)
 install(TARGETS loginmanagerplugin
-        DESTINATION ${QML_INSTALL_DIR}/Hawaii/LoginManager)
+        DESTINATION ${QML_INSTALL_DIR}/Liri/LoginManager)

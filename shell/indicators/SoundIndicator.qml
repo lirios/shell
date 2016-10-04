@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2014-2016 Pier Luigi Fiorini
  *
@@ -27,9 +27,9 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.0
 import Fluid.Controls 1.0
-import Hawaii.Shell 1.0
-import Hawaii.Mpris 1.0
-import Hawaii.Settings 1.0 as Settings
+import Liri.Shell 1.0
+import Vibe.Mpris 1.0
+import Vibe.Settings 1.0 as Settings
 import "sound" as SoundIndicator
 
 Indicator {

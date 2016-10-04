@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii Shell.
+ * This file is part of Liri Shell.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>

@@ -25,11 +25,11 @@ target_link_libraries(launcherplugin
                       Qt5::Quick
                       Qt5::Sql
                       GreenIsland::Server
-                      Hawaii::Core
-                      Hawaii::Settings
+                      Vibe::Core
+                      Vibe::Settings
                       Qt5Xdg)
 
 install(FILES qmldir plugins.qmltypes
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/launcher)
+        DESTINATION ${QML_INSTALL_DIR}/Liri/Launcher)
 install(TARGETS launcherplugin
-    DESTINATION ${QML_INSTALL_DIR}/org/hawaiios/launcher)
+        DESTINATION ${QML_INSTALL_DIR}/Liri/Launcher)

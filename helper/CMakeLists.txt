@@ -15,11 +15,11 @@ greenisland_add_client_protocol(SOURCES
     BASENAME shell-helper
 )
 
-add_executable(hawaii-client ${SOURCES})
-target_link_libraries(hawaii-client Qt5::Gui GreenIsland::Client)
+add_executable(liri-shell-helper ${SOURCES})
+target_link_libraries(liri-shell-helper Qt5::Gui GreenIsland::Client)
 
 # Git revision
 include(GetGitRevision)
-create_git_head_revision_file(gitsha1.h hawaii-client)
+create_git_head_revision_file(gitsha1.h liri-shell-helper)
 
-install(TARGETS hawaii-client DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS liri-shell-helper DESTINATION ${LIBEXEC_INSTALL_DIR})

@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
@@ -33,7 +33,7 @@
 #include "applicationmanager.h"
 #include "usagetracker.h"
 
-Q_LOGGING_CATEGORY(APPLICATION_MANAGER, "hawaii.qml.launcher.applicationmanager")
+Q_LOGGING_CATEGORY(APPLICATION_MANAGER, "liri.launcher.applicationmanager")
 
 bool appLessThan(Application *e1, Application *e2)
 {
@@ -43,8 +43,8 @@ bool appLessThan(Application *e1, Application *e2)
 ApplicationManager::ApplicationManager(QObject *parent)
     : QObject(parent)
 {
-    m_settings = new QGSettings(QStringLiteral("org.hawaiios.desktop.panel"),
-                                QStringLiteral("/org/hawaiios/desktop/panel/"), this);
+    m_settings = new QGSettings(QStringLiteral("io.liri.desktop.panel"),
+                                QStringLiteral("/io/liri/desktop/panel/"), this);
 
     refresh();
 }
@@ -94,8 +94,8 @@ void ApplicationManager::refresh()
 
     XdgMenu xdgMenu;
     //xdgMenu.setLogDir("/tmp/");
-    xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii")
-                                          << QStringLiteral("X-Hawaii"));
+    xdgMenu.setEnvironments(QStringList() << QStringLiteral("Liri")
+                                          << QStringLiteral("X-Liri"));
 
     const QString menuFileName = XdgMenu::getMenuFileName();
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2012-2016 Pier Luigi Fiorini
  *
@@ -94,7 +94,7 @@ void Application::startup()
         return;
 
     // Register D-Bus service
-    if (!QDBusConnection::sessionBus().registerService(QStringLiteral("org.hawaiios.Session"))) {
+    if (!QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Session"))) {
         qWarning("Failed to register D-Bus service: %s",
                  qPrintable(QDBusConnection::sessionBus().lastError().message()));
         QCoreApplication::exit(1);
@@ -143,8 +143,8 @@ void Application::shutdown()
 void Application::autostart()
 {
     Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
-        // Ignore entries that are explicitely not meant for Hawaii
-        if (!entry.isSuitable(true, QStringLiteral("X-Hawaii")))
+        // Ignore entries that are explicitely not meant for Liri
+        if (!entry.isSuitable(true, QStringLiteral("X-Liri")))
             continue;
 
         // If it's neither suitable for GNOME nor KDE then it's probably not meant
@@ -176,7 +176,7 @@ void Application::objectCreated(QObject *object, const QUrl &)
     // Compositor failed to load
     if (m_failSafe) {
         // We give up because even the error screen has an error
-        qWarning("A fatal error has occurred while running Hawaii, but the error "
+        qWarning("A fatal error has occurred while running Liri Shell, but the error "
                  "screen has errors too. Giving up.");
         QCoreApplication::exit(1);
     } else {

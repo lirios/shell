@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2012-2016 Pier Luigi Fiorini
  *
@@ -32,7 +32,7 @@
 #include <QQuickStyle>
 
 #include <GreenIsland/greenisland_version.h>
-#include <Hawaii/Settings/QGSettings>
+#include <Vibe/Settings/QGSettings>
 
 #include "application.h"
 #include "config.h"
@@ -66,18 +66,18 @@ static void setupEnvironment()
         qputenv("XDG_CONFIG_DIRS", QByteArrayLiteral("/etc/xdg"));
 
     // Environment
-    qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("Hawaii"));
+    qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("liri"));
     qputenv("QT_QUICK_CONTROLS_1_STYLE", QByteArrayLiteral("Flat"));
     qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("material"));
-    qputenv("QT_WAYLAND_DECORATION", QByteArrayLiteral("HawaiiMaterialDecoration"));
-    qputenv("XCURSOR_THEME", QByteArrayLiteral("hawaii"));
+    qputenv("QT_WAYLAND_DECORATION", QByteArrayLiteral("material"));
+    qputenv("XCURSOR_THEME", QByteArrayLiteral("Paper"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
-    qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("hawaii-"));
-    qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Hawaii"));
+    qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("liri-"));
+    qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Liri"));
 
     // Load input method
-    Hawaii::QGSettings settings(QStringLiteral("org.hawaiios.desktop.interface"),
-                                QStringLiteral("/org/hawaiios/desktop/interface/"));
+    Vibe::QGSettings settings(QStringLiteral("io.liri.desktop.interface"),
+                              QStringLiteral("/io/liri/desktop/interface/"));
     qputenv("QT_IM_MODULE", settings.value(QStringLiteral("inputMethod")).toByteArray());
 }
 
@@ -94,10 +94,10 @@ int main(int argc, char *argv[])
 
     // Application
     QApplication app(argc, argv);
-    app.setApplicationName(QStringLiteral("Hawaii"));
-    app.setApplicationVersion(QStringLiteral(HAWAII_VERSION_STRING));
-    app.setOrganizationName(QStringLiteral("Hawaii"));
-    app.setOrganizationDomain(QStringLiteral("hawaiios.org"));
+    app.setApplicationName(QStringLiteral("Liri"));
+    app.setApplicationVersion(QStringLiteral(LIRI_VERSION_STRING));
+    app.setOrganizationName(QStringLiteral("Liri"));
+    app.setOrganizationDomain(QStringLiteral("liri.io"));
     app.setFallbackSessionManagementEnabled(false);
     app.setQuitOnLastWindowClosed(false);
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 
     // Command line parser
     QCommandLineParser parser;
-    parser.setApplicationDescription(TR("Wayland compositor for the Hawaii desktop environment"));
+    parser.setApplicationDescription(TR("Wayland compositor and shell for Liri OS"));
     parser.addHelpOption();
     parser.addVersionOption();
 
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 
     // Restart with D-Bus session if necessary
     if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
-        qCritical("No D-Bus session bus available, please run Hawaii with dbus-launch.");
+        qCritical("No D-Bus session bus available, please run Liri Shell with dbus-launch.");
         return 1;
     }
 
@@ -172,28 +172,28 @@ int main(int argc, char *argv[])
     }
 
     // Print version information
-    qDebug("== Hawaii Compositor v%s (Green Island v%s) ==\n"
-           "** http://hawaiios.org\n"
-           "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
+    qDebug("== Liri Shell v%s (Green Island v%s) ==\n"
+           "** http://liri.io\n"
+           "** Bug reports to: https://github.com/lirios/shell/issues\n"
            "** Build: %s-%s",
-           HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
-           HAWAII_VERSION_STRING, GIT_REV);
+           LIRI_VERSION_STRING, GREENISLAND_VERSION_STRING,
+           LIRI_VERSION_STRING, GIT_REV);
 
     // Application
-    Application *hawaii = new Application();
-    hawaii->setScreenConfiguration(fakeScreenData);
+    Application *shell = new Application();
+    shell->setScreenConfiguration(fakeScreenData);
 
     // Create the compositor and run
     bool urlAlreadySet = false;
 #if DEVELOPMENT_BUILD
     if (parser.isSet(qmlOption)) {
         urlAlreadySet = true;
-        hawaii->setUrl(QUrl::fromLocalFile(parser.value(qmlOption)));
+        shell->setUrl(QUrl::fromLocalFile(parser.value(qmlOption)));
     }
 #endif
     if (!urlAlreadySet)
-        hawaii->setUrl(QUrl(QStringLiteral("qrc:/Compositor.qml")));
-    QCoreApplication::postEvent(hawaii, new StartupEvent());
+        shell->setUrl(QUrl(QStringLiteral("qrc:/Compositor.qml")));
+    QCoreApplication::postEvent(shell, new StartupEvent());
 
     return app.exec();
 }

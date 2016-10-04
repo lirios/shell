@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -70,14 +70,14 @@ public:
             process->setProcessEnvironment(env);
 
             qCDebug(gLcShell) << "Starting shell helper...";
-            process->start(QLatin1String(INSTALL_LIBEXECDIR "/hawaii-client"));
+            process->start(QLatin1String(INSTALL_LIBEXECDIR "/liri-shell-helper"));
             if (Q_LIKELY(process->waitForStarted())) {
                 return;
             } else {
                 if (retries == 0)
-                    qCWarning(gLcShell, "Failed to start client program, giving up");
+                    qCWarning(gLcShell, "Failed to start shell helper, giving up");
                 else
-                    qCWarning(gLcShell, "Failed to start client program, %d attempt(s) left",
+                    qCWarning(gLcShell, "Failed to start shell helper, %d attempt(s) left",
                               retries);
             }
         }
@@ -99,13 +99,13 @@ private Q_SLOTS:
 
 class ShellHelperPrivate
         : public QWaylandCompositorExtensionPrivate
-        , public QtWaylandServer::hawaii_shell
+        , public QtWaylandServer::liri_shell
 {
     Q_DECLARE_PUBLIC(ShellHelper)
 public:
     ShellHelperPrivate()
         : QWaylandCompositorExtensionPrivate()
-        , QtWaylandServer::hawaii_shell()
+        , QtWaylandServer::liri_shell()
         , runnerThread(new QThread())
         , processRunner(new ProcessRunner())
     {
@@ -131,7 +131,7 @@ public:
     QWaylandSurface *grabSurface = nullptr;
 
 private:
-    void hawaii_shell_bind_resource(Resource *r) Q_DECL_OVERRIDE
+    void liri_shell_bind_resource(Resource *r) Q_DECL_OVERRIDE
     {
         // Client can bind only once
         if (resource())
@@ -140,7 +140,7 @@ private:
                                    "client can bind only once");
     }
 
-    void hawaii_shell_set_grab_surface(Resource *resource, struct ::wl_resource *wlSurface) Q_DECL_OVERRIDE
+    void liri_shell_set_grab_surface(Resource *resource, struct ::wl_resource *wlSurface) Q_DECL_OVERRIDE
     {
         Q_Q(ShellHelper);
 

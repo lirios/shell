@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2014-2016 Pier Luigi Fiorini
  *
@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import Fluid.Controls 1.0
-import org.hawaiios.launcher 0.1
+import Liri.Launcher 0.1
 
 ListView {
     id: launcher

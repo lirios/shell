@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2014-2016 Pier Luigi Fiorini
  *
@@ -25,8 +25,8 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0
-import Hawaii.Shell 1.0
-import Hawaii.Notifications 1.0
+import Liri.Shell 1.0
+import Vibe.Notifications 1.0
 
 Indicator {
     readonly property bool hasNotifications: notificationView.count > 0

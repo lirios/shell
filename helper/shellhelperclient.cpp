@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -37,12 +37,12 @@ using namespace GreenIsland::Client;
 
 class ShellHelperClientPrivate
         : public QObjectPrivate
-        , public QtWayland::hawaii_shell
+        , public QtWayland::liri_shell
 {
     Q_DECLARE_PUBLIC(ShellHelperClient)
 public:
     ShellHelperClientPrivate()
-        : QtWayland::hawaii_shell()
+        : QtWayland::liri_shell()
     {
     }
 
@@ -56,7 +56,7 @@ public:
     quint32 name = 0;
 
 private:
-    void hawaii_shell_grab_cursor(uint32_t cursor) Q_DECL_OVERRIDE
+    void liri_shell_grab_cursor(uint32_t cursor) Q_DECL_OVERRIDE
     {
         Q_Q(ShellHelperClient);
         Q_EMIT q->cursorChangeRequested(static_cast<ShellHelperClient::GrabCursor>(cursor));
@@ -107,5 +107,5 @@ void ShellHelperClient::registerGrabSurface(QWindow *window)
 
 QByteArray ShellHelperClient::interfaceName()
 {
-    return QByteArrayLiteral("hawaii_shell");
+    return QByteArrayLiteral("liri_shell");
 }

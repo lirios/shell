@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
@@ -28,7 +28,7 @@ import QtQml.Models 2.2
 import GreenIsland 1.0
 import Fluid.Controls 1.0
 import Fluid.Material 1.0
-import Hawaii.Shell 1.0
+import Liri.Shell 1.0
 import "../indicators"
 import "../launcher"
 

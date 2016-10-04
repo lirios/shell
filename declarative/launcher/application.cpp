@@ -87,9 +87,9 @@ bool Application::launch(const QStringList &urls)
 
     // TODO: Send urls to process launcher
     const QDBusConnection bus = QDBusConnection::sessionBus();
-    QDBusInterface interface(QStringLiteral("org.hawaiios.Session"),
+    QDBusInterface interface(QStringLiteral("io.liri.Session"),
                              QStringLiteral("/ProcessLauncher"),
-                             QStringLiteral("org.hawaiios.ProcessLauncher"), bus);
+                             QStringLiteral("io.liri.ProcessLauncher"), bus);
     QDBusMessage msg = interface.call(QStringLiteral("launchDesktopFile"), m_desktopFile->path());
     bool ran = msg.arguments().at(0).toBool();
 

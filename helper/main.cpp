@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -60,20 +60,20 @@ int main(int argc, char *argv[])
 
     // Application
     QGuiApplication app(argc, argv);
-    app.setApplicationName(QStringLiteral("Hawaii Shell Helper"));
-    app.setApplicationVersion(QStringLiteral(HAWAII_VERSION_STRING));
-    app.setOrganizationName(QStringLiteral("Hawaii"));
-    app.setOrganizationDomain(QStringLiteral("hawaiios.org"));
+    app.setApplicationName(QStringLiteral("Liri Shell Helper"));
+    app.setApplicationVersion(QStringLiteral(LIRI_VERSION_STRING));
+    app.setOrganizationName(QStringLiteral("Liri"));
+    app.setOrganizationDomain(QStringLiteral("liri.io"));
     app.setFallbackSessionManagementEnabled(false);
     app.setQuitOnLastWindowClosed(false);
 
     // Print version information
-    qDebug("== Hawaii Shell Helper v%s (Green Island v%s) ==\n"
-           "** http://hawaiios.org\n"
-           "** Bug reports to: https://github.com/hawaii-desktop/hawaii-shell/issues\n"
+    qDebug("== Liri Shell Helper v%s (Green Island v%s) ==\n"
+           "** http://liri.io\n"
+           "** Bug reports to: https://github.com/lirios/shell/issues\n"
            "** Build: %s-%s",
-           HAWAII_VERSION_STRING, GREENISLAND_VERSION_STRING,
-           HAWAII_VERSION_STRING, GIT_REV);
+           LIRI_VERSION_STRING, GREENISLAND_VERSION_STRING,
+           LIRI_VERSION_STRING, GIT_REV);
 
     // Create shell helper
     new ShellHelperApplication();

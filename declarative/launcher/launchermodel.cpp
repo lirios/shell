@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2014-2016 Pier Luigi Fiorini
  *
@@ -26,7 +26,7 @@
 
 #include "launchermodel.h"
 
-#include <Hawaii/Core/DesktopFile>
+#include <Vibe/Core/DesktopFile>
 #include <QtCore/QTimer>
 #include <QtGui/QIcon>
 
@@ -34,7 +34,7 @@
 #include "appsmodel.h"
 #include "usagetracker.h"
 
-using namespace Hawaii;
+using namespace Vibe;
 
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)

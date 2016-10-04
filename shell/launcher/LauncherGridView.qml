@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
@@ -26,7 +26,7 @@ import QtQuick 2.0
 import QtQml.Models 2.1
 import Fluid.Core 1.0
 import Fluid.Controls 1.0
-import org.hawaiios.launcher 0.1
+import Liri.Launcher 0.1
 import "../components"
 
 PagedGrid {

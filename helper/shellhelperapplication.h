@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -25,46 +25,20 @@
 
 #include <QtCore/QObject>
 
-#include <GreenIsland/Client/Registry>
+#include "shellhelperclient.h"
 
-class QWindow;
+class ShellHelperApplicationPrivate;
 
-class ShellHelperClientPrivate;
-
-class ShellHelperClient : public QObject
+class ShellHelperApplication : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(ShellHelperClient)
+    Q_DECLARE_PRIVATE(ShellHelperApplication)
 public:
-    enum GrabCursor {
-        NoGrabCursor = 0,
-        ResizeTopGrabCursor,
-        ResizeBottomGrabCursor,
-        ArrowGrabCursor,
-        ResizeLeftGrabCursor,
-        ResizeTopLeftGrabCursor,
-        ResizeBottomLeftGrabCursor,
-        MoveGrabCursor,
-        ResizeRightGrabCursor,
-        ResizeTopRightGrabCursor,
-        ResizeBottomRightGrabCursor,
-        BusyGrabCursor
-    };
-    Q_ENUM(GrabCursor)
-
-    ShellHelperClient(QObject *parent = nullptr);
-
-    quint32 name() const;
-
-    void initialize(GreenIsland::Client::Registry *registry, quint32 name, quint32 version);
-
-    void registerGrabSurface(QWindow *window);
-
-    static QByteArray interfaceName();
-
-Q_SIGNALS:
-    void cursorChangeRequested(GrabCursor cursor);
+    explicit ShellHelperApplication(QObject *parent = nullptr);
 
 private:
-    bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
+    void initialize();
+
+private Q_SLOTS:
+    void handleCursorChangeRequest(ShellHelperClient::GrabCursor cursor);
 };

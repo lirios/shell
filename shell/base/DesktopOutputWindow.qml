@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
@@ -25,7 +25,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import GreenIsland 1.0 as GreenIsland
-import Hawaii.Shell 1.0
+import Liri.Shell 1.0
 import "../desktop"
 
 ApplicationWindow {

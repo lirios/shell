@@ -4,12 +4,12 @@ Shell
 [![ZenHub.io](https://img.shields.io/badge/supercharged%20by-zenhub.io-blue.svg)](https://zenhub.io)
 
 [![License](https://img.shields.io/badge/license-GPLv3.0%2B-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![GitHub release](https://img.shields.io/github/release/qmlos/shell.svg)](https://github.com/qmlos/shell)
-[![Build Status](https://travis-ci.org/qmlos/shell.svg?branch=develop)](https://travis-ci.org/qmlos/shell)
-[![GitHub issues](https://img.shields.io/github/issues/qmlos/shell.svg)](https://github.com/qmlos/shell/issues)
-[![Maintained](https://img.shields.io/maintenance/yes/2016.svg)](https://github.com/qmlos/shell/commits/develop)
+[![GitHub release](https://img.shields.io/github/release/lirios/shell.svg)](https://github.com/lirios/shell)
+[![Build Status](https://travis-ci.org/lirios/shell.svg?branch=develop)](https://travis-ci.org/lirios/shell)
+[![GitHub issues](https://img.shields.io/github/issues/lirios/shell.svg)](https://github.com/lirios/shell/issues)
+[![Maintained](https://img.shields.io/maintenance/yes/2016.svg)](https://github.com/lirios/shell/commits/develop)
 
-Responsive shell for qmlOS.
+Responsive shell for Liri OS.
 
 ![Desktop](desktop.png)
 
@@ -33,8 +33,8 @@ The following modules and their dependencies are required:
 
  * [ECM >= 1.7.0](http://quickgit.kde.org/?p=extra-cmake-modules.git)
  * [greenisland](https://github.com/greenisland/greenisland)
- * [fluid](https://github.com/qmlos/fluid)
- * [qmlos-workspace](https://github.com/qmlos/workspace)
+ * [fluid](https://github.com/lirios/fluid)
+ * [liri-workspace](https://github.com/lirios/workspace)
  * [pam](http://www.linux-pam.org/)
  * [libqtxdg](https://github.com/lxde/libqtxdg)
  * [qtaccountsservice](https://github.com/hawaii-desktop/qtaccountsservice)
@@ -60,7 +60,7 @@ make install # use sudo if necessary
 
 On the `cmake` line, you can specify additional configuration parameters:
 
- * `-DCMAKE_INSTALL_PREFIX=/path/to/install` (for example, `/opt/qmlos` or `/usr`)
+ * `-DCMAKE_INSTALL_PREFIX=/path/to/install` (for example, `/opt/liri` or `/usr`)
  * `-DCMAKE_BUILD_TYPE=<build_type>`, where `<build_type>` is one of:
    * **Debug:** debug build
    * **Release:** release build
@@ -75,7 +75,7 @@ at your option, any later version.
 
 ### Logging categories
 
-Qt 5.2 introduced logging categories and Hawaii takes advantage of
+Qt 5.2 introduced logging categories and Liri Shell takes advantage of
 them to make debugging easier.
 
 Please refer to the [Qt](http://doc.qt.io/qt-5/qloggingcategory.html) documentation
@@ -84,24 +84,24 @@ to learn how to enable them.
 ### Available categories
 
  * Compositor:
-   * **hawaii.compositor:** Compositor
-   * **hawaii.processlauncher:** Process launcher and application tracker
-   * **hawaii.screensaver:** Lock, idle and inhibit interface
-   * **hawaii.session:** Manages the session
-   * **hawaii.loginmanager:** login manager subsystem
-   * **hawaii.loginmanager.logind:** login manager subsystem (logind backend)
+   * **liri.compositor:** Compositor
+   * **liri.processlauncher:** Process launcher and application tracker
+   * **liri.screensaver:** Lock, idle and inhibit interface
+   * **liri.session:** Manages the session
+   * **liri.loginmanager:** login manager subsystem
+   * **liri.loginmanager.logind:** login manager subsystem (logind backend)
 
  * Launcher QML plugin:
-   * **hawaii.qml.launcher:** Launcher model and items
-   * **hawaii.qml.launcher.appsmodel:** Applications model
+   * **liri.launcher:** Launcher model and items
+   * **liri.launcher.appsmodel:** Applications model
 
 ## Components
 
-*hawaii*
+*liri-shell*
 
 Compositor executable that links to Green Island.
 
-*hawaii-session*
+*liri-session*
 
 Manages the session, drives the compositor, runs autostart programs
 and launches applications for the application launcher.
@@ -110,7 +110,7 @@ Autostarts the D-Bus session if needed and can logout an existing
 session with:
 
 ```sh
-hawaii-session --logout
+liri-session --logout
 ```
 
 Supports the following modes:
@@ -129,20 +129,20 @@ libinput is automatically used with Qt 5.5 or better, built with libinput suppor
 The mode can be specified with the ``--mode`` argument, here's an example:
 
 ```sh
-hawaii-session --mode=eglfs
+liri-session --mode=eglfs
 ```
 
-The best mode is automatically detected if you run ``hawaii-session``
+The best mode is automatically detected if you run ``liri-session``
 without the ``--mode`` argument.
 
 ## QML JavaScript debugger
 
-Developers can debug Hawaii Shell with Qt Creator and the QML JavaScript debugger.
+Developers can debug Liri Shell with Qt Creator and the QML JavaScript debugger.
 
-Run Hawaii setting the debugger port:
+Set the debug port and run the shell:
 
 ```sh
-HAWAII_SHELL_DEBUG_PORT=3768 hawaii
+LIRI_SHELL_DEBUG_PORT=3768 liri-shell
 ```
 
 In the example above we are using the default port which is 3768.

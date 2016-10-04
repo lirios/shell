@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2012-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
@@ -24,9 +24,9 @@
 
 import QtQuick 2.0
 import GreenIsland 1.0 as GreenIsland
-import org.hawaiios.launcher 0.1
-import Hawaii.Shell 1.0
-import Hawaii.PulseAudio 1.0
+import Liri.Launcher 0.1
+import Liri.Shell 1.0
+import Vibe.PulseAudio 1.0
 import "base"
 import "desktop"
 

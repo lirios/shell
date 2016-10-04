@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
@@ -22,7 +22,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Hawaii.Shell 1.0
+import Liri.Shell 1.0
 
 Indicator {
     title: qsTr("Date & Time")

@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
@@ -36,8 +36,8 @@ class ShellPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        // @uri Hawaii.LoginManager
-        Q_ASSERT(uri == QLatin1String("Hawaii.Shell"));
+        // @uri Liri.Shell
+        Q_ASSERT(uri == QLatin1String("Liri.Shell"));
 
         qmlRegisterType<ShellHelperQuickExtension>(uri, 1, 0, "ShellHelper");
     }

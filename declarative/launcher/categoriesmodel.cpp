@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii Shell.
+ * This file is part of Liri Shell.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
@@ -151,7 +151,7 @@ void CategoriesModel::refresh()
 
     XdgMenu xdgMenu;
     //xdgMenu.setLogDir(QStringLiteral("/tmp/"));
-    xdgMenu.setEnvironments(QStringList() << QStringLiteral("Hawaii") << QStringLiteral("X-Hawaii"));
+    xdgMenu.setEnvironments(QStringList() << QStringLiteral("Liri") << QStringLiteral("X-Liri"));
     const QString menuFileName = XdgMenu::getMenuFileName();
     if (!xdgMenu.read(menuFileName)) {
         qWarning("Failed to read menu \"%s\": %s", qPrintable(menuFileName),

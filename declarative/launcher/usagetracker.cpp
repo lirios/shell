@@ -1,5 +1,5 @@
 /****************************************************************************
- * This file is part of Hawaii Shell.
+ * This file is part of Liri Shell.
  *
  * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
@@ -81,7 +81,7 @@
  */
 #define SCORE_MIN (SCORE_MAX >> 3)
 
-Q_LOGGING_CATEGORY(USAGE_TRACKER, "hawaii.usage")
+Q_LOGGING_CATEGORY(USAGE_TRACKER, "liri.usage")
 
 Q_GLOBAL_STATIC(UsageTracker, s_usageTracker)
 
