@@ -54,8 +54,6 @@ class Application : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 
-    Q_ENUMS(State)
-
     friend ApplicationManager;
 
 public:
