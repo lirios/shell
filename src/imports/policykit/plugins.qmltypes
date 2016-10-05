@@ -41,5 +41,10 @@ Module {
             Parameter { name: "message"; type: "string" }
         }
         Method { name: "registerAgent" }
+        Method {
+            name: "authenticate"
+            Parameter { name: "response"; type: "string" }
+        }
+        Method { name: "abortAuthentication" }
     }
 }
