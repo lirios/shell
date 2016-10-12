@@ -129,5 +129,5 @@ if(DEVELOPMENT_BUILD)
     greenisland_install_shell(io.liri.desktop shell)
 endif()
 
-# Display featute summary
+# Display feature summary
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
