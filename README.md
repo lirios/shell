@@ -39,14 +39,6 @@ The following modules and their dependencies are required:
  * [libqtxdg](https://github.com/lxde/libqtxdg)
  * [qtaccountsservice](https://github.com/hawaii-desktop/qtaccountsservice)
 
-Optional, but recommended dependencies:
-
- * [hawaii-icon-themes](https://github.com/hawaii-desktop/hawaii-icon-themes) for the default icon theme
- * [hawaii-wallpapers](https://github.com/hawaii-desktop/hawaii-wallpapers) for the default wallpaper
-
-If you do not install those dependencies, please configure the desktop with an
-alternative icon theme and wallpaper.
-
 ## Installation
 
 From the root of the repository, run:
