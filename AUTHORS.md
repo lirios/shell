@@ -16,7 +16,7 @@ Commit data has been generated with:
 git shortlog -s -e -n
 ```
 
-Commit counts have ben removed, since they change pretty frequently.
+Commit counts have been removed, since they change pretty frequently.
 
 Remember to update this file before any release is made, also make sure
 a .mailmap file is maintained if committer names and email addresses
