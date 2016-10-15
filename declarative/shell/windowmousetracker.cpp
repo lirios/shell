@@ -70,6 +70,10 @@ public:
 
     void setWindowSystemCursorEnabled(bool enable)
     {
+        // Check if we've got a hold of the window where the tracker is in
+        if (window.isNull())
+            return;
+
         // QtQuick Controls 2 ApplicationWindow creates an overlay item
         // on top of your scene, let's find this item and set/unset the
         // cursor of it in order to disable/enable window system cursor
