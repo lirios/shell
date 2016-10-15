@@ -113,12 +113,18 @@ find_package(QtAccountsService ${REQUIRED_QTACCOUNTSSERVICE_VERSION} REQUIRED)
 # lxqt
 find_package(QT5XDG REQUIRED)
 
+# Hack because QtWayland doesn't set this at all
+set(Qt5WaylandClient_PRIVATE_INCLUDE_DIRS
+        "${_qt5WaylandClient_install_prefix}/include/qt/QtWaylandClient/${Qt5WaylandClient_VERSION}"
+        "${_qt5WaylandClient_install_prefix}/include/qt/QtWaylandClient/${Qt5WaylandClient_VERSION}/QtWaylandClient"
+    )
+
 # Subdirectories
 add_subdirectory(3rdparty)
 add_subdirectory(compositor)
 add_subdirectory(data)
 add_subdirectory(declarative)
-#add_subdirectory(decorations)
+add_subdirectory(decorations)
 add_subdirectory(headers)
 add_subdirectory(helper)
 add_subdirectory(scripts)
