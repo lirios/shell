@@ -41,6 +41,31 @@ public:
         cursorPixmap = QPixmap::fromImage(cursorImage);
     }
 
+    void reparentOverlay()
+    {
+        Q_Q(WindowMouseTracker);
+
+        // Check if we've got a hold of the window where the tracker is in
+        if (window.isNull())
+            return;
+
+        // QtQuick Controls 2 ApplicationWindow creates an overlay item
+        // on top of your scene and this prevents WaylandMouseTracker from
+        // work. Reparent the overlay to WindowMouseTracker as soon as it
+        // is on a window and raise the Z order so we can track mouse events
+        // and make the overlay work at the same time.
+        for (QObject *object : qAsConst(window->contentItem()->children())) {
+            if (object->inherits("QQuickOverlay")) {
+                auto overlay = qobject_cast<QQuickItem *>(object);
+                if (overlay) {
+                    q->setZ(1000000);
+                    overlay->setParentItem(q);
+                    return;
+                }
+            }
+        }
+    }
+
     void handleMouseMove(const QPointF &mousePos)
     {
         Q_Q(WindowMouseTracker);
@@ -107,6 +132,9 @@ WindowMouseTracker::WindowMouseTracker(QQuickItem *parent)
 {
     Q_D(WindowMouseTracker);
 
+    setAcceptHoverEvents(true);
+    setAcceptedMouseButtons(Qt::NoButton);
+
     // QtQuick Controls 2 ApplicationWindow has an overlay on top of your
     // scene so we cannot use regular WaylandMouseTracker to track
     // mouse cursor position, but we can track the local position inside
@@ -123,6 +151,7 @@ WindowMouseTracker::WindowMouseTracker(QQuickItem *parent)
         if (window) {
             window->installEventFilter(this);
             d->window = window;
+            d->reparentOverlay();
             d->setWindowSystemCursorEnabled(d->windowSystemCursorEnabled);
         }
     });
@@ -148,7 +177,6 @@ qreal WindowMouseTracker::mouseY() const
 bool WindowMouseTracker::containsMouse() const
 {
     Q_D(const WindowMouseTracker);
-    return true;
     return d->containsMouse;
 }
 
@@ -181,11 +209,22 @@ bool WindowMouseTracker::eventFilter(QObject *watched, QEvent *event)
     // Allow only mouse events
     if (event->type() == QEvent::MouseMove)
         d->handleMouseMove(static_cast<QMouseEvent *>(event)->localPos());
-    if (event->type() == QEvent::HoverEnter)
-        d->setContainsMouse(true);
-    else if (event->type() == QEvent::HoverLeave)
-        d->setContainsMouse(false);
 
-    event->ignore();
     return false;
+}
+
+void WindowMouseTracker::hoverEnterEvent(QHoverEvent *event)
+{
+    Q_UNUSED(event);
+
+    Q_D(WindowMouseTracker);
+    d->setContainsMouse(true);
+}
+
+void WindowMouseTracker::hoverLeaveEvent(QHoverEvent *event)
+{
+    Q_UNUSED(event);
+
+    Q_D(WindowMouseTracker);
+    d->setContainsMouse(false);
 }

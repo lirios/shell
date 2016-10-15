@@ -55,6 +55,8 @@ Q_SIGNALS:
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
+    void hoverEnterEvent(QHoverEvent *event) Q_DECL_OVERRIDE;
+    void hoverLeaveEvent(QHoverEvent *event) Q_DECL_OVERRIDE;
 
 private:
     WindowMouseTrackerPrivate *const d_ptr;

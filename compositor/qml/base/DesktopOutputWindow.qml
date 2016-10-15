@@ -93,44 +93,43 @@ ApplicationWindow {
         id: mouseTracker
 
         anchors.fill: parent
+
         windowSystemCursorEnabled: false
 
         onMouseXChanged: compositor.wake()
         onMouseYChanged: compositor.wake()
         // TODO: Need to wake up with mouse button pressed, released and wheel
-    }
 
-    // User interface
-    Loader {
-        id: screenViewLoader
-        anchors.fill: parent
-    }
+        // User interface
+        Loader {
+            id: screenViewLoader
+            anchors.fill: parent
+        }
 
-    // Pointer cursor
-    GreenIsland.WaylandCursorItem {
-        id: cursor
+        // Pointer cursor
+        GreenIsland.WaylandCursorItem {
+            id: cursor
 
-        parent: ApplicationWindow.overlay
-        seat: output.compositor.defaultSeat
+            seat: output.compositor.defaultSeat
 
-        x: mouseTracker.mouseX
-        y: mouseTracker.mouseY
-        z: 1000001
+            x: mouseTracker.mouseX
+            y: mouseTracker.mouseY
+            z: 1000001
 
-        visible: mouseTracker.containsMouse &&
-                 screenView.cursorVisible &&
-                 output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
-    }
+            visible: mouseTracker.containsMouse &&
+                     screenView.cursorVisible &&
+                     output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
+        }
 
-    // Idle dimmer
-    IdleDimmer {
-        id: idleDimmer
+        // Idle dimmer
+        IdleDimmer {
+            id: idleDimmer
 
-        parent: ApplicationWindow.overlay
-        anchors.fill: parent
+            anchors.fill: parent
 
-        output: window.output
+            output: window.output
 
-        z: 1000002
+            z: 1000002
+        }
     }
 }
