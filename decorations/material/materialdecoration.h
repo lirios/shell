@@ -26,18 +26,18 @@
 **
 ****************************************************************************/
 
+#include <QBitmap>
 #include <QtGui/QCursor>
+#include <QtGui/QLinearGradient>
 #include <QtGui/QPainter>
 #include <QtGui/QPalette>
-#include <QtGui/QLinearGradient>
-#include <QBitmap>
 
 #include <QtGui/qpa/qwindowsysteminterface.h>
 
-#include <QtWaylandClient/private/qwaylanddecorationplugin_p.h>
 #include <QtWaylandClient/private/qwaylandabstractdecoration_p.h>
-#include <QtWaylandClient/private/qwaylandwindow_p.h>
+#include <QtWaylandClient/private/qwaylanddecorationplugin_p.h>
 #include <QtWaylandClient/private/qwaylandshellsurface_p.h>
+#include <QtWaylandClient/private/qwaylandwindow_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -54,6 +54,8 @@ enum Button
 
 class Q_WAYLAND_CLIENT_EXPORT QWaylandMaterialDecoration : public QWaylandAbstractDecoration
 {
+    Q_OBJECT
+
 public:
     QWaylandMaterialDecoration();
 

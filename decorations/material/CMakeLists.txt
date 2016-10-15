@@ -1,4 +1,4 @@
-include_directories(
+include_directories(SYSTEM
     ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
     ${Qt5WaylandClient_PRIVATE_INCLUDE_DIRS}
 )
