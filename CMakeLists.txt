@@ -132,7 +132,7 @@ add_subdirectory(tests)
 
 # Install the shell with development builds
 if(DEVELOPMENT_BUILD)
-    greenisland_install_shell(io.liri.desktop shell)
+    greenisland_install_shell(io.liri.shell compositor/qml)
 endif()
 
 # Display feature summary
