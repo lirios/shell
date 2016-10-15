@@ -113,8 +113,8 @@ ApplicationWindow {
         parent: ApplicationWindow.overlay
         seat: output.compositor.defaultSeat
 
-        x: mouseTracker.mouseX - hotspotX
-        y: mouseTracker.mouseY - hotspotY
+        x: mouseTracker.mouseX
+        y: mouseTracker.mouseY
         z: 1000001
 
         visible: mouseTracker.containsMouse &&
