@@ -63,9 +63,8 @@ Item {
 
         edge: Qt.RightEdge
 
-        y: screenView.width
         width: Math.max(320, panel.rightWidth)
-        height: screenView.height
+        height: shell.height
 
         Item {
             anchors.fill: parent
