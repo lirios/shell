@@ -10,13 +10,13 @@ set(SOURCES
     shellhelperclient.cpp
 )
 
-greenisland_add_client_protocol(SOURCES
+ecm_add_qtwayland_client_protocol(SOURCES
     PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../data/protocols/shell-helper.xml"
     BASENAME shell-helper
 )
 
 add_executable(liri-shell-helper ${SOURCES})
-target_link_libraries(liri-shell-helper Qt5::Gui GreenIsland::Client)
+target_link_libraries(liri-shell-helper Qt5::Gui Liri::WaylandClient)
 
 # Git revision
 include(GetGitRevision)

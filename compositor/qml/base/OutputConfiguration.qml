@@ -22,9 +22,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0 as GreenIsland
+import Liri.WaylandServer 1.0
 
-GreenIsland.OutputConfiguration {
+OutputConfiguration {
     id: config
     onChangeRequested: {
         var i, changeset;

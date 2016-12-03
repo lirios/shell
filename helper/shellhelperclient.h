@@ -25,7 +25,7 @@
 
 #include <QtCore/QObject>
 
-#include <GreenIsland/Client/Registry>
+#include <Liri/WaylandClient/Registry>
 
 class QWindow;
 
@@ -56,7 +56,7 @@ public:
 
     quint32 name() const;
 
-    void initialize(GreenIsland::Client::Registry *registry, quint32 name, quint32 version);
+    void initialize(Liri::WaylandClient::Registry *registry, quint32 name, quint32 version);
 
     void registerGrabSurface(QWindow *window);
 

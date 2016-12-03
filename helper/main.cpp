@@ -24,8 +24,6 @@
 #include <QtCore/QFileInfo>
 #include <QtGui/QGuiApplication>
 
-#include <GreenIsland/greenisland_version.h>
-
 #include "config.h"
 #include "gitsha1.h"
 #include "shellhelperapplication.h"
@@ -68,12 +66,11 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
 
     // Print version information
-    qDebug("== Liri Shell Helper v%s (Green Island v%s) ==\n"
+    qDebug("== Liri Shell Helper v%s ==\n"
            "** http://liri.io\n"
            "** Bug reports to: https://github.com/lirios/shell/issues\n"
            "** Build: %s-%s",
-           LIRI_VERSION_STRING, GREENISLAND_VERSION_STRING,
-           LIRI_VERSION_STRING, GIT_REV);
+           LIRI_VERSION_STRING, LIRI_VERSION_STRING, GIT_REV);
 
     // Create shell helper
     new ShellHelperApplication();

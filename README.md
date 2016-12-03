@@ -20,10 +20,11 @@ Compiler requirements:
 * [gcc >= 4.8](https://gcc.gnu.org/gcc-4.8/) or
 * [Clang](http://clang.llvm.org/)
 
-Qt >= 5.7.0 with at least the following modules is required:
+Qt >= 5.8.0 with at least the following modules is required:
 
  * [qtbase](http://code.qt.io/cgit/qt/qtbase.git)
  * [qtdeclarative](http://code.qt.io/cgit/qt/qtdeclarative.git)
+ * [qtwayland](http://code.qt.io/cgit/qt/qtwayland.git)
  * [qtgraphicaleffects](http://code.qt.io/cgit/qt/qtgraphicaleffects.git)
  * [qtquickcontrols](http://code.qt.io/cgit/qt/qtquickcontrols.git)
  * [qtquickcontrols2](http://code.qt.io/cgit/qt/qtquickcontrols2.git)
@@ -32,8 +33,8 @@ Qt >= 5.7.0 with at least the following modules is required:
 The following modules and their dependencies are required:
 
  * [ECM >= 1.7.0](http://quickgit.kde.org/?p=extra-cmake-modules.git)
- * [greenisland](https://github.com/greenisland/greenisland)
  * [fluid](https://github.com/lirios/fluid)
+ * [liri-wayland](https://github.com/lirios/liri-wayland)
  * [liri-workspace](https://github.com/lirios/workspace)
  * [pam](http://www.linux-pam.org/)
  * [libqtxdg](https://github.com/lxde/libqtxdg)

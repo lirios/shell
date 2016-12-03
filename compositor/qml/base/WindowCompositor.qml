@@ -23,7 +23,8 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import GreenIsland 1.0 as GreenIsland
+import QtWayland.Compositor 1.0
+import Liri.WaylandServer 1.0
 import Vibe.PolicyKit 1.0
 
 BaseCompositor {
@@ -52,12 +53,12 @@ BaseCompositor {
      * Extensions
      */
 
-    GreenIsland.QtWindowManager {
+    QtWindowManager {
         showIsFullScreen: false
         onOpenUrl: compositor.openUrl(url)
     }
 
-    GreenIsland.WlShell {
+    WlShell {
         onWlShellSurfaceCreated: {
             var window = applicationManager.createWindow(shellSurface.surface)
 
@@ -72,7 +73,7 @@ BaseCompositor {
         }
     }
 
-    GreenIsland.XdgShell {
+    XdgShellV5 {
         property variant viewsBySurface: ({})
 
         onXdgSurfaceCreated: {
@@ -113,15 +114,15 @@ BaseCompositor {
         }
     }
 
-    GreenIsland.GtkShell {}
+    GtkShell {}
 
-    GreenIsland.TextInputManager {}
+    TextInputManager {}
 
-    GreenIsland.ApplicationManager {
+    ApplicationManager {
         id: applicationManager
     }
 
-    GreenIsland.OutputManagement {
+    OutputManagement {
         id: outputManagement
         onCreateOutputConfiguration: {
             var outputConfiguration = outputConfigurationComponent.createObject()
@@ -129,19 +130,19 @@ BaseCompositor {
         }
     }
 
-    GreenIsland.Screencaster {
+    Screencaster {
         id: screencaster
     }
 
-    GreenIsland.Screenshooter {
+    Screenshooter {
         id: screenshooter
 
         onCaptureRequested: {
             // TODO: We might want to do something depending on the capture type - plfiorini
             switch (screenshot.captureType) {
-            case GreenIsland.Screenshot.CaptureActiveWindow:
-            case GreenIsland.Screenshot.CaptureWindow:
-            case GreenIsland.Screenshot.CaptureArea:
+            case Screenshot.CaptureActiveWindow:
+            case Screenshot.CaptureWindow:
+            case Screenshot.CaptureArea:
                 break
             default:
                 break
@@ -204,14 +205,14 @@ BaseCompositor {
     Component {
         id: surfaceComponent
 
-        GreenIsland.WaylandSurface {
+        WaylandSurface {
             id: surface
 
-            onMappedChanged: {
+            onHasContentChanged: {
                 if (cursorSurface)
                     return
 
-                if (isMapped) {
+                if (hasContent) {
                     var window = applicationManager.windowForSurface(surface)
 
                     if (window)
@@ -232,7 +233,7 @@ BaseCompositor {
     Component {
         id: chromeComponent
 
-        GreenIsland.WindowChrome {
+        WindowChrome {
             animationsEnabled: parent.animateWindows
             inputEventsEnabled: !output.screenView.locked
         }

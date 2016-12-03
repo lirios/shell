@@ -23,7 +23,7 @@
 
 #include <QtQml/QtQml>
 
-#include <GreenIsland/QtWaylandCompositor/QWaylandQuickExtension>
+#include <QtWaylandCompositor/QWaylandQuickExtension>
 
 #include "shellhelper.h"
 #include "windowmousetracker.h"

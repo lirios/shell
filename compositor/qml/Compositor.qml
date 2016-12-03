@@ -23,7 +23,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0 as GreenIsland
 import Liri.Launcher 0.1
 import Liri.Shell 1.0
 import Vibe.PulseAudio 1.0
@@ -36,6 +35,14 @@ WindowCompositor {
     property int idleInhibit: 0
 
     readonly property alias settings: settings
+
+    defaultSeat.keymap {
+        layout: settings.keyboard.layouts[0] ? settings.keyboard.layouts[0] : "us"
+        variant: settings.keyboard.variants[0] ? settings.keyboard.variants[0] : ""
+        options: settings.keyboard.options[0] ? settings.keyboard.options[0] : ""
+        model: settings.keyboard.model
+        rules: settings.keyboard.rules[0] ? settings.keyboard.rules[0] : ""
+    }
 
     onOpenUrl: processRunner.launchCommand("xdg-open %1".arg(url))
 

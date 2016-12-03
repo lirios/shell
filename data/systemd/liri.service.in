@@ -14,7 +14,7 @@ Description=Liri
 
 [Service]
 Type=forking
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/greenisland-launcher --execute "@CMAKE_INSTALL_FULL_BINDIR@/liri"
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/liri-shell
 
 [Install]
 WantedBy=liri.target

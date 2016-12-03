@@ -44,7 +44,7 @@ target_link_libraries(liri-shell
     Qt5::Gui
     Qt5::Widgets
     Qt5::QuickControls2
-    GreenIsland::Server
+    Liri::WaylandServer
     LiriSigWatch
     Vibe::Settings
     Qt5Xdg

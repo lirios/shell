@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <GreenIsland/Server/ApplicationManager>
+#include <Liri/WaylandServer/ApplicationManager>
 #include <Vibe/Settings/QGSettings>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QObject>
@@ -40,11 +40,11 @@ class ApplicationManager : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(GreenIsland::Server::ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
+    Q_PROPERTY(Liri::WaylandServer::ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
 public:
     ApplicationManager(QObject *parent = nullptr);
 
-    GreenIsland::Server::ApplicationManager *applicationManager() const;
+    Liri::WaylandServer::ApplicationManager *applicationManager() const;
 
     Application *getApplication(const QString &appId);
 
@@ -56,7 +56,7 @@ public Q_SLOTS:
     void quit(const QString &appId);
     void launch(const QString &appId);
 
-    void setApplicationManager(GreenIsland::Server::ApplicationManager *appMan);
+    void setApplicationManager(Liri::WaylandServer::ApplicationManager *appMan);
 
 Q_SIGNALS:
     void applicationManagerChanged();
@@ -70,7 +70,7 @@ private Q_SLOTS:
     void handleApplicationFocused(QString appId);
 
 private:
-    GreenIsland::Server::ApplicationManager *m_appMan = nullptr;
+    Liri::WaylandServer::ApplicationManager *m_appMan = nullptr;
     QGSettings *m_settings = nullptr;
     QMap<QString, Application *> m_apps;
 

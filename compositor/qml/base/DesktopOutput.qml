@@ -23,7 +23,7 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import GreenIsland 1.0 as GreenIsland
+import Liri.WaylandServer 1.0
 
 BaseOutput {
     id: output
@@ -38,7 +38,7 @@ BaseOutput {
 
     // TODO: this was true for ErrorOutput, false for desktop.Output
     sizeFollowsWindow: false
-    automaticFrameCallback: powerState === GreenIsland.ExtendedOutput.PowerStateOn
+    automaticFrameCallback: powerState === ExtendedOutput.PowerStateOn
 
     window: DesktopOutputWindow {
         id: outputWindow
@@ -58,7 +58,7 @@ BaseOutput {
 
         console.debug("Power on output", manufacturer, model)
         outputWindow.idleDimmer.fadeOut()
-        output.powerState = GreenIsland.ExtendedOutput.PowerStateOn
+        output.powerState = ExtendedOutput.PowerStateOn
         __private.idle = false
     }
 

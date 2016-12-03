@@ -25,13 +25,13 @@
 #include <QtCore/private/qobject_p.h>
 #include <QtGui/QWindow>
 
-#include <GreenIsland/Client/ClientConnection>
-#include <GreenIsland/Client/Registry>
-#include <GreenIsland/Client/Surface>
+#include <Liri/WaylandClient/ClientConnection>
+#include <Liri/WaylandClient/Registry>
+#include <Liri/WaylandClient/Surface>
 
 #include "shellhelperapplication.h"
 
-using namespace GreenIsland::Client;
+using namespace Liri::WaylandClient;
 
 class ShellHelperApplicationPrivate : public QObjectPrivate
 {

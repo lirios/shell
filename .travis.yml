@@ -8,7 +8,7 @@ sudo: required
 
 arch:
   repos:
-    - greenisland=https://dl.bintray.com/greenisland/archlinux-develop/$arch/
+    - wayland=https://dl.bintray.com/liri/archlinux-develop/$arch/
     - qtaccountsservice=https://dl.bintray.com/hawaii/archlinux-develop/$arch/
     - fluid=https://dl.bintray.com/liri/archlinux-develop/$arch/
     - vibe=https://dl.bintray.com/liri/archlinux-develop/$arch/
@@ -17,7 +17,7 @@ arch:
     - qt5-wayland
     - extra-cmake-modules
     - libqtxdg
-    - greenisland-git
+    - liri-wayland-git
     - qtaccountsservice-git
     - fluid-git
     - vibe-git

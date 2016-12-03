@@ -24,7 +24,7 @@
 
 import QtQuick 2.0
 import QtQuick.Window 2.0
-import GreenIsland 1.0 as GreenIsland
+import QtWayland.Compositor 1.0
 import Liri.Shell 1.0
 
 Window {
@@ -50,14 +50,14 @@ Window {
     }
 
     // Grab surface from shell helper
-    GreenIsland.WaylandQuickItem {
+    WaylandQuickItem {
         id: grabItem
         anchors.fill: parent
         focusOnClick: false
         onSurfaceChanged: output.compositor.shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
     }
 
-    GreenIsland.WaylandMouseTracker {
+    WaylandMouseTracker {
         id: localPointerTracker
         anchors.fill: parent
         windowSystemCursorEnabled: false
@@ -67,7 +67,7 @@ Window {
             anchors.fill: parent
         }
 
-        GreenIsland.WaylandCursorItem {
+        WaylandCursorItem {
             id: cursor
             seat: output.compositor.defaultSeat
             x: localPointerTracker.mouseX - hotspotX

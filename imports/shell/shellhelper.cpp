@@ -24,11 +24,11 @@
 #include <QtCore/QProcess>
 #include <QtCore/QThread>
 
-#include <GreenIsland/QtWaylandCompositor/qwaylandcompositor.h>
-#include <GreenIsland/QtWaylandCompositor/QWaylandPointer>
-#include <GreenIsland/QtWaylandCompositor/QWaylandSeat>
-#include <GreenIsland/QtWaylandCompositor/QWaylandSurface>
-#include <GreenIsland/QtWaylandCompositor/private/qwaylandcompositorextension_p.h>
+#include <QtWaylandCompositor/qwaylandcompositor.h>
+#include <QtWaylandCompositor/QWaylandPointer>
+#include <QtWaylandCompositor/QWaylandSeat>
+#include <QtWaylandCompositor/QWaylandSurface>
+#include <QtWaylandCompositor/private/qwaylandcompositorextension_p.h>
 
 #include "cmakedirs.h"
 #include "logging_p.h"

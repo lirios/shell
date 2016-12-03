@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <GreenIsland/QtWaylandCompositor/QWaylandCompositorExtension>
+#include <QtWaylandCompositor/QWaylandCompositorExtension>
 
 class QWaylandSurface;
 

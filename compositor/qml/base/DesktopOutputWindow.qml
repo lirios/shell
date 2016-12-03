@@ -24,7 +24,8 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
-import GreenIsland 1.0 as GreenIsland
+import QtWayland.Compositor 1.0
+import Liri.WaylandServer 1.0
 import Liri.Shell 1.0
 import "../desktop"
 
@@ -54,7 +55,7 @@ ApplicationWindow {
     }
 
     // Grab surface from shell helper
-    GreenIsland.WaylandQuickItem {
+    WaylandQuickItem {
         id: grabItem
         anchors.fill: parent
         focusOnClick: false
@@ -72,7 +73,7 @@ ApplicationWindow {
     }
 
     // Keyboard handling
-    GreenIsland.KeyEventFilter {
+    KeyEventFilter {
         Keys.onPressed: {
             // Input wakes the output
             compositor.wake()
@@ -107,7 +108,7 @@ ApplicationWindow {
         }
 
         // Pointer cursor
-        GreenIsland.WaylandCursorItem {
+        WaylandCursorItem {
             id: cursor
 
             seat: output.compositor.defaultSeat
@@ -118,7 +119,7 @@ ApplicationWindow {
 
             visible: mouseTracker.containsMouse &&
                      screenView.cursorVisible &&
-                     output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
+                     output.powerState === ExtendedOutput.PowerStateOn
         }
 
         // Idle dimmer

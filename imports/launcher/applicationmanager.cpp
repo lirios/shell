@@ -167,22 +167,22 @@ QList<Application *> ApplicationManager::pinnedApps() const
     return apps;
 }
 
-GreenIsland::Server::ApplicationManager *ApplicationManager::applicationManager() const
+Liri::WaylandServer::ApplicationManager *ApplicationManager::applicationManager() const
 {
     return m_appMan;
 }
 
-void ApplicationManager::setApplicationManager(GreenIsland::Server::ApplicationManager *appMan)
+void ApplicationManager::setApplicationManager(Liri::WaylandServer::ApplicationManager *appMan)
 {
     if (m_appMan == appMan)
         return;
 
     if (m_appMan != nullptr) {
-        disconnect(m_appMan, &GreenIsland::Server::ApplicationManager::applicationAdded,
+        disconnect(m_appMan, &Liri::WaylandServer::ApplicationManager::applicationAdded,
                    this, &ApplicationManager::handleApplicationAdded);
-        disconnect(m_appMan, &GreenIsland::Server::ApplicationManager::applicationRemoved,
+        disconnect(m_appMan, &Liri::WaylandServer::ApplicationManager::applicationRemoved,
                    this, &ApplicationManager::handleApplicationRemoved);
-        disconnect(m_appMan, &GreenIsland::Server::ApplicationManager::applicationFocused,
+        disconnect(m_appMan, &Liri::WaylandServer::ApplicationManager::applicationFocused,
                    this, &ApplicationManager::handleApplicationFocused);
     }
 
@@ -190,11 +190,11 @@ void ApplicationManager::setApplicationManager(GreenIsland::Server::ApplicationM
     Q_EMIT applicationManagerChanged();
 
     if (appMan != nullptr) {
-        connect(appMan, &GreenIsland::Server::ApplicationManager::applicationAdded,
+        connect(appMan, &Liri::WaylandServer::ApplicationManager::applicationAdded,
                 this, &ApplicationManager::handleApplicationAdded);
-        connect(appMan, &GreenIsland::Server::ApplicationManager::applicationRemoved,
+        connect(appMan, &Liri::WaylandServer::ApplicationManager::applicationRemoved,
                 this, &ApplicationManager::handleApplicationRemoved);
-        connect(appMan, &GreenIsland::Server::ApplicationManager::applicationFocused,
+        connect(appMan, &Liri::WaylandServer::ApplicationManager::applicationFocused,
                 this, &ApplicationManager::handleApplicationFocused);
     }
 }

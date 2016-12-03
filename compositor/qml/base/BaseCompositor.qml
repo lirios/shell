@@ -23,10 +23,11 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import GreenIsland 1.0 as GreenIsland
+import QtWayland.Compositor 1.0
+import Liri.WaylandServer 1.0
 import Liri.Shell 1.0
 
-GreenIsland.WaylandCompositor {
+WaylandCompositor {
     id: compositor
 
     property Component screenViewComponent
@@ -58,7 +59,7 @@ GreenIsland.WaylandCompositor {
         onActivated: Qt.quit()
     }
 
-    GreenIsland.ScreenManager {
+    ScreenManager {
         id: screenManager
 
         onScreenAdded: {

@@ -25,15 +25,15 @@
 #include <QtGui/QPlatformSurfaceEvent>
 #include <QtGui/QWindow>
 
-#include <GreenIsland/Client/Surface>
-#include <GreenIsland/client/private/registry_p.h>
-#include <GreenIsland/client/private/surface_p.h>
+#include <Liri/WaylandClient/Surface>
+#include <Liri/waylandclient/private/registry_p.h>
+#include <Liri/waylandclient/private/surface_p.h>
 
 #include "shellhelperclient.h"
 
 #include "qwayland-shell-helper.h"
 
-using namespace GreenIsland::Client;
+using namespace Liri::WaylandClient;
 
 class ShellHelperClientPrivate
         : public QObjectPrivate

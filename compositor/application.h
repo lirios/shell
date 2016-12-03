@@ -29,9 +29,9 @@
 
 #include <QtCore/QObject>
 
-#include <GreenIsland/Server/HomeApplication>
+#include <Liri/WaylandServer/HomeApplication>
 
-using namespace GreenIsland::Server;
+using namespace Liri::WaylandServer;
 
 class ProcessLauncher;
 class ScreenSaver;

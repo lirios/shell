@@ -24,7 +24,7 @@ target_link_libraries(launcherplugin
                       Qt5::Qml
                       Qt5::Quick
                       Qt5::Sql
-                      GreenIsland::Server
+                      Liri::WaylandServer
                       Vibe::Core
                       Vibe::Settings
                       Qt5Xdg)

@@ -23,9 +23,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0 as GreenIsland
+import Liri.WaylandServer 1.0
 
-GreenIsland.ExtendedOutput {
+ExtendedOutput {
     id: output
 
     readonly property bool primary: compositor.primaryScreen === nativeScreen

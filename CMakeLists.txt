@@ -94,13 +94,16 @@ check_symbol_exists(PR_SET_DUMPABLE "sys/prctl.h" HAVE_PR_SET_DUMPABLE)
 add_feature_info("prctl-dumpable" HAVE_PR_SET_DUMPABLE "Required to prevent ptrace on the compositor process")
 
 # Find Qt5
-set(REQUIRED_QT_VERSION "5.7.0")
+set(REQUIRED_QT_VERSION "5.8.0")
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
-             DBus Xml Widgets Qml Quick QuickControls2 WaylandClient Sql)
+             DBus Xml Widgets Qml Quick QuickControls2 WaylandClient WaylandCompositor Sql)
 
-# Find Green Island
-set(REQUIRED_GREENISLAND_VERSION "0.8.0")
-find_package(GreenIsland ${REQUIRED_GREENISLAND_VERSION} REQUIRED COMPONENTS Client Server)
+# Find qtwayland-scanner
+find_package(QtWaylandScanner REQUIRED)
+
+# Find Liri Wayland
+find_package(LiriWaylandClient ${REQUIRED_LIRIWAYLAND_VERSION} REQUIRED)
+find_package(LiriWaylandServer ${REQUIRED_LIRIWAYLAND_VERSION} REQUIRED)
 
 # Find Vibe
 set(REQUIRED_VIBE_VERSION "0.7.0")
@@ -114,10 +117,12 @@ find_package(QtAccountsService ${REQUIRED_QTACCOUNTSSERVICE_VERSION} REQUIRED)
 find_package(QT5XDG REQUIRED)
 
 # Hack because QtWayland doesn't set this at all
-set(Qt5WaylandClient_PRIVATE_INCLUDE_DIRS
+if(Qt5WaylandClient_PRIVATE_INCLUDE_DIRS STREQUAL "")
+    set(Qt5WaylandClient_PRIVATE_INCLUDE_DIRS
         "${_qt5WaylandClient_install_prefix}/include/qt/QtWaylandClient/${Qt5WaylandClient_VERSION}"
         "${_qt5WaylandClient_install_prefix}/include/qt/QtWaylandClient/${Qt5WaylandClient_VERSION}/QtWaylandClient"
     )
+endif()
 
 # Subdirectories
 add_subdirectory(3rdparty)
@@ -129,11 +134,6 @@ add_subdirectory(helper)
 add_subdirectory(imports)
 add_subdirectory(scripts)
 add_subdirectory(tests)
-
-# Install the shell with development builds
-if(DEVELOPMENT_BUILD)
-    greenisland_install_shell(io.liri.shell compositor/qml)
-endif()
 
 # Display feature summary
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

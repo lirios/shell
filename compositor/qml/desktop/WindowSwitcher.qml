@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import GreenIsland 1.0 as GreenIsland
+import QtWayland.Compositor 1.0
 import Fluid.Controls 1.0
 
 Popup {
@@ -57,7 +57,7 @@ Popup {
             color: wrapper.ListView.isCurrentItem ? Material.accent : "transparent"
             radius: 4
 
-            GreenIsland.WaylandQuickItem {
+            WaylandQuickItem {
                 id: windowItem
                 anchors {
                     fill: parent
@@ -66,7 +66,7 @@ Popup {
                 surface: window.surface
                 sizeFollowsSurface: false
                 inputEventsEnabled: false
-                view.discardFrontBuffers: true
+                allowDiscardFrontBuffer: true
                 z: 0
 
                 MouseArea {

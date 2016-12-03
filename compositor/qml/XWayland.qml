@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland.XWayland 1.0
+import Liri.XWayland 1.0
 
 Item {
     XWayland {

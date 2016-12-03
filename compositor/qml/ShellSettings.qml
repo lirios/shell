@@ -25,7 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0 as GreenIsland
+import QtWayland.Compositor 1.0
+import Liri.WaylandServer 1.0
 import Vibe.Settings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
 
@@ -42,16 +43,9 @@ FluidCore.Object {
      * Keymap
      */
 
-    GreenIsland.CompositorSettings {
+    CompositorSettings {
         id: compositorSettings
         compositor: compositor
-        keymap: GreenIsland.Keymap {
-            layout: keyboardSettings.layouts[0] ? keyboardSettings.layouts[0] : "us"
-            variant: keyboardSettings.variants[0] ? keyboardSettings.variants[0] : ""
-            options: keyboardSettings.options[0] ? keyboardSettings.options[0] : ""
-            model: keyboardSettings.model
-            rules: keyboardSettings.rules[0] ? keyboardSettings.rules[0] : ""
-        }
     }
 
     Settings.Settings {

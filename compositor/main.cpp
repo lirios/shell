@@ -31,7 +31,6 @@
 #include <QtWidgets/QApplication>
 #include <QQuickStyle>
 
-#include <GreenIsland/greenisland_version.h>
 #include <Vibe/Settings/QGSettings>
 
 #include "application.h"
@@ -153,9 +152,9 @@ int main(int argc, char *argv[])
     // Nested mode requires running from Wayland and a socket name
     // and fake screen data cannot be used
     if (nested) {
-        if (!QGuiApplication::platformName().startsWith(QStringLiteral("greenisland"))) {
+        if (!QGuiApplication::platformName().startsWith(QStringLiteral("liri"))) {
             qCritical("Nested mode only make sense when running on Wayland.\n"
-                      "Please pass the \"-platform greenisland\" argument.");
+                      "Please pass the \"-platform liri\" argument.");
             return 1;
         }
 
@@ -172,12 +171,11 @@ int main(int argc, char *argv[])
     }
 
     // Print version information
-    qDebug("== Liri Shell v%s (Green Island v%s) ==\n"
+    qDebug("== Liri Shell v%s ==\n"
            "** http://liri.io\n"
            "** Bug reports to: https://github.com/lirios/shell/issues\n"
            "** Build: %s-%s",
-           LIRI_VERSION_STRING, GREENISLAND_VERSION_STRING,
-           LIRI_VERSION_STRING, GIT_REV);
+           LIRI_VERSION_STRING, LIRI_VERSION_STRING, GIT_REV);
 
     // Application
     Application *shell = new Application();

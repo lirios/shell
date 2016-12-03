@@ -25,7 +25,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import GreenIsland 1.0 as GreenIsland
+import Liri.WaylandServer 1.0
 
 Item {
     signal topLeftTriggered()
@@ -41,16 +41,16 @@ Item {
         target: output
         onHotSpotTriggered: {
             switch (hotSpot) {
-            case GreenIsland.TopLeftHotSpot:
+            case TopLeftHotSpot:
                 root.topLeftTriggered();
                 break;
-            case GreenIsland.TopRightHotSpot:
+            case TopRightHotSpot:
                 root.topRightTriggered();
                 break;
-            case GreenIsland.BottomLeftHotSpot:
+            case BottomLeftHotSpot:
                 root.bottomLeftTriggered();
                 break;
-            case GreenIsland.BottomRightHotSpot:
+            case BottomRightHotSpot:
                 root.bottomRightTriggered();
                 break;
             default:

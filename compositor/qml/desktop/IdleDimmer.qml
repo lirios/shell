@@ -23,7 +23,7 @@
  ***************************************************************************/
 
 import QtQuick 2.7
-import GreenIsland 1.0 as GreenIsland
+import Liri.WaylandServer 1.0
 import Fluid.Controls 1.0
 
 Rectangle {
@@ -57,7 +57,7 @@ Rectangle {
     onOpacityChanged: {
         // Power off output when fade out has finished
         if (opacity == 1.0)
-            output.powerState = GreenIsland.ExtendedOutput.PowerStateStandby
+            output.powerState = ExtendedOutput.PowerStateStandby
     }
 
     OpacityAnimator {
