@@ -9,7 +9,7 @@ sudo: required
 arch:
   repos:
     - greenisland=https://dl.bintray.com/greenisland/archlinux-develop/$arch/
-    - qtaccountsservice=https://dl.bintray.com/hawaii/archlinux-develop/$arch/
+    - qtaccountsservice=https://dl.bintray.com/liri/archlinux-develop/$arch/
     - fluid=https://dl.bintray.com/liri/archlinux-develop/$arch/
     - vibe=https://dl.bintray.com/liri/archlinux-develop/$arch/
   packages:
