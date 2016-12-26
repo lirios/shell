@@ -50,7 +50,7 @@ Indicator {
                 ToolTip.text: modelData.mounted ? qsTr("Eject") : qsTr("Mount")
                 ToolTip.visible: hovered
 
-                iconName: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disc.svg"))
+                iconName: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disk.svg"))
                 onClicked: modelData.mounted ? modelData.unmount() : modelData.mount()
             }
         }
