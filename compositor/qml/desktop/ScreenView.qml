@@ -1,10 +1,8 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2014-2016 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -30,10 +28,9 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Liri.WaylandServer 1.0
 import Fluid.Controls 1.0
-import "../base"
 import "../screens"
 
-BaseScreenView {
+Rectangle {
     id: screenView
 
     readonly property alias surfacesArea: desktop.currentWorkspace
@@ -41,9 +38,45 @@ BaseScreenView {
     readonly property alias runCommand: runCommand
     readonly property alias authDialog: authDialog
 
+    property bool cursorVisible: true
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
     property alias zoomEnabled: zoomArea.enabled
+
+    readonly property var windows: {
+        var windows = [];
+
+        for (var i = 0; i < windowsModel.count; i++) {
+            var window = windowsModel.get(i).window;
+
+            if (window.designedOutput === output)
+                windows.push(window);
+        }
+
+        return windows;
+    }
+
+    readonly property bool hasMaximizedWindow: {
+        for (var i = 0; i < windows.length; i++) {
+            var window = windows[i];
+
+            if (window.maximized)
+                return true;
+        }
+
+        return false;
+    }
+
+    readonly property bool hasFullscreenWindow: {
+        for (var i = 0; i < windows.length; i++) {
+            var window = windows[i];
+
+            if (window.fullscreen)
+                return true;
+        }
+
+        return false;
+    }
 
     state: "splash"
     states: [
@@ -81,56 +114,6 @@ BaseScreenView {
             //StateChangeScript { script: output.idle() }
         }
     ]
-
-    onKeyPressed: {
-        // Handle Meta modifier
-        if (event.modifiers & Qt.MetaModifier) {
-            // Open window switcher
-            if (output.primary) {
-                if (event.key === Qt.Key_Tab) {
-                    event.accept = true
-                    desktop.windowSwitcher.next()
-                    return
-                } else if (event.key === Qt.Key_Backtab) {
-                    event.accept = true
-                    desktop.windowSwitcher.previous()
-                    return
-                }
-            }
-        }
-
-        // Power off and suspend
-        switch (event.key) {
-        case Qt.Key_PowerOff:
-        case Qt.Key_PowerDown:
-        case Qt.Key_Suspend:
-        case Qt.Key_Hibernate:
-            screenView.state = "poweroff"
-            event.accepted = true
-            return
-        default:
-            break
-        }
-
-        event.accept = false
-    }
-
-    onKeyReleased: {
-        // Handle Meta modifier
-        if (event.modifiers & Qt.MetaModifier) {
-            // Close window switcher
-            if (output.primary) {
-                if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
-                    event.accept = true
-                    desktop.windowSwitcher.close()
-                    desktop.windowSwitcher.activate()
-                    return
-                }
-            }
-        }
-
-        event.accept = false
-    }
 
     Connections {
         target: SessionInterface
@@ -306,5 +289,59 @@ BaseScreenView {
         }
         z: 1000
         visible: false
+    }
+
+    /*
+     * Methods
+     */
+
+    function keyPressed(event) {
+        // Handle Meta modifier
+        if (event.modifiers & Qt.MetaModifier) {
+            // Open window switcher
+            if (output.primary) {
+                if (event.key === Qt.Key_Tab) {
+                    event.accept = true;
+                    desktop.windowSwitcher.next();
+                    return;
+                } else if (event.key === Qt.Key_Backtab) {
+                    event.accept = true;
+                    desktop.windowSwitcher.previous();
+                    return;
+                }
+            }
+        }
+
+        // Power off and suspend
+        switch (event.key) {
+        case Qt.Key_PowerOff:
+        case Qt.Key_PowerDown:
+        case Qt.Key_Suspend:
+        case Qt.Key_Hibernate:
+            screenView.state = "poweroff";
+            event.accepted = true;
+            return;
+        default:
+            break;
+        }
+
+        event.accept = false;
+    }
+
+    function keyReleased(event) {
+        // Handle Meta modifier
+        if (event.modifiers & Qt.MetaModifier) {
+            // Close window switcher
+            if (output.primary) {
+                if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
+                    event.accept = true;
+                    desktop.windowSwitcher.close();
+                    desktop.windowSwitcher.activate();
+                    return;
+                }
+            }
+        }
+
+        event.accept = false;
     }
 }

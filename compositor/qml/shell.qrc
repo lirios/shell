@@ -6,15 +6,8 @@
 	<file>KeyBindings.qml</file>
 	<file>ShellSettings.qml</file>
 	<file>XWayland.qml</file>
-	<file>base/BaseCompositor.qml</file>
-	<file>base/BaseOutput.qml</file>
-	<file>base/BaseScreenView.qml</file>
-	<file>base/DesktopOutput.qml</file>
-	<file>base/DesktopOutputWindow.qml</file>
 	<file>base/Keyboard.qml</file>
 	<file>base/OutputConfiguration.qml</file>
-	<file>base/OutputWindow.qml</file>
-	<file>base/WindowCompositor.qml</file>
 	<file>components/CloseButton.qml</file>
 	<file>components/MenuSeparator.qml</file>
 	<file>components/Overlay.qml</file>
