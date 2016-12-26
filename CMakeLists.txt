@@ -99,7 +99,7 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
              DBus Xml Widgets Qml Quick QuickControls2 WaylandClient Sql)
 
 # Find Green Island
-set(REQUIRED_GREENISLAND_VERSION "0.8.0")
+set(REQUIRED_GREENISLAND_VERSION "0.9.0")
 find_package(GreenIsland ${REQUIRED_GREENISLAND_VERSION} REQUIRED COMPONENTS Client Server)
 
 # Find Vibe
