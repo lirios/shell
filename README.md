@@ -92,7 +92,7 @@ to learn how to enable them.
 
 *liri-shell*
 
-Compositor executable that links to Green Island.
+Compositor executable.
 
 *liri-session*
 
@@ -105,28 +105,6 @@ session with:
 ```sh
 liri-session --logout
 ```
-
-Supports the following modes:
-
-* **eglfs:** runs the compositor directly on KMS or other supported systems
-* **hwcomposer:** runs the compositor directly with Android drivers
-* **nested:** runs the compositor inside Weston
-
-For **eglfs** mode the user must be in the ``video`` and ``input`` groups.
-KMS support requires Qt 5.5 or better.
-libinput is automatically used with Qt 5.5 or better, built with libinput support.
-
-For **hwcomposer** mode the user must be in the ``video`` and ``input`` groups.
-libinput is automatically used with Qt 5.5 or better, built with libinput support.
-
-The mode can be specified with the ``--mode`` argument, here's an example:
-
-```sh
-liri-session --mode=eglfs
-```
-
-The best mode is automatically detected if you run ``liri-session``
-without the ``--mode`` argument.
 
 ## QML JavaScript debugger
 
