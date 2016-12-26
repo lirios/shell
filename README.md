@@ -11,7 +11,7 @@ Shell
 
 Responsive shell for Liri OS.
 
-![Desktop](desktop.png)
+![Desktop](.github/desktop.png)
 
 ## Dependencies
 
