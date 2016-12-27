@@ -30,17 +30,45 @@ import Liri.Shell 1.0
 import Vibe.PulseAudio 1.0
 import Vibe.PolicyKit 1.0
 import "base"
+import "windows"
 
 WaylandCompositor {
     id: compositor
 
+    property point mousePos: Qt.point(0, 0)
+
     property int idleInhibit: 0
 
     readonly property alias settings: settings
+    readonly property alias outputs: __private.outputs
+    readonly property alias shellSurfaces: shellSurfaces
+
+    readonly property bool hasMaxmizedShellSurfaces: {
+        var shellSurface;
+
+        for (var i = 0; i < __private.shellSurfaces.length; i++) {
+            shellSurface = __private.shellSurfaces[i];
+            if (shellSurface.maximized)
+                return true;
+        }
+
+        return false;
+    }
+
+    readonly property bool hasFullscreenShellSurfaces: {
+        var shellSurface;
+
+        for (var i = 0; i < __private.shellSurfaces.length; i++) {
+            shellSurface = __private.shellSurfaces[i];
+            if (shellSurface.fullscreen)
+                return true;
+        }
+
+        return false;
+    }
 
     property Component outputConfigurationComponent: OutputConfiguration {}
 
-    readonly property alias windowsModel: windowsModel
     readonly property alias applicationManager: applicationManager
     readonly property alias shellHelper: shellHelper
     readonly property alias policyKitAgent: policyKitAgent
@@ -66,7 +94,19 @@ WaylandCompositor {
     QtObject {
         id: __private
 
-        property variant outputs: []
+        property var outputs: []
+
+        function createShellSurfaceItem(shellSurface, moveItem, output) {
+            var parentSurfaceItem = output.viewsBySurface[shellSurface.parentSurface];
+            var parent = parentSurfaceItem || output.surfacesArea;
+            var item = chromeComponent.createObject(parent, {
+                                                        "compositor": compositor,
+                                                        "shellSurface": shellSurface,
+                                                        "moveItem": moveItem
+                                                    });
+            output.viewsBySurface[shellSurface.surface] = item;
+            return item;
+        }
     }
 
     ScreenManager {
@@ -74,9 +114,9 @@ WaylandCompositor {
 
         onScreenAdded: {
             var view = outputComponent.createObject(compositor, {
-                "compositor": compositor,
-                "nativeScreen": screen
-            })
+                                                        "compositor": compositor,
+                                                        "nativeScreen": screen
+                                                    })
 
             __private.outputs.push(view);
         }
@@ -97,6 +137,10 @@ WaylandCompositor {
         }
     }
 
+    ListModel {
+        id: shellSurfaces
+    }
+
     /*
      * Extensions
      */
@@ -107,62 +151,32 @@ WaylandCompositor {
     }
 
     WlShell {
-        onWlShellSurfaceCreated: {
-            var window = applicationManagerExt.createWindow(shellSurface.surface);
-
-            for (var i = 0; i < __private.outputs.length; i++) {
-                var view = chromeComponent.createObject(__private.outputs[i].surfacesArea, {
-                    "shellSurface": shellSurface, "window": window, "decorated": true
-                });
-
-                view.moveItem = window.moveItem;
-                window.addWindowView(view);
-            }
-        }
+        onWlShellSurfaceCreated: handleShellSurfaceCreated(shellSurface)
     }
 
     XdgShellV5 {
-        property variant viewsBySurface: ({})
-
-        onXdgSurfaceCreated: {
-            var window = applicationManagerExt.createWindow(xdgSurface.surface);
-
-            var i, view;
-            for (i = 0; i < __private.outputs.length; i++) {
-                view = chromeComponent.createObject(__private.outputs[i].surfacesArea, {
-                    "shellSurface": xdgSurface, "window": window, "decorated": false
-                });
-
-                view.moveItem = window.moveItem;
-
-                if (viewsBySurface[xdgSurface.surface] === undefined)
-                    viewsBySurface[xdgSurface.surface] = new Array();
-
-                viewsBySurface[xdgSurface.surface].push({
-                    "output": __private.outputs[i], "view": view
-                });
-                window.addWindowView(view);
-            }
-        }
-        onXdgPopupCreated: {
-            var window = applicationManagerExt.createWindow(xdgPopup.surface);
-
-            var i, j, parentView, view, parentViews = viewsBySurface[xdgPopup.parentSurface];
-            for (i = 0; i < __private.outputs.length; i++) {
-                for (j = 0; j < parentViews.length; j++) {
-                    if (parentViews[j].output === __private.outputs[i]) {
-                        view = chromeComponent.createObject(parentViews[j].view, {"shellSurface": xdgPopup, "window": window});
-                        view.x = xdgPopup.position.x;
-                        view.y = xdgPopup.position.y;
-                        view.moveItem = window.moveItem;
-                        window.addWindowView(view);
-                    }
-                }
-            }
-        }
+        onXdgSurfaceCreated: handleShellSurfaceCreated(xdgSurface)
+        onXdgPopupCreated: handleShellSurfaceCreated(xdgPopup)
     }
 
-    GtkShell {}
+    GtkShell {
+        onGtkSurfaceCreated: {
+            gtkSurface.appIdChanged.connect(function() {
+                // Move surface under this appId because for some reason Gtk+ applications
+                // are unable to provide a reliable appId via xdg-shell as opposed to gtk-shell
+                var shellSurface = __private.shellSurfaces.find(function(element) {
+                    return element.surface === gtkSurface.surface;
+                });
+                if (shellSurface === undefined)
+                    return;
+                var shellSurfaceData = __private.shelSurfacesData.find(function(element) {
+                    return element.shellSurface === shellSurface;
+                });
+                if (shellSurfaceData !== undefined)
+                    shellSurfaceData.appId = appId;
+            });
+        }
+    }
 
     TextInputManager {}
 
@@ -216,37 +230,32 @@ WaylandCompositor {
     Component {
         id: surfaceComponent
 
-        WaylandSurface {
-            id: surface
+        WaylandSurface {}
+    }
 
-            onHasContentChanged: {
-                if (cursorSurface)
-                    return;
+    // Item that catches move operations instead of actual surface items
+    Component {
+        id: moveItemComponent
 
-                if (hasContent) {
-                    var window = applicationManagerExt.windowForSurface(surface);
-
-                    if (window)
-                        windowsModel.append({"window": window});
-                } else {
-                    for (var i = 0; i < windowsModel.count; i++) {
-                        if (windowsModel.get(i).window.surface === surface) {
-                            windowsModel.remove(i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+        MoveItem {}
     }
 
     // Window component
     Component {
         id: chromeComponent
 
-        WindowChrome {
-            animationsEnabled: parent.animateWindows
+        Chrome {
             inputEventsEnabled: !output.screenView.locked
+        }
+    }
+
+    // Surface item for shell helper's grab surface
+    Component {
+        id: grabItemComponent
+
+        WaylandQuickItem {
+            focusOnClick: false
+            onSurfaceChanged: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
         }
     }
 
@@ -258,14 +267,17 @@ WaylandCompositor {
     ShellHelper {
         id: shellHelper
         onGrabSurfaceAdded: {
-            for (var i = 0; i < __private.outputs.length; i++)
-                __private.outputs[i].grabItem.surface = surface;
+            var parentItem;
+            for (var i = 0; i < __private.outputs.length; i++) {
+                parentItem = __private.outputs[i].window.contentItem;
+                grabItemComponent.createObject(parentItem, {"surface": surface});
+            }
         }
     }
 
-    // Windows model
-    ListModel {
-        id: windowsModel
+    // Holds move items in the compositor space
+    Item {
+        id: rootItem
     }
 
     // XWayland
@@ -386,14 +398,35 @@ WaylandCompositor {
         SessionInterface.idle = true;
     }
 
-    function activateWindows(appId) {
-        // Activate all windows of this application and unminimize
-        for (var i = 0; i < compositor.windowsModel.count; i++) {
-            var window = compositor.windowsModel.get(i).window
+    function handleShellSurfaceCreated(shellSurface) {
+        shellSurfaces.append({"shellSurface": shellSurface});
 
-            if (window.appId === appId) {
-                window.minimized = false
-                window.activate()
+        var moveItem =
+                moveItemComponent.createObject(rootItem, {
+                                                   "x": defaultOutput.position.x,
+                                                   "y": defaultOutput.position.y,
+                                                   "width": Qt.binding(function() { return shellSurface.surface.width; }),
+                                                   "height": Qt.binding(function() { return shellSurface.surface.height; })
+                                               });
+        for (var i = 0; i < __private.outputs.length; i++)
+            __private.createShellSurfaceItem(shellSurface, moveItem, __private.outputs[i]);
+    }
+
+    function handleShellSurfaceDestroyed(shellSurface) {
+        for (var i = 0; i < shellSurfaces.count; i++) {
+            if (shellSurfaces.get(i).shellSurface === shellSurface) {
+                shellSurfaces.remove(i, 1);
+                return;
+            }
+        }
+    }
+
+    function activateShellSurfaces(appId) {
+        for (var i = 0; i < shellSurfaces.count; i++) {
+            var shellSurface = shellSurfaces.get(i).shellSurface;
+            if (shellSurface.className === appId || shellSurface.appId === appId) {
+                for (var j = 0; j < __private.outputs.length; j++)
+                    __private.outputs[j].activateShellSurface(shellSurface);
             }
         }
     }

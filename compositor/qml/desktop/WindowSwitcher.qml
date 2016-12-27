@@ -48,8 +48,9 @@ Popup {
         id: thumbnailComponent
 
         Rectangle {
-            readonly property string title: window.title ? window.title : qsTr("Untitled")
-            readonly property real ratio: window.surface.size.width / window.surface.size.height
+            readonly property var view: compositor.defaultOutput.viewsBySurface[shellSurface.surface]
+            readonly property string title: shellSurface.title ? shellSurface.title : qsTr("Untitled")
+            readonly property real ratio: view.width / view.height
 
             id: wrapper
             width: height * ratio
@@ -63,7 +64,7 @@ Popup {
                     fill: parent
                     margins: Units.smallSpacing
                 }
-                surface: window.surface
+                surface: shellSurface.surface
                 sizeFollowsSurface: false
                 inputEventsEnabled: false
                 allowDiscardFrontBuffer: true
@@ -83,7 +84,7 @@ Popup {
                 }
                 width: Units.iconSizes.large
                 height: width
-                name: window.iconName
+                name: view.iconName
                 cache: false
                 z: 1
             }
@@ -100,7 +101,7 @@ Popup {
             clip: true
             focus: true
             orientation: ListView.Horizontal
-            model: compositor.windowsModel
+            model: compositor.shellSurfaces
             spacing: Units.smallSpacing
             highlightMoveDuration: Units.shortDuration
             delegate: thumbnailComponent
@@ -123,13 +124,12 @@ Popup {
     }
 
     function activate() {
-        var window = listView.model.get(listView.currentIndex);
-        if (window && window)
-            window.window.activate();
+        if (listView.currentItem)
+            listView.currentItem.view.activate();
     }
 
     function previous() {
-        if (windowsModel.count < 2)
+        if (listView.count < 2)
             return;
 
         if (listView.currentIndex == 0)
@@ -140,7 +140,7 @@ Popup {
     }
 
     function next() {
-        if (windowsModel.count < 2)
+        if (listView.count < 2)
             return;
 
         if (listView.currentIndex == listView.count - 1)

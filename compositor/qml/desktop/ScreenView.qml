@@ -39,44 +39,11 @@ Rectangle {
     readonly property alias authDialog: authDialog
 
     property bool cursorVisible: true
+    property bool locked: false
+
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
     property alias zoomEnabled: zoomArea.enabled
-
-    readonly property var windows: {
-        var windows = [];
-
-        for (var i = 0; i < windowsModel.count; i++) {
-            var window = windowsModel.get(i).window;
-
-            if (window.designedOutput === output)
-                windows.push(window);
-        }
-
-        return windows;
-    }
-
-    readonly property bool hasMaximizedWindow: {
-        for (var i = 0; i < windows.length; i++) {
-            var window = windows[i];
-
-            if (window.maximized)
-                return true;
-        }
-
-        return false;
-    }
-
-    readonly property bool hasFullscreenWindow: {
-        for (var i = 0; i < windows.length; i++) {
-            var window = windows[i];
-
-            if (window.fullscreen)
-                return true;
-        }
-
-        return false;
-    }
 
     state: "splash"
     states: [
@@ -295,7 +262,7 @@ Rectangle {
      * Methods
      */
 
-    function keyPressed(event) {
+    function handleKeyPressed(event) {
         // Handle Meta modifier
         if (event.modifiers & Qt.MetaModifier) {
             // Open window switcher
@@ -328,7 +295,7 @@ Rectangle {
         event.accept = false;
     }
 
-    function keyReleased(event) {
+    function handleKeyReleased(event) {
         // Handle Meta modifier
         if (event.modifiers & Qt.MetaModifier) {
             // Close window switcher

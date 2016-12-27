@@ -89,7 +89,7 @@ Rectangle {
 
         onClicked: {
             if (model.running) {
-                compositor.activateWindows(model.appId)
+                compositor.activateShellSurfaces(model.appId)
                 appLaunched() // Not really, but we want the same thing to happen
             } else {
                 applicationManager.launch(model.appId)

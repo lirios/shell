@@ -34,13 +34,14 @@ ExtendedOutput {
 
     readonly property bool primary: compositor.defaultOutput === this
 
+    property var viewsBySurface: ({})
+
     property int idleInhibit: 0
 
     readonly property alias screenView: screenView
     readonly property Item surfacesArea: screenView.surfacesArea
     //readonly property alias idleDimmer: idleDimmer
     readonly property alias cursor: cursor
-    readonly property alias grabItem: grabItem
 
     manufacturer: nativeScreen.manufacturer
     model: nativeScreen.model
@@ -61,13 +62,6 @@ ExtendedOutput {
         height: nativeScreen.size.height
         flags: Qt.FramelessWindowHint
 
-        // Grab surface from shell helper
-        WaylandQuickItem {
-            id: grabItem
-            focusOnClick: false
-            onSurfaceChanged: output.compositor.shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
-        }
-
         // Virtual Keyboard
         Loader {
             parent: window.overlay
@@ -84,14 +78,14 @@ ExtendedOutput {
                 // Input wakes the output
                 compositor.wake();
 
-                screenView.keyPressed(event);
+                screenView.handleKeyPressed(event);
             }
 
             Keys.onReleased: {
                 // Input wakes the output
                 compositor.wake();
 
-                screenView.keyReleased(event);
+                screenView.handleKeyReleased(event);
             }
         }
 
@@ -101,10 +95,22 @@ ExtendedOutput {
 
             anchors.fill: parent
 
-            windowSystemCursorEnabled: false
+            windowSystemCursorEnabled: true
 
-            onMouseXChanged: compositor.wake()
-            onMouseYChanged: compositor.wake()
+            onMouseXChanged: {
+                // Wake up
+                compositor.wake();
+
+                // Update global mouse position
+                compositor.mousePos.x = output.position.x + mouseX;
+            }
+            onMouseYChanged: {
+                // Wake up
+                compositor.wake();
+
+                // Update global mouse position
+                compositor.mousePos.y = output.position.y + mouseY;
+            }
             // TODO: Need to wake up with mouse button pressed, released and wheel
 
             // User interface
@@ -147,6 +153,10 @@ ExtendedOutput {
         property bool idle: false
     }
 
+    /*
+     * Methods
+     */
+
     function wake() {
         if (!__private.idle)
             return;
@@ -164,5 +174,14 @@ ExtendedOutput {
         console.debug("Standby output", manufacturer, model);
         idleDimmer.fadeIn();
         __private.idle = true;
+    }
+
+    function activateShellSurface(shellSurface) {
+        for (surface in viewsBySurface) {
+            if (shellSurface.surface === surface) {
+                viewsBySurface[surface].activate();
+                break;
+            }
+        }
     }
 }

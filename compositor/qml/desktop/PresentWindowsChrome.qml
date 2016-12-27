@@ -32,12 +32,12 @@ import Fluid.Controls 1.0
 import "../components" as ShellComponents
 
 Item {
-    property var window
+    property var view
     readonly property alias container: mouseArea
     readonly property int margin: 10
 
-    signal activated(var window)
-    signal closeRequested(var window)
+    signal selected(var view)
+    signal closed(var view)
 
     id: chrome
     anchors.fill: parent
@@ -50,7 +50,7 @@ Item {
         acceptedButtons: Qt.AllButtons
         hoverEnabled: true
         z: 4
-        onClicked: chrome.activated(window)
+        onClicked: chrome.selected(view)
     }
 
     RectangularGlow {
@@ -85,7 +85,7 @@ Item {
                 centerIn: parent
                 margins: Units.smallSpacing
             }
-            text: window.title ? window.title : qsTr("Unknown")
+            text: view.shellSurface.title ? view.shellSurface.title : qsTr("Unknown")
             elide: Text.ElideRight
         }
 
@@ -119,7 +119,7 @@ Item {
                 centerIn: parent
                 margins: Units.smallSpacing
             }
-            name: window.iconName ? window.iconName : "unknown"
+            name: view.iconName ? view.iconName : "unknown"
             width: Units.iconSizes.large
             height: width
         }
@@ -144,7 +144,7 @@ Item {
         width: Units.iconSizes.medium
         z: 5
         opacity: mouseArea.containsMouse || hovered ? 1.0 : 0.0
-        onClicked: chrome.closeRequested(window)
+        onClicked: chrome.closed(view)
 
         Behavior on opacity {
             NumberAnimation {

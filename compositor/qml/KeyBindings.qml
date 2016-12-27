@@ -220,7 +220,7 @@ Item {
         onActivated: {
             var i, workspace;
             for (i = 0; i < compositor.outputs.length; i++) {
-                workspace = compositor.outputs[i].screenView.surfacesArea;
+                workspace = compositor.outputs[i].surfacesArea;
                 if (workspace.state === "reveal")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")

@@ -48,7 +48,7 @@ PanelItem {
             if (model.active)
                 toggleWindows();
             else
-                activateWindows(model.appId);
+                activateShellSurfaces(model.appId);
         } else {
             if (!launcher.model.get(index).launch())
                 console.warn("Failed to run:", model.appId);

@@ -25,11 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.Controls 1.0
 
 Item {
-    readonly property alias animateWindows: __private.animationsEnabled
-
     id: workspace
     state: "normal"
     states: [
@@ -83,7 +80,6 @@ Item {
 
         property var storage: ({})
         property var chromes: ({})
-        property bool animationsEnabled: false
     }
 
     Component {
@@ -92,41 +88,26 @@ Item {
         PresentWindowsChrome {}
     }
 
-    function windowsList() {
-        var windows = [];
-        var i, window;
-        for (i = 0; i < applicationManager.windows.length; i++) {
-            window = applicationManager.windows[i];
-            if (window.designedOutput === output)
-                windows.push(window);
-        }
-        return windows;
-    }
-
     function present() {
         console.time("present " + output.model);
 
-        // Enable window animations
-        __private.animationsEnabled = true;
-
         // Parameters
-        var windows = windowsList();
-        var grid = Math.ceil(windows.length / 2);
+        var grid = Math.ceil(compositor.shellSurfaces.count / 2);
         var maxWidth = Math.floor(output.availableGeometry.width / grid);
         var maxHeight = Math.floor(output.availableGeometry.height / 2);
-        var scale, x, y;
 
         // Loop over the windows
-        var i, j, window;
-        for (i = 0; i < windows.length; i++) {
-            // Get a hold of the window
-            window = windows[i];
+        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
+            // Get a hold of the shell surface
+            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+            var view = output.viewsBySurface[shellSurface.surface];
 
             // Window size
-            var width = window.surface.size.width;
-            var height = window.surface.size.height;
+            var width = view.width;
+            var height = view.height;
 
             // Calculate scale factor
+            var scale;
             if (width >= height)
                 scale = width > maxWidth ? maxWidth / width : 0.85;
             else
@@ -136,35 +117,36 @@ Item {
             scale -= 0.15;
 
             // Calculate position
-            x = ((i % grid) * maxWidth) + Math.floor((maxWidth - scale * width) / 2);
-            y = ((i < grid ? 0 : 1) * maxHeight) + Math.floor((maxHeight - scale * height) / 2);
+            var x = ((i % grid) * maxWidth) + Math.floor((maxWidth - scale * width) / 2);
+            var y = ((i < grid ? 0 : 1) * maxHeight) + Math.floor((maxHeight - scale * height) / 2);
 
             // Save window position
-            __private.storage[window] = {"x": window.moveItem.x, "y": window.moveItem.y};
+            __private.storage[view] = {"x": view.moveItem.x, "y": view.moveItem.y};
 
             // Move the window
-            window.moveItem.x = output.position.x + x;
-            window.moveItem.y = output.position.y + y;
+            view.moveItem.animateTo(output.position.x + x, output.position.y + y);
 
-            // Scale shell surface items down
-            for (j = 0; j < window.views.length; j++) {
-                window.views[j].sizeFollowsSurface = false;
-                window.views[j].inputEventsEnabled = false;
-                window.views[j].scale = scale;
+            if (view.primary) {
+                // Scale view down and disable input
+                view.inputEventsEnabled = false;
+                view.resizeTo(view.width * scale, view.height * scale);
 
                 // Create the chrome
-                var chrome = chromeComponent.createObject(window.views[j], {"window": window});
-                __private.chromes[window.views[j]] = chrome;
+                var chrome = chromeComponent.createObject(view, {"view": view});
+                __private.chromes[view] = chrome;
 
                 // Handle chrome events
-                chrome.activated.connect(function(window) {
+                chrome.selected.connect(function(view) {
                     state = "normal";
-                    window.activate();
+                    view.activate();
                 });
-                chrome.closeRequested.connect(function(window) {
+                chrome.closed.connect(function(view) {
                     state = "normal";
-                    window.close();
+                    view.close();
                 });
+            } else {
+                // Hide view because it's not on this output
+                view.visible = false;
             }
         }
         console.timeEnd("present loop " + output.model);
@@ -174,41 +156,35 @@ Item {
 
     function presentRestore() {
         // Restore windows
-        var windows = windowsList();
-        var i, j, window, view;
-        for (i = 0; i < windows.length; i++) {
-            // Get a hold of the window
-            window = windows[i];
+        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
+            // Get a hold of the shell surface
+            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+            var view = output.viewsBySurface[shellSurface.surface];
 
             // Restore position
-            var pos = __private.storage[window];
-            window.moveItem.x = pos.x;
-            window.moveItem.y = pos.y;
-            delete __private.storage[window];
+            var pos = __private.storage[view];
+            if (pos !== undefined) {
+                view.moveItem.animateTo(pos.x, pos.y);
+                delete __private.storage[view];
+            }
 
-            // Scale shell surface items up
-            for (j = 0; j < window.views.length; j++) {
-                window.views[j].sizeFollowsSurface = true;
-                window.views[j].inputEventsEnabled = true;
-                window.views[j].scale = 1.0;
+            // Scale view up and enable input
+            view.inputEventsEnabled = true;
+            view.restoreSize();
+            view.visible = true;
 
-                // Destroy the chrome
-                __private.chromes[window.views[j]].destroy();
-                delete __private.chromes[window.views[j]];
+            // Destroy chrome
+            var chrome = __private.chromes[view];
+            if (chrome !== undefined) {
+                chrome.destroy();
+                delete __private.chromes[view];
             }
         }
-
-        // Disable window animations
-        __private.animationsEnabled = false;
     }
 
     function reveal() {
         console.time("reveal " + output.model);
 
-        // Enable window animations
-        __private.animationsEnabled = true;
-
-        var windows = windowsList();
         var margin = 96;
 
         // Divide screen in 4 zones
@@ -228,29 +204,33 @@ Item {
 
         // Loop over windows
         console.time("reveal loop " + output.model);
-        var i, j, window, view, x, y;
-        for (i = 0; i < windows.length; i++) {
-            // Get a hold of the window
-            window = windows[i];
+        var x, y;
+        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
+            // Get a hold of the shell surface
+            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+            var view = output.viewsBySurface[shellSurface.surface];
+
+            // Skip shell surfaces not rendered on this output
+            if (!view.primary)
+                continue;
 
             // Determine global coordinates to the closest of the 4 zones
-            if (contains(topRight, window.x, window.y)) {
+            if (contains(topRight, view.x, view.y)) {
                 x = topRight.x + topRight.width - margin;
-                y = topRight.y - window.surface.size.height + margin;
-            } else if (contains(bottomLeft, window.x, window.y)) {
-                x = bottomLeft.x - window.surface.size.width + margin;
+                y = topRight.y - view.height + margin;
+            } else if (contains(bottomLeft, view.x, view.y)) {
+                x = bottomLeft.x - view.width + margin;
                 y = bottomLeft.y + bottomLeft.height - margin;
-            } else if (contains(bottomRight, window.x, window.y)) {
+            } else if (contains(bottomRight, view.x, view.y)) {
                 x = bottomRight.x + bottomRight.width - margin;
                 y = bottomRight.y + bottomRight.height - margin;
             } else {
-                x = topLeft.x - window.surface.size.width + margin;
-                y = topLeft.y - window.surface.size.height + margin;
+                x = topLeft.x - view.width + margin;
+                y = topLeft.y - view.height + margin;
             }
 
-            __private.storage[window] = {"x": window.moveItem.x, "y": window.moveItem.y};
-            window.moveItem.x = x;
-            window.moveItem.y = y;
+            __private.storage[view] = {"x": view.moveItem.x, "y": view.moveItem.y};
+            view.moveItem.animateTo(x, y);
         }
         console.timeEnd("reveal loop " + output.model);
 
@@ -259,18 +239,16 @@ Item {
 
     function revealRestore() {
         // Restore windows position
-        var windows = windowsList();
-        var i, j, window, view;
-        for (i = 0; i < windows.length; i++) {
-            window = windows[i];
+        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
+            // Get a hold of the shell surface
+            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+            var view = output.viewsBySurface[shellSurface.surface];
 
-            var pos = __private.storage[window];
-            window.moveItem.x = pos.x;
-            window.moveItem.y = pos.y;
-            delete __private.storage[window];
+            var pos = __private.storage[view];
+            if (pos !== undefined) {
+                view.moveItem.animateTo(pos.x, pos.y);
+                delete __private.storage[view];
+            }
         }
-
-        // Disable window animations
-        __private.animationsEnabled = false;
     }
 }

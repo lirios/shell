@@ -42,8 +42,8 @@ Rectangle {
     property real size: 56
     property color darkColor: Material.dialogColor
 
-    property bool showing
-    property bool maximized: screenView.hasMaximizedWindow
+    property bool showing: compositor.hasMaxmizedShellSurfaces
+    property bool maximized: compositor.hasFullscreenShellSurfaces
 
     color: maximized ? darkColor : "transparent"
 
@@ -79,15 +79,6 @@ Rectangle {
             easing.type: Easing.OutQuad
             duration: Units.shortDuration
         }
-    }
-
-    /*
-     * Connections
-     */
-
-    Connections {
-        target: screenView
-        onHasFullscreenWindowChanged: showing = !screenView.hasFullscreenWindow
     }
 
     /*

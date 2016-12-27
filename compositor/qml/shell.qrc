@@ -3,6 +3,7 @@
 
 <qresource>
 	<file>Compositor.qml</file>
+	<file>Output.qml</file>
 	<file>KeyBindings.qml</file>
 	<file>ShellSettings.qml</file>
 	<file>XWayland.qml</file>
@@ -79,7 +80,9 @@
 	<file>screens/PowerDialog.qml</file>
 	<file>screens/PowerScreen.qml</file>
 	<file>screens/SplashScreen.qml</file>
-	<file>windows/WindowMenu.qml</file>
+	<file>windows/Chrome.qml</file>
+	<file>windows/ChromeMenu.qml</file>
+	<file>windows/MoveItem.qml</file>
 </qresource>
 
 </RCC>
