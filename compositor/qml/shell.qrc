@@ -10,7 +10,6 @@
 	<file>base/Keyboard.qml</file>
 	<file>base/OutputConfiguration.qml</file>
 	<file>components/CloseButton.qml</file>
-	<file>components/MenuSeparator.qml</file>
 	<file>components/Overlay.qml</file>
 	<file>components/PagedGrid.qml</file>
 	<file>decoration/PopupWindowDecoration.qml</file>

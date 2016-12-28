@@ -25,9 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import Fluid.Controls 1.0
-import "../components" as CustomComponents
 
 Menu {
     MenuItem {
@@ -42,7 +41,7 @@ Menu {
         text: qsTr("Maximize")
     }
 
-    CustomComponents.MenuSeparator {}
+    MenuSeparator {}
 
     MenuItem {
         text: qsTr("Move")
@@ -52,7 +51,7 @@ Menu {
         text: qsTr("Resize")
     }
 
-    CustomComponents.MenuSeparator {}
+    MenuSeparator {}
 
     MenuItem {
         text: qsTr("Close")

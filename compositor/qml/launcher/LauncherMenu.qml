@@ -25,10 +25,9 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import Fluid.Controls 1.0
 import Liri.Launcher 0.1 as CppLauncher
-import "../components" as CustomComponents
 
 Menu {
     id: menu
@@ -60,7 +59,7 @@ Menu {
     Component {
         id: separatorComponent
 
-        CustomComponents.MenuSeparator {}
+        MenuSeparator {}
     }
 
 
@@ -69,7 +68,7 @@ Menu {
         enabled: model.running
     }
 
-    CustomComponents.MenuSeparator {}
+    MenuSeparator {}
 
     MenuItem {
         text: app.pinned ? qsTr("Unpin from Launcher") : qsTr("Pin to Launcher")
@@ -80,7 +79,7 @@ Menu {
         }
     }
 
-    CustomComponents.MenuSeparator {}
+    MenuSeparator {}
 
     MenuItem {
         id: ciao
