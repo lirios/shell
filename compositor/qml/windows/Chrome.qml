@@ -24,6 +24,7 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.0
 import Liri.WaylandServer 1.0
+import Fluid.Material 1.0
 
 ChromeItem {
     id: chrome
@@ -120,6 +121,11 @@ ChromeItem {
 
     ShellSurfaceItem {
         id: shellSurfaceItem
+
+        layer.enabled: true
+        layer.effect: ElevationEffect {
+            elevation: shellSurfaceItem.focus ? 24 : 8
+        }
 
         focusOnClick: true
         onFocusChanged: {
