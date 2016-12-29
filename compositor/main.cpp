@@ -88,6 +88,9 @@ int main(int argc, char *argv[])
     // Setup the environment
     setupEnvironment();
 
+    // Force liri QPA for the compositor
+    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("liri"));
+
     // Automatically support HiDPI
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
