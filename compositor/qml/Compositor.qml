@@ -121,7 +121,9 @@ WaylandCompositor {
         }
 
         function handleShellSurfaceDestroyed(shellSurface) {
-            for (var i = 0; i < shellSurfaces.count; i++) {
+            var i;
+
+            for (i = 0; i < shellSurfaces.count; i++) {
                 if (shellSurfaces.get(i).shellSurface === shellSurface) {
                     shellSurfaces.remove(i, 1);
                     break;
@@ -232,7 +234,14 @@ WaylandCompositor {
     Component {
         id: surfaceComponent
 
-        WaylandSurface {}
+        WaylandSurface {
+            id: surface
+
+            Component.onDestruction: {
+                for (var i = 0; i < outputs.length; i++)
+                    delete outputs[i].viewsBySurface[surface];
+            }
+        }
     }
 
     // Item that catches move operations instead of actual surface items

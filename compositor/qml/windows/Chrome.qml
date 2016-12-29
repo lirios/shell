@@ -122,6 +122,7 @@ ChromeItem {
     ShellSurfaceItem {
         id: shellSurfaceItem
 
+        property int windowType: Qt.Window
         readonly property bool hasDropShadow: !shellSurface.maximized && !shellSurface.fullscreen
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
@@ -142,7 +143,7 @@ ChromeItem {
         onSurfaceDestroyed: {
             bufferLocked = true;
 
-            switch (shellSurface.windowType) {
+            switch (shellSurfaceItem.windowType) {
             case Qt.Window:
                 topLevelDestroyAnimation.start();
                 break;
@@ -156,22 +157,20 @@ ChromeItem {
                 chrome.destroy();
                 break;
             }
-
-            delete output.viewsBySurface[shellSurface.surface];
-
-            output.compositor.handleShellSurfaceDestroyed(shellSurface);
         }
+
+        Component.onCompleted: shellSurfaceItem.windowType = shellSurface.windowType
 
         /*
          * Surface events
          */
 
         Connections {
-            target: shellSurface.surface
+            target: shellSurfaceItem.surface
             onHasContentChanged: {
                 // Animate window creationg
-                if (shellSurface.surface.hasContent && !__private.mapped) {
-                    switch (shellSurface.windowType) {
+                if (shellSurfaceItem.surface.hasContent && !__private.mapped) {
+                    switch (shellSurfaceItem.windowType) {
                     case Qt.Window:
                         __private.setPosition();
                         topLevelMapAnimation.start();
@@ -199,6 +198,7 @@ ChromeItem {
         Connections {
             target: shellSurface
             ignoreUnknownSignals: true
+            onWindowTypeChanged: shellSurfaceItem.windowType = shellSurface.windowType
             onActivatedChanged: {
                 if (shellSurface.activated) {
                     chrome.raise();
@@ -221,12 +221,12 @@ ChromeItem {
                 __private.offset.x = 0;
                 __private.offset.y = 0;
 
-                if (parentSurface == undefined && relativeToParent == undefined) {
+                if (typeof(parentSurface) == "undefined" && typeof(relativeToParent) == "undefined") {
                     if (shellSurface.parentSurface) {
                         __private.parentSurface = shellSurface.parentSurface.surface;
                         parentSurfaceItem = output.viewsBySurface[__private.parentSurface];
-                        __private.offset.x = (shellSurfaceItem.width - parentItem.width) / 2;
-                        __private.offset.y = (shellSurfaceItem.height - parentItem.height) / 2;
+                        __private.offset.x = (shellSurfaceItem.width - parentSurfaceItem.width) / 2;
+                        __private.offset.y = (shellSurfaceItem.height - parentSurfaceItem.height) / 2;
                     }
                 } else {
                     parentSurfaceItem = output.viewsBySurface[parentSurface];
@@ -241,6 +241,7 @@ ChromeItem {
                 __private.offset.y = 0;
             }
             onShowWindowMenu: chrome.showWindowMenu(localSurfacePosition.x, localSurfacePosition.y)
+            onDestroyed: output.compositor.handleShellSurfaceDestroyed(shellSurface)
         }
 
         /*
