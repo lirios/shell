@@ -34,7 +34,7 @@ The following modules and their dependencies are required:
 
  * [ECM >= 1.7.0](http://quickgit.kde.org/?p=extra-cmake-modules.git)
  * [fluid](https://github.com/lirios/fluid)
- * [liri-wayland](https://github.com/lirios/liri-wayland)
+ * [liri-wayland](https://github.com/lirios/wayland)
  * [liri-workspace](https://github.com/lirios/workspace)
  * [pam](http://www.linux-pam.org/)
  * [libqtxdg](https://github.com/lxde/libqtxdg)
