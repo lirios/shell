@@ -98,6 +98,9 @@ set(REQUIRED_QT_VERSION "5.8.0")
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
              DBus Xml Widgets Qml Quick QuickControls2 WaylandClient WaylandCompositor Sql)
 
+# Find qtwayland-scanner
+find_package(QtWaylandScanner REQUIRED)
+
 # Find Liri Wayland
 set(REQUIRED_LIRIWAYLAND_VERSION "0.8.0")
 find_package(LiriWaylandClient ${REQUIRED_LIRIWAYLAND_VERSION} REQUIRED)
