@@ -7,6 +7,10 @@ include_directories(
     "${CMAKE_CURRENT_BINARY_DIR}/sessionmanager/screensaver"
 )
 
+if(systemd_FOUND)
+    include_directories(${systemd_INCLUDE_DIRS})
+endif()
+
 set(SOURCES
     application.cpp
     main.cpp
@@ -50,6 +54,10 @@ target_link_libraries(liri-shell
     Qt5Xdg
     ${PAM_LIBRARIES}
 )
+
+if(systemd_FOUND)
+    target_link_libraries(liri-shell ${systemd_LIBRARIES})
+endif()
 
 # Git revision
 include(GetGitRevision)

@@ -86,6 +86,18 @@ if(ENABLE_SYSTEMD)
         string(REGEX REPLACE "[ \t\n]+" "" SYSTEMD_USER_UNIT_DIR ${SYSTEMD_USER_UNIT_DIR})
     endif()
     message(STATUS "systemd user unit directory: ${SYSTEMD_USER_UNIT_DIR}")
+
+    pkg_check_modules(systemd libsystemd-daemon)
+    if(systemd_FOUND)
+        set(HAVE_SYSTEMD 1)
+    else()
+        # libsystem-daemon was merged to libsystem on systemd 208->209
+        pkg_check_modules(systemd libsystemd)
+        if(systemd_FOUND)
+            set(HAVE_SYSTEMD 1)
+        endif()
+    endif()
+    add_feature_info("systemd" systemd_FOUND "Required for systemd integration")
 endif()
 
 # Check for prctl

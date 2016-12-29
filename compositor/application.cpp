@@ -33,10 +33,15 @@
 
 #include <QtWaylandCompositor/QWaylandCompositor>
 
+#include "config.h"
 #include "application.h"
 #include "processlauncher/processlauncher.h"
 #include "sessionmanager/sessionmanager.h"
 #include "sigwatch/sigwatch.h"
+
+#if HAVE_SYSTEMD
+#  include <systemd/sd-daemon.h>
+#endif
 
 static const QEvent::Type StartupEventType = (QEvent::Type)QEvent::registerEventType();
 
@@ -119,8 +124,15 @@ void Application::startup()
     // Set Wayland socket name
     QObject *rootObject = m_homeApp->rootObjects().at(0);
     QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
-    if (compositor)
+    if (compositor) {
+#if HAVE_SYSTEMD
+        connect(compositor, &QWaylandCompositor::createdChanged, this, [this] {
+            // Notify systemd when the Wayland socket is available
+            sd_notify(0, "READY=1");
+        });
+#endif
         m_launcher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
+    }
 
     // Launch autostart applications
     autostart();
