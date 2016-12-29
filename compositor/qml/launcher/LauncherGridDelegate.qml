@@ -84,9 +84,6 @@ Rectangle {
     Ripple {
         anchors.fill: parent
 
-        // Disable window system cursor when hover this mouse area
-        cursorShape: Qt.BlankCursor
-
         onClicked: {
             if (model.running) {
                 compositor.activateShellSurfaces(model.appId)
