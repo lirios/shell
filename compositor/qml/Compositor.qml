@@ -44,10 +44,8 @@ WaylandCompositor {
     readonly property alias shellSurfaces: shellSurfaces
 
     readonly property bool hasMaxmizedShellSurfaces: {
-        var shellSurface;
-
-        for (var i = 0; i < __private.shellSurfaces.length; i++) {
-            shellSurface = __private.shellSurfaces[i];
+        for (var i = 0; i < shellSurfaces.count; i++) {
+            var shellSurface = shellSurfaces[i].shellSurface;
             if (shellSurface.maximized)
                 return true;
         }
@@ -56,10 +54,8 @@ WaylandCompositor {
     }
 
     readonly property bool hasFullscreenShellSurfaces: {
-        var shellSurface;
-
-        for (var i = 0; i < __private.shellSurfaces.length; i++) {
-            shellSurface = __private.shellSurfaces[i];
+        for (var i = 0; i < shellSurfaces.count; i++) {
+            var shellSurface = shellSurfaces[i].shellSurface;
             if (shellSurface.fullscreen)
                 return true;
         }
