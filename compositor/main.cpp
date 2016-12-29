@@ -94,6 +94,9 @@ int main(int argc, char *argv[])
     // Force liri QPA for the compositor
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("liri"));
 
+    // Disable QPA mouse cursor
+    qputenv("LIRI_QPA_HIDECURSOR", QByteArrayLiteral("1"));
+
     // Automatically support HiDPI
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
