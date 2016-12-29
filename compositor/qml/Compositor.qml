@@ -159,22 +159,7 @@ WaylandCompositor {
         onXdgPopupCreated: handleShellSurfaceCreated(xdgPopup)
     }
 
-    GtkShell {
-        onGtkSurfaceCreated: {
-            gtkSurface.appIdChanged.connect(function() {
-                // Move surface under this appId because for some reason Gtk+ applications
-                // are unable to provide a reliable appId via xdg-shell as opposed to gtk-shell
-                for (var i = 0; i < shellSurfaces.count; i++) {
-                    var shellSurface = shellSurfaces.get(i).shellSurface;
-
-                    if (shellSurface.surface === gtkSurface.surface) {
-                        shellSurface.canonicalAppId = appId;
-                        break;
-                    }
-                }
-            });
-        }
-    }
+    GtkShell {}
 
     TextInputManager {}
 
