@@ -111,6 +111,11 @@ int main(int argc, char *argv[])
     // Set Qt platform for applications that will be executed from here
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
 
+    // Don't mess with client scale factor
+    qunsetenv("QT_SCALE_FACTOR");
+    qunsetenv("QT_SCREEN_SCALE_FACTORS");
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArrayLiteral("1"));
+
     // Command line parser
     QCommandLineParser parser;
     parser.setApplicationDescription(TR("Wayland compositor and shell for Liri OS"));
