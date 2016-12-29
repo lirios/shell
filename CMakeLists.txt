@@ -102,6 +102,7 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
 find_package(QtWaylandScanner REQUIRED)
 
 # Find Liri Wayland
+set(REQUIRED_LIRIWAYLAND_VERSION "0.8.0")
 find_package(LiriWaylandClient ${REQUIRED_LIRIWAYLAND_VERSION} REQUIRED)
 find_package(LiriWaylandServer ${REQUIRED_LIRIWAYLAND_VERSION} REQUIRED)
 
