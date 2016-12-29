@@ -35,6 +35,7 @@ ExtendedOutput {
     readonly property bool primary: compositor.defaultOutput === this
 
     property var viewsBySurface: ({})
+    property var grabItem: null
 
     property int idleInhibit: 0
 
@@ -95,7 +96,7 @@ ExtendedOutput {
 
             anchors.fill: parent
 
-            windowSystemCursorEnabled: true
+            windowSystemCursorEnabled: false
 
             onMouseXChanged: {
                 // Wake up
@@ -119,21 +120,6 @@ ExtendedOutput {
                 anchors.fill: parent
             }
 
-            // Pointer cursor
-            WaylandCursorItem {
-                id: cursor
-
-                seat: output.compositor.defaultSeat
-
-                x: mouseTracker.mouseX
-                y: mouseTracker.mouseY
-                z: 1000001
-
-                visible: mouseTracker.containsMouse &&
-                         screenView.cursorVisible &&
-                         output.powerState === ExtendedOutput.PowerStateOn
-            }
-
             // Idle dimmer
             IdleDimmer {
                 id: idleDimmer
@@ -144,6 +130,22 @@ ExtendedOutput {
 
                 z: 1000002
             }
+        }
+
+        // Pointer cursor
+        WaylandCursorItem {
+            id: cursor
+
+            parent: mouseTracker.parent
+            seat: output.compositor.defaultSeat
+
+            x: mouseTracker.mouseX
+            y: mouseTracker.mouseY
+            z: 1000001
+
+            visible: mouseTracker.containsMouse &&
+                     screenView.cursorVisible &&
+                     output.powerState === ExtendedOutput.PowerStateOn
         }
     }
 

@@ -92,6 +92,13 @@ WaylandCompositor {
 
         property var outputs: []
 
+        function createGrabItem(surface, output) {
+            var grabItem = grabItemComponent.createObject(output.surfacesArea, {"surface": surface});
+            output.grabItem = grabItem;
+            if (output === defaultOutput)
+                grabItem.setPrimary();
+        }
+
         function createShellSurfaceItem(shellSurface, moveItem, output) {
             var parentSurfaceItem = output.viewsBySurface[shellSurface.parentSurface];
             var parent = parentSurfaceItem || output.surfacesArea;
@@ -144,6 +151,9 @@ WaylandCompositor {
                                                     })
 
             __private.outputs.push(view);
+
+            if (shellHelper.grabSurface)
+                __private.createGrabItem(shellHelper.grabSurface, view);
         }
         onScreenRemoved: {
             var index = screenManager.indexOf(screen);
@@ -173,6 +183,19 @@ WaylandCompositor {
     QtWindowManager {
         showIsFullScreen: false
         onOpenUrl: processRunner.launchCommand("xdg-open %1".arg(url))
+    }
+
+    ShellHelper {
+        id: shellHelper
+
+        property WaylandSurface grabSurface: null
+
+        onGrabSurfaceAdded: {
+            grabSurface = surface;
+
+            for (var i = 0; i < __private.outputs.length; i++)
+                __private.createGrabItem(surface, __private.outputs[i]);
+        }
     }
 
     WlShell {
@@ -273,18 +296,6 @@ WaylandCompositor {
     /*
      * Miscellaneous
      */
-
-    // Shell helper
-    ShellHelper {
-        id: shellHelper
-        onGrabSurfaceAdded: {
-            var parentItem;
-            for (var i = 0; i < __private.outputs.length; i++) {
-                parentItem = __private.outputs[i].window.contentItem;
-                grabItemComponent.createObject(parentItem, {"surface": surface});
-            }
-        }
-    }
 
     // Holds move items in the compositor space
     Item {
