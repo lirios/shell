@@ -24,10 +24,10 @@
 
 #pragma once
 
-#include <Liri/WaylandServer/ApplicationManager>
 #include <Vibe/Settings/QGSettings>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QObject>
+#include <QtWaylandCompositor/QWaylandShellSurface>
 
 class QDomElement;
 class Application;
@@ -39,40 +39,33 @@ Q_DECLARE_LOGGING_CATEGORY(APPLICATION_MANAGER)
 class ApplicationManager : public QObject
 {
     Q_OBJECT
-
-    Q_PROPERTY(Liri::WaylandServer::ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
 public:
     ApplicationManager(QObject *parent = nullptr);
-
-    Liri::WaylandServer::ApplicationManager *applicationManager() const;
 
     Application *getApplication(const QString &appId);
 
     QList<Application *> applications() const;
     QList<Application *> pinnedApps() const;
 
+    Q_INVOKABLE void registerShellSurface(QWaylandShellSurface *shellSurface);
+    Q_INVOKABLE void unregisterShellSurface(QWaylandShellSurface *shellSurface);
+    Q_INVOKABLE void focusShellSurface(QWaylandShellSurface *shellSurface);
+
 public Q_SLOTS:
     void refresh();
     void quit(const QString &appId);
     void launch(const QString &appId);
 
-    void setApplicationManager(Liri::WaylandServer::ApplicationManager *appMan);
-
 Q_SIGNALS:
-    void applicationManagerChanged();
     void applicationLaunched(Application *app);
     void refreshed();
     void applicationAdded(Application *app);
 
-private Q_SLOTS:
-    void handleApplicationAdded(QString appId, pid_t pid);
-    void handleApplicationRemoved(QString appId, pid_t pid);
-    void handleApplicationFocused(QString appId);
-
 private:
-    Liri::WaylandServer::ApplicationManager *m_appMan = nullptr;
     QGSettings *m_settings = nullptr;
     QMap<QString, Application *> m_apps;
+    QMap<QWaylandShellSurface *, QString> m_shellSurfaces;
 
+    QString getAppId(QWaylandShellSurface *shellSurface, qint64 pid);
     void readAppLink(const QDomElement &xml, const QString &categoryName);
 };

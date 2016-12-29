@@ -126,17 +126,24 @@ PanelItem {
         // Set index so that the window have a clue of which icon was clicked
         launcher.currentIndex = index;
 
-        // Minimize or unminimize windows
-        var i, window;
-        for (i = 0; i < compositor.windowsModel.count; i++) {
-            window = compositor.windowsModel.get(i).window;
-            if (window.appId === model.appId) {
+        // Minimize or unminimize shell surfaces
+        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
+            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+            if (shellSurface.canonicalAppId === model.appId) {
+                // Task icon position
                 var pt = screenView.mapFromItem(launcherItem, launcherItem.width * 0.5, launcherItem.height * 0.5);
                 pt.x += output.position.x;
                 pt.y += output.position.y;
 
-                window.taskIconGeometry = Qt.rect(pt.x, pt.y, launcherItem.width, launcherItem.height);
-                window.minimized = !window.minimized;
+                // Set task icon geometry and toggle minimization
+                for (var j = 0; j < compositor.outputs.length; j++) {
+                    var curOutput = compositor.outputs[j];
+                    for (var surface in curOutput.viewsBySurface) {
+                        var view = curOutput.viewsBySurface[surface];
+                        view.taskIconGeometry = Qt.rect(pt.x, pt.y, launcherItem.width, launcherItem.height);
+                        view.minimized = !view.minimized;
+                    }
+                }
             }
         }
     }

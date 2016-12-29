@@ -74,15 +74,15 @@ Menu {
         text: app.pinned ? qsTr("Unpin from Launcher") : qsTr("Pin to Launcher")
         enabled: model.name
         onTriggered: {
-            app.pinned = !app.pinned
-            menu.close()
+            app.pinned = !app.pinned;
+            menu.close();
         }
     }
 
     MenuSeparator {}
 
     MenuItem {
-        id: ciao
+        id: quit
         text: qsTr("Quit")
         enabled: app.running
         onTriggered: {

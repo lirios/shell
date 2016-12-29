@@ -30,7 +30,7 @@ ChromeItem {
     id: chrome
 
     readonly property alias primary: __private.primary
-    readonly property bool minimized: false
+    property bool minimized: false
 
     property alias shellSurface: shellSurfaceItem.shellSurface
     property alias moveItem: shellSurfaceItem.moveItem
@@ -133,6 +133,7 @@ ChromeItem {
             if (focus && shellSurface.activated === undefined) {
                 chrome.raise();
                 focusAnimation.start();
+                applicationManager.focusShellSurface(shellSurface);
             }
         }
         onSurfaceDestroyed: {
@@ -199,6 +200,7 @@ ChromeItem {
                 if (shellSurface.activated) {
                     chrome.raise();
                     focusAnimation.start();
+                    applicationManager.focusShellSurface(shellSurface);
                 }
             }
             onMinimizedChanged: {

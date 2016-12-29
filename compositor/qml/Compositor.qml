@@ -164,25 +164,19 @@ WaylandCompositor {
             gtkSurface.appIdChanged.connect(function() {
                 // Move surface under this appId because for some reason Gtk+ applications
                 // are unable to provide a reliable appId via xdg-shell as opposed to gtk-shell
-                var shellSurface = __private.shellSurfaces.find(function(element) {
-                    return element.surface === gtkSurface.surface;
-                });
-                if (shellSurface === undefined)
-                    return;
-                var shellSurfaceData = __private.shelSurfacesData.find(function(element) {
-                    return element.shellSurface === shellSurface;
-                });
-                if (shellSurfaceData !== undefined)
-                    shellSurfaceData.appId = appId;
+                for (var i = 0; i < shellSurfaces.count; i++) {
+                    var shellSurface = shellSurfaces.get(i).shellSurface;
+
+                    if (shellSurface.surface === gtkSurface.surface) {
+                        shellSurface.canonicalAppId = appId;
+                        break;
+                    }
+                }
             });
         }
     }
 
     TextInputManager {}
-
-    ApplicationManager {
-        id: applicationManagerExt
-    }
 
     OutputManagement {
         id: outputManagement
@@ -295,8 +289,6 @@ WaylandCompositor {
 
     Launcher.ApplicationManager {
         id: applicationManager
-
-        applicationManager: applicationManagerExt
     }
 
     Launcher.LauncherModel {
@@ -410,21 +402,25 @@ WaylandCompositor {
                                                });
         for (var i = 0; i < __private.outputs.length; i++)
             __private.createShellSurfaceItem(shellSurface, moveItem, __private.outputs[i]);
+
+        applicationManager.registerShellSurface(shellSurface);
     }
 
     function handleShellSurfaceDestroyed(shellSurface) {
         for (var i = 0; i < shellSurfaces.count; i++) {
             if (shellSurfaces.get(i).shellSurface === shellSurface) {
                 shellSurfaces.remove(i, 1);
-                return;
+                break;
             }
         }
+
+        applicationManager.unregisterShellSurface(shellSurface);
     }
 
     function activateShellSurfaces(appId) {
         for (var i = 0; i < shellSurfaces.count; i++) {
             var shellSurface = shellSurfaces.get(i).shellSurface;
-            if (shellSurface.className === appId || shellSurface.appId === appId) {
+            if (shellSurface.canonicalAppId === appId) {
                 for (var j = 0; j < __private.outputs.length; j++)
                     __private.outputs[j].activateShellSurface(shellSurface);
             }

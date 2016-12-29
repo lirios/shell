@@ -1,6 +1,7 @@
 /*
  * QML Desktop - Set of tools written in C++ for QML
  *
+ * Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2015-2016 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,16 +26,15 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
+#include <QtWaylandCompositor/QWaylandClient>
 
 #include "applicationmanager.h"
 
 // Applications have 5 seconds to start up before the start animation ends
 #define MAX_APPLICATION_STARTUP_TIME (5 * 1000)
 
-Application::Application(const QString &appId, const QStringList &categories,
-                         ApplicationManager *appMan)
-    : QObject(appMan)
-    , m_appMan(appMan)
+Application::Application(const QString &appId, const QStringList &categories, QObject *parent)
+    : QObject(parent)
     , m_appId(appId)
     , m_categories(categories)
 {
@@ -112,7 +112,21 @@ bool Application::quit()
     if (!isRunning())
         return false;
 
-    m_appMan->quit(appId());
+    for (QWaylandClient *client : qAsConst(m_clients)) {
+        m_pids.remove(client->processId());
+        client->close();
+    }
+    m_clients.clear();
 
     return true;
+}
+
+void Application::addClient(QWaylandClient *client)
+{
+    auto it = std::find_if(m_clients.begin(), m_clients.end(), [client](const QWaylandClient *item) {
+        return item->processId() == client->processId();
+    });
+
+    if (it == m_clients.end())
+        m_clients.append(client);
 }

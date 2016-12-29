@@ -177,7 +177,7 @@ ExtendedOutput {
     }
 
     function activateShellSurface(shellSurface) {
-        for (surface in viewsBySurface) {
+        for (var surface in viewsBySurface) {
             if (shellSurface.surface === surface) {
                 viewsBySurface[surface].activate();
                 break;

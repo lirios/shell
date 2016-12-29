@@ -26,6 +26,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
 #include <QtGui/QIcon>
+#include <QtWaylandCompositor/QWaylandSurface>
 #include <qt5xdg/xdgmenu.h>
 #include <qt5xdg/xmlhelper.h>
 
@@ -66,15 +67,19 @@ Application *ApplicationManager::getApplication(const QString &appId)
         // Currently pinned launchers
         QStringList pinnedLaunchers =
             m_settings->value(QStringLiteral("pinnedLaunchers")).toStringList();
+        bool changed = false;
 
         // Add or remove from the pinned launchers
         if (app->isPinned()) {
-            if (!pinnedLaunchers.contains(app->appId()))
+            if (!pinnedLaunchers.contains(app->appId())) {
                 pinnedLaunchers.append(app->appId());
+                changed = true;
+            }
         } else {
-            pinnedLaunchers.removeOne(app->appId());
+            changed = pinnedLaunchers.removeOne(app->appId());
         }
-        m_settings->setValue(QStringLiteral("pinnedLaunchers"), pinnedLaunchers);
+        if (changed)
+            m_settings->setValue(QStringLiteral("pinnedLaunchers"), pinnedLaunchers);
     });
 
     Q_EMIT applicationAdded(app);
@@ -135,7 +140,8 @@ void ApplicationManager::refresh()
 
 void ApplicationManager::quit(const QString &appId)
 {
-    m_appMan->quit(appId);
+    if (m_apps.contains(appId))
+        m_apps[appId]->quit();
 }
 
 QList<Application *> ApplicationManager::applications() const
@@ -167,68 +173,52 @@ QList<Application *> ApplicationManager::pinnedApps() const
     return apps;
 }
 
-Liri::WaylandServer::ApplicationManager *ApplicationManager::applicationManager() const
+void ApplicationManager::registerShellSurface(QWaylandShellSurface *shellSurface)
 {
-    return m_appMan;
-}
-
-void ApplicationManager::setApplicationManager(Liri::WaylandServer::ApplicationManager *appMan)
-{
-    if (m_appMan == appMan)
+    QWaylandSurface *surface = qvariant_cast<QWaylandSurface *>(shellSurface->property("surface"));
+    if (!surface) {
+        qCWarning(APPLICATION_MANAGER, "Unable to access surface property");
         return;
-
-    if (m_appMan != nullptr) {
-        disconnect(m_appMan, &Liri::WaylandServer::ApplicationManager::applicationAdded,
-                   this, &ApplicationManager::handleApplicationAdded);
-        disconnect(m_appMan, &Liri::WaylandServer::ApplicationManager::applicationRemoved,
-                   this, &ApplicationManager::handleApplicationRemoved);
-        disconnect(m_appMan, &Liri::WaylandServer::ApplicationManager::applicationFocused,
-                   this, &ApplicationManager::handleApplicationFocused);
     }
 
-    m_appMan = appMan;
-    Q_EMIT applicationManagerChanged();
-
-    if (appMan != nullptr) {
-        connect(appMan, &Liri::WaylandServer::ApplicationManager::applicationAdded,
-                this, &ApplicationManager::handleApplicationAdded);
-        connect(appMan, &Liri::WaylandServer::ApplicationManager::applicationRemoved,
-                this, &ApplicationManager::handleApplicationRemoved);
-        connect(appMan, &Liri::WaylandServer::ApplicationManager::applicationFocused,
-                this, &ApplicationManager::handleApplicationFocused);
-    }
-}
-
-void ApplicationManager::handleApplicationAdded(QString appId, pid_t pid)
-{
-    appId = DesktopFile::canonicalAppId(appId);
+    QString appId = getAppId(shellSurface, surface->client()->processId());
 
     Application *app = getApplication(appId);
     app->setState(Application::Running);
-    app->m_pids.insert(pid);
+    app->m_pids.insert(surface->client()->processId());
+    app->addClient(surface->client());
 
     if (!app->desktopFile()->noDisplay())
         UsageTracker::instance()->applicationLaunched(appId);
+
+    m_shellSurfaces.insertMulti(shellSurface, appId);
 }
 
-void ApplicationManager::handleApplicationRemoved(QString appId, pid_t pid)
+void ApplicationManager::unregisterShellSurface(QWaylandShellSurface *shellSurface)
 {
-    appId = DesktopFile::canonicalAppId(appId);
+    QString appId = shellSurface->property("canonicalAppId").toString();
 
-    UsageTracker::instance()->applicationFocused(QString());
+    m_shellSurfaces.remove(shellSurface);
 
-    Application *app = getApplication(appId);
+    if (!m_shellSurfaces.values().contains(appId)) {
+        UsageTracker::instance()->applicationFocused(QString());
 
-    app->m_pids.remove(pid);
-
-    if (app->m_pids.count() == 0) {
+        Application *app = getApplication(appId);
+        app->m_pids.clear();
+        app->m_clients.clear();
         app->setState(Application::NotRunning);
     }
 }
 
-void ApplicationManager::handleApplicationFocused(QString appId)
+void ApplicationManager::focusShellSurface(QWaylandShellSurface *shellSurface)
 {
-    appId = DesktopFile::canonicalAppId(appId);
+    QWaylandSurface *surface = qvariant_cast<QWaylandSurface *>(shellSurface->property("surface"));
+    if (!surface) {
+        qCWarning(APPLICATION_MANAGER, "Unable to access surface property");
+        return;
+    }
+
+    QString appId = getAppId(shellSurface, surface->client()->processId());
 
     Application *app = getApplication(appId);
 
@@ -254,4 +244,34 @@ void ApplicationManager::readAppLink(const QDomElement &xml, const QString &cate
 
     if (!app->hasCategory(categoryName))
         app->m_categories.append(categoryName);
+}
+
+QString ApplicationManager::getAppId(QWaylandShellSurface *shellSurface, qint64 pid)
+{
+    QString appId = shellSurface->property("canonicalAppId").toString();
+    if (!appId.isEmpty())
+        return appId;
+
+    // Try known property names first
+    appId = shellSurface->property("className").toString();
+    if (appId.isEmpty())
+        appId = shellSurface->property("appId").toString();
+
+    // Use process name if appId is empty (some applications won't set it, like weston-terminal)
+    if (appId.isEmpty()) {
+        QFile file(QStringLiteral("/proc/%1/cmdline").arg(pid));
+        if (file.open(QIODevice::ReadOnly)) {
+            QFileInfo fi(QString::fromUtf8(file.readAll().split('\0').at(0)));
+            appId = fi.baseName();
+            file.close();
+        }
+    }
+
+    // Canonicalize appId
+    appId = DesktopFile::canonicalAppId(appId);
+
+    // Save the canonicalized appId
+    shellSurface->setProperty("canonicalAppId", appId);
+
+    return appId;
 }

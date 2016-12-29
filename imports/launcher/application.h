@@ -26,6 +26,8 @@
 
 #include <Vibe/Core/DesktopFile>
 
+class QWaylandClient;
+
 using namespace Vibe;
 
 class ApplicationManager;
@@ -54,7 +56,7 @@ class Application : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 
-    friend ApplicationManager;
+    friend class ApplicationManager;
 
 public:
     enum State
@@ -76,8 +78,7 @@ public:
     };
     Q_ENUM(State)
 
-    Application(const QString &appId, const QStringList &categories,
-                ApplicationManager *applicationManager);
+    Application(const QString &appId, const QStringList &categories, QObject *parent = nullptr);
 
     bool isValid() const { return m_desktopFile != nullptr && m_desktopFile->isValid(); }
 
@@ -149,9 +150,9 @@ Q_SIGNALS:
 
 protected:
     QSet<pid_t> m_pids;
+    QVector<QWaylandClient *> m_clients;
 
 private:
-    ApplicationManager *m_appMan = nullptr;
     QString m_appId;
     QStringList m_categories;
     DesktopFile *m_desktopFile = nullptr;
@@ -160,4 +161,6 @@ private:
     int m_count = 0;
     int m_progress = 0;
     State m_state = NotRunning;
+
+    void addClient(QWaylandClient *client);
 };
