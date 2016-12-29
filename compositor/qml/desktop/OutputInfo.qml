@@ -142,6 +142,18 @@ Rectangle {
         }
 
         Text {
+            text: "Output Scale Factor:"
+            font.bold: true
+            color: "white"
+
+            Layout.alignment: Qt.AlignRight
+        }
+        Text {
+            text: output.scaleFactor.toFixed(2)
+            color: "white"
+        }
+
+        Text {
             text: "Available Virtual Desktop:"
             font.bold: true
             color: "white"
