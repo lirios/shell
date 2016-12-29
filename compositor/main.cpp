@@ -73,6 +73,9 @@ static void setupEnvironment()
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
     qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("liri-"));
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Liri"));
+    qputenv("QT_XCB_GL_INTEGRATION", QByteArrayLiteral("xcb_egl"));
+    qputenv("QT_WAYLAND_USE_XDG_SHELL", QByteArrayLiteral("1"));
+    qunsetenv("QT_WAYLAND_DISABLE_WINDOWDECORATION");
 
     // Load input method
     Vibe::QGSettings settings(QStringLiteral("io.liri.desktop.interface"),
