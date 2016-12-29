@@ -122,8 +122,10 @@ ChromeItem {
     ShellSurfaceItem {
         id: shellSurfaceItem
 
+        readonly property bool hasDropShadow: !shellSurface.maximized && !shellSurface.fullscreen
+
         // FIXME: Transparent backgrounds will be opaque due to shadows
-        layer.enabled: true
+        layer.enabled: hasDropShadow
         layer.effect: ElevationEffect {
             elevation: shellSurfaceItem.focus ? 24 : 8
         }
