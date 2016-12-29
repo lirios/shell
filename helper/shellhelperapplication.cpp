@@ -92,8 +92,8 @@ void ShellHelperApplication::initialize()
 
     connect(d->registry, &Registry::interfacesAnnounced, this, [this, d] {
         // All interfaces were announced including shm, let's start
-        d->helper->registerGrabSurface(d->grabWindow);
         d->grabWindow->show();
+        d->helper->registerGrabSurface(d->grabWindow);
     });
 
     connect(d->registry, &Registry::interfaceRemoved, this,
