@@ -142,7 +142,7 @@ int LauncherModel::pinAtIndex() const
         lastIndex++;
     }
 
-    return lastIndex;
+    return lastIndex - 1;
 }
 
 QHash<int, QByteArray> LauncherModel::roleNames() const
