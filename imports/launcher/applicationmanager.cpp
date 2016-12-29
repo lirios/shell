@@ -181,7 +181,7 @@ void ApplicationManager::registerShellSurface(QObject *shellSurface)
         return;
     }
 
-    QString appId = getAppId(shellSurface, surface->client()->processId());
+    QString appId = shellSurface->property("canonicalAppId").toString();
 
     Application *app = getApplication(appId);
     app->setState(Application::Running);
@@ -218,7 +218,7 @@ void ApplicationManager::focusShellSurface(QObject *shellSurface)
         return;
     }
 
-    QString appId = getAppId(shellSurface, surface->client()->processId());
+    QString appId = shellSurface->property("canonicalAppId").toString();
 
     Application *app = getApplication(appId);
 
@@ -235,6 +235,11 @@ void ApplicationManager::focusShellSurface(QObject *shellSurface)
         UsageTracker::instance()->applicationFocused(QString());
 }
 
+QString ApplicationManager::canonicalizeAppId(const QString &appId)
+{
+    return DesktopFile::canonicalAppId(appId);
+}
+
 void ApplicationManager::readAppLink(const QDomElement &xml, const QString &categoryName)
 {
     QString desktopFile = xml.attribute(QStringLiteral("desktopFile"));
@@ -244,34 +249,4 @@ void ApplicationManager::readAppLink(const QDomElement &xml, const QString &cate
 
     if (!app->hasCategory(categoryName))
         app->m_categories.append(categoryName);
-}
-
-QString ApplicationManager::getAppId(QObject *shellSurface, qint64 pid)
-{
-    QString appId = shellSurface->property("canonicalAppId").toString();
-    if (!appId.isEmpty())
-        return appId;
-
-    // Try known property names first
-    appId = shellSurface->property("className").toString();
-    if (appId.isEmpty())
-        appId = shellSurface->property("appId").toString();
-
-    // Use process name if appId is empty (some applications won't set it, like weston-terminal)
-    if (appId.isEmpty()) {
-        QFile file(QStringLiteral("/proc/%1/cmdline").arg(pid));
-        if (file.open(QIODevice::ReadOnly)) {
-            QFileInfo fi(QString::fromUtf8(file.readAll().split('\0').at(0)));
-            appId = fi.baseName();
-            file.close();
-        }
-    }
-
-    // Canonicalize appId
-    appId = DesktopFile::canonicalAppId(appId);
-
-    // Save the canonicalized appId
-    shellSurface->setProperty("canonicalAppId", appId);
-
-    return appId;
 }

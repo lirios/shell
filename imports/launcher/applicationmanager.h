@@ -50,6 +50,8 @@ public:
     Q_INVOKABLE void unregisterShellSurface(QObject *shellSurface);
     Q_INVOKABLE void focusShellSurface(QObject *shellSurface);
 
+    Q_INVOKABLE QString canonicalizeAppId(const QString &appId);
+
 public Q_SLOTS:
     void refresh();
     void quit(const QString &appId);
@@ -65,6 +67,5 @@ private:
     QMap<QString, Application *> m_apps;
     QMap<QObject *, QString> m_shellSurfaces;
 
-    QString getAppId(QObject *shellSurface, qint64 pid);
     void readAppLink(const QDomElement &xml, const QString &categoryName);
 };

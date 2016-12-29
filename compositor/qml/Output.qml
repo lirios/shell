@@ -177,13 +177,4 @@ ExtendedOutput {
         idleDimmer.fadeIn();
         __private.idle = true;
     }
-
-    function activateShellSurface(shellSurface) {
-        for (var surface in viewsBySurface) {
-            if (shellSurface.surface === surface) {
-                viewsBySurface[surface].activate();
-                break;
-            }
-        }
-    }
 }

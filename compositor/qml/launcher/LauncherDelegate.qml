@@ -48,7 +48,7 @@ PanelItem {
             if (model.active)
                 toggleWindows();
             else
-                activateShellSurfaces(model.appId);
+                compositor.activateShellSurfaces(model.appId);
         } else {
             if (!launcher.model.get(index).launch())
                 console.warn("Failed to run:", model.appId);
@@ -141,9 +141,11 @@ PanelItem {
                     for (var surface in curOutput.viewsBySurface) {
                         var view = curOutput.viewsBySurface[surface];
                         view.taskIconGeometry = Qt.rect(pt.x, pt.y, launcherItem.width, launcherItem.height);
-                        view.minimized = !view.minimized;
                     }
                 }
+
+                // Toggle minimization
+                shellSurface.minimized = !shellSurface.minimized;
             }
         }
     }
