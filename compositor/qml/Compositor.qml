@@ -107,6 +107,33 @@ WaylandCompositor {
             output.viewsBySurface[shellSurface.surface] = item;
             return item;
         }
+
+        function handleShellSurfaceCreated(shellSurface) {
+            shellSurfaces.append({"shellSurface": shellSurface});
+
+            var moveItem =
+                    moveItemComponent.createObject(rootItem, {
+                                                       "x": defaultOutput.position.x,
+                                                       "y": defaultOutput.position.y,
+                                                       "width": Qt.binding(function() { return shellSurface.surface.width; }),
+                                                       "height": Qt.binding(function() { return shellSurface.surface.height; })
+                                                   });
+            for (var i = 0; i < outputs.length; i++)
+                createShellSurfaceItem(shellSurface, moveItem, outputs[i]);
+
+            applicationManager.registerShellSurface(shellSurface);
+        }
+
+        function handleShellSurfaceDestroyed(shellSurface) {
+            for (var i = 0; i < shellSurfaces.count; i++) {
+                if (shellSurfaces.get(i).shellSurface === shellSurface) {
+                    shellSurfaces.remove(i, 1);
+                    break;
+                }
+            }
+
+            applicationManager.unregisterShellSurface(shellSurface);
+        }
     }
 
     ScreenManager {
@@ -376,30 +403,11 @@ WaylandCompositor {
     }
 
     function handleShellSurfaceCreated(shellSurface) {
-        shellSurfaces.append({"shellSurface": shellSurface});
-
-        var moveItem =
-                moveItemComponent.createObject(rootItem, {
-                                                   "x": defaultOutput.position.x,
-                                                   "y": defaultOutput.position.y,
-                                                   "width": Qt.binding(function() { return shellSurface.surface.width; }),
-                                                   "height": Qt.binding(function() { return shellSurface.surface.height; })
-                                               });
-        for (var i = 0; i < __private.outputs.length; i++)
-            __private.createShellSurfaceItem(shellSurface, moveItem, __private.outputs[i]);
-
-        applicationManager.registerShellSurface(shellSurface);
+        __private.handleShellSurfaceCreated(shellSurface);
     }
 
     function handleShellSurfaceDestroyed(shellSurface) {
-        for (var i = 0; i < shellSurfaces.count; i++) {
-            if (shellSurfaces.get(i).shellSurface === shellSurface) {
-                shellSurfaces.remove(i, 1);
-                break;
-            }
-        }
-
-        applicationManager.unregisterShellSurface(shellSurface);
+        __private.handleShellSurfaceDestroyed(shellSurface);
     }
 
     function activateShellSurfaces(appId) {
