@@ -26,7 +26,6 @@ Qt >= 5.8.0 with at least the following modules is required:
  * [qtdeclarative](http://code.qt.io/cgit/qt/qtdeclarative.git)
  * [qtwayland](http://code.qt.io/cgit/qt/qtwayland.git)
  * [qtgraphicaleffects](http://code.qt.io/cgit/qt/qtgraphicaleffects.git)
- * [qtquickcontrols](http://code.qt.io/cgit/qt/qtquickcontrols.git)
  * [qtquickcontrols2](http://code.qt.io/cgit/qt/qtquickcontrols2.git)
  * [qtsvg](http://code.qt.io/cgit/qt/qtsvg.git)
 

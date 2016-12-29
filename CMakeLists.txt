@@ -11,7 +11,7 @@ set(CMAKE_AUTORCC ON)
 set(APPLE_SUPPRESS_X11_WARNING ON)
 
 # Set version
-set(PROJECT_VERSION "0.8.90")
+set(PROJECT_VERSION "0.9.0")
 set(PROJECT_VERSION_MAJOR 0)
 set(PROJECT_SOVERSION 0)
 
@@ -98,17 +98,14 @@ set(REQUIRED_QT_VERSION "5.8.0")
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
              DBus Xml Widgets Qml Quick QuickControls2 WaylandClient WaylandCompositor Sql)
 
-# Find qtwayland-scanner
-find_package(QtWaylandScanner REQUIRED)
-
 # Find Liri Wayland
 set(REQUIRED_LIRIWAYLAND_VERSION "0.8.0")
 find_package(LiriWaylandClient ${REQUIRED_LIRIWAYLAND_VERSION} REQUIRED)
 find_package(LiriWaylandServer ${REQUIRED_LIRIWAYLAND_VERSION} REQUIRED)
 
 # Find Vibe
-set(REQUIRED_VIBE_VERSION "0.7.0")
-find_package(Vibe ${REQUIRED_HAWAII_VERSION} REQUIRED)
+set(REQUIRED_VIBE_VERSION "0.9.0")
+find_package(Vibe ${REQUIRED_VIBE_VERSION} REQUIRED)
 
 # Find QtAccountsService
 set(REQUIRED_QTACCOUNTSSERVICE "0.6.0")
