@@ -24,7 +24,7 @@ target_link_libraries(launcherplugin
                       Qt5::Qml
                       Qt5::Quick
                       Qt5::Sql
-                      Liri::WaylandServer
+                      Qt5::WaylandCompositor
                       Vibe::Core
                       Vibe::Settings
                       Qt5Xdg)
