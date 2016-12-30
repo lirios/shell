@@ -6,7 +6,6 @@
 	<file>Output.qml</file>
 	<file>KeyBindings.qml</file>
 	<file>ShellSettings.qml</file>
-	<file>XWayland.qml</file>
 	<file>base/Keyboard.qml</file>
 	<file>base/OutputConfiguration.qml</file>
 	<file>components/CloseButton.qml</file>
@@ -80,6 +79,7 @@
 	<file>screens/PowerScreen.qml</file>
 	<file>screens/SplashScreen.qml</file>
 	<file>windows/Chrome.qml</file>
+	<file>windows/XWaylandChrome.qml</file>
 	<file>windows/ChromeMenu.qml</file>
 	<file>windows/MoveItem.qml</file>
 </qresource>

@@ -26,6 +26,7 @@ import QtQuick 2.5
 import QtWayland.Compositor 1.0
 import Liri.Launcher 0.1 as Launcher
 import Liri.WaylandServer 1.0
+import Liri.XWayland 1.0
 import Liri.Shell 1.0
 import Vibe.PulseAudio 1.0
 import Vibe.PolicyKit 1.0
@@ -99,19 +100,19 @@ WaylandCompositor {
                 grabItem.setPrimary();
         }
 
-        function createShellSurfaceItem(shellSurface, moveItem, output) {
+        function createShellSurfaceItem(shellSurface, component, moveItem, output) {
             var parentSurfaceItem = output.viewsBySurface[shellSurface.parentSurface];
             var parent = parentSurfaceItem || output.surfacesArea;
-            var item = chromeComponent.createObject(parent, {
-                                                        "compositor": compositor,
-                                                        "shellSurface": shellSurface,
-                                                        "moveItem": moveItem
-                                                    });
+            var item = component.createObject(parent, {
+                                                  "compositor": compositor,
+                                                  "shellSurface": shellSurface,
+                                                  "moveItem": moveItem
+                                              });
             output.viewsBySurface[shellSurface.surface] = item;
             return item;
         }
 
-        function handleShellSurfaceCreated(shellSurface) {
+        function handleShellSurfaceCreated(shellSurface, component) {
             shellSurfaces.append({"shellSurface": shellSurface});
 
             var moveItem =
@@ -122,7 +123,7 @@ WaylandCompositor {
                                                        "height": Qt.binding(function() { return shellSurface.surface.height; })
                                                    });
             for (var i = 0; i < outputs.length; i++)
-                createShellSurfaceItem(shellSurface, moveItem, outputs[i]);
+                createShellSurfaceItem(shellSurface, component, moveItem, outputs[i]);
 
             applicationManager.registerShellSurface(shellSurface);
         }
@@ -199,12 +200,12 @@ WaylandCompositor {
     }
 
     WlShell {
-        onWlShellSurfaceCreated: handleShellSurfaceCreated(shellSurface)
+        onWlShellSurfaceCreated: handleShellSurfaceCreated(shellSurface, chromeComponent)
     }
 
     XdgShellV5 {
-        onXdgSurfaceCreated: handleShellSurfaceCreated(xdgSurface)
-        onXdgPopupCreated: handleShellSurfaceCreated(xdgPopup)
+        onXdgSurfaceCreated: handleShellSurfaceCreated(xdgSurface, chromeComponent)
+        onXdgPopupCreated: handleShellSurfaceCreated(xdgPopup, chromeComponent)
     }
 
     GtkShell {}
@@ -294,25 +295,30 @@ WaylandCompositor {
     }
 
     /*
+     * XWayland
+     */
+
+    XWayland {
+        id: xwayland
+        enabled: false
+        onShellSurfaceCreated: handleShellSurfaceCreated(shellSurface, xchromeComponent)
+    }
+
+    Component {
+        id: xchromeComponent
+
+        XWaylandChrome {
+            inputEventsEnabled: !output.screenView.locked
+        }
+    }
+
+    /*
      * Miscellaneous
      */
 
     // Holds move items in the compositor space
     Item {
         id: rootItem
-    }
-
-    // XWayland
-    Loader {
-        active: false
-        asynchronous: true
-
-        sourceComponent: Qt.createComponent(Qt.resolvedUrl("XWayland.qml"), Component.Asynchronous)
-
-        onStatusChanged: {
-            if (status === Loader.Error)
-                console.warn("Error loading XWayland support:", sourceComponent.errorString());
-        }
     }
 
     Launcher.ApplicationManager {
@@ -418,8 +424,8 @@ WaylandCompositor {
         SessionInterface.idle = true;
     }
 
-    function handleShellSurfaceCreated(shellSurface) {
-        __private.handleShellSurfaceCreated(shellSurface);
+    function handleShellSurfaceCreated(shellSurface, component) {
+        __private.handleShellSurfaceCreated(shellSurface, component);
     }
 
     function handleShellSurfaceDestroyed(shellSurface) {
