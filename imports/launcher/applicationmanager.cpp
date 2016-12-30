@@ -173,9 +173,9 @@ QList<Application *> ApplicationManager::pinnedApps() const
     return apps;
 }
 
-void ApplicationManager::registerShellSurface(QWaylandShellSurface *shellSurface)
+void ApplicationManager::registerShellSurface(QObject *shellSurface)
 {
-    QWaylandSurface *surface = qvariant_cast<QWaylandSurface *>(shellSurface->property("surface"));
+    QWaylandSurface *surface = shellSurface->property("surface").value<QWaylandSurface *>();
     if (!surface) {
         qCWarning(APPLICATION_MANAGER, "Unable to access surface property");
         return;
@@ -194,7 +194,7 @@ void ApplicationManager::registerShellSurface(QWaylandShellSurface *shellSurface
     m_shellSurfaces.insertMulti(shellSurface, appId);
 }
 
-void ApplicationManager::unregisterShellSurface(QWaylandShellSurface *shellSurface)
+void ApplicationManager::unregisterShellSurface(QObject *shellSurface)
 {
     QString appId = shellSurface->property("canonicalAppId").toString();
 
@@ -210,9 +210,9 @@ void ApplicationManager::unregisterShellSurface(QWaylandShellSurface *shellSurfa
     }
 }
 
-void ApplicationManager::focusShellSurface(QWaylandShellSurface *shellSurface)
+void ApplicationManager::focusShellSurface(QObject *shellSurface)
 {
-    QWaylandSurface *surface = qvariant_cast<QWaylandSurface *>(shellSurface->property("surface"));
+    QWaylandSurface *surface = shellSurface->property("surface").value<QWaylandSurface *>();
     if (!surface) {
         qCWarning(APPLICATION_MANAGER, "Unable to access surface property");
         return;
@@ -246,7 +246,7 @@ void ApplicationManager::readAppLink(const QDomElement &xml, const QString &cate
         app->m_categories.append(categoryName);
 }
 
-QString ApplicationManager::getAppId(QWaylandShellSurface *shellSurface, qint64 pid)
+QString ApplicationManager::getAppId(QObject *shellSurface, qint64 pid)
 {
     QString appId = shellSurface->property("canonicalAppId").toString();
     if (!appId.isEmpty())

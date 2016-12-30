@@ -27,7 +27,6 @@
 #include <Vibe/Settings/QGSettings>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QObject>
-#include <QtWaylandCompositor/QWaylandShellSurface>
 
 class QDomElement;
 class Application;
@@ -47,9 +46,9 @@ public:
     QList<Application *> applications() const;
     QList<Application *> pinnedApps() const;
 
-    Q_INVOKABLE void registerShellSurface(QWaylandShellSurface *shellSurface);
-    Q_INVOKABLE void unregisterShellSurface(QWaylandShellSurface *shellSurface);
-    Q_INVOKABLE void focusShellSurface(QWaylandShellSurface *shellSurface);
+    Q_INVOKABLE void registerShellSurface(QObject *shellSurface);
+    Q_INVOKABLE void unregisterShellSurface(QObject *shellSurface);
+    Q_INVOKABLE void focusShellSurface(QObject *shellSurface);
 
 public Q_SLOTS:
     void refresh();
@@ -64,8 +63,8 @@ Q_SIGNALS:
 private:
     QGSettings *m_settings = nullptr;
     QMap<QString, Application *> m_apps;
-    QMap<QWaylandShellSurface *, QString> m_shellSurfaces;
+    QMap<QObject *, QString> m_shellSurfaces;
 
-    QString getAppId(QWaylandShellSurface *shellSurface, qint64 pid);
+    QString getAppId(QObject *shellSurface, qint64 pid);
     void readAppLink(const QDomElement &xml, const QString &categoryName);
 };
