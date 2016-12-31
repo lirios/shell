@@ -32,6 +32,7 @@ ChromeItem {
 
     readonly property alias primary: __private.primary
     property bool minimized: false
+    property bool decorated: true
 
     property alias shellSurface: shellSurfaceItem.shellSurface
     property alias moveItem: shellSurfaceItem.moveItem
@@ -118,11 +119,20 @@ ChromeItem {
         }
     }
 
+    Decoration {
+        id: decoration
+
+        anchors.fill: parent
+    }
+
     XWaylandShellSurfaceItem {
         id: shellSurfaceItem
 
         property int windowType: Qt.Window
-        readonly property bool hasDropShadow: !shellSurface.maximized && !shellSurface.fullscreen
+        readonly property bool hasDropShadow: !decorated && !shellSurface.maximized && !shellSurface.fullscreen
+
+        x: decorated ? decoration.marginSize : 0
+        y: decorated ? decoration.titleBarHeight : 0
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
         layer.enabled: hasDropShadow

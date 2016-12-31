@@ -75,7 +75,6 @@ QtGuiApplication {
 
         Group { name: "QML Base"; files: ["qml/*", "qml/base/*"] }
         Group { name: "QML Components"; files: ["qml/components/*"] }
-        Group { name: "QML Decoration"; files: ["qml/decoration/*"] }
         Group { name: "QML Desktop"; files: ["qml/desktop/*"] }
         Group { name: "QML Error"; files: ["qml/error/*"] }
         Group { name: "QML Images"; files: ["qml/images/*"] }

@@ -289,8 +289,10 @@ WaylandCompositor {
             property bool minimized: false
             property bool maximized: false
             property bool fullscreen: false
-            property bool hasDropShadow: !maximized && !fullscreen
             property string canonicalAppId: applicationManager.canonicalizeAppId(className)
+
+            property bool decorated: false
+            property bool hasDropShadow: !maximized && !fullscreen
 
             property WaylandSurface parentWlSurface: null
             property point offset
@@ -387,6 +389,15 @@ WaylandCompositor {
                 onKeyboardFocusChanged: wlShellSurface.activated = newFocus == surface
             }
 
+            function maximize(output) {
+                wlShellSurface.setMaximized(output);
+            }
+
+            function unmaximize() {
+                if (windowType == Qt.Window)
+                    wlShellSurface.setDefaultToplevel();
+            }
+
             function pingClient() {
                 wlShellSurface.ping();
                 pingTimer.start();
@@ -414,10 +425,13 @@ WaylandCompositor {
 
             readonly property alias mapped: details.mapped
             property bool minimized: false
-            property bool hasDropShadow: !maximized && !fullscreen
             property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
 
             property WaylandSurface parentWlSurface: parentSurface ? parentSurface.surface : null
+
+            property bool decorated: false
+            property bool hasDropShadow: !maximized && !fullscreen
+
             property point offset
 
             readonly property alias responsive: details.responsive
@@ -509,8 +523,10 @@ WaylandCompositor {
             id: xdgPopup
 
             readonly property alias mapped: details.mapped
-            property bool hasDropShadow: false
             property string canonicalAppId
+
+            property bool decorated: false
+            property bool hasDropShadow: false
 
             property WaylandSurface parentWlSurface: parentSurface
             property point offset: position
@@ -556,7 +572,8 @@ WaylandCompositor {
                         // are unable to provide a reliable appId via xdg-shell as opposed to gtk-shell
                         shellSurface.canonicalAppId = appId;
 
-                        // Remove drop shadow for Gtk+ programs
+                        // Remove drop shadow and decoration for Gtk+ programs
+                        shellSurface.decorated = false;
                         shellSurface.hasDropShadow = false;
 
                         break;
