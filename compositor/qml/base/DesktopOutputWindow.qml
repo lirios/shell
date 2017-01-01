@@ -106,21 +106,6 @@ ApplicationWindow {
             anchors.fill: parent
         }
 
-        // Pointer cursor
-        GreenIsland.WaylandCursorItem {
-            id: cursor
-
-            seat: output.compositor.defaultSeat
-
-            x: mouseTracker.mouseX
-            y: mouseTracker.mouseY
-            z: 1000001
-
-            visible: mouseTracker.containsMouse &&
-                     screenView.cursorVisible &&
-                     output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
-        }
-
         // Idle dimmer
         IdleDimmer {
             id: idleDimmer
@@ -131,5 +116,20 @@ ApplicationWindow {
 
             z: 1000002
         }
+    }
+
+    // Pointer cursor
+    GreenIsland.WaylandCursorItem {
+        id: cursor
+
+        seat: output.compositor.defaultSeat
+
+        x: mouseTracker.mouseX
+        y: mouseTracker.mouseY
+        z: 1000001
+
+        visible: mouseTracker.containsMouse &&
+                 screenView.cursorVisible &&
+                 output.powerState === GreenIsland.ExtendedOutput.PowerStateOn
     }
 }
