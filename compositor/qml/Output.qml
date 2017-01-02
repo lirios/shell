@@ -35,7 +35,6 @@ ExtendedOutput {
     readonly property bool primary: compositor.defaultOutput === this
 
     property var viewsBySurface: ({})
-    property var grabItem: null
 
     property int idleInhibit: 0
 

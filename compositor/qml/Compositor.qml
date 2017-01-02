@@ -93,13 +93,6 @@ WaylandCompositor {
 
         property var outputs: []
 
-        function createGrabItem(surface, output) {
-            var grabItem = grabItemComponent.createObject(output.surfacesArea, {"surface": surface});
-            output.grabItem = grabItem;
-            if (output === defaultOutput)
-                grabItem.setPrimary();
-        }
-
         function createShellSurfaceItem(shellSurface, component, moveItem, output) {
             var parentSurfaceItem = output.viewsBySurface[shellSurface.parentSurface];
             var parent = parentSurfaceItem || output.surfacesArea;
@@ -152,9 +145,6 @@ WaylandCompositor {
                                                     })
 
             __private.outputs.push(view);
-
-            if (shellHelper.grabSurface)
-                __private.createGrabItem(shellHelper.grabSurface, view);
         }
         onScreenRemoved: {
             var index = screenManager.indexOf(screen);
@@ -191,12 +181,7 @@ WaylandCompositor {
 
         property WaylandSurface grabSurface: null
 
-        onGrabSurfaceAdded: {
-            grabSurface = surface;
-
-            for (var i = 0; i < __private.outputs.length; i++)
-                __private.createGrabItem(surface, __private.outputs[i]);
-        }
+        onGrabSurfaceAdded: grabSurface = surface
     }
 
     WlShell {
@@ -281,16 +266,6 @@ WaylandCompositor {
 
         Chrome {
             inputEventsEnabled: !output.screenView.locked
-        }
-    }
-
-    // Surface item for shell helper's grab surface
-    Component {
-        id: grabItemComponent
-
-        WaylandQuickItem {
-            focusOnClick: false
-            onSurfaceChanged: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
         }
     }
 

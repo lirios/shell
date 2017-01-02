@@ -23,6 +23,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtWayland.Compositor 1.0 as QtWaylandCompositor
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
@@ -87,14 +88,20 @@ Item {
         z: 1
     }
 
+    // Surface item for shell helper's grab surface
+    QtWaylandCompositor.WaylandQuickItem {
+        surface: shellHelper.grabSurface
+        focusOnClick: false
+        onSurfaceChanged: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
+    }
+
     // Change pointer cursor when needed
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
         hoverEnabled: true
-        onEntered: {
-            compositor.shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
-        }
+        onEntered: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
+        onExited: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
     }
 
     // Dim desktop in present mode
