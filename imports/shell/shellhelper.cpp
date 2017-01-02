@@ -195,15 +195,12 @@ void ShellHelper::grabCursor(GrabCursor cursor)
     if (d->grabSurface) {
         auto resource = d->resourceMap().value(d->grabSurface->waylandClient());
         if (resource) {
-            d->send_grab_cursor(resource->handle, static_cast<uint32_t>(cursor));
-
             auto seat = d->grabSurface->compositor()->defaultSeat();
             auto pointer = seat->pointer();
-
             auto view = d->grabSurface->views().at(0);
-            if (view) {
-                seat->setMouseFocus(view);
+            if (pointer && view) {
                 pointer->sendMouseMoveEvent(view, QPointF(0, 0), QPointF(0, 0));
+                d->send_grab_cursor(resource->handle, static_cast<uint32_t>(cursor));
             }
         }
     }
