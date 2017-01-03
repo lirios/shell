@@ -125,16 +125,6 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    // Wayland socket
-    QCommandLineOption socketOption(QStringLiteral("wayland-socket-name"),
-                                    TR("Wayland socket"), TR("name"));
-    parser.addOption(socketOption);
-
-    // Nested mode
-    QCommandLineOption nestedOption(QStringList() << QStringLiteral("n") << QStringLiteral("nested"),
-                                    TR("Nest into a compositor that supports _wl_fullscreen_shell"));
-    parser.addOption(nestedOption);
-
     // Fake screen configuration
     QCommandLineOption fakeScreenOption(QStringLiteral("fake-screen"),
                                         TR("Use fake screen configuration"),
@@ -159,30 +149,7 @@ int main(int argc, char *argv[])
     }
 
     // Arguments
-    bool nested = parser.isSet(nestedOption);
-    QString socket = parser.value(socketOption);
     QString fakeScreenData = parser.value(fakeScreenOption);
-
-    // Nested mode requires running from Wayland and a socket name
-    // and fake screen data cannot be used
-    if (nested) {
-        if (!QGuiApplication::platformName().startsWith(QStringLiteral("liri"))) {
-            qCritical("Nested mode only make sense when running on Wayland.\n"
-                      "Please pass the \"-platform liri\" argument.");
-            return 1;
-        }
-
-        if (socket.isEmpty()) {
-            qCritical("Nested mode requires you to specify a socket name.\n"
-                      "Please specify it with the \"--wayland-socket-name\" argument.");
-            return 1;
-        }
-
-        if (!fakeScreenData.isEmpty()) {
-            qCritical("Fake screen configuration cannot be used when nested");
-            return 1;
-        }
-    }
 
     // Print version information
     qDebug("== Liri Shell v%s ==\n"
