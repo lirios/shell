@@ -105,6 +105,44 @@ session with:
 liri-session --logout
 ```
 
+## Running on another window system
+
+By default the Liri session runs without a particular window system, however
+you can run it inside another window system.
+
+### X11
+
+To run windowed inside a X11 session:
+
+```sh
+liri-session -platform xcb
+```
+
+### Wayland
+
+To run windowed inside a Wayland session:
+
+```sh
+liri-session -platform wayland
+```
+
+Some compositors such as Weston support the fullscreen-shell protocol that
+allows the Liri desktop environment to be presented fullscreen nested into
+another compositor.
+
+Let's take Weston as an example. First you need to run it with the fullscreen-shell
+protocol enabled:
+
+```sh
+weston --shell=fullscreen-shell.so
+```
+
+Then you need to run `liri-session` like this:
+
+```sh
+QT_WAYLAND_SHELL_INTEGRATION=fullscreen-shell liri-session -platform wayland 
+```
+
 ## QML JavaScript debugger
 
 Developers can debug Liri Shell with Qt Creator and the QML JavaScript debugger.
