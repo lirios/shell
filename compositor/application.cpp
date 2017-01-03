@@ -132,6 +132,21 @@ void Application::startup()
         });
 #endif
         m_launcher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
+
+        // Set Qt platform for applications that will be executed from here
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
+
+        // Set the Wayland socket name for clients
+        qputenv("WAYLAND_DISPLAY", compositor->socketName());
+
+        // Use xdg-shell-v5 for Qt clients
+        qunsetenv("QT_WAYLAND_SHELL_INTEGRATION");
+        qputenv("QT_WAYLAND_USE_XDG_SHELL", QByteArrayLiteral("1"));
+
+        // Don't mess with client scale factor
+        qunsetenv("QT_SCALE_FACTOR");
+        qunsetenv("QT_SCREEN_SCALE_FACTORS");
+        qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArrayLiteral("1"));
     }
 
     // Launch autostart applications

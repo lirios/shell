@@ -74,7 +74,6 @@ static void setupEnvironment()
     qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("liri-"));
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Liri"));
     qputenv("QT_XCB_GL_INTEGRATION", QByteArrayLiteral("xcb_egl"));
-    qputenv("QT_WAYLAND_USE_XDG_SHELL", QByteArrayLiteral("1"));
     qunsetenv("QT_WAYLAND_DISABLE_WINDOWDECORATION");
 
     // Load input method
@@ -110,14 +109,6 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
 
     QQuickStyle::setStyle(QStringLiteral("Material"));
-
-    // Set Qt platform for applications that will be executed from here
-    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
-
-    // Don't mess with client scale factor
-    qunsetenv("QT_SCALE_FACTOR");
-    qunsetenv("QT_SCREEN_SCALE_FACTORS");
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArrayLiteral("1"));
 
     // Command line parser
     QCommandLineParser parser;
