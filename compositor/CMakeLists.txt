@@ -11,6 +11,10 @@ if(systemd_FOUND)
     include_directories(${systemd_INCLUDE_DIRS})
 endif()
 
+if(DEVELOPMENT_BUILD)
+    add_definitions(-DQT_QML_DEBUG)
+endif()
+
 set(SOURCES
     application.cpp
     main.cpp
