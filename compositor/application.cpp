@@ -24,9 +24,9 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
+#include <QtGui/QGuiApplication>
 
 #include <qt5xdg/xdgautostart.h>
 #include <qt5xdg/xdgdesktopfile.h>
@@ -112,6 +112,10 @@ void Application::startup()
     // Process launcher
     if (!ProcessLauncher::registerWithDBus(m_launcher))
         QCoreApplication::exit(1);
+
+    // Set platform name
+    m_homeApp->setContextProperty(QLatin1String("platformName"),
+                                  QGuiApplication::platformName());
 
     // Session interface
     m_homeApp->setContextProperty(QStringLiteral("SessionInterface"),

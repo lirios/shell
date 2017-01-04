@@ -119,7 +119,7 @@ WaylandCompositor {
                 WaylandMouseTracker {
                     id: mouseTracker
                     anchors.fill: parent
-                    windowSystemCursorEnabled: false
+                    windowSystemCursorEnabled: platformName !== "liri"
 
                     ErrorScreenView {
                         id: screenView
@@ -131,7 +131,7 @@ WaylandCompositor {
                         seat: output.compositor.defaultSeat
                         x: mouseTracker.mouseX - hotspotX
                         y: mouseTracker.mouseY - hotspotY
-                        visible: mouseTracker.containsMouse
+                        visible: mouseTracker.containsMouse && !mouseTracker.windowSystemCursorEnabled
                     }
                 }
             }

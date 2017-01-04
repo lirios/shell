@@ -95,7 +95,7 @@ ExtendedOutput {
 
             anchors.fill: parent
 
-            windowSystemCursorEnabled: false
+            windowSystemCursorEnabled: platformName !== "liri"
 
             onMouseXChanged: {
                 // Wake up
@@ -143,6 +143,7 @@ ExtendedOutput {
             z: 1000001
 
             visible: mouseTracker.containsMouse &&
+                     !mouseTracker.windowSystemCursorEnabled &&
                      screenView.cursorVisible &&
                      output.powerState === ExtendedOutput.PowerStateOn
         }
