@@ -107,8 +107,10 @@ liri-session --logout
 
 ## Running on another window system
 
-By default the Liri session runs without a particular window system, however
-you can run it inside another window system.
+By default the Liri session runs without a particular window system and uses
+DRM/KMS or a device specific EGL integration.
+
+However you can run it inside another window system.
 
 ### X11
 
@@ -126,9 +128,8 @@ To run windowed inside a Wayland session:
 liri-session -platform wayland
 ```
 
-Some compositors such as Weston support the fullscreen-shell protocol that
-allows the Liri desktop environment to be presented fullscreen nested into
-another compositor.
+Some compositors, such as Weston, support the fullscreen-shell protocol that
+allows a compositor to be nested into another compositor.
 
 Let's take Weston as an example. First you need to run it with the fullscreen-shell
 protocol enabled:
@@ -150,11 +151,11 @@ Developers can debug Liri Shell with Qt Creator and the QML JavaScript debugger.
 Set the debug port and run the shell:
 
 ```sh
-LIRI_SHELL_DEBUG_PORT=3768 liri-shell
+liri-session -qmljsdebugger=port:3768
 ```
 
 In the example above we are using the default port which is 3768.
 Now from Qt Creator click on Debug -> Start Debugging -> Attach to QML port and specify
 the 3768 port.
 
-See the [Qt Creator manual](http://qt-project.org/doc/qtcreator-3.0/creator-debugging-qml.html) for more information.
+See the [Qt Creator manual](http://doc.qt.io/qtcreator/creator-debugging-qml.html) for more information.
