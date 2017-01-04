@@ -75,6 +75,7 @@ endif()
 # Options
 option(DEVELOPMENT_BUILD "Enable options for developers" OFF)
 option(ENABLE_SYSTEMD "Enables systemd support" ON)
+option(ENABLE_QTQUICK_COMPILER "Enables QtQuick compiler support" OFF)
 
 # Find pkg-config here so that it can be referenced soon
 find_package(PkgConfig)
@@ -109,6 +110,11 @@ add_feature_info("prctl-dumpable" HAVE_PR_SET_DUMPABLE "Required to prevent ptra
 set(REQUIRED_QT_VERSION "5.8.0")
 find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS
              DBus Xml Widgets Qml Quick QuickControls2 WaylandClient WaylandCompositor Sql)
+
+# Find QtQuick Compiler
+if(ENABLE_QTQUICK_COMPILER)
+    find_package(Qt5QuickCompiler REQUIRED)
+endif()
 
 # Find qtwayland-scanner
 find_package(QtWaylandScanner REQUIRED)

@@ -43,7 +43,11 @@ qt5_add_dbus_adaptor(SOURCES sessionmanager/screensaver/org.freedesktop.ScreenSa
                      sessionmanager/screensaver/screensaver.h ScreenSaver
                      sessionmanager/screensaver/screensaveradaptor ScreenSaverAdaptor)
 
-qt5_add_resources(RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/qml/shell.qrc")
+if(ENABLE_QTQUICK_COMPILER)
+    qtquick_compiler_add_resources(RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/qml/shell.qrc")
+else()
+    qt5_add_resources(RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/qml/shell.qrc")
+endif()
 
 add_executable(liri-shell ${SOURCES} ${RESOURCES})
 target_link_libraries(liri-shell
