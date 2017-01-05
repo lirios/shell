@@ -151,8 +151,7 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        setAvailableGeometry()
-        showing = true
+        setAvailableGeometry();
     }
 
     function setAvailableGeometry() {
