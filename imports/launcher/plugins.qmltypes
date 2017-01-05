@@ -7,7 +7,7 @@ import QtQuick.tooling 1.2
 // 'qmlplugindump-qt5 -nonrelocatable Liri.Launcher 0.1'
 
 Module {
-    dependencies: ["QtQuick 2.0"]
+    dependencies: ["QtQuick 2.7"]
     Component {
         name: "Application"
         prototype: "QObject"
@@ -58,11 +58,6 @@ Module {
         prototype: "QObject"
         exports: ["Liri.Launcher/ApplicationManager 0.1"]
         exportMetaObjectRevisions: [0]
-        Property {
-            name: "applicationManager"
-            type: "GreenIsland::Server::ApplicationManager"
-            isPointer: true
-        }
         Signal {
             name: "applicationLaunched"
             Parameter { name: "app"; type: "Application"; isPointer: true }
@@ -82,8 +77,16 @@ Module {
             Parameter { name: "appId"; type: "string" }
         }
         Method {
-            name: "setApplicationManager"
-            Parameter { name: "appMan"; type: "GreenIsland::Server::ApplicationManager"; isPointer: true }
+            name: "registerShellSurface"
+            Parameter { name: "shellSurface"; type: "QObject"; isPointer: true }
+        }
+        Method {
+            name: "unregisterShellSurface"
+            Parameter { name: "shellSurface"; type: "QObject"; isPointer: true }
+        }
+        Method {
+            name: "focusShellSurface"
+            Parameter { name: "shellSurface"; type: "QObject"; isPointer: true }
         }
     }
     Component {

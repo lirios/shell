@@ -14,15 +14,15 @@ Module {
         "Fluid.Material 1.0",
         "QtGraphicalEffects 1.0",
         "QtQml 2.2",
-        "QtQuick 2.7",
-        "QtQuick.Controls 2.0",
-        "QtQuick.Controls.Material 2.0",
-        "QtQuick.Controls.Material.impl 2.0",
-        "QtQuick.Controls.Universal 2.0",
-        "QtQuick.Controls.Universal.impl 2.0",
-        "QtQuick.Controls.impl 2.0",
+        "QtQuick 2.8",
+        "QtQuick.Controls 2.1",
+        "QtQuick.Controls.Material 2.1",
+        "QtQuick.Controls.Material.impl 2.1",
+        "QtQuick.Controls.Universal 2.1",
+        "QtQuick.Controls.Universal.impl 2.1",
+        "QtQuick.Controls.impl 2.1",
         "QtQuick.Layouts 1.1",
-        "QtQuick.Templates 2.0",
+        "QtQuick.Templates 2.1",
         "QtQuick.Window 2.2"
     ]
     Component { name: "QWaylandCompositorExtension"; prototype: "QWaylandObject" }
@@ -67,6 +67,25 @@ Module {
         exports: ["Liri.Shell/ShellHelper 1.0"]
         exportMetaObjectRevisions: [0]
         Property { name: "data"; type: "QObject"; isList: true; isReadonly: true }
+    }
+    Component {
+        name: "WindowMouseTracker"
+        defaultProperty: "data"
+        prototype: "QQuickItem"
+        exports: ["Liri.Shell/WindowMouseTracker 1.0"]
+        exportMetaObjectRevisions: [0]
+        Property { name: "mouseX"; type: "double"; isReadonly: true }
+        Property { name: "mouseY"; type: "double"; isReadonly: true }
+        Property { name: "containsMouse"; type: "bool"; isReadonly: true }
+        Property { name: "windowSystemCursorEnabled"; type: "bool" }
+    }
+    Component {
+        prototype: "QQuickAbstractButton"
+        name: "QtQuick.Controls/AbstractButton 2.0"
+        exports: ["QtQuick.Controls/AbstractButton 2.0"]
+        exportMetaObjectRevisions: [0]
+        isComposite: true
+        defaultProperty: "data"
     }
     Component {
         prototype: "QQuickApplicationWindow"
@@ -155,12 +174,44 @@ Module {
         defaultProperty: "data"
     }
     Component {
+        prototype: "QQuickContainer"
+        name: "QtQuick.Controls/Container 2.0"
+        exports: ["QtQuick.Controls/Container 2.0"]
+        exportMetaObjectRevisions: [0]
+        isComposite: true
+        defaultProperty: "contentData"
+    }
+    Component {
+        prototype: "QQuickControl"
+        name: "QtQuick.Controls/Control 2.0"
+        exports: ["QtQuick.Controls/Control 2.0"]
+        exportMetaObjectRevisions: [0]
+        isComposite: true
+        defaultProperty: "data"
+    }
+    Component {
         prototype: "QQuickDial"
         name: "QtQuick.Controls/Dial 2.0"
         exports: ["QtQuick.Controls/Dial 2.0"]
         exportMetaObjectRevisions: [0]
         isComposite: true
         defaultProperty: "data"
+    }
+    Component {
+        prototype: "QQuickDialog"
+        name: "QtQuick.Controls/Dialog 2.1"
+        exports: ["QtQuick.Controls/Dialog 2.1"]
+        exportMetaObjectRevisions: [1]
+        isComposite: true
+        defaultProperty: "contentData"
+    }
+    Component {
+        prototype: "QQuickDialogButtonBox"
+        name: "QtQuick.Controls/DialogButtonBox 2.1"
+        exports: ["QtQuick.Controls/DialogButtonBox 2.1"]
+        exportMetaObjectRevisions: [1]
+        isComposite: true
+        defaultProperty: "contentData"
     }
     Component {
         prototype: "QQuickDrawer"
@@ -258,6 +309,14 @@ Module {
         defaultProperty: "data"
     }
     Component {
+        prototype: "QQuickMenuSeparator"
+        name: "QtQuick.Controls/MenuSeparator 2.1"
+        exports: ["QtQuick.Controls/MenuSeparator 2.1"]
+        exportMetaObjectRevisions: [1]
+        isComposite: true
+        defaultProperty: "data"
+    }
+    Component {
         prototype: "QQuickPage"
         name: "QtQuick.Controls/Page 2.0"
         exports: ["QtQuick.Controls/Page 2.0"]
@@ -340,14 +399,25 @@ Module {
         defaultProperty: "data"
     }
     Component {
-        prototype: "QQuickRectangle"
-        name: "QtQuick.Controls.Material.impl/Ripple 2.0"
-        exports: ["QtQuick.Controls.Material.impl/Ripple 2.0"]
+        prototype: "QQuickItem"
+        name: "QtQuick.Controls.Material.impl/RectangularGlow 2.0"
+        exports: ["QtQuick.Controls.Material.impl/RectangularGlow 2.0"]
         exportMetaObjectRevisions: [0]
         isComposite: true
         defaultProperty: "data"
-        Property { name: "control"; type: "QQuickItem"; isPointer: true }
-        Property { name: "colored"; type: "bool" }
+        Property { name: "glowRadius"; type: "double" }
+        Property { name: "spread"; type: "double" }
+        Property { name: "color"; type: "QColor" }
+        Property { name: "cornerRadius"; type: "double" }
+        Property { name: "cached"; type: "bool" }
+    }
+    Component {
+        prototype: "QQuickRoundButton"
+        name: "QtQuick.Controls/RoundButton 2.1"
+        exports: ["QtQuick.Controls/RoundButton 2.1"]
+        exportMetaObjectRevisions: [1]
+        isComposite: true
+        defaultProperty: "data"
     }
     Component {
         prototype: "QQuickScrollBar"
@@ -383,6 +453,7 @@ Module {
         Property { name: "value"; type: "double" }
         Property { name: "handleHasFocus"; type: "bool" }
         Property { name: "handlePressed"; type: "bool" }
+        Property { name: "handleHovered"; type: "bool" }
         Property { name: "initialSize"; type: "int"; isReadonly: true }
         Property { name: "horizontal"; type: "bool"; isReadonly: true }
         Property { name: "control"; type: "QVariant"; isReadonly: true }
@@ -443,11 +514,12 @@ Module {
         isComposite: true
         defaultProperty: "data"
         Property { name: "control"; type: "QQuickItem"; isPointer: true }
+        Property { name: "handle"; type: "QQuickRectangle"; isReadonly: true; isPointer: true }
     }
     Component {
-        prototype: "QQuickRectangle"
-        name: "QtQuick.Controls.Universal.impl/SwitchIndicator 2.0"
-        exports: ["QtQuick.Controls.Universal.impl/SwitchIndicator 2.0"]
+        prototype: "QQuickItem"
+        name: "QtQuick.Controls.impl/SwitchIndicator 2.0"
+        exports: ["QtQuick.Controls.impl/SwitchIndicator 2.0"]
         exportMetaObjectRevisions: [0]
         isComposite: true
         defaultProperty: "data"
@@ -455,8 +527,8 @@ Module {
     }
     Component {
         prototype: "QQuickItem"
-        name: "QtQuick.Controls.impl/SwitchIndicator 2.0"
-        exports: ["QtQuick.Controls.impl/SwitchIndicator 2.0"]
+        name: "QtQuick.Controls.Universal.impl/SwitchIndicator 2.0"
+        exports: ["QtQuick.Controls.Universal.impl/SwitchIndicator 2.0"]
         exportMetaObjectRevisions: [0]
         isComposite: true
         defaultProperty: "data"
@@ -507,6 +579,14 @@ Module {
         name: "QtQuick.Controls/ToolButton 2.0"
         exports: ["QtQuick.Controls/ToolButton 2.0"]
         exportMetaObjectRevisions: [0]
+        isComposite: true
+        defaultProperty: "data"
+    }
+    Component {
+        prototype: "QQuickToolSeparator"
+        name: "QtQuick.Controls/ToolSeparator 2.1"
+        exports: ["QtQuick.Controls/ToolSeparator 2.1"]
+        exportMetaObjectRevisions: [1]
         isComposite: true
         defaultProperty: "data"
     }

@@ -7,7 +7,7 @@ import QtQuick.tooling 1.2
 // 'qmlplugindump-qt5 -nonrelocatable Liri.LoginManager 1.0'
 
 Module {
-    dependencies: ["QtQuick 2.0"]
+    dependencies: ["QtQuick 2.7"]
     Component {
         name: "QtAccountsService::UsersModel"
         prototype: "QAbstractListModel"
