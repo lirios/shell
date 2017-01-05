@@ -99,17 +99,17 @@ Menu {
         var i, item;
 
         // Add application actions
-        for (i = app.actions.length - 1; i >= 0; i--) {
+        for (i = app.desktopFile.actions.length - 1; i >= 0; i--) {
             item = actionItemComponent.createObject(menu.contentItem);
-            item.text = app.actions[i].name;
-            item.command = app.actions[i].command;
+            item.text = app.desktopFile.actions[i].name;
+            item.command = app.desktopFile.actions[i].command;
             menu.insertItem(0, item);
         }
 
         // Add a separator if needed
-        if (app.actions.length > 0) {
+        if (app.desktopFile.actions.length > 0) {
             item = separatorComponent.createObject(menu.contentItem);
-            menu.insertItem(app.actions.length, item);
+            menu.insertItem(app.desktopFile.actions.length, item);
         }
     }
 }

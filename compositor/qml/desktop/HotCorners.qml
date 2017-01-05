@@ -41,16 +41,16 @@ Item {
         target: output
         onHotSpotTriggered: {
             switch (hotSpot) {
-            case TopLeftHotSpot:
+            case ExtendedOutput.TopLeftHotSpot:
                 root.topLeftTriggered();
                 break;
-            case TopRightHotSpot:
+            case ExtendedOutput.TopRightHotSpot:
                 root.topRightTriggered();
                 break;
-            case BottomLeftHotSpot:
+            case ExtendedOutput.BottomLeftHotSpot:
                 root.bottomLeftTriggered();
                 break;
-            case BottomRightHotSpot:
+            case ExtendedOutput.BottomRightHotSpot:
                 root.bottomRightTriggered();
                 break;
             default:
