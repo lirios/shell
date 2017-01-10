@@ -25,12 +25,13 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Liri.Shell 1.0
 
-Background {
+Rectangle {
+    // Same color as Plymouth and SDDM
+    color: Material.color(Material.BlueGrey, Material.Shade800)
+
     Material.theme: Material.Dark
     Material.primary: Material.Blue
     Material.accent: Material.Blue
