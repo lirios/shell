@@ -1,7 +1,7 @@
 configure_file(
-    hawaii.desktop.in
-    ${CMAKE_CURRENT_BINARY_DIR}/hawaii.desktop
+    liri.desktop.in
+    ${CMAKE_CURRENT_BINARY_DIR}/liri.desktop
 )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/hawaii.desktop
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/wayland-sessions)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/liri.desktop
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/wayland-sessions)

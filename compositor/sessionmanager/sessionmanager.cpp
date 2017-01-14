@@ -1,16 +1,16 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
- * $BEGIN_LICENSE:GPL2+$
+ * $BEGIN_LICENSE:GPL3+$
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -37,10 +37,10 @@
 #include "sessionmanager/screensaver/screensaver.h"
 #include "sessionmanager/screensaver/screensaveradaptor.h"
 
-#include <sys/types.h>
 #include <signal.h>
+#include <sys/types.h>
 
-Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
+Q_LOGGING_CATEGORY(SESSION_MANAGER, "liri.session.manager")
 
 /*
  * CustomAuthenticator
@@ -48,6 +48,8 @@ Q_LOGGING_CATEGORY(SESSION_MANAGER, "hawaii.session.manager")
 
 class CustomAuthenticator : public QObject
 {
+    Q_OBJECT
+
 public:
     CustomAuthenticator(SessionManager *parent, const QJSValue &callback)
         : m_parent(parent)
@@ -74,7 +76,8 @@ private:
     bool m_succeded;
 
 private Q_SLOTS:
-    void authenticate() {
+    void authenticate()
+    {
         if (m_callback.isCallable())
             m_callback.call(QJSValueList() << m_succeded);
 
@@ -103,16 +106,11 @@ SessionManager::SessionManager(QObject *parent)
     , m_locked(false)
 {
     // Lock and unlock the session
-    connect(m_loginManager, &LoginManager::sessionLocked, this, [this] {
-        setLocked(true);
-    });
-    connect(m_loginManager, &LoginManager::sessionUnlocked, this, [this] {
-        setLocked(false);
-    });
+    connect(m_loginManager, &LoginManager::sessionLocked, this, [this] { setLocked(true); });
+    connect(m_loginManager, &LoginManager::sessionUnlocked, this, [this] { setLocked(false); });
 
     // Logout session before the system goes off
-    connect(m_loginManager, &LoginManager::logOutRequested,
-            this, &SessionManager::logOut);
+    connect(m_loginManager, &LoginManager::logOutRequested, this, &SessionManager::logOut);
 
     // Authenticate in a separate thread
     m_authenticator->moveToThread(m_authenticatorThread);
@@ -325,4 +323,4 @@ void SessionManager::cancelShutdownRequest()
     Q_EMIT shutdownRequestCanceled();
 }
 
-#include "moc_sessionmanager.cpp"
+#include "sessionmanager.moc"

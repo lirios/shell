@@ -1,0 +1,4 @@
+module Liri.LoginManager
+plugin loginmanagerplugin
+classname LoginManagerPlugin
+typeinfo plugins.qmltypes

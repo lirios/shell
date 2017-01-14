@@ -1,4 +1,0 @@
-module org.hawaiios.hardware
-plugin hardwareplugin
-classname HardwarePlugin
-typeinfo plugins.qmltypes

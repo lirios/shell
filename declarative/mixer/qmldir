@@ -1,4 +1,0 @@
-module org.hawaiios.mixer
-plugin mixerplugin
-classname MixerPlugin
-typeinfo plugins.qmltypes

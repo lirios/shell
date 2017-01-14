@@ -1,4 +1,0 @@
-module org.hawaiios.notifications
-plugin notificationsplugin
-classname NotificationsPlugin
-typeinfo plugins.qmltypes

@@ -1,16 +1,16 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
- * $BEGIN_LICENSE:GPL2+$
+ * $BEGIN_LICENSE:GPL3+$
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -54,7 +54,7 @@ public:
     virtual void locked() = 0;
     virtual void unlocked() = 0;
 
-    virtual void switchToVt(int index) = 0;
+    virtual void switchToVt(quint32 vt) = 0;
 
 Q_SIGNALS:
     void logOutRequested();

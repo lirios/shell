@@ -1,16 +1,16 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
- * $BEGIN_LICENSE:GPL2+$
+ * $BEGIN_LICENSE:GPL3+$
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -24,7 +24,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/QProcess>
 #include <QtCore/QStandardPaths>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
@@ -34,7 +33,7 @@
 #include "processlauncher.h"
 #include "processlauncheradaptor.h"
 
-Q_LOGGING_CATEGORY(LAUNCHER, "hawaii.launcher")
+Q_LOGGING_CATEGORY(LAUNCHER, "liri.launcher")
 
 ProcessLauncher::ProcessLauncher(QObject *parent)
     : QObject(parent)
@@ -74,7 +73,8 @@ void ProcessLauncher::closeApplications()
 
         i.remove();
 
-        qCDebug(LAUNCHER) << "Terminating application from" << fileName << "with pid" << process->pid();
+        qCDebug(LAUNCHER) << "Terminating application from" << fileName << "with pid"
+                          << process->pid();
 
         process->terminate();
         if (!process->waitForFinished())
@@ -89,8 +89,7 @@ bool ProcessLauncher::registerWithDBus(ProcessLauncher *instance)
 
     new ProcessLauncherAdaptor(instance);
     if (!bus.registerObject(QStringLiteral("/ProcessLauncher"), instance)) {
-        qCWarning(LAUNCHER,
-                  "Couldn't register /ProcessLauncher D-Bus object: %s",
+        qCWarning(LAUNCHER, "Couldn't register /ProcessLauncher D-Bus object: %s",
                   qPrintable(bus.lastError().message()));
         return false;
     }
@@ -105,9 +104,8 @@ bool ProcessLauncher::launchApplication(const QString &appId)
         return false;
     }
 
-    const QString fileName =
-            QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                   appId + QStringLiteral(".desktop"));
+    const QString fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                                    appId + QStringLiteral(".desktop"));
     if (fileName.isEmpty()) {
         qCWarning(LAUNCHER) << "Cannot find" << appId << "desktop entry";
         return false;
@@ -151,13 +149,15 @@ bool ProcessLauncher::launchCommand(const QString &command)
     if (!m_waylandSocketName.isEmpty())
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
-    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
+    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("liri"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
 
     QProcess *process = new QProcess(this);
     process->setProcessEnvironment(env);
     process->setProcessChannelMode(QProcess::ForwardedChannels);
-    connect(process, SIGNAL(finished(int)), this, SLOT(finished(int)));
+    connect(process,
+            static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this,
+            &ProcessLauncher::finished);
     process->start(command);
     if (!process->waitForStarted()) {
         qCWarning(LAUNCHER) << "Failed to launch command" << command;
@@ -185,13 +185,14 @@ bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
     QStringList args = entry.expandExecString();
     QString command = args.takeAt(0);
 
-    qCDebug(LAUNCHER) << "Launching" << entry.expandExecString().join(" ") << "from" << entry.fileName();
+    qCDebug(LAUNCHER) << "Launching" << entry.expandExecString().join(QStringLiteral(" ")) << "from"
+                      << entry.fileName();
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     if (!m_waylandSocketName.isEmpty())
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
-    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("Hawaii"));
+    env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("liri"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
 
     QProcess *process = new QProcess(this);
@@ -200,21 +201,18 @@ bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
     process->setProcessEnvironment(env);
     process->setProcessChannelMode(QProcess::ForwardedChannels);
     m_apps[entry.fileName()] = process;
-    connect(process, SIGNAL(finished(int)), this, SLOT(finished(int)));
+    connect(process,
+            static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this,
+            &ProcessLauncher::finished);
     process->start();
     if (!process->waitForStarted()) {
-        qCWarning(LAUNCHER,
-                  "Failed to launch \"%s\" (%s)",
-                  qPrintable(entry.fileName()),
+        qCWarning(LAUNCHER, "Failed to launch \"%s\" (%s)", qPrintable(entry.fileName()),
                   qPrintable(entry.name()));
         return false;
     }
 
-    qCDebug(LAUNCHER,
-            "Launched \"%s\" (%s) with pid %lld",
-            qPrintable(entry.fileName()),
-            qPrintable(entry.name()),
-            process->pid());
+    qCDebug(LAUNCHER, "Launched \"%s\" (%s) with pid %lld", qPrintable(entry.fileName()),
+            qPrintable(entry.name()), process->pid());
 
     return true;
 }
@@ -233,8 +231,10 @@ bool ProcessLauncher::closeEntry(const QString &fileName)
     return true;
 }
 
-void ProcessLauncher::finished(int exitCode)
+void ProcessLauncher::finished(int exitCode, QProcess::ExitStatus exitStatus)
 {
+    Q_UNUSED(exitStatus);
+
     QProcess *process = qobject_cast<QProcess *>(sender());
     if (!process)
         return;

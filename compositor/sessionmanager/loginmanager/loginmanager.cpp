@@ -1,16 +1,16 @@
 /****************************************************************************
- * This file is part of Hawaii.
+ * This file is part of Liri.
  *
  * Copyright (C) 2015-2016 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
- * $BEGIN_LICENSE:GPL2+$
+ * $BEGIN_LICENSE:GPL3+$
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -28,7 +28,7 @@
 #include "loginmanager.h"
 #include "logindbackend.h"
 
-Q_LOGGING_CATEGORY(LOGINMANAGER, "hawaii.loginmanager")
+Q_LOGGING_CATEGORY(LOGINMANAGER, "liri.loginmanager")
 
 LoginManager::LoginManager(SessionManager *sm, QObject *parent)
     : QObject(parent)
@@ -40,12 +40,12 @@ LoginManager::LoginManager(SessionManager *sm, QObject *parent)
     qCDebug(LOGINMANAGER) << "Using" << m_backend->name() << "login manager backend";
 
     // Relay backend signals
-    connect(m_backend, SIGNAL(logOutRequested()),
-            this, SIGNAL(logOutRequested()));
-    connect(m_backend, SIGNAL(sessionLocked()),
-            this, SIGNAL(sessionLocked()));
-    connect(m_backend, SIGNAL(sessionUnlocked()),
-            this, SIGNAL(sessionUnlocked()));
+    connect(m_backend, &LoginManagerBackend::logOutRequested,
+            this, &LoginManager::logOutRequested);
+    connect(m_backend, &LoginManagerBackend::sessionLocked,
+            this, &LoginManager::sessionLocked);
+    connect(m_backend, &LoginManagerBackend::sessionUnlocked,
+            this, &LoginManager::sessionUnlocked);
 }
 
 LoginManager::~LoginManager()
@@ -89,9 +89,9 @@ void LoginManager::unlockSession()
     m_backend->unlockSession();
 }
 
-void LoginManager::switchToVt(int index)
+void LoginManager::switchToVt(quint32 vt)
 {
-    m_backend->switchToVt(index);
+    m_backend->switchToVt(vt);
 }
 
 void LoginManager::locked()

@@ -1,16 +1,16 @@
 /****************************************************************************
- * This file is part of Hawaii Shell.
+ * This file is part of Liri Shell.
  *
  * Copyright (C) 2013-2016 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
- * $BEGIN_LICENSE:GPL2+$
+ * $BEGIN_LICENSE:GPL3+$
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -34,7 +34,6 @@ class PowerManagerBackend;
 class PowerManager : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Capability)
     Q_PROPERTY(Capabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
 public:
     enum Capability {
@@ -45,6 +44,7 @@ public:
         Hibernate = 0x08,
         HybridSleep = 0x10
     };
+    Q_ENUM(Capability)
 
     Q_DECLARE_FLAGS(Capabilities, Capability)
     Q_FLAGS(Capabilities)

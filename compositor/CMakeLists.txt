@@ -1,10 +1,10 @@
 find_package(PAM REQUIRED)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/headers
-    ${CMAKE_BINARY_DIR}/headers
-    ${CMAKE_SOURCE_DIR}/3rdparty
-    ${CMAKE_CURRENT_BINARY_DIR}/sessionmanager/screensaver
+    "${CMAKE_CURRENT_SOURCE_DIR}/../headers"
+    "${CMAKE_CURRENT_BINARY_DIR}/../headers"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty"
+    "${CMAKE_CURRENT_BINARY_DIR}/sessionmanager/screensaver"
 )
 
 set(SOURCES
@@ -28,30 +28,31 @@ set(SOURCES
     sessionmanager/screensaver/screensaver.cpp
 )
 
-qt5_add_dbus_adaptor(SOURCES processlauncher/org.hawaiios.ProcessLauncher.xml
+qt5_add_dbus_adaptor(SOURCES processlauncher/io.liri.ProcessLauncher.xml
                      processlauncher/processlauncher.h ProcessLauncher
                      processlauncheradaptor ProcessLauncherAdaptor)
 qt5_add_dbus_adaptor(SOURCES sessionmanager/screensaver/org.freedesktop.ScreenSaver.xml
                      sessionmanager/screensaver/screensaver.h ScreenSaver
                      sessionmanager/screensaver/screensaveradaptor ScreenSaverAdaptor)
 
-qt5_add_resources(RESOURCES ${CMAKE_SOURCE_DIR}/shell/hawaii.qrc)
+qt5_add_resources(RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/qml/shell.qrc")
 
-add_executable(hawaii ${SOURCES} ${RESOURCES})
-target_link_libraries(hawaii
+add_executable(liri-shell ${SOURCES} ${RESOURCES})
+target_link_libraries(liri-shell
     Qt5::Core
     Qt5::DBus
     Qt5::Gui
     Qt5::Widgets
+    Qt5::QuickControls2
     GreenIsland::Server
-    HawaiiSigWatch
-    Hawaii::GSettings
+    LiriSigWatch
+    Vibe::Settings
     Qt5Xdg
     ${PAM_LIBRARIES}
 )
 
 # Git revision
 include(GetGitRevision)
-create_git_head_revision_file(gitsha1.h hawaii)
+create_git_head_revision_file(gitsha1.h liri-shell)
 
-install(TARGETS hawaii DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS liri-shell DESTINATION ${BIN_INSTALL_DIR})
