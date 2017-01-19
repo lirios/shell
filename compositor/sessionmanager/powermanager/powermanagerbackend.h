@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri Shell.
  *
- * Copyright (C) 2013-2016 Pier Luigi Fiorini
+ * Copyright (C) 2017 Pier Luigi Fiorini
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>

@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri Shell.
  *
- * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
+ * Copyright (C) 2017 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *

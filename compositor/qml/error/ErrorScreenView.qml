@@ -1,8 +1,8 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
- * Copyright (C) 2016 Michael Spencer <sonrisesoftware@gmail.com>
+ * Copyright (C) 2017 Pier Luigi Fiorini
+ * Copyright (C) 2017 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * Author(s):
  *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>

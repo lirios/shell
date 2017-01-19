@@ -1,7 +1,7 @@
 /*
  * Unix signal watcher for Qt.
  *
- * Copyright (C) 2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2017 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2014 Simon Knopp
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy

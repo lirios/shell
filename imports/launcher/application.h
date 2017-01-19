@@ -1,7 +1,7 @@
 /*
  * QML Desktop - Set of tools written in C++ for QML
  *
- * Copyright (C) 2015-2016 Michael Spencer <sonrisesoftware@gmail.com>
+ * Copyright (C) 2017 Michael Spencer <sonrisesoftware@gmail.com>
  *               2015 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
