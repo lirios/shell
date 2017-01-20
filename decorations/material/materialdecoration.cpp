@@ -3,6 +3,7 @@
 ** Copyright (C) 2014 Robin Burchell <robin.burchell@viroteck.net>
 ** Copyright (C) 2015 The Qt Company Ltd.
 ** Copyright (C) 2017 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+** Copyright (C) 2017 Michael Spencer <sonrisesoftware@gmail.com>
 ** Contact: http://www.qt.io/licensing/
 **
 ** This file is part of the plugins of the Qt Toolkit.
