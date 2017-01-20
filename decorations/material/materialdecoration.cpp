@@ -37,7 +37,7 @@ namespace QtWaylandClient
 
 #define BUTTON_WIDTH dp(24)
 #define BUTTON_SPACING dp(12)
-#define WINDOW_BORDER dp(2)
+#define WINDOW_BORDER 0
 
 QWaylandMaterialDecoration::QWaylandMaterialDecoration()
     : QWaylandAbstractDecoration()
