@@ -6,7 +6,6 @@ include_directories(SYSTEM
     ${Qt5WaylandClient_PRIVATE_INCLUDE_DIRS}
 )
 
-link_directories(${CMAKE_INSTALL_PREFIX}/lib/qt/plugins/wayland-decoration-client)
 add_library(liriplatform SHARED ${SOURCES})
 target_link_libraries(liriplatform
                       Qt5::Core
