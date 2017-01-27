@@ -52,7 +52,6 @@ FluidCore.Object {
         id: keyboardSettings
         schema.id: "io.liri.desktop.peripherals.keyboard"
         schema.path: "/io/liri/desktop/peripherals/keyboard/"
-        onSettingsChanged: shellSettings.applyKeymapSettings()
     }
 
     /*
