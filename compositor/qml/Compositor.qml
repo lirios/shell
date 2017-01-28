@@ -175,7 +175,7 @@ WaylandCompositor {
         onGrabSurfaceAdded: grabSurface = surface
     }
 
-    WlShell {
+    LWSP.WlShell {
         id: wlShell
 
         onWlShellSurfaceRequested: {
@@ -185,7 +185,7 @@ WaylandCompositor {
         onWlShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, chromeComponent)
     }
 
-    XdgShellV5 {
+    LWSP.XdgShellV5 {
         id: xdgShellV5
 
         onXdgSurfaceRequested: {
