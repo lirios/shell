@@ -76,6 +76,7 @@ endif()
 option(DEVELOPMENT_BUILD "Enable options for developers" OFF)
 option(ENABLE_SYSTEMD "Enables systemd support" ON)
 option(ENABLE_QTQUICK_COMPILER "Enables QtQuick compiler support" OFF)
+option(BUILD_HACK "Build hack for Arch Linux" OFF)
 
 # Find pkg-config here so that it can be referenced soon
 find_package(PkgConfig)
@@ -118,6 +119,40 @@ endif()
 
 # Find qtwayland-scanner
 find_package(QtWaylandScanner REQUIRED)
+
+# Hack because QtWayland doesn't set this at all
+if(Qt5WaylandClient_PRIVATE_INCLUDE_DIRS STREQUAL "")
+    set(Qt5WaylandClient_PRIVATE_INCLUDE_DIRS
+        "${_qt5WaylandClient_install_prefix}/include/qt/QtWaylandClient/${Qt5WaylandClient_VERSION}"
+        "${_qt5WaylandClient_install_prefix}/include/qt/QtWaylandClient/${Qt5WaylandClient_VERSION}/QtWaylandClient"
+    )
+endif()
+if(Qt5WaylandCompositor_PRIVATE_INCLUDE_DIRS STREQUAL "")
+    set(Qt5WaylandCompositor_PRIVATE_INCLUDE_DIRS
+        "${_qt5WaylandCompositor_install_prefix}/include/qt/QtWaylandCompositor/${Qt5WaylandCompositor_VERSION}"
+        "${_qt5WaylandCompositor_install_prefix}/include/qt/QtWaylandCompositor/${Qt5WaylandCompositor_VERSION}/QtWaylandCompositor"
+    )
+endif()
+
+# Hack for Arch Linux where private include dirs are badly defined
+if(BUILD_HACK)
+    set(Qt5WaylandClient_PRIVATE_INCLUDE_DIRS
+        "${_qt5WaylandClient_install_prefix}/include/qt/QtWaylandClient/${Qt5WaylandClient_VERSION}"
+        "${_qt5WaylandClient_install_prefix}/include/qt/QtWaylandClient/${Qt5WaylandClient_VERSION}/QtWaylandClient"
+    )
+    set(Qt5WaylandCompositor_PRIVATE_INCLUDE_DIRS
+        "${_qt5WaylandCompositor_install_prefix}/include/qt/QtWaylandCompositor/${Qt5WaylandCompositor_VERSION}"
+        "${_qt5WaylandCompositor_install_prefix}/include/qt/QtWaylandCompositor/${Qt5WaylandCompositor_VERSION}/QtWaylandCompositor"
+    )
+    set(Qt5Qml_PRIVATE_INCLUDE_DIRS
+        "${_qt5Qml_install_prefix}/include/qt/QtQml/${Qt5Qml_VERSION}"
+        "${_qt5Qml_install_prefix}/include/qt/QtQml/${Qt5Qml_VERSION}/QtQml"
+    )
+    set(Qt5Quick_PRIVATE_INCLUDE_DIRS
+        "${_qt5Quick_install_prefix}/include/qt/QtQuick/${Qt5Quick_VERSION}"
+        "${_qt5Quick_install_prefix}/include/qt/QtQuick/${Qt5Quick_VERSION}/QtQuick"
+    )
+endif()
 
 # Find Liri Wayland
 set(REQUIRED_LIRIWAYLAND_VERSION "0.8.0")
