@@ -1,3 +1,0 @@
-module Liri.Platform
-plugin liriplatform
-PlatformExtensions 1.0 PlatformExtensions.qml
