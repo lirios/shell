@@ -89,7 +89,7 @@ void ScreenSaver::UnInhibit(uint cookie)
 {
     Q_UNUSED(cookie)
 
-    m_sessionManager->idleUninhibitRequested();
+    Q_EMIT m_sessionManager->idleUninhibitRequested();
 }
 
 void ScreenSaver::Lock()
