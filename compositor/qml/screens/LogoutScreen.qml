@@ -22,9 +22,9 @@
  ***************************************************************************/
 
 import QtQuick 2.4
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
+import Fluid.Controls 1.0 as FluidControls
 
 Item {
     id: logoutScreen
@@ -75,8 +75,11 @@ Item {
         Behavior on opacity { NumberAnimation { duration: 150 } }
     }
 
-    Dialog {
+    FluidControls.AlertDialog {
         id: logoutDialog
+
+        Material.primary: Material.Blue
+        Material.accent: Material.Blue
 
         x: (parent.width - width)/2
         y: (parent.height - height)/2
@@ -84,16 +87,27 @@ Item {
         title: qsTr("Log out")
         text: qsTr("You will be logged out in %1 seconds").arg(logoutScreen.remainingSeconds)
 
-        positiveButtonText: qsTr("Log out")
+        footer: DialogButtonBox {
+            Button {
+                text: qsTr("Log out")
+                flat: true
+
+                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
+            }
+
+            Button {
+                text: qsTr("Cancel")
+                flat: true
+
+                DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
+            }
+        }
 
         onOpened: {
             logoutScreen.startTime = new Date()
             logoutScreen.remainingSeconds = logoutScreen.totalSeconds - (new Date() - logoutScreen.startTime)/1000
         }
-
         onAccepted: SessionInterface.logOut()
-
         onRejected: logoutScreen.canceled()
-        onCanceled: logoutScreen.canceled()
     }
 }

@@ -28,11 +28,12 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0
-import Fluid.Controls 1.0
+import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
+import Fluid.Controls 1.0 as FluidControls
 import Vibe.NetworkManager 1.0 as NM
 
-ListItem {
+FluidControls.ListItem {
     id: listItem
 
     property bool predictableWirelessPassword: !Uuid && Type === NM.Enums.Wireless &&
@@ -84,15 +85,33 @@ ListItem {
 
     Dialog {
         id: passwordDialog
+
+        Material.primary: Material.Blue
+        Material.accent: Material.Blue
+
         title: qsTr("Connect to Network")
-        text: listItem.text
 
         parent: screenView
         x: (output.availableGeometry.width - width)/2
         y: (output.availableGeometry.height - height)/2
+        focus: true
 
-        positiveButtonText: qsTr("Connect")
-        positiveButton.enabled: passwordField.acceptableInput
+        footer: DialogButtonBox {
+            Button {
+                text: qsTr("Connect")
+                enabled: passwordField.acceptableInput
+                flat: true
+
+                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
+            }
+
+            Button {
+                text: qsTr("Cancel")
+                flat: true
+
+                DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
+            }
+        }
 
         onOpened: passwordField.text = ""
         onAccepted: handler.addAndActivateConnection(DevicePath, SpecificPath, passwordField.text)
@@ -102,8 +121,13 @@ ListItem {
         ColumnLayout {
             width: parent.width
 
+            FluidControls.DialogLabel {
+                text: listItem.text
+            }
+
             TextField {
                 id: passwordField
+                focus: true
                 echoMode: showPasswordCheckbox.checked ? TextInput.Normal : TextInput.Password
                 placeholderText: qsTr("Password")
                 validator: RegExpValidator {

@@ -23,11 +23,11 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
+import Fluid.Controls 1.0 as FluidControls
 
-Popup {
+Dialog {
     id: authDialog
 
     property string actionId
@@ -41,6 +41,8 @@ Popup {
     property alias errorMessage: errorLabel.text
 
     parent: screenView
+
+    title: qsTr("Authentication required")
 
     modal: true
 
@@ -91,7 +93,7 @@ Popup {
         RowLayout {
             spacing: Units.smallSpacing
 
-            Icon {
+            FluidControls.Icon {
                 name: "action/lock"
                 size: Units.iconSizes.medium
 
@@ -101,11 +103,7 @@ Popup {
             ColumnLayout {
                 spacing: Units.smallSpacing
 
-                TitleLabel {
-                    text: qsTr("Authentication required")
-                }
-
-                Label {
+                FluidControls.DialogLabel {
                     id: messageLabel
                     wrapMode: Text.WordWrap
 
@@ -115,7 +113,7 @@ Popup {
                 RowLayout {
                     spacing: Units.smallSpacing
 
-                    Icon {
+                    FluidControls.Icon {
                         id: avatarImage
                         size: Units.iconSizes.large
                     }
@@ -141,7 +139,7 @@ Popup {
                         id: passwordInput
                         echoMode: echo ? TextInput.Normal : TextInput.Password
                         focus: true
-                        onAccepted: okButton.clicked()
+                        onAccepted: authDialog.accepted()
 
                         Layout.fillWidth: true
                     }
@@ -170,29 +168,24 @@ Popup {
 
             Layout.fillHeight: true
         }
+    }
 
-        Item {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+    footer: DialogButtonBox {
+        Button {
+            text: qsTr("Authenticate")
+            flat: true
+
+            DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
         }
 
-        RowLayout {
-            spacing: Units.smallSpacing
+        Button {
+            text: qsTr("Cancel")
+            flat: true
 
-            Button {
-                id: cancelButton
-                text: qsTr("Cancel")
-                onClicked: policyKitAgent.abortAuthentication()
-            }
-
-            Button {
-                id: okButton
-                text: qsTr("Authenticate")
-                onClicked: policyKitAgent.authenticate(passwordInput.text)
-            }
-
-            Layout.alignment: Qt.AlignRight
-            Layout.fillWidth: true
+            DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
         }
     }
+
+    onAccepted: policyKitAgent.authenticate(passwordInput.text)
+    onRejected: policyKitAgent.abortAuthentication()
 }

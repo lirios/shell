@@ -26,17 +26,13 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
 import Liri.Launcher 0.1 as CppLauncher
 
-Popup {
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+Dialog {
     modal: true
     focus: true
-    implicitWidth: layout.width + (2 * Units.largeSpacing)
-    implicitHeight: layout.height + (2 * Units.largeSpacing)
 
     Material.theme: Material.Dark
     Material.primary: Material.Blue
@@ -46,9 +42,10 @@ Popup {
         id: process
     }
 
+    standardButtons: Dialog.Cancel
+
     ColumnLayout {
-        id: layout
-        anchors.centerIn: parent
+        width: parent.width
         spacing: Units.smallSpacing
 
         Label {
@@ -65,13 +62,6 @@ Popup {
 
             Layout.minimumWidth: 350
             Layout.fillWidth: true
-        }
-
-        Button {
-            text: qsTr("Close")
-            onClicked: close()
-
-            Layout.alignment: Qt.AlignHCenter
         }
     }
 }
