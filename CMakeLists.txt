@@ -119,24 +119,16 @@ endif()
 # Find qtwayland-scanner
 find_package(QtWaylandScanner REQUIRED)
 
-# Hack because QtWayland doesn't set this at all
-foreach(_dir ${_Qt5WaylandClient_OWN_INCLUDE_DIRS})
-    list(APPEND Qt5WaylandClient_PRIVATE_INCLUDE_DIRS "${_dir}/QtWaylandClient/${Qt5WaylandClient_VERSION}")
-    list(APPEND Qt5WaylandClient_PRIVATE_INCLUDE_DIRS "${_dir}/QtWaylandClient/${Qt5WaylandClient_VERSION}/QtWaylandClient")
-endforeach()
-foreach(_dir ${_Qt5WaylandCompositor_OWN_INCLUDE_DIRS})
-    list(APPEND Qt5WaylandCompositor_PRIVATE_INCLUDE_DIRS "${_dir}/QtWaylandCompositor/${Qt5WaylandCompositor_VERSION}")
-    list(APPEND Qt5WaylandCompositor_PRIVATE_INCLUDE_DIRS "${_dir}/QtWaylandCompositor/${Qt5WaylandCompositor_VERSION}/QtWaylandCompositor")
-endforeach()
-
-# Hack because QtQml and QtQuick don't set this at all
-foreach(_dir ${_Qt5Qml_OWN_INCLUDE_DIRS})
-    list(APPEND Qt5Qml_PRIVATE_INCLUDE_DIRS "${_dir}/QtQml/${Qt5Qml_VERSION}")
-    list(APPEND Qt5Qml_PRIVATE_INCLUDE_DIRS "${_dir}/QtQml/${Qt5Qml_VERSION}/QtQml")
-endforeach()
-foreach(_dir ${_Qt5Quick_OWN_INCLUDE_DIRS})
-    list(APPEND Qt5Quick_PRIVATE_INCLUDE_DIRS "${_dir}/QtQuick/${Qt5Quick_VERSION}")
-    list(APPEND Qt5Quick_PRIVATE_INCLUDE_DIRS "${_dir}/QtQuick/${Qt5Quick_VERSION}/QtQuick")
+# Hack because Qt doesn't set this at all
+foreach(_mod WaylandClient WaylandCompositor Qml Quick)
+    foreach(_dir ${_Qt5${_mod}_OWN_INCLUDE_DIRS})
+        if(EXISTS "${_dir}/Qt${_mod}/${Qt5${_mod}_VERSION}")
+            list(APPEND Qt5${_mod}_PRIVATE_INCLUDE_DIRS "${_dir}/Qt${_mod}/${Qt5${_mod}_VERSION}")
+        endif()
+        if(EXISTS "${_dir}/Qt${_mod}/${Qt5${_mod}_VERSION}/Qt${_mod}")
+            list(APPEND Qt5${_mod}_PRIVATE_INCLUDE_DIRS "${_dir}/Qt${_mod}/${Qt5${_mod}_VERSION}/Qt${_mod}")
+        endif()
+    endforeach()
 endforeach()
 
 # Find Liri Wayland
