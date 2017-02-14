@@ -84,6 +84,8 @@ Item {
         x: (parent.width - width)/2
         y: (parent.height - height)/2
 
+        implicitWidth: 400
+
         title: qsTr("Log out")
         text: qsTr("You will be logged out in %1 seconds").arg(logoutScreen.remainingSeconds)
 
