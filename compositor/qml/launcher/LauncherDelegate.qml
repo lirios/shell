@@ -40,7 +40,7 @@ LiriShell.PanelItem {
     highlightOpacity: model.active || model.starting ? 1 : model.running ? 0.4 : 0
     active: model.active
 
-    ToolTip.visible: containsMouse && !menu.showing
+    ToolTip.visible: containsMouse && !menu.visible
     ToolTip.text: model.name || model.appId
 
     onClicked: {
@@ -56,7 +56,7 @@ LiriShell.PanelItem {
     }
 
     onRightClicked: {
-        if (menu.showing)
+        if (menu.visible)
             menu.close();
         else
             menu.open();
