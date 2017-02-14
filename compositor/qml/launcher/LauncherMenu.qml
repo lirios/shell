@@ -24,6 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+import QtQml 2.2
 import QtQuick 2.0
 import QtQuick.Controls 2.1
 import Liri.Launcher 0.1 as CppLauncher
@@ -38,22 +39,6 @@ Menu {
         id: process
     }
 
-    // Component to create application actions
-    Component {
-        id: actionItemComponent
-
-        MenuItem {
-            property string command
-
-            onTriggered: {
-                if (command) {
-                    process.launchCommand(command);
-                    menu.close();
-                }
-            }
-        }
-    }
-
     // Component for separators
     Component {
         id: separatorComponent
@@ -61,6 +46,27 @@ Menu {
         MenuSeparator {}
     }
 
+    Instantiator {
+        model: app.desktopFile.actions
+        delegate: MenuItem {
+            text: model.name
+            onTriggered: {
+                if (model.command) {
+                    process.launchCommand(model.command);
+                    menu.close();
+                }
+            }
+        }
+        onObjectAdded: menu.insertItem(0, object)
+        onObjectRemoved: menu.removeItem(index)
+    }
+
+    Instantiator {
+        model: app.desktopFile.actions.length > 0 ? 1 : 0
+        delegate: MenuSeparator {}
+        onObjectAdded: menu.insertItem(app.desktopFile.actions.length, object)
+        onObjectRemoved: menu.removeItem(index)
+    }
 
     MenuItem {
         text: qsTr("New Window")
@@ -88,27 +94,6 @@ Menu {
             if (!app.quit())
                 console.warn("Failed to quit:", model.appId);
             menu.close();
-        }
-    }
-
-    Component.onCompleted: {
-        if (launcherItem == undefined)
-            return
-
-        var i, item;
-
-        // Add application actions
-        for (i = app.desktopFile.actions.length - 1; i >= 0; i--) {
-            item = actionItemComponent.createObject(menu.contentItem);
-            item.text = app.desktopFile.actions[i].name;
-            item.command = app.desktopFile.actions[i].command;
-            menu.insertItem(0, item);
-        }
-
-        // Add a separator if needed
-        if (app.desktopFile.actions.length > 0) {
-            item = separatorComponent.createObject(menu.contentItem);
-            menu.insertItem(app.desktopFile.actions.length, item);
         }
     }
 }
