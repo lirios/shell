@@ -62,6 +62,9 @@ void Application::setState(State state)
     if (state == m_state)
         return;
 
+    if (state == State::NotRunning)
+        m_active = false;
+
     m_state = state;
     emit stateChanged();
 }
