@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQml.Models 2.1
 import Fluid.Core 1.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Launcher 0.1
 
 Item {
@@ -12,7 +12,7 @@ Item {
     width: 130 * grid.columns
     height: 130 * grid.rows
 
-    Placeholder {
+    FluidControls.Placeholder {
         anchors.fill: parent
 
         iconName: 'action/history'
@@ -50,7 +50,7 @@ Item {
 
                     anchors {
                         fill: parent
-                        margins: Units.smallSpacing
+                        margins: FluidControls.Units.smallSpacing
                     }
                 }
             }

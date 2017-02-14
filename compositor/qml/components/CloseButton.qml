@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
 Rectangle {
     id: root
@@ -36,19 +36,19 @@ Rectangle {
 
     Material.theme: Material.Dark
 
-    width: Units.iconSizes.smallMedium
+    width: FluidControls.Units.iconSizes.smallMedium
     height: width
     radius: width * 0.5
     border.color: Qt.rgba(1, 1, 1, 0.35)
-    border.width: Units.gu(0.05)
+    border.width: FluidControls.Units.gu(0.05)
     color: Material.dialogColor
     antialiasing: true
 
-    Icon {
+    FluidControls.Icon {
         anchors.centerIn: parent
         name: "navigation/close"
         color: "white"
-        width: parent.width - Units.smallSpacing
+        width: parent.width - FluidControls.Units.smallSpacing
         height: width
     }
 

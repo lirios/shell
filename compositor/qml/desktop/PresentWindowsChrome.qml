@@ -28,7 +28,7 @@ import QtQuick 2.2
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import "../components" as ShellComponents
 
 Item {
@@ -58,14 +58,14 @@ Item {
         glowRadius: margin
         spread: 0.2
         color: Material.accent
-        cornerRadius: Units.gu(0.2)
+        cornerRadius: FluidControls.Units.gu(0.2)
         opacity: closeButton.opacity > 0.0 ? 0.5 : 0.0
         z: 3
 
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
-                duration: Units.shortDuration
+                duration: FluidControls.Units.shortDuration
             }
         }
     }
@@ -75,15 +75,15 @@ Item {
         anchors.centerIn: parent
         radius: 6
         color: Material.dialogColor
-        width: Math.max(parent.width * 0.8, titleLabel.paintedWidth) + Units.smallSpacing * 2
-        height: titleLabel.paintedHeight + Units.smallSpacing * 2
+        width: Math.max(parent.width * 0.8, titleLabel.paintedWidth) + FluidControls.Units.smallSpacing * 2
+        height: titleLabel.paintedHeight + FluidControls.Units.smallSpacing * 2
         z: 4
 
         Label {
             id: titleLabel
             anchors {
                 centerIn: parent
-                margins: Units.smallSpacing
+                margins: FluidControls.Units.smallSpacing
             }
             text: view.shellSurface.title ? view.shellSurface.title : qsTr("Unknown")
             elide: Text.ElideRight
@@ -94,7 +94,7 @@ Item {
             target: titleBadge
             from: 0.0
             to: 1.0
-            duration: Units.longDuration
+            duration: FluidControls.Units.longDuration
             running: true
         }
     }
@@ -104,23 +104,23 @@ Item {
         anchors {
             right: parent.right
             bottom: parent.bottom
-            rightMargin: Units.largeSpacing
-            bottomMargin: Units.largeSpacing
+            rightMargin: FluidControls.Units.largeSpacing
+            bottomMargin: FluidControls.Units.largeSpacing
         }
         radius: 6
         color: Material.dialogColor
-        width: icon.width + Units.smallSpacing * 2
+        width: icon.width + FluidControls.Units.smallSpacing * 2
         height: width
         z: 4
 
-        Icon {
+        FluidControls.Icon {
             id: icon
             anchors {
                 centerIn: parent
-                margins: Units.smallSpacing
+                margins: FluidControls.Units.smallSpacing
             }
             name: view.iconName ? view.iconName : "unknown"
-            width: Units.iconSizes.large
+            width: FluidControls.Units.iconSizes.large
             height: width
         }
 
@@ -129,7 +129,7 @@ Item {
             target: iconBadge
             from: 0.0
             to: 1.0
-            duration: Units.longDuration
+            duration: FluidControls.Units.longDuration
             running: true
         }
     }
@@ -139,9 +139,9 @@ Item {
         anchors {
             top: mouseArea.top
             right: mouseArea.right
-            margins: -Units.gu(1)
+            margins: -FluidControls.Units.gu(1)
         }
-        width: Units.iconSizes.medium
+        width: FluidControls.Units.iconSizes.medium
         z: 5
         opacity: mouseArea.containsMouse || hovered ? 1.0 : 0.0
         onClicked: chrome.closed(view)
@@ -149,7 +149,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InCubic
-                duration: Units.shortDuration
+                duration: FluidControls.Units.shortDuration
             }
         }
     }

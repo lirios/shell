@@ -26,8 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
-import Fluid.Core 1.0
-import Fluid.Controls 1.0
 import Liri.Shell 1.0
 import Vibe.Hardware 1.0
 import "power" as PowerIndicator

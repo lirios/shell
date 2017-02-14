@@ -24,7 +24,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
 import Vibe.Notifications 1.0
 
@@ -39,7 +39,7 @@ Indicator {
     component: ColumnLayout {
         spacing: 0
 
-        Placeholder {
+        FluidControls.Placeholder {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -50,11 +50,11 @@ Indicator {
 
         ListView {
             id: notificationView
-            spacing: Units.largeSpacing
+            spacing: FluidControls.Units.largeSpacing
             clip: true
             model: notificationsModel
             visible: count > 0
-            delegate: ListItem {
+            delegate: FluidControls.ListItem {
                 property int notificationId: model.id
 
                 iconName: model.appIcon ? model.appIcon : model.hasIcon ? "image://notifications/%1/%2".arg(model.id).arg(Date.now() / 1000 | 0) : "social/notifications"
@@ -73,31 +73,31 @@ Indicator {
                 NumberAnimation {
                     properties: "x"
                     from: notificationView.width
-                    duration: Units.shortDuration
+                    duration: FluidControls.Units.shortDuration
                 }
             }
             remove: Transition {
                 NumberAnimation {
                     properties: "x"
                     to: notificationView.width
-                    duration: Units.longDuration
+                    duration: FluidControls.Units.longDuration
                 }
 
                 NumberAnimation {
                     properties: "opacity"
                     to: 0
-                    duration: Units.longDuration
+                    duration: FluidControls.Units.longDuration
                 }
             }
             removeDisplaced: Transition {
                 SequentialAnimation {
                     PauseAnimation {
-                        duration: Units.longDuration
+                        duration: FluidControls.Units.longDuration
                     }
 
                     NumberAnimation {
                         properties: "x,y"
-                        duration: Units.shortDuration
+                        duration: FluidControls.Units.shortDuration
                     }
                 }
             }

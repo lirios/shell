@@ -26,9 +26,9 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Core 1.0
-import Fluid.Controls 1.0
-import Fluid.Material 1.0
+import Fluid.Core 1.0 as FluidCore
+import Fluid.Controls 1.0 as FluidControls
+import Fluid.Material 1.0 as FluidMaterial
 import "../components" as ShellComponents
 
 Item {
@@ -38,7 +38,7 @@ Item {
 
     id: notification
     objectName: "notificationWindow"
-    width: Units.gu(24)
+    width: FluidControls.Units.gu(24)
     height: notificationItem.implicitHeight
 
     Material.theme: Material.Dark
@@ -48,14 +48,14 @@ Item {
     Behavior on height {
         NumberAnimation {
             easing.type: Easing.OutQuad
-            duration: Units.longDuration
+            duration: FluidControls.Units.longDuration
         }
     }
 
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.OutSine
-            duration: Units.longDuration
+            duration: FluidControls.Units.longDuration
         }
     }
 
@@ -75,8 +75,8 @@ Item {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -Units.smallSpacing * 1.5
-            rightMargin: -Units.smallSpacing * 1.5
+            topMargin: -FluidControls.Units.smallSpacing * 1.5
+            rightMargin: -FluidControls.Units.smallSpacing * 1.5
         }
         z: 1
         onClicked: notification.closed()
@@ -88,13 +88,13 @@ Item {
         anchors.fill: parent
 
         layer.enabled: true
-        layer.effect: ElevationEffect {
+        layer.effect: FluidMaterial.ElevationEffect {
             elevation: 8
         }
 
         color: Material.dialogColor
         border.width: 1
-        border.color: Utils.alpha(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
+        border.color: FluidCore.Utils.alpha(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
         radius: 6
         antialiasing: true
         z: 0
@@ -102,7 +102,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutSine
-                duration: Units.longDuration
+                duration: FluidControls.Units.longDuration
             }
         }
 
@@ -110,7 +110,7 @@ Item {
             id: notificationItem
             anchors {
                 fill: parent
-                margins: Units.smallSpacing
+                margins: FluidControls.Units.smallSpacing
             }
             summary: model.summary
             body: model.body

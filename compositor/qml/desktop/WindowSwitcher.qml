@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import QtWayland.Compositor 1.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
 Popup {
     readonly property real thumbnailSize: 200
@@ -38,7 +38,7 @@ Popup {
     focus: true
     modal: true
     implicitWidth: output.availableGeometry.width * 0.7
-    implicitHeight: thumbnailSize + label.paintedHeight + (2 * layout.spacing) + Units.largeSpacing
+    implicitHeight: thumbnailSize + label.paintedHeight + (2 * layout.spacing) + FluidControls.Units.largeSpacing
 
     Material.theme: Material.Dark
     Material.primary: Material.Blue
@@ -62,7 +62,7 @@ Popup {
                 id: windowItem
                 anchors {
                     fill: parent
-                    margins: Units.smallSpacing
+                    margins: FluidControls.Units.smallSpacing
                 }
                 surface: shellSurface.surface
                 sizeFollowsSurface: false
@@ -77,12 +77,12 @@ Popup {
                 }
             }
 
-            Icon {
+            FluidControls.Icon {
                 anchors {
                     right: parent.right
                     bottom: parent.bottom
                 }
-                width: Units.iconSizes.large
+                width: FluidControls.Units.iconSizes.large
                 height: width
                 name: view.iconName
                 cache: false
@@ -94,7 +94,7 @@ Popup {
     ColumnLayout {
         id: layout
         anchors.fill: parent
-        spacing: Units.smallSpacing
+        spacing: FluidControls.Units.smallSpacing
 
         ListView {
             id: listView
@@ -102,8 +102,8 @@ Popup {
             focus: true
             orientation: ListView.Horizontal
             model: compositor.shellSurfaces
-            spacing: Units.smallSpacing
-            highlightMoveDuration: Units.shortDuration
+            spacing: FluidControls.Units.smallSpacing
+            highlightMoveDuration: FluidControls.Units.shortDuration
             delegate: thumbnailComponent
             currentIndex: -1
 

@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
 import Vibe.Hardware 1.0 as Hardware
 
@@ -39,12 +39,12 @@ Indicator {
         model: hardware.storageDevices
         clip: true
 
-        delegate: ListItem {
+        delegate: FluidControls.ListItem {
             iconName: modelData.iconName + "-symbolic"
             text: modelData.name
             onClicked: processRunner.launchCommand("xdg-open file://" + modelData.filePath)
 
-            rightItem: IconButton {
+            rightItem: FluidControls.IconButton {
                 anchors.centerIn: parent
 
                 ToolTip.text: modelData.mounted ? qsTr("Eject") : qsTr("Mount")

@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
 Rectangle {
     width: 32
@@ -39,7 +39,7 @@ Rectangle {
     Behavior on opacity {
         NumberAnimation {
             easing.type: Easing.InOutQuad
-            duration: Units.shortDuration
+            duration: FluidControls.Units.shortDuration
         }
     }
 

@@ -28,11 +28,10 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Core 1.0
-import Fluid.Controls 1.0
-import Fluid.Material 1.0
+import Fluid.Controls 1.0 as FluidControls
+import Fluid.Material 1.0 as FluidMaterial
 
-Showable {
+FluidControls.Showable {
     //! How long the overlay will stay on screen
     property alias timeout: timer.interval
 
@@ -54,14 +53,14 @@ Showable {
     showAnimation: OpacityAnimator {
         target: rect
         easing.type: Easing.InSine
-        duration: Units.mediumDuration
+        duration: FluidControls.Units.mediumDuration
         from: 0.0
         to: 1.0
     }
     hideAnimation: OpacityAnimator {
         target: rect
         easing.type: Easing.InSine
-        duration: Units.mediumDuration
+        duration: FluidControls.Units.mediumDuration
         from: 1.0
         to: 0.0
     }
@@ -91,7 +90,7 @@ Showable {
         opacity: 0.0
 
         layer.enabled: true
-        layer.effect: ElevationEffect {
+        layer.effect: FluidMaterial.ElevationEffect {
             elevation: 8
         }
 
@@ -108,12 +107,12 @@ Showable {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: Units.largeSpacing
-            spacing: Units.smallSpacing
+            anchors.margins: FluidControls.Units.largeSpacing
+            spacing: FluidControls.Units.smallSpacing
 
-            Icon {
+            FluidControls.Icon {
                 id: icon
-                size: Units.iconSizes.enormous
+                size: FluidControls.Units.iconSizes.enormous
 
                 Layout.alignment: Qt.AlignHCenter
             }

@@ -26,9 +26,8 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Core 1.0
-import Fluid.Controls 1.0
-import Fluid.Material 1.0
+import Fluid.Core 1.0 as FluidCore
+import Fluid.Controls 1.0 as FluidControls
 import "../panel"
 
 Item {
@@ -79,13 +78,13 @@ Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: titleLabel.implicitHeight + 2 * titleLabel.anchors.margins
 
-                    HeadlineLabel {
+                    FluidControls.HeadlineLabel {
                         id: titleLabel
                         text: rightDrawer.indicator && rightDrawer.indicator.title
                         verticalAlignment: Qt.AlignVCenter
                         anchors {
                             fill: parent
-                            margins: 2 * Units.smallSpacing
+                            margins: 2 * FluidControls.Units.smallSpacing
                         }
                     }
                 }
@@ -104,7 +103,7 @@ Item {
                 anchors {
                     bottom: parent.bottom
                     right: parent.right
-                    rightMargin: Units.smallSpacing + (1 - rightDrawer.position) * rightDrawer.width
+                    rightMargin: FluidControls.Units.smallSpacing + (1 - rightDrawer.position) * rightDrawer.width
                 }
 
                 height: panel.height
@@ -113,10 +112,10 @@ Item {
                     anchors {
                         verticalCenter: parent.verticalCenter
                         right: parent.right
-                        rightMargin: Units.smallSpacing + 1
+                        rightMargin: FluidControls.Units.smallSpacing + 1
                     }
 
-                    height: Utils.scale(rightDrawer.position, parent.height - 2 * Units.smallSpacing, parent.height)
+                    height: FluidCore.Utils.scale(rightDrawer.position, parent.height - 2 * FluidControls.Units.smallSpacing, parent.height)
 
                     onIndicatorTriggered: {
                         if (indicator.active)

@@ -25,7 +25,6 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Fluid.Controls 1.0
 import "launcher"
 import Liri.Shell 1.0
 import "../launcher" as Launcher

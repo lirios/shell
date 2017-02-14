@@ -27,19 +27,19 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
-ListItem {
+FluidControls.ListItem {
     visible: volumeControl.visible
 
-    leftItem: IconButton {
+    leftItem: FluidControls.IconButton {
         anchors.centerIn: parent
 
         iconName: "av/volume_off"
         onClicked: volumeControl.setMinimumVolume()
     }
 
-    rightItem: IconButton {
+    rightItem: FluidControls.IconButton {
         anchors.centerIn: parent
 
         iconName: "av/volume_up"

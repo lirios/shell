@@ -30,7 +30,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
 Rectangle {
     Material.theme: Material.Dark
@@ -42,7 +42,7 @@ Rectangle {
 
         spacing: 0
 
-        Icon {
+        FluidControls.Icon {
             name: "alert/warning"
             size: 96
 
@@ -53,17 +53,15 @@ Rectangle {
             Layout.minimumHeight: 8
         }
 
-        Label {
+        FluidControls.DisplayLabel {
             text: qsTr("Oh no!")
-            font: FluidStyle.display1Font
             color: Material.primaryTextColor
 
             Layout.alignment: Qt.AlignHCenter
         }
 
-        Label {
+        FluidControls.SubheadingLabel {
             text: qsTr("Something went wrong and the desktop failed to load.")
-            font: FluidStyle.subheadingFont
             color: Material.primaryTextColor
 
             Layout.alignment: Qt.AlignHCenter

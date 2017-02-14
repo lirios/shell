@@ -27,7 +27,7 @@ import QtWayland.Compositor 1.0 as QtWaylandCompositor
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
 import ".."
 import "../components"
@@ -125,13 +125,13 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        width: Units.gu(20)
+        width: FluidControls.Units.gu(20)
         z: 3
         opacity: workspace.state == "present" ? 1.0 : 0.0
 
         ListView {
             anchors.fill: parent
-            anchors.margins: Units.smallSpacing
+            anchors.margins: FluidControls.Units.smallSpacing
             model: 1
             delegate: Item {
                 readonly property real ratio: workspace.width / workspace.height
@@ -212,7 +212,7 @@ Item {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InSine
-                duration: Units.mediumDuration
+                duration: FluidControls.Units.mediumDuration
             }
         }
     }
@@ -231,10 +231,10 @@ Item {
             top: parent.top
             right: parent.right
             bottom: parent.bottom
-            topMargin: Units.largeSpacing * 3
-            bottomMargin: 56 + Units.smallSpacing
+            topMargin: FluidControls.Units.largeSpacing * 3
+            bottomMargin: 56 + FluidControls.Units.smallSpacing
         }
-        width: Units.gu(24) + (2 * Units.smallSpacing)
+        width: FluidControls.Units.gu(24) + (2 * FluidControls.Units.smallSpacing)
         z: 10
     }
 

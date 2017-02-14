@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Templates 2.0 as T
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
 T.SwipeView {
     id: swipeView
@@ -39,7 +39,7 @@ T.SwipeView {
         highlightRangeMode: ListView.StrictlyEnforceRange
         preferredHighlightBegin: 0
         preferredHighlightEnd: 0
-        highlightMoveDuration: Units.mediumDelay
+        highlightMoveDuration: FluidControls.Units.mediumDelay
         interactive: false
     }
     onCurrentIndexChanged: console.debug("Selected workspace", currentIndex)

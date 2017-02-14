@@ -26,7 +26,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Launcher 0.1 as CppLauncher
 
 ListView {
@@ -37,7 +37,7 @@ ListView {
     model: CppLauncher.CategoriesModel {
         id: categoriesModel
     }
-    delegate: ListItem {
+    delegate: FluidControls.ListItem {
         property string category: model.category
 
         text: model.display

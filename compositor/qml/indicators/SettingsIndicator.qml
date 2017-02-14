@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
 
 Indicator {
@@ -36,53 +36,53 @@ Indicator {
 
     component: Component {
         ColumnLayout {
-            spacing: Units.largeSpacing
+            spacing: FluidControls.Units.largeSpacing
 
-            HeadlineLabel {
+            FluidControls.HeadlineLabel {
                 text: qsTr("Settings")
             }
 
-            Subheader {
+            FluidControls.Subheader {
                 text: qsTr("Size")
             }
 
             Row {
-                spacing: Units.smallSpacing
+                spacing: FluidControls.Units.smallSpacing
 
                 Button {
                     text: qsTr("Small")
                     checkable: true
-                    checked: screenView.panel.size === Units.iconSizes.medium
+                    checked: screenView.panel.size === FluidControls.Units.iconSizes.medium
                     autoExclusive: true
                     flat: true
-                    onClicked: screenView.panel.size = Units.iconSizes.medium
+                    onClicked: screenView.panel.size = FluidControls.Units.iconSizes.medium
                 }
 
                 Button {
                     text: qsTr("Medium")
                     checkable: true
-                    checked: screenView.panel.size === Units.iconSizes.large
+                    checked: screenView.panel.size === FluidControls.Units.iconSizes.large
                     autoExclusive: true
                     flat: true
-                    onClicked: screenView.panel.size = Units.iconSizes.large
+                    onClicked: screenView.panel.size = FluidControls.Units.iconSizes.large
                 }
 
                 Button {
                     text: qsTr("Large")
                     checkable: true
-                    checked: screenView.panel.size === Units.iconSizes.huge
+                    checked: screenView.panel.size === FluidControls.Units.iconSizes.huge
                     autoExclusive: true
                     flat: true
-                    onClicked: screenView.panel.size = Units.iconSizes.huge
+                    onClicked: screenView.panel.size = FluidControls.Units.iconSizes.huge
                 }
             }
 
-            Subheader {
+            FluidControls.Subheader {
                 text: qsTr("Position")
             }
 
             Row {
-                spacing: Units.smallSpacing
+                spacing: FluidControls.Units.smallSpacing
 
                 Button {
                     text: qsTr("Left")

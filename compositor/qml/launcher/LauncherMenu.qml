@@ -26,7 +26,6 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 2.1
-import Fluid.Controls 1.0
 import Liri.Launcher 0.1 as CppLauncher
 
 Menu {

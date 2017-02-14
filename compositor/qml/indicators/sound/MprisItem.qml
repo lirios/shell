@@ -28,10 +28,10 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import Vibe.Mpris 1.0
 
-BaseListItem {
+FluidControls.BaseListItem {
     property var player
 
     topPadding: 16
@@ -41,7 +41,7 @@ BaseListItem {
         RowLayout {
             Layout.fillWidth: true
 
-            spacing: Units.smallSpacing * 2
+            spacing: FluidControls.Units.smallSpacing * 2
 
             Item {
                 Layout.preferredHeight: 40
@@ -60,7 +60,7 @@ BaseListItem {
                     visible: status == Image.Ready
                 }
 
-                Icon {
+                FluidControls.Icon {
                     id: icon
                     anchors.centerIn: parent
                     name: player && player.iconName || "image/music_note"
@@ -75,7 +75,7 @@ BaseListItem {
 
                 spacing: 0
 
-                SubheadingLabel {
+                FluidControls.SubheadingLabel {
                     Layout.fillWidth: true
 
                     color: Material.primaryTextColor
@@ -83,7 +83,7 @@ BaseListItem {
                     elide: Text.ElideRight
                 }
 
-                BodyLabel {
+                FluidControls.BodyLabel {
                     Layout.fillWidth: true
 
                     color: Material.secondaryTextColor
@@ -98,36 +98,36 @@ BaseListItem {
         Row {
             Layout.alignment: Qt.AlignHCenter
 
-            IconButton {
+            FluidControls.IconButton {
                 ToolTip.text: qsTr("Previous")
                 ToolTip.visible: hovered
 
                 iconName: "av/skip_previous"
-                iconSize: Units.iconSizes.smallMedium
+                iconSize: FluidControls.Units.iconSizes.smallMedium
                 onClicked: {
                     if (player)
                         player.previous();
                 }
             }
 
-            IconButton {
+            FluidControls.IconButton {
                 ToolTip.text: player.status === "Playing" ? qsTr("Pause") : qsTr("Play")
                 ToolTip.visible: hovered
 
                 iconName: player ? (player.status === "Playing" ? "av/pause" : "av/play_arrow") : ""
-                iconSize: Units.iconSizes.smallMedium
+                iconSize: FluidControls.Units.iconSizes.smallMedium
                 onClicked: {
                     if (player)
                         player.playPause();
                 }
             }
 
-            IconButton {
+            FluidControls.IconButton {
                 ToolTip.text: qsTr("Next")
                 ToolTip.visible: hovered
 
                 iconName: "av/skip_next"
-                iconSize: Units.iconSizes.smallMedium
+                iconSize: FluidControls.Units.iconSizes.smallMedium
                 onClicked: {
                     if (player)
                         player.next();

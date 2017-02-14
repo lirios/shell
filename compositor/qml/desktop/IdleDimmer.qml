@@ -24,7 +24,7 @@
 
 import QtQuick 2.7
 import Liri.WaylandServer 1.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
 Rectangle {
     id: idleDimmer
@@ -64,7 +64,7 @@ Rectangle {
         id: idleDimmerAnimator
         target: idleDimmer
         easing.type: Easing.OutSine
-        duration: Units.longDuration
+        duration: FluidControls.Units.longDuration
     }
 
     Timer {

@@ -27,10 +27,10 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
-import Liri.Shell 1.0
+import Fluid.Controls 1.0 as FluidControls
+import Liri.Shell 1.0 as LiriShell
 
-PanelItem {
+LiriShell.PanelItem {
     id: launcherItem
 
     property int indexOfThisDelegate: index
@@ -80,7 +80,7 @@ PanelItem {
         PauseAnimation { duration: 500 }
     }
 
-    Icon {
+    FluidControls.Icon {
         id: icon
         anchors.centerIn: parent
         name: model.iconName || "application-x-executable"
@@ -92,10 +92,10 @@ PanelItem {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: -(Units.smallSpacing * 0.35)
-            rightMargin: -(Units.largeSpacing * 0.35)
+            topMargin: -(FluidControls.Units.smallSpacing * 0.35)
+            rightMargin: -(FluidControls.Units.largeSpacing * 0.35)
         }
-        width: Units.iconSizes.smallMedium
+        width: FluidControls.Units.iconSizes.smallMedium
         height: width
         radius: width * 0.5
         color: "orangered"
@@ -104,13 +104,13 @@ PanelItem {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.OutQuad
-                duration: Units.shortDuration
+                duration: FluidControls.Units.shortDuration
             }
         }
 
         Label {
             anchors.centerIn: parent
-            font.pixelSize: parent.width - Units.smallSpacing
+            font.pixelSize: parent.width - FluidControls.Units.smallSpacing
             color: "white"
             text: model.count
         }

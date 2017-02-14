@@ -26,7 +26,7 @@
 
 import QtQuick 2.5
 import QtQuick.Layouts 1.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
 import Vibe.Mpris 1.0
 import Vibe.Settings 1.0 as Settings
@@ -46,7 +46,7 @@ Indicator {
     component: ColumnLayout {
         spacing: 0
 
-        Subheader {
+        FluidControls.Subheader {
             text: qsTr("Volume")
             visible: volumeControl.visible
         }
@@ -56,7 +56,7 @@ Indicator {
             visible: volumeControl.visible
         }
 
-        Subheader {
+        FluidControls.Subheader {
             text: qsTr("Music")
             visible: mpris2.players.length > 0
         }

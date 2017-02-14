@@ -28,8 +28,8 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
-import Fluid.Material 1.0
+import Fluid.Controls 1.0 as FluidControls
+import Fluid.Material 1.0 as FluidMaterial
 
 Rectangle {
     property bool hovered: false
@@ -39,7 +39,7 @@ Rectangle {
     antialiasing: true
 
     Behavior on color {
-        ColorAnimation { duration: Units.mediumDuration }
+        ColorAnimation { duration: FluidControls.Units.mediumDuration }
     }
 
     Rectangle {
@@ -54,13 +54,13 @@ Rectangle {
         visible: model.running
     }
 
-    Icon {
+    FluidControls.Icon {
         id: icon
         anchors {
             horizontalCenter: parent.horizontalCenter
             top: parent.top
             bottom: label.top
-            margins: 2 * Units.smallSpacing
+            margins: 2 * FluidControls.Units.smallSpacing
         }
         size: height
         name: model.iconName
@@ -72,16 +72,16 @@ Rectangle {
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
-            margins: Units.smallSpacing
+            margins: FluidControls.Units.smallSpacing
         }
         text: model.name
         elide: Text.ElideRight
         textFormat: Text.PlainText
         horizontalAlignment: Text.AlignHCenter
-        width: parent.width - 2 * Units.smallSpacing
+        width: parent.width - 2 * FluidControls.Units.smallSpacing
     }
 
-    Ripple {
+    FluidMaterial.Ripple {
         anchors.fill: parent
 
         onClicked: {

@@ -27,7 +27,7 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Liri.WaylandServer 1.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 import "../screens"
 
 Rectangle {
@@ -160,7 +160,7 @@ Rectangle {
         Behavior on opacity {
             NumberAnimation {
                 easing.type: Easing.InSine
-                duration: Units.longDuration
+                duration: FluidControls.Units.longDuration
             }
         }
     }
@@ -195,7 +195,7 @@ Rectangle {
         }
     }
 
-    Loadable {
+    FluidControls.Loadable {
         property bool loadComponent: false
 
         id: lockScreenLoader
