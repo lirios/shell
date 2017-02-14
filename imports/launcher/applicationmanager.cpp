@@ -132,7 +132,7 @@ void ApplicationManager::refresh()
     }
 
     QStringList pinnedLaunchers = m_settings->value("pinnedLaunchers").toStringList();
-    for (const QString &appId : pinnedLaunchers)
+    for (const QString &appId : qAsConst(pinnedLaunchers))
         getApplication(appId)->setPinned(true);
 
     Q_EMIT refreshed();
