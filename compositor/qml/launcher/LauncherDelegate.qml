@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
+import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0 as LiriShell
 
@@ -40,8 +40,9 @@ LiriShell.PanelItem {
     highlightOpacity: model.active || model.starting ? 1 : model.running ? 0.4 : 0
     active: model.active
 
-    ToolTip.visible: containsMouse && !menu.visible
     ToolTip.text: model.name || model.appId
+    ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
+    ToolTip.visible: containsMouse && !menu.visible
 
     onClicked: {
         if (model.running) {

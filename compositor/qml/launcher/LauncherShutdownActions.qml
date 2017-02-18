@@ -26,7 +26,7 @@
 
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import Fluid.Controls 1.0
 
 RowLayout {
@@ -44,6 +44,8 @@ RowLayout {
         }
 
         ToolTip.text: qsTr("Log out")
+        ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
+        ToolTip.visible: hovered
     }
 
     IconButton {
@@ -55,6 +57,8 @@ RowLayout {
         }
 
         ToolTip.text: qsTr("Lock Session")
+        ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
+        ToolTip.visible: hovered
     }
 
     IconButton {
@@ -67,5 +71,7 @@ RowLayout {
         }
 
         ToolTip.text: qsTr("Power off")
+        ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
+        ToolTip.visible: hovered
     }
 }

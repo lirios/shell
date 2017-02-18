@@ -32,6 +32,7 @@ PanelItem {
     id: indicator
 
     ToolTip.text: tooltip || title
+    ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
     ToolTip.visible: containsMouse && shell.indicator == null
 
     active: shell.indicator && shell.indicator.title == title

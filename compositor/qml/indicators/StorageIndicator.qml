@@ -48,6 +48,7 @@ Indicator {
                 anchors.centerIn: parent
 
                 ToolTip.text: modelData.mounted ? qsTr("Eject") : qsTr("Mount")
+                ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
                 iconName: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disk.svg"))

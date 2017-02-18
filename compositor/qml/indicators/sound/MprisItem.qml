@@ -100,6 +100,7 @@ FluidControls.BaseListItem {
 
             FluidControls.IconButton {
                 ToolTip.text: qsTr("Previous")
+                ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
                 iconName: "av/skip_previous"
@@ -112,6 +113,7 @@ FluidControls.BaseListItem {
 
             FluidControls.IconButton {
                 ToolTip.text: player.status === "Playing" ? qsTr("Pause") : qsTr("Play")
+                ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
                 iconName: player ? (player.status === "Playing" ? "av/pause" : "av/play_arrow") : ""
@@ -124,6 +126,7 @@ FluidControls.BaseListItem {
 
             FluidControls.IconButton {
                 ToolTip.text: qsTr("Next")
+                ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
                 iconName: "av/skip_next"
