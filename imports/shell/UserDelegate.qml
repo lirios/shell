@@ -137,16 +137,15 @@ Card {
             Label {
                 id: label
                 text: model.realName || model.name
-                height: implicitHeight + Units.smallSpacing
+                horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.WordWrap
+                elide: Text.ElideRight
+                maximumLineCount: 2
                 font.pixelSize: 20
 
-                Layout.alignment: Qt.AlignHCenter
-            }
-
-            Item {
-                width: parent.width
-                height: Units.largeSpacing
+                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
 
             RowLayout {
