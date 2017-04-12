@@ -200,7 +200,8 @@ void ApplicationManager::unregisterShellSurface(QObject *shellSurface)
 
     m_shellSurfaces.remove(shellSurface);
 
-    if (!m_shellSurfaces.values().contains(appId)) {
+    auto values = m_shellSurfaces.values();
+    if (!values.contains(appId)) {
         UsageTracker::instance()->applicationFocused(QString());
 
         Application *app = getApplication(appId);
