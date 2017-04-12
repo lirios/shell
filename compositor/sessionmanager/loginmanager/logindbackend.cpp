@@ -33,6 +33,7 @@
 #include "logindsessioninfo.h"
 #include "sessionmanager/sessionmanager.h"
 
+#include <sys/sysmacros.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
