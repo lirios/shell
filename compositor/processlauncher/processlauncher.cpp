@@ -151,6 +151,7 @@ bool ProcessLauncher::launchCommand(const QString &command)
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("liri"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
+    env.remove(QStringLiteral("EGL_PLATFORM"));
 
     QProcess *process = new QProcess(this);
     process->setProcessEnvironment(env);
@@ -194,6 +195,7 @@ bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("liri"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
+    env.remove(QStringLiteral("EGL_PLATFORM"));
 
     QProcess *process = new QProcess(this);
     process->setProgram(command);
