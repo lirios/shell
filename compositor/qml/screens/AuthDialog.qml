@@ -88,20 +88,20 @@ Dialog {
 
     ColumnLayout {
         id: mainLayout
-        spacing: Units.smallSpacing
+        spacing: FluidControls.Units.smallSpacing
 
         RowLayout {
-            spacing: Units.smallSpacing
+            spacing: FluidControls.Units.smallSpacing
 
             FluidControls.Icon {
                 name: "action/lock"
-                size: Units.iconSizes.medium
+                size: FluidControls.Units.iconSizes.medium
 
                 Layout.alignment: Qt.AlignTop
             }
 
             ColumnLayout {
-                spacing: Units.smallSpacing
+                spacing: FluidControls.Units.smallSpacing
 
                 FluidControls.DialogLabel {
                     id: messageLabel
@@ -111,11 +111,11 @@ Dialog {
                 }
 
                 RowLayout {
-                    spacing: Units.smallSpacing
+                    spacing: FluidControls.Units.smallSpacing
 
                     FluidControls.Icon {
                         id: avatarImage
-                        size: Units.iconSizes.large
+                        size: FluidControls.Units.iconSizes.large
                     }
 
                     Label {
@@ -129,7 +129,7 @@ Dialog {
                 }
 
                 RowLayout {
-                    spacing: Units.smallSpacing
+                    spacing: FluidControls.Units.smallSpacing
 
                     Label {
                         id: promptLabel
