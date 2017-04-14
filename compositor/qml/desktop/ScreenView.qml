@@ -285,7 +285,8 @@ Rectangle {
         case Qt.Key_PowerDown:
         case Qt.Key_Suspend:
         case Qt.Key_Hibernate:
-            screenView.state = "poweroff";
+            if (screenView.state != "lock")
+                screenView.state = "poweroff";
             event.accepted = true;
             return;
         default:
