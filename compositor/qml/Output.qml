@@ -65,6 +65,7 @@ ExtendedOutput {
         // Virtual Keyboard
         Loader {
             parent: window.overlay
+            active: compositor.settings.ui.inputMethod === "qtvirtualkeyboard"
             source: Qt.resolvedUrl("base/Keyboard.qml")
             x: (parent.width - width) / 2
             y: parent.height - height

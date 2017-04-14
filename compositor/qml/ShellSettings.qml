@@ -31,6 +31,7 @@ import Vibe.Settings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
 
 FluidCore.Object {
+    readonly property alias ui: interfaceSettings
     readonly property alias keyboard: keyboardSettings
     readonly property alias background: bgSettings
     readonly property alias lockScreen: lockSettings
@@ -38,6 +39,16 @@ FluidCore.Object {
     readonly property int numWorkspaces: 4
 
     id: shellSettings
+
+    /*
+     * Interface
+     */
+
+    Settings.Settings {
+        id: interfaceSettings
+        schema.id: "io.liri.desktop.interface"
+        schema.path: "/io/liri/desktop/interface/"
+    }
 
     /*
      * Keymap
