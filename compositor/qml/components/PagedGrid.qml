@@ -34,7 +34,7 @@ Item {
 
     property Component delegate
 
-    readonly property var count: model.rowCount()
+    readonly property var count: model.count
 
     readonly property int pageCount: rows * columns
     readonly property alias pages: pageView.count
