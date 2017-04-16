@@ -43,12 +43,17 @@ PagedGrid {
     columns: 6
 
     function filterByCategory(category) {
-        appsModel.categoryFilter = category;
+        appsCategoryProxyModel.filterPattern = category;
     }
 
     model: SortFilterProxyModel {
         id: appsProxyModel
-        sourceModel: appsModel
+        sourceModel: SortFilterProxyModel {
+            id: appsCategoryProxyModel
+            sourceModel: appsModel
+            filterRoleName: "categories"
+            filterCaseSensitivity: Qt.CaseInsensitive
+        }
         filterRoleName: "filterInfo"
         filterCaseSensitivity: Qt.CaseInsensitive
         isSortLocaleAware: true
