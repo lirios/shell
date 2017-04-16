@@ -163,11 +163,11 @@ QList<Application *> ApplicationManager::pinnedApps() const
     // We have to look up the pinnedLaunchers list instead of just getting all pinned
     // apps because the apps map isn't sorted
     QList<Application *> apps;
-    QStringList pinnedLaunchers = m_settings->value("pinnedLaunchers").toStringList();
+    const QStringList pinnedLaunchers = m_settings->value("pinnedLaunchers").toStringList();
 
-    for (Application *app : qAsConst(m_apps)) {
-        if (pinnedLaunchers.contains(app->appId()))
-            apps.append(app);
+    for (const QString appId : qAsConst(pinnedLaunchers)) {
+        if (m_apps.contains(appId))
+            apps.append(m_apps[appId]);
     }
 
     return apps;
