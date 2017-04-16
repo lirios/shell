@@ -136,7 +136,7 @@ QVariant AppsModel::data(const QModelIndex &index, int role) const
     case AppIdRole:
         return app->appId();
     case FilterInfoRole:
-        return QString(app->name() + app->comment());
+        return QString(app->name() + QStringLiteral(" ") + app->genericName() + QStringLiteral(" ") + app->comment());
     case RunningRole:
         return app->isRunning();
     case CategoriesRole:
