@@ -93,7 +93,7 @@ Item {
         }
 
         color: Material.dialogColor
-        radius: 6
+        radius: 2
         antialiasing: true
         z: 0
 
