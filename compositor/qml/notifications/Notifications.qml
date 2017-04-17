@@ -28,6 +28,7 @@ import Vibe.Notifications 1.0
 ListView {
     id: listView
     spacing: Units.largeSpacing
+    interactive: false
     model: ListModel {
         id: notificationsModel
     }
