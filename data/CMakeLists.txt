@@ -1,3 +1,4 @@
+add_subdirectory(pam)
 if(ENABLE_SYSTEMD)
     add_subdirectory(systemd)
 endif()
