@@ -93,8 +93,6 @@ Item {
         }
 
         color: Material.dialogColor
-        border.width: 1
-        border.color: FluidCore.Utils.alpha(Qt.darker(Material.drawerBackgroundColor, 1.2), 0.5)
         radius: 6
         antialiasing: true
         z: 0
