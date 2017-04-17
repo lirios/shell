@@ -407,7 +407,7 @@ WaylandCompositor {
             property bool hasDropShadow: !maximized && !fullscreen
             property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
 
-            property WaylandSurface parentWlSurface: parentSurface.surface
+            property WaylandSurface parentWlSurface: parentSurface ? parentSurface.surface : null
             property point offset
 
             readonly property alias responsive: details.responsive
