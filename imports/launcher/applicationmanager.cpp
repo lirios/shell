@@ -165,7 +165,7 @@ QList<Application *> ApplicationManager::pinnedApps() const
     QList<Application *> apps;
     const QStringList pinnedLaunchers = m_settings->value("pinnedLaunchers").toStringList();
 
-    for (const QString appId : qAsConst(pinnedLaunchers)) {
+    for (const QString &appId : qAsConst(pinnedLaunchers)) {
         if (m_apps.contains(appId))
             apps.append(m_apps[appId]);
     }
