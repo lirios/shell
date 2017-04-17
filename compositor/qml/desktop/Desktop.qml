@@ -225,7 +225,7 @@ Item {
     }
 
     // Notifications are behind the panel
-    Notifications {
+    Loader {
         id: notificationsLayer
         anchors {
             top: parent.top
@@ -234,6 +234,9 @@ Item {
             topMargin: FluidControls.Units.largeSpacing * 3
             bottomMargin: 56 + FluidControls.Units.smallSpacing
         }
+        asynchronous: true
+        active: output.primary
+        sourceComponent: Notifications {}
         width: FluidControls.Units.gu(24) + (2 * FluidControls.Units.smallSpacing)
         z: 10
     }
