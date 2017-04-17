@@ -42,7 +42,7 @@ Item {
     Material.accent: Material.Blue
 
     readonly property var layers: QtObject {
-        readonly property alias workspaces: workspacesLayer
+        readonly property alias workspaces: workspace //workspacesLayer
         readonly property alias fullScreen: fullScreenLayer
         readonly property alias overlays: overlaysLayer
         readonly property alias notifications: notificationsLayer
@@ -61,8 +61,8 @@ Item {
         id: hotCorners
         anchors.fill: parent
         z: 2000
-        onTopLeftTriggered: workspacesLayer.selectPrevious()
-        onTopRightTriggered: workspacesLayer.selectNext()
+        //onTopLeftTriggered: workspacesLayer.selectPrevious()
+        //onTopRightTriggered: workspacesLayer.selectNext()
         onBottomLeftTriggered: currentWorkspace.state = "present";
     }
 
@@ -104,81 +104,22 @@ Item {
         onExited: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
     }
 
-    // Dim desktop in present mode
-    Rectangle {
-        anchors.fill: parent
-        z: 2
-        color: "black"
-        opacity: workspace.state == "present" ? 0.7 : 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.OutQuad
-                duration: 250
-            }
-        }
-    }
-
-    // Workspaces selector for present
-    // FIXME: Only one workspace for now
-    Pane {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: FluidControls.Units.gu(20)
-        z: 3
-        opacity: workspace.state == "present" ? 1.0 : 0.0
-
-        ListView {
-            anchors.fill: parent
-            anchors.margins: FluidControls.Units.smallSpacing
-            model: 1
-            delegate: Item {
-                readonly property real ratio: workspace.width / workspace.height
-
-                width: ListView.view.width
-                height: width / ratio
-
-                ShaderEffectSource {
-                    anchors.fill: parent
-                    smooth: true
-                    sourceItem: backgroundLayer
-                    live: true
-                    hideSource: false
-
-                    ShaderEffectSource {
-                        anchors.fill: parent
-                        smooth: true
-                        sourceItem: workspace
-                        live: true
-                        hideSource: false
-                    }
-                }
-            }
-
-            ScrollBar.vertical: ScrollBar {}
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.OutQuad
-                duration: 250
-            }
-        }
-    }
-
     // Workspaces
+    /*
     WorkspacesView {
         id: workspacesLayer
         anchors.fill: parent
         z: 5
     }
+    */
 
     // FIXME: Temporary workaround to make keyboard input work,
     // apparently SwipeView captures input. An Item instead make it work.
     Workspace {
         id: workspace
         anchors.fill: parent
+        onEffectStarted: if (effect == "present") parent.state = "present"
+        onEffectStopped: if (effect == "present") parent.state = "normal"
         z: 6
     }
 
@@ -190,6 +131,7 @@ Item {
         active: output.primary
         sourceComponent: Shell {
             opacity: workspace.state == "present" ? 0.0 : 1.0
+            visible: opacity > 0.0
 
             Behavior on opacity {
                 NumberAnimation {

@@ -28,6 +28,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Liri.WaylandServer 1.0
 import Fluid.Controls 1.0 as FluidControls
+import Fluid.Material 1.0 as FluidMaterial
 import "../screens"
 
 Rectangle {
@@ -108,27 +109,97 @@ Rectangle {
      * Desktop
      */
 
-    Desktop {
-        id: desktop
-
+    Rectangle {
         anchors.fill: parent
+        color: Material.color(Material.Grey, Material.Shade700)
 
-        transform: Scale {
-            id: screenScaler
-            origin.x: zoomArea.x2
-            origin.y: zoomArea.y2
-            xScale: zoomArea.zoom2
-            yScale: zoomArea.zoom2
-        }
+        Desktop {
+            id: desktop
 
-        ScreenZoom {
-            id: zoomArea
+            // Margins for "present" mode to fit screen aspect ratio
+            property QtObject margins: QtObject {
+                property real left: screenView.width * 0.1
+                property real right: screenView.width * 0.1
+                property real top: screenView.height * 0.1
+                property real bottom: screenView.height * 0.1
+            }
+
             anchors.fill: parent
-            scaler: screenScaler
-            enabled: false
-        }
 
-        Component.onCompleted: screenView.state = "session"
+            // All the necessary for the "present" mode
+            layer.enabled: false
+            layer.effect: FluidMaterial.ElevationEffect {
+                elevation: 24
+            }
+            states: [
+                State {
+                    name: "normal"
+
+                    PropertyChanges {
+                        target: desktop
+                        anchors.margins: 0
+                    }
+                },
+                State {
+                    name: "present"
+
+                    // Margins respect screen aspect ratio
+                    PropertyChanges {
+                        target: desktop
+                        anchors.leftMargin: margins.left
+                        anchors.rightMargin: margins.right
+                        anchors.topMargin: margins.top
+                        anchors.bottomMargin: margins.bottom
+                    }
+                }
+
+            ]
+            transitions: [
+                Transition {
+                    to: "normal"
+
+                    SequentialAnimation {
+                        NumberAnimation {
+                            properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
+                            easing.type: Easing.OutQuad
+                            duration: 300
+                        }
+
+                        ScriptAction { script: desktop.layer.enabled = false }
+                    }
+                },
+                Transition {
+                    to: "present"
+
+                    SequentialAnimation {
+                        ScriptAction { script: desktop.layer.enabled = true }
+
+                        NumberAnimation {
+                            properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
+                            easing.type: Easing.InQuad
+                            duration: 300
+                        }
+                    }
+                }
+            ]
+
+            transform: Scale {
+                id: screenScaler
+                origin.x: zoomArea.x2
+                origin.y: zoomArea.y2
+                xScale: zoomArea.zoom2
+                yScale: zoomArea.zoom2
+            }
+
+            ScreenZoom {
+                id: zoomArea
+                anchors.fill: parent
+                scaler: screenScaler
+                enabled: false
+            }
+
+            Component.onCompleted: screenView.state = "session"
+        }
     }
 
     /*

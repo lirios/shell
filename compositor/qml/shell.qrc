@@ -23,6 +23,7 @@
 	<file>desktop/IdleDimmer.qml</file>
 	<file>desktop/OutputInfo.qml</file>
 	<file>desktop/PresentWindowsChrome.qml</file>
+	<file>desktop/PresentEffect.js</file>
 	<file>desktop/RunCommand.qml</file>
 	<file>desktop/ScreenView.qml</file>
 	<file>desktop/ScreenZoom.qml</file>

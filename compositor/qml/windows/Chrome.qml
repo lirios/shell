@@ -364,4 +364,8 @@ ChromeItem {
         shellSurfaceItem.width = shellSurface.surface.size.width;
         shellSurfaceItem.height = shellSurface.surface.size.height;
     }
+
+    function close() {
+        // TODO:
+    }
 }

@@ -25,9 +25,14 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import "PresentEffect.js" as PresentEffect
 
 Item {
     id: workspace
+
+    signal effectStarted(string effect)
+    signal effectStopped(string effect)
+
     state: "normal"
     states: [
         State {
@@ -65,7 +70,9 @@ Item {
     onChildrenChanged: {
         switch (state) {
         case "present":
-            present();
+            compositor.outputs.forEach(function(o) {
+                o.surfacesArea.state = "normal";
+            });
             break;
         case "reveal":
             reveal();
@@ -91,99 +98,23 @@ Item {
     function present() {
         console.time("present " + output.model);
 
-        // Parameters
-        var grid = Math.ceil(compositor.shellSurfaces.count / 2);
-        var maxWidth = Math.floor(output.availableGeometry.width / grid);
-        var maxHeight = Math.floor(output.availableGeometry.height / 2);
+        workspace.effectStarted("present");
 
-        // Loop over the windows
-        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
-            // Get a hold of the shell surface
-            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
-            var view = output.viewsBySurface[shellSurface.surface];
-
-            // Window size
-            var width = view.width;
-            var height = view.height;
-
-            // Calculate scale factor
-            var scale;
-            if (width >= height)
-                scale = width > maxWidth ? maxWidth / width : 0.85;
-            else
-                scale = height > maxHeight ? maxHeight / height : 0.85;
-
-            // Add a little margin
-            scale -= 0.15;
-
-            // Calculate position
-            var x = ((i % grid) * maxWidth) + Math.floor((maxWidth - scale * width) / 2);
-            var y = ((i < grid ? 0 : 1) * maxHeight) + Math.floor((maxHeight - scale * height) / 2);
-
-            // Save window position
-            __private.storage[view] = {"x": view.moveItem.x, "y": view.moveItem.y};
-
-            // Move the window
-            view.moveItem.animateTo(output.position.x + x, output.position.y + y);
-
-            if (view.primary) {
-                // Scale view down and disable input
-                view.inputEventsEnabled = false;
-                view.resizeTo(view.width * scale, view.height * scale);
-
-                // Create the chrome
-                var chrome = chromeComponent.createObject(view, {"view": view});
-                __private.chromes[view] = chrome;
-
-                // Handle chrome events
-                chrome.selected.connect(function(view) {
-                    state = "normal";
-                    view.activate();
-                });
-                chrome.closed.connect(function(view) {
-                    state = "normal";
-                    view.close();
-                });
-            } else {
-                // Hide view because it's not on this output
-                view.visible = false;
-            }
-        }
-        console.timeEnd("present loop " + output.model);
+        PresentEffect.spreadWindows();
 
         console.timeEnd("present " + output.model);
     }
 
     function presentRestore() {
-        // Restore windows
-        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
-            // Get a hold of the shell surface
-            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
-            var view = output.viewsBySurface[shellSurface.surface];
+        PresentEffect.restoreWindows();
 
-            // Restore position
-            var pos = __private.storage[view];
-            if (pos !== undefined) {
-                view.moveItem.animateTo(pos.x, pos.y);
-                delete __private.storage[view];
-            }
-
-            // Scale view up and enable input
-            view.inputEventsEnabled = true;
-            view.restoreSize();
-            view.visible = true;
-
-            // Destroy chrome
-            var chrome = __private.chromes[view];
-            if (chrome !== undefined) {
-                chrome.destroy();
-                delete __private.chromes[view];
-            }
-        }
+        workspace.effectStopped("present");
     }
 
     function reveal() {
         console.time("reveal " + output.model);
+
+        workspace.effectStarted("reveal");
 
         var margin = 96;
 
@@ -250,5 +181,7 @@ Item {
                 delete __private.storage[view];
             }
         }
+
+        workspace.effectStopped("reveal");
     }
 }
