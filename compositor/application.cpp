@@ -145,7 +145,8 @@ void Application::startup()
 
         // Use xdg-shell-v5 for Qt clients
         qunsetenv("QT_WAYLAND_SHELL_INTEGRATION");
-        qputenv("QT_WAYLAND_USE_XDG_SHELL", QByteArrayLiteral("1"));
+        qunsetenv("QT_WAYLAND_USE_XDG_SHELL");
+        //qputenv("QT_WAYLAND_USE_XDG_SHELL", QByteArrayLiteral("1"));
 
         // Don't mess with client scale factor
         qunsetenv("QT_SCALE_FACTOR");
