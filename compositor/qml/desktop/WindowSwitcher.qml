@@ -125,7 +125,7 @@ Popup {
 
     function activate() {
         if (listView.currentItem)
-            listView.currentItem.view.activate();
+            listView.currentItem.view.takeFocus();
     }
 
     function previous() {
