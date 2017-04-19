@@ -54,6 +54,9 @@ WaylandCompositor {
     readonly property alias shellHelper: shellHelper
     readonly property alias policyKitAgent: policyKitAgent
 
+    signal shellSurfaceCreated(ShellSurface shellSurface)
+    signal shellSurfaceDestroyed(ShellSurface shellSurface)
+
     defaultSeat.keymap {
         layout: settings.keyboard.layouts[0] ? settings.keyboard.layouts[0] : "us"
         variant: settings.keyboard.variants[0] ? settings.keyboard.variants[0] : ""
@@ -107,6 +110,8 @@ WaylandCompositor {
                                                    });
             for (var i = 0; i < outputs.length; i++)
                 createShellSurfaceItem(shellSurface, component, moveItem, outputs[i]);
+
+            compositor.shellSurfaceCreated(shellSurface);
         }
 
         function handleShellSurfaceDestroyed(shellSurface) {
@@ -123,6 +128,8 @@ WaylandCompositor {
             }
 
             applicationManager.unregisterShellSurface(shellSurface);
+
+            compositor.shellSurfaceDestroyed(shellSurface);
         }
     }
 
