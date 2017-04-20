@@ -52,6 +52,8 @@ public:
 
     Q_INVOKABLE QString canonicalizeAppId(const QString &appId);
 
+    Q_INVOKABLE QString getIconName(const QString &appId);
+
 public Q_SLOTS:
     void refresh();
     void quit(const QString &appId);

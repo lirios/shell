@@ -241,6 +241,12 @@ QString ApplicationManager::canonicalizeAppId(const QString &appId)
     return DesktopFile::canonicalAppId(appId);
 }
 
+QString ApplicationManager::getIconName(const QString &appId)
+{
+    DesktopFile desktopFile(appId);
+    return desktopFile.iconName();
+}
+
 void ApplicationManager::readAppLink(const QDomElement &xml, const QString &categoryName)
 {
     QString desktopFile = xml.attribute(QStringLiteral("desktopFile"));
