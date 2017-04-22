@@ -29,7 +29,7 @@ import Liri.Shell 1.0
 import Vibe.Notifications 1.0
 
 Indicator {
-    readonly property bool hasNotifications: notificationView.count > 0
+    readonly property bool hasNotifications: notificationsModel.count > 0
     readonly property bool silentMode: false
 
     title: qsTr("Notifications")

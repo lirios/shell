@@ -52,7 +52,7 @@ Item {
         Material.accent: Material.Blue
 
         onIndicatorChanged: {
-            if (indicator != null)
+            if (indicator !== null)
                 rightDrawer.open()
             else
                 rightDrawer.close()
@@ -80,7 +80,7 @@ Item {
 
                     FluidControls.HeadlineLabel {
                         id: titleLabel
-                        text: rightDrawer.indicator && rightDrawer.indicator.title
+                        text: rightDrawer.indicator ? rightDrawer.indicator.title : ""
                         verticalAlignment: Qt.AlignVCenter
                         anchors {
                             fill: parent
