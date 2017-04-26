@@ -140,9 +140,9 @@ find_package(LiriWaylandServer ${REQUIRED_LIRIWAYLAND_VERSION} REQUIRED)
 set(REQUIRED_VIBE_VERSION "0.9.0")
 find_package(Vibe ${REQUIRED_VIBE_VERSION} REQUIRED)
 
-# Find QtAccountsService
-set(REQUIRED_QTACCOUNTSSERVICE "0.6.0")
-find_package(QtAccountsService ${REQUIRED_QTACCOUNTSSERVICE_VERSION} REQUIRED)
+# Find Qt5AccountsService
+set(REQUIRED_QTACCOUNTSSERVICE "0.7.0")
+find_package(Qt5AccountsService ${REQUIRED_QTACCOUNTSSERVICE_VERSION} REQUIRED)
 
 # lxqt
 find_package(QT5XDG REQUIRED)
