@@ -35,9 +35,9 @@
 #include <QtDBus/QDBusMetaType>
 
 #include "mpris2player.h"
-#include "mprisadaptor.h"
-#include "mprisplayeradaptor.h"
-#include "dbuspropertiesadaptor.h"
+#include "mediaplayer2_interface.h"
+#include "player_interface.h"
+#include "properties_interface.h"
 
 const QString objectPath(QLatin1String("/org/mpris/MediaPlayer2"));
 const QString playerInterface(QLatin1String("org.mpris.MediaPlayer2.Player"));
