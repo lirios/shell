@@ -24,7 +24,6 @@
 #include <QtCore/QFileInfo>
 #include <QtGui/QGuiApplication>
 
-#include "config.h"
 #include "gitsha1.h"
 #include "shellhelperapplication.h"
 
@@ -36,7 +35,7 @@
 
 static void disablePtrace()
 {
-#if HAVE_PR_SET_DUMPABLE
+#if defined(PR_SET_DUMPABLE)
     // Allow ptrace when running inside gdb
     const qint64 pid = QCoreApplication::applicationPid();
     const QFileInfo process(QStringLiteral("/proc/%1/exe").arg(pid));
@@ -59,7 +58,7 @@ int main(int argc, char *argv[])
     // Application
     QGuiApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Liri Shell Helper"));
-    app.setApplicationVersion(QStringLiteral(LIRI_VERSION_STRING));
+    app.setApplicationVersion(QStringLiteral(LIRISHELL_VERSION));
     app.setOrganizationName(QStringLiteral("Liri"));
     app.setOrganizationDomain(QStringLiteral("liri.io"));
     app.setFallbackSessionManagementEnabled(false);
@@ -70,7 +69,7 @@ int main(int argc, char *argv[])
            "** http://liri.io\n"
            "** Bug reports to: https://github.com/lirios/shell/issues\n"
            "** Build: %s-%s",
-           LIRI_VERSION_STRING, LIRI_VERSION_STRING, GIT_REV);
+           LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
 
     // Create shell helper
     new ShellHelperApplication();

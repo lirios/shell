@@ -14,7 +14,7 @@ Description=Liri
 
 [Service]
 Type=forking
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/liri-shell
+ExecStart=@INSTALL_BINDIR@/liri-shell
 
 [Install]
 WantedBy=liri.target

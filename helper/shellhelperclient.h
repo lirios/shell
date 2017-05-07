@@ -25,7 +25,7 @@
 
 #include <QtCore/QObject>
 
-#include <Liri/WaylandClient/Registry>
+#include <LiriWaylandClient/Registry>
 
 class QWindow;
 

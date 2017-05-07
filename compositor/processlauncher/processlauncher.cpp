@@ -31,7 +31,7 @@
 #include <qt5xdg/xdgdesktopfile.h>
 
 #include "processlauncher.h"
-#include "processlauncheradaptor.h"
+#include "processlauncher_adaptor.h"
 
 Q_LOGGING_CATEGORY(LAUNCHER, "liri.launcher")
 

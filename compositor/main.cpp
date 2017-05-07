@@ -31,11 +31,10 @@
 #include <QtWidgets/QApplication>
 #include <QQuickStyle>
 
-#include <Vibe/Settings/QGSettings>
+#include <Qt5GSettings/QGSettings>
 
-#include "application.h"
-#include "config.h"
 #include "gitsha1.h"
+#include "application.h"
 
 #if HAVE_SYS_PRCTL_H
 #include <sys/prctl.h>
@@ -45,7 +44,7 @@
 
 static void disablePtrace()
 {
-#if !DEVELOPMENT_BUILD && HAVE_PR_SET_DUMPABLE
+#if !DEVELOPMENT_BUILD && defined(PR_SET_DUMPABLE)
     // Allow ptrace when running inside gdb
     const qint64 pid = QCoreApplication::applicationPid();
     const QFileInfo process(QStringLiteral("/proc/%1/exe").arg(pid));
@@ -76,8 +75,8 @@ static void setupEnvironment()
     qunsetenv("QT_WAYLAND_DISABLE_WINDOWDECORATION");
 
     // Load input method
-    Vibe::QGSettings settings(QStringLiteral("io.liri.desktop.interface"),
-                              QStringLiteral("/io/liri/desktop/interface/"));
+    QtGSettings::QGSettings settings(QStringLiteral("io.liri.desktop.interface"),
+                                     QStringLiteral("/io/liri/desktop/interface/"));
     qputenv("QT_IM_MODULE", settings.value(QStringLiteral("inputMethod")).toByteArray());
 }
 
@@ -101,7 +100,7 @@ int main(int argc, char *argv[])
     // Application
     QApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Liri"));
-    app.setApplicationVersion(QStringLiteral(LIRI_VERSION_STRING));
+    app.setApplicationVersion(QStringLiteral(LIRISHELL_VERSION));
     app.setOrganizationName(QStringLiteral("Liri"));
     app.setOrganizationDomain(QStringLiteral("liri.io"));
     app.setFallbackSessionManagementEnabled(false);
@@ -146,7 +145,7 @@ int main(int argc, char *argv[])
            "** http://liri.io\n"
            "** Bug reports to: https://github.com/lirios/shell/issues\n"
            "** Build: %s-%s",
-           LIRI_VERSION_STRING, LIRI_VERSION_STRING, GIT_REV);
+           LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
 
     // Application
     Application *shell = new Application();
@@ -161,7 +160,7 @@ int main(int argc, char *argv[])
     }
 #endif
     if (!urlAlreadySet)
-        shell->setUrl(QUrl(QStringLiteral("qrc:/Compositor.qml")));
+        shell->setUrl(QUrl(QStringLiteral("qrc:/qml/Compositor.qml")));
     QCoreApplication::postEvent(shell, new StartupEvent());
 
     return app.exec();

@@ -25,9 +25,9 @@
 #include <QtGui/QPlatformSurfaceEvent>
 #include <QtGui/QWindow>
 
-#include <Liri/WaylandClient/Surface>
-#include <Liri/waylandclient/private/registry_p.h>
-#include <Liri/waylandclient/private/surface_p.h>
+#include <LiriWaylandClient/Surface>
+#include <LiriWaylandClient/private/registry_p.h>
+#include <LiriWaylandClient/private/surface_p.h>
 
 #include "shellhelperclient.h"
 

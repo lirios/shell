@@ -30,7 +30,6 @@
 #include <QtWaylandCompositor/QWaylandSurface>
 #include <QtWaylandCompositor/private/qwaylandcompositorextension_p.h>
 
-#include "cmakedirs.h"
 #include "logging_p.h"
 #include "shellhelper.h"
 

@@ -25,9 +25,9 @@
 #include <QtCore/private/qobject_p.h>
 #include <QtGui/QWindow>
 
-#include <Liri/WaylandClient/ClientConnection>
-#include <Liri/WaylandClient/Registry>
-#include <Liri/WaylandClient/Surface>
+#include <LiriWaylandClient/ClientConnection>
+#include <LiriWaylandClient/Registry>
+#include <LiriWaylandClient/Surface>
 
 #include "shellhelperapplication.h"
 

@@ -24,11 +24,11 @@
 #include <QtCore/QSet>
 #include <QtCore/QStringList>
 
-#include <Vibe/Core/DesktopFile>
+#include <LiriCore/DesktopFile>
 
 class QWaylandClient;
 
-using namespace Vibe;
+using namespace Liri;
 
 class ApplicationManager;
 

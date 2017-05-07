@@ -24,7 +24,7 @@
 #pragma once
 
 #include <QtCore/QObject>
-#include <QtAccountsService/UsersModel>
+#include <Qt5AccountsService/UsersModel>
 
 class UsersModel : public QtAccountsService::UsersModel
 {

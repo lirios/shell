@@ -25,32 +25,32 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import Vibe.Settings 1.0 as Settings
+import QtGSettings 1.0 as Settings
 
 Item {
     /*
      * Key bindings
      */
 
-    Settings.Settings {
+    Settings.GSettings {
         id: wmKeybindings
         schema.id: "io.liri.desktop.keybindings.wm"
         schema.path: "/io/liri/desktop/keybindings/wm/"
     }
 
-    Settings.Settings {
+    Settings.GSettings {
         id: smKeybindings
         schema.id: "io.liri.desktop.keybindings.sm"
         schema.path: "/io/liri/desktop/keybindings/sm/"
     }
 
-    Settings.Settings {
+    Settings.GSettings {
         id: desktopKeybindings
         schema.id: "io.liri.desktop.keybindings.desktop"
         schema.path: "/io/liri/desktop/keybindings/desktop/"
     }
 
-    Settings.Settings {
+    Settings.GSettings {
         id: mmKeybindings
         schema.id: "io.liri.desktop.keybindings.multimedia"
         schema.path: "/io/liri/desktop/keybindings/multimedia/"

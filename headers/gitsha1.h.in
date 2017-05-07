@@ -21,10 +21,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#undef GIT_REV
-#undef GIT_REV_
+#pragma once
 
-#define STR_EXPAND(x) #x
-#define STR(x) STR_EXPAND(x)
-#define GIT_REV STR(GIT_REV_)
-#define GIT_REV_ \
+#define GIT_REV "@REVISION@"

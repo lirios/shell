@@ -29,7 +29,7 @@
 
 #include <QtCore/QObject>
 
-#include <Liri/WaylandServer/HomeApplication>
+#include <LiriWaylandServer/HomeApplication>
 
 using namespace Liri::WaylandServer;
 

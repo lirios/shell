@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
 import Vibe.Mpris 1.0
-import Vibe.Settings 1.0 as Settings
+import QtGSettings 1.0 as Settings
 import "sound" as SoundIndicator
 
 Indicator {

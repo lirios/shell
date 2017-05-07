@@ -26,15 +26,16 @@
 
 #include "launchermodel.h"
 
-#include <Vibe/Core/DesktopFile>
 #include <QtCore/QTimer>
 #include <QtGui/QIcon>
+
+#include <LiriCore/DesktopFile>
 
 #include "application.h"
 #include "appsmodel.h"
 #include "usagetracker.h"
 
-using namespace Vibe;
+using namespace Liri;
 
 LauncherModel::LauncherModel(QObject *parent)
     : QAbstractListModel(parent)

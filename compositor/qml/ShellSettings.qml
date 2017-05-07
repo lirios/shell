@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.0
 import Liri.WaylandServer 1.0
-import Vibe.Settings 1.0 as Settings
+import QtGSettings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
 
 FluidCore.Object {
@@ -44,7 +44,7 @@ FluidCore.Object {
      * Interface
      */
 
-    Settings.Settings {
+    Settings.GSettings {
         id: interfaceSettings
         schema.id: "io.liri.desktop.interface"
         schema.path: "/io/liri/desktop/interface/"
@@ -59,7 +59,7 @@ FluidCore.Object {
         compositor: compositor
     }
 
-    Settings.Settings {
+    Settings.GSettings {
         id: keyboardSettings
         schema.id: "io.liri.desktop.peripherals.keyboard"
         schema.path: "/io/liri/desktop/peripherals/keyboard/"
@@ -69,7 +69,7 @@ FluidCore.Object {
      * Session
      */
 
-    Settings.Settings {
+    Settings.GSettings {
         id: sessionSettings
         schema.id: "io.liri.session"
         schema.path: "/io/liri/session/"
@@ -79,7 +79,7 @@ FluidCore.Object {
      * Background
      */
 
-    Settings.Settings {
+    Settings.GSettings {
         id: bgSettings
         schema.id: "io.liri.desktop.background"
         schema.path: "/io/liri/desktop/background/"
@@ -89,7 +89,7 @@ FluidCore.Object {
      * Lock screen
      */
 
-    Settings.Settings {
+    Settings.GSettings {
         id: lockSettings
         schema.id: "io.liri.desktop.lockscreen"
         schema.path: "/io/liri/desktop/lockscreen/"

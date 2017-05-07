@@ -26,7 +26,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
-import Vibe.Notifications 1.0
+import Liri.Notifications 1.0
 
 Indicator {
     readonly property bool hasNotifications: notificationsModel.count > 0

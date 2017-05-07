@@ -30,12 +30,11 @@
 #include <QtDBus/QDBusError>
 
 #include "authenticator.h"
-#include "cmakedirs.h"
 #include "loginmanager/loginmanager.h"
 #include "powermanager/powermanager.h"
-#include "sessionmanager.h"
+#include "sessionmanager/sessionmanager.h"
 #include "sessionmanager/screensaver/screensaver.h"
-#include "sessionmanager/screensaver/screensaveradaptor.h"
+#include "screensaver_adaptor.h"
 
 #include <signal.h>
 #include <sys/types.h>

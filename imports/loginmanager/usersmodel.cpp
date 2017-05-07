@@ -26,7 +26,7 @@
 #include <QtCore/QSettings>
 #include <QDebug>
 
-#include <QtAccountsService/UserAccount>
+#include <Qt5AccountsService/UserAccount>
 
 #include "usersmodel.h"
 

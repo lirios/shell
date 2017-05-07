@@ -12,7 +12,7 @@
 [Desktop Entry]
 Name=Liri
 Comment=QtQuick and Wayland based desktop environment
-Exec=@CMAKE_INSTALL_FULL_BINDIR@/liri-session
-TryExec=@CMAKE_INSTALL_FULL_BINDIR@/liri-session
+Exec=@INSTALL_BINDIR@/liri-session
+TryExec=@INSTALL_BINDIR@/liri-session
 Icon=start-here
 Type=Application

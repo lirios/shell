@@ -23,7 +23,7 @@
 
 import QtQuick 2.5
 import Fluid.Controls 1.0
-import Vibe.Notifications 1.0
+import Liri.Notifications 1.0
 
 ListView {
     id: listView

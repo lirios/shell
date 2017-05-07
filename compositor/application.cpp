@@ -33,11 +33,10 @@
 
 #include <QtWaylandCompositor/QWaylandCompositor>
 
-#include "config.h"
 #include "application.h"
 #include "processlauncher/processlauncher.h"
 #include "sessionmanager/sessionmanager.h"
-#include "sigwatch/sigwatch.h"
+#include "sigwatch.h"
 
 #if HAVE_SYSTEMD
 #  include <systemd/sd-daemon.h>
@@ -214,7 +213,7 @@ void Application::objectCreated(QObject *object, const QUrl &)
     } else {
         // Load the error screen in case of error
         m_failSafe = true;
-        m_homeApp->loadUrl(QUrl(QStringLiteral("qrc:/error/ErrorCompositor.qml")));
+        m_homeApp->loadUrl(QUrl(QStringLiteral("qrc:/qml/error/ErrorCompositor.qml")));
     }
 }
 
