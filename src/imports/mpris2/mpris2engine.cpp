@@ -31,9 +31,9 @@
 #include "mpris2engine.h"
 #include "mpris2player.h"
 
-const QString mprisInterface("org.mpris.MediaPlayer2");
-const QString mprisPlayerInterface("org.mpris.MediaPlayer2.Player");
-const QString mprisPrefix("org.mpris.MediaPlayer2.");
+const QString mprisInterface(QLatin1String("org.mpris.MediaPlayer2"));
+const QString mprisPlayerInterface(QLatin1String("org.mpris.MediaPlayer2.Player"));
+const QString mprisPrefix(QLatin1String("org.mpris.MediaPlayer2."));
 
 Q_LOGGING_CATEGORY(MPRIS2, "vibe.mpris2")
 

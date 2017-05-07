@@ -39,9 +39,9 @@
 #include "mprisplayeradaptor.h"
 #include "dbuspropertiesadaptor.h"
 
-const QString objectPath("/org/mpris/MediaPlayer2");
-const QString playerInterface("org.mpris.MediaPlayer2.Player");
-const QString mprisInterface("org.mpris.MediaPlayer2");
+const QString objectPath(QLatin1String("/org/mpris/MediaPlayer2"));
+const QString playerInterface(QLatin1String("org.mpris.MediaPlayer2.Player"));
+const QString mprisInterface(QLatin1String("org.mpris.MediaPlayer2"));
 
 Q_LOGGING_CATEGORY(MPRIS2_PLAYER, "vibe.mpris2.player")
 
@@ -291,13 +291,13 @@ void Mpris2Player::retrieveData()
     // wrong order (eg: a stale GetAll response overwriting a more recent value
     // from a PropertiesChanged signal) due to D-Bus message ordering guarantees.
 
-    QDBusPendingCall async = m_propsInterface->GetAll(OrgMprisMediaPlayer2Interface::staticInterfaceName());
+    QDBusPendingCall async = m_propsInterface->GetAll(QLatin1String(OrgMprisMediaPlayer2Interface::staticInterfaceName()));
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(async, this);
     connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
             this, SLOT(propertiesFinished(QDBusPendingCallWatcher*)));
     ++m_fetchesPending;
 
-    async = m_propsInterface->GetAll(OrgMprisMediaPlayer2PlayerInterface::staticInterfaceName());
+    async = m_propsInterface->GetAll(QLatin1String(OrgMprisMediaPlayer2PlayerInterface::staticInterfaceName()));
     watcher = new QDBusPendingCallWatcher(async, this);
     connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
             this, SLOT(propertiesFinished(QDBusPendingCallWatcher*)));
@@ -427,9 +427,9 @@ void Mpris2Player::copyProperty(const QString &name, const QVariant &value,
     }
     if (tmp.type() != expectedType) {
         const char * gotTypeCh = QDBusMetaType::typeToSignature(tmp.userType());
-        QString gotType = gotTypeCh ? QString::fromUtf8(gotTypeCh) : "<unknown>";
+        QString gotType = gotTypeCh ? QString::fromUtf8(gotTypeCh) : QLatin1String("<unknown>");
         const char * expTypeCh = QDBusMetaType::typeToSignature(expectedType);
-        QString expType = expTypeCh ? QString::fromUtf8(expTypeCh) : "<unknown>";
+        QString expType = expTypeCh ? QString::fromUtf8(expTypeCh) : QLatin1String("<unknown>");
 
         qCWarning(MPRIS2_PLAYER) << m_serviceName << "exports" << name
                                  << "as D-Bus type" << gotType

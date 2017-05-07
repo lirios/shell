@@ -36,7 +36,7 @@ class Mpris2Plugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(uri == QLatin1String("Vibe.Mpris"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("Vibe.Mpris"));
 
         // @uri Vibe.Mpris
         qmlRegisterType<Mpris2Engine>(uri, 1, 0, "Mpris");
