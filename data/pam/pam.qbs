@@ -19,6 +19,7 @@ Product {
     Group {
         qbs.install: true
         qbs.installDir: lirideployment.etcDir + "/pam.d"
+        qbs.installPrefix: ""
         fileTagsFilter: product.type
     }
 }
