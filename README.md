@@ -60,17 +60,18 @@ qbs -d build -j $(nproc) profile:qt5 # use sudo if necessary
 
 On the last `qbs` line, you can specify additional configuration parameters at the end:
 
- * `qbs.installRoot:/path/to/install` (for example `/opt/liri` or `/usr`)
+ * `qbs.installRoot:/path/to/install` (for example `/`)
+ * `qbs.installPrefix:path/to/install` (for example `opt/liri` or `usr`)
 
-The following are only needed if `qbs.installRoot` is a system-wide path such as `/usr`
+The following are only needed if `qbs.installPrefix` is a system-wide path such as `usr`
 and the default value doesn't suit your needs. All are relative to `qbs.installRoot`:
 
- * `lirideployment:libDir=path/to/lib` where libraries are installed (default: `lib`)
- * `lirideployment:qmlDir=path/to/qml` where QML plugins are installed (default: `lib/qml`)
- * `lirideployment:pluginsDir=path/to/plugins` where Qt plugins are installed (default: `lib/plugins`)
- * `lirideployment:qbsModulesDir=path/to/qbs` where Qbs modules are installed (default: `share/qbs/modules`)
+ * `lirideployment.libDir:path/to/lib` where libraries are installed (default: `lib`)
+ * `lirideployment.qmlDir:path/to/qml` where QML plugins are installed (default: `lib/qml`)
+ * `lirideployment.pluginsDir:path/to/plugins` where Qt plugins are installed (default: `lib/plugins`)
+ * `lirideployment.qbsModulesDir:path/to/qbs` where Qbs modules are installed (default: `share/qbs/modules`)
 
-See `qbs-shared/modules/lirideployment/lirideployment.qbs` for more deployment-related parameters.
+See `qbs/shared/modules/lirideployment/lirideployment.qbs` for more deployment-related parameters.
 
 You can also specify the following options:
 
