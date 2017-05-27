@@ -28,8 +28,10 @@ arch:
   packages:
     - qbs
     - qt5-declarative
+    - qt5-quickcontrols2
     - qt5-tools
     - qt5-wayland
+    - glib2
     - libqtxdg
     - xorg-server-xvfb
     #- clazy-git
