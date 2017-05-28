@@ -51,10 +51,12 @@ QtGuiApplication {
 
     GitRevision.sourceDirectory: product.sourceDirectory + "/.."
 
+    Qt.core.resourcePrefix: "/"
+    Qt.core.resourceSourceBase: sourceDirectory
+
     files: [
         "*.cpp",
         "*.h",
-        "*.qrc",
         "processlauncher/*.cpp",
         "processlauncher/*.h",
         "sessionmanager/*.cpp",
@@ -66,6 +68,29 @@ QtGuiApplication {
         "sessionmanager/screensaver/*.cpp",
         "sessionmanager/screensaver/*.h",
     ]
+
+    Group {
+        name: "Resource Data"
+        fileTags: ["qt.core.resource_data"]
+
+        Group { name: "QML Base"; files: ["qml/*", "qml/base/*"] }
+        Group { name: "QML Components"; files: ["qml/components/*"] }
+        Group { name: "QML Decoration"; files: ["qml/decoration/*"] }
+        Group { name: "QML Desktop"; files: ["qml/desktop/*"] }
+        Group { name: "QML Error"; files: ["qml/error/*"] }
+        Group { name: "QML Images"; files: ["qml/images/*"] }
+        Group { name: "QML Indicators"; files: ["qml/indicators/*"] }
+        Group { name: "QML Indicators Power"; files: ["qml/indicators/power/*"] }
+        Group { name: "QML Indicators Sound"; files: ["qml/indicators/sound/*"] }
+        Group { name: "QML Indicators Network"; files: ["qml/indicators/network/*"] }
+        Group { name: "QML Indicators Launcher"; files: ["qml/indicators/launcher/*"] }
+        Group { name: "QML Launcher"; files: ["qml/launcher/*"] }
+        Group { name: "QML Notifications"; files: ["qml/notifications/*"] }
+        Group { name: "QML Overlays"; files: ["qml/overlays/*"] }
+        Group { name: "QML Panel"; files: ["qml/panel/*"] }
+        Group { name: "QML Screens"; files: ["qml/screens/*"] }
+        Group { name: "QML Windows"; files: ["qml/windows/*"] }
+    }
 
     Group {
         name: "D-Bus Adaptors"
