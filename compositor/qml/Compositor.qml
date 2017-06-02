@@ -585,7 +585,7 @@ WaylandCompositor {
 
     XWayland {
         id: xwayland
-        enabled: false
+        enabled: true
         onShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, xchromeComponent)
     }
 
