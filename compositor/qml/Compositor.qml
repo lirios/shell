@@ -66,8 +66,10 @@ WaylandCompositor {
     }
 
     onCreatedChanged: {
-        if (compositor.created)
-            shellHelper.start(compositor.socketName);
+        if (compositor.created) {
+            if (xwayland.enabled)
+                xwayland.startServer();
+        }
     }
 
     onSurfaceRequested: {
@@ -586,6 +588,7 @@ WaylandCompositor {
     XWayland {
         id: xwayland
         enabled: true
+        onServerStarted: shellHelper.start(compositor.socketName)
         onShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, xchromeComponent)
     }
 
