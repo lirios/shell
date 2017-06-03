@@ -25,7 +25,7 @@ import QtQuick 2.0
 import QtWayland.Compositor 1.0
 import Liri.WaylandServer 1.0
 import Liri.Shell 1.0
-import Fluid.Material 1.0
+import Fluid.Material 1.0 as FluidMaterial
 
 ChromeItem {
     id: chrome
@@ -126,7 +126,7 @@ ChromeItem {
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
         layer.enabled: !shellSurface.decorated
-        layer.effect: ElevationEffect {
+        layer.effect: FluidMaterial.ElevationEffect {
             elevation: shellSurfaceItem.focus ? 24 : 8
         }
 

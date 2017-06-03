@@ -336,7 +336,7 @@ WaylandCompositor {
     Component {
         id: chromeComponent
 
-        Chrome {
+        WaylandChrome {
             inputEventsEnabled: !output.screenView.locked
         }
     }
