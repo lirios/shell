@@ -27,7 +27,6 @@ import QtWayland.Compositor 1.0
 import Liri.Launcher 0.1 as Launcher
 import Liri.WaylandServer 1.0
 import Liri.WaylandServer.Private 1.0 as LWSP
-import Liri.XWayland 1.0
 import Liri.Shell 1.0
 import Vibe.PulseAudio 1.0
 import Vibe.PolicyKit 1.0
@@ -67,8 +66,10 @@ WaylandCompositor {
 
     onCreatedChanged: {
         if (compositor.created) {
-            if (xwayland.enabled)
-                xwayland.startServer();
+            if (xwaylandLoader.status == Loader.Ready)
+                xwaylandLoader.item.startServer();
+            else
+                shellHelper.start(compositor.socketName);
         }
     }
 
@@ -585,18 +586,11 @@ WaylandCompositor {
      * XWayland
      */
 
-    XWayland {
-        id: xwayland
-        enabled: true
-        onServerStarted: shellHelper.start(compositor.socketName)
-        onShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, xchromeComponent)
-    }
-
-    Component {
-        id: xchromeComponent
-
-        XWaylandChrome {
-            inputEventsEnabled: !output.screenView.locked
+    Loader {
+        id: xwaylandLoader
+        active: true
+        sourceComponent: XWayland {
+            onServerStarted: shellHelper.start(compositor.socketName)
         }
     }
 
