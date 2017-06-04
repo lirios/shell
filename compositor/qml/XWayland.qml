@@ -50,7 +50,7 @@ LXW.XWayland {
             readonly property bool decorated: windowType != Qt.Popup
             readonly property bool hasDropShadow: !maximized && !fullscreen
 
-            property WaylandSurface parentWlSurface: null
+            property WaylandSurface parentWlSurface: parentSurface ? parentSurface.surface : null
             property point offset: Qt.point(0, 0)
 
             signal destruction()

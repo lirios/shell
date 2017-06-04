@@ -88,8 +88,6 @@ ChromeItem {
 
         property point moveItemPosition
 
-        property var parentSurface: null
-
         function updatePrimary() {
             var x = chrome.x;
             var y = chrome.y;
@@ -122,9 +120,9 @@ ChromeItem {
             }
 
             if (shellSurface.windowType == Qt.SubWindow) {
-                var parentSurfaceItem = output.viewsBySurface[__private.parentSurface];
-                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x;
-                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y;
+                var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
+                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.x;
+                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.y;
             }
 
             if (shellSurface.windowType == Qt.Popup) {
