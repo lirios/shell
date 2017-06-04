@@ -83,7 +83,6 @@ Control {
                 if (edges & 4)
                     h += mouse.y - pressY;
                 shellSurface.requestSize(w, h);
-                console.warn("resize " + chrome + " " + chrome.x + ", ", chrome.y)
             }
         }
     }

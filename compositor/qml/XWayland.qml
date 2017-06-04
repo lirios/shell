@@ -97,6 +97,10 @@ LXW.XWayland {
                 }
             }
 
+            function requestSize(w, h) {
+                shellSurface.sendResize(Qt.size(w, h));
+            }
+
             Component.onDestruction: {
                 __private.handleShellSurfaceDestroyed(shellSurface);
             }
