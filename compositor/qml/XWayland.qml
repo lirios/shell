@@ -47,7 +47,7 @@ LXW.XWayland {
             property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
             property string iconName: "unknown"
 
-            readonly property bool decorated: windowType != Qt.Popup
+            readonly property bool decorated: windowType != Qt.Popup && decorate
             readonly property bool hasDropShadow: !maximized && !fullscreen
 
             property WaylandSurface parentWlSurface: parentSurface ? parentSurface.surface : null
