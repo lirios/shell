@@ -53,6 +53,8 @@ LXW.XWayland {
             property WaylandSurface parentWlSurface: null
             property point offset: Qt.point(0, 0)
 
+            signal destruction()
+
             QtObject {
                 id: details
 
@@ -102,6 +104,7 @@ LXW.XWayland {
             }
 
             Component.onDestruction: {
+                shellSurface.destruction();
                 __private.handleShellSurfaceDestroyed(shellSurface);
             }
         }

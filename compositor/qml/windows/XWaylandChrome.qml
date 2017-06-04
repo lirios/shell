@@ -192,7 +192,7 @@ ChromeItem {
 
         Connections {
             target: shellSurface
-            onDestroyed: {
+            onDestruction: {
                 shellSurfaceItem.bufferLocked = true;
 
                 switch (shellSurface.windowType) {
