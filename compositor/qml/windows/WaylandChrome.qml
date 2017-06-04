@@ -41,8 +41,8 @@ ChromeItem {
 
     property string iconName: "unknown"
 
-    x: shellSurfaceItem.moveItem.x - shellSurfaceItem.output.position.x
-    y: shellSurfaceItem.moveItem.y - shellSurfaceItem.output.position.y
+    x: moveItem.x - output.position.x
+    y: moveItem.y - output.position.y
     width: shellSurfaceItem.width
     height: shellSurfaceItem.height
 
@@ -123,6 +123,14 @@ ChromeItem {
         id: shellSurfaceItem
 
         property bool moving: false
+
+        moveItem: MoveItem {
+            parent: rootItem
+            x: output.position.x
+            y: output.position.y
+            width: chrome.width
+            height: chrome.height
+        }
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
         layer.enabled: !shellSurface.decorated

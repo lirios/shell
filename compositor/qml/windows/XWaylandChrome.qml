@@ -39,8 +39,8 @@ ChromeItem {
 
     property rect taskIconGeometry: Qt.rect(0, 0, 32, 32)
 
-    x: shellSurfaceItem.moveItem.x - shellSurfaceItem.output.position.x
-    y: shellSurfaceItem.moveItem.y - shellSurfaceItem.output.position.y
+    x: moveItem.x - output.position.x
+    y: moveItem.y - output.position.y
     width: shellSurfaceItem.width + (shellSurface.decorated ? decoration.leftPadding + decoration.rightPadding : 0)
     height: shellSurfaceItem.height + (shellSurface.decorated ? decoration.topPadding + decoration.bottomPadding + decoration.titleBarHeight : 0)
 
@@ -151,6 +151,17 @@ ChromeItem {
 
         x: shellSurface.decorated ? decoration.marginSize : 0
         y: shellSurface.decorated ? decoration.titleBarHeight : 0
+
+        moveItem: MoveItem {
+            parent: rootItem
+            x: output.position.x
+            y: output.position.y
+            width: chrome.width
+            height: chrome.height
+
+            onXChanged: shellSurface.sendPosition(Qt.point(x, y))
+            onYChanged: shellSurface.sendPosition(Qt.point(x, y))
+        }
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
         layer.enabled: !shellSurface.decorated

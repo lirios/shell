@@ -85,13 +85,12 @@ WaylandCompositor {
         property int maximizedShellSurfaces: 0
         property int fullscreenShellSurfaces: 0
 
-        function createShellSurfaceItem(shellSurface, component, moveItem, output) {
+        function createShellSurfaceItem(shellSurface, component, output) {
             var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
             var parent = parentSurfaceItem || output.surfacesArea;
             var item = component.createObject(parent, {
                                                   "compositor": compositor,
-                                                  "shellSurface": shellSurface,
-                                                  "moveItem": moveItem
+                                                  "shellSurface": shellSurface
                                               });
             if (shellSurface.windowType === Qt.Popup) {
                 item.x = shellSurface.offset.x;
@@ -104,15 +103,8 @@ WaylandCompositor {
         function handleShellSurfaceCreated(shellSurface, component) {
             shellSurfaces.append({"shellSurface": shellSurface});
 
-            var moveItem =
-                    moveItemComponent.createObject(rootItem, {
-                                                       "x": defaultOutput.position.x,
-                                                       "y": defaultOutput.position.y,
-                                                       "width": Qt.binding(function() { return shellSurface.surface.width; }),
-                                                       "height": Qt.binding(function() { return shellSurface.surface.height; })
-                                                   });
             for (var i = 0; i < outputs.length; i++)
-                createShellSurfaceItem(shellSurface, component, moveItem, outputs[i]);
+                createShellSurfaceItem(shellSurface, component, outputs[i]);
 
             compositor.shellSurfaceCreated(shellSurface);
         }
@@ -323,13 +315,6 @@ WaylandCompositor {
                 }
             }
         }
-    }
-
-    // Item that catches move operations instead of actual surface items
-    Component {
-        id: moveItemComponent
-
-        MoveItem {}
     }
 
     // Window component
