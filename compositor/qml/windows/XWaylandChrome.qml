@@ -25,14 +25,12 @@ import QtQuick 2.0
 import QtWayland.Compositor 1.0
 import Liri.WaylandServer 1.0
 import Liri.XWayland 1.0
-import Fluid.Material 1.0
+import Fluid.Material 1.0 as FluidMaterial
 
 ChromeItem {
     id: chrome
 
     readonly property alias primary: __private.primary
-    property bool minimized: false
-    property bool decorated: true
 
     property alias shellSurface: shellSurfaceItem.shellSurface
     property alias moveItem: shellSurfaceItem.moveItem
@@ -43,17 +41,29 @@ ChromeItem {
 
     x: shellSurfaceItem.moveItem.x - shellSurfaceItem.output.position.x
     y: shellSurfaceItem.moveItem.y - shellSurfaceItem.output.position.y
-    width: shellSurfaceItem.width
-    height: shellSurfaceItem.height
+    width: shellSurfaceItem.width + (shellSurface.decorated ? decoration.leftPadding + decoration.rightPadding : 0)
+    height: shellSurfaceItem.height + (shellSurface.decorated ? decoration.topPadding + decoration.bottomPadding + decoration.titleBarHeight : 0)
 
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
 
-    onMinimizedChanged: {
-        if (minimized)
-            minimizeAnimation.start();
-        else
-            unminimizeAnimation.start();
+    Component.onCompleted: {
+        switch (shellSurface.windowType) {
+        case Qt.Window:
+            __private.setPosition();
+            topLevelMapAnimation.start();
+            break;
+        case Qt.SubWindow:
+            __private.setPosition();
+            transientMapAnimation.start();
+            break;
+        case Qt.Popup:
+            __private.setPosition();
+            popupMapAnimation.start();
+            break;
+        default:
+            break;
+        }
     }
 
     transform: [
@@ -72,7 +82,6 @@ ChromeItem {
     QtObject {
         id: __private
 
-        property bool mapped: false
         property bool primary: false
 
         property bool unresponsive: false
@@ -80,7 +89,6 @@ ChromeItem {
         property point moveItemPosition
 
         property var parentSurface: null
-        property point offset: Qt.point(0, 0)
 
         function updatePrimary() {
             var x = chrome.x;
@@ -106,15 +114,22 @@ ChromeItem {
         }
 
         function setPosition() {
-            var parentSurfaceItem = output.viewsBySurface[__private.parentSurface];
-            if (parentSurfaceItem === undefined) {
+            if (shellSurface.windowType == Qt.Window) {
                 var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
                 var pos = chrome.randomPosition(compositor.mousePos, size);
                 moveItem.x = pos.x;
                 moveItem.y = pos.y;
-            } else {
-                moveItem.x = parentSurfaceItem.moveItem.x + __private.offset.x;
-                moveItem.y = parentSurfaceItem.moveItem.y + __private.offset.y;
+            }
+
+            if (shellSurface.windowType == Qt.SubWindow) {
+                var parentSurfaceItem = output.viewsBySurface[__private.parentSurface];
+                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x;
+                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y;
+            }
+
+            if (shellSurface.windowType == Qt.Popup) {
+                moveItem.x = shellSurface.x;
+                moveItem.y = shellSurface.y;
             }
         }
     }
@@ -123,20 +138,23 @@ ChromeItem {
         id: decoration
 
         anchors.fill: parent
+
+        // FIXME: Transparent backgrounds will be opaque due to shadows
+        layer.enabled: shellSurface.decorated && shellSurface.hasDropShadow
+        layer.effect: FluidMaterial.ElevationEffect {
+            elevation: shellSurfaceItem.focus ? 24 : 8
+        }
     }
 
     XWaylandShellSurfaceItem {
         id: shellSurfaceItem
 
-        property int windowType: Qt.Window
-        readonly property bool hasDropShadow: !decorated && !shellSurface.maximized && !shellSurface.fullscreen
-
-        x: decorated ? decoration.marginSize : 0
-        y: decorated ? decoration.titleBarHeight : 0
+        x: shellSurface.decorated ? decoration.marginSize : 0
+        y: shellSurface.decorated ? decoration.titleBarHeight : 0
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
-        layer.enabled: hasDropShadow
-        layer.effect: ElevationEffect {
+        layer.enabled: !shellSurface.decorated
+        layer.effect: FluidMaterial.ElevationEffect {
             elevation: shellSurfaceItem.focus ? 24 : 8
         }
 
@@ -148,113 +166,46 @@ ChromeItem {
                 applicationManager.focusShellSurface(shellSurface);
             }
         }
-        /*
         onSurfaceDestroyed: {
             bufferLocked = true;
-
-            switch (shellSurfaceItem.windowType) {
-            case Qt.Window:
-                topLevelDestroyAnimation.start();
-                break;
-            case Qt.SubWindow:
-                transientDestroyAnimation.start();
-                break;
-            case Qt.Popup:
-                popupDestroyAnimation.start();
-                break;
-            default:
-                chrome.destroy();
-                break;
-            }
         }
-        */
 
-        Component.onCompleted: shellSurfaceItem.windowType = shellSurface.windowType
-
-        /*
-         * Surface events
-         */
-
-        Connections {
-            target: shellSurfaceItem.surface
-            onHasContentChanged: {
-                // Animate window creationg
-                if (shellSurfaceItem.surface.hasContent && !__private.mapped) {
-                    switch (shellSurfaceItem.windowType) {
-                    case Qt.Window:
-                        __private.setPosition();
-                        topLevelMapAnimation.start();
-                        break;
-                    case Qt.SubWindow:
-                        __private.setPosition();
-                        transientMapAnimation.start();
-                        break;
-                    case Qt.Popup:
-                        popupMapAnimation.start();
-                        break;
-                    default:
-                        break;
-                    }
-
-                    __private.mapped = true;
-                }
-            }
+        Component.onCompleted: {
+            if (shellSurface.windowType === Qt.Window)
+                takeFocus();
         }
 
         /*
          * Shell surface events
          */
 
-        /*
         Connections {
             target: shellSurface
-            ignoreUnknownSignals: true
-            onWindowTypeChanged: shellSurfaceItem.windowType = shellSurface.windowType
-            onActivatedChanged: {
-                if (shellSurface.activated) {
-                    chrome.raise();
-                    focusAnimation.start();
-                    applicationManager.focusShellSurface(shellSurface);
+            onDestroyed: {
+                shellSurfaceItem.bufferLocked = true;
+
+                switch (shellSurface.windowType) {
+                case Qt.Window:
+                    topLevelDestroyAnimation.start();
+                    break;
+                case Qt.SubWindow:
+                    transientDestroyAnimation.start();
+                    break;
+                case Qt.Popup:
+                    popupDestroyAnimation.start();
+                    break;
+                default:
+                    chrome.destroy();
+                    break;
                 }
             }
             onMinimizedChanged: {
-                chrome.minimized = shellSurface.minimized;
+                if (shellSurface.minimized)
+                    minimizeAnimation.start();
+                else
+                    unminimizeAnimation.start();
             }
-            onSetDefaultToplevel: {
-                __private.parentSurface = null;
-                __private.offset.x = 0;
-                __private.offset.y = 0;
-            }
-            onSetTransient: {
-                var parentSurfaceItem = null;
-
-                __private.parentSurface = null;
-                __private.offset.x = 0;
-                __private.offset.y = 0;
-
-                if (typeof(parentSurface) == "undefined" && typeof(relativeToParent) == "undefined") {
-                    if (shellSurface.parentSurface) {
-                        __private.parentSurface = shellSurface.parentSurface.surface;
-                        parentSurfaceItem = output.viewsBySurface[__private.parentSurface];
-                        __private.offset.x = (shellSurfaceItem.width - parentSurfaceItem.width) / 2;
-                        __private.offset.y = (shellSurfaceItem.height - parentSurfaceItem.height) / 2;
-                    }
-                } else {
-                    parentSurfaceItem = output.viewsBySurface[parentSurface];
-                    __private.parentSurface = parentSurface;
-                    __private.offset.x = relativeToParent.x;
-                    __private.offset.y = relativeToParent.y;
-                }
-            }
-            onSetPopup: {
-                __private.parentSurface = null;
-                __private.offset.x = 0;
-                __private.offset.y = 0;
-            }
-            onShowWindowMenu: chrome.showWindowMenu(localSurfacePosition.x, localSurfacePosition.y)
-            onDestroyed: output.compositor.handleShellSurfaceDestroyed(shellSurface)
         }
-        */
 
         /*
          * Animations
@@ -411,11 +362,7 @@ ChromeItem {
     }
 
     function close() {
-        // TODO: Close the shell surface with one of the following:
-        // shellSurface.sendClose() for xdg_surface
-        // shellSurface.sendPopupDone() for xdg_popup
-        // shellSurface.surface.destroy() for wl_shell - maybe too aggressive
-        console.warn("Close not implemented yet");
+        shellSurface.close();
     }
 
     function showWindowMenu(x, y) {
