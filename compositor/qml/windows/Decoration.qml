@@ -148,6 +148,10 @@ Control {
 
                 drag.target: shellSurfaceItem.moveItem
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
+                onPressed: {
+                    if (mouse.button === Qt.LeftButton)
+                        shellSurfaceItem.takeFocus();
+                }
                 onClicked: {
                     if (mouse.button === Qt.LeftButton)
                         shellSurfaceItem.takeFocus();
