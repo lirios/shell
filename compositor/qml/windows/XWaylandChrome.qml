@@ -47,25 +47,6 @@ ChromeItem {
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
 
-    Component.onCompleted: {
-        switch (shellSurface.windowType) {
-        case Qt.Window:
-            __private.setPosition();
-            topLevelMapAnimation.start();
-            break;
-        case Qt.SubWindow:
-            __private.setPosition();
-            transientMapAnimation.start();
-            break;
-        case Qt.Popup:
-            __private.setPosition();
-            popupMapAnimation.start();
-            break;
-        default:
-            break;
-        }
-    }
-
     transform: [
         Scale {
             id: scaleTransform
@@ -178,6 +159,24 @@ ChromeItem {
 
         Connections {
             target: shellSurface
+            onMapped: {
+                switch (shellSurface.windowType) {
+                case Qt.Window:
+                    __private.setPosition();
+                    topLevelMapAnimation.start();
+                    break;
+                case Qt.SubWindow:
+                    __private.setPosition();
+                    transientMapAnimation.start();
+                    break;
+                case Qt.Popup:
+                    __private.setPosition();
+                    popupMapAnimation.start();
+                    break;
+                default:
+                    break;
+                }
+            }
             onDestruction: {
                 shellSurfaceItem.bufferLocked = true;
 
