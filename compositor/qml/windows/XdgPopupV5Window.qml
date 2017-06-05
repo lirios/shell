@@ -37,10 +37,20 @@ LWSP.XdgPopupV5 {
     property WaylandSurface parentWlSurface: parentSurface
     property point offset: position
 
+    readonly property alias moveItem: moveItem
+
     QtObject {
         id: details
 
         property bool mapped: false
+    }
+
+    MoveItem {
+        id: moveItem
+
+        parent: rootItem
+        width: surface.width
+        height: surface.height
     }
 
     Connections {

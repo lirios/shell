@@ -124,13 +124,7 @@ ChromeItem {
 
         property bool moving: false
 
-        moveItem: MoveItem {
-            parent: rootItem
-            x: output.position.x
-            y: output.position.y
-            width: chrome.width
-            height: chrome.height
-        }
+        moveItem: shellSurface.moveItem
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
         layer.enabled: !shellSurface.decorated

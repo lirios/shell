@@ -131,16 +131,7 @@ ChromeItem {
         x: shellSurface.decorated ? decoration.marginSize : 0
         y: shellSurface.decorated ? decoration.titleBarHeight : 0
 
-        moveItem: MoveItem {
-            parent: rootItem
-            x: output.position.x
-            y: output.position.y
-            width: chrome.width
-            height: chrome.height
-
-            onXChanged: shellSurface.sendPosition(Qt.point(x, y))
-            onYChanged: shellSurface.sendPosition(Qt.point(x, y))
-        }
+        moveItem: shellSurface.moveItem
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
         layer.enabled: !shellSurface.decorated

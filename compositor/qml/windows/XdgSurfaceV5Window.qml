@@ -41,6 +41,16 @@ LWSP.XdgSurfaceV5 {
 
     readonly property alias responsive: details.responsive
 
+    readonly property alias moveItem: moveItem
+
+    MoveItem {
+        id: moveItem
+
+        parent: rootItem
+        width: surface.width
+        height: surface.height
+    }
+
     onActivatedChanged: {
         if (details.registered && activated)
             applicationManager.focusShellSurface(xdgSurface);

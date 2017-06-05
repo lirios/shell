@@ -52,6 +52,8 @@ LXW.XWayland {
             property WaylandSurface parentWlSurface: parentSurface ? parentSurface.surface : null
             property point offset: Qt.point(0, 0)
 
+            readonly property alias moveItem: moveItem
+
             signal destruction()
 
             QtObject {
@@ -59,6 +61,17 @@ LXW.XWayland {
 
                 property bool registered: false
                 property bool responsive: true
+            }
+
+            MoveItem {
+                id: moveItem
+
+                parent: rootItem
+                width: surface.width
+                height: surface.height
+
+                onXChanged: shellSurface.sendPosition(Qt.point(x, y))
+                onYChanged: shellSurface.sendPosition(Qt.point(x, y))
             }
 
             onSurfaceChanged: {
