@@ -43,7 +43,7 @@ LXW.XWayland {
             id: shellSurface
 
             property bool minimized: false
-            property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
+            property string canonicalAppId
             property string iconName: "unknown"
 
             readonly property bool decorated: windowType != Qt.Popup && decorate
@@ -61,6 +61,9 @@ LXW.XWayland {
                 property bool responsive: true
             }
 
+            onSurfaceChanged: {
+                canonicalAppId = applicationManager.canonicalizeAppId(appId);
+            }
             onActivatedChanged: {
                 if (details.registered && activated && windowType != Qt.Popup)
                     applicationManager.focusShellSurface(shellSurface);
