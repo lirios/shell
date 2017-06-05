@@ -167,21 +167,9 @@ ChromeItem {
             elevation: shellSurfaceItem.focus ? 24 : 8
         }
 
-        focusOnClick: true
-        onFocusChanged: {
-            if (focus) {
-                chrome.raise();
-                focusAnimation.start();
-                applicationManager.focusShellSurface(shellSurface);
-            }
-        }
+        focusOnClick: shellSurface.windowType != Qt.Popup
         onSurfaceDestroyed: {
             bufferLocked = true;
-        }
-
-        Component.onCompleted: {
-            if (shellSurface.windowType === Qt.Window)
-                takeFocus();
         }
 
         /*
@@ -206,6 +194,13 @@ ChromeItem {
                 default:
                     chrome.destroy();
                     break;
+                }
+            }
+            onActivatedChanged: {
+                if (shellSurface.activated) {
+                    applicationManager.focusShellSurface(shellSurface);
+                    chrome.raise();
+                    focusAnimation.start();
                 }
             }
             onMinimizedChanged: {
@@ -365,9 +360,8 @@ ChromeItem {
      * Methods
      */
 
-    function activate() {
-        chrome.minimized = false;
-        shellSurfaceItem.takeFocus(compositor.defaultSeat);
+    function takeFocus() {
+        shellSurfaceItem.takeFocus();
     }
 
     function close() {

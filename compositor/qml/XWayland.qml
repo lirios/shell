@@ -42,7 +42,6 @@ LXW.XWayland {
         LXW.XWaylandShellSurface {
             id: shellSurface
 
-            property bool activated: true
             property bool minimized: false
             property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
             property string iconName: "unknown"
@@ -62,17 +61,12 @@ LXW.XWayland {
                 property bool responsive: true
             }
 
-            Connections {
-                target: defaultSeat
-                onKeyboardFocusChanged: shellSurface.activated = newFocus == surface
-            }
-
             onActivatedChanged: {
-                if (details.registered && activated)
+                if (details.registered && activated && windowType != Qt.Popup)
                     applicationManager.focusShellSurface(shellSurface);
             }
             onCanonicalAppIdChanged: {
-                if (!details.registered && canonicalAppId) {
+                if (!details.registered && canonicalAppId && windowType != Qt.Popup) {
                     // Register application
                     applicationManager.registerShellSurface(shellSurface);
                     details.registered = true;
