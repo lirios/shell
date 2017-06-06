@@ -1,24 +1,14 @@
 import qbs 1.0
 
-LiriDynamicLibrary {
-    name: "Vibe.Mpris"
-    targetName: "mpris2plugin"
+LiriQmlPlugin {
+    name: "mpris2plugin"
+    pluginPath: "Vibe/Mpris"
 
-    Depends { name: "lirideployment" }
-    Depends { name: "Qt"; submodules: ["dbus", "qml", "quick"] }
+    Depends { name: "Qt"; submodules: ["dbus"] }
 
     Qt.dbus.xml2CppHeaderFlags: "-N"
 
-    files: ["*.cpp", "*.h"]
-
-    Group {
-        name: "QML Files"
-        files: [
-            "qmldir",
-            "plugins.qmltypes"
-        ]
-        fileTags: ["qml"]
-    }
+    files: ["*.cpp", "*.h", "qmldir", "*.qmltypes"]
 
     Group {
         name: "D-Bus Interfaces"
@@ -28,11 +18,5 @@ LiriDynamicLibrary {
             "org.mpris.MediaPlayer2.xml"
         ]
         fileTags: ["qt.dbus.interface"]
-    }
-
-    Group {
-        qbs.install: true
-        qbs.installDir: lirideployment.qmlDir + "/Vibe/Mpris"
-        fileTagsFilter: ["dynamiclibrary", "qml"]
     }
 }
