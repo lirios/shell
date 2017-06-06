@@ -44,7 +44,7 @@
 
 static void disablePtrace()
 {
-#if !DEVELOPMENT_BUILD && defined(PR_SET_DUMPABLE)
+#if !defined(DEVELOPMENT_BUILD) && defined(PR_SET_DUMPABLE)
     // Allow ptrace when running inside gdb
     const qint64 pid = QCoreApplication::applicationPid();
     const QFileInfo process(QStringLiteral("/proc/%1/exe").arg(pid));
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
                                         TR("filename"));
     parser.addOption(fakeScreenOption);
 
-#if DEVELOPMENT_BUILD
+#ifdef DEVELOPMENT_BUILD
     // Load shell from an arbitrary path
     QCommandLineOption qmlOption(QStringLiteral("qml"),
                                  QStringLiteral("Load a shell main QML file"),
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
 
     // Create the compositor and run
     bool urlAlreadySet = false;
-#if DEVELOPMENT_BUILD
+#ifdef DEVELOPMENT_BUILD
     if (parser.isSet(qmlOption)) {
         urlAlreadySet = true;
         shell->setUrl(QUrl::fromLocalFile(parser.value(qmlOption)));
