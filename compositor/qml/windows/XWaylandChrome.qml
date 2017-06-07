@@ -41,8 +41,8 @@ ChromeItem {
 
     x: moveItem.x - output.position.x
     y: moveItem.y - output.position.y
-    width: shellSurfaceItem.width + (shellSurface.decorated ? decoration.leftPadding + decoration.rightPadding : 0)
-    height: shellSurfaceItem.height + (shellSurface.decorated ? decoration.topPadding + decoration.bottomPadding + decoration.titleBarHeight : 0)
+    width: shellSurfaceItem.width // + (shellSurface.decorated ? decoration.leftPadding + decoration.rightPadding : 0)
+    height: shellSurfaceItem.height // + (shellSurface.decorated ? decoration.topPadding + decoration.bottomPadding + decoration.titleBarHeight : 0)
 
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
@@ -93,23 +93,8 @@ ChromeItem {
         }
 
         function setPosition() {
-            if (shellSurface.windowType == Qt.Window) {
-                var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
-                var pos = chrome.randomPosition(compositor.mousePos, size);
-                moveItem.x = pos.x;
-                moveItem.y = pos.y;
-            }
-
-            if (shellSurface.windowType == Qt.SubWindow) {
-                var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
-                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.x;
-                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.y;
-            }
-
-            if (shellSurface.windowType == Qt.Popup) {
-                moveItem.x = shellSurface.x;
-                moveItem.y = shellSurface.y;
-            }
+            moveItem.x = shellSurface.x;
+            moveItem.y = shellSurface.y;
         }
     }
 
@@ -168,7 +153,7 @@ ChromeItem {
                     break;
                 }
             }
-            onDestruction: {
+            onUnmapped: {
                 shellSurfaceItem.bufferLocked = true;
 
                 switch (shellSurface.windowType) {
@@ -189,7 +174,6 @@ ChromeItem {
             onActivatedChanged: {
                 if (shellSurface.activated) {
                     applicationManager.focusShellSurface(shellSurface);
-                    chrome.raise();
                     focusAnimation.start();
                 }
             }

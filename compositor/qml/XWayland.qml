@@ -30,11 +30,14 @@ LXW.XWayland {
     id: xwayland
 
     enabled: true
-    onShellSurfaceRequested: {
-        var shellSurface = shellSurfaceComponent.createObject(manager);
-        shellSurface.initialize(manager, window, geometry, overrideRedirect);
+    manager: LXW.XWaylandManager {
+        id: manager
+        onShellSurfaceRequested: {
+            var shellSurface = shellSurfaceComponent.createObject(manager);
+            shellSurface.initialize(manager, window, geometry, overrideRedirect, parentShellSurface);
+        }
+        onShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, xchromeComponent)
     }
-    onShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, xchromeComponent)
 
     Component {
         id: shellSurfaceComponent
@@ -54,8 +57,6 @@ LXW.XWayland {
 
             readonly property alias moveItem: moveItem
 
-            signal destruction()
-
             QtObject {
                 id: details
 
@@ -67,11 +68,11 @@ LXW.XWayland {
                 id: moveItem
 
                 parent: rootItem
-                width: surface.width
-                height: surface.height
+                width: surface ? surface.width : 0
+                height: surface ? surface.height : 0
 
-                onXChanged: shellSurface.sendPosition(Qt.point(x, y))
-                onYChanged: shellSurface.sendPosition(Qt.point(x, y))
+                onXChanged: if (surface) shellSurface.sendPosition(Qt.point(x, y))
+                onYChanged: if (surface) shellSurface.sendPosition(Qt.point(x, y))
             }
 
             onSurfaceChanged: {
@@ -114,7 +115,6 @@ LXW.XWayland {
             }
 
             Component.onDestruction: {
-                shellSurface.destruction();
                 __private.handleShellSurfaceDestroyed(shellSurface);
             }
         }
