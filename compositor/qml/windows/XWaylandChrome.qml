@@ -174,6 +174,7 @@ ChromeItem {
             onActivatedChanged: {
                 if (shellSurface.activated) {
                     applicationManager.focusShellSurface(shellSurface);
+                    chrome.raise();
                     focusAnimation.start();
                 }
             }
