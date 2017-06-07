@@ -117,6 +117,13 @@ ChromeItem {
                 moveItem.y = pos.y;
             }
         }
+
+        function giveFocusToParent() {
+            // Give focus back to the parent on destruction
+            var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
+            if (parentSurfaceItem)
+                parentSurfaceItem.takeFocus();
+        }
     }
 
     ShellSurfaceItem {
@@ -132,7 +139,7 @@ ChromeItem {
             elevation: shellSurfaceItem.focus ? 24 : 8
         }
 
-        focusOnClick: true
+        focusOnClick: shellSurface.windowType != Qt.Popup
         onSurfaceDestroyed: {
             bufferLocked = true;
         }
@@ -143,11 +150,6 @@ ChromeItem {
 
             // Ping the client
             shellSurface.pingClient();
-        }
-
-        Component.onCompleted: {
-            if (shellSurface.windowType === Qt.Window)
-                takeFocus();
         }
 
         /*
@@ -186,6 +188,7 @@ ChromeItem {
                         popupDestroyAnimation.start();
                         break;
                     default:
+                        __private.giveFocusToParent();
                         chrome.destroy();
                         break;
                     }
@@ -249,7 +252,12 @@ ChromeItem {
         NumberAnimation { target: scaleTransform; property: "xScale"; to: 0; duration: 150 }
         NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutQuad; to: 0.0; duration: 200 }
 
-        ScriptAction { script: chrome.destroy() }
+        ScriptAction {
+            script: {
+                __private.giveFocusToParent();
+                chrome.destroy();
+            }
+        }
     }
 
     /*
@@ -273,7 +281,12 @@ ChromeItem {
             NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutQuad; from: 1.0; to: 0.0; duration: 200 }
         }
 
-        ScriptAction { script: chrome.destroy() }
+        ScriptAction {
+            script: {
+                __private.giveFocusToParent();
+                chrome.destroy();
+            }
+        }
     }
 
     /*
@@ -295,7 +308,12 @@ ChromeItem {
         NumberAnimation { target: scaleTransform; property: "yScale"; easing.type: Easing.OutExpo; from: 1.0; to: 0.8; duration: 150 }
         NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutQuad; to: 0.0; duration: 150 }
 
-        ScriptAction { script: chrome.destroy() }
+        ScriptAction {
+            script: {
+                __private.giveFocusToParent();
+                chrome.destroy();
+            }
+        }
     }
 
     /*
