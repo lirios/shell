@@ -106,15 +106,15 @@ ChromeItem {
         }
 
         function setPosition() {
-            if (shellSurface.windowType === Qt.Window) {
+            var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
+            if (parentSurfaceItem) {
+                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x;
+                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y;
+            } else {
                 var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
                 var pos = chrome.randomPosition(compositor.mousePos, size);
                 moveItem.x = pos.x;
                 moveItem.y = pos.y;
-            } else if (shellSurface.windowType === Qt.SubWindow) {
-                var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
-                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x;
-                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y;
             }
         }
     }
@@ -159,13 +159,13 @@ ChromeItem {
             ignoreUnknownSignals: true
             onMappedChanged: {
                 if (shellSurface.mapped) {
+                    __private.setPosition();
+
                     switch (shellSurface.windowType) {
                     case Qt.Window:
-                        __private.setPosition();
                         topLevelMapAnimation.start();
                         break;
                     case Qt.SubWindow:
-                        __private.setPosition();
                         transientMapAnimation.start();
                         break;
                     case Qt.Popup:

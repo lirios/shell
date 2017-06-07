@@ -92,10 +92,6 @@ WaylandCompositor {
                                                   "compositor": compositor,
                                                   "shellSurface": shellSurface
                                               });
-            if (shellSurface.windowType === Qt.Popup) {
-                item.x = shellSurface.offset.x;
-                item.y = shellSurface.offset.y;
-            }
             output.viewsBySurface[shellSurface.surface] = item;
             return item;
         }
