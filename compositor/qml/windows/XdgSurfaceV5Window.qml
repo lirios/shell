@@ -37,7 +37,7 @@ LWSP.XdgSurfaceV5 {
     property bool decorated: false
     property bool hasDropShadow: !maximized && !fullscreen
 
-    property point offset
+    property point offset: Qt.point(0, 0)
 
     readonly property alias responsive: details.responsive
 
@@ -68,6 +68,10 @@ LWSP.XdgSurfaceV5 {
         offset.x = 0;
         offset.y = 0;
     }
+    onSetTransient: {
+        offset.x = (parentSurface.windowGeometry.width - windowGeometry.width) / 2;
+        offset.y = (parentSurface.windowGeometry.height - windowGeometry.height) / 2;
+    }
     onSetMinimized: minimized = true
     onSetMaximized: __private.maximizedShellSurfaces++
     onUnsetMaximized: __private.maximizedShellSurfaces--
@@ -92,12 +96,6 @@ LWSP.XdgSurfaceV5 {
         target: surface
         onHasContentChanged: {
             if (surface.hasContent) {
-                // Center transient windows
-                if (xdgSurface.windowType === Qt.SubWindow) {
-                    offset.x = (xdgSurface.parentWlSurface.size.width - xdgSurface.surface.size.width) / 2;
-                    offset.y = (xdgSurface.parentWlSurface.size.height - xdgSurface.surface.size.height) / 2;
-                }
-
                 // Set mapped flag which will make Chrome play the animation
                 details.mapped = surface.hasContent;
             }
