@@ -47,8 +47,8 @@ LWSP.XdgSurfaceV5 {
         id: moveItem
 
         parent: rootItem
-        width: surface.width
-        height: surface.height
+        width: surface ? surface.width : 0
+        height: surface ? surface.height : 0
     }
 
     onActivatedChanged: {
