@@ -49,6 +49,9 @@ const static QString dbusPropertiesInterface = QStringLiteral("org.freedesktop.D
 
 LogindBackend::LogindBackend()
     : LoginManagerBackend()
+    , m_sessionManager(nullptr)
+    , m_interface(nullptr)
+    , m_powerButtonFd(-1)
     , m_inhibitFd(-1)
 {
 }
