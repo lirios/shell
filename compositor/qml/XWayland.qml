@@ -127,6 +127,9 @@ LXW.XWayland {
                     break;
                 }
             }
+            onSetMinimized: {
+                minimized = !minimized;
+            }
 
             function requestSize(w, h) {
                 shellSurface.sendResize(Qt.size(w, h));
