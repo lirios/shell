@@ -41,8 +41,8 @@ ChromeItem {
 
     x: moveItem.x - output.position.x
     y: moveItem.y - output.position.y
-    width: shellSurfaceItem.width // + (shellSurface.decorated ? decoration.leftPadding + decoration.rightPadding : 0)
-    height: shellSurfaceItem.height // + (shellSurface.decorated ? decoration.topPadding + decoration.bottomPadding + decoration.titleBarHeight : 0)
+    width: shellSurfaceItem.width
+    height: shellSurfaceItem.height
 
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
@@ -93,8 +93,8 @@ ChromeItem {
         }
 
         function setPosition() {
-            moveItem.x = shellSurface.x;
-            moveItem.y = shellSurface.y;
+            moveItem.x = shellSurface.x + shellSurfaceItem.x;
+            moveItem.y = shellSurface.y + shellSurfaceItem.y;
         }
     }
 
@@ -136,17 +136,16 @@ ChromeItem {
         Connections {
             target: shellSurface
             onMapped: {
+                __private.setPosition();
+
                 switch (shellSurface.windowType) {
                 case Qt.Window:
-                    __private.setPosition();
                     topLevelMapAnimation.start();
                     break;
                 case Qt.SubWindow:
-                    __private.setPosition();
                     transientMapAnimation.start();
                     break;
                 case Qt.Popup:
-                    __private.setPosition();
                     popupMapAnimation.start();
                     break;
                 default:
@@ -183,6 +182,12 @@ ChromeItem {
                     minimizeAnimation.start();
                 else
                     unminimizeAnimation.start();
+            }
+            onXChanged: {
+                moveItem.x = x + shellSurfaceItem.x;
+            }
+            onYChanged: {
+                moveItem.y = y + shellSurfaceItem.y;
             }
         }
 

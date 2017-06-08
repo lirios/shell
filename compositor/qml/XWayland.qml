@@ -71,8 +71,8 @@ LXW.XWayland {
                 width: surface ? surface.width : 0
                 height: surface ? surface.height : 0
 
-                onXChanged: if (surface) shellSurface.sendPosition(Qt.point(x, y))
-                onYChanged: if (surface) shellSurface.sendPosition(Qt.point(x, y))
+                onXChanged: if (surface) shellSurface.sendX(x)
+                onYChanged: if (surface) shellSurface.sendY(y)
             }
 
             onSurfaceChanged: {
@@ -99,9 +99,10 @@ LXW.XWayland {
             }
             onWindowTypeChanged: {
                 switch (windowType) {
+                case Qt.SubWindow:
                 case Qt.Popup:
-                    offset.x = x;
-                    offset.y = y;
+                    offset.x = Qt.binding(function() { return x; });
+                    offset.y = Qt.binding(function() { return y; });
                     break;
                 default:
                     offset.x = 0;
