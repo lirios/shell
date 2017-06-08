@@ -56,6 +56,7 @@ LXW.XWayland {
             property point offset: Qt.point(0, 0)
 
             readonly property alias moveItem: moveItem
+            readonly property alias xwaylandMoveItem: xwaylandMoveItem
 
             QtObject {
                 id: details
@@ -64,8 +65,24 @@ LXW.XWayland {
                 property bool responsive: true
             }
 
-            MoveItem {
+            // This item stores the window global position, that is sent to us
+            // by XWayland - this can never be the drag target for the decoration
+            Item {
                 id: moveItem
+
+                parent: rootItem
+                width: surface ? surface.width : 0
+                height: surface ? surface.height : 0
+            }
+
+            // Send coordinates to XWayland as user moves the window from
+            // the decoration: dragging the decoration will change the
+            // coordinates of this item and in turn this will send the new
+            // coordinates to XWayland - we can't update XWayland coordinates
+            // with moveItem without starting an infinite loop so we have to
+            // separate the two move items
+            MoveItem {
+                id: xwaylandMoveItem
 
                 parent: rootItem
                 width: surface ? surface.width : 0

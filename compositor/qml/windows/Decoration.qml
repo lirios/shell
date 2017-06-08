@@ -35,6 +35,8 @@ Control {
     readonly property bool dragging: moveArea.drag.active
     readonly property bool hasDropShadow: !shellSurface.maximized && !shellSurface.fullscreen
 
+    property Item dragTarget: shellSurfaceItem.moveItem
+
     Material.theme: Material.Dark
 
     // FIXME: Transparent backgrounds will be opaque due to shadows
@@ -146,7 +148,7 @@ Control {
                     bottomMargin: parent.radius
                 }
 
-                drag.target: shellSurfaceItem.moveItem
+                drag.target: dragTarget
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onPressed: {
                     if (mouse.button === Qt.LeftButton)

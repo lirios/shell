@@ -95,6 +95,8 @@ ChromeItem {
         function setPosition() {
             moveItem.x = shellSurface.x + shellSurfaceItem.x;
             moveItem.y = shellSurface.y + shellSurfaceItem.y;
+            shellSurface.xwaylandMoveItem.x = moveItem.x;
+            shellSurface.xwaylandMoveItem.y = moveItem.y;
         }
     }
 
@@ -102,6 +104,8 @@ ChromeItem {
         id: decoration
 
         anchors.fill: parent
+
+        dragTarget: shellSurface.xwaylandMoveItem
 
         // FIXME: Transparent backgrounds will be opaque due to shadows
         layer.enabled: shellSurface.decorated && shellSurface.hasDropShadow
@@ -185,8 +189,14 @@ ChromeItem {
             }
             onXChanged: {
                 moveItem.x = x + shellSurfaceItem.x;
+                shellSurface.xwaylandMoveItem.x = moveItem.x;
             }
             onYChanged: {
+                moveItem.y = y + shellSurfaceItem.y;
+                shellSurface.xwaylandMoveItem.y = moveItem.y;
+            }
+            onSetPosition: {
+                moveItem.x = x + shellSurfaceItem.x;
                 moveItem.y = y + shellSurfaceItem.y;
             }
         }
