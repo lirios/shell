@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     // Application
     QGuiApplication app(argc, argv);
-    app.setApplicationName(QStringLiteral("Liri Shell Helper"));
+    app.setApplicationName(QStringLiteral("Shell Helper"));
     app.setApplicationVersion(QStringLiteral(LIRISHELL_VERSION));
     app.setOrganizationName(QStringLiteral("Liri"));
     app.setOrganizationDomain(QStringLiteral("liri.io"));

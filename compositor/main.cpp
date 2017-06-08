@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
     // Application
     QApplication app(argc, argv);
-    app.setApplicationName(QStringLiteral("Liri"));
+    app.setApplicationName(QStringLiteral("Shell"));
     app.setApplicationVersion(QStringLiteral(LIRISHELL_VERSION));
     app.setOrganizationName(QStringLiteral("Liri"));
     app.setOrganizationDomain(QStringLiteral("liri.io"));
