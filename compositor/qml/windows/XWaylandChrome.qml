@@ -147,10 +147,16 @@ ChromeItem {
                     topLevelMapAnimation.start();
                     break;
                 case Qt.SubWindow:
+                    if (shellSurface.wmWindowType == XWaylandShellSurface.MenuWindow ||
+                            shellSurface.wmWindowType == XWaylandShellSurface.PopupWindow ||
+                            shellSurface.wmWindowType == XWaylandShellSurface.ComboWindow)
                     transientMapAnimation.start();
                     break;
                 case Qt.Popup:
-                    popupMapAnimation.start();
+                    if (shellSurface.wmWindowType == XWaylandShellSurface.MenuWindow ||
+                            shellSurface.wmWindowType == XWaylandShellSurface.PopupWindow ||
+                            shellSurface.wmWindowType == XWaylandShellSurface.ComboWindow)
+                        popupMapAnimation.start();
                     break;
                 default:
                     break;
