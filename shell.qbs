@@ -14,7 +14,7 @@ Project {
     references: [
         "3rdparty/3rdparty.qbs",
         "data/data.qbs",
-        "programs.qbs",
-        "imports/imports.qbs",
+        "src/imports/imports.qbs",
+        "src/programs.qbs",
     ]
 }
