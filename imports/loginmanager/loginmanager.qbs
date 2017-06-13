@@ -1,29 +1,12 @@
 import qbs 1.0
 
-LiriDynamicLibrary {
-    name: "Liri.LoginManager"
-    targetName: "loginmanagerplugin"
+LiriQmlPlugin {
+    name: "loginmanagerplugin"
+    pluginPath: "Liri/LoginManager"
 
-    Depends { name: "lirideployment" }
-    Depends { name: "Qt"; submodules: ["qml", "quick"] }
     Depends { name: "Qt5AccountsService" }
 
     cpp.defines: []
 
-    files: ["*.cpp", "*.h"]
-
-    Group {
-        name: "QML Files"
-        files: [
-            "qmldir",
-            "plugins.qmltypes"
-        ]
-        fileTags: ["qml"]
-    }
-
-    Group {
-        qbs.install: true
-        qbs.installDir: lirideployment.qmlDir + "/Liri/LoginManager"
-        fileTagsFilter: ["dynamiclibrary", "qml"]
-    }
+    files: ["*.cpp", "*.h", "qmldir", "*.qmltypes"]
 }

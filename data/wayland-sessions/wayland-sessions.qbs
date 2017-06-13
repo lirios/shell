@@ -5,7 +5,7 @@ import qbs.ModUtils
 import qbs.TextFile
 
 Product {
-    name: "Liri Shell (Wayland Session)"
+    name: "liri-shell-wayland-session"
     type: "script"
 
     Depends { name: "lirideployment" }

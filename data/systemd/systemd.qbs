@@ -5,7 +5,7 @@ import qbs.ModUtils
 import qbs.TextFile
 
 Product {
-    name: "Liri Shell (systemd)"
+    name: "liri-shell-systemd"
     type: "systemd"
 
     Depends { name: "qbsbuildconfig" }

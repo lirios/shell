@@ -1,11 +1,10 @@
 import qbs 1.0
 
-LiriDynamicLibrary {
-    name: "Liri.Launcher"
-    targetName: "launcherplugin"
+LiriQmlPlugin {
+    name: "launcherplugin"
+    pluginPath: "Liri/Launcher"
 
-    Depends { name: "lirideployment" }
-    Depends { name: "Qt"; submodules: ["dbus", "xml", "qml", "quick", "sql", "waylandcompositor"] }
+    Depends { name: "Qt"; submodules: ["dbus", "xml", "sql", "waylandcompositor"] }
     Depends { name: "LiriCore" }
     Depends { name: "Qt5GSettings" }
     Depends { name: "Qt5Xdg" }
@@ -21,20 +20,5 @@ LiriDynamicLibrary {
 
     cpp.defines: []
 
-    files: ["*.cpp", "*.h"]
-
-    Group {
-        name: "QML Files"
-        files: [
-            "qmldir",
-            "plugins.qmltypes"
-        ]
-        fileTags: ["qml"]
-    }
-
-    Group {
-        qbs.install: true
-        qbs.installDir: lirideployment.qmlDir + "/Liri/Launcher"
-        fileTagsFilter: ["dynamiclibrary", "qml"]
-    }
+    files: ["*.cpp", "*.h", "qmldir", "*.qmltypes"]
 }
