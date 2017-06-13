@@ -75,10 +75,10 @@ See `qbs/shared/modules/lirideployment/lirideployment.qbs` for more deployment-r
 
 You can also specify the following options:
 
- * `qbsbuildconfig:developmentBuild=true` to enable features for development such as the ability
+ * `projects.Shell.developmentBuild:true` to enable features for development such as the ability
    to load arbitrary QML files from the shell
- * `qbsbuildconfig:systemdUserUnitDir=path/to/units` to install systemd user units in a different
-   path, the path is relative to `qbs.installRoot` and defaults to `lib/systemd/user`
+ * `projects.Shell.systemdUserUnitDir:path/to/units` to install systemd user units in a different
+   path, the path is relative to `qbs.installPrefix` and defaults to `lib/systemd/user`
 
 If you specify `qbs.installRoot` you might need to prefix the entire line with `sudo`,
 depending on whether you have permissions to write there or not.

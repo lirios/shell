@@ -5,7 +5,6 @@ QtGuiApplication {
     name: "liri-shell-helper"
     targetName: "liri-shell-helper"
 
-    Depends { name: "qbsbuildconfig" }
     Depends { name: "lirideployment" }
     Depends { name: "GitRevision" }
     Depends { name: "Qt"; submodules: ["core", "core-private", "gui", "waylandclient"] }
@@ -19,7 +18,7 @@ QtGuiApplication {
 
     cpp.defines: {
         var defines = base.concat(['LIRISHELL_VERSION="' + project.version + '"']);
-        if (qbsbuildconfig.developmentBuild)
+        if (project.developmentBuild)
             defines.push("DEVELOPMENT_BUILD");
         if (haveSysPrctl.found)
             defines.push("HAVE_SYS_PRCTL_H");

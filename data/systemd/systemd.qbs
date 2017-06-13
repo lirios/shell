@@ -8,7 +8,6 @@ Product {
     name: "liri-shell-systemd"
     type: "systemd"
 
-    Depends { name: "qbsbuildconfig" }
     Depends { name: "lirideployment" }
 
     Group {
@@ -58,7 +57,7 @@ Product {
 
     Group {
         qbs.install: true
-        qbs.installDir: qbsbuildconfig.systemdUserUnitDir
+        qbs.installDir: project.systemdUserUnitDir
         fileTagsFilter: product.type
     }
 }
