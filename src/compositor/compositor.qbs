@@ -87,7 +87,7 @@ QtGuiApplication {
 
     Group {
         name: "Git Revision"
-        files: ["../headers/gitsha1.h.in"]
+        files: ["../../headers/gitsha1.h.in"]
         fileTags: ["liri.gitsha"]
     }
 

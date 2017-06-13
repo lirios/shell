@@ -17,7 +17,7 @@ LiriQmlPlugin {
     Group {
         name: "Wayland Protocols"
         files: [
-            "../../data/protocols/shell-helper.xml"
+            "../../../data/protocols/shell-helper.xml"
         ]
         fileTags: ["wayland.server.protocol"]
     }

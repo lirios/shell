@@ -36,14 +36,14 @@ QtGuiApplication {
     Group {
         name: "Wayland Protocols"
         files: [
-            "../data/protocols/shell-helper.xml"
+            "../../data/protocols/shell-helper.xml"
         ]
         fileTags: ["wayland.client.protocol"]
     }
 
     Group {
         name: "Git Revision"
-        files: ["../headers/gitsha1.h.in"]
+        files: ["../../headers/gitsha1.h.in"]
         fileTags: ["liri.gitsha"]
     }
 
