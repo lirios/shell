@@ -7,7 +7,7 @@ Project {
 
     condition: qbs.targetOS.contains("linux")
 
-    minimumQbsVersion: "1.6"
+    minimumQbsVersion: "1.8.0"
 
     qbsSearchPaths: ["qbs/shared", "qbs/local"]
 
