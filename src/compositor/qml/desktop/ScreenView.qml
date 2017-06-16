@@ -31,7 +31,7 @@ import Fluid.Controls 1.0 as FluidControls
 import Fluid.Material 1.0 as FluidMaterial
 import "../screens"
 
-Rectangle {
+Item {
     id: screenView
 
     readonly property alias surfacesArea: desktop.currentWorkspace
