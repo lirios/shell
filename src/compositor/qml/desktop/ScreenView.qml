@@ -29,6 +29,7 @@ import QtQuick.Controls.Material 2.0
 import Liri.WaylandServer 1.0
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Material 1.0 as FluidMaterial
+import "../components" as Components
 import "../screens"
 
 Item {
@@ -45,6 +46,10 @@ Item {
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
     property alias zoomEnabled: zoomArea.enabled
+
+    Material.theme: Material.Dark
+    Material.primary: Material.Blue
+    Material.accent: Material.Blue
 
     state: "splash"
     states: [
@@ -103,6 +108,42 @@ Item {
         id: runCommand
         x: (parent.width - height) / 2
         y: (parent.height - height) / 2
+    }
+
+    /*
+     * Hot corners
+     */
+
+    // Top-left corner
+    Components.HotCorner {
+        corner: Qt.TopLeftCorner
+        z: 2000
+        //onTriggered: workspacesLayer.selectPrevious()
+    }
+
+    // Top-right corner
+    Components.HotCorner {
+        corner: Qt.TopRightCorner
+        z: 2000
+        //onTriggered: workspacesLayer.selectNext()
+    }
+
+    // Bottom-left corner
+    Components.HotCorner {
+        corner: Qt.BottomLeftCorner
+        z: 2000
+        onTriggered: {
+            if (desktop.currentWorkspace.state == "normal")
+                desktop.currentWorkspace.state = "present";
+            else
+                desktop.currentWorkspace.state = "normal";
+        }
+    }
+
+    // Bottom-right corner
+    Components.HotCorner {
+        corner: Qt.BottomRightCorner
+        z: 2000
     }
 
     /*

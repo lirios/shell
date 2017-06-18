@@ -54,19 +54,6 @@ Item {
     readonly property alias windowSwitcher: windowSwitcher
 
     /*
-     * Hot corners
-     */
-
-    HotCorners {
-        id: hotCorners
-        anchors.fill: parent
-        z: 2000
-        //onTopLeftTriggered: workspacesLayer.selectPrevious()
-        //onTopRightTriggered: workspacesLayer.selectNext()
-        onBottomLeftTriggered: currentWorkspace.state = "present";
-    }
-
-    /*
      * Workspace
      */
 
