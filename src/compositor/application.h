@@ -43,6 +43,9 @@ class Application : public QObject
 public:
     Application(QObject *parent = Q_NULLPTR);
 
+    bool isAutostartEnabled() const;
+    void setAutostartEnabled(bool enabled);
+
     void setScreenConfiguration(const QString &fakeScreenData);
     void setUrl(const QUrl &url);
 
@@ -56,6 +59,7 @@ private:
     SessionManager *m_sessionManager;
     bool m_failSafe;
     bool m_started;
+    bool m_autostartEnabled;
 
 private Q_SLOTS:
     void startup();

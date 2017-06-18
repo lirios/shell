@@ -48,6 +48,7 @@ Application::Application(QObject *parent)
     : QObject(parent)
     , m_failSafe(false)
     , m_started(false)
+    , m_autostartEnabled(true)
 {
     // Unix signals watcher
     UnixSignalWatcher *sigwatch = new UnixSignalWatcher(this);
@@ -73,6 +74,16 @@ Application::Application(QObject *parent)
     // Invoke shutdown sequence when quitting
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit,
             this, &Application::shutdown);
+}
+
+bool Application::isAutostartEnabled() const
+{
+    return m_autostartEnabled;
+}
+
+void Application::setAutostartEnabled(bool enabled)
+{
+    m_autostartEnabled = enabled;
 }
 
 void Application::setScreenConfiguration(const QString &fakeScreenData)
@@ -173,6 +184,11 @@ void Application::shutdown()
 
 void Application::autostart()
 {
+    if (!m_autostartEnabled) {
+        qCDebug(SESSION_MANAGER) << "Autostart disabled";
+        return;
+    }
+
     Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
         // Ignore entries that are explicitely not meant for Liri
         if (!entry.isSuitable(true, QStringLiteral("X-Liri")))

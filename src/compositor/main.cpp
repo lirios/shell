@@ -120,6 +120,10 @@ int main(int argc, char *argv[])
                                         TR("filename"));
     parser.addOption(fakeScreenOption);
 
+    QCommandLineOption noAutostartOption(QStringLiteral("no-autostart"),
+                                         TR("Do not run autostart programs"));
+    parser.addOption(noAutostartOption);
+
 #ifdef DEVELOPMENT_BUILD
     // Load shell from an arbitrary path
     QCommandLineOption qmlOption(QStringLiteral("qml"),
@@ -149,6 +153,7 @@ int main(int argc, char *argv[])
 
     // Application
     Application *shell = new Application();
+    shell->setAutostartEnabled(!parser.isSet(noAutostartOption));
     shell->setScreenConfiguration(fakeScreenData);
 
     // Create the compositor and run
