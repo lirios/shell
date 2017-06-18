@@ -23,6 +23,7 @@
  ***************************************************************************/
 
 import QtQuick 2.5
+import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import QtWayland.Compositor 1.0
 import Liri.WaylandServer 1.0
@@ -61,6 +62,7 @@ ExtendedOutput {
         width: nativeScreen.size.width
         height: nativeScreen.size.height
         flags: Qt.FramelessWindowHint
+        visibility: Window.FullScreen
 
         // Virtual Keyboard
         Loader {
