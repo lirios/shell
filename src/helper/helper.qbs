@@ -28,7 +28,7 @@ QtGuiApplication {
         product.sourceDirectory
     ])
 
-    GitRevision.sourceDirectory: product.sourceDirectory + "/.."
+    GitRevision.sourceDirectory: product.sourceDirectory + "/../.."
 
     files: ["*.cpp", "*.h"]
 

@@ -48,7 +48,7 @@ QtGuiApplication {
         product.sourceDirectory
     ])
 
-    GitRevision.sourceDirectory: product.sourceDirectory + "/.."
+    GitRevision.sourceDirectory: product.sourceDirectory + "/../.."
 
     Qt.core.resourcePrefix: "/"
     Qt.core.resourceSourceBase: sourceDirectory
