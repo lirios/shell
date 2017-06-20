@@ -31,7 +31,8 @@ import Liri.Launcher 0.1 as CppLauncher
 
 Menu {
     id: menu
-    readonly property var app: launcher.model.get(index)
+
+    property var actions: model.application.actions
 
     transformOrigin: Menu.BottomLeft
 
@@ -39,15 +40,9 @@ Menu {
         id: process
     }
 
-    // Component for separators
-    Component {
-        id: separatorComponent
-
-        MenuSeparator {}
-    }
-
     Instantiator {
-        model: app.desktopFile.actions
+        id: actionsInstantiator
+        model: actions
         delegate: MenuItem {
             text: model.name
             onTriggered: {
@@ -62,9 +57,9 @@ Menu {
     }
 
     Instantiator {
-        model: app.desktopFile.actions.length > 0 ? 1 : 0
+        model: actionsInstantiator.count > 0 ? 1 : 0
         delegate: MenuSeparator {}
-        onObjectAdded: menu.insertItem(app.desktopFile.actions.length, object)
+        onObjectAdded: menu.insertItem(actionsInstantiator.count, object)
         onObjectRemoved: menu.removeItem(index)
     }
 
@@ -76,10 +71,10 @@ Menu {
     MenuSeparator {}
 
     MenuItem {
-        text: app.pinned ? qsTr("Unpin from Launcher") : qsTr("Pin to Launcher")
+        text: model.pinned ? qsTr("Unpin from Launcher") : qsTr("Pin to Launcher")
         enabled: model.name
         onTriggered: {
-            app.pinned = !app.pinned;
+            model.application.pinned = !model.application.pinned;
             menu.close();
         }
     }
@@ -89,9 +84,9 @@ Menu {
     MenuItem {
         id: quit
         text: qsTr("Quit")
-        enabled: app.running
+        enabled: model.running
         onTriggered: {
-            if (!app.quit())
+            if (!model.application.quit())
                 console.warn("Failed to quit:", model.appId);
             menu.close();
         }

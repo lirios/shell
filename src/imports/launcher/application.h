@@ -23,6 +23,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QSet>
 #include <QtCore/QStringList>
+#include <QtQml>
+#include <QtQml/QQmlListProperty>
 
 #include <LiriCore/DesktopFile>
 
@@ -56,6 +58,8 @@ class Application : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 
+    Q_PROPERTY(QQmlListProperty<DesktopFileAction> actions READ actions CONSTANT)
+
     friend class ApplicationManager;
 
 public:
@@ -78,7 +82,7 @@ public:
     };
     Q_ENUM(State)
 
-    Application(const QString &appId, const QStringList &categories, QObject *parent = nullptr);
+    explicit Application(const QString &appId, const QStringList &categories, QObject *parent = nullptr);
 
     bool isValid() const { return m_desktopFile != nullptr && m_desktopFile->isValid(); }
 
@@ -127,6 +131,8 @@ public:
 
     bool isPinned() const { return m_pinned; }
 
+    QQmlListProperty<DesktopFileAction> actions();
+
 public Q_SLOTS:
     void setPinned(bool pinned);
 
@@ -164,3 +170,5 @@ private:
 
     void addClient(QWaylandClient *client);
 };
+
+QML_DECLARE_TYPE(DesktopFileAction)

@@ -7,7 +7,7 @@ import QtQuick.tooling 1.2
 // 'qmlplugindump-qt5 -nonrelocatable Liri.Launcher 0.1'
 
 Module {
-    dependencies: ["QtQuick 2.7"]
+    dependencies: ["QtQuick 2.8"]
     Component {
         name: "Application"
         prototype: "QObject"
@@ -55,25 +55,58 @@ Module {
     }
     Component {
         name: "ApplicationManager"
-        prototype: "QObject"
+        prototype: "QAbstractListModel"
         exports: ["Liri.Launcher/ApplicationManager 0.1"]
         exportMetaObjectRevisions: [0]
-        Signal {
-            name: "applicationLaunched"
-            Parameter { name: "app"; type: "Application"; isPointer: true }
+        Enum {
+            name: "Roles"
+            values: {
+                "AppIdRole": 257,
+                "DesktopFileRole": 258,
+                "NameRole": 259,
+                "GenericNameRole": 260,
+                "CommentRole": 261,
+                "IconNameRole": 262,
+                "CategoriesRole": 263,
+                "FilterInfoRole": 264,
+                "PinnedRole": 265,
+                "RunningRole": 266,
+                "StartingRole": 267,
+                "ActiveRole": 268,
+                "HasWindowsRole": 269,
+                "HasCountRole": 270,
+                "CountRole": 271,
+                "HasProgressRole": 272,
+                "ProgressRole": 273
+            }
         }
         Signal { name: "refreshed" }
         Signal {
             name: "applicationAdded"
             Parameter { name: "app"; type: "Application"; isPointer: true }
         }
-        Method { name: "refresh" }
-        Method {
-            name: "quit"
-            Parameter { name: "appId"; type: "string" }
+        Signal {
+            name: "applicationRemoved"
+            Parameter { name: "app"; type: "Application"; isPointer: true }
+        }
+        Signal {
+            name: "applicationPinned"
+            Parameter { name: "app"; type: "Application"; isPointer: true }
+        }
+        Signal {
+            name: "applicationUnpinned"
+            Parameter { name: "app"; type: "Application"; isPointer: true }
+        }
+        Signal {
+            name: "applicationLaunched"
+            Parameter { name: "app"; type: "Application"; isPointer: true }
         }
         Method {
             name: "launch"
+            Parameter { name: "appId"; type: "string" }
+        }
+        Method {
+            name: "quit"
             Parameter { name: "appId"; type: "string" }
         }
         Method {
@@ -88,33 +121,25 @@ Module {
             name: "focusShellSurface"
             Parameter { name: "shellSurface"; type: "QObject"; isPointer: true }
         }
-    }
-    Component {
-        name: "AppsModel"
-        prototype: "QAbstractListModel"
-        exports: ["Liri.Launcher/AppsModel 0.1"]
-        exportMetaObjectRevisions: [0]
-        Enum {
-            name: "Roles"
-            values: {
-                "NameRole": 257,
-                "GenericNameRole": 258,
-                "CommentRole": 259,
-                "IconNameRole": 260,
-                "AppIdRole": 261,
-                "CategoriesRole": 262,
-                "RunningRole": 263,
-                "FilterInfoRole": 264
-            }
-        }
-        Property { name: "applicationManager"; type: "ApplicationManager"; isPointer: true }
-        Signal {
-            name: "appLaunched"
-            Parameter { name: "app"; type: "Application"; isPointer: true }
+        Method {
+            name: "canonicalizeAppId"
+            type: "string"
+            Parameter { name: "appId"; type: "string" }
         }
         Method {
-            name: "setApplicationManager"
-            Parameter { name: "appMan"; type: "ApplicationManager"; isPointer: true }
+            name: "get"
+            type: "Application*"
+            Parameter { name: "index"; type: "int" }
+        }
+        Method {
+            name: "getIconName"
+            type: "string"
+            Parameter { name: "appId"; type: "string" }
+        }
+        Method {
+            name: "indexFromAppId"
+            type: "int"
+            Parameter { name: "appId"; type: "string" }
         }
     }
     Component {
@@ -142,7 +167,7 @@ Module {
     }
     Component {
         name: "LauncherModel"
-        prototype: "QAbstractListModel"
+        prototype: "QSortFilterProxyModel"
         exports: ["Liri.Launcher/LauncherModel 0.1"]
         exportMetaObjectRevisions: [0]
         Enum {
@@ -164,19 +189,10 @@ Module {
                 "ProgressRole": 270
             }
         }
-        Property { name: "applicationManager"; type: "ApplicationManager"; isPointer: true }
-        Method {
-            name: "setApplicationManager"
-            Parameter { name: "appMan"; type: "ApplicationManager"; isPointer: true }
-        }
-        Method {
-            name: "setupConnections"
-            Parameter { name: "app"; type: "Application"; isPointer: true }
-        }
         Method {
             name: "get"
             type: "Application*"
-            Parameter { name: "index"; type: "int" }
+            Parameter { name: "row"; type: "int" }
         }
         Method {
             name: "indexFromAppId"

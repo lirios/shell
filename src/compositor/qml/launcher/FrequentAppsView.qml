@@ -36,7 +36,7 @@ Item {
                 limitCount: grid.rows * grid.columns
                 sourceModel: FrequentAppsModel {
                     id: frequentAppsModel
-                    sourceModel: appsModel
+                    sourceModel: applicationManager
                 }
             }
 

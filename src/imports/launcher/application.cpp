@@ -78,6 +78,17 @@ void Application::setActive(bool active)
     emit activeChanged();
 }
 
+QQmlListProperty<DesktopFileAction> Application::actions()
+{
+    auto countFunc = [](QQmlListProperty<DesktopFileAction> *prop) {
+        return static_cast<Application *>(prop->object)->m_desktopFile->actions().count();
+    };
+    auto atFunc = [](QQmlListProperty<DesktopFileAction> *prop, int i) {
+        return static_cast<Application *>(prop->object)->m_desktopFile->actions().at(i);
+    };
+    return QQmlListProperty<DesktopFileAction>(this, nullptr, countFunc, atFunc);
+}
+
 bool Application::launch(const QStringList &urls)
 {
     Q_UNUSED(urls);

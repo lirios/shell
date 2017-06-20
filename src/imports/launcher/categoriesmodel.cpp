@@ -25,6 +25,9 @@
  ***************************************************************************/
 
 #include <QtCore/QFileSystemWatcher>
+#include <QtCore/QFuture>
+#include <QtCore/QThread>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QtGui/QIcon>
 
 #include <qt5xdg/xdgmenu.h>
@@ -50,20 +53,24 @@ public:
 
 CategoriesModel::CategoriesModel(QObject *parent)
     : QAbstractListModel(parent)
+    , m_initialized(false)
     , m_allCategory(true)
 {
-    refresh();
+    qRegisterMetaType<CategoryEntry *>("CategoryEntry*");
+
+    QtConcurrent::run(CategoriesModel::refresh, this);
 
     QFileSystemWatcher *watcher = new QFileSystemWatcher(this);
     watcher->addPaths(xdgApplicationsPaths());
     connect(watcher, &QFileSystemWatcher::directoryChanged, this, [this](const QString &) {
-        refresh();
+        QtConcurrent::run(CategoriesModel::refresh, this);
     });
 }
 
 CategoriesModel::~CategoriesModel()
 {
-    qDeleteAll(m_list);
+    while (!m_list.isEmpty())
+        delete m_list.takeFirst();
 }
 
 bool CategoriesModel::isAllCategoryIncluded() const
@@ -76,11 +83,13 @@ void CategoriesModel::includeAllCategory(bool value)
     if (m_allCategory == value)
         return;
 
-    // Remove the item if it was previously included
+    // Add or remove the item
     if (m_allCategory) {
-        beginResetModel();
+        beginRemoveRows(QModelIndex(), 0, 0);
         delete m_list.takeAt(0);
-        endResetModel();
+        endRemoveRows();
+    } else {
+        createAllCategory();
     }
 
     m_allCategory = value;
@@ -111,6 +120,8 @@ QVariant CategoriesModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     CategoryEntry *item = m_list.at(index.row());
+    if (!item)
+        return QVariant();
 
     switch (role) {
     case Qt::DecorationRole:
@@ -131,23 +142,24 @@ QVariant CategoriesModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void CategoriesModel::refresh()
+void CategoriesModel::refresh(CategoriesModel *model)
 {
-    beginResetModel();
-
-    Q_EMIT refreshing();
-
-    qDeleteAll(m_list);
-    m_list.clear();
-
-    if (m_allCategory) {
-        CategoryEntry *allCategory = new CategoryEntry();
-        allCategory->name = tr("All");
-        allCategory->comment = tr("All categories");
-        allCategory->iconName = QStringLiteral("applications-other");
-        allCategory->category = QString();
-        m_list.append(allCategory);
+    // Create the 'All' category for the first time, if needed
+    if (!model->m_initialized) {
+        model->m_initialized = true;
+        if (model->m_allCategory)
+            QMetaObject::invokeMethod(model, "createAllCategory");
     }
+
+    // List of categories that are no longer in the menu, at first
+    // we assume that all of theme will have to be removed
+    QStringList toRemove;
+    for (CategoryEntry *category : qAsConst(model->m_list)) {
+        if (category->name != tr("All"))
+            toRemove.append(category->name);
+    }
+
+    QMetaObject::invokeMethod(model, "refreshing");
 
     XdgMenu xdgMenu;
     //xdgMenu.setLogDir(QStringLiteral("/tmp/"));
@@ -166,6 +178,25 @@ void CategoriesModel::refresh()
         QDomElement xml = it.next();
 
         if (xml.tagName() == QStringLiteral("Menu")) {
+            QString name = xml.attribute(QStringLiteral("name"));
+            if (!xml.attribute(QStringLiteral("title")).isEmpty())
+                name = xml.attribute(QStringLiteral("title"));
+
+            // This entry is still in the menu, we don't have to remove it
+            toRemove.removeOne(name);
+
+            // Do not add duplicate entries
+            bool found = false;
+            for (CategoryEntry *entry : qAsConst(model->m_list)) {
+                if (entry->name == name) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found)
+                break;
+
+            // Create entry
             CategoryEntry *entry = new CategoryEntry();
             if (!xml.attribute(QStringLiteral("title")).isEmpty())
                 entry->name = xml.attribute(QStringLiteral("title"));
@@ -174,15 +205,64 @@ void CategoriesModel::refresh()
             entry->comment = xml.attribute(QStringLiteral("comment"));
             entry->iconName = xml.attribute(QStringLiteral("icon"));
             entry->category = xml.attribute(QStringLiteral("name"));
-            m_list.append(entry);
+
+            // Add entry
+            QMetaObject::invokeMethod(model, "addEntry", Q_ARG(CategoryEntry*, entry));
         }
     }
 
+    // Remove categories that are no longer in the menu
+    //QMetaObject::invokeMethod(model, "cleanModel", Q_ARG(QStringList, toRemove));
+
+    // Sort
+    QMetaObject::invokeMethod(model, "sortModel");
+}
+
+void CategoriesModel::createAllCategory()
+{
+    beginInsertRows(QModelIndex(), 0, 0);
+    CategoryEntry *allCategory = new CategoryEntry();
+    allCategory->name = tr("All");
+    allCategory->comment = tr("All categories");
+    allCategory->iconName = QStringLiteral("applications-other");
+    allCategory->category = QString();
+    m_list.append(allCategory);
+    endInsertRows();
+}
+
+void CategoriesModel::addEntry(CategoryEntry *entry)
+{
+    beginInsertRows(QModelIndex(), m_list.count(), m_list.count());
+    m_list.append(entry);
+    endInsertRows();
+}
+
+void CategoriesModel::cleanModel(const QStringList &list)
+{
+    for (const QString &name : qAsConst(list)) {
+        auto it = m_list.begin();
+        while (it != m_list.end()) {
+            CategoryEntry *entry = (*it);
+            if (entry->name == name) {
+                int index = m_list.indexOf(entry);
+                beginRemoveRows(QModelIndex(), index, index);
+                it = m_list.erase(it);
+                endRemoveRows();
+                delete entry;
+            } else {
+                it++;
+            }
+        }
+    }
+}
+
+void CategoriesModel::sortModel()
+{
+    beginResetModel();
     if (m_allCategory)
         qSort(m_list.begin() + 1, m_list.end(), CategoryEntry::lessThan);
     else
         qSort(m_list.begin(), m_list.end(), CategoryEntry::lessThan);
-
     endResetModel();
 }
 

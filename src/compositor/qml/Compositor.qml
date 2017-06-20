@@ -349,12 +349,7 @@ WaylandCompositor {
 
     Launcher.LauncherModel {
         id: launcherModel
-        applicationManager: applicationManager
-    }
-
-    Launcher.AppsModel {
-        id: appsModel
-        applicationManager: applicationManager
+        sourceModel: applicationManager
     }
 
     DateTime {

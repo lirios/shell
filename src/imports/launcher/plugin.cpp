@@ -28,7 +28,6 @@
 
 #include "application.h"
 #include "applicationmanager.h"
-#include "appsmodel.h"
 #include "categoriesmodel.h"
 #include "frequentmodel.h"
 #include "launchermodel.h"
@@ -47,7 +46,6 @@ public:
         Q_ASSERT(uri == QLatin1String("Liri.Launcher"));
 
         qmlRegisterType<ApplicationManager>(uri, 0, 1, "ApplicationManager");
-        qmlRegisterType<AppsModel>(uri, 0, 1, "AppsModel");
         qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
         qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
         qmlRegisterType<PageModel>(uri, 0, 1, "PageModel");
@@ -55,6 +53,8 @@ public:
         qmlRegisterType<ProcessRunner>(uri, 0, 1, "ProcessRunner");
         qmlRegisterUncreatableType<Application>(uri, 0, 1, "Application",
                                                 QStringLiteral("Cannot instantiate Application"));
+        qmlRegisterUncreatableType<DesktopFileAction>(uri, 0, 1, "DesktopFileAction",
+                                                      QStringLiteral("Cannot instantiate DesktopFileAction"));
     }
 };
 

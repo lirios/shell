@@ -50,7 +50,7 @@ PagedGrid {
         id: appsProxyModel
         sourceModel: SortFilterProxyModel {
             id: appsCategoryProxyModel
-            sourceModel: appsModel
+            sourceModel: applicationManager
             filterRoleName: "categories"
             filterCaseSensitivity: Qt.CaseInsensitive
         }

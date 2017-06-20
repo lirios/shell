@@ -62,10 +62,17 @@ Q_SIGNALS:
     void refreshing();
 
 private:
+    bool m_initialized;
     QList<CategoryEntry *> m_list;
     bool m_allCategory;
 
-    void refresh();
+    static void refresh(CategoriesModel *model);
+
+private Q_SLOTS:
+    void createAllCategory();
+    void addEntry(CategoryEntry *entry);
+    void cleanModel(const QStringList &list);
+    void sortModel();
 };
 
 QML_DECLARE_TYPE(CategoriesModel)

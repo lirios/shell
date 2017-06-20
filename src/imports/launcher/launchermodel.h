@@ -27,65 +27,29 @@
 #ifndef LAUNCHERMODEL_H
 #define LAUNCHERMODEL_H
 
-#include <QtCore/QAbstractListModel>
+#include <QtCore/QSortFilterProxyModel>
 #include <QtQml/QQmlComponent>
 
 class Application;
 class ApplicationManager;
 
-class LauncherModel : public QAbstractListModel
+class LauncherModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(ApplicationManager *applicationManager READ applicationManager WRITE setApplicationManager NOTIFY applicationManagerChanged)
 public:
-    enum Roles
-    {
-        AppIdRole = Qt::UserRole + 1,
-        DesktopFileRole,
-        NameRole,
-        CommentRole,
-        IconNameRole,
-        PinnedRole,
-        RunningRole,
-        StartingRole,
-        ActiveRole,
-        HasWindowsRole,
-        HasCountRole,
-        CountRole,
-        HasProgressRole,
-        ProgressRole
-    };
-    Q_ENUM(Roles)
+    explicit LauncherModel(QObject *parent = nullptr);
 
-    LauncherModel(QObject *parent = nullptr);
+    void setSourceModel(QAbstractItemModel *sourceModel) override;
 
-    ApplicationManager *applicationManager() const;
-
-    QHash<int, QByteArray> roleNames() const override;
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-
-    Q_INVOKABLE Application *get(int index) const;
+    Q_INVOKABLE Application *get(int row) const;
     Q_INVOKABLE int indexFromAppId(const QString &appId) const;
 
-public Q_SLOTS:
-    void setApplicationManager(ApplicationManager *appMan);
-    void setupConnections(Application *app);
-
-Q_SIGNALS:
-    void applicationManagerChanged();
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    bool lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const override;
 
 private:
-    ApplicationManager *m_appMan = nullptr;
-    QList<Application *> m_apps;
-
-    int pinAtIndex() const;
-
-    bool moveRows(int sourceRow, int count, int destinationChild);
-    bool moveRows(const QModelIndex &sourceParent, int sourceRow, int count,
-                  const QModelIndex &destinationParent, int destinationChild) Q_DECL_OVERRIDE;
+    ApplicationManager *m_appMan;
 };
 
 QML_DECLARE_TYPE(LauncherModel)
