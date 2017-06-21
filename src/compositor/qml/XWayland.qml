@@ -67,7 +67,7 @@ LXW.XWayland {
 
             // This item stores the window global position, that is sent to us
             // by XWayland - this can never be the drag target for the decoration
-            Item {
+            MoveItem {
                 id: moveItem
 
                 parent: rootItem
