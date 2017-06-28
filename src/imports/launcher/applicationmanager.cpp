@@ -292,6 +292,9 @@ void ApplicationManager::refresh(ApplicationManager *manager)
                     toRemove.removeOne(appId);
 
                     // Ignore desktop files that do not exists
+                    desktopFileName =
+                            QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                                   appId + QStringLiteral(".desktop"));
                     if (!QFileInfo::exists(desktopFileName))
                         continue;
 
