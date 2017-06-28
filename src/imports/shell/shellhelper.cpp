@@ -68,7 +68,7 @@ public:
             //env.insert(QLatin1String("WAYLAND_DEBUG"), "1");
             process->setProcessEnvironment(env);
 
-            qCDebug(gLcShell) << "Starting shell helper...";
+            qCDebug(gLcShell, "Starting shell helper (%s)...", INSTALL_LIBEXECDIR "/liri-shell-helper");
             process->start(QLatin1String(INSTALL_LIBEXECDIR "/liri-shell-helper"));
             if (Q_LIKELY(process->waitForStarted())) {
                 return;
