@@ -33,6 +33,7 @@ LXW.XWayland {
     manager: LXW.XWaylandManager {
         id: manager
         onCreated: {
+            console.debug("Starting shell helper on", compositor.socketName);
             shellHelper.start(compositor.socketName);
         }
         onShellSurfaceRequested: {
@@ -40,6 +41,10 @@ LXW.XWayland {
             shellSurface.initialize(manager, window, geometry, overrideRedirect, parentShellSurface);
         }
         onShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, xchromeComponent)
+    }
+
+    onServerStarted: {
+        console.debug("Xwayland server started");
     }
 
     Component {

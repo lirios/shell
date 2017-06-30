@@ -66,6 +66,7 @@ WaylandCompositor {
 
     onCreatedChanged: {
         if (compositor.created) {
+            console.debug("Compositor created");
             if (xwaylandLoader.status == Loader.Ready)
                 xwaylandLoader.item.startServer();
             else
