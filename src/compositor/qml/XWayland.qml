@@ -32,6 +32,9 @@ LXW.XWayland {
     enabled: true
     manager: LXW.XWaylandManager {
         id: manager
+        onCreated: {
+            shellHelper.start(compositor.socketName);
+        }
         onShellSurfaceRequested: {
             var shellSurface = shellSurfaceComponent.createObject(manager);
             shellSurface.initialize(manager, window, geometry, overrideRedirect, parentShellSurface);

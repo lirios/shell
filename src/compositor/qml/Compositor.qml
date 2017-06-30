@@ -329,9 +329,7 @@ WaylandCompositor {
     Loader {
         id: xwaylandLoader
         active: true
-        sourceComponent: XWayland {
-            onServerStarted: shellHelper.start(compositor.socketName)
-        }
+        sourceComponent: XWayland {}
     }
 
     /*
