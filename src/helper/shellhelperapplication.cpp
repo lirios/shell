@@ -24,10 +24,10 @@
 #include <QtCore/QThread>
 #include <QtCore/private/qobject_p.h>
 #include <QtGui/QWindow>
+#include <QtGui/qpa/qwindowsysteminterface.h>
 
 #include <LiriWaylandClient/ClientConnection>
 #include <LiriWaylandClient/Registry>
-#include <LiriWaylandClient/Surface>
 
 #include "shellhelperapplication.h"
 
@@ -146,4 +146,6 @@ void ShellHelperApplication::handleCursorChangeRequest(ShellHelperClient::GrabCu
     }
 
     d->grabWindow->setCursor(newCursor);
+
+    QWindowSystemInterface::handleEnterLeaveEvent(d->grabWindow, d->grabWindow, QPointF(0, 0), QPointF(0, 0));
 }

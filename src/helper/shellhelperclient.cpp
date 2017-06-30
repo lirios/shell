@@ -77,6 +77,7 @@ quint32 ShellHelperClient::name() const
 void ShellHelperClient::initialize(Registry *registry, quint32 name, quint32 version)
 {
     Q_D(ShellHelperClient);
+    d->name = name;
     d->init(RegistryPrivate::get(registry)->registry, name, version);
 }
 
