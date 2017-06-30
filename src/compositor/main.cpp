@@ -145,11 +145,11 @@ int main(int argc, char *argv[])
     QString fakeScreenData = parser.value(fakeScreenOption);
 
     // Print version information
-    qDebug("== Liri Shell v%s ==\n"
-           "** http://liri.io\n"
-           "** Bug reports to: https://github.com/lirios/shell/issues\n"
-           "** Build: %s-%s",
-           LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
+    qInfo("== Liri Shell v%s ==\n"
+          "** http://liri.io\n"
+          "** Bug reports to: https://github.com/lirios/shell/issues\n"
+          "** Build: %s-%s",
+          LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
 
     // Application
     Application *shell = new Application();

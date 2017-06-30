@@ -65,11 +65,11 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
 
     // Print version information
-    qDebug("== Liri Shell Helper v%s ==\n"
-           "** http://liri.io\n"
-           "** Bug reports to: https://github.com/lirios/shell/issues\n"
-           "** Build: %s-%s",
-           LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
+    qInfo("== Liri Shell Helper v%s ==\n"
+          "** http://liri.io\n"
+          "** Bug reports to: https://github.com/lirios/shell/issues\n"
+          "** Build: %s-%s",
+          LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
 
     // Create shell helper
     new ShellHelperApplication();
