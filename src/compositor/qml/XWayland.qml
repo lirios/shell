@@ -42,6 +42,9 @@ LXW.XWayland {
         }
         onShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, xchromeComponent)
     }
+    onServerFailedToStart: {
+        shellHelper.start(compositor.socketName);
+    }
 
     onServerStarted: {
         console.debug("Xwayland server started");
