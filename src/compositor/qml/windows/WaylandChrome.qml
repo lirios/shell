@@ -109,7 +109,7 @@ ChromeItem {
 
         function giveFocusToParent() {
             // Give focus back to the parent on destruction
-            var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
+            var parentSurfaceItem = output.viewsBySurface[shellSurfaceItem.parentWlSurface];
             if (parentSurfaceItem)
                 parentSurfaceItem.takeFocus();
         }
@@ -117,6 +117,9 @@ ChromeItem {
 
     ShellSurfaceItem {
         id: shellSurfaceItem
+
+        property int windowType: Qt.Window
+        property WaylandSurface parentWlSurface: null
 
         property bool moving: false
 
@@ -131,6 +134,22 @@ ChromeItem {
         focusOnClick: shellSurface.windowType != Qt.Popup
         onSurfaceDestroyed: {
             bufferLocked = true;
+
+            switch (windowType) {
+            case Qt.Window:
+                topLevelDestroyAnimation.start();
+                break;
+            case Qt.SubWindow:
+                transientDestroyAnimation.start();
+                break;
+            case Qt.Popup:
+                popupDestroyAnimation.start();
+                break;
+            default:
+                __private.giveFocusToParent();
+                chrome.destroy();
+                break;
+            }
         }
         onMovingChanged: shellHelper.grabCursor(moving ? ShellHelper.MoveGrabCursor : ShellHelper.ArrowGrabCursor)
         onMouseRelease: {
@@ -152,7 +171,7 @@ ChromeItem {
                 if (shellSurface.mapped) {
                     __private.setPosition();
 
-                    switch (shellSurface.windowType) {
+                    switch (shellSurfaceItem.windowType) {
                     case Qt.Window:
                         topLevelMapAnimation.start();
                         break;
@@ -165,23 +184,15 @@ ChromeItem {
                     default:
                         break;
                     }
-                } else {
-                    switch (shellSurface.windowType) {
-                    case Qt.Window:
-                        topLevelDestroyAnimation.start();
-                        break;
-                    case Qt.SubWindow:
-                        transientDestroyAnimation.start();
-                        break;
-                    case Qt.Popup:
-                        popupDestroyAnimation.start();
-                        break;
-                    default:
-                        __private.giveFocusToParent();
-                        chrome.destroy();
-                        break;
-                    }
                 }
+            }
+            onWindowTypeChanged: {
+                // Save window type to be able to use it on destruction
+                shellSurfaceItem.windowType = shellSurface.windowType;
+            }
+            onParentWlSurfaceChanged: {
+                // Save parent surface to able to use it on destruction
+                shellSurfaceItem.parentWlSurface = shellSurface.parentWlSurface;
             }
             onActivatedChanged: {
                 if (shellSurface.activated) {
