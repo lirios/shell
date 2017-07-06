@@ -30,7 +30,9 @@ LWSP.XdgSurfaceV5 {
 
     readonly property alias mapped: details.mapped
     property bool minimized: false
+
     property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
+    property string iconName: "unknown"
 
     property WaylandSurface parentWlSurface: parentSurface ? parentSurface.surface : null
 
@@ -52,17 +54,23 @@ LWSP.XdgSurfaceV5 {
     }
 
     onActivatedChanged: {
-        if (details.registered && activated)
+        if (details.registered && activated && windowType != Qt.Popup)
             applicationManager.focusShellSurface(xdgSurface);
     }
     onCanonicalAppIdChanged: {
-        if (!details.registered && canonicalAppId) {
+        if (!details.registered && canonicalAppId && windowType != Qt.Popup) {
+            // Register application
             applicationManager.registerShellSurface(xdgSurface);
             details.registered = true;
 
+            // Focus icon in the panel
             if (activated)
                 applicationManager.focusShellSurface(xdgSurface);
         }
+
+        // Set icon name when appId changes
+        var appIconName = applicationManager.getIconName(canonicalAppId);
+        iconName = appIconName ? appIconName : "unknown";
     }
     onSetTopLevel: {
         offset.x = 0;

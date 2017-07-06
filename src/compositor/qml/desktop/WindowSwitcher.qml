@@ -84,7 +84,7 @@ Popup {
                 }
                 width: FluidControls.Units.iconSizes.large
                 height: width
-                name: view.iconName
+                name: view.shellSurface.iconName
                 cache: false
                 z: 1
             }

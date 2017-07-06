@@ -29,7 +29,7 @@ LWSP.XdgPopupV5 {
     id: xdgPopup
 
     readonly property alias mapped: details.mapped
-    property string canonicalAppId
+    property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
 
     property bool decorated: false
     property bool hasDropShadow: false

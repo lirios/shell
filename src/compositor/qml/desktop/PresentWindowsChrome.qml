@@ -119,7 +119,7 @@ Item {
                 centerIn: parent
                 margins: FluidControls.Units.smallSpacing
             }
-            name: view.iconName || view.shellSurface.iconName
+            name: view.shellSurface.iconName
             width: FluidControls.Units.iconSizes.large
             height: width
         }

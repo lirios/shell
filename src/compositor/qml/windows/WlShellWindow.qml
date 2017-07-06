@@ -33,7 +33,9 @@ LWSP.WlShellSurface {
     property bool minimized: false
     property bool maximized: false
     property bool fullscreen: false
+
     property string canonicalAppId: applicationManager.canonicalizeAppId(className)
+    property string iconName: "unknown"
 
     property bool decorated: false
     property bool hasDropShadow: !maximized && !fullscreen
@@ -54,17 +56,23 @@ LWSP.WlShellSurface {
     }
 
     onActivatedChanged: {
-        if (details.registered && activated)
+        if (details.registered && activated && windowType != Qt.Popup)
             applicationManager.focusShellSurface(wlShellSurface);
     }
     onCanonicalAppIdChanged: {
-        if (!details.registered && canonicalAppId) {
+        if (!details.registered && canonicalAppId && windowType != Qt.Popup) {
+            // Register application
             applicationManager.registerShellSurface(wlShellSurface);
             details.registered = true;
 
+            // Focus icon in the panel
             if (activated)
                 applicationManager.focusShellSurface(wlShellSurface);
         }
+
+        // Set icon name when appId changes
+        var appIconName = applicationManager.getIconName(canonicalAppId);
+        iconName = appIconName ? appIconName : "unknown";
     }
     onSetDefaultToplevel: {
         maximized = false;
