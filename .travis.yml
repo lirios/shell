@@ -25,6 +25,7 @@ arch:
     - qtgsettings-artifacts.tar.gz
     - fluid-artifacts.tar.gz
     - libliri-artifacts.tar.gz
+    - qbs-shared-artifacts.tar.gz
   packages:
     - qbs
     - qt5-declarative
