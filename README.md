@@ -66,10 +66,10 @@ On the last `qbs` line, you can specify additional configuration parameters at t
 The following are only needed if `qbs.installPrefix` is a system-wide path such as `usr`
 and the default value doesn't suit your needs. All are relative to `qbs.installRoot`:
 
- * `lirideployment.libDir:path/to/lib` where libraries are installed (default: `lib`)
- * `lirideployment.qmlDir:path/to/qml` where QML plugins are installed (default: `lib/qml`)
- * `lirideployment.pluginsDir:path/to/plugins` where Qt plugins are installed (default: `lib/plugins`)
- * `lirideployment.qbsModulesDir:path/to/qbs` where Qbs modules are installed (default: `share/qbs/modules`)
+ * `modules.lirideployment.libDir:path/to/lib` where libraries are installed (default: `lib`)
+ * `modules.lirideployment.qmlDir:path/to/qml` where QML plugins are installed (default: `lib/qml`)
+ * `modules.lirideployment.pluginsDir:path/to/plugins` where Qt plugins are installed (default: `lib/plugins`)
+ * `modules.lirideployment.qbsModulesDir:path/to/qbs` where Qbs modules are installed (default: `share/qbs/modules`)
 
 See [lirideployment.qbs](https://github.com/lirios/qbs-shared/blob/develop/modules/lirideployment/lirideployment.qbs)
 for more deployment-related parameters.
