@@ -31,7 +31,7 @@ Qt >= 5.8.0 with at least the following modules is required:
 
 The following modules and their dependencies are required:
 
- * [ECM >= 1.7.0](http://quickgit.kde.org/?p=extra-cmake-modules.git)
+ * [qbs-shared](https://github.com/lirios/qbs-shared.git)
  * [fluid](https://github.com/lirios/fluid)
  * [qtaccountsservice](https://github.com/lirios/qtaccountsservice)
  * [qtgsettings](https://github.com/lirios/qtgsettings)
@@ -71,7 +71,8 @@ and the default value doesn't suit your needs. All are relative to `qbs.installR
  * `lirideployment.pluginsDir:path/to/plugins` where Qt plugins are installed (default: `lib/plugins`)
  * `lirideployment.qbsModulesDir:path/to/qbs` where Qbs modules are installed (default: `share/qbs/modules`)
 
-See `qbs/shared/modules/lirideployment/lirideployment.qbs` for more deployment-related parameters.
+See [lirideployment.qbs](https://github.com/lirios/qbs-shared/blob/develop/modules/lirideployment/lirideployment.qbs)
+for more deployment-related parameters.
 
 You can also specify the following options:
 

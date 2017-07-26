@@ -12,8 +12,6 @@ Project {
 
     minimumQbsVersion: "1.8.0"
 
-    qbsSearchPaths: ["qbs/shared"]
-
     references: [
         "3rdparty/3rdparty.qbs",
         "data/data.qbs",
