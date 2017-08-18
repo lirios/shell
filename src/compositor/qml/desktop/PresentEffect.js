@@ -48,6 +48,9 @@ function spreadWindows() {
 
         row.windows.forEach(function(pos) {
             var shellSurface = compositor.shellSurfaces.get(pos.index).shellSurface;
+            if (!shellSurface)
+                continue;
+
             var entry = output.viewsBySurface[shellSurface.surface];
 
             // Calculate position and size
@@ -93,6 +96,9 @@ function restoreWindows() {
     // visible again on restore
     for (var i = 0; i < compositor.shellSurfaces.count; i++) {
         var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+        if (!shellSurface)
+            continue;
+
         var entry = output.viewsBySurface[shellSurface.surface];
 
         // Ignore undefined entries, happens with some Qt wl-shell clients
@@ -145,6 +151,9 @@ function tryLayout(rows) {
 
     for (i = 0; i < compositor.shellSurfaces.count; i++) {
         shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+        if (!shellSurface)
+            continue;
+
         entry = output.viewsBySurface[shellSurface.surface];
 
         // Ignore undefined entries, happens with some Qt wl-shell clients
@@ -164,6 +173,9 @@ function tryLayout(rows) {
 
     for (i = 0; i < compositor.shellSurfaces.count; i++) {
         shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+        if (!shellSurface)
+            continue;
+
         entry = output.viewsBySurface[shellSurface.surface];
 
         // Ignore undefined entries, happens with some Qt wl-shell clients
@@ -240,6 +252,9 @@ function calcSpacing() {
 
     for (i = 0; i < compositor.shellSurfaces.count; i++) {
         shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+        if (!shellSurface)
+            continue;
+
         entry = output.viewsBySurface[shellSurface.surface];
 
         // Ignore undefined entries, happens with some Qt wl-shell clients

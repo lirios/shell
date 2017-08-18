@@ -130,6 +130,9 @@ LiriShell.PanelItem {
         // Minimize or unminimize shell surfaces
         for (var i = 0; i < compositor.shellSurfaces.count; i++) {
             var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+            if (!shellSurface)
+                continue;
+
             if (shellSurface.canonicalAppId === model.appId) {
                 // Task icon position
                 var pt = screenView.mapFromItem(launcherItem, launcherItem.width * 0.5, launcherItem.height * 0.5);
