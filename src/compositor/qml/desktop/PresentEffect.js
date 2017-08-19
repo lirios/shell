@@ -49,7 +49,7 @@ function spreadWindows() {
         row.windows.forEach(function(pos) {
             var shellSurface = compositor.shellSurfaces.get(pos.index).shellSurface;
             if (!shellSurface)
-                continue;
+                return;
 
             var entry = output.viewsBySurface[shellSurface.surface];
 
