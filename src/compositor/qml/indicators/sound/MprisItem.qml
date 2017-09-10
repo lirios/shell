@@ -31,7 +31,7 @@ import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
 import Vibe.Mpris 1.0
 
-FluidControls.BaseListItem {
+FluidControls.ListItem {
     property var player
 
     topPadding: 16
