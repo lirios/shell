@@ -29,7 +29,6 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Fluid.Material 1.0 as FluidMaterial
 
 Rectangle {
     property bool hovered: false
@@ -81,7 +80,7 @@ Rectangle {
         width: parent.width - 2 * FluidControls.Units.smallSpacing
     }
 
-    FluidMaterial.Ripple {
+    FluidControls.Ripple {
         anchors.fill: parent
 
         onClicked: {

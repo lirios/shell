@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
-import Fluid.Material 1.0
+import Fluid.Effects 1.0 as FluidEffects
 
 Popup {
     id: launcherPopOver
@@ -88,7 +88,7 @@ Popup {
                         height: parent.parent.height
 
                         layer.enabled: true
-                        layer.effect: ElevationEffect {
+                        layer.effect: FluidEffects.Elevation {
                             elevation: 2
                         }
                     }

@@ -27,7 +27,7 @@ import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 import Fluid.Controls 1.0
-import Fluid.Material 1.0
+import Fluid.Effects 1.0 as FluidEffects
 import Liri.Shell 1.0
 import "../indicators"
 import "../launcher"
@@ -101,7 +101,7 @@ Rectangle {
                 radius: 2
                 color: panel.darkColor
                 layer.enabled: !panel.maximized
-                layer.effect: ElevationEffect {
+                layer.effect: FluidEffects.Elevation {
                     elevation: 8
                 }
 
@@ -136,7 +136,7 @@ Rectangle {
                 radius: 2
                 color: panel.darkColor
                 layer.enabled: !panel.maximized
-                layer.effect: ElevationEffect {
+                layer.effect: FluidEffects.Elevation {
                     elevation: 8
                 }
 

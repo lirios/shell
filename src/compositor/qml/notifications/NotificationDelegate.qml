@@ -28,7 +28,7 @@ import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Core 1.0 as FluidCore
 import Fluid.Controls 1.0 as FluidControls
-import Fluid.Material 1.0 as FluidMaterial
+import Fluid.Effects 1.0 as FluidEffects
 import "../components" as ShellComponents
 
 Item {
@@ -88,7 +88,7 @@ Item {
         anchors.fill: parent
 
         layer.enabled: true
-        layer.effect: FluidMaterial.ElevationEffect {
+        layer.effect: FluidEffects.Elevation {
             elevation: 8
         }
 

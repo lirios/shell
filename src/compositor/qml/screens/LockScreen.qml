@@ -27,7 +27,6 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
 import Fluid.Effects 1.0
-import Fluid.Material 1.0
 import QtAccountsService 1.0
 import Liri.Shell 1.0
 import "../indicators"
@@ -180,7 +179,7 @@ Showable {
                         radius: 2
                         color: Material.dialogColor
                         layer.enabled: true
-                        layer.effect: ElevationEffect {
+                        layer.effect: Elevation {
                             elevation: 8
                         }
 

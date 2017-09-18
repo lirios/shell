@@ -25,7 +25,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Fluid.Material 1.0 as FluidMaterial
+import Fluid.Effects 1.0 as FluidEffects
 
 Control {
     id: decoration
@@ -41,7 +41,7 @@ Control {
 
     // FIXME: Transparent backgrounds will be opaque due to shadows
     layer.enabled: hasDropShadow
-    layer.effect: FluidMaterial.ElevationEffect {
+    layer.effect: FluidEffects.Elevation {
         elevation: shellSurfaceItem.focus ? 24 : 8
     }
 

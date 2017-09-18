@@ -28,7 +28,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Liri.WaylandServer 1.0
 import Fluid.Controls 1.0 as FluidControls
-import Fluid.Material 1.0 as FluidMaterial
+import Fluid.Effects 1.0 as FluidEffects
 import "../components" as Components
 import "../screens"
 
@@ -169,7 +169,7 @@ Item {
 
             // All the necessary for the "present" mode
             layer.enabled: false
-            layer.effect: FluidMaterial.ElevationEffect {
+            layer.effect: FluidEffects.Elevation {
                 elevation: 24
             }
             states: [

@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Fluid.Material 1.0 as FluidMaterial
+import Fluid.Effects 1.0 as FluidEffects
 
 FluidControls.Showable {
     //! How long the overlay will stay on screen
@@ -90,7 +90,7 @@ FluidControls.Showable {
         opacity: 0.0
 
         layer.enabled: true
-        layer.effect: FluidMaterial.ElevationEffect {
+        layer.effect: FluidEffects.Elevation {
             elevation: 8
         }
 
