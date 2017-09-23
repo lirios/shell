@@ -24,10 +24,9 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#pragma once
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <LiriWaylandServer/HomeApplication>
 
@@ -41,7 +40,7 @@ class Application : public QObject
 {
     Q_OBJECT
 public:
-    Application(QObject *parent = Q_NULLPTR);
+    explicit Application(QObject *parent = nullptr);
 
     bool isAutostartEnabled() const;
     void setAutostartEnabled(bool enabled);
@@ -50,7 +49,7 @@ public:
     void setUrl(const QUrl &url);
 
 protected:
-    void customEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void customEvent(QEvent *event) override;
 
 private:
     QUrl m_url;
@@ -74,5 +73,3 @@ class StartupEvent : public QEvent
 public:
     StartupEvent();
 };
-
-#endif // APPLICATION_H

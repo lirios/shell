@@ -42,7 +42,7 @@
 #  include <systemd/sd-daemon.h>
 #endif
 
-static const QEvent::Type StartupEventType = (QEvent::Type)QEvent::registerEventType();
+static const QEvent::Type StartupEventType = static_cast<QEvent::Type>(QEvent::registerEventType());
 
 Application::Application(QObject *parent)
     : QObject(parent)
@@ -140,7 +140,7 @@ void Application::startup()
     QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
     if (compositor) {
 #if HAVE_SYSTEMD
-        connect(compositor, &QWaylandCompositor::createdChanged, this, [this] {
+        connect(compositor, &QWaylandCompositor::createdChanged, this, [] {
             // Notify systemd when the Wayland socket is available
             sd_notify(0, "READY=1");
         });
