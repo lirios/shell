@@ -97,19 +97,21 @@ void Listener::initiateAuthentication(const QString &actionId,
         }
     }
 
-    // Can we find root?
-    found = false;
-    pw = ::getpwnam("root");
-    for (int i = 0; i < identities.size(); i++) {
-        PolkitQt1::Identity identity = identities.at(i);
+    if (!found) {
+        // Can we find root?
+        pw = ::getpwnam("root");
+        for (int i = 0; i < identities.size(); i++) {
+            PolkitQt1::Identity identity = identities.at(i);
 
-        if (identity.toUnixUserIdentity().uid() == pw->pw_uid) {
-            found = true;
-            m_realName = tr("Administrator");
-            uidToAuthenticate = identity.toUnixUserIdentity().uid();
-            break;
+            if (identity.toUnixUserIdentity().uid() == pw->pw_uid) {
+                found = true;
+                m_realName = tr("Administrator");
+                uidToAuthenticate = identity.toUnixUserIdentity().uid();
+                break;
+            }
         }
     }
+
     if (!found) {
         PolkitQt1::Identity identity = identities.at(0);
         uidToAuthenticate = identity.toUnixUserIdentity().uid();
