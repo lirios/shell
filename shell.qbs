@@ -5,6 +5,8 @@ Project {
 
     readonly property string version: "0.9.0"
 
+    property bool useStaticAnalyzer: false
+
     property bool developmentBuild: false
     property string systemdUserUnitDir: "lib/systemd/user"
 
