@@ -33,8 +33,8 @@ LXW.XWayland {
     manager: LXW.XWaylandManager {
         id: manager
         onCreated: {
-            console.debug("Starting shell helper on", compositor.socketName);
-            shellHelper.start(compositor.socketName);
+            console.debug("Starting shell helper on", liriCompositor.socketName);
+            shellHelper.start(liriCompositor.socketName);
         }
         onShellSurfaceRequested: {
             var shellSurface = shellSurfaceComponent.createObject(manager);
@@ -43,7 +43,7 @@ LXW.XWayland {
         onShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, xchromeComponent)
     }
     onServerFailedToStart: {
-        shellHelper.start(compositor.socketName);
+        shellHelper.start(liriCompositor.socketName);
     }
 
     onServerStarted: {

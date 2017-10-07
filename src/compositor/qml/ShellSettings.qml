@@ -56,7 +56,7 @@ FluidCore.Object {
 
     CompositorSettings {
         id: compositorSettings
-        compositor: compositor
+        compositor: liriCompositor
     }
 
     Settings.GSettings {

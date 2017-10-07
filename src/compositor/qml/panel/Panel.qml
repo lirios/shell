@@ -42,8 +42,8 @@ Rectangle {
     property real size: 56
     property color darkColor: Material.dialogColor
 
-    property bool showing: !compositor.hasFullscreenShellSurfaces
-    property bool maximized: compositor.hasMaxmizedShellSurfaces
+    property bool showing: !liriCompositor.hasFullscreenShellSurfaces
+    property bool maximized: liriCompositor.hasMaxmizedShellSurfaces
 
     color: maximized ? darkColor : "transparent"
 

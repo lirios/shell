@@ -45,7 +45,9 @@ public:
     bool isAutostartEnabled() const;
     void setAutostartEnabled(bool enabled);
 
-    void setScreenConfiguration(const QString &fakeScreenData);
+    QString screenConfigurationFileName() const;
+    void setScreenConfigurationFileName(const QString &fileName);
+
     void setUrl(const QUrl &url);
 
 protected:
@@ -59,6 +61,7 @@ private:
     bool m_failSafe;
     bool m_started;
     bool m_autostartEnabled;
+    QString m_screenConfigFileName;
 
 private Q_SLOTS:
     void startup();

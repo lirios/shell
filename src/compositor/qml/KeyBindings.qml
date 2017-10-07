@@ -60,9 +60,8 @@ Item {
         id: d
 
         function switchToWorkspace(number) {
-            var i;
-            for (i = 0; i < compositor.outputs.length; i++)
-                compositor.outputs[i].screenView.layers.workspaces.select(number);
+            for (var i = 0; i < liriCompositor.screenManager.count; i++)
+                liriCompositor.screenManager.objectAt(i).screenView.layers.workspaces.select(number);
         }
     }
 
@@ -78,9 +77,8 @@ Item {
         onActivated: {
             showInformation = !showInformation;
 
-            var i;
-            for (i = 0; i < compositor.outputs.length; i++)
-                compositor.outputs[i].screenView.showInformation = showInformation;
+            for (var i = 0; i < liriCompositor.screenManager.count; i++)
+                liriCompositor.screenManager.objectAt(i).screenView.showInformation = showInformation;
         }
     }
 
@@ -164,9 +162,8 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspaceLeft
         onActivated: {
-            var i;
-            for (i = 0; i < compositor.outputs.length; i++)
-                compositor.outputs[i].screenView.layers.workspaces.selectPrevious();
+            for (var i = 0; i < liriCompositor.screenManager.count; i++)
+                liriCompositor.screenManager.objectAt(i).screenView.layers.workspaces.selectPrevious();
         }
     }
 
@@ -174,9 +171,8 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspaceRight
         onActivated: {
-            var i;
-            for (i = 0; i < compositor.outputs.length; i++)
-                compositor.outputs[i].screenView.layers.workspaces.selectNext();
+            for (var i = 0; i < liriCompositor.screenManager.count; i++)
+                liriCompositor.screenManager.objectAt(i).screenView.layers.workspaces.selectNext();
         }
     }
 
@@ -194,9 +190,9 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspaceLast
         onActivated: {
-            var i, index = compositor.settings.numWorkspaces - 1;
-            for (i = 0; i < compositor.outputs.length; i++)
-                compositor.outputs[i].screenView.layers.workspaces.select(index);
+            var index = liriCompositor.settings.numWorkspaces - 1;
+            for (var i = 0; i < liriCompositor.screenManager.count; i++)
+                liriCompositor.screenManager.objectAt(i).screenView.layers.workspaces.select(index);
         }
     }
 
@@ -218,9 +214,9 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.showDesktop
         onActivated: {
-            var i, workspace;
-            for (i = 0; i < compositor.outputs.length; i++) {
-                workspace = compositor.outputs[i].surfacesArea;
+            var workspace;
+            for (var i = 0; i < liriCompositor.screenManager.count; i++) {
+                workspace = liriCompositor.objectAt(i).surfacesArea;
                 if (workspace.state === "reveal")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")
@@ -233,9 +229,9 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.presentWindows
         onActivated: {
-            var i, workspace;
-            for (i = 0; i < compositor.outputs.length; i++) {
-                workspace = compositor.outputs[i].screenView.surfacesArea;
+            var workspace;
+            for (var i = 0; i < liriCompositor.screenManager.count; i++) {
+                workspace = liriCompositor.objectAt(i).screenView.surfacesArea;
                 if (workspace.state === "present")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")
@@ -248,7 +244,7 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.mainMenu
         onActivated: {
-            var panel = compositor.defaultOutput.screenView.desktop.panel
+            var panel = liriCompositor.defaultOutput.screenView.desktop.panel
             panel.launcherIndicator.clicked(null)
         }
     }
@@ -599,7 +595,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.runCommand
-        onActivated: compositor.defaultOutput.screenView.runCommand.open()
+        onActivated: liriCompositor.defaultOutput.screenView.runCommand.open()
     }
 
     Shortcut {

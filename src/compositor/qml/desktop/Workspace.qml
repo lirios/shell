@@ -70,9 +70,8 @@ Item {
     onChildrenChanged: {
         switch (state) {
         case "present":
-            compositor.outputs.forEach(function(o) {
-                o.surfacesArea.state = "normal";
-            });
+            for (var i = 0; i < liriCompositor.screenManager.count; i++)
+                liriCompositor.screenManager.objectAt(i).surfacesArea.state = "normal";
             break;
         case "reveal":
             reveal();
@@ -136,9 +135,9 @@ Item {
         // Loop over windows
         console.time("reveal loop " + output.model);
         var x, y;
-        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
+        for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
             // Get a hold of the shell surface
-            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+            var shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
             var view = output.viewsBySurface[shellSurface.surface];
 
             // Skip shell surfaces not rendered on this output
@@ -170,9 +169,9 @@ Item {
 
     function revealRestore() {
         // Restore windows position
-        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
+        for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
             // Get a hold of the shell surface
-            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+            var shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
             var view = output.viewsBySurface[shellSurface.surface];
 
             var pos = __private.storage[view];

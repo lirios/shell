@@ -48,7 +48,7 @@ Popup {
         id: thumbnailComponent
 
         Rectangle {
-            readonly property var view: compositor.defaultOutput.viewsBySurface[shellSurface.surface]
+            readonly property var view: liriCompositor.defaultOutput.viewsBySurface[shellSurface.surface]
             readonly property string title: shellSurface.title ? shellSurface.title : qsTr("Untitled")
             readonly property real ratio: view.width / view.height
 
@@ -101,7 +101,7 @@ Popup {
             clip: true
             focus: true
             orientation: ListView.Horizontal
-            model: compositor.shellSurfaces
+            model: liriCompositor.shellSurfaces
             spacing: FluidControls.Units.smallSpacing
             highlightMoveDuration: FluidControls.Units.shortDuration
             delegate: thumbnailComponent

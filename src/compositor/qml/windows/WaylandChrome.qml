@@ -47,7 +47,7 @@ ChromeItem {
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
 
-    onMoveRequested: shellSurface.startMove(compositor.defaultSeat)
+    onMoveRequested: shellSurface.startMove(liriCompositor.defaultSeat)
 
     transform: [
         Scale {
@@ -101,7 +101,7 @@ ChromeItem {
                 moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y;
             } else {
                 var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
-                var pos = chrome.randomPosition(compositor.mousePos, size);
+                var pos = chrome.randomPosition(liriCompositor.mousePos, size);
                 moveItem.x = pos.x;
                 moveItem.y = pos.y;
             }

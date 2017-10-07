@@ -23,17 +23,21 @@
  ***************************************************************************/
 
 import QtQuick 2.5
-import QtQuick.Window 2.0
+import QtQuick.Window 2.3
 import QtQuick.Controls 2.0
 import QtWayland.Compositor 1.0
-import Liri.WaylandServer 1.0
-import Liri.Shell 1.0
+import Liri.WaylandServer 1.0 as LiriWayland
+import Liri.Shell 1.0 as LiriShell
 import "desktop"
 
-ExtendedOutput {
+LiriWayland.WaylandOutput {
     id: output
 
-    readonly property bool primary: compositor.defaultOutput === this
+    property bool primary: false
+
+    property alias screen: outputSettings.screen
+    property alias windowScreen: outputWindow.screen
+    property alias powerState: outputSettings.powerState
 
     property var viewsBySurface: ({})
 
@@ -44,30 +48,35 @@ ExtendedOutput {
     //readonly property alias idleDimmer: idleDimmer
     readonly property alias cursor: cursor
 
-    manufacturer: nativeScreen.manufacturer
-    model: nativeScreen.model
-    position: nativeScreen.position
-    physicalSize: nativeScreen.physicalSize
-    subpixel: nativeScreen.subpixel
-    transform: nativeScreen.transform
-    scaleFactor: nativeScreen.scaleFactor
-    sizeFollowsWindow: false
-    automaticFrameCallback: powerState === ExtendedOutput.PowerStateOn
+    property bool __idle: false
+
+    automaticFrameCallback: outputSettings.powerState === LiriWayland.WaylandOutputSettings.PowerStateOn
+
+    onPrimaryChanged: {
+        // Set default output
+        if (primary)
+            liriCompositor.defaultOutput = this;
+    }
 
     window: ApplicationWindow {
-        id: window
+        id: outputWindow
 
-        x: nativeScreen.position.x
-        y: nativeScreen.position.y
-        width: nativeScreen.size.width
-        height: nativeScreen.size.height
+        x: output.position.x
+        y: output.position.y
+        width: output.geometry.width
+        height: output.geometry.height
         flags: Qt.FramelessWindowHint
-        visibility: Window.FullScreen
+        visible: true
+
+        Component.onCompleted: {
+            // Register this window with the screencaster
+            screencaster.addWindow(this);
+        }
 
         // Virtual Keyboard
         Loader {
-            parent: window.overlay
-            active: compositor.settings.ui.inputMethod === "qtvirtualkeyboard"
+            parent: outputWindow.overlay
+            active: liriCompositor.settings.ui.inputMethod === "qtvirtualkeyboard"
             source: Qt.resolvedUrl("base/Keyboard.qml")
             x: (parent.width - width) / 2
             y: parent.height - height
@@ -76,24 +85,24 @@ ExtendedOutput {
         }
 
         // Keyboard handling
-        KeyEventFilter {
+        LiriWayland.KeyEventFilter {
             Keys.onPressed: {
                 // Input wakes the output
-                compositor.wake();
+                liriCompositor.wake();
 
                 screenView.handleKeyPressed(event);
             }
 
             Keys.onReleased: {
                 // Input wakes the output
-                compositor.wake();
+                liriCompositor.wake();
 
                 screenView.handleKeyReleased(event);
             }
         }
 
         // Mouse tracker
-        WindowMouseTracker {
+        LiriShell.WindowMouseTracker {
             id: mouseTracker
 
             anchors.fill: parent
@@ -102,17 +111,17 @@ ExtendedOutput {
 
             onMouseXChanged: {
                 // Wake up
-                compositor.wake();
+                liriCompositor.wake();
 
                 // Update global mouse position
-                compositor.mousePos.x = output.position.x + mouseX;
+                liriCompositor.mousePos.x = output.position.x + mouseX;
             }
             onMouseYChanged: {
                 // Wake up
-                compositor.wake();
+                liriCompositor.wake();
 
                 // Update global mouse position
-                compositor.mousePos.y = output.position.y + mouseY;
+                liriCompositor.mousePos.y = output.position.y + mouseY;
             }
             // TODO: Need to wake up with mouse button pressed, released and wheel
 
@@ -139,7 +148,7 @@ ExtendedOutput {
             id: cursor
 
             parent: mouseTracker.parent
-            seat: output.compositor.defaultSeat
+            seat: liriCompositor.defaultSeat
 
             x: mouseTracker.mouseX
             y: mouseTracker.mouseY
@@ -147,15 +156,12 @@ ExtendedOutput {
 
             visible: mouseTracker.containsMouse &&
                      !mouseTracker.windowSystemCursorEnabled &&
-                     screenView.cursorVisible &&
-                     output.powerState === ExtendedOutput.PowerStateOn
+                     screenView.cursorVisible
         }
     }
 
-    QtObject {
-        id: __private
-
-        property bool idle: false
+    LiriWayland.WaylandOutputSettings {
+        id: outputSettings
     }
 
     /*
@@ -163,21 +169,21 @@ ExtendedOutput {
      */
 
     function wake() {
-        if (!__private.idle)
+        if (!__idle)
             return;
 
         console.debug("Power on output", manufacturer, model);
         idleDimmer.fadeOut();
-        output.powerState = ExtendedOutput.PowerStateOn;
-        __private.idle = false;
+        outputSettings.powerState = LiriWayland.WaylandOutputSettings.PowerStateOn;
+        __idle = false;
     }
 
     function idle() {
-        if (__private.idle)
+        if (__idle)
             return;
 
         console.debug("Standby output", manufacturer, model);
         idleDimmer.fadeIn();
-        __private.idle = true;
+        __idle = true;
     }
 }

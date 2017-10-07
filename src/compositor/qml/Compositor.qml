@@ -23,9 +23,10 @@
  ***************************************************************************/
 
 import QtQuick 2.5
+import QtQuick.Window 2.2
 import QtWayland.Compositor 1.0
 import Liri.Launcher 0.1 as Launcher
-import Liri.WaylandServer 1.0
+import Liri.WaylandServer 1.0 as LiriWayland
 import Liri.WaylandServer.Private 1.0 as LWSP
 import Liri.Shell 1.0
 import Vibe.PulseAudio 1.0
@@ -34,14 +35,15 @@ import "base"
 import "windows"
 
 WaylandCompositor {
-    id: compositor
+    id: liriCompositor
 
     property point mousePos: Qt.point(0, 0)
 
     property int idleInhibit: 0
 
+    readonly property alias screenManager: screenManager
+
     readonly property alias settings: settings
-    readonly property alias outputs: __private.outputs
     readonly property alias shellSurfaces: shellSurfaces
 
     readonly property bool hasMaxmizedShellSurfaces: __private.maximizedShellSurfaces > 0
@@ -65,24 +67,23 @@ WaylandCompositor {
     }
 
     onCreatedChanged: {
-        if (compositor.created) {
+        if (liriCompositor.created) {
             console.debug("Compositor created");
             if (xwaylandLoader.status == Loader.Ready)
                 xwaylandLoader.item.startServer();
             else
-                shellHelper.start(compositor.socketName);
+                shellHelper.start(liriCompositor.socketName);
         }
     }
 
     onSurfaceRequested: {
-        var surface = surfaceComponent.createObject(compositor, {});
-        surface.initialize(compositor, client, id, version);
+        var surface = surfaceComponent.createObject(liriCompositor, {});
+        surface.initialize(liriCompositor, client, id, version);
     }
 
     QtObject {
         id: __private
 
-        property var outputs: []
         property int maximizedShellSurfaces: 0
         property int fullscreenShellSurfaces: 0
 
@@ -90,7 +91,7 @@ WaylandCompositor {
             var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
             var parent = parentSurfaceItem || output.surfacesArea;
             var item = component.createObject(parent, {
-                                                  "compositor": compositor,
+                                                  "compositor": liriCompositor,
                                                   "shellSurface": shellSurface
                                               });
             output.viewsBySurface[shellSurface.surface] = item;
@@ -100,10 +101,10 @@ WaylandCompositor {
         function handleShellSurfaceCreated(shellSurface, component) {
             shellSurfaces.append({"shellSurface": shellSurface});
 
-            for (var i = 0; i < outputs.length; i++)
-                createShellSurfaceItem(shellSurface, component, outputs[i]);
+            for (var i = 0; i < screenManager.count; i++)
+                createShellSurfaceItem(shellSurface, component, screenManager.objectAt(i));
 
-            compositor.shellSurfaceCreated(shellSurface);
+            liriCompositor.shellSurfaceCreated(shellSurface);
         }
 
         function handleShellSurfaceDestroyed(shellSurface) {
@@ -121,35 +122,38 @@ WaylandCompositor {
 
             applicationManager.unregisterShellSurface(shellSurface);
 
-            compositor.shellSurfaceDestroyed(shellSurface);
+            liriCompositor.shellSurfaceDestroyed(shellSurface);
         }
     }
 
     ScreenManager {
         id: screenManager
 
-        onScreenAdded: {
-            var view = outputComponent.createObject(compositor, {
-                                                        "compositor": compositor,
-                                                        "nativeScreen": screen
-                                                    })
+        delegate: Output {
+            compositor: liriCompositor
+            screen: screenItem.screen
+            windowScreen: screenItem.screen
+            primary: screenItem.primary
+            position: Qt.point(x, y)
+            manufacturer: screenItem.manufacturer
+            model: screenItem.model
+            physicalSize: screenItem.physicalSize
+            subpixel: screenItem.subpixel
+            transform: screenItem.transform
+            scaleFactor: screenItem.scaleFactor
+            currentModeIndex: screenItem.currentModeIndex
+            preferredModeIndex: screenItem.preferredModeIndex
 
-            __private.outputs.push(view);
-        }
-        onScreenRemoved: {
-            var index = screenManager.indexOf(screen);
+            Component.onCompleted: {
+                // Add modes
+                var sourceModes = screenManager.screenModel.get(index).modes;
+                for (var i = 0; i < sourceModes.length; i++)
+                    modes.push(sourceModes[i]);
 
-            if (index < __private.outputs.length) {
-                var output = __private.outputs[index];
-                __private.outputs.splice(index, 1);
-                output.destroy();
+                // Set default output the first time
+                if (!liriCompositor.defaultOutput)
+                    liriCompositor.defaultOutput = this;
             }
-        }
-        onPrimaryScreenChanged: {
-            var index = screenManager.indexOf(screen);
-
-            if (index < __private.outputs.length)
-                compositor.defaultOutput = __private.outputs[index];
         }
     }
 
@@ -199,7 +203,7 @@ WaylandCompositor {
         onXdgPopupCreated: __private.handleShellSurfaceCreated(xdgPopup, chromeComponent)
     }
 
-    GtkShell {
+    LiriWayland.GtkShell {
         id: gtkShell
 
         onGtkSurfaceRequested: {
@@ -210,7 +214,7 @@ WaylandCompositor {
 
     TextInputManager {}
 
-    OutputManagement {
+    LiriWayland.OutputManagement {
         id: outputManagement
         onCreateOutputConfiguration: {
             var outputConfiguration = outputConfigurationComponent.createObject();
@@ -218,11 +222,11 @@ WaylandCompositor {
         }
     }
 
-    Screencaster {
+    LiriWayland.Screencaster {
         id: screencaster
     }
 
-    Screenshooter {
+    LiriWayland.Screenshooter {
         id: screenshooter
 
         onCaptureRequested: {
@@ -245,13 +249,6 @@ WaylandCompositor {
      * Components
      */
 
-    // Output component
-    Component {
-        id: outputComponent
-
-        Output {}
-    }
-
     // Surface component
     Component {
         id: surfaceComponent
@@ -260,8 +257,8 @@ WaylandCompositor {
             id: surface
 
             Component.onDestruction: {
-                for (var i = 0; i < __private.outputs.length; i++)
-                    delete __private.outputs[i].viewsBySurface[surface];
+                for (var i = 0; i < screenManager.count; i++)
+                    delete screenManager.objectAt(i).viewsBySurface[surface];
             }
         }
     }
@@ -291,7 +288,7 @@ WaylandCompositor {
     Component {
         id: gtkSurfaceComponent
 
-        GtkSurface {
+        LiriWayland.GtkSurface {
             id: gtkSurface
 
             onAppIdChanged: {
@@ -373,28 +370,28 @@ WaylandCompositor {
     PolicyKitAgent {
         id: policyKitAgent
         onAuthenticationInitiated: {
-            var authDialog = compositor.defaultOutput.screenView.authDialog;
+            var authDialog = liriCompositor.defaultOutput.screenView.authDialog;
             authDialog.actionId = actionId;
             authDialog.message = message;
             authDialog.iconName = iconName;
             authDialog.realName = realName;
         }
         onAuthenticationRequested: {
-            var authDialog = compositor.defaultOutput.screenView.authDialog;
+            var authDialog = liriCompositor.defaultOutput.screenView.authDialog;
             authDialog.prompt = prompt;
             authDialog.echo = echo;
             authDialog.open();
         }
-        onAuthenticationCanceled: compositor.defaultOutput.screenView.authDialog.close()
-        onAuthenticationFinished: compositor.defaultOutput.screenView.authDialog.close()
-        onAuthorizationGained: compositor.defaultOutput.screenView.authDialog.close()
+        onAuthenticationCanceled: liriCompositor.defaultOutput.screenView.authDialog.close()
+        onAuthenticationFinished: liriCompositor.defaultOutput.screenView.authDialog.close()
+        onAuthorizationGained: liriCompositor.defaultOutput.screenView.authDialog.close()
         onAuthorizationFailed: {
-            var authDialog = compositor.defaultOutput.screenView.authDialog;
+            var authDialog = liriCompositor.defaultOutput.screenView.authDialog;
             authDialog.errorMessage = qsTr("Sorry, that didn't work. Please try again.");
         }
-        onAuthorizationCanceled: compositor.defaultOutput.screenView.authDialog.close()
-        onInformation: compositor.defaultOutput.screenView.authDialog.infoMessage = message
-        onError: compositor.defaultOutput.screenView.authDialog.errorMessage = message
+        onAuthorizationCanceled: liriCompositor.defaultOutput.screenView.authDialog.close()
+        onInformation: liriCompositor.defaultOutput.screenView.authDialog.infoMessage = message
+        onError: liriCompositor.defaultOutput.screenView.authDialog.errorMessage = message
 
         Component.onCompleted: registerAgent()
     }
@@ -406,8 +403,8 @@ WaylandCompositor {
         repeat: true
         onTriggered: {
             var i, output, idleHint = false;
-            for (i = 0; i < __private.outputs.length; i++) {
-                output = __private.outputs[i];
+            for (i = 0; i < screenManager.count; i++) {
+                output = screenManager.objectAt(i);
                 if (idleInhibit + output.idleInhibit == 0) {
                     output.idle();
                     idleHint = true;
@@ -424,9 +421,9 @@ WaylandCompositor {
 
     function wake() {
         var i;
-        for (i = 0; i < __private.outputs.length; i++) {
+        for (i = 0; i < screenManager.count; i++) {
             idleTimer.restart();
-            __private.outputs[i].wake();
+            screenManager.objectAt(i).wake();
         }
 
         SessionInterface.idle = false;
@@ -434,8 +431,8 @@ WaylandCompositor {
 
     function idle() {
         var i;
-        for (i = 0; i < __private.outputs.length; i++)
-            __private.outputs[i].idle();
+        for (i = 0; i < screenManager.count; i++)
+            screenManager.objectAt(i).idle();
 
         SessionInterface.idle = true;
     }
@@ -445,8 +442,8 @@ WaylandCompositor {
             var shellSurface = shellSurfaces.get(i).shellSurface;
             if (shellSurface.canonicalAppId === appId) {
                 shellSurface.minimized = false;
-                for (var j = 0; j < __private.outputs.length; j++)
-                    __private.outputs[j].viewsBySurface[shellSurface.surface].takeFocus();
+                for (var j = 0; j < screenManager.count; j++)
+                    screenManager.objectAt(j).viewsBySurface[shellSurface.surface].takeFocus();
             }
         }
     }

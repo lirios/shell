@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     // Application
     Application *shell = new Application();
     shell->setAutostartEnabled(!parser.isSet(noAutostartOption));
-    shell->setScreenConfiguration(fakeScreenData);
+    shell->setScreenConfigurationFileName(fakeScreenData);
 
     // Create the compositor and run
     bool urlAlreadySet = false;

@@ -60,11 +60,11 @@ Item {
     Background {
         id: backgroundLayer
         anchors.fill: parent
-        mode: compositor.settings.background.mode
-        pictureUrl: compositor.settings.background.pictureUrl
-        primaryColor: compositor.settings.background.primaryColor
-        secondaryColor: compositor.settings.background.secondaryColor
-        fillMode: compositor.settings.background.fillMode
+        mode: liriCompositor.settings.background.mode
+        pictureUrl: liriCompositor.settings.background.pictureUrl
+        primaryColor: liriCompositor.settings.background.primaryColor
+        secondaryColor: liriCompositor.settings.background.secondaryColor
+        fillMode: liriCompositor.settings.background.fillMode
         blur: false
         z: 0
     }

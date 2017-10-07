@@ -23,7 +23,7 @@
  ***************************************************************************/
 
 import QtQuick 2.7
-import Liri.WaylandServer 1.0
+import Liri.WaylandServer 1.0 as LiriWayland
 import Fluid.Controls 1.0 as FluidControls
 
 Rectangle {
@@ -57,7 +57,7 @@ Rectangle {
     onOpacityChanged: {
         // Power off output when fade out has finished
         if (opacity == 1.0)
-            output.powerState = ExtendedOutput.PowerStateStandby
+            output.powerState = LiriWayland.WaylandOutputSettings.PowerStateStandby;
     }
 
     OpacityAnimator {

@@ -47,7 +47,7 @@ function spreadWindows() {
         var offsetX = (workspaceWidth - row.width) / 2;
 
         row.windows.forEach(function(pos) {
-            var shellSurface = compositor.shellSurfaces.get(pos.index).shellSurface;
+            var shellSurface = liriCompositor.shellSurfaces.get(pos.index).shellSurface;
             if (!shellSurface)
                 return;
 
@@ -64,15 +64,13 @@ function spreadWindows() {
             // Create the chrome
             var chrome = chromeComponent.createObject(entry, {"view": entry});
             chrome.selected.connect(function(view) {
-                compositor.outputs.forEach(function(o) {
-                    o.surfacesArea.state = "normal";
-                });
+                for (var i = 0; i < liriCompositor.screenManager.count; i++)
+                    liriCompositor.screenManager.objectAt(i).state = "normal";
                 view.takeFocus();
             });
             chrome.closed.connect(function(view) {
-                compositor.outputs.forEach(function(o) {
-                    o.surfacesArea.state = "normal";
-                });
+                for (var i = 0; i < liriCompositor.screenManager.count; i++)
+                    liriCompositor.screenManager.objectAt(i).state = "normal";
                 view.close();
             });
             chromes[entry] = chrome;
@@ -94,8 +92,8 @@ function spreadWindows() {
 function restoreWindows() {
     // This loop needs to run on all shell surfaces so we make their views
     // visible again on restore
-    for (var i = 0; i < compositor.shellSurfaces.count; i++) {
-        var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+    for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
+        var shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
         if (!shellSurface)
             continue;
 
@@ -149,8 +147,8 @@ function tryLayout(rows) {
     var list = [];
     var i, shellSurface, entry;
 
-    for (i = 0; i < compositor.shellSurfaces.count; i++) {
-        shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+    for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
+        shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
         if (!shellSurface)
             continue;
 
@@ -171,8 +169,8 @@ function tryLayout(rows) {
         rowHeight = Math.min(rowHeight, entry.height);
     }
 
-    for (i = 0; i < compositor.shellSurfaces.count; i++) {
-        shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+    for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
+        shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
         if (!shellSurface)
             continue;
 
@@ -250,8 +248,8 @@ function calcSpacing() {
     var count = 0;
     var i, shellSurface, entry;
 
-    for (i = 0; i < compositor.shellSurfaces.count; i++) {
-        shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+    for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
+        shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
         if (!shellSurface)
             continue;
 

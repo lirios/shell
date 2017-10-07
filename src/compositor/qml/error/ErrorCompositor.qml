@@ -21,29 +21,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtWayland.Compositor 1.0
-import Liri.WaylandServer 1.0
-import Liri.Shell 1.0
+import Liri.WaylandServer 1.0 as LiriWayland
+import Liri.Shell 1.0 as LiriShell
+import ".." as Root
 
 WaylandCompositor {
-    id: compositor
+    id: liriCompositor
 
     onCreatedChanged: {
-        if (compositor.created)
-            shellHelper.start(compositor.socketName);
+        if (liriCompositor.created)
+            shellHelper.start(liriCompositor.socketName);
     }
 
     onSurfaceRequested: {
-        var surface = surfaceComponent.createObject(compositor, {});
-        surface.initialize(compositor, client, id, version);
-    }
-
-    QtObject {
-        id: __private
-
-        property variant outputs: []
+        var surface = surfaceComponent.createObject(liriCompositor, {});
+        surface.initialize(liriCompositor, client, id, version);
     }
 
     Shortcut {
@@ -52,88 +48,32 @@ WaylandCompositor {
         onActivated: Qt.quit()
     }
 
-    ScreenManager {
+    Root.ScreenManager {
         id: screenManager
 
-        onScreenAdded: {
-            var view = outputComponent.createObject(compositor, {
-                "compositor": compositor,
-                "nativeScreen": screen
-            });
+        delegate: ErrorOutput {
+            compositor: liriCompositor
+            screen: screenItem.screen
+            primary: screenItem.primary
+            position: Qt.point(x, y)
+            manufacturer: screenItem.manufacturer
+            model: screenItem.model
+            physicalSize: screenItem.physicalSize
+            subpixel: screenItem.subpixel
+            transform: screenItem.transform
+            scaleFactor: screenItem.scaleFactor
+            currentModeIndex: screenItem.currentModeIndex
+            preferredModeIndex: screenItem.preferredModeIndex
 
-            __private.outputs.push(view);
-        }
-        onScreenRemoved: {
-            var index = screenManager.indexOf(screen);
+            Component.onCompleted: {
+                // Add modes
+                var sourceModes = screenManager.screenModel.get(index).modes;
+                for (var i = 0; i < sourceModes.length; i++)
+                    modes.push(sourceModes[i]);
 
-            if (index < __private.outputs.length) {
-                var output = __private.outputs[index];
-                __private.outputs.splice(index, 1);
-                output.destroy();
-            }
-        }
-        onPrimaryScreenChanged: {
-            var index = screenManager.indexOf(screen);
-
-            if (index < __private.outputs.length)
-                compositor.defaultOutput = __private.outputs[index];
-        }
-    }
-
-    // Output component
-    Component {
-        id: outputComponent
-
-        ExtendedOutput {
-            readonly property bool primary: compositor.defaultOutput === this
-            readonly property alias grabItem: grabItem
-
-            id: output
-            manufacturer: nativeScreen.manufacturer
-            model: nativeScreen.model
-            position: nativeScreen.position
-            physicalSize: nativeScreen.physicalSize
-            subpixel: nativeScreen.subpixel
-            transform: nativeScreen.transform
-            scaleFactor: nativeScreen.scaleFactor
-            sizeFollowsWindow: true
-
-            window: Window {
-                x: nativeScreen.position.x
-                y: nativeScreen.position.y
-                width: nativeScreen.size.width
-                height: nativeScreen.size.height
-                flags: Qt.FramelessWindowHint
-
-                // Grab surface from shell helper
-                WaylandQuickItem {
-                    id: grabItem
-                    focusOnClick: false
-                    onSurfaceChanged: {
-                        shellHelper.grabCursor(ShellHelper.ArrowGrabCursor);
-                        if (output.primary)
-                            grabItem.setPrimary();
-                    }
-                }
-
-                WaylandMouseTracker {
-                    id: mouseTracker
-                    anchors.fill: parent
-                    windowSystemCursorEnabled: platformName !== "liri"
-
-                    ErrorScreenView {
-                        id: screenView
-                        anchors.fill: parent
-                    }
-
-                    WaylandCursorItem {
-                        id: cursor
-                        seat: output.compositor.defaultSeat
-                        x: mouseTracker.mouseX - hotspotX
-                        y: mouseTracker.mouseY - hotspotY
-                        visible: mouseTracker.containsMouse && !mouseTracker.windowSystemCursorEnabled
-                    }
-                }
+                // Set default output the first time
+                if (!liriCompositor.defaultOutput)
+                    liriCompositor.defaultOutput = this;
             }
         }
     }
@@ -146,11 +86,11 @@ WaylandCompositor {
     }
 
     // Shell helper
-    ShellHelper {
+    LiriShell.ShellHelper {
         id: shellHelper
         onGrabSurfaceAdded: {
-            for (var i = 0; i < __private.outputs.length; i++)
-                __private.outputs[i].grabItem.surface = surface;
+            for (var i = 0; i < screenManager.count; i++)
+                screenManager.objectAt(i).grabItem.surface = surface;
         }
     }
 }

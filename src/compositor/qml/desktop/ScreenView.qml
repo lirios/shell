@@ -92,8 +92,8 @@ Item {
         target: SessionInterface
         onSessionLocked: screenView.state = "lock"
         onSessionUnlocked: screenView.state = "session"
-        onIdleInhibitRequested: compositor.idleInhibit++
-        onIdleUninhibitRequested: compositor.idleInhibit--
+        onIdleInhibitRequested: liriCompositor.idleInhibit++
+        onIdleUninhibitRequested: liriCompositor.idleInhibit--
         onShutdownRequestCanceled: screenView.state = "session"
         onLogOutRequested: if (screenView.state != "lock") screenView.state = "logout"
         onPowerOffRequested: if (screenView.state != "lock") screenView.state = "poweroff"

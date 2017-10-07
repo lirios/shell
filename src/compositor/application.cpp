@@ -86,9 +86,14 @@ void Application::setAutostartEnabled(bool enabled)
     m_autostartEnabled = enabled;
 }
 
-void Application::setScreenConfiguration(const QString &fakeScreenData)
+QString Application::screenConfigurationFileName() const
 {
-    m_homeApp->setScreenConfiguration(fakeScreenData);
+    return m_screenConfigFileName;
+}
+
+void Application::setScreenConfigurationFileName(const QString &fileName)
+{
+    m_screenConfigFileName = fileName;
 }
 
 void Application::setUrl(const QUrl &url)
@@ -126,6 +131,10 @@ void Application::startup()
     // Set platform name
     m_homeApp->setContextProperty(QLatin1String("platformName"),
                                   QGuiApplication::platformName());
+
+    // Set screen configuration file name
+    m_homeApp->setContextProperty(QStringLiteral("screenConfigurationFileName"),
+                                  m_screenConfigFileName);
 
     // Session interface
     m_homeApp->setContextProperty(QStringLiteral("SessionInterface"),

@@ -81,11 +81,11 @@ Showable {
     Background {
         id: background
         anchors.fill: parent
-        mode: compositor.settings.lockScreen.mode
-        pictureUrl: compositor.settings.lockScreen.pictureUrl
-        primaryColor: compositor.settings.lockScreen.primaryColor
-        secondaryColor: compositor.settings.lockScreen.secondaryColor
-        fillMode: compositor.settings.lockScreen.fillMode
+        mode: liriCompositor.settings.lockScreen.mode
+        pictureUrl: liriCompositor.settings.lockScreen.pictureUrl
+        primaryColor: liriCompositor.settings.lockScreen.primaryColor
+        secondaryColor: liriCompositor.settings.lockScreen.secondaryColor
+        fillMode: liriCompositor.settings.lockScreen.fillMode
         blur: true
         visible: !vignette.visible
     }

@@ -49,7 +49,7 @@ LiriShell.PanelItem {
             if (model.active)
                 toggleWindows();
             else
-                compositor.activateShellSurfaces(model.appId);
+                liriCompositor.activateShellSurfaces(model.appId);
         } else {
             if (!launcher.model.get(index).launch())
                 console.warn("Failed to run:", model.appId);
@@ -128,8 +128,8 @@ LiriShell.PanelItem {
         launcher.currentIndex = index;
 
         // Minimize or unminimize shell surfaces
-        for (var i = 0; i < compositor.shellSurfaces.count; i++) {
-            var shellSurface = compositor.shellSurfaces.get(i).shellSurface;
+        for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
+            var shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
             if (!shellSurface)
                 continue;
 
@@ -140,8 +140,8 @@ LiriShell.PanelItem {
                 pt.y += output.position.y;
 
                 // Set task icon geometry and toggle minimization
-                for (var j = 0; j < compositor.outputs.length; j++) {
-                    var curOutput = compositor.outputs[j];
+                for (var j = 0; j < liriCompositor.screenManager.count; j++) {
+                    var curOutput = liriCompositor.screenManager.objectAt(j);
                     for (var surface in curOutput.viewsBySurface) {
                         var view = curOutput.viewsBySurface[surface];
                         view.taskIconGeometry = Qt.rect(pt.x, pt.y, launcherItem.width, launcherItem.height);
