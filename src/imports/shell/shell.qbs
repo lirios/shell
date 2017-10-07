@@ -5,7 +5,11 @@ LiriQmlPlugin {
     name: "shellplugin"
     pluginPath: "Liri/Shell"
 
-    Depends { name: "Qt"; submodules: ["core", "core-private", "waylandcompositor-private"] }
+    Depends {
+        name: "Qt"
+        submodules: ["core", "core-private", "waylandcompositor-private"]
+        versionAtLeast: project.minimumQtVersion
+    }
     Depends { name: "WaylandScanner" }
     Depends { name: "LiriWaylandServer" }
 

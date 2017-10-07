@@ -7,7 +7,11 @@ QtGuiApplication {
 
     Depends { name: "lirideployment" }
     Depends { name: "GitRevision" }
-    Depends { name: "Qt"; submodules: ["core", "core-private", "gui", "gui-private", "waylandclient"] }
+    Depends {
+        name: "Qt"
+        submodules: ["core", "core-private", "gui", "gui-private", "waylandclient"]
+        versionAtLeast: project.minimumQtVersion
+    }
     Depends { name: "LiriWaylandClient" }
     Depends { name: "WaylandScanner" }
 

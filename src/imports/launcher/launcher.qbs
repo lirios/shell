@@ -4,7 +4,11 @@ LiriQmlPlugin {
     name: "launcherplugin"
     pluginPath: "Liri/Launcher"
 
-    Depends { name: "Qt"; submodules: ["dbus", "xml", "sql", "waylandcompositor"] }
+    Depends {
+        name: "Qt"
+        submodules: ["dbus", "xml", "sql", "waylandcompositor"]
+        versionAtLeast: project.minimumQtVersion
+    }
     Depends { name: "LiriCore" }
     Depends { name: "Qt5GSettings" }
     Depends { name: "Qt5Xdg" }

@@ -7,7 +7,11 @@ QtGuiApplication {
 
     Depends { name: "lirideployment" }
     Depends { name: "GitRevision" }
-    Depends { name: "Qt"; submodules: ["core", "dbus", "gui", "widgets", "quickcontrols2", "waylandcompositor"] }
+    Depends {
+        name: "Qt"
+        submodules: ["core", "dbus", "gui", "widgets", "quickcontrols2", "waylandcompositor"]
+        versionAtLeast: project.minimumQtVersion
+    }
     Depends { name: "sigwatch" }
     Depends { name: "Qt5GSettings" }
     Depends { name: "Qt5Xdg" }
