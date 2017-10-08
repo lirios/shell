@@ -170,6 +170,63 @@ Then you need to run `liri-session` like this:
 QT_WAYLAND_SHELL_INTEGRATION=fullscreen-shell liri-session -platform wayland 
 ```
 
+## Fake screen configuration
+
+You can simulate a fake screen configuration on X11 and Wayland.
+
+Run:
+
+```sh
+liri-session -platform xcb --fake-screen screenconfig.json # replace xcb with wayland if you are running on Wayland
+```
+
+Here's the contents of `screenconfig.json`:
+
+```json
+{
+	"outputs": [{
+		"name": "Screen 1",
+		"primary": false,
+		"scale": 1,
+		"position": {
+			"x": 0,
+			"y": 0
+		},
+		"mode": {
+			"size": {
+				"width": 1024,
+				"height": 768
+			},
+			"refreshRate": 60000
+		},
+		"physicalSize": {
+			"width": 350,
+			"height": 260
+		}
+	},
+	{
+		"name": "Screen 2",
+		"primary": true,
+		"scale": 1,
+		"position": {
+			"x": 1024,
+			"y": 0
+		},
+		"mode": {
+			"size": {
+				"width": 1024,
+				"height": 768
+			},
+			"refreshRate": 60000
+		},
+		"physicalSize": {
+			"width": 350,
+			"height": 260
+		}
+	}]
+}
+```
+
 ## QML JavaScript debugger
 
 Developers can debug Liri Shell with Qt Creator and the QML JavaScript debugger.
