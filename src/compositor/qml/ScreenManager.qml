@@ -34,4 +34,17 @@ Instantiator {
         id: screenModel
         fileName: screenConfigurationFileName
     }
+    onObjectRemoved: {
+        // Move all windows that fit entirely the removed output to the primary output,
+        // unless the output remove is the primary one (this shouldn't happen)
+        if (object === liriCompositor.defaultOutput)
+            return;
+        for (var surface in object.viewsBySurface) {
+            var view = object.viewsBySurface[surface];
+            if (view.primary && view.output === object) {
+                view.moveItem.x = liriCompositor.defaultOutput.position.x + 20;
+                view.moveItem.y = liriCompositor.defaultOutput.position.y + 20;
+            }
+        }
+    }
 }
