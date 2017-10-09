@@ -12,7 +12,7 @@ Project {
     property bool developmentBuild: false
     property string systemdUserUnitDir: "lib/systemd/user"
 
-    condition: qbs.targetOS.contains("linux")
+    condition: qbs.targetOS.contains("linux") && !qbs.targetOS.contains("android")
 
     minimumQbsVersion: "1.8.0"
 
