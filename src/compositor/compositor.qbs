@@ -9,14 +9,13 @@ QtGuiApplication {
     Depends { name: "GitRevision" }
     Depends {
         name: "Qt"
-        submodules: ["core", "dbus", "gui", "widgets", "quickcontrols2", "waylandcompositor"]
+        submodules: ["core", "core-private", "dbus", "gui", "widgets", "quickcontrols2", "waylandcompositor"]
         versionAtLeast: project.minimumQtVersion
     }
     Depends { name: "sigwatch" }
     Depends { name: "Qt5GSettings" }
     Depends { name: "Qt5Xdg" }
     Depends { name: "systemd" }
-    Depends { name: "LiriWaylandServer" }
     Depends { name: "pam" }
 
     LiriIncludeProbe {

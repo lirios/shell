@@ -106,6 +106,10 @@ int main(int argc, char *argv[])
     app.setFallbackSessionManagementEnabled(false);
     app.setQuitOnLastWindowClosed(false);
 
+    // Enable scene graph logs
+    QLoggingCategory::setFilterRules(QStringLiteral("qt.scenegraph.general=true"));
+
+    // Set style
     QQuickStyle::setStyle(QStringLiteral("Material"));
 
     // Command line parser
@@ -150,6 +154,9 @@ int main(int argc, char *argv[])
           "** Bug reports to: https://github.com/lirios/shell/issues\n"
           "** Build: %s-%s",
           LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
+
+    // Print OS information
+    qInfo("%s", qPrintable(Application::systemInformation().trimmed()));
 
     // Application
     Application *shell = new Application();

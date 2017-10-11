@@ -26,11 +26,11 @@
 
 #pragma once
 
+#include <QEvent>
 #include <QObject>
+#include <QUrl>
 
-#include <LiriWaylandServer/HomeApplication>
-
-using namespace Liri::WaylandServer;
+QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
 
 class ProcessLauncher;
 class ScreenSaver;
@@ -50,18 +50,22 @@ public:
 
     void setUrl(const QUrl &url);
 
+    static QString systemInformation();
+
 protected:
     void customEvent(QEvent *event) override;
 
 private:
     QUrl m_url;
-    HomeApplication *m_homeApp;
+    QQmlApplicationEngine *m_appEngine;
     ProcessLauncher *m_launcher;
     SessionManager *m_sessionManager;
     bool m_failSafe;
     bool m_started;
     bool m_autostartEnabled;
     QString m_screenConfigFileName;
+
+    void verifyXdgRuntimeDir();
 
 private Q_SLOTS:
     void startup();

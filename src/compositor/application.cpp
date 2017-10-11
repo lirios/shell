@@ -24,9 +24,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QDir>
+#include <QSysInfo>
+#include <QtCore/private/qsimd_p.h>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 #include <QtGui/QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QStandardPaths>
 
 #include <qt5xdg/xdgautostart.h>
 #include <qt5xdg/xdgdesktopfile.h>
@@ -42,7 +48,39 @@
 #  include <systemd/sd-daemon.h>
 #endif
 
+#include <unistd.h>
+#include <sys/types.h>
+
+#define DUMP_CPU_FEATURE(feature, name)  \
+    if (qCpuHasFeature(feature)) str << " " name;
+
 static const QEvent::Type StartupEventType = static_cast<QEvent::Type>(QEvent::registerEventType());
+
+static int convertPermission(const QFileInfo &fileInfo)
+{
+    int p = 0;
+
+    if (fileInfo.permission(QFile::ReadUser))
+        p += 400;
+    if (fileInfo.permission(QFile::WriteUser))
+        p += 200;
+    if (fileInfo.permission(QFile::ExeUser))
+        p += 100;
+    if (fileInfo.permission(QFile::ReadGroup))
+        p += 40;
+    if (fileInfo.permission(QFile::WriteGroup))
+        p += 20;
+    if (fileInfo.permission(QFile::ExeGroup))
+        p += 10;
+    if (fileInfo.permission(QFile::ReadOther))
+        p += 4;
+    if (fileInfo.permission(QFile::WriteOther))
+        p += 2;
+    if (fileInfo.permission(QFile::ExeOther))
+        p += 1;
+
+    return p;
+}
 
 Application::Application(QObject *parent)
     : QObject(parent)
@@ -58,18 +96,16 @@ Application::Application(QObject *parent)
     // Quit when the process is killed
     connect(sigwatch, &UnixSignalWatcher::unixSignal, this, &Application::unixSignal);
 
-    // Home application
-    m_homeApp = new HomeApplication(this);
+    // Application engine
+    m_appEngine = new QQmlApplicationEngine(this);
+    connect(m_appEngine, &QQmlApplicationEngine::objectCreated,
+            this, &Application::objectCreated);
 
     // Process launcher
     m_launcher = new ProcessLauncher(this);
 
     // Session manager
     m_sessionManager = new SessionManager(this);
-
-    // Fail safe mode
-    connect(m_homeApp, &HomeApplication::objectCreated,
-            this, &Application::objectCreated);
 
     // Invoke shutdown sequence when quitting
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit,
@@ -101,10 +137,79 @@ void Application::setUrl(const QUrl &url)
     m_url = url;
 }
 
+QString Application::systemInformation()
+{
+    QString result;
+    QTextStream str(&result);
+
+    str << "OS: " << QSysInfo::prettyProductName();
+    str << " ["
+        << QSysInfo::kernelType()
+        << " version " << QSysInfo::kernelVersion()
+        << "]\n";
+    str << "Architecture: " << QSysInfo::currentCpuArchitecture() << "; ";
+    str << "features:";
+#if defined(Q_PROCESSOR_X86)
+    DUMP_CPU_FEATURE(SSE2, "SSE2");
+    DUMP_CPU_FEATURE(SSE3, "SSE3");
+    DUMP_CPU_FEATURE(SSSE3, "SSSE3");
+    DUMP_CPU_FEATURE(SSE4_1, "SSE4.1");
+    DUMP_CPU_FEATURE(SSE4_2, "SSE4.2");
+    DUMP_CPU_FEATURE(AVX, "AVX");
+    DUMP_CPU_FEATURE(AVX2, "AVX2");
+    DUMP_CPU_FEATURE(RTM, "RTM");
+    DUMP_CPU_FEATURE(HLE, "HLE");
+#elif defined(Q_PROCESSOR_ARM)
+    DUMP_CPU_FEATURE(ARM_NEON, "Neon");
+#elif defined(Q_PROCESSOR_MIPS)
+    DUMP_CPU_FEATURE(DSP, "DSP");
+    DUMP_CPU_FEATURE(DSPR2, "DSPR2");
+#endif
+    str << '\n';
+    return result;
+}
+
 void Application::customEvent(QEvent *event)
 {
     if (event->type() == StartupEventType)
         startup();
+}
+
+void Application::verifyXdgRuntimeDir()
+{
+    QByteArray dirName = qgetenv("XDG_RUNTIME_DIR");
+
+    if (qEnvironmentVariableIsEmpty("XDG_RUNTIME_DIR")) {
+        QString msg = QObject::tr(
+                    "The XDG_RUNTIME_DIR environment variable is not set.\n"
+                    "Refer to your distribution on how to get it, or read\n"
+                    "http://www.freedesktop.org/wiki/Specifications/basedir-spec\n"
+                    "on how to implement it.\n");
+        qFatal("%s", qPrintable(msg));
+    }
+
+    QFileInfo fileInfo(dirName);
+
+    if (!fileInfo.exists()) {
+        QString msg = QObject::tr(
+                    "The XDG_RUNTIME_DIR environment variable is set to "
+                    "\"%1\", which doesn't exist.\n").arg(dirName.constData());
+        qFatal("%s", qPrintable(msg));
+    }
+
+    if (convertPermission(fileInfo) != 700 || fileInfo.ownerId() != getuid()) {
+        QString msg = QObject::tr(
+                    "XDG_RUNTIME_DIR is set to \"%1\" and is not configured correctly.\n"
+                    "Unix access mode must be 0700, but is 0%2.\n"
+                    "It must also be owned by the current user (UID %3), "
+                    "but is owned by UID %4 (\"%5\").\n")
+                .arg(dirName.constData())
+                .arg(convertPermission(fileInfo))
+                .arg(getuid())
+                .arg(fileInfo.ownerId())
+                .arg(fileInfo.owner());
+        qFatal("%s\n", qPrintable(msg));
+    }
 }
 
 void Application::startup()
@@ -112,6 +217,9 @@ void Application::startup()
     // Can't do the startup sequence twice
     if (m_started)
         return;
+
+    // Check whether XDG_RUNTIME_DIR is ok or not
+    verifyXdgRuntimeDir();
 
     // Register D-Bus service
     if (!QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Session"))) {
@@ -129,23 +237,22 @@ void Application::startup()
         QCoreApplication::exit(1);
 
     // Set platform name
-    m_homeApp->setContextProperty(QLatin1String("platformName"),
-                                  QGuiApplication::platformName());
+    m_appEngine->rootContext()->setContextProperty(QStringLiteral("platformName"),
+                                                   QGuiApplication::platformName());
 
     // Set screen configuration file name
-    m_homeApp->setContextProperty(QStringLiteral("screenConfigurationFileName"),
-                                  m_screenConfigFileName);
+    m_appEngine->rootContext()->setContextProperty(QStringLiteral("screenConfigurationFileName"),
+                                                   m_screenConfigFileName);
 
     // Session interface
-    m_homeApp->setContextProperty(QStringLiteral("SessionInterface"),
-                                  m_sessionManager);
+    m_appEngine->rootContext()->setContextProperty(QStringLiteral("SessionInterface"),
+                                                   m_sessionManager);
 
     // Load the compositor
-    if (!m_homeApp->loadUrl(m_url))
-        QCoreApplication::exit(1);
+    m_appEngine->load(m_url);
 
     // Set Wayland socket name
-    QObject *rootObject = m_homeApp->rootObjects().at(0);
+    QObject *rootObject = m_appEngine->rootObjects().at(0);
     QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
     if (compositor) {
 #if HAVE_SYSTEMD
@@ -184,8 +291,8 @@ void Application::shutdown()
     m_launcher->deleteLater();
     m_launcher = Q_NULLPTR;
 
-    m_homeApp->deleteLater();
-    m_homeApp = Q_NULLPTR;
+    m_appEngine->deleteLater();
+    m_appEngine = Q_NULLPTR;
 
     m_sessionManager->deleteLater();
     m_sessionManager = Q_NULLPTR;
@@ -207,7 +314,7 @@ void Application::autostart()
         // for us too, some utilities like those from XFCE have an explicit list
         // of desktop that are not supported instead of show them on XFCE
         //if (!entry.isSuitable(true, QLatin1String("GNOME")) && !entry.isSuitable(true, QLatin1String("KDE")))
-            //continue;
+        //continue;
 
         qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
         m_launcher->launchEntry(entry);
@@ -238,7 +345,7 @@ void Application::objectCreated(QObject *object, const QUrl &)
     } else {
         // Load the error screen in case of error
         m_failSafe = true;
-        m_homeApp->loadUrl(QUrl(QStringLiteral("qrc:/qml/error/ErrorCompositor.qml")));
+        m_appEngine->load(QUrl(QStringLiteral("qrc:/qml/error/ErrorCompositor.qml")));
     }
 }
 
