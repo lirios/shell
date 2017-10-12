@@ -52,6 +52,7 @@ public:
 
     ShellHelper();
     explicit ShellHelper(QWaylandCompositor *compositor);
+    ~ShellHelper();
 
     void initialize() override;
 
@@ -64,4 +65,7 @@ public:
 
 Q_SIGNALS:
     void grabSurfaceAdded(QWaylandSurface *surface);
+
+private:
+    ShellHelperPrivate *const d_ptr;
 };

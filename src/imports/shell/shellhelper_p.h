@@ -23,18 +23,15 @@
 
 #pragma once
 
-#include <QtWaylandCompositor/private/qwaylandcompositorextension_p.h>
-
 #include "qwayland-server-shell-helper.h"
 
+QT_FORWARD_DECLARE_CLASS(QThread)
 QT_FORWARD_DECLARE_CLASS(QWaylandSurface)
 
 class ProcessRunner;
 class ShellHelper;
 
-class ShellHelperPrivate
-        : public QWaylandCompositorExtensionPrivate
-        , public QtWaylandServer::liri_shell
+class ShellHelperPrivate : public QtWaylandServer::liri_shell
 {
     Q_DECLARE_PUBLIC(ShellHelper)
 public:

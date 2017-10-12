@@ -99,8 +99,7 @@ private Q_SLOTS:
  */
 
 ShellHelperPrivate::ShellHelperPrivate(ShellHelper *qq)
-    : QWaylandCompositorExtensionPrivate()
-    , QtWaylandServer::liri_shell()
+    : QtWaylandServer::liri_shell()
     , runnerThread(new QThread())
     , processRunner(new ProcessRunner())
     , q_ptr(qq)
@@ -151,13 +150,20 @@ void ShellHelperPrivate::liri_shell_set_grab_surface(Resource *resource, struct 
  */
 
 ShellHelper::ShellHelper()
-    : QWaylandCompositorExtensionTemplate<ShellHelper>(*new ShellHelperPrivate(this))
+    : QWaylandCompositorExtensionTemplate<ShellHelper>()
+    , d_ptr(new ShellHelperPrivate(this))
 {
 }
 
 ShellHelper::ShellHelper(QWaylandCompositor *compositor)
-    : QWaylandCompositorExtensionTemplate<ShellHelper>(compositor, *new ShellHelperPrivate(this))
+    : QWaylandCompositorExtensionTemplate<ShellHelper>(compositor)
+    , d_ptr(new ShellHelperPrivate(this))
 {
+}
+
+ShellHelper::~ShellHelper()
+{
+    delete d_ptr;
 }
 
 void ShellHelper::initialize()
