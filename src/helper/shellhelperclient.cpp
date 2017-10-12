@@ -21,7 +21,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/private/qobject_p.h>
 #include <QtGui/QPlatformSurfaceEvent>
 #include <QtGui/QWindow>
 
@@ -36,13 +35,13 @@
 using namespace Liri::WaylandClient;
 
 class ShellHelperClientPrivate
-        : public QObjectPrivate
-        , public QtWayland::liri_shell
+        : public QtWayland::liri_shell
 {
     Q_DECLARE_PUBLIC(ShellHelperClient)
 public:
-    ShellHelperClientPrivate()
+    ShellHelperClientPrivate(ShellHelperClient *qq)
         : QtWayland::liri_shell()
+        , q_ptr(qq)
     {
     }
 
@@ -55,6 +54,9 @@ public:
 
     quint32 name = 0;
 
+protected:
+    ShellHelperClient *q_ptr;
+
 private:
     void liri_shell_grab_cursor(uint32_t cursor) Q_DECL_OVERRIDE
     {
@@ -64,8 +66,14 @@ private:
 };
 
 ShellHelperClient::ShellHelperClient(QObject *parent)
-    : QObject(*new ShellHelperClientPrivate(), parent)
+    : QObject(parent)
+    , d_ptr(new ShellHelperClientPrivate(this))
 {
+}
+
+ShellHelperClient::~ShellHelperClient()
+{
+    delete d_ptr;
 }
 
 quint32 ShellHelperClient::name() const

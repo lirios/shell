@@ -22,7 +22,6 @@
  ***************************************************************************/
 
 #include <QtCore/QThread>
-#include <QtCore/private/qobject_p.h>
 #include <QtGui/QWindow>
 #include <QtGui/qpa/qwindowsysteminterface.h>
 
@@ -33,9 +32,8 @@
 
 using namespace Liri::WaylandClient;
 
-class ShellHelperApplicationPrivate : public QObjectPrivate
+class ShellHelperApplicationPrivate
 {
-    Q_DECLARE_PUBLIC(ShellHelperApplication)
 public:
     ShellHelperApplicationPrivate()
         : thread(new QThread())
@@ -70,9 +68,15 @@ public:
 };
 
 ShellHelperApplication::ShellHelperApplication(QObject *parent)
-    : QObject(*new ShellHelperApplicationPrivate(), parent)
+    : QObject(parent)
+    , d_ptr(new ShellHelperApplicationPrivate())
 {
     initialize();
+}
+
+ShellHelperApplication::~ShellHelperApplication()
+{
+    delete d_ptr;
 }
 
 void ShellHelperApplication::initialize()

@@ -9,7 +9,7 @@ QtGuiApplication {
     Depends { name: "GitRevision" }
     Depends {
         name: "Qt"
-        submodules: ["core", "core-private", "gui", "gui-private", "waylandclient"]
+        submodules: ["core", "gui", "gui-private", "waylandclient"]
         versionAtLeast: project.minimumQtVersion
     }
     Depends { name: "LiriWaylandClient" }

@@ -53,6 +53,7 @@ public:
     Q_ENUM(GrabCursor)
 
     ShellHelperClient(QObject *parent = nullptr);
+    ~ShellHelperClient();
 
     quint32 name() const;
 
@@ -66,5 +67,7 @@ Q_SIGNALS:
     void cursorChangeRequested(GrabCursor cursor);
 
 private:
+    ShellHelperClientPrivate *const d_ptr;
+
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 };

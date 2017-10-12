@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QtCore/private/qobject_p.h>
-
 #include "sigwatch.h"
 
 /*!
@@ -10,12 +8,11 @@
  *
  * \see http://qt-project.org/doc/qt-5.0/qtdoc/unix-signals.html
  */
-class UnixSignalWatcherPrivate : public QObjectPrivate
+class UnixSignalWatcherPrivate
 {
     Q_DECLARE_PUBLIC(UnixSignalWatcher)
-
 public:
-    UnixSignalWatcherPrivate();
+    UnixSignalWatcherPrivate(UnixSignalWatcher *qq);
 
     void initialize();
 
@@ -23,6 +20,9 @@ public:
     static void signalHandler(int signal);
 
     void _q_handleNotify(int sockfd);
+
+protected:
+    UnixSignalWatcher *q_ptr;
 
 private:
     static int sockpair[2];

@@ -43,6 +43,7 @@ class UnixSignalWatcher : public QObject
     Q_DECLARE_PRIVATE(UnixSignalWatcher)
 public:
     explicit UnixSignalWatcher(QObject *parent = nullptr);
+    ~UnixSignalWatcher();
 
     void watchForSignal(int signal);
 
@@ -50,6 +51,8 @@ Q_SIGNALS:
     void unixSignal(int signal);
 
 private:
+    UnixSignalWatcherPrivate *const d_ptr;
+
     Q_PRIVATE_SLOT(d_func(), void _q_handleNotify(int))
 };
 

@@ -36,7 +36,8 @@
 
 int UnixSignalWatcherPrivate::sockpair[2];
 
-UnixSignalWatcherPrivate::UnixSignalWatcherPrivate()
+UnixSignalWatcherPrivate::UnixSignalWatcherPrivate(UnixSignalWatcher *qq)
+    : q_ptr(qq)
 {
 }
 
@@ -111,9 +112,18 @@ void UnixSignalWatcherPrivate::_q_handleNotify(int sockfd)
  * Create a new UnixSignalWatcher as a child of the given \a parent.
  */
 UnixSignalWatcher::UnixSignalWatcher(QObject *parent)
-    : QObject(*new UnixSignalWatcherPrivate(), parent)
+    : QObject(parent)
+    , d_ptr(new UnixSignalWatcherPrivate(this))
 {
     d_func()->initialize();
+}
+
+/*!
+ * Destroy the UnixSignalWatcher objects.
+ */
+UnixSignalWatcher::~UnixSignalWatcher()
+{
+    delete d_ptr;
 }
 
 /*!

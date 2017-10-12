@@ -35,8 +35,11 @@ class ShellHelperApplication : public QObject
     Q_DECLARE_PRIVATE(ShellHelperApplication)
 public:
     explicit ShellHelperApplication(QObject *parent = nullptr);
+    ~ShellHelperApplication();
 
 private:
+    ShellHelperApplicationPrivate *const d_ptr;
+
     void initialize();
 
 private Q_SLOTS:
