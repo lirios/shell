@@ -37,7 +37,8 @@ class PolicyKitAgent : public QObject, public QQmlParserStatus
     Q_DECLARE_PRIVATE(PolicyKitAgent)
     Q_INTERFACES(QQmlParserStatus)
 public:
-    PolicyKitAgent(QObject *parent = nullptr);
+    explicit PolicyKitAgent(QObject *parent = nullptr);
+    ~PolicyKitAgent();
 
     QString objectPath() const;
     void setObjectPath(const QString &path);
@@ -67,4 +68,7 @@ Q_SIGNALS:
 
     void information(const QString &message);
     void error(const QString &message);
+
+private:
+    PolicyKitAgentPrivate *const d_ptr;
 };

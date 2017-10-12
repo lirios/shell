@@ -21,8 +21,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QtCore/private/qobject_p.h>
-
 #include "logging_p.h"
 #include "listener_p.h"
 #include "policykitagent.h"
@@ -31,9 +29,8 @@
  * PolicyKitAgentPrivate
  */
 
-class PolicyKitAgentPrivate : public QObjectPrivate
+class PolicyKitAgentPrivate
 {
-    Q_DECLARE_PUBLIC(PolicyKitAgent)
 public:
     PolicyKitAgentPrivate();
     ~PolicyKitAgentPrivate();
@@ -60,7 +57,8 @@ PolicyKitAgentPrivate::~PolicyKitAgentPrivate()
  */
 
 PolicyKitAgent::PolicyKitAgent(QObject *parent)
-    : QObject(*new PolicyKitAgentPrivate(), parent)
+    : QObject(parent)
+    , d_ptr(new PolicyKitAgentPrivate())
 {
     // Rely signals
     connect(d_func()->listener, &Listener::authenticationInitiated,
@@ -81,6 +79,11 @@ PolicyKitAgent::PolicyKitAgent(QObject *parent)
             this, &PolicyKitAgent::information);
     connect(d_func()->listener, &Listener::error,
             this, &PolicyKitAgent::error);
+}
+
+PolicyKitAgent::~PolicyKitAgent()
+{
+    delete d_ptr;
 }
 
 QString PolicyKitAgent::objectPath() const

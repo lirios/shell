@@ -4,7 +4,7 @@ LiriQmlPlugin {
     name: "polkitplugin"
     pluginPath: "Vibe/PolicyKit"
 
-    Depends { name: "Qt"; submodules: ["core", "core-private", "dbus"] }
+    Depends { name: "Qt"; submodules: ["core", "dbus"] }
     Depends { name: "polkit_qt5"; submodules: ["core", "agent"] }
 
     condition: {
