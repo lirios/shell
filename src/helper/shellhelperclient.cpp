@@ -58,7 +58,7 @@ protected:
     ShellHelperClient *q_ptr;
 
 private:
-    void liri_shell_grab_cursor(uint32_t cursor) Q_DECL_OVERRIDE
+    void liri_shell_grab_cursor(uint32_t cursor) override
     {
         Q_Q(ShellHelperClient);
         Q_EMIT q->cursorChangeRequested(static_cast<ShellHelperClient::GrabCursor>(cursor));

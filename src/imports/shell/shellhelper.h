@@ -53,7 +53,7 @@ public:
     ShellHelper();
     explicit ShellHelper(QWaylandCompositor *compositor);
 
-    void initialize() Q_DECL_OVERRIDE;
+    void initialize() override;
 
     Q_INVOKABLE void start(const QString &socketName);
 

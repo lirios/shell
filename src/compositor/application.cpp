@@ -289,13 +289,13 @@ void Application::startup()
 void Application::shutdown()
 {
     m_launcher->deleteLater();
-    m_launcher = Q_NULLPTR;
+    m_launcher = nullptr;
 
     m_appEngine->deleteLater();
-    m_appEngine = Q_NULLPTR;
+    m_appEngine = nullptr;
 
     m_sessionManager->deleteLater();
-    m_sessionManager = Q_NULLPTR;
+    m_sessionManager = nullptr;
 }
 
 void Application::autostart()

@@ -69,7 +69,7 @@ LogindBackend *LogindBackend::create(SessionManager *sm, const QDBusConnection &
 {
     LogindBackend *backend = new LogindBackend();
     if (!backend)
-        return Q_NULLPTR;
+        return nullptr;
     backend->m_sessionManager = sm;
 
     // Connect to logind if available
@@ -77,7 +77,7 @@ LogindBackend *LogindBackend::create(SessionManager *sm, const QDBusConnection &
         new QDBusInterface(login1Service, login1Object, login1ManagerInterface, connection);
     if (!backend->m_interface || !backend->m_interface->isValid()) {
         delete backend;
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     // Get notified when the system is preparing for sleep

@@ -32,7 +32,7 @@
 
 Authenticator::Authenticator(QObject *parent)
     : QObject(parent)
-    , m_response(Q_NULLPTR)
+    , m_response(nullptr)
 {
 }
 
@@ -43,7 +43,7 @@ Authenticator::~Authenticator()
 void Authenticator::authenticate(const QString &password)
 {
     const pam_conv conversation = { conversationHandler, this };
-    pam_handle_t *handle = Q_NULLPTR;
+    pam_handle_t *handle = nullptr;
 
     passwd *pwd = getpwuid(getuid());
     if (!pwd) {

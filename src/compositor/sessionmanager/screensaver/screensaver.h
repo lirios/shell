@@ -38,7 +38,7 @@ class ScreenSaver : public QObject
 {
     Q_OBJECT
 public:
-    ScreenSaver(QObject *parent = Q_NULLPTR);
+    ScreenSaver(QObject *parent = nullptr);
     ~ScreenSaver();
 
     bool GetActive();

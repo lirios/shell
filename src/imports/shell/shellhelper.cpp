@@ -130,7 +130,7 @@ public:
     QWaylandSurface *grabSurface = nullptr;
 
 private:
-    void liri_shell_bind_resource(Resource *r) Q_DECL_OVERRIDE
+    void liri_shell_bind_resource(Resource *r) override
     {
         // Client can bind only once
         if (resource())
@@ -139,7 +139,7 @@ private:
                                    "client can bind only once");
     }
 
-    void liri_shell_set_grab_surface(Resource *resource, struct ::wl_resource *wlSurface) Q_DECL_OVERRIDE
+    void liri_shell_set_grab_surface(Resource *resource, struct ::wl_resource *wlSurface) override
     {
         Q_Q(ShellHelper);
 

@@ -54,7 +54,7 @@ class SessionManager : public QObject
     Q_PROPERTY(bool canHibernate READ canHibernate CONSTANT)
     Q_PROPERTY(bool canHybridSleep READ canHybridSleep CONSTANT)
 public:
-    SessionManager(QObject *parent = Q_NULLPTR);
+    SessionManager(QObject *parent = nullptr);
     virtual ~SessionManager();
 
     bool registerWithDBus();
