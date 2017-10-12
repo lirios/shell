@@ -28,7 +28,7 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QFileInfo>
 #include <QtCore/QStandardPaths>
-#include <QtWidgets/QApplication>
+#include <QGuiApplication>
 #include <QQuickStyle>
 
 #include <Qt5GSettings/QGSettings>
@@ -95,10 +95,10 @@ int main(int argc, char *argv[])
     qputenv("LIRI_QPA_HIDECURSOR", QByteArrayLiteral("1"));
 
     // Automatically support HiDPI
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     // Application
-    QApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Shell"));
     app.setApplicationVersion(QStringLiteral(LIRISHELL_VERSION));
     app.setOrganizationName(QStringLiteral("Liri"));
