@@ -94,14 +94,14 @@ void ShellHelperApplication::initialize()
         }
     });
 
-    connect(d->registry, &Registry::interfacesAnnounced, this, [this, d] {
+    connect(d->registry, &Registry::interfacesAnnounced, this, [d] {
         // All interfaces were announced including shm, let's start
         d->grabWindow->show();
         d->helper->registerGrabSurface(d->grabWindow);
     });
 
     connect(d->registry, &Registry::interfaceRemoved, this,
-            [this, d](quint32 name) {
+            [d](quint32 name) {
         if (d->helper && d->helper->name() == name) {
             delete d->helper;
             d->helper = nullptr;
