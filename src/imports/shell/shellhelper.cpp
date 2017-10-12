@@ -28,12 +28,10 @@
 #include <QtWaylandCompositor/QWaylandPointer>
 #include <QtWaylandCompositor/QWaylandSeat>
 #include <QtWaylandCompositor/QWaylandSurface>
-#include <QtWaylandCompositor/private/qwaylandcompositorextension_p.h>
 
 #include "logging_p.h"
 #include "shellhelper.h"
-
-#include "qwayland-server-shell-helper.h"
+#include "shellhelper_p.h"
 
 class ProcessRunner : public QObject
 {
@@ -96,72 +94,69 @@ private Q_SLOTS:
     }
 };
 
-class ShellHelperPrivate
-        : public QWaylandCompositorExtensionPrivate
-        , public QtWaylandServer::liri_shell
+/*
+ * ShellHelperPrivate
+ */
+
+ShellHelperPrivate::ShellHelperPrivate(ShellHelper *qq)
+    : QWaylandCompositorExtensionPrivate()
+    , QtWaylandServer::liri_shell()
+    , runnerThread(new QThread())
+    , processRunner(new ProcessRunner())
+    , q_ptr(qq)
 {
-    Q_DECLARE_PUBLIC(ShellHelper)
-public:
-    ShellHelperPrivate()
-        : QWaylandCompositorExtensionPrivate()
-        , QtWaylandServer::liri_shell()
-        , runnerThread(new QThread())
-        , processRunner(new ProcessRunner())
-    {
-        processRunner->moveToThread(runnerThread);
+    processRunner->moveToThread(runnerThread);
+}
+
+ShellHelperPrivate::~ShellHelperPrivate()
+{
+    runnerThread->wait();
+    runnerThread->quit();
+    delete runnerThread;
+
+    delete processRunner;
+}
+
+ShellHelperPrivate *ShellHelperPrivate::get(ShellHelper *shell)
+{
+    return shell->d_func();
+}
+
+void ShellHelperPrivate::liri_shell_bind_resource(Resource *r)
+{
+    // Client can bind only once
+    if (resource())
+        wl_resource_post_error(r->handle,
+                               WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "client can bind only once");
+}
+
+void ShellHelperPrivate::liri_shell_set_grab_surface(Resource *resource, struct ::wl_resource *wlSurface)
+{
+    Q_Q(ShellHelper);
+
+    auto surface = QWaylandSurface::fromResource(wlSurface);
+    if (surface) {
+        grabSurface = surface;
+        Q_EMIT q->grabSurfaceAdded(surface);
+    } else {
+        qCWarning(gLcShell) << "Couldn't find surface from resource";
+        wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
+                               "the specified surface is invalid");
     }
+}
 
-    ~ShellHelperPrivate()
-    {
-        runnerThread->wait();
-        runnerThread->quit();
-        delete runnerThread;
-
-        delete processRunner;
-    }
-
-    static ShellHelperPrivate *get(ShellHelper *shell)
-    {
-        return shell->d_func();
-    }
-
-    QThread *runnerThread;
-    ProcessRunner *processRunner;
-    QWaylandSurface *grabSurface = nullptr;
-
-private:
-    void liri_shell_bind_resource(Resource *r) override
-    {
-        // Client can bind only once
-        if (resource())
-            wl_resource_post_error(r->handle,
-                                   WL_DISPLAY_ERROR_INVALID_OBJECT,
-                                   "client can bind only once");
-    }
-
-    void liri_shell_set_grab_surface(Resource *resource, struct ::wl_resource *wlSurface) override
-    {
-        Q_Q(ShellHelper);
-
-        auto surface = QWaylandSurface::fromResource(wlSurface);
-        if (surface) {
-            grabSurface = surface;
-            Q_EMIT q->grabSurfaceAdded(surface);
-        } else {
-            qCWarning(gLcShell) << "Couldn't find surface from resource";
-            wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
-                                   "the specified surface is invalid");
-        }
-    }
-};
+/*
+ * ShellHelper
+ */
 
 ShellHelper::ShellHelper()
-    : QWaylandCompositorExtensionTemplate<ShellHelper>(*new ShellHelperPrivate())
+    : QWaylandCompositorExtensionTemplate<ShellHelper>(*new ShellHelperPrivate(this))
 {
 }
 
 ShellHelper::ShellHelper(QWaylandCompositor *compositor)
-    : QWaylandCompositorExtensionTemplate<ShellHelper>(compositor, *new ShellHelperPrivate())
+    : QWaylandCompositorExtensionTemplate<ShellHelper>(compositor, *new ShellHelperPrivate(this))
 {
 }
 
