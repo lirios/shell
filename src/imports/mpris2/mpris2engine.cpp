@@ -75,7 +75,7 @@ Mpris2Engine::~Mpris2Engine()
 
 QQmlListProperty<Mpris2Player> Mpris2Engine::players()
 {
-    return QQmlListProperty<Mpris2Player>(this, Q_NULLPTR, playersCount, playersAt);
+    return QQmlListProperty<Mpris2Player>(this, nullptr, playersCount, playersAt);
 }
 
 int Mpris2Engine::playersCount(QQmlListProperty<Mpris2Player> *prop)
