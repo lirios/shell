@@ -7,7 +7,7 @@ LiriQmlPlugin {
 
     Depends {
         name: "Qt"
-        submodules: ["core", "core-private", "waylandcompositor-private"]
+        submodules: ["core", "waylandcompositor-private"]
         versionAtLeast: project.minimumQtVersion
     }
     Depends { name: "WaylandScanner" }
