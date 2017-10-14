@@ -15,6 +15,7 @@ QtGuiApplication {
     Depends { name: "sigwatch" }
     Depends { name: "Qt5GSettings" }
     Depends { name: "Qt5Xdg" }
+    Depends { name: "LiriLogind" }
     Depends { name: "systemd" }
     Depends { name: "pam" }
 

@@ -27,8 +27,9 @@
 #ifndef LOGINDBACKEND_H
 #define LOGINDBACKEND_H
 
-#include <QtCore/QLoggingCategory>
-#include <QtDBus/QDBusConnection>
+#include <QLoggingCategory>
+
+#include <LiriLogind/Logind>
 
 #include "loginmanagerbackend.h"
 
@@ -45,8 +46,7 @@ class LogindBackend : public LoginManagerBackend
 public:
     ~LogindBackend();
 
-    static LogindBackend *create(SessionManager *sm,
-                                 const QDBusConnection &connection = QDBusConnection::systemBus());
+    static LogindBackend *create(SessionManager *sm);
 
     QString name() const;
 
@@ -73,18 +73,18 @@ private:
     LogindBackend();
 
     SessionManager *m_sessionManager;
-    QDBusInterface *m_interface;
     QString m_sessionPath;
     int m_powerButtonFd;
     int m_inhibitFd;
 
-    void setupPowerButton();
     void setupInhibitors();
 
 private Q_SLOTS:
+    void handleConnectedChanged(bool connected);
+    void handleInhibited(const QString &who, const QString &why, int fd);
+    void handleUninhibited(int fd);
     void prepareForSleep(bool arg);
     void prepareForShutdown(bool arg);
-    void getSession(QDBusPendingCallWatcher *watcher);
     void devicePaused(quint32 devMajor, quint32 devMinor, const QString &type);
 };
 
