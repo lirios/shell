@@ -34,9 +34,6 @@ using namespace Liri;
 
 LogindBackend::LogindBackend()
     : LoginManagerBackend()
-    , m_sessionManager(nullptr)
-    , m_powerButtonFd(-1)
-    , m_inhibitFd(-1)
 {
 }
 

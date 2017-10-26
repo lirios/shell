@@ -35,9 +35,6 @@
 
 Q_DECLARE_LOGGING_CATEGORY(LOGIND_BACKEND)
 
-class QDBusInterface;
-class QDBusPendingCallWatcher;
-
 class SessionManager;
 
 class LogindBackend : public LoginManagerBackend
@@ -72,10 +69,9 @@ public:
 private:
     LogindBackend();
 
-    SessionManager *m_sessionManager;
-    QString m_sessionPath;
-    int m_powerButtonFd;
-    int m_inhibitFd;
+    SessionManager *m_sessionManager = nullptr;
+    int m_powerButtonFd = -1;
+    int m_inhibitFd = -1;
 
     void setupInhibitors();
 
