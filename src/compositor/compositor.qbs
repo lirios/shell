@@ -16,6 +16,7 @@ QtGuiApplication {
     Depends { name: "Qt5GSettings" }
     Depends { name: "Qt5Xdg" }
     Depends { name: "LiriLogind" }
+    Depends { name: "LiriLocalDevice" }
     Depends { name: "systemd" }
     Depends { name: "pam" }
 
@@ -66,8 +67,6 @@ QtGuiApplication {
         "sessionmanager/*.h",
         "sessionmanager/loginmanager/*.cpp",
         "sessionmanager/loginmanager/*.h",
-        "sessionmanager/powermanager/*.cpp",
-        "sessionmanager/powermanager/*.h",
         "sessionmanager/screensaver/*.cpp",
         "sessionmanager/screensaver/*.h",
     ]

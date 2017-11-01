@@ -26,6 +26,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0
+import Liri.Device 1.0 as LiriDevice
 
 Popup {
     id: powerDialog
@@ -153,41 +154,41 @@ Popup {
         ListItem {
             iconSource: Qt.resolvedUrl("../images/sleep.svg")
             text: qsTr("Sleep")
-            visible: SessionInterface.canSuspend
+            visible: LiriDevice.LocalDevice.canSuspend
             onClicked: {
                 powerDialog.accept()
                 // TODO: Lock screen
-                SessionInterface.suspend()
+                LiriDevice.LocalDevice.suspend()
             }
         }
 
         ListItem {
             iconName: "file/file_download"
             text: qsTr("Suspend to disk")
-            visible: SessionInterface.canHibernate
+            visible: LiriDevice.LocalDevice.canHibernate
             onClicked: {
                 powerDialog.accept()
-                SessionInterface.hibernate()
+                LiriDevice.LocalDevice.hibernate()
             }
         }
 
         ListItem {
             iconName: "action/power_settings_new"
             text: qsTr("Power off")
-            visible: SessionInterface.canPowerOff
+            visible: LiriDevice.LocalDevice.canPowerOff
             onClicked: {
                 powerDialog.accept()
-                SessionInterface.powerOff()
+                LiriDevice.LocalDevice.powerOff()
             }
         }
 
         ListItem {
             iconSource: Qt.resolvedUrl("../images/reload.svg")
             text: qsTr("Restart")
-            visible: SessionInterface.canRestart
+            visible: LiriDevice.LocalDevice.canRestart
             onClicked: {
                 powerDialog.accept()
-                SessionInterface.restart()
+                LiriDevice.LocalDevice.restart()
             }
         }
 

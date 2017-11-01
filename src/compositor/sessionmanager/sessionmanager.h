@@ -37,7 +37,6 @@ Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 class Authenticator;
 class CustomAuthenticator;
 class LoginManager;
-class PowerManager;
 class ScreenSaver;
 
 class SessionManager : public QObject
@@ -48,11 +47,6 @@ class SessionManager : public QObject
     Q_PROPERTY(bool canLock READ canLock CONSTANT)
     Q_PROPERTY(bool canStartNewSession READ canStartNewSession CONSTANT)
     Q_PROPERTY(bool canLogOut READ canLogOut CONSTANT)
-    Q_PROPERTY(bool canPowerOff READ canPowerOff CONSTANT)
-    Q_PROPERTY(bool canRestart READ canRestart CONSTANT)
-    Q_PROPERTY(bool canSuspend READ canSuspend CONSTANT)
-    Q_PROPERTY(bool canHibernate READ canHibernate CONSTANT)
-    Q_PROPERTY(bool canHybridSleep READ canHybridSleep CONSTANT)
 public:
     SessionManager(QObject *parent = nullptr);
     virtual ~SessionManager();
@@ -67,11 +61,6 @@ public:
     bool canLock() const;
     bool canStartNewSession();
     bool canLogOut();
-    bool canPowerOff();
-    bool canRestart();
-    bool canSuspend();
-    bool canHibernate();
-    bool canHybridSleep();
 
 Q_SIGNALS:
     void idleChanged(bool value);
@@ -95,11 +84,6 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void logOut();
-    void powerOff();
-    void restart();
-    void suspend();
-    void hibernate();
-    void hybridSleep();
 
     void lockSession();
     void unlockSession(const QString &password, const QJSValue &callback);
@@ -120,7 +104,6 @@ private:
     Authenticator *m_authenticator;
 
     LoginManager *m_loginManager;
-    PowerManager *m_powerManager;
     ScreenSaver *m_screenSaver;
     QList<qint64> m_processes;
 
@@ -129,7 +112,7 @@ private:
 
     void setLocked(bool value);
 
-    friend class CustomAuthenticator;
+    friend class QmlAuthenticator;
 };
 
 #endif // SESSIONMANAGER_H

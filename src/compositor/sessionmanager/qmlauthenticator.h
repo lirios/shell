@@ -1,10 +1,7 @@
 /****************************************************************************
- * This file is part of Liri Shell.
+ * This file is part of Liri.
  *
- * Copyright (C) 2017 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2017 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -24,35 +21,24 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef SYSTEMDPOWERBACKEND_H
-#define SYSTEMDPOWERBACKEND_H
+#pragma once
 
-#include <QtDBus/QDBusInterface>
+#include <QObject>
+#include <QJSValue>
 
-#include "powermanagerbackend.h"
+#include "sessionmanager/sessionmanager.h"
 
-class SystemdPowerBackend : public PowerManagerBackend
+class QmlAuthenticator : public QObject
 {
     Q_OBJECT
-
 public:
-    SystemdPowerBackend();
-    virtual ~SystemdPowerBackend();
-
-    static QString service();
-
-    QString name() const;
-
-    PowerManager::Capabilities capabilities() const;
-
-    void powerOff();
-    void restart();
-    void suspend();
-    void hibernate();
-    void hybridSleep();
+    explicit QmlAuthenticator(SessionManager *parent, const QJSValue &callback);
 
 private:
-    QDBusInterface *m_interface;
-};
+    SessionManager *m_parent;
+    QJSValue m_callback;
+    bool m_succeded;
 
-#endif // SYSTEMDPOWERBACKEND_H
+private Q_SLOTS:
+    void authenticate();
+};

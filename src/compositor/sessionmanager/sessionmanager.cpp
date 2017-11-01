@@ -30,8 +30,8 @@
 #include <QtDBus/QDBusError>
 
 #include "authenticator.h"
+#include "qmlauthenticator.h"
 #include "loginmanager/loginmanager.h"
-#include "powermanager/powermanager.h"
 #include "sessionmanager/sessionmanager.h"
 #include "sessionmanager/screensaver/screensaver.h"
 #include "screensaver_adaptor.h"
@@ -40,54 +40,6 @@
 #include <sys/types.h>
 
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "liri.session.manager")
-
-/*
- * CustomAuthenticator
- */
-
-class CustomAuthenticator : public QObject
-{
-    Q_OBJECT
-
-public:
-    CustomAuthenticator(SessionManager *parent, const QJSValue &callback)
-        : m_parent(parent)
-        , m_callback(callback)
-        , m_succeded(false)
-    {
-        connect(m_parent->m_authenticator, &Authenticator::authenticationSucceded, this, [=] {
-            m_succeded = true;
-            authenticate();
-        });
-        connect(m_parent->m_authenticator, &Authenticator::authenticationFailed, this, [=] {
-            m_succeded = false;
-            authenticate();
-        });
-        connect(m_parent->m_authenticator, &Authenticator::authenticationError, this, [=] {
-            m_succeded = false;
-            authenticate();
-        });
-    }
-
-private:
-    SessionManager *m_parent;
-    QJSValue m_callback;
-    bool m_succeded;
-
-private Q_SLOTS:
-    void authenticate()
-    {
-        if (m_callback.isCallable())
-            m_callback.call(QJSValueList() << m_succeded);
-
-        m_parent->m_authRequested = false;
-
-        if (m_succeded)
-            m_parent->setLocked(false);
-
-        deleteLater();
-    }
-};
 
 /*
  * SessionManager
@@ -99,7 +51,6 @@ SessionManager::SessionManager(QObject *parent)
     , m_authRequested(false)
     , m_authenticator(new Authenticator)
     , m_loginManager(new LoginManager(this, this))
-    , m_powerManager(new PowerManager(this))
     , m_screenSaver(new ScreenSaver(this))
     , m_idle(false)
     , m_locked(false)
@@ -193,60 +144,10 @@ bool SessionManager::canStartNewSession()
     return false;
 }
 
-bool SessionManager::canPowerOff()
-{
-    return m_powerManager->capabilities() & PowerManager::PowerOff;
-}
-
-bool SessionManager::canRestart()
-{
-    return m_powerManager->capabilities() & PowerManager::Restart;
-}
-
-bool SessionManager::canSuspend()
-{
-    return m_powerManager->capabilities() & PowerManager::Suspend;
-}
-
-bool SessionManager::canHibernate()
-{
-    return m_powerManager->capabilities() & PowerManager::Hibernate;
-}
-
-bool SessionManager::canHybridSleep()
-{
-    return m_powerManager->capabilities() & PowerManager::HybridSleep;
-}
-
 void SessionManager::logOut()
 {
     // Exit
     QCoreApplication::quit();
-}
-
-void SessionManager::powerOff()
-{
-    m_powerManager->powerOff();
-}
-
-void SessionManager::restart()
-{
-    m_powerManager->restart();
-}
-
-void SessionManager::suspend()
-{
-    m_powerManager->suspend();
-}
-
-void SessionManager::hibernate()
-{
-    m_powerManager->hibernate();
-}
-
-void SessionManager::hybridSleep()
-{
-    m_powerManager->hybridSleep();
 }
 
 void SessionManager::lockSession()
@@ -259,7 +160,7 @@ void SessionManager::unlockSession(const QString &password, const QJSValue &call
     if (m_authRequested)
         return;
 
-    (void)new CustomAuthenticator(this, callback);
+    (void)new QmlAuthenticator(this, callback);
     QMetaObject::invokeMethod(m_authenticator, "authenticate", Q_ARG(QString, password));
     m_authRequested = true;
 }
@@ -284,36 +185,26 @@ void SessionManager::requestLogOut()
 
 void SessionManager::requestPowerOff()
 {
-    if (!canPowerOff())
-        return;
     Q_EMIT powerOffRequested();
 }
 
 void SessionManager::requestRestart()
 {
-    if (!canRestart())
-        return;
     Q_EMIT restartRequested();
 }
 
 void SessionManager::requestSuspend()
 {
-    if (!canSuspend())
-        return;
     Q_EMIT suspendRequested();
 }
 
 void SessionManager::requestHibernate()
 {
-    if (!canHibernate())
-        return;
     Q_EMIT hibernateRequested();
 }
 
 void SessionManager::requestHybridSleep()
 {
-    if (!canHybridSleep())
-        return;
     Q_EMIT hybridSleepRequested();
 }
 
@@ -321,5 +212,3 @@ void SessionManager::cancelShutdownRequest()
 {
     Q_EMIT shutdownRequestCanceled();
 }
-
-#include "sessionmanager.moc"

@@ -28,6 +28,7 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.1
 import Fluid.Controls 1.0
+import Liri.Device 1.0 as LiriDevice
 
 RowLayout {
     implicitWidth: (Units.iconSizes.large * 3) + (spacing * 3)
@@ -64,7 +65,7 @@ RowLayout {
     IconButton {
         iconSize: Units.iconSizes.smallMedium
         iconName: "action/power_settings_new"
-        enabled: SessionInterface.canPowerOff
+        enabled: LiriDevice.LocalDevice.canPowerOff
         onClicked: {
             launcherPopOver.close();
             SessionInterface.requestPowerOff();
