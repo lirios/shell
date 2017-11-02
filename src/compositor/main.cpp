@@ -40,6 +40,8 @@
 #include <sys/prctl.h>
 #endif
 
+#include <signal.h>
+
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
 static void disablePtrace()
@@ -128,6 +130,11 @@ int main(int argc, char *argv[])
                                          TR("Do not run autostart programs"));
     parser.addOption(noAutostartOption);
 
+    // Raise SIGSTOP on start-up
+    QCommandLineOption waitForDebuggerOption(QStringLiteral("wait-for-debugger"),
+                                             TR("Raise SIGSTOP on startup"));
+    parser.addOption(waitForDebuggerOption);
+
 #ifdef DEVELOPMENT_BUILD
     // Load shell from an arbitrary path
     QCommandLineOption qmlOption(QStringLiteral("qml"),
@@ -147,6 +154,13 @@ int main(int argc, char *argv[])
 
     // Arguments
     QString fakeScreenData = parser.value(fakeScreenOption);
+
+    // Wait for debugger
+    if (parser.isSet(waitForDebuggerOption)) {
+        qWarning("Waiting for debugger on PID %lld, send SIGCONT to continue...",
+                 QCoreApplication::applicationPid());
+        ::raise(SIGSTOP);
+    }
 
     // Print version information
     qInfo("== Liri Shell v%s ==\n"
