@@ -380,11 +380,11 @@ Item {
             // Open window switcher
             if (output.primary) {
                 if (event.key === Qt.Key_Tab) {
-                    event.accept = true;
+                    event.accepted = true;
                     desktop.windowSwitcher.next();
                     return;
                 } else if (event.key === Qt.Key_Backtab) {
-                    event.accept = true;
+                    event.accepted = true;
                     desktop.windowSwitcher.previous();
                     return;
                 }
@@ -405,7 +405,7 @@ Item {
             break;
         }
 
-        event.accept = false;
+        event.accepted = false;
     }
 
     function handleKeyReleased(event) {
@@ -414,7 +414,7 @@ Item {
             // Close window switcher
             if (output.primary) {
                 if (event.key === Qt.Key_Super_L || event.key === Qt.Key_Super_R) {
-                    event.accept = true;
+                    event.accepted = true;
                     desktop.windowSwitcher.close();
                     desktop.windowSwitcher.activate();
                     return;
@@ -422,6 +422,6 @@ Item {
             }
         }
 
-        event.accept = false;
+        event.accepted = false;
     }
 }
