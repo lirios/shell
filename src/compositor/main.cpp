@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("liri"));
 
     // Disable QPA mouse cursor
-    qputenv("LIRI_QPA_HIDECURSOR", QByteArrayLiteral("1"));
+    qputenv("QT_QPA_EGLFS_HIDECURSOR", QByteArrayLiteral("1"));
 
     // Automatically support HiDPI
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
