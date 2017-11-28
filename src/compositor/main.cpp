@@ -108,7 +108,8 @@ int main(int argc, char *argv[])
     app.setFallbackSessionManagementEnabled(false);
     app.setQuitOnLastWindowClosed(false);
 
-    // Enable scene graph logs
+    // Enable logs
+    QLoggingCategory::setFilterRules(QStringLiteral("qt.qpa.eglfs*=true"));
     QLoggingCategory::setFilterRules(QStringLiteral("qt.scenegraph.general=true"));
 
     // Set style
