@@ -5,7 +5,7 @@ Project {
 
     readonly property string version: "0.9.0"
 
-    readonly property string minimumQtVersion: "5.9.0"
+    readonly property string minimumQtVersion: "5.10.0"
 
     property bool useStaticAnalyzer: false
 
