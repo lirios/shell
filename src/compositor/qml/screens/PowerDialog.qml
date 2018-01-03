@@ -21,11 +21,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.2
+import QtQuick 2.10
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import QtQuick.Controls 2.3
+import QtQuick.Controls.Material 2.3
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Device 1.0 as LiriDevice
 
 Popup {
@@ -119,7 +119,7 @@ Popup {
                 anchors.centerIn: parent
                 spacing: 4
 
-                Icon {
+                FluidControls.Icon {
                     anchors.horizontalCenter: parent.horizontalCenter
                     name: actionIcon
                     size: 36
@@ -130,13 +130,13 @@ Popup {
                     height: 8
                 }
 
-                TitleLabel {
+                FluidControls.TitleLabel {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: Material.primaryTextColor
                     text: actionTitle
                 }
 
-                SubheadingLabel {
+                FluidControls.SubheadingLabel {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: Material.secondaryTextColor
                     horizontalAlignment: Qt.AlignHCenter
@@ -151,8 +151,8 @@ Popup {
             height: 8
         }
 
-        ListItem {
-            iconSource: Qt.resolvedUrl("../images/sleep.svg")
+        FluidControls.ListItem {
+            icon.source: Qt.resolvedUrl("../images/sleep.svg")
             text: qsTr("Sleep")
             visible: LiriDevice.LocalDevice.canSuspend
             onClicked: {
@@ -162,8 +162,8 @@ Popup {
             }
         }
 
-        ListItem {
-            iconName: "file/file_download"
+        FluidControls.ListItem {
+            icon.source: FluidControls.Utils.iconUrl("file/file_download")
             text: qsTr("Suspend to disk")
             visible: LiriDevice.LocalDevice.canHibernate
             onClicked: {
@@ -172,8 +172,8 @@ Popup {
             }
         }
 
-        ListItem {
-            iconName: "action/power_settings_new"
+        FluidControls.ListItem {
+            icon.source: FluidControls.Utils.iconUrl("action/power_settings_new")
             text: qsTr("Power off")
             visible: LiriDevice.LocalDevice.canPowerOff
             onClicked: {
@@ -182,8 +182,8 @@ Popup {
             }
         }
 
-        ListItem {
-            iconSource: Qt.resolvedUrl("../images/reload.svg")
+        FluidControls.ListItem {
+            icon.source: Qt.resolvedUrl("../images/reload.svg")
             text: qsTr("Restart")
             visible: LiriDevice.LocalDevice.canRestart
             onClicked: {

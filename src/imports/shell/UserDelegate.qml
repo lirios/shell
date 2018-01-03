@@ -26,9 +26,9 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
-Card {
+FluidControls.Card {
     id: userDelegate
 
     property string userName: model.userName
@@ -55,11 +55,11 @@ Card {
     Material.elevation: selected ? 4 : 2
 
     Behavior on width {
-        NumberAnimation { duration: Units.shortDuration }
+        NumberAnimation { duration: FluidControls.Units.shortDuration }
     }
 
     Behavior on height {
-        NumberAnimation { duration: Units.shortDuration }
+        NumberAnimation { duration: FluidControls.Units.shortDuration }
     }
 
     onSelectedChanged: {
@@ -94,10 +94,10 @@ Card {
         ColumnLayout {
             anchors {
                 fill: parent
-                margins: Units.largeSpacing
+                margins: FluidControls.Units.largeSpacing
             }
 
-            CircleImage {
+            FluidControls.CircleImage {
                 id: image
 
                 width: 96
@@ -120,9 +120,9 @@ Card {
                 height: width
                 visible: !image.visible
 
-                Icon {
+                FluidControls.Icon {
                     anchors.centerIn: parent
-                    name: "action/account_circle"
+                    source: FluidControls.Utils.iconUrl("action/account_circle")
                     size: 96
                 }
 
@@ -131,7 +131,7 @@ Card {
 
             Item {
                 width: parent.width
-                height: Units.largeSpacing
+                height: FluidControls.Units.largeSpacing
             }
 
             Label {
@@ -154,7 +154,7 @@ Card {
                 visible: opacity > 0.0
                 opacity: selected ? 1.0 : 0.0
 
-                spacing: Units.smallSpacing
+                spacing: FluidControls.Units.smallSpacing
 
                 onVisibleChanged: {
                     if (!visible)
@@ -164,11 +164,11 @@ Card {
                 Layout.fillWidth: true
 
                 Behavior on height {
-                    NumberAnimation { duration: Units.shortDuration }
+                    NumberAnimation { duration: FluidControls.Units.shortDuration }
                 }
 
                 Behavior on opacity {
-                    NumberAnimation { duration: Units.shortDuration }
+                    NumberAnimation { duration: FluidControls.Units.shortDuration }
                 }
 
                 TextField {
@@ -187,9 +187,9 @@ Card {
                     }
                 }
 
-                IconButton {
+                ToolButton {
                     id: sendButton
-                    iconName: "content/send"
+                    icon.source: FluidControls.Utils.iconUrl("content/send")
                     enabled: field.text != ""
                     onClicked: field.accepted()
                     visible: !busyIndicator.visible
@@ -207,7 +207,7 @@ Card {
                     visible: opacity > 0.0
 
                     Behavior on opacity {
-                        NumberAnimation { duration: Units.shortDuration }
+                        NumberAnimation { duration: FluidControls.Units.shortDuration }
                     }
 
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight

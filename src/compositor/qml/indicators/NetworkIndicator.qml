@@ -36,7 +36,7 @@ Indicator {
     id: indicator
 
     title: qsTr("Network")
-    iconName: materialIconName(connectionIconProvider.connectionTooltipIcon)
+    iconSource: FluidControls.Utils.iconUrl(materialIconName(connectionIconProvider.connectionTooltipIcon))
     tooltip: networkStatus.activeConnections
     // visible: connectionIconProvider.connectionIcon !== "network-unavailable"
 

@@ -41,7 +41,7 @@ FluidControls.ListItem {
         property bool airplaneMode: false
     }
 
-    iconName: "device/airplanemode_active"
+    icon.source: FluidControls.Utils.iconUrl("device/airplanemode_active")
     text: qsTr("Airplane mode")
 
     rightItem: Switch {

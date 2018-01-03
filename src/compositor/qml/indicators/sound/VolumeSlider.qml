@@ -24,25 +24,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.10
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.3
 import Fluid.Controls 1.0 as FluidControls
 
 FluidControls.ListItem {
     visible: volumeControl.visible
 
-    leftItem: FluidControls.IconButton {
+    leftItem: ToolButton {
         anchors.centerIn: parent
 
-        iconName: "av/volume_off"
+        icon.source: FluidControls.Utils.iconUrl("av/volume_off")
         onClicked: volumeControl.setMinimumVolume()
     }
 
-    rightItem: FluidControls.IconButton {
+    rightItem: ToolButton {
         anchors.centerIn: parent
 
-        iconName: "av/volume_up"
+        icon.source: FluidControls.Utils.iconUrl("av/volume_up")
         onClicked: volumeControl.setMaximumVolume()
     }
 

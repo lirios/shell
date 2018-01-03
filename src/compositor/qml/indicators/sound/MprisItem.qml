@@ -24,10 +24,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.10
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
+import QtQuick.Controls 2.3
+import QtQuick.Controls.Material 2.3
 import Fluid.Controls 1.0 as FluidControls
 import Vibe.Mpris 1.0
 
@@ -63,7 +63,8 @@ FluidControls.ListItem {
                 FluidControls.Icon {
                     id: icon
                     anchors.centerIn: parent
-                    name: player && player.iconName || "image/music_note"
+                    name: player ? player.iconName : ""
+                    source: player ? "" : FluidControls.Utils.iconUrl("image/music_note")
                     visible: !albumArt.visible
                     size: 40
                 }
@@ -98,39 +99,36 @@ FluidControls.ListItem {
         Row {
             Layout.alignment: Qt.AlignHCenter
 
-            FluidControls.IconButton {
+            ToolButton {
                 ToolTip.text: qsTr("Previous")
                 ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
-                iconName: "av/skip_previous"
-                iconSize: FluidControls.Units.iconSizes.smallMedium
+                icon.source: FluidControls.Utils.iconUrl("av/skip_previous")
                 onClicked: {
                     if (player)
                         player.previous();
                 }
             }
 
-            FluidControls.IconButton {
+            ToolButton {
                 ToolTip.text: player.status === "Playing" ? qsTr("Pause") : qsTr("Play")
                 ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
-                iconName: player ? (player.status === "Playing" ? "av/pause" : "av/play_arrow") : ""
-                iconSize: FluidControls.Units.iconSizes.smallMedium
+                icon.source: FluidControls.Utils.iconUrl(player ? (player.status === "Playing" ? "av/pause" : "av/play_arrow") : "")
                 onClicked: {
                     if (player)
                         player.playPause();
                 }
             }
 
-            FluidControls.IconButton {
+            ToolButton {
                 ToolTip.text: qsTr("Next")
                 ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
-                iconName: "av/skip_next"
-                iconSize: FluidControls.Units.iconSizes.smallMedium
+                icon.source: FluidControls.Utils.iconUrl("av/skip_next")
                 onClicked: {
                     if (player)
                         player.next();

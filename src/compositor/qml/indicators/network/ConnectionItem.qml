@@ -60,7 +60,7 @@ FluidControls.ListItem {
         }
     }
 
-    iconName: materialIconName(ConnectionIcon)
+    icon.source: FluidControls.Utils.iconUrl(materialIconName(ConnectionIcon))
     text: ItemUniqueName
     subText: {
         if (ConnectionState === NM.Enums.Activating) {

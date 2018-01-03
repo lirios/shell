@@ -33,25 +33,25 @@ import Vibe.Hardware 1.0 as Hardware
 
 Indicator {
     title: qsTr("Storage")
-    iconName: Qt.resolvedUrl("../images/harddisk.svg")
+    iconSource: Qt.resolvedUrl("../images/harddisk.svg")
     visible: hardware.storageDevices.length > 0
     component: ListView {
         model: hardware.storageDevices
         clip: true
 
         delegate: FluidControls.ListItem {
-            iconName: modelData.iconName + "-symbolic"
+            icon.name: modelData.iconName + "-symbolic"
             text: modelData.name
             onClicked: processRunner.launchCommand("xdg-open file://" + modelData.filePath)
 
-            rightItem: FluidControls.IconButton {
+            rightItem: ToolButton {
                 anchors.centerIn: parent
 
                 ToolTip.text: modelData.mounted ? qsTr("Eject") : qsTr("Mount")
                 ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
-                iconName: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disk.svg"))
+                icon.source: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disk.svg"))
                 onClicked: modelData.mounted ? modelData.unmount() : modelData.mount()
             }
         }

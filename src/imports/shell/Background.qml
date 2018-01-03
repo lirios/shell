@@ -25,7 +25,7 @@
 import QtQuick 2.0
 import QtGraphicalEffects 1.0
 import Fluid.Core 1.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
 Loader {
     id: background
@@ -63,14 +63,14 @@ Loader {
     Component {
         id: solid
 
-        NoiseBackground {
+        FluidControls.NoiseBackground {
             objectName: "solid"
-            color: Utils.asColor(background.primaryColor)
+            color: background.primaryColor
 
             Behavior on color {
                 ColorAnimation {
                     easing.type: Easing.OutQuad
-                    duration: Units.mediumDuration
+                    duration: FluidControls.Units.mediumDuration
                 }
             }
         }
@@ -79,7 +79,7 @@ Loader {
     Component {
         id: gradient
 
-        NoiseBackground {
+        FluidControls.NoiseBackground {
             property bool vertical: background.mode === "vgradient"
 
             objectName: "gradient"
@@ -88,23 +88,23 @@ Loader {
             gradient: Gradient {
                 GradientStop {
                     position: 0
-                    color: Utils.asColor(background.primaryColor)
+                    color: background.primaryColor
 
                     Behavior on color {
                         ColorAnimation {
                             easing.type: Easing.OutQuad
-                            duration: Units.mediumDuration
+                            duration: FluidControls.Units.mediumDuration
                         }
                     }
                 }
                 GradientStop {
                     position: 1
-                    color: Utils.asColor(background.secondaryColor)
+                    color: background.secondaryColor
 
                     Behavior on color {
                         ColorAnimation {
                             easing.type: Easing.OutQuad
-                            duration: Units.mediumDuration
+                            duration: FluidControls.Units.mediumDuration
                         }
                     }
                 }
@@ -118,20 +118,20 @@ Loader {
         Item {
             objectName: "wallpaper"
 
-            NoiseBackground {
+            FluidControls.NoiseBackground {
                 anchors.fill: parent
-                color: Utils.asColor(background.primaryColor)
+                color: background.primaryColor
                 visible: picture.status !== Image.Loading
 
                 Behavior on color {
                     ColorAnimation {
                         easing.type: Easing.OutQuad
-                        duration: Units.mediumDuration
+                        duration: FluidControls.Units.mediumDuration
                     }
                 }
             }
 
-            SmoothFadeImage {
+            FluidControls.SmoothFadeImage {
                 readonly property real aspectRatio: width / height
 
                 id: picture

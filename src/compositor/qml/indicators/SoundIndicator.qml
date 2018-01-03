@@ -36,7 +36,7 @@ Indicator {
     id: indicator
 
     title: qsTr("Sound")
-    iconName: volumeControl.getIconName()
+    iconSource: FluidControls.Utils.iconUrl(volumeControl.getIconName())
     tooltip: volumeControl.visible
             ? volumeControl.muted ? qsTr("Muted")
                                   : qsTr("Volume at %1%").arg(Math.round(volumeControl.getVolumePercentage()))

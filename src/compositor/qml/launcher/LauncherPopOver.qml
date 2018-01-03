@@ -24,11 +24,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.2
+import QtQuick 2.10
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import QtQuick.Controls 2.3
+import QtQuick.Controls.Material 2.3
+import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 
 Popup {
@@ -101,9 +101,9 @@ Popup {
                         margins: Units.smallSpacing
                     }
 
-                    IconButton {
+                    ToolButton {
                         id: frequentAppsButton
-                        iconName: "action/history"
+                        icon.source: FluidControls.Utils.iconUrl("action/history")
                         checkable: true
                         checked: frequentApps.count > 0
                         autoExclusive: true
@@ -113,9 +113,9 @@ Popup {
                         }
                     }
 
-                    IconButton {
+                    ToolButton {
                         id: allAppsButton
-                        iconName: "navigation/apps"
+                        icon.source: FluidControls.Utils.iconUrl("navigation/apps")
                         checkable: true
                         checked: frequentApps.count === 0
                         autoExclusive: true
@@ -125,9 +125,9 @@ Popup {
                         }
                     }
 
-                    IconButton {
+                    ToolButton {
                         id: categoriesButton
-                        iconName: "action/list"
+                        icon.source: FluidControls.Utils.iconUrl("action/list")
                         checkable: true
                         autoExclusive: true
                         onClicked: {

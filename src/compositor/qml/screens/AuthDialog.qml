@@ -94,7 +94,7 @@ Dialog {
             spacing: FluidControls.Units.smallSpacing
 
             FluidControls.Icon {
-                name: "action/lock"
+                source: FluidControls.Utils.iconUrl("action/lock")
                 size: FluidControls.Units.iconSizes.medium
 
                 Layout.alignment: Qt.AlignTop

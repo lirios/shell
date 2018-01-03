@@ -43,7 +43,7 @@ Rectangle {
         spacing: 0
 
         FluidControls.Icon {
-            name: "alert/warning"
+            source: FluidControls.Utils.iconUrl("alert/warning")
             size: 96
 
             Layout.alignment: Qt.AlignHCenter

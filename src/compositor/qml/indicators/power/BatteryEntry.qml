@@ -33,7 +33,7 @@ import Vibe.Hardware 1.0
 FluidControls.ListItem {
     property var battery
 
-    iconName: battery.iconName
+    icon.source: FluidControls.Utils.iconUrl(battery.iconName)
     text: battery.name
     valueText: battery.summary
 

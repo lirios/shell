@@ -35,8 +35,8 @@ FluidControls.Showable {
     //! How long the overlay will stay on screen
     property alias timeout: timer.interval
 
-    //! Name of the icon to show (see XDG icon naming specification)
-    property alias iconName: icon.name
+    //! Name of the icon to show
+    property string iconName
 
     //! Overlay value (a percentage value in the 0:100 range)
     property alias value: progress.value
@@ -112,6 +112,7 @@ FluidControls.Showable {
 
             FluidControls.Icon {
                 id: icon
+                source: root.iconName ? FluidControls.Utils.iconUrl(root.iconName) : ""
                 size: FluidControls.Units.iconSizes.enormous
 
                 Layout.alignment: Qt.AlignHCenter

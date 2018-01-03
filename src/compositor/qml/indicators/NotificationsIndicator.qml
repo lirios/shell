@@ -33,9 +33,11 @@ Indicator {
     readonly property bool silentMode: false
 
     title: qsTr("Notifications")
-    iconName: silentMode ? "social/notifications_off"
-                         : hasNotifications ? "social/notifications"
-                                            : "social/notifications_none"
+    iconSource: FluidControls.Utils.iconUrl(
+                    silentMode ? "social/notifications_off"
+                               : hasNotifications ? "social/notifications"
+                                                  : "social/notifications_none"
+                    )
     component: ColumnLayout {
         spacing: 0
 
@@ -43,7 +45,7 @@ Indicator {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            iconName: "social/notifications_none"
+            icon.source: FluidControls.Utils.iconUrl("social/notifications_none")
             text: qsTr("No notifications")
             visible: notificationView.count == 0
         }
@@ -57,7 +59,8 @@ Indicator {
             delegate: FluidControls.ListItem {
                 property int notificationId: model.id
 
-                iconName: model.appIcon ? model.appIcon : model.hasIcon ? "image://notifications/%1/%2".arg(model.id).arg(Date.now() / 1000 | 0) : "social/notifications"
+                icon.name: model.appIcon ? model.appIcon : ""
+                icon.source: model.appIcon ? "" : model.hasIcon ? "image://notifications/%1/%2".arg(model.id).arg(Date.now() / 1000 | 0) : FluidControls.Utils.iconUrl("social/notifications")
                 text: model.summary
                 onClicked: {
                     for (var i = 0; i < notificationsModel.count; i++) {

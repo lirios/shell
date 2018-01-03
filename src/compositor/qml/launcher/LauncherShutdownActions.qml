@@ -24,20 +24,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.2
+import QtQuick 2.10
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.1
-import Fluid.Controls 1.0
+import QtQuick.Controls 2.3
+import Fluid.Controls 1.0 as FluidControls
 import Liri.Device 1.0 as LiriDevice
 
 RowLayout {
-    implicitWidth: (Units.iconSizes.large * 3) + (spacing * 3)
-    implicitHeight: Units.iconSizes.large + (spacing * 2)
-    spacing: Units.smallSpacing
+    implicitWidth: (FluidControls.Units.iconSizes.large * 3) + (spacing * 3)
+    implicitHeight: FluidControls.Units.iconSizes.large + (spacing * 2)
+    spacing: FluidControls.Units.smallSpacing
 
-    IconButton {
-        iconSize: Units.iconSizes.smallMedium
-        iconName: Qt.resolvedUrl("../images/logout.svg")
+    ToolButton {
+        icon.source: Qt.resolvedUrl("../images/logout.svg")
         enabled: SessionInterface.canLogOut
         onClicked: {
             launcherPopOver.close();
@@ -49,9 +48,8 @@ RowLayout {
         ToolTip.visible: hovered
     }
 
-    IconButton {
-        iconSize: Units.iconSizes.smallMedium
-        iconName: "action/lock"
+    ToolButton {
+        icon.source: FluidControls.Utils.iconUrl("action/lock")
         onClicked: {
             launcherPopOver.close();
             SessionInterface.lockSession()
@@ -62,9 +60,8 @@ RowLayout {
         ToolTip.visible: hovered
     }
 
-    IconButton {
-        iconSize: Units.iconSizes.smallMedium
-        iconName: "action/power_settings_new"
+    ToolButton {
+        icon.source: FluidControls.Utils.iconUrl("action/power_settings_new")
         enabled: LiriDevice.LocalDevice.canPowerOff
         onClicked: {
             launcherPopOver.close();

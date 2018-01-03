@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import QtQml.Models 2.1
-import Fluid.Core 1.0
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Launcher 0.1
 
@@ -15,7 +14,7 @@ Item {
     FluidControls.Placeholder {
         anchors.fill: parent
 
-        iconName: 'action/history'
+        icon.source: FluidControls.Utils.iconUrl("action/history")
         text: qsTr('Frequent Apps')
         subText: qsTr('The apps you use frequently will show here')
         visible: frequentApps.count === 0

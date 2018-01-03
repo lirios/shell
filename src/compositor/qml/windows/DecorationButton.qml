@@ -23,7 +23,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
+import Fluid.Controls 1.0 as FluidControls
 
 Item {
     id: button
@@ -35,7 +35,7 @@ Item {
     width: icon.size
     height: width
 
-    Icon {
+    FluidControls.Icon {
         id: icon
 
         anchors.fill: parent

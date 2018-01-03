@@ -46,7 +46,7 @@ Rectangle {
 
     FluidControls.Icon {
         anchors.centerIn: parent
-        name: "navigation/close"
+        source: FluidControls.Utils.iconUrl("navigation/close")
         color: "white"
         width: parent.width - FluidControls.Units.smallSpacing
         height: width
