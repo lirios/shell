@@ -62,7 +62,7 @@ Item {
 
         edge: Qt.RightEdge
 
-        width: Math.max(320, panel.rightWidth)
+        width: Math.max(356, panel.rightWidth)
         height: shell.height
 
         Item {

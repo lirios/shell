@@ -22,10 +22,36 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Liri.Shell 1.0
+import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
+import Liri.Shell 1.0 as Shell
+import Fluid.Controls 1.0 as FluidControls
 
-Indicator {
+Shell.Indicator {
     title: qsTr("Date & Time")
     text: Qt.formatTime(dateTime.now)
     tooltip: Qt.formatDate(dateTime.now, Locale.LongFormat)
+
+    component: Item {
+        FluidControls.DatePicker {
+            id: datePicker
+
+            Material.theme: Material.Light
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            orientation: FluidControls.DatePicker.Portrait
+            footer: DialogButtonBox {
+                Material.background: "transparent"
+
+                padding: 0
+
+                Button {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Today")
+                    flat: true
+                    onClicked: datePicker.selectedDate = new Date()
+                }
+            }
+        }
+    }
 }
