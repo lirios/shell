@@ -45,7 +45,6 @@ Item {
         readonly property alias workspaces: workspace //workspacesLayer
         readonly property alias fullScreen: fullScreenLayer
         readonly property alias overlays: overlaysLayer
-        readonly property alias notifications: notificationsLayer
     }
 
     readonly property alias shell: shellLoader.item
