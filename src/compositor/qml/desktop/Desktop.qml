@@ -114,7 +114,6 @@ Item {
     Loader {
         id: shellLoader
         anchors.fill: parent
-        asynchronous: true
         active: output.primary
         sourceComponent: Shell {
             opacity: workspace.state == "present" ? 0.0 : 1.0
@@ -163,7 +162,6 @@ Item {
             topMargin: FluidControls.Units.largeSpacing * 3
             bottomMargin: 56 + FluidControls.Units.smallSpacing
         }
-        asynchronous: true
         active: output.primary
         sourceComponent: Notifications {}
         width: FluidControls.Units.gu(24) + (2 * FluidControls.Units.smallSpacing)
