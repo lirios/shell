@@ -8,15 +8,11 @@ LiriQmlPlugin {
     Depends { name: "polkit_qt5"; submodules: ["core", "agent"] }
 
     condition: {
-        if (!polkit_qt5.core.found) {
-            console.error("polkit-qt5-core-1 is required to build " + targetName);
-            return false;
-        }
+        if (!polkit_qt5.core.found)
+            throw "polkit-qt5-core-1 is required to build " + targetName;
 
-        if (!polkit_qt5.agent.found) {
-            console.error("polkit-qt5-agent-1 is required to build " + targetName);
-            return false;
-        }
+        if (!polkit_qt5.agent.found)
+            throw "polkit-qt5-agent-1 is required to build " + targetName;
 
         return true;
     }
