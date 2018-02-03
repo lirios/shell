@@ -7,7 +7,7 @@ Shell
 [![GitHub release](https://img.shields.io/github/release/lirios/shell.svg)](https://github.com/lirios/shell)
 [![Build Status](https://travis-ci.org/lirios/shell.svg?branch=develop)](https://travis-ci.org/lirios/shell)
 [![GitHub issues](https://img.shields.io/github/issues/lirios/shell.svg)](https://github.com/lirios/shell/issues)
-[![Maintained](https://img.shields.io/maintenance/yes/2017.svg)](https://github.com/lirios/shell/commits/develop)
+[![Maintained](https://img.shields.io/maintenance/yes/2018.svg)](https://github.com/lirios/shell/commits/develop)
 
 Responsive shell for Liri OS.
 

@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2017 Pier Luigi Fiorini
+ * Copyright (C) 2018 Pier Luigi Fiorini
  *
  * $BEGIN_LICENSE:GPL3+$
  *
