@@ -65,12 +65,12 @@ function spreadWindows() {
             var chrome = chromeComponent.createObject(entry, {"view": entry});
             chrome.selected.connect(function(view) {
                 for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                    liriCompositor.screenManager.objectAt(i).state = "normal";
+                    liriCompositor.screenManager.objectAt(i).screenView.surfacesArea.state = "normal";
                 view.takeFocus();
             });
             chrome.closed.connect(function(view) {
                 for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                    liriCompositor.screenManager.objectAt(i).state = "normal";
+                    liriCompositor.screenManager.objectAt(i).screenView.surfacesArea.state = "normal";
                 view.close();
             });
             chromes[entry] = chrome;
