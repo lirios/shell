@@ -49,27 +49,28 @@ If you want to learn more, please read the [Qbs manual](http://doc.qt.io/qbs/ind
 especially the [setup guide](http://doc.qt.io/qbs/configuring.html) and how to install artifacts
 from the [installation guide](http://doc.qt.io/qbs/installing-files.html).
 
-From the root of the repository, run:
+If you haven't already, start by setting up a `qt5` profile for `qbs`:
 
 ```sh
 qbs setup-toolchains --type gcc /usr/bin/g++ gcc
-qbs setup-qt /usr/bin/qmake-qt5 qt5
+qbs setup-qt $(which qmake) qt5 # make sure that qmake is in PATH
 qbs config profiles.qt5.baseProfile gcc
+```
+
+Then, from the root of the repository, run:
+
+```sh
 qbs -d build -j $(nproc) profile:qt5 # use sudo if necessary
 ```
 
-On the last `qbs` line, you can specify additional configuration parameters at the end:
+To the `qbs` call above you can append additional configuration parameters:
 
- * `qbs.installRoot:/path/to/install` (for example `/`)
- * `qbs.installPrefix:path/to/install` (for example `opt/liri` or `usr`)
-
-The following are only needed if `qbs.installPrefix` is a system-wide path such as `usr`
-and the default value doesn't suit your needs. All are relative to `qbs.installRoot`:
-
- * `modules.lirideployment.libDir:path/to/lib` where libraries are installed (default: `lib`)
- * `modules.lirideployment.qmlDir:path/to/qml` where QML plugins are installed (default: `lib/qml`)
- * `modules.lirideployment.pluginsDir:path/to/plugins` where Qt plugins are installed (default: `lib/plugins`)
- * `modules.lirideployment.qbsModulesDir:path/to/qbs` where Qbs modules are installed (default: `share/qbs/modules`)
+ * `modules.lirideployment.prefix:/path/to/prefix` where most files are installed (default: `/usr/local`)
+ * `modules.lirideployment.dataDir:path/to/lib` where data files are installed (default: `/usr/local/share`)
+ * `modules.lirideployment.libDir:path/to/lib` where libraries are installed (default: `/usr/local/lib`)
+ * `modules.lirideployment.qmlDir:path/to/qml` where QML plugins are installed (default: `/usr/local/lib/qml`)
+ * `modules.lirideployment.pluginsDir:path/to/plugins` where Qt plugins are installed (default: `/usr/local/lib/plugins`)
+ * `modules.lirideployment.qbsModulesDir:path/to/qbs` where Qbs modules are installed (default: `/usr/local/share/qbs/modules`)
 
 See [lirideployment.qbs](https://github.com/lirios/qbs-shared/blob/develop/modules/lirideployment/lirideployment.qbs)
 for more deployment-related parameters.
@@ -80,9 +81,6 @@ You can also specify the following options:
    to load arbitrary QML files from the shell
  * `projects.Shell.systemdUserUnitDir:path/to/units` to install systemd user units in a different
    path, the path is relative to `qbs.installPrefix` and defaults to `lib/systemd/user`
-
-If you specify `qbs.installRoot` you might need to prefix the entire line with `sudo`,
-depending on whether you have permissions to write there or not.
 
 ## Licensing
 
