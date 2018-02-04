@@ -79,8 +79,8 @@ You can also specify the following options:
 
  * `projects.Shell.developmentBuild:true` to enable features for development such as the ability
    to load arbitrary QML files from the shell
- * `projects.Shell.systemdUserUnitDir:path/to/units` to install systemd user units in a different
-   path, the path is relative to `qbs.installPrefix` and defaults to `lib/systemd/user`
+ * `projects.Shell.systemdUserUnitDir:/path/to/units` to install systemd user units (default: `/usr/local/lib/systemd/user`),
+   the prefix can be changed setting `modules.lirideployment.prefix`
 
 ## Licensing
 

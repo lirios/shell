@@ -10,7 +10,7 @@ Project {
     property bool useStaticAnalyzer: false
 
     property bool developmentBuild: false
-    property string systemdUserUnitDir: "lib/systemd/user"
+    property string systemdUserUnitDir: ""
 
     condition: qbs.targetOS.contains("linux") && !qbs.targetOS.contains("android")
 
