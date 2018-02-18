@@ -105,7 +105,9 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(QStringLiteral(LIRISHELL_VERSION));
     app.setOrganizationName(QStringLiteral("Liri"));
     app.setOrganizationDomain(QStringLiteral("liri.io"));
+#ifndef QT_NO_SESSIONMANAGER
     app.setFallbackSessionManagementEnabled(false);
+#endif
     app.setQuitOnLastWindowClosed(false);
 
     // Enable logs
