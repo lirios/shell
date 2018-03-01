@@ -12,7 +12,6 @@ QtGuiApplication {
         submodules: ["core", "gui", "gui-private", "waylandclient"]
         versionAtLeast: project.minimumQtVersion
     }
-    Depends { name: "LiriWaylandClient" }
     Depends { name: "WaylandScanner" }
 
     LiriIncludeProbe {

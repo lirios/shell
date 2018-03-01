@@ -25,91 +25,43 @@
 #include <QtGui/QWindow>
 #include <QtGui/qpa/qwindowsysteminterface.h>
 
-#include <LiriWaylandClient/ClientConnection>
-#include <LiriWaylandClient/Registry>
-
 #include "shellhelperapplication.h"
-
-using namespace Liri::WaylandClient;
 
 class ShellHelperApplicationPrivate
 {
 public:
     ShellHelperApplicationPrivate()
-        : thread(new QThread())
-        , clientConnection(ClientConnection::fromQt())
-        , registry(new Registry())
-        , grabWindow(new QWindow())
     {
-        clientConnection->moveToThread(thread);
-        thread->start();
+        helper = new ShellHelperClient();
 
+        grabWindow = new QWindow();
         grabWindow->setFlags(Qt::BypassWindowManagerHint);
         grabWindow->resize(1, 1);
+        grabWindow->show();
+        helper->registerGrabSurface(grabWindow);
     }
 
     ~ShellHelperApplicationPrivate()
     {
         delete helper;
         delete grabWindow;
-        delete registry;
-        delete clientConnection;
-
-        thread->quit();
-        thread->wait();
-        delete thread;
     }
 
-    QThread *thread;
-    ClientConnection *clientConnection;
-    Registry *registry;
-    QWindow *grabWindow;
     ShellHelperClient *helper = nullptr;
+    QWindow *grabWindow = nullptr;
 };
 
 ShellHelperApplication::ShellHelperApplication(QObject *parent)
     : QObject(parent)
     , d_ptr(new ShellHelperApplicationPrivate())
 {
-    initialize();
+    connect(d_ptr->helper, &ShellHelperClient::cursorChangeRequested,
+            this, &ShellHelperApplication::handleCursorChangeRequest);
 }
 
 ShellHelperApplication::~ShellHelperApplication()
 {
     delete d_ptr;
-}
-
-void ShellHelperApplication::initialize()
-{
-    Q_D(ShellHelperApplication);
-
-    connect(d->registry, &Registry::interfaceAnnounced, this,
-            [this, d](const QByteArray &interface, quint32 name, quint32 version) {
-        if (interface == ShellHelperClient::interfaceName()) {
-            d->helper = new ShellHelperClient();
-            d->helper->initialize(d->registry, name, version);
-
-            connect(d->helper, &ShellHelperClient::cursorChangeRequested,
-                    this, &ShellHelperApplication::handleCursorChangeRequest);
-        }
-    });
-
-    connect(d->registry, &Registry::interfacesAnnounced, this, [d] {
-        // All interfaces were announced including shm, let's start
-        d->grabWindow->show();
-        d->helper->registerGrabSurface(d->grabWindow);
-    });
-
-    connect(d->registry, &Registry::interfaceRemoved, this,
-            [d](quint32 name) {
-        if (d->helper && d->helper->name() == name) {
-            delete d->helper;
-            d->helper = nullptr;
-        }
-    });
-
-    d->registry->create(d->clientConnection->display());
-    d->registry->setup();
 }
 
 void ShellHelperApplication::handleCursorChangeRequest(ShellHelperClient::GrabCursor cursor)

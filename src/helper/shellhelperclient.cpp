@@ -21,21 +21,22 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtGui/QGuiApplication>
 #include <QtGui/QPlatformSurfaceEvent>
 #include <QtGui/QWindow>
-
-#include <LiriWaylandClient/Surface>
-#include <LiriWaylandClient/private/registry_p.h>
-#include <LiriWaylandClient/private/surface_p.h>
+#include <QtGui/qpa/qplatformnativeinterface.h>
 
 #include "shellhelperclient.h"
 
 #include "qwayland-shell-helper.h"
 
-using namespace Liri::WaylandClient;
+static inline struct ::wl_surface *getWlSurface(QWindow *window)
+{
+    void *surface = QGuiApplication::platformNativeInterface()->nativeResourceForWindow("surface", window);
+    return static_cast<struct ::wl_surface *>(surface);
+}
 
-class ShellHelperClientPrivate
-        : public QtWayland::liri_shell
+class ShellHelperClientPrivate : public QtWayland::liri_shell
 {
     Q_DECLARE_PUBLIC(ShellHelperClient)
 public:
@@ -45,14 +46,20 @@ public:
     {
     }
 
-    void registerWindow(QWindow *window)
+    void sendGrabSurfaceRegistration(QWindow *window)
     {
-        Surface *surface = Surface::fromQt(window);
-        if (surface)
-            set_grab_surface(SurfacePrivate::get(surface)->object());
+        Q_Q(ShellHelperClient);
+
+        if (window->handle())
+            set_grab_surface(getWlSurface(window));
+        else
+            window->installEventFilter(q);
+
+        activated = true;
     }
 
-    quint32 name = 0;
+    bool activated = false;
+    QWindow *grabWindow = nullptr;
 
 protected:
     ShellHelperClient *q_ptr;
@@ -65,10 +72,11 @@ private:
     }
 };
 
-ShellHelperClient::ShellHelperClient(QObject *parent)
-    : QObject(parent)
+ShellHelperClient::ShellHelperClient()
+    : QWaylandClientExtensionTemplate(1)
     , d_ptr(new ShellHelperClientPrivate(this))
 {
+    connect(this, &ShellHelperClient::activeChanged, this, &ShellHelperClient::handleActivation);
 }
 
 ShellHelperClient::~ShellHelperClient()
@@ -76,17 +84,24 @@ ShellHelperClient::~ShellHelperClient()
     delete d_ptr;
 }
 
-quint32 ShellHelperClient::name() const
-{
-    Q_D(const ShellHelperClient);
-    return d->name;
-}
-
-void ShellHelperClient::initialize(Registry *registry, quint32 name, quint32 version)
+void ShellHelperClient::init(wl_registry *registry, int id, int version)
 {
     Q_D(ShellHelperClient);
-    d->name = name;
-    d->init(RegistryPrivate::get(registry)->registry, name, version);
+    d->init(registry, id, version);
+}
+
+void ShellHelperClient::registerGrabSurface(QWindow *window)
+{
+    Q_D(ShellHelperClient);
+
+    d->grabWindow = window;
+    if (isActive())
+        d->sendGrabSurfaceRegistration(window);
+}
+
+const wl_interface *ShellHelperClient::interface()
+{
+    return QtWayland::liri_shell::interface();
 }
 
 bool ShellHelperClient::eventFilter(QObject *watched, QEvent *event)
@@ -98,23 +113,16 @@ bool ShellHelperClient::eventFilter(QObject *watched, QEvent *event)
         QWindow *window = qobject_cast<QWindow*>(watched);
         Q_ASSERT(window);
         window->removeEventFilter(this);
-        d->registerWindow(window);
+        d->set_grab_surface(getWlSurface(window));
     }
 
     return false;
 }
 
-void ShellHelperClient::registerGrabSurface(QWindow *window)
+void ShellHelperClient::handleActivation()
 {
     Q_D(ShellHelperClient);
 
-    if (window->handle())
-        d->registerWindow(window);
-    else
-        window->installEventFilter(this);
-}
-
-QByteArray ShellHelperClient::interfaceName()
-{
-    return QByteArrayLiteral("liri_shell");
+    if (isActive() && !d->activated && d->grabWindow)
+        d->sendGrabSurfaceRegistration(d->grabWindow);
 }

@@ -21,17 +21,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef LIRISHELLHELPERCLIENT_H
+#define LIRISHELLHELPERCLIENT_H
 
 #include <QtCore/QObject>
+#include <QtWaylandClient/qwaylandclientextension.h>
 
-#include <LiriWaylandClient/Registry>
+#include <wayland-client.h>
 
 class QWindow;
 
 class ShellHelperClientPrivate;
 
-class ShellHelperClient : public QObject
+class ShellHelperClient : public QWaylandClientExtensionTemplate<ShellHelperClient>
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ShellHelperClient)
@@ -52,16 +54,14 @@ public:
     };
     Q_ENUM(GrabCursor)
 
-    ShellHelperClient(QObject *parent = nullptr);
+    ShellHelperClient();
     ~ShellHelperClient();
 
-    quint32 name() const;
+    void init(struct ::wl_registry *registry, int id, int version);
 
-    void initialize(Liri::WaylandClient::Registry *registry, quint32 name, quint32 version);
+    Q_INVOKABLE void registerGrabSurface(QWindow *window);
 
-    void registerGrabSurface(QWindow *window);
-
-    static QByteArray interfaceName();
+    static const struct ::wl_interface *interface();
 
 Q_SIGNALS:
     void cursorChangeRequested(GrabCursor cursor);
@@ -70,4 +70,7 @@ private:
     ShellHelperClientPrivate *const d_ptr;
 
     bool eventFilter(QObject *watched, QEvent *event) override;
+    void handleActivation();
 };
+
+#endif // LIRISHELLHELPERCLIENT_H

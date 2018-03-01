@@ -21,7 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef LIRISHELLHELPERAPPLICATION_H
+#define LIRISHELLHELPERAPPLICATION_H
 
 #include <QtCore/QObject>
 
@@ -40,8 +41,8 @@ public:
 private:
     ShellHelperApplicationPrivate *const d_ptr;
 
-    void initialize();
-
 private Q_SLOTS:
     void handleCursorChangeRequest(ShellHelperClient::GrabCursor cursor);
 };
+
+#endif // LIRISHELLHELPERAPPLICATION_H
