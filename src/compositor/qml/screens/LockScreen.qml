@@ -208,7 +208,7 @@ Showable {
         }
     }
 
-    InfoBar {
+    SnackBar {
         id: errorBar
     }
 }
