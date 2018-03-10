@@ -32,7 +32,7 @@ Product {
 
         prepare: {
             var vars = {
-                INSTALL_BINDIR: FileInfo.joinPaths(product.moduleProperty("qbs", "installRoot"),
+                INSTALL_BINDIR: FileInfo.joinPaths(product.moduleProperty("qbs", "installPrefix"),
                                                    product.moduleProperty("lirideployment", "binDir"))
             };
 
