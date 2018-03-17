@@ -98,7 +98,7 @@ Popup {
                     id: topRow
                     anchors {
                         fill: parent
-                        margins: Units.smallSpacing
+                        margins: FluidControls.Units.smallSpacing
                     }
 
                     ToolButton {
@@ -137,7 +137,7 @@ Popup {
                     }
 
                     Item {
-                        width: Units.smallSpacing
+                        width: FluidControls.Units.smallSpacing
                     }
 
                     TextField {
@@ -177,7 +177,7 @@ Popup {
 
                     anchors {
                         fill: parent
-                        margins: Units.smallSpacing
+                        margins: FluidControls.Units.smallSpacing
                     }
 
                     FrequentAppsView {
@@ -189,7 +189,7 @@ Popup {
                     LauncherCategories {
                         id: categories
 
-                        Layout.preferredWidth: Units.gu(10)
+                        Layout.preferredWidth: FluidControls.Units.gu(10)
                         Layout.fillHeight: true
 
                         clip: true
