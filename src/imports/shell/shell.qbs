@@ -13,7 +13,10 @@ LiriQmlPlugin {
     Depends { name: "WaylandScanner" }
     Depends { name: "LiriWaylandServer" }
 
-    cpp.defines: ['INSTALL_LIBEXECDIR="' + FileInfo.joinPaths(qbs.installPrefix, lirideployment.libexecDir) + '"']
+    cpp.defines: [
+        'INSTALL_ROOTDIR="' + qbs.installRoot + '"',
+        'INSTALL_LIBEXECDIR="' + FileInfo.joinPaths(qbs.installPrefix, lirideployment.libexecDir) + '"',
+    ]
     cpp.includePaths: base.concat([product.buildDirectory])
 
     files: ["*.cpp", "*.h", "qmldir", "*.qml", "*.qmltypes"]

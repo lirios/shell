@@ -21,6 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QtCore/QFile>
 #include <QtCore/QProcess>
 #include <QtCore/QThread>
 
@@ -59,25 +60,8 @@ public:
 
     void startProcess(const QString &socketName)
     {
-        int retries = 5;
-        while (retries-- > 0) {
-            QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-            env.insert(QLatin1String("WAYLAND_DISPLAY"), socketName);
-            //env.insert(QLatin1String("WAYLAND_DEBUG"), "1");
-            process->setProcessEnvironment(env);
-
-            qCDebug(gLcShell, "Starting shell helper (%s)...", INSTALL_LIBEXECDIR "/liri-shell-helper");
-            process->start(QLatin1String(INSTALL_LIBEXECDIR "/liri-shell-helper"));
-            if (Q_LIKELY(process->waitForStarted())) {
-                return;
-            } else {
-                if (retries == 0)
-                    qCWarning(gLcShell, "Failed to start shell helper, giving up");
-                else
-                    qCWarning(gLcShell, "Failed to start shell helper, %d attempt(s) left",
-                              retries);
-            }
-        }
+        if (!runProgram(QLatin1String(INSTALL_ROOTDIR INSTALL_LIBEXECDIR "/liri-shell-helper"), socketName))
+            runProgram(QLatin1String(INSTALL_LIBEXECDIR "/liri-shell-helper"), socketName);
     }
 
     QProcess *process;
@@ -91,6 +75,35 @@ private Q_SLOTS:
     void handleReadError()
     {
         qCCritical(gLcShell) << process->readAllStandardError();
+    }
+
+private:
+    bool runProgram(const QString &path, const QString &socketName)
+    {
+        if (!QFile::exists(path))
+            return false;
+
+        int retries = 5;
+        while (retries-- > 0) {
+            QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+            env.insert(QLatin1String("WAYLAND_DISPLAY"), socketName);
+            //env.insert(QLatin1String("WAYLAND_DEBUG"), "1");
+            process->setProcessEnvironment(env);
+            process->start(path);
+            qCDebug(gLcShell, "Trying shell helper (%s)...", qPrintable(path));
+            if (Q_LIKELY(process->waitForStarted())) {
+                qCInfo(gLcShell, "Running shell helper (%s)...", qPrintable(path));
+                return true;
+            } else {
+                if (retries == 0)
+                    qCWarning(gLcShell, "Failed to start shell helper, giving up");
+                else
+                    qCWarning(gLcShell, "Failed to start shell helper, %d attempt(s) left",
+                              retries);
+            }
+        }
+
+        return false;
     }
 };
 
