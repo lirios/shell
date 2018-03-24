@@ -232,9 +232,9 @@ WaylandCompositor {
         onCaptureRequested: {
             // TODO: We might want to do something depending on the capture type - plfiorini
             switch (screenshot.captureType) {
-            case Screenshot.CaptureActiveWindow:
-            case Screenshot.CaptureWindow:
-            case Screenshot.CaptureArea:
+            case LiriWayland.Screenshot.CaptureActiveWindow:
+            case LiriWayland.Screenshot.CaptureWindow:
+            case LiriWayland.Screenshot.CaptureArea:
                 break;
             default:
                 break;
