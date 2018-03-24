@@ -169,9 +169,8 @@ void UsageTracker::sessionIdleStateChanged(bool isIdle)
  */
 void UsageTracker::normalizeScores()
 {
-    Q_FOREACH (AppUsage *app, m_apps) {
+    for (AppUsage *app : qAsConst(m_apps))
         app->score /= 2;
-    }
 }
 
 void UsageTracker::incrementUsageForApp(AppUsage *app)
@@ -237,7 +236,7 @@ void UsageTracker::cleanUsage()
 {
     QDateTime weekAgo = QDateTime::currentDateTime().addDays(-7);
 
-    Q_FOREACH (AppUsage *app, m_apps) {
+    for (AppUsage *app : qAsConst(m_apps)) {
         if (app->score < SCORE_MIN && app->lastSeen < weekAgo) {
             m_apps.removeOne(app);
             app->destroy();
@@ -251,7 +250,7 @@ AppUsage *UsageTracker::usageForAppId(const QString &appId, bool createIfNew)
     if (appId.isEmpty())
         return nullptr;
 
-    Q_FOREACH (AppUsage *app, m_apps) {
+    for (AppUsage *app : qAsConst(m_apps)) {
         if (app->appId == appId)
             return app;
     }

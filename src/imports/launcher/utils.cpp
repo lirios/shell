@@ -50,7 +50,7 @@ QStringList xdgApplicationsPaths()
     xdgPaths += xdgDataDirs.split(QLatin1Char(':'), QString::SkipEmptyParts);
 
     // Append the applications directory to all XDG data directories
-    Q_FOREACH (const QString &xdgPath, xdgPaths) {
+    for (const QString &xdgPath : qAsConst(xdgPaths)) {
         QDir iconDir = QDir(xdgPath).filePath(QLatin1String("applications"));
         paths.append(iconDir.absolutePath());
     }

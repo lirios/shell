@@ -305,7 +305,7 @@ void Application::autostart()
         return;
     }
 
-    Q_FOREACH (const XdgDesktopFile &entry, XdgAutoStart::desktopFileList()) {
+    for (const XdgDesktopFile &entry : XdgAutoStart::desktopFileList()) {
         // Ignore entries that are explicitely not meant for Liri
         if (!entry.isSuitable(true, QStringLiteral("X-Liri")))
             continue;
