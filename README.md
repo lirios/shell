@@ -9,7 +9,7 @@ Shell
 [![GitHub issues](https://img.shields.io/github/issues/lirios/shell.svg)](https://github.com/lirios/shell/issues)
 [![Maintained](https://img.shields.io/maintenance/yes/2018.svg)](https://github.com/lirios/shell/commits/develop)
 
-Responsive shell for Liri OS.
+Responsive shell for the Liri desktop.
 
 ![Desktop](.github/desktop.png)
 
@@ -31,10 +31,11 @@ Qt >= 5.10.0 with at least the following modules is required:
 
 The following modules and their dependencies are required:
 
- * [qbs-shared](https://github.com/lirios/qbs-shared.git)
- * [fluid](https://github.com/lirios/fluid)
- * [qtaccountsservice](https://github.com/lirios/qtaccountsservice)
- * [qtgsettings](https://github.com/lirios/qtgsettings)
+ * [qbs](http://code.qt.io/cgit/qbs/qbs.git) >= 1.9.0
+ * [qbs-shared](https://github.com/lirios/qbs-shared.git) >= 1.2.0
+ * [fluid](https://github.com/lirios/fluid) >= 1.0.0
+ * [qtaccountsservice](https://github.com/lirios/qtaccountsservice) >= 1.2.0
+ * [qtgsettings](https://github.com/lirios/qtgsettings) >= 1.1.0
  * [libliri](https://github.com/lirios/libliri)
  * [liri-wayland](https://github.com/lirios/wayland)
  * [liri-workspace](https://github.com/lirios/workspace)
