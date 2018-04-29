@@ -23,7 +23,6 @@
 
 #include <QtCore/QThread>
 #include <QtGui/QWindow>
-#include <QtGui/qpa/qwindowsysteminterface.h>
 
 #include "shellhelperapplication.h"
 
@@ -102,6 +101,4 @@ void ShellHelperApplication::handleCursorChangeRequest(ShellHelperClient::GrabCu
     }
 
     d->grabWindow->setCursor(newCursor);
-
-    QWindowSystemInterface::handleEnterLeaveEvent(d->grabWindow, d->grabWindow, QPointF(0, 0), QPointF(0, 0));
 }

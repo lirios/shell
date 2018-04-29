@@ -209,6 +209,8 @@ void ShellHelper::grabCursor(GrabCursor cursor)
         auto resource = d->resourceMap().value(d->grabSurface->waylandClient());
         if (resource)
             d->send_grab_cursor(resource->handle, static_cast<uint32_t>(cursor));
+        for (QWaylandView *view : d->grabSurface->views())
+            d->grabSurface->compositor()->defaultSeat()->sendMouseMoveEvent(view, QPointF(0, 0));
     }
 }
 
