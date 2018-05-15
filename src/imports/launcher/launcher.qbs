@@ -24,5 +24,29 @@ LiriQmlPlugin {
 
     cpp.defines: []
 
-    files: ["*.cpp", "*.h", "qmldir", "*.qmltypes"]
+    files: [
+        "application.cpp",
+        "application.h",
+        "applicationmanager.cpp",
+        "applicationmanager.h",
+        "appusage.cpp",
+        "appusage.h",
+        "categoriesmodel.cpp",
+        "categoriesmodel.h",
+        "frequentmodel.cpp",
+        "frequentmodel.h",
+        "launchermodel.cpp",
+        "launchermodel.h",
+        "pagemodel.cpp",
+        "pagemodel.h",
+        "plugin.cpp",
+        "plugins.qmltypes",
+        "processrunner.cpp",
+        "processrunner.h",
+        "qmldir",
+        "usagetracker.cpp",
+        "usagetracker.h",
+        "utils.cpp",
+        "utils.h",
+    ]
 }

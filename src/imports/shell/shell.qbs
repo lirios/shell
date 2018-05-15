@@ -19,7 +19,25 @@ LiriQmlPlugin {
     ]
     cpp.includePaths: base.concat([product.buildDirectory])
 
-    files: ["*.cpp", "*.h", "qmldir", "*.qml", "*.qmltypes"]
+    files: [
+        "Background.qml",
+        "DateTime.qml",
+        "DateTimeIndicator.qml",
+        "Indicator.qml",
+        "LoginGreeter.qml",
+        "PanelItem.qml",
+        "UserDelegate.qml",
+        "logging_p.cpp",
+        "logging_p.h",
+        "plugin.cpp",
+        "plugins.qmltypes",
+        "qmldir",
+        "shellhelper.cpp",
+        "shellhelper.h",
+        "shellhelper_p.h",
+        "windowmousetracker.cpp",
+        "windowmousetracker.h",
+    ]
 
     Group {
         name: "Wayland Protocols"

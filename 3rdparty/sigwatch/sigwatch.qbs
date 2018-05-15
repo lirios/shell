@@ -7,7 +7,11 @@ StaticLibrary {
     Depends { name: "cpp" }
     Depends { name: "Qt.core" }
 
-    files: ["*.cpp", "*.h"]
+    files: [
+        "sigwatch.cpp",
+        "sigwatch.h",
+        "sigwatch_p.h",
+    ]
 
     Export {
         Depends { name: "cpp" }

@@ -34,7 +34,13 @@ QtGuiApplication {
 
     GitRevision.sourceDirectory: product.sourceDirectory + "/../.."
 
-    files: ["*.cpp", "*.h"]
+    files: [
+        "main.cpp",
+        "shellhelperapplication.cpp",
+        "shellhelperapplication.h",
+        "shellhelperclient.cpp",
+        "shellhelperclient.h",
+    ]
 
     Group {
         name: "Wayland Protocols"

@@ -8,5 +8,11 @@ LiriQmlPlugin {
 
     cpp.defines: []
 
-    files: ["*.cpp", "*.h", "qmldir", "*.qmltypes"]
+    files: [
+        "plugin.cpp",
+        "plugins.qmltypes",
+        "qmldir",
+        "usersmodel.cpp",
+        "usersmodel.h",
+    ]
 }
