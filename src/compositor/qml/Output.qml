@@ -85,7 +85,7 @@ LiriWayland.WaylandOutput {
         }
 
         // Keyboard handling
-        LiriWayland.KeyEventFilter {
+        LiriShell.KeyEventFilter {
             Keys.onPressed: {
                 // Input wakes the output
                 liriCompositor.wake();

@@ -23,11 +23,11 @@
 
 import QtQuick 2.0
 import QtWayland.Compositor 1.0
-import Liri.WaylandServer 1.0
 import Liri.XWayland 1.0
+import Liri.Shell 1.0 as LS
 import Fluid.Effects 1.0 as FluidEffects
 
-ChromeItem {
+LS.ChromeItem {
     id: chrome
 
     readonly property alias primary: __private.primary

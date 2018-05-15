@@ -25,6 +25,9 @@
 
 #include <QtWaylandCompositor/QWaylandQuickExtension>
 
+#include "chromeitem.h"
+#include "hotspot.h"
+#include "keyeventfilter.h"
 #include "shellhelper.h"
 #include "windowmousetracker.h"
 
@@ -40,6 +43,9 @@ public:
         // @uri Liri.Shell
         Q_ASSERT(uri == QLatin1String("Liri.Shell"));
 
+        qmlRegisterType<ChromeItem>(uri, 1, 0, "ChromeItem");
+        qmlRegisterType<HotSpot>(uri, 1, 0, "HotSpot");
+        qmlRegisterType<KeyEventFilter>(uri, 1, 0, "KeyEventFilter");
         qmlRegisterType<ShellHelperQuickExtension>(uri, 1, 0, "ShellHelper");
         qmlRegisterType<WindowMouseTracker>(uri, 1, 0, "WindowMouseTracker");
     }
