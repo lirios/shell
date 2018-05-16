@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ This file is part of Liri.
+
+ Copyright (C) 2015-2016 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation; either version 2.1 of the License, or
+ (at your option) any later version.
+-->
+<schemalist gettext-domain="liri">
+  <schema id="io.liri.session" path="/io/liri/session/">
+    <key name="idle-delay" type="u">
+      <default>300</default>
+      <summary>Time before the session is considered idle</summary>
+      <description>
+        The number of seconds of inactivity before the session is
+        considered idle.
+      </description>
+    </key>
+  </schema>
+</schemalist>
