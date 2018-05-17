@@ -256,9 +256,10 @@ void Application::startup()
     QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
     if (compositor) {
 #if HAVE_SYSTEMD
-        connect(compositor, &QWaylandCompositor::createdChanged, this, [] {
+        connect(compositor, &QWaylandCompositor::createdChanged, this, [compositor] {
             // Notify systemd when the Wayland socket is available
-            sd_notify(0, "READY=1");
+            if (compositor->isCreated())
+                sd_notify(0, "READY=1");
         });
 #endif
         m_launcher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
