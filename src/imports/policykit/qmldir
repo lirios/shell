@@ -1,0 +1,4 @@
+module Vibe.PolicyKit
+plugin polkitplugin
+classname PolicyKitPlugin
+typeinfo plugins.qmltypes
