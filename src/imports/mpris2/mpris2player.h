@@ -1,16 +1,13 @@
 /****************************************************************************
-* This file is part of Vibe.
+ * This file is part of Liri.
  *
- * Copyright (C) 2015-2016 Pier Luigi Fiorini
+ * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
- *
- * $BEGIN_LICENSE:LGPL2.1+$
+ * $BEGIN_LICENSE:LGPLv3+$
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -44,7 +41,7 @@ typedef QMap<QString, QVariant> Metadata;
 
 class Mpris2Player : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
     Q_PROPERTY(QString identity READ identity NOTIFY identityChanged)
     Q_PROPERTY(QString iconName READ iconName NOTIFY iconNameChanged)
     Q_PROPERTY(Capabilities capabilities READ capabilities WRITE setCapabilities NOTIFY capabilitiesChanged)
@@ -112,21 +109,21 @@ Q_SIGNALS:
     void initialFetchFinished();
 
 public Q_SLOTS:
-	void raise();
-	void quit();
+    void raise();
+    void quit();
 
     void previous();
     void next();
 
-	void play();
-	void pause();
-	void playPause();
-	void stop();
+    void play();
+    void pause();
+    void playPause();
+    void stop();
 
     void seek(qlonglong offset);
     void setPosition(const QString &trackId, qlonglong position);
 
-	void openUrl(const QUrl &url);
+    void openUrl(const QUrl &url);
 
 private:
     QString m_serviceName;
