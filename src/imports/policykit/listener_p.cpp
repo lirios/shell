@@ -25,8 +25,8 @@
 
 #include <PolkitQt1/Subject>
 
-#include "logging_p.h"
 #include "listener_p.h"
+#include "policykitagent.h"
 
 #include <sys/types.h>
 #include <unistd.h>

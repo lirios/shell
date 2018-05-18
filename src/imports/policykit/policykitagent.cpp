@@ -21,9 +21,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include "logging_p.h"
 #include "listener_p.h"
 #include "policykitagent.h"
+
+Q_LOGGING_CATEGORY(POLKITAGENT, "vibe.policykit")
 
 /*
  * PolicyKitAgentPrivate

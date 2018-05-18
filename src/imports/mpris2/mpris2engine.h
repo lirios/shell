@@ -21,8 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef MPRIS2ENGINE_H
-#define MPRIS2ENGINE_H
+#ifndef LIRI_MPRIS2ENGINE_H
+#define LIRI_MPRIS2ENGINE_H
 
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
@@ -53,4 +53,4 @@ private:
     QList<Mpris2Player *> m_players;
 };
 
-#endif // MPRIS2ENGINE_H
+#endif // LIRI_MPRIS2ENGINE_H

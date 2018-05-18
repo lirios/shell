@@ -21,7 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef LIRI_POLKIT_LISTENER_P_H
+#define LIRI_POLKIT_LISTENER_P_H
 
 #include <PolkitQt1/Agent/Listener>
 
@@ -74,3 +75,5 @@ public Q_SLOTS:
     void authenticate(const QString &response);
     void abortAuthentication();
 };
+
+#endif // LIRI_POLKIT_LISTENER_P_H

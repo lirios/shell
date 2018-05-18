@@ -21,11 +21,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef LIRI_POLICYKITAGENT_H
+#define LIRI_POLICYKITAGENT_H
 
+#include <QtCore/QLoggingCategory>
 #include <QtQml/QQmlParserStatus>
 
 #include <PolkitQt1/Agent/Listener>
+
+Q_DECLARE_LOGGING_CATEGORY(POLKITAGENT)
 
 class PolicyKitAgentPrivate;
 
@@ -72,3 +76,5 @@ Q_SIGNALS:
 private:
     PolicyKitAgentPrivate *const d_ptr;
 };
+
+#endif // LIRI_POLICYKITAGENT_H

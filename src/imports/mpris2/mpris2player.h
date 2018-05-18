@@ -21,8 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef MPRIS2PLAYER_H
-#define MPRIS2PLAYER_H
+#ifndef LIRI_MPRIS2PLAYER_H
+#define LIRI_MPRIS2PLAYER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QDateTime>
@@ -165,4 +165,4 @@ private Q_SLOTS:
                       const QVariant::Type &expectedType);
 };
 
-#endif // MPRIS2PLAYER_H
+#endif // LIRI_MPRIS2PLAYER_H
