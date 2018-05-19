@@ -8,7 +8,15 @@ LiriQmlPlugin {
 
     Qt.dbus.xml2CppHeaderFlags: "-N"
 
-    files: ["*.cpp", "*.h", "qmldir", "*.qmltypes"]
+    files: [
+        "mpris2engine.cpp",
+        "mpris2engine.h",
+        "mpris2player.cpp",
+        "mpris2player.h",
+        "plugin.cpp",
+        "plugins.qmltypes",
+        "qmldir",
+    ]
 
     Group {
         name: "D-Bus Interfaces"

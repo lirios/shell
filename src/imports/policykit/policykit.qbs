@@ -17,5 +17,13 @@ LiriQmlPlugin {
         return true;
     }
 
-    files: ["*.cpp", "*.h", "qmldir", "*.qmltypes"]
+    files: [
+        "listener_p.cpp",
+        "listener_p.h",
+        "plugin.cpp",
+        "plugins.qmltypes",
+        "policykitagent.cpp",
+        "policykitagent.h",
+        "qmldir",
+    ]
 }
