@@ -27,7 +27,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Liri.Launcher 0.1 as CppLauncher
+import Liri.Launcher 1.0 as CppLauncher
 
 ListView {
     signal selected(string category)

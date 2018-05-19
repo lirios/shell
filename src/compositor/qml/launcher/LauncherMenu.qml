@@ -27,7 +27,7 @@
 import QtQml 2.2
 import QtQuick 2.0
 import QtQuick.Controls 2.1
-import Liri.Launcher 0.1 as CppLauncher
+import Liri.Launcher 1.0 as CppLauncher
 
 Menu {
     id: menu

@@ -25,7 +25,7 @@
 import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtWayland.Compositor 1.0
-import Liri.Launcher 0.1 as Launcher
+import Liri.Launcher 1.0 as Launcher
 import Liri.WaylandServer 1.0 as LiriWayland
 import Liri.WaylandServer.Private 1.0 as LWSP
 import Liri.Shell 1.0

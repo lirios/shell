@@ -45,15 +45,15 @@ public:
         // @uri Liri.Launcher
         Q_ASSERT(uri == QLatin1String("Liri.Launcher"));
 
-        qmlRegisterType<ApplicationManager>(uri, 0, 1, "ApplicationManager");
-        qmlRegisterType<CategoriesModel>(uri, 0, 1, "CategoriesModel");
-        qmlRegisterType<LauncherModel>(uri, 0, 1, "LauncherModel");
-        qmlRegisterType<PageModel>(uri, 0, 1, "PageModel");
-        qmlRegisterType<FrequentAppsModel>(uri, 0, 1, "FrequentAppsModel");
-        qmlRegisterType<ProcessRunner>(uri, 0, 1, "ProcessRunner");
-        qmlRegisterUncreatableType<Application>(uri, 0, 1, "Application",
+        qmlRegisterType<ApplicationManager>(uri, 1, 0, "ApplicationManager");
+        qmlRegisterType<CategoriesModel>(uri, 1, 0, "CategoriesModel");
+        qmlRegisterType<LauncherModel>(uri, 1, 0, "LauncherModel");
+        qmlRegisterType<PageModel>(uri, 1, 0, "PageModel");
+        qmlRegisterType<FrequentAppsModel>(uri, 1, 0, "FrequentAppsModel");
+        qmlRegisterType<ProcessRunner>(uri, 1, 0, "ProcessRunner");
+        qmlRegisterUncreatableType<Application>(uri, 1, 0, "Application",
                                                 QStringLiteral("Cannot instantiate Application"));
-        qmlRegisterUncreatableType<DesktopFileAction>(uri, 0, 1, "DesktopFileAction",
+        qmlRegisterUncreatableType<DesktopFileAction>(uri, 1, 0, "DesktopFileAction",
                                                       QStringLiteral("Cannot instantiate DesktopFileAction"));
     }
 };

@@ -26,7 +26,7 @@ import QtQuick 2.0
 import QtQml.Models 2.1
 import Fluid.Core 1.0
 import Fluid.Controls 1.0
-import Liri.Launcher 0.1
+import Liri.Launcher 1.0
 import "../components"
 
 PagedGrid {

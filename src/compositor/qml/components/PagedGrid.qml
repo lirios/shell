@@ -22,7 +22,7 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import Liri.Launcher 0.1
+import Liri.Launcher 1.0
 
 Item {
     id: pagedGrid
