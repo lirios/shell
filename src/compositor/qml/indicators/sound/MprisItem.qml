@@ -29,7 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.3
 import Fluid.Controls 1.0 as FluidControls
-import Vibe.Mpris 1.0
+import Liri.Mpris 1.0
 
 FluidControls.ListItem {
     property var player

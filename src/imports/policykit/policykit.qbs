@@ -2,7 +2,7 @@ import qbs 1.0
 
 LiriQmlPlugin {
     name: "polkitplugin"
-    pluginPath: "Vibe/PolicyKit"
+    pluginPath: "Liri/PolicyKit"
 
     Depends { name: "Qt"; submodules: ["core", "dbus"] }
     Depends { name: "polkit_qt5"; submodules: ["core", "agent"] }
@@ -16,8 +16,6 @@ LiriQmlPlugin {
 
         return true;
     }
-
-    cpp.defines: base.concat(['VIBE_VERSION="' + project.version + '"'])
 
     files: ["*.cpp", "*.h", "qmldir", "*.qmltypes"]
 }

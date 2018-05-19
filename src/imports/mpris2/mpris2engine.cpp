@@ -32,7 +32,7 @@ const QString mprisInterface(QLatin1String("org.mpris.MediaPlayer2"));
 const QString mprisPlayerInterface(QLatin1String("org.mpris.MediaPlayer2.Player"));
 const QString mprisPrefix(QLatin1String("org.mpris.MediaPlayer2."));
 
-Q_LOGGING_CATEGORY(MPRIS2, "vibe.mpris2")
+Q_LOGGING_CATEGORY(MPRIS2, "liri.mpris2")
 
 Mpris2Engine::Mpris2Engine(QObject *parent)
     : QObject(parent)

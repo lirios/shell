@@ -28,7 +28,7 @@ import QtQuick 2.5
 import QtQuick.Layouts 1.0
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
-import Vibe.Mpris 1.0
+import Liri.Mpris 1.0
 import QtGSettings 1.0 as Settings
 import "sound" as SoundIndicator
 

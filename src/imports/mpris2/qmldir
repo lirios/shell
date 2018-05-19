@@ -1,4 +1,4 @@
-module Vibe.Mpris
+module Liri.Mpris
 plugin mpris2plugin
 classname Mpris2Plugin
 typeinfo plugins.qmltypes

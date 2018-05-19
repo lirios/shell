@@ -40,7 +40,7 @@ const QString objectPath(QLatin1String("/org/mpris/MediaPlayer2"));
 const QString playerInterface(QLatin1String("org.mpris.MediaPlayer2.Player"));
 const QString mprisInterface(QLatin1String("org.mpris.MediaPlayer2"));
 
-Q_LOGGING_CATEGORY(MPRIS2_PLAYER, "vibe.mpris2.player")
+Q_LOGGING_CATEGORY(MPRIS2_PLAYER, "liri.mpris2.player")
 
 static QVariant::Type propertyType(const QString &name)
 {

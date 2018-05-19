@@ -32,8 +32,8 @@ class PolicyKitPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        // @uri Vibe.PolicyKit
-        Q_ASSERT(uri == QByteArray("Vibe.PolicyKit"));
+        // @uri Liri.PolicyKit
+        Q_ASSERT(uri == QByteArray("Liri.PolicyKit"));
 
         qmlRegisterType<PolicyKitAgent>(uri, 1, 0, "PolicyKitAgent");
     }

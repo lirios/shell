@@ -33,9 +33,9 @@ class Mpris2Plugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri)
     {
-        Q_ASSERT(QLatin1String(uri) == QLatin1String("Vibe.Mpris"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("Liri.Mpris"));
 
-        // @uri Vibe.Mpris
+        // @uri Liri.Mpris
         qmlRegisterType<Mpris2Engine>(uri, 1, 0, "Mpris");
         qmlRegisterUncreatableType<Mpris2Player>(uri, 1, 0, "MprisPlayer",
                                                  QStringLiteral("Cannot create MprisPlayer object"));

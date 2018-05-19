@@ -24,7 +24,7 @@
 #include "listener_p.h"
 #include "policykitagent.h"
 
-Q_LOGGING_CATEGORY(POLKITAGENT, "vibe.policykit")
+Q_LOGGING_CATEGORY(POLKITAGENT, "liri.policykit")
 
 /*
  * PolicyKitAgentPrivate

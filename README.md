@@ -112,6 +112,13 @@ to learn how to enable them.
    * **liri.launcher:** Launcher model and items
    * **liri.launcher.appsmodel:** Applications model
 
+ * MPRIS2 QML plugin:
+   * **liri.mpris2:** MPRIS2 engine
+   * **liri.mpris2.player:** MPRIS2 player interface
+
+ * PolicyKit QML plugin:
+   * **liri.policykit:** PolicyKit agent.
+
 ## Components
 
 *liri-shell*

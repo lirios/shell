@@ -2,7 +2,7 @@ import qbs 1.0
 
 LiriQmlPlugin {
     name: "mpris2plugin"
-    pluginPath: "Vibe/Mpris"
+    pluginPath: "Liri/Mpris"
 
     Depends { name: "Qt"; submodules: ["dbus"] }
 
