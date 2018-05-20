@@ -196,8 +196,6 @@ Showable {
 
                             SoundIndicator {}
 
-                            NetworkIndicator {}
-
                             StorageIndicator {}
 
                             BatteryIndicator {}

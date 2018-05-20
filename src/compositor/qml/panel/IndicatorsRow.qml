@@ -1,6 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
+ * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2017 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
@@ -46,10 +47,6 @@ Row {
     }
 
     SoundIndicator {
-        onClicked: indicatorTriggered(caller)
-    }
-
-    NetworkIndicator {
         onClicked: indicatorTriggered(caller)
     }
 
