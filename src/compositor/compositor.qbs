@@ -116,6 +116,7 @@ QtGuiApplication {
             "images/lan-disconnect.svg",
             "images/logout.svg",
             "images/reload.svg",
+            "images/sleep.svg",
             "images/wallpaper.png",
             "indicators/launcher/AppsIcon.qml",
             "indicators/launcher/Dot.qml",
