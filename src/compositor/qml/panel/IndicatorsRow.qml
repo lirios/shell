@@ -28,6 +28,7 @@ import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 import Fluid.Controls 1.0
 import Liri.Shell 1.0
+import Liri.labs.shell 1.0
 import "../indicators"
 import "../launcher"
 
@@ -48,5 +49,24 @@ Row {
 
     StorageIndicator {
         onClicked: indicatorTriggered(caller)
+    }
+
+    IndicatorsModel {
+        id: indicatorsModel
+    }
+
+    Repeater {
+        model: indicatorsModel
+
+        Loader {
+            source: url
+            width: 32
+            height: parent.height
+
+            Connections {
+                target: item
+                onClicked: indicatorTriggered(item)
+            }
+        }
     }
 }

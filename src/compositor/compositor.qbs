@@ -9,7 +9,7 @@ QtGuiApplication {
     Depends { name: "GitRevision" }
     Depends {
         name: "Qt"
-        submodules: ["core", "core-private", "dbus", "gui", "svg", "quickcontrols2", "waylandcompositor"]
+        submodules: ["core", "core-private", "concurrent", "dbus", "gui", "svg", "quickcontrols2", "waylandcompositor"]
         versionAtLeast: project.minimumQtVersion
     }
     Depends { name: "sigwatch" }
@@ -59,6 +59,8 @@ QtGuiApplication {
     Qt.core.resourceSourceBase: sourceDirectory
 
     files: [
+        "indicatorsmodel.cpp",
+        "indicatorsmodel.h",
         "main.cpp",
         "application.cpp",
         "application.h",

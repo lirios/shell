@@ -29,6 +29,7 @@ import Fluid.Controls 1.0
 import Fluid.Effects 1.0
 import QtAccountsService 1.0
 import Liri.Shell 1.0
+import Liri.labs.shell 1.0
 import "../indicators"
 
 Showable {
@@ -195,6 +196,20 @@ Showable {
                             NotificationsIndicator {}
 
                             StorageIndicator {}
+
+                            IndicatorsModel {
+                                id: indicatorsModel
+                            }
+
+                            Repeater {
+                                model: indicatorsModel
+
+                                Loader {
+                                    source: url
+                                    width: 32
+                                    height: parent.height
+                                }
+                            }
                         }
                     }
                 }

@@ -40,6 +40,7 @@
 #include <QtWaylandCompositor/QWaylandCompositor>
 
 #include "application.h"
+#include "indicatorsmodel.h"
 #include "processlauncher/processlauncher.h"
 #include "sessionmanager/sessionmanager.h"
 #include "sigwatch.h"
@@ -220,6 +221,9 @@ void Application::startup()
 
     // Check whether XDG_RUNTIME_DIR is ok or not
     verifyXdgRuntimeDir();
+
+    // Register private QML types
+    qmlRegisterType<IndicatorsModel>("Liri.labs.shell", 1, 0, "IndicatorsModel");
 
     // Register D-Bus service
     if (!QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Session"))) {
