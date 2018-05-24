@@ -53,8 +53,4 @@ Row {
     StorageIndicator {
         onClicked: indicatorTriggered(caller)
     }
-
-    BatteryIndicator {
-        onClicked: indicatorTriggered(caller)
-    }
 }

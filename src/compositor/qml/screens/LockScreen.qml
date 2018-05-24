@@ -197,8 +197,6 @@ Showable {
                             SoundIndicator {}
 
                             StorageIndicator {}
-
-                            BatteryIndicator {}
                         }
                     }
                 }
