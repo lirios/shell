@@ -29,7 +29,6 @@ import Liri.Launcher 1.0 as Launcher
 import Liri.WaylandServer 1.0 as LiriWayland
 import Liri.WaylandServer.Private 1.0 as LWSP
 import Liri.Shell 1.0
-import Vibe.PulseAudio 1.0
 import Liri.PolicyKit 1.0
 import "base"
 import "windows"
@@ -361,10 +360,6 @@ WaylandCompositor {
     }
 
     KeyBindings {}
-
-    VolumeControl {
-        id: volumeControl
-    }
 
     // PolicyKit
     PolicyKitAgent {

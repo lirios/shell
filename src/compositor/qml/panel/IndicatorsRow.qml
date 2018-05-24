@@ -46,10 +46,6 @@ Row {
         onClicked: indicatorTriggered(caller)
     }
 
-    SoundIndicator {
-        onClicked: indicatorTriggered(caller)
-    }
-
     StorageIndicator {
         onClicked: indicatorTriggered(caller)
     }

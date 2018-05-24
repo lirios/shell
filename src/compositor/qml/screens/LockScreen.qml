@@ -194,8 +194,6 @@ Showable {
 
                             NotificationsIndicator {}
 
-                            SoundIndicator {}
-
                             StorageIndicator {}
                         }
                     }

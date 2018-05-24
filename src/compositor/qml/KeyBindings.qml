@@ -651,19 +651,16 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeMute
-        onActivated: volumeControl.toggleMute()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeUp
-        onActivated: volumeControl.increase()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeDown
-        onActivated: volumeControl.decrease()
     }
 
     Shortcut {

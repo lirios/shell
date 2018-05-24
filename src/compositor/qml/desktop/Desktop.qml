@@ -173,27 +173,4 @@ Item {
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
     }
-
-    /*
-     * Miscellaneaous
-     */
-
-    Connections {
-        target: volumeControl
-        onVolumeChanged: {
-            // Show overlay
-            overlaysLayer.iconName = volumeControl.getIconName()
-            overlaysLayer.value = volume
-            overlaysLayer.showProgress = true
-            if (!overlaysLayer.visible)
-                overlaysLayer.show()
-        }
-        onMutedChanged: {
-            // Show overlay
-            overlaysLayer.iconName = volumeControl.getIconName()
-            overlaysLayer.showProgress = false
-            if (!overlaysLayer.visible)
-                overlaysLayer.show()
-        }
-    }
 }
