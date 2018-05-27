@@ -41,6 +41,7 @@
 
 #include "application.h"
 #include "indicatorsmodel.h"
+#include "multimediakeys/multimediakeys.h"
 #include "processlauncher/processlauncher.h"
 #include "sessionmanager/sessionmanager.h"
 #include "sigwatch.h"
@@ -101,6 +102,9 @@ Application::Application(QObject *parent)
     m_appEngine = new QQmlApplicationEngine(this);
     connect(m_appEngine, &QQmlApplicationEngine::objectCreated,
             this, &Application::objectCreated);
+
+    // Multimedia keys
+    m_multimediaKeys = new MultimediaKeys(this);
 
     // Process launcher
     m_launcher = new ProcessLauncher(this);
