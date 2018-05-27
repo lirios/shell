@@ -38,9 +38,9 @@ The following modules and their dependencies are required:
  * [qtgsettings](https://github.com/lirios/qtgsettings) >= 1.1.0
  * [libliri](https://github.com/lirios/libliri)
  * [liri-wayland](https://github.com/lirios/wayland)
- * [liri-workspace](https://github.com/lirios/workspace)
  * [pam](http://www.linux-pam.org/)
  * [libqtxdg](https://github.com/lxde/libqtxdg)
+ * [polkit-qt5](http://quickgit.kde.org/?p=polkit-qt-1.git)
 
 ## Installation
 
