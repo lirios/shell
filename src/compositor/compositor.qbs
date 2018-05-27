@@ -64,6 +64,8 @@ QtGuiApplication {
         "main.cpp",
         "application.cpp",
         "application.h",
+        "multimediakeys/multimediakeys.cpp",
+        "multimediakeys/multimediakeys.h",
         "processlauncher/processlauncher.cpp",
         "processlauncher/processlauncher.h",
         "sessionmanager/authenticator.cpp",

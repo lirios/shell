@@ -651,30 +651,36 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeMute
+        onActivated: MultimediaKeys.volumeMute()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeUp
+        onActivated: MultimediaKeys.volumeUp()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeDown
+        onActivated: MultimediaKeys.volumeDown()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.mediaPlay
+        onActivated: MultimediaKeys.mediaPlay()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.mediaPrevious
+        onActivated: MultimediaKeys.mediaPrevious()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.mediaNext
+        onActivated: MultimediaKeys.mediaNext()
     }
 }

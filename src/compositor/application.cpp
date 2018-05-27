@@ -252,6 +252,9 @@ void Application::startup()
     m_appEngine->rootContext()->setContextProperty(QStringLiteral("SessionInterface"),
                                                    m_sessionManager);
 
+    m_appEngine->rootContext()->setContextProperty(QLatin1String("MultimediaKeys"),
+                                                   m_multimediaKeys);
+
     // Load the compositor
     m_appEngine->load(m_url);
 
