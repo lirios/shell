@@ -49,6 +49,7 @@ T.SwipeView {
 
         function showOverlay(next) {
             // Show overlay
+            OnScreenDisplay.showText(next ? "go-next-symbolic" : "go-previous-symbolic");
             var overlay = output.screenView.desktop.layers.overlays;
             overlay.iconName = next ? "go-next-symbolic" : "go-previous-symbolic";
             overlay.value = "";

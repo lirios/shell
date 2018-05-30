@@ -149,6 +149,25 @@ Item {
         id: overlaysLayer
         anchors.centerIn: parent
         z: 10
+
+        Connections {
+            target: OnScreenDisplay
+            onTextRequested: {
+                overlaysLayer.iconName = iconName;
+                overlaysLayer.text = text;
+                overlaysLayer.showProgress = false;
+                if (!overlaysLayer.visible)
+                    overlaysLayer.show();
+            }
+            onProgressRequested: {
+                overlaysLayer.iconName = iconName;
+                overlaysLayer.text = "";
+                overlaysLayer.value = value;
+                overlaysLayer.showProgress = true;
+                if (!overlaysLayer.visible)
+                    overlaysLayer.show();
+            }
+        }
     }
 
     // Notifications are behind the panel

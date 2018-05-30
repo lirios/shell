@@ -41,6 +41,7 @@
 
 #include "application.h"
 #include "indicatorsmodel.h"
+#include "onscreendisplay.h"
 #include "multimediakeys/multimediakeys.h"
 #include "processlauncher/processlauncher.h"
 #include "sessionmanager/sessionmanager.h"
@@ -258,6 +259,10 @@ void Application::startup()
 
     m_appEngine->rootContext()->setContextProperty(QLatin1String("MultimediaKeys"),
                                                    m_multimediaKeys);
+
+    // OSD service
+    m_appEngine->rootContext()->setContextProperty(QLatin1String("OnScreenDisplay"),
+                                                   new OnScreenDisplay(this));
 
     // Load the compositor
     m_appEngine->load(m_url);
