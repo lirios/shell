@@ -9,7 +9,7 @@ QtGuiApplication {
     Depends { name: "GitRevision" }
     Depends {
         name: "Qt"
-        submodules: ["core", "core-private", "concurrent", "dbus", "gui", "svg", "quickcontrols2", "waylandcompositor"]
+        submodules: ["core", "core-private", "concurrent", "dbus", "gui", "gui-private", "svg", "qml", "quick", "quickcontrols2", "waylandcompositor"]
         versionAtLeast: project.minimumQtVersion
     }
     Depends { name: "sigwatch" }
@@ -19,6 +19,8 @@ QtGuiApplication {
     Depends { name: "LiriLocalDevice" }
     Depends { name: "systemd" }
     Depends { name: "pam" }
+    Depends { name: "WaylandScanner" }
+    Depends { name: "Wayland.server" }
 
     LiriIncludeProbe {
         id: haveSysPrctl
@@ -39,8 +41,12 @@ QtGuiApplication {
         return true;
     }
 
+    cpp.commonCompilerFlags: base.concat(["-Wno-deprecated-declarations"])
     cpp.defines: {
-        var defines = base.concat(['LIRISHELL_VERSION="' + project.version + '"']);
+        var defines = base.concat([
+            'LIRISHELL_VERSION="' + project.version + '"',
+            "QT_WAYLAND_COMPOSITOR_QUICK",
+        ]);
         if (project.developmentBuild)
             defines.push("DEVELOPMENT_BUILD");
         if (haveSysPrctl.found)
@@ -59,17 +65,42 @@ QtGuiApplication {
     Qt.core.resourceSourceBase: sourceDirectory
 
     files: [
-        "indicatorsmodel.cpp",
-        "indicatorsmodel.h",
         "main.cpp",
         "application.cpp",
         "application.h",
+        "declarative/indicatorsmodel.cpp",
+        "declarative/indicatorsmodel.h",
+        "declarative/inputsettings.cpp",
+        "declarative/inputsettings.h",
+        "declarative/outputsettings.cpp",
+        "declarative/outputsettings.h",
+        "declarative/quickoutput.cpp",
+        "declarative/quickoutput.h",
+        "declarative/screenmodel.cpp",
+        "declarative/screenmodel.h",
+        "extensions/gtkshell.cpp",
+        "extensions/gtkshell.h",
+        "extensions/gtkshell_p.h",
+        "extensions/outputchangeset.cpp",
+        "extensions/outputchangeset.h",
+        "extensions/outputconfiguration.cpp",
+        "extensions/outputconfiguration.h",
+        "extensions/outputconfiguration_p.h",
+        "extensions/outputmanagement.cpp",
+        "extensions/outputmanagement.h",
+        "extensions/outputmanagement_p.h",
+        "extensions/quickoutputconfiguration.cpp",
+        "extensions/quickoutputconfiguration.h",
         "multimediakeys/multimediakeys.cpp",
         "multimediakeys/multimediakeys.h",
+        "logging.cpp",
+        "logging_p.h",
         "onscreendisplay.cpp",
         "onscreendisplay.h",
         "processlauncher/processlauncher.cpp",
         "processlauncher/processlauncher.h",
+        "qmlregistration.cpp",
+        "qmlregistration.h",
         "sessionmanager/authenticator.cpp",
         "sessionmanager/authenticator.h",
         "sessionmanager/qmlauthenticator.cpp",
@@ -182,6 +213,15 @@ QtGuiApplication {
             "sessionmanager/screensaver/org.freedesktop.ScreenSaver.xml"
         ]
         fileTags: ["qt.dbus.adaptor"]
+    }
+
+    Group {
+        name: "Wayland Protocols"
+        files: [
+            "../../data/protocols/gtk-shell.xml",
+            "../../data/protocols/liri-outputmanagement.xml",
+        ]
+        fileTags: ["wayland.server.protocol"]
     }
 
     Group {

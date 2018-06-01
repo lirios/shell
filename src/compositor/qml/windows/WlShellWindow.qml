@@ -23,9 +23,9 @@
 
 import QtQuick 2.0
 import QtWayland.Compositor 1.0
-import Liri.WaylandServer.Private 1.0 as LWSP
+import Liri.private.shell 1.0 as P
 
-LWSP.WlShellSurface {
+P.WlShellSurface {
     id: wlShellSurface
 
     readonly property alias mapped: details.mapped

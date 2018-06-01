@@ -27,7 +27,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 
-#include "indicatorsmodel.h"
+#include "declarative/indicatorsmodel.h"
 
 /*
  * IndicatorItem

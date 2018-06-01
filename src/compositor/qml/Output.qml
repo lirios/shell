@@ -26,11 +26,11 @@ import QtQuick 2.5
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.0
 import QtWayland.Compositor 1.0
-import Liri.WaylandServer 1.0 as LiriWayland
 import Liri.Shell 1.0 as LiriShell
+import Liri.private.shell 1.0 as P
 import "desktop"
 
-LiriWayland.WaylandOutput {
+P.WaylandOutput {
     id: output
 
     property bool primary: false
@@ -50,7 +50,7 @@ LiriWayland.WaylandOutput {
 
     property bool __idle: false
 
-    automaticFrameCallback: outputSettings.powerState === LiriWayland.WaylandOutputSettings.PowerStateOn
+    automaticFrameCallback: outputSettings.powerState === P.WaylandOutputSettings.PowerStateOn
 
     onPrimaryChanged: {
         // Set default output
@@ -160,7 +160,7 @@ LiriWayland.WaylandOutput {
         }
     }
 
-    LiriWayland.WaylandOutputSettings {
+    P.WaylandOutputSettings {
         id: outputSettings
     }
 
@@ -174,7 +174,7 @@ LiriWayland.WaylandOutput {
 
         console.debug("Power on output", manufacturer, model);
         idleDimmer.fadeOut();
-        outputSettings.powerState = LiriWayland.WaylandOutputSettings.PowerStateOn;
+        outputSettings.powerState = P.WaylandOutputSettings.PowerStateOn;
         __idle = false;
     }
 

@@ -40,10 +40,10 @@
 #include <QtWaylandCompositor/QWaylandCompositor>
 
 #include "application.h"
-#include "indicatorsmodel.h"
 #include "onscreendisplay.h"
 #include "multimediakeys/multimediakeys.h"
 #include "processlauncher/processlauncher.h"
+#include "qmlregistration.h"
 #include "sessionmanager/sessionmanager.h"
 #include "sigwatch.h"
 
@@ -98,6 +98,9 @@ Application::Application(QObject *parent)
 
     // Quit when the process is killed
     connect(sigwatch, &UnixSignalWatcher::unixSignal, this, &Application::unixSignal);
+
+    // Register private QML types
+    registerPrivateTypes();
 
     // Application engine
     m_appEngine = new QQmlApplicationEngine(this);
@@ -226,9 +229,6 @@ void Application::startup()
 
     // Check whether XDG_RUNTIME_DIR is ok or not
     verifyXdgRuntimeDir();
-
-    // Register private QML types
-    qmlRegisterType<IndicatorsModel>("Liri.labs.shell", 1, 0, "IndicatorsModel");
 
     // Register D-Bus service
     if (!QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Session"))) {

@@ -24,10 +24,10 @@
 import QtQuick 2.5
 import QtQuick.Window 2.3
 import QtWayland.Compositor 1.0
-import Liri.WaylandServer 1.0 as LiriWayland
 import Liri.Shell 1.0 as LiriShell
+import Liri.private.shell 1.0 as P
 
-LiriWayland.WaylandOutput {
+P.WaylandOutput {
     property bool primary: false
     readonly property alias grabItem: grabItem
     property alias screen: outputWindow.screen

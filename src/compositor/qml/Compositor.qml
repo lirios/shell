@@ -27,9 +27,9 @@ import QtQuick.Window 2.2
 import QtWayland.Compositor 1.0
 import Liri.Launcher 1.0 as Launcher
 import Liri.WaylandServer 1.0 as LiriWayland
-import Liri.WaylandServer.Private 1.0 as LWSP
 import Liri.Shell 1.0
 import Liri.PolicyKit 1.0
+import Liri.private.shell 1.0 as P
 import "base"
 import "windows"
 
@@ -177,7 +177,7 @@ WaylandCompositor {
         onGrabSurfaceAdded: grabSurface = surface
     }
 
-    LWSP.WlShell {
+    P.WlShell {
         id: wlShell
 
         onWlShellSurfaceRequested: {
@@ -187,7 +187,7 @@ WaylandCompositor {
         onWlShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, chromeComponent)
     }
 
-    LWSP.XdgShellV5 {
+    P.XdgShellV5 {
         id: xdgShellV5
 
         onXdgSurfaceRequested: {
@@ -202,7 +202,7 @@ WaylandCompositor {
         onXdgPopupCreated: __private.handleShellSurfaceCreated(xdgPopup, chromeComponent)
     }
 
-    LiriWayland.GtkShell {
+    P.GtkShell {
         id: gtkShell
 
         onGtkSurfaceRequested: {
@@ -213,7 +213,7 @@ WaylandCompositor {
 
     TextInputManager {}
 
-    LiriWayland.OutputManagement {
+    P.OutputManagement {
         id: outputManagement
         onCreateOutputConfiguration: {
             var outputConfiguration = outputConfigurationComponent.createObject();
@@ -287,7 +287,7 @@ WaylandCompositor {
     Component {
         id: gtkSurfaceComponent
 
-        LiriWayland.GtkSurface {
+        P.GtkSurface {
             id: gtkSurface
 
             onAppIdChanged: {

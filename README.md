@@ -107,6 +107,9 @@ to learn how to enable them.
    * **liri.session:** Manages the session
    * **liri.loginmanager:** login manager subsystem
    * **liri.loginmanager.logind:** login manager subsystem (logind backend)
+   * **liri.shell:** Shell
+   * **liri.gtkshell:** Gtk shell support
+   * **liri.outputmanagement:** Output management
 
  * Launcher QML plugin:
    * **liri.launcher:** Launcher model and items
@@ -117,7 +120,7 @@ to learn how to enable them.
    * **liri.mpris2.player:** MPRIS2 player interface
 
  * PolicyKit QML plugin:
-   * **liri.policykit:** PolicyKit agent.
+   * **liri.policykit:** PolicyKit agent
 
 ## Components
 

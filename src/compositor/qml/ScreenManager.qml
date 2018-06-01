@@ -23,14 +23,14 @@
 
 import QtQml 2.2
 import QtQuick 2.5
-import Liri.WaylandServer 1.0 as LiriWayland
+import Liri.private.shell 1.0 as P
 
 Instantiator {
     id: screenManager
 
     property alias screenModel: screenModel
 
-    model: LiriWayland.ScreenModel {
+    model: P.ScreenModel {
         id: screenModel
         fileName: screenConfigurationFileName
     }

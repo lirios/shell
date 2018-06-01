@@ -28,7 +28,7 @@ import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 import Fluid.Controls 1.0
 import Liri.Shell 1.0
-import Liri.labs.shell 1.0
+import Liri.private.shell 1.0 as P
 import "../indicators"
 import "../launcher"
 
@@ -51,7 +51,7 @@ Row {
         onClicked: indicatorTriggered(caller)
     }
 
-    IndicatorsModel {
+    P.IndicatorsModel {
         id: indicatorsModel
     }
 

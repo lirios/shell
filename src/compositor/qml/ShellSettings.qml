@@ -26,9 +26,9 @@
 
 import QtQuick 2.0
 import QtWayland.Compositor 1.0
-import Liri.WaylandServer 1.0
 import QtGSettings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
+import Liri.private.shell 1.0 as P
 
 FluidCore.Object {
     readonly property alias ui: interfaceSettings
@@ -54,8 +54,7 @@ FluidCore.Object {
      * Keymap
      */
 
-    CompositorSettings {
-        id: compositorSettings
+    P.InputSettings {
         compositor: liriCompositor
     }
 

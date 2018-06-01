@@ -29,7 +29,7 @@ import Fluid.Controls 1.0
 import Fluid.Effects 1.0
 import QtAccountsService 1.0
 import Liri.Shell 1.0
-import Liri.labs.shell 1.0
+import Liri.private.shell 1.0 as P
 import "../indicators"
 
 Showable {
@@ -197,7 +197,7 @@ Showable {
 
                             StorageIndicator {}
 
-                            IndicatorsModel {
+                            P.IndicatorsModel {
                                 id: indicatorsModel
                             }
 
