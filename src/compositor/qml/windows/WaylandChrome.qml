@@ -150,7 +150,7 @@ LS.ChromeItem {
                 break;
             }
         }
-        onMovingChanged: shellHelper.grabCursor(moving ? ShellHelper.MoveGrabCursor : ShellHelper.ArrowGrabCursor)
+        onMovingChanged: shellHelper.grabCursor(moving ? LS.ShellHelper.MoveGrabCursor : LS.ShellHelper.ArrowGrabCursor)
         onMouseRelease: {
             // Assume it stopped moving
             moving = false;
