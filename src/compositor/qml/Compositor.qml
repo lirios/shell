@@ -41,6 +41,7 @@ WaylandCompositor {
     property int idleInhibit: 0
 
     readonly property alias screenManager: screenManager
+    readonly property alias outputManager: outputManager
 
     readonly property alias settings: settings
     readonly property alias shellSurfaces: shellSurfaces
@@ -48,8 +49,6 @@ WaylandCompositor {
     property var activeShellSurface: null
     readonly property bool hasMaxmizedShellSurfaces: __private.maximizedShellSurfaces > 0
     readonly property bool hasFullscreenShellSurfaces: __private.fullscreenShellSurfaces > 0
-
-    property Component outputConfigurationComponent: OutputConfiguration {}
 
     readonly property alias applicationManager: applicationManager
     readonly property alias shellHelper: shellHelper
@@ -131,9 +130,8 @@ WaylandCompositor {
 
         delegate: Output {
             compositor: liriCompositor
-            screen: screenItem.screen
-            windowScreen: screenItem.screen
-            primary: screenItem.primary
+            hardwareScreen: screenItem
+            uuid: screenItem.uuid
             position: Qt.point(x, y)
             manufacturer: screenItem.manufacturer
             model: screenItem.model
@@ -141,19 +139,25 @@ WaylandCompositor {
             subpixel: screenItem.subpixel
             transform: screenItem.transform
             scaleFactor: screenItem.scaleFactor
+            modes: screenItem.modes
             currentModeIndex: screenItem.currentModeIndex
             preferredModeIndex: screenItem.preferredModeIndex
 
             Component.onCompleted: {
-                // Add modes
-                var sourceModes = screenManager.screenModel.get(index).modes;
-                for (var i = 0; i < sourceModes.length; i++)
-                    modes.push(sourceModes[i]);
-
                 // Set default output the first time
-                if (!liriCompositor.defaultOutput)
+                if (!liriCompositor.defaultOutput && screenItem.primary)
                     liriCompositor.defaultOutput = this;
             }
+        }
+
+        function getOutputForUuid(uuid) {
+            for (var i = 0; i < screenManager.count; i++) {
+                var output = screenManager.objectAt(i);
+                if (output.uuid === uuid)
+                    return output;
+            }
+
+            return null;
         }
     }
 
@@ -215,10 +219,54 @@ WaylandCompositor {
     TextInputManager {}
 
     P.OutputManagement {
-        id: outputManagement
-        onCreateOutputConfiguration: {
-            var outputConfiguration = outputConfigurationComponent.createObject();
-            outputConfiguration.initialize(outputManagement, resource);
+        id: outputManager
+        onPrimaryOutputDeviceChanged: {
+            var output = screenManager.getOutputForUuid(device.uuid);
+            if (output)
+                liriCompositor.defaultOutput = output;
+        }
+        onOutputConfigurationCreated: {
+            configuration.changeRequested.connect(function() {
+                var failedCount = this.changes.length;
+
+                for (var i = 0; i < this.changes.length; i++) {
+                    var changeset = this.changes[i];
+
+                    if (changeset.empty) {
+                        // No changes, we are done!
+                        failedCount--;
+                        continue;
+                    }
+
+                    var output = screenManager.getOutputForUuid(changeset.outputDevice.uuid);
+                    if (!output) {
+                        // No output found with that uuid
+                        continue;
+                    }
+
+                    if (changeset.enabledChanged)
+                        output.enabled = changeset.enabled;
+
+                    if (changeset.transformChanged)
+                        output.hardwareScreen.transform = changeset.transform;
+
+                    if (changeset.currentModeIndexChanged)
+                        output.hardwareScreen.currentModeIndex = changeset.currentModeIndex;
+
+                    if (changeset.positionChanged)
+                        output.hardwareScreen.position = changeset.position;
+
+                    if (changeset.scaleFactorChanged)
+                        output.hardwareScreen.scaleFactor = changeset.scaleFactor;
+
+                    failedCount--;
+                }
+
+                if (failedCount === 0)
+                    this.setApplied();
+                else
+                    this.setFailed();
+            });
         }
     }
 

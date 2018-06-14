@@ -11,7 +11,6 @@ LiriQmlPlugin {
         versionAtLeast: project.minimumQtVersion
     }
     Depends { name: "WaylandScanner" }
-    Depends { name: "LiriWaylandServer" }
 
     cpp.defines: [
         'INSTALL_ROOTDIR="' + qbs.installRoot + '"',

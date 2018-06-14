@@ -33,11 +33,9 @@ import "desktop"
 P.WaylandOutput {
     id: output
 
-    property bool primary: false
+    readonly property bool primary: liriCompositor.defaultOutput === this
 
-    property alias screen: outputSettings.screen
-    property alias windowScreen: outputWindow.screen
-    property alias powerState: outputSettings.powerState
+    property var hardwareScreen: null
 
     property var viewsBySurface: ({})
 
@@ -50,13 +48,8 @@ P.WaylandOutput {
 
     property bool __idle: false
 
-    automaticFrameCallback: outputSettings.powerState === P.WaylandOutputSettings.PowerStateOn
-
-    onPrimaryChanged: {
-        // Set default output
-        if (primary)
-            liriCompositor.defaultOutput = this;
-    }
+    sizeFollowsWindow: false
+    automaticFrameCallback: enabled && hardwareScreen.powerState === P.ScreenItem.PowerStateOn
 
     window: ApplicationWindow {
         id: outputWindow
@@ -66,6 +59,8 @@ P.WaylandOutput {
         width: output.geometry.width
         height: output.geometry.height
         flags: Qt.FramelessWindowHint
+        screen: output.hardwareScreen.screen
+        color: "black"
         visible: true
 
         // Virtual Keyboard
@@ -124,6 +119,7 @@ P.WaylandOutput {
             ScreenView {
                 id: screenView
                 anchors.fill: parent
+                visible: output.enabled
             }
 
             // Idle dimmer
@@ -155,8 +151,22 @@ P.WaylandOutput {
         }
     }
 
-    P.WaylandOutputSettings {
-        id: outputSettings
+    onModeAdded: {
+        outputDevice.addMode(size, refreshRate);
+    }
+
+    P.OutputDevice {
+        id: outputDevice
+        manager: output.compositor.outputManager
+        uuid: output.uuid
+        manufacturer: output.manufacturer
+        model: output.model
+        position: output.position
+        physicalSize: output.physicalSize
+        transform: output.transform
+        scaleFactor: output.scaleFactor
+        currentModeIndex: output.currentModeIndex
+        preferredModeIndex: output.preferredModeIndex
     }
 
     /*
@@ -169,7 +179,7 @@ P.WaylandOutput {
 
         console.debug("Power on output", manufacturer, model);
         idleDimmer.fadeOut();
-        outputSettings.powerState = P.WaylandOutputSettings.PowerStateOn;
+        hardwareScreen.powerState = P.ScreenItem.PowerStateOn;
         __idle = false;
     }
 

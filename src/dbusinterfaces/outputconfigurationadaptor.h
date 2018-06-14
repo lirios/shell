@@ -21,45 +21,39 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef LIRI_OUTPUTCONFIGURATIONADAPTOR_H
+#define LIRI_OUTPUTCONFIGURATIONADAPTOR_H
 
+#include <QDBusObjectPath>
 #include <QObject>
-#include <QQmlParserStatus>
-#include <QScreen>
 
-class OutputSettings : public QObject, public QQmlParserStatus
+class OutputConfiguration;
+
+class OutputConfigurationAdaptor : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QScreen *screen READ screen WRITE setScreen NOTIFY screenChanged)
-    Q_PROPERTY(PowerState powerState READ powerState WRITE setPowerState NOTIFY powerStateChanged)
-    Q_INTERFACES(QQmlParserStatus)
+    Q_CLASSINFO("D-Bus Interface", "io.liri.Shell.OutputConfiguration1")
 public:
-    enum PowerState {
-        PowerStateOn,
-        PowerStateStandby,
-        PowerStateSuspend,
-        PowerStateOff
-    };
-    Q_ENUM(PowerState)
+    explicit OutputConfigurationAdaptor(OutputConfiguration *parent);
+    ~OutputConfigurationAdaptor();
 
-    explicit OutputSettings(QObject *parent = nullptr);
+    QDBusObjectPath path() const;
 
-    QScreen *screen() const;
-    void setScreen(QScreen *screen);
+    Q_SCRIPTABLE void SetEnabled(const QDBusObjectPath &handle, bool enabled);
+    Q_SCRIPTABLE void SetMode(const QDBusObjectPath &handle, int index);
+    Q_SCRIPTABLE void SetTransform(const QDBusObjectPath &handle, const QString &transform);
+    Q_SCRIPTABLE void SetPosition(const QDBusObjectPath &handle, const QPoint &position);
+    Q_SCRIPTABLE void SetScaleFactor(const QDBusObjectPath &handle, int scaleFactor);
 
-    PowerState powerState() const;
-    void setPowerState(PowerState state);
+    Q_SCRIPTABLE void Apply();
 
 Q_SIGNALS:
-    void screenChanged();
-    void powerStateChanged();
-
-protected:
-    void classBegin() override;
-    void componentComplete() override;
+    void Applied();
+    void Failed();
 
 private:
-    bool m_initialized = false;
-    QScreen *m_screen = nullptr;
-    PowerState m_powerState = PowerStateOn;
+    OutputConfiguration *m_parent = nullptr;
+    int m_id = 0;
 };
+
+#endif // LIRI_OUTPUTCONFIGURATIONADAPTOR_H

@@ -21,6 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QCryptographicHash>
 #include <QFile>
 #include <QGuiApplication>
 #include <QJsonArray>
@@ -76,6 +77,11 @@ bool ScreenItem::isPrimary() const
     return m_primary;
 }
 
+QString ScreenItem::uuid() const
+{
+    return m_uuid;
+}
+
 QString ScreenItem::manufacturer() const
 {
     return m_manufacturer;
@@ -111,6 +117,26 @@ int ScreenItem::height() const
     return m_geometry.height();
 }
 
+QPoint ScreenItem::position() const
+{
+    return m_geometry.topLeft();
+}
+
+void ScreenItem::setPosition(const QPoint &pos)
+{
+    if (!m_screen) {
+        qCWarning(lcShell) << "ScreenItem cannot set position if the screen property is not set";
+        return;
+    }
+
+    if (m_geometry.topLeft() == pos)
+        return;
+
+    Liri::Platform::EglFSFunctions::setScreenPosition(m_screen, pos);
+    m_geometry.setTopLeft(pos);
+    Q_EMIT geometryChanged();
+}
+
 QRect ScreenItem::geometry() const
 {
     return m_geometry;
@@ -124,6 +150,21 @@ QSizeF ScreenItem::physicalSize() const
 int ScreenItem::scaleFactor() const
 {
     return m_scaleFactor;
+}
+
+void ScreenItem::setScaleFactor(int factor)
+{
+    if (!m_screen) {
+        qCWarning(lcShell) << "ScreenItem cannot set scale factor if the screen property is not set";
+        return;
+    }
+
+    if (m_scaleFactor == factor)
+        return;
+
+    Liri::Platform::EglFSFunctions::setScreenScaleFactor(m_screen, static_cast<qreal>(factor));
+    m_scaleFactor = factor;
+    Q_EMIT scaleFactorChanged();
 }
 
 QWaylandOutput::Subpixel ScreenItem::subpixel() const
@@ -152,9 +193,55 @@ int ScreenItem::currentModeIndex() const
     return m_currentMode;
 }
 
+void ScreenItem::setCurrentModeIndex(int modeIndex)
+{
+    if (!m_screen) {
+        qCWarning(lcShell) << "ScreenItem cannot set current mode if the screen property is not set";
+        return;
+    }
+
+    Liri::Platform::EglFSFunctions::setScreenMode(m_screen, modeIndex);
+    m_currentMode = modeIndex;
+    Q_EMIT currentModeIndexChanged();
+}
+
 int ScreenItem::preferredModeIndex() const
 {
     return m_preferredMode;
+}
+
+ScreenItem::PowerState ScreenItem::powerState() const
+{
+    return m_powerState;
+}
+
+void ScreenItem::setPowerState(ScreenItem::PowerState state)
+{
+    if (!m_screen) {
+        qCWarning(lcShell) << "ScreenItem cannot set power state if the screen property is not set";
+        return;
+    }
+
+    if (m_powerState == state)
+        return;
+
+    switch (state) {
+    case PowerStateOn:
+        m_screen->handle()->setPowerState(QPlatformScreen::PowerStateOn);
+        break;
+    case PowerStateStandby:
+        m_screen->handle()->setPowerState(QPlatformScreen::PowerStateStandby);
+        break;
+    case PowerStateSuspend:
+        m_screen->handle()->setPowerState(QPlatformScreen::PowerStateSuspend);
+        break;
+    case PowerStateOff:
+        m_screen->handle()->setPowerState(QPlatformScreen::PowerStateOff);
+        break;
+    }
+
+    m_powerState = state;
+    Q_EMIT powerStateChanged();
 }
 
 /*
@@ -239,6 +326,8 @@ QVariant ScreenModel::data(const QModelIndex &index, int role) const
         return QVariant::fromValue<QScreen *>(item->screen());
     case PrimaryRole:
         return item->isPrimary();
+    case UuidRole:
+        return item->uuid();
     case ManufacturerRole:
         return item->manufacturer();
     case ModelRole:
@@ -386,9 +475,14 @@ void ScreenModel::addFakeScreens()
                 static_cast<Qt::ScreenOrientation>(outputSettings.value(QStringLiteral("orientation")).toInt());
         qCDebug(lcShell) << "Output orientation:" << orientation;
 
+        QCryptographicHash hash(QCryptographicHash::Md5);
+        hash.addData(QByteArrayLiteral("Liri"));
+        hash.addData(name.toUtf8());
+
         beginInsertRows(QModelIndex(), m_items.count(), m_items.count());
 
         ScreenItem *item = new ScreenItem(this);
+        item->m_uuid = hash.result().toHex().left(10);
         item->m_primary = primary && !primarySet;
         item->m_manufacturer = QStringLiteral("Liri");
         item->m_model = name;
@@ -456,6 +550,11 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
     item->m_physicalSize = screen->physicalSize();
     item->m_scaleFactor = qFloor(screen->devicePixelRatio());
 
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    hash.addData(item->m_manufacturer.toUtf8());
+    hash.addData(item->m_model.toUtf8());
+    item->m_uuid = hash.result().toHex().left(10);
+
     QPlatformScreen::SubpixelAntialiasingType subpixel = screen->handle()->subpixelAntialiasingTypeHint();
     switch (subpixel) {
     case QPlatformScreen::Subpixel_None:
@@ -504,6 +603,21 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
     }
     item->m_currentMode = screen->handle()->currentMode();
     item->m_preferredMode = screen->handle()->preferredMode();
+
+    switch (screen->handle()->powerState()) {
+    case QPlatformScreen::PowerStateOn:
+        item->m_powerState = ScreenItem::PowerStateOn;
+        break;
+    case QPlatformScreen::PowerStateStandby:
+        item->m_powerState = ScreenItem::PowerStateStandby;
+        break;
+    case QPlatformScreen::PowerStateSuspend:
+        item->m_powerState = ScreenItem::PowerStateSuspend;
+        break;
+    case QPlatformScreen::PowerStateOff:
+        item->m_powerState = ScreenItem::PowerStateOff;
+        break;
+    }
 
     connect(screen, &QScreen::availableGeometryChanged, this, [this, item](const QRect &geometry) {
         int row = m_items.indexOf(item);

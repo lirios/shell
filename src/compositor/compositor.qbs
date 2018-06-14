@@ -9,7 +9,7 @@ QtGuiApplication {
     Depends { name: "GitRevision" }
     Depends {
         name: "Qt"
-        submodules: ["core", "core-private", "concurrent", "dbus", "gui", "gui-private", "svg", "qml", "quick", "quickcontrols2", "waylandcompositor"]
+        submodules: ["core", "core-private", "concurrent", "dbus", "gui", "gui-private", "svg", "qml", "quick", "quickcontrols2", "waylandcompositor", "waylandcompositor-private"]
         versionAtLeast: project.minimumQtVersion
     }
     Depends { name: "sigwatch" }
@@ -73,8 +73,6 @@ QtGuiApplication {
         "declarative/indicatorsmodel.h",
         "declarative/inputsettings.cpp",
         "declarative/inputsettings.h",
-        "declarative/outputsettings.cpp",
-        "declarative/outputsettings.h",
         "declarative/quickoutput.cpp",
         "declarative/quickoutput.h",
         "declarative/screenmodel.cpp",
@@ -82,16 +80,6 @@ QtGuiApplication {
         "extensions/gtkshell.cpp",
         "extensions/gtkshell.h",
         "extensions/gtkshell_p.h",
-        "extensions/outputchangeset.cpp",
-        "extensions/outputchangeset.h",
-        "extensions/outputconfiguration.cpp",
-        "extensions/outputconfiguration.h",
-        "extensions/outputconfiguration_p.h",
-        "extensions/outputmanagement.cpp",
-        "extensions/outputmanagement.h",
-        "extensions/outputmanagement_p.h",
-        "extensions/quickoutputconfiguration.cpp",
-        "extensions/quickoutputconfiguration.h",
         "multimediakeys/multimediakeys.cpp",
         "multimediakeys/multimediakeys.h",
         "logging.cpp",
@@ -125,7 +113,6 @@ QtGuiApplication {
         prefix: "qml/"
         files: [
             "base/Keyboard.qml",
-            "base/OutputConfiguration.qml",
             "components/CloseButton.qml",
             "components/HotCorner.qml",
             "components/Overlay.qml",
@@ -220,7 +207,6 @@ QtGuiApplication {
         name: "Wayland Protocols"
         files: [
             "../../data/protocols/gtk-shell.xml",
-            "../../data/protocols/liri-outputmanagement.xml",
         ]
         fileTags: ["wayland.server.protocol"]
     }

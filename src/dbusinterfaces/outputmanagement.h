@@ -26,31 +26,38 @@
 
 #include <QObject>
 
-#include <QWaylandCompositorExtension>
-#include <QWaylandResource>
+#include "outputdevice.h"
 
 class OutputConfiguration;
-class OutputManagementPrivate;
+class OutputManagementAdaptor;
 
-class OutputManagement : public QWaylandCompositorExtensionTemplate<OutputManagement>
+class OutputManagement : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(OutputManagement)
+    Q_PROPERTY(OutputDevice *primaryOutputDevice READ primaryOutputDevice NOTIFY primaryOutputDeviceChanged)
 public:
-    OutputManagement();
-    explicit OutputManagement(QWaylandCompositor *compositor);
+    explicit OutputManagement(QObject *parent = nullptr);
 
-    void initialize() override;
+    QVector<OutputDevice *> devices() const;
 
-    static const struct wl_interface *interface();
-    static QByteArray interfaceName();
+    OutputDevice *primaryOutputDevice() const;
+    void setPrimaryOutputDevice(OutputDevice *device);
 
 Q_SIGNALS:
-    void createOutputConfiguration(const QWaylandResource &resource);
+    void primaryOutputDeviceChanged(OutputDevice *device);
+    void outputDeviceAdded(OutputDevice *device);
+    void outputDeviceRemoved(OutputDevice *device);
     void outputConfigurationCreated(OutputConfiguration *configuration);
 
 private:
-    OutputManagementPrivate *const d_ptr;
+    OutputManagementAdaptor *m_adaptor = nullptr;
+    QVector<OutputDevice *> m_devices;
+    OutputDevice *m_primaryOutputDevice = nullptr;
+
+    void addDevice(OutputDevice *device);
+    void removeDevice(OutputDevice *device);
+
+    friend class OutputDevice;
 };
 
 #endif // LIRI_OUTPUTMANAGEMENT_H

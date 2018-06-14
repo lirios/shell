@@ -22,14 +22,44 @@
  ***************************************************************************/
 
 #include <QGuiApplication>
+#include <QWaylandCompositor>
 #include <QWaylandOutputMode>
 
 #include "declarative/quickoutput.h"
 #include "declarative/screenmodel.h"
+#include "logging_p.h"
 
 QuickOutput::QuickOutput()
     : QWaylandQuickOutput()
 {
+}
+
+QString QuickOutput::uuid() const
+{
+    return m_uuid;
+}
+
+void QuickOutput::setUuid(const QString &uuid)
+{
+    if (m_uuid == uuid)
+        return;
+
+    m_uuid = uuid;
+    Q_EMIT uuidChanged();
+}
+
+bool QuickOutput::isEnabled() const
+{
+    return m_enabled;
+}
+
+void QuickOutput::setEnabled(bool value)
+{
+    if (m_enabled == value)
+        return;
+
+    m_enabled = value;
+    Q_EMIT enabledChanged();
 }
 
 QQmlListProperty<ScreenMode> QuickOutput::screenModes()
@@ -60,13 +90,16 @@ int QuickOutput::currentModeIndex() const
 
 void QuickOutput::setCurrentModeIndex(int index)
 {
-    if (m_initialized)
-        return;
-    if (index == m_currentModeIndex)
+    if (m_currentModeIndex == index)
         return;
 
     m_currentModeIndex = index;
     Q_EMIT currentModeIndexChanged();
+
+    if (m_initialized) {
+        auto mode = modes().at(index);
+        setCurrentMode(mode);
+    }
 }
 
 int QuickOutput::preferredModeIndex() const
@@ -78,7 +111,7 @@ void QuickOutput::setPreferredModeIndex(int index)
 {
     if (m_initialized)
         return;
-    if (index == m_preferredModexIndex)
+    if (m_preferredModexIndex == index)
         return;
 
     m_preferredModexIndex = index;
@@ -87,7 +120,9 @@ void QuickOutput::setPreferredModeIndex(int index)
 
 void QuickOutput::initialize()
 {
-    // Modes cannot change past initialization
+    if (m_initialized)
+        return;
+
     m_initialized = true;
 
     // Make sure size is dictated by the current mode
@@ -100,6 +135,8 @@ void QuickOutput::initialize()
 
         if (m_currentModeIndex == index)
             setCurrentMode(wlMode);
+
+        Q_EMIT modeAdded(mode->resolution(), mode->refreshRate());
 
         index++;
     }

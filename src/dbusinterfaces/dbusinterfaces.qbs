@@ -9,6 +9,7 @@ StaticLibrary {
 
     name: "LiriShellDBusInterfaces"
 
+    Depends { name: "lirideployment" }
     Depends { name: "cpp" }
     Depends {
         name: "Qt"
@@ -37,6 +38,20 @@ StaticLibrary {
     }
 
     files: [
+        "outputchangeset.cpp",
+        "outputchangeset.h",
+        "outputconfiguration.cpp",
+        "outputconfiguration.h",
+        "outputconfigurationadaptor.cpp",
+        "outputconfigurationadaptor.h",
+        "outputdevice.cpp",
+        "outputdevice.h",
+        "outputdeviceadaptor.cpp",
+        "outputdeviceadaptor.h",
+        "outputmanagement.cpp",
+        "outputmanagement.h",
+        "outputmanagementadaptor.cpp",
+        "outputmanagementadaptor.h",
         "screencast.cpp",
         "screencast.h",
         "screencastadaptor.cpp",
@@ -54,6 +69,15 @@ StaticLibrary {
         files: [
             "screencaststream.cpp",
             "screencaststream.h",
+        ]
+    }
+
+    Group {
+        name: "D-Bus Interfaces"
+        files: [
+            "data/io.liri.Shell.OutputConfiguration1.xml",
+            "data/io.liri.Shell.OutputDevice1.xml",
+            "data/io.liri.Shell.OutputManagement1.xml",
         ]
     }
 

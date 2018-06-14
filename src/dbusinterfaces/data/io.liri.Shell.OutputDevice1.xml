@@ -1,0 +1,124 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="io.liri.Shell.OutputDevice1">
+    <!--
+      Uuid
+
+      Unique identifier.
+    -->
+    <property name="Uuid" type="s" access="read"/>
+
+    <!--
+      Enabled
+
+      Whether this output device is enabled or not.
+    -->
+    <property name="Enabled" type="b" access="read"/>
+
+    <!--
+      Manufacturer
+
+      Output device manufacturer.
+    -->
+    <property name="Manufacturer" type="s" access="read"/>
+
+    <!--
+      Model
+
+      Output device model.
+    -->
+    <property name="Model" type="s" access="read"/>
+
+    <!--
+      Position
+
+      Output position in compositor space.
+    -->
+    <property name="Position" type="(ii)" access="read">
+      <annotation name="org.qtproject.QtDBus.QtTypeName" value="QPoint"/>
+    </property>
+
+    <!--
+      PhysicalSize
+
+      Physical size in mm.
+    -->
+    <property name="PhysicalSize" type="(ii)" access="read">
+      <annotation name="org.qtproject.QtDBus.QtTypeName" value="QSize"/>
+    </property>
+
+    <!--
+      Transform
+
+      Transform to apply to this output device.
+    -->
+    <property name="Transform" type="s" access="read"/>
+
+    <!--
+      ScaleFactor
+
+      Scale factor to apply to this output device.
+    -->
+    <property name="ScaleFactor" type="i" access="read"/>
+
+    <!--
+      Modes
+
+      List of modes available for this output device.
+    -->
+    <property name="Modes" type="a(s(ii)i)" access="read">
+      <annotation name="org.qtproject.QtDBus.QtTypeName" value="QList&lt;Mode&gt;"/>
+    </property>
+
+    <!--
+      CurrentModeIndex
+
+      Currently used mode.
+    -->
+    <property name="CurrentModeIndex" type="i" access="read"/>
+
+    <!--
+      PreferredModeIndex
+
+      Preferred mode.
+    -->
+    <property name="PreferredModeIndex" type="i" access="read"/>
+
+    <signal name="EnabledChanged">
+      <arg name="enabled" type="b" direction="out"/>
+    </signal>
+    <signal name="ManufacturerChanged">
+      <arg name="manufacturer" type="s" direction="out"/>
+    </signal>
+    <signal name="ModelChanged">
+      <arg name="model" type="s" direction="out"/>
+    </signal>
+    <signal name="PositionChanged">
+      <arg name="position" type="(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QPoint"/>
+    </signal>
+    <signal name="PhysicalSizeChanged">
+      <arg name="size" type="(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QSize"/>
+    </signal>
+    <signal name="TransformChanged">
+      <arg name="transform" type="s" direction="out"/>
+    </signal>
+    <signal name="ScaleFactorChanged">
+      <arg name="scaleFactor" type="i" direction="out"/>
+    </signal>
+    <signal name="ModeAdded">
+      <arg name="size" type="(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QSize"/>
+      <arg name="refreshRate" type="i" direction="out"/>
+    </signal>
+    <signal name="CurrentModeIndexChanged">
+      <arg name="currentModeIndex" type="i" direction="out"/>
+    </signal>
+    <signal name="PreferredModeIndexChanged">
+      <arg name="preferredModeIndex" type="i" direction="out"/>
+    </signal>
+
+    <signal name="Changed"></signal>
+  </interface>
+</node>

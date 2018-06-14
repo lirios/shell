@@ -30,15 +30,14 @@
 
 #include "declarative/indicatorsmodel.h"
 #include "declarative/inputsettings.h"
-#include "declarative/outputsettings.h"
 #include "declarative/quickoutput.h"
 #include "declarative/screenmodel.h"
 #include "extensions/gtkshell.h"
-#include "extensions/outputchangeset.h"
-#include "extensions/outputconfiguration.h"
-#include "extensions/outputmanagement.h"
-#include "extensions/quickoutputconfiguration.h"
 
+#include "outputchangeset.h"
+#include "outputconfiguration.h"
+#include "outputdevice.h"
+#include "outputmanagement.h"
 #include "screencast.h"
 #include "screenshooter.h"
 
@@ -88,7 +87,6 @@ Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgSurfaceV5)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgPopupV5)
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(GtkShell)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(GtkSurface)
-Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(OutputManagement)
 
 void registerPrivateTypes()
 {
@@ -99,12 +97,13 @@ void registerPrivateTypes()
     qmlRegisterType<IndicatorsModel>(uri, versionMajor, versionMinor, "IndicatorsModel");
     qmlRegisterType<InputSettings>(uri, versionMajor, versionMinor, "InputSettings");
     qmlRegisterType<QuickOutputQuickParent>(uri, versionMajor, versionMinor, "WaylandOutput");
-    qmlRegisterType<OutputSettings>(uri, versionMajor, versionMinor, "WaylandOutputSettings");
     qmlRegisterType<ScreenModel>(uri, versionMajor, versionMinor, "ScreenModel");
     qmlRegisterUncreatableType<ScreenMode>(uri, versionMajor, versionMinor, "ScreenMode",
                                            QLatin1String("Cannot create instance of ScreenMode"));
     qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
                                            QLatin1String("Cannot create instance of ScreenItem"));
+
+    // Wayland protocols
 
     qmlRegisterType<QWaylandWlShellQuickExtension>(uri, versionMajor, versionMinor, "WlShell");
     qmlRegisterType<QWaylandWlShellSurfaceQuickParent>(uri, versionMajor, versionMinor, "WlShellSurface");
@@ -118,10 +117,11 @@ void registerPrivateTypes()
     qmlRegisterType<GtkShellQuickExtension>(uri, versionMajor, versionMinor, "GtkShell");
     qmlRegisterType<GtkSurfaceQuickParent>(uri, versionMajor, versionMinor, "GtkSurface");
 
-    qmlRegisterType<QuickOutputConfiguration>(uri, versionMajor, versionMinor, "OutputConfiguration");
-    qmlRegisterUncreatableType<OutputManagement>(uri, versionMajor, versionMinor, "OutputManagementBase",
-                                                 QLatin1String("Cannot create instance of OutputManagementBase, use OutputManagement instead"));
-    qmlRegisterType<OutputManagementQuickExtension>(uri, versionMajor, versionMinor, "OutputManagement");
+    // D-Bus interfaces
+
+    qmlRegisterType<OutputConfiguration>(uri, versionMajor, versionMinor, "OutputConfiguration");
+    qmlRegisterType<OutputDevice>(uri, versionMajor, versionMinor, "OutputDevice");
+    qmlRegisterType<OutputManagement>(uri, versionMajor, versionMinor, "OutputManagement");
     qmlRegisterUncreatableType<OutputChangeset>(uri, versionMajor, versionMinor, "OutputChangeset",
                                                 QLatin1String("Cannot create instance of OutputChangeset"));
 

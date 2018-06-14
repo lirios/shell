@@ -24,6 +24,7 @@
 
 import QtQuick 2.7
 import Fluid.Controls 1.0 as FluidControls
+import Liri.private.shell 1.0 as P
 
 Rectangle {
     id: idleDimmer
@@ -56,7 +57,7 @@ Rectangle {
     onOpacityChanged: {
         // Power off output when fade out has finished
         if (opacity == 1.0)
-            output.powerState = P.WaylandOutputSettings.PowerStateStandby;
+            output.hardwareScreen.powerState = P.ScreenItem.PowerStateStandby;
     }
 
     OpacityAnimator {

@@ -21,40 +21,46 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef LIRI_QUICKOUTPUTCONFIGURATION_H
-#define LIRI_QUICKOUTPUTCONFIGURATION_H
+#ifndef LIRI_OUTPUTCONFIGURATION_H
+#define LIRI_OUTPUTCONFIGURATION_H
 
+#include <QHash>
+#include <QObject>
 #include <QQmlListProperty>
 
-#include "outputconfiguration.h"
+class OutputChangeset;
+class OutputConfigurationAdaptor;
+class OutputDevice;
+class OutputManagementAdaptor;
 
-class QuickOutputConfigurationPrivate;
-
-class QuickOutputConfiguration : public OutputConfiguration
+class OutputConfiguration : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QQmlListProperty<OutputChangeset> changes READ changes NOTIFY changesChanged)
-    Q_PROPERTY(QQmlListProperty<QObject> data READ data DESIGNABLE false)
-    Q_CLASSINFO("DefaultProperty", "data")
+    Q_PROPERTY(QQmlListProperty<OutputChangeset> changes READ changes)
 public:
-    QuickOutputConfiguration();
+    explicit OutputConfiguration(QObject *parent = nullptr);
 
     QQmlListProperty<OutputChangeset> changes();
-    QQmlListProperty<QObject> data();
+
+    OutputChangeset *pendingChanges(OutputDevice *device);
+    bool hasPendingChanges(OutputDevice *device);
+    void clearPendingChanges();
+
+    Q_INVOKABLE void setApplied();
+    Q_INVOKABLE void setFailed();
 
     static int changesCount(QQmlListProperty<OutputChangeset> *prop);
     static OutputChangeset *changesAt(QQmlListProperty<OutputChangeset> *prop, int index);
 
-    static void dataAppend(QQmlListProperty<QObject> *prop, QObject *object);
-    static int dataCount(QQmlListProperty<QObject> *prop);
-    static QObject *dataAt(QQmlListProperty<QObject> *prop, int index);
-    static void dataClear(QQmlListProperty<QObject> *prop);
-
 Q_SIGNALS:
-    void changesChanged();
+    void changeRequested();
 
 private:
-    QVector<QObject *> m_objects;
+    OutputConfigurationAdaptor *m_adaptor = nullptr;
+    bool m_done = false;
+    QHash<OutputDevice *, OutputChangeset *> m_changes;
+
+    friend class OutputManagementAdaptor;
 };
 
-#endif // LIRI_QUICKOUTPUTCONFIGURATION_H
+#endif // LIRI_OUTPUTCONFIGURATION_H

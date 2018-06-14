@@ -1,0 +1,92 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <!--
+    io.liri.Shell.OutputConfiguration1
+    @short_description: Output configuration
+
+    This interface is used by programs to configure an output device.
+  -->
+  <interface name="io.liri.Shell.OutputConfiguration1">
+    <!--
+      SetEnabled
+      @handle: Output device object path.
+      @enabled: Whether it is enabled or not.
+
+      Called to enable or disable an output device.
+    -->
+    <method name="SetEnabled">
+      <arg name="handle" type="o" direction="in"/>
+      <arg name="enabled" type="b" direction="in"/>
+    </method>
+
+    <!--
+      SetMode
+      @handle: Output device object path.
+      @index: Mode index.
+
+      Called to select a new mode for the output device.
+    -->
+    <method name="SetMode">
+      <arg name="handle" type="o" direction="in"/>
+      <arg name="index" type="i" direction="in"/>
+    </method>
+
+    <!--
+      SetTransform
+      @handle: Output device object path.
+      @transform: Desired output transformation.
+
+      Called to change the output device transformation.
+    -->
+    <method name="SetTransform">
+      <arg name="handle" type="o" direction="in"/>
+      <arg name="transform" type="s" direction="in"/>
+    </method>
+
+    <!--
+      SetPosition
+      @handle: Output device object path.
+      @position: X and Y coordinates.
+
+      Called to change the output device position.
+    -->
+    <method name="SetPosition">
+      <arg name="handle" type="o" direction="in"/>
+      <arg name="position" type="(ii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QPoint"/>
+    </method>
+
+    <!--
+      SetScaleFactor
+      @handle: Output device object path.
+      @scaleFactor: Scale factor.
+
+      Called to change output device scale factor.
+    -->
+    <method name="SetScaleFactor">
+      <arg name="handle" type="o" direction="in"/>
+      <arg name="scaleFactor" type="i" direction="in"/>
+    </method>
+
+    <!--
+      Apply
+
+      Called to apply the configuration.
+    -->
+    <method name="Apply"></method>
+
+    <!--
+      Applied
+
+      Emitted when this configuration is applied.
+    -->
+    <signal name="Applied"></signal>
+
+    <!--
+      Failed
+
+      Emitted when this configuration failed to be applied.
+    -->
+    <signal name="Failed"></signal>
+  </interface>
+</node>

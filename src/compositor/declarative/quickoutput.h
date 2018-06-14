@@ -32,11 +32,19 @@ class ScreenMode;
 class QuickOutput : public QWaylandQuickOutput
 {
     Q_OBJECT
+    Q_PROPERTY(QString uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(QQmlListProperty<ScreenMode> modes READ screenModes NOTIFY modesChanged)
     Q_PROPERTY(int currentModeIndex READ currentModeIndex WRITE setCurrentModeIndex NOTIFY currentModeIndexChanged)
     Q_PROPERTY(int preferredModeIndex READ preferredModeIndex WRITE setPreferredModeIndex NOTIFY preferredModeIndexChanged)
 public:
     explicit QuickOutput();
+
+    QString uuid() const;
+    void setUuid(const QString &uuid);
+
+    bool isEnabled() const;
+    void setEnabled(bool value);
 
     QQmlListProperty<ScreenMode> screenModes();
 
@@ -47,15 +55,20 @@ public:
     void setPreferredModeIndex(int index);
 
 Q_SIGNALS:
+    void uuidChanged();
+    void enabledChanged();
     void modesChanged();
     void currentModeIndexChanged();
     void preferredModeIndexChanged();
+    void modeAdded(const QSize &size, int refreshRate);
 
 protected:
     void initialize() override;
 
 private:
     bool m_initialized = false;
+    QString m_uuid;
+    bool m_enabled = true;
     QVector<ScreenMode *> m_modes;
     int m_currentModeIndex = 0;
     int m_preferredModexIndex = 0;

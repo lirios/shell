@@ -25,54 +25,65 @@
 #define LIRI_OUTPUTCHANGESET_H
 
 #include <QObject>
-
 #include <QWaylandOutput>
 
-class OutputChangesetPrivate;
-class OutputConfigurationPrivate;
+class OutputConfiguration;
+class OutputConfigurationAdaptor;
+class OutputDevice;
 
 class OutputChangeset : public QObject
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(OutputChangeset)
-    Q_PROPERTY(QWaylandOutput *output READ output CONSTANT)
+    Q_PROPERTY(bool empty READ isEmpty CONSTANT)
+    Q_PROPERTY(OutputDevice *outputDevice READ outputDevice CONSTANT)
     Q_PROPERTY(bool enabledChanged READ isEnabledChanged CONSTANT)
-    Q_PROPERTY(bool primaryChanged READ isPrimaryChanged CONSTANT)
     Q_PROPERTY(bool transformChanged READ isTransformChanged CONSTANT)
-    Q_PROPERTY(bool modeIdChanged READ isModeIdChanged CONSTANT)
+    Q_PROPERTY(bool currentModeIndexChanged READ isCurrentModeIndexChanged CONSTANT)
     Q_PROPERTY(bool positionChanged READ isPositionChanged CONSTANT)
     Q_PROPERTY(bool scaleFactorChanged READ isScaleFactorChanged CONSTANT)
     Q_PROPERTY(bool enabled READ isEnabled CONSTANT)
-    Q_PROPERTY(bool primary READ isPrimary CONSTANT)
-    Q_PROPERTY(int modeId READ modeId CONSTANT)
+    Q_PROPERTY(int currentModeIndex READ currentModeIndex CONSTANT)
     Q_PROPERTY(QWaylandOutput::Transform transform READ transform CONSTANT)
     Q_PROPERTY(QPoint position READ position CONSTANT)
     Q_PROPERTY(int scaleFactor READ scaleFactor CONSTANT)
 public:
-    ~OutputChangeset();
+    bool isEmpty() const;
 
-    QWaylandOutput *output() const;
+    OutputDevice *outputDevice() const;
 
     bool isEnabledChanged() const;
-    bool isPrimaryChanged() const;
     bool isTransformChanged() const;
-    bool isModeIdChanged() const;
+    bool isCurrentModeIndexChanged() const;
     bool isPositionChanged() const;
     bool isScaleFactorChanged() const;
 
     bool isEnabled() const;
-    bool isPrimary() const;
-    int modeId() const;
+    void setEnabled(bool enabled);
+
+    int currentModeIndex() const;
+    void setCurrentModeIndex(int index);
+
     QWaylandOutput::Transform transform() const;
+    void setTransform(QWaylandOutput::Transform transform);
+
     QPoint position() const;
+    void setPosition(const QPoint &position);
+
     int scaleFactor() const;
+    void setScaleFactor(int scaleFactor);
 
 private:
-    explicit OutputChangeset(QWaylandOutput *output, QObject *parent = nullptr);
+    OutputDevice *m_outputDevice = nullptr;
+    bool m_enabled = true;
+    int m_currentModeIndex = -1;
+    QWaylandOutput::Transform m_transform = QWaylandOutput::TransformNormal;
+    QPoint m_position;
+    int m_scaleFactor = 1;
 
-    friend class OutputConfigurationPrivate;
+    explicit OutputChangeset(OutputDevice *output, QObject *parent = nullptr);
 
-    OutputChangesetPrivate *const d_ptr;
+    friend class OutputConfiguration;
+    friend class OutputConfigurationAdaptor;
 };
 
 #endif // LIRI_OUTPUTCHANGESET_H

@@ -41,6 +41,7 @@ public:
         ScreenItemRole = Qt::UserRole,
         ScreenRole,
         PrimaryRole,
+        UuidRole,
         ManufacturerRole,
         ModelRole,
         NameRole,
@@ -114,6 +115,7 @@ class ScreenItem : public QObject
     Q_OBJECT
     Q_PROPERTY(QScreen *screen READ screen CONSTANT)
     Q_PROPERTY(bool primary READ isPrimary NOTIFY primaryChanged)
+    Q_PROPERTY(QString uuid READ uuid CONSTANT)
     Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
     Q_PROPERTY(QString model READ model CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
@@ -121,15 +123,25 @@ class ScreenItem : public QObject
     Q_PROPERTY(int y READ y NOTIFY geometryChanged)
     Q_PROPERTY(int width READ width NOTIFY geometryChanged)
     Q_PROPERTY(int height READ height NOTIFY geometryChanged)
+    Q_PROPERTY(QPoint position READ position WRITE setPosition NOTIFY geometryChanged)
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
     Q_PROPERTY(QSizeF physicalSize READ physicalSize NOTIFY physicalSizeChanged)
-    Q_PROPERTY(int scaleFactor READ scaleFactor CONSTANT)
+    Q_PROPERTY(int scaleFactor READ scaleFactor WRITE setScaleFactor NOTIFY scaleFactorChanged)
     Q_PROPERTY(QWaylandOutput::Subpixel subpixel READ subpixel CONSTANT)
     Q_PROPERTY(QWaylandOutput::Transform transform READ transform NOTIFY transformChanged)
     Q_PROPERTY(QQmlListProperty<ScreenMode> modes READ modes CONSTANT)
-    Q_PROPERTY(int currentModeIndex READ currentModeIndex NOTIFY currentModeIndexChanged)
+    Q_PROPERTY(int currentModeIndex READ currentModeIndex WRITE setCurrentModeIndex NOTIFY currentModeIndexChanged)
     Q_PROPERTY(int preferredModeIndex READ preferredModeIndex CONSTANT)
+    Q_PROPERTY(PowerState powerState READ powerState WRITE setPowerState NOTIFY powerStateChanged)
 public:
+    enum PowerState {
+        PowerStateOn,
+        PowerStateStandby,
+        PowerStateSuspend,
+        PowerStateOff
+    };
+    Q_ENUM(PowerState)
+
     explicit ScreenItem(QObject *parent = nullptr);
     ~ScreenItem();
 
@@ -137,6 +149,7 @@ public:
 
     bool isPrimary() const;
 
+    QString uuid() const;
     QString manufacturer() const;
     QString model() const;
     QString name() const;
@@ -144,27 +157,43 @@ public:
     int y() const;
     int width() const;
     int height() const;
+
+    QPoint position() const;
+    void setPosition(const QPoint &pos);
+
     QRect geometry() const;
     QSizeF physicalSize() const;
+
     int scaleFactor() const;
+    void setScaleFactor(int factor);
+
     QWaylandOutput::Subpixel subpixel() const;
     QWaylandOutput::Transform transform() const;
     QQmlListProperty<ScreenMode> modes();
+
     int currentModeIndex() const;
+    void setCurrentModeIndex(int modeIndex);
+
     int preferredModeIndex() const;
+
+    PowerState powerState() const;
+    void setPowerState(PowerState state);
 
 Q_SIGNALS:
     void primaryChanged();
     void geometryChanged();
     void physicalSizeChanged();
+    void scaleFactorChanged();
     void transformChanged();
     void currentModeIndexChanged();
+    void powerStateChanged();
 
 private:
     friend class ScreenModel;
 
     QScreen *m_screen = nullptr;
     bool m_primary = false;
+    QString m_uuid;
     QString m_manufacturer;
     QString m_model;
     QString m_name;
@@ -176,6 +205,7 @@ private:
     int m_currentMode = 0;
     int m_preferredMode = 0;
     QVector<ScreenMode *> m_modes;
+    PowerState m_powerState = PowerStateOn;
 };
 
 QML_DECLARE_TYPE(ScreenItem)
