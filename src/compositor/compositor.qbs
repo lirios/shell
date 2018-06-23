@@ -17,6 +17,7 @@ QtGuiApplication {
     Depends { name: "Qt5Xdg" }
     Depends { name: "LiriLogind" }
     Depends { name: "LiriLocalDevice" }
+    Depends { name: "LiriShellDBusInterfaces" }
     Depends { name: "systemd" }
     Depends { name: "pam" }
     Depends { name: "WaylandScanner" }

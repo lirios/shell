@@ -5,6 +5,7 @@ Project {
 
     references: [
         "compositor/compositor.qbs",
+        "dbusinterfaces/dbusinterfaces.qbs",
         "helper/helper.qbs",
         "scripts/scripts.qbs",
     ]

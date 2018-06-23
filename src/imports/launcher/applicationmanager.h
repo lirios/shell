@@ -100,6 +100,7 @@ Q_SIGNALS:
     void applicationPinned(Application *app);
     void applicationUnpinned(Application *app);
     void applicationLaunched(Application *app);
+    void shellSurfaceFocused(QObject *shellSurface);
 
 private:
     QGSettings *m_settings = nullptr;

@@ -396,6 +396,8 @@ void ApplicationManager::focusShellSurface(QObject *shellSurface)
         else
             UsageTracker::instance()->applicationFocused(QString());
     }
+
+    Q_EMIT shellSurfaceFocused(shellSurface);
 }
 
 QString ApplicationManager::canonicalizeAppId(const QString &appId)

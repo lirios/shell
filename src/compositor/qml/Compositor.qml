@@ -45,6 +45,7 @@ WaylandCompositor {
     readonly property alias settings: settings
     readonly property alias shellSurfaces: shellSurfaces
 
+    property var activeShellSurface: null
     readonly property bool hasMaxmizedShellSurfaces: __private.maximizedShellSurfaces > 0
     readonly property bool hasFullscreenShellSurfaces: __private.fullscreenShellSurfaces > 0
 
@@ -225,22 +226,32 @@ WaylandCompositor {
         id: screencaster
     }
 
-    LiriWayland.Screenshooter {
+    P.Screenshooter {
         id: screenshooter
 
         onCaptureRequested: {
-            // TODO: We might want to do something depending on the capture type - plfiorini
+            // Grab cursor surface
+            screenshot.grabCursorItem(defaultOutput.cursor);
+
+            // Capture
             switch (screenshot.captureType) {
-            case LiriWayland.Screenshot.CaptureActiveWindow:
-            case LiriWayland.Screenshot.CaptureWindow:
-            case LiriWayland.Screenshot.CaptureArea:
+            case P.Screenshot.CaptureScreens:
+                screenshot.grabScreens();
+                break;
+            case P.Screenshot.CaptureActiveWindow:
+                screenshot.grabSurfaceItem(defaultOutput.viewsBySurface[activeShellSurface.surface]);
+                break;
+            case P.Screenshot.CaptureWindow:
+            case P.Screenshot.CaptureArea:
+                // TODO: Implement interactive capture types
                 break;
             default:
                 break;
             }
 
-            // Setup client buffer
-            screenshot.setup();
+            // Save capture
+            screenshot.save();
+            delete screenshot;
         }
     }
 
@@ -340,6 +351,7 @@ WaylandCompositor {
 
     Launcher.ApplicationManager {
         id: applicationManager
+        onShellSurfaceFocused: activeShellSurface = shellSurface
     }
 
     Launcher.LauncherModel {

@@ -39,6 +39,8 @@
 #include "extensions/outputmanagement.h"
 #include "extensions/quickoutputconfiguration.h"
 
+#include "screenshooter.h"
+
 #ifndef Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS
 #define Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(className) \
     class Q_WAYLAND_COMPOSITOR_EXPORT className##QuickParent : public className \
@@ -121,6 +123,10 @@ void registerPrivateTypes()
     qmlRegisterType<OutputManagementQuickExtension>(uri, versionMajor, versionMinor, "OutputManagement");
     qmlRegisterUncreatableType<OutputChangeset>(uri, versionMajor, versionMinor, "OutputChangeset",
                                                 QLatin1String("Cannot create instance of OutputChangeset"));
+
+    qmlRegisterType<Screenshooter>(uri, versionMajor, versionMinor, "Screenshooter");
+    qmlRegisterUncreatableType<Screenshot>(uri, versionMajor, versionMinor, "Screenshot",
+                                           QLatin1String("Cannot create instance of Screenshot"));
 }
 
 #include "qmlregistration.moc"
