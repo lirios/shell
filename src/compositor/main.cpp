@@ -40,7 +40,9 @@
 #include <sys/prctl.h>
 #endif
 
+#include <sys/types.h>
 #include <signal.h>
+#include <unistd.h>
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
 
@@ -84,6 +86,11 @@ static void setupEnvironment()
 
 int main(int argc, char *argv[])
 {
+    if (::getuid() == 0) {
+        qWarning("Liri Shell doesn't support running as root!");
+        return 1;
+    }
+
     // Disable ptrace except for gdb
     disablePtrace();
 
