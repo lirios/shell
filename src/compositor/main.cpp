@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 
     // Restart with D-Bus session if necessary
     if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
-        qCritical("No D-Bus session bus available, please run Liri Shell with dbus-run-session.");
+        qWarning("No D-Bus session bus available, please run Liri Shell with dbus-run-session.");
         return 1;
     }
 
