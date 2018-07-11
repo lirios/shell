@@ -68,11 +68,6 @@ P.WaylandOutput {
         flags: Qt.FramelessWindowHint
         visible: true
 
-        Component.onCompleted: {
-            // Register this window with the screencaster
-            screencaster.addWindow(this);
-        }
-
         // Virtual Keyboard
         Loader {
             parent: outputWindow.overlay

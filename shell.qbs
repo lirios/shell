@@ -12,9 +12,13 @@ Project {
     property bool developmentBuild: false
     property string systemdUserUnitDir: ""
 
+    property bool screenCastEnabled: true
+
     condition: qbs.targetOS.contains("linux") && !qbs.targetOS.contains("android")
 
     minimumQbsVersion: "1.8.0"
+
+    qbsSearchPaths: ["qbs"]
 
     references: [
         "3rdparty/3rdparty.qbs",

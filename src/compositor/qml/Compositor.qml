@@ -222,9 +222,7 @@ WaylandCompositor {
         }
     }
 
-    LiriWayland.Screencaster {
-        id: screencaster
-    }
+    P.ScreenCast {}
 
     P.Screenshooter {
         id: screenshooter

@@ -39,6 +39,7 @@
 #include "extensions/outputmanagement.h"
 #include "extensions/quickoutputconfiguration.h"
 
+#include "screencast.h"
 #include "screenshooter.h"
 
 #ifndef Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS
@@ -123,6 +124,8 @@ void registerPrivateTypes()
     qmlRegisterType<OutputManagementQuickExtension>(uri, versionMajor, versionMinor, "OutputManagement");
     qmlRegisterUncreatableType<OutputChangeset>(uri, versionMajor, versionMinor, "OutputChangeset",
                                                 QLatin1String("Cannot create instance of OutputChangeset"));
+
+    qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
 
     qmlRegisterType<Screenshooter>(uri, versionMajor, versionMinor, "Screenshooter");
     qmlRegisterUncreatableType<Screenshot>(uri, versionMajor, versionMinor, "Screenshot",
