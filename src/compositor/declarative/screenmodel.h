@@ -205,7 +205,6 @@ private:
     int m_currentMode = 0;
     int m_preferredMode = 0;
     QVector<ScreenMode *> m_modes;
-    PowerState m_powerState = PowerStateOn;
 };
 
 QML_DECLARE_TYPE(ScreenItem)

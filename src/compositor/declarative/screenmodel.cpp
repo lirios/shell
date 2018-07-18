@@ -30,8 +30,40 @@
 #include <QtMath>
 #include <qpa/qplatformscreen.h>
 
+#include <LiriPlatformHeaders/lirieglfsfunctions.h>
+
 #include "declarative/screenmodel.h"
 #include "logging_p.h"
+
+static ScreenItem::PowerState convertPowerState(Liri::Platform::EglFSFunctions::PowerState powerState)
+{
+    switch (powerState) {
+    case Liri::Platform::EglFSFunctions::PowerStateOn:
+        return ScreenItem::PowerStateOn;
+    case Liri::Platform::EglFSFunctions::PowerStateStandby:
+        return ScreenItem::PowerStateStandby;
+    case Liri::Platform::EglFSFunctions::PowerStateSuspend:
+        return ScreenItem::PowerStateSuspend;
+    case Liri::Platform::EglFSFunctions::PowerStateOff:
+        return ScreenItem::PowerStateOff;
+    }
+    Q_UNREACHABLE();
+}
+
+static Liri::Platform::EglFSFunctions::PowerState convertPowerState(ScreenItem::PowerState powerState)
+{
+    switch (powerState) {
+    case ScreenItem::PowerStateOn:
+        return Liri::Platform::EglFSFunctions::PowerStateOn;
+    case ScreenItem::PowerStateStandby:
+        return Liri::Platform::EglFSFunctions::PowerStateStandby;
+    case ScreenItem::PowerStateSuspend:
+        return Liri::Platform::EglFSFunctions::PowerStateSuspend;
+    case ScreenItem::PowerStateOff:
+        return Liri::Platform::EglFSFunctions::PowerStateOff;
+    }
+    Q_UNREACHABLE();
+}
 
 /*
  * ScreenMode
@@ -212,7 +244,12 @@ int ScreenItem::preferredModeIndex() const
 
 ScreenItem::PowerState ScreenItem::powerState() const
 {
-    return m_powerState;
+    if (!m_screen) {
+        qCWarning(lcShell) << "ScreenItem cannot get power state if the screen property is not set";
+        return ScreenItem::PowerStateOn;
+    }
+
+    return convertPowerState(Liri::Platform::EglFSFunctions::getPowerState(m_screen));
 }
 
 void ScreenItem::setPowerState(ScreenItem::PowerState state)
@@ -222,25 +259,14 @@ void ScreenItem::setPowerState(ScreenItem::PowerState state)
         return;
     }
 
-    if (m_powerState == state)
+    auto oldPowerState = Liri::Platform::EglFSFunctions::getPowerState(m_screen);
+    auto newPowerState = convertPowerState(state);
+
+    if (oldPowerState == newPowerState)
         return;
 
-    switch (state) {
-    case PowerStateOn:
-        m_screen->handle()->setPowerState(QPlatformScreen::PowerStateOn);
-        break;
-    case PowerStateStandby:
-        m_screen->handle()->setPowerState(QPlatformScreen::PowerStateStandby);
-        break;
-    case PowerStateSuspend:
-        m_screen->handle()->setPowerState(QPlatformScreen::PowerStateSuspend);
-        break;
-    case PowerStateOff:
-        m_screen->handle()->setPowerState(QPlatformScreen::PowerStateOff);
-        break;
-    }
+    Liri::Platform::EglFSFunctions::setPowerState(m_screen, newPowerState);
 
-    m_powerState = state;
     Q_EMIT powerStateChanged();
 }
 
@@ -603,21 +629,6 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
     }
     item->m_currentMode = screen->handle()->currentMode();
     item->m_preferredMode = screen->handle()->preferredMode();
-
-    switch (screen->handle()->powerState()) {
-    case QPlatformScreen::PowerStateOn:
-        item->m_powerState = ScreenItem::PowerStateOn;
-        break;
-    case QPlatformScreen::PowerStateStandby:
-        item->m_powerState = ScreenItem::PowerStateStandby;
-        break;
-    case QPlatformScreen::PowerStateSuspend:
-        item->m_powerState = ScreenItem::PowerStateSuspend;
-        break;
-    case QPlatformScreen::PowerStateOff:
-        item->m_powerState = ScreenItem::PowerStateOff;
-        break;
-    }
 
     connect(screen, &QScreen::availableGeometryChanged, this, [this, item](const QRect &geometry) {
         int row = m_items.indexOf(item);
