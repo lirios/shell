@@ -26,7 +26,6 @@ import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import Liri.WaylandServer 1.0
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 import "../components" as Components
