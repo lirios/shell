@@ -67,6 +67,8 @@ QtGuiApplication {
     Qt.core.resourceSourceBase: sourceDirectory
 
     files: [
+        "declarative/fpscounter.cpp",
+        "declarative/fpscounter.h",
         "main.cpp",
         "application.cpp",
         "application.h",

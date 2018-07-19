@@ -28,6 +28,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
+import Liri.private.shell 1.0 as P
 import "../components" as Components
 import "../screens"
 
@@ -346,7 +347,7 @@ Item {
             top: parent.top
             right: parent.right
         }
-        text: fpsCounter.fps
+        text: fpsCounter.framesPerSecond.toFixed(2)
         font.pointSize: 36
         style: Text.Raised
         styleColor: "#222"
@@ -354,7 +355,7 @@ Item {
         z: 1000
         visible: false
 
-        FpsCounter {
+        P.FpsCounter {
             id: fpsCounter
         }
     }

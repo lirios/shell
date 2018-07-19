@@ -28,6 +28,7 @@
 
 #include "qmlregistration.h"
 
+#include "declarative/fpscounter.h"
 #include "declarative/indicatorsmodel.h"
 #include "declarative/inputsettings.h"
 #include "declarative/quickoutput.h"
@@ -94,6 +95,9 @@ void registerPrivateTypes()
     const int versionMajor = 1;
     const int versionMinor = 0;
 
+    // Components
+
+    qmlRegisterType<FpsCounter>(uri, versionMajor, versionMinor, "FpsCounter");
     qmlRegisterType<IndicatorsModel>(uri, versionMajor, versionMinor, "IndicatorsModel");
     qmlRegisterType<InputSettings>(uri, versionMajor, versionMinor, "InputSettings");
     qmlRegisterType<QuickOutputQuickParent>(uri, versionMajor, versionMinor, "WaylandOutput");
