@@ -42,6 +42,10 @@ The following modules and their dependencies are required:
  * [libqtxdg](https://github.com/lxde/libqtxdg)
  * [polkit-qt5](http://quickgit.kde.org/?p=polkit-qt-1.git)
 
+Optional dependencies:
+
+ * [qml-xwayland](https://github.com/lirios/qml-xwayland.git)
+
 ## Installation
 
 Qbs is a new build system that is much easier to use compared to qmake or CMake.
