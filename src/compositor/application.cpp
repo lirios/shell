@@ -278,7 +278,11 @@ void Application::startup()
         m_launcher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
 
         // Set Qt platform for applications that will be executed from here
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland;xcb"));
+#else
         qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
+#endif
 
         // Set the Wayland socket name for clients
         qputenv("WAYLAND_DISPLAY", compositor->socketName());
