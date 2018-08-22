@@ -97,8 +97,25 @@ int main(int argc, char *argv[])
     // Setup the environment
     setupEnvironment();
 
-    // Force liri QPA for the compositor
-    qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("liri"));
+    // Automatically detect the right platform plugin to use
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+    // Since Qt 5.11.0 we can specify a fallback platform plugin,
+    // so try wayland and xcb in this order unless XDG_SESSION_TYPE
+    // is empty (which likely means we are launched from a vt)
+    if (qEnvironmentVariableIsEmpty("XDG_SESSION_TYPE"))
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("liri"));
+    else
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland;xcb"));
+#else
+    // Try to detect the platform based on environment variables,
+    // fallback to liri if nothing is found
+    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY"))
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
+    else if (qEnvironmentVariableIsSet("DISPLAY"))
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("xcb"));
+    else
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("liri"));
+#endif
 
     // Disable QPA mouse cursor
     qputenv("QT_QPA_EGLFS_HIDECURSOR", QByteArrayLiteral("1"));

@@ -175,6 +175,7 @@ QString Application::systemInformation()
     DUMP_CPU_FEATURE(DSPR2, "DSPR2");
 #endif
     str << '\n';
+    str << "Platform name: " << QGuiApplication::platformName();
     return result;
 }
 

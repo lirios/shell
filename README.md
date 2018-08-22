@@ -142,10 +142,14 @@ liri-session --logout
 
 ## Running on another window system
 
-By default the Liri session runs without a particular window system and uses
-DRM/KMS or a device specific EGL integration.
+The platform plugin to use is automatically detected based on the environment,
+it can be one of the following:
 
-However you can run it inside another window system.
+ * wayland: Run inside another Wayland compositor
+ * xcb: Run inside a X11 session
+ * liri: Uses DRM/KMS or a device specific EGL integration
+
+You can override the automatic detection, if it doesn't work as intended.
 
 ### X11
 
@@ -177,6 +181,14 @@ Then you need to run `liri-session` like this:
 
 ```sh
 QT_WAYLAND_SHELL_INTEGRATION=fullscreen-shell liri-session -platform wayland 
+```
+
+### DRM/KMS
+
+To make sure the Liri session runs without another window system type:
+
+```sh
+liri-session -platform liri
 ```
 
 ## Fake screen configuration
