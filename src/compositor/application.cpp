@@ -245,10 +245,6 @@ void Application::startup()
     if (!ProcessLauncher::registerWithDBus(m_launcher))
         QCoreApplication::exit(1);
 
-    // Set platform name
-    m_appEngine->rootContext()->setContextProperty(QStringLiteral("platformName"),
-                                                   QGuiApplication::platformName());
-
     // Set screen configuration file name
     m_appEngine->rootContext()->setContextProperty(QStringLiteral("screenConfigurationFileName"),
                                                    m_screenConfigFileName);
