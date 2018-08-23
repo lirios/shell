@@ -39,6 +39,7 @@
 #include "outputconfiguration.h"
 #include "outputdevice.h"
 #include "outputmanagement.h"
+#include "outputs.h"
 #include "screencast.h"
 #include "screenshooter.h"
 
@@ -128,6 +129,8 @@ void registerPrivateTypes()
     qmlRegisterType<OutputManagement>(uri, versionMajor, versionMinor, "OutputManagement");
     qmlRegisterUncreatableType<OutputChangeset>(uri, versionMajor, versionMinor, "OutputChangeset",
                                                 QLatin1String("Cannot create instance of OutputChangeset"));
+
+    qmlRegisterType<Outputs>(uri, versionMajor, versionMinor, "Outputs");
 
     qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
 

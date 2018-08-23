@@ -52,6 +52,10 @@ StaticLibrary {
         "outputmanagement.h",
         "outputmanagementadaptor.cpp",
         "outputmanagementadaptor.h",
+        "outputs.cpp",
+        "outputs.h",
+        "outputsadaptor.cpp",
+        "outputsadaptor.h",
         "screencast.cpp",
         "screencast.h",
         "screencastadaptor.cpp",
@@ -78,6 +82,7 @@ StaticLibrary {
             "data/io.liri.Shell.OutputConfiguration1.xml",
             "data/io.liri.Shell.OutputDevice1.xml",
             "data/io.liri.Shell.OutputManagement1.xml",
+            "data/io.liri.Shell.Outputs.xml",
         ]
     }
 

@@ -146,6 +146,9 @@ WaylandCompositor {
                 // Set default output the first time
                 if (!liriCompositor.defaultOutput && screenItem.primary)
                     liriCompositor.defaultOutput = this;
+
+                // Register output
+                outputs.addOutput(this);
             }
         }
 
@@ -267,6 +270,14 @@ WaylandCompositor {
                     this.setFailed();
             });
         }
+    }
+
+    /*
+     * D-Bus
+     */
+
+    P.Outputs {
+        id: outputs
     }
 
     P.ScreenCast {}
