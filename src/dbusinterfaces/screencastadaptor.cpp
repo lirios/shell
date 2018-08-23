@@ -48,17 +48,16 @@ ScreenCastAdaptor::~ScreenCastAdaptor()
     QDBusConnection::sessionBus().unregisterObject(dbusPath);
 }
 
-bool ScreenCastAdaptor::captureScreen(const QString &uuid)
+bool ScreenCastAdaptor::captureScreen(const QDBusObjectPath &handle)
 {
+    QString uuid = handle.path().remove(0, 24);
+
     for (auto output : m_parent->compositor()->outputs()) {
-        QVariant uuidVariant = output->property("uuid");
-        if (uuidVariant.isValid()) {
-            if (uuidVariant.toString() == uuid)
-                return m_parent->createStream(output->window()->screen());
-        }
+        if (output->property("uuid").toString() == uuid)
+            return m_parent->createStream(output->window()->screen());
     }
 
-    qCWarning(lcScreenCast) << "No screen with uuid" << uuid << "found";
+    qCWarning(lcScreenCast) << "No output with uuid" << uuid << "found";
 
     return false;
 }

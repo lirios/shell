@@ -24,6 +24,7 @@
 #ifndef SCREENCASTADAPTOR_H
 #define SCREENCASTADAPTOR_H
 
+#include <QDBusObjectPath>
 #include <QObject>
 
 class ScreenCast;
@@ -36,7 +37,7 @@ public:
     explicit ScreenCastAdaptor(QObject *parent = nullptr);
     ~ScreenCastAdaptor();
 
-    Q_SCRIPTABLE bool captureScreen(const QString &uuid);
+    Q_SCRIPTABLE bool captureScreen(const QDBusObjectPath &handle);
 
 Q_SIGNALS:
     void streamReady(quint32 nodeId);
