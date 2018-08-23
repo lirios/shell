@@ -9,7 +9,7 @@ QtGuiApplication {
     Depends { name: "GitRevision" }
     Depends {
         name: "Qt"
-        submodules: ["core", "core-private", "concurrent", "dbus", "gui", "gui-private", "svg", "qml", "quick", "quickcontrols2", "waylandcompositor", "waylandcompositor-private"]
+        submodules: ["core", "concurrent", "dbus", "gui", "gui-private", "svg", "qml", "quick", "quickcontrols2", "waylandcompositor"]
         versionAtLeast: project.minimumQtVersion
     }
     Depends { name: "sigwatch" }
