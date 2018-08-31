@@ -1,0 +1,4 @@
+module Liri.Storage
+plugin storageplugin
+classname StoragePlugin
+typeinfo plugins.qmltypes

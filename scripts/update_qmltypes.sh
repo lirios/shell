@@ -28,3 +28,4 @@ update Liri.LoginManager 1.0 loginmanager
 update Liri.Mpris 1.0 mpris2
 update Liri.PolicyKit 1.0 policykit
 update Liri.Shell 1.0 shell
+update Liri.Storage 1.0 storage

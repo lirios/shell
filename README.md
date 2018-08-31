@@ -41,6 +41,7 @@ The following modules and their dependencies are required:
  * [pam](http://www.linux-pam.org/)
  * [libqtxdg](https://github.com/lxde/libqtxdg)
  * [polkit-qt5](http://quickgit.kde.org/?p=polkit-qt-1.git)
+ * [solid](http://quickgit.kde.org/?p=solid.git)
 
 Optional dependencies:
 

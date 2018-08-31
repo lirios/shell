@@ -9,5 +9,6 @@ Project {
         "mpris2/mpris2.qbs",
         "policykit/policykit.qbs",
         "shell/shell.qbs",
+        "storage/storage.qbs",
     ]
 }

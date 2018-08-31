@@ -29,35 +29,35 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0
-import Vibe.Hardware 1.0 as Hardware
+import Liri.Storage 1.0 as Storage
 
 Indicator {
     title: qsTr("Storage")
     iconSource: Qt.resolvedUrl("../images/harddisk.svg")
-    visible: hardware.storageDevices.length > 0
+    visible: storageModel.count > 0
     component: ListView {
-        model: hardware.storageDevices
+        model: storageModel
         clip: true
 
         delegate: FluidControls.ListItem {
-            icon.name: modelData.iconName + "-symbolic"
-            text: modelData.name
-            onClicked: processRunner.launchCommand("xdg-open file://" + modelData.filePath)
+            icon.name: model.iconName + "-symbolic"
+            text: model.name
+            onClicked: processRunner.launchCommand("xdg-open file://" + model.filePath)
 
             rightItem: ToolButton {
                 anchors.centerIn: parent
 
-                ToolTip.text: modelData.mounted ? qsTr("Eject") : qsTr("Mount")
+                ToolTip.text: model.mounted ? qsTr("Eject") : qsTr("Mount")
                 ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
                 ToolTip.visible: hovered
 
-                icon.source: Qt.resolvedUrl("../images/" + (modelData.mounted ? "eject.svg" : "disk.svg"))
-                onClicked: modelData.mounted ? modelData.unmount() : modelData.mount()
+                icon.source: Qt.resolvedUrl("../images/" + (model.mounted ? "eject.svg" : "disk.svg"))
+                onClicked: model.mounted ? model.storageDevice.unmount() : model.storageDevice.mount()
             }
         }
     }
 
-    Hardware.HardwareEngine {
-        id: hardware
+    Storage.StorageModel {
+        id: storageModel
     }
 }
