@@ -9,7 +9,8 @@ travis_start "install_packages"
 msg "Install packages..."
 sudo apt-get install -y \
      libpam0g-dev \
-     libpolkit-qt5-1-dev
+     libpolkit-qt5-1-dev \
+     libkf5solid-dev
 travis_end "install_packages"
 
 # Install libqtxdg
