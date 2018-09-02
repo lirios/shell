@@ -57,7 +57,7 @@ Product {
 
     Group {
         qbs.install: true
-        qbs.installDir: project.systemdUserUnitDir ? project.systemdUserUnitDir : FileInfo.joinPaths(lirideployment.libDir, "systemd/usr")
+        qbs.installDir: project.systemdUserUnitDir ? project.systemdUserUnitDir : FileInfo.joinPaths(lirideployment.libDir, "systemd/user")
         fileTagsFilter: product.type
     }
 }
