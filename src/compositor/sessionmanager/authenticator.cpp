@@ -51,7 +51,7 @@ void Authenticator::authenticate(const QString &password)
         return;
     }
 
-    int retval = pam_start("liri-shell", pwd->pw_name, &conversation, &handle);
+    int retval = pam_start("su", pwd->pw_name, &conversation, &handle);
     if (retval != PAM_SUCCESS) {
         qWarning("pam_start returned %d", retval);
         Q_EMIT authenticationError();
