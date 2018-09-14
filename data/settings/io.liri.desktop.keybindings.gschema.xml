@@ -312,54 +312,6 @@
       <default>['Meta+L']</default>
       <summary>Lock the screen</summary>
     </key>
-    <key name="activate-session-1" type="as">
-      <default>['Ctrl+Alt+F1']</default>
-      <summary>Activate session 1</summary>
-    </key>
-    <key name="activate-session-2" type="as">
-      <default>['Ctrl+Alt+F2']</default>
-      <summary>Activate session 2</summary>
-    </key>
-    <key name="activate-session-3" type="as">
-      <default>['Ctrl+Alt+F3']</default>
-      <summary>Activate session 3</summary>
-    </key>
-    <key name="activate-session-4" type="as">
-      <default>['Ctrl+Alt+F4']</default>
-      <summary>Activate session 4</summary>
-    </key>
-    <key name="activate-session-5" type="as">
-      <default>['Ctrl+Alt+F5']</default>
-      <summary>Activate session 5</summary>
-    </key>
-    <key name="activate-session-6" type="as">
-      <default>['Ctrl+Alt+F6']</default>
-      <summary>Activate session 6</summary>
-    </key>
-    <key name="activate-session-7" type="as">
-      <default>['Ctrl+Alt+F7']</default>
-      <summary>Activate session 7</summary>
-    </key>
-    <key name="activate-session-8" type="as">
-      <default>['Ctrl+Alt+F8']</default>
-      <summary>Activate session 8</summary>
-    </key>
-    <key name="activate-session-9" type="as">
-      <default>['Ctrl+Alt+F9']</default>
-      <summary>Activate session 9</summary>
-    </key>
-    <key name="activate-session-10" type="as">
-      <default>['Ctrl+Alt+F10']</default>
-      <summary>Activate session 10</summary>
-    </key>
-    <key name="activate-session-11" type="as">
-      <default>['Ctrl+Alt+F11']</default>
-      <summary>Activate session 11</summary>
-    </key>
-    <key name="activate-session-12" type="as">
-      <default>['Ctrl+Alt+F12']</default>
-      <summary>Activate session 12</summary>
-    </key>
   </schema>
   <schema id="io.liri.desktop.keybindings.desktop" path="/io/liri/desktop/keybindings/desktop/">
     <key name="run-command" type="as">
