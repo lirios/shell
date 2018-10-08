@@ -127,8 +127,8 @@ void Listener::initiateAuthentication(const QString &actionId,
             new PolkitQt1::Agent::Session(m_identity, m_cookie, result);
     connect(session, SIGNAL(request(QString, bool)), this, SLOT(request(QString, bool)));
     connect(session, SIGNAL(completed(bool)), this, SLOT(completed(bool)));
-    connect(session, SIGNAL(showInfo(QString)), this, SLOT(information(QString)));
-    connect(session, SIGNAL(showError(QString)), this, SLOT(error(QString)));
+    connect(session, SIGNAL(showInfo(QString)), this, SIGNAL(information(QString)));
+    connect(session, SIGNAL(showError(QString)), this, SIGNAL(error(QString)));
     session->initiate();
 
     // Initiate authentication sequence
