@@ -229,10 +229,10 @@ WaylandCompositor {
         }
         onOutputConfigurationCreated: {
             configuration.changeRequested.connect(function() {
-                var failedCount = this.changes.length;
+                var failedCount = configuration.changes.length;
 
-                for (var i = 0; i < this.changes.length; i++) {
-                    var changeset = this.changes[i];
+                for (var i = 0; i < configuration.changes.length; i++) {
+                    var changeset = configuration.changes[i];
 
                     if (changeset.empty) {
                         // No changes, we are done!
@@ -265,9 +265,9 @@ WaylandCompositor {
                 }
 
                 if (failedCount === 0)
-                    this.setApplied();
+                    configuration.setApplied();
                 else
-                    this.setFailed();
+                    configuration.setFailed();
             });
         }
     }
