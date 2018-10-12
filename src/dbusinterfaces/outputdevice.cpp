@@ -76,6 +76,7 @@ void OutputDevice::setManager(OutputManagement *manager)
     }
 
     m_manager = manager;
+    setParent(m_manager);
     Q_EMIT managerChanged();
 }
 

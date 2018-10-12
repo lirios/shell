@@ -74,35 +74,35 @@ QDBusObjectPath OutputConfigurationAdaptor::path() const
 
 void OutputConfigurationAdaptor::SetEnabled(const QDBusObjectPath &handle, bool enabled)
 {
-    auto device = parent()->findChild<OutputDevice *>(handle.path());
+    auto device = m_parent->parent()->findChild<OutputDevice *>(handle.path());
     if (device)
         m_parent->pendingChanges(device)->setEnabled(enabled);
 }
 
 void OutputConfigurationAdaptor::SetMode(const QDBusObjectPath &handle, int index)
 {
-    auto device = parent()->findChild<OutputDevice *>(handle.path());
+    auto device = m_parent->parent()->findChild<OutputDevice *>(handle.path());
     if (device)
         m_parent->pendingChanges(device)->setCurrentModeIndex(index);
 }
 
 void OutputConfigurationAdaptor::SetTransform(const QDBusObjectPath &handle, const QString &transform)
 {
-    auto device = parent()->findChild<OutputDevice *>(handle.path());
+    auto device = m_parent->parent()->findChild<OutputDevice *>(handle.path());
     if (device)
         m_parent->pendingChanges(device)->setTransform(stringToTransform(transform));
 }
 
 void OutputConfigurationAdaptor::SetPosition(const QDBusObjectPath &handle, const QPoint &position)
 {
-    auto device = parent()->findChild<OutputDevice *>(handle.path());
+    auto device = m_parent->parent()->findChild<OutputDevice *>(handle.path());
     if (device)
         m_parent->pendingChanges(device)->setPosition(position);
 }
 
 void OutputConfigurationAdaptor::SetScaleFactor(const QDBusObjectPath &handle, int scaleFactor)
 {
-    auto device = parent()->findChild<OutputDevice *>(handle.path());
+    auto device = m_parent->parent()->findChild<OutputDevice *>(handle.path());
     if (device)
         m_parent->pendingChanges(device)->setScaleFactor(scaleFactor);
 }
