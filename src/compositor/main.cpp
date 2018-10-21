@@ -86,10 +86,12 @@ static void setupEnvironment()
 
 int main(int argc, char *argv[])
 {
+#ifndef DEVELOPMENT_BUILD
     if (::getuid() == 0) {
         qWarning("Liri Shell doesn't support running as root!");
         return 1;
     }
+#endif
 
     // Disable ptrace except for gdb
     disablePtrace();
