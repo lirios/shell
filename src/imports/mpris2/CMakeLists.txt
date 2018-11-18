@@ -1,0 +1,25 @@
+liri_add_qml_plugin(mpris2
+    MODULE_PATH
+        "Liri/Mpris"
+    SOURCES
+        mpris2engine.cpp
+        mpris2engine.h
+        mpris2player.cpp
+        mpris2player.h
+        mpris2.qbs
+        plugin.cpp
+    QML_FILES
+        qmldir
+        plugins.qmltypes
+    DBUS_INTERFACE_SOURCES
+        org.freedesktop.DBus.Properties.xml
+        org.mpris.MediaPlayer2.Player.xml
+        org.mpris.MediaPlayer2.xml
+    DBUS_INTERFACE_FLAGS "-N"
+    DEFINES
+        QT_NO_CAST_FROM_ASCII
+        QT_NO_FOREACH
+    PUBLIC_LIBRARIES
+        Qt5::Core
+        Qt5::DBus
+)

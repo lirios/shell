@@ -428,7 +428,11 @@ void ScreenCastStream::initialize()
 
     auto map = pwCoreType->map;
 
+#if !PW_API_PRE_0_2_0
+#  if (PW_MAJOR==0) && (PW_MINOR==2) && (PW_MICRO<3)
     spa_debug_set_type_map(map);
+#  endif
+#endif
 
     pwType = new PwType();
 

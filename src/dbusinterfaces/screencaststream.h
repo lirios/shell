@@ -34,8 +34,6 @@
 #include <spa/param/video/raw-utils.h>
 #include <spa/param/props.h>
 
-#include <spa/lib/debug.h>
-
 #include <pipewire/factory.h>
 #include <pipewire/pipewire.h>
 #include <pipewire/remote.h>
@@ -50,6 +48,12 @@
 #  endif
 #else
 #  define PW_API_PRE_0_2_0 true
+#endif
+
+#if !PW_API_PRE_0_2_0
+#  if (PW_MAJOR==0) && (PW_MINOR==2) && (PW_MICRO<3)
+#    include <spa/lib/debug.h>
+#  endif
 #endif
 
 class QSocketNotifier;

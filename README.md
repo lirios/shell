@@ -29,8 +29,8 @@ Qt >= 5.10.0 with at least the following modules is required:
 
 The following modules and their dependencies are required:
 
- * [qbs](http://code.qt.io/cgit/qbs/qbs.git) >= 1.9.0
- * [qbs-shared](https://github.com/lirios/qbs-shared.git) >= 1.2.0
+ * [cmake](https://gitlab.kitware.com/cmake/cmake) >= 3.10.0
+ * [cmake-shared](https://github.com/lirios/cmake-shared.git) >= 1.0.0
  * [fluid](https://github.com/lirios/fluid) >= 1.0.0
  * [qtaccountsservice](https://github.com/lirios/qtaccountsservice) >= 1.2.0
  * [qtgsettings](https://github.com/lirios/qtgsettings) >= 1.1.0
@@ -47,44 +47,23 @@ Optional dependencies:
 
 ## Installation
 
-Qbs is a new build system that is much easier to use compared to qmake or CMake.
-
-If you want to learn more, please read the [Qbs manual](http://doc.qt.io/qbs/index.html),
-especially the [setup guide](http://doc.qt.io/qbs/configuring.html) and how to install artifacts
-from the [installation guide](http://doc.qt.io/qbs/installing-files.html).
-
-If you haven't already, start by setting up a `qt5` profile for `qbs`:
-
 ```sh
-qbs setup-toolchains --type gcc /usr/bin/g++ gcc
-qbs setup-qt $(which qmake) qt5 # make sure that qmake is in PATH
-qbs config profiles.qt5.baseProfile gcc
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=/path/to/prefix ..
+make
+make install # use sudo if necessary
 ```
 
-Then, from the root of the repository, run:
+Replace `/path/to/prefix` to your installation prefix.
+Default is `/usr/local`.
 
-```sh
-qbs -d build -j $(nproc) profile:qt5 # use sudo if necessary
-```
+You can also append the following options to the `cmake` command:
 
-To the `qbs` call above you can append additional configuration parameters:
-
- * `modules.lirideployment.prefix:/path/to/prefix` where most files are installed (default: `/usr/local`)
- * `modules.lirideployment.dataDir:path/to/lib` where data files are installed (default: `/usr/local/share`)
- * `modules.lirideployment.libDir:path/to/lib` where libraries are installed (default: `/usr/local/lib`)
- * `modules.lirideployment.qmlDir:path/to/qml` where QML plugins are installed (default: `/usr/local/lib/qml`)
- * `modules.lirideployment.pluginsDir:path/to/plugins` where Qt plugins are installed (default: `/usr/local/lib/plugins`)
- * `modules.lirideployment.qbsModulesDir:path/to/qbs` where Qbs modules are installed (default: `/usr/local/share/qbs/modules`)
-
-See [lirideployment.qbs](https://github.com/lirios/qbs-shared/blob/develop/modules/lirideployment/lirideployment.qbs)
-for more deployment-related parameters.
-
-You can also specify the following options:
-
- * `projects.Shell.developmentBuild:true` to enable features for development such as the ability
-   to load arbitrary QML files from the shell
- * `projects.Shell.systemdUserUnitDir:/path/to/units` to install systemd user units (default: `/usr/local/lib/systemd/user`),
-   the prefix can be changed setting `modules.lirideployment.prefix`
+ * `-DLIRI_SHELL_DEVELOPMENT_BUILD:BOOL=ON`: Enable feature for development such as the
+   ability to load arbitrary QML files.
+ * `-DLIRI_SHELL_WITH_SCREENCAST:BOOL=OFF`: Disable experimental screencast support.
+ * `-DINSTALL_SYSTEMDUSERUNITDIR=/path/to/systemd/user`: Path to install systemd user units (default: `/usr/local/lib/systemd/user`).
 
 ## Licensing
 
