@@ -36,12 +36,21 @@ LS.ChromeItem {
     property alias inputEventsEnabled: shellSurfaceItem.inputEventsEnabled
     readonly property alias output: shellSurfaceItem.output
 
+    readonly property size windowSize: {
+        var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
+        if (shellSurface.decorated) {
+            size.width += decoration.marginSize * 2;
+            size.height += decoration.titleBarHeight + decoration.marginSize;
+        }
+        return size;
+    }
+
     property rect taskIconGeometry: Qt.rect(0, 0, 32, 32)
 
     x: moveItem.x - output.position.x
     y: moveItem.y - output.position.y
-    width: shellSurfaceItem.width
-    height: shellSurfaceItem.height
+    width: windowSize.width
+    height: windowSize.height
 
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
@@ -51,13 +60,13 @@ LS.ChromeItem {
     transform: [
         Scale {
             id: scaleTransform
-            origin.x: shellSurfaceItem.width / 2
-            origin.y: shellSurfaceItem.height / 2
+            origin.x: windowSize.width / 2
+            origin.y: windowSize.height / 2
         },
         Scale {
             id: scaleTransformPos
-            origin.x: shellSurfaceItem.width / 2
-            origin.y: chrome.y - shellSurfaceItem.output.position.y - shellSurfaceItem.height
+            origin.x: windowSize.width / 2
+            origin.y: chrome.y - shellSurfaceItem.output.position.y - windowSize.height
         }
     ]
 
@@ -99,8 +108,7 @@ LS.ChromeItem {
                 moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x;
                 moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y;
             } else {
-                var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
-                var pos = chrome.randomPosition(liriCompositor.mousePos, size);
+                var pos = chrome.randomPosition(liriCompositor.mousePos, windowSize);
                 moveItem.x = pos.x;
                 moveItem.y = pos.y;
             }
@@ -114,6 +122,14 @@ LS.ChromeItem {
         }
     }
 
+    Decoration {
+        id: decoration
+
+        anchors.fill: parent
+
+        dragTarget: shellSurface.moveItem
+    }
+
     ShellSurfaceItem {
         id: shellSurfaceItem
 
@@ -122,13 +138,10 @@ LS.ChromeItem {
 
         property bool moving: false
 
-        moveItem: shellSurface.moveItem
+        x: shellSurface.decorated ? decoration.marginSize : 0
+        y: shellSurface.decorated ? decoration.titleBarHeight : 0
 
-        // FIXME: Transparent backgrounds will be opaque due to shadows
-        layer.enabled: !shellSurface.decorated
-        layer.effect: FluidEffects.Elevation {
-            elevation: shellSurfaceItem.focus ? 24 : 8
-        }
+        moveItem: shellSurface.moveItem
 
         focusOnClick: shellSurface.windowType != Qt.Popup
         onSurfaceDestroyed: {

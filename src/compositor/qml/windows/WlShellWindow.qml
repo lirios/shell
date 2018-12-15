@@ -37,7 +37,7 @@ P.WlShellSurface {
     property string canonicalAppId: applicationManager.canonicalizeAppId(className)
     property string iconName: "unknown"
 
-    property bool decorated: false
+    property bool decorated: true
     property bool hasDropShadow: !maximized && !fullscreen
 
     property WaylandSurface parentWlSurface: null

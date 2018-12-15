@@ -150,6 +150,7 @@ bool ProcessLauncher::launchCommand(const QString &command)
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("liri"));
+    env.insert(QStringLiteral("QT_WAYLAND_DISABLE_WINDOWDECORATION"), QStringLiteral("1"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
     env.remove(QStringLiteral("EGL_PLATFORM"));
 
@@ -194,6 +195,7 @@ bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
         env.insert(QStringLiteral("WAYLAND_DISPLAY"), m_waylandSocketName);
     env.insert(QStringLiteral("SAL_USE_VCLPLUGIN"), QStringLiteral("kde"));
     env.insert(QStringLiteral("QT_PLATFORM_PLUGIN"), QStringLiteral("liri"));
+    env.insert(QStringLiteral("QT_WAYLAND_DISABLE_WINDOWDECORATION"), QStringLiteral("1"));
     env.remove(QStringLiteral("QSG_RENDER_LOOP"));
     env.remove(QStringLiteral("EGL_PLATFORM"));
 

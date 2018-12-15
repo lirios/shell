@@ -76,7 +76,6 @@ static void setupEnvironment()
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
     qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("liri-"));
     qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Liri"));
-    qunsetenv("QT_WAYLAND_DISABLE_WINDOWDECORATION");
 
     // Load input method
     QtGSettings::QGSettings settings(QStringLiteral("io.liri.desktop.interface"),
