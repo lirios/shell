@@ -38,7 +38,7 @@ LS.ChromeItem {
 
     readonly property size windowSize: {
         var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
-        if (shellSurface.decorated) {
+        if (decoration.visible) {
             size.width += decoration.marginSize * 2;
             size.height += decoration.titleBarHeight + decoration.marginSize;
         }
@@ -56,6 +56,12 @@ LS.ChromeItem {
     onYChanged: __private.updatePrimary()
 
     onMoveRequested: shellSurface.startMove(liriCompositor.defaultSeat)
+
+    // FIXME: Transparent backgrounds will be opaque due to shadows
+    layer.enabled: decoration.visible && shellSurface.hasDropShadow
+    layer.effect: FluidEffects.Elevation {
+        elevation: shellSurfaceItem.focus ? 24 : 8
+    }
 
     transform: [
         Scale {

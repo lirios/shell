@@ -37,26 +37,41 @@ LS.ChromeItem {
     property alias inputEventsEnabled: shellSurfaceItem.inputEventsEnabled
     readonly property alias output: shellSurfaceItem.output
 
+    readonly property size windowSize: {
+        var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
+        if (decoration.visible) {
+            size.width += decoration.marginSize * 2;
+            size.height += decoration.titleBarHeight + decoration.marginSize;
+        }
+        return size;
+    }
+
     property rect taskIconGeometry: Qt.rect(0, 0, 32, 32)
 
     x: moveItem.x - output.position.x
     y: moveItem.y - output.position.y
-    width: shellSurfaceItem.width
-    height: shellSurfaceItem.height
+    width: windowSize.width
+    height: windowSize.height
 
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
 
+    // FIXME: Transparent backgrounds will be opaque due to shadows
+    layer.enabled: true
+    layer.effect: FluidEffects.Elevation {
+        elevation: shellSurfaceItem.focus ? 24 : 8
+    }
+
     transform: [
         Scale {
             id: scaleTransform
-            origin.x: shellSurfaceItem.width / 2
-            origin.y: shellSurfaceItem.height / 2
+            origin.x: windowSize.width / 2
+            origin.y: windowSize.height / 2
         },
         Scale {
             id: scaleTransformPos
-            origin.x: shellSurfaceItem.width / 2
-            origin.y: chrome.y - shellSurfaceItem.output.position.y - shellSurfaceItem.height
+            origin.x: windowSize.width / 2
+            origin.y: chrome.y - shellSurfaceItem.output.position.y - windowSize.height
         }
     ]
 
@@ -106,12 +121,6 @@ LS.ChromeItem {
         anchors.fill: parent
 
         dragTarget: shellSurface.xwaylandMoveItem
-
-        // FIXME: Transparent backgrounds will be opaque due to shadows
-        layer.enabled: shellSurface.decorated && shellSurface.hasDropShadow
-        layer.effect: FluidEffects.Elevation {
-            elevation: shellSurfaceItem.focus ? 24 : 8
-        }
     }
 
     XWaylandShellSurfaceItem {
@@ -121,12 +130,6 @@ LS.ChromeItem {
         y: shellSurface.decorated ? decoration.titleBarHeight : 0
 
         moveItem: shellSurface.moveItem
-
-        // FIXME: Transparent backgrounds will be opaque due to shadows
-        layer.enabled: !shellSurface.decorated
-        layer.effect: FluidEffects.Elevation {
-            elevation: shellSurfaceItem.focus ? 24 : 8
-        }
 
         focusOnClick: shellSurface.windowType != Qt.Popup
         onSurfaceDestroyed: {

@@ -33,17 +33,10 @@ Control {
     readonly property real marginSize: 0
     readonly property real titleBarHeight: shellSurface.fullscreen ? 0 : 32 - titleBar.radius
     readonly property bool dragging: moveArea.drag.active
-    readonly property bool hasDropShadow: !shellSurface.maximized && !shellSurface.fullscreen
 
     property Item dragTarget: shellSurfaceItem.moveItem
 
     Material.theme: Material.Dark
-
-    // FIXME: Transparent backgrounds will be opaque due to shadows
-    layer.enabled: hasDropShadow
-    layer.effect: FluidEffects.Elevation {
-        elevation: shellSurfaceItem.focus ? 24 : 8
-    }
 
     padding: shellSurface.maximized || shellSurface.fullscreen ? 0 : (shellSurface.windowType === Qt.Popup ? 1 : 4)
 
