@@ -78,11 +78,12 @@ function spreadWindows() {
             // Save original position and size (compositor space coordinates)
             originalLayout[entry] = {
                 "x": entry.moveItem.x, "y": entry.moveItem.y,
-                "width": entry.width, "height": entry.height
+                "width": entry.width, "height": entry.height,
+                "scale": entry.scale
             };
 
             // Move and resize
-            entry.inputEventsEnabled = false;
+            entry.output.screenView.locked = true;
             entry.moveItem.animateTo(x, y);
             entry.resizeTo(w, h);
         });
@@ -108,7 +109,7 @@ function restoreWindows() {
             // Restore to the original position and size
             entry.moveItem.animateTo(pos.x, pos.y);
             entry.restoreSize();
-            entry.inputEventsEnabled = true;
+            entry.output.screenView.locked = false;
             delete originalLayout[entry];
 
             // Delete the chrome

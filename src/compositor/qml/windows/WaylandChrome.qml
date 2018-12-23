@@ -33,24 +33,21 @@ LS.ChromeItem {
 
     property alias shellSurface: shellSurfaceItem.shellSurface
     property alias moveItem: shellSurfaceItem.moveItem
-    property alias inputEventsEnabled: shellSurfaceItem.inputEventsEnabled
     readonly property alias output: shellSurfaceItem.output
 
-    readonly property size windowSize: {
-        var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
-        if (decoration.visible) {
-            size.width += decoration.marginSize * 2;
-            size.height += decoration.titleBarHeight + decoration.marginSize;
-        }
-        return size;
-    }
+    readonly property bool decorated: shellSurface.decorated && !shellSurface.fullscreen
+
+    readonly property rect windowGeometry: Qt.rect(decoration.borderSize, decoration.borderSize,
+                                                   shellSurfaceItem.width,
+                                                   shellSurfaceItem.height + decoration.titleBarHeight)
 
     property rect taskIconGeometry: Qt.rect(0, 0, 32, 32)
 
     x: moveItem.x - output.position.x
     y: moveItem.y - output.position.y
-    width: windowSize.width
-    height: windowSize.height
+
+    implicitWidth: shellSurfaceItem.width + (2 * decoration.borderSize)
+    implicitHeight: shellSurfaceItem.height + (2 * decoration.borderSize) + decoration.titleBarHeight
 
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
@@ -58,7 +55,7 @@ LS.ChromeItem {
     onMoveRequested: shellSurface.startMove(liriCompositor.defaultSeat)
 
     // FIXME: Transparent backgrounds will be opaque due to shadows
-    layer.enabled: decoration.visible && shellSurface.hasDropShadow
+    layer.enabled: shellSurface.decorated && !shellSurface.maximized && !shellSurface.fullscreen
     layer.effect: FluidEffects.Elevation {
         elevation: shellSurfaceItem.focus ? 24 : 8
     }
@@ -66,13 +63,13 @@ LS.ChromeItem {
     transform: [
         Scale {
             id: scaleTransform
-            origin.x: windowSize.width / 2
-            origin.y: windowSize.height / 2
+            origin.x: chrome.width / 2
+            origin.y: chrome.height / 2
         },
         Scale {
             id: scaleTransformPos
-            origin.x: windowSize.width / 2
-            origin.y: chrome.y - shellSurfaceItem.output.position.y - windowSize.height
+            origin.x: chrome.width / 2
+            origin.y: chrome.y - shellSurfaceItem.output.position.y - chrome.height
         }
     ]
 
@@ -84,6 +81,10 @@ LS.ChromeItem {
         property bool unresponsive: false
 
         property point moveItemPosition
+
+        property point savedPosition
+        property size savedSize
+        property point finalPosition: Qt.point(-1, -1)
 
         function updatePrimary() {
             var x = chrome.x;
@@ -114,7 +115,7 @@ LS.ChromeItem {
                 moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x;
                 moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y;
             } else {
-                var pos = chrome.randomPosition(liriCompositor.mousePos, windowSize);
+                var pos = chrome.randomPosition(liriCompositor.mousePos);
                 moveItem.x = pos.x;
                 moveItem.y = pos.y;
             }
@@ -128,12 +129,26 @@ LS.ChromeItem {
         }
     }
 
+    Connections {
+        target: shellSurface.surface
+        onRedraw: {
+            if (!chrome.decorated)
+                return;
+
+            if (__private.finalPosition.x >= 0 && __private.finalPosition.y >= 0) {
+                moveItem.x = __private.finalPosition.x;
+                moveItem.y = __private.finalPosition.y;
+                __private.finalPosition = Qt.point(-1, -1);
+            }
+        }
+    }
+
     Decoration {
         id: decoration
 
         anchors.fill: parent
-
-        dragTarget: shellSurface.moveItem
+        enabled: chrome.decorated
+        drag.target: shellSurface.moveItem
     }
 
     ShellSurfaceItem {
@@ -144,10 +159,12 @@ LS.ChromeItem {
 
         property bool moving: false
 
-        x: shellSurface.decorated ? decoration.marginSize : 0
-        y: shellSurface.decorated ? decoration.titleBarHeight : 0
+        x: chrome.decorated ? decoration.borderSize : 0
+        y: chrome.decorated ? decoration.borderSize + decoration.titleBarHeight : 0
 
         moveItem: shellSurface.moveItem
+
+        inputEventsEnabled: !output.screenView.locked
 
         focusOnClick: shellSurface.windowType != Qt.Popup
         onSurfaceDestroyed: {
@@ -410,11 +427,39 @@ LS.ChromeItem {
 
     function restoreSize() {
         shellSurfaceItem.sizeFollowsSurface = true;
-        shellSurfaceItem.width = shellSurface.surface.size.width;
-        shellSurfaceItem.height = shellSurface.surface.size.height;
+        shellSurfaceItem.width = shellSurfaceItem.implicitWidth;
+        shellSurfaceItem.height = shellSurfaceItem.implicitHeight;
+    }
+
+    function maximize(output) {
+        if (!chrome.primary)
+            return;
+        if (shellSurface.maximized)
+            return;
+
+        __private.savedPosition = Qt.point(moveItem.x, moveItem.y);
+        __private.savedSize = Qt.size(shellSurfaceItem.implicitWidth, shellSurfaceItem.implicitHeight);
+
+        var newSize =
+                Qt.size(output.availableGeometry.width / output.scaleFactor,
+                        output.availableGeometry.height / output.scaleFactor);
+        __private.finalPosition = output.position;
+        shellSurface.resize(newSize, 0);
+        shellSurface.maximized = true;
+    }
+
+    function unmaximize() {
+        if (!chrome.primary)
+            return;
+        if (!shellSurface.maximized)
+            return;
+
+        __private.finalPosition = __private.savedPosition;
+        shellSurface.resize(__private.savedSize, 0);
+        shellSurface.maximized = false;
     }
 
     function close() {
-        // TODO:
+        shellSurface.close();
     }
 }

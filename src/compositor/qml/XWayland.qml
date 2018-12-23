@@ -155,8 +155,6 @@ LXW.XWayland {
     Component {
         id: xchromeComponent
 
-        XWaylandChrome {
-            inputEventsEnabled: !output.screenView.locked
-        }
+        XWaylandChrome {}
     }
 }

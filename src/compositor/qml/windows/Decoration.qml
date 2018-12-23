@@ -25,74 +25,70 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Fluid.Effects 1.0 as FluidEffects
+import Liri.Shell 1.0 as LS
 
-Control {
+MouseArea {
     id: decoration
 
-    readonly property real marginSize: 0
-    readonly property real titleBarHeight: shellSurface.fullscreen ? 0 : 32 - titleBar.radius
-    readonly property bool dragging: moveArea.drag.active
+    readonly property real borderSize: {
+        if (!chrome.decorated || shellSurface.maximized || shellSurface.fullscreen)
+            return 0;
+        return 4;
+    }
+    readonly property alias titleBarHeight: titleBar.height
 
-    property Item dragTarget: shellSurfaceItem.moveItem
+    readonly property alias drag: moveArea.drag
 
     Material.theme: Material.Dark
 
-    padding: shellSurface.maximized || shellSurface.fullscreen ? 0 : (shellSurface.windowType === Qt.Popup ? 1 : 4)
+    QtObject {
+        id: d
 
-    visible: shellSurface.decorated && !shellSurface.fullscreen
+        property int edges: 0
+        property point initialPos
+        property size initialSize
+    }
 
-    MouseArea {
-        id: resizeArea
+    acceptedButtons: Qt.LeftButton
 
-        property int pressX
-        property int pressY
-        property int startW
-        property int startH
-        property bool pressed: false
+    hoverEnabled: enabled
+    scrollGestureEnabled: false
 
-        anchors.fill: parent
-        hoverEnabled: true
+    onPressed: {
+        d.edges = 0;
+        d.initialPos.x = mouse.x;
+        d.initialPos.y = mouse.y;
+        d.initialSize.width = shellSurfaceItem.width;
+        d.initialSize.height = shellSurfaceItem.height;
 
-        //bitfield: top, left, bottom, right
-        property int edges
-        onPressed: {
-            pressed = true;
-            edges = 0;
-            pressX = mouse.x;
-            pressY = mouse.y;
-            startW = chrome.width;
-            startH = chrome.height;
-            if (mouse.y > chrome.height - titleBarHeight)
-                edges |= 4; //bottom edge
-            if (mouse.x > chrome.width - titleBarHeight)
-                edges |= 8; //right edge
-        }
-        onReleased: pressed = false
-        onMouseXChanged: {
-            if (pressed) {
-                var w = startW;
-                var h = startH;
-                if (edges & 8)
-                    w += mouse.x - pressX;
-                if (edges & 4)
-                    h += mouse.y - pressY;
-                shellSurface.requestSize(w, h);
-            }
+        if (mouse.x <= borderSize)
+            d.edges |= Qt.LeftEdge;
+        else if (mouse.x >= this.width - borderSize)
+            d.edges |= Qt.RightEdge;
+        if (mouse.y <= borderSize)
+            d.edges |= Qt.TopEdge;
+        else if (mouse.y >= this.height - borderSize)
+            d.edges |= Qt.BottomEdge;
+    }
+    onPositionChanged: {
+        if (pressed) {
+            var delta = Qt.point(mouse.x - d.initialPos.x, mouse.y - d.initialPos.y);
+            shellSurface.interactiveResize(d.initialSize, delta, d.edges);
         }
     }
 
     Rectangle {
         id: titleBar
 
-        anchors {
-            left: parent.left
-            top: parent.top
-        }
-        width: shellSurfaceItem.width
-        height: titleBarHeight + radius
-        radius: 3
+        x: borderSize
+        y: borderSize
+
+        implicitWidth: shellSurfaceItem.width
+        implicitHeight: chrome.decorated ? 32 : 0
+
         color: Material.color(Material.Blue)
+
+        visible: chrome.decorated
 
         Item {
             anchors.fill: parent
@@ -141,7 +137,6 @@ Control {
                     bottomMargin: parent.radius
                 }
 
-                drag.target: dragTarget
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onPressed: {
                     if (mouse.button === Qt.LeftButton)
@@ -173,7 +168,7 @@ Control {
 
                 DecorationButton {
                     source: shellSurface.maximized ? "window-restore.svg" : "window-maximize.svg"
-                    onClicked: shellSurface.maximized ? shellSurface.unmaximize() : shellSurface.maximize(output)
+                    onClicked: shellSurface.maximized ? chrome.unmaximize() : chrome.maximize(output)
                 }
 
                 DecorationButton {

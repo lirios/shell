@@ -36,7 +36,7 @@ public:
     QWaylandCompositor *compositor() const;
     void setCompositor(QWaylandCompositor *compositor);
 
-    Q_INVOKABLE QPointF randomPosition(const QPointF &mousePos, const QSizeF &surfaceSize) const;
+    Q_INVOKABLE QPointF randomPosition(const QPointF &mousePos) const;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

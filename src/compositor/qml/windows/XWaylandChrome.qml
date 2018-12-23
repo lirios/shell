@@ -34,30 +34,27 @@ LS.ChromeItem {
 
     property alias shellSurface: shellSurfaceItem.shellSurface
     property alias moveItem: shellSurfaceItem.moveItem
-    property alias inputEventsEnabled: shellSurfaceItem.inputEventsEnabled
     readonly property alias output: shellSurfaceItem.output
 
-    readonly property size windowSize: {
-        var size = Qt.size(shellSurfaceItem.width, shellSurfaceItem.height);
-        if (decoration.visible) {
-            size.width += decoration.marginSize * 2;
-            size.height += decoration.titleBarHeight + decoration.marginSize;
-        }
-        return size;
-    }
+    readonly property bool decorated: shellSurface.decorated && !shellSurface.fullscreen
+
+    readonly property rect windowGeometry: Qt.rect(decoration.borderSize, decoration.borderSize,
+                                                   shellSurfaceItem.width,
+                                                   shellSurfaceItem.height + decoration.titleBarHeight)
 
     property rect taskIconGeometry: Qt.rect(0, 0, 32, 32)
 
     x: moveItem.x - output.position.x
     y: moveItem.y - output.position.y
-    width: windowSize.width
-    height: windowSize.height
+
+    implicitWidth: shellSurfaceItem.width + (2 * decoration.borderSize)
+    implicitHeight: shellSurfaceItem.height + (2 * decoration.borderSize) + decoration.titleBarHeight
 
     onXChanged: __private.updatePrimary()
     onYChanged: __private.updatePrimary()
 
     // FIXME: Transparent backgrounds will be opaque due to shadows
-    layer.enabled: true
+    layer.enabled: shellSurface.decorated && !shellSurface.maximized && !shellSurface.fullscreen
     layer.effect: FluidEffects.Elevation {
         elevation: shellSurfaceItem.focus ? 24 : 8
     }
@@ -65,13 +62,13 @@ LS.ChromeItem {
     transform: [
         Scale {
             id: scaleTransform
-            origin.x: windowSize.width / 2
-            origin.y: windowSize.height / 2
+            origin.x: chrome.width / 2
+            origin.y: chrome.height / 2
         },
         Scale {
             id: scaleTransformPos
-            origin.x: windowSize.width / 2
-            origin.y: chrome.y - shellSurfaceItem.output.position.y - windowSize.height
+            origin.x: chrome.width / 2
+            origin.y: chrome.y - shellSurfaceItem.output.position.y - chrome.height
         }
     ]
 
@@ -119,17 +116,19 @@ LS.ChromeItem {
         id: decoration
 
         anchors.fill: parent
-
-        dragTarget: shellSurface.xwaylandMoveItem
+        enabled: chrome.decorated
+        drag.target: shellSurface.xwaylandMoveItem
     }
 
     XWaylandShellSurfaceItem {
         id: shellSurfaceItem
 
-        x: shellSurface.decorated ? decoration.marginSize : 0
-        y: shellSurface.decorated ? decoration.titleBarHeight : 0
+        x: chrome.decorated ? decoration.borderSize : 0
+        y: chrome.decorated ? decoration.borderSize + decoration.titleBarHeight : 0
 
         moveItem: shellSurface.moveItem
+
+        inputEventsEnabled: !output.screenView.locked
 
         focusOnClick: shellSurface.windowType != Qt.Popup
         onSurfaceDestroyed: {
@@ -381,7 +380,7 @@ LS.ChromeItem {
 
     function restoreSize() {
         shellSurfaceItem.sizeFollowsSurface = true;
-        shellSurfaceItem.width = shellSurface.surface.size.width;
-        shellSurfaceItem.height = shellSurface.surface.size.height;
+        shellSurfaceItem.width = shellSurfaceItem.implicitWidth;
+        shellSurfaceItem.height = shellSurfaceItem.implicitHeight;
     }
 }

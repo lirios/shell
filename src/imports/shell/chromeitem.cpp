@@ -46,14 +46,14 @@ void ChromeItem::setCompositor(QWaylandCompositor *compositor)
     Q_EMIT compositorChanged();
 }
 
-QPointF ChromeItem::randomPosition(const QPointF &mousePos, const QSizeF &surfaceSize) const
+QPointF ChromeItem::randomPosition(const QPointF &mousePos) const
 {
     if (!m_compositor)
         return QPointF(0, 0);
 
     // Surface size
-    const int w = surfaceSize.toSize().width();
-    const int h = surfaceSize.toSize().height();
+    const qreal w = width();
+    const qreal h = height();
 
     // Find the output where the pointer is located, defaults
     // to the default output
@@ -73,7 +73,7 @@ QPointF ChromeItem::randomPosition(const QPointF &mousePos, const QSizeF &surfac
     const int step = 24;
     static int px = step;
     static int py = 2 * step;
-    int dx, dy;
+    qreal dx, dy;
 
     // Increment new coordinates by the step
     px += step;

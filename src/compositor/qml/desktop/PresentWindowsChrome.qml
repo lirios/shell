@@ -40,7 +40,11 @@ Item {
     signal closed(var view)
 
     id: chrome
-    anchors.fill: parent
+
+    x: view.windowGeometry.x
+    y: view.windowGeometry.y
+    width: view.windowGeometry.width
+    height: view.windowGeometry.height
 
     Material.theme: Material.Dark
 

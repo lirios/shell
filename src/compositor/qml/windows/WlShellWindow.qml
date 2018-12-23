@@ -38,7 +38,6 @@ P.WlShellSurface {
     property string iconName: "unknown"
 
     property bool decorated: true
-    property bool hasDropShadow: !maximized && !fullscreen
 
     property WaylandSurface parentWlSurface: null
     property point offset
@@ -151,13 +150,37 @@ P.WlShellSurface {
         onKeyboardFocusChanged: wlShellSurface.activated = newFocus == surface
     }
 
-    function maximize(output) {
-        wlShellSurface.setMaximized(output);
+    function __convertEdges(edges) {
+        var wlEdges = P.WlShellSurface.NoneEdge;
+        if (edges & Qt.TopEdge && edges & Qt.LeftEdge)
+            wlEdges |= P.WlShellSurface.TopLeftEdge;
+        else if (edges & Qt.BottomEdge && edges & Qt.LeftEdge)
+            wlEdges |= P.WlShellSurface.BottomLeftEdge;
+        else if (edges & Qt.TopEdge && edges & Qt.RightEdge)
+            wlEdges |= P.WlShellSurface.TopRightEdge;
+        else if (edges & Qt.BottomEdge && edges & Qt.RightEdge)
+            wlEdges |= P.WlShellSurface.BottomRightEdge;
+        else {
+            if (edges & Qt.TopEdge)
+                wlEdges |= P.WlShellSurface.TopEdge;
+            if (edges & Qt.BottomEdge)
+                wlEdges |= P.WlShellSurface.BottomEdge;
+            if (edges & Qt.LeftEdge)
+                wlEdges |= P.WlShellSurface.LeftEdge;
+            if (edges & Qt.RightEdge)
+                wlEdges |= P.WlShellSurface.RightEdge;
+        }
+        return wlEdges;
     }
 
-    function unmaximize() {
-        if (windowType == Qt.Window)
-            wlShellSurface.setDefaultToplevel();
+    function interactiveResize(size, delta, edges) {
+        var wlEdges = __convertEdges(edges);
+        var newSize = wlShellSurface.sizeForResize(size, delta, wlEdges);
+        wlShellSurface.sendConfigure(newSize, wlEdges);
+    }
+
+    function resize(size, edges) {
+        wlShellSurface.sendConfigure(size, __convertEdges(edges));
     }
 
     function pingClient() {

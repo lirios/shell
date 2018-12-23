@@ -368,7 +368,6 @@ WaylandCompositor {
 
                         // Remove drop shadow and decoration for Gtk+ programs
                         shellSurface.decorated = false;
-                        shellSurface.hasDropShadow = false;
 
                         break;
                     }
@@ -381,9 +380,7 @@ WaylandCompositor {
     Component {
         id: chromeComponent
 
-        WaylandChrome {
-            inputEventsEnabled: !output.screenView.locked
-        }
+        WaylandChrome {}
     }
 
     /*
