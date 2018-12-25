@@ -33,7 +33,7 @@ public:
     void registerTypes(const char *uri)
     {
         // @uri Liri.PolicyKit
-        Q_ASSERT(uri == QByteArray("Liri.PolicyKit"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("Liri.PolicyKit"));
 
         qmlRegisterType<PolicyKitAgent>(uri, 1, 0, "PolicyKitAgent");
     }

@@ -41,7 +41,7 @@ public:
     void registerTypes(const char *uri)
     {
         // @uri Liri.Shell
-        Q_ASSERT(uri == QLatin1String("Liri.Shell"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("Liri.Shell"));
 
         qmlRegisterType<ChromeItem>(uri, 1, 0, "ChromeItem");
         qmlRegisterType<HotSpot>(uri, 1, 0, "HotSpot");

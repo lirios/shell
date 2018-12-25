@@ -43,7 +43,7 @@ public:
     void registerTypes(const char *uri)
     {
         // @uri Liri.Launcher
-        Q_ASSERT(uri == QLatin1String("Liri.Launcher"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("Liri.Launcher"));
 
         qmlRegisterType<ApplicationManager>(uri, 1, 0, "ApplicationManager");
         qmlRegisterType<CategoriesModel>(uri, 1, 0, "CategoriesModel");

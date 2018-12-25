@@ -33,7 +33,7 @@ public:
     void registerTypes(const char *uri)
     {
         // @uri Liri.LoginManager
-        Q_ASSERT(uri == QLatin1String("Liri.LoginManager"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("Liri.LoginManager"));
 
         qmlRegisterType<UsersModel>(uri, 1, 0, "UsersModel");
     }
