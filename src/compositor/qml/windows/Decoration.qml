@@ -69,6 +69,10 @@ MouseArea {
             d.edges |= Qt.TopEdge;
         else if (mouse.y >= this.height - borderSize)
             d.edges |= Qt.BottomEdge;
+
+        // Focus on click
+        if (shellSurfaceItem.focusOnClick && mouse.button === Qt.LeftButton)
+            shellSurfaceItem.takeFocus();
     }
     onPositionChanged: {
         if (pressed) {
