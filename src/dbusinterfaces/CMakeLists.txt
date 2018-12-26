@@ -9,6 +9,7 @@ if(LIRI_SHELL_WITH_SCREENCAST AND PipeWire_FOUND)
         screencaststream.h
     )
     set(LiriShellDBusInterfaces_LIBRARIES "GLIB2::GLIB2;PipeWire::PipeWire")
+    set_source_files_properties("screencaststream.cpp" PROPERTIES COMPILE_FLAGS "-fpermissive")
 else()
     set(LiriShellDBusInterfaces_DEFINES)
     set(LiriShellDBusInterfaces_SOURCES)
