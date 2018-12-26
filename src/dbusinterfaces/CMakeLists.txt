@@ -47,6 +47,7 @@ add_library(LiriShellDBusInterfaces
     screenshoter.cpp
     ${LiriShellDBusInterfaces_SOURCES}
 )
+set_source_files_properties("screencast.cpp" PROPERTIES COMPILE_FLAGS "-fpermissive")
 add_library("Liri::ShellDBusInterfaces" ALIAS "LiriShellDBusInterfaces")
 target_include_directories("LiriShellDBusInterfaces" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries("LiriShellDBusInterfaces"
