@@ -138,15 +138,20 @@ MouseArea {
                 }
 
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
+
                 onPressed: {
                     if (mouse.button === Qt.LeftButton)
                         shellSurfaceItem.takeFocus();
                 }
-                onClicked: {
-                    if (mouse.button === Qt.LeftButton)
-                        shellSurfaceItem.takeFocus();
-                    else if (mouse.button === Qt.RightButton)
+                onReleased: {
+                    shellHelper.grabCursor(LS.ShellHelper.ArrowGrabCursor);
+
+                    if (mouse.button === Qt.RightButton)
                         chrome.showWindowMenu(mouse.x, mouse.y);
+                }
+                onPositionChanged: {
+                    if (pressed)
+                        shellHelper.grabCursor(LS.ShellHelper.MoveGrabCursor);
                 }
             }
 
