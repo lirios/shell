@@ -9,7 +9,6 @@ if(LIRI_SHELL_WITH_SCREENCAST AND PipeWire_FOUND)
         screencaststream.h
     )
     set(LiriShellDBusInterfaces_LIBRARIES "GLIB2::GLIB2;PipeWire::PipeWire")
-    set_source_files_properties("screencaststream.cpp" PROPERTIES COMPILE_FLAGS "-fpermissive")
 else()
     set(LiriShellDBusInterfaces_DEFINES)
     set(LiriShellDBusInterfaces_SOURCES)
@@ -48,8 +47,8 @@ add_library(LiriShellDBusInterfaces
     screenshoter.cpp
     ${LiriShellDBusInterfaces_SOURCES}
 )
-set_source_files_properties("screencast.cpp" PROPERTIES COMPILE_FLAGS "-fpermissive")
 add_library("Liri::ShellDBusInterfaces" ALIAS "LiriShellDBusInterfaces")
+target_compile_options("LiriShellDBusInterfaces" PUBLIC "-fpermissive")
 target_include_directories("LiriShellDBusInterfaces" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries("LiriShellDBusInterfaces"
     Qt5::Core
