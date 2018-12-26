@@ -75,6 +75,37 @@ MouseArea {
             var delta = Qt.point(mouse.x - d.initialPos.x, mouse.y - d.initialPos.y);
             shellSurface.interactiveResize(d.initialSize, delta, d.edges);
         }
+
+        // Draw cursor
+        var edges = 0;
+
+        if (mouse.x <= borderSize)
+            edges |= Qt.LeftEdge;
+        else if (mouse.x >= this.width - borderSize)
+            edges |= Qt.RightEdge;
+        if (mouse.y <= borderSize)
+            edges |= Qt.TopEdge;
+        else if (mouse.y >= this.height - borderSize)
+            edges |= Qt.BottomEdge;
+
+        if (edges & Qt.TopEdge && edges & Qt.LeftEdge)
+            shellHelper.grabCursor(LS.ShellHelper.ResizeTopLeftGrabCursor);
+        else if (edges & Qt.BottomEdge && edges & Qt.LeftEdge)
+            shellHelper.grabCursor(LS.ShellHelper.ResizeBottomLeftGrabCursor);
+        else if (edges & Qt.TopEdge && edges & Qt.RightEdge)
+            shellHelper.grabCursor(LS.ShellHelper.ResizeTopRightGrabCursor);
+        else if (edges & Qt.BottomEdge && edges & Qt.RightEdge)
+            shellHelper.grabCursor(LS.ShellHelper.ResizeBottomRightGrabCursor);
+        else {
+            if (edges & Qt.LeftEdge)
+                shellHelper.grabCursor(LS.ShellHelper.ResizeLeftGrabCursor);
+            else if (edges & Qt.RightEdge)
+                shellHelper.grabCursor(LS.ShellHelper.ResizeRightGrabCursor);
+            if (edges & Qt.TopEdge)
+                shellHelper.grabCursor(LS.ShellHelper.ResizeTopGrabCursor);
+            else if (edges & Qt.BottomEdge)
+                shellHelper.grabCursor(LS.ShellHelper.ResizeBottomGrabCursor);
+        }
     }
 
     Rectangle {
