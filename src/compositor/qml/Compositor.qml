@@ -180,8 +180,12 @@ WaylandCompositor {
         id: shellHelper
 
         property WaylandSurface grabSurface: null
+        property WaylandQuickItem grabSurfaceView: null
 
-        onGrabSurfaceAdded: grabSurface = surface
+        onGrabSurfaceAdded: {
+            grabSurface = surface;
+            grabSurfaceView = grabSurfaceViewComponent.createObject(null);
+        }
     }
 
     P.WlShell {
@@ -381,6 +385,17 @@ WaylandCompositor {
         id: chromeComponent
 
         WaylandChrome {}
+    }
+
+    // Grab surface view
+    Component {
+        id: grabSurfaceViewComponent
+
+        WaylandQuickItem {
+            output: liriCompositor.defaultOutput
+            surface: shellHelper.grabSurface
+            focusOnClick: false
+        }
     }
 
     /*

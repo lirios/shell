@@ -74,13 +74,6 @@ Item {
         z: 1
     }
 
-    // Surface item for shell helper's grab surface
-    QtWaylandCompositor.WaylandQuickItem {
-        surface: shellHelper.grabSurface
-        focusOnClick: false
-        onSurfaceChanged: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
-    }
-
     // Change pointer cursor when needed
     MouseArea {
         anchors.fill: parent
