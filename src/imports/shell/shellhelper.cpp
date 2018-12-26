@@ -212,7 +212,8 @@ void ShellHelper::grabCursor(GrabCursor cursor)
         if (d->grabSurface->views().size() > 0) {
             auto seat = d->grabSurface->compositor()->defaultSeat();
             auto view = d->grabSurface->views().at(0);
-            seat->sendMouseMoveEvent(view, QPointF(0, 0));
+            seat->setMouseFocus(view);
+            seat->sendMouseMoveEvent(view, QPointF(0, 0), QPointF(0, 0));
         }
     }
 }
