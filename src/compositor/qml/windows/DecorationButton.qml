@@ -24,6 +24,7 @@
 import QtQuick 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
+import Liri.Shell 1.0 as LS
 
 Item {
     id: button
@@ -44,6 +45,10 @@ Item {
 
     MouseArea {
         anchors.fill: parent
+
+        hoverEnabled: true
+
+        onEntered: shellHelper.grabCursor(LS.ShellHelper.ArrowGrabCursor);
         onClicked: button.clicked()
     }
 }
