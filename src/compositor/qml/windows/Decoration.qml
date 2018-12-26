@@ -175,7 +175,7 @@ MouseArea {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
 
                 onPressed: {
-                    if (mouse.button === Qt.LeftButton)
+                    if (shellSurfaceItem.focusOnClick && mouse.button === Qt.LeftButton)
                         shellSurfaceItem.takeFocus();
                 }
                 onReleased: {
