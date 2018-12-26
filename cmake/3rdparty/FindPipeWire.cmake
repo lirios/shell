@@ -61,7 +61,7 @@
 # Use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 find_package(PkgConfig QUIET)
-pkg_check_modules(PKG_PipeWire QUIET libpipewire-0.1 libpipewire-0.2)
+pkg_check_modules(PKG_PipeWire QUIET libpipewire-0.2 libpipewire-0.3)
 
 set(PipeWire_DEFINITIONS "${PKG_PipeWire_CFLAGS_OTHER}")
 set(PipeWire_VERSION "${PKG_PipeWire_VERSION}")
@@ -75,7 +75,7 @@ find_path(PipeWire_INCLUDE_DIRS
 
 find_library(PipeWire_LIBRARIES
     NAMES
-        pipewire-0.1 pipewire-0.2
+        pipewire-0.2 pipewire-0.3
     HINTS
         ${PKG_PipeWire_LIBRARIES_DIRS}
 )
