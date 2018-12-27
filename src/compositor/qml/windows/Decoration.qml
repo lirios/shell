@@ -167,6 +167,7 @@ MouseArea {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
+                font.pixelSize: 16
                 color: foregroundColor
                 text: shellSurface.title
                 wrapMode: Text.NoWrap
