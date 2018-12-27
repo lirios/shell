@@ -188,6 +188,17 @@ WaylandCompositor {
         }
     }
 
+    P.LiriDecorationManager {
+        onDecorationCreated: {
+            decoration.foregroundColorChanged.connect(function(color) {
+                decoration.surface.foregroundColor = color;
+            });
+            decoration.backgroundColorChanged.connect(function(color) {
+                decoration.surface.backgroundColor = color;
+            });
+        }
+    }
+
     P.WlShell {
         id: wlShell
 
@@ -325,6 +336,9 @@ WaylandCompositor {
 
         WaylandSurface {
             id: surface
+
+            property color foregroundColor: "transparent"
+            property color backgroundColor: "transparent"
 
             Component.onDestruction: {
                 for (var i = 0; i < screenManager.count; i++)

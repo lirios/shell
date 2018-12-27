@@ -34,8 +34,11 @@ if(TARGET PkgConfig::Libsystemd)
 endif()
 
 find_package(Wayland REQUIRED)
-
 find_package(QtWaylandScanner REQUIRED)
+
+ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
+    PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../../data/protocols/liri-decoration.xml"
+    BASENAME "liri-decoration")
 ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
     PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../../data/protocols/gtk-shell.xml"
     BASENAME "gtk-shell")
@@ -62,6 +65,8 @@ liri_add_executable(LiriShell
         extensions/gtkshell.cpp
         extensions/gtkshell.h
         extensions/gtkshell_p.h
+        extensions/liridecoration.cpp
+        extensions/liridecoration.h
         logging.cpp
         logging_p.h
         main.cpp

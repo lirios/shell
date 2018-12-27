@@ -39,6 +39,17 @@ MouseArea {
 
     readonly property alias drag: moveArea.drag
 
+    readonly property color foregroundColor: {
+        if (shellSurfaceItem.surface && shellSurfaceItem.surface.foregroundColor.a > 0)
+            return shellSurfaceItem.surface.foregroundColor;
+        return Material.primaryTextColor;
+    }
+    readonly property color backgroundColor: {
+        if (shellSurfaceItem.surface && shellSurfaceItem.surface.backgroundColor.a > 0)
+            return shellSurfaceItem.surface.backgroundColor;
+        return Material.color(Material.Blue);
+    }
+
     Material.theme: Material.Dark
 
     QtObject {
@@ -121,7 +132,7 @@ MouseArea {
         implicitWidth: shellSurfaceItem.width
         implicitHeight: chrome.decorated ? 32 : 0
 
-        color: Material.color(Material.Blue)
+        color: backgroundColor
 
         visible: chrome.decorated
 
@@ -156,7 +167,7 @@ MouseArea {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.bold: true
-                color: Material.primaryTextColor
+                color: foregroundColor
                 text: shellSurface.title
                 wrapMode: Text.NoWrap
             }
@@ -210,16 +221,19 @@ MouseArea {
 
                 DecorationButton {
                     source: "window-minimize.svg"
+                    color: foregroundColor
                     onClicked: shellSurface.minimized = true
                 }
 
                 DecorationButton {
                     source: shellSurface.maximized ? "window-restore.svg" : "window-maximize.svg"
+                    color: foregroundColor
                     onClicked: shellSurface.maximized ? chrome.unmaximize() : chrome.maximize(output)
                 }
 
                 DecorationButton {
                     source: "window-close.svg"
+                    color: foregroundColor
                     onClicked: shellSurface.close()
                 }
             }

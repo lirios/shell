@@ -26,3 +26,4 @@
 Q_LOGGING_CATEGORY(lcGtkShell, "liri.gtkshell", QtDebugMsg)
 Q_LOGGING_CATEGORY(lcOutputManagement, "liri.outputmanagement", QtDebugMsg)
 Q_LOGGING_CATEGORY(lcShell, "liri.shell", QtDebugMsg)
+Q_LOGGING_CATEGORY(lcDecoration, "liri.decoration", QtWarningMsg)

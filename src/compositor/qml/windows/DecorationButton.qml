@@ -30,6 +30,7 @@ Item {
     id: button
 
     property alias source: icon.source
+    property alias color: icon.color
 
     signal clicked()
 
@@ -40,7 +41,6 @@ Item {
         id: icon
 
         anchors.fill: parent
-        color: Material.primaryTextColor
     }
 
     MouseArea {
