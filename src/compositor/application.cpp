@@ -34,8 +34,8 @@
 #include <QQmlContext>
 #include <QStandardPaths>
 
-#include <qt5xdg/xdgautostart.h>
-#include <qt5xdg/xdgdesktopfile.h>
+#include <LiriXdg/AutoStart>
+#include <LiriXdg/DesktopFile>
 
 #include <QtWaylandCompositor/QWaylandCompositor>
 
@@ -323,7 +323,7 @@ void Application::autostart()
         return;
     }
 
-    for (const XdgDesktopFile &entry : XdgAutoStart::desktopFileList()) {
+    for (const Liri::DesktopFile &entry : Liri::AutoStart::desktopFileList()) {
         // Ignore entries that are explicitely not meant for Liri
         if (!entry.isSuitable(true, QStringLiteral("X-Liri")))
             continue;

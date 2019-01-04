@@ -5,8 +5,6 @@ find_package(Libsystemd)
 
 find_package(PAM REQUIRED)
 
-find_package(Qt5Xdg REQUIRED)
-
 if(NOT TARGET Liri::Qt5GSettings)
     find_package(Qt5GSettings REQUIRED)
 endif()
@@ -18,6 +16,9 @@ if(NOT TARGET Liri::Logind)
 endif()
 if(NOT TARGET Liri::LocalDevice)
     find_package(Liri1LocalDevice REQUIRED)
+endif()
+if(NOT TARGET Liri::Xdg)
+    find_package(Liri1Xdg REQUIRED)
 endif()
 
 set(LiriShell_DEFINES "")
@@ -120,11 +121,11 @@ liri_add_executable(LiriShell
         Qt5::QuickControls2
         Qt5::WaylandCompositor
         Wayland::Server
-        Qt5Xdg
         Liri::Qt5GSettings
         Liri::PlatformHeaders
         Liri::Logind
         Liri::LocalDevice
+        Liri::Xdg
         Liri::SigWatch
         Liri::ShellDBusInterfaces
         ${PAM_LIBRARIES}
