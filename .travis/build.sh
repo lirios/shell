@@ -12,7 +12,6 @@ dnf install -y \
      pam-devel \
      polkit-qt5-1-devel \
      kf5-solid-devel \
-     libqtxdg-devel \
      wayland-devel \
      pipewire-devel
 travis_end "install_packages"
