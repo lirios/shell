@@ -33,14 +33,62 @@
 // Applications have 5 seconds to start up before the start animation ends
 #define MAX_APPLICATION_STARTUP_TIME (5 * 1000)
 
+/*
+ * DesktopFileAction
+ */
+
+DesktopFileAction::DesktopFileAction(QObject *parent)
+    : QObject(parent)
+{
+}
+
+QString DesktopFileAction::name() const
+{
+    return m_name;
+}
+
+QString DesktopFileAction::comment() const
+{
+    return m_comment;
+}
+
+QString DesktopFileAction::command() const
+{
+    return m_command;
+}
+
+/*
+ * Application
+ */
+
 Application::Application(const QString &appId, const QStringList &categories, QObject *parent)
     : QObject(parent)
     , m_appId(appId)
     , m_categories(categories)
 {
-    m_desktopFile = new DesktopFile(appId, this);
+    QString fileName = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                              appId + QStringLiteral(".desktop"));
+    m_desktopFile = new Liri::DesktopFile();
+    if (m_desktopFile->load(fileName)) {
+        for (const auto &actionName : m_desktopFile->actionNames()) {
+            Liri::DesktopFileAction desktopFileAction = m_desktopFile->action(actionName);
+            DesktopFileAction *action = new DesktopFileAction();
+            action->m_name = desktopFileAction.name();
+            action->m_comment = desktopFileAction.comment();
+            action->m_command = desktopFileAction.exec();
+            m_actions.append(action);
+        }
 
-    connect(m_desktopFile, &DesktopFile::dataChanged, this, &Application::dataChanged);
+        emit dataChanged();
+    }
+}
+
+Application::~Application()
+{
+    delete m_desktopFile;
+    m_desktopFile = nullptr;
+
+    qDeleteAll(m_actions);
 }
 
 bool Application::hasCategory(const QString &category) const
@@ -81,10 +129,10 @@ void Application::setActive(bool active)
 QQmlListProperty<DesktopFileAction> Application::actions()
 {
     auto countFunc = [](QQmlListProperty<DesktopFileAction> *prop) {
-        return static_cast<Application *>(prop->object)->m_desktopFile->actions().count();
+        return static_cast<Application *>(prop->object)->m_actions.count();
     };
     auto atFunc = [](QQmlListProperty<DesktopFileAction> *prop, int i) {
-        return static_cast<Application *>(prop->object)->m_desktopFile->actions().at(i);
+        return static_cast<Application *>(prop->object)->m_actions.at(i);
     };
     return QQmlListProperty<DesktopFileAction>(this, nullptr, countFunc, atFunc);
 }
@@ -104,7 +152,7 @@ bool Application::launch(const QStringList &urls)
     QDBusInterface interface(QStringLiteral("io.liri.Session"),
                              QStringLiteral("/ProcessLauncher"),
                              QStringLiteral("io.liri.ProcessLauncher"), bus);
-    QDBusMessage msg = interface.call(QStringLiteral("launchDesktopFile"), m_desktopFile->path());
+    QDBusMessage msg = interface.call(QStringLiteral("launchDesktopFile"), m_desktopFile->fileName());
     bool ran = msg.arguments().at(0).toBool();
 
     if (ran) {

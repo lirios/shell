@@ -30,8 +30,7 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtGui/QIcon>
 
-#include <qt5xdg/xdgmenu.h>
-#include <qt5xdg/xmlhelper.h>
+#include <LiriXdg/DesktopMenu>
 
 #include "categoriesmodel.h"
 #include "utils.h"
@@ -161,22 +160,20 @@ void CategoriesModel::refresh(CategoriesModel *model)
 
     QMetaObject::invokeMethod(model, "refreshing");
 
-    XdgMenu xdgMenu;
-    //xdgMenu.setLogDir(QStringLiteral("/tmp/"));
+    Liri::DesktopMenu xdgMenu;
+    //xdgMenu.setLogDir(QDir::tempPath()));
     xdgMenu.setEnvironments(QStringList() << QStringLiteral("Liri") << QStringLiteral("X-Liri"));
-    const QString menuFileName = XdgMenu::getMenuFileName();
+    const QString menuFileName = Liri::DesktopMenu::getMenuFileName();
     if (!xdgMenu.read(menuFileName)) {
         qWarning("Failed to read menu \"%s\": %s", qPrintable(menuFileName),
                  qPrintable(xdgMenu.errorString()));
         return;
     }
 
-    QDomElement xml = xdgMenu.xml().documentElement();
+    QDomElement doc = xdgMenu.xml().documentElement();
+    QDomElement xml = doc.firstChildElement();
 
-    DomElementIterator it(xml, QString());
-    while (it.hasNext()) {
-        QDomElement xml = it.next();
-
+    for (; !xml.isNull(); xml = xml.nextSiblingElement()) {
         if (xml.tagName() == QStringLiteral("Menu")) {
             QString name = xml.attribute(QStringLiteral("name"));
             if (!xml.attribute(QStringLiteral("title")).isEmpty())

@@ -37,6 +37,7 @@ find_package(Qt5 "${QT_MIN_VERSION}"
         Core
         Concurrent
         DBus
+        Xml
         Sql
         Gui
         Widgets

@@ -44,7 +44,6 @@ public:
     {
         AppIdRole = Qt::UserRole + 1,
         ApplicationRole,
-        DesktopFileRole,
         NameRole,
         GenericNameRole,
         CommentRole,

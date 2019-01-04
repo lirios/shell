@@ -31,8 +31,9 @@
 #include <QtDBus/QDBusInterface>
 #include <QtGui/QIcon>
 #include <QtWaylandCompositor/QWaylandSurface>
-#include <qt5xdg/xdgmenu.h>
-#include <qt5xdg/xmlhelper.h>
+
+#include <LiriXdg/DesktopFile>
+#include <LiriXdg/DesktopMenu>
 
 #include "application.h"
 #include "applicationmanager.h"
@@ -40,6 +41,15 @@
 #include "utils.h"
 
 Q_LOGGING_CATEGORY(APPLICATION_MANAGER, "liri.launcher.applicationmanager")
+
+const QMap<QString, QString> correctAppIds = {
+        {"baobob", "org.gnome.baobob"},           {"cheese", "org.gnome.Cheese"},
+        {"corebird", "org.baedert.corebird"},     {"dconf-editor", "ca.desrt.dconf-editor"},
+        {"file-roller", "org.gnome.FileRoller"},  {"gnome-calendar", "org.gnome.Calendar"},
+        {"gnome-disks", "org.gnome.DiskUtility"}, {"gnome-font-viewer", "org.gnome.font-viewer"},
+        {"nautilus", "org.gnome.Nautilus"},       {"org.kate-editor.kate", "org.kde.kate"},
+        {"gedit", "org.gnome.gedit"},             {"gnome-dictionary", "org.gnome.Dictionary"}
+};
 
 ApplicationManager::ApplicationManager(QObject *parent)
     : QAbstractListModel(parent)
@@ -69,7 +79,6 @@ QHash<int, QByteArray> ApplicationManager::roleNames() const
     roles.insert(Qt::DecorationRole, "decoration");
     roles.insert(AppIdRole, "appId");
     roles.insert(ApplicationRole, "application");
-    roles.insert(DesktopFileRole, "desktopFile");
     roles.insert(NameRole, "name");
     roles.insert(GenericNameRole, "genericName");
     roles.insert(CommentRole, "comment");
@@ -114,8 +123,6 @@ QVariant ApplicationManager::data(const QModelIndex &index, int role) const
     case Qt::DisplayRole:
     case NameRole:
         return app->name();
-    case DesktopFileRole:
-        return qVariantFromValue(app->desktopFile());
     case ApplicationRole:
         return qVariantFromValue(app);
     case AppIdRole:
@@ -256,12 +263,12 @@ void ApplicationManager::refresh(ApplicationManager *manager)
     // Avoid adding duplicate entries
     QStringList addedEntries;
 
-    XdgMenu xdgMenu;
-    //xdgMenu.setLogDir("/tmp/");
+    Liri::DesktopMenu xdgMenu;
+    //xdgMenu.setLogDir(QDir::tempPath());
     xdgMenu.setEnvironments(QStringList() << QStringLiteral("Liri")
                                           << QStringLiteral("X-Liri"));
 
-    const QString menuFileName = XdgMenu::getMenuFileName();
+    const QString menuFileName = Liri::DesktopMenu::getMenuFileName();
 
     qCDebug(APPLICATION_MANAGER) << "Menu file name:" << menuFileName;
     if (!xdgMenu.read(menuFileName)) {
@@ -271,21 +278,17 @@ void ApplicationManager::refresh(ApplicationManager *manager)
         return;
     }
 
-    QDomElement xml = xdgMenu.xml().documentElement();
+    QDomElement doc = xdgMenu.xml().documentElement();
+    QDomElement xml = doc.firstChildElement();
 
-    DomElementIterator it(xml, QString());
-    while (it.hasNext()) {
-        QDomElement xml = it.next();
-
+    for (; !xml.isNull(); xml = xml.nextSiblingElement()) {
         if (xml.tagName() == QStringLiteral("Menu")) {
             QString categoryName = xml.attribute(QStringLiteral("name"));
 
-            DomElementIterator it(xml, QString());
-            while (it.hasNext()) {
-                QDomElement xml = it.next();
-
-                if (xml.tagName() == QStringLiteral("AppLink")) {
-                    QString desktopFileName = xml.attribute(QStringLiteral("desktopFile"));
+            QDomElement child = xml.firstChildElement();
+            for (; !child.isNull(); child = child.nextSiblingElement()) {
+                if (child.tagName() == QStringLiteral("AppLink")) {
+                    QString desktopFileName = child.attribute(QStringLiteral("desktopFile"));
                     QString appId = QFileInfo(desktopFileName).completeBaseName();
 
                     // App is still in the menu, which means it should not be deleted
@@ -304,9 +307,7 @@ void ApplicationManager::refresh(ApplicationManager *manager)
                     addedEntries.append(appId);
 
                     // Add only valid apps
-                    XdgDesktopFile desktopFile;
-                    if (!desktopFile.load(desktopFileName))
-                        continue;
+                    Liri::DesktopFile desktopFile(desktopFileName);
                     if (!desktopFile.isValid())
                         continue;
 
@@ -402,7 +403,9 @@ void ApplicationManager::focusShellSurface(QObject *shellSurface)
 
 QString ApplicationManager::canonicalizeAppId(const QString &appId)
 {
-    return DesktopFile::canonicalAppId(appId);
+    if (correctAppIds.contains(appId))
+        return correctAppIds[appId];
+    return appId;
 }
 
 Application *ApplicationManager::get(int index) const
@@ -414,8 +417,10 @@ Application *ApplicationManager::get(int index) const
 
 QString ApplicationManager::getIconName(const QString &appId)
 {
-    DesktopFile desktopFile(appId);
-    return desktopFile.iconName();
+    Application *app = get(indexFromAppId(appId));
+    if (app)
+        return app->iconName();
+    return QString();
 }
 
 int ApplicationManager::indexFromAppId(const QString &appId) const

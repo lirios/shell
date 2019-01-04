@@ -1,7 +1,5 @@
-find_package(Qt5Xdg REQUIRED)
-
-if(NOT TARGET Liri::Core)
-    find_package(Liri1Core REQUIRED)
+if(NOT TARGET Liri::Xdg)
+    find_package(Liri1Xdg REQUIRED)
 endif()
 if(NOT TARGET Liri::Qt5GSettings)
     find_package(Qt5GSettings REQUIRED)
@@ -44,7 +42,6 @@ liri_add_qml_plugin(launcher
         Qt5::Xml
         Qt5::Sql
         Qt5::WaylandCompositor
-        Qt5Xdg
-        Liri::Core
+        Liri::Xdg
         Liri::Qt5GSettings
 )

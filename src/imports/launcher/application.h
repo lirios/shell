@@ -26,13 +26,32 @@
 #include <QtQml>
 #include <QtQml/QQmlListProperty>
 
-#include <LiriCore/DesktopFile>
+#include <LiriXdg/DesktopFile>
 
 class QWaylandClient;
 
-using namespace Liri;
-
 class ApplicationManager;
+
+class DesktopFileAction : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString comment READ comment CONSTANT)
+    Q_PROPERTY(QString command READ command CONSTANT)
+
+    friend class Application;
+public:
+    explicit DesktopFileAction(QObject *parent = nullptr);
+
+    QString name() const;
+    QString comment() const;
+    QString command() const;
+
+private:
+    QString m_name;
+    QString m_comment;
+    QString m_command;
+};
 
 class Application : public QObject
 {
@@ -41,7 +60,6 @@ class Application : public QObject
     // Properties from the desktop file
 
     Q_PROPERTY(QString appId READ appId CONSTANT)
-    Q_PROPERTY(DesktopFile *desktopFile READ desktopFile CONSTANT)
     Q_PROPERTY(bool valid READ isValid CONSTANT)
 
     Q_PROPERTY(QString name READ name NOTIFY dataChanged)
@@ -83,6 +101,7 @@ public:
     Q_ENUM(State)
 
     explicit Application(const QString &appId, const QStringList &categories, QObject *parent = nullptr);
+    ~Application();
 
     bool isValid() const { return m_desktopFile != nullptr && m_desktopFile->isValid(); }
 
@@ -114,7 +133,7 @@ public:
      *
      * Returns the desktop entry file name.
      */
-    DesktopFile *desktopFile() const { return m_desktopFile; }
+    Liri::DesktopFile *desktopFile() const { return m_desktopFile; }
 
     /*!
      * \brief Application active state.
@@ -161,7 +180,8 @@ protected:
 private:
     QString m_appId;
     QStringList m_categories;
-    DesktopFile *m_desktopFile = nullptr;
+    Liri::DesktopFile *m_desktopFile = nullptr;
+    QVector<DesktopFileAction *> m_actions;
     bool m_active = false;
     bool m_pinned = false;
     int m_count = 0;
