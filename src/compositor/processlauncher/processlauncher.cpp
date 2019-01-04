@@ -28,7 +28,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include <qt5xdg/xdgdesktopfile.h>
+#include <LiriXdg/DesktopFile>
 
 #include "processlauncher.h"
 #include "processlauncher_adaptor.h"
@@ -111,7 +111,7 @@ bool ProcessLauncher::launchApplication(const QString &appId)
         return false;
     }
 
-    XdgDesktopFile *entry = XdgDesktopFileCache::getFile(fileName);
+    Liri::DesktopFile *entry = Liri::DesktopFileCache::getFile(fileName);
     if (!entry) {
         qCWarning(LAUNCHER) << "No desktop entry found for" << appId;
         return false;
@@ -127,7 +127,7 @@ bool ProcessLauncher::launchDesktopFile(const QString &fileName)
         return false;
     }
 
-    XdgDesktopFile *entry = XdgDesktopFileCache::getFile(fileName);
+    Liri::DesktopFile *entry = Liri::DesktopFileCache::getFile(fileName);
     if (!entry) {
         qCWarning(LAUNCHER) << "Failed to open desktop file" << fileName;
         return false;
@@ -182,7 +182,7 @@ bool ProcessLauncher::closeDesktopFile(const QString &fileName)
     return closeEntry(fileName);
 }
 
-bool ProcessLauncher::launchEntry(const XdgDesktopFile &entry)
+bool ProcessLauncher::launchEntry(const Liri::DesktopFile &entry)
 {
     QStringList args = entry.expandExecString();
     QString command = args.takeAt(0);

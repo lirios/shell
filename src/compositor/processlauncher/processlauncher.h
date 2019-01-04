@@ -35,7 +35,10 @@
 Q_DECLARE_LOGGING_CATEGORY(LAUNCHER)
 
 class QProcess;
-class XdgDesktopFile;
+
+namespace Liri {
+class DesktopFile;
+}
 
 typedef QMap<QString, QProcess *> ApplicationMap;
 typedef QMutableMapIterator<QString, QProcess *> ApplicationMapIterator;
@@ -55,7 +58,7 @@ public:
     Q_INVOKABLE bool launchApplication(const QString &appId);
     Q_INVOKABLE bool launchDesktopFile(const QString &fileName);
     Q_INVOKABLE bool launchCommand(const QString &command);
-    bool launchEntry(const XdgDesktopFile &entry);
+    bool launchEntry(const Liri::DesktopFile &entry);
 
     Q_INVOKABLE bool closeApplication(const QString &appId);
     Q_INVOKABLE bool closeDesktopFile(const QString &fileName);

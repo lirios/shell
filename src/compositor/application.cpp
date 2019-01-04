@@ -324,8 +324,11 @@ void Application::autostart()
     }
 
     for (const Liri::DesktopFile &entry : Liri::AutoStart::desktopFileList()) {
+        // Ignore hidden entries
+        if (!entry.isVisible())
+            continue;
         // Ignore entries that are explicitely not meant for Liri
-        if (!entry.isSuitable(true, QStringLiteral("X-Liri")))
+        if (!entry.isSuitable(QStringLiteral("X-Liri")))
             continue;
 
         // If it's neither suitable for GNOME nor KDE then it's probably not meant

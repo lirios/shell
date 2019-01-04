@@ -41,6 +41,7 @@ find_package(Qt5 "${QT_MIN_VERSION}"
         Sql
         Gui
         Widgets
+        Svg
         Qml
         Quick
         QuickControls2
