@@ -47,6 +47,12 @@ ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
+# Translations
+file(GLOB LiriShell_TRANSLATIONS "${CMAKE_CURRENT_SOURCE_DIR}/translations/*_*.ts")
+qt5_add_translation(LiriShell_QM_FILES ${LiriShell_TRANSLATIONS})
+install(FILES ${LiriShell_QM_FILES}
+        DESTINATION "${INSTALL_DATADIR}/liri-shell/translations")
+
 liri_add_executable(LiriShell
     OUTPUT_NAME
         "liri-shell"
@@ -97,6 +103,7 @@ liri_add_executable(LiriShell
         sessionmanager/screensaver/screensaver.cpp
         sessionmanager/screensaver/screensaver.h
         ${LiriShell_SOURCES}
+        ${LiriShell_QM_FILES}
     RESOURCES
         "compositor.qrc"
     DBUS_ADAPTOR_SOURCES

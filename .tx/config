@@ -1,14 +1,16 @@
 [main]
 host = https://www.transifex.com
 
-[hawaii.shell-wayland-sessions-hawaii]
+[liri-shell.session-entry]
 type = DESKTOP
 source_lang = en
-source_file = data/wayland-sessions/hawaii.desktop.in
-file_filter = translations/data/wayland-sessions/hawaii_<lang>.desktop
+source_file = data/wayland-sessions/liri.desktop.in.in
+liri_dest_file = data/wayland-sessions/liri.desktop.in
+file_filter = data/wayland-sessions/translations/liri_<lang>.desktop
 
-[hawaii.shell-qml]
-type = TS
+[liri-shell.compositor]
+type = QT
 source_lang = en
-source_file = translations/shell/shell.ts
-file_filter = translations/shell/shell_<lang>.ts
+liri_source_directory = src/compositor
+source_file = src/compositor/translations/compositor.ts
+file_filter = src/compositor/translations/compositor_<lang>.ts
