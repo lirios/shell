@@ -14,6 +14,8 @@ endif()
 liri_add_qml_plugin(shell
     MODULE_PATH
         "Liri/Shell"
+    VERSION
+        "1.0"
     SOURCES
         chromeitem.cpp
         chromeitem.h
@@ -39,7 +41,6 @@ liri_add_qml_plugin(shell
         PanelItem.qml
         UserDelegate.qml
         qmldir
-        plugins.qmltypes
     DEFINES
         #QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH

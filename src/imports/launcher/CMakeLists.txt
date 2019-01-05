@@ -8,6 +8,8 @@ endif()
 liri_add_qml_plugin(launcher
     MODULE_PATH
         "Liri/Launcher"
+    VERSION
+        "1.0"
     SOURCES
         application.cpp
         application.h
@@ -32,7 +34,6 @@ liri_add_qml_plugin(launcher
         utils.h
     QML_FILES
         qmldir
-        plugins.qmltypes
     DEFINES
         #QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH

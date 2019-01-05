@@ -3,6 +3,8 @@ find_package(KF5Solid REQUIRED)
 liri_add_qml_plugin(storage
     MODULE_PATH
         "Liri/Storage"
+    VERSION
+        "1.0"
     SOURCES
         plugin.cpp
         storagedevice.cpp
@@ -11,7 +13,6 @@ liri_add_qml_plugin(storage
         storagemodel.h
     QML_FILES
         qmldir
-        plugins.qmltypes
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH

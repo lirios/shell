@@ -3,6 +3,8 @@ find_package(PolkitQt5-1 REQUIRED)
 liri_add_qml_plugin(polkit
     MODULE_PATH
         "Liri/PolicyKit"
+    VERSION
+        "1.0"
     SOURCES
         listener_p.cpp
         listener_p.h
@@ -11,7 +13,6 @@ liri_add_qml_plugin(polkit
         policykitagent.h
     QML_FILES
         qmldir
-        plugins.qmltypes
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH

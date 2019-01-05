@@ -1,6 +1,8 @@
 liri_add_qml_plugin(mpris2
     MODULE_PATH
         "Liri/Mpris"
+    VERSION
+        "1.0"
     SOURCES
         mpris2engine.cpp
         mpris2engine.h
@@ -10,7 +12,6 @@ liri_add_qml_plugin(mpris2
         plugin.cpp
     QML_FILES
         qmldir
-        plugins.qmltypes
     DBUS_INTERFACE_SOURCES
         org.freedesktop.DBus.Properties.xml
         org.mpris.MediaPlayer2.Player.xml

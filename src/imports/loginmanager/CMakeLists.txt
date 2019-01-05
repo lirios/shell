@@ -5,13 +5,14 @@ endif()
 liri_add_qml_plugin(loginmanager
     MODULE_PATH
         "Liri/LoginManager"
+    VERSION
+        "1.0"
     SOURCES
         plugin.cpp
         usersmodel.cpp
         usersmodel.h
     QML_FILES
         qmldir
-        plugins.qmltypes
     DEFINES
         #QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
