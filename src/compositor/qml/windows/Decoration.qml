@@ -204,8 +204,12 @@ MouseArea {
                     shellHelper.grabCursor(LS.ShellHelper.ArrowGrabCursor);
                 }
                 onPositionChanged: {
-                    if (pressed)
+                    if (pressed) {
                         shellHelper.grabCursor(LS.ShellHelper.MoveGrabCursor);
+
+                        if (shellSurface.maximized)
+                            chrome.unmaximize();
+                    }
                 }
             }
 
