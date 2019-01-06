@@ -34,11 +34,9 @@ P.XdgSurfaceV5 {
     property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
     property string iconName: "unknown"
 
+    property bool decorated: true
+
     property WaylandSurface parentWlSurface: parentSurface ? parentSurface.surface : null
-
-    property bool decorated: false
-    property bool hasDropShadow: !maximized && !fullscreen
-
     property point offset: Qt.point(0, 0)
 
     readonly property alias responsive: details.responsive
@@ -118,13 +116,54 @@ P.XdgSurfaceV5 {
         }
     }
 
+    function __convertEdges(edges) {
+        var xdgEdges = P.XdgSurfaceV5.NoneEdge;
+        if (edges & Qt.TopEdge && edges & Qt.LeftEdge)
+            xdgEdges |= P.XdgSurfaceV5.TopLeftEdge;
+        else if (edges & Qt.BottomEdge && edges & Qt.LeftEdge)
+            xdgEdges |= P.XdgSurfaceV5.BottomLeftEdge;
+        else if (edges & Qt.TopEdge && edges & Qt.RightEdge)
+            xdgEdges |= P.XdgSurfaceV5.TopRightEdge;
+        else if (edges & Qt.BottomEdge && edges & Qt.RightEdge)
+            xdgEdges |= P.XdgSurfaceV5.BottomRightEdge;
+        else {
+            if (edges & Qt.TopEdge)
+                xdgEdges |= P.XdgSurfaceV5.TopEdge;
+            if (edges & Qt.BottomEdge)
+                xdgEdges |= P.XdgSurfaceV5.BottomEdge;
+            if (edges & Qt.LeftEdge)
+                xdgEdges |= P.XdgSurfaceV5.LeftEdge;
+            if (edges & Qt.RightEdge)
+                xdgEdges |= P.XdgSurfaceV5.RightEdge;
+        }
+        return xdgEdges;
+    }
+
+    function interactiveResize(size, delta, edges) {
+        var xdgEdges = __convertEdges(edges);
+        var newSize = xdgSurface.sizeForResize(size, delta, xdgEdges);
+        xdgSurface.sendResizing(newSize);
+    }
+
+    function resize(size, edges) {
+        xdgSurface.sendResizing(size);
+    }
+
+    function maximize(size) {
+        sendMaximized(size);
+    }
+
+    function unmaximize(size) {
+        sendUnmaximized(size);
+    }
+
     function pingClient() {
         shell.ping(surface.client);
         pingTimer.start();
     }
 
     function close() {
-        sendClose();
+        xdgSurface.sendClose();
     }
 
     Component.onDestruction: {

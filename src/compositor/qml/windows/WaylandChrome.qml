@@ -445,8 +445,7 @@ LS.ChromeItem {
                 Qt.size(output.availableGeometry.width / output.scaleFactor,
                         output.availableGeometry.height / output.scaleFactor);
         __private.finalPosition = output.position;
-        shellSurface.resize(newSize, 0);
-        shellSurface.maximized = true;
+        shellSurface.maximize(newSize);
     }
 
     function unmaximize() {
@@ -456,8 +455,7 @@ LS.ChromeItem {
             return;
 
         __private.finalPosition = __private.savedPosition;
-        shellSurface.resize(__private.savedSize, 0);
-        shellSurface.maximized = false;
+        shellSurface.unmaximize(__private.savedSize);
     }
 
     function close() {

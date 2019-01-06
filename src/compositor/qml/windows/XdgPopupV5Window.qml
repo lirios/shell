@@ -29,13 +29,21 @@ P.XdgPopupV5 {
     id: xdgPopup
 
     readonly property alias mapped: details.mapped
-    property string canonicalAppId: applicationManager.canonicalizeAppId(appId)
+    property bool activated: false
+    readonly property bool minimized: false
+    readonly property bool maximized: false
+    readonly property bool fullscreen: false
+    readonly property string title: ""
+
+    property string canonicalAppId: surface ? applicationManager.canonicalizeAppId(surface.appId) : ""
+    property string iconName: ""
 
     property bool decorated: false
-    property bool hasDropShadow: false
 
     property WaylandSurface parentWlSurface: parentSurface
     property point offset: position
+
+    readonly property bool responsive: true
 
     readonly property alias moveItem: moveItem
 

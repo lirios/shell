@@ -29,7 +29,7 @@ P.WlShellSurface {
     id: wlShellSurface
 
     readonly property alias mapped: details.mapped
-    property bool activated: true
+    property bool activated: false
     property bool minimized: false
     property bool maximized: false
     property bool fullscreen: false
@@ -184,6 +184,16 @@ P.WlShellSurface {
 
     function resize(size, edges) {
         wlShellSurface.sendConfigure(size, __convertEdges(edges));
+    }
+
+    function maximize(size) {
+        resize(size, 0);
+        maximized = true;
+    }
+
+    function unmaximize(size) {
+        resize(size, 0);
+        maximized = false;
     }
 
     function pingClient() {
