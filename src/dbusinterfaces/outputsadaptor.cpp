@@ -138,6 +138,7 @@ void OutputsAdaptor::addOutput(OutputAdaptor *outputAdaptor)
 
 void OutputsAdaptor::removeOutput(const QString &uuid)
 {
+    m_outputs.erase(
     std::remove_if(m_outputs.begin(), m_outputs.end(),
                    [this, uuid](OutputAdaptor *outputAdaptor) {
         if (outputAdaptor->uuid() == uuid) {
@@ -146,7 +147,7 @@ void OutputsAdaptor::removeOutput(const QString &uuid)
         }
 
         return false;
-    });
+    }), m_outputs.end());
 }
 
 bool OutputsAdaptor::hasOutput(const QString &uuid)

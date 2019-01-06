@@ -346,9 +346,9 @@ bool ScreenCastStream::createStream(const QSize &resolution)
 
     auto flags = static_cast<pw_stream_flags>(PW_STREAM_FLAG_DRIVER | PW_STREAM_FLAG_MAP_BUFFERS);
 #if PW_CHECK_VERSION(0, 2, 9)
-    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, 0, flags, params, G_N_ELEMENTS(&params)) != 0) {
+    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, 0, flags, params, G_N_ELEMENTS(params)) != 0) {
 #else
-    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, nullptr, flags, params, G_N_ELEMENTS(&params)) != 0) {
+    if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, nullptr, flags, params, G_N_ELEMENTS(params)) != 0) {
 #endif
         qCWarning(lcScreenCast) << "Could not connect to stream";
         return false;
