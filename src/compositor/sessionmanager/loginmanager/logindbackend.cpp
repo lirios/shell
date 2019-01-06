@@ -48,8 +48,6 @@ LogindBackend::~LogindBackend()
 LogindBackend *LogindBackend::create(SessionManager *sm)
 {
     LogindBackend *backend = new LogindBackend();
-    if (!backend)
-        return nullptr;
     backend->m_sessionManager = sm;
 
     // Check if logind is available

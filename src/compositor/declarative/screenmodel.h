@@ -61,7 +61,7 @@ public:
     Q_ENUM(Roles)
 
     explicit ScreenModel(QObject *parent = nullptr);
-    ~ScreenModel();
+    ~ScreenModel() override;
 
     QString fileName() const;
     void setFileName(const QString &fileName);
@@ -199,7 +199,7 @@ private:
     QString m_name;
     QRect m_geometry;
     QSizeF m_physicalSize;
-    int m_scaleFactor;
+    int m_scaleFactor = 1;
     QWaylandOutput::Subpixel m_subpixel = QWaylandOutput::SubpixelUnknown;
     QWaylandOutput::Transform m_transform = QWaylandOutput::TransformNormal;
     int m_currentMode = 0;
