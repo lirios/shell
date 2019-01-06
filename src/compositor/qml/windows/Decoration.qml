@@ -211,6 +211,12 @@ MouseArea {
                             chrome.unmaximize();
                     }
                 }
+                onDoubleClicked: {
+                    if (shellSurface.maximized)
+                        chrome.unmaximize();
+                    else
+                        chrome.maximize(output);
+                }
             }
 
             Row {
