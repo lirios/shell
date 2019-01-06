@@ -29,7 +29,10 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QStandardPaths>
 #include <QGuiApplication>
+#include <QLibraryInfo>
 #include <QQuickStyle>
+#include <QStandardPaths>
+#include <QTranslator>
 
 #include <Qt5GSettings/QGSettings>
 
