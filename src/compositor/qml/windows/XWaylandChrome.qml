@@ -34,6 +34,7 @@ LS.ChromeItem {
 
     property alias shellSurface: shellSurfaceItem.shellSurface
     property alias moveItem: shellSurfaceItem.moveItem
+    readonly property alias decoration: decoration
     readonly property alias output: shellSurfaceItem.output
 
     readonly property bool decorated: shellSurface.decorated && !shellSurface.fullscreen

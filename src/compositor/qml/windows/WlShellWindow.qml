@@ -192,10 +192,7 @@ P.WlShellSurface {
     }
 
     function close() {
-        if (windowType == Qt.Popup)
-            sendPopupDone();
-        else
-            surface.destroy();
+        console.warn("wl-shell doesn't support closing windows");
     }
 
     Component.onDestruction: {
