@@ -74,6 +74,7 @@ P.WlShellSurface {
         iconName = appIconName ? appIconName : "unknown";
     }
     onSetDefaultToplevel: {
+        decorated = true;
         maximized = false;
         fullscreen = false;
         parentWlSurface = null;
@@ -81,6 +82,7 @@ P.WlShellSurface {
         offset.y = 0;
     }
     onSetPopup: {
+        decorated = false;
         maximized = false;
         fullscreen = false;
         parentWlSurface = parentSurface;
@@ -88,6 +90,7 @@ P.WlShellSurface {
         offset.y = relativeToParent.y;
     }
     onSetTransient: {
+        decorated = true;
         maximized = false;
         fullscreen = false;
         parentWlSurface = parentSurface;

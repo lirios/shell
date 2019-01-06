@@ -33,6 +33,7 @@ LS.ChromeItem {
 
     property alias shellSurface: shellSurfaceItem.shellSurface
     property alias moveItem: shellSurfaceItem.moveItem
+    readonly property alias decoration: decoration
     readonly property alias output: shellSurfaceItem.output
 
     readonly property bool decorated: shellSurface.decorated && !shellSurface.fullscreen
@@ -112,8 +113,8 @@ LS.ChromeItem {
         function setPosition() {
             var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
             if (parentSurfaceItem) {
-                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x;
-                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y;
+                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x - parentSurfaceItem.decoration.borderSize;
+                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y - parentSurfaceItem.decoration.borderSize;
             } else {
                 var pos = chrome.randomPosition(liriCompositor.mousePos);
                 moveItem.x = pos.x;
