@@ -133,7 +133,7 @@ LiriShell.PanelItem {
             if (!shellSurface)
                 continue;
 
-            if (shellSurface.canonicalAppId === model.appId) {
+            if (shellSurface.appId === model.appId) {
                 // Task icon position
                 var pt = screenView.mapFromItem(launcherItem, launcherItem.width * 0.5, launcherItem.height * 0.5);
                 pt.x += output.position.x;

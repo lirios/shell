@@ -32,7 +32,7 @@ import Fluid.Controls 1.0 as FluidControls
 import "../components" as ShellComponents
 
 Item {
-    property var view
+    property Item view: null
     readonly property alias container: mouseArea
     readonly property int margin: 10
 
@@ -41,10 +41,10 @@ Item {
 
     id: chrome
 
-    x: view.windowGeometry.x
-    y: view.windowGeometry.y
-    width: view.windowGeometry.width
-    height: view.windowGeometry.height
+    x: view.window.windowGeometry.x * view.scale
+    y: view.window.windowGeometry.y * view.scale
+    width: view.width * view.scale
+    height: view.height * view.scale
 
     Material.theme: Material.Dark
 
@@ -89,7 +89,7 @@ Item {
                 centerIn: parent
                 margins: FluidControls.Units.smallSpacing
             }
-            text: view.shellSurface.title ? view.shellSurface.title : qsTr("Unknown")
+            text: view.window.title ? view.window.title : qsTr("Unknown")
             elide: Text.ElideRight
         }
 
@@ -123,7 +123,7 @@ Item {
                 centerIn: parent
                 margins: FluidControls.Units.smallSpacing
             }
-            name: view.shellSurface.iconName
+            name: view.window.iconName
             width: FluidControls.Units.iconSizes.large
             height: width
         }

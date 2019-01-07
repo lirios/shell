@@ -25,33 +25,42 @@
 
 #include <QtQuick/QQuickItem>
 #include <QtWaylandCompositor/QWaylandCompositor>
+#include <QWaylandQuickItem>
 
 class ChromeItem : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(QWaylandCompositor *compositor READ compositor WRITE setCompositor NOTIFY compositorChanged)
+    Q_PROPERTY(QWaylandQuickItem *shellSurfaceItem READ shellSurfaceItem WRITE setShellSurfaceItem NOTIFY shellSurfaceItemChanged)
+    Q_PROPERTY(bool primary READ isPrimary NOTIFY primaryChanged)
 public:
     ChromeItem(QQuickItem *parent = nullptr);
 
     QWaylandCompositor *compositor() const;
     void setCompositor(QWaylandCompositor *compositor);
 
-    Q_INVOKABLE QPointF randomPosition(const QPointF &mousePos) const;
+    QWaylandQuickItem *shellSurfaceItem() const;
+    void setShellSurfaceItem(QWaylandQuickItem *item);
 
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
-    void keyReleaseEvent(QKeyEvent *event) override;
-    void mousePressEvent(QMouseEvent *event) override;
+    bool isPrimary() const;
+
+    Q_INVOKABLE QPointF randomPosition(const QPointF &mousePos) const;
 
 Q_SIGNALS:
     void compositorChanged();
-    void moveRequested();
+    void shellSurfaceItemChanged();
+    void primaryChanged();
 
 public Q_SLOTS:
     void raise();
     void lower();
+    void takeFocus(QWaylandSeat *device = nullptr);
 
 private:
     QWaylandCompositor *m_compositor;
-    bool m_isModifierHeld;
+    QWaylandQuickItem *m_shellSurfaceItem = nullptr;
+    bool m_primary = false;
+
+private Q_SLOTS:
+    void updatePrimary();
 };

@@ -43,12 +43,12 @@
 Q_LOGGING_CATEGORY(APPLICATION_MANAGER, "liri.launcher.applicationmanager")
 
 const QMap<QString, QString> correctAppIds = {
-        {"baobob", "org.gnome.baobob"},           {"cheese", "org.gnome.Cheese"},
-        {"corebird", "org.baedert.corebird"},     {"dconf-editor", "ca.desrt.dconf-editor"},
-        {"file-roller", "org.gnome.FileRoller"},  {"gnome-calendar", "org.gnome.Calendar"},
-        {"gnome-disks", "org.gnome.DiskUtility"}, {"gnome-font-viewer", "org.gnome.font-viewer"},
-        {"nautilus", "org.gnome.Nautilus"},       {"org.kate-editor.kate", "org.kde.kate"},
-        {"gedit", "org.gnome.gedit"},             {"gnome-dictionary", "org.gnome.Dictionary"}
+    {"baobob", "org.gnome.baobob"},           {"cheese", "org.gnome.Cheese"},
+    {"corebird", "org.baedert.corebird"},     {"dconf-editor", "ca.desrt.dconf-editor"},
+    {"file-roller", "org.gnome.FileRoller"},  {"gnome-calendar", "org.gnome.Calendar"},
+    {"gnome-disks", "org.gnome.DiskUtility"}, {"gnome-font-viewer", "org.gnome.font-viewer"},
+    {"nautilus", "org.gnome.Nautilus"},       {"org.kate-editor.kate", "org.kde.kate"},
+    {"gedit", "org.gnome.gedit"},             {"gnome-dictionary", "org.gnome.Dictionary"}
 };
 
 ApplicationManager::ApplicationManager(QObject *parent)
@@ -338,7 +338,7 @@ void ApplicationManager::registerShellSurface(QObject *shellSurface)
         return;
     }
 
-    QString appId = shellSurface->property("canonicalAppId").toString();
+    QString appId = shellSurface->property("appId").toString();
 
     Application *app = findApplication(appId);
     if (!app)
@@ -357,7 +357,7 @@ void ApplicationManager::unregisterShellSurface(QObject *shellSurface)
 {
     m_shellSurfaces.remove(shellSurface);
 
-    QString appId = shellSurface->property("canonicalAppId").toString();
+    QString appId = shellSurface->property("appId").toString();
     if (appId.isEmpty())
         return;
 
@@ -381,7 +381,7 @@ void ApplicationManager::focusShellSurface(QObject *shellSurface)
         return;
     }
 
-    QString appId = shellSurface->property("canonicalAppId").toString();
+    QString appId = shellSurface->property("appId").toString();
 
     Application *app = findApplication(appId);
     if (app) {

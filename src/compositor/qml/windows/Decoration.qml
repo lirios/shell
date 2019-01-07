@@ -30,13 +30,6 @@ import Liri.Shell 1.0 as LS
 MouseArea {
     id: decoration
 
-    readonly property real borderSize: {
-        if (!chrome.decorated || shellSurface.maximized || shellSurface.fullscreen)
-            return 0;
-        return 4;
-    }
-    readonly property alias titleBarHeight: titleBar.height
-
     readonly property alias drag: moveArea.drag
 
     readonly property color foregroundColor: {
@@ -55,6 +48,7 @@ MouseArea {
     QtObject {
         id: d
 
+        property bool resizing: false
         property int edges: 0
         property point initialPos
         property size initialSize
@@ -66,19 +60,20 @@ MouseArea {
     scrollGestureEnabled: false
 
     onPressed: {
+        d.resizing = true;
         d.edges = 0;
         d.initialPos.x = mouse.x;
         d.initialPos.y = mouse.y;
         d.initialSize.width = shellSurfaceItem.width;
         d.initialSize.height = shellSurfaceItem.height;
 
-        if (mouse.x <= borderSize)
+        if (mouse.x <= chrome.window.borderSize)
             d.edges |= Qt.LeftEdge;
-        else if (mouse.x >= this.width - borderSize)
+        else if (mouse.x >= this.width - chrome.window.borderSize)
             d.edges |= Qt.RightEdge;
-        if (mouse.y <= borderSize)
+        if (mouse.y <= chrome.window.borderSize)
             d.edges |= Qt.TopEdge;
-        else if (mouse.y >= this.height - borderSize)
+        else if (mouse.y >= this.height - chrome.window.borderSize)
             d.edges |= Qt.BottomEdge;
 
         // Focus on click
@@ -88,19 +83,22 @@ MouseArea {
     onPositionChanged: {
         if (pressed) {
             var delta = Qt.point(mouse.x - d.initialPos.x, mouse.y - d.initialPos.y);
-            shellSurface.interactiveResize(d.initialSize, delta, d.edges);
+            var newSize = chrome.window.sizeForResize(d.initialSize, delta, d.edges);
+            chrome.window.sendResizing(newSize);
+        } else {
+            d.resizing = false;
         }
 
         // Draw cursor
         var edges = 0;
 
-        if (mouse.x <= borderSize)
+        if (mouse.x <= chrome.window.borderSize)
             edges |= Qt.LeftEdge;
-        else if (mouse.x >= this.width - borderSize)
+        else if (mouse.x >= this.width - chrome.window.borderSize)
             edges |= Qt.RightEdge;
-        if (mouse.y <= borderSize)
+        if (mouse.y <= chrome.window.borderSize)
             edges |= Qt.TopEdge;
-        else if (mouse.y >= this.height - borderSize)
+        else if (mouse.y >= this.height - chrome.window.borderSize)
             edges |= Qt.BottomEdge;
 
         if (edges & Qt.TopEdge && edges & Qt.LeftEdge)
@@ -123,23 +121,39 @@ MouseArea {
         }
     }
 
+    Connections {
+        target: chrome.window.surface
+        onSizeChanged: {
+            if (d.resizing) {
+                var dx = 0;
+                var dy = 0;
+
+                if (d.edges & Qt.LeftEdge)
+                    dx += d.initialSize.width - shellSurfaceItem.width;
+                if (d.edges & Qt.TopEdge)
+                    dy += d.initialSize.height - shellSurfaceItem.height;
+
+                chrome.window.moveItem.x += dx;
+                chrome.window.moveItem.y += dy;
+            }
+        }
+    }
+
     Rectangle {
         id: titleBar
 
-        x: borderSize
-        y: borderSize
+        x: chrome.window.borderSize + chrome.window.surfaceGeometry.x
+        y: chrome.window.borderSize + chrome.window.surfaceGeometry.y
 
         implicitWidth: shellSurfaceItem.width
-        implicitHeight: chrome.decorated ? 32 : 0
+        implicitHeight: 32
 
         color: backgroundColor
-
-        visible: chrome.decorated
 
         Item {
             anchors.fill: parent
             anchors.bottomMargin: parent.radius
-            opacity: shellSurface.activated ? 1.0 : 0.5
+            opacity: chrome.window.activated ? 1.0 : 0.5
 
             FluidControls.Icon {
                 id: icon
@@ -150,7 +164,7 @@ MouseArea {
                     verticalCenter: parent.verticalCenter
                 }
 
-                name: shellSurface.iconName
+                name: chrome.window.iconName ? chrome.window.iconName : ""
                 width: 24
                 height: width
                 visible: name != "" && status == Image.Ready
@@ -169,7 +183,7 @@ MouseArea {
                 font.bold: true
                 font.pixelSize: 16
                 color: foregroundColor
-                text: shellSurface.title
+                text: chrome.window.title ? chrome.window.title : ""
                 wrapMode: Text.NoWrap
             }
 
@@ -198,7 +212,7 @@ MouseArea {
                     shellHelper.grabCursor(LS.ShellHelper.ArrowGrabCursor);
 
                     if (mouse.button === Qt.RightButton)
-                        chrome.showWindowMenu(mouse.x, mouse.y);
+                        chrome.window.showWindowMenu(compositor.defaultSeat, Qt.point(mouse.x, mouse.y));
                 }
                 onEntered: {
                     shellHelper.grabCursor(LS.ShellHelper.ArrowGrabCursor);
@@ -207,15 +221,15 @@ MouseArea {
                     if (pressed) {
                         shellHelper.grabCursor(LS.ShellHelper.MoveGrabCursor);
 
-                        if (shellSurface.maximized)
-                            chrome.unmaximize();
+                        if (chrome.window.maximized)
+                            chrome.window.sendUnmaximized();
                     }
                 }
                 onDoubleClicked: {
-                    if (shellSurface.maximized)
-                        chrome.unmaximize();
+                    if (chrome.window.maximized)
+                        chrome.window.sendUnmaximized();
                     else
-                        chrome.maximize(output);
+                        chrome.window.sendMaximized(shellSurfaceItem.output);
                 }
             }
 
@@ -233,19 +247,20 @@ MouseArea {
                 DecorationButton {
                     source: "window-minimize.svg"
                     color: foregroundColor
-                    onClicked: shellSurface.minimized = true
+                    onClicked: chrome.window.minimized = true
                 }
 
                 DecorationButton {
-                    source: shellSurface.maximized ? "window-restore.svg" : "window-maximize.svg"
+                    source: chrome.window.maximized ? "window-restore.svg" : "window-maximize.svg"
                     color: foregroundColor
-                    onClicked: shellSurface.maximized ? chrome.unmaximize() : chrome.maximize(output)
+                    visible: chrome.window.maximizable
+                    onClicked: chrome.window.maximized ? chrome.window.sendUnmaximized() : chrome.window.sendMaximized(shellSurfaceItem.output)
                 }
 
                 DecorationButton {
                     source: "window-close.svg"
                     color: foregroundColor
-                    onClicked: shellSurface.close()
+                    onClicked: chrome.window.sendClose()
                 }
             }
         }

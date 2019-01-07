@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -24,24 +24,24 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.1 as QtWayland
 import Fluid.Core 1.0 as FluidCore
-import Liri.Shell 1.0 as LS
+import Liri.XWayland 1.0 as LXW
 
 FluidCore.Object {
     id: window
 
-    property QtWayland.WlShellSurface shellSurface: null
+    property LXW.XWaylandShellSurface shellSurface: null
     readonly property QtWayland.WaylandSurface surface: shellSurface ? shellSurface.surface : null
     readonly property alias parentSurface: d.parentSurface
 
-    readonly property alias windowType: d.windowType
+    readonly property int windowType: shellSurface ? shellSurface.windowType : Qt.Window
 
     readonly property alias mapped: d.mapped
 
     readonly property alias moveItem: moveItem
 
     readonly property string title: shellSurface ? shellSurface.title : ""
-    readonly property alias appId: d.appId
-    readonly property alias iconName: d.iconName
+    readonly property string appId: d.appId
+    readonly property string iconName: d.iconName
 
     readonly property alias windowGeometry: d.windowGeometry
     readonly property alias surfaceGeometry: d.surfaceGeometry
@@ -49,18 +49,18 @@ FluidCore.Object {
     readonly property size minSize: Qt.size(0, 0)
     readonly property size maxSize: Qt.size(0, 0)
 
-    readonly property alias activated: d.activated
+    readonly property bool activated: shellSurface && shellSurface.activated
     property bool minimized: false
-    readonly property alias maximized: d.maximized
-    readonly property alias fullscreen: d.fullscreen
+    readonly property bool maximized: shellSurface && shellSurface.maximized
+    readonly property bool fullscreen: shellSurface && shellSurface.fullscreen
     readonly property bool resizing: false
 
-    readonly property bool decorated: shellSurface && d.windowType !== Qt.Popup && !d.fullscreen
-    readonly property bool bordered: decorated && !d.maximized
+    readonly property bool decorated: shellSurface && shellSurface.windowType !== Qt.Popup && shellSurface.decorate && !shellSurface.fullscreen
+    readonly property bool bordered: decorated && !shellSurface.maximized
     readonly property real borderSize: bordered ? 4 : 0
     readonly property real titleBarHeight: decorated ? 32 : 0
 
-    readonly property bool focusable: d.windowType !== Qt.Popup
+    readonly property bool focusable: shellSurface && shellSurface.windowType !== Qt.Popup
     readonly property bool maximizable: true
 
     signal showWindowMenu(QtWayland.WaylandSeat seat, point localSurfacePosition)
@@ -68,26 +68,14 @@ FluidCore.Object {
     QtObject {
         id: d
 
-        property int windowType: Qt.Window
         property string appId: ""
         property string iconName: ""
         property rect windowGeometry
         property rect surfaceGeometry
         property bool mapped: false
         property bool registered: false
-        property bool activated: false
-        property bool maximized: false
-        property bool fullscreen: false
         property bool responsive: true
         property QtWayland.WaylandSurface parentSurface: null
-        property point position
-        property size size
-        property point finalPosition
-
-        onActivatedChanged: {
-            if (d.registered && d.activated)
-                applicationManager.focusShellSurface(window);
-        }
 
         function recalculateWindowGeometry() {
             var w = window.surface ? window.surface.size.width : 0;
@@ -109,37 +97,26 @@ FluidCore.Object {
     }
 
     Connections {
-        target: defaultSeat
-        onKeyboardFocusChanged: d.activated = newFocus == surface
-    }
-
-    Connections {
         target: surface
-        onHasContentChanged: {
-            if (surface.hasContent)
-                d.mapped = true;
-        }
         onSizeChanged: {
             d.windowGeometry = d.recalculateWindowGeometry();
             d.surfaceGeometry = d.recalculateSurfaceGeometry();
-        }
-        onRedraw: {
-            if (!window.decorated)
-                return;
-
-            if (d.finalPosition.x !== -1 && d.finalPosition.y !== -1) {
-                moveItem.x = d.finalPosition.x;
-                moveItem.y = d.finalPosition.y;
-                d.finalPosition = Qt.point(-1, -1);
-            }
         }
     }
 
     Connections {
         target: shellSurface
-        onClassNameChanged: {
+        onActivatedChanged: {
+            if (d.registered && shellSurface.activated && shellSurface.windowType !== Qt.Popup)
+                applicationManager.focusShellSurface(window);
+        }
+        onSurfaceChanged: {
+            // Surface is changed, which means that app id has likely changed too
+            d.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
+        }
+        onAppIdChanged: {
             // Canonicalize app id and cache it, so that it's known even during destruction
-            d.appId = applicationManager.canonicalizeAppId(shellSurface.className);
+            d.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
 
             if (!d.registered && d.appId) {
                 // Register application
@@ -155,36 +132,14 @@ FluidCore.Object {
             var appIconName = applicationManager.getIconName(d.appId);
             d.iconName = appIconName ? appIconName : "";
         }
-        onStartMove: {
-            shellHelper.grabCursor(LS.ShellHelper.MoveGrabCursor);
+        onMapped: {
+            d.mapped = true;
         }
-        onSetDefaultToplevel: {
-            d.maximized = false;
-            d.fullscreen = false;
-            d.parentSurface = null;
-            d.windowType = Qt.Window;
+        onUnmapped: {
+            d.mapped = false;
         }
-        onSetPopup: {
-            d.maximized = false;
-            d.fullscreen = false;
-            d.parentSurface = parentSurface;
-            d.windowType = Qt.Popup;
-        }
-        onSetTransient: {
-            d.maximized = false;
-            d.fullscreen = false;
-            d.parentSurface = parentSurface;
-            d.windowType = Qt.SubWindow;
-        }
-        onSetMaximized: {
-            d.maximized = true;
-        }
-        onSetFullScreen: {
-            d.fullscreen = true;
-        }
-        onPong: {
-            pingTimer.stop();
-            d.responsive = true;
+        onSetMinimized: {
+            minimized = !minimized;
         }
     }
 
@@ -196,91 +151,54 @@ FluidCore.Object {
         height: windowGeometry.height
     }
 
-    Timer {
-        id: pingTimer
-        interval: 500
-        onTriggered: d.responsive = false
-    }
-
     function __convertEdges(edges) {
-        var wlEdges = QtWayland.WlShellSurface.NoneEdge;
+        var wlEdges = LXW.XWaylandShellSurface.NoneEdge;
         if (edges & Qt.TopEdge && edges & Qt.LeftEdge)
-            wlEdges |= QtWayland.WlShellSurface.TopLeftEdge;
+            wlEdges |= LXW.XWaylandShellSurface.TopLeftEdge;
         else if (edges & Qt.BottomEdge && edges & Qt.LeftEdge)
-            wlEdges |= QtWayland.WlShellSurface.BottomLeftEdge;
+            wlEdges |= LXW.XWaylandShellSurface.BottomLeftEdge;
         else if (edges & Qt.TopEdge && edges & Qt.RightEdge)
-            wlEdges |= QtWayland.WlShellSurface.TopRightEdge;
+            wlEdges |= LXW.XWaylandShellSurface.TopRightEdge;
         else if (edges & Qt.BottomEdge && edges & Qt.RightEdge)
-            wlEdges |= QtWayland.WlShellSurface.BottomRightEdge;
+            wlEdges |= LXW.XWaylandShellSurface.BottomRightEdge;
         else {
             if (edges & Qt.TopEdge)
-                wlEdges |= QtWayland.WlShellSurface.TopEdge;
+                wlEdges |= LXW.XWaylandShellSurface.TopEdge;
             if (edges & Qt.BottomEdge)
-                wlEdges |= QtWayland.WlShellSurface.BottomEdge;
+                wlEdges |= LXW.XWaylandShellSurface.BottomEdge;
             if (edges & Qt.LeftEdge)
-                wlEdges |= QtWayland.WlShellSurface.LeftEdge;
+                wlEdges |= LXW.XWaylandShellSurface.LeftEdge;
             if (edges & Qt.RightEdge)
-                wlEdges |= QtWayland.WlShellSurface.RightEdge;
+                wlEdges |= LXW.XWaylandShellSurface.RightEdge;
         }
         return wlEdges;
     }
 
     function sizeForResize(size, delta, edges) {
-        var wlEdges = __convertEdges(edges);
-        return shellSurface.sizeForResize(size, delta, edges);
+        return shellSurface.sizeForResize(size, delta, __convertEdges(edges));
     }
 
     function sendResizing(size) {
-        shellSurface.sendConfigure(size, QtWayland.WlShellSurface.NoneEdge);
+        shellSurface.sendResize(size);
     }
 
     function sendMaximized(output) {
-        // Save position and size but only if it's the first time
-        if (!d.maximized) {
-            d.position = Qt.point(moveItem.x, moveItem.y);
-            d.size = Qt.size(windowGeometry.width, windowGeometry.height);
-        }
-
-        var w = output.availableGeometry.width;
-        var h = output.availableGeometry.height - titleBarHeight;
-
-        d.finalPosition = Qt.point(output.position.x + output.availableGeometry.x,
-                                   output.position.y + output.availableGeometry.y);
-
-        d.sendConfigure(Qt.size(w, h), QtWayland.WlShellSurface.NoneEdge);
+        shellSurface.maximize(output);
     }
 
     function sendUnmaximized() {
-        if (!d.maximized)
-            return;
-
-        d.finalPosition = d.position;
-
-        d.sendConfigure(d.size, QtWayland.WlShellSurface.NoneEdge);
-        d.maximized = false;
+        shellSurface.unmaximize();
     }
 
     function sendFullscreen(output) {
-        // Save position and size but only if it's the first time
-        if (!d.fullscreen) {
-            d.position = Qt.point(moveItem.x, moveItem.y);
-            d.size = Qt.size(windowGeometry.width, windowGeometry.height);
-        }
-
-        var w = output.geometry.width;
-        var h = output.geometry.height;
-
-        d.finalPosition = output.position;
-
-        d.sendConfigure(Qt.size(w, h), QtWayland.WlShellSurface.NoneEdge);
+        console.warn("Not implemented yet");
     }
 
     function pingClient() {
-        shellSurface.ping();
-        pingTimer.start();
+        console.warn("Not implemented yet");
     }
 
     function sendClose() {
-        console.warn("wl-shell doesn't support closing windows");
+        shellSurface.close();
     }
 }

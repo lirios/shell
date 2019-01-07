@@ -78,5 +78,9 @@
         <file>qml/windows/XdgSurfaceV5Window.qml</file>
         <file>qml/windows/XWaylandChrome.qml</file>
         <file>qml/XWayland.qml</file>
+        <file>qml/windows/XdgToplevelV6Window.qml</file>
+        <file>qml/windows/XdgPopupV6Window.qml</file>
+        <file>qml/windows/WaylandPopupChrome.qml</file>
+        <file>qml/windows/XWaylandWindow.qml</file>
     </qresource>
 </RCC>

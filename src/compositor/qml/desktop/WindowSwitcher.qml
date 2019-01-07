@@ -29,6 +29,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import QtWayland.Compositor 1.0
+import Fluid.Core 1.0 as FluidCore
 import Fluid.Controls 1.0 as FluidControls
 
 Popup {
@@ -48,9 +49,9 @@ Popup {
         id: thumbnailComponent
 
         Rectangle {
-            readonly property var view: liriCompositor.defaultOutput.viewsBySurface[shellSurface.surface]
-            readonly property string title: shellSurface.title ? shellSurface.title : qsTr("Untitled")
-            readonly property real ratio: view.width / view.height
+            readonly property var chrome: liriCompositor.defaultOutput.viewsBySurface[model.window.surface]
+            readonly property string title: model.window.title ? model.window.title : qsTr("Untitled")
+            readonly property real ratio: chrome.width / chrome.height
 
             id: wrapper
             width: height * ratio
@@ -58,16 +59,12 @@ Popup {
             color: wrapper.ListView.isCurrentItem ? Material.accent : "transparent"
             radius: 4
 
-            WaylandQuickItem {
-                id: windowItem
+            ShaderEffectSource {
                 anchors {
                     fill: parent
                     margins: FluidControls.Units.smallSpacing
                 }
-                surface: shellSurface.surface
-                sizeFollowsSurface: false
-                inputEventsEnabled: false
-                allowDiscardFrontBuffer: true
+                sourceItem: chrome
                 z: 0
 
                 MouseArea {
@@ -84,7 +81,7 @@ Popup {
                 }
                 width: FluidControls.Units.iconSizes.large
                 height: width
-                name: view.shellSurface.iconName
+                name: model.window.iconName || "unknown"
                 cache: false
                 z: 1
             }
@@ -101,7 +98,10 @@ Popup {
             clip: true
             focus: true
             orientation: ListView.Horizontal
-            model: liriCompositor.shellSurfaces
+            model: FluidCore.SortFilterProxyModel {
+                sourceModel: liriCompositor.shellSurfaces
+                filterExpression: model.window.parentSurface === null
+            }
             spacing: FluidControls.Units.smallSpacing
             highlightMoveDuration: FluidControls.Units.shortDuration
             delegate: thumbnailComponent
@@ -125,14 +125,16 @@ Popup {
 
     function activate() {
         if (listView.currentItem)
-            listView.currentItem.view.takeFocus();
+            listView.currentItem.chrome.takeFocus();
     }
 
     function previous() {
         if (listView.count < 2)
             return;
 
-        if (listView.currentIndex == 0)
+        if (listView.currentIndex == listView.count)
+            listView.currentIndex -= 2;
+        else if (listView.currentIndex == 0)
             listView.currentIndex = listView.count == 0 ? 0 : listView.count - 1;
         else
             listView.currentIndex--;
@@ -143,7 +145,7 @@ Popup {
         if (listView.count < 2)
             return;
 
-        if (listView.currentIndex == listView.count - 1)
+        if (listView.currentIndex >= listView.count - 1)
             listView.currentIndex = 0;
         else
             listView.currentIndex++;

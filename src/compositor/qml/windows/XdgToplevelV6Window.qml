@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -22,14 +22,15 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtWayland.Compositor 1.2 as QtWayland
+import QtWayland.Compositor 1.1 as QtWayland
 import Fluid.Core 1.0 as FluidCore
 import Liri.Shell 1.0 as LS
 
 FluidCore.Object {
     id: window
 
-    property QtWayland.XdgSurfaceV5 xdgSurface: null
+    property QtWayland.XdgSurfaceV6 xdgSurface: null
+    property QtWayland.XdgToplevelV6 toplevel: null
 
     readonly property QtWayland.ShellSurface shellSurface: xdgSurface
     readonly property QtWayland.WaylandSurface surface: xdgSurface ? xdgSurface.surface : null
@@ -41,14 +42,14 @@ FluidCore.Object {
 
     readonly property alias moveItem: moveItem
 
-    readonly property string title: xdgSurface ? xdgSurface.title : ""
+    readonly property string title: toplevel ? toplevel.title : ""
     readonly property string appId: d.appId
     readonly property string iconName: d.iconName
 
     readonly property rect windowGeometry: {
         var rect = Qt.rect(0, 0, 0, 0);
         if (xdgSurface) {
-            if (xdgSurface.windowGeometry.width < 0 && xdgSurface.windowGeometry.height < 0)
+            if (xdgSurface.windowGeometry.width <= 0 && xdgSurface.windowGeometry.height <= 0)
                 rect = Qt.rect(0, 0, xdgSurface.surface.size.width, xdgSurface.surface.size.height);
             else
                 rect = xdgSurface.windowGeometry;
@@ -69,17 +70,17 @@ FluidCore.Object {
         return rect;
     }
 
-    readonly property size minSize: Qt.size(0, 0)
-    readonly property size maxSize: Qt.size(0, 0)
+    readonly property size minSize: toplevel ? toplevel.minSize : Qt.size(0, 0)
+    readonly property size maxSize: toplevel ? toplevel.maxSize : Qt.size(0, 0)
 
-    readonly property bool activated: xdgSurface && xdgSurface.activated
+    readonly property bool activated: toplevel && toplevel.activated
     property bool minimized: false
-    readonly property bool maximized: xdgSurface && xdgSurface.maximized
-    readonly property bool fullscreen: xdgSurface && xdgSurface.fullscreen
-    readonly property bool resizing: xdgSurface && xdgSurface.resizing
+    readonly property bool maximized: toplevel && toplevel.maximized
+    readonly property bool fullscreen: toplevel && toplevel.fullscreen
+    readonly property bool resizing: toplevel && toplevel.resizing
 
-    readonly property bool decorated: xdgSurface && !xdgSurface.fullscreen
-    readonly property bool bordered: decorated && !xdgSurface.maximized
+    readonly property bool decorated: toplevel && !toplevel.fullscreen
+    readonly property bool bordered: decorated && !toplevel.maximized
     readonly property real borderSize: bordered ? 4 : 0
     readonly property real titleBarHeight: decorated ? 32 : 0
 
@@ -125,22 +126,22 @@ FluidCore.Object {
     }
 
     Connections {
-        target: xdgSurface
+        target: toplevel
         onActivatedChanged: {
-            if (d.registered && xdgSurface.activated)
+            if (d.registered && toplevel.activated)
                 applicationManager.focusShellSurface(window);
         }
         onAppIdChanged: {
             // Canonicalize app id and cache it, so that it's known even during destruction
-            d.appId = applicationManager.canonicalizeAppId(xdgSurface.appId);
+            d.appId = applicationManager.canonicalizeAppId(toplevel.appId);
 
-            if (!d.registered && xdgSurface.appId) {
+            if (!d.registered && d.appId) {
                 // Register application
                 applicationManager.registerShellSurface(window);
                 d.registered = true;
 
                 // Focus icon in the panel
-                if (xdgSurface.activated)
+                if (toplevel.activated)
                     applicationManager.focusShellSurface(window);
             }
 
@@ -157,9 +158,16 @@ FluidCore.Object {
         onShowWindowMenu: {
             window.showWindowMenu(seat, localSurfacePosition);
         }
-        onParentSurfaceChanged: {
-            if (xdgSurface && xdgSurface.parentSurface) {
-                d.parentSurface = xdgSurface.parentSurface.surface;
+        onParentToplevelChanged: {
+            if (toplevel && toplevel.parentToplevel) {
+                d.parentSurface = null;
+                for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
+                    var currentWindow = liriCompositor.shellSurfaces.get(i).window;
+                    if (currentWindow.toplevel === toplevel.parentToplevel) {
+                        d.parentSurface = currentWindow.surface;
+                        break;
+                    }
+                }
                 d.windowType = Qt.SubWindow;
             } else {
                 d.parentSurface = null;
@@ -176,41 +184,17 @@ FluidCore.Object {
         height: windowGeometry.height
     }
 
-    function __convertEdges(edges) {
-        var xdgEdges = QtWayland.XdgSurfaceV5.NoneEdge;
-        if (edges & Qt.TopEdge && edges & Qt.LeftEdge)
-            xdgEdges |= QtWayland.XdgSurfaceV5.TopLeftEdge;
-        else if (edges & Qt.BottomEdge && edges & Qt.LeftEdge)
-            xdgEdges |= QtWayland.XdgSurfaceV5.BottomLeftEdge;
-        else if (edges & Qt.TopEdge && edges & Qt.RightEdge)
-            xdgEdges |= QtWayland.XdgSurfaceV5.TopRightEdge;
-        else if (edges & Qt.BottomEdge && edges & Qt.RightEdge)
-            xdgEdges |= QtWayland.XdgSurfaceV5.BottomRightEdge;
-        else {
-            if (edges & Qt.TopEdge)
-                xdgEdges |= QtWayland.XdgSurfaceV5.TopEdge;
-            if (edges & Qt.BottomEdge)
-                xdgEdges |= QtWayland.XdgSurfaceV5.BottomEdge;
-            if (edges & Qt.LeftEdge)
-                xdgEdges |= QtWayland.XdgSurfaceV5.LeftEdge;
-            if (edges & Qt.RightEdge)
-                xdgEdges |= QtWayland.XdgSurfaceV5.RightEdge;
-        }
-        return xdgEdges;
-    }
-
     function sizeForResize(size, delta, edges) {
-        var xdgEdges = __convertEdges(edges);
-        return xdgSurface.sizeForResize(size, delta, xdgEdges);
+        return toplevel.sizeForResize(size, delta, edges);
     }
 
     function sendResizing(size) {
-        xdgSurface.sendResizing(size);
+        toplevel.sendResizing(size);
     }
 
     function sendMaximized(output) {
         // Save position and size but only if it's the first time
-        if (!xdgSurface.maximized) {
+        if (!toplevel.maximized) {
             d.position = Qt.point(moveItem.x, moveItem.y);
             d.size = Qt.size(windowGeometry.width, windowGeometry.height);
         }
@@ -221,21 +205,21 @@ FluidCore.Object {
         d.finalPosition = Qt.point(output.position.x + output.availableGeometry.x,
                                    output.position.y + output.availableGeometry.y);
 
-        xdgSurface.sendMaximized(Qt.size(w, h));
+        toplevel.sendMaximized(Qt.size(w, h));
     }
 
     function sendUnmaximized() {
-        if (!xdgSurface.maximized)
+        if (!toplevel.maximized)
             return;
 
         d.finalPosition = d.position;
 
-        xdgSurface.sendUnmaximized(d.size);
+        toplevel.sendUnmaximized(d.size);
     }
 
     function sendFullscreen(output) {
         // Save position and size but only if it's the first time
-        if (!xdgSurface.fullscreen) {
+        if (!toplevel.fullscreen) {
             d.position = Qt.point(moveItem.x, moveItem.y);
             d.size = Qt.size(windowGeometry.width, windowGeometry.height);
         }
@@ -245,10 +229,10 @@ FluidCore.Object {
 
         d.finalPosition = output.position;
 
-        xdgSurface.sendFullscreen(Qt.size(w, h));
+        toplevel.sendFullscreen(Qt.size(w, h));
     }
 
     function sendClose() {
-        xdgSurface.sendClose();
+        toplevel.sendClose();
     }
 }

@@ -69,6 +69,8 @@ liri_add_executable(LiriShell
         declarative/quickoutput.h
         declarative/screenmodel.cpp
         declarative/screenmodel.h
+        declarative/shellsurfaceitem.cpp
+        declarative/shellsurfaceitem.h
         extensions/gtkshell.cpp
         extensions/gtkshell.h
         extensions/gtkshell_p.h

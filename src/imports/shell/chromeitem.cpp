@@ -28,8 +28,9 @@
 ChromeItem::ChromeItem(QQuickItem *parent)
     : QQuickItem(parent)
     , m_compositor(nullptr)
-    , m_isModifierHeld(false)
 {
+    connect(this, &ChromeItem::xChanged, this, &ChromeItem::updatePrimary);
+    connect(this, &ChromeItem::yChanged, this, &ChromeItem::updatePrimary);
 }
 
 QWaylandCompositor *ChromeItem::compositor() const
@@ -44,6 +45,25 @@ void ChromeItem::setCompositor(QWaylandCompositor *compositor)
 
     m_compositor = compositor;
     Q_EMIT compositorChanged();
+}
+
+QWaylandQuickItem *ChromeItem::shellSurfaceItem() const
+{
+    return m_shellSurfaceItem;
+}
+
+void ChromeItem::setShellSurfaceItem(QWaylandQuickItem *item)
+{
+    if (m_shellSurfaceItem == item)
+        return;
+
+    m_shellSurfaceItem = item;
+    Q_EMIT shellSurfaceItemChanged();
+}
+
+bool ChromeItem::isPrimary() const
+{
+    return m_primary;
 }
 
 QPointF ChromeItem::randomPosition(const QPointF &mousePos) const
@@ -100,35 +120,6 @@ QPointF ChromeItem::randomPosition(const QPointF &mousePos) const
     return QPointF(dx, dy);
 }
 
-void ChromeItem::keyPressEvent(QKeyEvent *event)
-{
-    m_isModifierHeld = event->key() == Qt::Key_Meta ||
-            event->key() == Qt::Key_Super_L ||
-            event->key() == Qt::Key_Super_R;
-
-    QQuickItem::keyPressEvent(event);
-}
-
-void ChromeItem::keyReleaseEvent(QKeyEvent *event)
-{
-    if (event->key() == Qt::Key_Meta || event->key() == Qt::Key_Super_L ||
-            event->key() == Qt::Key_Super_R)
-        m_isModifierHeld = false;
-
-    QQuickItem::keyReleaseEvent(event);
-}
-
-void ChromeItem::mousePressEvent(QMouseEvent *event)
-{
-    // Let mouse press go through anyway, if focus on click is enabled this
-    // will give focus to the window before the use can drag it
-    QQuickItem::mousePressEvent(event);
-
-    // If the modifier is pressed we initiate a move operation
-    if (m_isModifierHeld && event->buttons().testFlag(Qt::LeftButton))
-        Q_EMIT moveRequested();
-}
-
 void ChromeItem::lower()
 {
     QQuickItem *parent = parentItem();
@@ -136,6 +127,42 @@ void ChromeItem::lower()
     QQuickItem *bottom = parent->childItems().first();
     if (bottom != this)
         stackBefore(bottom);
+}
+
+void ChromeItem::takeFocus(QWaylandSeat *device)
+{
+    if (m_shellSurfaceItem)
+        m_shellSurfaceItem->takeFocus(device);
+}
+
+void ChromeItem::updatePrimary()
+{
+    if (!m_shellSurfaceItem)
+        return;
+
+    const qreal xOrig = x();
+    const qreal yOrig = y();
+    const qreal w = width();
+    const qreal h = height();
+    const qreal area = w * h;
+    const qreal screenWidth = m_shellSurfaceItem->output()->geometry().width();
+    const qreal screenHeight = m_shellSurfaceItem->output()->geometry().height();
+    const qreal x1 = qMax<qreal>(0, xOrig);
+    const qreal y1 = qMax<qreal>(0, yOrig);
+    const qreal x2 = qMin<qreal>(xOrig + w, screenWidth);
+    const qreal y2 = qMin<qreal>(yOrig + h, screenHeight);
+    const qreal w1 = qMax<qreal>(0, x2 - x1);
+    const qreal h1 = qMax<qreal>(0, y2 - y1);
+
+    const bool oldPrimaryValue = m_primary;
+    if (w1 * h1 * 2 > area) {
+        m_shellSurfaceItem->setPrimary();
+        m_primary = true;
+    } else {
+        m_primary = false;
+    }
+    if (oldPrimaryValue != m_primary)
+        Q_EMIT primaryChanged();
 }
 
 void ChromeItem::raise()

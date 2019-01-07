@@ -33,6 +33,7 @@
 #include "declarative/inputsettings.h"
 #include "declarative/quickoutput.h"
 #include "declarative/screenmodel.h"
+#include "declarative/shellsurfaceitem.h"
 #include "extensions/gtkshell.h"
 #include "extensions/liridecoration.h"
 
@@ -109,6 +110,7 @@ void registerPrivateTypes()
                                            QLatin1String("Cannot create instance of ScreenMode"));
     qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
                                            QLatin1String("Cannot create instance of ScreenItem"));
+    qmlRegisterType<ShellSurfaceItem>(uri, versionMajor, versionMinor, "ShellSurfaceItem");
 
     // Wayland protocols
 

@@ -24,39 +24,26 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.0
 import Liri.Shell 1.0 as LS
+import Liri.private.shell 1.0 as P
 import Fluid.Effects 1.0 as FluidEffects
 
 LS.ChromeItem {
     id: chrome
 
-    readonly property alias primary: __private.primary
-
-    property alias shellSurface: shellSurfaceItem.shellSurface
-    property alias moveItem: shellSurfaceItem.moveItem
-    readonly property alias decoration: decoration
-    readonly property alias output: shellSurfaceItem.output
-
-    readonly property bool decorated: shellSurface.decorated && !shellSurface.fullscreen
-
-    readonly property rect windowGeometry: Qt.rect(decoration.borderSize, decoration.borderSize,
-                                                   shellSurfaceItem.width,
-                                                   shellSurfaceItem.height + decoration.titleBarHeight)
+    property QtObject window
 
     property rect taskIconGeometry: Qt.rect(0, 0, 32, 32)
 
-    x: moveItem.x - output.position.x
-    y: moveItem.y - output.position.y
+    x: chrome.window.moveItem.x - shellSurfaceItem.output.position.x
+    y: chrome.window.moveItem.y - shellSurfaceItem.output.position.y
 
-    implicitWidth: shellSurfaceItem.width + (2 * decoration.borderSize)
-    implicitHeight: shellSurfaceItem.height + (2 * decoration.borderSize) + decoration.titleBarHeight
+    implicitWidth: chrome.window.surfaceGeometry.width + (2 * chrome.window.borderSize)
+    implicitHeight: chrome.window.surfaceGeometry.height + (2 * chrome.window.borderSize) + chrome.window.titleBarHeight
 
-    onXChanged: __private.updatePrimary()
-    onYChanged: __private.updatePrimary()
-
-    onMoveRequested: shellSurface.startMove(liriCompositor.defaultSeat)
+    shellSurfaceItem: shellSurfaceItem
 
     // FIXME: Transparent backgrounds will be opaque due to shadows
-    layer.enabled: shellSurface.decorated && !shellSurface.maximized && !shellSurface.fullscreen
+    layer.enabled: chrome.window.mapped && chrome.window.bordered
     layer.effect: FluidEffects.Elevation {
         elevation: shellSurfaceItem.focus ? 24 : 8
     }
@@ -74,73 +61,83 @@ LS.ChromeItem {
         }
     ]
 
+    // This is fundamental for scaled windows with the present windows effect,
+    // the default value of Item.Center offsets the window position
+    transformOrigin: Item.TopLeft
+
     QtObject {
         id: __private
 
-        property bool primary: false
-
-        property bool unresponsive: false
-
         property point moveItemPosition
 
-        property point savedPosition
-        property size savedSize
-        property point finalPosition: Qt.point(-1, -1)
-
-        function updatePrimary() {
-            var x = chrome.x;
-            var y = chrome.y;
-            var width = chrome.width;
-            var height = chrome.height;
-            var area = width * height;
-            var screenWidth = output.geometry.width;
-            var screenHeight = output.geometry.height;
-            var x1 = Math.max(0, x);
-            var y1 = Math.max(0, y);
-            var x2 = Math.min(x + width, screenWidth);
-            var y2 = Math.min(y + height, screenHeight);
-            var w1 = Math.max(0, x2 - x1);
-            var h1 = Math.max(0, y2 - y1);
-
-            if (w1 * h1 * 2 > area) {
-                shellSurfaceItem.setPrimary();
-                primary = true;
-            } else {
-                primary = false;
-            }
-        }
-
         function setPosition() {
-            var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
+            if (chrome.window.windowType === Qt.Popup)
+                return;
+
+            var parentSurfaceItem = shellSurfaceItem.output.viewsBySurface[chrome.window.parentSurface];
             if (parentSurfaceItem) {
-                moveItem.x = parentSurfaceItem.moveItem.x + shellSurface.offset.x - parentSurfaceItem.decoration.borderSize;
-                moveItem.y = parentSurfaceItem.moveItem.y + shellSurface.offset.y - parentSurfaceItem.decoration.borderSize;
+                chrome.window.moveItem.x = parentSurfaceItem.window.moveItem.x + ((parentSurfaceItem.width - chrome.width) / 2);
+                chrome.window.moveItem.y = parentSurfaceItem.window.moveItem.y + ((parentSurfaceItem.height - chrome.height) / 2);
             } else {
                 var pos = chrome.randomPosition(liriCompositor.mousePos);
-                moveItem.x = pos.x;
-                moveItem.y = pos.y;
+                chrome.window.moveItem.x = pos.x;
+                chrome.window.moveItem.y = pos.y;
             }
         }
 
         function giveFocusToParent() {
-            // Give focus back to the parent on destruction
-            var parentSurfaceItem = output.viewsBySurface[shellSurfaceItem.parentWlSurface];
+            // Give focus back to the parent
+            var parentSurfaceItem = shellSurfaceItem.output.viewsBySurface[chrome.window.parentSurface];
             if (parentSurfaceItem)
                 parentSurfaceItem.takeFocus();
         }
     }
 
     Connections {
-        target: shellSurface.surface
-        onRedraw: {
-            if (!chrome.decorated)
+        target: chrome.window
+        ignoreUnknownSignals: true
+        onMappedChanged: {
+            if (chrome.window.mapped) {
+                if (chrome.window.focusable)
+                    takeFocus();
+                __private.setPosition();
+                mapAnimation.start();
+            }
+        }
+        onActivatedChanged: {
+            if (chrome.window.activated) {
+                chrome.raise();
+                focusAnimation.start();
+            }
+        }
+        onMinimizedChanged: {
+            if (chrome.window.minimized)
+                minimizeAnimation.start();
+            else
+                unminimizeAnimation.start();
+        }
+        onShowWindowMenu: {
+            showWindowMenu(localSurfacePosition.x, localSurfacePosition.y);
+        }
+    }
+
+    Connections {
+        target: shellSurfaceItem.output
+        onGeometryChanged: {
+            if (!chrome.primary)
                 return;
 
-            if (__private.finalPosition.x >= 0 && __private.finalPosition.y >= 0) {
-                moveItem.x = __private.finalPosition.x;
-                moveItem.y = __private.finalPosition.y;
-                __private.finalPosition = Qt.point(-1, -1);
-            }
+            // Resize fullscreen windows as the geometry changes
+            if (chrome.window.fullscreen)
+                chrome.window.sendFullscreen(shellSurfaceItem.output);
+        }
+        onAvailableGeometryChanged: {
+            if (!chrome.primary)
+                return;
+
+            // Resize maximized windows as the available geometry changes
+            if (chrome.window.maximized)
+                chrome.window.sendMaximized(shellSurfaceItem.output);
         }
     }
 
@@ -148,102 +145,36 @@ LS.ChromeItem {
         id: decoration
 
         anchors.fill: parent
-        enabled: chrome.decorated
-        drag.target: shellSurface.moveItem
+        drag.target: chrome.window.moveItem
+        enabled: chrome.window.decorated
+        visible: chrome.window.mapped && enabled
     }
 
-    ShellSurfaceItem {
+    P.ShellSurfaceItem {
         id: shellSurfaceItem
 
-        property int windowType: Qt.Window
-        property WaylandSurface parentWlSurface: null
+        x: chrome.window.borderSize
+        y: chrome.window.borderSize + chrome.window.titleBarHeight
 
-        property bool moving: false
-
-        x: chrome.decorated ? decoration.borderSize : 0
-        y: chrome.decorated ? decoration.borderSize + decoration.titleBarHeight : 0
-
-        moveItem: shellSurface.moveItem
+        shellSurface: chrome.window.shellSurface
+        moveItem: chrome.window.moveItem
 
         inputEventsEnabled: !output.screenView.locked
 
-        focusOnClick: shellSurface.windowType != Qt.Popup
+        focusOnClick: chrome.window.focusable
+
+        onMoveStarted: {
+            // Move initiated with Meta+LeftMouseButton has started
+            shellHelper.grabCursor(LS.ShellHelper.MoveGrabCursor);
+        }
+        onMoveStopped: {
+            // Move initiated with Meta+LeftMouseButton has stopped
+            shellHelper.grabCursor(LS.ShellHelper.ArrowGrabCursor);
+        }
+
         onSurfaceDestroyed: {
             bufferLocked = true;
-
-            switch (windowType) {
-            case Qt.Window:
-                topLevelDestroyAnimation.start();
-                break;
-            case Qt.SubWindow:
-                transientDestroyAnimation.start();
-                break;
-            case Qt.Popup:
-                popupDestroyAnimation.start();
-                break;
-            default:
-                __private.giveFocusToParent();
-                chrome.destroy();
-                break;
-            }
-        }
-        onMovingChanged: shellHelper.grabCursor(moving ? LS.ShellHelper.MoveGrabCursor : LS.ShellHelper.ArrowGrabCursor)
-        onMouseRelease: {
-            // Assume it stopped moving
-            moving = false;
-
-            // Ping the client
-            shellSurface.pingClient();
-        }
-
-        /*
-         * Shell surface events
-         */
-
-        Connections {
-            target: shellSurface
-            ignoreUnknownSignals: true
-            onMappedChanged: {
-                if (shellSurface.mapped) {
-                    __private.setPosition();
-
-                    switch (shellSurfaceItem.windowType) {
-                    case Qt.Window:
-                        topLevelMapAnimation.start();
-                        break;
-                    case Qt.SubWindow:
-                        transientMapAnimation.start();
-                        break;
-                    case Qt.Popup:
-                        popupMapAnimation.start();
-                        break;
-                    default:
-                        break;
-                    }
-                }
-            }
-            onWindowTypeChanged: {
-                // Save window type to be able to use it on destruction
-                shellSurfaceItem.windowType = shellSurface.windowType;
-            }
-            onParentWlSurfaceChanged: {
-                // Save parent surface to able to use it on destruction
-                shellSurfaceItem.parentWlSurface = shellSurface.parentWlSurface;
-            }
-            onActivatedChanged: {
-                if (shellSurface.activated) {
-                    chrome.raise();
-                    focusAnimation.start();
-                }
-            }
-            onMinimizedChanged: {
-                if (shellSurface.minimized)
-                    minimizeAnimation.start();
-                else
-                    unminimizeAnimation.start();
-            }
-            onStartMove: shellSurfaceItem.moving = true
-            onShowWindowMenu: chrome.showWindowMenu(localSurfacePosition.x, localSurfacePosition.y)
+            destroyAnimation.start();
         }
 
         /*
@@ -264,90 +195,31 @@ LS.ChromeItem {
     }
 
     /*
-     * Animations for top level windows
-     */
-
-    SequentialAnimation {
-        id: topLevelMapAnimation
-
-        ParallelAnimation {
-            NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutExpo; from: 0.0; to: 1.0; duration: 350 }
-            NumberAnimation { target: scaleTransform; property: "xScale"; easing.type: Easing.OutExpo; from: 0.01; to: 1.0; duration: 350 }
-            NumberAnimation { target: scaleTransform; property: "yScale"; easing.type: Easing.OutExpo; from: 0.1; to: 1.0; duration: 350 }
-        }
-    }
-
-    SequentialAnimation {
-        id: topLevelDestroyAnimation
-
-        ParallelAnimation {
-            NumberAnimation { target: scaleTransform; property: "yScale"; to: 2 / chrome.height; duration: 150 }
-            NumberAnimation { target: scaleTransform; property: "xScale"; to: 0.4; duration: 150 }
-        }
-
-        NumberAnimation { target: scaleTransform; property: "xScale"; to: 0; duration: 150 }
-        NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutQuad; to: 0.0; duration: 200 }
-
-        ScriptAction {
-            script: {
-                __private.giveFocusToParent();
-                chrome.destroy();
-            }
-        }
-    }
-
-    /*
-     * Animations for transient windows
+     * Animations for creation and destruction
      */
 
     ParallelAnimation {
-        id: transientMapAnimation
+        id: mapAnimation
 
-        NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutQuad; from: 0.0; to: 1.0; duration: 250 }
-        NumberAnimation { target: scaleTransformPos; property: "xScale"; easing.type: Easing.OutExpo; from: 0.0; to: 1.0; duration: 250 }
-        NumberAnimation { target: scaleTransformPos; property: "yScale"; easing.type: Easing.OutExpo; from: 0.0; to: 1.0; duration: 250 }
+        NumberAnimation { target: chrome; property: "scale"; from: 0.9; to: 1.0; easing.type: Easing.OutQuint; duration: 220 }
+        NumberAnimation { target: chrome; property: "opacity"; from: 0.0; to: 1.0; easing.type: Easing.OutCubic; duration: 150 }
     }
 
     SequentialAnimation {
-        id: transientDestroyAnimation
+        id: destroyAnimation
 
         ParallelAnimation {
-            NumberAnimation { target: scaleTransform; property: "xScale"; easing.type: Easing.OutQuad; from: 1.0; to: 0.0; duration: 200 }
-            NumberAnimation { target: scaleTransform; property: "yScale"; easing.type: Easing.OutQuad; from: 1.0; to: 0.0; duration: 200 }
-            NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutQuad; from: 1.0; to: 0.0; duration: 200 }
+            NumberAnimation { target: chrome; property: "scale"; from: 1.0; to: 0.9; easing.type: Easing.OutQuint; duration: 220 }
+            NumberAnimation { target: chrome; property: "opacity"; from: 1.0; to: 0.0; easing.type: Easing.OutCubic; duration: 150 }
         }
 
         ScriptAction {
             script: {
                 __private.giveFocusToParent();
                 chrome.destroy();
-            }
-        }
-    }
 
-    /*
-     * Animations for popup windows
-     */
-
-    ParallelAnimation {
-        id: popupMapAnimation
-
-        NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutQuad; from: 0.0; to: 1.0; duration: 150 }
-        NumberAnimation { target: scaleTransform; property: "xScale"; easing.type: Easing.OutExpo; from: 0.9; to: 1.0; duration: 150 }
-        NumberAnimation { target: scaleTransform; property: "yScale"; easing.type: Easing.OutExpo; from: 0.9; to: 1.0; duration: 150 }
-    }
-
-    ParallelAnimation {
-        id: popupDestroyAnimation
-
-        NumberAnimation { target: scaleTransform; property: "xScale"; easing.type: Easing.OutExpo; from: 1.0; to: 0.8; duration: 150 }
-        NumberAnimation { target: scaleTransform; property: "yScale"; easing.type: Easing.OutExpo; from: 1.0; to: 0.8; duration: 150 }
-        NumberAnimation { target: chrome; property: "opacity"; easing.type: Easing.OutQuad; to: 0.0; duration: 150 }
-
-        ScriptAction {
-            script: {
-                __private.giveFocusToParent();
-                chrome.destroy();
+                if (chrome.primary)
+                    liriCompositor.handleShellSurfaceDestroyed(window);
             }
         }
     }
@@ -410,55 +282,9 @@ LS.ChromeItem {
      * Methods
      */
 
-    function takeFocus() {
-        shellSurfaceItem.takeFocus();
-    }
-
     function showWindowMenu(x, y) {
         chromeMenu.x = x;
         chromeMenu.y = y;
         chromeMenu.open();
-    }
-
-    function resizeTo(width, height) {
-        shellSurfaceItem.sizeFollowsSurface = false;
-        shellSurfaceItem.width = width;
-        shellSurfaceItem.height = height;
-    }
-
-    function restoreSize() {
-        shellSurfaceItem.sizeFollowsSurface = true;
-        shellSurfaceItem.width = shellSurfaceItem.implicitWidth;
-        shellSurfaceItem.height = shellSurfaceItem.implicitHeight;
-    }
-
-    function maximize(output) {
-        if (!chrome.primary)
-            return;
-        if (shellSurface.maximized)
-            return;
-
-        __private.savedPosition = Qt.point(moveItem.x, moveItem.y);
-        __private.savedSize = Qt.size(shellSurfaceItem.implicitWidth, shellSurfaceItem.implicitHeight);
-
-        var newSize =
-                Qt.size(output.availableGeometry.width / output.scaleFactor,
-                        output.availableGeometry.height / output.scaleFactor);
-        __private.finalPosition = output.position;
-        shellSurface.maximize(newSize);
-    }
-
-    function unmaximize() {
-        if (!chrome.primary)
-            return;
-        if (!shellSurface.maximized)
-            return;
-
-        __private.finalPosition = __private.savedPosition;
-        shellSurface.unmaximize(__private.savedSize);
-    }
-
-    function close() {
-        shellSurface.close();
     }
 }

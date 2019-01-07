@@ -287,10 +287,8 @@ void Application::startup()
         // Set the Wayland socket name for clients
         qputenv("WAYLAND_DISPLAY", compositor->socketName());
 
-        // Use xdg-shell-v5 for Qt clients
-        qunsetenv("QT_WAYLAND_SHELL_INTEGRATION");
-        qunsetenv("QT_WAYLAND_USE_XDG_SHELL");
-        //qputenv("QT_WAYLAND_USE_XDG_SHELL", QByteArrayLiteral("1"));
+        // Use xdg-shell-v6 for Qt clients
+        qputenv("QT_WAYLAND_SHELL_INTEGRATION", QByteArrayLiteral("xdg-shell-v6"));
 
         // Don't mess with client scale factor
         qunsetenv("QT_SCALE_FACTOR");

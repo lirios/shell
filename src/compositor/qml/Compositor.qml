@@ -24,7 +24,7 @@
 
 import QtQuick 2.5
 import QtQuick.Window 2.2
-import QtWayland.Compositor 1.0
+import QtWayland.Compositor 1.1
 import Liri.Launcher 1.0 as Launcher
 import Liri.Shell 1.0
 import Liri.PolicyKit 1.0
@@ -53,8 +53,8 @@ WaylandCompositor {
     readonly property alias shellHelper: shellHelper
     readonly property alias policyKitAgent: policyKitAgent
 
-    signal shellSurfaceCreated(ShellSurface shellSurface)
-    signal shellSurfaceDestroyed(ShellSurface shellSurface)
+    signal shellSurfaceCreated(var shellSurface)
+    signal shellSurfaceDestroyed(var shellSurface)
 
     defaultSeat.keymap {
         layout: settings.keyboard.layouts[0] ? settings.keyboard.layouts[0] : "us"
@@ -85,42 +85,24 @@ WaylandCompositor {
         property int maximizedShellSurfaces: 0
         property int fullscreenShellSurfaces: 0
 
-        function createShellSurfaceItem(shellSurface, component, output) {
-            var parentSurfaceItem = output.viewsBySurface[shellSurface.parentWlSurface];
+        function createShellSurfaceItem(window, component, output) {
+            var parentSurfaceItem = output.viewsBySurface[window.parentSurface];
             var parent = parentSurfaceItem || output.surfacesArea;
             var item = component.createObject(parent, {
                                                   "compositor": liriCompositor,
-                                                  "shellSurface": shellSurface
+                                                  "window": window
                                               });
-            output.viewsBySurface[shellSurface.surface] = item;
+            output.viewsBySurface[window.surface] = item;
             return item;
         }
 
-        function handleShellSurfaceCreated(shellSurface, component) {
-            shellSurfaces.append({"shellSurface": shellSurface});
+        function handleShellSurfaceCreated(window, component) {
+            shellSurfaces.append({"window": window});
 
             for (var i = 0; i < screenManager.count; i++)
-                createShellSurfaceItem(shellSurface, component, screenManager.objectAt(i));
+                createShellSurfaceItem(window, component, screenManager.objectAt(i));
 
-            liriCompositor.shellSurfaceCreated(shellSurface);
-        }
-
-        function handleShellSurfaceDestroyed(shellSurface) {
-            if (shellSurface.maximized)
-                maximizedShellSurfaces--;
-            if (shellSurface.fullscreen)
-                fullscreenShellSurfaces--;
-
-            for (var i = 0; i < shellSurfaces.count; i++) {
-                if (shellSurfaces.get(i).shellSurface === shellSurface) {
-                    shellSurfaces.remove(i, 1);
-                    break;
-                }
-            }
-
-            applicationManager.unregisterShellSurface(shellSurface);
-
-            liriCompositor.shellSurfaceDestroyed(shellSurface);
+            liriCompositor.shellSurfaceCreated(window);
         }
     }
 
@@ -202,26 +184,36 @@ WaylandCompositor {
     P.WlShell {
         id: wlShell
 
-        onWlShellSurfaceRequested: {
-            var shellSurface = wlShellSurfaceComponent.createObject(wlShell);
-            shellSurface.initialize(wlShell, surface, resource);
+        onWlShellSurfaceCreated: {
+            var window = wlShellSurfaceComponent.createObject(wlShell, {"shellSurface": shellSurface});
+            __private.handleShellSurfaceCreated(window, chromeComponent);
         }
-        onWlShellSurfaceCreated: __private.handleShellSurfaceCreated(shellSurface, chromeComponent)
     }
 
     P.XdgShellV5 {
         id: xdgShellV5
 
-        onXdgSurfaceRequested: {
-            var xdgSurface = xdgSurfaveV5Component.createObject(xdgShellV5);
-            xdgSurface.initialize(xdgShellV5, surface, resource);
+        onXdgSurfaceCreated: {
+            var window = xdgSurfaveV5Component.createObject(xdgShellV5, {"xdgSurface": xdgSurface});
+            __private.handleShellSurfaceCreated(window, chromeComponent);
         }
-        onXdgSurfaceCreated: __private.handleShellSurfaceCreated(xdgSurface, chromeComponent)
-        onXdgPopupRequested: {
-            var xdgPopup = xdgPopupV5Component.createObject(xdgShellV5);
-            xdgPopup.initialize(xdgShellV5, surface, parent, position, resource);
+        onXdgPopupCreated: {
+            var window = xdgPopupV5Component.createObject(xdgShellV5, {"xdgPopup": xdgPopup});
+            __private.handleShellSurfaceCreated(window, popupChromeComponent);
         }
-        onXdgPopupCreated: __private.handleShellSurfaceCreated(xdgPopup, chromeComponent)
+    }
+
+    XdgShellV6 {
+        id: xdgShellV6
+
+        onToplevelCreated: {
+            var window = xdgToplevelV6Component.createObject(xdgShellV6, {"xdgSurface": xdgSurface, "toplevel": toplevel});
+            __private.handleShellSurfaceCreated(window, chromeComponent);
+        }
+        onPopupCreated: {
+            var window = xdgPopupV6Component.createObject(xdgShellV6, {"xdgSurface": xdgSurface, "popup": popup});
+            __private.handleShellSurfaceCreated(window, popupChromeComponent);
+        }
     }
 
     P.GtkShell {
@@ -347,25 +339,78 @@ WaylandCompositor {
         }
     }
 
-    // Custom wl_shell surface
+    // Custom wl-shell surface
     Component {
         id: wlShellSurfaceComponent
 
-        WlShellWindow {}
+        WlShellWindow {
+            onMaximizedChanged: {
+                if (maximized)
+                    __private.maximizedShellSurfaces++;
+                else
+                    __private.maximizedShellSurfaces--;
+            }
+            onFullscreenChanged: {
+                if (fullscreen)
+                    __private.fullscreenShellSurfaces++;
+                else
+                    __private.fullscreenShellSurfaces--;
+            }
+        }
     }
 
-    // Custom xdg_shell v5 surface
+    // Custom xdg-shell v5 surface
     Component {
         id: xdgSurfaveV5Component
 
-        XdgSurfaceV5Window {}
+        XdgSurfaceV5Window {
+            onMaximizedChanged: {
+                if (maximized)
+                    __private.maximizedShellSurfaces++;
+                else
+                    __private.maximizedShellSurfaces--;
+            }
+            onFullscreenChanged: {
+                if (fullscreen)
+                    __private.fullscreenShellSurfaces++;
+                else
+                    __private.fullscreenShellSurfaces--;
+            }
+        }
     }
 
-    // Custom xdg_shell v5 popup
+    // Custom xdg-shell v5 popup
     Component {
         id: xdgPopupV5Component
 
         XdgPopupV5Window {}
+    }
+
+    // Shell surface for xdg-shell v6 toplevel
+    Component {
+        id: xdgToplevelV6Component
+
+        XdgToplevelV6Window {
+            onMaximizedChanged: {
+                if (maximized)
+                    __private.maximizedShellSurfaces++;
+                else
+                    __private.maximizedShellSurfaces--;
+            }
+            onFullscreenChanged: {
+                if (fullscreen)
+                    __private.fullscreenShellSurfaces++;
+                else
+                    __private.fullscreenShellSurfaces--;
+            }
+        }
+    }
+
+    // Shell surface for xdg-shell v6 popup
+    Component {
+        id: xdgPopupV6Component
+
+        XdgPopupV6Window {}
     }
 
     // Custom gtk_shell surface
@@ -377,15 +422,12 @@ WaylandCompositor {
 
             onAppIdChanged: {
                 for (var i = 0; i < shellSurfaces.count; i++) {
-                    var shellSurface = shellSurfaces.get(i).shellSurface;
+                    var window = shellSurfaces.get(i).window;
 
-                    if (shellSurface.surface === gtkSurface.surface) {
+                    if (window.surface === gtkSurface.surface) {
                         // Move surface under this appId because for some reason Gtk+ applications
                         // are unable to provide a reliable appId via xdg-shell as opposed to gtk-shell
-                        shellSurface.canonicalAppId = appId;
-
-                        // Remove drop shadow and decoration for Gtk+ programs
-                        shellSurface.decorated = false;
+                        window.appId = appId;
 
                         break;
                     }
@@ -399,6 +441,13 @@ WaylandCompositor {
         id: chromeComponent
 
         WaylandChrome {}
+    }
+
+    // Window component for popups
+    Component {
+        id: popupChromeComponent
+
+        WaylandPopupChrome {}
     }
 
     // Grab surface view
@@ -528,12 +577,32 @@ WaylandCompositor {
 
     function activateShellSurfaces(appId) {
         for (var i = 0; i < shellSurfaces.count; i++) {
-            var shellSurface = shellSurfaces.get(i).shellSurface;
-            if (shellSurface.canonicalAppId === appId) {
+            var shellSurface = shellSurfaces.get(i).window;
+            if (shellSurface.appId === appId) {
                 shellSurface.minimized = false;
                 for (var j = 0; j < screenManager.count; j++)
                     screenManager.objectAt(j).viewsBySurface[shellSurface.surface].takeFocus();
             }
         }
+    }
+
+    function handleShellSurfaceDestroyed(window) {
+        if (window.maximized)
+            __private.maximizedShellSurfaces--;
+        if (window.fullscreen)
+            __private.fullscreenShellSurfaces--;
+
+        for (var i = 0; i < shellSurfaces.count; i++) {
+            if (shellSurfaces.get(i).window === window) {
+                shellSurfaces.remove(i, 1);
+                break;
+            }
+        }
+
+        applicationManager.unregisterShellSurface(window);
+
+        liriCompositor.shellSurfaceDestroyed(window);
+
+        window.destroy();
     }
 }

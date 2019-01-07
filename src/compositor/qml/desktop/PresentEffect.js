@@ -47,7 +47,7 @@ function spreadWindows() {
         var offsetX = (workspaceWidth - row.width) / 2;
 
         row.windows.forEach(function(pos) {
-            var shellSurface = liriCompositor.shellSurfaces.get(pos.index).shellSurface;
+            var shellSurface = liriCompositor.shellSurfaces.get(pos.index).window;
             if (!shellSurface)
                 return;
 
@@ -66,26 +66,26 @@ function spreadWindows() {
             chrome.selected.connect(function(view) {
                 for (var i = 0; i < liriCompositor.screenManager.count; i++)
                     liriCompositor.screenManager.objectAt(i).screenView.surfacesArea.state = "normal";
-                view.takeFocus();
+                view.shellSurfaceItem.takeFocus();
             });
             chrome.closed.connect(function(view) {
                 for (var i = 0; i < liriCompositor.screenManager.count; i++)
                     liriCompositor.screenManager.objectAt(i).screenView.surfacesArea.state = "normal";
-                view.close();
+                view.window.sendClose();
             });
             chromes[entry] = chrome;
 
             // Save original position and size (compositor space coordinates)
             originalLayout[entry] = {
-                "x": entry.moveItem.x, "y": entry.moveItem.y,
+                "x": entry.window.moveItem.x, "y": entry.window.moveItem.y,
                 "width": entry.width, "height": entry.height,
                 "scale": entry.scale
             };
 
             // Move and resize
-            entry.output.screenView.locked = true;
-            entry.moveItem.animateTo(x, y);
-            entry.resizeTo(w, h);
+            entry.shellSurfaceItem.output.screenView.locked = true;
+            entry.window.moveItem.animateTo(x, y);
+            entry.scale = pos.scale;
         });
     });
 }
@@ -94,7 +94,7 @@ function restoreWindows() {
     // This loop needs to run on all shell surfaces so we make their views
     // visible again on restore
     for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-        var shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
+        var shellSurface = liriCompositor.shellSurfaces.get(i).window;
         if (!shellSurface)
             continue;
 
@@ -107,9 +107,9 @@ function restoreWindows() {
         var pos = originalLayout[entry];
         if (pos !== undefined) {
             // Restore to the original position and size
-            entry.moveItem.animateTo(pos.x, pos.y);
-            entry.restoreSize();
-            entry.output.screenView.locked = false;
+            entry.window.moveItem.animateTo(pos.x, pos.y);
+            entry.scale = pos.scale;
+            entry.shellSurfaceItem.output.screenView.locked = false;
             delete originalLayout[entry];
 
             // Delete the chrome
@@ -149,7 +149,7 @@ function tryLayout(rows) {
     var i, shellSurface, entry;
 
     for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-        shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
+        shellSurface = liriCompositor.shellSurfaces.get(i).window;
         if (!shellSurface)
             continue;
 
@@ -171,7 +171,7 @@ function tryLayout(rows) {
     }
 
     for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-        shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
+        shellSurface = liriCompositor.shellSurfaces.get(i).window;
         if (!shellSurface)
             continue;
 
@@ -250,7 +250,7 @@ function calcSpacing() {
     var i, shellSurface, entry;
 
     for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-        shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
+        shellSurface = liriCompositor.shellSurfaces.get(i).window;
         if (!shellSurface)
             continue;
 

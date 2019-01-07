@@ -22,17 +22,18 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtWayland.Compositor 1.2 as QtWayland
+import QtWayland.Compositor 1.1 as QtWayland
 import Fluid.Core 1.0 as FluidCore
 
 FluidCore.Object {
     id: window
 
-    property QtWayland.XdgPopupV5 xdgPopup: null
+    property QtWayland.XdgSurfaceV6 xdgSurface: null
+    property QtWayland.XdgPopupV6 popup: null
 
-    readonly property QtWayland.ShellSurface shellSurface: xdgPopup
-    readonly property QtWayland.WaylandSurface surface: xdgPopup ? xdgPopup.surface : null
-    readonly property QtWayland.WaylandSurface parentSurface: xdgPopup ? xdgPopup.parentSurface : null
+    readonly property QtWayland.ShellSurface shellSurface: xdgSurface
+    readonly property QtWayland.WaylandSurface surface: xdgSurface ? xdgSurface.surface : null
+    readonly property QtWayland.WaylandSurface parentSurface: popup && popup.parentXdgSurface ? popup.parentXdgSurface.surface : null
 
     readonly property int windowType: Qt.Popup
 
@@ -41,15 +42,28 @@ FluidCore.Object {
 
     readonly property alias moveItem: moveItem
 
-    readonly property rect windowGeometry: Qt.rect(0, 0, surface ? surface.size.width : -1, surface ? surface.size.height : -1)
+    readonly property rect windowGeometry: {
+        if (xdgSurface) {
+            if (xdgSurface.windowGeometry.width < 0 && xdgSurface.windowGeometry.height < 0)
+                return Qt.rect(0, 0, xdgSurface.surface.size.width, xdgSurface.surface.size.height);
+            return xdgSurface.windowGeometry;
+        } else {
+            return Qt.rect(0, 0, -1, -1);
+        }
+    }
 
-    readonly property bool focusable: true
+    readonly property bool focusable: false
+
+    onPopupChanged: {
+        if (popup)
+            d.offset = popup.offset;
+    }
 
     QtObject {
         id: d
 
         property bool mapped: false
-        property point offset: Qt.point(0, 0)
+        property point offset
     }
 
     Connections {
