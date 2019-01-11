@@ -41,8 +41,8 @@ Item {
 
     id: chrome
 
-    x: view.window.windowGeometry.x * view.scale
-    y: view.window.windowGeometry.y * view.scale
+    x: view.x + view.window.windowGeometry.x * view.scale
+    y: view.y + view.window.windowGeometry.y * view.scale
     width: view.width * view.scale
     height: view.height * view.scale
 

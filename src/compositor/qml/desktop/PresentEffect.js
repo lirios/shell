@@ -62,7 +62,7 @@ function spreadWindows() {
             //console.debug(output.model, "-", shellSurface.appId, "\"" + shellSurface.title + "\"", x.toFixed(2) + "," + y.toFixed(2), w.toFixed(2) + "x" + h.toFixed(2));
 
             // Create the chrome
-            var chrome = chromeComponent.createObject(entry, {"view": entry});
+            var chrome = chromeComponent.createObject(output.surfacesArea, {"view": entry});
             chrome.selected.connect(function(view) {
                 for (var i = 0; i < liriCompositor.screenManager.count; i++)
                     liriCompositor.screenManager.objectAt(i).screenView.surfacesArea.state = "normal";
