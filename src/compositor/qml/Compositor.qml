@@ -170,6 +170,16 @@ WaylandCompositor {
         }
     }
 
+    P.KdeServerDecorationManager {
+        defaultMode: P.KdeServerDecorationManager.Server
+
+        onDecorationCreated: {
+            decoration.modeRequested.connect(function(mode) {
+                decoration.surface.decorationMode = mode;
+            });
+        }
+    }
+
     P.LiriDecorationManager {
         onDecorationCreated: {
             decoration.foregroundColorChanged.connect(function(color) {
@@ -328,6 +338,8 @@ WaylandCompositor {
 
         WaylandSurface {
             id: surface
+
+            property int decorationMode: P.KdeServerDecorationManager.None
 
             property color foregroundColor: "transparent"
             property color backgroundColor: "transparent"

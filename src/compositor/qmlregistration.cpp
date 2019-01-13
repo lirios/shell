@@ -35,6 +35,7 @@
 #include "declarative/screenmodel.h"
 #include "declarative/shellsurfaceitem.h"
 #include "extensions/gtkshell.h"
+#include "extensions/kdeserverdecoration.h"
 #include "extensions/liridecoration.h"
 
 #include "outputchangeset.h"
@@ -91,6 +92,7 @@ Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgSurfaceV5)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgPopupV5)
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(GtkShell)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(GtkSurface)
+Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(KdeServerDecorationManager)
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(LiriDecorationManager)
 
 void registerPrivateTypes()
@@ -125,6 +127,10 @@ void registerPrivateTypes()
 
     qmlRegisterType<GtkShellQuickExtension>(uri, versionMajor, versionMinor, "GtkShell");
     qmlRegisterType<GtkSurfaceQuickParent>(uri, versionMajor, versionMinor, "GtkSurface");
+
+    qmlRegisterType<KdeServerDecorationManagerQuickExtension>(uri, versionMajor, versionMinor, "KdeServerDecorationManager");
+    qmlRegisterUncreatableType<KdeServerDecoration>(uri, versionMajor, versionMinor, "KdeServerDecoration",
+                                                    QLatin1String("Cannot create instance of KdeServerDecoration"));
 
     qmlRegisterType<LiriDecorationManagerQuickExtension>(uri, versionMajor, versionMinor, "LiriDecorationManager");
     qmlRegisterUncreatableType<LiriDecoration>(uri, versionMajor, versionMinor, "LiriDecoration",

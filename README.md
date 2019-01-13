@@ -91,6 +91,7 @@ to learn how to enable them.
    * **liri.shell:** Shell
    * **liri.gtkshell:** Gtk shell support
    * **liri.outputmanagement:** Output management
+   * **liri.decoration:** Window decorations
 
  * Launcher QML plugin:
    * **liri.launcher:** Launcher model and items

@@ -43,6 +43,9 @@ ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
 ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
     PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../../data/protocols/gtk-shell.xml"
     BASENAME "gtk-shell")
+ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
+    PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../../data/protocols/server-decoration.xml"
+    BASENAME "server-decoration")
 
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
@@ -74,6 +77,8 @@ liri_add_executable(LiriShell
         extensions/gtkshell.cpp
         extensions/gtkshell.h
         extensions/gtkshell_p.h
+        extensions/kdeserverdecoration.cpp
+        extensions/kdeserverdecoration.h
         extensions/liridecoration.cpp
         extensions/liridecoration.h
         logging.cpp

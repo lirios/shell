@@ -25,6 +25,7 @@ import QtQuick 2.0
 import QtWayland.Compositor 1.1 as QtWayland
 import Fluid.Core 1.0 as FluidCore
 import Liri.Shell 1.0 as LS
+import Liri.private.shell 1.0 as P
 
 FluidCore.Object {
     id: window
@@ -79,8 +80,8 @@ FluidCore.Object {
     readonly property bool fullscreen: toplevel && toplevel.fullscreen
     readonly property bool resizing: toplevel && toplevel.resizing
 
-    readonly property bool decorated: toplevel && !toplevel.fullscreen
-    readonly property bool bordered: decorated && !toplevel.maximized
+    readonly property alias decorated: d.decorated
+    readonly property alias bordered: d.bordered
     readonly property real borderSize: bordered ? 4 : 0
     readonly property real titleBarHeight: decorated ? 32 : 0
 
@@ -101,10 +102,26 @@ FluidCore.Object {
         property string iconName: ""
         property bool mapped: false
         property bool registered: false
+        property bool decorated: true
+        property bool bordered: true
         property QtWayland.WaylandSurface parentSurface: null
         property point position
         property size size
         property point finalPosition
+
+        function resetDecoration() {
+            if (window.surface) {
+                if (window.surface.decorationMode !== P.KdeServerDecorationManager.Client) {
+                    if (window.toplevel)
+                        d.decorated = !window.toplevel.fullscreen;
+                } else {
+                    d.decorated = false;
+                }
+            }
+
+            if (window.toplevel)
+                d.bordered = d.decorated && !window.toplevel.maximized;
+        }
     }
 
     Connections {
@@ -122,6 +139,9 @@ FluidCore.Object {
                 moveItem.y = d.finalPosition.y;
                 d.finalPosition = Qt.point(-1, -1);
             }
+        }
+        onDecorationModeChanged: {
+            d.resetDecoration();
         }
     }
 
@@ -154,6 +174,12 @@ FluidCore.Object {
         }
         onSetMinimized: {
             window.minimized = true;
+        }
+        onMaximizedChanged: {
+            d.resetDecoration();
+        }
+        onFullscreenChanged: {
+            d.resetDecoration();
         }
         onShowWindowMenu: {
             window.showWindowMenu(seat, localSurfacePosition);
