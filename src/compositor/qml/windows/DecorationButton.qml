@@ -22,9 +22,8 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Liri.Shell 1.0 as LS
+import Liri.private.shell 1.0 as P
 
 Item {
     id: button
@@ -48,7 +47,7 @@ Item {
 
         hoverEnabled: true
 
-        onEntered: shellHelper.grabCursor(LS.ShellHelper.ArrowGrabCursor);
+        onEntered: shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor);
         onClicked: button.clicked()
     }
 }

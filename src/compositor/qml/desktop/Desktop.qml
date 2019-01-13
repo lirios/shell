@@ -28,7 +28,8 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Liri.Shell 1.0
+import Liri.Shell 1.0 as LS
+import Liri.private.shell 1.0 as P
 import ".."
 import "../components"
 import "../indicators"
@@ -56,7 +57,7 @@ Item {
      * Workspace
      */
 
-    Background {
+    LS.Background {
         id: backgroundLayer
         anchors.fill: parent
         mode: liriCompositor.settings.background.mode
@@ -79,8 +80,8 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
         hoverEnabled: true
-        onEntered: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
-        onExited: shellHelper.grabCursor(ShellHelper.ArrowGrabCursor)
+        onEntered: shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor)
+        onExited: shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor)
     }
 
     // Workspaces

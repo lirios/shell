@@ -21,10 +21,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef HOTSPOT_H
+#define HOTSPOT_H
 
-#include <QtCore/QElapsedTimer>
-#include <QtQuick/QQuickItem>
+#include <QElapsedTimer>
+#include <QQuickItem>
 
 class HotSpot : public QQuickItem
 {
@@ -68,3 +69,5 @@ private:
     QElapsedTimer m_timer;
     bool m_hovered;
 };
+
+#endif // HOTSPOT_H

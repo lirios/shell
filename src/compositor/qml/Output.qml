@@ -75,7 +75,7 @@ P.WaylandOutput {
         }
 
         // Keyboard handling
-        LiriShell.KeyEventFilter {
+        P.KeyEventFilter {
             Keys.onPressed: {
                 // Input wakes the output
                 liriCompositor.wake();
@@ -92,7 +92,7 @@ P.WaylandOutput {
         }
 
         // Mouse tracker
-        LiriShell.WindowMouseTracker {
+        P.WindowMouseTracker {
             id: mouseTracker
 
             anchors.fill: parent

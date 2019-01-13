@@ -21,7 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef WINDOWMOUSETRACKER_H
+#define WINDOWMOUSETRACKER_H
 
 #include <QtQuick/QQuickItem>
 
@@ -61,3 +62,5 @@ protected:
 private:
     WindowMouseTrackerPrivate *const d_ptr;
 };
+
+#endif // WINDOWMOUSETRACKER_H

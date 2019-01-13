@@ -46,9 +46,18 @@ ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
 ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
     PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../../data/protocols/server-decoration.xml"
     BASENAME "server-decoration")
+ecm_add_qtwayland_server_protocol(LiriShell_SOURCES
+    PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../../data/protocols/shell-helper.xml"
+    BASENAME "shell-helper")
 
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
+
+if(IS_ABSOLUTE "${INSTALL_LIBEXECDIR}")
+    set(LIBEXECDIR "${INSTALL_LIBEXECDIR}")
+else()
+    set(LIBEXECDIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBEXECDIR}")
+endif()
 
 # Translations
 file(GLOB LiriShell_TRANSLATIONS "${CMAKE_CURRENT_SOURCE_DIR}/translations/*_*.ts")
@@ -62,18 +71,26 @@ liri_add_executable(LiriShell
     SOURCES
         application.cpp
         application.h
+        declarative/chromeitem.cpp
+        declarative/chromeitem.h
         declarative/fpscounter.cpp
         declarative/fpscounter.h
+        declarative/hotspot.cpp
+        declarative/hotspot.h
         declarative/indicatorsmodel.cpp
         declarative/indicatorsmodel.h
         declarative/inputsettings.cpp
         declarative/inputsettings.h
+        declarative/keyeventfilter.cpp
+        declarative/keyeventfilter.h
         declarative/quickoutput.cpp
         declarative/quickoutput.h
         declarative/screenmodel.cpp
         declarative/screenmodel.h
         declarative/shellsurfaceitem.cpp
         declarative/shellsurfaceitem.h
+        declarative/windowmousetracker.cpp
+        declarative/windowmousetracker.h
         extensions/gtkshell.cpp
         extensions/gtkshell.h
         extensions/gtkshell_p.h
@@ -81,6 +98,9 @@ liri_add_executable(LiriShell
         extensions/kdeserverdecoration.h
         extensions/liridecoration.cpp
         extensions/liridecoration.h
+        extensions/shellhelper.cpp
+        extensions/shellhelper.h
+        extensions/shellhelper_p.h
         logging.cpp
         logging_p.h
         main.cpp
@@ -121,6 +141,8 @@ liri_add_executable(LiriShell
         QT_NO_FOREACH
         QT_WAYLAND_COMPOSITOR_QUICK
         LIRISHELL_VERSION="${PROJECT_VERSION}"
+        INSTALL_ROOTDIR=""
+        INSTALL_LIBEXECDIR="${LIBEXECDIR}"
         ${LiriShell_DEFINES}
     LIBRARIES
         Qt5::Core

@@ -25,9 +25,10 @@ import QtQuick 2.0
 import QtWayland.Compositor 1.0
 import Liri.XWayland 1.0
 import Liri.Shell 1.0 as LS
+import Liri.private.shell 1.0 as P
 import Fluid.Effects 1.0 as FluidEffects
 
-LS.ChromeItem {
+P.ChromeItem {
     id: chrome
 
     property QtObject window

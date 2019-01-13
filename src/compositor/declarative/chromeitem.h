@@ -21,10 +21,11 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef CHROMEITEM_H
+#define CHROMEITEM_H
 
-#include <QtQuick/QQuickItem>
-#include <QtWaylandCompositor/QWaylandCompositor>
+#include <QQuickItem>
+#include <QWaylandCompositor>
 #include <QWaylandQuickItem>
 
 class ChromeItem : public QQuickItem
@@ -64,3 +65,5 @@ private:
 private Q_SLOTS:
     void updatePrimary();
 };
+
+#endif // CHROMEITEM_H

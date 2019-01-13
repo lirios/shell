@@ -28,15 +28,20 @@
 
 #include "qmlregistration.h"
 
+#include "declarative/chromeitem.h"
 #include "declarative/fpscounter.h"
+#include "declarative/hotspot.h"
 #include "declarative/indicatorsmodel.h"
 #include "declarative/inputsettings.h"
+#include "declarative/keyeventfilter.h"
 #include "declarative/quickoutput.h"
 #include "declarative/screenmodel.h"
 #include "declarative/shellsurfaceitem.h"
+#include "declarative/windowmousetracker.h"
 #include "extensions/gtkshell.h"
 #include "extensions/kdeserverdecoration.h"
 #include "extensions/liridecoration.h"
+#include "extensions/shellhelper.h"
 
 #include "outputchangeset.h"
 #include "outputconfiguration.h"
@@ -94,6 +99,7 @@ Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(GtkShell)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(GtkSurface)
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(KdeServerDecorationManager)
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(LiriDecorationManager)
+Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(ShellHelper)
 
 void registerPrivateTypes()
 {
@@ -103,9 +109,12 @@ void registerPrivateTypes()
 
     // Components
 
+    qmlRegisterType<ChromeItem>(uri, versionMajor, versionMinor, "ChromeItem");
     qmlRegisterType<FpsCounter>(uri, versionMajor, versionMinor, "FpsCounter");
+    qmlRegisterType<HotSpot>(uri, versionMajor, versionMinor, "HotSpot");
     qmlRegisterType<IndicatorsModel>(uri, versionMajor, versionMinor, "IndicatorsModel");
     qmlRegisterType<InputSettings>(uri, versionMajor, versionMinor, "InputSettings");
+    qmlRegisterType<KeyEventFilter>(uri, versionMajor, versionMinor, "KeyEventFilter");
     qmlRegisterType<QuickOutputQuickParent>(uri, versionMajor, versionMinor, "WaylandOutput");
     qmlRegisterType<ScreenModel>(uri, versionMajor, versionMinor, "ScreenModel");
     qmlRegisterUncreatableType<ScreenMode>(uri, versionMajor, versionMinor, "ScreenMode",
@@ -113,6 +122,7 @@ void registerPrivateTypes()
     qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
                                            QLatin1String("Cannot create instance of ScreenItem"));
     qmlRegisterType<ShellSurfaceItem>(uri, versionMajor, versionMinor, "ShellSurfaceItem");
+    qmlRegisterType<WindowMouseTracker>(uri, versionMajor, versionMinor, "WindowMouseTracker");
 
     // Wayland protocols
 
@@ -135,6 +145,8 @@ void registerPrivateTypes()
     qmlRegisterType<LiriDecorationManagerQuickExtension>(uri, versionMajor, versionMinor, "LiriDecorationManager");
     qmlRegisterUncreatableType<LiriDecoration>(uri, versionMajor, versionMinor, "LiriDecoration",
                                                QLatin1String("Cannot create instance of LiriDecoration"));
+
+    qmlRegisterType<ShellHelperQuickExtension>(uri, versionMajor, versionMinor, "ShellHelper");
 
     // D-Bus interfaces
 

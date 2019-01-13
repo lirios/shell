@@ -52,7 +52,7 @@ public:
 
     ~ProcessRunner()
     {
-        qCDebug(gLcShell) << "Stopping shell helper...";
+        qCDebug(lcShell) << "Stopping shell helper...";
         process->terminate();
         if (!process->waitForFinished())
             process->kill();
@@ -69,12 +69,12 @@ public:
 private Q_SLOTS:
     void handleReadOutput()
     {
-        qCInfo(gLcShell) << process->readAllStandardOutput();
+        qCInfo(lcShell) << process->readAllStandardOutput();
     }
 
     void handleReadError()
     {
-        qCCritical(gLcShell) << process->readAllStandardError();
+        qCCritical(lcShell) << process->readAllStandardError();
     }
 
 private:
@@ -90,15 +90,15 @@ private:
             //env.insert(QLatin1String("WAYLAND_DEBUG"), "1");
             process->setProcessEnvironment(env);
             process->start(path);
-            qCDebug(gLcShell, "Trying shell helper (%s)...", qPrintable(path));
+            qCDebug(lcShell, "Trying shell helper (%s)...", qPrintable(path));
             if (Q_LIKELY(process->waitForStarted())) {
-                qCInfo(gLcShell, "Running shell helper (%s)...", qPrintable(path));
+                qCInfo(lcShell, "Running shell helper (%s)...", qPrintable(path));
                 return true;
             } else {
                 if (retries == 0)
-                    qCWarning(gLcShell, "Failed to start shell helper, giving up");
+                    qCWarning(lcShell, "Failed to start shell helper, giving up");
                 else
-                    qCWarning(gLcShell, "Failed to start shell helper, %d attempt(s) left",
+                    qCWarning(lcShell, "Failed to start shell helper, %d attempt(s) left",
                               retries);
             }
         }
@@ -152,7 +152,7 @@ void ShellHelperPrivate::liri_shell_set_grab_surface(Resource *resource, struct 
         grabSurface = surface;
         Q_EMIT q->grabSurfaceAdded(surface);
     } else {
-        qCWarning(gLcShell) << "Couldn't find surface from resource";
+        qCWarning(lcShell) << "Couldn't find surface from resource";
         wl_resource_post_error(resource->handle, WL_DISPLAY_ERROR_INVALID_OBJECT,
                                "the specified surface is invalid");
     }
@@ -186,7 +186,7 @@ void ShellHelper::initialize()
     QWaylandCompositorExtension::initialize();
     QWaylandCompositor *compositor = static_cast<QWaylandCompositor *>(extensionContainer());
     if (!compositor) {
-        qCWarning(gLcShell) << "Failed to find QWaylandCompositor when initializing ShellHelper";
+        qCWarning(lcShell) << "Failed to find QWaylandCompositor when initializing ShellHelper";
         return;
     }
     d->init(compositor->display(), 1);

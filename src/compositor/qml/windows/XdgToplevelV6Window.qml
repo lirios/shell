@@ -24,7 +24,6 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.1 as QtWayland
 import Fluid.Core 1.0 as FluidCore
-import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
 
 FluidCore.Object {
@@ -170,7 +169,7 @@ FluidCore.Object {
             d.iconName = appIconName ? appIconName : "";
         }
         onStartMove: {
-            shellHelper.grabCursor(LS.ShellHelper.MoveGrabCursor);
+            shellHelper.grabCursor(P.ShellHelper.MoveGrabCursor);
         }
         onSetMinimized: {
             window.minimized = true;

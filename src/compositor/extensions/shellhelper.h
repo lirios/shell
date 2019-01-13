@@ -21,7 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#pragma once
+#ifndef SHELLPHELPER_H
+#define SHELLPHELPER_H
 
 #include <QtWaylandCompositor/QWaylandCompositorExtension>
 
@@ -69,3 +70,5 @@ Q_SIGNALS:
 private:
     ShellHelperPrivate *const d_ptr;
 };
+
+#endif //SHELLPHELPER_H

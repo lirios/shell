@@ -26,8 +26,8 @@ import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtWayland.Compositor 1.1
 import Liri.Launcher 1.0 as Launcher
-import Liri.Shell 1.0
 import Liri.PolicyKit 1.0
+import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
 import "base"
 import "windows"
@@ -158,7 +158,7 @@ WaylandCompositor {
         onOpenUrl: processRunner.launchCommand("xdg-open %1".arg(url))
     }
 
-    ShellHelper {
+    P.ShellHelper {
         id: shellHelper
 
         property WaylandSurface grabSurface: null
@@ -502,7 +502,7 @@ WaylandCompositor {
         sourceModel: applicationManager
     }
 
-    DateTime {
+    LS.DateTime {
         id: dateTime
     }
 

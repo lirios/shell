@@ -23,11 +23,10 @@
 
 import QtQuick 2.0
 import QtWayland.Compositor 1.0
-import Liri.Shell 1.0 as LS
-import Liri.private.shell 1.0 as P
 import Fluid.Effects 1.0 as FluidEffects
+import Liri.private.shell 1.0 as P
 
-LS.ChromeItem {
+P.ChromeItem {
     id: chrome
 
     property QtObject window
@@ -165,11 +164,11 @@ LS.ChromeItem {
 
         onMoveStarted: {
             // Move initiated with Meta+LeftMouseButton has started
-            shellHelper.grabCursor(LS.ShellHelper.MoveGrabCursor);
+            shellHelper.grabCursor(P.ShellHelper.MoveGrabCursor);
         }
         onMoveStopped: {
             // Move initiated with Meta+LeftMouseButton has stopped
-            shellHelper.grabCursor(LS.ShellHelper.ArrowGrabCursor);
+            shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor);
         }
 
         onSurfaceDestroyed: {

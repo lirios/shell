@@ -24,7 +24,6 @@
 import QtQuick 2.5
 import QtQuick.Window 2.3
 import QtWayland.Compositor 1.0
-import Liri.Shell 1.0 as LiriShell
 import Liri.private.shell 1.0 as P
 
 P.WaylandOutput {
@@ -55,7 +54,7 @@ P.WaylandOutput {
             id: grabItem
             focusOnClick: false
             onSurfaceChanged: {
-                shellHelper.grabCursor(LiriShell.ShellHelper.ArrowGrabCursor);
+                shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor);
                 if (output.primary)
                     grabItem.setPrimary();
             }

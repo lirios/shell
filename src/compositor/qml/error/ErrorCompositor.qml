@@ -25,7 +25,7 @@ import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtWayland.Compositor 1.0
-import Liri.Shell 1.0 as LiriShell
+import Liri.private.shell 1.0 as P
 import ".." as Root
 
 WaylandCompositor {
@@ -85,7 +85,7 @@ WaylandCompositor {
     }
 
     // Shell helper
-    LiriShell.ShellHelper {
+    P.ShellHelper {
         id: shellHelper
         onGrabSurfaceAdded: {
             for (var i = 0; i < screenManager.count; i++)
