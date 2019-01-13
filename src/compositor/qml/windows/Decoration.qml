@@ -32,16 +32,8 @@ MouseArea {
 
     readonly property alias drag: moveArea.drag
 
-    readonly property color foregroundColor: {
-        if (shellSurfaceItem.surface && shellSurfaceItem.surface.foregroundColor.a > 0)
-            return shellSurfaceItem.surface.foregroundColor;
-        return Material.primaryTextColor;
-    }
-    readonly property color backgroundColor: {
-        if (shellSurfaceItem.surface && shellSurfaceItem.surface.backgroundColor.a > 0)
-            return shellSurfaceItem.surface.backgroundColor;
-        return Material.color(Material.Blue);
-    }
+    property color foregroundColor: Material.primaryTextColor
+    property color backgroundColor: Material.color(Material.Blue)
 
     Material.theme: Material.Dark
 
@@ -136,6 +128,12 @@ MouseArea {
                 chrome.window.moveItem.x += dx;
                 chrome.window.moveItem.y += dy;
             }
+        }
+        onForegroundColorChanged: {
+            decoration.foregroundColor = chrome.window.surface.foregroundColor;
+        }
+        onBackgroundColorChanged: {
+            decoration.backgroundColor = chrome.window.surface.backgroundColor;
         }
     }
 
