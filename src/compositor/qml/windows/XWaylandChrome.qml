@@ -270,16 +270,4 @@ P.ChromeItem {
         chromeMenu.y = y;
         chromeMenu.open();
     }
-
-    function resizeTo(width, height) {
-        shellSurfaceItem.sizeFollowsSurface = false;
-        shellSurfaceItem.width = width;
-        shellSurfaceItem.height = height;
-    }
-
-    function restoreSize() {
-        shellSurfaceItem.sizeFollowsSurface = true;
-        shellSurfaceItem.width = shellSurfaceItem.implicitWidth;
-        shellSurfaceItem.height = shellSurfaceItem.implicitHeight;
-    }
 }
