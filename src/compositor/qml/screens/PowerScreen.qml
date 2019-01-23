@@ -28,7 +28,6 @@ Item {
     id: powerScreen
 
     property bool active
-    property string mode: "poweroff"
 
     anchors.fill: parent
 
@@ -57,55 +56,5 @@ Item {
         id: powerDialog
 
         onCanceled: powerScreen.canceled()
-
-        actionIcon: {
-            switch (mode) {
-            case "poweroff":
-                return "action/power_settings_new"
-            case "restart":
-                return Qt.resolvedUrl("../images/reload.svg")
-            default:
-                console.warn("Unrecognized mode: " + mode)
-                return "alert/warning"
-            }
-        }
-
-        actionTitle: {
-            switch (mode) {
-            case "poweroff":
-                return qsTr("Power Off")
-            case "restart":
-                return qsTr("Restart")
-            default:
-                console.warn("Unrecognized mode: " + mode)
-                return qsTr("Do Nothing")
-            }
-        }
-
-        actionText: {
-            switch (mode) {
-            case "poweroff":
-                return qsTr("power off")
-            case "restart":
-                return qsTr("restart")
-            default:
-                console.warn("Unrecognized mode: " + mode)
-                return qsTr("do nothing")
-            }
-        }
-
-        onActionTriggered: {
-            switch (mode) {
-            case "poweroff":
-                SessionInterface.powerOff()
-                break
-            case "restart":
-                SessionInterface.restart()
-                break
-            default:
-                console.warn("Unrecognized mode: " + mode)
-                break
-            }
-        }
     }
 }

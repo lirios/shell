@@ -70,12 +70,12 @@ Item {
         State {
             name: "poweroff"
             PropertyChanges { target: screenView; cursorVisible: true }
-            PropertyChanges { target: powerScreen; active: true; mode: "poweroff" }
+            PropertyChanges { target: powerScreen; active: true }
         },
         State {
             name: "restart"
             PropertyChanges { target: screenView; cursorVisible: true }
-            PropertyChanges { target: powerScreen; active: true; mode: "restart" }
+            PropertyChanges { target: powerScreen; active: true }
         },
         State {
             name: "lock"

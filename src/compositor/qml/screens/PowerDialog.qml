@@ -1,6 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  * Copyright (C) 2017 Michael Spencer <sonrisesoftware@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
@@ -31,10 +32,6 @@ import Liri.Device 1.0 as LiriDevice
 Popup {
     id: powerDialog
 
-    property string actionTitle
-    property string actionText
-    property string actionIcon
-
     property var startTime
     property int remainingSeconds
     property int totalSeconds: 60
@@ -55,7 +52,6 @@ Popup {
     Material.theme: Material.Light
     Material.accent: Material.Blue
 
-    signal actionTriggered()
     signal canceled()
 
     onOpened: {
@@ -88,7 +84,7 @@ Popup {
         interval: totalSeconds * 1000
         onTriggered: {
             powerDialog.accept()
-            actionTriggered()
+            SessionInterface.powerOff()
         }
     }
 
@@ -121,7 +117,7 @@ Popup {
 
                 FluidControls.Icon {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    name: actionIcon
+                    source: FluidControls.Utils.iconUrl("action/power_settings_new")
                     size: 36
                 }
 
@@ -133,15 +129,15 @@ Popup {
                 FluidControls.TitleLabel {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: Material.primaryTextColor
-                    text: actionTitle
+                    text: qsTr("Power Off")
                 }
 
                 FluidControls.SubheadingLabel {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: Material.secondaryTextColor
                     horizontalAlignment: Qt.AlignHCenter
-                    text: ("The system will %1\nautomatically in %2 " +
-                              "seconds.").arg(actionText).arg(remainingSeconds)
+                    text: ("The system will power off\nautomatically in %1 " +
+                              "seconds.").arg(remainingSeconds)
                 }
             }
         }
@@ -157,7 +153,6 @@ Popup {
             visible: LiriDevice.LocalDevice.canSuspend
             onClicked: {
                 powerDialog.accept()
-                // TODO: Lock screen
                 LiriDevice.LocalDevice.suspend()
             }
         }
