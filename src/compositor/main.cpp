@@ -163,6 +163,10 @@ int main(int argc, char *argv[])
     // Disable QPA mouse cursor
     qputenv("QT_QPA_EGLFS_HIDECURSOR", QByteArrayLiteral("1"));
 
+    // ShareOpenGLContexts is needed for using the threaded renderer
+    // on NVIDIA EGLStreams
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+
     // Automatically support HiDPI
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
