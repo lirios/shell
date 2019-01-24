@@ -23,9 +23,9 @@ include(LiriSetup)
 
 ## Features:
 option(LIRI_SHELL_DEVELOPMENT_BUILD "Development build" OFF)
-add_feature_info("Liri Shell development build" LIRI_SHELL_DEVELOPMENT_BUILD "Build Liri Shell for development")
+add_feature_info("Shell::DevelopmentBuild" LIRI_SHELL_DEVELOPMENT_BUILD "Build Liri Shell for development")
 option(LIRI_SHELL_WITH_SCREENCAST "Build with screencast support" OFF)
-add_feature_info("Liri Shell screencast" LIRI_SHELL_WITH_SCREENCAST "Build Liri Shell with screencast support")
+add_feature_info("Shell::Pipewire" LIRI_SHELL_WITH_SCREENCAST "Build Liri Shell with screencast support")
 
 ## Variables:
 set(INSTALL_SYSTEMDUSERUNITDIR "${INSTALL_LIBDIR}/systemd/user" CACHE PATH "systemd user unit directory [PREFIX/lib/systemd/user]")
