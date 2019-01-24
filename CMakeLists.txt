@@ -24,7 +24,7 @@ include(LiriSetup)
 ## Features:
 option(LIRI_SHELL_DEVELOPMENT_BUILD "Development build" OFF)
 add_feature_info("Liri Shell development build" LIRI_SHELL_DEVELOPMENT_BUILD "Build Liri Shell for development")
-option(LIRI_SHELL_WITH_SCREENCAST "Build with screencast support" ON)
+option(LIRI_SHELL_WITH_SCREENCAST "Build with screencast support" OFF)
 add_feature_info("Liri Shell screencast" LIRI_SHELL_WITH_SCREENCAST "Build Liri Shell with screencast support")
 
 ## Variables:

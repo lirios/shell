@@ -61,7 +61,7 @@ You can also append the following options to the `cmake` command:
 
  * `-DLIRI_SHELL_DEVELOPMENT_BUILD:BOOL=ON`: Enable feature for development such as the
    ability to load arbitrary QML files.
- * `-DLIRI_SHELL_WITH_SCREENCAST:BOOL=OFF`: Disable experimental screencast support.
+ * `-DLIRI_SHELL_WITH_SCREENCAST:BOOL=ON`: Enable experimental screencast support.
  * `-DINSTALL_SYSTEMDUSERUNITDIR=/path/to/systemd/user`: Path to install systemd user units (default: `/usr/local/lib/systemd/user`).
 
 ## Licensing
