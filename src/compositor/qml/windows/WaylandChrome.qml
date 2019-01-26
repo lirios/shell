@@ -60,10 +60,6 @@ P.ChromeItem {
         }
     ]
 
-    // This is fundamental for scaled windows with the present windows effect,
-    // the default value of Item.Center offsets the window position
-    transformOrigin: Item.TopLeft
-
     QtObject {
         id: __private
 
