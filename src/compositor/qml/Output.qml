@@ -97,7 +97,7 @@ P.WaylandOutput {
 
             anchors.fill: parent
 
-            windowSystemCursorEnabled: Qt.platform.pluginName !== "liri"
+            windowSystemCursorEnabled: false
 
             onMouseXChanged: {
                 // Wake up
