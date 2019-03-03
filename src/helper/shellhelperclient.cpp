@@ -51,11 +51,17 @@ public:
         Q_Q(ShellHelperClient);
 
         if (window->handle())
-            set_grab_surface(getWlSurface(window));
+            setGrabSurface(window);
         else
             window->installEventFilter(q);
 
         activated = true;
+    }
+
+    void setGrabSurface(QWindow *window)
+    {
+        set_grab_surface(getWlSurface(window));
+        window->setCursor(QCursor(Qt::ArrowCursor));
     }
 
     bool activated = false;
@@ -113,7 +119,7 @@ bool ShellHelperClient::eventFilter(QObject *watched, QEvent *event)
         QWindow *window = qobject_cast<QWindow*>(watched);
         Q_ASSERT(window);
         window->removeEventFilter(this);
-        d->set_grab_surface(getWlSurface(window));
+        d->setGrabSurface(window);
     }
 
     return false;
