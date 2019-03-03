@@ -24,6 +24,7 @@
 #include <QtCore/QPointer>
 #include <QtGui/QGuiApplication>
 #include <QtQuick/QQuickWindow>
+#include <QScreen>
 
 #include "windowmousetracker.h"
 
@@ -153,6 +154,14 @@ WindowMouseTracker::WindowMouseTracker(QQuickItem *parent)
             d->window = window;
             d->reparentOverlay();
             d->setWindowSystemCursorEnabled(d->windowSystemCursorEnabled);
+
+            // Center mouse on primary screen
+            if (window->screen() == QGuiApplication::primaryScreen()) {
+                const QPoint pos = window->screen()->geometry().center();
+                QCursor::setPos(window->screen(), pos);
+                d->handleMouseMove(pos);
+                d->setContainsMouse(true);
+            }
         }
     });
 }
