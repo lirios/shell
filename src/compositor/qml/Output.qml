@@ -58,7 +58,7 @@ P.WaylandOutput {
         y: output.position.y
         width: output.geometry.width
         height: output.geometry.height
-        flags: Qt.FramelessWindowHint
+        flags: Qt.Window | Qt.FramelessWindowHint
         screen: output.hardwareScreen.screen
         color: "black"
         visible: true
