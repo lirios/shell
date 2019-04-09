@@ -155,7 +155,9 @@ Rectangle {
     }
 
     function setAvailableGeometry() {
-        output.availableGeometry = Qt.rect(0, 0, output.geometry.width, output.geometry.height - height -
-                                           2 * panel.anchors.margins)
+        output.availableGeometry =
+                Qt.rect(0, 0,
+                        outputWindow.width,
+                        outputWindow.height - panel.height - (2 * panel.anchors.margins));
     }
 }
