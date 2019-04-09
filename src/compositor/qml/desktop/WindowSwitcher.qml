@@ -51,7 +51,7 @@ Popup {
         Rectangle {
             readonly property var chrome: liriCompositor.defaultOutput.viewsBySurface[model.window.surface]
             readonly property string title: model.window.title ? model.window.title : qsTr("Untitled")
-            readonly property real ratio: chrome.width / chrome.height
+            readonly property real ratio: chrome ? chrome.width / chrome.height : 0
 
             id: wrapper
             width: height * ratio
