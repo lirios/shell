@@ -182,7 +182,6 @@ int main(int argc, char *argv[])
     app.setQuitOnLastWindowClosed(false);
 
     // Enable logs
-    QLoggingCategory::setFilterRules(QStringLiteral("qt.qpa.eglfs*=true"));
     QLoggingCategory::setFilterRules(QStringLiteral("qt.scenegraph.general=true"));
 
     // Set style
