@@ -104,6 +104,11 @@ QScreen *ScreenItem::screen() const
     return m_screen;
 }
 
+int ScreenItem::screenIndex() const
+{
+    return qGuiApp->screens().indexOf(m_screen);
+}
+
 bool ScreenItem::isPrimary() const
 {
     return m_primary;
@@ -314,6 +319,7 @@ QHash<int, QByteArray> ScreenModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles.insert(ScreenItemRole, QByteArrayLiteral("screenItem"));
     roles.insert(ScreenRole, QByteArrayLiteral("screen"));
+    roles.insert(ScreenIndexRole, QByteArrayLiteral("screenIndex"));
     roles.insert(PrimaryRole, QByteArrayLiteral("primary"));
     roles.insert(ManufacturerRole, QByteArrayLiteral("manufacturer"));
     roles.insert(ModelRole, QByteArrayLiteral("model"));
@@ -350,6 +356,8 @@ QVariant ScreenModel::data(const QModelIndex &index, int role) const
         return QVariant::fromValue(item);
     case ScreenRole:
         return QVariant::fromValue<QScreen *>(item->screen());
+    case ScreenIndexRole:
+        return item->screenIndex();
     case PrimaryRole:
         return item->isPrimary();
     case UuidRole:

@@ -40,6 +40,7 @@ public:
     enum Roles {
         ScreenItemRole = Qt::UserRole,
         ScreenRole,
+        ScreenIndexRole,
         PrimaryRole,
         UuidRole,
         ManufacturerRole,
@@ -114,6 +115,7 @@ class ScreenItem : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QScreen *screen READ screen CONSTANT)
+    Q_PROPERTY(int screenIndex READ screenIndex CONSTANT)
     Q_PROPERTY(bool primary READ isPrimary NOTIFY primaryChanged)
     Q_PROPERTY(QString uuid READ uuid CONSTANT)
     Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
@@ -146,6 +148,7 @@ public:
     ~ScreenItem();
 
     QScreen *screen() const;
+    int screenIndex() const;
 
     bool isPrimary() const;
 
