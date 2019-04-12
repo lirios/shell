@@ -325,6 +325,9 @@ WaylandCompositor {
             // Save capture
             screenshot.save();
             delete screenshot;
+
+            // Flash
+            liriCompositor.flash();
         }
     }
 
@@ -585,6 +588,12 @@ WaylandCompositor {
             screenManager.objectAt(i).idle();
 
         SessionInterface.idle = true;
+    }
+
+    function flash() {
+        var i;
+        for (i = 0; i < screenManager.count; i++)
+            screenManager.objectAt(i).flash();
     }
 
     function activateShellSurfaces(appId) {

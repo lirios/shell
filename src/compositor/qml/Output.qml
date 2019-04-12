@@ -122,6 +122,35 @@ P.WaylandOutput {
                 visible: output.enabled
             }
 
+            // Flash for screenshots
+            Rectangle {
+                id: flash
+
+                anchors.fill: parent
+
+                color: "white"
+                opacity: 0.0
+
+                SequentialAnimation {
+                    id: flashAnimation
+
+                    OpacityAnimator {
+                        easing.type: Easing.OutQuad
+                        target: flash
+                        from: 0.0
+                        to: 1.0
+                        duration: 250
+                    }
+                    OpacityAnimator {
+                        easing.type: Easing.OutQuad
+                        target: flash
+                        from: 1.0
+                        to: 0.0
+                        duration: 250
+                    }
+                }
+            }
+
             // Idle dimmer
             IdleDimmer {
                 id: idleDimmer
@@ -190,5 +219,9 @@ P.WaylandOutput {
         console.debug("Standby output", manufacturer, model);
         idleDimmer.fadeIn();
         __idle = true;
+    }
+
+    function flash() {
+        flashAnimation.start();
     }
 }
