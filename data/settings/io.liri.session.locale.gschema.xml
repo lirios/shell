@@ -12,14 +12,14 @@
 <schemalist gettext-domain="liri">
   <schema id="io.liri.session.locale" path="/io/liri/session/locale/">
     <key name="language" type="s">
-      <default>'C'</default>
+      <default>''</default>
       <summary>The locale used for messages</summary>
       <description>
         Specify the locale to be used for displaying messages.
       </description>
     </key>
     <key name="region" type="s">
-      <default>'C'</default>
+      <default>''</default>
       <summary>The locale used for dates and number formats</summary>
       <description>
         Specify the locale to be used for displaying dates, times and number formats.
