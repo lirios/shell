@@ -133,6 +133,7 @@ liri_add_executable(LiriShell
         ${LiriShell_QM_FILES}
     RESOURCES
         "compositor.qrc"
+    QTQUICK_COMPILER
     DBUS_ADAPTOR_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/processlauncher/io.liri.ProcessLauncher.xml"
         "${CMAKE_CURRENT_SOURCE_DIR}/sessionmanager/screensaver/org.freedesktop.ScreenSaver.xml"
