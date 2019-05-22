@@ -187,9 +187,9 @@ void Application::customEvent(QEvent *event)
 
 void Application::verifyXdgRuntimeDir()
 {
-    QByteArray dirName = qgetenv("XDG_RUNTIME_DIR");
+    QString dirName = QString::fromLocal8Bit(qgetenv("XDG_RUNTIME_DIR"));
 
-    if (qEnvironmentVariableIsEmpty("XDG_RUNTIME_DIR")) {
+    if (dirName.isEmpty()) {
         QString msg = QObject::tr(
                     "The XDG_RUNTIME_DIR environment variable is not set.\n"
                     "Refer to your distribution on how to get it, or read\n"

@@ -516,7 +516,7 @@ void ScreenModel::addFakeScreens()
         beginInsertRows(QModelIndex(), m_items.count(), m_items.count());
 
         ScreenItem *item = new ScreenItem(this);
-        item->m_uuid = hash.result().toHex().left(10);
+        item->m_uuid = QString::fromLocal8Bit(hash.result().toHex().left(10));
         item->m_primary = primary && !primarySet;
         item->m_manufacturer = QStringLiteral("Liri");
         item->m_model = name;
@@ -587,7 +587,7 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
     QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(item->m_manufacturer.toUtf8());
     hash.addData(item->m_model.toUtf8());
-    item->m_uuid = hash.result().toHex().left(10);
+    item->m_uuid = QString::fromLocal8Bit(hash.result().toHex().left(10));
 
     QPlatformScreen::SubpixelAntialiasingType subpixel = screen->handle()->subpixelAntialiasingTypeHint();
     switch (subpixel) {
