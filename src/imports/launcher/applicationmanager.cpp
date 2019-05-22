@@ -43,12 +43,18 @@
 Q_LOGGING_CATEGORY(APPLICATION_MANAGER, "liri.launcher.applicationmanager")
 
 const QMap<QString, QString> correctAppIds = {
-    {"baobob", "org.gnome.baobob"},           {"cheese", "org.gnome.Cheese"},
-    {"corebird", "org.baedert.corebird"},     {"dconf-editor", "ca.desrt.dconf-editor"},
-    {"file-roller", "org.gnome.FileRoller"},  {"gnome-calendar", "org.gnome.Calendar"},
-    {"gnome-disks", "org.gnome.DiskUtility"}, {"gnome-font-viewer", "org.gnome.font-viewer"},
-    {"nautilus", "org.gnome.Nautilus"},       {"org.kate-editor.kate", "org.kde.kate"},
-    {"gedit", "org.gnome.gedit"},             {"gnome-dictionary", "org.gnome.Dictionary"}
+    {QStringLiteral("baobob"), QStringLiteral("org.gnome.baobob")},
+    {QStringLiteral("cheese"), QStringLiteral("org.gnome.Cheese")},
+    {QStringLiteral("corebird"), QStringLiteral("org.baedert.corebird")},
+    {QStringLiteral("dconf-editor"), QStringLiteral("ca.desrt.dconf-editor")},
+    {QStringLiteral("file-roller"), QStringLiteral("org.gnome.FileRoller")},
+    {QStringLiteral("gnome-calendar"), QStringLiteral("org.gnome.Calendar")},
+    {QStringLiteral("gnome-disks"), QStringLiteral("org.gnome.DiskUtility")},
+    {QStringLiteral("gnome-font-viewer"), QStringLiteral("org.gnome.font-viewer")},
+    {QStringLiteral("nautilus"), QStringLiteral("org.gnome.Nautilus")},
+    {QStringLiteral("org.kate-editor.kate"), QStringLiteral("org.kde.kate")},
+    {QStringLiteral("gedit"), QStringLiteral("org.gnome.gedit")},
+    {QStringLiteral("gnome-dictionary"), QStringLiteral("org.gnome.Dictionary")}
 };
 
 ApplicationManager::ApplicationManager(QObject *parent)
@@ -100,7 +106,7 @@ QHash<int, QByteArray> ApplicationManager::roleNames() const
 
 int ApplicationManager::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
+    Q_UNUSED(parent)
     return m_apps.size();
 }
 

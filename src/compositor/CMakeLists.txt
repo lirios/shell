@@ -138,7 +138,7 @@ liri_add_executable(LiriShell
         "${CMAKE_CURRENT_SOURCE_DIR}/processlauncher/io.liri.ProcessLauncher.xml"
         "${CMAKE_CURRENT_SOURCE_DIR}/sessionmanager/screensaver/org.freedesktop.ScreenSaver.xml"
     DEFINES
-        #QT_NO_CAST_FROM_ASCII
+        QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
         QT_WAYLAND_COMPOSITOR_QUICK
         LIRISHELL_VERSION="${PROJECT_VERSION}"

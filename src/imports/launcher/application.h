@@ -174,7 +174,7 @@ Q_SIGNALS:
     void dataChanged();
 
 protected:
-    QSet<pid_t> m_pids;
+    QSet<qint64> m_pids;
     QVector<QWaylandClient *> m_clients;
 
 private:

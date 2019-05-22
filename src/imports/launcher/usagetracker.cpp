@@ -116,8 +116,9 @@ void UsageTracker::openDatabase()
 
 void UsageTracker::migrate()
 {
-    QSqlQuery query("CREATE TABLE IF NOT EXISTS app_usage (id TEXT PRIMARY KEY, last_seen INTEGER, "
-                    "score INTEGER)",
+    QSqlQuery query(QStringLiteral("CREATE TABLE IF NOT EXISTS app_usage "
+                                   "(id TEXT PRIMARY KEY, last_seen INTEGER, "
+                                   "score INTEGER)"),
                     m_db);
 }
 
@@ -218,7 +219,7 @@ void UsageTracker::loadUsage()
 
     while (query.next()) {
         QDateTime lastSeen;
-        lastSeen.setTime_t(query.value(lastSeenColumn).toInt());
+        lastSeen.setTime_t(query.value(lastSeenColumn).toUInt());
 
         AppUsage *app = new AppUsage(query.value(idColumn).toString(), this);
         app->lastSeen = lastSeen;

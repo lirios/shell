@@ -257,9 +257,9 @@ void CategoriesModel::sortModel()
 {
     beginResetModel();
     if (m_allCategory)
-        qSort(m_list.begin() + 1, m_list.end(), CategoryEntry::lessThan);
+        std::sort(m_list.begin() + 1, m_list.end(), CategoryEntry::lessThan);
     else
-        qSort(m_list.begin(), m_list.end(), CategoryEntry::lessThan);
+        std::sort(m_list.begin(), m_list.end(), CategoryEntry::lessThan);
     endResetModel();
 }
 
