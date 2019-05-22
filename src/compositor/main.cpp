@@ -143,12 +143,11 @@ int main(int argc, char *argv[])
     // Automatically detect the right platform plugin to use
 #if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
     // Since Qt 5.11.0 we can specify a fallback platform plugin,
-    // so try wayland, xcb and liri in this order unless XDG_SESSION_TYPE
-    // is empty (which likely means we are launched from a vt)
-    if (qEnvironmentVariableIsEmpty("XDG_SESSION_TYPE"))
+    // so try wayland and xcb in this order unless it's running on a vt
+    if (qEnvironmentVariableIsEmpty("XDG_SESSION_TYPE") || qgetenv("XDG_SESSION_TYPE") == "tty")
         qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("liri"));
     else
-        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland;xcb;liri"));
+        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland;xcb"));
 #else
     // Try to detect the platform based on environment variables,
     // fallback to liri if nothing is found
