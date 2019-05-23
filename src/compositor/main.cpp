@@ -239,11 +239,11 @@ int main(int argc, char *argv[])
     }
 
     // Print version information
-    qInfo("== Liri Shell v%s ==\n"
-          "** http://liri.io\n"
+    qInfo("== Liri Shell ==\n"
+          "** https://liri.io\n"
           "** Bug reports to: https://github.com/lirios/shell/issues\n"
           "** Build: %s-%s",
-          LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
+          LIRISHELL_VERSION, GIT_REV);
 
     // Print OS information
     qInfo("%s", qPrintable(Application::systemInformation().trimmed()));
