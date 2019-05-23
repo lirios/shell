@@ -82,7 +82,6 @@ to learn how to enable them.
 
  * Compositor:
    * **liri.compositor:** Compositor
-   * **liri.processlauncher:** Process launcher and application tracker
    * **liri.screensaver:** Lock, idle and inhibit interface
    * **liri.session:** Manages the session
    * **liri.loginmanager:** login manager subsystem
@@ -103,75 +102,6 @@ to learn how to enable them.
  * PolicyKit QML plugin:
    * **liri.policykit:** PolicyKit agent
 
-## Components
-
-*liri-shell*
-
-Compositor executable.
-
-*liri-session*
-
-Manages the session, drives the compositor, runs autostart programs
-and launches applications for the application launcher.
-
-Autostarts the D-Bus session if needed and can logout an existing
-session with:
-
-```sh
-liri-session --logout
-```
-
-## Running on another window system
-
-The platform plugin to use is automatically detected based on the environment,
-it can be one of the following:
-
- * wayland: Run inside another Wayland compositor
- * xcb: Run inside a X11 session
- * liri: Uses DRM/KMS or a device specific EGL integration
-
-You can override the automatic detection, if it doesn't work as intended.
-
-### X11
-
-To run windowed inside a X11 session:
-
-```sh
-liri-session -platform xcb
-```
-
-### Wayland
-
-To run windowed inside a Wayland session:
-
-```sh
-liri-session -platform wayland
-```
-
-Some compositors, such as Weston, support the fullscreen-shell protocol that
-allows a compositor to be nested into another compositor.
-
-Let's take Weston as an example. First you need to run it with the fullscreen-shell
-protocol enabled:
-
-```sh
-weston --shell=fullscreen-shell.so
-```
-
-Then you need to run `liri-session` like this:
-
-```sh
-QT_WAYLAND_SHELL_INTEGRATION=fullscreen-shell liri-session -platform wayland 
-```
-
-### DRM/KMS
-
-To make sure the Liri session runs without another window system type:
-
-```sh
-liri-session -platform liri
-```
-
 ## Fake screen configuration
 
 You can simulate a fake screen configuration on X11 and Wayland.
@@ -179,7 +109,7 @@ You can simulate a fake screen configuration on X11 and Wayland.
 Run:
 
 ```sh
-liri-session -platform xcb --fake-screen screenconfig.json # replace xcb with wayland if you are running on Wayland
+liri-session -- -platform xcb --fake-screen screenconfig.json # replace xcb with wayland if you are running on Wayland
 ```
 
 Here's the contents of `screenconfig.json`:
@@ -236,7 +166,7 @@ Developers can debug Liri Shell with Qt Creator and the QML JavaScript debugger.
 Set the debug port and run the shell:
 
 ```sh
-liri-session -qmljsdebugger=port:3768
+liri-session -- -qmljsdebugger=port:3768
 ```
 
 In the example above we are using the default port which is 3768.

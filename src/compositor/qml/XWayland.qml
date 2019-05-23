@@ -34,7 +34,7 @@ LXW.XWayland {
         id: manager
         onCreated: {
             console.debug("Starting shell helper on", liriCompositor.socketName);
-            shellHelper.start(liriCompositor.socketName);
+            shellHelper.start();
         }
         onShellSurfaceRequested: {
             var shellSurface = shellSurfaceComponent.createObject(manager);
@@ -46,11 +46,13 @@ LXW.XWayland {
         }
     }
     onServerFailedToStart: {
-        shellHelper.start(liriCompositor.socketName);
+        shellHelper.start();
     }
 
     onServerStarted: {
         console.debug("Xwayland server started");
+
+        SessionInterface.setEnvironment("DISPLAY", displayName);
     }
 
     Component {

@@ -33,7 +33,6 @@
 QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
 
 class MultimediaKeys;
-class ProcessLauncher;
 class ScreenSaver;
 class SessionManager;
 
@@ -43,15 +42,10 @@ class Application : public QObject
 public:
     explicit Application(QObject *parent = nullptr);
 
-    bool isAutostartEnabled() const;
-    void setAutostartEnabled(bool enabled);
-
     QString screenConfigurationFileName() const;
     void setScreenConfigurationFileName(const QString &fileName);
 
     void setUrl(const QUrl &url);
-
-    static QString systemInformation();
 
 protected:
     void customEvent(QEvent *event) override;
@@ -60,11 +54,9 @@ private:
     QUrl m_url;
     QQmlApplicationEngine *m_appEngine;
     MultimediaKeys *m_multimediaKeys;
-    ProcessLauncher *m_launcher;
     SessionManager *m_sessionManager;
     bool m_failSafe;
     bool m_started;
-    bool m_autostartEnabled;
     QString m_screenConfigFileName;
 
     void verifyXdgRuntimeDir();
@@ -72,8 +64,6 @@ private:
 private Q_SLOTS:
     void startup();
     void shutdown();
-    void autostart();
-    void unixSignal();
     void objectCreated(QObject *object, const QUrl &);
 };
 

@@ -67,10 +67,14 @@ WaylandCompositor {
     onCreatedChanged: {
         if (liriCompositor.created) {
             console.debug("Compositor created");
+
+            SessionInterface.setEnvironment("WAYLAND_DISPLAY", liriCompositor.socketName);
+            SessionInterface.setEnvironment("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
+
             if (xwaylandLoader.status == Loader.Ready)
                 xwaylandLoader.item.startServer();
             else
-                shellHelper.start(liriCompositor.socketName);
+                shellHelper.start();
         }
     }
 
@@ -155,7 +159,7 @@ WaylandCompositor {
 
     QtWindowManager {
         showIsFullScreen: false
-        onOpenUrl: processRunner.launchCommand("xdg-open %1".arg(url))
+        onOpenUrl: SessionInterface.launchCommand("xdg-open %1".arg(url))
     }
 
     P.ShellHelper {
@@ -164,6 +168,9 @@ WaylandCompositor {
         property WaylandSurface grabSurface: null
         property WaylandQuickItem grabSurfaceView: null
 
+        onProcessStarted: {
+            SessionInterface.registerService();
+        }
         onGrabSurfaceAdded: {
             grabSurface = surface;
             grabSurfaceView = grabSurfaceViewComponent.createObject(null);
@@ -511,10 +518,6 @@ WaylandCompositor {
 
     ShellSettings {
         id: settings
-    }
-
-    Launcher.ProcessRunner {
-        id: processRunner
     }
 
     KeyBindings {}

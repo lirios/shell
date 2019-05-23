@@ -57,7 +57,7 @@ public:
 
     void initialize() override;
 
-    Q_INVOKABLE void start(const QString &socketName);
+    Q_INVOKABLE void start();
 
     Q_INVOKABLE void grabCursor(GrabCursor cursor);
 
@@ -65,6 +65,7 @@ public:
     static QByteArray interfaceName();
 
 Q_SIGNALS:
+    void processStarted();
     void grabSurfaceAdded(QWaylandSurface *surface);
 
 private:

@@ -64,12 +64,6 @@ static void disablePtrace()
 
 static void setupEnvironment()
 {
-    // Set defaults
-    if (qEnvironmentVariableIsEmpty("XDG_DATA_DIRS"))
-        qputenv("XDG_DATA_DIRS", QByteArrayLiteral("/usr/local/share/:/usr/share/"));
-    if (qEnvironmentVariableIsEmpty("XDG_CONFIG_DIRS"))
-        qputenv("XDG_CONFIG_DIRS", QByteArrayLiteral("/etc/xdg"));
-
     // Environment
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("liri"));
     qputenv("QT_QUICK_CONTROLS_1_STYLE", QByteArrayLiteral("Flat"));
@@ -77,8 +71,6 @@ static void setupEnvironment()
     qputenv("QT_WAYLAND_DECORATION", QByteArrayLiteral("material"));
     qputenv("XCURSOR_THEME", QByteArrayLiteral("Paper"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
-    qputenv("XDG_MENU_PREFIX", QByteArrayLiteral("liri-"));
-    qputenv("XDG_CURRENT_DESKTOP", QByteArrayLiteral("X-Liri"));
 
     // Load input method
     QtGSettings::QGSettings settings(QStringLiteral("io.liri.desktop.interface"),
@@ -202,10 +194,6 @@ int main(int argc, char *argv[])
                                         TR("filename"));
     parser.addOption(fakeScreenOption);
 
-    QCommandLineOption noAutostartOption(QStringLiteral("no-autostart"),
-                                         TR("Do not run autostart programs"));
-    parser.addOption(noAutostartOption);
-
     // Raise SIGSTOP on start-up
     QCommandLineOption waitForDebuggerOption(QStringLiteral("wait-for-debugger"),
                                              TR("Raise SIGSTOP on startup"));
@@ -222,9 +210,9 @@ int main(int argc, char *argv[])
     // Parse command line
     parser.process(app);
 
-    // Restart with D-Bus session if necessary
+    // Need a D-Bus session, that should have been set up by liri-session
     if (qEnvironmentVariableIsEmpty("DBUS_SESSION_BUS_ADDRESS")) {
-        qWarning("No D-Bus session bus available, please run Liri Shell with dbus-run-session.");
+        qWarning("No D-Bus session bus available, please don't manually run Liri Shell.");
         return 1;
     }
 
@@ -246,11 +234,10 @@ int main(int argc, char *argv[])
           LIRISHELL_VERSION, GIT_REV);
 
     // Print OS information
-    qInfo("%s", qPrintable(Application::systemInformation().trimmed()));
+    qInfo("Platform name: %s", qPrintable(QGuiApplication::platformName()));
 
     // Application
     Application *shell = new Application();
-    shell->setAutostartEnabled(!parser.isSet(noAutostartOption));
     shell->setScreenConfigurationFileName(fakeScreenData);
 
     // Create the compositor and run

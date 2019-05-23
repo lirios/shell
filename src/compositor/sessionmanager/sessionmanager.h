@@ -83,6 +83,12 @@ Q_SIGNALS:
     void shutdownRequestCanceled();
 
 public Q_SLOTS:
+    void registerService();
+    void launchApplication(const QString &appId);
+    void launchDesktopFile(const QString &fileName);
+    void launchCommand(const QString &command);
+    void setEnvironment(const QString &key, const QString &value);
+
     void logOut();
 
     void lockSession();

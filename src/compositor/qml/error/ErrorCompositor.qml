@@ -33,7 +33,7 @@ WaylandCompositor {
 
     onCreatedChanged: {
         if (liriCompositor.created)
-            shellHelper.start(liriCompositor.socketName);
+            shellHelper.start();
     }
 
     onSurfaceRequested: {

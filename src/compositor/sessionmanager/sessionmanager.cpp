@@ -144,10 +144,78 @@ bool SessionManager::canStartNewSession()
     return false;
 }
 
+void SessionManager::registerService()
+{
+    QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Shell"));
+}
+
+void SessionManager::launchApplication(const QString &appId)
+{
+    auto msg = QDBusMessage::createMethodCall(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("LaunchApplication"));
+    QVariantList args;
+    args.append(appId);
+    msg.setArguments(args);
+    QDBusConnection::sessionBus().send(msg);
+}
+
+void SessionManager::launchDesktopFile(const QString &fileName)
+{
+    auto msg = QDBusMessage::createMethodCall(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("LaunchDesktopFile"));
+    QVariantList args;
+    args.append(fileName);
+    msg.setArguments(args);
+    QDBusConnection::sessionBus().send(msg);
+}
+
+void SessionManager::launchCommand(const QString &command)
+{
+    auto msg = QDBusMessage::createMethodCall(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("LaunchCommand"));
+    QVariantList args;
+    args.append(command);
+    msg.setArguments(args);
+    QDBusConnection::sessionBus().send(msg);
+}
+
+void SessionManager::setEnvironment(const QString &key, const QString &value)
+{
+    qputenv(key.toLocal8Bit().constData(), value.toLocal8Bit());
+
+    auto msg = QDBusMessage::createMethodCall(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("SetEnvironment"));
+    QVariantList args;
+    args.append(key);
+    args.append(value);
+    msg.setArguments(args);
+    QDBusConnection::sessionBus().send(msg);
+}
+
 void SessionManager::logOut()
 {
+    // Unregister service
+    QDBusConnection::sessionBus().unregisterService(QStringLiteral("io.liri.Shell"));
+
     // Exit
-    QCoreApplication::quit();
+    auto msg = QDBusMessage::createMethodCall(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("Logout"));
+    QDBusConnection::sessionBus().send(msg);
 }
 
 void SessionManager::lockSession()

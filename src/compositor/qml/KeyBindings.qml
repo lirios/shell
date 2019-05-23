@@ -529,7 +529,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.screenshot
-        onActivated: processRunner.launchApplication("io.liri.Screenshot")
+        onActivated: SessionInterface.launchApplication("io.liri.Screenshot")
     }
 
     Shortcut {

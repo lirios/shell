@@ -68,6 +68,8 @@ install(FILES ${LiriShell_QM_FILES}
 liri_add_executable(LiriShell
     OUTPUT_NAME
         "liri-shell"
+    INSTALL_DIRECTORY
+        "${INSTALL_LIBEXECDIR}"
     SOURCES
         application.cpp
         application.h
@@ -108,9 +110,6 @@ liri_add_executable(LiriShell
         multimediakeys/multimediakeys.h
         onscreendisplay.cpp
         onscreendisplay.h
-        processlauncher/io.liri.ProcessLauncher.xml
-        processlauncher/processlauncher.cpp
-        processlauncher/processlauncher.h
         qmlregistration.cpp
         qmlregistration.h
         sessionmanager/authenticator.cpp
@@ -135,7 +134,6 @@ liri_add_executable(LiriShell
         "compositor.qrc"
     QTQUICK_COMPILER
     DBUS_ADAPTOR_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/processlauncher/io.liri.ProcessLauncher.xml"
         "${CMAKE_CURRENT_SOURCE_DIR}/sessionmanager/screensaver/org.freedesktop.ScreenSaver.xml"
     DEFINES
         QT_NO_CAST_FROM_ASCII
@@ -162,7 +160,6 @@ liri_add_executable(LiriShell
         Liri::Logind
         Liri::LocalDevice
         Liri::Xdg
-        Liri::SigWatch
         Liri::ShellDBusInterfaces
         ${PAM_LIBRARIES}
         ${LiriShell_LIBRARIES}

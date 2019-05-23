@@ -26,8 +26,6 @@ liri_add_qml_plugin(launcher
         pagemodel.cpp
         pagemodel.h
         plugin.cpp
-        processrunner.cpp
-        processrunner.h
         usagetracker.cpp
         usagetracker.h
         utils.cpp

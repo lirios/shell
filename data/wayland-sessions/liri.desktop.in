@@ -1,7 +1,0 @@
-[Desktop Entry]
-Comment=QtQuick and Wayland based desktop environment
-Exec=@INSTALL_BINDIR@/liri-session -platform liri
-Icon=start-here
-Name=Liri
-TryExec=@INSTALL_BINDIR@/liri-session
-Type=Application

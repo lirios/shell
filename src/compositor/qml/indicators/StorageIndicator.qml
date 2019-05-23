@@ -42,7 +42,7 @@ Indicator {
         delegate: FluidControls.ListItem {
             icon.name: model.iconName + "-symbolic"
             text: model.name
-            onClicked: processRunner.launchCommand("xdg-open file://" + model.filePath)
+            onClicked: SessionInterface.launchCommand("xdg-open file://" + model.filePath)
 
             rightItem: ToolButton {
                 anchors.centerIn: parent

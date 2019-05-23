@@ -27,7 +27,6 @@
 import QtQml 2.2
 import QtQuick 2.0
 import QtQuick.Controls 2.1
-import Liri.Launcher 1.0 as CppLauncher
 
 Menu {
     id: menu
@@ -36,10 +35,6 @@ Menu {
 
     transformOrigin: Menu.BottomLeft
 
-    CppLauncher.ProcessRunner {
-        id: process
-    }
-
     Instantiator {
         id: actionsInstantiator
         model: actions
@@ -47,7 +42,7 @@ Menu {
             text: model.name
             onTriggered: {
                 if (model.command) {
-                    process.launchCommand(model.command);
+                    SessionInterface.launchCommand(model.command);
                     menu.close();
                 }
             }

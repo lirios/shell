@@ -149,10 +149,10 @@ bool Application::launch(const QStringList &urls)
 
     // TODO: Send urls to process launcher
     const QDBusConnection bus = QDBusConnection::sessionBus();
-    QDBusInterface interface(QStringLiteral("io.liri.Session"),
-                             QStringLiteral("/ProcessLauncher"),
-                             QStringLiteral("io.liri.ProcessLauncher"), bus);
-    QDBusMessage msg = interface.call(QStringLiteral("launchDesktopFile"), m_desktopFile->fileName());
+    QDBusInterface interface(QStringLiteral("io.liri.SessionManager"),
+                             QStringLiteral("/io/liri/SessionManager"),
+                             QStringLiteral("io.liri.SessionManager"), bus);
+    QDBusMessage msg = interface.call(QStringLiteral("LaunchDesktopFile"), m_desktopFile->fileName());
     bool ran = msg.arguments().at(0).toBool();
 
     if (ran) {

@@ -51,15 +51,11 @@ find_package(Qt5 "${QT_MIN_VERSION}"
 )
 
 ## Add subdirectories:
-add_subdirectory(3rdparty/sigwatch)
-add_subdirectory(data/menu)
 add_subdirectory(data/settings)
 add_subdirectory(data/systemd)
-add_subdirectory(data/wayland-sessions)
 add_subdirectory(src/dbusinterfaces)
 add_subdirectory(src/compositor)
 add_subdirectory(src/helper)
-add_subdirectory(src/scripts)
 add_subdirectory(src/imports/launcher)
 add_subdirectory(src/imports/loginmanager)
 add_subdirectory(src/imports/mpris2)

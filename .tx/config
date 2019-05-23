@@ -1,13 +1,6 @@
 [main]
 host = https://www.transifex.com
 
-[liri-shell.session-entry]
-type = DESKTOP
-source_lang = en
-source_file = data/wayland-sessions/liri.desktop.in.in
-liri_dest_file = data/wayland-sessions/liri.desktop.in
-file_filter = data/wayland-sessions/translations/liri_<lang>.desktop
-
 [liri-shell.compositor]
 type = QT
 source_lang = en

@@ -24,27 +24,21 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QCoreApplication>
 #include <QDir>
-#include <QSysInfo>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
-#include <QtGui/QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QStandardPaths>
-
-#include <LiriXdg/AutoStart>
-#include <LiriXdg/DesktopFile>
 
 #include <QtWaylandCompositor/QWaylandCompositor>
 
 #include "application.h"
 #include "onscreendisplay.h"
 #include "multimediakeys/multimediakeys.h"
-#include "processlauncher/processlauncher.h"
 #include "qmlregistration.h"
 #include "sessionmanager/sessionmanager.h"
-#include "sigwatch.h"
 
 #if HAVE_SYSTEMD
 #  include <systemd/sd-daemon.h>
@@ -52,9 +46,6 @@
 
 #include <unistd.h>
 #include <sys/types.h>
-
-#define DUMP_CPU_FEATURE(feature, name)  \
-    if (qCpuHasFeature(feature)) str << " " name;
 
 static const QEvent::Type StartupEventType = static_cast<QEvent::Type>(QEvent::registerEventType());
 
@@ -88,16 +79,7 @@ Application::Application(QObject *parent)
     : QObject(parent)
     , m_failSafe(false)
     , m_started(false)
-    , m_autostartEnabled(true)
 {
-    // Unix signals watcher
-    UnixSignalWatcher *sigwatch = new UnixSignalWatcher(this);
-    sigwatch->watchForSignal(SIGINT);
-    sigwatch->watchForSignal(SIGTERM);
-
-    // Quit when the process is killed
-    connect(sigwatch, &UnixSignalWatcher::unixSignal, this, &Application::unixSignal);
-
     // Register private QML types
     registerPrivateTypes();
 
@@ -109,25 +91,12 @@ Application::Application(QObject *parent)
     // Multimedia keys
     m_multimediaKeys = new MultimediaKeys(this);
 
-    // Process launcher
-    m_launcher = new ProcessLauncher(this);
-
     // Session manager
     m_sessionManager = new SessionManager(this);
 
     // Invoke shutdown sequence when quitting
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit,
             this, &Application::shutdown);
-}
-
-bool Application::isAutostartEnabled() const
-{
-    return m_autostartEnabled;
-}
-
-void Application::setAutostartEnabled(bool enabled)
-{
-    m_autostartEnabled = enabled;
 }
 
 QString Application::screenConfigurationFileName() const
@@ -143,21 +112,6 @@ void Application::setScreenConfigurationFileName(const QString &fileName)
 void Application::setUrl(const QUrl &url)
 {
     m_url = url;
-}
-
-QString Application::systemInformation()
-{
-    QString result;
-    QTextStream str(&result);
-
-    str << "OS: " << QSysInfo::prettyProductName();
-    str << " ["
-        << QSysInfo::kernelType()
-        << " version " << QSysInfo::kernelVersion()
-        << "]\n";
-    str << "Architecture: " << QSysInfo::currentCpuArchitecture() << "\n";
-    str << "Platform name: " << QGuiApplication::platformName();
-    return result;
 }
 
 void Application::customEvent(QEvent *event)
@@ -223,10 +177,6 @@ void Application::startup()
     if (!m_sessionManager->registerWithDBus())
         QCoreApplication::exit(1);
 
-    // Process launcher
-    if (!ProcessLauncher::registerWithDBus(m_launcher))
-        QCoreApplication::exit(1);
-
     // Set screen configuration file name
     m_appEngine->rootContext()->setContextProperty(QStringLiteral("screenConfigurationFileName"),
                                                    m_screenConfigFileName);
@@ -256,7 +206,6 @@ void Application::startup()
                 sd_notify(0, "READY=1");
         });
 #endif
-        m_launcher->setWaylandSocketName(QString::fromUtf8(compositor->socketName()));
 
         // Set Qt platform for applications that will be executed from here
 #if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
@@ -264,9 +213,6 @@ void Application::startup()
 #else
         qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
 #endif
-
-        // Set the Wayland socket name for clients
-        qputenv("WAYLAND_DISPLAY", compositor->socketName());
 
         // Use xdg-shell-v6 for Qt clients
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", QByteArrayLiteral("xdg-shell-v6"));
@@ -277,57 +223,16 @@ void Application::startup()
         qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArrayLiteral("1"));
     }
 
-    // Launch autostart applications
-    autostart();
-
     m_started = true;
 }
 
 void Application::shutdown()
 {
-    m_launcher->deleteLater();
-    m_launcher = nullptr;
-
     m_appEngine->deleteLater();
     m_appEngine = nullptr;
 
     m_sessionManager->deleteLater();
     m_sessionManager = nullptr;
-}
-
-void Application::autostart()
-{
-    if (!m_autostartEnabled) {
-        qCDebug(SESSION_MANAGER) << "Autostart disabled";
-        return;
-    }
-
-    for (const Liri::DesktopFile &entry : Liri::AutoStart::desktopFileList()) {
-        // Ignore hidden entries
-        if (!entry.isVisible())
-            continue;
-        // Ignore entries that are explicitely not meant for Liri
-        if (!entry.isSuitable(QStringLiteral("X-Liri")))
-            continue;
-
-        // If it's neither suitable for GNOME nor KDE then it's probably not meant
-        // for us too, some utilities like those from XFCE have an explicit list
-        // of desktop that are not supported instead of show them on XFCE
-        //if (!entry.isSuitable(true, QLatin1String("GNOME")) && !entry.isSuitable(true, QLatin1String("KDE")))
-        //continue;
-
-        qCDebug(SESSION_MANAGER) << "Autostart:" << entry.name() << "from" << entry.fileName();
-        m_launcher->launchEntry(entry);
-    }
-}
-
-void Application::unixSignal()
-{
-    // Close all applications we launched
-    m_launcher->closeApplications();
-
-    // Exit
-    QCoreApplication::quit();
 }
 
 void Application::objectCreated(QObject *object, const QUrl &)

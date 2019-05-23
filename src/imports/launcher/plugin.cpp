@@ -32,7 +32,6 @@
 #include "frequentmodel.h"
 #include "launchermodel.h"
 #include "pagemodel.h"
-#include "processrunner.h"
 
 class LauncherPlugin : public QQmlExtensionPlugin
 {
@@ -50,7 +49,6 @@ public:
         qmlRegisterType<LauncherModel>(uri, 1, 0, "LauncherModel");
         qmlRegisterType<PageModel>(uri, 1, 0, "PageModel");
         qmlRegisterType<FrequentAppsModel>(uri, 1, 0, "FrequentAppsModel");
-        qmlRegisterType<ProcessRunner>(uri, 1, 0, "ProcessRunner");
         qmlRegisterUncreatableType<Application>(uri, 1, 0, "Application",
                                                 QStringLiteral("Cannot instantiate Application"));
         qmlRegisterUncreatableType<DesktopFileAction>(uri, 1, 0, "DesktopFileAction",

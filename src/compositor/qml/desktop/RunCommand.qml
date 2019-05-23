@@ -28,7 +28,6 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.1
-import Liri.Launcher 1.0 as CppLauncher
 import Fluid.Controls 1.0 as FluidControls
 
 Dialog {
@@ -38,10 +37,6 @@ Dialog {
     Material.theme: Material.Dark
     Material.primary: Material.Blue
     Material.accent: Material.Blue
-
-    CppLauncher.ProcessRunner {
-        id: process
-    }
 
     standardButtons: Dialog.Cancel
 
@@ -56,7 +51,7 @@ Dialog {
         TextField {
             focus: true
             onAccepted: {
-                process.launchCommand(text);
+                SessionInterface.launchCommand(text);
                 text = "";
                 close();
             }

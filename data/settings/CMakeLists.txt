@@ -4,8 +4,6 @@ install(
         io.liri.desktop.keybindings.gschema.xml
         io.liri.desktop.panel.gschema.xml
         io.liri.desktop.peripherals.gschema.xml
-        io.liri.session.gschema.xml
-        io.liri.session.locale.gschema.xml
         io.liri.system.gschema.xml
     DESTINATION
         "${INSTALL_DATADIR}/glib-2.0/schemas"

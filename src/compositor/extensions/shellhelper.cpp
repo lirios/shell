@@ -58,10 +58,12 @@ public:
             process->kill();
     }
 
-    void startProcess(const QString &socketName)
+    bool startProcess()
     {
-        if (!runProgram(QLatin1String(INSTALL_ROOTDIR INSTALL_LIBEXECDIR "/liri-shell-helper"), socketName))
-            runProgram(QLatin1String(INSTALL_LIBEXECDIR "/liri-shell-helper"), socketName);
+        if (!runProgram(QLatin1String(INSTALL_ROOTDIR INSTALL_LIBEXECDIR "/liri-shell-helper")))
+            if (!runProgram(QLatin1String(INSTALL_LIBEXECDIR "/liri-shell-helper")))
+	        return false;
+	return true;
     }
 
     QProcess *process;
@@ -78,7 +80,7 @@ private Q_SLOTS:
     }
 
 private:
-    bool runProgram(const QString &path, const QString &socketName)
+    bool runProgram(const QString &path)
     {
         if (!QFile::exists(path))
             return false;
@@ -86,7 +88,6 @@ private:
         int retries = 5;
         while (retries-- > 0) {
             QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-            env.insert(QLatin1String("WAYLAND_DISPLAY"), socketName);
             //env.insert(QLatin1String("WAYLAND_DEBUG"), "1");
             process->setProcessEnvironment(env);
             process->start(path);
@@ -192,13 +193,14 @@ void ShellHelper::initialize()
     d->init(compositor->display(), 1);
 }
 
-void ShellHelper::start(const QString &socketName)
+void ShellHelper::start()
 {
     Q_D(ShellHelper);
 
     // Run the shell helper in a thread to avoid
     // blocking the compositor
-    d->processRunner->startProcess(socketName);
+    if (d->processRunner->startProcess())
+        Q_EMIT processStarted();
 }
 
 void ShellHelper::grabCursor(GrabCursor cursor)
