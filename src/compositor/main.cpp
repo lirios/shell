@@ -115,7 +115,7 @@ static void loadAppTranslations()
 
     // Load shell translations
     QTranslator *appTranslator = new QTranslator(QCoreApplication::instance());
-    if (appTranslator->load(QStringLiteral("%1/compositor_%3").arg(translationsDir, locale))) {
+    if (appTranslator->load(QStringLiteral("%1/compositor_%2").arg(translationsDir, locale))) {
         QCoreApplication::installTranslator(appTranslator);
     } else if (locale == QLatin1String("C") ||
                 locale.startsWith(QLatin1String("en"))) {
