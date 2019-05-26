@@ -26,7 +26,6 @@
 
 #include <QDir>
 #include <QSysInfo>
-#include <QtCore/private/qsimd_p.h>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 #include <QtGui/QGuiApplication>
@@ -156,25 +155,7 @@ QString Application::systemInformation()
         << QSysInfo::kernelType()
         << " version " << QSysInfo::kernelVersion()
         << "]\n";
-    str << "Architecture: " << QSysInfo::currentCpuArchitecture() << "; ";
-    str << "features:";
-#if defined(Q_PROCESSOR_X86)
-    DUMP_CPU_FEATURE(SSE2, "SSE2");
-    DUMP_CPU_FEATURE(SSE3, "SSE3");
-    DUMP_CPU_FEATURE(SSSE3, "SSSE3");
-    DUMP_CPU_FEATURE(SSE4_1, "SSE4.1");
-    DUMP_CPU_FEATURE(SSE4_2, "SSE4.2");
-    DUMP_CPU_FEATURE(AVX, "AVX");
-    DUMP_CPU_FEATURE(AVX2, "AVX2");
-    DUMP_CPU_FEATURE(RTM, "RTM");
-    DUMP_CPU_FEATURE(HLE, "HLE");
-#elif defined(Q_PROCESSOR_ARM)
-    DUMP_CPU_FEATURE(ARM_NEON, "Neon");
-#elif defined(Q_PROCESSOR_MIPS)
-    DUMP_CPU_FEATURE(DSP, "DSP");
-    DUMP_CPU_FEATURE(DSPR2, "DSPR2");
-#endif
-    str << '\n';
+    str << "Architecture: " << QSysInfo::currentCpuArchitecture() << "\n";
     str << "Platform name: " << QGuiApplication::platformName();
     return result;
 }

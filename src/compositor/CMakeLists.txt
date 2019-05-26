@@ -147,7 +147,6 @@ liri_add_executable(LiriShell
         ${LiriShell_DEFINES}
     LIBRARIES
         Qt5::Core
-        Qt5::CorePrivate
         Qt5::Concurrent
         Qt5::DBus
         Qt5::Gui
