@@ -60,10 +60,7 @@ public:
 
     bool startProcess()
     {
-        if (!runProgram(QLatin1String(INSTALL_ROOTDIR INSTALL_LIBEXECDIR "/liri-shell-helper")))
-            if (!runProgram(QLatin1String(INSTALL_LIBEXECDIR "/liri-shell-helper")))
-	        return false;
-	return true;
+        return runProgram(QString::asprintf("%s/liri-shell-helper", INSTALL_LIBEXECDIR));
     }
 
     QProcess *process;
