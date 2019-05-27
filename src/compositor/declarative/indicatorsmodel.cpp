@@ -143,6 +143,14 @@ void IndicatorsModel::populate(IndicatorsModel *model)
             if (metadata.value(QLatin1String("Type")).toString() != QLatin1String("Service"))
                 continue;
 
+            // Don't add the same indicator twice, might happen when developing while
+            // there is already a system-wide installation
+            const QString name = metadata.value(QStringLiteral("X-Liri-PluginInfo-Name")).toString();
+            if (model->m_indicatorNames.contains(name))
+                continue;
+            else
+                model->m_indicatorNames.append(name);
+
             const QString mainScriptPath = indicatorDir.absoluteFilePath(metadata.value(QLatin1String("X-Liri-MainScript")).toString());
             if (!indicatorDir.exists(mainScriptPath))
                 continue;

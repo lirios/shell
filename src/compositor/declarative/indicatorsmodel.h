@@ -73,6 +73,7 @@ Q_SIGNALS:
 private:
     QHash<int, QByteArray> m_roleNames;
     QList<IndicatorItem*> m_items;
+    QStringList m_indicatorNames;
 
 private Q_SLOTS:
     void addNewItem(QObject *object);
