@@ -86,6 +86,7 @@ private:
         while (retries-- > 0) {
             QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
             //env.insert(QLatin1String("WAYLAND_DEBUG"), "1");
+            env.insert(QStringLiteral("XDG_SESSION_TYPE"), QStringLiteral("wayland"));
             process->setProcessEnvironment(env);
             process->start(path);
             qCDebug(lcShell, "Trying shell helper (%s)...", qPrintable(path));
