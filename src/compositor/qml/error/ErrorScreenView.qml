@@ -73,7 +73,7 @@ Rectangle {
 
         Button {
             text: qsTr("Quit")
-            onClicked: Qt.quit()
+            onClicked: SessionInterface.logOut()
 
             Layout.alignment: Qt.AlignHCenter
 
