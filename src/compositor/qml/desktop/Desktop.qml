@@ -25,11 +25,12 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.0 as QtWaylandCompositor
 import QtGraphicalEffects 1.0
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
+import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
+import Liri.DBusService 1.0 as DBusService
 import ".."
 import "../components"
 import "../indicators"
@@ -67,6 +68,41 @@ Item {
         fillMode: liriCompositor.settings.background.fillMode
         blur: false
         z: 0
+
+        DBusService.Application {
+            id: settingsApp
+
+            serviceName: "io.liri.Settings"
+            objectPath: "/io/liri/Settings"
+        }
+
+        Menu {
+            id: bgMenu
+
+            MenuItem {
+                text: qsTr("Change Background...")
+                onClicked: settingsApp.open(["background"])
+            }
+
+            MenuSeparator {}
+
+            MenuItem {
+                text: qsTr("Display Settings")
+                onClicked: settingsApp.open(["display"])
+            }
+
+            MenuItem {
+                text: qsTr("Settings")
+                onClicked: settingsApp.activate()
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: bgMenu.popup(mouse.x, mouse.y)
+            onPressAndHold: bgMenu.popup(mouse.x, mouse.y)
+        }
     }
 
     DesktopWidgets {
