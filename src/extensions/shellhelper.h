@@ -24,7 +24,10 @@
 #ifndef SHELLPHELPER_H
 #define SHELLPHELPER_H
 
+#include <QLoggingCategory>
 #include <QtWaylandCompositor/QWaylandCompositorExtension>
+
+Q_DECLARE_LOGGING_CATEGORY(lcShellHelper)
 
 class QWaylandSurface;
 

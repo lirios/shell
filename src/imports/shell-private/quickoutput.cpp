@@ -25,9 +25,8 @@
 #include <QWaylandCompositor>
 #include <QWaylandOutputMode>
 
-#include "declarative/quickoutput.h"
-#include "declarative/screenmodel.h"
-#include "logging_p.h"
+#include "quickoutput.h"
+#include "screenmodel.h"
 
 QuickOutput::QuickOutput()
     : QWaylandQuickOutput()

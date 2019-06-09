@@ -24,7 +24,7 @@
 #ifndef LIRI_GTKSHELL_P_H
 #define LIRI_GTKSHELL_P_H
 
-#include "extensions/gtkshell.h"
+#include "gtkshell.h"
 #include "qwayland-server-gtk-shell.h"
 
 //

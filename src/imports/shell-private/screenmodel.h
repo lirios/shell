@@ -25,11 +25,14 @@
 #define SCREENMODEL_H
 
 #include <QAbstractListModel>
+#include <QLoggingCategory>
 #include <QQmlComponent>
 #include <QQmlParserStatus>
 #include <QQmlListProperty>
 #include <QScreen>
 #include <QWaylandOutput>
+
+Q_DECLARE_LOGGING_CATEGORY(lcShell)
 
 class ScreenModel : public QAbstractListModel, public QQmlParserStatus
 {

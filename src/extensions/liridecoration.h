@@ -24,12 +24,15 @@
 #ifndef LIRIDECORATION_H
 #define LIRIDECORATION_H
 
+#include <QLoggingCategory>
 #include <QPointer>
 #include <QWaylandCompositorExtension>
 #include <QWaylandResource>
 #include <QWaylandSurface>
 
 #include "qwayland-server-liri-decoration.h"
+
+Q_DECLARE_LOGGING_CATEGORY(lcDecoration)
 
 class LiriDecoration;
 

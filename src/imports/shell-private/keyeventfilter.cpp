@@ -22,7 +22,6 @@
  ***************************************************************************/
 
 #include <QtQuick/QQuickWindow>
-#include <QDebug>
 
 #include "keyeventfilter.h"
 
@@ -60,5 +59,3 @@ bool KeyEventFilter::eventFilter(QObject *object, QEvent *event)
     QCoreApplication::sendEvent(this, event);
     return event->isAccepted();
 }
-
-#include "moc_keyeventfilter.cpp"

@@ -26,18 +26,18 @@
 
 #include <QCoreApplication>
 #include <QDir>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
+#include <QDBusConnection>
+#include <QDBusError>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQmlExtensionPlugin>
 #include <QStandardPaths>
-
+#include <QtPlugin>
 #include <QtWaylandCompositor/QWaylandCompositor>
 
 #include "application.h"
 #include "onscreendisplay.h"
 #include "multimediakeys/multimediakeys.h"
-#include "qmlregistration.h"
 #include "sessionmanager/sessionmanager.h"
 
 #if HAVE_SYSTEMD
@@ -46,6 +46,8 @@
 
 #include <unistd.h>
 #include <sys/types.h>
+
+Q_IMPORT_PLUGIN(ShellPrivatePlugin)
 
 static const QEvent::Type StartupEventType = static_cast<QEvent::Type>(QEvent::registerEventType());
 
@@ -80,8 +82,8 @@ Application::Application(QObject *parent)
     , m_failSafe(false)
     , m_started(false)
 {
-    // Register private QML types
-    registerPrivateTypes();
+    // Register the static QML plugin
+    qobject_cast<QQmlExtensionPlugin*>(qt_static_plugin_ShellPrivatePlugin().instance())->registerTypes("Liri.private.shell");
 
     // Application engine
     m_appEngine = new QQmlApplicationEngine(this);

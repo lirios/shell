@@ -24,9 +24,10 @@
 #include <QWaylandCompositor>
 #include <QWaylandSurface>
 
-#include "extensions/gtkshell.h"
-#include "extensions/gtkshell_p.h"
-#include "logging_p.h"
+#include "gtkshell.h"
+#include "gtkshell_p.h"
+
+Q_LOGGING_CATEGORY(lcGtkShell, "liri.gtkshell", QtDebugMsg)
 
 /*
  * GtkShellPrivate

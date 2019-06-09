@@ -23,8 +23,9 @@
 
 #include <QWaylandCompositor>
 
-#include "extensions/liridecoration.h"
-#include "logging_p.h"
+#include "liridecoration.h"
+
+Q_LOGGING_CATEGORY(lcDecoration, "liri.decoration", QtWarningMsg)
 
 LiriDecorationManager::LiriDecorationManager()
     : QWaylandCompositorExtensionTemplate<LiriDecorationManager>()

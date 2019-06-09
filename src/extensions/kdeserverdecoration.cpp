@@ -25,7 +25,7 @@
 #include <QWaylandSurface>
 
 #include "kdeserverdecoration.h"
-#include "logging_p.h"
+#include "liridecoration.h"
 
 KdeServerDecorationManager::KdeServerDecorationManager()
     : QWaylandCompositorExtensionTemplate<KdeServerDecorationManager>()

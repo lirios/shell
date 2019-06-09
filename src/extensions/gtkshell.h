@@ -24,9 +24,12 @@
 #ifndef LIRI_GTKSHELL_H
 #define LIRI_GTKSHELL_H
 
+#include <QLoggingCategory>
 #include <QWaylandCompositorExtension>
 #include <QWaylandResource>
 #include <QWaylandShellSurface>
+
+Q_DECLARE_LOGGING_CATEGORY(lcGtkShell)
 
 QT_FORWARD_DECLARE_CLASS(QWaylandClient)
 QT_FORWARD_DECLARE_CLASS(QWaylandSurface)

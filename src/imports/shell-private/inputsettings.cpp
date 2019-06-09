@@ -24,7 +24,7 @@
 #include <QWaylandCompositor>
 #include <QWaylandSeat>
 
-#include "declarative/inputsettings.h"
+#include "inputsettings.h"
 
 /*
  * InputSettings
