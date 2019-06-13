@@ -34,20 +34,21 @@ const QString outputDbusObjectPath = QLatin1String("/io/liri/Shell/Outputs/");
 
 OutputAdaptor::OutputAdaptor(const QString &uuid, QObject *parent)
     : QObject(parent)
+    , m_path(QDBusObjectPath(outputDbusObjectPath + uuid))
     , m_uuid(uuid)
 {
     QDBusConnection::sessionBus().registerObject(
-                path().path(), this, QDBusConnection::ExportAllContents);
+                m_path.path(), this, QDBusConnection::ExportAllContents);
 }
 
 OutputAdaptor::~OutputAdaptor()
 {
-    QDBusConnection::sessionBus().unregisterObject(path().path());
+    QDBusConnection::sessionBus().unregisterObject(m_path.path());
 }
 
 QDBusObjectPath OutputAdaptor::path() const
 {
-    return QDBusObjectPath(outputDbusObjectPath + m_uuid);
+    return m_path;
 }
 
 QString OutputAdaptor::uuid() const

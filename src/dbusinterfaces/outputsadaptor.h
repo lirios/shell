@@ -54,6 +54,7 @@ Q_SIGNALS:
     void ModelChanged(const QString &model);
 
 private:
+    QDBusObjectPath m_path;
     QString m_uuid;
     QString m_manufacturer;
     QString m_model;
