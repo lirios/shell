@@ -87,13 +87,26 @@ void Outputs::handleDefaultOutputChanged()
     if (!compositor() || !compositor()->defaultOutput())
         return;
 
-    QString uuid = compositor()->defaultOutput()->property("uuid").toString();
+    QVariant value = compositor()->defaultOutput()->property("uuid");
+    if (!value.isValid())
+        return;
+
+    QString uuid = value.toString();
+    if (uuid.isEmpty())
+        return;
+
     m_adaptor->setPrimaryOutput(uuid);
 }
 
 void Outputs::handleOutputAdded(QWaylandOutput *output)
 {
-    QString uuid = output->property("uuid").toString();
+    QVariant value = output->property("uuid");
+    if (!value.isValid())
+        return;
+
+    QString uuid = value.toString();
+    if (uuid.isEmpty())
+        return;
 
     if (m_adaptor->hasOutput(uuid))
         return;
@@ -112,5 +125,13 @@ void Outputs::handleOutputAdded(QWaylandOutput *output)
 
 void Outputs::handleOutputRemoved(QWaylandOutput *output)
 {
-    m_adaptor->removeOutput(output->property("uuid").toString());
+    QVariant value = output->property("uuid");
+    if (!value.isValid())
+        return;
+
+    QString uuid = value.toString();
+    if (uuid.isEmpty())
+        return;
+
+    m_adaptor->removeOutput(uuid);
 }
