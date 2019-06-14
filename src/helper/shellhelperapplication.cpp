@@ -21,10 +21,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+#include <QDBusConnection>
+#include <QDBusError>
 #include <QtCore/QThread>
 #include <QtGui/QWindow>
 
+#include "processlauncher.h"
 #include "shellhelperapplication.h"
+
+const QString serviceName = QStringLiteral("io.liri.ShellHelper");
 
 class ShellHelperApplicationPrivate
 {
@@ -56,10 +61,23 @@ ShellHelperApplication::ShellHelperApplication(QObject *parent)
 {
     connect(d_ptr->helper, &ShellHelperClient::cursorChangeRequested,
             this, &ShellHelperApplication::handleCursorChangeRequest);
+
+    // Register D-Bus service
+    auto bus = QDBusConnection::sessionBus();
+    if (!bus.registerService(serviceName))
+        qWarning("Failed to register D-Bus service \"%s\": %s", qPrintable(serviceName),
+                 qPrintable(bus.lastError().message()));
+
+    // Process launcher D-Bus object
+    new ProcessLauncher(this);
 }
 
 ShellHelperApplication::~ShellHelperApplication()
 {
+    // Unregister D-Bus service
+    auto bus = QDBusConnection::sessionBus();
+    bus.unregisterService(serviceName);
+
     delete d_ptr;
 }
 

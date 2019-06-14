@@ -52,7 +52,9 @@ int main(int argc, char *argv[])
     disablePtrace();
 
     // Setup the environment
+    qputenv("XDG_SESSION_TYPE", QByteArrayLiteral("wayland"));
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
+    qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("liri"));
     qputenv("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT", QByteArrayLiteral("1"));
 
     // Application

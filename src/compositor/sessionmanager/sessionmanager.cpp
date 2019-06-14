@@ -152,9 +152,9 @@ void SessionManager::registerService()
 void SessionManager::launchApplication(const QString &appId)
 {
     auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("io.liri.ShellHelper"),
+                QStringLiteral("/io/liri/Launcher"),
+                QStringLiteral("io.liri.Launcher"),
                 QStringLiteral("LaunchApplication"));
     QVariantList args;
     args.append(appId);
@@ -165,9 +165,9 @@ void SessionManager::launchApplication(const QString &appId)
 void SessionManager::launchDesktopFile(const QString &fileName)
 {
     auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("io.liri.ShellHelper"),
+                QStringLiteral("/io/liri/Launcher"),
+                QStringLiteral("io.liri.Launcher"),
                 QStringLiteral("LaunchDesktopFile"));
     QVariantList args;
     args.append(fileName);
@@ -178,9 +178,9 @@ void SessionManager::launchDesktopFile(const QString &fileName)
 void SessionManager::launchCommand(const QString &command)
 {
     auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("io.liri.ShellHelper"),
+                QStringLiteral("/io/liri/Launcher"),
+                QStringLiteral("io.liri.Launcher"),
                 QStringLiteral("LaunchCommand"));
     QVariantList args;
     args.append(command);
