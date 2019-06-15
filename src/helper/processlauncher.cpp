@@ -44,6 +44,26 @@ ProcessLauncher::ProcessLauncher(QObject *parent)
                             this, QDBusConnection::ExportScriptableContents))
         qWarning("Failed to register \"%s\" D-Bus interface: %s", qPrintable(interfaceName),
                  qPrintable(bus.lastError().message()));
+
+    // Set environment for the programs we will launch from here
+    m_env = QProcessEnvironment::systemEnvironment();
+    m_env.insert(QStringLiteral("XDG_SESSION_TYPE"), QStringLiteral("wayland"));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+    m_env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland;xcb"));
+#else
+    m_env.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+#endif
+    m_env.insert(QStringLiteral("QT_QPA_PLATFORMTHEME"), QStringLiteral("liri"));
+    m_env.insert(QStringLiteral("QT_WAYLAND_SHELL_INTEGRATION"), QStringLiteral("xdg-shell-v6"));
+    m_env.insert(QStringLiteral("QT_QUICK_CONTROLS_1_STYLE"), QStringLiteral("Flat"));
+    m_env.insert(QStringLiteral("QT_QUICK_CONTROLS_STYLE"), QStringLiteral("material"));
+    m_env.insert(QStringLiteral("QT_WAYLAND_DECORATION"), QStringLiteral("material"));
+    m_env.insert(QStringLiteral("QT_AUTO_SCREEN_SCALE_FACTOR"), QStringLiteral("1"));
+    m_env.insert(QStringLiteral("XCURSOR_THEME"), QStringLiteral("Paper"));
+    m_env.insert(QStringLiteral("XCURSOR_SIZE"), QStringLiteral("16"));
+    m_env.remove(QStringLiteral("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT"));
+    m_env.remove(QStringLiteral("QT_SCALE_FACTOR"));
+    m_env.remove(QStringLiteral("QT_SCREEN_SCALE_FACTORS"));
 }
 
 ProcessLauncher::~ProcessLauncher()
@@ -72,9 +92,7 @@ bool ProcessLauncher::LaunchApplication(const QString &appId)
         return false;
     }
 
-    auto env = QProcessEnvironment::systemEnvironment();
-    env.remove(QStringLiteral("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT"));
-    desktop->setProcessEnvironment(env);
+    desktop->setProcessEnvironment(m_env);
 
     return desktop->startDetached();
 }
@@ -96,9 +114,7 @@ bool ProcessLauncher::LaunchDesktopFile(const QString &path, const QStringList &
         return false;
     }
 
-    auto env = QProcessEnvironment::systemEnvironment();
-    env.remove(QStringLiteral("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT"));
-    desktop->setProcessEnvironment(env);
+    desktop->setProcessEnvironment(m_env);
 
     return desktop->startDetached(urls);
 }
@@ -108,10 +124,7 @@ bool ProcessLauncher::LaunchCommand(const QString &command)
     if (command.isEmpty())
         return false;
 
-    auto env = QProcessEnvironment::systemEnvironment();
-    env.remove(QStringLiteral("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT"));
-
     QProcess *process = new QProcess(this);
-    process->setProcessEnvironment(env);
+    process->setProcessEnvironment(m_env);
     return process->startDetached(command);
 }

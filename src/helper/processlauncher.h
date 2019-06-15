@@ -25,6 +25,7 @@
 #define PROCESSLAUNCHER_H
 
 #include <QObject>
+#include <QProcessEnvironment>
 
 class ProcessLauncher : public QObject
 {
@@ -37,6 +38,9 @@ public:
     Q_SCRIPTABLE bool LaunchApplication(const QString &appId);
     Q_SCRIPTABLE bool LaunchDesktopFile(const QString &path, const QStringList &urls = QStringList());
     Q_SCRIPTABLE bool LaunchCommand(const QString &command);
+
+private:
+    QProcessEnvironment m_env;
 };
 
 #endif // PROCESSLAUNCHER_H

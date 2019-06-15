@@ -66,11 +66,6 @@ static void setupEnvironment()
 {
     // Environment
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("liri"));
-    qputenv("QT_QUICK_CONTROLS_1_STYLE", QByteArrayLiteral("Flat"));
-    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArrayLiteral("material"));
-    qputenv("QT_WAYLAND_DECORATION", QByteArrayLiteral("material"));
-    qputenv("XCURSOR_THEME", QByteArrayLiteral("Paper"));
-    qputenv("XCURSOR_SIZE", QByteArrayLiteral("16"));
 
     // Load input method
     QtGSettings::QGSettings settings(QStringLiteral("io.liri.desktop.interface"),

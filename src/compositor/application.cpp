@@ -208,21 +208,6 @@ void Application::startup()
                 sd_notify(0, "READY=1");
         });
 #endif
-
-        // Set Qt platform for applications that will be executed from here
-#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
-        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland;xcb"));
-#else
-        qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
-#endif
-
-        // Use xdg-shell-v6 for Qt clients
-        qputenv("QT_WAYLAND_SHELL_INTEGRATION", QByteArrayLiteral("xdg-shell-v6"));
-
-        // Don't mess with client scale factor
-        qunsetenv("QT_SCALE_FACTOR");
-        qunsetenv("QT_SCREEN_SCALE_FACTORS");
-        qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", QByteArrayLiteral("1"));
     }
 
     m_started = true;
