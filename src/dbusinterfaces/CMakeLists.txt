@@ -19,49 +19,51 @@ if(NOT TARGET Liri::PlatformHeaders)
     find_package(Liri1PlatformHeaders REQUIRED)
 endif()
 
-add_library(LiriShellDBusInterfaces
-    STATIC
-    outputchangeset.cpp
-    outputchangeset.h
-    outputconfigurationadaptor.cpp
-    outputconfigurationadaptor.h
-    outputconfiguration.cpp
-    outputconfiguration.h
-    outputdeviceadaptor.cpp
-    outputdeviceadaptor.h
-    outputdevice.cpp
-    outputdevice.h
-    outputmanagementadaptor.cpp
-    outputmanagementadaptor.h
-    outputmanagement.cpp
-    outputmanagement.h
-    outputsadaptor.cpp
-    outputsadaptor.h
-    outputs.cpp
-    outputs.h
-    screencastadaptor.cpp
-    screencastadaptor.h
-    screencast.cpp
-    screencast.h
-    screenshooter.h
-    screenshoter.cpp
-    ${LiriShellDBusInterfaces_SOURCES}
-)
-add_library("Liri::ShellDBusInterfaces" ALIAS "LiriShellDBusInterfaces")
-target_compile_options("LiriShellDBusInterfaces" PUBLIC "-fpermissive")
-target_include_directories("LiriShellDBusInterfaces" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_link_libraries("LiriShellDBusInterfaces"
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Gui
-    Qt5::Qml
-    Qt5::Quick
-    Qt5::WaylandCompositor
-    Liri::PlatformHeaders
-    ${LiriShellDBusInterfaces_LIBRARIES}
-)
-target_compile_definitions("LiriShellDBusInterfaces"
-    PRIVATE
+liri_add_module(ShellDBusInterfaces
+    SOURCES
+        outputchangeset.cpp
+        outputchangeset.h
+        outputconfigurationadaptor.cpp
+        outputconfigurationadaptor.h
+        outputconfiguration.cpp
+        outputconfiguration.h
+        outputdeviceadaptor.cpp
+        outputdeviceadaptor.h
+        outputdevice.cpp
+        outputdevice.h
+        outputmanagementadaptor.cpp
+        outputmanagementadaptor.h
+        outputmanagement.cpp
+        outputmanagement.h
+        outputsadaptor.cpp
+        outputsadaptor.h
+        outputs.cpp
+        outputs.h
+        screencastadaptor.cpp
+        screencastadaptor.h
+        screencast.cpp
+        screencast.h
+        screenshooter.h
+        screenshoter.cpp
+        ${LiriShellDBusInterfaces_SOURCES}
+    DEFINES
+        QT_NO_CAST_FROM_ASCII
+        QT_NO_FOREACH
         QT_WAYLAND_COMPOSITOR_QUICK
         ${LiriShellDBusInterfaces_DEFINES}
+    PUBLIC_LIBRARIES
+        Qt5::Core
+        Qt5::DBus
+        Qt5::Gui
+        Qt5::Qml
+        Qt5::Quick
+        Qt5::WaylandCompositor
+        Liri::PlatformHeaders
+        ${LiriShellDBusInterfaces_LIBRARIES}
+    COMPILE_FLAGS
+        "-fpermissive"
+    STATIC
+    NO_MODULE_HEADERS
+    NO_CMAKE
+    NO_PKGCONFIG
 )
