@@ -136,6 +136,27 @@ ShellHelperPrivate *ShellHelperPrivate::get(ShellHelper *shell)
 
 void ShellHelperPrivate::liri_shell_bind_resource(Resource *r)
 {
+    // Make sure only an authorized client can bind
+    pid_t pid;
+    wl_client_get_credentials(r->client(), &pid, nullptr, nullptr);
+    QFile file(QString::asprintf("/proc/%d/cmdline", pid));
+    if (file.open(QFile::ReadOnly)) {
+        QTextStream stream(&file);
+        QString data = stream.readAll();
+        QStringList args = data.split(QLatin1Char('\0'));
+        file.close();
+
+        if (!args.first().endsWith(QStringLiteral("liri-shell-helper"))) {
+            wl_resource_post_error(r->handle, WL_DISPLAY_ERROR_IMPLEMENTATION,
+                                   "unauthorized client program");
+            return;
+        }
+    } else {
+        wl_resource_post_error(r->handle, WL_DISPLAY_ERROR_IMPLEMENTATION,
+                               "unauthorized client program");
+        return;
+    }
+
     // Client can bind only once
     if (resource())
         wl_resource_post_error(r->handle,
