@@ -243,7 +243,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../application.cpp" line="128"/>
+        <location filename="../application.cpp" line="130"/>
         <source>The XDG_RUNTIME_DIR environment variable is not set.
 Refer to your distribution on how to get it, or read
 http://www.freedesktop.org/wiki/Specifications/basedir-spec
@@ -256,14 +256,14 @@ pour comment l&apos;implémenter.
 </translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="139"/>
+        <location filename="../application.cpp" line="141"/>
         <source>The XDG_RUNTIME_DIR environment variable is set to &quot;%1&quot;, which doesn't exist.
 </source>
         <translation>La variable d&apos;environnement XDG_RUNTIME_DIR est définie sur &quot;%1&quot;, ce qui n&apos;existe pas.
 </translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="146"/>
+        <location filename="../application.cpp" line="148"/>
         <source>XDG_RUNTIME_DIR is set to &quot;%1&quot; and is not configured correctly.
 Unix access mode must be 0700, but is 0%2.
 It must also be owned by the current user (UID %3), but is owned by UID %4 (&quot;%5&quot;).

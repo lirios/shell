@@ -63,17 +63,17 @@
     <message>
         <location filename="../qml/desktop/Desktop.qml" line="83"/>
         <source>Change Background...</source>
-        <translation type="unfinished"/>
+        <translation> Skift baggrund ...</translation>
     </message>
     <message>
         <location filename="../qml/desktop/Desktop.qml" line="90"/>
         <source>Display Settings</source>
-        <translation type="unfinished"/>
+        <translation>Skærmindstillinger</translation>
     </message>
     <message>
         <location filename="../qml/desktop/Desktop.qml" line="95"/>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation>Indstillinger</translation>
     </message>
 </context>
 <context>
@@ -143,7 +143,7 @@
     <message>
         <location filename="../qml/launcher/LauncherPopOver.qml" line="145"/>
         <source>Type an application name...</source>
-        <translation>Skriv et programnavn...</translation>
+        <translation>Skriv et programnavn ...</translation>
     </message>
 </context>
 <context>
@@ -209,7 +209,7 @@
     <message>
         <location filename="../qml/screens/PowerDialog.qml" line="132"/>
         <source>Power Off</source>
-        <translation type="unfinished"/>
+        <translation>Sluk</translation>
     </message>
     <message>
         <location filename="../qml/screens/PowerDialog.qml" line="152"/>
@@ -243,7 +243,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../application.cpp" line="128"/>
+        <location filename="../application.cpp" line="130"/>
         <source>The XDG_RUNTIME_DIR environment variable is not set.
 Refer to your distribution on how to get it, or read
 http://www.freedesktop.org/wiki/Specifications/basedir-spec
@@ -256,14 +256,14 @@ om hvordan den implementeres.
 </translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="139"/>
+        <location filename="../application.cpp" line="141"/>
         <source>The XDG_RUNTIME_DIR environment variable is set to &quot;%1&quot;, which doesn't exist.
 </source>
         <translation>XDG_RUNTIME_DIR-miljøvariablen er indstillet til &quot;%1&quot;, som ikke findes.
 </translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="146"/>
+        <location filename="../application.cpp" line="148"/>
         <source>XDG_RUNTIME_DIR is set to &quot;%1&quot; and is not configured correctly.
 Unix access mode must be 0700, but is 0%2.
 It must also be owned by the current user (UID %3), but is owned by UID %4 (&quot;%5&quot;).
