@@ -19,17 +19,11 @@ ecm_add_qtwayland_client_protocol(LiriShellHelper_SOURCES
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
-if(NOT TARGET Liri::Xdg)
-    find_package(Liri1Xdg REQUIRED)
-endif()
-
 liri_add_executable(LiriShellHelper
     OUTPUT_NAME
         "liri-shell-helper"
     SOURCES
         main.cpp
-        processlauncher.cpp
-        processlauncher.h
         shellhelperapplication.cpp
         shellhelperapplication.h
         shellhelperclient.cpp
@@ -44,10 +38,8 @@ liri_add_executable(LiriShellHelper
         "${INSTALL_LIBEXECDIR}"
     LIBRARIES
         Qt5::Core
-        Qt5::DBus
         Qt5::Gui
         Qt5::GuiPrivate
         Qt5::WaylandClient
         Wayland::Client
-        Liri::Xdg
 )

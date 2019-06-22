@@ -148,7 +148,7 @@ bool Application::launch(const QStringList &urls)
         return true;
 
     const QDBusConnection bus = QDBusConnection::sessionBus();
-    QDBusInterface interface(QStringLiteral("io.liri.ShellHelper"),
+    QDBusInterface interface(QStringLiteral("io.liri.Launcher"),
                              QStringLiteral("/io/liri/Launcher"),
                              QStringLiteral("io.liri.Launcher"), bus);
     QDBusMessage msg = interface.call(QStringLiteral("LaunchDesktopFile"), m_desktopFile->fileName());
