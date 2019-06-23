@@ -35,6 +35,10 @@
 
 Q_LOGGING_CATEGORY(lcShellHelper, "liri.shell", QtDebugMsg)
 
+#ifndef WL_DISPLAY_ERROR_IMPLEMENTATION
+#  define WL_DISPLAY_ERROR_IMPLEMENTATION WL_DISPLAY_ERROR_INVALID_METHOD
+#endif
+
 class ProcessRunner : public QObject
 {
     Q_OBJECT
