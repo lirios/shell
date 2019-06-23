@@ -25,7 +25,6 @@
 
 #include "qwayland-server-shell-helper.h"
 
-QT_FORWARD_DECLARE_CLASS(QThread)
 QT_FORWARD_DECLARE_CLASS(QWaylandSurface)
 
 class ProcessRunner;
@@ -40,7 +39,6 @@ public:
 
     static ShellHelperPrivate *get(ShellHelper *shell);
 
-    QThread *runnerThread = nullptr;
     ProcessRunner *processRunner = nullptr;
     QWaylandSurface *grabSurface = nullptr;
 

@@ -23,7 +23,6 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QProcess>
-#include <QtCore/QThread>
 
 #include <QtWaylandCompositor/qwaylandcompositor.h>
 #include <QtWaylandCompositor/QWaylandPointer>
@@ -49,10 +48,19 @@ public:
     {
         process->setProcessChannelMode(QProcess::ForwardedChannels);
 
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        //env.insert(QLatin1String("WAYLAND_DEBUG"), "1");
+        env.insert(QStringLiteral("XDG_SESSION_TYPE"), QStringLiteral("wayland"));
+        process->setProcessEnvironment(env);
+
         connect(process, &QProcess::readyReadStandardOutput,
                 this, &ProcessRunner::handleReadOutput);
         connect(process, &QProcess::readyReadStandardError,
                 this, &ProcessRunner::handleReadError);
+        connect(process, &QProcess::started,
+                this, &ProcessRunner::processStarted);
+        connect(process, &QProcess::errorOccurred,
+                this, &ProcessRunner::handleErrorOccurred);
     }
 
     ~ProcessRunner()
@@ -68,7 +76,11 @@ public:
         return runProgram(QString::asprintf("%s/liri-shell-helper", INSTALL_LIBEXECDIR));
     }
 
-    QProcess *process;
+    int retries = 5;
+    QProcess *process = nullptr;
+
+Q_SIGNALS:
+    void processStarted();
 
 private Q_SLOTS:
     void handleReadOutput()
@@ -81,33 +93,31 @@ private Q_SLOTS:
         qCCritical(lcShellHelper) << process->readAllStandardError();
     }
 
+    void handleErrorOccurred(QProcess::ProcessError error)
+    {
+        if (error != QProcess::FailedToStart || error != QProcess::Crashed)
+            return;
+
+        if (retries-- > 0) {
+            qCWarning(lcShellHelper, "Failed to start shell helper, %d attempt(s) left",
+                      retries);
+            startProcess();
+            return;
+        }
+
+        if (retries == 0)
+            qCWarning(lcShellHelper, "Failed to start shell helper, giving up");
+    }
+
 private:
     bool runProgram(const QString &path)
     {
         if (!QFile::exists(path))
             return false;
 
-        int retries = 5;
-        while (retries-- > 0) {
-            QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-            //env.insert(QLatin1String("WAYLAND_DEBUG"), "1");
-            env.insert(QStringLiteral("XDG_SESSION_TYPE"), QStringLiteral("wayland"));
-            process->setProcessEnvironment(env);
-            process->start(path);
-            qCDebug(lcShellHelper, "Trying shell helper (%s)...", qPrintable(path));
-            if (Q_LIKELY(process->waitForStarted())) {
-                qCInfo(lcShellHelper, "Running shell helper (%s)...", qPrintable(path));
-                return true;
-            } else {
-                if (retries == 0)
-                    qCWarning(lcShellHelper, "Failed to start shell helper, giving up");
-                else
-                    qCWarning(lcShellHelper, "Failed to start shell helper, %d attempt(s) left",
-                              retries);
-            }
-        }
+        process->start(path);
 
-        return false;
+        return true;
     }
 };
 
@@ -117,20 +127,16 @@ private:
 
 ShellHelperPrivate::ShellHelperPrivate(ShellHelper *qq)
     : QtWaylandServer::liri_shell()
-    , runnerThread(new QThread())
-    , processRunner(new ProcessRunner())
+    , processRunner(new ProcessRunner)
     , q_ptr(qq)
 {
-    processRunner->moveToThread(runnerThread);
+    qq->connect(processRunner, &ProcessRunner::processStarted,
+                qq, &ShellHelper::processStarted);
 }
 
 ShellHelperPrivate::~ShellHelperPrivate()
 {
-    runnerThread->wait();
-    runnerThread->quit();
-    delete runnerThread;
-
-    delete processRunner;
+    processRunner->deleteLater();
 }
 
 ShellHelperPrivate *ShellHelperPrivate::get(ShellHelper *shell)
@@ -221,10 +227,7 @@ void ShellHelper::start()
 {
     Q_D(ShellHelper);
 
-    // Run the shell helper in a thread to avoid
-    // blocking the compositor
-    if (d->processRunner->startProcess())
-        Q_EMIT processStarted();
+    d->processRunner->startProcess();
 }
 
 void ShellHelper::grabCursor(GrabCursor cursor)
