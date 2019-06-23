@@ -29,13 +29,12 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 #include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
 
 #include "authenticator.h"
 #include "qmlauthenticator.h"
 #include "loginmanager/loginmanager.h"
 #include "sessionmanager/sessionmanager.h"
-#include "sessionmanager/screensaver/screensaver.h"
-#include "screensaver_adaptor.h"
 
 #include <signal.h>
 #include <sys/types.h>
@@ -56,7 +55,6 @@ SessionManager::SessionManager(QObject *parent)
     , m_authRequested(false)
     , m_authenticator(new Authenticator)
     , m_loginManager(new LoginManager(this, this))
-    , m_screenSaver(new ScreenSaver(this))
     , m_idle(false)
     , m_locked(false)
 {
@@ -87,21 +85,6 @@ SessionManager::~SessionManager()
     m_authenticatorThread->quit();
     m_authenticatorThread->wait();
     m_authenticator->deleteLater();
-}
-
-bool SessionManager::registerWithDBus()
-{
-    QDBusConnection bus = QDBusConnection::sessionBus();
-
-    new ScreenSaverAdaptor(m_screenSaver);
-    if (!bus.registerObject(QStringLiteral("/org/freedesktop/ScreenSaver"), m_screenSaver)) {
-        qCWarning(SESSION_MANAGER,
-                  "Couldn't register /org/freedesktop/ScreenSaver D-Bus object: %s",
-                  qPrintable(bus.lastError().message()));
-        return false;
-    }
-
-    return true;
 }
 
 bool SessionManager::isIdle() const

@@ -59,15 +59,11 @@ liri_add_executable(LiriShell
         sessionmanager/loginmanager/loginmanagerbackend.h
         sessionmanager/loginmanager/loginmanager.cpp
         sessionmanager/loginmanager/loginmanager.h
-        sessionmanager/screensaver/screensaver.cpp
-        sessionmanager/screensaver/screensaver.h
         ${LiriShell_QM_FILES}
     RESOURCES
         "compositor.qrc"
     QTQUICK_COMPILER
         ${LIRI_SHELL_ENABLE_QTQUICK_COMPILER}
-    DBUS_ADAPTOR_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/sessionmanager/screensaver/org.freedesktop.ScreenSaver.xml"
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
