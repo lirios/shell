@@ -171,10 +171,6 @@ void Application::startup()
         QCoreApplication::exit(1);
     }
 
-    // Session manager
-    if (!m_sessionManager->registerWithDBus())
-        QCoreApplication::exit(1);
-
     // Set screen configuration file name
     m_appEngine->rootContext()->setContextProperty(QStringLiteral("screenConfigurationFileName"),
                                                    m_screenConfigFileName);

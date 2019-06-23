@@ -37,7 +37,6 @@ Q_DECLARE_LOGGING_CATEGORY(SESSION_MANAGER)
 class Authenticator;
 class CustomAuthenticator;
 class LoginManager;
-class ScreenSaver;
 
 class SessionManager : public QObject
 {
@@ -50,8 +49,6 @@ class SessionManager : public QObject
 public:
     SessionManager(QObject *parent = nullptr);
     virtual ~SessionManager();
-
-    bool registerWithDBus();
 
     bool isIdle() const;
     void setIdle(bool value);
@@ -108,7 +105,6 @@ private:
     Authenticator *m_authenticator;
 
     LoginManager *m_loginManager;
-    ScreenSaver *m_screenSaver;
     QList<qint64> m_processes;
 
     bool m_idle;
