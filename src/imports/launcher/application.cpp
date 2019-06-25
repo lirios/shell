@@ -70,7 +70,8 @@ Application::Application(const QString &appId, const QStringList &categories, QO
                                               appId + QStringLiteral(".desktop"));
     m_desktopFile = new Liri::DesktopFile();
     if (m_desktopFile->load(fileName)) {
-        for (const auto &actionName : m_desktopFile->actionNames()) {
+        const auto actionNames = m_desktopFile->actionNames();
+        for (const auto &actionName : actionNames) {
             Liri::DesktopFileAction desktopFileAction = m_desktopFile->action(actionName);
             DesktopFileAction *action = new DesktopFileAction();
             action->m_name = desktopFileAction.name();

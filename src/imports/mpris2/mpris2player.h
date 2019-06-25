@@ -52,8 +52,6 @@ class Mpris2Player : public QObject
     Q_PROPERTY(qreal rate READ rate NOTIFY rateChanged)
     Q_PROPERTY(qreal minimumRate READ minimumRate NOTIFY minimumRateChanged)
     Q_PROPERTY(qreal maximumRate READ maximumRate NOTIFY maximumRateChanged)
-    Q_ENUMS(Capability)
-    Q_FLAGS(Capabilities)
 public:
     enum Capability {
         NoCapabilities = 0,
@@ -68,6 +66,7 @@ public:
         CanGoNext,
         CanGoPrevious,
     };
+    Q_ENUM(Capability)
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
     Mpris2Player(const QString &service, QObject *parent = 0);

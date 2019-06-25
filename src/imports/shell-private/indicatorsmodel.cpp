@@ -133,14 +133,14 @@ void IndicatorsModel::populate(IndicatorsModel *model)
         QFileInfoList entries = dataDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
         for (const QFileInfo &info : entries) {
             const QDir indicatorDir(info.absoluteFilePath());
-            const QString metadataFileName = QLatin1String("metadata.desktop");
+            const QString metadataFileName = QStringLiteral("metadata.desktop");
 
             if (!indicatorDir.exists(metadataFileName))
                 continue;
 
             QSettings metadata(indicatorDir.absoluteFilePath(metadataFileName), QSettings::IniFormat);
-            metadata.beginGroup(QLatin1String("Desktop Entry"));
-            if (metadata.value(QLatin1String("Type")).toString() != QLatin1String("Service"))
+            metadata.beginGroup(QStringLiteral("Desktop Entry"));
+            if (metadata.value(QStringLiteral("Type")).toString() != QStringLiteral("Service"))
                 continue;
 
             // Don't add the same indicator twice, might happen when developing while
@@ -151,7 +151,7 @@ void IndicatorsModel::populate(IndicatorsModel *model)
             else
                 model->m_indicatorNames.append(name);
 
-            const QString mainScriptPath = indicatorDir.absoluteFilePath(metadata.value(QLatin1String("X-Liri-MainScript")).toString());
+            const QString mainScriptPath = indicatorDir.absoluteFilePath(metadata.value(QStringLiteral("X-Liri-MainScript")).toString());
             if (!indicatorDir.exists(mainScriptPath))
                 continue;
 

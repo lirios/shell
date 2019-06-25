@@ -29,7 +29,7 @@
 #include "screencast.h"
 #include "screencastadaptor.h"
 
-const QString dbusPath = QLatin1String("/ScreenCast");
+const QString dbusPath = QStringLiteral("/ScreenCast");
 
 ScreenCastAdaptor::ScreenCastAdaptor(QObject *parent)
     : QObject(parent)

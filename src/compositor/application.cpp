@@ -187,11 +187,11 @@ void Application::startup()
     m_appEngine->rootContext()->setContextProperty(QStringLiteral("SessionInterface"),
                                                    m_sessionManager);
 
-    m_appEngine->rootContext()->setContextProperty(QLatin1String("MultimediaKeys"),
+    m_appEngine->rootContext()->setContextProperty(QStringLiteral("MultimediaKeys"),
                                                    m_multimediaKeys);
 
     // OSD service
-    m_appEngine->rootContext()->setContextProperty(QLatin1String("OnScreenDisplay"),
+    m_appEngine->rootContext()->setContextProperty(QStringLiteral("OnScreenDisplay"),
                                                    new OnScreenDisplay(this));
 
     // Load the compositor

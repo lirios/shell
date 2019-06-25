@@ -109,11 +109,11 @@ private:
     OutputDevice *m_parent = nullptr;
     QString m_uuid;
     bool m_enabled = true;
-    QString m_manufacturer = QLatin1String("Unknown");
-    QString m_model = QLatin1String("Unknown");
+    QString m_manufacturer = QStringLiteral("Unknown");
+    QString m_model = QStringLiteral("Unknown");
     QPoint m_position;
     QSize m_physicalSize;
-    QString m_transform = QLatin1String("normal");
+    QString m_transform = QStringLiteral("normal");
     int m_scaleFactor = 1;
     QList<Mode> m_modes;
     int m_currentModeIndex = 0;

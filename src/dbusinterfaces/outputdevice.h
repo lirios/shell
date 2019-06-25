@@ -110,8 +110,8 @@ private:
     bool m_initialized = false;
     QString m_uuid;
     bool m_enabled = true;
-    QString m_manufacturer = QLatin1String("Unknown");
-    QString m_model = QLatin1String("Unknown");
+    QString m_manufacturer = QStringLiteral("Unknown");
+    QString m_model = QStringLiteral("Unknown");
     QPoint m_position;
     QSize m_physicalSize;
     QWaylandOutput::Transform m_transform = QWaylandOutput::TransformNormal;

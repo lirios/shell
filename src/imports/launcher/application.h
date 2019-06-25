@@ -161,7 +161,7 @@ public Q_SLOTS:
     Q_INVOKABLE bool launch() { return launch(QStringList()); }
 
 protected Q_SLOTS:
-    void setState(State state);
+    void setState(Application::State state);
     void setActive(bool active);
 
 Q_SIGNALS:

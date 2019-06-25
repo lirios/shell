@@ -29,21 +29,21 @@ static QString transformToString(QWaylandOutput::Transform transform)
 {
     switch (transform) {
     case QWaylandOutput::TransformNormal:
-        return QLatin1String("normal");
+        return QStringLiteral("normal");
     case QWaylandOutput::Transform90:
-        return QLatin1String("90");
+        return QStringLiteral("90");
     case QWaylandOutput::Transform180:
-        return QLatin1String("180");
+        return QStringLiteral("180");
     case QWaylandOutput::Transform270:
-        return QLatin1String("270");
+        return QStringLiteral("270");
     case QWaylandOutput::TransformFlipped:
-        return QLatin1String("flipped");
+        return QStringLiteral("flipped");
     case QWaylandOutput::TransformFlipped90:
-        return QLatin1String("flipped90");
+        return QStringLiteral("flipped90");
     case QWaylandOutput::TransformFlipped180:
-        return QLatin1String("flipped180");
+        return QStringLiteral("flipped180");
     case QWaylandOutput::TransformFlipped270:
-        return QLatin1String("flipped270");
+        return QStringLiteral("flipped270");
     }
 
     Q_UNREACHABLE();

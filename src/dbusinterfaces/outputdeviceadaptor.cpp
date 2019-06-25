@@ -28,7 +28,7 @@
 #include "outputdevice.h"
 #include "outputdeviceadaptor.h"
 
-const QString dbusObjectPath = QLatin1String("/io/liri/Shell/OutputDevice1/");
+const QString dbusObjectPath = QStringLiteral("/io/liri/Shell/OutputDevice1/");
 
 static QString aspectRatioString(const QSize &size)
 {
@@ -43,21 +43,21 @@ static QString aspectRatioString(const QSize &size)
 
     switch (ratio) {
     case 10:
-        return QLatin1String("1:1");
+        return QStringLiteral("1:1");
     case 12:
-        return QLatin1String("5:4");
+        return QStringLiteral("5:4");
     case 13:
-        return QLatin1String("4:3");
+        return QStringLiteral("4:3");
     case 15:
-        return QLatin1String("3:2");
+        return QStringLiteral("3:2");
     case 16:
-        return QLatin1String("1:6");
+        return QStringLiteral("1:6");
     case 17:
-        return QLatin1String("16:9");
+        return QStringLiteral("16:9");
     case 18:
-        return QLatin1String("9:5");
+        return QStringLiteral("9:5");
     case 23:
-        return QLatin1String("21:9");
+        return QStringLiteral("21:9");
     default:
         break;
     }

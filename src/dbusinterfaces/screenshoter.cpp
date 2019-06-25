@@ -36,7 +36,7 @@
 
 Q_LOGGING_CATEGORY(lcScreenshooter, "liri.screenshooter", QtDebugMsg)
 
-const QString dbusPath = QLatin1String("/Screenshot");
+const QString dbusPath = QStringLiteral("/Screenshot");
 
 /*
  * Screenshooter
@@ -106,7 +106,7 @@ QByteArray ScreenshooterAdaptor::captureScreens(bool overlayCursor)
     setDelayedReply(true);
 
     if (!m_parent->m_compositor) {
-        sendErrorReply(QDBusError::InternalError, QLatin1String("Screenshooter::compositor not set"));
+        sendErrorReply(QDBusError::InternalError, QStringLiteral("Screenshooter::compositor not set"));
         return QByteArray();
     }
 
@@ -220,7 +220,8 @@ void Screenshot::grabScreens()
     QRect r;
 
     // Calculate the final size
-    for (auto output : m_compositor->outputs()) {
+    const auto outputs = m_compositor->outputs();
+    for (auto output : outputs) {
         const bool enabled = output->property("enabled").toBool();
 
         if (!enabled)

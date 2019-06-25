@@ -49,10 +49,10 @@ public:
     {
         process->setProcessChannelMode(QProcess::ForwardedChannels);
 
-        connect(process, SIGNAL(readyReadStandardOutput()),
-                this, SLOT(handleReadOutput()));
-        connect(process, SIGNAL(readyReadStandardError()),
-                this, SLOT(handleReadError()));
+        connect(process, &QProcess::readyReadStandardOutput,
+                this, &ProcessRunner::handleReadOutput);
+        connect(process, &QProcess::readyReadStandardError,
+                this, &ProcessRunner::handleReadError);
     }
 
     ~ProcessRunner()

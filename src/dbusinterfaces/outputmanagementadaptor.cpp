@@ -30,7 +30,7 @@
 #include "outputmanagement.h"
 #include "outputmanagementadaptor.h"
 
-const QString dbusObjectPath = QLatin1String("/io/liri/Shell/OutputManagement1");
+const QString dbusObjectPath = QStringLiteral("/io/liri/Shell/OutputManagement1");
 
 OutputManagementAdaptor::OutputManagementAdaptor(OutputManagement *parent)
     : QObject(parent)
@@ -48,7 +48,8 @@ QList<QDBusObjectPath> OutputManagementAdaptor::outputDevices() const
 {
     QList<QDBusObjectPath> list;
 
-    for (auto device : m_parent->devices())
+    const auto devices = m_parent->devices();
+    for (auto device : devices)
         list.append(device->m_adaptor->path());
 
     return list;

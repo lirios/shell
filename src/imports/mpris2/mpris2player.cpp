@@ -36,9 +36,9 @@
 #include "player_interface.h"
 #include "properties_interface.h"
 
-const QString objectPath(QLatin1String("/org/mpris/MediaPlayer2"));
-const QString playerInterface(QLatin1String("org.mpris.MediaPlayer2.Player"));
-const QString mprisInterface(QLatin1String("org.mpris.MediaPlayer2"));
+const QString objectPath(QStringLiteral("/org/mpris/MediaPlayer2"));
+const QString playerInterface(QStringLiteral("org.mpris.MediaPlayer2.Player"));
+const QString mprisInterface(QStringLiteral("org.mpris.MediaPlayer2"));
 
 Q_LOGGING_CATEGORY(MPRIS2_PLAYER, "liri.mpris2.player")
 

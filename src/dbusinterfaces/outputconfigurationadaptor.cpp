@@ -28,7 +28,7 @@
 #include "outputconfigurationadaptor.h"
 #include "outputdevice.h"
 
-const QString dbusObjectPath = QLatin1String("/io/liri/Shell/OutputConfiguration1/");
+const QString dbusObjectPath = QStringLiteral("/io/liri/Shell/OutputConfiguration1/");
 
 static QWaylandOutput::Transform stringToTransform(const QString &transform)
 {

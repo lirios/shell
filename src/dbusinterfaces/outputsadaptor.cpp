@@ -25,8 +25,8 @@
 
 #include "outputsadaptor.h"
 
-const QString outputsDbusObjectPath = QLatin1String("/io/liri/Shell/Outputs");
-const QString outputDbusObjectPath = QLatin1String("/io/liri/Shell/Outputs/");
+const QString outputsDbusObjectPath = QStringLiteral("/io/liri/Shell/Outputs");
+const QString outputDbusObjectPath = QStringLiteral("/io/liri/Shell/Outputs/");
 
 /*
  * OutputAdaptor

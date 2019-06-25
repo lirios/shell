@@ -62,7 +62,7 @@ public:
 
     Q_INVOKABLE void start();
 
-    Q_INVOKABLE void grabCursor(GrabCursor cursor);
+    Q_INVOKABLE void grabCursor(ShellHelper::GrabCursor cursor);
 
     static const struct wl_interface *interface();
     static QByteArray interfaceName();

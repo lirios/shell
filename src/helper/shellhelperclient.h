@@ -64,7 +64,7 @@ public:
     static const struct ::wl_interface *interface();
 
 Q_SIGNALS:
-    void cursorChangeRequested(GrabCursor cursor);
+    void cursorChangeRequested(ShellHelperClient::GrabCursor cursor);
 
 private:
     ShellHelperClientPrivate *const d_ptr;

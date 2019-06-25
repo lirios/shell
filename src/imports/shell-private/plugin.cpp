@@ -127,9 +127,9 @@ public:
         qmlRegisterType<QuickOutputQuickParent>(uri, versionMajor, versionMinor, "WaylandOutput");
         qmlRegisterType<ScreenModel>(uri, versionMajor, versionMinor, "ScreenModel");
         qmlRegisterUncreatableType<ScreenMode>(uri, versionMajor, versionMinor, "ScreenMode",
-                                               QLatin1String("Cannot create instance of ScreenMode"));
+                                               QStringLiteral("Cannot create instance of ScreenMode"));
         qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
-                                               QLatin1String("Cannot create instance of ScreenItem"));
+                                               QStringLiteral("Cannot create instance of ScreenItem"));
         qmlRegisterType<ShellSurfaceItem>(uri, versionMajor, versionMinor, "ShellSurfaceItem");
         qmlRegisterType<WindowMouseTracker>(uri, versionMajor, versionMinor, "WindowMouseTracker");
 
@@ -139,7 +139,7 @@ public:
         qmlRegisterType<QWaylandWlShellSurfaceQuickParent>(uri, versionMajor, versionMinor, "WlShellSurface");
 
         qmlRegisterUncreatableType<QWaylandXdgShellV5>(uri, versionMajor, versionMinor, "XdgShellV5Base",
-                                                       QLatin1String("Cannot create instance of XdgShellV5Base"));
+                                                       QStringLiteral("Cannot create instance of XdgShellV5Base"));
         qmlRegisterType<QWaylandXdgShellV5QuickExtension>(uri, versionMajor, versionMinor, "XdgShellV5");
         qmlRegisterType<QWaylandXdgSurfaceV5QuickParent>(uri, versionMajor, versionMinor, "XdgSurfaceV5");
         qmlRegisterType<QWaylandXdgPopupV5QuickParent>(uri, versionMajor, versionMinor, "XdgPopupV5");
@@ -149,11 +149,11 @@ public:
 
         qmlRegisterType<KdeServerDecorationManagerQuickExtension>(uri, versionMajor, versionMinor, "KdeServerDecorationManager");
         qmlRegisterUncreatableType<KdeServerDecoration>(uri, versionMajor, versionMinor, "KdeServerDecoration",
-                                                        QLatin1String("Cannot create instance of KdeServerDecoration"));
+                                                        QStringLiteral("Cannot create instance of KdeServerDecoration"));
 
         qmlRegisterType<LiriDecorationManagerQuickExtension>(uri, versionMajor, versionMinor, "LiriDecorationManager");
         qmlRegisterUncreatableType<LiriDecoration>(uri, versionMajor, versionMinor, "LiriDecoration",
-                                                   QLatin1String("Cannot create instance of LiriDecoration"));
+                                                   QStringLiteral("Cannot create instance of LiriDecoration"));
 
         qmlRegisterType<ShellHelperQuickExtension>(uri, versionMajor, versionMinor, "ShellHelper");
 
@@ -163,7 +163,7 @@ public:
         qmlRegisterType<OutputDevice>(uri, versionMajor, versionMinor, "OutputDevice");
         qmlRegisterType<OutputManagement>(uri, versionMajor, versionMinor, "OutputManagement");
         qmlRegisterUncreatableType<OutputChangeset>(uri, versionMajor, versionMinor, "OutputChangeset",
-                                                    QLatin1String("Cannot create instance of OutputChangeset"));
+                                                    QStringLiteral("Cannot create instance of OutputChangeset"));
 
         qmlRegisterType<Outputs>(uri, versionMajor, versionMinor, "Outputs");
 
@@ -171,7 +171,7 @@ public:
 
         qmlRegisterType<Screenshooter>(uri, versionMajor, versionMinor, "Screenshooter");
         qmlRegisterUncreatableType<Screenshot>(uri, versionMajor, versionMinor, "Screenshot",
-                                               QLatin1String("Cannot create instance of Screenshot"));
+                                               QStringLiteral("Cannot create instance of Screenshot"));
     }
 };
 
