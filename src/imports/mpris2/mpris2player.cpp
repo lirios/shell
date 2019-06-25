@@ -290,14 +290,14 @@ void Mpris2Player::retrieveData()
 
     QDBusPendingCall async = m_propsInterface->GetAll(QLatin1String(OrgMprisMediaPlayer2Interface::staticInterfaceName()));
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(async, this);
-    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
-            this, SLOT(propertiesFinished(QDBusPendingCallWatcher*)));
+    connect(watcher, &QDBusPendingCallWatcher::finished,
+            this, &Mpris2Player::propertiesFinished);
     ++m_fetchesPending;
 
     async = m_propsInterface->GetAll(QLatin1String(OrgMprisMediaPlayer2PlayerInterface::staticInterfaceName()));
     watcher = new QDBusPendingCallWatcher(async, this);
-    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
-            this, SLOT(propertiesFinished(QDBusPendingCallWatcher*)));
+    connect(watcher, &QDBusPendingCallWatcher::finished,
+            this, &Mpris2Player::propertiesFinished);
     ++m_fetchesPending;
 }
 
@@ -314,7 +314,8 @@ void Mpris2Player::setMetadata(const Metadata &map)
 {
     m_metadata->deleteLater();
     m_metadata = new QQmlPropertyMap(this);
-    for (const QString &key: map.keys())
+    const auto keys = map.keys();
+    for (const auto &key: keys)
         m_metadata->insert(key, map.value(key));
     Q_EMIT metadataChanged();
 }
@@ -424,9 +425,9 @@ void Mpris2Player::copyProperty(const QString &name, const QVariant &value,
     }
     if (tmp.type() != expectedType) {
         const char * gotTypeCh = QDBusMetaType::typeToSignature(tmp.userType());
-        QString gotType = gotTypeCh ? QString::fromUtf8(gotTypeCh) : QLatin1String("<unknown>");
+        QString gotType = gotTypeCh ? QString::fromUtf8(gotTypeCh) : QStringLiteral("<unknown>");
         const char * expTypeCh = QDBusMetaType::typeToSignature(expectedType);
-        QString expType = expTypeCh ? QString::fromUtf8(expTypeCh) : QLatin1String("<unknown>");
+        QString expType = expTypeCh ? QString::fromUtf8(expTypeCh) : QStringLiteral("<unknown>");
 
         qCWarning(MPRIS2_PLAYER) << m_serviceName << "exports" << name
                                  << "as D-Bus type" << gotType

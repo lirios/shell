@@ -52,7 +52,8 @@ bool ScreenCastAdaptor::captureScreen(const QDBusObjectPath &handle)
 {
     QString uuid = handle.path().replace(QStringLiteral("/io/liri/Shell/Outputs/"), QString());
 
-    for (auto output : m_parent->compositor()->outputs()) {
+    const auto outputs = m_parent->compositor()->outputs();
+    for (auto output : outputs) {
         if (output->property("uuid").toString() == uuid)
             return m_parent->createStream(output->window()->screen());
     }

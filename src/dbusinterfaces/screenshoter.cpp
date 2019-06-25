@@ -219,8 +219,9 @@ void Screenshot::grabScreens()
 
     QRect r;
 
-    // Calculate the final size
     const auto outputs = m_compositor->outputs();
+
+    // Calculate the final size
     for (auto output : outputs) {
         const bool enabled = output->property("enabled").toBool();
 
@@ -232,7 +233,7 @@ void Screenshot::grabScreens()
 
     m_finalImage = QImage(r.size(), QImage::Format_RGB32);
     QPainter painter(&m_finalImage);
-    for (auto output : m_compositor->outputs()) {
+    for (auto output : outputs) {
         auto window = qobject_cast<QQuickWindow *>(output->window());
         if (window)
             painter.drawImage(output->position(), window->grabWindow());

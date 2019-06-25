@@ -28,9 +28,9 @@
 #include "mpris2engine.h"
 #include "mpris2player.h"
 
-const QString mprisInterface(QLatin1String("org.mpris.MediaPlayer2"));
-const QString mprisPlayerInterface(QLatin1String("org.mpris.MediaPlayer2.Player"));
-const QString mprisPrefix(QLatin1String("org.mpris.MediaPlayer2."));
+const QString mprisInterface(QStringLiteral("org.mpris.MediaPlayer2"));
+const QString mprisPlayerInterface(QStringLiteral("org.mpris.MediaPlayer2.Player"));
+const QString mprisPrefix(QStringLiteral("org.mpris.MediaPlayer2."));
 
 Q_LOGGING_CATEGORY(MPRIS2, "liri.mpris2")
 
@@ -38,12 +38,15 @@ Mpris2Engine::Mpris2Engine(QObject *parent)
     : QObject(parent)
 {
     const QDBusConnection bus = QDBusConnection::sessionBus();
-    const QStringList services = bus.interface()->registeredServiceNames();
+    const auto registeredServices = bus.interface()->registeredServiceNames();
 
-    for (const QString &name: services.filter(mprisInterface)) {
-        qCDebug(MPRIS2) << "Found player" << name;
-        m_players.append(new Mpris2Player(name));
-        Q_EMIT playersChanged();
+    if (registeredServices.isValid()) {
+        const auto services = registeredServices.value().filter(mprisInterface);
+        for (const auto &name : services) {
+            qCDebug(MPRIS2) << "Found player" << name;
+            m_players.append(new Mpris2Player(name));
+            Q_EMIT playersChanged();
+        }
     }
 
     m_watcher = new QDBusServiceWatcher(this);
