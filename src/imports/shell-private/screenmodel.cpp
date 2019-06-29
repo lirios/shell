@@ -548,6 +548,7 @@ void ScreenModel::addFakeScreens()
         item->m_primary = primary && !primarySet;
         item->m_manufacturer = QStringLiteral("Liri");
         item->m_model = name;
+        item->m_name = name;
         item->m_description = description;
         if (physicalSize.isValid())
             item->m_physicalSize = physicalSize;
