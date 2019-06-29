@@ -473,6 +473,15 @@ void ScreenModel::addFakeScreens()
         qCDebug(lcShell) << "Output settings:" << outputSettings;
 
         QString name = outputSettings.value(QStringLiteral("name")).toString();
+        if (name.isEmpty()) {
+            if (QGuiApplication::platformName() == QLatin1String("xcb"))
+                name = QStringLiteral("X11-");
+            else if (QGuiApplication::platformName().contains(QLatin1String("wayland")))
+                name = QStringLiteral("WL-");
+            else
+                name = QStringLiteral("UNK-");
+            name.append(QString::number(i));
+        }
         qCDebug(lcShell) << "Output name:" << name;
 
         bool primary = outputSettings.value(QStringLiteral("primary")).toBool();
