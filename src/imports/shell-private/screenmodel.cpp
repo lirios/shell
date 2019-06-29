@@ -135,6 +135,11 @@ QString ScreenItem::name() const
     return m_name;
 }
 
+QString ScreenItem::description() const
+{
+    return m_description;
+}
+
 int ScreenItem::x() const
 {
     return m_geometry.x();
@@ -369,6 +374,8 @@ QVariant ScreenModel::data(const QModelIndex &index, int role) const
         return item->model();
     case NameRole:
         return item->name();
+    case DescriptionRole:
+        return item->description();
     case XRole:
         return item->geometry().topLeft().rx();
     case YRole:
@@ -484,6 +491,17 @@ void ScreenModel::addFakeScreens()
         }
         qCDebug(lcShell) << "Output name:" << name;
 
+        QString description = outputSettings.value(QStringLiteral("description")).toString();
+        if (description.isEmpty()) {
+            if (QGuiApplication::platformName() == QLatin1String("xcb"))
+                description = QStringLiteral("Virtual X11 output via :%1").arg(QString::fromLocal8Bit(qgetenv("DISPLAY")));
+            else if (QGuiApplication::platformName().contains(QLatin1String("wayland")))
+                description = QStringLiteral("Virtual Wayland output");
+            else
+                description = QStringLiteral("Virtual output");
+        }
+        qCDebug(lcShell) << "Output description:" << description;
+
         bool primary = outputSettings.value(QStringLiteral("primary")).toBool();
         qCDebug(lcShell) << "Output primary:" << primary;
 
@@ -530,6 +548,7 @@ void ScreenModel::addFakeScreens()
         item->m_primary = primary && !primarySet;
         item->m_manufacturer = QStringLiteral("Liri");
         item->m_model = name;
+        item->m_description = description;
         if (physicalSize.isValid())
             item->m_physicalSize = physicalSize;
         item->m_geometry = QRect(pos, size);
@@ -590,6 +609,7 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
         item->m_model = QStringLiteral("Unknown");
 
     item->m_name = screen->name();
+    item->m_description = screen->manufacturer() + QStringLiteral(" ") + screen->model();
     item->m_geometry = screen->availableGeometry();
     item->m_physicalSize = screen->physicalSize();
     item->m_scaleFactor = qFloor(screen->devicePixelRatio());

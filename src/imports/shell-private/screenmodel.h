@@ -49,6 +49,7 @@ public:
         ManufacturerRole,
         ModelRole,
         NameRole,
+        DescriptionRole,
         XRole,
         YRole,
         WidthRole,
@@ -124,6 +125,7 @@ class ScreenItem : public QObject
     Q_PROPERTY(QString manufacturer READ manufacturer CONSTANT)
     Q_PROPERTY(QString model READ model CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString description READ description CONSTANT)
     Q_PROPERTY(int x READ x NOTIFY geometryChanged)
     Q_PROPERTY(int y READ y NOTIFY geometryChanged)
     Q_PROPERTY(int width READ width NOTIFY geometryChanged)
@@ -159,6 +161,7 @@ public:
     QString manufacturer() const;
     QString model() const;
     QString name() const;
+    QString description() const;
     int x() const;
     int y() const;
     int width() const;
@@ -203,6 +206,7 @@ private:
     QString m_manufacturer;
     QString m_model;
     QString m_name;
+    QString m_description;
     QRect m_geometry;
     QSizeF m_physicalSize;
     int m_scaleFactor = 1;

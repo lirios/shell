@@ -118,6 +118,7 @@ Here's the contents of `screenconfig.json`:
 {
 	"outputs": [{
 		"name": "Screen 1",
+		"description": "Virtual output 1",
 		"primary": false,
 		"scale": 1,
 		"position": {
@@ -138,6 +139,7 @@ Here's the contents of `screenconfig.json`:
 	},
 	{
 		"name": "Screen 2",
+		"description": "Virtual output 2",
 		"primary": true,
 		"scale": 1,
 		"position": {
