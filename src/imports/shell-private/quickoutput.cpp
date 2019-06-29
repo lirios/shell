@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -21,124 +21,35 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QGuiApplication>
-#include <QWaylandCompositor>
-#include <QWaylandOutputMode>
-
 #include "quickoutput.h"
-#include "screenmodel.h"
 
 QuickOutput::QuickOutput()
     : QWaylandQuickOutput()
 {
 }
 
-QString QuickOutput::uuid() const
+void QuickOutput::addOutputMode(const QSize &size, int refresh, bool isPreferred, bool isCurrent)
 {
-    return m_uuid;
-}
+    QWaylandOutputMode wlMode(size, refresh);
 
-void QuickOutput::setUuid(const QString &uuid)
-{
-    if (m_uuid == uuid)
-        return;
-
-    m_uuid = uuid;
-    Q_EMIT uuidChanged();
-}
-
-bool QuickOutput::isEnabled() const
-{
-    return m_enabled;
-}
-
-void QuickOutput::setEnabled(bool value)
-{
-    if (m_enabled == value)
-        return;
-
-    m_enabled = value;
-    Q_EMIT enabledChanged();
-}
-
-QQmlListProperty<ScreenMode> QuickOutput::screenModes()
-{
-    auto appendFunc = [](QQmlListProperty<ScreenMode> *prop, ScreenMode *mode) {
-        auto output = static_cast<QuickOutput *>(prop->object);;
-        if (!output->m_initialized)
-            output->m_modes.append(mode);
-    };
-    auto countFunc = [](QQmlListProperty<ScreenMode> *prop) {
-        return static_cast<QuickOutput *>(prop->object)->m_modes.count();
-    };
-    auto atFunc = [](QQmlListProperty<ScreenMode> *prop, int index) {
-        return static_cast<QuickOutput *>(prop->object)->m_modes.at(index);
-    };
-    auto clearFunc = [](QQmlListProperty<ScreenMode> *prop) {
-        auto output = static_cast<QuickOutput *>(prop->object);
-        if (!output->m_initialized)
-            output->m_modes.clear();
-    };
-    return QQmlListProperty<ScreenMode>(this, this, appendFunc, countFunc, atFunc, clearFunc);
-}
-
-int QuickOutput::currentModeIndex() const
-{
-    return m_currentModeIndex;
-}
-
-void QuickOutput::setCurrentModeIndex(int index)
-{
-    if (m_currentModeIndex == index)
-        return;
-
-    m_currentModeIndex = index;
-    Q_EMIT currentModeIndexChanged();
-
-    if (m_initialized) {
-        auto mode = modes().at(index);
-        setCurrentMode(mode);
-    }
-}
-
-int QuickOutput::preferredModeIndex() const
-{
-    return m_preferredModexIndex;
-}
-
-void QuickOutput::setPreferredModeIndex(int index)
-{
-    if (m_initialized)
-        return;
-    if (m_preferredModexIndex == index)
-        return;
-
-    m_preferredModexIndex = index;
-    Q_EMIT preferredModeIndexChanged();
-}
-
-void QuickOutput::initialize()
-{
-    if (m_initialized)
-        return;
-
-    m_initialized = true;
-
-    // Make sure size is dictated by the current mode
-    setSizeFollowsWindow(false);
-
-    int index = 0;
-    for (const auto mode : m_modes) {
-        QWaylandOutputMode wlMode(mode->resolution(), mode->refreshRate());
-        addMode(wlMode, m_preferredModexIndex == index);
-
-        if (m_currentModeIndex == index)
-            setCurrentMode(wlMode);
-
-        Q_EMIT modeAdded(mode->resolution(), mode->refreshRate());
-
-        index++;
+    bool alreadyHasMode = false;
+    const auto modesList = modes();
+    for (const auto &mode : modesList) {
+        if (mode == wlMode) {
+            alreadyHasMode = true;
+            break;
+        }
     }
 
-    QWaylandQuickOutput::initialize();
+    if (!alreadyHasMode)
+        addMode(wlMode, isPreferred);
+
+    if (isCurrent)
+        setCurrentMode(wlMode);
+}
+
+void QuickOutput::setCurrentOutputMode(const QSize &size, int refresh)
+{
+    QWaylandOutputMode wlMode(size, refresh);
+    setCurrentMode(wlMode);
 }

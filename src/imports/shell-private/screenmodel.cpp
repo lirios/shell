@@ -21,7 +21,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include <QCryptographicHash>
 #include <QFile>
 #include <QGuiApplication>
 #include <QJsonArray>
@@ -86,6 +85,12 @@ int ScreenMode::refreshRate() const
     return m_refreshRate;
 }
 
+bool ScreenMode::operator==(const ScreenMode &other) const
+{
+    return resolution() == other.resolution() &&
+            refreshRate() == other.refreshRate();
+}
+
 /*
  * ScreenItem
  */
@@ -110,14 +115,9 @@ int ScreenItem::screenIndex() const
     return qGuiApp->screens().indexOf(m_screen);
 }
 
-bool ScreenItem::isPrimary() const
+bool ScreenItem::isEnabled() const
 {
-    return m_primary;
-}
-
-QString ScreenItem::uuid() const
-{
-    return m_uuid;
+    return m_enabled;
 }
 
 QString ScreenItem::manufacturer() const
@@ -140,49 +140,9 @@ QString ScreenItem::description() const
     return m_description;
 }
 
-int ScreenItem::x() const
-{
-    return m_geometry.x();
-}
-
-int ScreenItem::y() const
-{
-    return m_geometry.y();
-}
-
-int ScreenItem::width() const
-{
-    return m_geometry.width();
-}
-
-int ScreenItem::height() const
-{
-    return m_geometry.height();
-}
-
 QPoint ScreenItem::position() const
 {
-    return m_geometry.topLeft();
-}
-
-void ScreenItem::setPosition(const QPoint &pos)
-{
-    if (!m_screen) {
-        qCWarning(lcShell) << "ScreenItem cannot set position if the screen property is not set";
-        return;
-    }
-
-    if (m_geometry.topLeft() == pos)
-        return;
-
-    Liri::Platform::EglFSFunctions::setScreenPosition(m_screen, pos);
-    m_geometry.setTopLeft(pos);
-    Q_EMIT geometryChanged();
-}
-
-QRect ScreenItem::geometry() const
-{
-    return m_geometry;
+    return m_position;
 }
 
 QSizeF ScreenItem::physicalSize() const
@@ -190,24 +150,9 @@ QSizeF ScreenItem::physicalSize() const
     return m_physicalSize;
 }
 
-int ScreenItem::scaleFactor() const
+qreal ScreenItem::scaleFactor() const
 {
     return m_scaleFactor;
-}
-
-void ScreenItem::setScaleFactor(int factor)
-{
-    if (!m_screen) {
-        qCWarning(lcShell) << "ScreenItem cannot set scale factor if the screen property is not set";
-        return;
-    }
-
-    if (m_scaleFactor == factor)
-        return;
-
-    Liri::Platform::EglFSFunctions::setScreenScaleFactor(m_screen, static_cast<qreal>(factor));
-    m_scaleFactor = factor;
-    Q_EMIT scaleFactorChanged();
 }
 
 QWaylandOutput::Subpixel ScreenItem::subpixel() const
@@ -220,7 +165,12 @@ QWaylandOutput::Transform ScreenItem::transform() const
     return m_transform;
 }
 
-QQmlListProperty<ScreenMode> ScreenItem::modes()
+QVector<ScreenMode *> ScreenItem::modes() const
+{
+    return m_modes;
+}
+
+QQmlListProperty<ScreenMode> ScreenItem::modesList()
 {
     auto countFunc = [](QQmlListProperty<ScreenMode> *prop) {
         return static_cast<ScreenItem *>(prop->object)->m_modes.count();
@@ -231,24 +181,12 @@ QQmlListProperty<ScreenMode> ScreenItem::modes()
     return QQmlListProperty<ScreenMode>(this, this, countFunc, atFunc);
 }
 
-int ScreenItem::currentModeIndex() const
+ScreenMode *ScreenItem::currentMode() const
 {
     return m_currentMode;
 }
 
-void ScreenItem::setCurrentModeIndex(int modeIndex)
-{
-    if (!m_screen) {
-        qCWarning(lcShell) << "ScreenItem cannot set current mode if the screen property is not set";
-        return;
-    }
-
-    Liri::Platform::EglFSFunctions::setScreenMode(m_screen, modeIndex);
-    m_currentMode = modeIndex;
-    Q_EMIT currentModeIndexChanged();
-}
-
-int ScreenItem::preferredModeIndex() const
+ScreenMode *ScreenItem::preferredMode() const
 {
     return m_preferredMode;
 }
@@ -315,6 +253,11 @@ void ScreenModel::setFileName(const QString &fileName)
     Q_EMIT fileNameChanged();
 }
 
+int ScreenModel::count() const
+{
+    return rowCount();
+}
+
 ScreenItem *ScreenModel::get(int index) const
 {
     return m_items.at(index);
@@ -326,21 +269,6 @@ QHash<int, QByteArray> ScreenModel::roleNames() const
     roles.insert(ScreenItemRole, QByteArrayLiteral("screenItem"));
     roles.insert(ScreenRole, QByteArrayLiteral("screen"));
     roles.insert(ScreenIndexRole, QByteArrayLiteral("screenIndex"));
-    roles.insert(PrimaryRole, QByteArrayLiteral("primary"));
-    roles.insert(ManufacturerRole, QByteArrayLiteral("manufacturer"));
-    roles.insert(ModelRole, QByteArrayLiteral("model"));
-    roles.insert(NameRole, QByteArrayLiteral("name"));
-    roles.insert(XRole, QByteArrayLiteral("x"));
-    roles.insert(YRole, QByteArrayLiteral("y"));
-    roles.insert(WidthRole, QByteArrayLiteral("width"));
-    roles.insert(HeightRole, QByteArrayLiteral("height"));
-    roles.insert(PhysicalSizeRole, QByteArrayLiteral("physicalSize"));
-    roles.insert(ScaleFactorRole, QByteArrayLiteral("scaleFactor"));
-    roles.insert(SubpixelRole, QByteArrayLiteral("subpixel"));
-    roles.insert(TransformRole, QByteArrayLiteral("transform"));
-    roles.insert(ModesRole, QByteArrayLiteral("modes"));
-    roles.insert(CurrentModeIndex, QByteArrayLiteral("currentModeIndex"));
-    roles.insert(PreferredModeIndex, QByteArrayLiteral("preferredModeIndex"));
     return roles;
 }
 
@@ -364,43 +292,119 @@ QVariant ScreenModel::data(const QModelIndex &index, int role) const
         return QVariant::fromValue<QScreen *>(item->screen());
     case ScreenIndexRole:
         return item->screenIndex();
-    case PrimaryRole:
-        return item->isPrimary();
-    case UuidRole:
-        return item->uuid();
-    case ManufacturerRole:
-        return item->manufacturer();
-    case ModelRole:
-        return item->model();
-    case NameRole:
-        return item->name();
-    case DescriptionRole:
-        return item->description();
-    case XRole:
-        return item->geometry().topLeft().rx();
-    case YRole:
-        return item->geometry().topLeft().ry();
-    case WidthRole:
-        return item->geometry().width();
-    case HeightRole:
-        return item->geometry().height();
-    case PhysicalSizeRole:
-        return item->physicalSize();
-    case ScaleFactorRole:
-        return item->scaleFactor();
-    case SubpixelRole:
-        return item->subpixel();
-    case TransformRole:
-        return item->transform();
-    case ModesRole:
-        return QVariant::fromValue(item->modes());
-    case CurrentModeIndex:
-        return item->currentModeIndex();
-    case PreferredModeIndex:
-        return item->preferredModeIndex();
     }
 
     return QVariant();
+}
+
+bool ScreenModel::testConfiguration(WaylandWlrOutputConfigurationV1 *configuration)
+{
+    if (!m_fileName.isEmpty()) {
+        qWarning("Cannot test output configuration when using a fake screen backend");
+        return false;
+    }
+
+    const auto changesList = configuration->enabledHeads();
+    for (auto *changes : changesList) {
+        for (auto *item : qAsConst(m_items)) {
+            if (item->name() == changes->head()->name()) {
+                QSize size;
+                quint32 refresh = 0;
+
+                if (changes->customModeSize().isValid() && changes->customModeRefresh() > 0) {
+                    size = changes->customModeSize();
+                    refresh = changes->customModeRefresh();
+                } else if (changes->mode()) {
+                    size = changes->mode()->size();
+                    refresh = changes->mode()->refresh();
+                }
+
+                bool modeFound = false;
+                const auto modes = item->modes();
+                for (auto *screenMode : modes) {
+                    if (screenMode->resolution() == size && screenMode->refreshRate() == refresh) {
+                        modeFound = true;
+                        break;
+                    }
+                }
+
+                if (!modeFound) {
+                    qWarning("Output configuration test failed: mode not found");
+                    return false;
+                }
+
+                break;
+            }
+        }
+    }
+
+    return true;
+}
+
+void ScreenModel::applyConfiguration(WaylandWlrOutputConfigurationV1 *configuration)
+{
+    if (!m_fileName.isEmpty()) {
+        qWarning("Cannot test or apply output configuration when using a fake screen backend");
+        return;
+    }
+
+    QVector<Liri::Platform::ScreenChange> screenChanges;
+
+    const auto changesList = configuration->enabledHeads();
+    for (auto *changes : changesList) {
+        for (auto *item : qAsConst(m_items)) {
+            if (item->name() == changes->head()->name()) {
+                Liri::Platform::ScreenChange screenChange;
+                screenChange.screen = item->screen();
+                screenChange.enabled = true;
+                screenChange.position = changes->position();
+                if (changes->customModeSize().isValid() && changes->customModeRefresh() > 0) {
+                    screenChange.resolution = changes->customModeSize();
+                    screenChange.refreshRate = changes->customModeRefresh();
+                } else if (changes->mode()) {
+                    screenChange.resolution = changes->mode()->size();
+                    screenChange.refreshRate = changes->mode()->refresh();
+                }
+                screenChange.scale = changes->scale();
+                screenChanges.append(screenChange);
+
+                if (!item->isEnabled()) {
+                    item->m_enabled = true;
+                    Q_EMIT item->enabledChanged();
+                }
+
+                break;
+            }
+        }
+    }
+
+    const auto heads = configuration->disabledHeads();
+    for (auto *head : heads) {
+        for (auto *item : qAsConst(m_items)) {
+            if (item->name() == head->name()) {
+                Liri::Platform::ScreenChange screenChange;
+                screenChange.screen = item->screen();
+                screenChange.enabled = false;
+                screenChanges.append(screenChange);
+
+                if (item->isEnabled()) {
+                    item->m_enabled = false;
+                    Q_EMIT item->enabledChanged();
+                }
+
+                break;
+            }
+        }
+    }
+
+    bool result = Liri::Platform::EglFSFunctions::applyScreenChanges(screenChanges);
+
+    // TODO: Send cancelled if a new screen is added or changed meanwhile
+
+    if (result)
+        configuration->sendSucceeded();
+    else
+        configuration->sendFailed();
 }
 
 void ScreenModel::classBegin()
@@ -414,8 +418,10 @@ void ScreenModel::componentComplete()
     // provided by the user
 
     if (m_fileName.isEmpty()) {
-        for (const QScreen *screen : qGuiApp->screens())
-            handleScreenAdded(const_cast<QScreen *>(screen));
+        const auto screens = qGuiApp->screens();
+        for (auto *screen : screens)
+            handleScreenAdded(screen);
+        Q_EMIT countChanged();
 
         connect(qGuiApp, &QGuiApplication::screenAdded, this, &ScreenModel::handleScreenAdded);
         connect(qGuiApp, &QGuiApplication::screenRemoved, this, [this](QScreen *screen) {
@@ -430,17 +436,6 @@ void ScreenModel::componentComplete()
                     screenItem->deleteLater();
                 } else {
                     ++it;
-                }
-                row++;
-            }
-        });
-        connect(qGuiApp, &QGuiApplication::primaryScreenChanged, this, [this](QScreen *screen) {
-            int row = 0;
-            for (auto screenItem : m_items) {
-                if (screenItem->screen()) {
-                    screenItem->m_primary = screenItem->screen() == screen;
-                    Q_EMIT screenItem->primaryChanged();
-                    Q_EMIT dataChanged(index(row, 0), index(row, 0));
                 }
                 row++;
             }
@@ -469,8 +464,6 @@ void ScreenModel::addFakeScreens()
                   qPrintable(m_fileName));
         return;
     }
-
-    bool primarySet = false;
 
     const QJsonObject object = doc.object();
     const QJsonArray outputs = object.value(QStringLiteral("outputs")).toArray();
@@ -502,9 +495,6 @@ void ScreenModel::addFakeScreens()
         }
         qCDebug(lcShell) << "Output description:" << description;
 
-        bool primary = outputSettings.value(QStringLiteral("primary")).toBool();
-        qCDebug(lcShell) << "Output primary:" << primary;
-
         int scale = qMax<int>(1, outputSettings.value(QStringLiteral("scale")).toInt());
         qCDebug(lcShell) << "Scale:" << scale;
 
@@ -531,32 +521,24 @@ void ScreenModel::addFakeScreens()
             physicalSize.setWidth(w * 0.26458);
             physicalSize.setHeight(h * 0.26458);
         }
-        qCDebug(lcShell) << "Physical size millimiters:" << size;
+        qCDebug(lcShell) << "Physical size millimiters:" << physicalSize;
 
         Qt::ScreenOrientation orientation =
                 static_cast<Qt::ScreenOrientation>(outputSettings.value(QStringLiteral("orientation")).toInt());
         qCDebug(lcShell) << "Output orientation:" << orientation;
 
-        QCryptographicHash hash(QCryptographicHash::Md5);
-        hash.addData(QByteArrayLiteral("Liri"));
-        hash.addData(name.toUtf8());
-
         beginInsertRows(QModelIndex(), m_items.count(), m_items.count());
 
         ScreenItem *item = new ScreenItem(this);
-        item->m_uuid = QString::fromLocal8Bit(hash.result().toHex().left(10));
-        item->m_primary = primary && !primarySet;
+        item->m_enabled = true;
         item->m_manufacturer = QStringLiteral("Liri");
         item->m_model = name;
         item->m_name = name;
         item->m_description = description;
         if (physicalSize.isValid())
             item->m_physicalSize = physicalSize;
-        item->m_geometry = QRect(pos, size);
+        item->m_position = pos;
         item->m_scaleFactor = scale;
-
-        if (primary)
-            primarySet = true;
 
         switch (orientation) {
         case Qt::PortraitOrientation:
@@ -580,9 +562,9 @@ void ScreenModel::addFakeScreens()
         m_items.append(item);
 
         endInsertRows();
-
-        Q_EMIT item->primaryChanged();
     }
+
+    Q_EMIT countChanged();
 }
 
 void ScreenModel::handleScreenAdded(QScreen *screen)
@@ -591,7 +573,6 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
 
     ScreenItem *item = new ScreenItem(this);
     item->m_screen = screen;
-    item->m_primary = screen == qGuiApp->primaryScreen();
 
     item->m_manufacturer = screen->manufacturer();
     if (item->m_manufacturer.isEmpty())
@@ -611,14 +592,9 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
 
     item->m_name = screen->name();
     item->m_description = screen->manufacturer() + QStringLiteral(" ") + screen->model();
-    item->m_geometry = screen->availableGeometry();
+    item->m_position = screen->availableGeometry().topLeft();
     item->m_physicalSize = screen->physicalSize();
     item->m_scaleFactor = qFloor(screen->devicePixelRatio());
-
-    QCryptographicHash hash(QCryptographicHash::Md5);
-    hash.addData(item->m_manufacturer.toUtf8());
-    hash.addData(item->m_model.toUtf8());
-    item->m_uuid = QString::fromLocal8Bit(hash.result().toHex().left(10));
 
     QPlatformScreen::SubpixelAntialiasingType subpixel = screen->handle()->subpixelAntialiasingTypeHint();
     switch (subpixel) {
@@ -656,35 +632,56 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
     if (screen->handle()->modes().count() == 0) {
         ScreenMode *mode = new ScreenMode(item);
         mode->m_resolution = screen->geometry().size();
-        mode->m_refreshRate = int(screen->refreshRate() * 1000);
+        mode->m_refreshRate = qFloor(screen->refreshRate() * 1000);
         item->m_modes.append(mode);
+        item->m_currentMode = mode;
+        item->m_preferredMode = mode;
     } else {
-        for (auto platformMode : screen->handle()->modes()) {
+        int modeIndex = 0;
+        const auto modes = screen->handle()->modes();
+        for (const auto &platformMode : modes) {
+            const QSize size = platformMode.size;
+            const int refresh = qFloor(platformMode.refreshRate * 1000);
+
+            // Don't add the same modes twice
+            auto result = std::find_if(item->m_modes.begin(), item->m_modes.end(), [size, refresh](ScreenMode *mode) {
+                return mode->resolution() == size && mode->refreshRate() == refresh;
+            });
+            if (result != item->m_modes.end())
+                continue;
+
             ScreenMode *mode = new ScreenMode(item);
-            mode->m_resolution = platformMode.size;
-            mode->m_refreshRate = int(platformMode.refreshRate * 1000);
+            mode->m_resolution = size;
+            mode->m_refreshRate = refresh;
             item->m_modes.append(mode);
+
+            if (screen->handle()->currentMode() == modeIndex)
+                item->m_currentMode = mode;
+            if (screen->handle()->preferredMode() == modeIndex)
+                item->m_preferredMode = mode;
+
+            modeIndex++;
         }
     }
-    item->m_currentMode = screen->handle()->currentMode();
-    item->m_preferredMode = screen->handle()->preferredMode();
 
     connect(screen, &QScreen::availableGeometryChanged, this, [this, item](const QRect &geometry) {
         int row = m_items.indexOf(item);
 
-        item->m_geometry = geometry;
-        Q_EMIT item->geometryChanged();
+        if (item->m_position != geometry.topLeft()) {
+            item->m_position = geometry.topLeft();
+            Q_EMIT item->positionChanged();
+        }
 
-        int modeIndex = 0;
-        for (auto mode : item->m_modes) {
+        for (auto *mode : qAsConst(item->m_modes)) {
             const QSize size = geometry.size();
-            const int refreshRate = int(item->screen()->refreshRate() * 1000);
+            const int refreshRate = qFloor(item->screen()->refreshRate() * 1000);
             if (mode->resolution() == size && mode->refreshRate() == refreshRate) {
-                item->m_currentMode = modeIndex;
-                Q_EMIT item->currentModeIndexChanged();
+                if (item->m_currentMode != mode) {
+                    item->m_currentMode = mode;
+                    Q_EMIT item->currentModeChanged(size, refreshRate);
+                }
                 break;
             }
-            modeIndex++;
         }
 
         Q_EMIT dataChanged(index(row, 0), index(row, 0));
@@ -692,16 +689,16 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
     connect(screen, &QScreen::refreshRateChanged, this, [this, item](qreal rr) {
         int row = m_items.indexOf(item);
 
-        int modeIndex = 0;
-        for (auto mode : item->m_modes) {
+        for (auto *mode : qAsConst(item->m_modes)) {
             const QSize size = item->screen()->availableGeometry().size();
-            const int refreshRate = int(rr * 1000);
+            const int refreshRate = qFloor(rr * 1000);
             if (mode->resolution() == size && mode->refreshRate() == refreshRate) {
-                item->m_currentMode = modeIndex;
-                Q_EMIT item->currentModeIndexChanged();
+                if (item->m_currentMode != mode) {
+                    item->m_currentMode = mode;
+                    Q_EMIT item->currentModeChanged(size, refreshRate);
+                }
                 break;
             }
-            modeIndex++;
         }
 
         Q_EMIT dataChanged(index(row, 0), index(row, 0));
@@ -734,6 +731,4 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
     m_items.append(item);
 
     endInsertRows();
-
-    Q_EMIT item->primaryChanged();
 }

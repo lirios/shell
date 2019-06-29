@@ -53,29 +53,27 @@ WaylandCompositor {
         onActivated: liriCompositor.quit()
     }
 
-    Root.ScreenManager {
+    P.ScreenModel {
+        id: screenModel
+        fileName: screenConfigurationFileName
+    }
+
+    Instantiator {
         id: screenManager
 
+        model: screenModel
         delegate: ErrorOutput {
             compositor: liriCompositor
-            screen: screenItem.screen
-            primary: screenItem.primary
-            position: Qt.point(x, y)
+            screen: screenItem
+            position: screenItem.position
             manufacturer: screenItem.manufacturer
             model: screenItem.model
             physicalSize: screenItem.physicalSize
             subpixel: screenItem.subpixel
             transform: screenItem.transform
             scaleFactor: screenItem.scaleFactor
-            currentModeIndex: screenItem.currentModeIndex
-            preferredModeIndex: screenItem.preferredModeIndex
 
             Component.onCompleted: {
-                // Add modes
-                var sourceModes = screenManager.screenModel.get(index).modes;
-                for (var i = 0; i < sourceModes.length; i++)
-                    modes.push(sourceModes[i]);
-
                 // Set default output the first time
                 if (!liriCompositor.defaultOutput)
                     liriCompositor.defaultOutput = this;

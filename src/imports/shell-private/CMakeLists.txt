@@ -2,6 +2,10 @@ find_package(Wayland REQUIRED)
 
 set(AUTOMOC_MOC_OPTIONS -Muri=Liri.private.shell)
 
+if(NOT TARGET Liri::WaylandServer)
+    find_package(Liri1WaylandServer REQUIRED)
+endif()
+
 liri_add_qml_plugin(shell-private
     MODULE_PATH
         "Liri/private/shell"
@@ -42,5 +46,6 @@ liri_add_qml_plugin(shell-private
         Qt5::Quick
         Qt5::WaylandCompositor
         Liri::ShellDBusInterfaces
+        Liri::WaylandServer
     STATIC
 )

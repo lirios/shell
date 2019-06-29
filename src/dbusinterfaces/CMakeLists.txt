@@ -15,24 +15,6 @@ endif()
 
 liri_add_module(ShellDBusInterfaces
     SOURCES
-        outputchangeset.cpp
-        outputchangeset.h
-        outputconfigurationadaptor.cpp
-        outputconfigurationadaptor.h
-        outputconfiguration.cpp
-        outputconfiguration.h
-        outputdeviceadaptor.cpp
-        outputdeviceadaptor.h
-        outputdevice.cpp
-        outputdevice.h
-        outputmanagementadaptor.cpp
-        outputmanagementadaptor.h
-        outputmanagement.cpp
-        outputmanagement.h
-        outputsadaptor.cpp
-        outputsadaptor.h
-        outputs.cpp
-        outputs.h
         screencastadaptor.cpp
         screencastadaptor.h
         screencast.cpp

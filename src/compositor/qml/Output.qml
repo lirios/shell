@@ -35,7 +35,7 @@ P.WaylandOutput {
 
     readonly property bool primary: liriCompositor.defaultOutput === this
 
-    property var hardwareScreen: null
+    property var screen: null
 
     property var viewsBySurface: ({})
 
@@ -49,7 +49,27 @@ P.WaylandOutput {
     property bool __idle: false
 
     sizeFollowsWindow: false
-    automaticFrameCallback: enabled && hardwareScreen.powerState === P.ScreenItem.PowerStateOn
+    automaticFrameCallback: screen && screen.enabled && screen.powerState === P.ScreenItem.PowerStateOn
+
+    Connections {
+        target: output.screen
+        onCurrentModeChanged: {
+            output.setCurrentOutputMode(resolution, refreshRate);
+        }
+    }
+
+    Component.onCompleted: {
+        if (output.screen) {
+            for (var i = 0; i < output.screen.modes.length; i++) {
+                var screenMode = output.screen.modes[i];
+                var isPreferred = output.screen.preferredMode.resolution === screenMode.resolution &&
+                        output.screen.preferredMode.refreshRateRate === screenMode.refreshRate;
+                var isCurrent = output.screen.currentMode.resolution === screenMode.resolution &&
+                        output.screen.currentMode.refreshRate === screenMode.refreshRate;
+                output.addOutputMode(screenMode.resolution, screenMode.refreshRate, isPreferred, isCurrent);
+            }
+        }
+    }
 
     window: ApplicationWindow {
         id: outputWindow
@@ -59,7 +79,7 @@ P.WaylandOutput {
         width: output.geometry.width
         height: output.geometry.height
         flags: Qt.Window | Qt.FramelessWindowHint
-        screen: Qt.application.screens[output.hardwareScreen.screenIndex]
+        screen: output.screen ? Qt.application.screens[output.screen.screenIndex] : null
         color: "black"
         visible: true
 
@@ -119,7 +139,7 @@ P.WaylandOutput {
             ScreenView {
                 id: screenView
                 anchors.fill: parent
-                visible: output.enabled
+                visible: output.screen.enabled
             }
 
             // Flash for screenshots
@@ -180,10 +200,6 @@ P.WaylandOutput {
         }
     }
 
-    onModeAdded: {
-        outputDevice.addMode(size, refreshRate);
-    }
-
     /*
      * Methods
      */
@@ -194,7 +210,7 @@ P.WaylandOutput {
 
         console.debug("Power on output", manufacturer, model);
         idleDimmer.fadeOut();
-        hardwareScreen.powerState = P.ScreenItem.PowerStateOn;
+        screen.powerState = P.ScreenItem.PowerStateOn;
         __idle = false;
     }
 

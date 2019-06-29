@@ -57,7 +57,7 @@ Rectangle {
     onOpacityChanged: {
         // Power off output when fade out has finished
         if (opacity == 1.0)
-            output.hardwareScreen.powerState = P.ScreenItem.PowerStateStandby;
+            output.screen.powerState = P.ScreenItem.PowerStateStandby;
     }
 
     OpacityAnimator {

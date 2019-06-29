@@ -39,11 +39,6 @@
 #include "windowmousetracker.h"
 
 // DBusInterfaces
-#include "outputchangeset.h"
-#include "outputconfiguration.h"
-#include "outputdevice.h"
-#include "outputmanagement.h"
-#include "outputs.h"
 #include "screencast.h"
 #include "screenshooter.h"
 
@@ -134,14 +129,6 @@ public:
         qmlRegisterType<QWaylandXdgPopupV5QuickParent>(uri, versionMajor, versionMinor, "XdgPopupV5");
 
         // D-Bus interfaces
-
-        qmlRegisterType<OutputConfiguration>(uri, versionMajor, versionMinor, "OutputConfiguration");
-        qmlRegisterType<OutputDevice>(uri, versionMajor, versionMinor, "OutputDevice");
-        qmlRegisterType<OutputManagement>(uri, versionMajor, versionMinor, "OutputManagement");
-        qmlRegisterUncreatableType<OutputChangeset>(uri, versionMajor, versionMinor, "OutputChangeset",
-                                                    QStringLiteral("Cannot create instance of OutputChangeset"));
-
-        qmlRegisterType<Outputs>(uri, versionMajor, versionMinor, "Outputs");
 
         qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
 

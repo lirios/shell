@@ -28,16 +28,21 @@ import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 
 P.WaylandOutput {
-    property bool primary: false
-    readonly property alias grabItem: grabItem
-    property alias screen: outputWindow.screen
-
     id: output
 
-    onPrimaryChanged: {
-        // Set default output
-        if (primary)
-            liriCompositor.defaultOutput = this;
+    readonly property bool primary: liriCompositor.defaultOutput === this
+
+    property var screen: null
+
+    Component.onCompleted: {
+        if (output.screen) {
+            for (var i = 0; i < output.screen.modes.length; i++) {
+                var screenMode = output.screen.modes[i];
+                var isPreferred = output.screen.preferredMode === screenMode;
+                var isCurrent = output.screen.currentMode === screenMode;
+                output.addOutputMode(screenMode.resolution, screenMode.refreshRate, isPreferred, isCurrent);
+            }
+        }
     }
 
     window: Window {
@@ -47,7 +52,9 @@ P.WaylandOutput {
         y: output.position.y
         width: output.geometry.width
         height: output.geometry.height
-        flags: Qt.FramelessWindowHint
+        flags: Qt.Window | Qt.FramelessWindowHint
+        screen: output.screen ? Qt.application.screens[output.screen.screenIndex] : null
+        color: "black"
         visible: true
 
         // Grab surface from shell helper

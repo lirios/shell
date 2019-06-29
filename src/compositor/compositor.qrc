@@ -56,7 +56,6 @@
         <file>qml/overlays/UnresponsiveOverlay.qml</file>
         <file>qml/panel/IndicatorsRow.qml</file>
         <file>qml/panel/Panel.qml</file>
-        <file>qml/ScreenManager.qml</file>
         <file>qml/screens/AuthDialog.qml</file>
         <file>qml/screens/LockScreen.qml</file>
         <file>qml/screens/LogoutScreen.qml</file>

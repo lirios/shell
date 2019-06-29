@@ -22,11 +22,13 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+import QtQml 2.1
 import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtWayland.Compositor 1.3
 import Liri.Launcher 1.0 as Launcher
 import Liri.PolicyKit 1.0
+import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
 import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
@@ -84,6 +86,14 @@ WaylandCompositor {
         surface.initialize(liriCompositor, client, id, version);
     }
 
+    /*
+     * Window management
+     */
+
+    ListModel {
+        id: shellSurfaces
+    }
+
     QtObject {
         id: __private
 
@@ -111,44 +121,105 @@ WaylandCompositor {
         }
     }
 
-    ScreenManager {
+    /*
+     * Output management
+     */
+
+    P.ScreenModel {
+        id: screenModel
+        fileName: screenConfigurationFileName
+    }
+
+    Component {
+        id: outputModeComponent
+
+        WS.WlrOutputModeV1 {}
+    }
+
+    WS.WlrOutputManagerV1 {
+        id: outputManager
+
+        onConfigurationCreated: {
+            configuration.readyToTest.connect(function() {
+                if (!screenModel.testConfiguration(configuration))
+                    configuration.sendFailed();
+            });
+
+            configuration.readyToApply.connect(function() {
+                screenModel.applyConfiguration(configuration);
+            });
+        }
+    }
+
+    Instantiator {
         id: screenManager
 
+        model: screenModel
         delegate: Output {
             compositor: liriCompositor
-            hardwareScreen: screenItem
-            uuid: screenItem.uuid
-            position: Qt.point(x, y)
+            screen: screenItem
+            position: screenItem.position
             manufacturer: screenItem.manufacturer
             model: screenItem.model
             physicalSize: screenItem.physicalSize
             subpixel: screenItem.subpixel
             transform: screenItem.transform
             scaleFactor: screenItem.scaleFactor
-            modes: screenItem.modes
-            currentModeIndex: screenItem.currentModeIndex
-            preferredModeIndex: screenItem.preferredModeIndex
 
             Component.onCompleted: {
-                // Set default output the first time
-                if (!liriCompositor.defaultOutput && screenItem.primary)
+                // Set this as default output if configured
+                if (!liriCompositor.defaultOutput && screenItem.name === settings.outputs.primary)
+                    liriCompositor.defaultOutput = this;
+
+                // Fallback to the first one
+                if (!liriCompositor.defaultOutput)
                     liriCompositor.defaultOutput = this;
             }
         }
 
-        function getOutputForUuid(uuid) {
-            for (var i = 0; i < screenManager.count; i++) {
-                var output = screenManager.objectAt(i);
-                if (output.uuid === uuid)
-                    return output;
+        onObjectRemoved: {
+            // Move all windows that fit entirely the removed output to the primary output,
+            // unless the output remove is the primary one (this shouldn't happen)
+            if (object === liriCompositor.defaultOutput)
+                return;
+            for (var surface in object.viewsBySurface) {
+                var view = object.viewsBySurface[surface];
+                if (view.primary && view.output === object) {
+                    view.moveItem.x = liriCompositor.defaultOutput.position.x + 20;
+                    view.moveItem.y = liriCompositor.defaultOutput.position.y + 20;
+                }
             }
-
-            return null;
         }
     }
 
-    ListModel {
-        id: shellSurfaces
+    Instantiator {
+        id: headManager
+
+        model: screenModel
+        delegate: WS.WlrOutputHeadV1 {
+            manager: outputManager
+            name: screenItem.name
+            description: screenItem.description
+            physicalSize: screenItem.physicalSize
+            position: screenItem.position
+            transform: screenItem.transform
+            scale: screenItem.scaleFactor
+
+            Component.onCompleted: {
+                for (var i = 0; i < screenItem.modes.length; i++) {
+                    var screenMode = screenItem.modes[i];
+                    var mode = outputModeComponent.createObject(this, {size: screenMode.resolution, refresh: screenMode.refreshRate});
+
+                    addMode(mode);
+
+                    if (screenItem.preferredMode === screenMode)
+                        preferredMode = mode;
+
+                    if (screenItem.currentMode === screenMode)
+                        currentMode = mode;
+                }
+            }
+        }
     }
 
     /*

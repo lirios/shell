@@ -31,12 +31,37 @@ import Fluid.Core 1.0 as FluidCore
 import Liri.private.shell 1.0 as P
 
 FluidCore.Object {
+    readonly property alias outputs: outputsSettings
     readonly property alias ui: interfaceSettings
     readonly property alias keyboard: keyboardSettings
     readonly property alias lockScreen: lockSettings
     readonly property alias shell: shellSettings
     readonly property alias session: sessionSettings
     readonly property int numWorkspaces: 4
+
+    /*
+     * Outputs
+     */
+
+    Settings.GSettings {
+        id: outputsSettings
+        schema.id: "io.liri.hardware.screens"
+        schema.path: "/io/liri/hardware/screens/"
+    }
+
+    Connections {
+        target: outputsSettings
+        onPrimaryChanged: {
+            for (var i = 0; i < liriCompositor.screenManager.count; i++) {
+                var output = liriCompositor.screenManager.objectAt(i);
+
+                if (output.screen && output.screen.name === primary) {
+                    liriCompositor.defaultOutput = output;
+                    return;
+                }
+            }
+        }
+    }
 
     /*
      * Interface
