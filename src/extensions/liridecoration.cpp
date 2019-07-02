@@ -52,7 +52,7 @@ void LiriDecorationManager::initialize()
 
 void LiriDecorationManager::unregisterDecoration(LiriDecoration *decoration)
 {
-    m_decorations.remove(decoration->surface());
+    m_decorations.remove(decoration->surfaceResource());
 }
 
 void LiriDecorationManager::liri_decoration_manager_create(QtWaylandServer::liri_decoration_manager::Resource *resource, uint32_t id, wl_resource *surfaceResource)
@@ -63,7 +63,7 @@ void LiriDecorationManager::liri_decoration_manager_create(QtWaylandServer::liri
         return;
     }
 
-    if (m_decorations.contains(surface)) {
+    if (m_decorations.contains(surfaceResource)) {
         qCWarning(lcDecoration) << "Decoration object already exist for surface";
         wl_resource_post_error(resource->handle, error_already_exists,
                                "liri_decoration already exist for surface");
@@ -72,7 +72,7 @@ void LiriDecorationManager::liri_decoration_manager_create(QtWaylandServer::liri
 
     auto decoration = new LiriDecoration(this, surface);
     decoration->init(resource->client(), id, QtWaylandServer::liri_decoration::interfaceVersion());
-    m_decorations[surface] = decoration;
+    m_decorations[surfaceResource] = decoration;
     Q_EMIT decorationCreated(decoration);
 }
 
@@ -88,14 +88,14 @@ LiriDecoration::LiriDecoration(LiriDecorationManager *parent, QWaylandSurface *s
 {
 }
 
-LiriDecoration::~LiriDecoration()
-{
-    m_manager->unregisterDecoration(this);
-}
-
 QWaylandSurface *LiriDecoration::surface() const
 {
     return m_surface;
+}
+
+wl_resource *LiriDecoration::surfaceResource() const
+{
+    return m_surface->resource();
 }
 
 QColor LiriDecoration::foregroundColor() const
@@ -110,7 +110,8 @@ QColor LiriDecoration::backgroundColor() const
 
 void LiriDecoration::liri_decoration_destroy_resource(QtWaylandServer::liri_decoration::Resource *resource)
 {
-    Q_UNUSED(resource);
+    Q_UNUSED(resource)
+    m_manager->unregisterDecoration(this);
     delete this;
 }
 
@@ -138,6 +139,5 @@ void LiriDecoration::liri_decoration_set_background(QtWaylandServer::liri_decora
 
 void LiriDecoration::liri_decoration_destroy(QtWaylandServer::liri_decoration::Resource *resource)
 {
-    m_manager->unregisterDecoration(this);
     wl_resource_destroy(resource->handle);
 }

@@ -52,7 +52,7 @@ Q_SIGNALS:
     void decorationCreated(LiriDecoration *decoration);
 
 private:
-    QMap<QWaylandSurface *, LiriDecoration *> m_decorations;
+    QMap<wl_resource *, LiriDecoration *> m_decorations;
 
     void liri_decoration_manager_create(Resource *resource, uint32_t id, struct ::wl_resource *surfaceResource) override;
     void liri_decoration_manager_destroy(Resource *resource) override;
@@ -67,9 +67,9 @@ class LiriDecoration : public QWaylandCompositorExtensionTemplate<LiriDecoration
     Q_PROPERTY(QColor backgroundColor READ backgroundColor NOTIFY backgroundColorChanged)
 public:
     explicit LiriDecoration(LiriDecorationManager *parent, QWaylandSurface *surface);
-    ~LiriDecoration();
 
     QWaylandSurface *surface() const;
+    wl_resource *surfaceResource() const;
 
     QColor foregroundColor() const;
     QColor backgroundColor() const;
@@ -80,7 +80,7 @@ Q_SIGNALS:
 
 private:
     LiriDecorationManager *m_manager = nullptr;
-    QPointer<QWaylandSurface> m_surface = nullptr;
+    QWaylandSurface *m_surface = nullptr;
     QColor m_fgColor = Qt::transparent;
     QColor m_bgColor = Qt::transparent;
 
