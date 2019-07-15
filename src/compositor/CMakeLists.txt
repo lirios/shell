@@ -76,6 +76,7 @@ liri_add_executable(LiriShell
     RESOURCES
         "compositor.qrc"
     QTQUICK_COMPILER
+        ${LIRI_SHELL_ENABLE_QTQUICK_COMPILER}
     DBUS_ADAPTOR_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/sessionmanager/screensaver/org.freedesktop.ScreenSaver.xml"
     DEFINES
