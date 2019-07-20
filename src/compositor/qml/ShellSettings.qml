@@ -33,7 +33,6 @@ import Liri.private.shell 1.0 as P
 FluidCore.Object {
     readonly property alias ui: interfaceSettings
     readonly property alias keyboard: keyboardSettings
-    readonly property alias background: bgSettings
     readonly property alias lockScreen: lockSettings
     readonly property alias shell: shellSettings
     readonly property alias session: sessionSettings
@@ -81,16 +80,6 @@ FluidCore.Object {
         id: sessionSettings
         schema.id: "io.liri.session"
         schema.path: "/io/liri/session/"
-    }
-
-    /*
-     * Background
-     */
-
-    Settings.GSettings {
-        id: bgSettings
-        schema.id: "io.liri.desktop.background"
-        schema.path: "/io/liri/desktop/background/"
     }
 
     /*

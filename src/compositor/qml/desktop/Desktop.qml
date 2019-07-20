@@ -30,7 +30,6 @@ import QtQuick.Controls.Material 2.1
 import Fluid.Controls 1.0 as FluidControls
 import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
-import Liri.DBusService 1.0 as DBusService
 import ".."
 import "../components"
 import "../indicators"
@@ -44,9 +43,14 @@ Item {
     Material.accent: Material.Blue
 
     readonly property var layers: QtObject {
+        readonly property alias background: backgroundLayer
+        readonly property alias desktop: desktopLayer
+        readonly property alias bottom: bottomLayer
         readonly property alias workspaces: workspace //workspacesLayer
+        readonly property alias top: topLayer
         readonly property alias fullScreen: fullScreenLayer
         readonly property alias overlays: overlaysLayer
+        readonly property alias notifications: notificationsLayer
     }
 
     readonly property alias shell: shellLoader.item
@@ -58,66 +62,19 @@ Item {
      * Workspace
      */
 
-    LS.Background {
+    Item {
         id: backgroundLayer
         anchors.fill: parent
-        mode: liriCompositor.settings.background.mode
-        pictureUrl: liriCompositor.settings.background.pictureUrl
-        primaryColor: liriCompositor.settings.background.primaryColor
-        secondaryColor: liriCompositor.settings.background.secondaryColor
-        fillMode: liriCompositor.settings.background.fillMode
-        blur: false
-        z: 0
-
-        DBusService.Application {
-            id: settingsApp
-
-            serviceName: "io.liri.Settings"
-            objectPath: "/io/liri/Settings"
-        }
-
-        Menu {
-            id: bgMenu
-
-            MenuItem {
-                text: qsTr("Change Background...")
-                onClicked: settingsApp.open(["background"])
-            }
-
-            MenuSeparator {}
-
-            MenuItem {
-                text: qsTr("Display Settings")
-                onClicked: settingsApp.open(["display"])
-            }
-
-            MenuItem {
-                text: qsTr("Settings")
-                onClicked: settingsApp.activate()
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.RightButton
-            onClicked: bgMenu.popup(mouse.x, mouse.y)
-            onPressAndHold: bgMenu.popup(mouse.x, mouse.y)
-        }
     }
 
-    DesktopWidgets {
+    Item {
         id: desktopLayer
         anchors.fill: parent
-        z: 1
     }
 
-    // Change pointer cursor when needed
-    MouseArea {
+    Item {
+        id: bottomLayer
         anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-        hoverEnabled: true
-        onEntered: shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor)
-        onExited: shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor)
     }
 
     // Workspaces
@@ -137,6 +94,11 @@ Item {
         onEffectStarted: if (effect == "present") parent.state = "present"
         onEffectStopped: if (effect == "present") parent.state = "normal"
         z: 6
+    }
+
+    Item {
+        id: topLayer
+        anchors.fill: parent
     }
 
     // Panels
@@ -174,46 +136,51 @@ Item {
         }
     }
 
-    // Overlays are above the panel
-    Overlay {
-        id: overlaysLayer
-        anchors.centerIn: parent
-        z: 10
+    Item {
+        id: overlaysLayer2
+        anchors.fill: parent
 
-        Connections {
-            target: OnScreenDisplay
-            onTextRequested: {
-                overlaysLayer.iconName = iconName;
-                overlaysLayer.text = text;
-                overlaysLayer.showProgress = false;
-                if (!overlaysLayer.visible)
-                    overlaysLayer.show();
-            }
-            onProgressRequested: {
-                overlaysLayer.iconName = iconName;
-                overlaysLayer.text = "";
-                overlaysLayer.value = value;
-                overlaysLayer.showProgress = true;
-                if (!overlaysLayer.visible)
-                    overlaysLayer.show();
+        // Overlays are above the panel
+        Overlay {
+            id: overlaysLayer
+            anchors.centerIn: parent
+            z: 10
+
+            Connections {
+                target: OnScreenDisplay
+                onTextRequested: {
+                    overlaysLayer.iconName = iconName;
+                    overlaysLayer.text = text;
+                    overlaysLayer.showProgress = false;
+                    if (!overlaysLayer.visible)
+                        overlaysLayer.show();
+                }
+                onProgressRequested: {
+                    overlaysLayer.iconName = iconName;
+                    overlaysLayer.text = "";
+                    overlaysLayer.value = value;
+                    overlaysLayer.showProgress = true;
+                    if (!overlaysLayer.visible)
+                        overlaysLayer.show();
+                }
             }
         }
-    }
 
-    // Notifications are behind the panel
-    Loader {
-        id: notificationsLayer
-        anchors {
-            top: parent.top
-            right: parent.right
-            bottom: parent.bottom
-            topMargin: FluidControls.Units.largeSpacing * 3
-            bottomMargin: 56 + FluidControls.Units.smallSpacing
+        // Notifications are behind the panel
+        Loader {
+            id: notificationsLayer
+            anchors {
+                top: parent.top
+                right: parent.right
+                bottom: parent.bottom
+                topMargin: FluidControls.Units.largeSpacing * 3
+                bottomMargin: 56 + FluidControls.Units.smallSpacing
+            }
+            active: output.primary
+            sourceComponent: Notifications {}
+            width: FluidControls.Units.gu(24) + (2 * FluidControls.Units.smallSpacing)
+            z: 10
         }
-        active: output.primary
-        sourceComponent: Notifications {}
-        width: FluidControls.Units.gu(24) + (2 * FluidControls.Units.smallSpacing)
-        z: 10
     }
 
     // Windows switcher

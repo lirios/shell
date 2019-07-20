@@ -1,10 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2018 Pier Luigi Fiorini
- *
- * Author(s):
- *    Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -25,6 +22,10 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtWayland.Compositor 1.3
 
-Item {
+LayerSurfaceItem {
+    WaylandHardwareLayer {
+        stackingLevel: -1
+    }
 }

@@ -23,6 +23,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QGuiApplication>
+#include <QQmlApplicationEngine>
 
 #include "gitsha1.h"
 #include "shellhelperapplication.h"
@@ -79,6 +80,10 @@ int main(int argc, char *argv[])
 
     // Create shell helper
     new ShellHelperApplication();
+
+    // Create UI
+    QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);
+    engine->load(QStringLiteral("qrc:/qml/main.qml"));
 
     return app.exec();
 }

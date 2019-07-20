@@ -31,6 +31,7 @@ import Liri.Shell 1.0 as LS
 import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import "base"
+import "desktop"
 import "windows"
 
 WaylandCompositor {
@@ -158,6 +159,8 @@ WaylandCompositor {
         onOpenUrl: SessionInterface.launchCommand("xdg-open %1".arg(url))
     }
 
+    // Liri shell
+
     WS.LiriShell {
         id: shellHelper
 
@@ -167,6 +170,60 @@ WaylandCompositor {
             grabSurface = surface;
         }
     }
+
+    // Layer shell
+
+    Component {
+        id: layerItemComponent
+
+        LayerSurfaceItem {}
+    }
+
+    Component {
+        id: bgLayerItemComponent
+
+        BackgroundItem {}
+    }
+
+    WS.WlrLayerShellV1 {
+        id: layerShell
+
+        onLayerSurfaceCreated: {
+            var output = layerSurface.output;
+            if (!output)
+                output = liriCompositor.defaultOutput;
+
+            var parent = null;
+            switch (layerSurface.layer) {
+            case WS.WlrLayerShellV1.BackgroundLayer:
+                parent = output.screenView.desktop.layers.background;
+                break;
+            case WS.WlrLayerShellV1.BottomLayer:
+                parent = output.screenView.desktop.layers.bottom;
+                break;
+            case WS.WlrLayerShellV1.TopLayer:
+                parent = output.screenView.desktop.layers.top;
+                break;
+            case WS.WlrLayerShellV1.OverlayLayer:
+                parent = output.screenView.desktop.layers.overlays;
+                break;
+            default:
+                break;
+            }
+
+            var props = {
+                "layerSurface": layerSurface,
+                "surface": layerSurface.surface,
+                "output": output
+            };
+            if (layerSurface.layer === WS.WlrLayerShellV1.BackgroundLayer)
+                bgLayerItemComponent.createObject(parent, props);
+            else
+                layerItemComponent.createObject(parent, props);
+        }
+    }
+
+    // Decorations
 
     WS.KdeServerDecorationManager {
         defaultMode: WS.KdeServerDecorationManager.Server
@@ -188,6 +245,8 @@ WaylandCompositor {
             });
         }
     }
+
+    // Shells
 
     WlShell {
         id: wlShell
@@ -245,6 +304,8 @@ WaylandCompositor {
             gtkSurface.initialize(gtkShell, surface, resource);
         }
     }
+
+    // Text input
 
     TextInputManager {}
 

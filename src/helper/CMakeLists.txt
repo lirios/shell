@@ -19,6 +19,8 @@ liri_add_executable(LiriShellHelper
         main.cpp
         shellhelperapplication.cpp
         shellhelperapplication.h
+    RESOURCES
+        "helper.qrc"
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
@@ -29,6 +31,7 @@ liri_add_executable(LiriShellHelper
         Qt5::Core
         Qt5::Gui
         Qt5::GuiPrivate
+        Qt5::Qml
         Qt5::WaylandClient
         Liri::WaylandClient
 )

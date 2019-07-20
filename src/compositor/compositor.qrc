@@ -6,9 +6,10 @@
         <file>qml/components/Overlay.qml</file>
         <file>qml/components/PagedGrid.qml</file>
         <file>qml/Compositor.qml</file>
+        <file>qml/desktop/BackgroundItem.qml</file>
         <file>qml/desktop/Desktop.qml</file>
-        <file>qml/desktop/DesktopWidgets.qml</file>
         <file>qml/desktop/IdleDimmer.qml</file>
+        <file>qml/desktop/LayerSurfaceItem.qml</file>
         <file>qml/desktop/OutputInfo.qml</file>
         <file>qml/desktop/PresentEffect.js</file>
         <file>qml/desktop/PresentWindowsChrome.qml</file>
