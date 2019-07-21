@@ -24,6 +24,7 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.1 as QtWayland
 import Fluid.Core 1.0 as FluidCore
+import Liri.WaylandServer 1.0 as WS
 import Liri.XWayland 1.0 as LXW
 
 FluidCore.Object {
@@ -94,6 +95,49 @@ FluidCore.Object {
 
             return Qt.rect(0, 0, w > 0 ? w : -1, h > 0 ? h : -1);
         }
+    }
+
+    WS.WlrForeignToplevelHandleV1 {
+        id: toplevelHandle
+
+        compositor: liriCompositor
+        maximized: window.maximized
+        minimized: window.minimized
+        activated: window.activated
+        fullscreen: window.fullscreen
+        title: window.title
+        appId: window.appId
+        onMaximizeRequested: {
+            if (shellSurface)
+                shellSurface.maximize(liriCompositor.defaultOutput);
+        }
+        onUnmaximizeRequested: {
+            if (shellSurface)
+                shellSurface.unmaximize();
+        }
+        onMinimizeRequested: {
+            liriCompositor.setAppMinimized(window.appId, true);
+        }
+        onUnminimizeRequested: {
+            liriCompositor.setAppMinimized(window.appId, false);
+        }
+        onFullscreenRequested: {
+            console.warn("Fullscreen is not supported with XWayland");
+        }
+        onUnfullscreenRequested: {
+            console.warn("Unfullscreen is not supported with XWayland");
+        }
+        onActivateRequested: {
+            liriCompositor.activateApp(window.appId);
+        }
+        onCloseRequested: {
+            if (shellSurface)
+                shellSurface.close();
+        }
+    }
+
+    Component.onDestruction: {
+        toplevelHandle.sendClosed();
     }
 
     Connections {

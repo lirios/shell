@@ -122,6 +122,51 @@ FluidCore.Object {
         }
     }
 
+    WS.WlrForeignToplevelHandleV1 {
+        id: toplevelHandle
+
+        compositor: liriCompositor
+        maximized: window.maximized
+        minimized: window.minimized
+        activated: window.activated
+        fullscreen: window.fullscreen
+        title: window.title
+        appId: window.appId
+        onMaximizeRequested: {
+            if (toplevel)
+                toplevel.sendMaximized(liriCompositor.defaultOutput.availableGeometry.size);
+        }
+        onUnmaximizeRequested: {
+            if (toplevel)
+                toplevel.sendUnmaximized();
+        }
+        onMinimizeRequested: {
+            liriCompositor.setAppMinimized(window.appId, true);
+        }
+        onUnminimizeRequested: {
+            liriCompositor.setAppMinimized(window.appId, false);
+        }
+        onFullscreenRequested: {
+            var outputToUse = output ? output : liriCompositor.defaultOutput;
+            if (toplevel)
+                toplevel.sendFullscreen(outputToUse.geometry.size);
+        }
+        onUnfullscreenRequested: {
+            console.warn("Unfullscreen is not supported with xdg-shell-v5");
+        }
+        onActivateRequested: {
+            liriCompositor.activateApp(window.appId);
+        }
+        onCloseRequested: {
+            if (toplevel)
+                toplevel.sendClose();
+        }
+    }
+
+    Component.onDestruction: {
+        toplevelHandle.sendClosed();
+    }
+
     Connections {
         target: surface
         onHasContentChanged: {

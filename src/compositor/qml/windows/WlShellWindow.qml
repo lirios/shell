@@ -127,6 +127,46 @@ FluidCore.Object {
         }
     }
 
+    WS.WlrForeignToplevelHandleV1 {
+        id: toplevelHandle
+
+        compositor: liriCompositor
+        maximized: window.maximized
+        minimized: window.minimized
+        activated: window.activated
+        fullscreen: window.fullscreen
+        title: window.title
+        appId: window.appId
+        onMaximizeRequested: {
+            console.warn("Maximize is not supported with wl-shell");
+        }
+        onUnmaximizeRequested: {
+            console.warn("Unmaximize is not supported with wl-shell");
+        }
+        onMinimizeRequested: {
+            liriCompositor.setAppMinimized(window.appId, true);
+        }
+        onUnminimizeRequested: {
+            liriCompositor.setAppMinimized(window.appId, false);
+        }
+        onFullscreenRequested: {
+            console.warn("Fullscreen is not supported with wl-shell");
+        }
+        onUnfullscreenRequested: {
+            console.warn("Unfullscreen is not supported with wl-shell");
+        }
+        onActivateRequested: {
+            liriCompositor.activateApp(window.appId);
+        }
+        onCloseRequested: {
+            console.warn("Clients cannot be closed with wl-shell");
+        }
+    }
+
+    Component.onDestruction: {
+        toplevelHandle.sendClosed();
+    }
+
     Connections {
         target: defaultSeat
         onKeyboardFocusChanged: d.activated = newFocus == surface

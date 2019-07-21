@@ -353,6 +353,12 @@ WaylandCompositor {
         }
     }
 
+    // Foreign toplevel management
+
+    WS.WlrForeignToplevelManagerV1 {
+        id: foreignToplevelManager
+    }
+
     // Shells
 
     WlShell {
@@ -731,7 +737,7 @@ WaylandCompositor {
             screenManager.objectAt(i).flash();
     }
 
-    function activateShellSurfaces(appId) {
+    function activateApp(appId) {
         for (var i = 0; i < shellSurfaces.count; i++) {
             var shellSurface = shellSurfaces.get(i).window;
             if (shellSurface.appId === appId) {
@@ -739,6 +745,14 @@ WaylandCompositor {
                 for (var j = 0; j < screenManager.count; j++)
                     screenManager.objectAt(j).viewsBySurface[shellSurface.surface].takeFocus();
             }
+        }
+    }
+
+    function setAppMinimized(appId, minimized) {
+        for (var i = 0; i < shellSurfaces.count; i++) {
+            var shellSurface = shellSurfaces.get(i).window;
+            if (shellSurface.appId === appId)
+                shellSurface.minimized = minimized;
         }
     }
 
