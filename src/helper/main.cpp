@@ -35,7 +35,7 @@
 
 static void disablePtrace()
 {
-#if defined(PR_SET_DUMPABLE)
+#if !defined(DEVELOPMENT_BUILD) && defined(PR_SET_DUMPABLE)
     // Allow ptrace when running inside gdb
     const qint64 pid = QCoreApplication::applicationPid();
     const QFileInfo process(QStringLiteral("/proc/%1/exe").arg(pid));
