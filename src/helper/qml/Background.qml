@@ -32,6 +32,8 @@ import Liri.DBusService 1.0 as DBusService
 Window {
     id: bgWindow
 
+    property bool loaded: background.loaded && bgWindow.visible
+
     flags: Qt.Window | Qt.BypassWindowManagerHint
     visible: false
 
@@ -101,6 +103,8 @@ Window {
     }
 
     LS.Background {
+        id: background
+
         anchors.fill: parent
         mode: bgSettings.mode
         pictureUrl: bgSettings.pictureUrl

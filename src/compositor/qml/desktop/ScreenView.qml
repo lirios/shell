@@ -234,8 +234,6 @@ Item {
                 scaler: screenScaler
                 enabled: false
             }
-
-            Component.onCompleted: screenView.state = "session"
         }
     }
 

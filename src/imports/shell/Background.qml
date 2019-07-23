@@ -37,7 +37,7 @@ Loader {
     property string fillMode
     property bool blur: false
     property real blurRadius: 32
-    readonly property bool imageLoaded: __private.imageLoaded
+    readonly property bool loaded: __private.loaded
 
     sourceComponent: {
         switch (background.mode) {
@@ -57,7 +57,7 @@ Loader {
     QtObject {
         id: __private
 
-        property bool imageLoaded: false
+        property bool loaded: false
     }
 
     Component {
@@ -66,6 +66,10 @@ Loader {
         FluidControls.NoiseBackground {
             objectName: "solid"
             color: background.primaryColor
+
+            Component.onCompleted: {
+                __private.loaded = true;
+            }
 
             Behavior on color {
                 ColorAnimation {
@@ -109,6 +113,10 @@ Loader {
                     }
                 }
             }
+
+            Component.onCompleted: {
+                __private.loaded = true;
+            }
         }
     }
 
@@ -140,7 +148,7 @@ Loader {
                 smooth: true
                 clip: fillMode === Image.PreserveAspectCrop
                 fillMode: background.convertFillMode(background.fillMode)
-                onStatusChanged: __private.imageLoaded = picture.status === Image.Ready
+                onStatusChanged: __private.loaded = picture.status === Image.Ready
                 visible: !blur.visible
             }
 

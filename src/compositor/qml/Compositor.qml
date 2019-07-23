@@ -169,6 +169,10 @@ WaylandCompositor {
         onGrabSurfaceAdded: {
             grabSurface = surface;
         }
+        onReady: {
+            for (var i = 0; i < screenManager.count; i++)
+                screenManager.objectAt(i).screenView.state = "session";
+        }
     }
 
     // Layer shell

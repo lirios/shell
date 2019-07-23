@@ -27,6 +27,13 @@ import QtQuick.Window 2.0
 import Liri.WaylandClient 1.0 as WaylandClient
 
 Item {
+    property int refCount: 0
+
+    onRefCountChanged: {
+        if (shell.active && refCount == 0)
+            shell.sendReady();
+    }
+
     WaylandClient.LiriShell {
         id: shell
 
@@ -45,16 +52,42 @@ Item {
     Window {
         id: grabWindow
 
+        property bool registered: false
+
         flags: Qt.BypassWindowManagerHint
         width: 1
         height: 1
+
+        onVisibleChanged: {
+            if (visible && !registered) {
+                refCount--;
+                registered = true;
+            }
+        }
+
+        Component.onCompleted: {
+            refCount++;
+        }
     }
 
     Instantiator {
         model: Qt.application.screens
 
         Background {
+            property bool registered: false
+
             screen: modelData
+
+            onLoadedChanged: {
+                if (loaded && !registered) {
+                    refCount--;
+                    registered = true;
+                }
+            }
+
+            Component.onCompleted: {
+                refCount++;
+            }
         }
     }
 }
