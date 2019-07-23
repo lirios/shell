@@ -23,11 +23,31 @@
 
 import QtQml 2.1
 import QtQuick 2.0
+import QtQuick.Window 2.0
 import Liri.WaylandClient 1.0 as WaylandClient
 
 Item {
+    WaylandClient.LiriShell {
+        id: shell
+
+        onActiveChanged: {
+            if (active) {
+                registerGrabSurface(grabWindow);
+                grabWindow.visible = true;
+            }
+        }
+    }
+
     WaylandClient.WlrLayerShellV1 {
         id: layerShell
+    }
+
+    Window {
+        id: grabWindow
+
+        flags: Qt.BypassWindowManagerHint
+        width: 1
+        height: 1
     }
 
     Instantiator {

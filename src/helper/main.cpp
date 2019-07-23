@@ -26,10 +26,14 @@
 #include <QQmlApplicationEngine>
 
 #include "gitsha1.h"
-#include "shellhelperapplication.h"
 
 #if HAVE_SYS_PRCTL_H
 #include <sys/prctl.h>
+#endif
+
+#ifdef HAVE_SYSTEMD
+#  include <QTimer>
+#  include <systemd/sd-daemon.h>
 #endif
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
@@ -44,6 +48,35 @@ static void disablePtrace()
         return;
 
     ::prctl(PR_SET_DUMPABLE, 0);
+#endif
+}
+
+static void setupSystemd()
+{
+#ifdef HAVE_SYSTEMD
+    auto *app = QCoreApplication::instance();
+
+    QObject::connect(app, &QCoreApplication::aboutToQuit, app, [&] {
+        sd_notify(0, "STOPPING=1");
+    });
+
+    uint64_t interval = 0;
+    if (sd_watchdog_enabled(0, &interval) > 0) {
+        if (interval > 0) {
+            // Start a keep-alive timer every half of the watchdog interval,
+            // and convert it from microseconds to milliseconds
+            std::chrono::microseconds us(interval / 2);
+            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(us);
+            auto *timer = new QTimer(app);
+            timer->setInterval(ms);
+            QObject::connect(timer, &QTimer::timeout, app, [] {
+                sd_notify(0, "WATCHDOG=1");
+            });
+            timer->start();
+        }
+    }
+
+    sd_notify(0, "READY=1");
 #endif
 }
 
@@ -78,8 +111,8 @@ int main(int argc, char *argv[])
           "** Build: %s-%s",
           LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
 
-    // Create shell helper
-    new ShellHelperApplication();
+    // Setup systemd
+    setupSystemd();
 
     // Create UI
     QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);

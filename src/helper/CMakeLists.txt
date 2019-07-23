@@ -17,8 +17,6 @@ liri_add_executable(LiriShellHelper
         "liri-shell-helper"
     SOURCES
         main.cpp
-        shellhelperapplication.cpp
-        shellhelperapplication.h
     RESOURCES
         "helper.qrc"
     DEFINES
