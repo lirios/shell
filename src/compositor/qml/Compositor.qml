@@ -28,6 +28,7 @@ import QtWayland.Compositor 1.1
 import Liri.Launcher 1.0 as Launcher
 import Liri.PolicyKit 1.0
 import Liri.Shell 1.0 as LS
+import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import "base"
 import "windows"
@@ -161,7 +162,7 @@ WaylandCompositor {
         onOpenUrl: SessionInterface.launchCommand("xdg-open %1".arg(url))
     }
 
-    P.ShellHelper {
+    WS.ShellHelper {
         id: shellHelper
 
         property WaylandSurface grabSurface: null
@@ -173,8 +174,8 @@ WaylandCompositor {
         }
     }
 
-    P.KdeServerDecorationManager {
-        defaultMode: P.KdeServerDecorationManager.Server
+    WS.KdeServerDecorationManager {
+        defaultMode: WS.KdeServerDecorationManager.Server
 
         onDecorationCreated: {
             decoration.modeRequested.connect(function(mode) {
@@ -183,7 +184,7 @@ WaylandCompositor {
         }
     }
 
-    P.LiriDecorationManager {
+    WS.LiriDecorationManager {
         onDecorationCreated: {
             decoration.foregroundColorChanged.connect(function(color) {
                 decoration.surface.foregroundColor = color;
@@ -194,7 +195,7 @@ WaylandCompositor {
         }
     }
 
-    P.WlShell {
+    WlShell {
         id: wlShell
 
         onWlShellSurfaceCreated: {
@@ -203,7 +204,7 @@ WaylandCompositor {
         }
     }
 
-    P.XdgShellV5 {
+    XdgShellV5 {
         id: xdgShellV5
 
         onXdgSurfaceCreated: {
@@ -229,7 +230,7 @@ WaylandCompositor {
         }
     }
 
-    P.GtkShell {
+    WS.GtkShell {
         id: gtkShell
 
         onGtkSurfaceRequested: {
@@ -345,7 +346,7 @@ WaylandCompositor {
         WaylandSurface {
             id: surface
 
-            property int decorationMode: P.KdeServerDecorationManager.None
+            property int decorationMode: WS.KdeServerDecorationManager.None
 
             property color foregroundColor: "transparent"
             property color backgroundColor: "transparent"
@@ -435,7 +436,7 @@ WaylandCompositor {
     Component {
         id: gtkSurfaceComponent
 
-        P.GtkSurface {
+        WS.GtkSurface {
             id: gtkSurface
 
             onAppIdChanged: {

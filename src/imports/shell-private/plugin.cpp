@@ -38,12 +38,6 @@
 #include "shellsurfaceitem.h"
 #include "windowmousetracker.h"
 
-// WaylandExtensions
-#include "gtkshell.h"
-#include "kdeserverdecoration.h"
-#include "liridecoration.h"
-#include "shellhelper.h"
-
 // DBusInterfaces
 #include "outputchangeset.h"
 #include "outputconfiguration.h"
@@ -97,11 +91,6 @@ Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandWlShellSurface)
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(QWaylandXdgShellV5)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgSurfaceV5)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgPopupV5)
-Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(GtkShell)
-Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(GtkSurface)
-Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(KdeServerDecorationManager)
-Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(LiriDecorationManager)
-Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(ShellHelper)
 
 class ShellPrivatePlugin : public QQmlExtensionPlugin
 {
@@ -143,19 +132,6 @@ public:
         qmlRegisterType<QWaylandXdgShellV5QuickExtension>(uri, versionMajor, versionMinor, "XdgShellV5");
         qmlRegisterType<QWaylandXdgSurfaceV5QuickParent>(uri, versionMajor, versionMinor, "XdgSurfaceV5");
         qmlRegisterType<QWaylandXdgPopupV5QuickParent>(uri, versionMajor, versionMinor, "XdgPopupV5");
-
-        qmlRegisterType<GtkShellQuickExtension>(uri, versionMajor, versionMinor, "GtkShell");
-        qmlRegisterType<GtkSurfaceQuickParent>(uri, versionMajor, versionMinor, "GtkSurface");
-
-        qmlRegisterType<KdeServerDecorationManagerQuickExtension>(uri, versionMajor, versionMinor, "KdeServerDecorationManager");
-        qmlRegisterUncreatableType<KdeServerDecoration>(uri, versionMajor, versionMinor, "KdeServerDecoration",
-                                                        QStringLiteral("Cannot create instance of KdeServerDecoration"));
-
-        qmlRegisterType<LiriDecorationManagerQuickExtension>(uri, versionMajor, versionMinor, "LiriDecorationManager");
-        qmlRegisterUncreatableType<LiriDecoration>(uri, versionMajor, versionMinor, "LiriDecoration",
-                                                   QStringLiteral("Cannot create instance of LiriDecoration"));
-
-        qmlRegisterType<ShellHelperQuickExtension>(uri, versionMajor, versionMinor, "ShellHelper");
 
         // D-Bus interfaces
 

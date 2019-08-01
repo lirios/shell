@@ -24,6 +24,7 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.0
 import Fluid.Effects 1.0 as FluidEffects
+import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 
 P.ChromeItem {
@@ -160,11 +161,11 @@ P.ChromeItem {
 
         onMoveStarted: {
             // Move initiated with Meta+LeftMouseButton has started
-            shellHelper.grabCursor(P.ShellHelper.MoveGrabCursor);
+            shellHelper.grabCursor(WS.ShellHelper.MoveGrabCursor);
         }
         onMoveStopped: {
             // Move initiated with Meta+LeftMouseButton has stopped
-            shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor);
+            shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor);
         }
 
         onSurfaceDestroyed: {

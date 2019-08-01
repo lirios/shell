@@ -23,7 +23,7 @@
 
 import QtQuick 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Liri.private.shell 1.0 as P
+import Liri.WaylandServer 1.0 as WS
 
 Item {
     id: button
@@ -47,7 +47,7 @@ Item {
 
         hoverEnabled: true
 
-        onEntered: shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor);
+        onEntered: shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor);
         onClicked: button.clicked()
     }
 }

@@ -24,7 +24,7 @@
 import QtQuick 2.0
 import QtWayland.Compositor 1.1 as QtWayland
 import Fluid.Core 1.0 as FluidCore
-import Liri.private.shell 1.0 as P
+import Liri.WaylandServer 1.0 as WS
 
 FluidCore.Object {
     id: window
@@ -117,7 +117,7 @@ FluidCore.Object {
 
         function resetDecoration() {
             if (window.surface) {
-                if (window.surface.decorationMode !== P.KdeServerDecorationManager.Client)
+                if (window.surface.decorationMode !== WS.KdeServerDecorationManager.Client)
                     d.decorated = !d.fullscreen;
                 else
                     d.decorated = false;
@@ -178,7 +178,7 @@ FluidCore.Object {
             d.iconName = appIconName ? appIconName : "";
         }
         onStartMove: {
-            shellHelper.grabCursor(P.ShellHelper.MoveGrabCursor);
+            shellHelper.grabCursor(WS.ShellHelper.MoveGrabCursor);
         }
         onSetDefaultToplevel: {
             d.maximized = false;

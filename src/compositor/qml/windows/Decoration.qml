@@ -25,7 +25,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Liri.private.shell 1.0 as P
+import Liri.WaylandServer 1.0 as WS
 
 MouseArea {
     id: decoration
@@ -94,22 +94,22 @@ MouseArea {
             edges |= Qt.BottomEdge;
 
         if (edges & Qt.TopEdge && edges & Qt.LeftEdge)
-            shellHelper.grabCursor(P.ShellHelper.ResizeTopLeftGrabCursor);
+            shellHelper.grabCursor(WS.ShellHelper.ResizeTopLeftGrabCursor);
         else if (edges & Qt.BottomEdge && edges & Qt.LeftEdge)
-            shellHelper.grabCursor(P.ShellHelper.ResizeBottomLeftGrabCursor);
+            shellHelper.grabCursor(WS.ShellHelper.ResizeBottomLeftGrabCursor);
         else if (edges & Qt.TopEdge && edges & Qt.RightEdge)
-            shellHelper.grabCursor(P.ShellHelper.ResizeTopRightGrabCursor);
+            shellHelper.grabCursor(WS.ShellHelper.ResizeTopRightGrabCursor);
         else if (edges & Qt.BottomEdge && edges & Qt.RightEdge)
-            shellHelper.grabCursor(P.ShellHelper.ResizeBottomRightGrabCursor);
+            shellHelper.grabCursor(WS.ShellHelper.ResizeBottomRightGrabCursor);
         else {
             if (edges & Qt.LeftEdge)
-                shellHelper.grabCursor(P.ShellHelper.ResizeLeftGrabCursor);
+                shellHelper.grabCursor(WS.ShellHelper.ResizeLeftGrabCursor);
             else if (edges & Qt.RightEdge)
-                shellHelper.grabCursor(P.ShellHelper.ResizeRightGrabCursor);
+                shellHelper.grabCursor(WS.ShellHelper.ResizeRightGrabCursor);
             if (edges & Qt.TopEdge)
-                shellHelper.grabCursor(P.ShellHelper.ResizeTopGrabCursor);
+                shellHelper.grabCursor(WS.ShellHelper.ResizeTopGrabCursor);
             else if (edges & Qt.BottomEdge)
-                shellHelper.grabCursor(P.ShellHelper.ResizeBottomGrabCursor);
+                shellHelper.grabCursor(WS.ShellHelper.ResizeBottomGrabCursor);
         }
     }
 
@@ -207,17 +207,17 @@ MouseArea {
                         shellSurfaceItem.takeFocus();
                 }
                 onReleased: {
-                    shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor);
+                    shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor);
 
                     if (mouse.button === Qt.RightButton)
                         chrome.window.showWindowMenu(compositor.defaultSeat, Qt.point(mouse.x, mouse.y));
                 }
                 onEntered: {
-                    shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor);
+                    shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor);
                 }
                 onPositionChanged: {
                     if (pressed) {
-                        shellHelper.grabCursor(P.ShellHelper.MoveGrabCursor);
+                        shellHelper.grabCursor(WS.ShellHelper.MoveGrabCursor);
 
                         if (chrome.window.maximized)
                             chrome.window.sendUnmaximized();

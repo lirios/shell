@@ -28,8 +28,8 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.1
 import Fluid.Controls 1.0 as FluidControls
+import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
-import Liri.private.shell 1.0 as P
 import Liri.DBusService 1.0 as DBusService
 import ".."
 import "../components"
@@ -116,8 +116,8 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
         hoverEnabled: true
-        onEntered: shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor)
-        onExited: shellHelper.grabCursor(P.ShellHelper.ArrowGrabCursor)
+        onEntered: shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor)
+        onExited: shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor)
     }
 
     // Workspaces

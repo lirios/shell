@@ -42,6 +42,5 @@ liri_add_qml_plugin(shell-private
         Qt5::Quick
         Qt5::WaylandCompositor
         Liri::ShellDBusInterfaces
-        Liri::WaylandExtensions
     STATIC
 )

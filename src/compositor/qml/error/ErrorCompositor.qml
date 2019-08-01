@@ -25,6 +25,7 @@ import QtQml 2.2
 import QtQuick 2.5
 import QtQuick.Window 2.0
 import QtWayland.Compositor 1.0
+import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import ".." as Root
 
@@ -83,7 +84,8 @@ WaylandCompositor {
     }
 
     // Shell helper
-    P.ShellHelper {
+    WS.ShellHelper {
+        id: shellHelper
         onGrabSurfaceAdded: {
             for (var i = 0; i < screenManager.count; i++)
                 screenManager.objectAt(i).grabItem.surface = surface;
