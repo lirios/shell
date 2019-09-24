@@ -28,6 +28,7 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
+#include <QDBusPendingCallWatcher>
 
 #include "authenticator.h"
 #include "qmlauthenticator.h"
@@ -159,7 +160,15 @@ void SessionManager::launchApplication(const QString &appId)
     QVariantList args;
     args.append(appId);
     msg.setArguments(args);
-    QDBusConnection::sessionBus().send(msg);
+    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<> reply = *self;
+        if (reply.isError())
+            qWarning("Failed to launch application: %s", qPrintable(reply.error().message()));
+
+        self->deleteLater();
+    });
 }
 
 void SessionManager::launchDesktopFile(const QString &fileName)
@@ -172,7 +181,15 @@ void SessionManager::launchDesktopFile(const QString &fileName)
     QVariantList args;
     args.append(fileName);
     msg.setArguments(args);
-    QDBusConnection::sessionBus().send(msg);
+    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<> reply = *self;
+        if (reply.isError())
+            qWarning("Failed to launch application from desktop file: %s", qPrintable(reply.error().message()));
+
+        self->deleteLater();
+    });
 }
 
 void SessionManager::launchCommand(const QString &command)
@@ -185,7 +202,15 @@ void SessionManager::launchCommand(const QString &command)
     QVariantList args;
     args.append(command);
     msg.setArguments(args);
-    QDBusConnection::sessionBus().send(msg);
+    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<> reply = *self;
+        if (reply.isError())
+            qWarning("Failed to launch command: %s", qPrintable(reply.error().message()));
+
+        self->deleteLater();
+    });
 }
 
 void SessionManager::setEnvironment(const QString &key, const QString &value)
@@ -201,21 +226,38 @@ void SessionManager::setEnvironment(const QString &key, const QString &value)
     args.append(key);
     args.append(value);
     msg.setArguments(args);
-    QDBusConnection::sessionBus().send(msg);
+    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<> reply = *self;
+        if (reply.isError())
+            qWarning("Failed to set environment: %s", qPrintable(reply.error().message()));
+
+        self->deleteLater();
+    });
 }
 
 void SessionManager::logOut()
 {
-    // Unregister service
-    QDBusConnection::sessionBus().unregisterService(QStringLiteral("io.liri.Shell"));
-
-    // Exit
+    // Logout
     auto msg = QDBusMessage::createMethodCall(
                 QStringLiteral("io.liri.SessionManager"),
                 QStringLiteral("/io/liri/SessionManager"),
                 QStringLiteral("io.liri.SessionManager"),
                 QStringLiteral("Logout"));
-    QDBusConnection::sessionBus().send(msg);
+    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<> reply = *self;
+        if (reply.isError())
+            // Warn that we couldn't do it
+            qWarning("Failed to log out: %s", qPrintable(reply.error().message()));
+        else
+            // Unregister service
+            QDBusConnection::sessionBus().unregisterService(QStringLiteral("io.liri.Shell"));
+
+        self->deleteLater();
+    });
 }
 
 void SessionManager::lockSession()
