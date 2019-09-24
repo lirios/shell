@@ -44,7 +44,7 @@ WaylandCompositor {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: "Ctrl+Alt+Backspace"
-        onActivated: SessionInterface.logOut()
+        onActivated: Qt.quit()
     }
 
     Root.ScreenManager {

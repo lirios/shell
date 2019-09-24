@@ -1,0 +1,7 @@
+[Unit]
+Description=Graphical environment
+BindsTo=liri-shell.service
+After=liri-shell.service
+# Don't manually start/stop
+RefuseManualStart=on
+RefuseManualStop=on

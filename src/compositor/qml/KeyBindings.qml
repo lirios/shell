@@ -501,7 +501,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: smKeybindings.abortSession
-        onActivated: SessionInterface.logOut()
+        onActivated: Qt.quit()
     }
 
     Shortcut {

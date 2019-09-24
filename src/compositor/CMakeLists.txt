@@ -1,7 +1,9 @@
 include(CheckIncludeFile)
 check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
 
-find_package(Libsystemd)
+if(LIRI_ENABLE_SYSTEMD)
+    find_package(Libsystemd)
+endif()
 
 find_package(PAM REQUIRED)
 
@@ -29,9 +31,11 @@ endif()
 if(HAVE_SYS_PRCTL_H)
     list(APPEND LiriShell_DEFINES "HAVE_SYS_PRCTL_H")
 endif()
-if(TARGET PkgConfig::Libsystemd)
-    list(APPEND LiriShell_DEFINES "HAVE_SYSTEMD")
-    list(APPEND LiriShell_LIBRARIES "PkgConfig::Libsystemd")
+if(LIRI_ENABLE_SYSTEMD)
+    if(TARGET PkgConfig::Libsystemd)
+        list(APPEND LiriShell_DEFINES "HAVE_SYSTEMD")
+        list(APPEND LiriShell_LIBRARIES "PkgConfig::Libsystemd")
+    endif()
 endif()
 
 include(LiriCreateGitHeadRevisionFile)

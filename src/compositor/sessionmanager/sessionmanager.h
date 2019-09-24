@@ -89,8 +89,6 @@ public Q_SLOTS:
     void launchCommand(const QString &command);
     void setEnvironment(const QString &key, const QString &value);
 
-    void logOut();
-
     void lockSession();
     void unlockSession(const QString &password, const QJSValue &callback);
     void startNewSession();

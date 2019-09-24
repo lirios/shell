@@ -40,6 +40,10 @@
 #include <signal.h>
 #include <sys/types.h>
 
+#if HAVE_SYSTEMD
+#  include <systemd/sd-daemon.h>
+#endif
+
 Q_LOGGING_CATEGORY(SESSION_MANAGER, "liri.session.manager")
 
 /*
@@ -56,12 +60,18 @@ SessionManager::SessionManager(QObject *parent)
     , m_idle(false)
     , m_locked(false)
 {
+    // Unregister D-Bus service when we are exiting
+    connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [] {
+        QDBusConnection::sessionBus().unregisterService(QStringLiteral("io.liri.Shell"));
+    });
+
     // Lock and unlock the session
     connect(m_loginManager, &LoginManager::sessionLocked, this, [this] { setLocked(true); });
     connect(m_loginManager, &LoginManager::sessionUnlocked, this, [this] { setLocked(false); });
 
     // Logout session before the system goes off
-    connect(m_loginManager, &LoginManager::logOutRequested, this, &SessionManager::logOut);
+    connect(m_loginManager, &LoginManager::logOutRequested,
+            QCoreApplication::instance(), &QCoreApplication::quit);
 
     // Authenticate in a separate thread
     m_authenticator->moveToThread(m_authenticatorThread);
@@ -148,6 +158,10 @@ bool SessionManager::canStartNewSession()
 void SessionManager::registerService()
 {
     QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Shell"));
+
+#if HAVE_SYSTEMD
+    sd_notify(0, "READY=1");
+#endif
 }
 
 void SessionManager::launchApplication(const QString &appId)
@@ -232,29 +246,6 @@ void SessionManager::setEnvironment(const QString &key, const QString &value)
         QDBusPendingReply<> reply = *self;
         if (reply.isError())
             qWarning("Failed to set environment: %s", qPrintable(reply.error().message()));
-
-        self->deleteLater();
-    });
-}
-
-void SessionManager::logOut()
-{
-    // Logout
-    auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("Logout"));
-    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
-    auto *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
-        QDBusPendingReply<> reply = *self;
-        if (reply.isError())
-            // Warn that we couldn't do it
-            qWarning("Failed to log out: %s", qPrintable(reply.error().message()));
-        else
-            // Unregister service
-            QDBusConnection::sessionBus().unregisterService(QStringLiteral("io.liri.Shell"));
 
         self->deleteLater();
     });

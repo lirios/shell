@@ -62,7 +62,7 @@ Item {
         interval: totalSeconds * 1000
         onTriggered: {
             logoutDialog.close()
-            SessionInterface.logOut()
+            Qt.quit();
         }
     }
 
@@ -109,7 +109,7 @@ Item {
             logoutScreen.startTime = new Date()
             logoutScreen.remainingSeconds = logoutScreen.totalSeconds - (new Date() - logoutScreen.startTime)/1000
         }
-        onAccepted: SessionInterface.logOut()
+        onAccepted: Qt.quit()
         onRejected: logoutScreen.canceled()
     }
 }

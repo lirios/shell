@@ -28,9 +28,13 @@ option(LIRI_SHELL_WITH_SCREENCAST "Build with screencast support" OFF)
 add_feature_info("Shell::Pipewire" LIRI_SHELL_WITH_SCREENCAST "Build Liri Shell with screencast support")
 option(LIRI_SHELL_ENABLE_QTQUICK_COMPILER "Build with QtQuick compiler (resulting binaries may not be compatible with future Qt releases without rebuilding them)" OFF)
 add_feature_info("Shell::QtQuickCompiler" LIRI_SHELL_ENABLE_QTQUICK_COMPILER "Build with QtQuick compiler")
+option(LIRI_ENABLE_SYSTEMD "Enable systemd support" ON)
+add_feature_info("Liri::Systemd" LIRI_ENABLE_SYSTEMD "Enable systemd support")
 
 ## Variables:
-set(INSTALL_SYSTEMDUSERUNITDIR "${INSTALL_LIBDIR}/systemd/user" CACHE PATH "systemd user unit directory [PREFIX/lib/systemd/user]")
+if(LIRI_ENABLE_SYSTEMD)
+    set(INSTALL_SYSTEMDUSERUNITDIR "${INSTALL_LIBDIR}/systemd/user" CACHE PATH "systemd user unit directory [PREFIX/lib/systemd/user]")
+endif()
 
 ## Find Qt 5:
 find_package(Qt5 "${QT_MIN_VERSION}"
@@ -54,7 +58,9 @@ find_package(Qt5 "${QT_MIN_VERSION}"
 
 ## Add subdirectories:
 add_subdirectory(data/settings)
-add_subdirectory(data/systemd)
+if(LIRI_ENABLE_SYSTEMD)
+    add_subdirectory(data/systemd)
+endif()
 add_subdirectory(src/compositor)
 add_subdirectory(src/helper)
 add_subdirectory(src/dbusinterfaces)

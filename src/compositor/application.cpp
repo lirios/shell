@@ -205,7 +205,7 @@ void Application::startup()
         connect(compositor, &QWaylandCompositor::createdChanged, this, [compositor] {
             // Notify systemd when the Wayland socket is available
             if (compositor->isCreated())
-                sd_notify(0, "READY=1");
+                sd_notify(0, "STATUS=Wayland socket created");
         });
 #endif
     }

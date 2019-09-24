@@ -1,0 +1,22 @@
+[Unit]
+Description=Liri Shell
+PartOf=liri-shell.target
+# Don't manually start/stop
+RefuseManualStart=on
+RefuseManualStop=on
+# Force a session shutdown when this exits for a logout or a crash,
+# because we are a display server
+OnFailure=liri-session-shutdown.service
+OnFailureJobMode=replace-irreversibly
+CollectMode=inactive-or-failed
+
+[Service]
+Type=notify
+ExecStart=@ABSOLUTE_LIBEXECDIR@/liri-shell
+ExecStopPost=@ABSOLUTE_BINDIR@/liri-session-ctl --logout
+# Don't restart, this is a display server
+Restart=no
+# Make sure any child process is gone after this long
+TimeoutStopSec=5
+# Clean the environment
+UnsetEnvironment=QT_QPA_PLATFORM QT_WAYLAND_SHELL_INTEGRATION
