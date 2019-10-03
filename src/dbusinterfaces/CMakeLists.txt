@@ -3,16 +3,10 @@ find_package(PipeWire)
 if(LIRI_SHELL_WITH_SCREENCAST AND PipeWire_FOUND)
     find_package(GLIB2 REQUIRED)
 
-    set(LiriShellDBusInterfaces_DEFINES SCREENCAST_ENABLED)
-    set(LiriShellDBusInterfaces_SOURCES
+    set(screencast_SOURCES
         screencaststream.cpp
         screencaststream.h
     )
-    set(LiriShellDBusInterfaces_LIBRARIES "GLIB2::GLIB2;PipeWire::PipeWire")
-else()
-    set(LiriShellDBusInterfaces_DEFINES)
-    set(LiriShellDBusInterfaces_SOURCES)
-    set(LiriShellDBusInterfaces_LIBRARIES)
 endif()
 
 if(NOT TARGET Liri::PlatformHeaders)
@@ -45,12 +39,10 @@ liri_add_module(ShellDBusInterfaces
         screencast.h
         screenshooter.h
         screenshoter.cpp
-        ${LiriShellDBusInterfaces_SOURCES}
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
         QT_WAYLAND_COMPOSITOR_QUICK
-        ${LiriShellDBusInterfaces_DEFINES}
     PUBLIC_LIBRARIES
         Qt5::Core
         Qt5::DBus
@@ -59,7 +51,6 @@ liri_add_module(ShellDBusInterfaces
         Qt5::Quick
         Qt5::WaylandCompositor
         Liri::PlatformHeaders
-        ${LiriShellDBusInterfaces_LIBRARIES}
     COMPILE_FLAGS
         "-fpermissive"
     STATIC
@@ -67,3 +58,9 @@ liri_add_module(ShellDBusInterfaces
     NO_CMAKE
     NO_PKGCONFIG
 )
+
+liri_extend_target("ShellDBusInterfaces"
+    CONDITION LIRI_SHELL_WITH_SCREENCAST AND PipeWire_FOUND
+    DEFINES SCREENCAST_ENABLED
+    SOURCES "${screencast_SOURCES}"
+    LIBRARIES "GLIB2::GLIB2;PipeWire::PipeWire")

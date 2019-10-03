@@ -1,18 +1,10 @@
 include(CheckIncludeFile)
 check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
 
-set(LiriShellHelper_DEFINES "")
-if(LIRI_SHELL_DEVELOPMENT_BUILD)
-    list(APPEND LiriShellHelper_DEFINES "DEVELOPMENT_BUILD")
-endif()
-if(HAVE_SYS_PRCTL_H)
-    list(APPEND LiriShellHelper_DEFINES "HAVE_SYS_PRCTL_H")
-endif()
-
 find_package(Wayland REQUIRED)
 
 find_package(QtWaylandScanner REQUIRED)
-ecm_add_qtwayland_client_protocol(LiriShellHelper_SOURCES
+ecm_add_qtwayland_client_protocol(SOURCES
     PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../../data/protocols/shell-helper.xml"
     BASENAME "shell-helper")
 
@@ -28,12 +20,11 @@ liri_add_executable(LiriShellHelper
         shellhelperapplication.h
         shellhelperclient.cpp
         shellhelperclient.h
-        ${LiriShellHelper_SOURCES}
+        ${SOURCES}
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
         LIRISHELL_VERSION="${PROJECT_VERSION}"
-        ${LiriShellHelper_DEFINES}
     INSTALL_DIRECTORY
         "${INSTALL_LIBEXECDIR}"
     LIBRARIES
@@ -43,3 +34,11 @@ liri_add_executable(LiriShellHelper
         Qt5::WaylandClient
         Wayland::Client
 )
+
+liri_extend_target("LiriShellHelper"
+    CONDITION LIRI_SHELL_DEVELOPMENT_BUILD
+    DEFINES DEVELOPMENT_BUILD)
+
+liri_extend_target("LiriShellHelper"
+    CONDITION HAVE_SYS_PRCTL_H
+    DEFINES HAVE_SYS_PRCTL_H)

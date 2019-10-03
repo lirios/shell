@@ -2,7 +2,7 @@ include(CheckIncludeFile)
 check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
 
 if(LIRI_ENABLE_SYSTEMD)
-    find_package(Libsystemd)
+    find_package(Libsystemd REQUIRED)
 endif()
 
 find_package(PAM REQUIRED)
@@ -21,21 +21,6 @@ if(NOT TARGET Liri::LocalDevice)
 endif()
 if(NOT TARGET Liri::Xdg)
     find_package(Liri1Xdg REQUIRED)
-endif()
-
-set(LiriShell_DEFINES "")
-set(LiriShell_LIBRARIES "")
-if(LIRI_SHELL_DEVELOPMENT_BUILD)
-    list(APPEND LiriShell_DEFINES "DEVELOPMENT_BUILD")
-endif()
-if(HAVE_SYS_PRCTL_H)
-    list(APPEND LiriShell_DEFINES "HAVE_SYS_PRCTL_H")
-endif()
-if(LIRI_ENABLE_SYSTEMD)
-    if(TARGET PkgConfig::Libsystemd)
-        list(APPEND LiriShell_DEFINES "HAVE_SYSTEMD")
-        list(APPEND LiriShell_LIBRARIES "PkgConfig::Libsystemd")
-    endif()
 endif()
 
 include(LiriCreateGitHeadRevisionFile)
@@ -88,7 +73,6 @@ liri_add_executable(LiriShell
         QT_NO_FOREACH
         QT_WAYLAND_COMPOSITOR_QUICK
         LIRISHELL_VERSION="${PROJECT_VERSION}"
-        ${LiriShell_DEFINES}
     LIBRARIES
         Qt5::Core
         Qt5::Concurrent
@@ -106,5 +90,17 @@ liri_add_executable(LiriShell
         Liri::Xdg
         shell-privateplugin
         ${PAM_LIBRARIES}
-        ${LiriShell_LIBRARIES}
 )
+
+liri_extend_target("LiriShell"
+    CONDITION LIRI_SHELL_DEVELOPMENT_BUILD
+    DEFINES DEVELOPMENT_BUILD)
+
+liri_extend_target("LiriShell"
+    CONDITION HAVE_SYS_PRCTL_H
+    DEFINES HAVE_SYS_PRCTL_H)
+
+liri_extend_target("LiriShell"
+    CONDITION LIRI_ENABLE_SYSTEMD
+    DEFINES HAVE_SYSTEMD
+    LIBRARIES PkgConfig::Libsystemd)
