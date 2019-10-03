@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="liri">
+  <schema id="io.liri.shell" path="/io/liri/shell/">
+    <key name="enable-xwayland" type="b">
+      <default>true</default>
+      <summary>XWayland support</summary>
+      <description>
+        If set to true, XWayland support is enabled.
+      </description>
+    </key>
+  </schema>
+</schemalist>
