@@ -32,8 +32,6 @@ WaylandCompositor {
     id: liriCompositor
 
     onCreatedChanged: {
-        if (liriCompositor.created)
-            shellHelper.start();
     }
 
     onSurfaceRequested: {
@@ -86,7 +84,6 @@ WaylandCompositor {
 
     // Shell helper
     P.ShellHelper {
-        id: shellHelper
         onGrabSurfaceAdded: {
             for (var i = 0; i < screenManager.count; i++)
                 screenManager.objectAt(i).grabItem.surface = surface;

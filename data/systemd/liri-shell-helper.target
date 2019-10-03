@@ -1,0 +1,8 @@
+[Unit]
+Description=Liri Shell helper program
+Requisite=liri-shell.target
+BindsTo=liri-shell-helper.service
+After=liri-shell-helper.service
+# Don't manually start/stop
+RefuseManualStart=on
+RefuseManualStop=on

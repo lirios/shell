@@ -62,6 +62,10 @@ SessionManager::SessionManager(QObject *parent)
 {
     // Unregister D-Bus service when we are exiting
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [] {
+#ifdef HAVE_SYSTEMD
+        sd_notify(0, "STOPPING=1");
+#endif
+
         QDBusConnection::sessionBus().unregisterService(QStringLiteral("io.liri.Shell"));
     });
 

@@ -60,15 +60,12 @@ public:
 
     void initialize() override;
 
-    Q_INVOKABLE void start();
-
     Q_INVOKABLE void grabCursor(ShellHelper::GrabCursor cursor);
 
     static const struct wl_interface *interface();
     static QByteArray interfaceName();
 
 Q_SIGNALS:
-    void processStarted();
     void grabSurfaceAdded(QWaylandSurface *surface);
 
 private:
