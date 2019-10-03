@@ -29,7 +29,7 @@ import "windows"
 LXW.XWayland {
     id: xwayland
 
-    enabled: true
+    enabled: liriCompositor.settings.shell.enableXwayland
     manager: LXW.XWaylandManager {
         id: manager
         onCreated: {
