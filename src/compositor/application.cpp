@@ -40,7 +40,7 @@
 #include "multimediakeys/multimediakeys.h"
 #include "sessionmanager/sessionmanager.h"
 
-#if HAVE_SYSTEMD
+#ifdef HAVE_SYSTEMD
 #  include <systemd/sd-daemon.h>
 #endif
 
@@ -201,7 +201,7 @@ void Application::startup()
     QObject *rootObject = m_appEngine->rootObjects().at(0);
     QWaylandCompositor *compositor = qobject_cast<QWaylandCompositor *>(rootObject);
     if (compositor) {
-#if HAVE_SYSTEMD
+#ifdef HAVE_SYSTEMD
         connect(compositor, &QWaylandCompositor::createdChanged, this, [compositor] {
             // Notify systemd when the Wayland socket is available
             if (compositor->isCreated())

@@ -40,7 +40,7 @@
 #include <signal.h>
 #include <sys/types.h>
 
-#if HAVE_SYSTEMD
+#ifdef HAVE_SYSTEMD
 #  include <systemd/sd-daemon.h>
 #endif
 
@@ -159,7 +159,7 @@ void SessionManager::registerService()
 {
     QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Shell"));
 
-#if HAVE_SYSTEMD
+#ifdef HAVE_SYSTEMD
     sd_notify(0, "READY=1");
 #endif
 }
