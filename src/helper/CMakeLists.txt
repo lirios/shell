@@ -1,6 +1,10 @@
 include(CheckIncludeFile)
 check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
 
+if(LIRI_ENABLE_SYSTEMD)
+    find_package(Libsystemd REQUIRED)
+endif()
+
 find_package(Wayland REQUIRED)
 
 find_package(QtWaylandScanner REQUIRED)
@@ -42,3 +46,8 @@ liri_extend_target("LiriShellHelper"
 liri_extend_target("LiriShellHelper"
     CONDITION HAVE_SYS_PRCTL_H
     DEFINES HAVE_SYS_PRCTL_H)
+
+liri_extend_target("LiriShellHelper"
+    CONDITION LIRI_ENABLE_SYSTEMD
+    DEFINES HAVE_SYSTEMD
+    LIBRARIES PkgConfig::Libsystemd)

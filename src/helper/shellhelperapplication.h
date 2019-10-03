@@ -41,8 +41,15 @@ public:
 private:
     ShellHelperApplicationPrivate *const d_ptr;
 
+#ifdef HAVE_SYSTEMD
+    void setupSystemd();
+#endif
+
 private Q_SLOTS:
     void handleCursorChangeRequest(ShellHelperClient::GrabCursor cursor);
+#ifdef HAVE_SYSTEMD
+    void keepAlive();
+#endif
 };
 
 #endif // LIRISHELLHELPERAPPLICATION_H

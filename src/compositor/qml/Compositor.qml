@@ -70,11 +70,10 @@ WaylandCompositor {
 
             SessionInterface.setEnvironment("WAYLAND_DISPLAY", liriCompositor.socketName);
             SessionInterface.setEnvironment("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
+            SessionInterface.registerService();
 
             if (xwaylandLoader.status == Loader.Ready)
                 xwaylandLoader.item.startServer();
-            else
-                shellHelper.start();
         }
     }
 
@@ -168,9 +167,6 @@ WaylandCompositor {
         property WaylandSurface grabSurface: null
         property WaylandQuickItem grabSurfaceView: null
 
-        onProcessStarted: {
-            SessionInterface.registerService();
-        }
         onGrabSurfaceAdded: {
             grabSurface = surface;
             grabSurfaceView = grabSurfaceViewComponent.createObject(null);

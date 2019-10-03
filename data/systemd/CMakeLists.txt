@@ -13,11 +13,18 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/liri-shell.service"
     @ONLY
 )
+configure_file(
+    "liri-shell-helper.service.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/liri-shell-helper.service"
+    @ONLY
+)
 
 install(
     FILES
         liri-shell.target
         "${CMAKE_CURRENT_BINARY_DIR}/liri-shell.service"
+        liri-shell-helper.target
+        "${CMAKE_CURRENT_BINARY_DIR}/liri-shell-helper.service"
     DESTINATION
         "${INSTALL_SYSTEMDUSERUNITDIR}"
 )

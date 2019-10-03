@@ -24,6 +24,11 @@
 #include <QtCore/QThread>
 #include <QtGui/QWindow>
 
+#ifdef HAVE_SYSTEMD
+#  include <QTimer>
+#  include <systemd/sd-daemon.h>
+#endif
+
 #include "shellhelperapplication.h"
 
 class ShellHelperApplicationPrivate
@@ -56,11 +61,19 @@ ShellHelperApplication::ShellHelperApplication(QObject *parent)
 {
     connect(d_ptr->helper, &ShellHelperClient::cursorChangeRequested,
             this, &ShellHelperApplication::handleCursorChangeRequest);
+
+#ifdef HAVE_SYSTEMD
+    setupSystemd();
+#endif
 }
 
 ShellHelperApplication::~ShellHelperApplication()
 {
     delete d_ptr;
+
+#ifdef HAVE_SYSTEMD
+    sd_notify(0, "STOPPING=1");
+#endif
 }
 
 void ShellHelperApplication::handleCursorChangeRequest(ShellHelperClient::GrabCursor cursor)
@@ -102,3 +115,30 @@ void ShellHelperApplication::handleCursorChangeRequest(ShellHelperClient::GrabCu
 
     d->grabWindow->setCursor(newCursor);
 }
+
+#ifdef HAVE_SYSTEMD
+void ShellHelperApplication::setupSystemd()
+{
+    uint64_t interval = 0;
+    if (sd_watchdog_enabled(0, &interval) > 0) {
+        if (interval > 0) {
+            // Start a keep-alive timer every half of the watchdog interval,
+            // and convert it from microseconds to milliseconds
+            std::chrono::microseconds us(interval / 2);
+            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(us);
+            auto *timer = new QTimer(this);
+            timer->setInterval(ms);
+            connect(timer, &QTimer::timeout,
+                    this, &ShellHelperApplication::keepAlive);
+            timer->start();
+        }
+    }
+
+    sd_notify(0, "READY=1");
+}
+
+void ShellHelperApplication::keepAlive()
+{
+    sd_notify(0, "WATCHDOG=1");
+}
+#endif
