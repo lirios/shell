@@ -51,14 +51,6 @@ liri_add_executable(LiriShell
         sessionmanager/qmlauthenticator.h
         sessionmanager/sessionmanager.cpp
         sessionmanager/sessionmanager.h
-        sessionmanager/loginmanager/fakebackend.cpp
-        sessionmanager/loginmanager/fakebackend.h
-        sessionmanager/loginmanager/logindbackend.cpp
-        sessionmanager/loginmanager/logindbackend.h
-        sessionmanager/loginmanager/loginmanagerbackend.cpp
-        sessionmanager/loginmanager/loginmanagerbackend.h
-        sessionmanager/loginmanager/loginmanager.cpp
-        sessionmanager/loginmanager/loginmanager.h
         ${LiriShell_QM_FILES}
     RESOURCES
         "compositor.qrc"

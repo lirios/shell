@@ -50,8 +50,5 @@ void QmlAuthenticator::authenticate()
 
     m_parent->m_authRequested = false;
 
-    if (m_succeded)
-        m_parent->setLocked(false);
-
     deleteLater();
 }

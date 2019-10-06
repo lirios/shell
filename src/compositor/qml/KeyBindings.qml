@@ -507,13 +507,13 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: smKeybindings.powerOff
-        onActivated: SessionInterface.requestPowerOff()
+        onActivated: liriCompositor.defaultOutput.screenView.showPowerOff()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: smKeybindings.lockScreen
-        onActivated: SessionInterface.lockSession()
+        onActivated: SessionInterface.lock()
     }
 
     /*

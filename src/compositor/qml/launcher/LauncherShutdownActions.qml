@@ -37,10 +37,9 @@ RowLayout {
 
     ToolButton {
         icon.source: Qt.resolvedUrl("../images/logout.svg")
-        enabled: SessionInterface.canLogOut
         onClicked: {
             launcherPopOver.close();
-            SessionInterface.requestLogOut();
+            liriCompositor.defaultOutput.screenView.showLogout();
         }
 
         ToolTip.text: qsTr("Log out")
@@ -52,7 +51,7 @@ RowLayout {
         icon.source: FluidControls.Utils.iconUrl("action/lock")
         onClicked: {
             launcherPopOver.close();
-            SessionInterface.lockSession()
+            SessionInterface.lock();
         }
 
         ToolTip.text: qsTr("Lock Session")
@@ -65,7 +64,7 @@ RowLayout {
         enabled: LiriDevice.LocalDevice.canPowerOff
         onClicked: {
             launcherPopOver.close();
-            SessionInterface.requestPowerOff();
+            liriCompositor.defaultOutput.screenView.showPowerOff();
         }
 
         ToolTip.text: qsTr("Power off")
