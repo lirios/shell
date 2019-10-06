@@ -84,7 +84,7 @@ Popup {
         interval: totalSeconds * 1000
         onTriggered: {
             powerDialog.accept()
-            SessionInterface.powerOff()
+            LiriDevice.LocalDevice.powerOff()
         }
     }
 

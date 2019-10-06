@@ -127,10 +127,11 @@ Showable {
                     }
                 }
                 onLoginRequested: {
-                    SessionInterface.unlockSession(password, function(succeded) {
+                    SessionInterface.authenticate(password, function(succeded) {
                         if (succeded) {
                             usersListView.currentItem.busyIndicator.opacity = 0.0
                             usersListView.loginSucceeded()
+                            SessionInterface.unlock();
                         } else {
                             usersListView.currentItem.busyIndicator.opacity = 0.0
                             usersListView.currentItem.field.text = ""

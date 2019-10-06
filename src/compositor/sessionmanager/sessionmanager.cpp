@@ -33,7 +33,6 @@
 
 #include "authenticator.h"
 #include "qmlauthenticator.h"
-#include "loginmanager/loginmanager.h"
 #include "sessionmanager/sessionmanager.h"
 
 #include <signal.h>
@@ -52,11 +51,7 @@ Q_LOGGING_CATEGORY(SESSION_MANAGER, "liri.session.manager")
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
     , m_authenticatorThread(new QThread(this))
-    , m_authRequested(false)
     , m_authenticator(new Authenticator)
-    , m_loginManager(new LoginManager(this, this))
-    , m_idle(false)
-    , m_locked(false)
 {
     // Unregister D-Bus service when we are exiting
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [] {
@@ -67,13 +62,19 @@ SessionManager::SessionManager(QObject *parent)
         QDBusConnection::sessionBus().unregisterService(QStringLiteral("io.liri.Shell"));
     });
 
-    // Lock and unlock the session
-    connect(m_loginManager, &LoginManager::sessionLocked, this, [this] { setLocked(true); });
-    connect(m_loginManager, &LoginManager::sessionUnlocked, this, [this] { setLocked(false); });
-
-    // Logout session before the system goes off
-    connect(m_loginManager, &LoginManager::logOutRequested,
-            QCoreApplication::instance(), &QCoreApplication::quit);
+    // Emit when the session is locked or unlocked
+    QDBusConnection::sessionBus().connect(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("Locked"),
+                this, SIGNAL(sessionLocked()));
+    QDBusConnection::sessionBus().connect(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("Unlocked"),
+                this, SIGNAL(sessionUnlocked()));
 
     // Authenticate in a separate thread
     m_authenticator->moveToThread(m_authenticatorThread);
@@ -97,49 +98,25 @@ void SessionManager::setIdle(bool value)
     if (m_idle == value)
         return;
 
-    m_idle = value;
-    m_loginManager->setIdle(m_idle);
-    Q_EMIT idleChanged(value);
-}
+    auto msg = QDBusMessage::createMethodCall(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("SetIdle"));
+    msg.setArguments(QVariantList() << value);
+    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<> reply = *self;
+        if (reply.isError()) {
+            qWarning("Failed to toggle idle flag: %s", qPrintable(reply.error().message()));
+        } else {
+            m_idle = value;
+            emit idleChanged(m_idle);
+        }
 
-bool SessionManager::isLocked() const
-{
-    return m_locked;
-}
-
-void SessionManager::setLocked(bool value)
-{
-    if (m_locked == value)
-        return;
-
-    m_locked = value;
-    Q_EMIT lockedChanged(value);
-
-    if (value)
-        Q_EMIT sessionLocked();
-    else
-        Q_EMIT sessionUnlocked();
-}
-
-bool SessionManager::canLock() const
-{
-    // Always true, but in the future we might consider blocking
-    // this; might come in handy for kiosk systems
-    return true;
-}
-
-bool SessionManager::canLogOut()
-{
-    // Always true, but in the future we might consider blocking
-    // logout; might come in handy for kiosk systems
-    return true;
-}
-
-bool SessionManager::canStartNewSession()
-{
-    // Always false, but in the future we might consider
-    // allowing this
-    return false;
+        self->deleteLater();
+    });
 }
 
 void SessionManager::registerService()
@@ -149,6 +126,42 @@ void SessionManager::registerService()
 #ifdef HAVE_SYSTEMD
     sd_notify(0, "READY=1");
 #endif
+}
+
+void SessionManager::lock()
+{
+    auto msg = QDBusMessage::createMethodCall(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("Lock"));
+    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<> reply = *self;
+        if (reply.isError())
+            qWarning("Failed to lock session: %s", qPrintable(reply.error().message()));
+
+        self->deleteLater();
+    });
+}
+
+void SessionManager::unlock()
+{
+    auto msg = QDBusMessage::createMethodCall(
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("/io/liri/SessionManager"),
+                QStringLiteral("io.liri.SessionManager"),
+                QStringLiteral("Unlock"));
+    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
+        QDBusPendingReply<> reply = *self;
+        if (reply.isError())
+            qWarning("Failed to unlock the session: %s", qPrintable(reply.error().message()));
+
+        self->deleteLater();
+    });
 }
 
 void SessionManager::launchApplication(const QString &appId)
@@ -238,12 +251,7 @@ void SessionManager::setEnvironment(const QString &key, const QString &value)
     });
 }
 
-void SessionManager::lockSession()
-{
-    m_loginManager->lockSession();
-}
-
-void SessionManager::unlockSession(const QString &password, const QJSValue &callback)
+void SessionManager::authenticate(const QString &password, const QJSValue &callback)
 {
     if (m_authRequested)
         return;
@@ -251,52 +259,4 @@ void SessionManager::unlockSession(const QString &password, const QJSValue &call
     (void)new QmlAuthenticator(this, callback);
     QMetaObject::invokeMethod(m_authenticator, "authenticate", Q_ARG(QString, password));
     m_authRequested = true;
-}
-
-void SessionManager::startNewSession()
-{
-    // TODO: Implement
-    qWarning("SessionManager::startNewSession() is not implemented");
-}
-
-void SessionManager::activateSession(int index)
-{
-    m_loginManager->switchToVt(index);
-}
-
-void SessionManager::requestLogOut()
-{
-    if (!canLogOut())
-        return;
-    Q_EMIT logOutRequested();
-}
-
-void SessionManager::requestPowerOff()
-{
-    Q_EMIT powerOffRequested();
-}
-
-void SessionManager::requestRestart()
-{
-    Q_EMIT restartRequested();
-}
-
-void SessionManager::requestSuspend()
-{
-    Q_EMIT suspendRequested();
-}
-
-void SessionManager::requestHibernate()
-{
-    Q_EMIT hibernateRequested();
-}
-
-void SessionManager::requestHybridSleep()
-{
-    Q_EMIT hybridSleepRequested();
-}
-
-void SessionManager::cancelShutdownRequest()
-{
-    Q_EMIT shutdownRequestCanceled();
 }

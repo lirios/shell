@@ -94,10 +94,6 @@ Item {
         onSessionUnlocked: screenView.state = "session"
         onIdleInhibitRequested: liriCompositor.idleInhibit++
         onIdleUninhibitRequested: liriCompositor.idleInhibit--
-        onShutdownRequestCanceled: screenView.state = "session"
-        onLogOutRequested: if (screenView.state != "lock") screenView.state = "logout"
-        onPowerOffRequested: if (screenView.state != "lock") screenView.state = "poweroff"
-        onRestartRequested: if (screenView.state != "lock") screenView.state = "restart"
     }
 
     /*
@@ -328,13 +324,13 @@ Item {
     LogoutScreen {
         id: logoutScreen
 
-        onCanceled: SessionInterface.cancelShutdownRequest()
+        onCanceled: screenView.state = "session"
     }
 
     PowerScreen {
         id: powerScreen
 
-        onCanceled: SessionInterface.cancelShutdownRequest()
+        onCanceled: screenView.state = "session"
     }
 
     /*
@@ -423,5 +419,20 @@ Item {
         }
 
         event.accepted = false;
+    }
+
+    function showLogout() {
+        if (screenView.state != "lock")
+            screenView.state = "logout";
+    }
+
+    function showPowerOff() {
+        if (screenView.state != "lock")
+            screenView.state = "poweroff";
+    }
+
+    function showRestart() {
+        if (screenView.state != "lock")
+            screenView.state = "restart";
     }
 }
