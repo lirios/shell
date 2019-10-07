@@ -33,6 +33,13 @@ WaylandCompositor {
     id: liriCompositor
 
     onCreatedChanged: {
+        if (liriCompositor.created) {
+            console.debug("Compositor created");
+
+            SessionInterface.setEnvironment("WAYLAND_DISPLAY", liriCompositor.socketName);
+            SessionInterface.setEnvironment("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
+            SessionInterface.registerService();
+        }
     }
 
     onSurfaceRequested: {
