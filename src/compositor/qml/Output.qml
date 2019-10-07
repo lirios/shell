@@ -180,6 +180,10 @@ P.WaylandOutput {
         }
     }
 
+    onModeAdded: {
+        outputDevice.addMode(size, refreshRate);
+    }
+
     /*
      * Methods
      */
