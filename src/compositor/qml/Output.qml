@@ -180,24 +180,6 @@ P.WaylandOutput {
         }
     }
 
-    onModeAdded: {
-        outputDevice.addMode(size, refreshRate);
-    }
-
-    P.OutputDevice {
-        id: outputDevice
-        manager: output.compositor.outputManager
-        uuid: output.uuid
-        manufacturer: output.manufacturer
-        model: output.model
-        position: output.position
-        physicalSize: output.physicalSize
-        transform: output.transform
-        scaleFactor: output.scaleFactor
-        currentModeIndex: output.currentModeIndex
-        preferredModeIndex: output.preferredModeIndex
-    }
-
     /*
      * Methods
      */

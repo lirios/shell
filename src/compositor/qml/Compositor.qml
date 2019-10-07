@@ -41,7 +41,6 @@ WaylandCompositor {
     property int idleInhibit: 0
 
     readonly property alias screenManager: screenManager
-    readonly property alias outputManager: outputManager
 
     readonly property alias settings: settings
     readonly property alias shellSurfaces: shellSurfaces
@@ -132,9 +131,6 @@ WaylandCompositor {
                 // Set default output the first time
                 if (!liriCompositor.defaultOutput && screenItem.primary)
                     liriCompositor.defaultOutput = this;
-
-                // Register output
-                outputs.addOutput(this);
             }
         }
 
@@ -241,65 +237,9 @@ WaylandCompositor {
 
     TextInputManager {}
 
-    P.OutputManagement {
-        id: outputManager
-        onPrimaryOutputDeviceChanged: {
-            var output = screenManager.getOutputForUuid(device.uuid);
-            if (output)
-                liriCompositor.defaultOutput = output;
-        }
-        onOutputConfigurationCreated: {
-            configuration.changeRequested.connect(function() {
-                var failedCount = configuration.changes.length;
-
-                for (var i = 0; i < configuration.changes.length; i++) {
-                    var changeset = configuration.changes[i];
-
-                    if (changeset.empty) {
-                        // No changes, we are done!
-                        failedCount--;
-                        continue;
-                    }
-
-                    var output = screenManager.getOutputForUuid(changeset.outputDevice.uuid);
-                    if (!output) {
-                        // No output found with that uuid
-                        continue;
-                    }
-
-                    if (changeset.enabledChanged)
-                        output.enabled = changeset.enabled;
-
-                    if (changeset.transformChanged)
-                        output.hardwareScreen.transform = changeset.transform;
-
-                    if (changeset.currentModeIndexChanged)
-                        output.hardwareScreen.currentModeIndex = changeset.currentModeIndex;
-
-                    if (changeset.positionChanged)
-                        output.hardwareScreen.position = changeset.position;
-
-                    if (changeset.scaleFactorChanged)
-                        output.hardwareScreen.scaleFactor = changeset.scaleFactor;
-
-                    failedCount--;
-                }
-
-                if (failedCount === 0)
-                    configuration.setApplied();
-                else
-                    configuration.setFailed();
-            });
-        }
-    }
-
     /*
      * D-Bus
      */
-
-    P.Outputs {
-        id: outputs
-    }
 
     P.ScreenCast {}
 
