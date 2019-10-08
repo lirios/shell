@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../qml/Compositor.qml" line="546"/>
+        <location filename="../qml/Compositor.qml" line="543"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Atleiskite, tai nesuveikė. Bandykite dar kartą.</translation>
     </message>
@@ -149,17 +149,17 @@
 <context>
     <name>LauncherShutdownActions</name>
     <message>
-        <location filename="../qml/launcher/LauncherShutdownActions.qml" line="46"/>
+        <location filename="../qml/launcher/LauncherShutdownActions.qml" line="45"/>
         <source>Log out</source>
         <translation>Atsijungti</translation>
     </message>
     <message>
-        <location filename="../qml/launcher/LauncherShutdownActions.qml" line="58"/>
+        <location filename="../qml/launcher/LauncherShutdownActions.qml" line="57"/>
         <source>Lock Session</source>
         <translation>Užrakinti seansą</translation>
     </message>
     <message>
-        <location filename="../qml/launcher/LauncherShutdownActions.qml" line="71"/>
+        <location filename="../qml/launcher/LauncherShutdownActions.qml" line="70"/>
         <source>Power off</source>
         <translation>Išjungti</translation>
     </message>
@@ -167,7 +167,7 @@
 <context>
     <name>LockScreen</name>
     <message>
-        <location filename="../qml/screens/LockScreen.qml" line="138"/>
+        <location filename="../qml/screens/LockScreen.qml" line="139"/>
         <source>Sorry, wrong password. Please try again.</source>
         <translation>Atleiskite, neteisingas slaptažodis. Bandykite dar kartą.</translation>
     </message>
@@ -243,7 +243,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../application.cpp" line="130"/>
+        <location filename="../application.cpp" line="126"/>
         <source>The XDG_RUNTIME_DIR environment variable is not set.
 Refer to your distribution on how to get it, or read
 http://www.freedesktop.org/wiki/Specifications/basedir-spec
@@ -256,14 +256,14 @@ norėdami sužinoti kaip jį įgyvendinti.
 </translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="141"/>
+        <location filename="../application.cpp" line="137"/>
         <source>The XDG_RUNTIME_DIR environment variable is set to &quot;%1&quot;, which doesn't exist.
 </source>
         <translation>XDG_RUNTIME_DIR aplinkos kintamasis yra nustatytas į &quot;%1&quot;, kurio nėra.
 </translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="148"/>
+        <location filename="../application.cpp" line="144"/>
         <source>XDG_RUNTIME_DIR is set to &quot;%1&quot; and is not configured correctly.
 Unix access mode must be 0700, but is 0%2.
 It must also be owned by the current user (UID %3), but is owned by UID %4 (&quot;%5&quot;).
