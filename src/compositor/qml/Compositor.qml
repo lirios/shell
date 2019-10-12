@@ -24,7 +24,7 @@
 
 import QtQuick 2.5
 import QtQuick.Window 2.2
-import QtWayland.Compositor 1.1
+import QtWayland.Compositor 1.3
 import Liri.Launcher 1.0 as Launcher
 import Liri.PolicyKit 1.0
 import Liri.Shell 1.0 as LS
@@ -226,6 +226,19 @@ WaylandCompositor {
         }
     }
 
+    XdgShell {
+        id: xdgShell
+
+        onToplevelCreated: {
+            var window = xdgToplevelComponent.createObject(xdgShell, {"xdgSurface": xdgSurface, "toplevel": toplevel});
+            __private.handleShellSurfaceCreated(window, chromeComponent);
+        }
+        onPopupCreated: {
+            var window = xdgPopupComponent.createObject(xdgShell, {"xdgSurface": xdgSurface, "popup": popup});
+            __private.handleShellSurfaceCreated(window, popupChromeComponent);
+        }
+    }
+
     WS.GtkShell {
         id: gtkShell
 
@@ -370,6 +383,33 @@ WaylandCompositor {
         id: xdgPopupV6Component
 
         XdgPopupV6Window {}
+    }
+
+    // Shell surface for xdg-shell toplevel
+    Component {
+        id: xdgToplevelComponent
+
+        XdgToplevelWindow {
+            onMaximizedChanged: {
+                if (maximized)
+                    __private.maximizedShellSurfaces++;
+                else
+                    __private.maximizedShellSurfaces--;
+            }
+            onFullscreenChanged: {
+                if (fullscreen)
+                    __private.fullscreenShellSurfaces++;
+                else
+                    __private.fullscreenShellSurfaces--;
+            }
+        }
+    }
+
+    // Shell surface for xdg-shell popup
+    Component {
+        id: xdgPopupComponent
+
+        XdgPopupWindow {}
     }
 
     // Custom gtk_shell surface
