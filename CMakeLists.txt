@@ -12,11 +12,11 @@ if(NOT LIRI_LOCAL_ECM)
     list(APPEND CMAKE_MODULE_PATH "${LCS_MODULE_PATH}")
 endif()
 
-## Set minimum versions required:
-set(QT_MIN_VERSION "5.11.0")
-
 ## Add some paths to check for CMake modules:
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdparty")
+
+## Set minimum versions required:
+set(QT_MIN_VERSION "5.12.0")
 
 ## Liri specific setup common for all modules:
 include(LiriSetup)
