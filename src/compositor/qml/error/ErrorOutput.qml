@@ -55,7 +55,7 @@ P.WaylandOutput {
             id: grabItem
             focusOnClick: false
             onSurfaceChanged: {
-                shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor);
+                shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
                 if (output.primary)
                     grabItem.setPrimary();
             }

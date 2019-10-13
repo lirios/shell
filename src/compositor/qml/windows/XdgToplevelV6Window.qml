@@ -169,7 +169,7 @@ FluidCore.Object {
             d.iconName = appIconName ? appIconName : "";
         }
         onStartMove: {
-            shellHelper.grabCursor(WS.ShellHelper.MoveGrabCursor);
+            shellHelper.grabCursor(WS.LiriShell.MoveGrabCursor);
         }
         onSetMinimized: {
             window.minimized = true;

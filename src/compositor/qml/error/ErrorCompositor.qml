@@ -91,7 +91,7 @@ WaylandCompositor {
     }
 
     // Shell helper
-    WS.ShellHelper {
+    WS.LiriShell {
         id: shellHelper
         onGrabSurfaceAdded: {
             for (var i = 0; i < screenManager.count; i++)

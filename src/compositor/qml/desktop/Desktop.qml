@@ -116,8 +116,8 @@ Item {
         anchors.fill: parent
         acceptedButtons: Qt.NoButton
         hoverEnabled: true
-        onEntered: shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor)
-        onExited: shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor)
+        onEntered: shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor)
+        onExited: shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor)
     }
 
     // Workspaces

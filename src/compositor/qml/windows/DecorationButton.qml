@@ -47,7 +47,7 @@ Item {
 
         hoverEnabled: true
 
-        onEntered: shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor);
+        onEntered: shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
         onClicked: button.clicked()
     }
 }

@@ -161,11 +161,11 @@ P.ChromeItem {
 
         onMoveStarted: {
             // Move initiated with Meta+LeftMouseButton has started
-            shellHelper.grabCursor(WS.ShellHelper.MoveGrabCursor);
+            shellHelper.grabCursor(WS.LiriShell.MoveGrabCursor);
         }
         onMoveStopped: {
             // Move initiated with Meta+LeftMouseButton has stopped
-            shellHelper.grabCursor(WS.ShellHelper.ArrowGrabCursor);
+            shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
         }
 
         onSurfaceDestroyed: {

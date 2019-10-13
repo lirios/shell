@@ -158,7 +158,7 @@ WaylandCompositor {
         onOpenUrl: SessionInterface.launchCommand("xdg-open %1".arg(url))
     }
 
-    WS.ShellHelper {
+    WS.LiriShell {
         id: shellHelper
 
         property WaylandSurface grabSurface: null
