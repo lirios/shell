@@ -162,11 +162,9 @@ WaylandCompositor {
         id: shellHelper
 
         property WaylandSurface grabSurface: null
-        property WaylandQuickItem grabSurfaceView: null
 
         onGrabSurfaceAdded: {
             grabSurface = surface;
-            grabSurfaceView = grabSurfaceViewComponent.createObject(null);
         }
     }
 
@@ -447,17 +445,6 @@ WaylandCompositor {
         id: popupChromeComponent
 
         WaylandPopupChrome {}
-    }
-
-    // Grab surface view
-    Component {
-        id: grabSurfaceViewComponent
-
-        WaylandQuickItem {
-            output: liriCompositor.defaultOutput
-            surface: shellHelper.grabSurface
-            focusOnClick: false
-        }
     }
 
     /*
