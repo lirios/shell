@@ -26,7 +26,7 @@
 
 #include <QtCore/QObject>
 
-#include "shellhelperclient.h"
+#include <LiriWaylandClient/LiriShell>
 
 class ShellHelperApplicationPrivate;
 
@@ -46,7 +46,7 @@ private:
 #endif
 
 private Q_SLOTS:
-    void handleCursorChangeRequest(ShellHelperClient::GrabCursor cursor);
+    void handleCursorChangeRequest(LiriShell::GrabCursor cursor);
 #ifdef HAVE_SYSTEMD
     void keepAlive();
 #endif

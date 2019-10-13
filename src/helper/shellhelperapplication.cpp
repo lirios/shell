@@ -36,7 +36,7 @@ class ShellHelperApplicationPrivate
 public:
     ShellHelperApplicationPrivate()
     {
-        helper = new ShellHelperClient();
+        helper = new LiriShell();
 
         grabWindow = new QWindow();
         grabWindow->setFlags(Qt::BypassWindowManagerHint);
@@ -51,7 +51,7 @@ public:
         delete grabWindow;
     }
 
-    ShellHelperClient *helper = nullptr;
+    LiriShell *helper = nullptr;
     QWindow *grabWindow = nullptr;
 };
 
@@ -59,7 +59,7 @@ ShellHelperApplication::ShellHelperApplication(QObject *parent)
     : QObject(parent)
     , d_ptr(new ShellHelperApplicationPrivate())
 {
-    connect(d_ptr->helper, &ShellHelperClient::cursorChangeRequested,
+    connect(d_ptr->helper, &LiriShell::cursorChangeRequested,
             this, &ShellHelperApplication::handleCursorChangeRequest);
 
 #ifdef HAVE_SYSTEMD
@@ -76,36 +76,36 @@ ShellHelperApplication::~ShellHelperApplication()
 #endif
 }
 
-void ShellHelperApplication::handleCursorChangeRequest(ShellHelperClient::GrabCursor cursor)
+void ShellHelperApplication::handleCursorChangeRequest(LiriShell::GrabCursor cursor)
 {
     Q_D(ShellHelperApplication);
 
     QCursor newCursor;
 
     switch (cursor) {
-    case ShellHelperClient::ArrowGrabCursor:
+    case LiriShell::ArrowGrabCursor:
         newCursor.setShape(Qt::ArrowCursor);
         break;
-    case ShellHelperClient::ResizeTopGrabCursor:
-    case ShellHelperClient::ResizeBottomGrabCursor:
+    case LiriShell::ResizeTopGrabCursor:
+    case LiriShell::ResizeBottomGrabCursor:
         newCursor.setShape(Qt::SizeVerCursor);
         break;
-    case ShellHelperClient::ResizeLeftGrabCursor:
-    case ShellHelperClient::ResizeRightGrabCursor:
+    case LiriShell::ResizeLeftGrabCursor:
+    case LiriShell::ResizeRightGrabCursor:
         newCursor.setShape(Qt::SizeHorCursor);
         break;
-    case ShellHelperClient::ResizeTopLeftGrabCursor:
-    case ShellHelperClient::ResizeBottomRightGrabCursor:
+    case LiriShell::ResizeTopLeftGrabCursor:
+    case LiriShell::ResizeBottomRightGrabCursor:
         newCursor.setShape(Qt::SizeFDiagCursor);
         break;
-    case ShellHelperClient::ResizeTopRightGrabCursor:
-    case ShellHelperClient::ResizeBottomLeftGrabCursor:
+    case LiriShell::ResizeTopRightGrabCursor:
+    case LiriShell::ResizeBottomLeftGrabCursor:
         newCursor.setShape(Qt::SizeBDiagCursor);
         break;
-    case ShellHelperClient::MoveGrabCursor:
+    case LiriShell::MoveGrabCursor:
         newCursor.setShape(Qt::DragMoveCursor);
         break;
-    case ShellHelperClient::BusyGrabCursor:
+    case LiriShell::BusyGrabCursor:
         newCursor.setShape(Qt::BusyCursor);
         break;
     default:

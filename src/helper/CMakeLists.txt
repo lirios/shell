@@ -5,12 +5,9 @@ if(LIRI_ENABLE_SYSTEMD)
     find_package(Libsystemd REQUIRED)
 endif()
 
-find_package(Wayland REQUIRED)
-
-find_package(QtWaylandScanner REQUIRED)
-ecm_add_qtwayland_client_protocol(SOURCES
-    PROTOCOL "${CMAKE_CURRENT_SOURCE_DIR}/../../data/protocols/shell-helper.xml"
-    BASENAME "shell-helper")
+if(NOT TARGET Liri::WaylandClient)
+    find_package(Liri1WaylandClient REQUIRED)
+endif()
 
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
@@ -22,9 +19,6 @@ liri_add_executable(LiriShellHelper
         main.cpp
         shellhelperapplication.cpp
         shellhelperapplication.h
-        shellhelperclient.cpp
-        shellhelperclient.h
-        ${SOURCES}
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
@@ -36,7 +30,7 @@ liri_add_executable(LiriShellHelper
         Qt5::Gui
         Qt5::GuiPrivate
         Qt5::WaylandClient
-        Wayland::Client
+        Liri::WaylandClient
 )
 
 liri_extend_target("LiriShellHelper"
