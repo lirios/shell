@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("liri"));
     qputenv("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT", QByteArrayLiteral("1"));
-    qputenv("QT_WAYLAND_SHELL_INTEGRATION", "xdg-shell-v6");
     qputenv("QT_WAYLAND_DISABLE_DECORATION", "1");
     qunsetenv("QT_WAYLAND_DECORATION");
 
