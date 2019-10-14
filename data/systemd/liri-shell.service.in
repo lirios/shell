@@ -20,5 +20,7 @@ Restart=no
 TimeoutStartSec=15
 # Make sure any child process is gone after this long
 TimeoutStopSec=5
+# Keep-alive every 20 seconds
+WatchdogSec=20
 # Clean the environment
 UnsetEnvironment=QT_QPA_PLATFORM QT_WAYLAND_SHELL_INTEGRATION

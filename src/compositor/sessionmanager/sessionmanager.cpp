@@ -62,6 +62,24 @@ SessionManager::SessionManager(QObject *parent)
         QDBusConnection::sessionBus().unregisterService(QStringLiteral("io.liri.Shell"));
     });
 
+#ifdef HAVE_SYSTEMD
+    uint64_t interval = 0;
+    if (sd_watchdog_enabled(0, &interval) > 0) {
+        if (interval > 0) {
+            // Start a keep-alive timer every half of the watchdog interval,
+            // and convert it from microseconds to milliseconds
+            std::chrono::microseconds us(interval / 2);
+            auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(us);
+            auto *timer = new QTimer(this);
+            timer->setInterval(ms);
+            connect(timer, &QTimer::timeout, this, [] {
+                sd_notify(0, "WATCHDOG=1");
+            });
+            timer->start();
+        }
+    }
+#endif
+
     // Emit when the session is locked or unlocked
     QDBusConnection::sessionBus().connect(
                 QStringLiteral("io.liri.SessionManager"),
