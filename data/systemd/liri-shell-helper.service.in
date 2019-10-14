@@ -5,11 +5,6 @@ After=liri-shell.target
 # Don't manually start/stop
 RefuseManualStart=on
 RefuseManualStop=on
-# Force a session shutdown when this exits for a logout or a crash,
-# because we are a display server
-#OnFailure=liri-session-shutdown.service
-#OnFailureJobMode=replace-irreversibly
-#CollectMode=inactive-or-failed
 
 [Service]
 Type=notify
