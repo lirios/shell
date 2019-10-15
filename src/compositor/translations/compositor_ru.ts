@@ -53,26 +53,8 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../qml/Compositor.qml" line="543"/>
+        <location filename="../qml/Compositor.qml" line="575"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
-        <translation type="unfinished"/>
-    </message>
-</context>
-<context>
-    <name>Desktop</name>
-    <message>
-        <location filename="../qml/desktop/Desktop.qml" line="83"/>
-        <source>Change Background...</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../qml/desktop/Desktop.qml" line="90"/>
-        <source>Display Settings</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../qml/desktop/Desktop.qml" line="95"/>
-        <source>Settings</source>
         <translation type="unfinished"/>
     </message>
 </context>

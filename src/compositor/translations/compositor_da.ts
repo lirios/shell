@@ -53,27 +53,9 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../qml/Compositor.qml" line="543"/>
+        <location filename="../qml/Compositor.qml" line="575"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Beklager, det virkede ikke. Prøv venligst igen.</translation>
-    </message>
-</context>
-<context>
-    <name>Desktop</name>
-    <message>
-        <location filename="../qml/desktop/Desktop.qml" line="83"/>
-        <source>Change Background...</source>
-        <translation> Skift baggrund ...</translation>
-    </message>
-    <message>
-        <location filename="../qml/desktop/Desktop.qml" line="90"/>
-        <source>Display Settings</source>
-        <translation>Skærmindstillinger</translation>
-    </message>
-    <message>
-        <location filename="../qml/desktop/Desktop.qml" line="95"/>
-        <source>Settings</source>
-        <translation>Indstillinger</translation>
     </message>
 </context>
 <context>
