@@ -10,5 +10,6 @@ RefuseManualStop=on
 Type=notify
 ExecStart=@ABSOLUTE_LIBEXECDIR@/liri-shell-helper
 # Don't restart when aborting for a broken Wayland connection
-Restart=on-watchdog
+Restart=on-abnormal
+RestartPreventExitStatus=SIGABRT
 WatchdogSec=20
