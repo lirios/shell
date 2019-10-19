@@ -82,7 +82,6 @@ Item {
     WorkspacesView {
         id: workspacesLayer
         anchors.fill: parent
-        z: 5
     }
     */
 
@@ -93,7 +92,6 @@ Item {
         anchors.fill: parent
         onEffectStarted: if (effect == "present") parent.state = "present"
         onEffectStopped: if (effect == "present") parent.state = "normal"
-        z: 6
     }
 
     Item {
@@ -117,7 +115,6 @@ Item {
                 }
             }
         }
-        z: 10
     }
 
     // Full screen windows can cover application windows and panels
@@ -125,7 +122,6 @@ Item {
         id: fullScreenLayer
         anchors.fill: parent
         color: "black"
-        z: 20
         opacity: children.length > 0 ? 1.0 : 0.0
 
         Behavior on opacity {
