@@ -21,46 +21,24 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQml 2.1
-import QtQuick 2.0
-import QtQuick.Window 2.0
-import Liri.WaylandClient 1.0 as WaylandClient
+import QtQuick 2.10
+import QtQuick.Window 2.9
 
-Item {
-    property int refCount: 0
+Window {
+    property bool configured: false
+    property bool registered: false
 
-    onRefCountChanged: {
-        if (shell.active && refCount == 0)
-            shell.sendReady();
-    }
+    flags: Qt.Window | Qt.BypassWindowManagerHint
+    visible: false
 
-    WaylandClient.LiriShell {
-        id: shell
-
-        onActiveChanged: {
-            if (active) {
-                registerGrabSurface(grabWindow);
-                grabWindow.visible = true;
-            }
+    onVisibleChanged: {
+        if (visible && !registered) {
+            refCount--;
+            registered = true;
         }
     }
 
-    WaylandClient.WlrLayerShellV1 {
-        id: layerShell
-    }
-
-    BaseWindow {
-        id: grabWindow
-
-        width: 1
-        height: 1
-    }
-
-    Instantiator {
-        model: Qt.application.screens
-
-        Background {
-            screen: modelData
-        }
+    Component.onCompleted: {
+        refCount++;
     }
 }

@@ -29,17 +29,10 @@ import Liri.WaylandClient 1.0 as WaylandClient
 import Liri.Shell 1.0 as LS
 import Liri.DBusService 1.0 as DBusService
 
-Window {
+BaseWindow {
     id: bgWindow
 
-    property bool loaded: background.loaded && bgWindow.visible
-
-    flags: Qt.Window | Qt.BypassWindowManagerHint
-    visible: false
-
     WaylandClient.WlrLayerSurfaceV1 {
-        id: layerSurface
-
         shell: layerShell
         layer: WaylandClient.WlrLayerShellV1.BackgroundLayer
         window: bgWindow
@@ -59,7 +52,9 @@ Window {
             console.debug("Configuring background to " + width + "x" + height);
             ackConfigure(serial);
             console.debug("Acked configure with serial", serial);
-            bgWindow.visible = true;
+            bgWindow.configured = true;
+            if (background.loaded)
+                bgWindow.visible = true;
         }
         onClosed: {
             this.destroy();
@@ -112,6 +107,11 @@ Window {
         secondaryColor: bgSettings.secondaryColor
         fillMode: bgSettings.fillMode
         blur: false
+
+        onLoadedChanged: {
+            if (loaded && !bgWindow.visible)
+                bgWindow.visible = true;
+        }
     }
 
     MouseArea {
