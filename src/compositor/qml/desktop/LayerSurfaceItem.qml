@@ -50,12 +50,10 @@ WaylandQuickItem {
             sendConfigure();
         }
         onAnchorsChanged: {
-            setupAnchors();
-
-            if (configured) {
-                configured = false;
-                sendConfigure();
-            }
+            reconfigure();
+        }
+        onSizeChanged: {
+            reconfigure();
         }
     }
 
@@ -97,6 +95,15 @@ WaylandQuickItem {
         if (surfaceWidth >= 0 && surfaceHeight >= 0) {
             layerSurface.sendConfigure(surfaceWidth, surfaceHeight);
             configured = true;
+        }
+    }
+
+    function reconfigure() {
+        setupAnchors();
+
+        if (configured) {
+            configured = false;
+            sendConfigure();
         }
     }
 }
