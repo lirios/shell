@@ -36,13 +36,10 @@ BaseWindow {
         shell: layerShell
         layer: WaylandClient.WlrLayerShellV1.BackgroundLayer
         window: bgWindow
-        size.width: 0
-        size.height: 0
         anchors: WaylandClient.WlrLayerSurfaceV1.TopAnchor |
                  WaylandClient.WlrLayerSurfaceV1.BottomAnchor |
                  WaylandClient.WlrLayerSurfaceV1.LeftAnchor |
                  WaylandClient.WlrLayerSurfaceV1.RightAnchor
-        exclusiveZone: -1
         keyboardInteractivity: false
         nameSpace: "wallpaper"
 
