@@ -27,10 +27,10 @@ import Liri.WaylandServer 1.0 as WS
 
 WaylandQuickItem {
     property var layerSurface: undefined
-    property real implicitSurfaceWidth: implicitWidth
-    property real implicitSurfaceHeight: implicitHeight
-    property real surfaceWidth: layerSurface.width > 0 ? layerSurface.width : implicitSurfaceWidth
-    property real surfaceHeight: layerSurface.height > 0 ? layerSurface.height : implicitSurfaceHeight
+    property real implicitSurfaceWidth: Math.max(0, implicitWidth)
+    property real implicitSurfaceHeight: Math.max(0, implicitHeight)
+    property real surfaceWidth: Math.max(layerSurface.width, implicitSurfaceWidth)
+    property real surfaceHeight: Math.max(layerSurface.height, implicitSurfaceHeight)
     property bool configured: false
 
     anchors {
@@ -60,32 +60,32 @@ WaylandQuickItem {
     }
 
     function setupAnchors() {
-        var hasLeft = layerSurface.anchors & WS.WlrLayerSurfaceV1.LeftAnchor == WS.WlrLayerSurfaceV1.LeftAnchor;
-        var hasRight = layerSurface.anchors & WS.WlrLayerSurfaceV1.RightAnchor == WS.WlrLayerSurfaceV1.RightAnchor;
-        var hasTop = layerSurface.anchors & WS.WlrLayerSurfaceV1.TopAnchor == WS.WlrLayerSurfaceV1.TopAnchor;
-        var hasBottom = layerSurface.anchors & WS.WlrLayerSurfaceV1.BottomAnchor == WS.WlrLayerSurfaceV1.BottomAnchor;
+        var hasLeft = layerSurface.anchors & WS.WlrLayerSurfaceV1.LeftAnchor;
+        var hasRight = layerSurface.anchors & WS.WlrLayerSurfaceV1.RightAnchor;
+        var hasTop = layerSurface.anchors & WS.WlrLayerSurfaceV1.TopAnchor;
+        var hasBottom = layerSurface.anchors & WS.WlrLayerSurfaceV1.BottomAnchor;
 
         if (!hasLeft && !hasRight) {
             anchors.left = undefined;
             anchors.right = undefined;
             anchors.horizontalCenter = parent.horizontalCenter;
-            implicitSurfaceWidth = -1;
+            implicitSurfaceWidth = 0;
         } else {
             anchors.horizontalCenter = undefined;
             anchors.left = hasLeft ? parent.left : undefined;
             anchors.right = hasRight ? parent.right : undefined;
-            implicitSurfaceWidth = hasLeft && hasRight ? parent.width : -1;
+            implicitSurfaceWidth = hasLeft && hasRight ? parent.width : 0;
         }
         if (!hasTop && !hasBottom) {
             anchors.top = undefined;
             anchors.bottom = undefined;
             anchors.verticalCenter = parent.verticalCenter;
-            implicitSurfaceHeight = -1;
+            implicitSurfaceHeight = 0;
         } else {
             anchors.verticalCenter = undefined;
             anchors.top = hasTop ? parent.top : undefined;
             anchors.bottom = hasBottom ? parent.bottom : undefined;
-            implicitSurfaceHeight = hasTop && hasBottom ? parent.height : -1;
+            implicitSurfaceHeight = hasTop && hasBottom ? parent.height : 0;
         }
     }
 
@@ -94,7 +94,7 @@ WaylandQuickItem {
             return;
 
         console.debug("Layer surface", layerSurface.nameSpace, "size:", surfaceWidth + "x" + surfaceHeight);
-        if (surfaceWidth > 0 && surfaceHeight > 0) {
+        if (surfaceWidth >= 0 && surfaceHeight >= 0) {
             layerSurface.sendConfigure(surfaceWidth, surfaceHeight);
             configured = true;
         }
