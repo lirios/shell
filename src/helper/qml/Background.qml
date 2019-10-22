@@ -50,8 +50,7 @@ BaseWindow {
             ackConfigure(serial);
             console.debug("Acked configure with serial", serial);
             bgWindow.configured = true;
-            if (background.loaded)
-                bgWindow.visible = true;
+            bgWindow.visible = true;
         }
         onClosed: {
             this.destroy();
@@ -104,11 +103,6 @@ BaseWindow {
         secondaryColor: bgSettings.secondaryColor
         fillMode: bgSettings.fillMode
         blur: false
-
-        onLoadedChanged: {
-            if (loaded && !bgWindow.visible)
-                bgWindow.visible = true;
-        }
     }
 
     MouseArea {
