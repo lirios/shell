@@ -658,4 +658,14 @@ WaylandCompositor {
 
         window.destroy();
     }
+
+    function quit() {
+        layerShell.closeAllSurfaces();
+        shellHelper.sendQuit();
+
+        for (var i = 0; i < screenManager.count; i++)
+            screenManager.objectAt(i).window.close();
+
+        Qt.quit();
+    }
 }

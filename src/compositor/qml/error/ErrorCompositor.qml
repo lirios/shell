@@ -50,7 +50,7 @@ WaylandCompositor {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: "Ctrl+Alt+Backspace"
-        onActivated: Qt.quit()
+        onActivated: liriCompositor.quit()
     }
 
     Root.ScreenManager {
@@ -97,5 +97,14 @@ WaylandCompositor {
             for (var i = 0; i < screenManager.count; i++)
                 screenManager.objectAt(i).grabItem.surface = surface;
         }
+    }
+
+    function quit() {
+        shellHelper.sendQuit();
+
+        for (var i = 0; i < screenManager.count; i++)
+            screenManager.objectAt(i).window.close();
+
+        Qt.quit();
     }
 }

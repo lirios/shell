@@ -501,7 +501,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: smKeybindings.abortSession
-        onActivated: Qt.quit()
+        onActivated: liriCompositor.quit()
     }
 
     Shortcut {
