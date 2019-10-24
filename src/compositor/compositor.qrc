@@ -3,7 +3,7 @@
         <file>qml/base/Keyboard.qml</file>
         <file>qml/components/CloseButton.qml</file>
         <file>qml/components/HotCorner.qml</file>
-        <file>qml/components/Overlay.qml</file>
+        <file>qml/components/Osd.qml</file>
         <file>qml/components/PagedGrid.qml</file>
         <file>qml/Compositor.qml</file>
         <file>qml/desktop/BackgroundItem.qml</file>

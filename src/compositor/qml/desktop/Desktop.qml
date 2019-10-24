@@ -49,7 +49,7 @@ Item {
         readonly property alias workspaces: workspace //workspacesLayer
         readonly property alias top: topLayer
         readonly property alias fullScreen: fullScreenLayer
-        readonly property alias overlays: overlaysLayer
+        readonly property alias overlay: overlayLayer
         readonly property alias notifications: notificationsLayer
     }
 
@@ -99,6 +99,20 @@ Item {
         anchors.fill: parent
     }
 
+    Loader {
+        id: notificationsLayer
+        anchors {
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
+            topMargin: FluidControls.Units.largeSpacing * 3
+            bottomMargin: 56 + FluidControls.Units.smallSpacing
+        }
+        active: output.primary
+        sourceComponent: Notifications {}
+        width: FluidControls.Units.gu(24) + (2 * FluidControls.Units.smallSpacing)
+    }
+
     // Panels
     Loader {
         id: shellLoader
@@ -133,50 +147,8 @@ Item {
     }
 
     Item {
-        id: overlaysLayer2
+        id: overlayLayer
         anchors.fill: parent
-
-        // Overlays are above the panel
-        Overlay {
-            id: overlaysLayer
-            anchors.centerIn: parent
-            z: 10
-
-            Connections {
-                target: OnScreenDisplay
-                onTextRequested: {
-                    overlaysLayer.iconName = iconName;
-                    overlaysLayer.text = text;
-                    overlaysLayer.showProgress = false;
-                    if (!overlaysLayer.visible)
-                        overlaysLayer.show();
-                }
-                onProgressRequested: {
-                    overlaysLayer.iconName = iconName;
-                    overlaysLayer.text = "";
-                    overlaysLayer.value = value;
-                    overlaysLayer.showProgress = true;
-                    if (!overlaysLayer.visible)
-                        overlaysLayer.show();
-                }
-            }
-        }
-
-        // Notifications are behind the panel
-        Loader {
-            id: notificationsLayer
-            anchors {
-                top: parent.top
-                right: parent.right
-                bottom: parent.bottom
-                topMargin: FluidControls.Units.largeSpacing * 3
-                bottomMargin: 56 + FluidControls.Units.smallSpacing
-            }
-            active: output.primary
-            sourceComponent: Notifications {}
-            width: FluidControls.Units.gu(24) + (2 * FluidControls.Units.smallSpacing)
-            z: 10
-        }
     }
 
     // Windows switcher

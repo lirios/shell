@@ -21,48 +21,30 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQml 2.1
 import QtQuick 2.0
-import QtQuick.Window 2.9
 import Liri.WaylandClient 1.0 as WaylandClient
 
-Item {
-    property int refCount: 0
-
-    onRefCountChanged: {
-        if (shell.active && refCount == 0)
-            shell.sendReady();
+WaylandClient.LiriOsd {
+    property Component osdComponent: Component {
+        OsdWindow {}
     }
+    property OsdWindow osdWindow: null
 
-    WaylandClient.LiriShell {
-        id: shell
-
-        onActiveChanged: {
-            if (active) {
-                registerGrabSurface(grabWindow);
-                grabWindow.visible = true;
-            }
+    onTextRequested: {
+        if (osdWindow) {
+            osdWindow.iconName = iconName;
+            osdWindow.text = text;
+        } else {
+            osdWindow = osdComponent.createObject(this, {iconName: iconName, text: text});
         }
     }
-
-    WaylandClient.WlrLayerShellV1 {
-        id: layerShell
-    }
-
-    Osd {}
-
-    BaseWindow {
-        id: grabWindow
-
-        width: 1
-        height: 1
-    }
-
-    Instantiator {
-        model: Qt.application.screens
-
-        Background {
-            screen: modelData
+    onProgressRequested: {
+        if (osdWindow) {
+            osdWindow.iconName = iconName;
+            osdWindow.text = "";
+            osdWindow.value = value;
+        } else {
+            osdWindow = osdComponent.createObject(this, {iconName: iconName, value: value});
         }
     }
 }

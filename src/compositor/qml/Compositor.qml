@@ -31,6 +31,7 @@ import Liri.Shell 1.0 as LS
 import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import "base"
+import "components"
 import "desktop"
 import "windows"
 
@@ -175,6 +176,20 @@ WaylandCompositor {
         }
     }
 
+    WS.LiriOsd {
+        id: liriOsd
+    }
+
+    Connections {
+        target: OnScreenDisplay
+        onTextRequested: {
+            liriOsd.showText(iconName, text);
+        }
+        onProgressRequested: {
+            liriOsd.showProgress(iconName, value);
+        }
+    }
+
     // Layer shell
 
     Component {
@@ -187,6 +202,12 @@ WaylandCompositor {
         id: bgLayerItemComponent
 
         BackgroundItem {}
+    }
+
+    Component {
+        id: osdComponent
+
+        Osd {}
     }
 
     WS.WlrLayerShellV1 {
@@ -209,7 +230,7 @@ WaylandCompositor {
                 parent = output.screenView.desktop.layers.top;
                 break;
             case WS.WlrLayerShellV1.OverlayLayer:
-                parent = output.screenView.desktop.layers.overlays;
+                parent = output.screenView.desktop.layers.overlay;
                 break;
             default:
                 break;
@@ -222,6 +243,8 @@ WaylandCompositor {
             };
             if (layerSurface.layer === WS.WlrLayerShellV1.BackgroundLayer)
                 bgLayerItemComponent.createObject(parent, props);
+            else if (layerSurface.nameSpace === "osd")
+                osdComponent.createObject(parent, props);
             else
                 layerItemComponent.createObject(parent, props);
         }

@@ -3,5 +3,7 @@
         <file>qml/Background.qml</file>
         <file>qml/BaseWindow.qml</file>
         <file>qml/main.qml</file>
+        <file>qml/OsdWindow.qml</file>
+        <file>qml/Osd.qml</file>
     </qresource>
 </RCC>
