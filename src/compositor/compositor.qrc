@@ -32,7 +32,6 @@
         <file>qml/images/logout.svg</file>
         <file>qml/images/reload.svg</file>
         <file>qml/images/sleep.svg</file>
-        <file>qml/images/wallpaper.png</file>
         <file>qml/indicators/launcher/AppsIcon.qml</file>
         <file>qml/indicators/launcher/Dot.qml</file>
         <file>qml/indicators/LauncherIndicator.qml</file>
