@@ -2,14 +2,14 @@
     <qresource prefix="/">
         <file>qml/base/Keyboard.qml</file>
         <file>qml/components/CloseButton.qml</file>
+        <file>qml/components/HardwareLayerSurfaceItem.qml</file>
         <file>qml/components/HotCorner.qml</file>
+        <file>qml/components/LayerSurfaceItem.qml</file>
         <file>qml/components/Osd.qml</file>
         <file>qml/components/PagedGrid.qml</file>
         <file>qml/Compositor.qml</file>
-        <file>qml/desktop/BackgroundItem.qml</file>
         <file>qml/desktop/Desktop.qml</file>
         <file>qml/desktop/IdleDimmer.qml</file>
-        <file>qml/desktop/LayerSurfaceItem.qml</file>
         <file>qml/desktop/OutputInfo.qml</file>
         <file>qml/desktop/PresentEffect.js</file>
         <file>qml/desktop/PresentWindowsChrome.qml</file>

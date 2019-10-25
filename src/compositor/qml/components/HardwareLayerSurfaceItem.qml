@@ -25,7 +25,9 @@ import QtQuick 2.0
 import QtWayland.Compositor 1.3
 
 LayerSurfaceItem {
+    property alias stackingLevel: hwLayer.stackingLevel
+
     WaylandHardwareLayer {
-        stackingLevel: -1
+        id: hwLayer
     }
 }

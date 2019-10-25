@@ -25,12 +25,10 @@
  ***************************************************************************/
 
 import QtQuick 2.12
-import QtWayland.Compositor 1.3
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
-import "../desktop"
 
-LayerSurfaceItem {
+HardwareLayerSurfaceItem {
     id: osd
 
     layer.enabled: true
@@ -38,12 +36,10 @@ LayerSurfaceItem {
         elevation: 8
     }
 
+    stackingLevel: 0
+
     opacity: 0.0
     visible: opacity > 0.0
-
-    WaylandHardwareLayer {
-        stackingLevel: 0
-    }
 
     OpacityAnimator {
         id: showAnimation

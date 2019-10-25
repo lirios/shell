@@ -201,7 +201,9 @@ WaylandCompositor {
     Component {
         id: bgLayerItemComponent
 
-        BackgroundItem {}
+        HardwareLayerSurfaceItem {
+            stackingLevel: -1
+        }
     }
 
     Component {
