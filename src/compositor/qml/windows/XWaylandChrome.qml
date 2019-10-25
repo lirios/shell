@@ -100,10 +100,8 @@ P.ChromeItem {
             }
         }
         onActivatedChanged: {
-            if (chrome.window.activated) {
+            if (chrome.window.activated)
                 chrome.raise();
-                focusAnimation.start();
-            }
         }
         onMinimizedChanged: {
             if (chrome.window.minimized)
@@ -210,26 +208,6 @@ P.ChromeItem {
             script: {
                 chrome.destroy();
             }
-        }
-    }
-
-    /*
-     * Animation when the window is focused
-     */
-
-    SequentialAnimation {
-        id: focusAnimation
-
-        alwaysRunToEnd: true
-
-        ParallelAnimation {
-            NumberAnimation { target: scaleTransform; property: "xScale"; easing.type: Easing.OutQuad; to: 1.02; duration: 100 }
-            NumberAnimation { target: scaleTransform; property: "yScale"; easing.type: Easing.OutQuad; to: 1.02; duration: 100 }
-        }
-
-        ParallelAnimation {
-            NumberAnimation { target: scaleTransform; property: "xScale"; easing.type: Easing.InOutQuad; to: 1.0; duration: 100 }
-            NumberAnimation { target: scaleTransform; property: "yScale"; easing.type: Easing.InOutQuad; to: 1.0; duration: 100 }
         }
     }
 
