@@ -178,11 +178,11 @@ P.ChromeItem {
          */
 
         Behavior on width {
-            SmoothedAnimation { easing.type: Easing.InOutQuad; duration: 350 }
+            SmoothedAnimation { alwaysRunToEnd: true; easing.type: Easing.InOutQuad; duration: 350 }
         }
 
         Behavior on height {
-            SmoothedAnimation { easing.type: Easing.InOutQuad; duration: 350 }
+            SmoothedAnimation { alwaysRunToEnd: true; easing.type: Easing.InOutQuad; duration: 350 }
         }
     }
 
@@ -197,12 +197,16 @@ P.ChromeItem {
     ParallelAnimation {
         id: mapAnimation
 
+        alwaysRunToEnd: true
+
         NumberAnimation { target: chrome; property: "scale"; from: 0.9; to: 1.0; easing.type: Easing.OutQuint; duration: 220 }
         NumberAnimation { target: chrome; property: "opacity"; from: 0.0; to: 1.0; easing.type: Easing.OutCubic; duration: 150 }
     }
 
     SequentialAnimation {
         id: destroyAnimation
+
+        alwaysRunToEnd: true
 
         ParallelAnimation {
             NumberAnimation { target: chrome; property: "scale"; from: 1.0; to: 0.9; easing.type: Easing.OutQuint; duration: 220 }
@@ -227,6 +231,8 @@ P.ChromeItem {
     SequentialAnimation {
         id: focusAnimation
 
+        alwaysRunToEnd: true
+
         ParallelAnimation {
             NumberAnimation { target: scaleTransform; property: "xScale"; easing.type: Easing.OutQuad; to: 1.02; duration: 100 }
             NumberAnimation { target: scaleTransform; property: "yScale"; easing.type: Easing.OutQuad; to: 1.02; duration: 100 }
@@ -245,6 +251,8 @@ P.ChromeItem {
     SequentialAnimation {
         id: minimizeAnimation
 
+        alwaysRunToEnd: true
+
         ScriptAction {
             script: {
                 __private.moveItemPosition.x = shellSurfaceItem.moveItem.x;
@@ -261,6 +269,8 @@ P.ChromeItem {
 
     SequentialAnimation {
         id: unminimizeAnimation
+
+        alwaysRunToEnd: true
 
         ScriptAction {
             script: {
