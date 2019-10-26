@@ -46,6 +46,7 @@ Window {
     WaylandClient.WlrLayerSurfaceV1 {
         shell: layerShell
         layer: WaylandClient.WlrLayerShellV1.OverlayLayer
+        showOnAllScreens: false
         window: osdWindow
         keyboardInteractivity: false
         nameSpace: "osd"
