@@ -216,10 +216,17 @@ WaylandCompositor {
         id: layerShell
 
         onLayerSurfaceCreated: {
-            var output = layerSurface.output;
-            if (!output)
-                output = liriCompositor.defaultOutput;
+            // Create an item for the specified output, if none is specified create
+            // an item for each output
+            if (layerSurface.output) {
+                createItem(layerSurface, layerSurface.output);
+            } else {
+                for (var i = 0; i < screenManager.count; i++)
+                    createItem(layerSurface, screenManager.objectAt(i));
+            }
+        }
 
+        function createItem(layerSurface, output) {
             var parent = null;
             switch (layerSurface.layer) {
             case WS.WlrLayerShellV1.BackgroundLayer:
