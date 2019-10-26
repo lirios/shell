@@ -49,6 +49,24 @@ WaylandQuickItem {
             setupAnchors();
             sendConfigure();
         }
+        onLayerChanged: {
+            switch (layerSurface.layer) {
+            case WS.WlrLayerShellV1.BackgroundLayer:
+                parent = layerSurface.output.screenView.desktop.layers.background;
+                break;
+            case WS.WlrLayerShellV1.BottomLayer:
+                parent = layerSurface.output.screenView.desktop.layers.bottom;
+                break;
+            case WS.WlrLayerShellV1.TopLayer:
+                parent = layerSurface.output.screenView.desktop.layers.top;
+                break;
+            case WS.WlrLayerShellV1.OverlayLayer:
+                parent = layerSurface.output.screenView.desktop.layers.overlay;
+                break;
+            default:
+                break;
+            }
+        }
         onAnchorsChanged: {
             reconfigure();
         }
