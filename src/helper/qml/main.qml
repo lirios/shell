@@ -58,11 +58,5 @@ Item {
         height: 1
     }
 
-    Instantiator {
-        model: Qt.application.screens
-
-        Background {
-            screen: modelData
-        }
-    }
+    Background {}
 }
