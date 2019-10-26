@@ -250,7 +250,7 @@ WaylandCompositor {
                 "surface": layerSurface.surface,
                 "output": output
             };
-            if (layerSurface.layer === WS.WlrLayerShellV1.BackgroundLayer)
+            if (layerSurface.nameSpace === "background")
                 bgLayerItemComponent.createObject(parent, props);
             else if (layerSurface.nameSpace === "osd")
                 osdComponent.createObject(parent, props);
