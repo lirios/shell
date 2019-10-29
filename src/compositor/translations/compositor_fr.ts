@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../qml/Compositor.qml" line="575"/>
+        <location filename="../qml/Compositor.qml" line="607"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Désolé, ça n&apos;a pas fonctionné. Merci de recommencer.</translation>
     </message>
@@ -191,7 +191,7 @@
     <message>
         <location filename="../qml/screens/PowerDialog.qml" line="132"/>
         <source>Power Off</source>
-        <translation type="unfinished"/>
+        <translation>Éteindre </translation>
     </message>
     <message>
         <location filename="../qml/screens/PowerDialog.qml" line="152"/>
