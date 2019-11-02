@@ -40,7 +40,6 @@
 
 // DBusInterfaces
 #include "screencast.h"
-#include "screenshooter.h"
 
 #ifndef Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS
 #define Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(className) \
@@ -131,10 +130,6 @@ public:
         // D-Bus interfaces
 
         qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
-
-        qmlRegisterType<Screenshooter>(uri, versionMajor, versionMinor, "Screenshooter");
-        qmlRegisterUncreatableType<Screenshot>(uri, versionMajor, versionMinor, "Screenshot",
-                                               QStringLiteral("Cannot create instance of Screenshot"));
     }
 };
 

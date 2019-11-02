@@ -19,8 +19,6 @@ liri_add_module(ShellDBusInterfaces
         screencastadaptor.h
         screencast.cpp
         screencast.h
-        screenshooter.h
-        screenshoter.cpp
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH

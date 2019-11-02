@@ -359,6 +359,19 @@ WaylandCompositor {
         id: foreignToplevelManager
     }
 
+    // Screen copy
+
+    WS.WlrScreencopyManagerV1 {
+        onCaptureOutputRequested: {
+            frame.ready.connect(function() {
+                if (frame.overlayCursor)
+                    frame.grabCursorItem(frame.output.cursor);
+                frame.copy();
+                liriCompositor.flash();
+            });
+        }
+    }
+
     // Shells
 
     WlShell {
@@ -427,38 +440,6 @@ WaylandCompositor {
      */
 
     P.ScreenCast {}
-
-    P.Screenshooter {
-        id: screenshooter
-
-        onCaptureRequested: {
-            // Grab cursor surface
-            screenshot.grabCursorItem(defaultOutput.cursor);
-
-            // Capture
-            switch (screenshot.captureType) {
-            case P.Screenshot.CaptureScreens:
-                screenshot.grabScreens();
-                break;
-            case P.Screenshot.CaptureActiveWindow:
-                screenshot.grabSurfaceItem(defaultOutput.viewsBySurface[activeShellSurface.surface]);
-                break;
-            case P.Screenshot.CaptureWindow:
-            case P.Screenshot.CaptureArea:
-                // TODO: Implement interactive capture types
-                break;
-            default:
-                break;
-            }
-
-            // Save capture
-            screenshot.save();
-            delete screenshot;
-
-            // Flash
-            liriCompositor.flash();
-        }
-    }
 
     /*
      * Components
