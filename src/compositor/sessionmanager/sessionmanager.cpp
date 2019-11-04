@@ -139,7 +139,10 @@ void SessionManager::setIdle(bool value)
 
 void SessionManager::registerService()
 {
-    QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Shell"));
+    if (!QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Shell"))) {
+        qWarning("Failed to register D-Bus service io.liri.Shell");
+        return;
+    }
 
 #ifdef HAVE_SYSTEMD
     sd_notify(0, "READY=1");
