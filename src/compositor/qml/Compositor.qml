@@ -136,18 +136,28 @@ WaylandCompositor {
         WS.WlrOutputModeV1 {}
     }
 
+    Component {
+        id: outputConfigComponent
+
+        WS.WlrOutputConfigurationV1 {
+            id: configuration
+
+            onReadyToTest: {
+                if (!screenModel.testConfiguration(configuration))
+                    configuration.sendFailed();
+            }
+            onReadyToApply: {
+                screenModel.applyConfiguration(configuration);
+            }
+        }
+    }
+
     WS.WlrOutputManagerV1 {
         id: outputManager
 
-        onConfigurationCreated: {
-            configuration.readyToTest.connect(function() {
-                if (!screenModel.testConfiguration(configuration))
-                    configuration.sendFailed();
-            });
-
-            configuration.readyToApply.connect(function() {
-                screenModel.applyConfiguration(configuration);
-            });
+        onConfigurationRequested: {
+            var configuration = outputConfigComponent.createObject(outputManager);
+            configuration.initialize(outputManager, resource);
         }
     }
 
