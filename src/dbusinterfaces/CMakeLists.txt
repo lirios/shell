@@ -22,7 +22,6 @@ liri_add_module(ShellDBusInterfaces
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
-        QT_WAYLAND_COMPOSITOR_QUICK
     PUBLIC_LIBRARIES
         Qt5::Core
         Qt5::DBus

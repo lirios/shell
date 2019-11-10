@@ -59,7 +59,6 @@ liri_add_executable(LiriShell
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
-        QT_WAYLAND_COMPOSITOR_QUICK
         LIRISHELL_VERSION="${PROJECT_VERSION}"
     LIBRARIES
         Qt5::Core
