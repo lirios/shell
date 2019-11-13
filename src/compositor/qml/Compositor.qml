@@ -393,19 +393,6 @@ WaylandCompositor {
         }
     }
 
-    XdgShellV5 {
-        id: xdgShellV5
-
-        onXdgSurfaceCreated: {
-            var window = xdgSurfaveV5Component.createObject(xdgShellV5, {"xdgSurface": xdgSurface});
-            __private.handleShellSurfaceCreated(window, chromeComponent);
-        }
-        onXdgPopupCreated: {
-            var window = xdgPopupV5Component.createObject(xdgShellV5, {"xdgPopup": xdgPopup});
-            __private.handleShellSurfaceCreated(window, popupChromeComponent);
-        }
-    }
-
     XdgShellV6 {
         id: xdgShellV6
 
@@ -492,33 +479,6 @@ WaylandCompositor {
                     __private.fullscreenShellSurfaces--;
             }
         }
-    }
-
-    // Custom xdg-shell v5 surface
-    Component {
-        id: xdgSurfaveV5Component
-
-        XdgSurfaceV5Window {
-            onMaximizedChanged: {
-                if (maximized)
-                    __private.maximizedShellSurfaces++;
-                else
-                    __private.maximizedShellSurfaces--;
-            }
-            onFullscreenChanged: {
-                if (fullscreen)
-                    __private.fullscreenShellSurfaces++;
-                else
-                    __private.fullscreenShellSurfaces--;
-            }
-        }
-    }
-
-    // Custom xdg-shell v5 popup
-    Component {
-        id: xdgPopupV5Component
-
-        XdgPopupV5Window {}
     }
 
     // Shell surface for xdg-shell v6 toplevel

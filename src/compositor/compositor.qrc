@@ -73,8 +73,6 @@
         <file>qml/windows/window-minimize.svg</file>
         <file>qml/windows/window-restore.svg</file>
         <file>qml/windows/WlShellWindow.qml</file>
-        <file>qml/windows/XdgPopupV5Window.qml</file>
-        <file>qml/windows/XdgSurfaceV5Window.qml</file>
         <file>qml/windows/XWaylandChrome.qml</file>
         <file>qml/XWayland.qml</file>
         <file>qml/windows/XdgToplevelV6Window.qml</file>
