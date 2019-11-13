@@ -342,6 +342,10 @@ WaylandCompositor {
 
     // Decorations
 
+    XdgDecorationManagerV1 {
+        preferredMode: XdgToplevel.ServerSideDecoration
+    }
+
     WS.KdeServerDecorationManager {
         defaultMode: WS.KdeServerDecorationManager.Server
 
