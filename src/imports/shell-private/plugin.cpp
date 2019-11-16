@@ -22,8 +22,10 @@
  ***************************************************************************/
 
 #include <QtQml>
-#include <QWaylandQuickExtension>
-#include <QWaylandWlShell>
+
+#ifndef QT_WAYLAND_COMPOSITOR_QUICK
+#  define QT_WAYLAND_COMPOSITOR_QUICK
+#endif
 
 // ShellPrivate
 #include "chromeitem.h"
@@ -79,9 +81,6 @@
     };
 #endif
 
-Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QuickOutput)
-Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(QWaylandWlShell)
-Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandWlShellSurface)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(WaylandWindow)
 
 class ShellPrivatePlugin : public QQmlExtensionPlugin
@@ -105,7 +104,7 @@ public:
         qmlRegisterType<IndicatorsModel>(uri, versionMajor, versionMinor, "IndicatorsModel");
         qmlRegisterType<InputSettings>(uri, versionMajor, versionMinor, "InputSettings");
         qmlRegisterType<KeyEventFilter>(uri, versionMajor, versionMinor, "KeyEventFilter");
-        qmlRegisterType<QuickOutputQuickParent>(uri, versionMajor, versionMinor, "WaylandOutput");
+        qmlRegisterType<QuickOutput>(uri, versionMajor, versionMinor, "WaylandOutput");
         qmlRegisterType<ScreenModel>(uri, versionMajor, versionMinor, "ScreenModel");
         qmlRegisterUncreatableType<ScreenMode>(uri, versionMajor, versionMinor, "ScreenMode",
                                                QStringLiteral("Cannot create instance of ScreenMode"));
@@ -114,11 +113,6 @@ public:
         qmlRegisterType<ShellSurfaceItem>(uri, versionMajor, versionMinor, "ShellSurfaceItem");
         qmlRegisterType<WaylandWindowQuickParent>(uri, versionMajor, versionMinor, "WaylandWindow");
         qmlRegisterType<WindowMouseTracker>(uri, versionMajor, versionMinor, "WindowMouseTracker");
-
-        // Wayland protocols
-
-        qmlRegisterType<QWaylandWlShellQuickExtension>(uri, versionMajor, versionMinor, "WlShell");
-        qmlRegisterType<QWaylandWlShellSurfaceQuickParent>(uri, versionMajor, versionMinor, "WlShellSurface");
 
         // D-Bus interfaces
 
