@@ -36,6 +36,7 @@
 #include "quickoutput.h"
 #include "screenmodel.h"
 #include "shellsurfaceitem.h"
+#include "waylandwindow.h"
 #include "windowmousetracker.h"
 
 // DBusInterfaces
@@ -85,6 +86,7 @@ Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandWlShellSurface)
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(QWaylandXdgShellV5)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgSurfaceV5)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgPopupV5)
+Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(WaylandWindow)
 
 class ShellPrivatePlugin : public QQmlExtensionPlugin
 {
@@ -114,6 +116,7 @@ public:
         qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
                                                QStringLiteral("Cannot create instance of ScreenItem"));
         qmlRegisterType<ShellSurfaceItem>(uri, versionMajor, versionMinor, "ShellSurfaceItem");
+        qmlRegisterType<WaylandWindowQuickParent>(uri, versionMajor, versionMinor, "WaylandWindow");
         qmlRegisterType<WindowMouseTracker>(uri, versionMajor, versionMinor, "WindowMouseTracker");
 
         // Wayland protocols

@@ -26,8 +26,9 @@ import QtWayland.Compositor 1.1 as QtWayland
 import Fluid.Core 1.0 as FluidCore
 import Liri.WaylandServer 1.0 as WS
 import Liri.XWayland 1.0 as LXW
+import Liri.private.shell 1.0 as LS
 
-FluidCore.Object {
+LS.WaylandWindow {
     id: window
 
     property LXW.XWaylandShellSurface shellSurface: null
@@ -41,8 +42,6 @@ FluidCore.Object {
     readonly property alias moveItem: moveItem
 
     readonly property string title: shellSurface ? shellSurface.title : ""
-    readonly property string appId: d.appId
-    readonly property string iconName: d.iconName
 
     readonly property alias windowGeometry: d.windowGeometry
     readonly property alias surfaceGeometry: d.surfaceGeometry
@@ -69,8 +68,6 @@ FluidCore.Object {
     QtObject {
         id: d
 
-        property string appId: ""
-        property string iconName: ""
         property rect windowGeometry
         property rect surfaceGeometry
         property bool mapped: false
@@ -156,13 +153,13 @@ FluidCore.Object {
         }
         onSurfaceChanged: {
             // Surface is changed, which means that app id has likely changed too
-            d.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
+            window.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
         }
         onAppIdChanged: {
             // Canonicalize app id and cache it, so that it's known even during destruction
-            d.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
+            window.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
 
-            if (!d.registered && d.appId) {
+            if (!d.registered && window.appId) {
                 // Register application
                 applicationManager.registerShellSurface(window);
                 d.registered = true;
@@ -171,10 +168,6 @@ FluidCore.Object {
                 if (d.activated)
                     applicationManager.focusShellSurface(window);
             }
-
-            // Set icon name when appId changes
-            var appIconName = applicationManager.getIconName(d.appId);
-            d.iconName = appIconName ? appIconName : "";
         }
         onMapped: {
             d.mapped = true;

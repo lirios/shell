@@ -2,6 +2,9 @@ find_package(Wayland REQUIRED)
 
 set(AUTOMOC_MOC_OPTIONS -Muri=Liri.private.shell)
 
+if(NOT TARGET Liri::Xdg)
+    find_package(Liri1Xdg REQUIRED)
+endif()
 if(NOT TARGET Liri::WaylandServer)
     find_package(Liri1WaylandServer REQUIRED)
 endif()
@@ -31,6 +34,8 @@ liri_add_qml_plugin(shell-private
         screenmodel.h
         shellsurfaceitem.cpp
         shellsurfaceitem.h
+        waylandwindow.cpp
+        waylandwindow.h
         windowmousetracker.cpp
         windowmousetracker.h
     QML_FILES
@@ -45,6 +50,7 @@ liri_add_qml_plugin(shell-private
         Qt5::Qml
         Qt5::Quick
         Qt5::WaylandCompositor
+        Liri::Xdg
         Liri::ShellDBusInterfaces
         Liri::WaylandServer
     STATIC

@@ -25,8 +25,9 @@ import QtQuick 2.0
 import QtWayland.Compositor 1.3 as QtWayland
 import Fluid.Core 1.0 as FluidCore
 import Liri.WaylandServer 1.0 as WS
+import Liri.private.shell 1.0 as LS
 
-FluidCore.Object {
+LS.WaylandWindow {
     id: window
 
     property QtWayland.XdgSurface xdgSurface: null
@@ -43,8 +44,6 @@ FluidCore.Object {
     readonly property alias moveItem: moveItem
 
     readonly property string title: toplevel ? toplevel.title : ""
-    readonly property string appId: d.appId
-    readonly property string iconName: d.iconName
 
     readonly property rect windowGeometry: {
         var rect = Qt.rect(0, 0, 0, 0);
@@ -97,8 +96,6 @@ FluidCore.Object {
         id: d
 
         property int windowType: Qt.Window
-        property string appId: ""
-        property string iconName: ""
         property bool mapped: false
         property bool registered: false
         property bool decorated: true
@@ -197,9 +194,9 @@ FluidCore.Object {
         }
         onAppIdChanged: {
             // Canonicalize app id and cache it, so that it's known even during destruction
-            d.appId = applicationManager.canonicalizeAppId(toplevel.appId);
+            window.appId = applicationManager.canonicalizeAppId(toplevel.appId);
 
-            if (!d.registered && d.appId) {
+            if (!d.registered && window.appId) {
                 // Register application
                 applicationManager.registerShellSurface(window);
                 d.registered = true;
@@ -208,10 +205,6 @@ FluidCore.Object {
                 if (toplevel.activated)
                     applicationManager.focusShellSurface(window);
             }
-
-            // Set icon name when appId changes
-            var appIconName = applicationManager.getIconName(d.appId);
-            d.iconName = appIconName ? appIconName : "";
         }
         onStartMove: {
             shellHelper.grabCursor(WS.LiriShell.MoveGrabCursor);
