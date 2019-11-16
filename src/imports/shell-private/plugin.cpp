@@ -24,7 +24,6 @@
 #include <QtQml>
 #include <QWaylandQuickExtension>
 #include <QWaylandWlShell>
-#include <QWaylandXdgShellV5>
 
 // ShellPrivate
 #include "chromeitem.h"
@@ -83,9 +82,6 @@
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QuickOutput)
 Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(QWaylandWlShell)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandWlShellSurface)
-Q_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(QWaylandXdgShellV5)
-Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgSurfaceV5)
-Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(QWaylandXdgPopupV5)
 Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(WaylandWindow)
 
 class ShellPrivatePlugin : public QQmlExtensionPlugin
@@ -123,12 +119,6 @@ public:
 
         qmlRegisterType<QWaylandWlShellQuickExtension>(uri, versionMajor, versionMinor, "WlShell");
         qmlRegisterType<QWaylandWlShellSurfaceQuickParent>(uri, versionMajor, versionMinor, "WlShellSurface");
-
-        qmlRegisterUncreatableType<QWaylandXdgShellV5>(uri, versionMajor, versionMinor, "XdgShellV5Base",
-                                                       QStringLiteral("Cannot create instance of XdgShellV5Base"));
-        qmlRegisterType<QWaylandXdgShellV5QuickExtension>(uri, versionMajor, versionMinor, "XdgShellV5");
-        qmlRegisterType<QWaylandXdgSurfaceV5QuickParent>(uri, versionMajor, versionMinor, "XdgSurfaceV5");
-        qmlRegisterType<QWaylandXdgPopupV5QuickParent>(uri, versionMajor, versionMinor, "XdgPopupV5");
 
         // D-Bus interfaces
 
