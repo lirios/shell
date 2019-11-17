@@ -78,8 +78,22 @@ LS.WaylandWindow {
     readonly property bool fullscreen: toplevel && toplevel.fullscreen
     readonly property bool resizing: toplevel && toplevel.resizing
 
-    readonly property alias decorated: d.decorated
-    readonly property alias bordered: d.bordered
+    readonly property bool decorated: {
+        if (toplevel) {
+            if (toplevel.decorationMode === QtWayland.XdgToplevel.ServerSideDecoration)
+                return !toplevel.fullscreen;
+        }
+
+        return false;
+    }
+    readonly property bool bordered: {
+        if (toplevel) {
+            if (toplevel.decorationMode === QtWayland.XdgToplevel.ServerSideDecoration)
+                return !toplevel.maximized && !toplevel.fullscreen;
+        }
+
+        return false;
+    }
     readonly property real borderSize: bordered ? 4 : 0
     readonly property real titleBarHeight: decorated ? 32 : 0
 
@@ -98,26 +112,10 @@ LS.WaylandWindow {
         property int windowType: Qt.Window
         property bool mapped: false
         property bool registered: false
-        property bool decorated: true
-        property bool bordered: true
         property QtWayland.WaylandSurface parentSurface: null
         property point position
         property size size
         property point finalPosition
-
-        function resetDecoration() {
-            if (window.surface) {
-                if (window.surface.decorationMode !== WS.KdeServerDecorationManager.Client) {
-                    if (window.toplevel)
-                        d.decorated = !window.toplevel.fullscreen;
-                } else {
-                    d.decorated = false;
-                }
-            }
-
-            if (window.toplevel)
-                d.bordered = d.decorated && !window.toplevel.maximized;
-        }
     }
 
     WS.WlrForeignToplevelHandleV1 {
@@ -181,9 +179,6 @@ LS.WaylandWindow {
                 d.finalPosition = Qt.point(-1, -1);
             }
         }
-        onDecorationModeChanged: {
-            d.resetDecoration();
-        }
     }
 
     Connections {
@@ -211,12 +206,6 @@ LS.WaylandWindow {
         }
         onSetMinimized: {
             window.minimized = true;
-        }
-        onMaximizedChanged: {
-            d.resetDecoration();
-        }
-        onFullscreenChanged: {
-            d.resetDecoration();
         }
         onShowWindowMenu: {
             window.showWindowMenu(seat, localSurfacePosition);

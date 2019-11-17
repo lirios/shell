@@ -147,5 +147,13 @@
         the virtual keyboard.
       </description>
     </key>
+    <key name="client-side-decoration" type="b">
+      <default>false</default>
+      <summary>Client-side Decoration</summary>
+      <description>
+        Indicates whether programs will decorate their windows themselves,
+        or the compositor have to do it.
+      </description>
+    </key>
   </schema>
 </schemalist>

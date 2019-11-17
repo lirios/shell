@@ -73,7 +73,6 @@ WaylandCompositor {
             console.debug("Compositor created");
 
             SessionInterface.setEnvironment("WAYLAND_DISPLAY", liriCompositor.socketName);
-            SessionInterface.setEnvironment("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
             SessionInterface.registerService();
 
             if (xwaylandLoader.status == Loader.Ready)
@@ -343,11 +342,11 @@ WaylandCompositor {
     // Decorations
 
     XdgDecorationManagerV1 {
-        preferredMode: XdgToplevel.ServerSideDecoration
+        preferredMode: settings.ui.clientSideDecoration ? XdgToplevel.ClientSideDecoration : XdgToplevel.ServerSideDecoration
     }
 
     WS.KdeServerDecorationManager {
-        defaultMode: WS.KdeServerDecorationManager.Server
+        defaultMode: settings.ui.clientSideDecoration ? WS.KdeServerDecorationManager.Client : WS.KdeServerDecorationManager.Server
 
         onDecorationCreated: {
             decoration.modeRequested.connect(function(mode) {
