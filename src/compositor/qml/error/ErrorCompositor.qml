@@ -90,10 +90,6 @@ WaylandCompositor {
     // Shell helper
     WS.LiriShell {
         id: shellHelper
-        onGrabSurfaceAdded: {
-            for (var i = 0; i < screenManager.count; i++)
-                screenManager.objectAt(i).grabItem.surface = surface;
-        }
     }
 
     function quit() {
