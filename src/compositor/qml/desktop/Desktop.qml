@@ -28,6 +28,7 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.1
 import Fluid.Controls 1.0 as FluidControls
+import Fluid.Effects 1.0 as FluidEffects
 import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
 import ".."
@@ -42,11 +43,18 @@ Item {
     Material.primary: Material.Blue
     Material.accent: Material.Blue
 
+    // Margins for "present" mode to fit screen aspect ratio
+    property QtObject margins: QtObject {
+        property real left: screenView.width * 0.1
+        property real right: screenView.width * 0.1
+        property real top: screenView.height * 0.1
+        property real bottom: screenView.height * 0.1
+    }
+
     readonly property var layers: QtObject {
         readonly property alias background: backgroundLayer
         readonly property alias desktop: desktopLayer
         readonly property alias bottom: bottomLayer
-        readonly property alias workspaces: workspace //workspacesLayer
         readonly property alias top: topLayer
         readonly property alias fullScreen: fullScreenLayer
         readonly property alias overlay: overlayLayer
@@ -54,9 +62,68 @@ Item {
     }
 
     readonly property alias shell: shellLoader.item
-    readonly property alias currentWorkspace: workspace
+    readonly property alias currentWorkspace: workspacesView.currentWorkspace
     readonly property var panel: shell ? shell.panel : null
     readonly property alias windowSwitcher: windowSwitcher
+
+    // All the necessary for the "present" mode
+    layer.enabled: false
+    layer.effect: FluidEffects.Elevation {
+        elevation: 24
+    }
+
+    state: currentWorkspace.state
+    states: [
+        State {
+            name: "normal"
+
+            PropertyChanges {
+                target: desktop
+                anchors.margins: 0
+            }
+        },
+        State {
+            name: "present"
+
+            // Margins respect screen aspect ratio
+            PropertyChanges {
+                target: desktop
+                anchors.leftMargin: margins.left
+                anchors.rightMargin: margins.right
+                anchors.topMargin: margins.top
+                anchors.bottomMargin: margins.bottom
+            }
+        }
+
+    ]
+    transitions: [
+        Transition {
+            to: "normal"
+
+            SequentialAnimation {
+                NumberAnimation {
+                    properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
+                    easing.type: Easing.OutQuad
+                    duration: 300
+                }
+
+                ScriptAction { script: desktop.layer.enabled = false }
+            }
+        },
+        Transition {
+            to: "present"
+
+            SequentialAnimation {
+                ScriptAction { script: desktop.layer.enabled = true }
+
+                NumberAnimation {
+                    properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
+                    easing.type: Easing.InQuad
+                    duration: 300
+                }
+            }
+        }
+    ]
 
     /*
      * Workspace
@@ -77,21 +144,8 @@ Item {
         anchors.fill: parent
     }
 
-    // Workspaces
-    /*
     WorkspacesView {
-        id: workspacesLayer
-        anchors.fill: parent
-    }
-    */
-
-    // FIXME: Temporary workaround to make keyboard input work,
-    // apparently SwipeView captures input. An Item instead make it work.
-    Workspace {
-        id: workspace
-        anchors.fill: parent
-        onEffectStarted: if (effect == "present") parent.state = "present"
-        onEffectStopped: if (effect == "present") parent.state = "normal"
+        id: workspacesView
     }
 
     Item {
@@ -119,7 +173,7 @@ Item {
         anchors.fill: parent
         active: output.primary
         sourceComponent: Shell {
-            opacity: workspace.state == "present" ? 0.0 : 1.0
+            opacity: currentWorkspace.state == "present" ? 0.0 : 1.0
             visible: opacity > 0.0
 
             Behavior on opacity {
@@ -156,5 +210,21 @@ Item {
         id: windowSwitcher
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
+    }
+
+    /*
+     * Methods
+     */
+
+    function selectPreviousWorkspace() {
+        workspacesView.selectPrevious();
+    }
+
+    function selectNextWorkspace() {
+        workspacesView.selectNext();
+    }
+
+    function selectWorkspace(num) {
+        workspacesView.select(num);
     }
 }

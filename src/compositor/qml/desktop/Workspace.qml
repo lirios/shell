@@ -33,6 +33,9 @@ Item {
     signal effectStarted(string effect)
     signal effectStopped(string effect)
 
+    width: parent.width
+    height: parent.height
+
     state: "normal"
     states: [
         State {
@@ -67,11 +70,13 @@ Item {
             ScriptAction { script: revealRestore() }
         }
     ]
+    onEffectStopped: {
+        workspace.state = "normal";
+    }
     onChildrenChanged: {
         switch (state) {
         case "present":
-            for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).surfacesArea.state = "normal";
+            workspace.effectStopped(state);
             break;
         case "reveal":
             reveal();
@@ -135,10 +140,9 @@ Item {
         // Loop over windows
         console.time("reveal loop " + output.model);
         var x, y;
-        for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-            // Get a hold of the shell surface
-            var shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
-            var view = output.viewsBySurface[shellSurface.surface];
+        for (var i = 0; i < workspace.visibleChildren.length; i++) {
+            // Get a hold of the view
+            var view = workspace.visibleChildren[i];
 
             // Skip shell surfaces not rendered on this output
             if (!view.primary)
@@ -169,10 +173,9 @@ Item {
 
     function revealRestore() {
         // Restore windows position
-        for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-            // Get a hold of the shell surface
-            var shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
-            var view = output.viewsBySurface[shellSurface.surface];
+        for (var i = 0; i < workspace.visibleChildren.length; i++) {
+            // Get a hold of the view
+            var view = workspace.visibleChildren[i];
 
             var pos = __private.storage[view];
             if (pos !== undefined) {
@@ -182,5 +185,10 @@ Item {
         }
 
         workspace.effectStopped("reveal");
+    }
+
+    function stopEffect(effect) {
+        if (state === effect)
+            workspace.effectStopped(effect);
     }
 }

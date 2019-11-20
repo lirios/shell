@@ -27,7 +27,6 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
-import Fluid.Effects 1.0 as FluidEffects
 import Liri.private.shell 1.0 as P
 import "../components" as Components
 import "../screens"
@@ -114,14 +113,12 @@ Item {
     Components.HotCorner {
         corner: Qt.TopLeftCorner
         z: 2000
-        //onTriggered: workspacesLayer.selectPrevious()
     }
 
     // Top-right corner
     Components.HotCorner {
         corner: Qt.TopRightCorner
         z: 2000
-        //onTriggered: workspacesLayer.selectNext()
     }
 
     // Bottom-left corner
@@ -153,72 +150,7 @@ Item {
         Desktop {
             id: desktop
 
-            // Margins for "present" mode to fit screen aspect ratio
-            property QtObject margins: QtObject {
-                property real left: screenView.width * 0.1
-                property real right: screenView.width * 0.1
-                property real top: screenView.height * 0.1
-                property real bottom: screenView.height * 0.1
-            }
-
             anchors.fill: parent
-
-            // All the necessary for the "present" mode
-            layer.enabled: false
-            layer.effect: FluidEffects.Elevation {
-                elevation: 24
-            }
-            states: [
-                State {
-                    name: "normal"
-
-                    PropertyChanges {
-                        target: desktop
-                        anchors.margins: 0
-                    }
-                },
-                State {
-                    name: "present"
-
-                    // Margins respect screen aspect ratio
-                    PropertyChanges {
-                        target: desktop
-                        anchors.leftMargin: margins.left
-                        anchors.rightMargin: margins.right
-                        anchors.topMargin: margins.top
-                        anchors.bottomMargin: margins.bottom
-                    }
-                }
-
-            ]
-            transitions: [
-                Transition {
-                    to: "normal"
-
-                    SequentialAnimation {
-                        NumberAnimation {
-                            properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
-                            easing.type: Easing.OutQuad
-                            duration: 300
-                        }
-
-                        ScriptAction { script: desktop.layer.enabled = false }
-                    }
-                },
-                Transition {
-                    to: "present"
-
-                    SequentialAnimation {
-                        ScriptAction { script: desktop.layer.enabled = true }
-
-                        NumberAnimation {
-                            properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
-                            easing.type: Easing.InQuad
-                            duration: 300
-                        }
-                    }
-                }
-            ]
 
             transform: Scale {
                 id: screenScaler

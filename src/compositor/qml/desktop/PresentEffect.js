@@ -47,11 +47,7 @@ function spreadWindows() {
         var offsetX = (workspaceWidth - row.width) / 2;
 
         row.windows.forEach(function(pos) {
-            var shellSurface = liriCompositor.shellSurfaces.get(pos.index).window;
-            if (!shellSurface)
-                return;
-
-            var entry = output.viewsBySurface[shellSurface.surface];
+            var entry = workspace.visibleChildren[pos.index];
 
             // Calculate position and size
             var x = output.position.x + pos.x + ((workspaceWidth - row.width) / 2);
@@ -59,18 +55,16 @@ function spreadWindows() {
             var w = entry.width * pos.scale;
             var h = entry.height * pos.scale;
 
-            //console.debug(output.model, "-", shellSurface.appId, "\"" + shellSurface.title + "\"", x.toFixed(2) + "," + y.toFixed(2), w.toFixed(2) + "x" + h.toFixed(2));
+            //console.debug(output.model, "-", entry.window.appId, "\"" + entry.window.title + "\"", x.toFixed(2) + "," + y.toFixed(2), w.toFixed(2) + "x" + h.toFixed(2));
 
             // Create the chrome
-            var chrome = chromeComponent.createObject(output.surfacesArea, {"view": entry});
+            var chrome = chromeComponent.createObject(workspace, {"view": entry});
             chrome.selected.connect(function(view) {
-                for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                    liriCompositor.screenManager.objectAt(i).screenView.surfacesArea.state = "normal";
+                workspace.effectStopped("present");
                 view.shellSurfaceItem.takeFocus();
             });
             chrome.closed.connect(function(view) {
-                for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                    liriCompositor.screenManager.objectAt(i).screenView.surfacesArea.state = "normal";
+                workspace.effectStopped("present");
                 view.window.sendClose();
             });
             chromes[entry] = chrome;
@@ -95,16 +89,8 @@ function spreadWindows() {
 function restoreWindows() {
     // This loop needs to run on all shell surfaces so we make their views
     // visible again on restore
-    for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-        var shellSurface = liriCompositor.shellSurfaces.get(i).window;
-        if (!shellSurface)
-            continue;
-
-        var entry = output.viewsBySurface[shellSurface.surface];
-
-        // Ignore undefined entries, happens with some Qt wl-shell clients
-        if (entry === undefined)
-            continue;
+    for (var i = 0; i < workspace.visibleChildren.length; i++) {
+        var entry  = workspace.visibleChildren[i];
 
         var pos = originalLayout[entry];
         if (pos !== undefined) {
@@ -149,21 +135,15 @@ function tryLayout(rows) {
     var row = 0;
     var rowList = [];
     var list = [];
-    var i, shellSurface, entry;
+    var i, entry;
 
-    for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-        shellSurface = liriCompositor.shellSurfaces.get(i).window;
-        if (!shellSurface)
-            continue;
-
-        entry = output.viewsBySurface[shellSurface.surface];
-
-        // Ignore undefined entries, happens with some Qt wl-shell clients
-        if (entry === undefined)
+    for (i = 0; i < workspace.visibleChildren.length; i++) {
+        entry  = workspace.visibleChildren[i];
+        if (!entry.window)
             continue;
 
         // Only top level windows
-        if (shellSurface.windowType !== Qt.Window)
+        if (entry.window.windowType !== Qt.Window)
             continue;
 
         // Consider only entries for this output
@@ -173,19 +153,13 @@ function tryLayout(rows) {
         rowHeight = Math.min(rowHeight, entry.height);
     }
 
-    for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-        shellSurface = liriCompositor.shellSurfaces.get(i).window;
-        if (!shellSurface)
-            continue;
-
-        entry = output.viewsBySurface[shellSurface.surface];
-
-        // Ignore undefined entries, happens with some Qt wl-shell clients
-        if (entry === undefined)
+    for (i = 0; i < workspace.visibleChildren.length; i++) {
+        entry  = workspace.visibleChildren[i];
+        if (!entry.window)
             continue;
 
         // Only top level windows
-        if (shellSurface.windowType !== Qt.Window) {
+        if (entry.window.windowType !== Qt.Window) {
             entry.visible = false;
             continue;
         }
@@ -250,18 +224,10 @@ function isEntryOnOutput(entry, output) {
 // Calculate spacing between windows based on how many of them there are
 function calcSpacing() {
     var count = 0;
-    var i, shellSurface, entry;
+    var i, entry;
 
-    for (i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-        shellSurface = liriCompositor.shellSurfaces.get(i).window;
-        if (!shellSurface)
-            continue;
-
-        entry = output.viewsBySurface[shellSurface.surface];
-
-        // Ignore undefined entries, happens with some Qt wl-shell clients
-        if (entry === undefined)
-            continue;
+    for (i = 0; i < workspace.visibleChildren.length; i++) {
+        entry  = workspace.visibleChildren[i];
 
         // Count only windows on this output
         if (isEntryOnOutput(entry, output))
@@ -270,7 +236,7 @@ function calcSpacing() {
 
     if (count <= 2)
         return 64 * output.scaleFactor;
-    else if (count == 3)
+    else if (count === 3)
         return 32 * output.scaleFactor;
     else
         return 16 * output.scaleFactor;

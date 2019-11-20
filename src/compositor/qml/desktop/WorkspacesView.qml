@@ -25,119 +25,78 @@
  ***************************************************************************/
 
 import QtQuick 2.0
-import QtQuick.Templates 2.0 as T
 import Fluid.Controls 1.0 as FluidControls
 
-T.SwipeView {
+Row {
     id: swipeView
-    contentItem: ListView {
-        model: swipeView.contentModel
-        currentIndex: swipeView.currentIndex
-        spacing: swipeView.spacing
-        orientation: Qt.Horizontal
-        boundsBehavior: Flickable.StopAtBounds
-        highlightRangeMode: ListView.StrictlyEnforceRange
-        preferredHighlightBegin: 0
-        preferredHighlightEnd: 0
-        highlightMoveDuration: FluidControls.Units.mediumDelay
-        interactive: false
-    }
-    onCurrentIndexChanged: console.debug("Selected workspace", currentIndex)
 
-    QtObject {
-        id: d
+    readonly property int count: liriCompositor.settings.numWorkspaces
+    property int currentWorkspaceNumber: 1
+    property Item currentWorkspace: defaultWorkspace
 
-        function showOverlay(next) {
-            // Show overlay
-            OnScreenDisplay.showText(next ? "go-next-symbolic" : "go-previous-symbolic");
-            var overlay = output.screenView.desktop.layers.overlays;
-            overlay.iconName = next ? "go-next-symbolic" : "go-previous-symbolic";
-            overlay.value = "";
-            overlay.showProgress = false;
-            overlay.timeout = 1000;
-            if (!overlay.visible)
-                overlay.show();
-        }
+    width: parent.width
+    height: parent.height
+
+    onCurrentWorkspaceNumberChanged: {
+        console.debug("Selected workspace", currentWorkspaceNumber);
+        swipeView.x = -width * (currentWorkspaceNumber - 1);
+        if (currentWorkspaceNumber == 1)
+            currentWorkspace = defaultWorkspace;
+        else
+            currentWorkspace = repeater.itemAt(currentWorkspaceNumber - 2);
     }
 
-    Component {
-        id: workspaceComponent
+    Workspace {
+        id: defaultWorkspace
+    }
+
+    Repeater {
+        id: repeater
+
+        model: swipeView.count - 1
 
         Workspace {}
     }
 
-    Workspace {}
-
-    function add() {
-        var incubator = workspaceComponent.incubateObject(swipeView, {});
-        if (incubator.status !== Component.Ready) {
-            incubator.onStatusChange = function(status) {
-                if (status === Component.Ready)
-                    swipeView.add(incubator.object);
-            }
-        } else {
-            swipeView.add(incubator.object);
-        }
-    }
-
-    function remove(index) {
-        // Reparent all windows to the previous or next workspace
-        var workspace = swipeView.itemAt(index);
-        var prevIndex = index === 0 ? swipeView.count - 1 : index - 1;
-        var prevWorkspace = swipeView.itemAt(prevIndex);
-        var i;
-        for (i = 0; i < workspace.children.length; i++) {
-            var window = workspace.children[i];
-            window.parent = prevWorkspace;
-        }
-
-        // Remove item
-        swipeView.currentIndex = prevIndex;
-        swipeView.removeItem(index);
+    Behavior on x {
+        NumberAnimation { duration: FluidControls.Units.mediumDuration }
     }
 
     function select(num) {
-        if (num < 0 || num >= swipeView.count) {
-            console.warn("Attempt to select unknown workspace", num);
+        if (num < 1 || num > swipeView.count) {
+            console.warn("Attempt to select an unknown workspace", num);
             return;
         }
 
-        swipeView.currentIndex = num;
+        swipeView.currentWorkspaceNumber = num;
+
+        if (currentWorkspace.state != "normal")
+            currentWorkspace.stopEffect(currentWorkspace.state);
     }
 
     function selectPrevious() {
         // Previous index (avoid overflow)
-        var prevIndex = swipeView.currentIndex - 1;
-        if (prevIndex < 0)
-            prevIndex = swipeView.count - 1;
-        if (prevIndex < 0)
-            prevIndex = 0;
+        var prevNumber = swipeView.currentWorkspaceNumber - 1;
+        if (prevNumber < 1)
+            prevNumber = 1;
 
         // Select workspace
-        select(prevIndex);
+        select(prevNumber);
 
         // Show overlay
-        d.showOverlay(false);
+        OnScreenDisplay.showText("navigation/arrow_back");
     }
 
     function selectNext() {
         // Next index (avoid overflow)
-        var nextIndex = swipeView.currentIndex + 1;
-        if (nextIndex >= swipeView.count)
-            nextIndex = 0;
+        var nextNumber = swipeView.currentWorkspaceNumber + 1;
+        if (nextNumber > swipeView.count)
+            nextNumber = swipeView.count;
 
         // Select workspace
-        select(nextIndex);
+        select(nextNumber);
 
         // Show overlay
-        d.showOverlay(true);
-    }
-
-    Component.onCompleted: {
-        // Create all workspaces
-        var i;
-        for (i = swipeView.count; i < liriCompositor.settings.numWorkspaces; i++)
-            add();
-        select(0);
+        OnScreenDisplay.showText("navigation/arrow_forward");
     }
 }

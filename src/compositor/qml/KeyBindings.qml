@@ -61,7 +61,7 @@ Item {
 
         function switchToWorkspace(number) {
             for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).screenView.layers.workspaces.select(number);
+                liriCompositor.screenManager.objectAt(i).screenView.desktop.selectWorkspace(number);
         }
     }
 
@@ -89,73 +89,73 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspace1
-        onActivated: d.switchToWorkspace(0)
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace2
         onActivated: d.switchToWorkspace(1)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace3
+        sequence: wmKeybindings.switchToWorkspace2
         onActivated: d.switchToWorkspace(2)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace4
+        sequence: wmKeybindings.switchToWorkspace3
         onActivated: d.switchToWorkspace(3)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace5
+        sequence: wmKeybindings.switchToWorkspace4
         onActivated: d.switchToWorkspace(4)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace6
+        sequence: wmKeybindings.switchToWorkspace5
         onActivated: d.switchToWorkspace(5)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace7
+        sequence: wmKeybindings.switchToWorkspace6
         onActivated: d.switchToWorkspace(6)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace8
+        sequence: wmKeybindings.switchToWorkspace7
         onActivated: d.switchToWorkspace(7)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace9
+        sequence: wmKeybindings.switchToWorkspace8
         onActivated: d.switchToWorkspace(8)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace10
+        sequence: wmKeybindings.switchToWorkspace9
         onActivated: d.switchToWorkspace(9)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace11
+        sequence: wmKeybindings.switchToWorkspace10
         onActivated: d.switchToWorkspace(10)
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.switchToWorkspace12
+        sequence: wmKeybindings.switchToWorkspace11
         onActivated: d.switchToWorkspace(11)
+    }
+
+    Shortcut {
+        context: Qt.ApplicationShortcut
+        sequence: wmKeybindings.switchToWorkspace12
+        onActivated: d.switchToWorkspace(12)
     }
 
     Shortcut {
@@ -163,7 +163,7 @@ Item {
         sequence: wmKeybindings.switchToWorkspaceLeft
         onActivated: {
             for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).screenView.layers.workspaces.selectPrevious();
+                liriCompositor.screenManager.objectAt(i).screenView.desktop.selectPreviousWorkspace();
         }
     }
 
@@ -172,7 +172,7 @@ Item {
         sequence: wmKeybindings.switchToWorkspaceRight
         onActivated: {
             for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).screenView.layers.workspaces.selectNext();
+                liriCompositor.screenManager.objectAt(i).screenView.desktop.selectNextWorkspace();
         }
     }
 
@@ -189,11 +189,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspaceLast
-        onActivated: {
-            var index = liriCompositor.settings.numWorkspaces - 1;
-            for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).screenView.layers.workspaces.select(index);
-        }
+        onActivated: d.switchToWorkspace(liriCompositor.settings.numWorkspaces)
     }
 
     /*
