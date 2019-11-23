@@ -575,36 +575,36 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeMute
-        onActivated: MultimediaKeys.volumeMute()
+        onActivated: multimediaKeysServer.VolumeMute()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeUp
-        onActivated: MultimediaKeys.volumeUp()
+        onActivated: multimediaKeysServer.VolumeUp()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.volumeDown
-        onActivated: MultimediaKeys.volumeDown()
+        onActivated: multimediaKeysServer.VolumeDown()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.mediaPlay
-        onActivated: MultimediaKeys.mediaPlay()
+        onActivated: multimediaKeysServer.MediaPlay()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.mediaPrevious
-        onActivated: MultimediaKeys.mediaPrevious()
+        onActivated: multimediaKeysServer.MediaPrevious()
     }
 
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: mmKeybindings.mediaNext
-        onActivated: MultimediaKeys.mediaNext()
+        onActivated: multimediaKeysServer.MediaNext()
     }
 }

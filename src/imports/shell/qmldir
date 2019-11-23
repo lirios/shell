@@ -1,4 +1,5 @@
 module Liri.Shell
+plugin shellplugin
 classname ShellPlugin
 typeinfo plugins.qmltypes
 

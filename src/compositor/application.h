@@ -32,7 +32,6 @@
 
 QT_FORWARD_DECLARE_CLASS(QQmlApplicationEngine)
 
-class MultimediaKeys;
 class ScreenSaver;
 class SessionManager;
 
@@ -53,7 +52,6 @@ protected:
 private:
     QUrl m_url;
     QQmlApplicationEngine *m_appEngine;
-    MultimediaKeys *m_multimediaKeys;
     SessionManager *m_sessionManager;
     bool m_failSafe;
     bool m_started;

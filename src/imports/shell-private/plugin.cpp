@@ -28,6 +28,8 @@
 #endif
 
 // ShellPrivate
+#include "dbus/multimediakeysserver.h"
+#include "dbus/osdserver.h"
 #include "chromeitem.h"
 #include "fpscounter.h"
 #include "hotspot.h"
@@ -116,6 +118,8 @@ public:
 
         // D-Bus interfaces
 
+        qmlRegisterType<OsdServer>(uri, versionMajor, versionMinor, "OsdServer");
+        qmlRegisterType<MultimediaKeysServer>(uri, versionMajor, versionMinor, "MultimediaKeysServer");
         qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
     }
 };

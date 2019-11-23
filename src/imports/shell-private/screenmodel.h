@@ -25,7 +25,6 @@
 #define SCREENMODEL_H
 
 #include <QAbstractListModel>
-#include <QLoggingCategory>
 #include <QQmlComponent>
 #include <QQmlParserStatus>
 #include <QQmlListProperty>
@@ -33,8 +32,6 @@
 #include <QWaylandOutput>
 
 #include <LiriWaylandServer/WaylandWlrOutputManagerV1>
-
-Q_DECLARE_LOGGING_CATEGORY(lcShell)
 
 class ScreenModel : public QAbstractListModel, public QQmlParserStatus
 {

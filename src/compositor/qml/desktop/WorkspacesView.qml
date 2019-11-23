@@ -84,7 +84,7 @@ Row {
         select(prevNumber);
 
         // Show overlay
-        OnScreenDisplay.showText("navigation/arrow_back");
+        osdServer.ShowText("navigation/arrow_back");
     }
 
     function selectNext() {
@@ -97,6 +97,6 @@ Row {
         select(nextNumber);
 
         // Show overlay
-        OnScreenDisplay.showText("navigation/arrow_forward");
+        osdServer.ShowText("navigation/arrow_forward");
     }
 }

@@ -36,8 +36,6 @@
 #include <QtWaylandCompositor/QWaylandCompositor>
 
 #include "application.h"
-#include "onscreendisplay.h"
-#include "multimediakeys/multimediakeys.h"
 #include "sessionmanager/sessionmanager.h"
 
 #include <unistd.h>
@@ -85,9 +83,6 @@ Application::Application(QObject *parent)
     m_appEngine = new QQmlApplicationEngine(this);
     connect(m_appEngine, &QQmlApplicationEngine::objectCreated,
             this, &Application::objectCreated);
-
-    // Multimedia keys
-    m_multimediaKeys = new MultimediaKeys(this);
 
     // Session manager
     m_sessionManager = new SessionManager(this);
@@ -171,13 +166,6 @@ void Application::startup()
     // Session interface
     m_appEngine->rootContext()->setContextProperty(QStringLiteral("SessionInterface"),
                                                    m_sessionManager);
-
-    m_appEngine->rootContext()->setContextProperty(QStringLiteral("MultimediaKeys"),
-                                                   m_multimediaKeys);
-
-    // OSD service
-    m_appEngine->rootContext()->setContextProperty(QStringLiteral("OnScreenDisplay"),
-                                                   new OnScreenDisplay(this));
 
     // Load the compositor
     m_appEngine->load(m_url);

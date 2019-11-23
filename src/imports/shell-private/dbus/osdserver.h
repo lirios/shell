@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -21,23 +21,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef ONSCREENDISPLAY_H
-#define ONSCREENDISPLAY_H
+#ifndef OSDSERVER_H
+#define OSDSERVER_H
 
 #include <QObject>
 
-class OnScreenDisplay : public QObject
+class OsdServer : public QObject
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "io.liri.Shell.Osd")
 public:
-    explicit OnScreenDisplay(QObject *parent = nullptr);
+    explicit OsdServer(QObject *parent = nullptr);
 
-    Q_INVOKABLE void showText(const QString &iconName, const QString &text = QString());
-    Q_INVOKABLE void showProgress(const QString &iconName, int value);
+public Q_SLOTS:
+    void ShowText(const QString &iconName, const QString &text = QString());
+    void ShowProgress(const QString &iconName, int value);
 
 Q_SIGNALS:
     void textRequested(const QString &iconName, const QString &text);
     void progressRequested(const QString &iconName, int value);
 };
 
-#endif // ONSCREENDISPLAY_H
+#endif // OSDSERVER_H

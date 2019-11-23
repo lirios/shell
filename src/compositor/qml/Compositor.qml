@@ -260,16 +260,6 @@ WaylandCompositor {
         id: liriOsd
     }
 
-    Connections {
-        target: OnScreenDisplay
-        onTextRequested: {
-            liriOsd.showText(iconName, text);
-        }
-        onProgressRequested: {
-            liriOsd.showProgress(iconName, value);
-        }
-    }
-
     // Layer shell
 
     Component {
@@ -440,6 +430,21 @@ WaylandCompositor {
      */
 
     P.ScreenCast {}
+
+    P.MultimediaKeysServer {
+        id: multimediakeysServer
+    }
+
+    P.OsdServer {
+        id: osdServer
+
+        onTextRequested: {
+            liriOsd.showText(iconName, text);
+        }
+        onProgressRequested: {
+            liriOsd.showProgress(iconName, value);
+        }
+    }
 
     /*
      * Components

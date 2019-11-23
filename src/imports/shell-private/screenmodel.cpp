@@ -31,9 +31,8 @@
 
 #include <LiriPlatformHeaders/lirieglfsfunctions.h>
 
+#include "logging.h"
 #include "screenmodel.h"
-
-Q_LOGGING_CATEGORY(lcShell, "liri.shell", QtDebugMsg)
 
 static ScreenItem::PowerState convertPowerState(Liri::Platform::EglFSFunctions::PowerState powerState)
 {

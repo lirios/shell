@@ -1,8 +1,14 @@
-liri_add_qml_module(shell
+liri_add_qml_plugin(shell
     MODULE_PATH
         "Liri/Shell"
     VERSION
         "1.0"
+    SOURCES
+        multimediakeysclient.cpp
+        multimediakeysclient.h
+        osdclient.cpp
+        osdclient.h
+        plugin.cpp
     QML_FILES
         Background.qml
         DateTimeIndicator.qml
@@ -12,4 +18,10 @@ liri_add_qml_module(shell
         PanelItem.qml
         UserDelegate.qml
         qmldir
+    DEFINES
+        QT_NO_CAST_FROM_ASCII
+        QT_NO_FOREACH
+    PUBLIC_LIBRARIES
+        Qt5::Core
+        Qt5::DBus
 )

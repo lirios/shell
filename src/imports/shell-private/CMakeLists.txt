@@ -15,6 +15,10 @@ liri_add_qml_plugin(shell-private
     VERSION
         "1.0"
     SOURCES
+        dbus/multimediakeysserver.cpp
+        dbus/multimediakeysserver.h
+        dbus/osdserver.cpp
+        dbus/osdserver.h
         chromeitem.cpp
         chromeitem.h
         fpscounter.cpp
@@ -27,6 +31,8 @@ liri_add_qml_plugin(shell-private
         inputsettings.h
         keyeventfilter.cpp
         keyeventfilter.h
+        logging.cpp
+        logging.h
         plugin.cpp
         quickoutput.cpp
         quickoutput.h
@@ -45,6 +51,7 @@ liri_add_qml_plugin(shell-private
         QT_NO_FOREACH
     PUBLIC_LIBRARIES
         Qt5::Core
+        Qt5::DBus
         Qt5::Gui
         Qt5::GuiPrivate
         Qt5::Qml

@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -21,24 +21,6 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#ifndef MULTIMEDIAKEYS_H
-#define MULTIMEDIAKEYS_H
+#include "logging.h"
 
-#include <QObject>
-
-class MultimediaKeys : public QObject
-{
-    Q_OBJECT
-public:
-    explicit MultimediaKeys(QObject *parent = nullptr);
-
-Q_SIGNALS:
-    void volumeMute();
-    void volumeUp();
-    void volumeDown();
-    void mediaPlay();
-    void mediaPrevious();
-    void mediaNext();
-};
-
-#endif // MULTIMEDIAKEYS_H
+Q_LOGGING_CATEGORY(lcShell, "liri.shell", QtDebugMsg)

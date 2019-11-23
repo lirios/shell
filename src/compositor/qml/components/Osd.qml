@@ -79,7 +79,7 @@ HardwareLayerSurfaceItem {
     }
 
     Connections {
-        target: OnScreenDisplay
+        target: osdServer
         onTextRequested: {
             showAnimation.start();
         }

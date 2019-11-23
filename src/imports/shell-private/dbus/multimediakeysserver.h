@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -21,19 +21,25 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include "onscreendisplay.h"
+#ifndef MULTIMEDIAKEYSSERVER_H
+#define MULTIMEDIAKEYSSERVER_H
 
-OnScreenDisplay::OnScreenDisplay(QObject *parent)
-    : QObject(parent)
-{
-}
+#include <QObject>
 
-void OnScreenDisplay::showText(const QString &iconName, const QString &text)
+class MultimediaKeysServer : public QObject
 {
-    Q_EMIT textRequested(iconName, text);
-}
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "io.liri.Shell.MultimediaKeysServer")
+public:
+    explicit MultimediaKeysServer(QObject *parent = nullptr);
 
-void OnScreenDisplay::showProgress(const QString &iconName, int value)
-{
-    Q_EMIT progressRequested(iconName, value);
-}
+Q_SIGNALS:
+    void VolumeMute();
+    void VolumeUp();
+    void VolumeDown();
+    void MediaPlay();
+    void MediaPrevious();
+    void MediaNext();
+};
+
+#endif // MULTIMEDIAKEYSSERVER_H

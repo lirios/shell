@@ -1,7 +1,7 @@
 /****************************************************************************
  * This file is part of Liri.
  *
- * Copyright (C) 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+ * Copyright (C) 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
  *
  * $BEGIN_LICENSE:GPL3+$
  *
@@ -21,9 +21,19 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-#include "multimediakeys.h"
+#ifndef OSDCLIENT_H
+#define OSDCLIENT_H
 
-MultimediaKeys::MultimediaKeys(QObject *parent)
-    : QObject(parent)
+#include <QtCore/QObject>
+
+class OsdClient : public QObject
 {
-}
+    Q_OBJECT
+public:
+    explicit OsdClient(QObject *parent = nullptr);
+
+    Q_INVOKABLE void showText(const QString &iconName, const QString &text = QString());
+    Q_INVOKABLE void showProgress(const QString &iconName, int value);
+};
+
+#endif // OSDCLIENT_H

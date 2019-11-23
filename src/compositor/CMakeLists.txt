@@ -41,10 +41,6 @@ liri_add_executable(LiriShell
         application.cpp
         application.h
         main.cpp
-        multimediakeys/multimediakeys.cpp
-        multimediakeys/multimediakeys.h
-        onscreendisplay.cpp
-        onscreendisplay.h
         sessionmanager/authenticator.cpp
         sessionmanager/authenticator.h
         sessionmanager/qmlauthenticator.cpp
