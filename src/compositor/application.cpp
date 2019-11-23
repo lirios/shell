@@ -164,13 +164,6 @@ void Application::startup()
     // Check whether XDG_RUNTIME_DIR is ok or not
     verifyXdgRuntimeDir();
 
-    // Register D-Bus service
-    if (!QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Session"))) {
-        qWarning("Failed to register D-Bus service: %s",
-                 qPrintable(QDBusConnection::sessionBus().lastError().message()));
-        QCoreApplication::exit(1);
-    }
-
     // Set screen configuration file name
     m_appEngine->rootContext()->setContextProperty(QStringLiteral("screenConfigurationFileName"),
                                                    m_screenConfigFileName);
