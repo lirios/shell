@@ -34,8 +34,9 @@ WaylandClient.LiriOsd {
         if (osdWindow) {
             osdWindow.iconName = iconName;
             osdWindow.text = text;
+            osdWindow.progressVisible = false;
         } else {
-            osdWindow = osdComponent.createObject(this, {iconName: iconName, text: text});
+            osdWindow = osdComponent.createObject(this, {iconName: iconName, text: text, progressVisible: false});
         }
     }
     onProgressRequested: {
@@ -43,8 +44,9 @@ WaylandClient.LiriOsd {
             osdWindow.iconName = iconName;
             osdWindow.text = "";
             osdWindow.value = value;
+            osdWindow.progressVisible = true;
         } else {
-            osdWindow = osdComponent.createObject(this, {iconName: iconName, value: value});
+            osdWindow = osdComponent.createObject(this, {iconName: iconName, value: value, progressVisible: true});
         }
     }
 }

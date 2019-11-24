@@ -35,6 +35,7 @@ Window {
     property string iconName
     property alias value: progress.value
     property alias text: label.text
+    property alias progressVisible: progress.visible
 
     flags: Qt.Window | Qt.BypassWindowManagerHint
 
@@ -92,7 +93,7 @@ Window {
 
                 from: 0
                 to: 100
-                visible: label.text == ""
+                visible: false
 
                 Layout.fillWidth: true
             }
