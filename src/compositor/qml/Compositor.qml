@@ -251,6 +251,19 @@ WaylandCompositor {
             grabSurface = surface;
         }
         onReady: {
+            shellHelperTimer.running = false;
+
+            for (var i = 0; i < screenManager.count; i++)
+                screenManager.objectAt(i).screenView.state = "session";
+        }
+    }
+
+    Timer {
+        id: shellHelperTimer
+
+        interval: 15000
+        running: true
+        onTriggered: {
             for (var i = 0; i < screenManager.count; i++)
                 screenManager.objectAt(i).screenView.state = "session";
         }
