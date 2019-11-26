@@ -63,7 +63,7 @@ Loader {
     Component {
         id: solid
 
-        FluidControls.NoiseBackground {
+        Rectangle {
             objectName: "solid"
             color: background.primaryColor
 
@@ -83,7 +83,7 @@ Loader {
     Component {
         id: gradient
 
-        FluidControls.NoiseBackground {
+        Rectangle {
             property bool vertical: background.mode === "vgradient"
 
             objectName: "gradient"
@@ -126,7 +126,7 @@ Loader {
         Item {
             objectName: "wallpaper"
 
-            FluidControls.NoiseBackground {
+            Rectangle {
                 anchors.fill: parent
                 color: background.primaryColor
                 visible: picture.status !== Image.Loading
@@ -145,8 +145,9 @@ Loader {
                 id: picture
                 anchors.fill: parent
                 source: background.pictureUrl
-                smooth: true
-                clip: fillMode === Image.PreserveAspectCrop
+                sourceSize.width: width
+                sourceSize.height: height
+                smooth: false
                 fillMode: background.convertFillMode(background.fillMode)
                 onStatusChanged: __private.loaded = picture.status === Image.Ready
                 visible: !blur.visible
