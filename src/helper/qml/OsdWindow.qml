@@ -66,7 +66,7 @@ Window {
 
     Rectangle {
         Material.theme: Material.Dark
-        Material.accent: Material.LightBlue
+        Material.accent: Material.Blue
 
         anchors.fill: parent
 
