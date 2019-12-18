@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../qml/Compositor.qml" line="638"/>
+        <location filename="../qml/Compositor.qml" line="656"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation type="unfinished"/>
     </message>
@@ -225,7 +225,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../application.cpp" line="126"/>
+        <location filename="../application.cpp" line="121"/>
         <source>The XDG_RUNTIME_DIR environment variable is not set.
 Refer to your distribution on how to get it, or read
 http://www.freedesktop.org/wiki/Specifications/basedir-spec
@@ -234,13 +234,13 @@ on how to implement it.
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../application.cpp" line="137"/>
+        <location filename="../application.cpp" line="132"/>
         <source>The XDG_RUNTIME_DIR environment variable is set to &quot;%1&quot;, which doesn't exist.
 </source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../application.cpp" line="144"/>
+        <location filename="../application.cpp" line="139"/>
         <source>XDG_RUNTIME_DIR is set to &quot;%1&quot; and is not configured correctly.
 Unix access mode must be 0700, but is 0%2.
 It must also be owned by the current user (UID %3), but is owned by UID %4 (&quot;%5&quot;).
