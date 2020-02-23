@@ -377,6 +377,57 @@ WaylandCompositor {
 
     // Screen copy
 
+    P.ScreenCast {
+        id: screenCast
+
+        onFrameAvailable: {
+            for (var i = 0; i < screenManager.count; i++) {
+                var output = screenManager.objectAt(i);
+
+
+                if (output.screen.screen === screen) {
+                    output.exportDmabufFrame.frame(size, offset, 0, 0, drmFormat, modifier, numObjects);
+                    break;
+                }
+            }
+        }
+        onObjectAvailable: {
+            for (var i = 0; i < screenManager.count; i++) {
+                var output = screenManager.objectAt(i);
+                if (!output.exportDmabufFrame)
+                    continue;
+
+                if (output.screen.screen === screen) {
+                    output.exportDmabufFrame.object(index, fd, size, offset, stride, planeIndex);
+                    break;
+                }
+            }
+        }
+        onCaptureReady: {
+            for (var i = 0; i < screenManager.count; i++) {
+                var output = screenManager.objectAt(i);
+                if (!output.exportDmabufFrame)
+                    continue;
+
+                if (output.screen.screen === screen) {
+                    output.exportDmabufFrame.ready(tv_sec, tv_nsec);
+                    output.exportDmabufFrame = null;
+                    screenCast.disable(screen);
+                    break;
+                }
+            }
+        }
+    }
+
+    WS.WlrExportDmabufManagerV1 {
+        onOutputCaptureRequested: {
+            if (frame.output.screen) {
+                frame.output.exportDmabufFrame = frame;
+                screenCast.enable(frame.output.screen.screen);
+            }
+        }
+    }
+
     WS.WlrScreencopyManagerV1 {
         onCaptureOutputRequested: {
             frame.ready.connect(function() {
@@ -441,8 +492,6 @@ WaylandCompositor {
     /*
      * D-Bus
      */
-
-    P.ScreenCast {}
 
     P.MultimediaKeysServer {
         id: multimediakeysServer

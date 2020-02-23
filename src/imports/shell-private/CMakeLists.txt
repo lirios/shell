@@ -8,6 +8,9 @@ endif()
 if(NOT TARGET Liri::WaylandServer)
     find_package(Liri1WaylandServer REQUIRED)
 endif()
+if(NOT TARGET Liri::PlatformHeaders)
+    find_package(Liri1PlatformHeaders REQUIRED)
+endif()
 
 liri_add_qml_plugin(shell-private
     MODULE_PATH
@@ -36,6 +39,8 @@ liri_add_qml_plugin(shell-private
         plugin.cpp
         quickoutput.cpp
         quickoutput.h
+        screencast.cpp
+        screencast.h
         screenmodel.cpp
         screenmodel.h
         shellsurfaceitem.cpp
@@ -58,7 +63,7 @@ liri_add_qml_plugin(shell-private
         Qt5::Quick
         Qt5::WaylandCompositor
         Liri::Xdg
-        Liri::ShellDBusInterfaces
         Liri::WaylandServer
+        Liri::PlatformHeaders
     STATIC
 )

@@ -46,6 +46,8 @@ P.WaylandOutput {
     //readonly property alias idleDimmer: idleDimmer
     readonly property alias cursor: cursor
 
+    property var exportDmabufFrame: null
+
     property bool __idle: false
 
     sizeFollowsWindow: false

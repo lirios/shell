@@ -27,7 +27,6 @@
 #  define QT_WAYLAND_COMPOSITOR_QUICK
 #endif
 
-// ShellPrivate
 #include "dbus/multimediakeysserver.h"
 #include "dbus/osdserver.h"
 #include "chromeitem.h"
@@ -37,13 +36,11 @@
 #include "inputsettings.h"
 #include "keyeventfilter.h"
 #include "quickoutput.h"
+#include "screencast.h"
 #include "screenmodel.h"
 #include "shellsurfaceitem.h"
 #include "waylandwindow.h"
 #include "windowmousetracker.h"
-
-// DBusInterfaces
-#include "screencast.h"
 
 #ifndef Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS
 #define Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(className) \
@@ -107,6 +104,7 @@ public:
         qmlRegisterType<InputSettings>(uri, versionMajor, versionMinor, "InputSettings");
         qmlRegisterType<KeyEventFilter>(uri, versionMajor, versionMinor, "KeyEventFilter");
         qmlRegisterType<QuickOutput>(uri, versionMajor, versionMinor, "WaylandOutput");
+        qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
         qmlRegisterType<ScreenModel>(uri, versionMajor, versionMinor, "ScreenModel");
         qmlRegisterUncreatableType<ScreenMode>(uri, versionMajor, versionMinor, "ScreenMode",
                                                QStringLiteral("Cannot create instance of ScreenMode"));
@@ -120,7 +118,6 @@ public:
 
         qmlRegisterType<OsdServer>(uri, versionMajor, versionMinor, "OsdServer");
         qmlRegisterType<MultimediaKeysServer>(uri, versionMajor, versionMinor, "MultimediaKeysServer");
-        qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
     }
 };
 
