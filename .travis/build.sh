@@ -12,8 +12,7 @@ dnf install -y \
      pam-devel \
      polkit-qt5-1-devel \
      kf5-solid-devel \
-     wayland-devel \
-     pipewire-devel
+     wayland-devel
 travis_end "install_packages"
 
 # Install artifacts
