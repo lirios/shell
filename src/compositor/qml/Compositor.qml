@@ -431,9 +431,7 @@ WaylandCompositor {
     WS.WlrScreencopyManagerV1 {
         onCaptureOutputRequested: {
             frame.ready.connect(function() {
-                if (frame.overlayCursor)
-                    frame.grabCursorItem(frame.output.cursor);
-                frame.copy();
+                frame.copy("screenView");
                 liriCompositor.flash();
             });
         }

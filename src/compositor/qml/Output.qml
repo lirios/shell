@@ -140,6 +140,8 @@ P.WaylandOutput {
             // User interface
             ScreenView {
                 id: screenView
+
+                objectName: "screenView"
                 anchors.fill: parent
                 visible: output.screen.enabled
             }
