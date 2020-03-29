@@ -437,6 +437,10 @@ WaylandCompositor {
         }
     }
 
+    WS.LiriColorPickerManager {
+        layerName: "screenView"
+    }
+
     // Shells
 
     WlShell {
