@@ -27,7 +27,7 @@ include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
 # Translations
-file(GLOB LiriShell_TRANSLATIONS "${CMAKE_CURRENT_SOURCE_DIR}/translations/*_*.ts")
+file(GLOB LiriShell_TRANSLATIONS "${CMAKE_CURRENT_SOURCE_DIR}/../../translations/compositor/*_*.ts")
 qt5_add_translation(LiriShell_QM_FILES ${LiriShell_TRANSLATIONS})
 install(FILES ${LiriShell_QM_FILES}
         DESTINATION "${INSTALL_DATADIR}/liri-shell/translations")

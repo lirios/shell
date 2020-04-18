@@ -1,0 +1,7 @@
+[
+  {
+    "type": "ts",
+    "directory": "src/compositor",
+    "output_path": "translations/compositor/compositor.ts"
+  }
+]

@@ -4,6 +4,5 @@ host = https://www.transifex.com
 [liri-shell.compositor]
 type = QT
 source_lang = en
-liri_source_directory = src/compositor
-source_file = src/compositor/translations/compositor.ts
-file_filter = src/compositor/translations/compositor_<lang>.ts
+source_file = translations/compositor/compositor.ts
+file_filter = translations/compositor/compositor_<lang>.ts
