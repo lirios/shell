@@ -1,20 +1,20 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="da" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="tr" version="2.1">
 <context>
     <name>AuthDialog</name>
     <message>
         <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="45"/>
         <source>Authentication required</source>
-        <translation>Autentifikation kræves</translation>
+        <translation>Yetkilendirme gerekli</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="175"/>
         <source>Authenticate</source>
-        <translation>Autentificer</translation>
+        <translation>Yetkilendir</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="182"/>
         <source>Cancel</source>
-        <translation>Annuller</translation>
+        <translation>İptal</translation>
     </message>
 </context>
 <context>
@@ -22,32 +22,32 @@
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="36"/>
         <source>Minimize</source>
-        <translation>Minimer</translation>
+        <translation>Küçült</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="42"/>
         <source>Restore</source>
-        <translation>Gendan</translation>
+        <translation>Kurtar</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="49"/>
         <source>Maximize</source>
-        <translation>Maksimer</translation>
+        <translation>Büyült</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="58"/>
         <source>Move</source>
-        <translation>Flyt</translation>
+        <translation>Taşı</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="63"/>
         <source>Resize</source>
-        <translation>Tilpas størrelse</translation>
+        <translation>Boyutlandır</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="69"/>
         <source>Close</source>
-        <translation>Luk</translation>
+        <translation>Kapat</translation>
     </message>
 </context>
 <context>
@@ -55,7 +55,7 @@
     <message>
         <location filename="../../src/compositor/qml/Compositor.qml" line="707"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
-        <translation>Beklager, det virkede ikke. Prøv venligst igen.</translation>
+        <translation>Üzgünüz, işe yaramadı. Lütfen yeniden deneyin.</translation>
     </message>
 </context>
 <context>
@@ -63,17 +63,17 @@
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="57"/>
         <source>Oh no!</source>
-        <translation>Åh nej!</translation>
+        <translation>Olamaz!</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="64"/>
         <source>Something went wrong and the desktop failed to load.</source>
-        <translation>Noget gik galt og skrivebordet kunne ikke indlæses.</translation>
+        <translation>Bir şey yanlış gitti ve masaüstü yüklenemedi.</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="75"/>
         <source>Quit</source>
-        <translation>Afslut</translation>
+        <translation>Çık</translation>
     </message>
 </context>
 <context>
@@ -81,12 +81,12 @@
     <message>
         <location filename="../../src/compositor/qml/launcher/FrequentAppsView.qml" line="18"/>
         <source>Frequent Apps</source>
-        <translation>Programmer som ofte bruges</translation>
+        <translation>Sık Kullanılan Uygulamalar</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/launcher/FrequentAppsView.qml" line="19"/>
         <source>The apps you use frequently will show here</source>
-        <translation>Her vises de programmer som du ofte bruger</translation>
+        <translation>Sık kullandığınız uygulamalar burada gösterilecek</translation>
     </message>
 </context>
 <context>
@@ -94,7 +94,7 @@
     <message>
         <location filename="../../src/compositor/qml/indicators/LauncherIndicator.qml" line="34"/>
         <source>Applications</source>
-        <translation>Programmer</translation>
+        <translation>Uygulamalar</translation>
     </message>
 </context>
 <context>
@@ -102,22 +102,22 @@
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="62"/>
         <source>New Window</source>
-        <translation>Nyt vindue</translation>
+        <translation>Yeni Pencere</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="69"/>
         <source>Unpin from Launcher</source>
-        <translation>Frigør fra programstarter</translation>
+        <translation>Başlatıcıdan Kaldır</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="69"/>
         <source>Pin to Launcher</source>
-        <translation>Fastgør til programstarter</translation>
+        <translation>Başlatıcıya Ekle</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="81"/>
         <source>Quit</source>
-        <translation>Afslut</translation>
+        <translation>Çık</translation>
     </message>
 </context>
 <context>
@@ -125,7 +125,7 @@
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherPopOver.qml" line="145"/>
         <source>Type an application name...</source>
-        <translation>Skriv et programnavn ...</translation>
+        <translation>Uygulama adı yaz...</translation>
     </message>
 </context>
 <context>
@@ -133,17 +133,17 @@
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="45"/>
         <source>Log out</source>
-        <translation>Log ud</translation>
+        <translation>Oturumu kapat</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="57"/>
         <source>Lock Session</source>
-        <translation>Lås session</translation>
+        <translation>Oturumu kilitle</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="70"/>
         <source>Power off</source>
-        <translation>Sluk</translation>
+        <translation>Gücü kapat</translation>
     </message>
 </context>
 <context>
@@ -151,7 +151,7 @@
     <message>
         <location filename="../../src/compositor/qml/screens/LockScreen.qml" line="139"/>
         <source>Sorry, wrong password. Please try again.</source>
-        <translation>Beklager, forkert adgangskode. Prøv venligst igen.</translation>
+        <translation>Üzgünüz, yanlış parola. Lütfen yeniden deneyin.</translation>
     </message>
 </context>
 <context>
@@ -160,17 +160,17 @@
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="89"/>
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="94"/>
         <source>Log out</source>
-        <translation>Log ud</translation>
+        <translation>Oturumu kapat</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="90"/>
         <source>You will be logged out in %1 seconds</source>
-        <translation>Du logges ud om %1 sekunder</translation>
+        <translation>%1 saniyede oturumunuz kapatılacak</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="101"/>
         <source>Cancel</source>
-        <translation>Annuller</translation>
+        <translation>İptal</translation>
     </message>
 </context>
 <context>
@@ -178,12 +178,12 @@
     <message>
         <location filename="../../src/compositor/qml/indicators/NotificationsIndicator.qml" line="35"/>
         <source>Notifications</source>
-        <translation>Notifikationer</translation>
+        <translation>Bildirimler</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/NotificationsIndicator.qml" line="49"/>
         <source>No notifications</source>
-        <translation>Ingen notifikationer</translation>
+        <translation>Bildirim yok</translation>
     </message>
 </context>
 <context>
@@ -191,27 +191,27 @@
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="132"/>
         <source>Power Off</source>
-        <translation>Sluk</translation>
+        <translation>Gücü Kapat</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="152"/>
         <source>Sleep</source>
-        <translation>Slumre</translation>
+        <translation>Uyku</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="162"/>
         <source>Suspend to disk</source>
-        <translation>Suspender til disk</translation>
+        <translation>Diske askıya al</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="172"/>
         <source>Power off</source>
-        <translation>Sluk</translation>
+        <translation>Gücü kapat</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="182"/>
         <source>Restart</source>
-        <translation>Genstart</translation>
+        <translation>Yeniden başlat</translation>
     </message>
 </context>
 <context>
@@ -219,7 +219,7 @@
     <message>
         <location filename="../../src/compositor/qml/desktop/PresentWindowsChrome.qml" line="92"/>
         <source>Unknown</source>
-        <translation>Ukendt</translation>
+        <translation>Bilinmeyen</translation>
     </message>
 </context>
 <context>
@@ -231,18 +231,16 @@ Refer to your distribution on how to get it, or read
 http://www.freedesktop.org/wiki/Specifications/basedir-spec
 on how to implement it.
 </source>
-        <translation>XDG_RUNTIME_DIR-miljøvariablen er ikke indstillet.
-Referer til din distribution om hvordan den hentes, eller læs
-http://www.freedesktop.org/wiki/Specifications/basedir-spec
-om hvordan den implementeres.
-</translation>
+        <translation>XDG_RUNTIME_DIR ortam değişkeni belirlenmedi.
+Nasıl edineceğiniz için dağıtımınıza bakın, veya
+uygulamak için şu adresi okuyun:
+http://www.freedesktop.org/wiki/Specifications/basedir-spec</translation>
     </message>
     <message>
         <location filename="../../src/compositor/application.cpp" line="132"/>
         <source>The XDG_RUNTIME_DIR environment variable is set to &quot;%1&quot;, which doesn't exist.
 </source>
-        <translation>XDG_RUNTIME_DIR-miljøvariablen er indstillet til &quot;%1&quot;, som ikke findes.
-</translation>
+        <translation>XDG_RUNTIME_DIR ortam değişkeni &quot;%1&quot; olarak belirlendi, ama yok.</translation>
     </message>
     <message>
         <location filename="../../src/compositor/application.cpp" line="139"/>
@@ -250,10 +248,9 @@ om hvordan den implementeres.
 Unix access mode must be 0700, but is 0%2.
 It must also be owned by the current user (UID %3), but is owned by UID %4 (&quot;%5&quot;).
 </source>
-        <translation>XDG_RUNTIME_DIR er indstillet til &quot;%1&quot; og er ikke konfigureret korrekt.
-Unix-adgangstilstanden skal være 0700, men er 0%2.
-Den skal også være ejet af den nuværende bruger (UID %3), men ejes af UID %4 (&quot;%5&quot;).
-</translation>
+        <translation>XDG_RUNTIME_DIR &quot;%1&quot; olarak belirlendi ama doğru yapılandırılmadı.
+Unix erişim kipi 0700 olmalı ama 0%2.
+Geçerli (UID %3) kullanıcısınca sahiplenilmeli ama UID %4 (&quot;%5&quot;) tarafından sahipli.</translation>
     </message>
 </context>
 <context>
@@ -261,7 +258,7 @@ Den skal også være ejet af den nuværende bruger (UID %3), men ejes af UID %4 
     <message>
         <location filename="../../src/compositor/qml/desktop/RunCommand.qml" line="48"/>
         <source>Enter a Command</source>
-        <translation>Indtast en kommando</translation>
+        <translation>Komut Gir</translation>
     </message>
 </context>
 <context>
@@ -269,47 +266,47 @@ Den skal også være ejet af den nuværende bruger (UID %3), men ejes af UID %4 
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="42"/>
         <source>Settings</source>
-        <translation>Indstillinger</translation>
+        <translation>Ayarlar</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="46"/>
         <source>Size</source>
-        <translation>Størrelse</translation>
+        <translation>Boyut</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="53"/>
         <source>Small</source>
-        <translation>Lille</translation>
+        <translation>Küçük</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="62"/>
         <source>Medium</source>
-        <translation>Medium</translation>
+        <translation>Orta</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="71"/>
         <source>Large</source>
-        <translation>Stor</translation>
+        <translation>Geniş</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="81"/>
         <source>Position</source>
-        <translation>Placering</translation>
+        <translation>Konum</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="88"/>
         <source>Left</source>
-        <translation>Venstre</translation>
+        <translation>Sol</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="98"/>
         <source>Top</source>
-        <translation>Øverst</translation>
+        <translation>Sağ</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="108"/>
         <source>Bottom</source>
-        <translation>Nederst</translation>
+        <translation>Alt</translation>
     </message>
 </context>
 <context>
@@ -317,17 +314,17 @@ Den skal også være ejet af den nuværende bruger (UID %3), men ejes af UID %4 
     <message>
         <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="35"/>
         <source>Storage</source>
-        <translation>Lager</translation>
+        <translation>Depolama</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="50"/>
         <source>Eject</source>
-        <translation>Skub ud</translation>
+        <translation>Çıkar</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="50"/>
         <source>Mount</source>
-        <translation>Monter</translation>
+        <translation>Bağla</translation>
     </message>
 </context>
 <context>
@@ -335,22 +332,22 @@ Den skal også være ejet af den nuværende bruger (UID %3), men ejes af UID %4 
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="76"/>
         <source>Application is not responding</source>
-        <translation>Programmet svarer ikke</translation>
+        <translation>Uygulama yanıtlamıyor</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="86"/>
         <source>This application is unresponsive, you may choose to wait a short while for it to continue or force the application to quit entirely.</source>
-        <translation>Programmet svarer ikke - du kan vælge at vente lidt på at det fortsætter eller tvinge programmet til helt at afslutte.</translation>
+        <translation>Uygulama tepkisiz, sürmesi için kısa süre bekleyebilir veya tümüyle çıkmaya zorlayabilirsiniz.</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="98"/>
         <source>Wait</source>
-        <translation>Vent</translation>
+        <translation>Bekle</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="103"/>
         <source>Force Quit</source>
-        <translation>Tving afslut</translation>
+        <translation>Çıkmaya Zorla</translation>
     </message>
 </context>
 <context>
@@ -358,7 +355,7 @@ Den skal også være ejet af den nuværende bruger (UID %3), men ejes af UID %4 
     <message>
         <location filename="../../src/compositor/qml/desktop/WindowSwitcher.qml" line="53"/>
         <source>Untitled</source>
-        <translation>Unavngivet</translation>
+        <translation>Başlıksız</translation>
     </message>
 </context>
 </TS>
