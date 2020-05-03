@@ -10,4 +10,5 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     runs-on: ubuntu-latest
     steps:
-      - run: curl -X POST ${{ secrets.COPR_WEBHOOK_URL }}
+      - name: Rebuild package
+        run: curl -X POST ${{ secrets.COPR_WEBHOOK_URL }}
