@@ -191,7 +191,7 @@
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="132"/>
         <source>Power Off</source>
-        <translation type="unfinished"/>
+        <translation>Desligar</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="152"/>
