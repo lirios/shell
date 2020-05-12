@@ -35,7 +35,7 @@ if(LIRI_ENABLE_SYSTEMD)
 endif()
 
 ## Find Wayland:
-find_package(Wayland 1.15 COMPONENTS Server)
+find_package(Wayland 1.15 COMPONENTS Client Server)
 set_package_properties(Wayland PROPERTIES TYPE REQUIRED)
 
 ## Find Qt 5:
