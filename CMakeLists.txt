@@ -34,6 +34,10 @@ if(LIRI_ENABLE_SYSTEMD)
     set(INSTALL_SYSTEMDUSERUNITDIR "${INSTALL_LIBDIR}/systemd/user" CACHE PATH "systemd user unit directory [PREFIX/lib/systemd/user]")
 endif()
 
+## Find Wayland:
+find_package(Wayland 1.15 COMPONENTS Server)
+set_package_properties(Wayland PROPERTIES TYPE REQUIRED)
+
 ## Find Qt 5:
 find_package(Qt5 "${QT_MIN_VERSION}"
     CONFIG REQUIRED
