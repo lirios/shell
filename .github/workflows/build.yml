@@ -10,15 +10,22 @@ on:
       - master
       - develop
 
+env:
+  CLAZY_CHECKS: "level1"
+
 jobs:
-  neon:
+  build:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     strategy:
       matrix:
         compiler:
           - gcc
           - clang
-    runs-on: ubuntu-18.04
+        container:
+          - suse-qt512
+          - suse-qt514
+          - suse-qt515
+    runs-on: ubuntu-latest
     steps:
       - name: Extract branch name
         id: extract_branch
@@ -30,33 +37,12 @@ jobs:
             github_ref=${{ github.ref }}
             echo "##[set-output name=branch;]${github_ref##*/}"
           fi
-      - name: Install dependencies
+      - name: Qt version identifier
+        id: qt_version
+        shell: bash
         run: |
-          set -x
-          wget -qO - 'http://archive.neon.kde.org/public.key' | sudo apt-key add -
-          sudo apt-add-repository http://archive.neon.kde.org/user
-          sudo apt-get update
-          sudo apt-get install -y \
-            extra-cmake-modules \
-            dbus-x11 \
-            xvfb \
-            libsystemd-dev \
-            libpam0g-dev \
-            libdrm-dev \
-            libegl1-mesa-dev \
-            libwayland-dev \
-            libpolkit-qt5-1-dev \
-            libkf5solid-dev \
-            qtbase5-dev \
-            qtbase5-private-dev \
-            qtdeclarative5-dev \
-            qtquickcontrols2-5-dev \
-            qttools5-dev \
-            libqt5svg5-dev \
-            libqt5waylandclient5-dev \
-            libqt5waylandcompositor5-dev \
-            qtwayland5-private-dev \
-            qml-module-qtwayland-compositor
+          qtverid=`echo "${{ matrix.container }}" | sed -e 's,suse-qt,,g'`
+          echo "##[set-output name=id;]${qtverid}"
       - name: Fetch cmake-shared artifact
         uses: liri-infra/fetch-artifact@master
         with:
@@ -71,7 +57,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: lirios/qtaccountsservice
           workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.extract_branch.outputs.branch }}
+          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
           save_as: qtaccountsservice.zip
       - name: Fetch qtgsettings artifact
         uses: liri-infra/fetch-artifact@master
@@ -79,7 +65,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: lirios/qtgsettings
           workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.extract_branch.outputs.branch }}
+          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
           save_as: qtgsettings.zip
       - name: Fetch fluid artifact
         uses: liri-infra/fetch-artifact@master
@@ -87,7 +73,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: lirios/fluid
           workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.extract_branch.outputs.branch }}
+          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
           save_as: fluid.zip
       - name: Fetch libliri artifact
         uses: liri-infra/fetch-artifact@master
@@ -95,7 +81,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: lirios/libliri
           workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.extract_branch.outputs.branch }}
+          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
           save_as: libliri.zip
       - name: Fetch eglfs artifact
         uses: liri-infra/fetch-artifact@master
@@ -103,7 +89,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: lirios/eglfs
           workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.extract_branch.outputs.branch }}
+          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
           save_as: eglfs.zip
       - name: Fetch wayland artifact
         uses: liri-infra/fetch-artifact@master
@@ -111,7 +97,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: lirios/wayland
           workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.extract_branch.outputs.branch }}
+          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
           save_as: wayland.zip
       - name: Uncompress artifacts
         run: |
@@ -124,12 +110,14 @@ jobs:
       - name: Build
         run: |
           set -x
+          mkdir -p build
+          cd build
           if [ "${{ matrix.compiler }}" == "clang" ]; then
             export CC=clang
             export CXX=clang++
+            cmake .. -DLIRI_ENABLE_CLAZY:BOOL=ON -DCMAKE_INSTALL_PREFIX=/usr
+          else
+            cmake .. -DCMAKE_INSTALL_PREFIX=/usr
           fi
-          mkdir -p build
-          cd build
-          cmake .. -DCMAKE_INSTALL_PREFIX=/usr
           make -j $(getconf _NPROCESSORS_ONLN)
           sudo make install
