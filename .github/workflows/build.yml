@@ -26,6 +26,8 @@ jobs:
           - suse-qt514
           - suse-qt515
     runs-on: ubuntu-latest
+    container:
+      image: liridev/${{ matrix.container }}
     steps:
       - name: Extract branch name
         id: extract_branch
