@@ -13,15 +13,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Run lupdate
-        uses: liri-infra/lupdate-action@master
-      - name: Push sources and pull translations
-        uses: liri-infra/transifex-action@master
+      - name: Update translations
+        uses: liri-infra/translation-action@master
+        env:
+          TX_TOKEN: ${{ secrets.TX_TOKEN }}
         with:
-            tx_token: ${{ secrets.TX_TOKEN }}
-            ssh_key: ${{ secrets.CI_SSH_KEY }}
-            committer_name: Liri CI
-            committer_email: ci@liri.io
-            translations_folder: translations
-            pull_translations: true
-            push_sources: true
+          ssh_key: ${{ secrets.CI_SSH_KEY }}
+          committer_name: Liri CI
+          committer_email: ci@liri.io
+          translations_folder: translations
