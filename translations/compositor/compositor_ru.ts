@@ -4,17 +4,17 @@
     <message>
         <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="45"/>
         <source>Authentication required</source>
-        <translation type="unfinished"/>
+        <translation>Требуется аутентификация</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="175"/>
         <source>Authenticate</source>
-        <translation type="unfinished"/>
+        <translation>Аутентификация</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="182"/>
         <source>Cancel</source>
-        <translation type="unfinished"/>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
@@ -22,7 +22,7 @@
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="36"/>
         <source>Minimize</source>
-        <translation type="unfinished"/>
+        <translation>Уменьшить</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="42"/>
@@ -32,22 +32,22 @@
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="49"/>
         <source>Maximize</source>
-        <translation type="unfinished"/>
+        <translation>Увеличить</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="58"/>
         <source>Move</source>
-        <translation type="unfinished"/>
+        <translation>Переместить</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="63"/>
         <source>Resize</source>
-        <translation type="unfinished"/>
+        <translation>Изменить размер</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="69"/>
         <source>Close</source>
-        <translation type="unfinished"/>
+        <translation>ЗАкрыть</translation>
     </message>
 </context>
 <context>
@@ -55,7 +55,7 @@
     <message>
         <location filename="../../src/compositor/qml/Compositor.qml" line="707"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
-        <translation type="unfinished"/>
+        <translation>Извините, это не работает. Пожалуйста, попробуйте снова.</translation>
     </message>
 </context>
 <context>
@@ -63,17 +63,17 @@
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="57"/>
         <source>Oh no!</source>
-        <translation type="unfinished"/>
+        <translation>О, нет!</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="64"/>
         <source>Something went wrong and the desktop failed to load.</source>
-        <translation type="unfinished"/>
+        <translation>Что-то пошло не так, и рабочий стол не удалось загрузить.</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="75"/>
         <source>Quit</source>
-        <translation type="unfinished"/>
+        <translation>Выход</translation>
     </message>
 </context>
 <context>
@@ -81,12 +81,12 @@
     <message>
         <location filename="../../src/compositor/qml/launcher/FrequentAppsView.qml" line="18"/>
         <source>Frequent Apps</source>
-        <translation type="unfinished"/>
+        <translation>Частые приложения</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/launcher/FrequentAppsView.qml" line="19"/>
         <source>The apps you use frequently will show here</source>
-        <translation type="unfinished"/>
+        <translation>Приложения, которые вы часто используете, будут показываться здесь</translation>
     </message>
 </context>
 <context>
@@ -117,7 +117,7 @@
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="81"/>
         <source>Quit</source>
-        <translation type="unfinished"/>
+        <translation>Выход</translation>
     </message>
 </context>
 <context>
@@ -125,7 +125,7 @@
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherPopOver.qml" line="145"/>
         <source>Type an application name...</source>
-        <translation type="unfinished"/>
+        <translation>Ввести название приложения...</translation>
     </message>
 </context>
 <context>
@@ -133,7 +133,7 @@
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="45"/>
         <source>Log out</source>
-        <translation type="unfinished"/>
+        <translation>Выйти</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="57"/>
@@ -151,7 +151,7 @@
     <message>
         <location filename="../../src/compositor/qml/screens/LockScreen.qml" line="139"/>
         <source>Sorry, wrong password. Please try again.</source>
-        <translation type="unfinished"/>
+        <translation>Извините, неверный пароль. Пожалуйста, попробуйте снова.</translation>
     </message>
 </context>
 <context>
@@ -160,7 +160,7 @@
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="89"/>
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="94"/>
         <source>Log out</source>
-        <translation type="unfinished"/>
+        <translation>Выйти</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="90"/>
@@ -170,7 +170,7 @@
     <message>
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="101"/>
         <source>Cancel</source>
-        <translation type="unfinished"/>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
@@ -178,12 +178,12 @@
     <message>
         <location filename="../../src/compositor/qml/indicators/NotificationsIndicator.qml" line="35"/>
         <source>Notifications</source>
-        <translation type="unfinished"/>
+        <translation>Уведомления</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/NotificationsIndicator.qml" line="49"/>
         <source>No notifications</source>
-        <translation type="unfinished"/>
+        <translation>Нет уведомлений</translation>
     </message>
 </context>
 <context>
@@ -196,7 +196,7 @@
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="152"/>
         <source>Sleep</source>
-        <translation type="unfinished"/>
+        <translation>Сон</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="162"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="182"/>
         <source>Restart</source>
-        <translation type="unfinished"/>
+        <translation>Перезапуск</translation>
     </message>
 </context>
 <context>
@@ -219,7 +219,7 @@
     <message>
         <location filename="../../src/compositor/qml/desktop/PresentWindowsChrome.qml" line="92"/>
         <source>Unknown</source>
-        <translation type="unfinished"/>
+        <translation>Неизвестно</translation>
     </message>
 </context>
 <context>
@@ -261,47 +261,47 @@ It must also be owned by the current user (UID %3), but is owned by UID %4 (&quo
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="42"/>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation>Настройки</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="46"/>
         <source>Size</source>
-        <translation type="unfinished"/>
+        <translation>Размер</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="53"/>
         <source>Small</source>
-        <translation type="unfinished"/>
+        <translation>Маленький</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="62"/>
         <source>Medium</source>
-        <translation type="unfinished"/>
+        <translation>Средний</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="71"/>
         <source>Large</source>
-        <translation type="unfinished"/>
+        <translation>Большой</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="81"/>
         <source>Position</source>
-        <translation type="unfinished"/>
+        <translation>Позиция</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="88"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation>Слева</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="98"/>
         <source>Top</source>
-        <translation type="unfinished"/>
+        <translation>Сверху</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="108"/>
         <source>Bottom</source>
-        <translation type="unfinished"/>
+        <translation>Сбоку</translation>
     </message>
 </context>
 <context>
@@ -309,7 +309,7 @@ It must also be owned by the current user (UID %3), but is owned by UID %4 (&quo
     <message>
         <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="35"/>
         <source>Storage</source>
-        <translation type="unfinished"/>
+        <translation>Хранилище</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="50"/>
@@ -327,7 +327,7 @@ It must also be owned by the current user (UID %3), but is owned by UID %4 (&quo
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="76"/>
         <source>Application is not responding</source>
-        <translation type="unfinished"/>
+        <translation>Приложение не отвечает</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="86"/>
@@ -337,7 +337,7 @@ It must also be owned by the current user (UID %3), but is owned by UID %4 (&quo
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="98"/>
         <source>Wait</source>
-        <translation type="unfinished"/>
+        <translation>Ждите</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="103"/>
@@ -350,7 +350,7 @@ It must also be owned by the current user (UID %3), but is owned by UID %4 (&quo
     <message>
         <location filename="../../src/compositor/qml/desktop/WindowSwitcher.qml" line="53"/>
         <source>Untitled</source>
-        <translation type="unfinished"/>
+        <translation>Без заголовка</translation>
     </message>
 </context>
 </TS>
