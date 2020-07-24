@@ -27,7 +27,7 @@
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="42"/>
         <source>Restore</source>
-        <translation type="unfinished"/>
+        <translation>Восстановить</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="49"/>
@@ -47,7 +47,7 @@
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="69"/>
         <source>Close</source>
-        <translation>ЗАкрыть</translation>
+        <translation>Закрыть</translation>
     </message>
 </context>
 <context>
@@ -342,7 +342,7 @@ It must also be owned by the current user (UID %3), but is owned by UID %4 (&quo
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="103"/>
         <source>Force Quit</source>
-        <translation type="unfinished"/>
+        <translation>Принудительный выход</translation>
     </message>
 </context>
 <context>
