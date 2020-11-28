@@ -443,28 +443,6 @@ WaylandCompositor {
 
     // Shells
 
-    WlShell {
-        id: wlShell
-
-        onWlShellSurfaceCreated: {
-            var window = wlShellSurfaceComponent.createObject(wlShell, {"shellSurface": shellSurface});
-            __private.handleShellSurfaceCreated(window, chromeComponent);
-        }
-    }
-
-    XdgShellV6 {
-        id: xdgShellV6
-
-        onToplevelCreated: {
-            var window = xdgToplevelV6Component.createObject(xdgShellV6, {"xdgSurface": xdgSurface, "toplevel": toplevel});
-            __private.handleShellSurfaceCreated(window, chromeComponent);
-        }
-        onPopupCreated: {
-            var window = xdgPopupV6Component.createObject(xdgShellV6, {"xdgSurface": xdgSurface, "popup": popup});
-            __private.handleShellSurfaceCreated(window, popupChromeComponent);
-        }
-    }
-
     XdgShell {
         id: xdgShell
 
@@ -531,53 +509,6 @@ WaylandCompositor {
                     delete screenManager.objectAt(i).viewsBySurface[surface];
             }
         }
-    }
-
-    // Custom wl-shell surface
-    Component {
-        id: wlShellSurfaceComponent
-
-        WlShellWindow {
-            onMaximizedChanged: {
-                if (maximized)
-                    __private.maximizedShellSurfaces++;
-                else
-                    __private.maximizedShellSurfaces--;
-            }
-            onFullscreenChanged: {
-                if (fullscreen)
-                    __private.fullscreenShellSurfaces++;
-                else
-                    __private.fullscreenShellSurfaces--;
-            }
-        }
-    }
-
-    // Shell surface for xdg-shell v6 toplevel
-    Component {
-        id: xdgToplevelV6Component
-
-        XdgToplevelV6Window {
-            onMaximizedChanged: {
-                if (maximized)
-                    __private.maximizedShellSurfaces++;
-                else
-                    __private.maximizedShellSurfaces--;
-            }
-            onFullscreenChanged: {
-                if (fullscreen)
-                    __private.fullscreenShellSurfaces++;
-                else
-                    __private.fullscreenShellSurfaces--;
-            }
-        }
-    }
-
-    // Shell surface for xdg-shell v6 popup
-    Component {
-        id: xdgPopupV6Component
-
-        XdgPopupV6Window {}
     }
 
     // Shell surface for xdg-shell toplevel
