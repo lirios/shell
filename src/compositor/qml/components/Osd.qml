@@ -80,10 +80,12 @@ HardwareLayerSurfaceItem {
 
     Connections {
         target: osdServer
-        onTextRequested: {
+
+        function onTextRequested(iconName, text) {
             showAnimation.start();
         }
-        onProgressRequested: {
+
+        function onProgressRequested(iconName, value) {
             showAnimation.start();
         }
     }

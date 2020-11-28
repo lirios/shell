@@ -55,7 +55,8 @@ P.WaylandOutput {
 
     Connections {
         target: output.screen
-        onCurrentModeChanged: {
+
+        function onCurrentModeChanged(resolution, refreshRate) {
             output.setCurrentOutputMode(resolution, refreshRate);
         }
     }

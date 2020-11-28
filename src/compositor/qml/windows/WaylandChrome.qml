@@ -92,7 +92,8 @@ P.ChromeItem {
     Connections {
         target: chrome.window
         ignoreUnknownSignals: true
-        onMappedChanged: {
+
+        function onMappedChanged() {
             if (chrome.window.mapped) {
                 if (chrome.window.focusable)
                     takeFocus();
@@ -100,24 +101,25 @@ P.ChromeItem {
                 mapAnimation.start();
             }
         }
-        onActivatedChanged: {
+        function onActivatedChanged() {
             if (chrome.window.activated)
                 chrome.raise();
         }
-        onMinimizedChanged: {
+        function onMinimizedChanged() {
             if (chrome.window.minimized)
                 minimizeAnimation.start();
             else
                 unminimizeAnimation.start();
         }
-        onShowWindowMenu: {
+        function onShowWindowMenu(seat, localSurfacePosition) {
             showWindowMenu(localSurfacePosition.x, localSurfacePosition.y);
         }
     }
 
     Connections {
         target: shellSurfaceItem.output
-        onGeometryChanged: {
+
+        function onGeometryChanged() {
             if (!chrome.primary)
                 return;
 
@@ -125,7 +127,7 @@ P.ChromeItem {
             if (chrome.window.fullscreen)
                 chrome.window.sendFullscreen(shellSurfaceItem.output);
         }
-        onAvailableGeometryChanged: {
+        function onAvailableGeometryChanged() {
             if (!chrome.primary)
                 return;
 

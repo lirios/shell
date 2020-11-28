@@ -65,7 +65,10 @@ Row {
 
             Connections {
                 target: item
-                onClicked: indicatorTriggered(item)
+
+                function onClicked() {
+                    indicatorTriggered(item);
+                }
             }
         }
     }

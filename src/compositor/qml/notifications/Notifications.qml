@@ -68,7 +68,10 @@ ListView {
 
     Connections {
         target: NotificationsService
-        onNotificationReceived: {
+
+        function onNotificationReceived(notificationId, appName, appIcon,
+                                        hasIcon, summary, body, actions,
+                                        isPersistent, expireTimeout, hints) {
             notificationsModel.append({"id": notificationId, "appName": appName,
                                           "appIcon": appIcon, "hasIcon": hasIcon,
                                           "summary": summary, "body": body,

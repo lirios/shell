@@ -139,7 +139,8 @@ LS.WaylandWindow {
 
     Connections {
         target: surface
-        onSizeChanged: {
+
+        function onSizeChanged() {
             d.windowGeometry = d.recalculateWindowGeometry();
             d.surfaceGeometry = d.recalculateSurfaceGeometry();
         }
@@ -147,15 +148,16 @@ LS.WaylandWindow {
 
     Connections {
         target: shellSurface
-        onActivatedChanged: {
+
+        function onActivatedChanged() {
             if (d.registered && shellSurface.activated && shellSurface.windowType !== Qt.Popup)
                 applicationManager.focusShellSurface(window);
         }
-        onSurfaceChanged: {
+        function onSurfaceChanged() {
             // Surface is changed, which means that app id has likely changed too
             window.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
         }
-        onAppIdChanged: {
+        function onAppIdChanged() {
             // Canonicalize app id and cache it, so that it's known even during destruction
             window.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
 
@@ -169,13 +171,13 @@ LS.WaylandWindow {
                     applicationManager.focusShellSurface(window);
             }
         }
-        onMapped: {
+        function onMapped() {
             d.mapped = true;
         }
-        onUnmapped: {
+        function onUnmapped() {
             d.mapped = false;
         }
-        onSetMinimized: {
+        function onSetMinimized() {
             minimized = !minimized;
         }
     }

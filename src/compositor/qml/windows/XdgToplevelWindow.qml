@@ -165,11 +165,12 @@ LS.WaylandWindow {
 
     Connections {
         target: surface
-        onHasContentChanged: {
+
+        function onHasContentChanged() {
             if (surface.hasContent)
                 d.mapped = true;
         }
-        onRedraw: {
+        function onRedraw() {
             if (!window.decorated)
                 return;
 
@@ -183,11 +184,12 @@ LS.WaylandWindow {
 
     Connections {
         target: toplevel
-        onActivatedChanged: {
+
+        function onActivatedChanged() {
             if (d.registered && toplevel.activated)
                 applicationManager.focusShellSurface(window);
         }
-        onAppIdChanged: {
+        function onAppIdChanged() {
             // Canonicalize app id and cache it, so that it's known even during destruction
             window.appId = applicationManager.canonicalizeAppId(toplevel.appId);
 
@@ -201,16 +203,16 @@ LS.WaylandWindow {
                     applicationManager.focusShellSurface(window);
             }
         }
-        onStartMove: {
+        function onStartMove(seat) {
             shellHelper.grabCursor(WS.LiriShell.MoveGrabCursor);
         }
-        onSetMinimized: {
+        function onSetMinimized() {
             window.minimized = true;
         }
-        onShowWindowMenu: {
+        function onShowWindowMenu() {
             window.showWindowMenu(seat, localSurfacePosition);
         }
-        onParentToplevelChanged: {
+        function onParentToplevelChanged() {
             if (toplevel && toplevel.parentToplevel) {
                 d.parentSurface = null;
                 for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {

@@ -51,7 +51,8 @@ FluidCore.Object {
 
     Connections {
         target: outputsSettings
-        onPrimaryChanged: {
+
+        function onPrimaryChanged() {
             for (var i = 0; i < liriCompositor.screenManager.count; i++) {
                 var output = liriCompositor.screenManager.objectAt(i);
 

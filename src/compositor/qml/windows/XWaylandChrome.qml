@@ -91,7 +91,8 @@ P.ChromeItem {
     Connections {
         target: chrome.window
         ignoreUnknownSignals: true
-        onMappedChanged: {
+
+        function onMappedChanged() {
             if (chrome.window.mapped) {
                 if (chrome.window.focusable)
                     takeFocus();
@@ -99,17 +100,17 @@ P.ChromeItem {
                 mapAnimation.start();
             }
         }
-        onActivatedChanged: {
+        function onActivatedChanged() {
             if (chrome.window.activated)
                 chrome.raise();
         }
-        onMinimizedChanged: {
+        function onMinimizedChanged() {
             if (chrome.window.minimized)
                 minimizeAnimation.start();
             else
                 unminimizeAnimation.start();
         }
-        onShowWindowMenu: {
+        function onShowWindowMenu(seat, localSurfacePosition) {
             showWindowMenu(localSurfacePosition.x, localSurfacePosition.y);
         }
     }

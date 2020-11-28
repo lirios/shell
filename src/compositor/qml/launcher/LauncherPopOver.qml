@@ -51,7 +51,8 @@ Popup {
 
     Connections {
         target: applicationManager
-        onApplicationLaunched: {
+
+        function onApplicationLaunched(appId) {
             searchText.text = ""
             launcherPopOver.appLaunched()
         }

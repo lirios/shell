@@ -117,7 +117,10 @@ Indicator {
 
     Connections {
         target: NotificationsService
-        onNotificationReceived: {
+
+        function onNotificationReceived(notificationId, appName, appIcon,
+                                        hasIcon, summary, body, actions,
+                                        isPersistent, expireTimeout, hints) {
             // Replace existing notification
             for (var i = 0; i < notificationsModel.count; i++) {
                 var notification = notificationsModel.get(i)

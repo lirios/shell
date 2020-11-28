@@ -115,7 +115,8 @@ MouseArea {
 
     Connections {
         target: chrome.window.surface
-        onSizeChanged: {
+
+        function onSizeChanged() {
             if (d.resizing) {
                 var dx = 0;
                 var dy = 0;
@@ -129,10 +130,10 @@ MouseArea {
                 chrome.window.moveItem.y += dy;
             }
         }
-        onForegroundColorChanged: {
+        function onForegroundColorChanged() {
             decoration.foregroundColor = chrome.window.surface.foregroundColor;
         }
-        onBackgroundColorChanged: {
+        function onBackgroundColorChanged() {
             decoration.backgroundColor = chrome.window.surface.backgroundColor;
         }
     }

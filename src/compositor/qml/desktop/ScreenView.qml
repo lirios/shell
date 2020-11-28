@@ -89,10 +89,19 @@ Item {
 
     Connections {
         target: SessionInterface
-        onSessionLocked: screenView.state = "lock"
-        onSessionUnlocked: screenView.state = "session"
-        onIdleInhibitRequested: liriCompositor.idleInhibit++
-        onIdleUninhibitRequested: liriCompositor.idleInhibit--
+
+        function onSessionLocked() {
+            screenView.state = "lock";
+        }
+        function onSessionUnlocked() {
+            screenView.state = "session";
+        }
+        function onIdleInhibitRequested() {
+            liriCompositor.idleInhibit++;
+        }
+        function onIdleUninhibitRequested() {
+            liriCompositor.idleInhibit--;
+        }
     }
 
     /*

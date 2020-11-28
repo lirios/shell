@@ -68,7 +68,8 @@ FluidCore.Object {
 
     Connections {
         target: surface
-        onHasContentChanged: {
+
+        function onHasContentChanged() {
             if (surface.hasContent)
                 d.mapped = true;
         }

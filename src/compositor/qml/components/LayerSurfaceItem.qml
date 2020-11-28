@@ -45,11 +45,12 @@ WaylandQuickItem {
 
     Connections {
         target: layerSurface
-        onChanged: {
+
+        function onChanged() {
             setupAnchors();
             sendConfigure();
         }
-        onLayerChanged: {
+        function onLayerChanged() {
             switch (layerSurface.layer) {
             case WS.WlrLayerShellV1.BackgroundLayer:
                 parent = layerSurface.output.screenView.desktop.layers.background;
@@ -67,10 +68,10 @@ WaylandQuickItem {
                 break;
             }
         }
-        onAnchorsChanged: {
+        function onAnchorsChanged() {
             reconfigure();
         }
-        onSizeChanged: {
+        function onSizeChanged() {
             reconfigure();
         }
     }
