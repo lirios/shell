@@ -71,7 +71,7 @@ P.WaylandOutput {
         WaylandMouseTracker {
             id: mouseTracker
             anchors.fill: parent
-            windowSystemCursorEnabled: Qt.platform.pluginName !== "liri"
+            windowSystemCursorEnabled: true
 
             ErrorScreenView {
                 id: screenView
