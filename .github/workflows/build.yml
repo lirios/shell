@@ -45,69 +45,16 @@ jobs:
         run: |
           qtverid=`echo "${{ matrix.container }}" | sed -e 's,suse-qt,,g'`
           echo "##[set-output name=id;]${qtverid}"
-      - name: Fetch cmake-shared artifact
-        uses: liri-infra/fetch-artifact@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: lirios/cmake-shared
-          workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ steps.extract_branch.outputs.branch }}
-          save_as: cmake-shared.zip
-      - name: Fetch qtaccountsservice artifact
-        uses: liri-infra/fetch-artifact@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: lirios/qtaccountsservice
-          workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
-          save_as: qtaccountsservice.zip
-      - name: Fetch qtgsettings artifact
-        uses: liri-infra/fetch-artifact@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: lirios/qtgsettings
-          workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
-          save_as: qtgsettings.zip
-      - name: Fetch fluid artifact
-        uses: liri-infra/fetch-artifact@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: lirios/fluid
-          workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
-          save_as: fluid.zip
-      - name: Fetch libliri artifact
-        uses: liri-infra/fetch-artifact@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: lirios/libliri
-          workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
-          save_as: libliri.zip
-      - name: Fetch eglfs artifact
-        uses: liri-infra/fetch-artifact@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: lirios/eglfs
-          workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
-          save_as: eglfs.zip
-      - name: Fetch wayland artifact
-        uses: liri-infra/fetch-artifact@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: lirios/wayland
-          workflow_path: .github/workflows/build.yml
-          artifact_name: artifacts-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}-${{ steps.extract_branch.outputs.branch }}
-          save_as: wayland.zip
-      - name: Uncompress artifacts
+      - name: Fetch and uncompress artifacts
         run: |
           set -x
-          for what in cmake-shared qtaccountsservice qtgsettings fluid libliri eglfs wayland; do
-              sudo tar xf ${what}.tar.gz -C /
-              rm -f ${what}.zip ${what}.tar.gz
-          done
+          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/cmake-shared.tar.gz" | sudo tar -xz -f - -C /
+          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/qtaccountsservice-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
+          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/qtgsettings-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
+          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/fluid-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
+          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/libliri-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
+          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/eglfs-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
+          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/wayland-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
       - uses: actions/checkout@v2
       - name: Build
         run: |
