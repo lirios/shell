@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="707"/>
+        <location filename="../../src/compositor/qml/Compositor.qml" line="638"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Извините, это не работает. Пожалуйста, попробуйте снова.</translation>
     </message>
@@ -123,7 +123,7 @@
 <context>
     <name>LauncherPopOver</name>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherPopOver.qml" line="145"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherPopOver.qml" line="146"/>
         <source>Type an application name...</source>
         <translation>Ввести название приложения...</translation>
     </message>
