@@ -24,13 +24,9 @@
 import QtQuick 2.10
 import QtQuick.Window 2.9
 
-Window {
+BorderlessWindow {
     property bool configured: false
     property bool registered: false
-
-    flags: Qt.Window | Qt.BypassWindowManagerHint
-    color: "transparent"
-    visible: false
 
     onConfiguredChanged: {
         if (configured && !registered) {

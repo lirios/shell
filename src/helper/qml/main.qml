@@ -52,7 +52,7 @@ Item {
 
     Osd {}
 
-    Components.UiWindow {
+    Components.BorderlessWindow {
         id: grabWindow
 
         width: 1
