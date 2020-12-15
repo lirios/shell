@@ -29,6 +29,7 @@ Window {
     property bool registered: false
 
     flags: Qt.Window | Qt.BypassWindowManagerHint
+    color: "transparent"
     visible: false
 
     onVisibleChanged: {
