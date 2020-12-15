@@ -59,5 +59,5 @@ Item {
         height: 1
     }
 
-    Background {}
+    BackgroundWindow {}
 }
