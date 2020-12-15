@@ -8,7 +8,6 @@ liri_add_qml_plugin(mpris2
         mpris2engine.h
         mpris2player.cpp
         mpris2player.h
-        mpris2.qbs
         plugin.cpp
     QML_FILES
         qmldir
