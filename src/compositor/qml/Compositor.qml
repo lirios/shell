@@ -34,6 +34,7 @@ import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import "base"
 import "components"
+import "components/LayerSurfaceManager.js" as LayerSurfaceManager
 import "desktop"
 import "windows"
 
@@ -278,14 +279,22 @@ WaylandCompositor {
     Component {
         id: layerItemComponent
 
-        LayerSurfaceItem {}
+        LayerSurfaceItem {
+            onSurfaceDestroyed: {
+                bufferLocked = true;
+                destroy();
+            }
+        }
     }
 
     Component {
-        id: bgLayerItemComponent
+        id: hwLayerItemComponent
 
         HardwareLayerSurfaceItem {
-            stackingLevel: -1
+            onSurfaceDestroyed: {
+                bufferLocked = true;
+                destroy();
+            }
         }
     }
 
@@ -310,35 +319,20 @@ WaylandCompositor {
         }
 
         function createItem(layerSurface, output) {
-            var parent = null;
-            switch (layerSurface.layer) {
-            case WS.WlrLayerShellV1.BackgroundLayer:
-                parent = output.screenView.desktop.layers.background;
-                break;
-            case WS.WlrLayerShellV1.BottomLayer:
-                parent = output.screenView.desktop.layers.bottom;
-                break;
-            case WS.WlrLayerShellV1.TopLayer:
-                parent = output.screenView.desktop.layers.top;
-                break;
-            case WS.WlrLayerShellV1.OverlayLayer:
-                parent = output.screenView.desktop.layers.overlay;
-                break;
-            default:
-                break;
-            }
-
+            var parent = LayerSurfaceManager.getParentForLayer(layerSurface, output);
             var props = {
                 "layerSurface": layerSurface,
                 "surface": layerSurface.surface,
                 "output": output
             };
-            if (layerSurface.nameSpace === "background")
-                bgLayerItemComponent.createObject(parent, props);
-            else if (layerSurface.nameSpace === "osd")
+            if (layerSurface.nameSpace === "background") {
+                props["stackingLevel"] = -1;
+                hwLayerItemComponent.createObject(parent, props);
+            } else if (layerSurface.nameSpace === "osd") {
                 osdComponent.createObject(parent, props);
-            else
+            } else {
                 layerItemComponent.createObject(parent, props);
+            }
         }
     }
 

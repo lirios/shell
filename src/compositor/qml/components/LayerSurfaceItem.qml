@@ -22,26 +22,30 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import QtQuick.Controls.Material 2.0
 import QtWayland.Compositor 1.3
 import Liri.WaylandServer 1.0 as WS
+import Fluid.Effects 1.0 as FluidEffects
+import "LayerSurfaceManager.js" as LayerSurfaceManager
 
 WaylandQuickItem {
-    property var layerSurface: undefined
+    id: layerSurfaceItem
+
+    property Item containerItem: layerSurfaceItem
+    property bool honorAnchors: true
+    property WS.WlrLayerSurfaceV1 layerSurface: null
     property real implicitSurfaceWidth: Math.max(0, implicitWidth)
     property real implicitSurfaceHeight: Math.max(0, implicitHeight)
-    property real surfaceWidth: Math.max(layerSurface.width, implicitSurfaceWidth)
-    property real surfaceHeight: Math.max(layerSurface.height, implicitSurfaceHeight)
-    property bool configured: false
+    readonly property real surfaceWidth: Math.max(layerSurface.width, implicitSurfaceWidth)
+    readonly property real surfaceHeight: Math.max(layerSurface.height, implicitSurfaceHeight)
 
-    anchors {
-        leftMargin: layerSurface.leftMargin
-        rightMargin: layerSurface.rightMargin
-        topMargin: layerSurface.topMargin
-        bottomMargin: layerSurface.bottomMargin
-    }
-
-    paintEnabled: configured
     focusOnClick: layerSurface.keyboardInteractivity
+    visible: layerSurface && layerSurface.mapped && layerSurface.configured
+
+    onVisibleChanged: {
+        if (visible && layerSurface && layerSurface.keyboardInteractivity)
+            takeFocus();
+    }
 
     Connections {
         target: layerSurface
@@ -51,78 +55,76 @@ WaylandQuickItem {
             sendConfigure();
         }
         function onLayerChanged() {
-            switch (layerSurface.layer) {
-            case WS.WlrLayerShellV1.BackgroundLayer:
-                parent = layerSurface.output.screenView.desktop.layers.background;
-                break;
-            case WS.WlrLayerShellV1.BottomLayer:
-                parent = layerSurface.output.screenView.desktop.layers.bottom;
-                break;
-            case WS.WlrLayerShellV1.TopLayer:
-                parent = layerSurface.output.screenView.desktop.layers.top;
-                break;
-            case WS.WlrLayerShellV1.OverlayLayer:
-                parent = layerSurface.output.screenView.desktop.layers.overlay;
-                break;
-            default:
-                break;
-            }
-        }
-        function onAnchorsChanged() {
-            reconfigure();
-        }
-        function onSizeChanged() {
-            reconfigure();
+            var newParent = LayerSurfaceManager.getParentForLayer(layerSurface, output);
+            containerItem.parent = newParent;
         }
     }
 
     function setupAnchors() {
+        // Some kind of layer surfaces should not be anchored
+        if (!containerItem.honorAnchors) {
+            containerItem.anchors.left = undefined;
+            containerItem.anchors.right = undefined;
+            containerItem.anchors.top = undefined;
+            containerItem.anchors.bottom = undefined;
+            containerItem.anchors.horizontalCenter = undefined;
+            containerItem.anchors.verticalCenter = undefined;
+            containerItem.anchors.leftMargin = 0;
+            containerItem.anchors.rightMargin = 0;
+            containerItem.anchors.topMargin = 0;
+            containerItem.anchors.bottomMargin = 0;
+            return;
+        }
+
         var hasLeft = layerSurface.anchors & WS.WlrLayerSurfaceV1.LeftAnchor;
         var hasRight = layerSurface.anchors & WS.WlrLayerSurfaceV1.RightAnchor;
         var hasTop = layerSurface.anchors & WS.WlrLayerSurfaceV1.TopAnchor;
         var hasBottom = layerSurface.anchors & WS.WlrLayerSurfaceV1.BottomAnchor;
 
         if (!hasLeft && !hasRight) {
-            anchors.left = undefined;
-            anchors.right = undefined;
-            anchors.horizontalCenter = parent.horizontalCenter;
+            containerItem.anchors.left = undefined;
+            containerItem.anchors.right = undefined;
+            containerItem.anchors.horizontalCenter = containerItem.parent.horizontalCenter;
             implicitSurfaceWidth = 0;
         } else {
-            anchors.horizontalCenter = undefined;
-            anchors.left = hasLeft ? parent.left : undefined;
-            anchors.right = hasRight ? parent.right : undefined;
-            implicitSurfaceWidth = hasLeft && hasRight ? parent.width : 0;
+            containerItem.anchors.horizontalCenter = undefined;
+            containerItem.anchors.left = hasLeft ? containerItem.parent.left : undefined;
+            containerItem.anchors.right = hasRight ? containerItem.parent.right : undefined;
+            implicitSurfaceWidth = hasLeft && hasRight ? containerItem.parent.width : 0;
         }
         if (!hasTop && !hasBottom) {
-            anchors.top = undefined;
-            anchors.bottom = undefined;
-            anchors.verticalCenter = parent.verticalCenter;
+            containerItem.anchors.top = undefined;
+            containerItem.anchors.bottom = undefined;
+            containerItem.anchors.verticalCenter = containerItem.parent.verticalCenter;
             implicitSurfaceHeight = 0;
         } else {
-            anchors.verticalCenter = undefined;
-            anchors.top = hasTop ? parent.top : undefined;
-            anchors.bottom = hasBottom ? parent.bottom : undefined;
-            implicitSurfaceHeight = hasTop && hasBottom ? parent.height : 0;
+            containerItem.anchors.verticalCenter = undefined;
+            containerItem.anchors.top = hasTop ? containerItem.parent.top : undefined;
+            containerItem.anchors.bottom = hasBottom ? containerItem.parent.bottom : undefined;
+            implicitSurfaceHeight = hasTop && hasBottom ? containerItem.parent.height : 0;
         }
+
+        if (hasLeft)
+            containerItem.anchors.leftMargin = layerSurface.leftMargin;
+        if (hasRight)
+            containerItem.anchors.rightMargin = layerSurface.rightMargin;
+        if (hasTop)
+            containerItem.anchors.topMargin = layerSurface.topMargin;
+        if (hasBottom)
+            containerItem.anchors.bottomMargin = layerSurface.bottomMargin;
     }
 
     function sendConfigure() {
-        if (configured)
-            return;
-
-        console.debug("Layer surface", layerSurface.nameSpace, "size:", surfaceWidth + "x" + surfaceHeight);
         if (surfaceWidth >= 0 && surfaceHeight >= 0) {
+            console.debug("Layer surface", layerSurface.nameSpace, "size:", surfaceWidth + "x" + surfaceHeight);
             layerSurface.sendConfigure(surfaceWidth, surfaceHeight);
-            configured = true;
         }
     }
 
     function reconfigure() {
         setupAnchors();
 
-        if (configured) {
-            configured = false;
+        if (layerSurface.configured)
             sendConfigure();
-        }
     }
 }
