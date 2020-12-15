@@ -32,8 +32,8 @@ Window {
     color: "transparent"
     visible: false
 
-    onVisibleChanged: {
-        if (visible && !registered) {
+    onConfiguredChanged: {
+        if (configured && !registered) {
             refCount--;
             registered = true;
         }
