@@ -33,6 +33,11 @@ import "components" as Components
 Components.UiWindow {
     id: bgWindow
 
+    onConfiguredChanged: {
+        if (configured)
+            visible = true;
+    }
+
     WaylandClient.WlrLayerSurfaceV1 {
         shell: layerShell
         layer: WaylandClient.WlrLayerShellV1.BackgroundLayer
@@ -55,7 +60,6 @@ Components.UiWindow {
             bgWindow.visible = true;
         }
         onClosed: {
-            this.destroy();
             bgWindow.close();
         }
     }
