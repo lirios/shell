@@ -42,6 +42,7 @@ Components.UiWindow {
                  WaylandClient.WlrLayerSurfaceV1.LeftAnchor |
                  WaylandClient.WlrLayerSurfaceV1.RightAnchor
         keyboardInteractivity: false
+        exclusiveZone: -1
         nameSpace: "wallpaper"
 
         onConfigured: {
