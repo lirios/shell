@@ -25,6 +25,7 @@ import QtQml 2.1
 import QtQuick 2.0
 import QtQuick.Window 2.9
 import Liri.WaylandClient 1.0 as WaylandClient
+import "components" as Components
 
 Item {
     property int refCount: 0
@@ -51,7 +52,7 @@ Item {
 
     Osd {}
 
-    BaseWindow {
+    Components.UiWindow {
         id: grabWindow
 
         width: 1

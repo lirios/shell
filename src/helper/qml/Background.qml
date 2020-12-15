@@ -28,8 +28,9 @@ import QtGSettings 1.0 as Settings
 import Liri.WaylandClient 1.0 as WaylandClient
 import Liri.Shell 1.0 as LS
 import Liri.DBusService 1.0 as DBusService
+import "components" as Components
 
-BaseWindow {
+Components.UiWindow {
     id: bgWindow
 
     WaylandClient.WlrLayerSurfaceV1 {
