@@ -59,7 +59,6 @@ Window {
             osdWindow.visible = true;
         }
         onClosed: {
-            this.destroy();
             osdWindow.close();
         }
     }
