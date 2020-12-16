@@ -8,13 +8,13 @@
 function getParentForLayer(layerSurface, output) {
     switch (layerSurface.layer) {
     case WS.WlrLayerShellV1.BackgroundLayer:
-        return output.screenView.desktop.layers.background;
+        return output.layers.background;
     case WS.WlrLayerShellV1.BottomLayer:
-        return output.screenView.desktop.layers.bottom;
+        return output.layers.bottom;
     case WS.WlrLayerShellV1.TopLayer:
-        return output.screenView.desktop.layers.top;
+        return output.layers.top;
     case WS.WlrLayerShellV1.OverlayLayer:
-        return output.screenView.desktop.layers.overlay;
+        return output.layers.overlay;
     default:
         break;
     }

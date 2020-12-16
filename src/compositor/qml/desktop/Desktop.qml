@@ -52,12 +52,7 @@ Item {
     }
 
     readonly property var layers: QtObject {
-        readonly property alias background: backgroundLayer
-        readonly property alias desktop: desktopLayer
-        readonly property alias bottom: bottomLayer
-        readonly property alias top: topLayer
         readonly property alias fullScreen: fullScreenLayer
-        readonly property alias overlay: overlayLayer
         readonly property alias notifications: notificationsLayer
     }
 
@@ -129,28 +124,8 @@ Item {
      * Workspace
      */
 
-    Item {
-        id: backgroundLayer
-        anchors.fill: parent
-    }
-
-    Item {
-        id: desktopLayer
-        anchors.fill: parent
-    }
-
-    Item {
-        id: bottomLayer
-        anchors.fill: parent
-    }
-
     WorkspacesView {
         id: workspacesView
-    }
-
-    Item {
-        id: topLayer
-        anchors.fill: parent
     }
 
     Loader {
@@ -198,11 +173,6 @@ Item {
                 duration: FluidControls.Units.mediumDuration
             }
         }
-    }
-
-    Item {
-        id: overlayLayer
-        anchors.fill: parent
     }
 
     // Windows switcher

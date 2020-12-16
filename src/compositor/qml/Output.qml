@@ -46,6 +46,13 @@ P.WaylandOutput {
     //readonly property alias idleDimmer: idleDimmer
     readonly property alias cursor: cursor
 
+    readonly property var layers: QtObject {
+        readonly property alias background: backgroundLayer
+        readonly property alias bottom: bottomLayer
+        readonly property alias top: topLayer
+        readonly property alias overlay: overlayLayer
+    }
+
     property var exportDmabufFrame: null
 
     property bool __idle: false
@@ -84,7 +91,7 @@ P.WaylandOutput {
         flags: Qt.Window | Qt.FramelessWindowHint
         screen: output.screen ? Qt.application.screens[output.screen.screenIndex] : null
         color: "black"
-        visible: true
+        visible: output.screen.enabled
 
         // Virtual Keyboard
         Loader {
@@ -138,13 +145,40 @@ P.WaylandOutput {
             }
             // TODO: Need to wake up with mouse button pressed, released and wheel
 
+            // Background
+            Item {
+                id: backgroundLayer
+
+                anchors.fill: parent
+            }
+
+            // Bottom
+            Item {
+                id: bottomLayer
+
+                anchors.fill: parent
+            }
+
             // User interface
             ScreenView {
                 id: screenView
 
                 objectName: "screenView"
                 anchors.fill: parent
-                visible: output.screen.enabled
+            }
+
+            // Top
+            Item {
+                id: topLayer
+
+                anchors.fill: parent
+            }
+
+            // Overlays
+            Item {
+                id: overlayLayer
+
+                anchors.fill: parent
             }
 
             // Flash for screenshots
