@@ -33,11 +33,6 @@ import "components" as Components
 Components.UiWindow {
     id: bgWindow
 
-    onConfiguredChanged: {
-        if (configured)
-            visible = true;
-    }
-
     WaylandClient.WlrLayerSurfaceV1 {
         shell: layerShell
         layer: WaylandClient.WlrLayerShellV1.BackgroundLayer
@@ -53,9 +48,9 @@ Components.UiWindow {
         onConfigured: {
             bgWindow.width = width;
             bgWindow.height = height;
-            console.debug("Configuring background to " + width + "x" + height);
             ackConfigure(serial);
-            console.debug("Acked configure with serial", serial);
+            console.debug("Resized window of scope", '"' + nameSpace + '"',
+                          "to", bgWindow.width + "x" + bgWindow.height);
             bgWindow.configured = true;
             bgWindow.visible = true;
         }

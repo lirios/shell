@@ -116,7 +116,9 @@ WaylandQuickItem {
 
     function sendConfigure() {
         if (surfaceWidth >= 0 && surfaceHeight >= 0) {
-            console.debug("Layer surface", layerSurface.nameSpace, "size:", surfaceWidth + "x" + surfaceHeight);
+            console.debug("Sending configure to layer surface of scope",
+                          '"' + layerSurface.nameSpace + '"',
+                          "with size", surfaceWidth + "x" + surfaceHeight);
             layerSurface.sendConfigure(surfaceWidth, surfaceHeight);
         }
     }
