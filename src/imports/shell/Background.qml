@@ -147,7 +147,6 @@ Loader {
                 source: background.pictureUrl
                 sourceSize.width: width
                 sourceSize.height: height
-                smooth: false
                 fillMode: background.convertFillMode(background.fillMode)
                 onStatusChanged: __private.loaded = picture.status === Image.Ready
                 visible: !blur.visible
