@@ -147,7 +147,8 @@ int main(int argc, char *argv[])
     qputenv("QT_QPA_EGLFS_HIDECURSOR", QByteArrayLiteral("1"));
 
     // ShareOpenGLContexts is needed for using the threaded renderer
-    // on NVIDIA EGLStreams
+    // on NVIDIA EGLStreams and multi output compositors in general
+    // (see QTBUG-63039 and QTBUG-87597)
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
     // Automatically support HiDPI
