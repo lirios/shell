@@ -35,6 +35,16 @@ Item {
             shell.sendReady();
     }
 
+    /*
+     * Key bindings
+     */
+
+    KeyBindings {}
+
+    /*
+     * Shell
+     */
+
     WaylandClient.LiriShell {
         id: shell
 

@@ -246,12 +246,17 @@ WaylandCompositor {
     WS.LiriShell {
         id: shellHelper
 
+        property bool isReady: false
         property WaylandSurface grabSurface: null
 
         onGrabSurfaceAdded: {
             grabSurface = surface;
         }
+        onShortcutBound: {
+            shortcutComponent.incubateObject(keyBindings, { shortcut: shortcut });
+        }
         onReady: {
+            isReady = true;
             shellHelperTimer.running = false;
 
             for (var i = 0; i < screenManager.count; i++)
@@ -272,6 +277,21 @@ WaylandCompositor {
 
     WS.LiriOsd {
         id: liriOsd
+    }
+
+    Component {
+        id: shortcutComponent
+
+        Shortcut {
+            property WS.LiriShortcut shortcut: null
+
+            context: Qt.ApplicationShortcut
+            sequence: shortcut ? shortcut.sequence : ""
+            enabled: shellHelper.isReady
+            onActivated: {
+                shortcut.activate();
+            }
+        }
     }
 
     // Layer shell
@@ -606,7 +626,9 @@ WaylandCompositor {
         id: settings
     }
 
-    KeyBindings {}
+    KeyBindings {
+        id: keyBindings
+    }
 
     // PolicyKit
     PolicyKitAgent {
