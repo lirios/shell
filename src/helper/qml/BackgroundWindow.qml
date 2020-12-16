@@ -24,7 +24,9 @@
 import QtQuick 2.10
 import QtQuick.Window 2.9
 import QtQuick.Controls 2.1
+import QtQuick.Controls.Material 2.1
 import QtGSettings 1.0 as Settings
+import Fluid.Effects 1.0 as FluidEffects
 import Liri.WaylandClient 1.0 as WaylandClient
 import Liri.Shell 1.0 as LS
 import Liri.DBusService 1.0 as DBusService
@@ -32,6 +34,8 @@ import "components" as Components
 
 Components.UiWindow {
     id: bgWindow
+
+    color: Material.color(Material.Grey, Material.Shade700)
 
     WaylandClient.WlrLayerSurfaceV1 {
         shell: layerShell
@@ -98,6 +102,69 @@ Components.UiWindow {
         id: background
 
         anchors.fill: parent
+
+        pictureWidth: bgWindow.width
+        pictureHeight: bgWindow.height
+
+        // All the necessary for the "present" mode
+        layer.enabled: false
+        layer.effect: FluidEffects.Elevation {
+            elevation: 24
+        }
+
+        state: "normal"
+        states: [
+            State {
+                name: "normal"
+
+                PropertyChanges {
+                    target: background
+                    anchors.margins: 0
+                }
+            },
+            State {
+                name: "present"
+
+                // Margins respect screen aspect ratio
+                PropertyChanges {
+                    target: background
+                    anchors.leftMargin: bgWindow.width * 0.1
+                    anchors.rightMargin: bgWindow.width * 0.1
+                    anchors.topMargin: bgWindow.height * 0.1
+                    anchors.bottomMargin: bgWindow.height * 0.1
+                }
+            }
+
+        ]
+        transitions: [
+            Transition {
+                to: "normal"
+
+                SequentialAnimation {
+                    NumberAnimation {
+                        properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
+                        easing.type: Easing.OutQuad
+                        duration: 300
+                    }
+
+                    ScriptAction { script: background.layer.enabled = false }
+                }
+            },
+            Transition {
+                to: "present"
+
+                SequentialAnimation {
+                    ScriptAction { script: background.layer.enabled = true }
+
+                    NumberAnimation {
+                        properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
+                        easing.type: Easing.InQuad
+                        duration: 300
+                    }
+                }
+            }
+        ]
+
         mode: bgSettings.mode
         pictureUrl: bgSettings.pictureUrl
         primaryColor: bgSettings.primaryColor

@@ -43,14 +43,6 @@ Item {
     Material.primary: Material.Blue
     Material.accent: Material.Blue
 
-    // Margins for "present" mode to fit screen aspect ratio
-    property QtObject margins: QtObject {
-        property real left: screenView.width * 0.1
-        property real right: screenView.width * 0.1
-        property real top: screenView.height * 0.1
-        property real bottom: screenView.height * 0.1
-    }
-
     readonly property var layers: QtObject {
         readonly property alias fullScreen: fullScreenLayer
         readonly property alias notifications: notificationsLayer
@@ -60,65 +52,6 @@ Item {
     readonly property alias currentWorkspace: workspacesView.currentWorkspace
     readonly property var panel: shell ? shell.panel : null
     readonly property alias windowSwitcher: windowSwitcher
-
-    // All the necessary for the "present" mode
-    layer.enabled: false
-    layer.effect: FluidEffects.Elevation {
-        elevation: 24
-    }
-
-    state: currentWorkspace.state
-    states: [
-        State {
-            name: "normal"
-
-            PropertyChanges {
-                target: desktop
-                anchors.margins: 0
-            }
-        },
-        State {
-            name: "present"
-
-            // Margins respect screen aspect ratio
-            PropertyChanges {
-                target: desktop
-                anchors.leftMargin: margins.left
-                anchors.rightMargin: margins.right
-                anchors.topMargin: margins.top
-                anchors.bottomMargin: margins.bottom
-            }
-        }
-
-    ]
-    transitions: [
-        Transition {
-            to: "normal"
-
-            SequentialAnimation {
-                NumberAnimation {
-                    properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
-                    easing.type: Easing.OutQuad
-                    duration: 300
-                }
-
-                ScriptAction { script: desktop.layer.enabled = false }
-            }
-        },
-        Transition {
-            to: "present"
-
-            SequentialAnimation {
-                ScriptAction { script: desktop.layer.enabled = true }
-
-                NumberAnimation {
-                    properties: "anchors.leftMargin,anchors.rightMargin,anchors.topMargin,anchors.bottomMargin"
-                    easing.type: Easing.InQuad
-                    duration: 300
-                }
-            }
-        }
-    ]
 
     /*
      * Workspace

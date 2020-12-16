@@ -30,6 +30,8 @@ import Fluid.Controls 1.0 as FluidControls
 Loader {
     id: background
 
+    property real pictureWidth: width
+    property real pictureHeight: height
     property string mode
     property url pictureUrl
     property string primaryColor
@@ -145,8 +147,11 @@ Loader {
                 id: picture
                 anchors.fill: parent
                 source: background.pictureUrl
-                sourceSize.width: width
-                sourceSize.height: height
+                // Source size cannot be set to item width and height, otherwise it
+                // will interfere with animations that affect size therefore we
+                // we use fixed values (pictureWidth and pictureHeight)
+                sourceSize.width: background.pictureWidth
+                sourceSize.height: background.pictureHeight
                 fillMode: background.convertFillMode(background.fillMode)
                 onStatusChanged: __private.loaded = picture.status === Image.Ready
                 visible: !blur.visible

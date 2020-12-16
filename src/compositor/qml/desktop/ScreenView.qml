@@ -152,29 +152,24 @@ Item {
      * Desktop
      */
 
-    Rectangle {
+    Desktop {
+        id: desktop
+
         anchors.fill: parent
-        color: Material.color(Material.Grey, Material.Shade700)
 
-        Desktop {
-            id: desktop
+        transform: Scale {
+            id: screenScaler
+            origin.x: zoomArea.x2
+            origin.y: zoomArea.y2
+            xScale: zoomArea.zoom2
+            yScale: zoomArea.zoom2
+        }
 
+        ScreenZoom {
+            id: zoomArea
             anchors.fill: parent
-
-            transform: Scale {
-                id: screenScaler
-                origin.x: zoomArea.x2
-                origin.y: zoomArea.y2
-                xScale: zoomArea.zoom2
-                yScale: zoomArea.zoom2
-            }
-
-            ScreenZoom {
-                id: zoomArea
-                anchors.fill: parent
-                scaler: screenScaler
-                enabled: false
-            }
+            scaler: screenScaler
+            enabled: false
         }
     }
 
