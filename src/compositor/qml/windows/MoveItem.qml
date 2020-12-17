@@ -22,9 +22,16 @@
  ***************************************************************************/
 
 import QtQuick 2.0
+import Liri.WaylandServer 1.0 as WS
 
 Item {
     id: moveItem
+
+    property bool moving: false
+
+    onMovingChanged: {
+        shellHelper.grabCursor(moving ? WS.LiriShell.MoveGrabCursor : WS.LiriShell.ArrowGrabCursor);
+    }
 
     ParallelAnimation {
         id: moveAnimation

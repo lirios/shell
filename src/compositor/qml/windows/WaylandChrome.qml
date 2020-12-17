@@ -21,8 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtWayland.Compositor 1.0
+import QtQuick 2.15
+import QtWayland.Compositor 1.15
 import Fluid.Effects 1.0 as FluidEffects
 import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
@@ -146,7 +146,7 @@ P.ChromeItem {
         visible: chrome.window.mapped && enabled
     }
 
-    P.ShellSurfaceItem {
+    ShellSurfaceItem {
         id: shellSurfaceItem
 
         x: chrome.window.borderSize
@@ -159,18 +159,22 @@ P.ChromeItem {
 
         focusOnClick: chrome.window.focusable
 
-        onMoveStarted: {
-            // Move initiated with Meta+LeftMouseButton has started
-            shellHelper.grabCursor(WS.LiriShell.MoveGrabCursor);
-        }
-        onMoveStopped: {
-            // Move initiated with Meta+LeftMouseButton has stopped
-            shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
-        }
-
         onSurfaceDestroyed: {
             bufferLocked = true;
             destroyAnimation.start();
+        }
+
+        // Drag windows with Meta
+        DragHandler {
+            id: dragHandler
+
+            acceptedModifiers: liriCompositor.settings.input.windowActionKey
+            target: shellSurfaceItem.moveItem
+            property var movingBinding: Binding {
+                target: shellSurfaceItem.moveItem
+                property: "moving"
+                value: dragHandler.active
+            }
         }
 
         /*

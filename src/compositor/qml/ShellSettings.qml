@@ -37,6 +37,7 @@ FluidCore.Object {
     readonly property alias lockScreen: lockSettings
     readonly property alias shell: shellSettings
     readonly property alias session: sessionSettings
+    readonly property alias input: inputSettings
     readonly property int numWorkspaces: 4
 
     /*
@@ -79,6 +80,8 @@ FluidCore.Object {
      */
 
     P.InputSettings {
+        id: inputSettings
+
         compositor: liriCompositor
     }
 

@@ -38,7 +38,6 @@
 #include "quickoutput.h"
 #include "screencast.h"
 #include "screenmodel.h"
-#include "shellsurfaceitem.h"
 #include "waylandwindow.h"
 #include "windowmousetracker.h"
 
@@ -110,7 +109,6 @@ public:
                                                QStringLiteral("Cannot create instance of ScreenMode"));
         qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
                                                QStringLiteral("Cannot create instance of ScreenItem"));
-        qmlRegisterType<ShellSurfaceItem>(uri, versionMajor, versionMinor, "ShellSurfaceItem");
         qmlRegisterType<WaylandWindowQuickParent>(uri, versionMajor, versionMinor, "WaylandWindow");
         qmlRegisterType<WindowMouseTracker>(uri, versionMajor, versionMinor, "WindowMouseTracker");
 
