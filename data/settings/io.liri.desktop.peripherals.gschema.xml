@@ -19,15 +19,15 @@
       <summary>Keyboard repeat</summary>
       <description>Set this to TRUE to enable keyboard repeat.</description>
     </key>
-    <key name="repeat-interval" type="u">
-      <default>30</default>
+    <key name="repeat-rate" type="u">
+      <default>40</default>
       <summary>Key Repeat Interval</summary>
       <description>Delay between repeats in milliseconds.</description>
     </key>
-    <key name="delay" type="u">
-      <default>500</default>
+    <key name="repeat-delay" type="u">
+      <default>400</default>
       <summary>Initial Key Repeat Delay</summary>
-      <description>Initial key repeat delay in milliseconds.</description>
+      <description>How long a key is pressed before it starts to be repeated in milliseconds.</description>
     </key>
     <key name="model" type="s">
       <default>''</default>
