@@ -24,14 +24,14 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQuick.Controls.Material 2.0
 import Fluid.Controls 1.0 as FluidControls
 
 Rectangle {
     id: root
 
-    property alias hovered: mouseArea.containsMouse
+    property alias hovered: hoverHandler.hovered
     signal clicked()
 
     Material.theme: Material.Dark
@@ -52,10 +52,13 @@ Rectangle {
         height: width
     }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        onClicked: root.clicked()
+    HoverHandler {
+        id: hoverHandler
+    }
+
+    TapHandler {
+        onTapped: {
+            root.clicked();
+        }
     }
 }

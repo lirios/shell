@@ -21,7 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 import Liri.Launcher 1.0
 
 Item {
@@ -41,15 +41,15 @@ Item {
     property alias currentPage: pageView.currentIndex
 
     // Scroll through pages using the mouse weel
-    MouseArea {
-        anchors.fill: parent
-        propagateComposedEvents: true
-
+    WheelHandler {
+        acceptedButtons: Qt.NoButton
         onWheel: {
-            if (wheel.angleDelta.y > 0)
-                pageView.decrementCurrentIndex();
-            else
-                pageView.incrementCurrentIndex();
+            if (event.hasAngleDelta) {
+                if (event.angleDelta.y > 0)
+                    pageView.decrementCurrentIndex();
+                else
+                    pageView.incrementCurrentIndex();
+            }
         }
     }
 

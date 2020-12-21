@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
@@ -67,10 +67,10 @@ Popup {
                 sourceItem: chrome
                 z: 0
 
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.AllButtons
-                    onClicked: listView.currentIndex = index
+                TapHandler {
+                    onTapped: {
+                        listView.currentIndex = index;
+                    }
                 }
             }
 

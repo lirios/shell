@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.2
+import QtQuick 2.15
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
@@ -33,7 +33,6 @@ import "../components" as ShellComponents
 
 Item {
     property Item view: null
-    readonly property alias container: mouseArea
     readonly property int margin: 10
 
     signal selected(var view)
@@ -48,13 +47,14 @@ Item {
 
     Material.theme: Material.Dark
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.AllButtons
-        hoverEnabled: true
-        z: 4
-        onClicked: chrome.selected(view)
+    HoverHandler {
+        id: hoverHandler
+    }
+
+    TapHandler {
+        onTapped: {
+            chrome.selected(view);
+        }
     }
 
     RectangularGlow {
@@ -63,7 +63,7 @@ Item {
         spread: 0.2
         color: Material.accent
         cornerRadius: FluidControls.Units.gu(0.2)
-        opacity: closeButton.opacity > 0.0 ? 0.5 : 0.0
+        opacity: hoverHandler.hovered ? 0.5 : 0.0
         z: 3
 
         Behavior on opacity {
@@ -141,13 +141,13 @@ Item {
     ShellComponents.CloseButton {
         id: closeButton
         anchors {
-            top: mouseArea.top
-            right: mouseArea.right
+            top: parent.top
+            right: parent.right
             margins: -FluidControls.Units.gu(1)
         }
         width: FluidControls.Units.iconSizes.medium
         z: 5
-        opacity: mouseArea.containsMouse || hovered ? 1.0 : 0.0
+        opacity: hoverHandler.hovered ? 1.0 : 0.0
         onClicked: chrome.closed(view)
 
         Behavior on opacity {

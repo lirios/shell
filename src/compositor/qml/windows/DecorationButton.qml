@@ -21,7 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 import Fluid.Controls 1.0 as FluidControls
 import Liri.WaylandServer 1.0 as WS
 
@@ -42,12 +42,16 @@ Item {
         anchors.fill: parent
     }
 
-    MouseArea {
-        anchors.fill: parent
+    HoverHandler {
+        onHoveredChanged: {
+            if (hovered)
+                shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
+        }
+    }
 
-        hoverEnabled: true
-
-        onEntered: shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
-        onClicked: button.clicked()
+    TapHandler {
+        onTapped: {
+            button.clicked();
+        }
     }
 }
