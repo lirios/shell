@@ -34,7 +34,6 @@ class InputSettings : public QObject, public QQmlParserStatus
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
     Q_PROPERTY(QWaylandCompositor *compositor READ compositor WRITE setCompositor NOTIFY compositorChanged)
-    Q_PROPERTY(Qt::KeyboardModifier windowActionKey READ windowActionKey WRITE setWindowActionKey NOTIFY windowActionKeyChanged)
     Q_PROPERTY(quint32 keyboardRepeatRate READ keyboardRepeatRate WRITE setKeyboardRepeatRate NOTIFY keyboardRepeatRateChanged)
     Q_PROPERTY(quint32 keyboardRepeatDelay READ keyboardRepeatDelay WRITE setKeyboardRepeatDelay NOTIFY keyboardRepeatDelayChanged)
 public:
@@ -42,9 +41,6 @@ public:
 
     QWaylandCompositor *compositor() const;
     void setCompositor(QWaylandCompositor *compositor);
-
-    Qt::KeyboardModifier windowActionKey() const;
-    void setWindowActionKey(Qt::KeyboardModifier mod);
 
     quint32 keyboardRepeatRate() const;
     void setKeyboardRepeatRate(quint32 rate);
@@ -54,7 +50,6 @@ public:
 
 Q_SIGNALS:
     void compositorChanged();
-    void windowActionKeyChanged();
     void keyboardRepeatRateChanged();
     void keyboardRepeatDelayChanged();
 
@@ -65,7 +60,6 @@ protected:
 private:
     bool m_initialized = false;
     QWaylandCompositor *m_compositor = nullptr;
-    Qt::KeyboardModifier m_windowActionKey = Qt::MetaModifier;
     quint32 m_repeatRate = 40;
     quint32 m_repeatDelay = 400;
 

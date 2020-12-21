@@ -168,7 +168,7 @@ P.ChromeItem {
         DragHandler {
             id: dragHandler
 
-            acceptedModifiers: liriCompositor.settings.input.windowActionKey
+            acceptedModifiers: liriCompositor.settings.windowActionModifier
             target: shellSurfaceItem.moveItem
             property var movingBinding: Binding {
                 target: shellSurfaceItem.moveItem

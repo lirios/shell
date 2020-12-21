@@ -44,7 +44,7 @@ MouseArea {
     drag.target: parent
     drag.filterChildren: true
     onWheel: {
-        if (!(wheel.modifiers & Qt.MetaModifier)) {
+        if (!(wheel.modifiers & liriCompositor.settings.windowActionModifier)) {
             wheel.accepted = false;
             return;
         }

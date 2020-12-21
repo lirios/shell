@@ -59,20 +59,6 @@ void InputSettings::setCompositor(QWaylandCompositor *compositor)
     Q_EMIT compositorChanged();
 }
 
-Qt::KeyboardModifier InputSettings::windowActionKey() const
-{
-    return m_windowActionKey;
-}
-
-void InputSettings::setWindowActionKey(Qt::KeyboardModifier mod)
-{
-    if (m_windowActionKey == mod)
-        return;
-
-    m_windowActionKey = mod;
-    Q_EMIT windowActionKeyChanged();
-}
-
 quint32 InputSettings::keyboardRepeatRate() const
 {
     return m_repeatRate;

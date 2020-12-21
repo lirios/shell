@@ -39,6 +39,8 @@ FluidCore.Object {
     readonly property alias session: sessionSettings
     readonly property int numWorkspaces: 4
 
+    readonly property int windowActionModifier: shellSettings.windowActionKey === "Alt" ? Qt.AltModifier : Qt.MetaModifier
+
     /*
      * Outputs
      */

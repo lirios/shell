@@ -8,5 +8,20 @@
         If set to true, XWayland support is enabled.
       </description>
     </key>
+    <key name="window-action-key" type="s">
+      <choices>
+        <choice value='Meta'/>
+        <choice value='Alt'/>
+      </choices>
+      <default>'Meta'</default>
+      <summary>Modifier to use for extended window management operations</summary>
+      <description>
+        This key is used for extended window management operations, for example
+        dragging windows from the contents rather than their decoration.
+
+        The default is intended to be the "Windows" key on PC hardware or the
+        "Command" key on Mac hardware.
+      </description>
+    </key>
   </schema>
 </schemalist>
