@@ -21,7 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.5
+import QtQuick 2.15
 import QtQuick.VirtualKeyboard 2.1
 
 InputPanel {

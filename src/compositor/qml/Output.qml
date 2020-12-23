@@ -22,10 +22,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.5
-import QtQuick.Window 2.3
-import QtQuick.Controls 2.0
-import QtWayland.Compositor 1.0
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.15
+import QtWayland.Compositor 1.15
 import Liri.Shell 1.0 as LiriShell
 import Liri.private.shell 1.0 as P
 import "desktop"

@@ -21,8 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtWayland.Compositor 1.3
+import QtQuick 2.15
+import QtWayland.Compositor 1.15
 
 LayerSurfaceItem {
     property alias stackingLevel: hwLayer.stackingLevel

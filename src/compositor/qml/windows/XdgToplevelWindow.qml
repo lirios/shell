@@ -21,7 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 import QtWayland.Compositor 1.3 as QtWayland
 import Fluid.Core 1.0 as FluidCore
 import Liri.WaylandServer 1.0 as WS

@@ -21,8 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.10
-import QtQuick.Window 2.9
+import QtQuick 2.15
+import QtQuick.Window 2.15
 
 BorderlessWindow {
     property bool configured: false

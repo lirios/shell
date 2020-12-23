@@ -22,7 +22,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQml.Models 2.1
 import Fluid.Core 1.0
 import Fluid.Controls 1.0

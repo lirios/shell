@@ -22,7 +22,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.7
+import QtQuick 2.15
 import Fluid.Controls 1.0 as FluidControls
 import Liri.private.shell 1.0 as P
 

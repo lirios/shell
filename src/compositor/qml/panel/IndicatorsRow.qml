@@ -22,9 +22,9 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Controls.Material 2.0
-import QtQuick.Layouts 1.1
+import QtQuick 2.15
+import QtQuick.Controls.Material 2.15
+import QtQuick.Layouts 1.15
 import QtQml.Models 2.2
 import Fluid.Controls 1.0
 import Liri.Shell 1.0

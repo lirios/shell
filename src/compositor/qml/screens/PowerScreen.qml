@@ -21,8 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.4
-import QtQuick.Controls.Material 2.0
+import QtQuick 2.15
+import QtQuick.Controls.Material 2.15
 
 Item {
     id: powerScreen

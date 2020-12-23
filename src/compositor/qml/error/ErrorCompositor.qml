@@ -22,9 +22,9 @@
  ***************************************************************************/
 
 import QtQml 2.2
-import QtQuick 2.5
-import QtQuick.Window 2.0
-import QtWayland.Compositor 1.0
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtWayland.Compositor 1.15
 import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import ".." as Root

@@ -24,8 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtWayland.Compositor 1.0
+import QtQuick 2.15
+import QtWayland.Compositor 1.15
 import QtGSettings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
 import Liri.private.shell 1.0 as P

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQml.Models 2.1
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Launcher 1.0

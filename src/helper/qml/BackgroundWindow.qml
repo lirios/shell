@@ -21,10 +21,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.10
-import QtQuick.Window 2.9
-import QtQuick.Controls 2.1
-import QtQuick.Controls.Material 2.1
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Controls.Material 2.15
 import QtGSettings 1.0 as Settings
 import Fluid.Effects 1.0 as FluidEffects
 import Liri.WaylandClient 1.0 as WaylandClient

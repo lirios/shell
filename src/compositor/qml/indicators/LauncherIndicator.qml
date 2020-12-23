@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 import "launcher"
 import Liri.Shell 1.0
 import "../launcher" as Launcher

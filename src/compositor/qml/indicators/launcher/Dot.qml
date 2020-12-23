@@ -21,7 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 
 Rectangle {
     width: iconSize/5

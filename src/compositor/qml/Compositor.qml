@@ -23,9 +23,9 @@
  ***************************************************************************/
 
 import QtQml 2.1
-import QtQuick 2.5
-import QtQuick.Window 2.2
-import QtWayland.Compositor 1.3
+import QtQuick 2.15
+import QtQuick.Window 2.15
+import QtWayland.Compositor 1.15
 import Liri.Launcher 1.0 as Launcher
 import Liri.PolicyKit 1.0
 import Liri.WaylandServer 1.0 as WS

@@ -21,7 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.5
+import QtQuick 2.15
 import Fluid.Controls 1.0
 import Liri.Notifications 1.0
 

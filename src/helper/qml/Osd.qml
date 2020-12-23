@@ -21,7 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.15
 import Liri.WaylandClient 1.0 as WaylandClient
 
 WaylandClient.LiriOsd {

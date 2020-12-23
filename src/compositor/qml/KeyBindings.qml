@@ -24,7 +24,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.5
+import QtQuick 2.15
 import QtGSettings 1.0 as Settings
 
 Item {

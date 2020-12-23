@@ -21,8 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtWayland.Compositor 1.0
+import QtQuick 2.15
+import QtWayland.Compositor 1.15
 import Liri.XWayland 1.0 as LXW
 import "windows"
 
