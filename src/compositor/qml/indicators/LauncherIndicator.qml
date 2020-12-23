@@ -41,7 +41,7 @@ Indicator {
         x: (parent.width - width)/2
         y: (parent.height - height)/2
 
-        parent: screenView
+        parent: desktop
 
         modal: true
 

@@ -39,7 +39,7 @@ RowLayout {
         icon.source: Qt.resolvedUrl("../images/logout.svg")
         onClicked: {
             launcherPopOver.close();
-            liriCompositor.defaultOutput.screenView.showLogout();
+            liriCompositor.defaultOutput.showLogout();
         }
 
         ToolTip.text: qsTr("Log out")
@@ -64,7 +64,7 @@ RowLayout {
         enabled: LiriDevice.LocalDevice.canPowerOff
         onClicked: {
             launcherPopOver.close();
-            liriCompositor.defaultOutput.screenView.showPowerOff();
+            liriCompositor.defaultOutput.showPowerOff();
         }
 
         ToolTip.text: qsTr("Power off")

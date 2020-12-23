@@ -260,7 +260,7 @@ WaylandCompositor {
             shellHelperTimer.running = false;
 
             for (var i = 0; i < screenManager.count; i++)
-                screenManager.objectAt(i).screenView.state = "session";
+                screenManager.objectAt(i).desktop.state = "session";
         }
     }
 
@@ -271,7 +271,7 @@ WaylandCompositor {
         running: true
         onTriggered: {
             for (var i = 0; i < screenManager.count; i++)
-                screenManager.objectAt(i).screenView.state = "session";
+                screenManager.objectAt(i).desktop.state = "session";
         }
     }
 
@@ -445,14 +445,14 @@ WaylandCompositor {
     WS.WlrScreencopyManagerV1 {
         onCaptureOutputRequested: {
             frame.ready.connect(function() {
-                frame.copy("screenView");
+                frame.copy("desktop");
                 liriCompositor.flash();
             });
         }
     }
 
     WS.LiriColorPickerManager {
-        layerName: "screenView"
+        layerName: "desktop"
     }
 
     // Shells
@@ -634,28 +634,28 @@ WaylandCompositor {
     PolicyKitAgent {
         id: policyKitAgent
         onAuthenticationInitiated: {
-            var authDialog = liriCompositor.defaultOutput.screenView.authDialog;
+            var authDialog = liriCompositor.defaultOutput.desktop.authDialog;
             authDialog.actionId = actionId;
             authDialog.message = message;
             authDialog.iconName = iconName;
             authDialog.realName = realName;
         }
         onAuthenticationRequested: {
-            var authDialog = liriCompositor.defaultOutput.screenView.authDialog;
+            var authDialog = liriCompositor.defaultOutput.desktop.authDialog;
             authDialog.prompt = prompt;
             authDialog.echo = echo;
             authDialog.open();
         }
-        onAuthenticationCanceled: liriCompositor.defaultOutput.screenView.authDialog.close()
-        onAuthenticationFinished: liriCompositor.defaultOutput.screenView.authDialog.close()
-        onAuthorizationGained: liriCompositor.defaultOutput.screenView.authDialog.close()
+        onAuthenticationCanceled: liriCompositor.defaultOutput.desktop.authDialog.close()
+        onAuthenticationFinished: liriCompositor.defaultOutput.desktop.authDialog.close()
+        onAuthorizationGained: liriCompositor.defaultOutput.desktop.authDialog.close()
         onAuthorizationFailed: {
-            var authDialog = liriCompositor.defaultOutput.screenView.authDialog;
+            var authDialog = liriCompositor.defaultOutput.desktop.authDialog;
             authDialog.errorMessage = qsTr("Sorry, that didn't work. Please try again.");
         }
-        onAuthorizationCanceled: liriCompositor.defaultOutput.screenView.authDialog.close()
-        onInformation: liriCompositor.defaultOutput.screenView.authDialog.infoMessage = message
-        onError: liriCompositor.defaultOutput.screenView.authDialog.errorMessage = message
+        onAuthorizationCanceled: liriCompositor.defaultOutput.desktop.authDialog.close()
+        onInformation: liriCompositor.defaultOutput.desktop.authDialog.infoMessage = message
+        onError: liriCompositor.defaultOutput.desktop.authDialog.errorMessage = message
 
         Component.onCompleted: registerAgent()
     }

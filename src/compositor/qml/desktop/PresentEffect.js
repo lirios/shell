@@ -78,7 +78,7 @@ function spreadWindows() {
             };
 
             // Move and resize
-            entry.shellSurfaceItem.output.screenView.locked = true;
+            entry.shellSurfaceItem.output.locked = true;
             entry.transformOrigin = Item.TopLeft;
             entry.window.moveItem.animateTo(x, y);
             entry.scale = pos.scale;
@@ -97,7 +97,7 @@ function restoreWindows() {
             // Restore to the original position and size
             entry.window.moveItem.animateTo(pos.x, pos.y);
             entry.scale = pos.scale;
-            entry.shellSurfaceItem.output.screenView.locked = false;
+            entry.shellSurfaceItem.output.locked = false;
             entry.transformOrigin = pos.transformOrigin;
             delete originalLayout[entry];
 

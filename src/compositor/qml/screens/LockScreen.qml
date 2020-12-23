@@ -50,7 +50,7 @@ Showable {
             from: -root.height
             to: 0
         }
-        ScriptAction { script: output.screenView.locked = true }
+        ScriptAction { script: output.locked = true }
     }
 
     hideAnimation: SequentialAnimation {
@@ -62,7 +62,7 @@ Showable {
             from: 0
             to: -root.height
         }
-        ScriptAction { script: output.screenView.locked = false }
+        ScriptAction { script: output.locked = false }
     }
 
     Material.theme: Material.Dark

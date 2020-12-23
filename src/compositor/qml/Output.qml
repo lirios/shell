@@ -34,6 +34,7 @@ P.WaylandOutput {
     id: output
 
     readonly property bool primary: liriCompositor.defaultOutput === this
+    property bool locked: false
 
     property var screen: null
 
@@ -41,17 +42,20 @@ P.WaylandOutput {
 
     property int idleInhibit: 0
 
-    readonly property alias screenView: screenView
-    readonly property Item surfacesArea: screenView.surfacesArea
+    readonly property Item surfacesArea: desktop.surfacesArea
     //readonly property alias idleDimmer: idleDimmer
     readonly property alias cursor: cursor
+    readonly property alias desktop: desktop
 
     readonly property var layers: QtObject {
-        readonly property alias background: backgroundLayer
-        readonly property alias bottom: bottomLayer
-        readonly property alias top: topLayer
-        readonly property alias overlay: overlayLayer
+        readonly property alias background: desktop.backgroundLayer
+        readonly property alias bottom: desktop.bottomLayer
+        readonly property alias top: desktop.topLayer
+        readonly property alias overlay: desktop.overlayLayer
     }
+
+    property alias showFps: desktop.showFps
+    property alias showInformation: desktop.showInformation
 
     property var exportDmabufFrame: null
 
@@ -110,14 +114,14 @@ P.WaylandOutput {
                 // Input wakes the output
                 liriCompositor.wake();
 
-                screenView.handleKeyPressed(event);
+                desktop.handleKeyPressed(event);
             }
 
             Keys.onReleased: {
                 // Input wakes the output
                 liriCompositor.wake();
 
-                screenView.handleKeyReleased(event);
+                desktop.handleKeyReleased(event);
             }
         }
 
@@ -157,80 +161,12 @@ P.WaylandOutput {
                 }
             }
 
-            // Background
-            Item {
-                id: backgroundLayer
-
-                anchors.fill: parent
-            }
-
-            // Bottom
-            Item {
-                id: bottomLayer
-
-                anchors.fill: parent
-            }
-
             // User interface
-            ScreenView {
-                id: screenView
+            Desktop {
+                id: desktop
 
-                objectName: "screenView"
+                objectName: "desktop"
                 anchors.fill: parent
-            }
-
-            // Top
-            Item {
-                id: topLayer
-
-                anchors.fill: parent
-            }
-
-            // Overlays
-            Item {
-                id: overlayLayer
-
-                anchors.fill: parent
-            }
-
-            // Flash for screenshots
-            Rectangle {
-                id: flash
-
-                anchors.fill: parent
-
-                color: "white"
-                opacity: 0.0
-
-                SequentialAnimation {
-                    id: flashAnimation
-
-                    OpacityAnimator {
-                        easing.type: Easing.OutQuad
-                        target: flash
-                        from: 0.0
-                        to: 1.0
-                        duration: 250
-                    }
-                    OpacityAnimator {
-                        easing.type: Easing.OutQuad
-                        target: flash
-                        from: 1.0
-                        to: 0.0
-                        duration: 250
-                    }
-                }
-            }
-
-            // Idle dimmer
-            IdleDimmer {
-                id: idleDimmer
-
-                anchors.fill: parent
-
-                output: output
-
-                z: 1000002
             }
         }
 
@@ -247,7 +183,47 @@ P.WaylandOutput {
 
             visible: mouseTracker.containsMouse &&
                      !mouseTracker.windowSystemCursorEnabled &&
-                     screenView.cursorVisible
+                     desktop.cursorVisible
+        }
+
+        // Flash for screenshots
+        Rectangle {
+            id: flash
+
+            anchors.fill: parent
+
+            color: "white"
+            opacity: 0.0
+            z: 1000002
+
+            SequentialAnimation {
+                id: flashAnimation
+
+                OpacityAnimator {
+                    easing.type: Easing.OutQuad
+                    target: flash
+                    from: 0.0
+                    to: 1.0
+                    duration: 250
+                }
+                OpacityAnimator {
+                    easing.type: Easing.OutQuad
+                    target: flash
+                    from: 1.0
+                    to: 0.0
+                    duration: 250
+                }
+            }
+        }
+
+        // Idle dimmer
+        IdleDimmer {
+            id: idleDimmer
+
+            anchors.fill: parent
+            z: 1000003
+
+            output: output
         }
     }
 
@@ -276,5 +252,32 @@ P.WaylandOutput {
 
     function flash() {
         flashAnimation.start();
+    }
+
+    function selectPreviousWorkspace() {
+        desktop.workspacesView.selectPrevious();
+    }
+
+    function selectNextWorkspace() {
+        desktop.workspacesView.selectNext();
+    }
+
+    function selectWorkspace(num) {
+        desktop.workspacesView.select(num);
+    }
+
+    function showLogout() {
+        if (desktop.state != "lock")
+            desktop.state = "logout";
+    }
+
+    function showPowerOff() {
+        if (desktop.state != "lock")
+            desktop.state = "poweroff";
+    }
+
+    function showRestart() {
+        if (desktop.state != "lock")
+            desktop.state = "restart";
     }
 }

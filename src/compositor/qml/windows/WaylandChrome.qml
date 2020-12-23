@@ -155,7 +155,7 @@ P.ChromeItem {
         shellSurface: chrome.window.shellSurface
         moveItem: chrome.window.moveItem
 
-        inputEventsEnabled: !output.screenView.locked
+        inputEventsEnabled: !output.locked
 
         focusOnClick: chrome.window.focusable
 

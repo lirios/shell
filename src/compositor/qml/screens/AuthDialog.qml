@@ -40,7 +40,7 @@ Dialog {
     property alias infoMessage: infoLabel.text
     property alias errorMessage: errorLabel.text
 
-    parent: screenView
+    parent: desktop
 
     title: qsTr("Authentication required")
 

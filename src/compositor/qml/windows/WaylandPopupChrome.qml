@@ -42,7 +42,7 @@ Item {
 
         shellSurface: chrome.window.shellSurface
 
-        inputEventsEnabled: !output.screenView.locked
+        inputEventsEnabled: !output.locked
 
         focusOnClick: false
 

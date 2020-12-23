@@ -61,7 +61,7 @@ Item {
 
         function switchToWorkspace(number) {
             for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).screenView.desktop.selectWorkspace(number);
+                liriCompositor.screenManager.objectAt(i).selectWorkspace(number);
         }
     }
 
@@ -78,7 +78,7 @@ Item {
             showInformation = !showInformation;
 
             for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).screenView.showInformation = showInformation;
+                liriCompositor.screenManager.objectAt(i).showInformation = showInformation;
         }
     }
 
@@ -163,7 +163,7 @@ Item {
         sequence: wmKeybindings.switchToWorkspaceLeft
         onActivated: {
             for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).screenView.desktop.selectPreviousWorkspace();
+                liriCompositor.screenManager.objectAt(i).selectPreviousWorkspace();
         }
     }
 
@@ -172,7 +172,7 @@ Item {
         sequence: wmKeybindings.switchToWorkspaceRight
         onActivated: {
             for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).screenView.desktop.selectNextWorkspace();
+                liriCompositor.screenManager.objectAt(i).selectNextWorkspace();
         }
     }
 
@@ -227,7 +227,7 @@ Item {
         onActivated: {
             var workspace;
             for (var i = 0; i < liriCompositor.screenManager.count; i++) {
-                workspace = liriCompositor.objectAt(i).screenView.surfacesArea;
+                workspace = liriCompositor.objectAt(i).surfacesArea;
                 if (workspace.state === "present")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")
@@ -240,7 +240,7 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.mainMenu
         onActivated: {
-            var panel = liriCompositor.defaultOutput.screenView.desktop.panel
+            var panel = liriCompositor.defaultOutput.desktop.panel
             panel.launcherIndicator.clicked(null)
         }
     }
@@ -503,7 +503,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: smKeybindings.powerOff
-        onActivated: liriCompositor.defaultOutput.screenView.showPowerOff()
+        onActivated: liriCompositor.defaultOutput.showPowerOff()
     }
 
     Shortcut {
@@ -519,7 +519,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.runCommand
-        onActivated: liriCompositor.defaultOutput.screenView.runCommand.open()
+        onActivated: liriCompositor.defaultOutput.desktop.runCommand.open()
     }
 
     Shortcut {

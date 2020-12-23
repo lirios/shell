@@ -15,7 +15,6 @@
         <file>qml/desktop/PresentEffect.js</file>
         <file>qml/desktop/PresentWindowsChrome.qml</file>
         <file>qml/desktop/RunCommand.qml</file>
-        <file>qml/desktop/ScreenView.qml</file>
         <file>qml/desktop/ScreenZoom.qml</file>
         <file>qml/desktop/Shell.qml</file>
         <file>qml/desktop/WindowSwitcher.qml</file>

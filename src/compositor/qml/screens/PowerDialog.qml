@@ -45,7 +45,7 @@ Popup {
     x: (output.availableGeometry.width - width)/2
     y: (output.availableGeometry.height - height)/2
 
-    parent: screenView
+    parent: desktop
 
     modal: true
 
