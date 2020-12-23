@@ -29,8 +29,8 @@ var originalLayout = {};
 var chromes = {};
 
 function spreadWindows() {
-    var workspaceWidth = workspace.width - desktop.margins.left - desktop.margins.right;
-    var workspaceHeight = workspace.height - desktop.margins.top - desktop.margins.bottom;
+    var workspaceWidth = workspace.width - workspace.width * 0.2
+    var workspaceHeight = workspace.height - workspace.height * 0.2
     var spacing = calcSpacing();
 
     var layout = layoutWindows();
@@ -126,8 +126,8 @@ function layoutWindows() {
 }
 
 function tryLayout(rows) {
-    var workspaceWidth = workspace.width - desktop.margins.left - desktop.margins.right;
-    var workspaceHeight = workspace.height - desktop.margins.top - desktop.margins.bottom;
+    var workspaceWidth = workspace.width - workspace.width * 0.2;
+    var workspaceHeight = workspace.height - workspace.height * 0.2;
     var spacing = calcSpacing();
 
     var rowHeight = (workspaceHeight - spacing) / rows - spacing;
