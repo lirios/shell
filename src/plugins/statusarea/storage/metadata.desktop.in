@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=X-Liri-Service
+_Name=Storage
+_Comment=Access storage volumes
+_Keywords=Storage;Disk;
+OnlyShowIn=X-Liri;
+X-Liri-ServiceType=StatusAreaExtension
+X-Liri-StatusAreaExtension-Script=contents/main.qml
+X-Liri-StatusAreaExtension-Order=3
+X-Liri-PluginInfo-Name=io.liri.StatusAreaExtensions.Storage
+X-Liri-PluginInfo-Category=StatusAreaExtensions
+X-Liri-PluginInfo-Author=Pier Luigi Fiorini <pierluigi.fiorini@liri.io>
+X-Liri-PluginInfo-Version=1.0.0
+X-Liri-PluginInfo-Website=https://liri.io
+X-Liri-PluginInfo-License=GPL-3.0-or-later
+X-Liri-PluginInfo-EnabledByDefault=true

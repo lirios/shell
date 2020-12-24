@@ -163,57 +163,6 @@ Showable {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                 }
-
-                Item {
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: indicatorsRect.implicitWidth + indicatorsRect.anchors.margins * 2
-
-                    Rectangle {
-                        id: indicatorsRect
-
-                        anchors {
-                            fill: parent
-                            margins: Units.smallSpacing
-                        }
-
-                        implicitWidth: indicatorsView.width + 2 * Units.smallSpacing
-
-                        radius: 2
-                        color: Material.dialogColor
-                        layer.enabled: true
-                        layer.effect: Elevation {
-                            elevation: 8
-                        }
-
-                        Row {
-                            id: indicatorsView
-
-                            anchors.centerIn: parent
-
-                            height: parent.height
-
-                            DateTimeIndicator {}
-
-                            NotificationsIndicator {}
-
-                            StorageIndicator {}
-
-                            P.IndicatorsModel {
-                                id: indicatorsModel
-                            }
-
-                            Repeater {
-                                model: indicatorsModel
-
-                                Loader {
-                                    source: url
-                                    width: 32
-                                    height: parent.height
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }

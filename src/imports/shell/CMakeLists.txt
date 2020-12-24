@@ -11,11 +11,10 @@ liri_add_qml_plugin(shell
         plugin.cpp
     QML_FILES
         Background.qml
-        DateTimeIndicator.qml
-        DateTime.qml
         Indicator.qml
         LoginGreeter.qml
         PanelItem.qml
+        StatusAreaExtension.qml
         UserDelegate.qml
         qmldir
     DEFINES

@@ -60,8 +60,8 @@ Item {
         readonly property alias notifications: notificationsLayer
     }
 
-    readonly property alias shell: shellLoader.item
-    readonly property var panel: shell ? shell.panel : null
+    readonly property alias shell: shell
+    readonly property var panel: shell.panel
     readonly property alias runCommand: runCommand
     readonly property alias authDialog: authDialog
     readonly property alias windowSwitcher: windowSwitcher
@@ -193,20 +193,17 @@ Item {
     }
 
     // Panels
-    Loader {
-        id: shellLoader
+    Shell {
+        id: shell
 
         anchors.fill: parent
-        active: output.primary
-        sourceComponent: Shell {
-            opacity: currentWorkspace.state == "present" ? 0.0 : 1.0
-            visible: opacity > 0.0
+        opacity: currentWorkspace.state == "present" ? 0.0 : 1.0
+        visible: output.primary
 
-            Behavior on opacity {
-                NumberAnimation {
-                    easing.type: Easing.OutQuad
-                    duration: 250
-                }
+        Behavior on opacity {
+            NumberAnimation {
+                easing.type: Easing.OutQuad
+                duration: 250
             }
         }
     }

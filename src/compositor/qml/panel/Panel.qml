@@ -24,6 +24,7 @@
 
 import QtQuick 2.15
 import QtQuick.Controls.Material 2.15
+import QtQuick.Controls.Material.impl 2.15 as MaterialImpl
 import QtQuick.Layouts 1.15
 import QtQml.Models 2.2
 import Fluid.Controls 1.0
@@ -46,8 +47,6 @@ Rectangle {
     property bool maximized: liriCompositor.hasMaxmizedShellSurfaces
 
     color: maximized ? darkColor : "transparent"
-
-    signal indicatorTriggered(var indicator)
 
     anchors {
         left: parent.left
@@ -140,11 +139,52 @@ Rectangle {
                     elevation: 8
                 }
 
+                TapHandler {
+                    id: tapHandler
+
+                    onTapped: {
+                        panelMenu.open();
+                    }
+                }
+
+                MaterialImpl.Ripple {
+                    anchors.fill: parent
+                    clip: visible
+                    pressed: tapHandler.pressed
+                    anchor: indicatorsRect
+                    color: Material.rippleColor
+                }
+
                 IndicatorsRow {
                     id: indicatorsView
-                    anchors.centerIn: parent
 
-                    onIndicatorTriggered: panel.indicatorTriggered(indicator)
+                    anchors.centerIn: parent
+                }
+
+                Rectangle {
+                    id: highlight
+
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                    }
+
+                    height: 2
+                    color: Material.accentColor
+                    opacity: panelMenu.visible ? 1 : 0
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Units.mediumDuration
+                        }
+                    }
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Units.mediumDuration
+                        }
+                    }
                 }
             }
         }

@@ -30,9 +30,9 @@
 #include "dbus/multimediakeysserver.h"
 #include "dbus/osdserver.h"
 #include "chromeitem.h"
+#include "extensionsmodel.h"
 #include "fpscounter.h"
 #include "hotspot.h"
-#include "indicatorsmodel.h"
 #include "inputsettings.h"
 #include "keyeventfilter.h"
 #include "quickoutput.h"
@@ -97,9 +97,9 @@ public:
         // Components
 
         qmlRegisterType<ChromeItem>(uri, versionMajor, versionMinor, "ChromeItem");
+        qmlRegisterType<ExtensionsModel>(uri, versionMajor, versionMinor, "ExtensionsModel");
         qmlRegisterType<FpsCounter>(uri, versionMajor, versionMinor, "FpsCounter");
         qmlRegisterType<HotSpot>(uri, versionMajor, versionMinor, "HotSpot");
-        qmlRegisterType<IndicatorsModel>(uri, versionMajor, versionMinor, "IndicatorsModel");
         qmlRegisterType<InputSettings>(uri, versionMajor, versionMinor, "InputSettings");
         qmlRegisterType<KeyEventFilter>(uri, versionMajor, versionMinor, "KeyEventFilter");
         qmlRegisterType<QuickOutput>(uri, versionMajor, versionMinor, "WaylandOutput");

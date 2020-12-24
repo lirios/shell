@@ -159,12 +159,6 @@ Popup {
                         Layout.fillWidth: true
                     }
 
-                    LauncherShutdownActions {
-                        id: shutdownActions
-
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
                     Layout.fillWidth: true
                 }
             }

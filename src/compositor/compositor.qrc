@@ -23,9 +23,6 @@
         <file>qml/error/ErrorCompositor.qml</file>
         <file>qml/error/ErrorOutput.qml</file>
         <file>qml/error/ErrorScreenView.qml</file>
-        <file>qml/images/disk.svg</file>
-        <file>qml/images/eject.svg</file>
-        <file>qml/images/harddisk.svg</file>
         <file>qml/images/hibernate.svg</file>
         <file>qml/images/lan-connect.svg</file>
         <file>qml/images/lan-disconnect.svg</file>
@@ -35,9 +32,6 @@
         <file>qml/indicators/launcher/AppsIcon.qml</file>
         <file>qml/indicators/launcher/Dot.qml</file>
         <file>qml/indicators/LauncherIndicator.qml</file>
-        <file>qml/indicators/NotificationsIndicator.qml</file>
-        <file>qml/indicators/SettingsIndicator.qml</file>
-        <file>qml/indicators/StorageIndicator.qml</file>
         <file>qml/KeyBindings.qml</file>
         <file>qml/launcher/FrequentAppsView.qml</file>
         <file>qml/launcher/Launcher.qml</file>
@@ -47,7 +41,6 @@
         <file>qml/launcher/LauncherGridView.qml</file>
         <file>qml/launcher/LauncherMenu.qml</file>
         <file>qml/launcher/LauncherPopOver.qml</file>
-        <file>qml/launcher/LauncherShutdownActions.qml</file>
         <file>qml/notifications/NotificationDelegate.qml</file>
         <file>qml/notifications/NotificationItem.qml</file>
         <file>qml/notifications/Notifications.qml</file>
@@ -78,5 +71,6 @@
         <file>qml/windows/XdgPopupWindow.qml</file>
         <file>qml/windows/WaylandPopupChrome.qml</file>
         <file>qml/windows/XWaylandWindow.qml</file>
+        <file>qml/indicators/ShutdownIndicator.qml</file>
     </qresource>
 </RCC>

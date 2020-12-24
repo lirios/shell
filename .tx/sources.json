@@ -3,5 +3,53 @@
     "type": "ts",
     "directory": "src/compositor",
     "output_path": "translations/compositor/compositor.ts"
+  },
+  {
+    "type": "desktop",
+    "source_file": "src/plugins/statusarea/datetime/metadata.desktop.in",
+    "dest_file": "src/plugins/statusarea/datetime/metadata.desktop",
+    "file_filter": "translations/statusarea/datetime/<lang>.po",
+    "output_path": "translations/statusarea/datetime/metadata.pot"
+  },
+  {
+    "type": "desktop",
+    "source_file": "src/plugins/statusarea/notifications/metadata.desktop.in",
+    "dest_file": "src/plugins/statusarea/notifications/metadata.desktop",
+    "file_filter": "translations/statusarea/notifications/<lang>.po",
+    "output_path": "translations/statusarea/notifications/metadata.pot"
+  },
+  {
+    "type": "desktop",
+    "source_file": "src/plugins/statusarea/storage/metadata.desktop.in",
+    "dest_file": "src/plugins/statusarea/storage/metadata.desktop",
+    "file_filter": "translations/statusarea/storage/<lang>.po",
+    "output_path": "translations/statusarea/storage/metadata.pot"
+  },
+  {
+    "type": "desktop",
+    "source_file": "src/plugins/statusarea/user/metadata.desktop.in",
+    "dest_file": "src/plugins/statusarea/user/metadata.desktop",
+    "file_filter": "translations/statusarea/user/<lang>.po",
+    "output_path": "translations/statusarea/user/metadata.pot"
+  },
+  {
+    "type": "ts",
+    "directory": "src/plugins/statusarea/datetime",
+    "output_path": "translations/statusarea/datetime/datetime.ts"
+  },
+  {
+    "type": "ts",
+    "directory": "src/plugins/statusarea/notifications",
+    "output_path": "translations/statusarea/notifications/notifications.ts"
+  },
+  {
+    "type": "ts",
+    "directory": "src/plugins/statusarea/storage",
+    "output_path": "translations/statusarea/storage/storage.ts"
+  },
+  {
+    "type": "ts",
+    "directory": "src/plugins/statusarea/user",
+    "output_path": "translations/statusarea/user/user.ts"
   }
 ]

@@ -37,39 +37,15 @@ Row {
 
     height: parent.height
 
-    signal indicatorTriggered(var indicator)
-
-    DateTimeIndicator {
-        onClicked: indicatorTriggered(caller)
-    }
-
-    NotificationsIndicator {
-        onClicked: indicatorTriggered(caller)
-    }
-
-    StorageIndicator {
-        onClicked: indicatorTriggered(caller)
-    }
-
-    P.IndicatorsModel {
-        id: indicatorsModel
-    }
-
     Repeater {
         model: indicatorsModel
 
         Loader {
-            source: url
-            width: 32
+            asynchronous: true
+            sourceComponent: model.component
             height: parent.height
-
-            Connections {
-                target: item
-
-                function onClicked() {
-                    indicatorTriggered(item);
-                }
-            }
         }
     }
+
+    ShutdownIndicator {}
 }

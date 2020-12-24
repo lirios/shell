@@ -24,12 +24,12 @@ liri_add_qml_plugin(shell-private
         dbus/osdserver.h
         chromeitem.cpp
         chromeitem.h
+        extensionsmodel.cpp
+        extensionsmodel.h
         fpscounter.cpp
         fpscounter.h
         hotspot.cpp
         hotspot.h
-        indicatorsmodel.cpp
-        indicatorsmodel.h
         inputsettings.cpp
         inputsettings.h
         keyeventfilter.cpp

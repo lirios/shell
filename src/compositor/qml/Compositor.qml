@@ -618,10 +618,6 @@ WaylandCompositor {
         sourceModel: applicationManager
     }
 
-    LS.DateTime {
-        id: dateTime
-    }
-
     ShellSettings {
         id: settings
     }

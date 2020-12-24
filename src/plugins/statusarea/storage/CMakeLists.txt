@@ -1,0 +1,9 @@
+liri_add_statusareaextension(Storage
+    QML_FILES
+        contents/main.qml
+        contents/images/disk.svg
+        contents/images/eject.svg
+        contents/images/harddisk.svg
+    TRANSLATIONS_PATH
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../../../translations/statusarea/storage"
+)

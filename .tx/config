@@ -6,3 +6,39 @@ type = QT
 source_lang = en
 source_file = translations/compositor/compositor.ts
 file_filter = translations/compositor/compositor_<lang>.ts
+
+[liri-shell.statusarea-datetime-metadata]
+type = PO
+source_lang = en
+source_file = translations/statusarea/datetime/metadata.pot
+file_filter = translations/statusarea/datetime/<lang>.po
+
+[liri-shell.statusarea-notifications-metadata]
+type = PO
+source_lang = en
+source_file = translations/statusarea/notifications/metadata.pot
+file_filter = translations/statusarea/notifications/<lang>.po
+
+[liri-shell.statusarea-storage-metadata]
+type = PO
+source_lang = en
+source_file = translations/statusarea/storage/metadata.pot
+file_filter = translations/statusarea/storage/<lang>.po
+
+[liri-shell.statusarea-user-metadata]
+type = PO
+source_lang = en
+source_file = translations/statusarea/user/metadata.pot
+file_filter = translations/statusarea/user/<lang>.po
+
+[liri-shell.statusarea-notifications]
+type = QT
+source_lang = en
+source_file = translations/statusarea/notifications/notifications.ts
+file_filter = translations/statusarea/notifications/notifications_<lang_.ts
+
+[liri-shell.statusarea-storage]
+type = QT
+source_lang = en
+source_file = translations/statusarea/storage/storage.ts
+file_filter = translations/statusarea/storage/storage_<lang_.ts

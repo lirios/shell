@@ -22,109 +22,174 @@
  * $END_LICENSE$
  ***************************************************************************/
 
+import QtQml.Models 2.15
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Fluid.Core 1.0 as FluidCore
 import Fluid.Controls 1.0 as FluidControls
+import QtAccountsService 1.0 as Accounts
+import Liri.Device 1.0 as LiriDevice
+import Liri.private.shell 1.0 as P
 import "../panel"
 
 Item {
     id: shell
 
     readonly property alias panel: panel
-    readonly property alias indicator: rightDrawer.indicator
+
+    Accounts.UserAccount {
+        id: currentUser
+    }
+
+    Instantiator {
+        model: P.ExtensionsModel {}
+        delegate: Loader {
+            property string name: model.name
+
+            source: model.url
+            onStatusChanged: {
+                if (status === Loader.Error)
+                    console.error("Failed to load status area extension", name);
+            }
+        }
+        onObjectAdded: {
+            if (object.name && object.item) {
+                console.info("Loading status area extension:", object.name);
+
+                if (object.item.indicator)
+                    indicatorsModel.append({"component": object.item.indicator});
+                if (object.item.menu)
+                    menuExtensionsModel.append({"component": object.item.menu});
+            }
+        }
+    }
+
+    ListModel {
+        id: indicatorsModel
+    }
+
+    ListModel {
+        id: menuExtensionsModel
+    }
 
     Panel {
         id: panel
-
-        onIndicatorTriggered: rightDrawer.indicator = indicator
     }
 
-    Drawer {
-        id: rightDrawer
-
-        property var indicator: null
+    Dialog {
+        id: panelMenu
 
         Material.theme: Material.Dark
-        Material.primary: Material.Blue
-        Material.accent: Material.Blue
 
-        onIndicatorChanged: {
-            if (indicator !== null)
-                rightDrawer.open()
-            else
-                rightDrawer.close()
-        }
+        parent: desktop
 
-        onClosed: indicator = null
+        x: output.availableGeometry.x + output.availableGeometry.width - width - FluidControls.Units.smallSpacing
+        y: output.availableGeometry.y + output.availableGeometry.height - height - FluidControls.Units.smallSpacing
 
-        edge: Qt.RightEdge
+        leftPadding: 0
+        rightPadding: 0
+        topPadding: 2
+        bottomPadding: 2
 
-        width: Math.max(356, panel.rightWidth)
-        height: shell.height
+        width: Math.max(400, layout.implicitWidth)
+        height: Math.max(400, layout.implicitHeight)
 
-        Item {
+        modal: true
+        dim: false
+
+        StackView {
+            id: stackView
+
             anchors.fill: parent
-
             clip: true
 
-            ColumnLayout {
-                anchors.fill: parent
-                spacing: 0
+            initialItem: Page {
+                padding: 0
+                header: Pane {
+                    RowLayout {
+                        anchors.fill: parent
 
-                Item {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: titleLabel.implicitHeight + 2 * titleLabel.anchors.margins
+                        FluidControls.CircleImage {
+                            source: "file://" + currentUser.iconFileName
+                            width: 48
+                            height: 48
+                        }
 
-                    FluidControls.HeadlineLabel {
-                        id: titleLabel
-                        text: rightDrawer.indicator ? rightDrawer.indicator.title : ""
-                        verticalAlignment: Qt.AlignVCenter
-                        anchors {
-                            fill: parent
-                            margins: 2 * FluidControls.Units.smallSpacing
+                        ToolButton {
+                            icon.source: Qt.resolvedUrl("../images/logout.svg")
+                            onClicked: {
+                                panelMenu.close();
+                                output.showLogout();
+                            }
+
+                            ToolTip.text: qsTr("Log out")
+                            ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
+                            ToolTip.visible: hovered
+                        }
+
+                        ToolButton {
+                            icon.source: FluidControls.Utils.iconUrl("action/lock")
+                            onClicked: {
+                                panelMenu.close();
+                                SessionInterface.lock();
+                            }
+
+                            ToolTip.text: qsTr("Lock Session")
+                            ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
+                            ToolTip.visible: hovered
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                        }
+
+                        ToolButton {
+                            icon.source: FluidControls.Utils.iconUrl("action/power_settings_new")
+                            enabled: LiriDevice.LocalDevice.canPowerOff
+                            onClicked: {
+                                panelMenu.close();
+                                output.showPowerOff();
+                            }
+
+                            ToolTip.text: qsTr("Power off")
+                            ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
+                            ToolTip.visible: hovered
                         }
                     }
                 }
 
-                Loader {
-                    id: loader
+                ColumnLayout {
+                    id: layout
 
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    anchors.fill: parent
 
-                    sourceComponent: rightDrawer.indicator && rightDrawer.indicator.component
-                }
-            }
+                    Repeater {
+                        model: menuExtensionsModel
 
-            Item {
-                anchors {
-                    bottom: parent.bottom
-                    right: parent.right
-                    rightMargin: FluidControls.Units.smallSpacing + (1 - rightDrawer.position) * rightDrawer.width
-                }
+                        Loader {
+                            Layout.fillWidth: true
 
-                height: panel.height
-
-                IndicatorsRow {
-                    anchors {
-                        verticalCenter: parent.verticalCenter
-                        right: parent.right
-                        rightMargin: FluidControls.Units.smallSpacing + 1
+                            asynchronous: true
+                            sourceComponent: model.component
+                        }
                     }
 
-                    height: FluidCore.Utils.scale(rightDrawer.position, parent.height - 2 * FluidControls.Units.smallSpacing, parent.height)
-
-                    onIndicatorTriggered: {
-                        if (indicator.active)
-                            rightDrawer.close()
-                        else
-                            rightDrawer.indicator = indicator
+                    Item {
+                        Layout.fillHeight: true
                     }
                 }
             }
         }
+    }
+
+    function pushToMenu(item) {
+        stackView.push(item);
+    }
+
+    function popFromMenu() {
+        stackView.pop();
     }
 }

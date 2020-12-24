@@ -4,9 +4,8 @@ classname ShellPlugin
 typeinfo plugins.qmltypes
 
 Background 1.0 Background.qml
-DateTime 1.0 DateTime.qml
-DateTimeIndicator 1.0 DateTimeIndicator.qml
 Indicator 1.0 Indicator.qml
 LoginGreeter 1.0 LoginGreeter.qml
 PanelItem 1.0 PanelItem.qml
+StatusAreaExtension 1.0 StatusAreaExtension.qml
 UserDelegate 1.0 UserDelegate.qml
