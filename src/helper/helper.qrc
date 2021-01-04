@@ -7,5 +7,7 @@
         <file>qml/main.qml</file>
         <file>qml/OsdWindow.qml</file>
         <file>qml/Osd.qml</file>
+        <file>qml/ui/notifications/NotificationsManager.qml</file>
+        <file>qml/ui/notifications/NotificationWindow.qml</file>
     </qresource>
 </RCC>

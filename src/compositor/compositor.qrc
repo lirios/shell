@@ -6,6 +6,7 @@
         <file>qml/components/HotCorner.qml</file>
         <file>qml/components/LayerSurfaceItem.qml</file>
         <file>qml/components/LayerSurfaceManager.js</file>
+        <file>qml/components/Notification.qml</file>
         <file>qml/components/Osd.qml</file>
         <file>qml/components/PagedGrid.qml</file>
         <file>qml/Compositor.qml</file>
@@ -41,9 +42,6 @@
         <file>qml/launcher/LauncherGridView.qml</file>
         <file>qml/launcher/LauncherMenu.qml</file>
         <file>qml/launcher/LauncherPopOver.qml</file>
-        <file>qml/notifications/NotificationDelegate.qml</file>
-        <file>qml/notifications/NotificationItem.qml</file>
-        <file>qml/notifications/Notifications.qml</file>
         <file>qml/Output.qml</file>
         <file>qml/overlays/HelpOverlay.qml</file>
         <file>qml/overlays/UnresponsiveOverlay.qml</file>

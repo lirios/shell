@@ -33,7 +33,7 @@ import Liri.Shell 1.0 as LS
 import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import "base"
-import "components"
+import "components" as Components
 import "components/LayerSurfaceManager.js" as LayerSurfaceManager
 import "desktop"
 import "windows"
@@ -299,7 +299,7 @@ WaylandCompositor {
     Component {
         id: layerItemComponent
 
-        LayerSurfaceItem {
+        Components.LayerSurfaceItem {
             onSurfaceDestroyed: {
                 bufferLocked = true;
                 destroy();
@@ -310,7 +310,7 @@ WaylandCompositor {
     Component {
         id: hwLayerItemComponent
 
-        HardwareLayerSurfaceItem {
+        Components.HardwareLayerSurfaceItem {
             onSurfaceDestroyed: {
                 bufferLocked = true;
                 destroy();
@@ -321,7 +321,13 @@ WaylandCompositor {
     Component {
         id: osdComponent
 
-        Osd {}
+        Components.Osd {}
+    }
+
+    Component {
+        id: notificationComponent
+
+        Components.Notification {}
     }
 
     WS.WlrLayerShellV1 {
@@ -350,6 +356,9 @@ WaylandCompositor {
                 hwLayerItemComponent.createObject(parent, props);
             } else if (layerSurface.nameSpace === "osd") {
                 osdComponent.createObject(parent, props);
+            } else if (layerSurface.nameSpace === "notification") {
+                props["z"] = 100;
+                notificationComponent.createObject(parent, props);
             } else {
                 layerItemComponent.createObject(parent, props);
             }

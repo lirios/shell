@@ -26,6 +26,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import Liri.WaylandClient 1.0 as WaylandClient
 import "components" as Components
+import "ui/notifications" as Notifications
 
 Item {
     property int refCount: 0
@@ -70,4 +71,6 @@ Item {
     }
 
     BackgroundWindow {}
+
+    Notifications.NotificationsManager {}
 }

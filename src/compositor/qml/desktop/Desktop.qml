@@ -35,7 +35,6 @@ import Liri.private.shell 1.0 as P
 import ".."
 import "../components" as Components
 import "../indicators" as Indicators
-import "../notifications" as Notifications
 import "../screens" as Screens
 
 Item {
@@ -57,7 +56,6 @@ Item {
 
     readonly property var layers: QtObject {
         readonly property alias fullScreen: fullScreenLayer
-        readonly property alias notifications: notificationsLayer
     }
 
     readonly property alias shell: shell
@@ -175,21 +173,6 @@ Item {
         id: overlayLayer
 
         anchors.fill: parent
-    }
-
-    Loader {
-        id: notificationsLayer
-
-        anchors {
-            top: parent.top
-            right: parent.right
-            bottom: parent.bottom
-            topMargin: FluidControls.Units.largeSpacing * 3
-            bottomMargin: 56 + FluidControls.Units.smallSpacing
-        }
-        active: output.primary
-        sourceComponent: Notifications.Notifications {}
-        width: FluidControls.Units.gu(24) + (2 * FluidControls.Units.smallSpacing)
     }
 
     // Panels
