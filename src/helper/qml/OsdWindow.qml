@@ -44,6 +44,8 @@ Window {
 
     color: "transparent"
 
+    screen: primaryScreen
+
     WaylandClient.WlrLayerSurfaceV1 {
         shell: layerShell
         layer: WaylandClient.WlrLayerShellV1.OverlayLayer

@@ -93,9 +93,16 @@ Item {
 
         width: 1
         height: 1
+        screen: primaryScreen
     }
 
-    BackgroundWindow {}
+    Instantiator {
+        model: Qt.application.screens
+
+        BackgroundWindow {
+            screen: modelData
+        }
+    }
 
     Notifications.NotificationsManager {}
 

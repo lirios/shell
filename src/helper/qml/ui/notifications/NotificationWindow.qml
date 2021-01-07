@@ -27,6 +27,8 @@ Components.BorderlessWindow {
 
     signal actionInvoked(string actionId)
 
+    screen: primaryScreen
+
     Timer {
         id: timer
 
