@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="654"/>
+        <location filename="../../src/compositor/qml/Compositor.qml" line="659"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Qualcosa non ha funzionato. Riprova.</translation>
     </message>
@@ -90,14 +90,6 @@
     </message>
 </context>
 <context>
-    <name>LauncherIndicator</name>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/LauncherIndicator.qml" line="34"/>
-        <source>Applications</source>
-        <translation>Applicazioni</translation>
-    </message>
-</context>
-<context>
     <name>LauncherMenu</name>
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="62"/>
@@ -129,24 +121,6 @@
     </message>
 </context>
 <context>
-    <name>LauncherShutdownActions</name>
-    <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="45"/>
-        <source>Log out</source>
-        <translation>Disconnettiti</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="57"/>
-        <source>Lock Session</source>
-        <translation>Blocca la sessione</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="70"/>
-        <source>Power off</source>
-        <translation>Spegni</translation>
-    </message>
-</context>
-<context>
     <name>LockScreen</name>
     <message>
         <location filename="../../src/compositor/qml/screens/LockScreen.qml" line="139"/>
@@ -171,19 +145,6 @@
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="101"/>
         <source>Cancel</source>
         <translation>Annulla</translation>
-    </message>
-</context>
-<context>
-    <name>NotificationsIndicator</name>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/NotificationsIndicator.qml" line="35"/>
-        <source>Notifications</source>
-        <translation>Notifiche</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/NotificationsIndicator.qml" line="49"/>
-        <source>No notifications</source>
-        <translation>Nessuna notifica</translation>
     </message>
 </context>
 <context>
@@ -265,69 +226,29 @@ Deve anche essere di proprietà dall&apos;utente corrente (UID %3), ma è di pro
     </message>
 </context>
 <context>
-    <name>SettingsIndicator</name>
+    <name>Shell</name>
     <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="42"/>
-        <source>Settings</source>
-        <translation>Impostazioni</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="46"/>
-        <source>Size</source>
-        <translation>Dimensioni</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="53"/>
-        <source>Small</source>
-        <translation>Piccolo</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="62"/>
-        <source>Medium</source>
-        <translation>Medio</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="71"/>
-        <source>Large</source>
-        <translation>Grande</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="81"/>
-        <source>Position</source>
-        <translation>Posizione</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="88"/>
-        <source>Left</source>
-        <translation>Sinistra</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="98"/>
-        <source>Top</source>
-        <translation>Sopra</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="108"/>
-        <source>Bottom</source>
-        <translation>Sotto</translation>
-    </message>
-</context>
-<context>
-    <name>StorageIndicator</name>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="35"/>
-        <source>Storage</source>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="127"/>
+        <source>Log out</source>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="50"/>
-        <source>Eject</source>
-        <translation>Espelli</translation>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="139"/>
+        <source>Lock Session</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="50"/>
-        <source>Mount</source>
-        <translation>Monta</translation>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="157"/>
+        <source>Power off</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>ShutdownIndicator</name>
+    <message>
+        <location filename="../../src/compositor/qml/indicators/ShutdownIndicator.qml" line="10"/>
+        <source>Shut down</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

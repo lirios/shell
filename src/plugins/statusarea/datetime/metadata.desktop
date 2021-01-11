@@ -1,8 +1,14 @@
 [Desktop Entry]
 Type=X-Liri-Service
 Name=Date and time
+Name[lt]=Data ir laikas
+Name[tr]=Tarih ve saat
 Comment=Current date and time
+Comment[lt]=Dabartinė data ir laikas
+Comment[tr]=Geçerli tarih ve saat
 Keywords=Date;Time;
+Keywords[lt]=Data;Laikas;
+Keywords[tr]=Tarih;Saat;
 OnlyShowIn=X-Liri;
 X-Liri-ServiceType=StatusAreaExtension
 X-Liri-StatusAreaExtension-Script=contents/main.qml

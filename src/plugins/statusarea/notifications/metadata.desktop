@@ -1,8 +1,14 @@
 [Desktop Entry]
 Type=X-Liri-Service
 Name=Notifications
+Name[lt]=Pranešimai
+Name[tr]=Bildirimler
 Comment=Show notifications
+Comment[lt]=Rodyti pranešimus
+Comment[tr]=Bildirimleri göster
 Keywords=Notifications;
+Keywords[lt]=Pranešimai;
+Keywords[tr]=Bildirimler;
 OnlyShowIn=X-Liri;
 X-Liri-ServiceType=StatusAreaExtension
 X-Liri-StatusAreaExtension-Script=contents/main.qml

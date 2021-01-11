@@ -1,8 +1,11 @@
 [Desktop Entry]
 Type=X-Liri-Service
 Name=User
+Name[tr]=Kullanıcı
 Comment=Current user picture
+Comment[tr]=Geçerli kullanıcı resmi
 Keywords=User;
+Keywords[tr]=Kullanıcı;
 OnlyShowIn=X-Liri;
 X-Liri-ServiceType=StatusAreaExtension
 X-Liri-StatusAreaExtension-Script=contents/main.qml

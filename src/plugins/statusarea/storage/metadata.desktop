@@ -1,8 +1,14 @@
 [Desktop Entry]
 Type=X-Liri-Service
 Name=Storage
+Name[lt]=Kaupiklis
+Name[tr]=Depolama
 Comment=Access storage volumes
+Comment[lt]=Gauti prieigą prie kaupiklio tomų
+Comment[tr]=Depolama birimlerine eriş
 Keywords=Storage;Disk;
+Keywords[lt]=Kaupiklis;Saugykla;Diskas;Atminties įrenginys;Atminties irenginys;
+Keywords[tr]=Depolama;Biriktirme;Saklama;Disk;Teker;
 OnlyShowIn=X-Liri;
 X-Liri-ServiceType=StatusAreaExtension
 X-Liri-StatusAreaExtension-Script=contents/main.qml

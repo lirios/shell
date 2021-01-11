@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="654"/>
+        <location filename="../../src/compositor/qml/Compositor.qml" line="659"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Atleiskite, tai nesuveikė. Bandykite dar kartą.</translation>
     </message>
@@ -90,14 +90,6 @@
     </message>
 </context>
 <context>
-    <name>LauncherIndicator</name>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/LauncherIndicator.qml" line="34"/>
-        <source>Applications</source>
-        <translation>Programos</translation>
-    </message>
-</context>
-<context>
     <name>LauncherMenu</name>
     <message>
         <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="62"/>
@@ -129,24 +121,6 @@
     </message>
 </context>
 <context>
-    <name>LauncherShutdownActions</name>
-    <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="45"/>
-        <source>Log out</source>
-        <translation>Atsijungti</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="57"/>
-        <source>Lock Session</source>
-        <translation>Užrakinti seansą</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherShutdownActions.qml" line="70"/>
-        <source>Power off</source>
-        <translation>Išjungti</translation>
-    </message>
-</context>
-<context>
     <name>LockScreen</name>
     <message>
         <location filename="../../src/compositor/qml/screens/LockScreen.qml" line="139"/>
@@ -171,19 +145,6 @@
         <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="101"/>
         <source>Cancel</source>
         <translation>Atsisakyti</translation>
-    </message>
-</context>
-<context>
-    <name>NotificationsIndicator</name>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/NotificationsIndicator.qml" line="35"/>
-        <source>Notifications</source>
-        <translation>Pranešimai</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/NotificationsIndicator.qml" line="49"/>
-        <source>No notifications</source>
-        <translation>Pranešimų nėra</translation>
     </message>
 </context>
 <context>
@@ -265,69 +226,29 @@ Taip pat kintamasis privalo priklausyti dabartiniam naudotojui (UID %3), tačiau
     </message>
 </context>
 <context>
-    <name>SettingsIndicator</name>
+    <name>Shell</name>
     <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="42"/>
-        <source>Settings</source>
-        <translation>Nustatymai</translation>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="127"/>
+        <source>Log out</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="46"/>
-        <source>Size</source>
-        <translation>Dydis</translation>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="139"/>
+        <source>Lock Session</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="53"/>
-        <source>Small</source>
-        <translation>Mažas</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="62"/>
-        <source>Medium</source>
-        <translation>Vidutinis</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="71"/>
-        <source>Large</source>
-        <translation>Didelis</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="81"/>
-        <source>Position</source>
-        <translation>Vieta</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="88"/>
-        <source>Left</source>
-        <translation>Kairė</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="98"/>
-        <source>Top</source>
-        <translation>Viršus</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/SettingsIndicator.qml" line="108"/>
-        <source>Bottom</source>
-        <translation>Apačia</translation>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="157"/>
+        <source>Power off</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
-    <name>StorageIndicator</name>
+    <name>ShutdownIndicator</name>
     <message>
-        <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="35"/>
-        <source>Storage</source>
-        <translation>Kaupiklis</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="50"/>
-        <source>Eject</source>
-        <translation>Išstumti</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/indicators/StorageIndicator.qml" line="50"/>
-        <source>Mount</source>
-        <translation>Prijungti</translation>
+        <location filename="../../src/compositor/qml/indicators/ShutdownIndicator.qml" line="10"/>
+        <source>Shut down</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
