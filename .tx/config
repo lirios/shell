@@ -35,10 +35,10 @@ file_filter = translations/statusarea/user/<lang>.po
 type = QT
 source_lang = en
 source_file = translations/statusarea/notifications/notifications.ts
-file_filter = translations/statusarea/notifications/notifications_<lang_.ts
+file_filter = translations/statusarea/notifications/notifications_<lang>.ts
 
 [liri-shell.statusarea-storage]
 type = QT
 source_lang = en
 source_file = translations/statusarea/storage/storage.ts
-file_filter = translations/statusarea/storage/storage_<lang_.ts
+file_filter = translations/statusarea/storage/storage_<lang>.ts
