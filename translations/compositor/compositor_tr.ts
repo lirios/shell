@@ -227,17 +227,17 @@ Geçerli (UID %3) kullanıcısınca sahiplenilmeli ama UID %4 (&quot;%5&quot;) t
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="127"/>
         <source>Log out</source>
-        <translation type="unfinished"/>
+        <translation>Oturumu kapat</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="139"/>
         <source>Lock Session</source>
-        <translation type="unfinished"/>
+        <translation>Oturumu Kilitle</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="157"/>
         <source>Power off</source>
-        <translation type="unfinished"/>
+        <translation>Gücü kapat</translation>
     </message>
 </context>
 <context>
@@ -245,7 +245,7 @@ Geçerli (UID %3) kullanıcısınca sahiplenilmeli ama UID %4 (&quot;%5&quot;) t
     <message>
         <location filename="../../src/compositor/qml/indicators/ShutdownIndicator.qml" line="10"/>
         <source>Shut down</source>
-        <translation type="unfinished"/>
+        <translation>Kapat</translation>
     </message>
 </context>
 <context>

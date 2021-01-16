@@ -230,17 +230,17 @@ Taip pat kintamasis privalo priklausyti dabartiniam naudotojui (UID %3), tačiau
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="127"/>
         <source>Log out</source>
-        <translation type="unfinished"/>
+        <translation>Atsijungti</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="139"/>
         <source>Lock Session</source>
-        <translation type="unfinished"/>
+        <translation>Užrakinti seansą</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="157"/>
         <source>Power off</source>
-        <translation type="unfinished"/>
+        <translation>Išjungti</translation>
     </message>
 </context>
 <context>
