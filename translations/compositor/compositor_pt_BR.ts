@@ -230,17 +230,17 @@ Também deve pertencer ao usuário atual (UID %3), mas pertence ao UID %4 (&quot
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="127"/>
         <source>Log out</source>
-        <translation type="unfinished"/>
+        <translation>Encerrar sessão</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="139"/>
         <source>Lock Session</source>
-        <translation type="unfinished"/>
+        <translation>Bloquear sessão</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/Shell.qml" line="157"/>
         <source>Power off</source>
-        <translation type="unfinished"/>
+        <translation>Desligar</translation>
     </message>
 </context>
 <context>
@@ -248,7 +248,7 @@ Também deve pertencer ao usuário atual (UID %3), mas pertence ao UID %4 (&quot
     <message>
         <location filename="../../src/compositor/qml/indicators/ShutdownIndicator.qml" line="10"/>
         <source>Shut down</source>
-        <translation type="unfinished"/>
+        <translation>Desligar</translation>
     </message>
 </context>
 <context>

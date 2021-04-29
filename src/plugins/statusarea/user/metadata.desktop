@@ -1,10 +1,13 @@
 [Desktop Entry]
 Type=X-Liri-Service
 Name=User
+Name[pt_BR]=Usuário
 Name[tr]=Kullanıcı
 Comment=Current user picture
+Comment[pt_BR]=Imagem atual do usuário
 Comment[tr]=Geçerli kullanıcı resmi
 Keywords=User;
+Keywords[pt_BR]=Usuário;
 Keywords[tr]=Kullanıcı;
 OnlyShowIn=X-Liri;
 X-Liri-ServiceType=StatusAreaExtension

@@ -2,12 +2,15 @@
 Type=X-Liri-Service
 Name=Notifications
 Name[lt]=Pranešimai
+Name[pt_BR]=Notificações
 Name[tr]=Bildirimler
 Comment=Show notifications
 Comment[lt]=Rodyti pranešimus
+Comment[pt_BR]=Exibir notificações
 Comment[tr]=Bildirimleri göster
 Keywords=Notifications;
 Keywords[lt]=Pranešimai;
+Keywords[pt_BR]=Notificações;
 Keywords[tr]=Bildirimler;
 OnlyShowIn=X-Liri;
 X-Liri-ServiceType=StatusAreaExtension
