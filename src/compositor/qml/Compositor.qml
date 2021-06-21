@@ -473,10 +473,6 @@ WaylandCompositor {
             var window = xdgToplevelComponent.createObject(xdgShell, {"xdgSurface": xdgSurface, "toplevel": toplevel});
             __private.handleShellSurfaceCreated(window, chromeComponent);
         }
-        onPopupCreated: {
-            var window = xdgPopupComponent.createObject(xdgShell, {"xdgSurface": xdgSurface, "popup": popup});
-            __private.handleShellSurfaceCreated(window, popupChromeComponent);
-        }
     }
 
     WS.GtkShell {
@@ -554,13 +550,6 @@ WaylandCompositor {
         }
     }
 
-    // Shell surface for xdg-shell popup
-    Component {
-        id: xdgPopupComponent
-
-        XdgPopupWindow {}
-    }
-
     // Custom gtk_shell surface
     Component {
         id: gtkSurfaceComponent
@@ -589,13 +578,6 @@ WaylandCompositor {
         id: chromeComponent
 
         WaylandChrome {}
-    }
-
-    // Window component for popups
-    Component {
-        id: popupChromeComponent
-
-        WaylandPopupChrome {}
     }
 
     /*

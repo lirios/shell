@@ -156,6 +156,7 @@ P.ChromeItem {
         moveItem: chrome.window.moveItem
 
         inputEventsEnabled: !output.locked
+        autoCreatePopupItems: true
 
         focusOnClick: chrome.window.focusable
 

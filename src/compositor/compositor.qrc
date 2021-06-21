@@ -66,8 +66,6 @@
         <file>qml/windows/XWaylandChrome.qml</file>
         <file>qml/XWayland.qml</file>
         <file>qml/windows/XdgToplevelWindow.qml</file>
-        <file>qml/windows/XdgPopupWindow.qml</file>
-        <file>qml/windows/WaylandPopupChrome.qml</file>
         <file>qml/windows/XWaylandWindow.qml</file>
         <file>qml/indicators/ShutdownIndicator.qml</file>
     </qresource>
