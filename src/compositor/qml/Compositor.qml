@@ -227,11 +227,7 @@ WaylandCompositor {
         id: shellHelper
 
         property bool isReady: false
-        property WaylandSurface grabSurface: null
 
-        onGrabSurfaceAdded: {
-            grabSurface = surface;
-        }
         onShortcutBound: {
             shortcutComponent.incubateObject(keyBindings, { shortcut: shortcut });
         }

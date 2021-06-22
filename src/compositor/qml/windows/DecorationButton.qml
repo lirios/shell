@@ -4,7 +4,6 @@
 
 import QtQuick 2.15
 import Fluid.Controls 1.0 as FluidControls
-import Liri.WaylandServer 1.0 as WS
 
 Item {
     id: button
@@ -21,13 +20,6 @@ Item {
         id: icon
 
         anchors.fill: parent
-    }
-
-    HoverHandler {
-        onHoveredChanged: {
-            if (hovered)
-                shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
-        }
     }
 
     TapHandler {

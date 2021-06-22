@@ -11,7 +11,7 @@ Item {
     property bool moving: false
 
     onMovingChanged: {
-        shellHelper.grabCursor(moving ? WS.LiriShell.MoveGrabCursor : WS.LiriShell.ArrowGrabCursor);
+        // TODO: Set move cursor when `moving` is true
     }
 
     ParallelAnimation {

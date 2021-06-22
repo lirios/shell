@@ -54,13 +54,6 @@ Item {
 
     WaylandClient.LiriShell {
         id: shell
-
-        onActiveChanged: {
-            if (active) {
-                registerGrabSurface(grabWindow);
-                grabWindow.visible = true;
-            }
-        }
     }
 
     WaylandClient.WlrLayerShellV1 {
@@ -68,14 +61,6 @@ Item {
     }
 
     Osd {}
-
-    Components.BorderlessWindow {
-        id: grabWindow
-
-        width: 1
-        height: 1
-        screen: primaryScreen
-    }
 
     Instantiator {
         model: Qt.application.screens

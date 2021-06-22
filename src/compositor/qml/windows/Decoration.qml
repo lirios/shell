@@ -75,22 +75,22 @@ MouseArea {
             edges |= Qt.BottomEdge;
 
         if (edges & Qt.TopEdge && edges & Qt.LeftEdge)
-            shellHelper.grabCursor(WS.LiriShell.ResizeTopLeftGrabCursor);
+            cursorShape = Qt.SizeFDiagCursor;
         else if (edges & Qt.BottomEdge && edges & Qt.LeftEdge)
-            shellHelper.grabCursor(WS.LiriShell.ResizeBottomLeftGrabCursor);
+            cursorShape = Qt.SizeBDiagCursor;
         else if (edges & Qt.TopEdge && edges & Qt.RightEdge)
-            shellHelper.grabCursor(WS.LiriShell.ResizeTopRightGrabCursor);
+            cursorShape = Qt.SizeFDiagCursor;
         else if (edges & Qt.BottomEdge && edges & Qt.RightEdge)
-            shellHelper.grabCursor(WS.LiriShell.ResizeBottomRightGrabCursor);
+            cursorShape = Qt.SizeFDiagCursor;
         else {
             if (edges & Qt.LeftEdge)
-                shellHelper.grabCursor(WS.LiriShell.ResizeLeftGrabCursor);
+                cursorShape = Qt.SizeHorCursor;
             else if (edges & Qt.RightEdge)
-                shellHelper.grabCursor(WS.LiriShell.ResizeRightGrabCursor);
+                cursorShape = Qt.SizeHorCursor;
             if (edges & Qt.TopEdge)
-                shellHelper.grabCursor(WS.LiriShell.ResizeTopGrabCursor);
+                cursorShape = Qt.SizeVerCursor;
             else if (edges & Qt.BottomEdge)
-                shellHelper.grabCursor(WS.LiriShell.ResizeBottomGrabCursor);
+                cursorShape = Qt.SizeVerCursor;
         }
     }
 
@@ -189,17 +189,17 @@ MouseArea {
                         shellSurfaceItem.takeFocus();
                 }
                 onReleased: {
-                    shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
+                    cursorShape = Qt.ArrowCursor;
 
                     if (mouse.button === Qt.RightButton)
                         chrome.window.showWindowMenu(compositor.defaultSeat, Qt.point(mouse.x, mouse.y));
                 }
                 onEntered: {
-                    shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
+                    cursorShape = Qt.OpenHandCursor;
                 }
                 onPositionChanged: {
                     if (pressed) {
-                        shellHelper.grabCursor(WS.LiriShell.MoveGrabCursor);
+                        cursorShape = Qt.CloseHandCursor;
 
                         if (chrome.window.maximized)
                             chrome.window.sendUnmaximized();

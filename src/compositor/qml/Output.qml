@@ -121,18 +121,6 @@ P.WaylandOutput {
             }
             // TODO: Need to wake up with mouse button pressed, released and wheel
 
-            // This is needed so the grab surface will receive pointer events
-            WaylandQuickItem {
-                surface: shellHelper.grabSurface
-                focusOnClick: false
-                touchEventsEnabled: false
-                sizeFollowsSurface: true
-
-                onSurfaceDestroyed: {
-                    destroy();
-                }
-            }
-
             // User interface
             Desktop {
                 id: desktop

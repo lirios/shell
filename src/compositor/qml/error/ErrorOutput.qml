@@ -38,17 +38,6 @@ P.WaylandOutput {
         color: "black"
         visible: true
 
-        // Grab surface from shell helper
-        WaylandQuickItem {
-            id: grabItem
-            focusOnClick: false
-            onSurfaceChanged: {
-                shellHelper.grabCursor(WS.LiriShell.ArrowGrabCursor);
-                if (output.primary)
-                    grabItem.setPrimary();
-            }
-        }
-
         WaylandMouseTracker {
             id: mouseTracker
 

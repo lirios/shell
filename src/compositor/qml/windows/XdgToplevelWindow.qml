@@ -185,7 +185,7 @@ LS.WaylandWindow {
             }
         }
         function onStartMove(seat) {
-            shellHelper.grabCursor(WS.LiriShell.MoveGrabCursor);
+            // TODO: Set move cursor
         }
         function onSetMinimized() {
             window.minimized = true;
