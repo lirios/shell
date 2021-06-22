@@ -80,7 +80,7 @@ P.WaylandOutput {
 
             WaylandCursorItem {
                 id: cursor
-                seat: liriCompositor.defaultSeat
+                seat: output.compositor.defaultSeat
                 x: mouseTracker.mouseX - hotspotX
                 y: mouseTracker.mouseY - hotspotY
                 visible: mouseTracker.containsMouse && !mouseTracker.windowSystemCursorEnabled

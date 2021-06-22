@@ -30,7 +30,6 @@ import Liri.Launcher 1.0 as Launcher
 import Liri.PolicyKit 1.0
 import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
-import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import "base"
 import "components" as Components

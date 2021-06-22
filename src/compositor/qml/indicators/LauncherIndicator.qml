@@ -27,6 +27,7 @@
 import QtQuick 2.15
 import QtQuick.Controls.Material 2.15
 import QtQuick.Controls.Material.impl 2.15 as MaterialImpl
+import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 import "launcher"
 import "../launcher" as Launcher

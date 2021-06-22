@@ -175,7 +175,7 @@ P.WaylandOutput {
             id: cursor
 
             parent: mouseTracker.parent
-            seat: liriCompositor.defaultSeat
+            seat: output.compositor.defaultSeat
 
             x: mouseTracker.mouseX
             y: mouseTracker.mouseY
