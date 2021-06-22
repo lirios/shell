@@ -51,8 +51,9 @@ P.WaylandOutput {
 
         WaylandMouseTracker {
             id: mouseTracker
+
             anchors.fill: parent
-            windowSystemCursorEnabled: true
+            windowSystemCursorEnabled: !cursor.visible && mouseTracker.containsMouse
 
             ErrorScreenView {
                 id: screenView
@@ -61,10 +62,11 @@ P.WaylandOutput {
 
             WaylandCursorItem {
                 id: cursor
+
                 seat: output.compositor.defaultSeat
                 x: mouseTracker.mouseX - hotspotX
                 y: mouseTracker.mouseY - hotspotY
-                visible: mouseTracker.containsMouse && !mouseTracker.windowSystemCursorEnabled
+                visible: surface !== null && mouseTracker.containsMouse
             }
         }
     }

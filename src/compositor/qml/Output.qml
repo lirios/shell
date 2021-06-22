@@ -101,7 +101,9 @@ P.WaylandOutput {
 
             anchors.fill: parent
 
-            windowSystemCursorEnabled: false
+            windowSystemCursorEnabled: mouseTracker.containsMouse &&
+                                       desktop.cursorVisible &&
+                                       !cursor.visible
 
             onMouseXChanged: {
                 // Wake up
