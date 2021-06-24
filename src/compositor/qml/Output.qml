@@ -85,7 +85,7 @@ P.WaylandOutput {
         }
     }
 
-    window: ApplicationWindow {
+    window: Window {
         id: outputWindow
 
         x: output.position.x
@@ -96,17 +96,6 @@ P.WaylandOutput {
         screen: output.screen ? Qt.application.screens[output.screen.screenIndex] : null
         color: "black"
         visible: output.screen.enabled
-
-        // Virtual Keyboard
-        Loader {
-            parent: outputWindow.overlay
-            active: liriCompositor.settings.ui.inputMethod === "qtvirtualkeyboard"
-            source: Qt.resolvedUrl("base/Keyboard.qml")
-            x: (parent.width - width) / 2
-            y: parent.height - height
-            z: 999
-            width: Math.max(parent.width / 2, 768)
-        }
 
         // Keyboard handling
         P.KeyEventFilter {
@@ -126,7 +115,7 @@ P.WaylandOutput {
         }
 
         // Mouse tracker
-        P.WindowMouseTracker {
+        WaylandMouseTracker {
             id: mouseTracker
 
             anchors.fill: parent
@@ -168,62 +157,68 @@ P.WaylandOutput {
                 objectName: "desktop"
                 anchors.fill: parent
             }
-        }
 
-        // Pointer cursor
-        WaylandCursorItem {
-            id: cursor
+            // Virtual Keyboard
+            Loader {
+                parent: outputWindow.overlay
+                active: liriCompositor.settings.ui.inputMethod === "qtvirtualkeyboard"
+                source: Qt.resolvedUrl("base/Keyboard.qml")
+                x: (parent.width - width) / 2
+                y: parent.height - height
+                width: Math.max(parent.width / 2, 768)
+            }
 
-            parent: mouseTracker.parent
-            seat: output.compositor.defaultSeat
+            // Pointer cursor
+            WaylandCursorItem {
+                id: cursor
 
-            x: mouseTracker.mouseX
-            y: mouseTracker.mouseY
-            z: 1000001
+                seat: output.compositor.defaultSeat
 
-            visible: mouseTracker.containsMouse &&
-                     !mouseTracker.windowSystemCursorEnabled &&
-                     desktop.cursorVisible
-        }
+                x: mouseTracker.mouseX
+                y: mouseTracker.mouseY
 
-        // Flash for screenshots
-        Rectangle {
-            id: flash
+                visible: mouseTracker.containsMouse &&
+                         desktop.cursorVisible &&
+                         surface !== null && surface.hasContent
+            }
 
-            anchors.fill: parent
+            // Flash for screenshots
+            Rectangle {
+                id: flash
 
-            color: "white"
-            opacity: 0.0
-            z: 1000002
+                anchors.fill: parent
 
-            SequentialAnimation {
-                id: flashAnimation
+                color: "white"
+                opacity: 0.0
 
-                OpacityAnimator {
-                    easing.type: Easing.OutQuad
-                    target: flash
-                    from: 0.0
-                    to: 1.0
-                    duration: 250
-                }
-                OpacityAnimator {
-                    easing.type: Easing.OutQuad
-                    target: flash
-                    from: 1.0
-                    to: 0.0
-                    duration: 250
+                SequentialAnimation {
+                    id: flashAnimation
+
+                    OpacityAnimator {
+                        easing.type: Easing.OutQuad
+                        target: flash
+                        from: 0.0
+                        to: 1.0
+                        duration: 250
+                    }
+                    OpacityAnimator {
+                        easing.type: Easing.OutQuad
+                        target: flash
+                        from: 1.0
+                        to: 0.0
+                        duration: 250
+                    }
                 }
             }
-        }
 
-        // Idle dimmer
-        IdleDimmer {
-            id: idleDimmer
+            // Idle dimmer
+            IdleDimmer {
+                id: idleDimmer
 
-            anchors.fill: parent
-            z: 1000003
+                anchors.fill: parent
 
-            output: output
+                output: output
+            }
         }
     }
 
