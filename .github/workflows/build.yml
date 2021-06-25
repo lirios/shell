@@ -43,17 +43,11 @@ jobs:
         run: |
           qtverid=`echo "${{ matrix.container }}" | sed -e 's,suse-qt,,g'`
           echo "##[set-output name=id;]${qtverid}"
-      - name: Fetch and uncompress artifacts
+      - uses: actions/checkout@v2
+      - name: Build dependencies
         run: |
           set -x
-          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/cmake-shared.tar.gz" | sudo tar -xz -f - -C /
-          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/qtaccountsservice-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
-          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/qtgsettings-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
-          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/fluid-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
-          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/libliri-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
-          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/eglfs-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
-          curl -L -o - "https://dl.bintray.com/liri/artifacts-${{ steps.extract_branch.outputs.branch }}/wayland-${{ matrix.compiler }}-${{ steps.qt_version.outputs.id }}.tar.gz" | sudo tar -xz -f - -C /
-      - uses: actions/checkout@v2
+          ./.github/workflows/scripts/build-deps ${{ steps.extract_branch.outputs.branch }}
       - name: Build
         run: |
           set -x
