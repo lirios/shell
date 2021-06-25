@@ -16,6 +16,7 @@ pushd /tmp/build-deps
 $curdir/build-cmake-shared $branch
 $curdir/build-qtaccountsservice $branch
 $curdir/build-qtgsettings $branch
+$curdir/build-qtudev $branch
 $curdir/build-fluid $branch
 $curdir/build-libliri $branch
 $curdir/build-eglfs $branch
