@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2017 Michael Spencer <sonrisesoftware@gmail.com>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "frequentmodel.h"
 
 #include <QtCore/QDebug>

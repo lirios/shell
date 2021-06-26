@@ -2,6 +2,74 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Shell
 Source: https://github.com/lirios/shell
 
+Files: .tag
+Copyright: none
+License: CC0-1.0
+
+Files: .github/workflows/*.yml
+Copyright: none
+License: CC0-1.0
+
+Files: .github/desktop.png
+Copyright: 2021 Pier Luigi Fiorini
+License: CC0-1.0
+
+Files: .tx/*
+Copyright: none
+License: CC0-1.0
+
+Files: data/settings/*.xml
+Copyright: 2021 Pier Luigi Fiorini
+License: CC0-1.0
+
+Files: data/settings/*.xml.in
+Copyright: 2021 Pier Luigi Fiorini
+License: CC0-1.0
+
+Files: data/systemd/*.service*
+Copyright: none
+License: CC0-1.0
+
+Files: data/systemd/*.target*
+Copyright: none
+License: CC0-1.0
+
 Files: translations/*
 Copyright: 2020 Liri Translators
+License: CC0-1.0
+
+Files: **/qmldir
+Copyright: none
+License: CC0-1.0
+
+Files: **/*.qmltypes
+Copyright: none
+License: CC0-1.0
+
+Files: **/*.qrc
+Copyright: none
+License: CC0-1.0
+
+Files: **/*.desktop
+Copyright: none
+License: CC0-1.0
+
+Files: **/*.desktop.in
+Copyright: none
+License: CC0-1.0
+
+Files: CMakeLists.txt
+Copyright: 2021 Pier Luigi Fiorini
+License: BSD-3-Clause
+
+Files: **/CMakeLists.txt
+Copyright: 2021 Pier Luigi Fiorini
+License: BSD-3-Clause
+
+Files: AUTHORS.md
+Copyright: 2021 Pier Luigi Fiorini
+License: CC0-1.0
+
+Files: README.md
+Copyright: 2021 Pier Luigi Fiorini
 License: CC0-1.0

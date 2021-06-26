@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2017 Michael Spencer <sonrisesoftware@gmail.com>
+// SPDX-FileCopyrightText: 2021 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 import QtQuick 2.15
 import QtQml.Models 2.1
 import Fluid.Controls 1.0 as FluidControls
