@@ -42,20 +42,16 @@ P.WaylandOutput {
             id: mouseTracker
 
             anchors.fill: parent
-            windowSystemCursorEnabled: !cursor.visible && mouseTracker.containsMouse
+            windowSystemCursorEnabled: containsMouse
 
             ErrorScreenView {
                 id: screenView
                 anchors.fill: parent
             }
 
-            WaylandCursorItem {
-                id: cursor
-
+            P.WaylandCursorGrabber {
                 seat: output.compositor.defaultSeat
-                x: mouseTracker.mouseX - hotspotX
-                y: mouseTracker.mouseY - hotspotY
-                visible: surface !== null && mouseTracker.containsMouse
+                grab: mouseTracker.containsMouse
             }
         }
     }

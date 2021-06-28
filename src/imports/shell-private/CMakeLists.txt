@@ -43,6 +43,8 @@ liri_add_qml_plugin(shell-private
         screencast.h
         screenmodel.cpp
         screenmodel.h
+        waylandcursorgrabber.cpp
+        waylandcursorgrabber.h
         waylandwindow.cpp
         waylandwindow.h
         windowmousetracker.cpp

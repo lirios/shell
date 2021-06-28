@@ -25,7 +25,6 @@ P.WaylandOutput {
 
     readonly property Item surfacesArea: desktop.surfacesArea
     //readonly property alias idleDimmer: idleDimmer
-    readonly property alias cursor: cursor
     readonly property alias desktop: desktop
 
     readonly property var layers: QtObject {
@@ -102,8 +101,7 @@ P.WaylandOutput {
             anchors.fill: parent
 
             windowSystemCursorEnabled: mouseTracker.containsMouse &&
-                                       desktop.cursorVisible &&
-                                       !cursor.visible
+                                       desktop.cursorVisible
 
             onMouseXChanged: {
                 // Wake up
@@ -139,18 +137,10 @@ P.WaylandOutput {
                 width: Math.max(parent.width / 2, 768)
             }
 
-            // Pointer cursor
-            WaylandCursorItem {
-                id: cursor
-
+            // Grab pointer cursor surface and set a bitmap cursor on this window
+            P.WaylandCursorGrabber {
                 seat: output.compositor.defaultSeat
-
-                x: mouseTracker.mouseX
-                y: mouseTracker.mouseY
-
-                visible: mouseTracker.containsMouse &&
-                         desktop.cursorVisible &&
-                         surface !== null && surface.hasContent
+                grab: mouseTracker.containsMouse
             }
 
             // Flash for screenshots
