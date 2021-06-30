@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="621"/>
+        <location filename="../../src/compositor/qml/Compositor.qml" line="617"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Beklager, det virkede ikke. Prøv venligst igen.</translation>
     </message>
