@@ -225,7 +225,7 @@ void ScreenModel::setFileName(const QString &fileName)
 
     // We can feed the model only once
     if (m_initialized) {
-        qWarning("Screen configuration cannot be changed after initialization");
+        qCWarning(lcShell, "Screen configuration cannot be changed after initialization");
         return;
     }
 
@@ -280,7 +280,7 @@ QVariant ScreenModel::data(const QModelIndex &index, int role) const
 bool ScreenModel::testConfiguration(WaylandWlrOutputConfigurationV1 *configuration)
 {
     if (!m_fileName.isEmpty()) {
-        qWarning("Cannot test output configuration when using a fake screen backend");
+        qCWarning(lcShell, "Cannot test output configuration when using a fake screen backend");
         return false;
     }
 
@@ -309,7 +309,7 @@ bool ScreenModel::testConfiguration(WaylandWlrOutputConfigurationV1 *configurati
                 }
 
                 if (!modeFound) {
-                    qWarning("Output configuration test failed: mode not found");
+                    qCWarning(lcShell, "Output configuration test failed: mode not found");
                     return false;
                 }
 
@@ -324,7 +324,7 @@ bool ScreenModel::testConfiguration(WaylandWlrOutputConfigurationV1 *configurati
 void ScreenModel::applyConfiguration(WaylandWlrOutputConfigurationV1 *configuration)
 {
     if (!m_fileName.isEmpty()) {
-        qWarning("Cannot test or apply output configuration when using a fake screen backend");
+        qCWarning(lcShell, "Cannot test or apply output configuration when using a fake screen backend");
         return;
     }
 

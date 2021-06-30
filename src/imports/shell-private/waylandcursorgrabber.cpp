@@ -5,6 +5,7 @@
 #include <QWaylandDrag>
 #include <QWaylandOutput>
 
+#include "logging.h"
 #include "waylandcursorgrabber.h"
 
 WaylandCursorGrabber::WaylandCursorGrabber(QQuickItem *parent)
@@ -25,7 +26,7 @@ void WaylandCursorGrabber::setSeat(QWaylandSeat *seat)
     if (m_seat == seat)
         return;
     if (!seat) {
-        qWarning("Cannot unset WaylandCursorGrabber::seat");
+        qCWarning(lcShell, "Cannot unset WaylandCursorGrabber::seat");
         return;
     }
 
