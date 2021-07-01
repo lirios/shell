@@ -9,8 +9,8 @@ Row {
     id: swipeView
 
     readonly property int count: liriCompositor.settings.numWorkspaces
-    property int currentWorkspaceNumber: 1
-    property Item currentWorkspace: defaultWorkspace
+    readonly property alias currentWorkspaceNumber: __private.currentWorkspaceNumber
+    property alias currentWorkspace: defaultWorkspace
 
     width: parent.width
     height: parent.height
@@ -22,6 +22,12 @@ Row {
             currentWorkspace = defaultWorkspace;
         else
             currentWorkspace = repeater.itemAt(currentWorkspaceNumber - 2);
+    }
+
+    QtObject {
+        id: __private
+
+        property int currentWorkspaceNumber: 1
     }
 
     Workspace {
@@ -46,7 +52,7 @@ Row {
             return;
         }
 
-        swipeView.currentWorkspaceNumber = num;
+        __private.currentWorkspaceNumber = num;
 
         if (currentWorkspace.state != "normal")
             currentWorkspace.stopEffect(currentWorkspace.state);
@@ -54,7 +60,7 @@ Row {
 
     function selectPrevious() {
         // Previous index (avoid overflow)
-        var prevNumber = swipeView.currentWorkspaceNumber - 1;
+        var prevNumber = __private.currentWorkspaceNumber - 1;
         if (prevNumber < 1)
             prevNumber = 1;
 
@@ -67,7 +73,7 @@ Row {
 
     function selectNext() {
         // Next index (avoid overflow)
-        var nextNumber = swipeView.currentWorkspaceNumber + 1;
+        var nextNumber = __private.currentWorkspaceNumber + 1;
         if (nextNumber > swipeView.count)
             nextNumber = swipeView.count;
 

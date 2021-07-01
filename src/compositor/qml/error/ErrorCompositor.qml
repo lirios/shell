@@ -10,7 +10,7 @@ import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import ".." as Root
 
-WaylandCompositor {
+P.WaylandCompositor {
     id: liriCompositor
 
     onCreatedChanged: {
@@ -39,8 +39,6 @@ WaylandCompositor {
     }
 
     Instantiator {
-        id: screenManager
-
         model: screenModel
         delegate: ErrorOutput {
             compositor: liriCompositor
@@ -76,8 +74,8 @@ WaylandCompositor {
     function quit() {
         shellHelper.sendQuit();
 
-        for (var i = 0; i < screenManager.count; i++)
-            screenManager.objectAt(i).window.close();
+        for (var i = 0; i < outputs.length; i++)
+            outputs[i].window.close();
 
         Qt.quit();
     }

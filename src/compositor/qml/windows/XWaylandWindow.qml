@@ -9,70 +9,116 @@ import Liri.WaylandServer 1.0 as WS
 import Liri.XWayland 1.0 as LXW
 import Liri.private.shell 1.0 as LS
 
-LS.WaylandWindow {
+FluidCore.Object {
     id: window
 
     property LXW.XWaylandShellSurface shellSurface: null
-    readonly property QtWayland.WaylandSurface surface: shellSurface ? shellSurface.surface : null
-    readonly property alias parentSurface: d.parentSurface
 
-    readonly property int windowType: shellSurface ? shellSurface.windowType : Qt.Window
-
-    readonly property alias mapped: d.mapped
-
+    readonly property alias surface: __private.surface
+    readonly property alias parentSurface: __private.parentSurface
+    readonly property alias mapped: __private.mapped
+    readonly property alias backgroundColor: __private.backgroundColor
+    readonly property alias foregroundColor: __private.foregroundColor
     readonly property alias moveItem: moveItem
-
-    readonly property string title: shellSurface ? shellSurface.title : ""
-
-    readonly property alias windowGeometry: d.windowGeometry
-    readonly property alias surfaceGeometry: d.surfaceGeometry
-
-    readonly property size minSize: Qt.size(0, 0)
-    readonly property size maxSize: Qt.size(0, 0)
-
-    readonly property bool activated: shellSurface && shellSurface.activated
+    readonly property alias appId: appIdAndIcon.canonicalAppId
+    readonly property alias iconName: appIdAndIcon.iconName
+    readonly property alias title: __private.title
+    readonly property alias windowGeometry: __private.windowGeometry
+    readonly property alias activated: __private.activated
     property bool minimized: false
-    readonly property bool maximized: shellSurface && shellSurface.maximized
-    readonly property bool fullscreen: shellSurface && shellSurface.fullscreen
-    readonly property bool resizing: false
-
-    readonly property bool decorated: shellSurface && shellSurface.windowType !== Qt.Popup && shellSurface.decorate && !shellSurface.fullscreen
-    readonly property bool bordered: decorated && !shellSurface.maximized
-    readonly property real borderSize: bordered ? 4 : 0
+    readonly property alias maximized: __private.maximized
+    readonly property alias fullscreen: __private.fullscreen
+    readonly property alias resizing: __private.resizing
+    readonly property bool decorated: {
+        // Set true if it has a titlebar and decoration
+        if (__private.windowType !== Qt.Popup)
+            return __private.decorate && !__private.fullscreen;
+        else
+            return false;
+    }
+    readonly property bool bordered: {
+        // Set true if it has resize handles
+        if (decorated)
+            return !__private.maximized && !__private.fullscreen;
+        else
+            return false;
+    }
+    readonly property real borderSize: bordered ? 5 : 0
     readonly property real titleBarHeight: decorated ? 32 : 0
-
-    readonly property bool focusable: shellSurface && shellSurface.windowType !== Qt.Popup
+    readonly property bool focusable: true
     readonly property bool maximizable: true
+    readonly property bool resizable: !__private.maximized && !__private.fullscreen
 
     signal showWindowMenu(QtWayland.WaylandSeat seat, point localSurfacePosition)
 
+    // Instead of binding shellSurface properties to those of the
+    // window API, we have to store them into a private object to avoid issues
+    // when they become null due to the surface being destroyed.
+    // This is also needed for the chrome that depends on the properties here,
+    // and storing the last known state prevents the chrome from doing weird
+    // things for example messing the size due to a wrong window geometry value.
     QtObject {
-        id: d
+        id: __private
 
-        property rect windowGeometry
-        property rect surfaceGeometry
-        property bool mapped: false
         property bool registered: false
-        property bool responsive: true
+        property bool mapped: false
+
+        property QtWayland.WaylandSurface surface: null
         property QtWayland.WaylandSurface parentSurface: null
 
-        function recalculateWindowGeometry() {
-            var w = window.surface ? window.surface.size.width : 0;
-            var h = window.surface ? window.surface.size.height : 0;
+        property int windowType
+        property bool decorate
+        property color backgroundColor
+        property color foregroundColor
+        property string title
+        property rect windowGeometry
+        property bool activated
+        property bool maximized
+        property bool fullscreen
+        property bool resizing: false
 
-            if (window.decorated)
-                return Qt.rect(window.borderSize, window.borderSize,
-                               w + window.borderSize, h + window.borderSize + window.titleBarHeight);
+        property point position
+        property size size
+        property point finalPosition
 
-            return Qt.rect(0, 0, w > 0 ? w : -1, h > 0 ? h : -1);
+        function updateAppId() {
+            appIdAndIcon.appId = shellSurface.appId;
+
+            if (!__private.registered && appIdAndIcon.canonicalAppId) {
+                // Register application
+                applicationManager.registerShellSurface(window);
+                __private.registered = true;
+
+                // Focus icon in the panel
+                if (shellSurface.activated)
+                    applicationManager.focusShellSurface(window);
+            }
         }
 
-        function recalculateSurfaceGeometry() {
-            var w = window.surface ? window.surface.size.width : 0;
-            var h = window.surface ? window.surface.size.height : 0;
-
-            return Qt.rect(0, 0, w > 0 ? w : -1, h > 0 ? h : -1);
+        function updateWindowGeometry() {
+            __private.windowGeometry = Qt.rect(borderSize, borderSize,
+                                               xdgSurface.surface.size.width,
+                                               xdgSurface.surface.size.height + titleBarHeight);
         }
+    }
+
+    Component.onCompleted: {
+        __private.surface = shellSurface.surface;
+        __private.parentSurface = shellSurface.parentSurface;
+        __private.windowType = shellSurface.windowType;
+        __private.decorate = shellSurface.decorate;
+        __private.backgroundColor = shellSurface.surface.backgroundColor;
+        __private.foregroundColor = shellSurface.surface.foregroundColor;
+        __private.title = shellSurface.title;
+        __private.activated = shellSurface.activated;
+        __private.maximized = shellSurface.maximized;
+        __private.fullscreen = shellSurface.fullscreen;
+        __private.updateAppId();
+        __private.updateWindowGeometry();
+    }
+
+    LS.AppIdAndIcon {
+        id: appIdAndIcon
     }
 
     WS.WlrForeignToplevelHandleV1 {
@@ -119,11 +165,18 @@ LS.WaylandWindow {
     }
 
     Connections {
-        target: surface
+        target: __private.surface
 
         function onSizeChanged() {
-            d.windowGeometry = d.recalculateWindowGeometry();
-            d.surfaceGeometry = d.recalculateSurfaceGeometry();
+            __private.updateWindowGeometry();
+        }
+
+        function onBackgroundColorChanged() {
+            __private.backgroundColor = shellSurface.surface.backgroundColor;
+        }
+
+        function onForegroundColorChanged() {
+            __private.foregroundColor = shellSurface.surface.foregroundColor;
         }
     }
 
@@ -131,35 +184,40 @@ LS.WaylandWindow {
         target: shellSurface
 
         function onActivatedChanged() {
-            if (d.registered && shellSurface.activated && shellSurface.windowType !== Qt.Popup)
+            if (__private.registered && shellSurface.activated && shellSurface.windowType !== Qt.Popup)
                 applicationManager.focusShellSurface(window);
         }
+
         function onSurfaceChanged() {
-            // Surface is changed, which means that app id has likely changed too
-            window.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
-        }
-        function onAppIdChanged() {
-            // Canonicalize app id and cache it, so that it's known even during destruction
-            window.appId = applicationManager.canonicalizeAppId(shellSurface.appId);
-
-            if (!d.registered && window.appId) {
-                // Register application
-                applicationManager.registerShellSurface(window);
-                d.registered = true;
-
-                // Focus icon in the panel
-                if (d.activated)
-                    applicationManager.focusShellSurface(window);
+            if (shellSurface.surface) {
+                __private.surface = shellSurface.surface;
+                __private.backgroundColor = shellSurface.surface.backgroundColor;
+                __private.foregroundColor = shellSurface.surface.foregroundColor;
             }
         }
+
+        function onParentSurfaceChanged() {
+            __private.parentSurface = shellSurface.parentSurface;
+        }
+
+        function onAppIdChanged() {
+            __private.updateAppId();
+        }
+
+        function onDecorateChanged() {
+            __private.decorate = shellSurface.decorate;
+        }
+
         function onMapped() {
-            d.mapped = true;
+            __private.mapped = true;
         }
+
         function onUnmapped() {
-            d.mapped = false;
+            __private.mapped = false;
         }
+
         function onSetMinimized() {
-            minimized = !minimized;
+            minimized = true;
         }
     }
 

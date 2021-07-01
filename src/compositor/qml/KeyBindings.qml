@@ -38,8 +38,8 @@ Item {
         id: d
 
         function switchToWorkspace(number) {
-            for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).selectWorkspace(number);
+            for (var i = 0; i < liriCompositor.outputs.length; i++)
+                liriCompositor.outputs[i].selectWorkspace(number);
         }
     }
 
@@ -55,8 +55,8 @@ Item {
         onActivated: {
             showInformation = !showInformation;
 
-            for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).showInformation = showInformation;
+            for (var i = 0; i < liriCompositor.outputs.length; i++)
+                liriCompositor.outputs[i].showInformation = showInformation;
         }
     }
 
@@ -140,8 +140,8 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspaceLeft
         onActivated: {
-            for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).selectPreviousWorkspace();
+            for (var i = 0; i < liriCompositor.outputs.length; i++)
+                liriCompositor.outputs[i].selectPreviousWorkspace();
         }
     }
 
@@ -149,8 +149,8 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.switchToWorkspaceRight
         onActivated: {
-            for (var i = 0; i < liriCompositor.screenManager.count; i++)
-                liriCompositor.screenManager.objectAt(i).selectNextWorkspace();
+            for (var i = 0; i < liriCompositor.outputs.length; i++)
+                liriCompositor.outputs[i].selectNextWorkspace();
         }
     }
 
@@ -189,8 +189,8 @@ Item {
         sequence: wmKeybindings.showDesktop
         onActivated: {
             var workspace;
-            for (var i = 0; i < liriCompositor.screenManager.count; i++) {
-                workspace = liriCompositor.objectAt(i).surfacesArea;
+            for (var i = 0; i < liriCompositor.outputs.length; i++) {
+                workspace = liriCompositor.outputs[i].currentWorkspace;
                 if (workspace.state === "reveal")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")
@@ -204,8 +204,8 @@ Item {
         sequence: wmKeybindings.presentWindows
         onActivated: {
             var workspace;
-            for (var i = 0; i < liriCompositor.screenManager.count; i++) {
-                workspace = liriCompositor.objectAt(i).surfacesArea;
+            for (var i = 0; i < liriCompositor.outputs.length; i++) {
+                workspace = liriCompositor.outputs[i].currentWorkspace;
                 if (workspace.state === "present")
                     workspace.state = "normal";
                 else if (workspace.state === "normal")

@@ -3,10 +3,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
+import Liri.private.shell 1.0 as P
 import "PresentEffect.js" as PresentEffect
+import "../windows"
 
 Item {
     id: workspace
+
+    readonly property alias shellSurfaces: shellSurfaces
+    readonly property alias xwaylandShellSurfaces: xwaylandShellSurfaces
 
     signal effectStarted(string effect)
     signal effectStopped(string effect)
@@ -75,6 +80,66 @@ Item {
         id: chromeComponent
 
         PresentWindowsChrome {}
+    }
+
+    ListModel {
+        id: shellSurfaces
+    }
+
+    ListModel {
+        id: xwaylandShellSurfaces
+    }
+
+    Repeater {
+        model: shellSurfaces
+
+        Chrome {
+            id: chrome
+
+            window: model.window
+            shellSurface: model.shellSurface
+            output: model.output
+            shellSurfaceType: P.ChromeItem.WaylandShellSurface
+
+            onDestroyAnimationFinished: {
+                // Unregister from the application manager
+                applicationManager.unregisterShellSurface(chrome.window);
+
+                // Remove from shell surface model
+                shellSurfaces.remove(index);
+
+                // Destroy the window object but do it only once to avoid
+                // freeing already freed memory
+                if (chrome.primary)
+                    chrome.window.destroy();
+            }
+        }
+    }
+
+    Repeater {
+        model: xwaylandShellSurfaces
+
+        Chrome {
+            id: xwaylandChrome
+
+            window: model.window
+            shellSurface: model.shellSurface
+            output: model.output
+            shellSurfaceType: P.ChromeItem.XWaylandShellSurface
+
+            onDestroyAnimationFinished: {
+                // Unregister from the application manager
+                applicationManager.unregisterShellSurface(xwaylandChrome.window);
+
+                // Remove from shell surface model
+                xwaylandShellSurfaces.remove(index);
+
+                // Destroy the window object but do it only once to avoid
+                // freeing already freed memory
+                if (xwaylandChrome.primary)
+                    xwaylandChrome.window.destroy();
+            }
+        }
     }
 
     function present() {

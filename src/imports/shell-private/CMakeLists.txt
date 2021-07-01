@@ -18,6 +18,8 @@ liri_add_qml_plugin(shell-private
     VERSION
         "1.0"
     SOURCES
+        appidandicon.cpp
+        appidandicon.h
         dbus/multimediakeysserver.cpp
         dbus/multimediakeysserver.h
         dbus/osdserver.cpp
@@ -43,10 +45,10 @@ liri_add_qml_plugin(shell-private
         screencast.h
         screenmodel.cpp
         screenmodel.h
+        waylandcompositor.cpp
+        waylandcompositor.h
         waylandcursorgrabber.cpp
         waylandcursorgrabber.h
-        waylandwindow.cpp
-        waylandwindow.h
         windowmousetracker.cpp
         windowmousetracker.h
     QML_FILES

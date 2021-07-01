@@ -106,20 +106,17 @@ LiriShell.PanelItem {
         launcher.currentIndex = index;
 
         // Minimize or unminimize shell surfaces
-        for (var i = 0; i < liriCompositor.shellSurfaces.count; i++) {
-            var shellSurface = liriCompositor.shellSurfaces.get(i).shellSurface;
-            if (!shellSurface)
-                continue;
-
-            if (shellSurface.appId === model.appId) {
+        for (var i = 0; i < liriCompositor.windows.length; i++) {
+            var window = liriCompositor.windows[i];
+            if (window.appId === model.appId) {
                 // Task icon position
                 var pt = desktop.mapFromItem(launcherItem, launcherItem.width * 0.5, launcherItem.height * 0.5);
                 pt.x += output.position.x;
                 pt.y += output.position.y;
 
                 // Set task icon geometry and toggle minimization
-                for (var j = 0; j < liriCompositor.screenManager.count; j++) {
-                    var curOutput = liriCompositor.screenManager.objectAt(j);
+                for (var j = 0; j < liriCompositor.outputs.length; j++) {
+                    var curOutput = liriCompositor.outputs[j];
                     for (var surface in curOutput.viewsBySurface) {
                         var view = curOutput.viewsBySurface[surface];
                         view.taskIconGeometry = Qt.rect(pt.x, pt.y, launcherItem.width, launcherItem.height);
@@ -127,7 +124,7 @@ LiriShell.PanelItem {
                 }
 
                 // Toggle minimization
-                shellSurface.minimized = !shellSurface.minimized;
+                window.minimized = !window.minimized;
             }
         }
     }

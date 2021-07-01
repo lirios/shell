@@ -3,22 +3,32 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
-import Liri.WaylandServer 1.0 as WS
 
 Item {
     id: moveItem
 
     property bool moving: false
 
-    onMovingChanged: {
-        // TODO: Set move cursor when `moving` is true
-    }
-
     ParallelAnimation {
         id: moveAnimation
 
-        SmoothedAnimation { id: xAnimator; target: moveItem; property: "x"; easing.type: Easing.InOutQuad; duration: 450 }
-        SmoothedAnimation { id: yAnimator; target: moveItem; property: "y"; easing.type: Easing.InOutQuad; duration: 450 }
+        alwaysRunToEnd: true
+
+        SmoothedAnimation {
+            id: xAnimator
+
+            target: moveItem
+            property: "x"
+            duration: 250
+        }
+
+        SmoothedAnimation {
+            id: yAnimator
+
+            target: moveItem
+            property: "y"
+            duration: 250
+        }
     }
 
     function animateTo(dx, dy) {

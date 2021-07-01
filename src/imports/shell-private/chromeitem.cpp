@@ -2,13 +2,12 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <QtWaylandCompositor/QWaylandOutput>
+#include <QWaylandOutput>
 
 #include "chromeitem.h"
 
 ChromeItem::ChromeItem(QQuickItem *parent)
     : QQuickItem(parent)
-    , m_compositor(nullptr)
 {
     connect(this, &ChromeItem::xChanged, this, &ChromeItem::updatePrimary);
     connect(this, &ChromeItem::yChanged, this, &ChromeItem::updatePrimary);
@@ -17,15 +16,6 @@ ChromeItem::ChromeItem(QQuickItem *parent)
 QWaylandCompositor *ChromeItem::compositor() const
 {
     return m_compositor;
-}
-
-void ChromeItem::setCompositor(QWaylandCompositor *compositor)
-{
-    if (m_compositor == compositor)
-        return;
-
-    m_compositor = compositor;
-    Q_EMIT compositorChanged();
 }
 
 QWaylandQuickItem *ChromeItem::shellSurfaceItem() const
@@ -40,6 +30,9 @@ void ChromeItem::setShellSurfaceItem(QWaylandQuickItem *item)
 
     m_shellSurfaceItem = item;
     Q_EMIT shellSurfaceItemChanged();
+
+    m_compositor = m_shellSurfaceItem->compositor();
+    Q_EMIT compositorChanged();
 }
 
 bool ChromeItem::isPrimary() const

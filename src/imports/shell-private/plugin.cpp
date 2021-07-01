@@ -8,6 +8,7 @@
 #  define QT_WAYLAND_COMPOSITOR_QUICK
 #endif
 
+#include "appidandicon.h"
 #include "dbus/multimediakeysserver.h"
 #include "dbus/osdserver.h"
 #include "chromeitem.h"
@@ -19,8 +20,8 @@
 #include "quickoutput.h"
 #include "screencast.h"
 #include "screenmodel.h"
+#include "waylandcompositor.h"
 #include "waylandcursorgrabber.h"
-#include "waylandwindow.h"
 #include "windowmousetracker.h"
 
 #ifndef Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS
@@ -61,7 +62,7 @@
     };
 #endif
 
-Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(WaylandWindow)
+Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(WaylandCompositor)
 
 class ShellPrivatePlugin : public QQmlExtensionPlugin
 {
@@ -78,6 +79,7 @@ public:
 
         // Components
 
+        qmlRegisterType<AppIdAndIcon>(uri, versionMajor, versionMinor, "AppIdAndIcon");
         qmlRegisterType<ChromeItem>(uri, versionMajor, versionMinor, "ChromeItem");
         qmlRegisterType<ExtensionsModel>(uri, versionMajor, versionMinor, "ExtensionsModel");
         qmlRegisterType<FpsCounter>(uri, versionMajor, versionMinor, "FpsCounter");
@@ -91,8 +93,8 @@ public:
                                                QStringLiteral("Cannot create instance of ScreenMode"));
         qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
                                                QStringLiteral("Cannot create instance of ScreenItem"));
+        qmlRegisterType<WaylandCompositorQuickParent>(uri, versionMajor, versionMinor, "WaylandCompositor");
         qmlRegisterType<WaylandCursorGrabber>(uri, versionMajor, versionMinor, "WaylandCursorGrabber");
-        qmlRegisterType<WaylandWindowQuickParent>(uri, versionMajor, versionMinor, "WaylandWindow");
         qmlRegisterType<WindowMouseTracker>(uri, versionMajor, versionMinor, "WindowMouseTracker");
 
         // D-Bus interfaces

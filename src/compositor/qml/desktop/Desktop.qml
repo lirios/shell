@@ -17,6 +17,7 @@ import ".."
 import "../components" as Components
 import "../indicators" as Indicators
 import "../screens" as Screens
+import "../windows" as Windows
 
 Item {
     id: desktop
@@ -32,7 +33,6 @@ Item {
     readonly property alias topLayer: topLayer
     readonly property alias overlayLayer: overlayLayer
     readonly property alias workspacesView: workspacesView
-    readonly property alias surfacesArea: workspacesView.currentWorkspace
     readonly property alias currentWorkspace: workspacesView.currentWorkspace
 
     readonly property var layers: QtObject {
@@ -138,6 +138,7 @@ Item {
         anchors.fill: parent
     }
 
+    // Workspaces
     WorkspacesView {
         id: workspacesView
     }

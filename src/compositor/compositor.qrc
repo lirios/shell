@@ -54,19 +54,20 @@
         <file>qml/screens/PowerScreen.qml</file>
         <file>qml/screens/SplashScreen.qml</file>
         <file>qml/ShellSettings.qml</file>
+        <file>qml/windows/Chrome.qml</file>
         <file>qml/windows/ChromeMenu.qml</file>
-        <file>qml/windows/Decoration.qml</file>
         <file>qml/windows/DecorationButton.qml</file>
         <file>qml/windows/MoveItem.qml</file>
-        <file>qml/windows/WaylandChrome.qml</file>
-        <file>qml/windows/window-close.svg</file>
-        <file>qml/windows/window-maximize.svg</file>
-        <file>qml/windows/window-minimize.svg</file>
-        <file>qml/windows/window-restore.svg</file>
-        <file>qml/windows/XWaylandChrome.qml</file>
-        <file>qml/XWayland.qml</file>
         <file>qml/windows/XdgToplevelWindow.qml</file>
         <file>qml/windows/XWaylandWindow.qml</file>
         <file>qml/indicators/ShutdownIndicator.qml</file>
+        <file>qml/windows/TitleBar.qml</file>
+        <file>qml/windows/ResizeHandler.qml</file>
+        <file>images/chrome/dropshadow-24.png</file>
+        <file>images/chrome/dropshadow-8.png</file>
+        <file>images/chrome/window-close.svg</file>
+        <file>images/chrome/window-maximize.svg</file>
+        <file>images/chrome/window-minimize.svg</file>
+        <file>images/chrome/window-restore.svg</file>
     </qresource>
 </RCC>

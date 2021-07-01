@@ -9,6 +9,7 @@ import QtQuick.Window 2.15
 import QtWayland.Compositor 1.15
 import Liri.Launcher 1.0 as Launcher
 import Liri.PolicyKit 1.0
+import Liri.XWayland 1.0 as LXW
 import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
@@ -18,28 +19,22 @@ import "components/LayerSurfaceManager.js" as LayerSurfaceManager
 import "desktop"
 import "windows"
 
-WaylandCompositor {
+P.WaylandCompositor {
     id: liriCompositor
 
     property point mousePos: Qt.point(0, 0)
 
     property int idleInhibit: 0
 
-    readonly property alias screenManager: screenManager
-
     readonly property alias settings: settings
-    readonly property alias shellSurfaces: shellSurfaces
 
-    property var activeShellSurface: null
+    readonly property alias windows: __private.windows
     readonly property bool hasMaxmizedShellSurfaces: __private.maximizedShellSurfaces > 0
     readonly property bool hasFullscreenShellSurfaces: __private.fullscreenShellSurfaces > 0
 
     readonly property alias applicationManager: applicationManager
     readonly property alias shellHelper: shellHelper
     readonly property alias policyKitAgent: policyKitAgent
-
-    signal shellSurfaceCreated(var shellSurface)
-    signal shellSurfaceDestroyed(var shellSurface)
 
     defaultSeat.keymap {
         layout: settings.keyboard.layouts[0] ? settings.keyboard.layouts[0] : "us"
@@ -56,8 +51,8 @@ WaylandCompositor {
             SessionInterface.setEnvironment("WAYLAND_DISPLAY", liriCompositor.socketName);
             SessionInterface.registerService();
 
-            if (xwaylandLoader.status == Loader.Ready)
-                xwaylandLoader.item.startServer();
+            if (xwayland.enabled)
+                xwayland.startServer();
         }
     }
 
@@ -70,35 +65,12 @@ WaylandCompositor {
      * Window management
      */
 
-    ListModel {
-        id: shellSurfaces
-    }
-
     QtObject {
         id: __private
 
+        property var windows: []
         property int maximizedShellSurfaces: 0
         property int fullscreenShellSurfaces: 0
-
-        function createShellSurfaceItem(window, component, output) {
-            var parentSurfaceItem = output.viewsBySurface[window.parentSurface];
-            var parent = parentSurfaceItem || output.surfacesArea;
-            var item = component.createObject(parent, {
-                                                  "compositor": liriCompositor,
-                                                  "window": window
-                                              });
-            output.viewsBySurface[window.surface] = item;
-            return item;
-        }
-
-        function handleShellSurfaceCreated(window, component) {
-            shellSurfaces.append({"window": window});
-
-            for (var i = 0; i < screenManager.count; i++)
-                createShellSurfaceItem(window, component, screenManager.objectAt(i));
-
-            liriCompositor.shellSurfaceCreated(window);
-        }
     }
 
     /*
@@ -142,8 +114,6 @@ WaylandCompositor {
     }
 
     Instantiator {
-        id: screenManager
-
         model: screenModel
         delegate: Output {
             compositor: liriCompositor
@@ -175,8 +145,8 @@ WaylandCompositor {
             for (var surface in object.viewsBySurface) {
                 var view = object.viewsBySurface[surface];
                 if (view.primary && view.output === object) {
-                    view.moveItem.x = liriCompositor.defaultOutput.position.x + 20;
-                    view.moveItem.y = liriCompositor.defaultOutput.position.y + 20;
+                    view.window.moveItem.x = liriCompositor.defaultOutput.position.x + 20;
+                    view.window.moveItem.y = liriCompositor.defaultOutput.position.y + 20;
                 }
             }
         }
@@ -235,8 +205,8 @@ WaylandCompositor {
             isReady = true;
             shellHelperTimer.running = false;
 
-            for (var i = 0; i < screenManager.count; i++)
-                screenManager.objectAt(i).desktop.state = "session";
+            for (var i = 0; i < outputs.length; i++)
+                outputs[i].desktop.state = "session";
         }
     }
 
@@ -246,8 +216,8 @@ WaylandCompositor {
         interval: 15000
         running: true
         onTriggered: {
-            for (var i = 0; i < screenManager.count; i++)
-                screenManager.objectAt(i).desktop.state = "session";
+            for (var i = 0; i < outputs.length; i++)
+                outputs[i].desktop.state = "session";
         }
     }
 
@@ -315,8 +285,8 @@ WaylandCompositor {
             if (layerSurface.output) {
                 createItem(layerSurface, layerSurface.output);
             } else {
-                for (var i = 0; i < screenManager.count; i++)
-                    createItem(layerSurface, screenManager.objectAt(i));
+                for (var i = 0; i < outputs.length; i++)
+                    createItem(layerSurface, outputs[i]);
             }
         }
 
@@ -347,16 +317,6 @@ WaylandCompositor {
         preferredMode: settings.ui.clientSideDecoration ? XdgToplevel.ClientSideDecoration : XdgToplevel.ServerSideDecoration
     }
 
-    WS.KdeServerDecorationManager {
-        defaultMode: settings.ui.clientSideDecoration ? WS.KdeServerDecorationManager.Client : WS.KdeServerDecorationManager.Server
-
-        onDecorationCreated: {
-            decoration.modeRequested.connect(function(mode) {
-                decoration.surface.decorationMode = mode;
-            });
-        }
-    }
-
     WS.LiriDecorationManager {
         onDecorationCreated: {
             decoration.foregroundColorChanged.connect(function(color) {
@@ -380,9 +340,8 @@ WaylandCompositor {
         id: screenCast
 
         onFrameAvailable: {
-            for (var i = 0; i < screenManager.count; i++) {
-                var output = screenManager.objectAt(i);
-
+            for (var i = 0; i < outputs.length; i++) {
+                var output = outputs[i];
 
                 if (output.screen.screen === screen) {
                     output.exportDmabufFrame.frame(size, offset, 0, 0, drmFormat, modifier, numObjects);
@@ -391,8 +350,8 @@ WaylandCompositor {
             }
         }
         onObjectAvailable: {
-            for (var i = 0; i < screenManager.count; i++) {
-                var output = screenManager.objectAt(i);
+            for (var i = 0; i < outputs.length; i++) {
+                var output = outputs[i];
                 if (!output.exportDmabufFrame)
                     continue;
 
@@ -403,8 +362,8 @@ WaylandCompositor {
             }
         }
         onCaptureReady: {
-            for (var i = 0; i < screenManager.count; i++) {
-                var output = screenManager.objectAt(i);
+            for (var i = 0; i < outputs.length; i++) {
+                var output = outputs[i];
                 if (!output.exportDmabufFrame)
                     continue;
 
@@ -442,12 +401,69 @@ WaylandCompositor {
 
     // Shells
 
+    Component {
+        id: xdgToplevelComponent
+
+        XdgToplevelWindow {
+            id: window
+
+            onMaximizedChanged: {
+                if (maximized)
+                    __private.maximizedShellSurfaces++;
+                else
+                    __private.maximizedShellSurfaces--;
+            }
+            onFullscreenChanged: {
+                if (fullscreen)
+                    __private.fullscreenShellSurfaces++;
+                else
+                    __private.fullscreenShellSurfaces--;
+            }
+
+            Component.onDestruction: {
+                // Remove from the list of xdg-shell toplevels
+                var toplevelIndex = xdgShell.toplevels.indexOf(toplevel);
+                if (toplevelIndex >= 0)
+                    xdgShell.toplevels.splice(toplevelIndex, 1);
+
+                // Remove from the list of windows
+                var windowIndex = windows.indexOf(window);
+                if (windowIndex >= 0)
+                    windows.splice(windowIndex, 1);
+            }
+        }
+    }
+
     XdgShell {
         id: xdgShell
 
+        property var toplevels: ([])
+
         onToplevelCreated: {
-            var window = xdgToplevelComponent.createObject(xdgShell, {"xdgSurface": xdgSurface, "toplevel": toplevel});
-            __private.handleShellSurfaceCreated(window, chromeComponent);
+            var window = xdgToplevelComponent.createObject(xdgShell, {xdgSurface: xdgSurface, toplevel: toplevel});
+            for (var i = 0; i < outputs.length; i++)
+                outputs[i].currentWorkspace.shellSurfaces.append({shellSurface: xdgSurface, window: window, output: outputs[i]});
+            toplevels.push(toplevel);
+            windows.push(window);
+        }
+    }
+
+    Component {
+        id: gtkSurfaceComponent
+
+        WS.GtkSurface {
+            id: gtkSurface
+
+            onAppIdChanged: {
+                for (var i = 0; i < windows.length; i++) {
+                    if (windows[i].surface === gtkSurface.surface) {
+                        // Move surface under this appId because for some reason Gtk+ applications
+                        // are unable to provide a reliable appId via xdg-shell as opposed to gtk-shell
+                        windows[i].appId = appId;
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -457,6 +473,50 @@ WaylandCompositor {
         onGtkSurfaceRequested: {
             var gtkSurface = gtkSurfaceComponent.createObject(gtkShell);
             gtkSurface.initialize(gtkShell, surface, resource);
+        }
+    }
+
+    Component {
+        id: xwaylandWindowComponent
+
+        XWaylandWindow {
+            id: window
+
+            Component.onDestruction: {
+                // Remove from the list of windows
+                var windowIndex = windows.indexOf(window);
+                if (windowIndex >= 0)
+                    windows.splice(windowIndex, 1);
+            }
+        }
+    }
+
+    Component {
+        id: shellSurfaceComponent
+
+        LXW.XWaylandShellSurface {}
+    }
+
+    LXW.XWayland {
+        id: xwayland
+
+        enabled: liriCompositor.settings.shell.enableXwayland
+        manager: LXW.XWaylandManager {
+            id: manager
+            onShellSurfaceRequested: {
+                var shellSurface = shellSurfaceComponent.createObject(manager);
+                shellSurface.initialize(manager, window, geometry, overrideRedirect, parentShellSurface);
+            }
+            onShellSurfaceCreated: {
+                var window = xwaylandWindowComponent.createObject(manager, {shellSurface: shellSurface});
+                for (var i = 0; i < outputs.length; i++)
+                    outputs[i].currentWorkspace.xwaylandShellSurfaces.append({shellSurface: shellSurface, window: window, output: outputs[i]});
+                windows.push(window);
+            }
+        }
+        onServerStarted: {
+            console.info("Xwayland server started");
+            SessionInterface.setEnvironment("DISPLAY", displayName);
         }
     }
 
@@ -494,76 +554,14 @@ WaylandCompositor {
         WaylandSurface {
             id: surface
 
-            property int decorationMode: WS.KdeServerDecorationManager.None
-
             property color foregroundColor: "transparent"
             property color backgroundColor: "transparent"
 
             Component.onDestruction: {
-                for (var i = 0; i < screenManager.count; i++)
-                    delete screenManager.objectAt(i).viewsBySurface[surface];
+                for (var i = 0; i < outputs.length; i++)
+                    delete outputs[i].viewsBySurface[surface];
             }
         }
-    }
-
-    // Shell surface for xdg-shell toplevel
-    Component {
-        id: xdgToplevelComponent
-
-        XdgToplevelWindow {
-            onMaximizedChanged: {
-                if (maximized)
-                    __private.maximizedShellSurfaces++;
-                else
-                    __private.maximizedShellSurfaces--;
-            }
-            onFullscreenChanged: {
-                if (fullscreen)
-                    __private.fullscreenShellSurfaces++;
-                else
-                    __private.fullscreenShellSurfaces--;
-            }
-        }
-    }
-
-    // Custom gtk_shell surface
-    Component {
-        id: gtkSurfaceComponent
-
-        WS.GtkSurface {
-            id: gtkSurface
-
-            onAppIdChanged: {
-                for (var i = 0; i < shellSurfaces.count; i++) {
-                    var window = shellSurfaces.get(i).window;
-
-                    if (window.surface === gtkSurface.surface) {
-                        // Move surface under this appId because for some reason Gtk+ applications
-                        // are unable to provide a reliable appId via xdg-shell as opposed to gtk-shell
-                        window.appId = appId;
-
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    // Window component
-    Component {
-        id: chromeComponent
-
-        WaylandChrome {}
-    }
-
-    /*
-     * XWayland
-     */
-
-    Loader {
-        id: xwaylandLoader
-        active: true
-        sourceComponent: XWayland {}
     }
 
     /*
@@ -577,7 +575,6 @@ WaylandCompositor {
 
     Launcher.ApplicationManager {
         id: applicationManager
-        onShellSurfaceFocused: activeShellSurface = shellSurface
     }
 
     Launcher.LauncherModel {
@@ -625,13 +622,14 @@ WaylandCompositor {
 
     Timer {
         id: idleTimer
+
         interval: settings.session.idleDelay * 1000
         running: true
         repeat: true
         onTriggered: {
             var i, output, idleHint = false;
-            for (i = 0; i < screenManager.count; i++) {
-                output = screenManager.objectAt(i);
+            for (i = 0; i < outputs.length; i++) {
+                output = outputs[i];
                 if (idleInhibit + output.idleInhibit == 0) {
                     output.idle();
                     idleHint = true;
@@ -648,9 +646,9 @@ WaylandCompositor {
 
     function wake() {
         var i;
-        for (i = 0; i < screenManager.count; i++) {
+        for (i = 0; i < outputs.length; i++) {
             idleTimer.restart();
-            screenManager.objectAt(i).wake();
+            outputs[i].wake();
         }
 
         SessionInterface.idle = false;
@@ -658,63 +656,41 @@ WaylandCompositor {
 
     function idle() {
         var i;
-        for (i = 0; i < screenManager.count; i++)
-            screenManager.objectAt(i).idle();
+        for (i = 0; i < outputs.length; i++)
+            outputs[i].idle();
 
         SessionInterface.idle = true;
     }
 
     function flash() {
         var i;
-        for (i = 0; i < screenManager.count; i++)
-            screenManager.objectAt(i).flash();
+        for (i = 0; i < outputs.length; i++)
+            outputs[i].flash();
     }
 
     function activateApp(appId) {
-        for (var i = 0; i < shellSurfaces.count; i++) {
-            var shellSurface = shellSurfaces.get(i).window;
-            if (shellSurface.appId === appId) {
-                shellSurface.minimized = false;
-                for (var j = 0; j < screenManager.count; j++)
-                    screenManager.objectAt(j).viewsBySurface[shellSurface.surface].takeFocus();
+        for (var i = 0; i < windows.length; i++) {
+            if (windows[i].appId === appId) {
+                windows[i].minimized = false;
+                for (var j = 0; j < outputs.length; j++)
+                    outputs[j].viewsBySurface[windows[i].surface].takeFocus();
             }
         }
     }
 
     function setAppMinimized(appId, minimized) {
-        for (var i = 0; i < shellSurfaces.count; i++) {
-            var shellSurface = shellSurfaces.get(i).window;
-            if (shellSurface.appId === appId)
-                shellSurface.minimized = minimized;
+        for (var i = 0; i < windows.length; i++) {
+            if (windows[i].appId === appId)
+                windows[i].minimized = minimized;
         }
-    }
-
-    function handleShellSurfaceDestroyed(window) {
-        if (window.maximized)
-            __private.maximizedShellSurfaces--;
-        if (window.fullscreen)
-            __private.fullscreenShellSurfaces--;
-
-        for (var i = 0; i < shellSurfaces.count; i++) {
-            if (shellSurfaces.get(i).window === window) {
-                shellSurfaces.remove(i, 1);
-                break;
-            }
-        }
-
-        applicationManager.unregisterShellSurface(window);
-
-        liriCompositor.shellSurfaceDestroyed(window);
-
-        window.destroy();
     }
 
     function quit() {
         layerShell.closeAllSurfaces();
         shellHelper.sendQuit();
 
-        for (var i = 0; i < screenManager.count; i++)
-            screenManager.objectAt(i).window.close();
+        for (var i = 0; i < outputs.length; i++)
+            outputs[i].window.close();
 
         Qt.quit();
     }

@@ -124,7 +124,7 @@ function tryLayout(rows) {
             continue;
 
         // Only top level windows
-        if (entry.window.windowType !== Qt.Window)
+        if (entry.window.parentSurface)
             continue;
 
         // Consider only entries for this output
@@ -140,7 +140,7 @@ function tryLayout(rows) {
             continue;
 
         // Only top level windows
-        if (entry.window.windowType !== Qt.Window) {
+        if (entry.window.parentSurface) {
             entry.visible = false;
             continue;
         }

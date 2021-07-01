@@ -77,8 +77,8 @@ Popup {
             focus: true
             orientation: ListView.Horizontal
             model: FluidCore.SortFilterProxyModel {
-                sourceModel: liriCompositor.shellSurfaces
-                filterExpression: model.window.parentSurface === null
+                sourceModel: liriCompositor.windows
+                filterExpression: modelData.parentSurface === null
             }
             spacing: FluidControls.Units.smallSpacing
             highlightMoveDuration: FluidControls.Units.shortDuration

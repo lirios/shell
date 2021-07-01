@@ -23,7 +23,6 @@ P.WaylandOutput {
 
     property int idleInhibit: 0
 
-    readonly property Item surfacesArea: desktop.surfacesArea
     //readonly property alias idleDimmer: idleDimmer
     readonly property alias desktop: desktop
 
@@ -33,6 +32,7 @@ P.WaylandOutput {
         readonly property alias top: desktop.topLayer
         readonly property alias overlay: desktop.overlayLayer
     }
+    readonly property alias currentWorkspace: desktop.currentWorkspace
 
     property alias showFps: desktop.showFps
     property alias showInformation: desktop.showInformation
@@ -119,6 +119,12 @@ P.WaylandOutput {
             }
             // TODO: Need to wake up with mouse button pressed, released and wheel
 
+            // Grab pointer cursor surface and set a bitmap cursor on this window
+            P.WaylandCursorGrabber {
+                seat: output.compositor.defaultSeat
+                grab: mouseTracker.containsMouse
+            }
+
             // User interface
             Desktop {
                 id: desktop
@@ -135,12 +141,6 @@ P.WaylandOutput {
                 x: (parent.width - width) / 2
                 y: parent.height - height
                 width: Math.max(parent.width / 2, 768)
-            }
-
-            // Grab pointer cursor surface and set a bitmap cursor on this window
-            P.WaylandCursorGrabber {
-                seat: output.compositor.defaultSeat
-                grab: mouseTracker.containsMouse
             }
 
             // Flash for screenshots

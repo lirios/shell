@@ -33,8 +33,8 @@ FluidCore.Object {
         target: outputsSettings
 
         function onPrimaryChanged() {
-            for (var i = 0; i < liriCompositor.screenManager.count; i++) {
-                var output = liriCompositor.screenManager.objectAt(i);
+            for (var i = 0; i < liriCompositor.outputs.length; i++) {
+                var output = liriCompositor.outputs[i];
 
                 if (output.screen && output.screen.name === primary) {
                     liriCompositor.defaultOutput = output;
