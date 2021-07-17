@@ -449,34 +449,6 @@ P.WaylandCompositor {
     }
 
     Component {
-        id: gtkSurfaceComponent
-
-        WS.GtkSurface {
-            id: gtkSurface
-
-            onAppIdChanged: {
-                for (var i = 0; i < windows.length; i++) {
-                    if (windows[i].surface === gtkSurface.surface) {
-                        // Move surface under this appId because for some reason Gtk+ applications
-                        // are unable to provide a reliable appId via xdg-shell as opposed to gtk-shell
-                        windows[i].appId = appId;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    WS.GtkShell {
-        id: gtkShell
-
-        onGtkSurfaceRequested: {
-            var gtkSurface = gtkSurfaceComponent.createObject(gtkShell);
-            gtkSurface.initialize(gtkShell, surface, resource);
-        }
-    }
-
-    Component {
         id: xwaylandWindowComponent
 
         XWaylandWindow {
