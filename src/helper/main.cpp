@@ -7,6 +7,8 @@
 #include <QQmlApplicationEngine>
 
 #include "gitsha1.h"
+#include "windowmask.h"
+#include "shellhelperlogging_p.h"
 
 #if HAVE_SYS_PRCTL_H
 #include <sys/prctl.h>
@@ -18,6 +20,8 @@
 #endif
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
+
+Q_LOGGING_CATEGORY(lcShellHelper, "liri.shell.helper", QtInfoMsg)
 
 static void disablePtrace()
 {
@@ -70,6 +74,7 @@ int main(int argc, char *argv[])
     qputenv("XDG_SESSION_TYPE", QByteArrayLiteral("wayland"));
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("liri"));
+    qputenv("QT_WAYLAND_SHELL_INTEGRATION", "liri-layer-shell");
     qputenv("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT", QByteArrayLiteral("1"));
     qputenv("QT_WAYLAND_DISABLE_DECORATION", "1");
     qunsetenv("QT_WAYLAND_DECORATION");
@@ -94,6 +99,9 @@ int main(int argc, char *argv[])
 
     // Setup systemd
     setupSystemd();
+
+    // Register QML types
+    qmlRegisterType<WindowMask>("Liri.ShellHelper", 1, 0, "WindowMask");
 
     // Create UI
     QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);

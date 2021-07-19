@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/BackgroundWindow.qml</file>
-        <file>qml/components/BorderlessWindow.qml</file>
-        <file>qml/components/UiWindow.qml</file>
         <file>qml/KeyBindings.qml</file>
         <file>qml/main.qml</file>
         <file>qml/OsdWindow.qml</file>

@@ -7,20 +7,22 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtGSettings 1.0 as Settings
 import Liri.WaylandClient 1.0 as WaylandClient
-import "components" as Components
 import "ui/notifications" as Notifications
 
 Item {
-    property int refCount: 0
     property Screen primaryScreen: null
-
-    onRefCountChanged: {
-        if (shell.active && refCount == 0)
-            shell.sendReady();
-    }
 
     Component.onCompleted: {
         primaryScreen = determinePrimaryScreen();
+    }
+
+    Timer {
+        id: readyTimer
+
+        interval: 250
+        onTriggered: {
+            shell.sendReady();
+        }
     }
 
     /*
@@ -54,10 +56,10 @@ Item {
 
     WaylandClient.LiriShell {
         id: shell
-    }
 
-    WaylandClient.WlrLayerShellV1 {
-        id: layerShell
+        Component.onCompleted: {
+            readyTimer.start();
+        }
     }
 
     Osd {}

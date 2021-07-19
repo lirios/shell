@@ -3,14 +3,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import Liri.WaylandClient 1.0 as WC
+import Liri.WaylandClient.LayerShell 1.0 as LayerShell
 import Fluid.Controls 1.0 as FluidControls
-import "../../components" as Components
 
-Components.BorderlessWindow {
+Window {
     id: notificationWindow
 
     property int notificationId
@@ -28,6 +28,8 @@ Components.BorderlessWindow {
     signal actionInvoked(string actionId)
 
     screen: primaryScreen
+    color: "transparent"
+    visible: true
 
     Timer {
         id: timer
@@ -42,31 +44,14 @@ Components.BorderlessWindow {
         }
     }
 
-    WC.WlrLayerSurfaceV1 {
-        shell: layerShell
-        layer: WC.WlrLayerShellV1.TopLayer
-        window: notificationWindow
-        showOnAllScreens: false
-        anchors: WC.WlrLayerSurfaceV1.TopAnchor |
-                 WC.WlrLayerSurfaceV1.RightAnchor
-        size.width: container.implicitWidth
-        size.height: container.implicitHeight
-        keyboardInteractivity: false
+    LayerShell.LayerSurface {
+        layer: LayerShell.LayerSurface.TopLayer
+        anchors: LayerShell.LayerSurface.TopAnchor |
+                 LayerShell.LayerSurface.RightAnchor
+        keyboardInteractivity: LayerShell.LayerSurface.NoKeyboardInteractivity
         topMargin: FluidControls.Units.smallSpacing
         rightMargin: FluidControls.Units.smallSpacing
-        nameSpace: "notification"
-
-        onConfigured: {
-            notificationWindow.width = width;
-            notificationWindow.height = height;
-            console.debug("Configuring notification to " + notificationWindow.width + "x" + notificationWindow.height);
-            ackConfigure(serial);
-            console.debug("Acked notification configure with serial", serial);
-            notificationWindow.visible = true;
-        }
-        onClosed: {
-            notificationWindow.close();
-        }
+        role: "notification"
     }
 
     Rectangle {

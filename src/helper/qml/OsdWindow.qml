@@ -7,7 +7,8 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import Liri.WaylandClient 1.0 as WaylandClient
+import Liri.WaylandClient.LayerShell 1.0 as LayerShell
+import Liri.ShellHelper 1.0 as ShellHelper
 import Fluid.Controls 1.0 as FluidControls
 
 Window {
@@ -18,32 +19,25 @@ Window {
     property alias text: label.text
     property alias progressVisible: progress.visible
 
-    flags: Qt.Window | Qt.BypassWindowManagerHint
-
     width: 256
     height: 256
 
-    color: "transparent"
-
     screen: primaryScreen
+    color: "transparent"
+    visible: true
 
-    WaylandClient.WlrLayerSurfaceV1 {
-        shell: layerShell
-        layer: WaylandClient.WlrLayerShellV1.OverlayLayer
-        showOnAllScreens: false
-        window: osdWindow
-        keyboardInteractivity: false
-        nameSpace: "osd"
+    Component.onCompleted: {
+        windowMask.addRect(Qt.rect(0, 0, width, height));
+    }
 
-        onConfigured: {
-            ackConfigure(serial);
-            console.debug("Acked configure for osd with serial", serial);
-            addMask(Qt.rect(0, 0, osdWindow.width, osdWindow.height));
-            osdWindow.visible = true;
-        }
-        onClosed: {
-            osdWindow.close();
-        }
+    LayerShell.LayerSurface {
+        layer: LayerShell.LayerSurface.OverlayLayer
+        keyboardInteractivity: LayerShell.LayerSurface.NoKeyboardInteractivity
+        role: "osd"
+    }
+
+    ShellHelper.WindowMask {
+        id: windowMask
     }
 
     Rectangle {

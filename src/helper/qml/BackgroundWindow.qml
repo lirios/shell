@@ -8,40 +8,25 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import QtGSettings 1.0 as Settings
 import Fluid.Effects 1.0 as FluidEffects
-import Liri.WaylandClient 1.0 as WaylandClient
+import Liri.WaylandClient.LayerShell 1.0 as LayerShell
 import Liri.Shell 1.0 as LS
 import Liri.DBusService 1.0 as DBusService
-import "components" as Components
 
-Components.UiWindow {
+Window {
     id: bgWindow
 
     color: Material.color(Material.Grey, Material.Shade700)
+    visible: true
 
-    WaylandClient.WlrLayerSurfaceV1 {
-        shell: layerShell
-        layer: WaylandClient.WlrLayerShellV1.BackgroundLayer
-        window: bgWindow
-        anchors: WaylandClient.WlrLayerSurfaceV1.TopAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.BottomAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.LeftAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.RightAnchor
-        keyboardInteractivity: false
+    LayerShell.LayerSurface {
+        layer: LayerShell.LayerSurface.BackgroundLayer
+        anchors: LayerShell.LayerSurface.TopAnchor |
+                 LayerShell.LayerSurface.BottomAnchor |
+                 LayerShell.LayerSurface.LeftAnchor |
+                 LayerShell.LayerSurface.RightAnchor
+        keyboardInteractivity: LayerShell.LayerSurface.NoKeyboardInteractivity
         exclusiveZone: -1
-        nameSpace: "background"
-
-        onConfigured: {
-            bgWindow.width = width;
-            bgWindow.height = height;
-            ackConfigure(serial);
-            console.debug("Resized window of scope", '"' + nameSpace + '"',
-                          "to", bgWindow.width + "x" + bgWindow.height);
-            bgWindow.configured = true;
-            bgWindow.visible = true;
-        }
-        onClosed: {
-            bgWindow.close();
-        }
+        role: "background"
     }
 
     Settings.GSettings {
