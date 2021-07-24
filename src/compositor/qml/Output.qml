@@ -180,6 +180,30 @@ P.WaylandOutput {
 
                 output: output
             }
+
+            Item {
+                anchors.fill: parent
+
+                WheelHandler {
+                    id: zoomWheelHandler
+
+                    readonly property real minZoom: 1.0
+                    readonly property real maxZoom: 10.0
+                    readonly property real zoomIncrement: 0.1
+
+                    target: outputWindow.contentItem
+                    acceptedModifiers: Qt.ControlModifier | liriCompositor.settings.windowActionModifier
+                    acceptedButtons: Qt.NoButton
+                    orientation: Qt.Vertical
+                    grabPermissions: PointerHandler.CanTakeOverFromAnything
+                    onWheel: {
+                        if (event.angleDelta.y > 0)
+                            target.scale = Math.min(target.scale + zoomIncrement, maxZoom);
+                        else if (event.angleDelta.y <= 0)
+                            target.scale = Math.max(target.scale - zoomIncrement, minZoom);
+                    }
+                }
+            }
         }
     }
 

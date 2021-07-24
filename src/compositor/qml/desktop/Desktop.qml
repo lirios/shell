@@ -47,7 +47,6 @@ Item {
 
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
-    property alias zoomEnabled: zoomArea.enabled
 
     state: "splash"
     states: [
@@ -85,23 +84,6 @@ Item {
             //StateChangeScript { script: output.idle() }
         }
     ]
-
-    transform: Scale {
-        id: screenScaler
-
-        origin.x: zoomArea.x2
-        origin.y: zoomArea.y2
-        xScale: zoomArea.zoom2
-        yScale: zoomArea.zoom2
-    }
-
-    ScreenZoom {
-        id: zoomArea
-
-        anchors.fill: parent
-        scaler: screenScaler
-        enabled: false
-    }
 
     Connections {
         target: SessionInterface
