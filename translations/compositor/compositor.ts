@@ -55,7 +55,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="614"/>
+        <location filename="../../src/compositor/qml/Compositor.qml" line="586"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation type="unfinished"></translation>
     </message>
