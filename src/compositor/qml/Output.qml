@@ -135,7 +135,7 @@ P.WaylandOutput {
 
             // Virtual Keyboard
             Loader {
-                parent: outputWindow.overlay
+                parent: output.layers.overlay
                 active: liriCompositor.settings.ui.inputMethod === "qtvirtualkeyboard"
                 source: Qt.resolvedUrl("base/Keyboard.qml")
                 x: (parent.width - width) / 2
