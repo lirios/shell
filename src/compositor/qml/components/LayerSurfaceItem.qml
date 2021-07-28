@@ -20,11 +20,11 @@ WaylandQuickItem {
     readonly property real surfaceWidth: Math.max(layerSurface.width, implicitSurfaceWidth)
     readonly property real surfaceHeight: Math.max(layerSurface.height, implicitSurfaceHeight)
 
-    focusOnClick: layerSurface.keyboardInteractivity
+    focusOnClick: layerSurface.keyboardInteractivity > WS.WlrLayerSurfaceV1.NoKeyboardInteractivity
     visible: layerSurface && layerSurface.mapped && layerSurface.configured
 
     onVisibleChanged: {
-        if (visible && layerSurface && layerSurface.keyboardInteractivity)
+        if (visible && layerSurface && layerSurface.keyboardInteractivity > WS.WlrLayerSurfaceV1.NoKeyboardInteractivity)
             takeFocus();
     }
 
