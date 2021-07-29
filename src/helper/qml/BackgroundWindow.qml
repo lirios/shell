@@ -8,7 +8,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import QtGSettings 1.0 as Settings
 import Fluid.Effects 1.0 as FluidEffects
-import Liri.WaylandClient.LayerShell 1.0 as LayerShell
+import Liri.WaylandClient 1.0 as WaylandClient
 import Liri.Shell 1.0 as LS
 import Liri.DBusService 1.0 as DBusService
 
@@ -18,13 +18,13 @@ Window {
     color: Material.color(Material.Grey, Material.Shade700)
     visible: true
 
-    LayerShell.LayerSurface {
-        layer: LayerShell.LayerSurface.BackgroundLayer
-        anchors: LayerShell.LayerSurface.TopAnchor |
-                 LayerShell.LayerSurface.BottomAnchor |
-                 LayerShell.LayerSurface.LeftAnchor |
-                 LayerShell.LayerSurface.RightAnchor
-        keyboardInteractivity: LayerShell.LayerSurface.NoKeyboardInteractivity
+    WaylandClient.WlrLayerSurfaceV1 {
+        layer: WaylandClient.WlrLayerSurfaceV1.BackgroundLayer
+        anchors: WaylandClient.WlrLayerSurfaceV1.TopAnchor |
+                 WaylandClient.WlrLayerSurfaceV1.BottomAnchor |
+                 WaylandClient.WlrLayerSurfaceV1.LeftAnchor |
+                 WaylandClient.WlrLayerSurfaceV1.RightAnchor
+        keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
         exclusiveZone: -1
         role: "background"
     }

@@ -7,7 +7,7 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import Liri.WaylandClient.LayerShell 1.0 as LayerShell
+import Liri.WaylandClient 1.0 as WaylandClient
 import Fluid.Controls 1.0 as FluidControls
 
 Window {
@@ -44,11 +44,11 @@ Window {
         }
     }
 
-    LayerShell.LayerSurface {
-        layer: LayerShell.LayerSurface.TopLayer
-        anchors: LayerShell.LayerSurface.TopAnchor |
-                 LayerShell.LayerSurface.RightAnchor
-        keyboardInteractivity: LayerShell.LayerSurface.NoKeyboardInteractivity
+    WaylandClient.WlrLayerSurfaceV1 {
+        layer: WaylandClient.WlrLayerSurfaceV1.TopLayer
+        anchors: WaylandClient.WlrLayerSurfaceV1.TopAnchor |
+                 WaylandClient.WlrLayerSurfaceV1.RightAnchor
+        keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
         topMargin: FluidControls.Units.smallSpacing
         rightMargin: FluidControls.Units.smallSpacing
         role: "notification"

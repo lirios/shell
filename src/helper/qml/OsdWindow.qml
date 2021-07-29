@@ -7,7 +7,7 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import Liri.WaylandClient.LayerShell 1.0 as LayerShell
+import Liri.WaylandClient 1.0 as WaylandClient
 import Liri.ShellHelper 1.0 as ShellHelper
 import Fluid.Controls 1.0 as FluidControls
 
@@ -30,9 +30,9 @@ Window {
         windowMask.addRect(Qt.rect(0, 0, width, height));
     }
 
-    LayerShell.LayerSurface {
-        layer: LayerShell.LayerSurface.OverlayLayer
-        keyboardInteractivity: LayerShell.LayerSurface.NoKeyboardInteractivity
+    WaylandClient.WlrLayerSurfaceV1 {
+        layer: WaylandClient.WlrLayerSurfaceV1.OverlayLayer
+        keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
         role: "osd"
     }
 
