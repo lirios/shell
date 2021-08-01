@@ -1,14 +1,17 @@
 [Desktop Entry]
 Type=X-Liri-Service
 Name=Notifications
+Name[de]=Benachrichtigungen
 Name[lt]=Pranešimai
 Name[pt_BR]=Notificações
 Name[tr]=Bildirimler
 Comment=Show notifications
+Comment[de]=Benachrichtigungen anzeigen
 Comment[lt]=Rodyti pranešimus
 Comment[pt_BR]=Exibir notificações
 Comment[tr]=Bildirimleri göster
 Keywords=Notifications;
+Keywords[de]=Benachrichtigungen;
 Keywords[lt]=Pranešimai;
 Keywords[pt_BR]=Notificações;
 Keywords[tr]=Bildirimler;

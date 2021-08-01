@@ -1,14 +1,17 @@
 [Desktop Entry]
 Type=X-Liri-Service
 Name=Date and time
+Name[de]=Datum und Uhrzeit
 Name[lt]=Data ir laikas
 Name[pt_BR]=Data e hora
 Name[tr]=Tarih ve saat
 Comment=Current date and time
+Comment[de]=Aktuelles Datum und Uhrzeit
 Comment[lt]=Dabartinė data ir laikas
 Comment[pt_BR]=Data e hora atual
 Comment[tr]=Geçerli tarih ve saat
 Keywords=Date;Time;
+Keywords[de]=Datum;Zeit;
 Keywords[lt]=Data;Laikas;
 Keywords[pt_BR]=Data;Hora;
 Keywords[tr]=Tarih;Saat;

@@ -1,14 +1,17 @@
 [Desktop Entry]
 Type=X-Liri-Service
 Name=Storage
+Name[de]=Speicher
 Name[lt]=Kaupiklis
 Name[pt_BR]=Armazenamento
 Name[tr]=Depolama
 Comment=Access storage volumes
+Comment[de]=Auf Speichervolumen zugreifen
 Comment[lt]=Gauti prieigą prie kaupiklio tomų
 Comment[pt_BR]=Acessar volumes de armazenamento
 Comment[tr]=Depolama birimlerine eriş
 Keywords=Storage;Disk;
+Keywords[de]=Speicher;Festplatte;
 Keywords[lt]=Kaupiklis;Saugykla;Diskas;Atminties įrenginys;Atminties irenginys;
 Keywords[pt_BR]=Armazenamento;Disco;
 Keywords[tr]=Depolama;Biriktirme;Saklama;Disk;Teker;
