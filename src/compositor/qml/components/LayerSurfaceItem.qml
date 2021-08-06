@@ -14,18 +14,63 @@ WaylandQuickItem {
 
     property Item containerItem: layerSurfaceItem
     property bool honorAnchors: true
+
     property WS.WlrLayerSurfaceV1 layerSurface: null
+
     property real implicitSurfaceWidth: Math.max(0, implicitWidth)
     property real implicitSurfaceHeight: Math.max(0, implicitHeight)
     readonly property real surfaceWidth: Math.max(layerSurface.width, implicitSurfaceWidth)
     readonly property real surfaceHeight: Math.max(layerSurface.height, implicitSurfaceHeight)
 
+    readonly property real leftMargin: layerSurface.leftMargin + additionalLeftMargin
+    readonly property real topMargin: layerSurface.topMargin + additionalTopMargin
+    readonly property real rightMargin: layerSurface.rightMargin + additionalRightMargin
+    readonly property real bottomMargin: layerSurface.bottomMargin + additionalBottomMargin
+
+    property real additionalLeftMargin: 0
+    property real additionalTopMargin: 0
+    property real additionalRightMargin: 0
+    property real additionalBottomMargin: 0
+
+    readonly property real horizontalMargin: leftMargin + rightMargin + additionalLeftMargin + additionalRightMargin
+    readonly property real verticalMargin: topMargin + bottomMargin + additionalTopMargin + additionalBottomMargin
+
+    surface: layerSurface.surface
     focusOnClick: layerSurface.keyboardInteractivity > WS.WlrLayerSurfaceV1.NoKeyboardInteractivity
-    visible: layerSurface && layerSurface.mapped && layerSurface.configured
+
+    z: layerSurface && layerSurface.nameSpace === "notification" ? 100 : 0
+
+    visible: layerSurface.mapped && layerSurface.configured
 
     onVisibleChanged: {
-        if (visible && layerSurface && layerSurface.keyboardInteractivity > WS.WlrLayerSurfaceV1.NoKeyboardInteractivity)
-            takeFocus();
+        if (visible) {
+            if (layerSurface.keyboardInteractivity > WS.WlrLayerSurfaceV1.NoKeyboardInteractivity)
+                takeFocus();
+        }
+    }
+
+    Behavior on x {
+        NumberAnimation { duration: 220 }
+    }
+
+    Behavior on y {
+        NumberAnimation { duration: 220 }
+    }
+
+    Behavior on anchors.leftMargin {
+        NumberAnimation { duration: 220 }
+    }
+
+    Behavior on anchors.topMargin {
+        NumberAnimation { duration: 220 }
+    }
+
+    Behavior on anchors.rightMargin {
+        NumberAnimation { duration: 220 }
+    }
+
+    Behavior on anchors.bottomMargin {
+        NumberAnimation { duration: 220 }
     }
 
     Connections {
@@ -35,9 +80,21 @@ WaylandQuickItem {
             setupAnchors();
             sendConfigure();
         }
+
         function onLayerChanged() {
             var newParent = LayerSurfaceManager.getParentForLayer(layerSurface, output);
             containerItem.parent = newParent;
+        }
+    }
+
+    Connections {
+        target: parent
+
+        function onChildrenChanged() {
+            additionalLeftMargin = calculateLeftMargin();
+            additionalTopMargin = calculateTopMargin();
+            additionalRightMargin = calculateRightMargin();
+            additionalBottomMargin = calculateBottomMargin();
         }
     }
 
@@ -86,22 +143,44 @@ WaylandQuickItem {
         }
 
         if (hasLeft)
-            containerItem.anchors.leftMargin = layerSurface.leftMargin;
+            containerItem.anchors.leftMargin = Qt.binding(function() { return leftMargin });
+        else
+            containerItem.anchors.leftMargin = 0;
         if (hasRight)
-            containerItem.anchors.rightMargin = layerSurface.rightMargin;
+            containerItem.anchors.rightMargin = Qt.binding(function() { return rightMargin });
+        else
+            containerItem.anchors.rightMargin = 0;
         if (hasTop)
-            containerItem.anchors.topMargin = layerSurface.topMargin;
+            containerItem.anchors.topMargin = Qt.binding(function() { return topMargin });
+        else
+            containerItem.anchors.topMargin = 0;
         if (hasBottom)
-            containerItem.anchors.bottomMargin = layerSurface.bottomMargin;
+            containerItem.anchors.bottomMargin = Qt.binding(function() { return bottomMargin });
+        else
+            containerItem.anchors.bottomMargin = 0;
     }
 
     function sendConfigure() {
-        if (surfaceWidth >= 0 && surfaceHeight >= 0) {
-            console.debug("Sending configure to layer surface of scope",
-                          '"' + layerSurface.nameSpace + '"',
-                          "with size", surfaceWidth + "x" + surfaceHeight);
-            layerSurface.sendConfigure(surfaceWidth, surfaceHeight);
-        }
+        additionalLeftMargin = calculateLeftMargin();
+        additionalTopMargin = calculateTopMargin();
+        additionalRightMargin = calculateRightMargin();
+        additionalBottomMargin = calculateBottomMargin();
+
+        // When the size is invalid the compositor determins the size, otherwise
+        // it's up to the client to determine its own size
+        var newSize = Qt.size(layerSurface.width, layerSurface.height);
+        if (newSize.width <= 0)
+            newSize.width = implicitSurfaceWidth;
+        else
+            newSize.width = 0;
+        if (newSize.height <= 0)
+            newSize.height = implicitSurfaceHeight;
+        else
+            newSize.height = 0;
+        console.debug("Sending configure to layer surface of scope",
+                      '"' + layerSurface.nameSpace + '"',
+                      "with size", newSize.width + "x" + newSize.height);
+        layerSurface.sendConfigure(newSize.width, newSize.height);
     }
 
     function reconfigure() {
@@ -109,5 +188,28 @@ WaylandQuickItem {
 
         if (layerSurface.configured)
             sendConfigure();
+    }
+
+    function calculateLeftMargin() {
+        return 0;
+    }
+
+    function calculateTopMargin() {
+        return 0;
+    }
+
+    function calculateRightMargin() {
+        return 0;
+    }
+
+    function calculateBottomMargin() {
+        if (layerSurface.nameSpace === "notification") {
+            for (var i = 0; i < parent.children.length; i++) {
+                if (parent.children[i] === this)
+                    return (surfaceHeight + layerSurface.bottomMargin) * i;
+            }
+        }
+
+        return 0;
     }
 }

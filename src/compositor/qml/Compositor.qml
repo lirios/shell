@@ -270,12 +270,6 @@ P.WaylandCompositor {
         Components.Osd {}
     }
 
-    Component {
-        id: notificationComponent
-
-        Components.Notification {}
-    }
-
     WS.WlrLayerShellV1 {
         id: layerShell
 
@@ -302,9 +296,6 @@ P.WaylandCompositor {
                 hwLayerItemComponent.createObject(parent, props);
             } else if (layerSurface.nameSpace === "osd") {
                 osdComponent.createObject(parent, props);
-            } else if (layerSurface.nameSpace === "notification") {
-                props["z"] = 100;
-                notificationComponent.createObject(parent, props);
             } else {
                 layerItemComponent.createObject(parent, props);
             }

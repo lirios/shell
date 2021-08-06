@@ -8,7 +8,9 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Liri.WaylandClient 1.0 as WaylandClient
+import Liri.ShellHelper 1.0 as ShellHelper
 import Fluid.Controls 1.0 as FluidControls
+import Fluid.Effects 1.0 as FluidEffects
 
 Window {
     id: notificationWindow
@@ -29,6 +31,8 @@ Window {
 
     screen: primaryScreen
     color: "transparent"
+    width: control.width + (closeButton.width / 2) + (control.Material.elevation * 4)
+    height: control.height + (closeButton.height / 2) + (control.Material.elevation * 4)
     visible: true
 
     Timer {
@@ -46,29 +50,76 @@ Window {
 
     WaylandClient.WlrLayerSurfaceV1 {
         layer: WaylandClient.WlrLayerSurfaceV1.TopLayer
-        anchors: WaylandClient.WlrLayerSurfaceV1.TopAnchor |
+        anchors: WaylandClient.WlrLayerSurfaceV1.BottomAnchor |
                  WaylandClient.WlrLayerSurfaceV1.RightAnchor
         keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
-        topMargin: FluidControls.Units.smallSpacing
+        bottomMargin: FluidControls.Units.smallSpacing
         rightMargin: FluidControls.Units.smallSpacing
         role: "notification"
     }
 
-    Rectangle {
-        id: container
+    ShellHelper.WindowMask {
+        id: windowMask
+    }
+
+    RoundButton {
+        id: closeButton
+
+        Material.theme: Material.Dark
+        Material.background: control.Material.dialogColor
+        Material.elevation: 0
+
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: control.Material.elevation * 2
+        anchors.rightMargin: control.Material.elevation * 2
+
+        icon.source: FluidControls.Utils.iconUrl("navigation/close")
+
+        z: 1
+
+        onClicked: {
+            notificationWindow.close();
+        }
+    }
+
+    Page {
+        id: control
 
         Material.theme: Material.Dark
         Material.primary: Material.Blue
         Material.accent: Material.Blue
+        Material.elevation: 8
 
         anchors.left: parent.left
         anchors.top: parent.top
+        anchors.leftMargin: control.Material.elevation * 2
+        anchors.topMargin: (closeButton.height / 2) + (control.Material.elevation * 2)
 
-        color: Material.dialogColor
-        radius: 2
+        implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                                contentWidth + leftPadding + rightPadding,
+                                implicitHeaderWidth,
+                                implicitFooterWidth)
+        implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                                 contentHeight + topPadding + bottomPadding
+                                 + (implicitHeaderHeight > 0 ? implicitHeaderHeight + spacing : 0)
+                                 + (implicitFooterHeight > 0 ? implicitFooterHeight + spacing : 0))
 
-        implicitWidth: FluidControls.Units.gu(24)
-        implicitHeight: layout.implicitHeight + FluidControls.Units.smallSpacing
+        contentWidth: FluidControls.Units.gu(24)
+
+        Behavior on opacity {
+            NumberAnimation { duration: 150 }
+        }
+
+        background: Rectangle {
+            radius: 2
+            color: control.Material.dialogColor
+
+            layer.enabled: true
+            layer.effect: FluidEffects.Elevation {
+                elevation: control.Material.elevation
+            }
+        }
 
         ColumnLayout {
             id: layout
@@ -133,6 +184,10 @@ Window {
             Item {
                 height: FluidControls.Units.smallSpacing
             }
+        }
+
+        footer: ColumnLayout {
+            spacing: FluidControls.Units.smallSpacing
 
             FluidControls.ThinDivider {
                 visible: actionsModel.count > 0
@@ -143,7 +198,8 @@ Window {
 
                 visible: actionsModel.count > 0
 
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+                Layout.bottomMargin: FluidControls.Units.smallSpacing
 
                 Repeater {
                     id: actionsRepeater
@@ -161,6 +217,26 @@ Window {
                     }
                 }
             }
+        }
+    }
+
+    // Do not capture click events, just change opacity when the pointer
+    // is moved. This will make stuff underneath it visible.
+    // Areas with buttons are not sensitive to mouse hover.
+    MouseArea {
+        x: control.x
+        y: control.y
+        width: control.implicitWidth
+        height: control.implicitHeight - control.implicitFooterHeight
+        acceptedButtons: Qt.NoButton
+        hoverEnabled: true
+
+        onContainsMouseChanged: {
+            control.opacity = containsMouse ? 0.5 : 1.0;
+        }
+
+        Component.onCompleted: {
+            windowMask.addRect(Qt.rect(x, y, width, height));
         }
     }
 }
