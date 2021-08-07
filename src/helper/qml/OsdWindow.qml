@@ -10,6 +10,7 @@ import QtQuick.Controls.Material 2.15
 import Liri.WaylandClient 1.0 as WaylandClient
 import Liri.ShellHelper 1.0 as ShellHelper
 import Fluid.Controls 1.0 as FluidControls
+import Fluid.Effects 1.0 as FluidEffects
 
 Window {
     id: osdWindow
@@ -19,8 +20,8 @@ Window {
     property alias text: label.text
     property alias progressVisible: progress.visible
 
-    width: 256
-    height: 256
+    width: 256 + (control.Material.elevation * 4)
+    height: 256 + (control.Material.elevation * 4)
 
     screen: primaryScreen
     color: "transparent"
@@ -40,15 +41,73 @@ Window {
         id: windowMask
     }
 
-    Rectangle {
+    Timer {
+        id: timer
+
+        interval: 2500
+        onTriggered: {
+            hideAnimation.start();
+        }
+    }
+
+    SequentialAnimation {
+        id: showAnimation
+
+        alwaysRunToEnd: true
+
+        OpacityAnimator {
+            target: control
+            duration: 150
+            from: 0.0
+            to: 1.0
+        }
+
+        ScriptAction {
+            script: {
+                timer.restart();
+            }
+        }
+    }
+
+    SequentialAnimation {
+        id: hideAnimation
+
+        alwaysRunToEnd: true
+
+        OpacityAnimator {
+            target: control
+            duration: 150
+            from: 1.0
+            to: 1.0
+        }
+
+        ScriptAction {
+            script: {
+                osdWindow.visible = false;
+            }
+        }
+    }
+
+    Control {
+        id: control
+
         Material.theme: Material.Dark
+        Material.primary: Material.Blue
         Material.accent: Material.Blue
+        Material.elevation: 8
 
         anchors.fill: parent
+        anchors.margins: Material.elevation * 2
 
-        color: Material.dialogColor
-        radius: 6
-        antialiasing: true
+        background: Rectangle {
+            radius: 2
+            color: control.Material.dialogColor
+
+            layer.enabled: true
+            layer.effect: FluidEffects.Elevation {
+                elevation: control.Material.elevation
+            }
+        }
 
         ColumnLayout {
             anchors.fill: parent
@@ -81,6 +140,16 @@ Window {
 
                 Layout.alignment: Qt.AlignHCenter
             }
+        }
+    }
+
+    function showWindow() {
+        if (visible) {
+            timer.restart();
+        } else {
+            control.opacity = 0;
+            visible = true;
+            showAnimation.start();
         }
     }
 }

@@ -6,7 +6,6 @@
         <file>qml/components/HotCorner.qml</file>
         <file>qml/components/LayerSurfaceItem.qml</file>
         <file>qml/components/LayerSurfaceManager.js</file>
-        <file>qml/components/Osd.qml</file>
         <file>qml/components/PagedGrid.qml</file>
         <file>qml/Compositor.qml</file>
         <file>qml/desktop/Desktop.qml</file>

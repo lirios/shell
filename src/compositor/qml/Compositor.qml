@@ -264,12 +264,6 @@ P.WaylandCompositor {
         }
     }
 
-    Component {
-        id: osdComponent
-
-        Components.Osd {}
-    }
-
     WS.WlrLayerShellV1 {
         id: layerShell
 
@@ -294,8 +288,6 @@ P.WaylandCompositor {
             if (layerSurface.nameSpace === "background") {
                 props["stackingLevel"] = -1;
                 hwLayerItemComponent.createObject(parent, props);
-            } else if (layerSurface.nameSpace === "osd") {
-                osdComponent.createObject(parent, props);
             } else {
                 layerItemComponent.createObject(parent, props);
             }

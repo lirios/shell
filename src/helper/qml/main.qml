@@ -62,7 +62,33 @@ Item {
         }
     }
 
-    Osd {}
+    Component {
+        id: osdComponent
+
+        OsdWindow {}
+    }
+
+    WaylandClient.LiriOsd {
+        property OsdWindow osdWindow: null
+
+        onTextRequested: {
+            if (!osdWindow)
+                osdWindow = osdComponent.createObject(this);
+            osdWindow.iconName = iconName;
+            osdWindow.text = text;
+            osdWindow.progressVisible = false;
+            osdWindow.showWindow();
+        }
+        onProgressRequested: {
+            if (!osdWindow)
+                osdWindow = osdComponent.createObject(this);
+            osdWindow.iconName = iconName;
+            osdWindow.text = "";
+            osdWindow.value = value;
+            osdWindow.progressVisible = true;
+            osdWindow.showWindow();
+        }
+    }
 
     Instantiator {
         model: Qt.application.screens
