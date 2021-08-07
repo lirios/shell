@@ -14,8 +14,6 @@ import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
 import "base"
-import "components" as Components
-import "components/LayerSurfaceManager.js" as LayerSurfaceManager
 import "desktop"
 import "windows"
 
@@ -242,55 +240,31 @@ P.WaylandCompositor {
 
     // Layer shell
 
-    Component {
-        id: layerItemComponent
-
-        Components.LayerSurfaceItem {
-            onSurfaceDestroyed: {
-                bufferLocked = true;
-                destroy();
-            }
-        }
-    }
-
-    Component {
-        id: hwLayerItemComponent
-
-        Components.HardwareLayerSurfaceItem {
-            onSurfaceDestroyed: {
-                bufferLocked = true;
-                destroy();
-            }
-        }
-    }
-
     WS.WlrLayerShellV1 {
         id: layerShell
 
-        onLayerSurfaceCreated: {
-            // Create an item for the specified output, if none is specified create
-            // an item for each output
-            if (layerSurface.output) {
-                createItem(layerSurface, layerSurface.output);
-            } else {
-                for (var i = 0; i < outputs.length; i++)
-                    createItem(layerSurface, outputs[i]);
+        function getModelForLayer(layerSurface, output) {
+            switch (layerSurface.layer) {
+            case WS.WlrLayerShellV1.BackgroundLayer:
+                return output.backgroundLayerModel;
+            case WS.WlrLayerShellV1.BottomLayer:
+                return output.bottomLayerModel;
+            case WS.WlrLayerShellV1.TopLayer:
+                return output.topLayerModel;
+            case WS.WlrLayerShellV1.OverlayLayer:
+                return output.overlayLayerModel;
+            default:
+                return undefined;
             }
         }
 
-        function createItem(layerSurface, output) {
-            var parent = LayerSurfaceManager.getParentForLayer(layerSurface, output);
-            var props = {
-                "layerSurface": layerSurface,
-                "surface": layerSurface.surface,
-                "output": output
-            };
-            if (layerSurface.nameSpace === "background") {
-                props["stackingLevel"] = -1;
-                hwLayerItemComponent.createObject(parent, props);
-            } else {
-                layerItemComponent.createObject(parent, props);
-            }
+        onLayerSurfaceCreated: {
+            var output = layerSurface.output;
+            if (!output)
+                output = liriCompositor.defaultOutput;
+
+            var model = getModelForLayer(layerSurface, output);
+            model.append({layerSurface: layerSurface, output});
         }
     }
 

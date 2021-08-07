@@ -32,6 +32,12 @@ Item {
     readonly property alias bottomLayer: bottomLayer
     readonly property alias topLayer: topLayer
     readonly property alias overlayLayer: overlayLayer
+
+    readonly property alias backgroundLayerModel: backgroundLayerModel
+    readonly property alias bottomLayerModel: bottomLayerModel
+    readonly property alias topLayerModel: topLayerModel
+    readonly property alias overlayLayerModel: overlayLayerModel
+
     readonly property alias workspacesView: workspacesView
     readonly property alias currentWorkspace: workspacesView.currentWorkspace
 
@@ -111,6 +117,22 @@ Item {
         id: backgroundLayer
 
         anchors.fill: parent
+
+        Repeater {
+            model: ListModel {
+                id: backgroundLayerModel
+            }
+
+            Components.HardwareLayerSurfaceItem {
+                stackingLevel: -1
+                layerSurface: model.layerSurface
+                output: model.output
+
+                onDestroyAnimationFinished: {
+                    backgroundLayerModel.remove(index);
+                }
+            }
+        }
     }
 
     // Bottom
@@ -118,6 +140,21 @@ Item {
         id: bottomLayer
 
         anchors.fill: parent
+
+        Repeater {
+            model: ListModel {
+                id: bottomLayerModel
+            }
+
+            Components.LayerSurfaceItem {
+                layerSurface: model.layerSurface
+                output: model.output
+
+                onDestroyAnimationFinished: {
+                    bottomLayerModel.remove(index);
+                }
+            }
+        }
     }
 
     // Workspaces
@@ -130,6 +167,21 @@ Item {
         id: topLayer
 
         anchors.fill: parent
+
+        Repeater {
+            model: ListModel {
+                id: topLayerModel
+            }
+
+            Components.LayerSurfaceItem {
+                layerSurface: model.layerSurface
+                output: model.output
+
+                onDestroyAnimationFinished: {
+                    topLayerModel.remove(index);
+                }
+            }
+        }
     }
 
     // Overlays
@@ -137,6 +189,21 @@ Item {
         id: overlayLayer
 
         anchors.fill: parent
+
+        Repeater {
+            model: ListModel {
+                id: overlayLayerModel
+            }
+
+            Components.LayerSurfaceItem {
+                layerSurface: model.layerSurface
+                output: model.output
+
+                onDestroyAnimationFinished: {
+                    overlayLayerModel.remove(index);
+                }
+            }
+        }
     }
 
     // Panels

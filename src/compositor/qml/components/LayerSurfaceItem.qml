@@ -7,7 +7,6 @@ import QtQuick.Controls.Material 2.15
 import QtWayland.Compositor 1.15
 import Liri.WaylandServer 1.0 as WS
 import Fluid.Effects 1.0 as FluidEffects
-import "LayerSurfaceManager.js" as LayerSurfaceManager
 
 WaylandQuickItem {
     id: layerSurfaceItem
@@ -35,12 +34,19 @@ WaylandQuickItem {
     readonly property real horizontalMargin: leftMargin + rightMargin + additionalLeftMargin + additionalRightMargin
     readonly property real verticalMargin: topMargin + bottomMargin + additionalTopMargin + additionalBottomMargin
 
+    signal destroyAnimationFinished()
+
     surface: layerSurface.surface
     focusOnClick: layerSurface.keyboardInteractivity > WS.WlrLayerSurfaceV1.NoKeyboardInteractivity
 
     z: layerSurface && layerSurface.nameSpace === "notification" ? 100 : 0
 
     visible: layerSurface.mapped && layerSurface.configured
+
+    onSurfaceDestroyed: {
+        bufferLocked = true;
+        destroyAnimationFinished();
+    }
 
     onVisibleChanged: {
         if (visible) {
@@ -82,8 +88,13 @@ WaylandQuickItem {
         }
 
         function onLayerChanged() {
-            var newParent = LayerSurfaceManager.getParentForLayer(layerSurface, output);
-            containerItem.parent = newParent;
+            // Create new surface item elsewhere
+            var model = layerShell.getModelForLayer(layerSurface, output);
+            model.append({layerSurface: layerSurface, output: output});
+
+            // Destroy this surface item
+            bufferLocked = true;
+            destroyAnimationFinished();
         }
     }
 

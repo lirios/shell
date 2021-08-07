@@ -32,6 +32,12 @@ P.WaylandOutput {
         readonly property alias top: desktop.topLayer
         readonly property alias overlay: desktop.overlayLayer
     }
+
+    readonly property alias backgroundLayerModel: desktop.backgroundLayerModel
+    readonly property alias bottomLayerModel: desktop.bottomLayerModel
+    readonly property alias topLayerModel: desktop.topLayerModel
+    readonly property alias overlayLayerModel: desktop.overlayLayerModel
+
     readonly property alias currentWorkspace: desktop.currentWorkspace
 
     property alias showFps: desktop.showFps
