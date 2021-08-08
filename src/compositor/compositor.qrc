@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/base/Keyboard.qml</file>
-        <file>qml/components/CloseButton.qml</file>
         <file>qml/components/HardwareLayerSurfaceItem.qml</file>
         <file>qml/components/HotCorner.qml</file>
         <file>qml/components/LayerSurfaceItem.qml</file>

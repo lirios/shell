@@ -116,23 +116,26 @@ Item {
         }
     }
 
-    ShellComponents.CloseButton {
-        id: closeButton
+    RoundButton {
+        Material.background: titleBadge.color
+        Material.elevation: 0
+
         anchors {
             top: parent.top
             right: parent.right
             margins: -FluidControls.Units.gu(1)
         }
-        width: FluidControls.Units.iconSizes.medium
+
+        icon.source: FluidControls.Utils.iconUrl("navigation/close")
         z: 5
         opacity: hoverHandler.hovered ? 1.0 : 0.0
-        onClicked: chrome.closed(view)
+
+        onClicked: {
+            chrome.closed(view);
+        }
 
         Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InCubic
-                duration: FluidControls.Units.shortDuration
-            }
+            NumberAnimation { duration: FluidControls.Units.shortDuration }
         }
     }
 }
