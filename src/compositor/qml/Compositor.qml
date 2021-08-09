@@ -30,6 +30,8 @@ P.WaylandCompositor {
     readonly property bool hasMaxmizedShellSurfaces: __private.maximizedShellSurfaces > 0
     readonly property bool hasFullscreenShellSurfaces: __private.fullscreenShellSurfaces > 0
 
+    readonly property alias showModalOverlay: liriModal.grabbed
+
     readonly property alias applicationManager: applicationManager
     readonly property alias shellHelper: shellHelper
     readonly property alias policyKitAgent: policyKitAgent
@@ -208,6 +210,10 @@ P.WaylandCompositor {
         }
     }
 
+    WS.LiriModalManager {
+        id: liriModal
+    }
+
     Timer {
         id: shellHelperTimer
 
@@ -244,6 +250,9 @@ P.WaylandCompositor {
         id: layerShell
 
         function getModelForLayer(layerSurface, output) {
+            if (layerSurface.nameSpace === "dialog")
+                return output.modalOverlayModel;
+
             switch (layerSurface.layer) {
             case WS.WlrLayerShellV1.BackgroundLayer:
                 return output.backgroundLayerModel;

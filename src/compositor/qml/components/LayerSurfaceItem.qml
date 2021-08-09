@@ -45,11 +45,17 @@ WaylandQuickItem {
 
     onSurfaceDestroyed: {
         bufferLocked = true;
-        destroyAnimationFinished();
+        if (layerSurface.nameSpace === "dialog")
+            shrinkFadeOutAnimation.start();
+        else
+            destroyAnimationFinished();
     }
 
     onVisibleChanged: {
         if (visible) {
+            if (layerSurface.nameSpace === "dialog")
+                growFadeInAnimation.start();
+
             if (layerSurface.keyboardInteractivity > WS.WlrLayerSurfaceV1.NoKeyboardInteractivity)
                 takeFocus();
         }
@@ -77,6 +83,28 @@ WaylandQuickItem {
 
     Behavior on anchors.bottomMargin {
         NumberAnimation { duration: 220 }
+    }
+
+    ParallelAnimation {
+        id: growFadeInAnimation
+
+        NumberAnimation { property: "scale"; from: 0.9; to: 1.0; easing.type: Easing.OutQuint; duration: 220 }
+        NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; easing.type: Easing.OutCubic; duration: 150 }
+    }
+
+    SequentialAnimation {
+        id: shrinkFadeOutAnimation
+
+        ParallelAnimation {
+            NumberAnimation { property: "scale"; from: 1.0; to: 0.9; easing.type: Easing.OutQuint; duration: 220 }
+            NumberAnimation { property: "opacity"; from: 1.0; to: 0.0; easing.type: Easing.OutCubic; duration: 150 }
+        }
+
+        ScriptAction {
+            script: {
+                destroyAnimationFinished();
+            }
+        }
     }
 
     Connections {

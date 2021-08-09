@@ -37,6 +37,7 @@ Item {
     readonly property alias bottomLayerModel: bottomLayerModel
     readonly property alias topLayerModel: topLayerModel
     readonly property alias overlayLayerModel: overlayLayerModel
+    readonly property alias modalOverlayModel: modalOverlayModel
 
     readonly property alias workspacesView: workspacesView
     readonly property alias currentWorkspace: workspacesView.currentWorkspace
@@ -234,6 +235,46 @@ Item {
             NumberAnimation {
                 easing.type: Easing.InSine
                 duration: FluidControls.Units.mediumDuration
+            }
+        }
+    }
+
+    Rectangle {
+        id: modalOverlay
+
+        Material.theme: Material.Light
+
+        anchors.fill: parent
+        color: Material.backgroundDimColor
+        opacity: liriCompositor.showModalOverlay ? 1.0 : 0.0
+        enabled: liriCompositor.showModalOverlay
+
+        Behavior on opacity {
+            NumberAnimation { duration: 150 }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+            hoverEnabled: true
+
+            onClicked: {
+                liriModal.sendDone();
+            }
+        }
+
+        Repeater {
+            model: ListModel {
+                id: modalOverlayModel
+            }
+
+            Components.LayerSurfaceItem {
+                layerSurface: model.layerSurface
+                output: model.output
+
+                onDestroyAnimationFinished: {
+                    overlayLayerModel.remove(index);
+                }
             }
         }
     }
