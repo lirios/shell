@@ -16,6 +16,8 @@ liri_add_executable(LiriShellHelper
     OUTPUT_NAME
         "liri-shell-helper"
     SOURCES
+        launcher.cpp
+        launcher.h
         main.cpp
         windowmask.cpp
         windowmask.h
@@ -30,6 +32,7 @@ liri_add_executable(LiriShellHelper
         "${INSTALL_LIBEXECDIR}"
     LIBRARIES
         Qt5::Core
+        Qt5::DBus
         Qt5::Gui
         Qt5::GuiPrivate
         Qt5::Qml

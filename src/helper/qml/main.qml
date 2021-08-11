@@ -100,6 +100,12 @@ Item {
 
     Notifications.NotificationsManager {}
 
+    RunDialog {
+        id: runDialog
+
+        screen: primaryScreen
+    }
+
     /*
      * Methods
      */

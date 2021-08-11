@@ -496,12 +496,6 @@ Item {
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: desktopKeybindings.runCommand
-        onActivated: liriCompositor.defaultOutput.desktop.runCommand.open()
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.screenshot
         onActivated: SessionInterface.launchApplication("io.liri.Screenshot")
     }

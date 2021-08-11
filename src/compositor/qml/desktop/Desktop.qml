@@ -48,7 +48,6 @@ Item {
 
     readonly property alias shell: shell
     readonly property var panel: shell.panel
-    readonly property alias runCommand: runCommand
     readonly property alias authDialog: authDialog
     readonly property alias windowSwitcher: windowSwitcher
 
@@ -277,17 +276,6 @@ Item {
                 }
             }
         }
-    }
-
-    /*
-     * Run command dialog
-     */
-
-    RunCommand {
-        id: runCommand
-
-        x: (parent.width - height) / 2
-        y: (parent.height - height) / 2
     }
 
     /*
