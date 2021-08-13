@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="586"/>
+        <location filename="../../src/compositor/qml/Compositor.qml" line="552"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Entschuldigung, das hat nicht funktioniert. Bitte versuchen Sie es erneut.</translation>
     </message>
@@ -214,14 +214,6 @@ It must also be owned by the current user (UID %3), but is owned by UID %4 (&quo
 Der Unix-Zugriffsmodus muss 0700 sein, ist aber 0%2.
 Sie muss auch im Besitz des aktuellen Benutzers (UID %3) sein, aber sie ist im Besitz von UID %4 (&quot;%5&quot;).
 </translation>
-    </message>
-</context>
-<context>
-    <name>RunCommand</name>
-    <message>
-        <location filename="../../src/compositor/qml/desktop/RunCommand.qml" line="26"/>
-        <source>Enter a Command</source>
-        <translation>Befehl eingeben</translation>
     </message>
 </context>
 <context>

@@ -53,7 +53,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="586"/>
+        <location filename="../../src/compositor/qml/Compositor.qml" line="552"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation>Atleiskite, tai nesuveikė. Bandykite dar kartą.</translation>
     </message>
@@ -215,14 +215,6 @@ It must also be owned by the current user (UID %3), but is owned by UID %4 (&quo
 Unix prieigos veiksena privalo būti 0700, tačiau yra 0%2.
 Taip pat kintamasis privalo priklausyti dabartiniam naudotojui (UID %3), tačiau jis priklauso UID %4 (&quot;%5&quot;).
 </translation>
-    </message>
-</context>
-<context>
-    <name>RunCommand</name>
-    <message>
-        <location filename="../../src/compositor/qml/desktop/RunCommand.qml" line="26"/>
-        <source>Enter a Command</source>
-        <translation>Įveskite komandą</translation>
     </message>
 </context>
 <context>

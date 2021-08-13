@@ -55,7 +55,7 @@
 <context>
     <name>Compositor</name>
     <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="586"/>
+        <location filename="../../src/compositor/qml/Compositor.qml" line="552"/>
         <source>Sorry, that didn&apos;t work. Please try again.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -208,14 +208,6 @@ on how to implement it.
 Unix access mode must be 0700, but is 0%2.
 It must also be owned by the current user (UID %3), but is owned by UID %4 (&quot;%5&quot;).
 </source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>RunCommand</name>
-    <message>
-        <location filename="../../src/compositor/qml/desktop/RunCommand.qml" line="26"/>
-        <source>Enter a Command</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
