@@ -2,14 +2,17 @@
 Type=X-Liri-Service
 Name=User
 Name[de]=Benutzer
+Name[lt]=Naudotojas
 Name[pt_BR]=Usuário
 Name[tr]=Kullanıcı
 Comment=Current user picture
 Comment[de]=Aktuelles Benutzerbild
+Comment[lt]=Dabartinio naudotojo paveikslas
 Comment[pt_BR]=Imagem atual do usuário
 Comment[tr]=Geçerli kullanıcı resmi
 Keywords=User;
 Keywords[de]=Benutzer;
+Keywords[lt]=Naudotojas;naudotojai;
 Keywords[pt_BR]=Usuário;
 Keywords[tr]=Kullanıcı;
 OnlyShowIn=X-Liri;
