@@ -48,7 +48,6 @@ Item {
 
     readonly property alias shell: shell
     readonly property var panel: shell.panel
-    readonly property alias authDialog: authDialog
     readonly property alias windowSwitcher: windowSwitcher
 
     property alias showFps: fpsIndicator.visible
@@ -276,17 +275,6 @@ Item {
                 }
             }
         }
-    }
-
-    /*
-     * Authentication
-     */
-
-    Screens.AuthDialog {
-        id: authDialog
-
-        x: (parent.width - width) / 2
-        y: (parent.height - height) / 2
     }
 
     /*

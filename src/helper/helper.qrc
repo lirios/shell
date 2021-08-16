@@ -8,5 +8,6 @@
         <file>qml/ui/notifications/NotificationWindow.qml</file>
         <file>qml/components/Dialog.qml</file>
         <file>qml/RunDialog.qml</file>
+        <file>qml/AuthDialog.qml</file>
     </qresource>
 </RCC>

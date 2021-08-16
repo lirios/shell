@@ -7,8 +7,9 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Fluid.Controls 1.0 as FluidControls
+import "components" as Components
 
-Dialog {
+Components.Dialog {
     id: authDialog
 
     property string actionId
@@ -21,54 +22,48 @@ Dialog {
     property alias infoMessage: infoLabel.text
     property alias errorMessage: errorLabel.text
 
-    parent: desktop
+    Material.theme: Material.Dark
+    Material.primary: Material.Blue
+    Material.accent: Material.Blue
 
     title: qsTr("Authentication required")
-
-    modal: true
-
-    // Since we cannot determine when the dialog is canceled
-    // with press outside or escape we shall not have autoclose
-    closePolicy: Popup.NoAutoClose
 
     onAvatarChanged: {
         // Load the image from the disk if it's an absolute path
         if (avatar.indexOf("/") == 0) {
-            avatarImage.name = ""
-            avatarImage.source = avatar
+            avatarImage.name = "";
+            avatarImage.source = avatar;
         }
 
         // Otherwise use a standard icon
-        avatarImage.source = ""
-        avatarImage.name = "action/verified_user"
+        avatarImage.source = "";
+        avatarImage.name = "action/verified_user";
     }
     onErrorMessageChanged: {
         // Give focus to the password field and clear
-        passwordInput.text = ""
-        passwordInput.forceActiveFocus()
+        passwordInput.text = "";
+        passwordInput.forceActiveFocus();
     }
     onOpened: {
         // Give focus to the password field
-        passwordInput.forceActiveFocus()
+        passwordInput.forceActiveFocus();
     }
     onClosed: {
         // Cleanup
-        actionId = ""
-        message = ""
-        iconName = ""
-        realName = ""
-        avatar = ""
-        prompt = ""
-        passwordInput.text = ""
-        infoMessage = ""
-        errorMessage = ""
+        actionId = "";
+        message = "";
+        iconName = "";
+        realName = "";
+        avatar = "";
+        prompt = "";
+        passwordInput.text = "";
+        infoMessage = "";
+        errorMessage = "";
     }
-
-    Material.theme: Material.Dark
-    Material.accent: Material.Blue
 
     ColumnLayout {
         id: mainLayout
+
         spacing: FluidControls.Units.smallSpacing
 
         RowLayout {
@@ -167,6 +162,10 @@ Dialog {
         }
     }
 
-    onAccepted: policyKitAgent.authenticate(passwordInput.text)
-    onRejected: policyKitAgent.abortAuthentication()
+    onAccepted: {
+        policyKitAgent.authenticate(passwordInput.text);
+    }
+    onRejected: {
+        policyKitAgent.abortAuthentication();
+    }
 }

@@ -28,6 +28,12 @@ Window {
     property alias standardButtons: buttonBox.standardButtons
     property alias footer: page.footer
 
+    signal opened()
+    signal closed()
+
+    signal accepted()
+    signal rejected()
+
     Material.elevation: 24
 
     flags: Qt.Dialog
@@ -38,10 +44,20 @@ Window {
     height: page.height + (Material.elevation * 8)
 
     onVisibleChanged: {
-        if (visible)
+        if (visible) {
+            opened();
             liriModal.grab();
-        else
+        } else {
             liriModal.close();
+            closed();
+        }
+    }
+
+    onAccepted: {
+        hide();
+    }
+    onRejected: {
+        hide();
     }
 
     WaylandClient.LiriModal {
@@ -49,7 +65,7 @@ Window {
 
         onGrabbedChanged: {
             if (!grabbed)
-                window.hide();
+                reject();
         }
     }
 
@@ -121,13 +137,19 @@ Window {
             id: buttonBox
 
             visible: count > 0
+        }
+    }
 
-            onAccepted: {
-                accept();
-            }
-            onDiscarded: {
-                dismiss();
-            }
+    Connections {
+        target: footer
+        ignoreUnknownSignals: true
+
+        function onAccepted() {
+            accept();
+        }
+
+        function onRejected() {
+            rejected();
         }
     }
 
@@ -136,10 +158,10 @@ Window {
     }
 
     function accept() {
-        hide();
+        accepted();
     }
 
-    function dismiss() {
-        hide();
+    function reject() {
+        rejected();
     }
 }

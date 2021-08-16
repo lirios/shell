@@ -13,18 +13,23 @@ Q_LOGGING_CATEGORY(POLKITAGENT, "liri.policykit")
 
 class PolicyKitAgentPrivate
 {
+    Q_DECLARE_PUBLIC(PolicyKitAgent)
 public:
-    PolicyKitAgentPrivate();
+    PolicyKitAgentPrivate(PolicyKitAgent *self);
     ~PolicyKitAgentPrivate();
 
-    bool initialized;
-    bool registered;
-    Listener *listener;
+    void registerAgent();
+
+    bool initialized = false;
+    bool registered = false;
+    Listener *listener = nullptr;
+
+protected:
+    PolicyKitAgent *q_ptr = nullptr;
 };
 
-PolicyKitAgentPrivate::PolicyKitAgentPrivate()
-    : initialized(false)
-    , registered(false)
+PolicyKitAgentPrivate::PolicyKitAgentPrivate(PolicyKitAgent *self)
+    : q_ptr(self)
     , listener(new Listener())
 {
 }
@@ -34,13 +39,27 @@ PolicyKitAgentPrivate::~PolicyKitAgentPrivate()
     delete listener;
 }
 
+void PolicyKitAgentPrivate::registerAgent()
+{
+    Q_Q(PolicyKitAgent);
+
+    if (registered) {
+        qCWarning(POLKITAGENT, "Cannot register PolicyKitAgent more than once");
+        return;
+    }
+
+    registered = listener->registerObject();
+    if (registered)
+        Q_EMIT q->registeredChanged();
+}
+
 /*
  * PolicyKitAgent
  */
 
 PolicyKitAgent::PolicyKitAgent(QObject *parent)
     : QObject(parent)
-    , d_ptr(new PolicyKitAgentPrivate())
+    , d_ptr(new PolicyKitAgentPrivate(this))
 {
     // Rely signals
     connect(d_func()->listener, &Listener::authenticationInitiated,
@@ -96,20 +115,6 @@ bool PolicyKitAgent::isRegistered() const
     return d->registered;
 }
 
-void PolicyKitAgent::registerAgent()
-{
-    Q_D(PolicyKitAgent);
-
-    if (d->registered) {
-        qCWarning(POLKITAGENT, "Cannot register PolicyKitAgent more than once");
-        return;
-    }
-
-    d->registered = d->listener->registerObject();
-    if (d->registered)
-        Q_EMIT registeredChanged();
-}
-
 void PolicyKitAgent::authenticate(const QString &response)
 {
     Q_D(PolicyKitAgent);
@@ -126,4 +131,5 @@ void PolicyKitAgent::componentComplete()
 {
     Q_D(PolicyKitAgent);
     d->initialized = true;
+    d->registerAgent();
 }

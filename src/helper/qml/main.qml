@@ -7,6 +7,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtGSettings 1.0 as Settings
 import Liri.WaylandClient 1.0 as WaylandClient
+import Liri.PolicyKit 1.0 as Polkit
 import "ui/notifications" as Notifications
 
 Item {
@@ -99,6 +100,57 @@ Item {
     }
 
     Notifications.NotificationsManager {}
+
+    /*
+     * PolicyKit
+     */
+
+    AuthDialog {
+        id: authDialog
+
+        screen: null
+    }
+
+    Polkit.PolicyKitAgent {
+        id: policyKitAgent
+
+        onAuthenticationInitiated: {
+            authDialog.actionId = actionId;
+            authDialog.message = message;
+            authDialog.iconName = iconName;
+            authDialog.realName = realName;
+        }
+        onAuthenticationRequested: {
+            authDialog.prompt = prompt;
+            authDialog.echo = echo;
+            authDialog.show();
+        }
+        onAuthenticationCanceled: {
+            authDialog.hide();
+        }
+        onAuthenticationFinished: {
+            authDialog.hide();
+        }
+        onAuthorizationGained: {
+            authDialog.hide();
+        }
+        onAuthorizationFailed: {
+            authDialog.errorMessage = qsTr("Sorry, that didn't work. Please try again.");
+        }
+        onAuthorizationCanceled: {
+            authDialog.close();
+        }
+        onInformation: {
+            authDialog.infoMessage = message;
+        }
+        onError: {
+            authDialog.errorMessage = message;
+        }
+    }
+
+    /*
+     * Dialogs
+     */
 
     RunDialog {
         id: runDialog

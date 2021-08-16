@@ -7,7 +7,7 @@ import QtQuick.tooling 1.2
 // 'qmlplugindump-qt5 -v -noinstantiate -notrelocatable Liri.PolicyKit 1.0'
 
 Module {
-    dependencies: ["QtQuick 2.8"]
+    dependencies: ["QtQuick 2.0"]
     Component {
         name: "PolicyKitAgent"
         prototype: "QObject"
@@ -40,7 +40,6 @@ Module {
             name: "error"
             Parameter { name: "message"; type: "string" }
         }
-        Method { name: "registerAgent" }
         Method {
             name: "authenticate"
             Parameter { name: "response"; type: "string" }

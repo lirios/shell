@@ -8,7 +8,6 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtWayland.Compositor 1.15
 import Liri.Launcher 1.0 as Launcher
-import Liri.PolicyKit 1.0
 import Liri.XWayland 1.0 as LXW
 import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
@@ -34,7 +33,6 @@ P.WaylandCompositor {
 
     readonly property alias applicationManager: applicationManager
     readonly property alias shellHelper: shellHelper
-    readonly property alias policyKitAgent: policyKitAgent
 
     defaultSeat.keymap {
         layout: settings.keyboard.layouts[0] ? settings.keyboard.layouts[0] : "us"
@@ -526,36 +524,6 @@ P.WaylandCompositor {
 
     KeyBindings {
         id: keyBindings
-    }
-
-    // PolicyKit
-    PolicyKitAgent {
-        id: policyKitAgent
-        onAuthenticationInitiated: {
-            var authDialog = liriCompositor.defaultOutput.desktop.authDialog;
-            authDialog.actionId = actionId;
-            authDialog.message = message;
-            authDialog.iconName = iconName;
-            authDialog.realName = realName;
-        }
-        onAuthenticationRequested: {
-            var authDialog = liriCompositor.defaultOutput.desktop.authDialog;
-            authDialog.prompt = prompt;
-            authDialog.echo = echo;
-            authDialog.open();
-        }
-        onAuthenticationCanceled: liriCompositor.defaultOutput.desktop.authDialog.close()
-        onAuthenticationFinished: liriCompositor.defaultOutput.desktop.authDialog.close()
-        onAuthorizationGained: liriCompositor.defaultOutput.desktop.authDialog.close()
-        onAuthorizationFailed: {
-            var authDialog = liriCompositor.defaultOutput.desktop.authDialog;
-            authDialog.errorMessage = qsTr("Sorry, that didn't work. Please try again.");
-        }
-        onAuthorizationCanceled: liriCompositor.defaultOutput.desktop.authDialog.close()
-        onInformation: liriCompositor.defaultOutput.desktop.authDialog.infoMessage = message
-        onError: liriCompositor.defaultOutput.desktop.authDialog.errorMessage = message
-
-        Component.onCompleted: registerAgent()
     }
 
     Timer {

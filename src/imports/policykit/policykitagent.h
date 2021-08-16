@@ -30,7 +30,6 @@ public:
 
     bool isRegistered() const;
 
-    Q_INVOKABLE void registerAgent();
     Q_INVOKABLE void authenticate(const QString &response);
     Q_INVOKABLE void abortAuthentication();
 
