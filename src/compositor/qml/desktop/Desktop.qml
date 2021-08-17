@@ -14,7 +14,6 @@ import Liri.WaylandServer 1.0 as WS
 import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
 import ".."
-import "../components" as Components
 import "../indicators" as Indicators
 import "../screens" as Screens
 import "../windows" as Windows
@@ -122,7 +121,7 @@ Item {
                 id: backgroundLayerModel
             }
 
-            Components.HardwareLayerSurfaceItem {
+            HardwareLayerSurfaceItem {
                 stackingLevel: -1
                 layerSurface: model.layerSurface
                 output: model.output
@@ -145,7 +144,7 @@ Item {
                 id: bottomLayerModel
             }
 
-            Components.LayerSurfaceItem {
+            LayerSurfaceItem {
                 layerSurface: model.layerSurface
                 output: model.output
 
@@ -172,7 +171,7 @@ Item {
                 id: topLayerModel
             }
 
-            Components.LayerSurfaceItem {
+            LayerSurfaceItem {
                 layerSurface: model.layerSurface
                 output: model.output
 
@@ -194,7 +193,7 @@ Item {
                 id: overlayLayerModel
             }
 
-            Components.LayerSurfaceItem {
+            LayerSurfaceItem {
                 layerSurface: model.layerSurface
                 output: model.output
 
@@ -266,7 +265,7 @@ Item {
                 id: modalOverlayModel
             }
 
-            Components.LayerSurfaceItem {
+            LayerSurfaceItem {
                 layerSurface: model.layerSurface
                 output: model.output
 
@@ -312,17 +311,17 @@ Item {
         anchors.fill: parent
 
         // Top-left corner
-        Components.HotCorner {
+        HotCorner {
             corner: Qt.TopLeftCorner
         }
 
         // Top-right corner
-        Components.HotCorner {
+        HotCorner {
             corner: Qt.TopRightCorner
         }
 
         // Bottom-left corner
-        Components.HotCorner {
+        HotCorner {
             corner: Qt.BottomLeftCorner
             onTriggered: {
                 if (workspacesView.currentWorkspace.state === "normal")
@@ -333,7 +332,7 @@ Item {
         }
 
         // Bottom-right corner
-        Components.HotCorner {
+        HotCorner {
             corner: Qt.BottomRightCorner
         }
     }
