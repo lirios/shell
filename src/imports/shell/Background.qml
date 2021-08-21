@@ -21,6 +21,7 @@ Loader {
     property bool blur: false
     property real blurRadius: 32
     readonly property bool loaded: __private.loaded
+    readonly property bool imageLoaded: __private.imageLoaded
 
     sourceComponent: {
         switch (background.mode) {
@@ -41,6 +42,7 @@ Loader {
         id: __private
 
         property bool loaded: false
+        property bool imageLoaded: false
     }
 
     Component {
@@ -134,7 +136,10 @@ Loader {
                 sourceSize.width: background.pictureWidth
                 sourceSize.height: background.pictureHeight
                 fillMode: background.convertFillMode(background.fillMode)
-                onStatusChanged: __private.loaded = picture.status === Image.Ready
+                onStatusChanged: {
+                    __private.loaded = picture.status === Image.Ready;
+                    __private.imageLoaded = __private.loaded;
+                }
                 visible: !blur.visible
             }
 

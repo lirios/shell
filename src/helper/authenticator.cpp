@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018 Pier Luigi Fiorini
+// SPDX-FileCopyrightText: 2018-2021 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,7 +10,6 @@
 
 Authenticator::Authenticator(QObject *parent)
     : QObject(parent)
-    , m_response(nullptr)
 {
 }
 
@@ -18,7 +17,17 @@ Authenticator::~Authenticator()
 {
 }
 
-void Authenticator::authenticate(const QString &password)
+void Authenticator::authenticate(const QString &password, const QJSValue &callback)
+{
+    if (m_authRequested)
+        return;
+
+    m_authRequested = true;
+    m_callback = callback;
+    actualAuthentication(password);
+}
+
+void Authenticator::actualAuthentication(const QString &password)
 {
     const pam_conv conversation = { conversationHandler, this };
     pam_handle_t *handle = nullptr;
@@ -26,6 +35,7 @@ void Authenticator::authenticate(const QString &password)
     passwd *pwd = getpwuid(getuid());
     if (!pwd) {
         Q_EMIT authenticationError();
+        sendReply(false);
         return;
     }
 
@@ -33,6 +43,7 @@ void Authenticator::authenticate(const QString &password)
     if (retval != PAM_SUCCESS) {
         qWarning("pam_start returned %d", retval);
         Q_EMIT authenticationError();
+        sendReply(false);
         return;
     }
 
@@ -48,6 +59,7 @@ void Authenticator::authenticate(const QString &password)
             qWarning("pam_authenticate returned %d", retval);
             Q_EMIT authenticationError();
         }
+        sendReply(false);
 
         return;
     }
@@ -56,10 +68,20 @@ void Authenticator::authenticate(const QString &password)
     if (retval != PAM_SUCCESS) {
         qWarning("pam_end returned %d", retval);
         Q_EMIT authenticationError();
+        sendReply(false);
         return;
     }
 
     Q_EMIT authenticationSucceded();
+    sendReply(true);
+}
+
+void Authenticator::sendReply(bool succeeded)
+{
+    if (m_callback.isCallable())
+        m_callback.call(QJSValueList() << succeeded);
+
+    m_authRequested = false;
 }
 
 int Authenticator::conversationHandler(int num, const pam_message **message,
@@ -72,5 +94,3 @@ int Authenticator::conversationHandler(int num, const pam_message **message,
     *response = self->m_response;
     return PAM_SUCCESS;
 }
-
-#include "moc_authenticator.cpp"

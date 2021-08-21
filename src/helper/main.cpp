@@ -6,6 +6,7 @@
 #include <QtGui/QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include "authenticator.h"
 #include "gitsha1.h"
 #include "inputregion.h"
 #include "shellhelperlogging_p.h"
@@ -101,6 +102,10 @@ int main(int argc, char *argv[])
     setupSystemd();
 
     // Register QML types
+    qmlRegisterSingletonType<Authenticator>("Liri.ShellHelper", 1, 0, "Authenticator",
+                                            [](QQmlEngine *, QJSEngine *) -> QObject * {
+        return new Authenticator();
+    });
     qmlRegisterType<InputRegion>("Liri.ShellHelper", 1, 0, "InputRegion");
     qmlRegisterType<Rect>("Liri.ShellHelper", 1, 0, "Rect");
 

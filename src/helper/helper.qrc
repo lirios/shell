@@ -14,5 +14,6 @@
         <file>qml/AuthDialog.qml</file>
         <file>qml/LogoutDialog.qml</file>
         <file>qml/PowerOffDialog.qml</file>
+        <file>qml/LockScreenWindow.qml</file>
     </qresource>
 </RCC>

@@ -5,8 +5,6 @@ if(LIRI_ENABLE_SYSTEMD)
     find_package(Libsystemd REQUIRED)
 endif()
 
-find_package(PAM REQUIRED)
-
 if(NOT TARGET Liri::Qt5GSettings)
     find_package(Qt5GSettings REQUIRED)
 endif()
@@ -41,10 +39,6 @@ liri_add_executable(LiriShell
         application.cpp
         application.h
         main.cpp
-        sessionmanager/authenticator.cpp
-        sessionmanager/authenticator.h
-        sessionmanager/qmlauthenticator.cpp
-        sessionmanager/qmlauthenticator.h
         sessionmanager/sessionmanager.cpp
         sessionmanager/sessionmanager.h
         ${LiriShell_QM_FILES}
@@ -72,7 +66,6 @@ liri_add_executable(LiriShell
         Liri::LocalDevice
         Liri::Xdg
         shell-privateplugin
-        ${PAM_LIBRARIES}
 )
 
 liri_extend_target("LiriShell"

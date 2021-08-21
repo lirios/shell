@@ -38,7 +38,6 @@
         <file>qml/overlays/UnresponsiveOverlay.qml</file>
         <file>qml/panel/IndicatorsRow.qml</file>
         <file>qml/panel/Panel.qml</file>
-        <file>qml/screens/LockScreen.qml</file>
         <file>qml/screens/SplashScreen.qml</file>
         <file>qml/ShellSettings.qml</file>
         <file>qml/windows/Chrome.qml</file>

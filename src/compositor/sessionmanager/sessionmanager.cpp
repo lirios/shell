@@ -6,8 +6,6 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 
-#include "authenticator.h"
-#include "qmlauthenticator.h"
 #include "sessionmanager/sessionmanager.h"
 
 #include <signal.h>
@@ -25,8 +23,6 @@ Q_LOGGING_CATEGORY(SESSION_MANAGER, "liri.session.manager")
 
 SessionManager::SessionManager(QObject *parent)
     : QObject(parent)
-    , m_authenticatorThread(new QThread(this))
-    , m_authenticator(new Authenticator)
 {
     // Unregister D-Bus service when we are exiting
     connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [] {
@@ -54,17 +50,10 @@ SessionManager::SessionManager(QObject *parent)
         }
     }
 #endif
-
-    // Authenticate in a separate thread
-    m_authenticator->moveToThread(m_authenticatorThread);
-    m_authenticatorThread->start();
 }
 
 SessionManager::~SessionManager()
 {
-    m_authenticatorThread->quit();
-    m_authenticatorThread->wait();
-    m_authenticator->deleteLater();
 }
 
 void SessionManager::registerService()
@@ -77,14 +66,4 @@ void SessionManager::registerService()
 #ifdef HAVE_SYSTEMD
     sd_notify(0, "READY=1");
 #endif
-}
-
-void SessionManager::authenticate(const QString &password, const QJSValue &callback)
-{
-    if (m_authRequested)
-        return;
-
-    (void)new QmlAuthenticator(this, callback);
-    QMetaObject::invokeMethod(m_authenticator, "authenticate", Q_ARG(QString, password));
-    m_authRequested = true;
 }

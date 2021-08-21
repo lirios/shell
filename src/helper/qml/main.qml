@@ -69,6 +69,14 @@ Item {
         }
     }
 
+    WaylandClient.LiriLockScreenV1 {
+        id: lockScreen
+
+        onLockRequested: {
+            lockScreenInstantiator.active = true;
+        }
+    }
+
     Component {
         id: osdComponent
 
@@ -106,6 +114,17 @@ Item {
     }
 
     NotificationsManager {}
+
+    Instantiator {
+        id: lockScreenInstantiator
+
+        active: false
+        model: Qt.application.screens
+
+        LockScreenWindow {
+            screen: modelData
+        }
+    }
 
     /*
      * PolicyKit

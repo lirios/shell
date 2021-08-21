@@ -246,6 +246,14 @@ P.WaylandCompositor {
         }
     }
 
+    WS.LiriLockScreenV1 {
+        id: lockScreen
+
+        onUnlocked: {
+            Session.SessionManager.unlock();
+        }
+    }
+
     // Layer shell
 
     WS.WlrLayerShellV1 {

@@ -9,6 +9,8 @@ if(NOT TARGET Liri::WaylandClient)
     find_package(Liri1WaylandClient REQUIRED)
 endif()
 
+find_package(PAM REQUIRED)
+
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
@@ -16,6 +18,7 @@ liri_add_executable(LiriShellHelper
     OUTPUT_NAME
         "liri-shell-helper"
     SOURCES
+        authenticator.cpp authenticator.h
         main.cpp
         inputregion.cpp inputregion.h
         shellhelperlogging_p.h
@@ -35,6 +38,7 @@ liri_add_executable(LiriShellHelper
         Qt5::Qml
         Qt5::WaylandClient
         Liri::WaylandClient
+        ${PAM_LIBRARIES}
 )
 
 liri_extend_target("LiriShellHelper"

@@ -1,24 +1,28 @@
-// SPDX-FileCopyrightText: 2018 Pier Luigi Fiorini
+// SPDX-FileCopyrightText: 2018-2021 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #ifndef AUTHENTICATOR_H
 #define AUTHENTICATOR_H
 
-#include <QtCore/QObject>
+#include <QObject>
+#include <QJSValue>
 
+extern "C" {
 struct pam_message;
 struct pam_response;
+}
 
 class Authenticator : public QObject
 {
     Q_OBJECT
 public:
-    Authenticator(QObject *parent = 0);
+    Authenticator(QObject *parent = nullptr);
     ~Authenticator();
 
+    Q_INVOKABLE void authenticate(const QString &password, const QJSValue &callback);
+
 public Q_SLOTS:
-    void authenticate(const QString &password);
 
 Q_SIGNALS:
     void authenticationSucceded();
@@ -26,7 +30,12 @@ Q_SIGNALS:
     void authenticationError();
 
 private:
-    pam_response *m_response;
+    bool m_authRequested = false;
+    QJSValue m_callback;
+    pam_response *m_response = nullptr;
+
+    void actualAuthentication(const QString &password);
+    void sendReply(bool succeeded);
 
     static int conversationHandler(int num, const pam_message **message,
                                    pam_response **response, void *data);

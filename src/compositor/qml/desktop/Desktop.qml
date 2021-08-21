@@ -63,15 +63,6 @@ Item {
         State {
             name: "session"
             PropertyChanges { target: desktop; cursorVisible: true }
-        },
-        State {
-            name: "lock"
-            PropertyChanges { target: desktop   ; cursorVisible: true }
-            PropertyChanges { target: lockScreenLoader; loadComponent: true }
-            // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
-            // when the system is resumed it won't flip so we comment this out but unfortunately
-            // it means that the lock screen will not turn off the screen
-            //StateChangeScript { script: output.idle() }
         }
     ]
 
@@ -79,10 +70,12 @@ Item {
         target: Session.SessionManager
 
         function onSessionLocked() {
-            desktop.state = "lock";
+            // Ask the client to show the lock screen
+            lockScreen.requestLock();
         }
         function onSessionUnlocked() {
             desktop.state = "session";
+            output.locked = false;
         }
         function onIdleInhibitRequested() {
             liriCompositor.idleInhibit++;
@@ -182,6 +175,18 @@ Item {
             LayerSurfaceItem {
                 layerSurface: model.layerSurface
                 output: model.output
+
+                onCreateAnimationFinished: {
+                    if (layerSurface.nameSpace === "lockscreen") {
+                        // Make sure all surfaces are hidden
+                        output.locked = true;
+
+                        // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
+                        // when the system is resumed it won't flip so we comment this out but unfortunately
+                        // it means that the lock screen will not turn off the screen
+                        //output.idle();
+                    }
+                }
 
                 onDestroyAnimationFinished: {
                     overlayLayerModel.remove(index);
@@ -306,40 +311,6 @@ Item {
         HotCorner {
             corner: Qt.BottomRightCorner
         }
-    }
-
-    /*
-     * Lock screen
-     */
-
-    Component {
-        id: primaryLockScreenComponent
-
-        Screens.LockScreen {
-            primary: true
-        }
-    }
-
-    Component {
-        id: secondaryLockScreenComponent
-
-        Screens.LockScreen {
-            primary: false
-        }
-    }
-
-    FluidControls.Loadable {
-        id: lockScreenLoader
-
-        property bool loadComponent: false
-
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
-        asynchronous: true
-        component: output.primary ? primaryLockScreenComponent : secondaryLockScreenComponent
-        onLoadComponentChanged: if (loadComponent) show(); else hide();
     }
 
     /*

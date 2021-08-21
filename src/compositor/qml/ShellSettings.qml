@@ -12,7 +12,6 @@ FluidCore.Object {
     readonly property alias outputs: outputsSettings
     readonly property alias ui: interfaceSettings
     readonly property alias keyboard: keyboardSettings
-    readonly property alias lockScreen: lockSettings
     readonly property alias shell: shellSettings
     readonly property alias session: sessionSettings
     readonly property int numWorkspaces: 4
@@ -88,15 +87,5 @@ FluidCore.Object {
         id: sessionSettings
         schema.id: "io.liri.session"
         schema.path: "/io/liri/session/"
-    }
-
-    /*
-     * Lock screen
-     */
-
-    Settings.GSettings {
-        id: lockSettings
-        schema.id: "io.liri.desktop.lockscreen"
-        schema.path: "/io/liri/desktop/lockscreen/"
     }
 }
