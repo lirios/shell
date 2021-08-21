@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Fluid.Controls 1.0 as FluidControls
-import Liri.ShellHelper 1.0 as ShellHelper
+import Liri.Session 1.0 as Session
 import "components" as Components
 
 Components.Dialog {
@@ -27,7 +27,7 @@ Components.Dialog {
         TextField {
             focus: true
             onAccepted: {
-                ShellHelper.Launcher.launchCommand(text);
+                Session.Launcher.launchCommand(text);
                 text = "";
                 accept();
             }

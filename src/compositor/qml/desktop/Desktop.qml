@@ -11,6 +11,7 @@ import QtQuick.Controls.Material 2.15
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 import Liri.WaylandServer 1.0 as WS
+import Liri.Session 1.0 as Session
 import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
 import ".."
@@ -90,7 +91,7 @@ Item {
     ]
 
     Connections {
-        target: SessionInterface
+        target: Session.Session
 
         function onSessionLocked() {
             desktop.state = "lock";

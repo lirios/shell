@@ -5,6 +5,7 @@
 import QtQml 2.2
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Liri.Session 1.0 as Session
 
 Menu {
     id: menu
@@ -20,7 +21,7 @@ Menu {
             text: model.name
             onTriggered: {
                 if (model.command) {
-                    SessionInterface.launchCommand(model.command);
+                    Session.Launcher.launchCommand(model.command);
                     menu.close();
                 }
             }

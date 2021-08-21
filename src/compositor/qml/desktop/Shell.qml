@@ -12,6 +12,7 @@ import Fluid.Core 1.0 as FluidCore
 import Fluid.Controls 1.0 as FluidControls
 import QtAccountsService 1.0 as Accounts
 import Liri.Device 1.0 as LiriDevice
+import Liri.Session 1.0 as Session
 import Liri.private.shell 1.0 as P
 import "../panel"
 
@@ -114,7 +115,7 @@ Item {
                             icon.source: FluidControls.Utils.iconUrl("action/lock")
                             onClicked: {
                                 panelMenu.close();
-                                SessionInterface.lock();
+                                Session.SessionManager.lock();
                             }
 
                             ToolTip.text: qsTr("Lock Session")

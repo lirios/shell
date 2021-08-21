@@ -5,9 +5,6 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
-#include <QDBusPendingCallWatcher>
-#include <QDBusPendingReply>
 
 #include "authenticator.h"
 #include "qmlauthenticator.h"
@@ -58,20 +55,6 @@ SessionManager::SessionManager(QObject *parent)
     }
 #endif
 
-    // Emit when the session is locked or unlocked
-    QDBusConnection::sessionBus().connect(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("Locked"),
-                this, SIGNAL(sessionLocked()));
-    QDBusConnection::sessionBus().connect(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("Unlocked"),
-                this, SIGNAL(sessionUnlocked()));
-
     // Authenticate in a separate thread
     m_authenticator->moveToThread(m_authenticatorThread);
     m_authenticatorThread->start();
@@ -84,37 +67,6 @@ SessionManager::~SessionManager()
     m_authenticator->deleteLater();
 }
 
-bool SessionManager::isIdle() const
-{
-    return m_idle;
-}
-
-void SessionManager::setIdle(bool value)
-{
-    if (m_idle == value)
-        return;
-
-    auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("SetIdle"));
-    msg.setArguments(QVariantList() << value);
-    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
-    auto *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [&](QDBusPendingCallWatcher *self) {
-        QDBusPendingReply<> reply = *self;
-        if (reply.isError()) {
-            qWarning("Failed to toggle idle flag: %s", qPrintable(reply.error().message()));
-        } else {
-            m_idle = value;
-            emit idleChanged(m_idle);
-        }
-
-        self->deleteLater();
-    });
-}
-
 void SessionManager::registerService()
 {
     if (!QDBusConnection::sessionBus().registerService(QStringLiteral("io.liri.Shell"))) {
@@ -125,129 +77,6 @@ void SessionManager::registerService()
 #ifdef HAVE_SYSTEMD
     sd_notify(0, "READY=1");
 #endif
-}
-
-void SessionManager::lock()
-{
-    auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("Lock"));
-    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
-    auto *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
-        QDBusPendingReply<> reply = *self;
-        if (reply.isError())
-            qWarning("Failed to lock session: %s", qPrintable(reply.error().message()));
-
-        self->deleteLater();
-    });
-}
-
-void SessionManager::unlock()
-{
-    auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("Unlock"));
-    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
-    auto *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
-        QDBusPendingReply<> reply = *self;
-        if (reply.isError())
-            qWarning("Failed to unlock the session: %s", qPrintable(reply.error().message()));
-
-        self->deleteLater();
-    });
-}
-
-void SessionManager::launchApplication(const QString &appId)
-{
-    auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.Launcher"),
-                QStringLiteral("/io/liri/Launcher"),
-                QStringLiteral("io.liri.Launcher"),
-                QStringLiteral("LaunchApplication"));
-    QVariantList args;
-    args.append(appId);
-    msg.setArguments(args);
-    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
-    auto *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
-        QDBusPendingReply<> reply = *self;
-        if (reply.isError())
-            qWarning("Failed to launch application: %s", qPrintable(reply.error().message()));
-
-        self->deleteLater();
-    });
-}
-
-void SessionManager::launchDesktopFile(const QString &fileName)
-{
-    auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.Launcher"),
-                QStringLiteral("/io/liri/Launcher"),
-                QStringLiteral("io.liri.Launcher"),
-                QStringLiteral("LaunchDesktopFile"));
-    QVariantList args;
-    args.append(fileName);
-    msg.setArguments(args);
-    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
-    auto *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
-        QDBusPendingReply<> reply = *self;
-        if (reply.isError())
-            qWarning("Failed to launch application from desktop file: %s", qPrintable(reply.error().message()));
-
-        self->deleteLater();
-    });
-}
-
-void SessionManager::launchCommand(const QString &command)
-{
-    auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.Launcher"),
-                QStringLiteral("/io/liri/Launcher"),
-                QStringLiteral("io.liri.Launcher"),
-                QStringLiteral("LaunchCommand"));
-    QVariantList args;
-    args.append(command);
-    msg.setArguments(args);
-    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
-    auto *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
-        QDBusPendingReply<> reply = *self;
-        if (reply.isError())
-            qWarning("Failed to launch command: %s", qPrintable(reply.error().message()));
-
-        self->deleteLater();
-    });
-}
-
-void SessionManager::setEnvironment(const QString &key, const QString &value)
-{
-    qputenv(key.toLocal8Bit().constData(), value.toLocal8Bit());
-
-    auto msg = QDBusMessage::createMethodCall(
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("/io/liri/SessionManager"),
-                QStringLiteral("io.liri.SessionManager"),
-                QStringLiteral("SetEnvironment"));
-    QVariantList args;
-    args.append(key);
-    args.append(value);
-    msg.setArguments(args);
-    QDBusPendingCall call = QDBusConnection::sessionBus().asyncCall(msg);
-    auto *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, this, [](QDBusPendingCallWatcher *self) {
-        QDBusPendingReply<> reply = *self;
-        if (reply.isError())
-            qWarning("Failed to set environment: %s", qPrintable(reply.error().message()));
-
-        self->deleteLater();
-    });
 }
 
 void SessionManager::authenticate(const QString &password, const QJSValue &callback)

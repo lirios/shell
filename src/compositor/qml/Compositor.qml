@@ -10,6 +10,7 @@ import QtWayland.Compositor 1.15
 import Liri.Launcher 1.0 as Launcher
 import Liri.XWayland 1.0 as LXW
 import Liri.WaylandServer 1.0 as WS
+import Liri.Session 1.0 as Session
 import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
 import "base"
@@ -46,7 +47,7 @@ P.WaylandCompositor {
         if (liriCompositor.created) {
             console.debug("Compositor created");
 
-            SessionInterface.setEnvironment("WAYLAND_DISPLAY", liriCompositor.socketName);
+            Session.SessionManager.setEnvironment("WAYLAND_DISPLAY", liriCompositor.socketName);
             SessionInterface.registerService();
 
             if (xwayland.enabled)
@@ -186,7 +187,7 @@ P.WaylandCompositor {
 
     QtWindowManager {
         showIsFullScreen: false
-        onOpenUrl: SessionInterface.launchCommand("xdg-open %1".arg(url))
+        onOpenUrl: Session.Launcher.launchCommand("xdg-open %1".arg(url))
     }
 
     // Liri shell
@@ -452,7 +453,7 @@ P.WaylandCompositor {
         }
         onServerStarted: {
             console.info("Xwayland server started");
-            SessionInterface.setEnvironment("DISPLAY", displayName);
+            Session.SessionManager.setEnvironment("DISPLAY", displayName);
         }
     }
 
@@ -542,7 +543,7 @@ P.WaylandCompositor {
                 }
             }
 
-            SessionInterface.idle = idleHint;
+            Session.SessionManager.idle = idleHint;
         }
     }
 
@@ -557,7 +558,7 @@ P.WaylandCompositor {
             outputs[i].wake();
         }
 
-        SessionInterface.idle = false;
+        Session.SessionManager.idle = false;
     }
 
     function idle() {
@@ -565,7 +566,7 @@ P.WaylandCompositor {
         for (i = 0; i < outputs.length; i++)
             outputs[i].idle();
 
-        SessionInterface.idle = true;
+        Session.SessionManager.idle = true;
     }
 
     function flash() {

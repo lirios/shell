@@ -16,8 +16,6 @@ liri_add_executable(LiriShellHelper
     OUTPUT_NAME
         "liri-shell-helper"
     SOURCES
-        launcher.cpp
-        launcher.h
         main.cpp
         windowmask.cpp
         windowmask.h

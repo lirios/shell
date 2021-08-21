@@ -4,6 +4,7 @@
 
 import QtQuick 2.15
 import QtGSettings 1.0 as Settings
+import Liri.Session 1.0 as Session
 
 Item {
     /*
@@ -487,7 +488,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: smKeybindings.lockScreen
-        onActivated: SessionInterface.lock()
+        onActivated: Session.SessionManager.lock()
     }
 
     /*
@@ -497,7 +498,7 @@ Item {
     Shortcut {
         context: Qt.ApplicationShortcut
         sequence: desktopKeybindings.screenshot
-        onActivated: SessionInterface.launchApplication("io.liri.Screenshot")
+        onActivated: Session.Launcher.launchApplication("io.liri.Screenshot")
     }
 
     Shortcut {

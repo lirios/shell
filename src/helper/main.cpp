@@ -7,7 +7,6 @@
 #include <QQmlApplicationEngine>
 
 #include "gitsha1.h"
-#include "launcher.h"
 #include "windowmask.h"
 #include "shellhelperlogging_p.h"
 
@@ -103,8 +102,6 @@ int main(int argc, char *argv[])
 
     // Register QML types
     qmlRegisterType<WindowMask>("Liri.ShellHelper", 1, 0, "WindowMask");
-    QScopedPointer<Launcher> launcherInstance(new Launcher());
-    qmlRegisterSingletonInstance<Launcher>("Liri.ShellHelper", 1, 0, "Launcher", launcherInstance.get());
 
     // Create UI
     QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);
