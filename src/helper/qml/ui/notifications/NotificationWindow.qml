@@ -58,8 +58,21 @@ Window {
         role: "notification"
     }
 
-    ShellHelper.WindowMask {
-        id: windowMask
+    ShellHelper.InputRegion {
+        rects: [
+            ShellHelper.Rect {
+                x: notificationWindow.width - (control.Material.elevation * 2) - closeButton.width
+                y: control.Material.elevation * 2
+                width: closeButton.width
+                height: closeButton.height
+            },
+            ShellHelper.Rect {
+                x: control.footer.x + (control.Material.elevation * 2)
+                y: control.footer.y + (control.Material.elevation * 2)
+                width: control.implicitWidth
+                height: control.implicitHeight - control.implicitFooterHeight
+            }
+        ]
     }
 
     RoundButton {
@@ -122,8 +135,6 @@ Window {
         }
 
         ColumnLayout {
-            id: layout
-
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
@@ -233,10 +244,6 @@ Window {
 
         onContainsMouseChanged: {
             control.opacity = containsMouse ? 0.5 : 1.0;
-        }
-
-        Component.onCompleted: {
-            windowMask.addRect(Qt.rect(x, y, width, height));
         }
     }
 }

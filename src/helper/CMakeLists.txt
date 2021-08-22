@@ -17,8 +17,7 @@ liri_add_executable(LiriShellHelper
         "liri-shell-helper"
     SOURCES
         main.cpp
-        windowmask.cpp
-        windowmask.h
+        inputregion.cpp inputregion.h
         shellhelperlogging_p.h
     RESOURCES
         "helper.qrc"

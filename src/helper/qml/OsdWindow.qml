@@ -27,18 +27,16 @@ Window {
     color: "transparent"
     visible: true
 
-    Component.onCompleted: {
-        windowMask.addRect(Qt.rect(0, 0, width, height));
-    }
-
     WaylandClient.WlrLayerSurfaceV1 {
         layer: WaylandClient.WlrLayerSurfaceV1.OverlayLayer
         keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
         role: "osd"
     }
 
-    ShellHelper.WindowMask {
-        id: windowMask
+    ShellHelper.InputRegion {
+        // Apparently a null region is not set by QtWayland, so we have to
+        // set a 1x1 rectangle that is so small that is never going to be noticed
+        rects: ShellHelper.Rect { width: 1; height: 1 }
     }
 
     Timer {

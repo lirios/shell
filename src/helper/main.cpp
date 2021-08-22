@@ -7,7 +7,7 @@
 #include <QQmlApplicationEngine>
 
 #include "gitsha1.h"
-#include "windowmask.h"
+#include "inputregion.h"
 #include "shellhelperlogging_p.h"
 
 #if HAVE_SYS_PRCTL_H
@@ -101,7 +101,8 @@ int main(int argc, char *argv[])
     setupSystemd();
 
     // Register QML types
-    qmlRegisterType<WindowMask>("Liri.ShellHelper", 1, 0, "WindowMask");
+    qmlRegisterType<InputRegion>("Liri.ShellHelper", 1, 0, "InputRegion");
+    qmlRegisterType<Rect>("Liri.ShellHelper", 1, 0, "Rect");
 
     // Create UI
     QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);
