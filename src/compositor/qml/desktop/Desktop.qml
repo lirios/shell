@@ -91,7 +91,7 @@ Item {
     ]
 
     Connections {
-        target: Session.Session
+        target: Session.SessionManager
 
         function onSessionLocked() {
             desktop.state = "lock";
