@@ -235,15 +235,17 @@ Window {
     // is moved. This will make stuff underneath it visible.
     // Areas with buttons are not sensitive to mouse hover.
     MouseArea {
-        x: control.x
-        y: control.y
-        width: control.implicitWidth
-        height: control.implicitHeight - control.implicitFooterHeight
+        anchors.fill: parent
         acceptedButtons: Qt.NoButton
         hoverEnabled: true
 
-        onContainsMouseChanged: {
-            control.opacity = containsMouse ? 0.5 : 1.0;
+        onPositionChanged: {
+            if (mouse.x >= control.x && mouse.y >= control.y &&
+                    mouse.x <= control.x + control.implicitWidth &&
+                    mouse.y <= control.y + control.implicitHeight - control.implicitFooterHeight)
+                control.opacity = 0.5;
+            else
+                control.opacity = 1.0;
         }
     }
 }
