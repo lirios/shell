@@ -101,7 +101,7 @@ Window {
         focus: true
 
         Keys.onEscapePressed: {
-            dismiss();
+            reject();
         }
 
         contentItem: Item {
