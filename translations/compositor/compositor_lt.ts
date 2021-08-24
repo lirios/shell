@@ -1,23 +1,5 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="lt" version="2.1">
 <context>
-    <name>AuthDialog</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="26"/>
-        <source>Authentication required</source>
-        <translation>Reikalingas tapatybės nustatymas</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="156"/>
-        <source>Authenticate</source>
-        <translation>Nustatyti tapatybę</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="163"/>
-        <source>Cancel</source>
-        <translation>Atsisakyti</translation>
-    </message>
-</context>
-<context>
     <name>ChromeMenu</name>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="14"/>
@@ -48,14 +30,6 @@
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="47"/>
         <source>Close</source>
         <translation>Užverti</translation>
-    </message>
-</context>
-<context>
-    <name>Compositor</name>
-    <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="552"/>
-        <source>Sorry, that didn&apos;t work. Please try again.</source>
-        <translation>Atleiskite, tai nesuveikė. Bandykite dar kartą.</translation>
     </message>
 </context>
 <context>
@@ -92,22 +66,22 @@
 <context>
     <name>LauncherMenu</name>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="40"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="41"/>
         <source>New Window</source>
         <translation>Naujas langas</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="47"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="48"/>
         <source>Unpin from Launcher</source>
         <translation>Atsegti nuo leistuko</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="47"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="48"/>
         <source>Pin to Launcher</source>
         <translation>Prisegti prie leistuko</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="59"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="60"/>
         <source>Quit</source>
         <translation>Išeiti</translation>
     </message>
@@ -220,17 +194,17 @@ Taip pat kintamasis privalo priklausyti dabartiniam naudotojui (UID %3), tačiau
 <context>
     <name>Shell</name>
     <message>
-        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="108"/>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="109"/>
         <source>Log out</source>
         <translation>Atsijungti</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="120"/>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="121"/>
         <source>Lock Session</source>
         <translation>Užrakinti seansą</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="138"/>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="139"/>
         <source>Power off</source>
         <translation>Išjungti</translation>
     </message>

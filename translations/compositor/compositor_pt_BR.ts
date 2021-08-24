@@ -1,23 +1,5 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS language="pt_BR" version="2.1">
 <context>
-    <name>AuthDialog</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="26"/>
-        <source>Authentication required</source>
-        <translation>Autenticação necessária</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="156"/>
-        <source>Authenticate</source>
-        <translation>Autenticar</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/AuthDialog.qml" line="163"/>
-        <source>Cancel</source>
-        <translation>Cancelar</translation>
-    </message>
-</context>
-<context>
     <name>ChromeMenu</name>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="14"/>
@@ -48,14 +30,6 @@
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="47"/>
         <source>Close</source>
         <translation>Fechar</translation>
-    </message>
-</context>
-<context>
-    <name>Compositor</name>
-    <message>
-        <location filename="../../src/compositor/qml/Compositor.qml" line="552"/>
-        <source>Sorry, that didn&apos;t work. Please try again.</source>
-        <translation>Desculpe, isto não funciona. Tente novamente.</translation>
     </message>
 </context>
 <context>
@@ -92,22 +66,22 @@
 <context>
     <name>LauncherMenu</name>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="40"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="41"/>
         <source>New Window</source>
         <translation>Nova janela</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="47"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="48"/>
         <source>Unpin from Launcher</source>
         <translation>Desafixar do lançador</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="47"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="48"/>
         <source>Pin to Launcher</source>
         <translation>Fixar no lançador</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="59"/>
+        <location filename="../../src/compositor/qml/launcher/LauncherMenu.qml" line="60"/>
         <source>Quit</source>
         <translation>Sair</translation>
     </message>
@@ -220,17 +194,17 @@ Também deve pertencer ao usuário atual (UID %3), mas pertence ao UID %4 (&quot
 <context>
     <name>Shell</name>
     <message>
-        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="108"/>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="109"/>
         <source>Log out</source>
         <translation>Encerrar sessão</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="120"/>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="121"/>
         <source>Lock Session</source>
         <translation>Bloquear sessão</translation>
     </message>
     <message>
-        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="138"/>
+        <location filename="../../src/compositor/qml/desktop/Shell.qml" line="139"/>
         <source>Power off</source>
         <translation>Desligar</translation>
     </message>
