@@ -3,28 +3,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
-import Fluid.Controls 1.0 as FluidControls
+import QtQuick.Controls 2.15
 
-Item {
-    id: button
+ToolButton {
+    display: ToolButton.IconOnly
+    padding: 0
+    spacing: 0
 
-    property alias source: icon.source
-    property alias color: icon.color
-
-    signal clicked()
-
-    width: icon.size
-    height: width
-
-    FluidControls.Icon {
-        id: icon
-
+    background: Item {
         anchors.fill: parent
-    }
-
-    TapHandler {
-        onTapped: {
-            button.clicked();
-        }
     }
 }

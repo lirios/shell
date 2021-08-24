@@ -236,12 +236,13 @@ Item {
             NumberAnimation { duration: 150 }
         }
 
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.AllButtons
-            hoverEnabled: true
+        HoverHandler {
+            grabPermissions: HoverHandler.CanTakeOverFromAnything
+        }
 
-            onClicked: {
+        TapHandler {
+            grabPermissions: TapHandler.CanTakeOverFromAnything
+            onTapped: {
                 liriModal.sendDone();
             }
         }

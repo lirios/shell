@@ -8,6 +8,7 @@
 #  define QT_WAYLAND_COMPOSITOR_QUICK
 #endif
 
+#include "abstracttitlebar.h"
 #include "appidandicon.h"
 #include "dbus/multimediakeysserver.h"
 #include "dbus/osdserver.h"
@@ -79,6 +80,7 @@ public:
 
         // Components
 
+        qmlRegisterType<AbstractTitleBar>(uri, versionMajor, versionMinor, "AbstractTitleBar");
         qmlRegisterType<AppIdAndIcon>(uri, versionMajor, versionMinor, "AppIdAndIcon");
         qmlRegisterType<ChromeItem>(uri, versionMajor, versionMinor, "ChromeItem");
         qmlRegisterType<ExtensionsModel>(uri, versionMajor, versionMinor, "ExtensionsModel");

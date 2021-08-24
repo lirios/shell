@@ -18,6 +18,7 @@ liri_add_qml_plugin(shell-private
     VERSION
         "1.0"
     SOURCES
+        abstracttitlebar.cpp abstracttitlebar.h
         appidandicon.cpp
         appidandicon.h
         dbus/multimediakeysserver.cpp

@@ -365,6 +365,12 @@ P.ChromeItem {
             height: visible ? window.titleBarHeight : 0
             visible: window.decorated
 
+            Binding {
+                target: window.moveItem
+                property: "moving"
+                value: titleBar.moving
+            }
+
             onActivationRequested: {
                 if (window.focusable)
                     shellSurfaceItem.takeFocus();
@@ -401,7 +407,7 @@ P.ChromeItem {
                 autoCreatePopupItems: true
                 moveItem: window.moveItem
                 focusOnClick: window.focusable
-                inputEventsEnabled: !chrome.output.locked
+                inputEventsEnabled: !chrome.output.locked && !liriCompositor.showModalOverlay
                 bufferLocked: chrome.bufferLocked
 
                 onSurfaceChanged: {
@@ -474,6 +480,7 @@ P.ChromeItem {
 
         acceptedModifiers: liriCompositor.settings.windowActionModifier
         target: window.moveItem
+        enabled: !liriCompositor.showModalOverlay
     }
 
     // Animate the creation of this window

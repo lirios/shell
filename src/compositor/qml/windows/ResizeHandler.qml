@@ -12,6 +12,8 @@ DragHandler {
     property size lastSize: Qt.size(0, 0)
 
     target: null
+    grabPermissions: DragHandler.CanTakeOverFromHandlersOfSameType
+    enabled: shellSurfaceItem.inputEventsEnabled && visible
     onGrabChanged: {
         resizing = false;
     }
