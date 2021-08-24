@@ -8,7 +8,6 @@ import QtQuick.Window 2.15
 import QtGSettings 1.0 as Settings
 import Liri.WaylandClient 1.0 as WaylandClient
 import Liri.PolicyKit 1.0 as Polkit
-import "ui/notifications" as Notifications
 
 Item {
     property Screen primaryScreen: null
@@ -106,7 +105,7 @@ Item {
         }
     }
 
-    Notifications.NotificationsManager {}
+    NotificationsManager {}
 
     /*
      * PolicyKit

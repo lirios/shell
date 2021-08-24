@@ -7,8 +7,8 @@
         <file>qml/KeyBindings.qml</file>
         <file>qml/main.qml</file>
         <file>qml/OsdWindow.qml</file>
-        <file>qml/ui/notifications/NotificationsManager.qml</file>
-        <file>qml/ui/notifications/NotificationWindow.qml</file>
+        <file>qml/NotificationsManager.qml</file>
+        <file>qml/NotificationWindow.qml</file>
         <file>qml/components/Dialog.qml</file>
         <file>qml/RunDialog.qml</file>
         <file>qml/AuthDialog.qml</file>
