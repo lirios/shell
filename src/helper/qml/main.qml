@@ -58,6 +58,13 @@ Item {
     WaylandClient.LiriShell {
         id: shell
 
+        onLogoutRequested: {
+            logoutDialog.show();
+        }
+        onShutdownRequested: {
+            powerOffDialog.show();
+        }
+
         Component.onCompleted: {
             readyTimer.start();
         }
@@ -154,6 +161,18 @@ Item {
 
     RunDialog {
         id: runDialog
+
+        screen: primaryScreen
+    }
+
+    LogoutDialog {
+        id: logoutDialog
+
+        screen: primaryScreen
+    }
+
+    PowerOffDialog {
+        id: powerOffDialog
 
         screen: primaryScreen
     }

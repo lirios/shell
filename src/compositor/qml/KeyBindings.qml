@@ -481,12 +481,6 @@ Item {
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: smKeybindings.powerOff
-        onActivated: liriCompositor.defaultOutput.showPowerOff()
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
         sequence: smKeybindings.lockScreen
         onActivated: Session.SessionManager.lock()
     }

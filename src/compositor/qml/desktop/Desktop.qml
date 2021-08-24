@@ -65,21 +65,6 @@ Item {
             PropertyChanges { target: desktop; cursorVisible: true }
         },
         State {
-            name: "logout"
-            PropertyChanges { target: desktop; cursorVisible: true }
-            PropertyChanges { target: logoutScreen; active: true }
-        },
-        State {
-            name: "poweroff"
-            PropertyChanges { target: desktop; cursorVisible: true }
-            PropertyChanges { target: powerScreen; active: true }
-        },
-        State {
-            name: "restart"
-            PropertyChanges { target: desktop; cursorVisible: true }
-            PropertyChanges { target: powerScreen; active: true }
-        },
-        State {
             name: "lock"
             PropertyChanges { target: desktop   ; cursorVisible: true }
             PropertyChanges { target: lockScreenLoader; loadComponent: true }
@@ -289,22 +274,6 @@ Item {
     }
 
     /*
-     * Logout and power off
-     */
-
-    Screens.LogoutScreen {
-        id: logoutScreen
-
-        onCanceled: desktop.state = "session"
-    }
-
-    Screens.PowerScreen {
-        id: powerScreen
-
-        onCanceled: desktop.state = "session"
-    }
-
-    /*
      * Hot corners
      */
 
@@ -470,8 +439,7 @@ Item {
         case Qt.Key_PowerDown:
         case Qt.Key_Suspend:
         case Qt.Key_Hibernate:
-            if (desktop.state != "lock")
-                desktop.state = "poweroff";
+            shellHelper.requestShutdown();
             event.accepted = true;
             return;
         default:

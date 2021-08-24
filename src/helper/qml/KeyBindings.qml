@@ -9,11 +9,32 @@ import Liri.WaylandClient 1.0 as WaylandClient
 
 FluidCore.Object {
     Settings.GSettings {
+        id: smKeybindings
+        schema.id: "io.liri.desktop.keybindings.sm"
+        schema.path: "/io/liri/desktop/keybindings/sm/"
+    }
+
+    Settings.GSettings {
         id: desktopKeybindings
 
         schema.id: "io.liri.desktop.keybindings.desktop"
         schema.path: "/io/liri/desktop/keybindings/desktop/"
     }
+
+    /*
+     * Session Manager
+     */
+
+    WaylandClient.LiriShortcut {
+        sequence: smKeybindings.powerOff
+        onActivated: {
+            powerOffDialog.show();
+        }
+    }
+
+    /*
+     * Desktop
+     */
 
     WaylandClient.LiriShortcut {
         sequence: desktopKeybindings.runCommand

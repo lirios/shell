@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2017 Michael Spencer <sonrisesoftware@gmail.com>
-// SPDX-FileCopyrightText: 2019 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+// SPDX-FileCopyrightText: 2019-2021 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -9,63 +9,45 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Device 1.0 as LiriDevice
+import "components" as Components
 
-Popup {
-    id: powerDialog
+Components.Dialog {
+    id: powerOffDialog
 
-    property var startTime
-    property int remainingSeconds
+    property date startTime
+    property int remainingSeconds: 60
     property int totalSeconds: 60
-    property bool accepted: false
-
-    focus: true
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-    padding: 0
-
-    x: (output.availableGeometry.width - width)/2
-    y: (output.availableGeometry.height - height)/2
-
-    parent: desktop
-
-    modal: true
 
     Material.theme: Material.Light
+    Material.primary: Material.Blue
     Material.accent: Material.Blue
 
-    signal canceled()
+    padding: 0
+    leftPadding: 0
+    topPadding: 0
+    rightPadding: 0
+    bottomPadding: 0
 
     onOpened: {
-        startTime = new Date()
-        remainingSeconds = totalSeconds - (new Date() - startTime)/1000
-        accepted = false
-    }
-
-    onClosed: {
-        if (!accepted)
-            canceled()
-    }
-
-    function accept() {
-        accepted = true
-        close()
+        startTime = new Date();
+        remainingSeconds = totalSeconds - (new Date() - startTime) / 1000;
     }
 
     Timer {
-        running: powerDialog.visible
+        running: visible
         interval: 1000
         repeat: true
         onTriggered: {
-            remainingSeconds = totalSeconds - (new Date() - startTime)/1000
+            remainingSeconds = totalSeconds - (new Date() - startTime) / 1000;
         }
     }
 
     Timer {
-        running: powerDialog.visible
+        running: visible
         interval: totalSeconds * 1000
         onTriggered: {
-            powerDialog.accept()
-            LiriDevice.LocalDevice.powerOff()
+            accept();
+            LiriDevice.LocalDevice.powerOff();
         }
     }
 
@@ -129,12 +111,12 @@ Popup {
         }
 
         FluidControls.ListItem {
-            icon.source: Qt.resolvedUrl("../images/sleep.svg")
+            icon.source: Qt.resolvedUrl("qrc:/images/sleep.svg")
             text: qsTr("Sleep")
             visible: LiriDevice.LocalDevice.canSuspend
             onClicked: {
-                powerDialog.accept()
-                LiriDevice.LocalDevice.suspend()
+                powerOffDialog.accept();
+                LiriDevice.LocalDevice.suspend();
             }
         }
 
@@ -143,8 +125,8 @@ Popup {
             text: qsTr("Suspend to disk")
             visible: LiriDevice.LocalDevice.canHibernate
             onClicked: {
-                powerDialog.accept()
-                LiriDevice.LocalDevice.hibernate()
+                powerOffDialog.accept();
+                LiriDevice.LocalDevice.hibernate();
             }
         }
 
@@ -153,18 +135,18 @@ Popup {
             text: qsTr("Power off")
             visible: LiriDevice.LocalDevice.canPowerOff
             onClicked: {
-                powerDialog.accept()
-                LiriDevice.LocalDevice.powerOff()
+                powerOffDialog.accept();
+                LiriDevice.LocalDevice.powerOff();
             }
         }
 
         FluidControls.ListItem {
-            icon.source: Qt.resolvedUrl("../images/reload.svg")
+            icon.source: Qt.resolvedUrl("qrc:/images/reload.svg")
             text: qsTr("Restart")
             visible: LiriDevice.LocalDevice.canRestart
             onClicked: {
-                powerDialog.accept()
-                LiriDevice.LocalDevice.restart()
+                powerOffDialog.accept();
+                LiriDevice.LocalDevice.restart();
             }
         }
 

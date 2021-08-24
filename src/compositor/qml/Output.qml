@@ -252,19 +252,4 @@ P.WaylandOutput {
     function selectWorkspace(num) {
         desktop.workspacesView.select(num);
     }
-
-    function showLogout() {
-        if (desktop.state != "lock")
-            desktop.state = "logout";
-    }
-
-    function showPowerOff() {
-        if (desktop.state != "lock")
-            desktop.state = "poweroff";
-    }
-
-    function showRestart() {
-        if (desktop.state != "lock")
-            desktop.state = "restart";
-    }
 }

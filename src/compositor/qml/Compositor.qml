@@ -207,6 +207,9 @@ P.WaylandCompositor {
             for (var i = 0; i < outputs.length; i++)
                 outputs[i].desktop.state = "session";
         }
+        onTerminateRequested: {
+            liriCompositor.quit();
+        }
     }
 
     WS.LiriModalManager {

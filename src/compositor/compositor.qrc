@@ -18,12 +18,9 @@
         <file>qml/error/ErrorCompositor.qml</file>
         <file>qml/error/ErrorOutput.qml</file>
         <file>qml/error/ErrorScreenView.qml</file>
-        <file>qml/images/hibernate.svg</file>
         <file>qml/images/lan-connect.svg</file>
         <file>qml/images/lan-disconnect.svg</file>
         <file>qml/images/logout.svg</file>
-        <file>qml/images/reload.svg</file>
-        <file>qml/images/sleep.svg</file>
         <file>qml/indicators/launcher/AppsIcon.qml</file>
         <file>qml/indicators/launcher/Dot.qml</file>
         <file>qml/indicators/LauncherIndicator.qml</file>
@@ -42,9 +39,6 @@
         <file>qml/panel/IndicatorsRow.qml</file>
         <file>qml/panel/Panel.qml</file>
         <file>qml/screens/LockScreen.qml</file>
-        <file>qml/screens/LogoutScreen.qml</file>
-        <file>qml/screens/PowerDialog.qml</file>
-        <file>qml/screens/PowerScreen.qml</file>
         <file>qml/screens/SplashScreen.qml</file>
         <file>qml/ShellSettings.qml</file>
         <file>qml/windows/Chrome.qml</file>

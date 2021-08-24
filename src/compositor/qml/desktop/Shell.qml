@@ -103,7 +103,7 @@ Item {
                             icon.source: Qt.resolvedUrl("../images/logout.svg")
                             onClicked: {
                                 panelMenu.close();
-                                output.showLogout();
+                                shellHelper.requestLogout();
                             }
 
                             ToolTip.text: qsTr("Log out")
@@ -133,7 +133,7 @@ Item {
                             enabled: LiriDevice.LocalDevice.canPowerOff
                             onClicked: {
                                 panelMenu.close();
-                                output.showPowerOff();
+                                shellHelper.requestShutdown();
                             }
 
                             ToolTip.text: qsTr("Power off")
