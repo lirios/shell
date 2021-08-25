@@ -43,6 +43,8 @@ P.ChromeItem {
     width: shellSurfaceWidth + frameMarginLeft + frameMarginRight
     height: shellSurfaceHeight + frameMarginTop + frameMarginBottom
 
+    enabled: !chrome.output.locked && !liriCompositor.showModalOverlay
+
     transform: [
         Scale {
             id: scaleTransform
@@ -407,7 +409,6 @@ P.ChromeItem {
                 autoCreatePopupItems: true
                 moveItem: window.moveItem
                 focusOnClick: window.focusable
-                inputEventsEnabled: !chrome.output.locked && !liriCompositor.showModalOverlay
                 bufferLocked: chrome.bufferLocked
 
                 onSurfaceChanged: {
@@ -440,7 +441,6 @@ P.ChromeItem {
                 shellSurface: chrome.shellSurface
                 moveItem: window.moveItem
                 focusOnClick: window.focusable
-                inputEventsEnabled: !chrome.output.locked
                 bufferLocked: chrome.bufferLocked
 
                 onSurfaceChanged: {
