@@ -103,53 +103,6 @@
     </message>
 </context>
 <context>
-    <name>LogoutScreen</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="70"/>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="75"/>
-        <source>Log out</source>
-        <translation>Se déconnecter</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="71"/>
-        <source>You will be logged out in %1 seconds</source>
-        <translation>Vous serez déconnecté dans %1 secondes</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="82"/>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
-    </message>
-</context>
-<context>
-    <name>PowerDialog</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="113"/>
-        <source>Power Off</source>
-        <translation>Éteindre </translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="133"/>
-        <source>Sleep</source>
-        <translation>Mettre en veille</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="143"/>
-        <source>Suspend to disk</source>
-        <translation>Arrêter le disque dur</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="153"/>
-        <source>Power off</source>
-        <translation>Éteindre</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="163"/>
-        <source>Restart</source>
-        <translation>Redémarrer</translation>
-    </message>
-</context>
-<context>
     <name>PresentWindowsChrome</name>
     <message>
         <location filename="../../src/compositor/qml/desktop/PresentWindowsChrome.qml" line="70"/>

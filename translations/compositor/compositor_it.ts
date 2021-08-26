@@ -103,53 +103,6 @@
     </message>
 </context>
 <context>
-    <name>LogoutScreen</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="70"/>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="75"/>
-        <source>Log out</source>
-        <translation>Disconnettiti</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="71"/>
-        <source>You will be logged out in %1 seconds</source>
-        <translation>Sarai disconnesso tra %1 secondi</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="82"/>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-</context>
-<context>
-    <name>PowerDialog</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="113"/>
-        <source>Power Off</source>
-        <translation>Spegni</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="133"/>
-        <source>Sleep</source>
-        <translation>Sleep</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="143"/>
-        <source>Suspend to disk</source>
-        <translation>Sospendi su disco</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="153"/>
-        <source>Power off</source>
-        <translation>Spegni</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="163"/>
-        <source>Restart</source>
-        <translation>Riavvia</translation>
-    </message>
-</context>
-<context>
     <name>PresentWindowsChrome</name>
     <message>
         <location filename="../../src/compositor/qml/desktop/PresentWindowsChrome.qml" line="70"/>

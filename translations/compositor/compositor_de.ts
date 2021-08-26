@@ -103,53 +103,6 @@
     </message>
 </context>
 <context>
-    <name>LogoutScreen</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="70"/>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="75"/>
-        <source>Log out</source>
-        <translation>Abmelden</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="71"/>
-        <source>You will be logged out in %1 seconds</source>
-        <translation>Sie werden in %1 Sekunden abgemeldet</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LogoutScreen.qml" line="82"/>
-        <source>Cancel</source>
-        <translation>Abbrechen</translation>
-    </message>
-</context>
-<context>
-    <name>PowerDialog</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="113"/>
-        <source>Power Off</source>
-        <translation>Ausschalten</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="133"/>
-        <source>Sleep</source>
-        <translation>Schlafen</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="143"/>
-        <source>Suspend to disk</source>
-        <translation>Ruhezustand</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="153"/>
-        <source>Power off</source>
-        <translation>Ausschalten</translation>
-    </message>
-    <message>
-        <location filename="../../src/compositor/qml/screens/PowerDialog.qml" line="163"/>
-        <source>Restart</source>
-        <translation>Neustart</translation>
-    </message>
-</context>
-<context>
     <name>PresentWindowsChrome</name>
     <message>
         <location filename="../../src/compositor/qml/desktop/PresentWindowsChrome.qml" line="70"/>
