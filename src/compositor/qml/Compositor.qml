@@ -205,7 +205,7 @@ P.WaylandCompositor {
             shellHelperTimer.running = false;
 
             for (var i = 0; i < outputs.length; i++)
-                outputs[i].desktop.state = "session";
+                outputs[i].reveal();
         }
         onTerminateRequested: {
             liriCompositor.quit();
@@ -223,7 +223,7 @@ P.WaylandCompositor {
         running: true
         onTriggered: {
             for (var i = 0; i < outputs.length; i++)
-                outputs[i].desktop.state = "session";
+                outputs[i].reveal();
         }
     }
 

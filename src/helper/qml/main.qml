@@ -64,8 +64,9 @@ Item {
             powerOffDialog.show();
         }
 
-        Component.onCompleted: {
-            readyTimer.start();
+        onActiveChanged: {
+            if (active)
+                readyTimer.start();
         }
     }
 

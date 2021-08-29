@@ -16,7 +16,6 @@ import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
 import ".."
 import "../indicators" as Indicators
-import "../screens" as Screens
 import "../windows" as Windows
 
 Item {
@@ -25,8 +24,6 @@ Item {
     Material.theme: Material.Dark
     Material.primary: Material.Blue
     Material.accent: Material.Blue
-
-    property bool cursorVisible: true
 
     readonly property alias backgroundLayer: backgroundLayer
     readonly property alias bottomLayer: bottomLayer
@@ -50,21 +47,9 @@ Item {
     readonly property var panel: shell.panel
     readonly property alias windowSwitcher: windowSwitcher
 
+    readonly property alias splashVisible: splash.visible
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
-
-    state: "splash"
-    states: [
-        State {
-            name: "splash"
-            PropertyChanges { target: desktop; cursorVisible: false }
-            PropertyChanges { target: splashScreen; opacity: 1.0 }
-        },
-        State {
-            name: "session"
-            PropertyChanges { target: desktop; cursorVisible: true }
-        }
-    ]
 
     Connections {
         target: Session.SessionManager
@@ -74,7 +59,6 @@ Item {
             lockScreen.requestLock();
         }
         function onSessionUnlocked() {
-            desktop.state = "session";
             output.locked = false;
         }
         function onIdleInhibitRequested() {
@@ -313,39 +297,19 @@ Item {
         }
     }
 
-    /*
-     * Splash screen
-     */
-
-    Loader {
-        id: splashScreen
+    // Splash screen
+    FluidControls.Wave {
+        id: splash
 
         anchors.fill: parent
-        source: "../screens/SplashScreen.qml"
-        opacity: 0.0
-        active: false
-        z: 900
-        onOpacityChanged: {
-            if (opacity == 1.0)
-                splashScreen.active = true;
-            else if (opacity == 0.0)
-                splashScreenTimer.start();
+
+        Rectangle {
+            anchors.fill: parent
+            color: Material.color(Material.BlueGrey, Material.Shade800)
         }
 
-        // Unload after a while so that the opacity animation is visible
-        Timer {
-            id: splashScreenTimer
-
-            running: false
-            interval: 5000
-            onTriggered: splashScreen.active = false
-        }
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InSine
-                duration: FluidControls.Units.longDuration
-            }
+        Component.onCompleted: {
+            openWave(0, 0);
         }
     }
 
@@ -436,5 +400,9 @@ Item {
         }
 
         event.accepted = false;
+    }
+
+    function reveal() {
+        splash.closeWave(splash.width - splash.size, splash.height - splash.size);
     }
 }

@@ -6,6 +6,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Controls.Material 2.15
 import QtWayland.Compositor 1.15
 import Liri.Shell 1.0 as LiriShell
 import Liri.private.shell 1.0 as P
@@ -81,7 +82,7 @@ P.WaylandOutput {
         height: output.geometry.height
         flags: Qt.Window | Qt.FramelessWindowHint
         screen: output.screen ? Qt.application.screens[output.screen.screenIndex] : null
-        color: "black"
+        color: desktop.splashVisible ? Material.color(Material.BlueGrey, Material.Shade800) : "black"
         visible: output.screen.enabled
 
         // Keyboard handling
@@ -107,8 +108,7 @@ P.WaylandOutput {
 
             anchors.fill: parent
 
-            windowSystemCursorEnabled: mouseTracker.containsMouse &&
-                                       desktop.cursorVisible
+            windowSystemCursorEnabled: mouseTracker.containsMouse
 
             onMouseXChanged: {
                 // Wake up
@@ -217,6 +217,10 @@ P.WaylandOutput {
     /*
      * Methods
      */
+
+    function reveal() {
+        desktop.reveal();
+    }
 
     function wake() {
         if (!__idle)
