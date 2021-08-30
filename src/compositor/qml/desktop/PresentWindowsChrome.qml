@@ -7,7 +7,6 @@ import QtGraphicalEffects 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Fluid.Controls 1.0 as FluidControls
-import "../components" as ShellComponents
 
 Item {
     property Item view: null

@@ -12,7 +12,6 @@ import Aurora.Compositor.Wlroots 1.0
 import Aurora.Compositor.WlrLayerShell 1.0
 import Aurora.Compositor.XdgShell 1.0
 import Aurora.Compositor.XWayland 1.0 as LXW
-import Liri.Launcher 1.0 as Launcher
 import Liri.Session 1.0 as Session
 import Liri.Shell.Compositor 1.0
 import Liri.Shell 1.0 as LS
@@ -30,12 +29,9 @@ WaylandCompositor {
     readonly property alias settings: settings
 
     readonly property alias windows: __private.windows
-    readonly property bool hasMaxmizedShellSurfaces: __private.maximizedShellSurfaces > 0
-    readonly property bool hasFullscreenShellSurfaces: __private.fullscreenShellSurfaces > 0
 
     readonly property alias showModalOverlay: liriModal.grabbed
 
-    readonly property alias applicationManager: applicationManager
     readonly property alias shellHelper: shellHelper
 
     defaultSeat.keymap {
@@ -86,8 +82,6 @@ WaylandCompositor {
         property int idleInhibit: 0
 
         property var windows: []
-        property int maximizedShellSurfaces: 0
-        property int fullscreenShellSurfaces: 0
     }
 
     /*
@@ -381,19 +375,6 @@ WaylandCompositor {
         XdgToplevelWindow {
             id: window
 
-            onMaximizedChanged: {
-                if (maximized)
-                    __private.maximizedShellSurfaces++;
-                else
-                    __private.maximizedShellSurfaces--;
-            }
-            onFullscreenChanged: {
-                if (fullscreen)
-                    __private.fullscreenShellSurfaces++;
-                else
-                    __private.fullscreenShellSurfaces--;
-            }
-
             Component.onDestruction: {
                 // Remove from the list of xdg-shell toplevels
                 var toplevelIndex = xdgShell.toplevels.indexOf(toplevel);
@@ -518,15 +499,6 @@ WaylandCompositor {
     // Holds move items in the compositor space
     Item {
         id: rootItem
-    }
-
-    Launcher.ApplicationManager {
-        id: applicationManager
-    }
-
-    Launcher.LauncherModel {
-        id: launcherModel
-        sourceModel: applicationManager
     }
 
     ShellSettings {

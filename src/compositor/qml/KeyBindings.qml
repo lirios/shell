@@ -217,15 +217,6 @@ Item {
 
     Shortcut {
         context: Qt.ApplicationShortcut
-        sequence: wmKeybindings.mainMenu
-        onActivated: {
-            var panel = liriCompositor.defaultOutput.panel;
-            panel.launcherIndicator.clicked(null);
-        }
-    }
-
-    Shortcut {
-        context: Qt.ApplicationShortcut
         sequence: wmKeybindings.activateWindowMenu
     }
 

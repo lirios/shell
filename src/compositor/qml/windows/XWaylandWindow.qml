@@ -60,7 +60,6 @@ FluidCore.Object {
     QtObject {
         id: __private
 
-        property bool registered: false
         property bool mapped: false
 
         property WaylandSurface surface: null
@@ -83,16 +82,6 @@ FluidCore.Object {
 
         function updateAppId() {
             appIdAndIcon.appId = shellSurface.appId;
-
-            if (!__private.registered && appIdAndIcon.canonicalAppId) {
-                // Register application
-                applicationManager.registerShellSurface(window);
-                __private.registered = true;
-
-                // Focus icon in the panel
-                if (shellSurface.activated)
-                    applicationManager.focusShellSurface(window);
-            }
         }
 
         function updateWindowGeometry() {
@@ -182,11 +171,6 @@ FluidCore.Object {
 
     Connections {
         target: shellSurface
-
-        function onActivatedChanged() {
-            if (__private.registered && shellSurface.activated && shellSurface.windowType !== Qt.Popup)
-                applicationManager.focusShellSurface(window);
-        }
 
         function onSurfaceChanged() {
             if (shellSurface.surface) {

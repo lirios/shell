@@ -15,8 +15,8 @@ Rectangle {
     property bool active: false
     property alias containsMouse: ripple.containsMouse
 
-    signal clicked(var caller)
-    signal rightClicked(var caller)
+    signal clicked(real x, real y)
+    signal rightClicked(real x, real y)
 
     width: height
     height: parent.height
@@ -46,10 +46,10 @@ Rectangle {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onClicked: {
-            if (mouse.button == Qt.RightButton)
-                item.rightClicked(item)
+            if (mouse.button === Qt.RightButton)
+                item.rightClicked(mouse.x, mouse.y);
             else
-                item.clicked(item)
+                item.clicked(mouse.x, mouse.y);
         }
 
         onContainsMouseChanged: {

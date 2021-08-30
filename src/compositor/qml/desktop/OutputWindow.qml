@@ -16,7 +16,6 @@ Window {
     readonly property alias layerSurfacesModel: layerSurfacesModel
 
     readonly property alias currentWorkspace: workspacesView.currentWorkspace
-    readonly property alias panel: shell.panel
 
     readonly property alias splashVisible: splash.visible
     property alias showFps: fpsIndicator.visible
@@ -201,23 +200,6 @@ Window {
             // Modal overlay
             ModalOverlay {
                 objectName: "modal-overlay"
-            }
-        }
-
-        // Panel and status menu (soon to be replaced by layer surfaces)
-        Shell {
-            id: shell
-
-            anchors.fill: parent
-            objectName: "shell"
-            opacity: currentWorkspace.state === "present" ? 0.0 : 1.0
-            visible: output.primary
-
-            Behavior on opacity {
-                NumberAnimation {
-                    easing.type: Easing.OutQuad
-                    duration: 250
-                }
             }
         }
 

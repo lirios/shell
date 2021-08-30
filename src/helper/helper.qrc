@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>images/hibernate.svg</file>
+        <file>images/logout.svg</file>
         <file>images/reload.svg</file>
         <file>images/sleep.svg</file>
         <file>qml/BackgroundWindow.qml</file>
@@ -16,5 +17,21 @@
         <file>qml/PowerOffDialog.qml</file>
         <file>qml/LockScreenWindow.qml</file>
         <file>qml/NotificationItem.qml</file>
+        <file>qml/TopLayerWindow.qml</file>
+        <file>qml/panel/Panel.qml</file>
+        <file>qml/panel/PanelButton.qml</file>
+        <file>qml/panel/IndicatorsRow.qml</file>
+        <file>qml/panel/ShutdownIndicator.qml</file>
+        <file>qml/panel/TaskBar.qml</file>
+        <file>qml/panel/TaskDelegate.qml</file>
+        <file>qml/panel/TaskMenu.qml</file>
+        <file>qml/panel/ShelfPane.qml</file>
+        <file>qml/launcher/FrequentAppsView.qml</file>
+        <file>qml/launcher/CategoriesView.qml</file>
+        <file>qml/launcher/AppsGridDelegate.qml</file>
+        <file>qml/launcher/AppsGrid.qml</file>
+        <file>qml/launcher/AppsLauncher.qml</file>
+        <file>qml/launcher/PagedGrid.qml</file>
+        <file>qml/panel/StatusMenu.qml</file>
     </qresource>
 </RCC>

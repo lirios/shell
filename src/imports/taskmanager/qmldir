@@ -1,0 +1,4 @@
+module Liri.Shell.TaskManager
+plugin taskmanagerplugin
+classname TaskManagerPlugin
+typeinfo plugins.qmltypes
