@@ -6,6 +6,7 @@ liri_add_qml_plugin(ShellQmlPlugin
     OUTPUT_NAME
         "shellplugin"
     SOURCES
+        extensionsmodel.cpp extensionsmodel.h
         multimediakeysclient.cpp
         multimediakeysclient.h
         osdclient.cpp
@@ -24,6 +25,7 @@ liri_add_qml_plugin(ShellQmlPlugin
         QT_NO_FOREACH
     PUBLIC_LIBRARIES
         Qt5::Core
+        Qt5::Concurrent
         Qt5::DBus
 )
 

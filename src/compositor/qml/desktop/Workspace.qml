@@ -102,9 +102,6 @@ Item {
             shellSurfaceType: P.ChromeItem.WaylandShellSurface
 
             onDestroyAnimationFinished: {
-                // Unregister from the application manager
-                applicationManager.unregisterShellSurface(chrome.window);
-
                 // Remove from shell surface model
                 shellSurfaces.remove(index);
 
@@ -128,9 +125,6 @@ Item {
             shellSurfaceType: P.ChromeItem.XWaylandShellSurface
 
             onDestroyAnimationFinished: {
-                // Unregister from the application manager
-                applicationManager.unregisterShellSurface(xwaylandChrome.window);
-
                 // Remove from shell surface model
                 xwaylandShellSurfaces.remove(index);
 

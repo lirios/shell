@@ -30,8 +30,6 @@ liri_add_qml_plugin(ShellPrivateQmlPlugin
         chromeitem.cpp
         chromeitem.h
         desktoplayout.cpp desktoplayout.h
-        extensionsmodel.cpp
-        extensionsmodel.h
         fpscounter.cpp
         fpscounter.h
         hotspot.cpp

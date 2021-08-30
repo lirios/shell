@@ -21,7 +21,6 @@ P.WaylandOutput {
     readonly property alias layerSurfacesModel: outputWindow.layerSurfacesModel
 
     readonly property alias currentWorkspace: outputWindow.currentWorkspace
-    readonly property alias panel: outputWindow.panel
 
     property alias showFps: outputWindow.showFps
     property alias showInformation: outputWindow.showInformation

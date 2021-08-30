@@ -4,6 +4,7 @@
 
 #include <QtQml>
 
+#include "extensionsmodel.h"
 #include "multimediakeysclient.h"
 #include "osdclient.h"
 
@@ -12,14 +13,15 @@ class ShellPlugin : public QQmlExtensionPlugin
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 public:
-    void registerTypes(const char *uri)
+    void registerTypes(const char *uri) override
     {
         // @uri Liri.Shell
-        Q_ASSERT(QLatin1String(uri) == QLatin1String("Liri.Shell"));
+        Q_ASSERT(strcmp(uri, "Liri.Shell") == 0);
 
         const int versionMajor = 1;
         const int versionMinor = 0;
 
+        qmlRegisterType<ExtensionsModel>(uri, versionMajor, versionMinor, "ExtensionsModel");
         qmlRegisterSingletonType<MultimediaKeysClient>(uri, versionMajor, versionMinor, "MultimediaKeysClient",
                                                        [](QQmlEngine *, QJSEngine *) -> QObject * {
             return new MultimediaKeysClient();

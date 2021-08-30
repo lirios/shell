@@ -1,4 +1,0 @@
-module Liri.Launcher
-plugin launcherplugin
-classname LauncherPlugin
-typeinfo plugins.qmltypes

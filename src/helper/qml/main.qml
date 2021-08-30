@@ -22,6 +22,7 @@ Item {
         interval: 250
         onTriggered: {
             shell.sendReady();
+            topLayerWindow.show();
         }
     }
 
@@ -57,13 +58,6 @@ Item {
     AuroraClient.LiriShellV1 {
         id: shell
 
-        onLogoutRequested: {
-            logoutDialog.show();
-        }
-        onShutdownRequested: {
-            powerOffDialog.show();
-        }
-
         onActiveChanged: {
             if (active)
                 readyTimer.start();
@@ -75,6 +69,21 @@ Item {
 
         onLockRequested: {
             lockScreenInstantiator.active = true;
+        }
+    }
+
+    TopLayerWindow {
+        id: topLayerWindow
+
+        screen: primaryScreen
+
+        onLogoutRequested: {
+            logoutDialog.show();
+        }
+        onLockRequested: {
+        }
+        onShutdownRequested: {
+            powerOffDialog.show();
         }
     }
 

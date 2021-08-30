@@ -9,7 +9,15 @@ import Aurora.Client 1.0 as AuroraClient
 
 FluidCore.Object {
     Settings.GSettings {
+        id: wmKeybindings
+
+        schema.id: "io.liri.desktop.keybindings.wm"
+        schema.path: "/io/liri/desktop/keybindings/wm/"
+    }
+
+    Settings.GSettings {
         id: smKeybindings
+
         schema.id: "io.liri.desktop.keybindings.sm"
         schema.path: "/io/liri/desktop/keybindings/sm/"
     }
@@ -19,6 +27,17 @@ FluidCore.Object {
 
         schema.id: "io.liri.desktop.keybindings.desktop"
         schema.path: "/io/liri/desktop/keybindings/desktop/"
+    }
+
+    /*
+     * Window Manager
+     */
+
+    AuroraClient.LiriShortcutV1 {
+        sequence: wmKeybindings.mainMenu
+        onActivated: {
+            panelWindow;
+        }
     }
 
     /*
