@@ -25,15 +25,8 @@ Item {
     Material.primary: Material.Blue
     Material.accent: Material.Blue
 
-    readonly property alias backgroundLayer: backgroundLayer
-    readonly property alias bottomLayer: bottomLayer
-    readonly property alias topLayer: topLayer
-    readonly property alias overlayLayer: overlayLayer
-
-    readonly property alias backgroundLayerModel: backgroundLayerModel
-    readonly property alias bottomLayerModel: bottomLayerModel
-    readonly property alias topLayerModel: topLayerModel
-    readonly property alias overlayLayerModel: overlayLayerModel
+    readonly property alias hardwareLayerSurfaceModel: hardwareLayerSurfaceModel
+    readonly property alias layerSurfaceModel: layerSurfaceModel
     readonly property alias modalOverlayModel: modalOverlayModel
 
     readonly property alias workspacesView: workspacesView
@@ -73,117 +66,78 @@ Item {
      * Workspace
      */
 
-    // Background
-    Item {
-        id: backgroundLayer
+    Repeater {
+        model: ListModel {
+            id: hardwareLayerSurfaceModel
+        }
 
-        anchors.fill: parent
+        HardwareLayerSurfaceItem {
+            parent: desktopLayout
+            stackingLevel: -1
+            layerSurface: model.layerSurface
+            output: model.output
 
-        Repeater {
-            model: ListModel {
-                id: backgroundLayerModel
-            }
-
-            HardwareLayerSurfaceItem {
-                stackingLevel: -1
-                layerSurface: model.layerSurface
-                output: model.output
-
-                onDestroyAnimationFinished: {
-                    backgroundLayerModel.remove(index);
-                }
+            onDestroyAnimationFinished: {
+                hardwareLayerSurfaceModel.remove(index);
             }
         }
     }
 
-    // Bottom
-    Item {
-        id: bottomLayer
+    Repeater {
+        model: ListModel {
+            id: layerSurfaceModel
+        }
 
-        anchors.fill: parent
+        LayerSurfaceItem {
+            parent: desktopLayout
+            layerSurface: model.layerSurface
+            output: model.output
 
-        Repeater {
-            model: ListModel {
-                id: bottomLayerModel
+            onCreateAnimationFinished: {
+                if (layerSurface.nameSpace === "lockscreen") {
+                    // Make sure all surfaces are hidden
+                    output.locked = true;
+
+                    // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
+                    // when the system is resumed it won't flip so we comment this out but unfortunately
+                    // it means that the lock screen will not turn off the screen
+                    //output.idle();
+                }
             }
 
-            LayerSurfaceItem {
-                layerSurface: model.layerSurface
-                output: model.output
-
-                onDestroyAnimationFinished: {
-                    bottomLayerModel.remove(index);
-                }
+            onDestroyAnimationFinished: {
+                layerSurfaceModel.remove(index);
             }
         }
     }
 
-    // Workspaces
-    WorkspacesView {
-        id: workspacesView
-    }
-
-    // Top
-    Item {
-        id: topLayer
+    P.DesktopLayout {
+        id: desktopLayout
 
         anchors.fill: parent
 
-        Repeater {
-            model: ListModel {
-                id: topLayerModel
-            }
+        WorkspacesView {
+            id: workspacesView
 
-            LayerSurfaceItem {
-                layerSurface: model.layerSurface
-                output: model.output
+            anchors.fill: parent
+            objectName: "workspace"
+        }
 
-                onDestroyAnimationFinished: {
-                    topLayerModel.remove(index);
-                }
-            }
+        Rectangle {
+            id: fullScreenLayer
+
+            anchors.fill: parent
+            objectName: "fullscreen"
+            color: "black"
+            visible: children.length
         }
     }
 
-    // Overlays
-    Item {
-        id: overlayLayer
-
-        anchors.fill: parent
-
-        Repeater {
-            model: ListModel {
-                id: overlayLayerModel
-            }
-
-            LayerSurfaceItem {
-                layerSurface: model.layerSurface
-                output: model.output
-
-                onCreateAnimationFinished: {
-                    if (layerSurface.nameSpace === "lockscreen") {
-                        // Make sure all surfaces are hidden
-                        output.locked = true;
-
-                        // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
-                        // when the system is resumed it won't flip so we comment this out but unfortunately
-                        // it means that the lock screen will not turn off the screen
-                        //output.idle();
-                    }
-                }
-
-                onDestroyAnimationFinished: {
-                    overlayLayerModel.remove(index);
-                }
-            }
-        }
-    }
-
-    // Panels
     Shell {
         id: shell
 
         anchors.fill: parent
+        objectName: "shell"
         opacity: currentWorkspace.state == "present" ? 0.0 : 1.0
         visible: output.primary
 
@@ -191,22 +145,6 @@ Item {
             NumberAnimation {
                 easing.type: Easing.OutQuad
                 duration: 250
-            }
-        }
-    }
-
-    // Full screen windows can cover application windows and panels
-    Rectangle {
-        id: fullScreenLayer
-
-        anchors.fill: parent
-        color: "black"
-        opacity: children.length > 0 ? 1.0 : 0.0
-
-        Behavior on opacity {
-            NumberAnimation {
-                easing.type: Easing.InSine
-                duration: FluidControls.Units.mediumDuration
             }
         }
     }

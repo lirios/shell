@@ -27,17 +27,8 @@ P.WaylandOutput {
     //readonly property alias idleDimmer: idleDimmer
     readonly property alias desktop: desktop
 
-    readonly property var layers: QtObject {
-        readonly property alias background: desktop.backgroundLayer
-        readonly property alias bottom: desktop.bottomLayer
-        readonly property alias top: desktop.topLayer
-        readonly property alias overlay: desktop.overlayLayer
-    }
-
-    readonly property alias backgroundLayerModel: desktop.backgroundLayerModel
-    readonly property alias bottomLayerModel: desktop.bottomLayerModel
-    readonly property alias topLayerModel: desktop.topLayerModel
-    readonly property alias overlayLayerModel: desktop.overlayLayerModel
+    readonly property alias hardwareLayerSurfaceModel: desktop.hardwareLayerSurfaceModel
+    readonly property alias layerSurfaceModel: desktop.layerSurfaceModel
     readonly property alias modalOverlayModel: desktop.modalOverlayModel
 
     readonly property alias currentWorkspace: desktop.currentWorkspace
@@ -142,7 +133,6 @@ P.WaylandOutput {
 
             // Virtual Keyboard
             Loader {
-                parent: output.layers.overlay
                 active: liriCompositor.settings.ui.inputMethod === "qtvirtualkeyboard"
                 source: Qt.resolvedUrl("base/Keyboard.qml")
                 x: (parent.width - width) / 2

@@ -13,6 +13,7 @@
 #include "dbus/multimediakeysserver.h"
 #include "dbus/osdserver.h"
 #include "chromeitem.h"
+#include "desktoplayout.h"
 #include "extensionsmodel.h"
 #include "fpscounter.h"
 #include "hotspot.h"
@@ -83,6 +84,7 @@ public:
         qmlRegisterType<AbstractTitleBar>(uri, versionMajor, versionMinor, "AbstractTitleBar");
         qmlRegisterType<AppIdAndIcon>(uri, versionMajor, versionMinor, "AppIdAndIcon");
         qmlRegisterType<ChromeItem>(uri, versionMajor, versionMinor, "ChromeItem");
+        qmlRegisterType<DesktopLayout>(uri, versionMajor, versionMinor, "DesktopLayout");
         qmlRegisterType<ExtensionsModel>(uri, versionMajor, versionMinor, "ExtensionsModel");
         qmlRegisterType<FpsCounter>(uri, versionMajor, versionMinor, "FpsCounter");
         qmlRegisterType<HotSpot>(uri, versionMajor, versionMinor, "HotSpot");

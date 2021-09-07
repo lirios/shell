@@ -12,9 +12,6 @@ Row {
     readonly property alias currentWorkspaceNumber: __private.currentWorkspaceNumber
     property alias currentWorkspace: defaultWorkspace
 
-    width: parent.width
-    height: parent.height
-
     onCurrentWorkspaceNumberChanged: {
         console.debug("Selected workspace", currentWorkspaceNumber);
         swipeView.x = -width * (currentWorkspaceNumber - 1);

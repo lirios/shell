@@ -27,6 +27,7 @@ liri_add_qml_plugin(shell-private
         dbus/osdserver.h
         chromeitem.cpp
         chromeitem.h
+        desktoplayout.cpp desktoplayout.h
         extensionsmodel.cpp
         extensionsmodel.h
         fpscounter.cpp

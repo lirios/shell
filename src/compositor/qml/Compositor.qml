@@ -265,13 +265,11 @@ P.WaylandCompositor {
 
             switch (layerSurface.layer) {
             case WS.WlrLayerShellV1.BackgroundLayer:
-                return output.backgroundLayerModel;
+                return output.hardwareLayerSurfaceModel;
             case WS.WlrLayerShellV1.BottomLayer:
-                return output.bottomLayerModel;
             case WS.WlrLayerShellV1.TopLayer:
-                return output.topLayerModel;
             case WS.WlrLayerShellV1.OverlayLayer:
-                return output.overlayLayerModel;
+                return output.layerSurfaceModel;
             default:
                 return undefined;
             }
