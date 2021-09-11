@@ -15,237 +15,90 @@ import Fluid.Effects 1.0 as FluidEffects
 Window {
     id: notificationWindow
 
-    property int notificationId
-    property string appName
-    property string appIcon
-    property alias iconUrl: imageItem.source
-    property alias hasIcon: imageItem.visible
-    property alias summary: titleLabel.text
-    property alias body: bodyLabel.text
-    readonly property alias actionsModel: actionsModel
-    property bool isPersistent: false
-    property alias expireTimeout: timer.interval
-    property var hints
-
-    signal actionInvoked(string actionId)
+    property alias model: notificationsModel
 
     screen: primaryScreen
     color: "transparent"
-    width: control.width + (closeButton.width / 2) + (control.Material.elevation * 4)
-    height: control.height + (closeButton.height / 2) + (control.Material.elevation * 4)
+    // width = 24gu + (closeButton.width / 2) + (elevation * 4)
+    width: FluidControls.Units.gu(24) + (48 / 2) + (8 * 4)
     visible: true
-
-    Timer {
-        id: timer
-
-        interval: 5000
-        running: !isPersistent
-        onTriggered: {
-            if (!isPersistent) {
-                timer.running = false;
-                notificationWindow.close();
-            }
-        }
-    }
 
     WaylandClient.WlrLayerSurfaceV1 {
         layer: WaylandClient.WlrLayerSurfaceV1.TopLayer
-        anchors: WaylandClient.WlrLayerSurfaceV1.BottomAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.RightAnchor
+        anchors: WaylandClient.WlrLayerSurfaceV1.RightAnchor |
+                 WaylandClient.WlrLayerSurfaceV1.TopAnchor |
+                 WaylandClient.WlrLayerSurfaceV1.BottomAnchor
         keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
-        bottomMargin: FluidControls.Units.smallSpacing
+        leftMargin: FluidControls.Units.smallSpacing
+        topMargin: FluidControls.Units.smallSpacing
         rightMargin: FluidControls.Units.smallSpacing
-        role: "notification"
+        bottomMargin: FluidControls.Units.smallSpacing
+        role: "notifications"
     }
 
     ShellHelper.InputRegion {
-        rects: [
-            ShellHelper.Rect {
-                x: notificationWindow.width - (control.Material.elevation * 2) - closeButton.width
-                y: control.Material.elevation * 2
-                width: closeButton.width
-                height: closeButton.height
-            },
-            ShellHelper.Rect {
-                x: control.footer.x + (control.Material.elevation * 2)
-                y: control.footer.y + (control.Material.elevation * 2)
-                width: control.implicitWidth
-                height: control.implicitHeight - control.implicitFooterHeight
-            }
-        ]
-    }
-
-    RoundButton {
-        id: closeButton
-
-        Material.theme: Material.Dark
-        Material.background: control.Material.dialogColor
-        Material.elevation: 0
-
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.topMargin: control.Material.elevation * 2
-        anchors.rightMargin: control.Material.elevation * 2
-
-        icon.source: FluidControls.Utils.iconUrl("navigation/close")
-
-        z: 1
-
-        onClicked: {
-            notificationWindow.close();
+        rects: ShellHelper.Rect {
+            width: listView.count > 0 ? notificationWindow.width : 1
+            height: listView.count > 0 ? notificationWindow.height : 1
         }
     }
 
-    Page {
-        id: control
+    ListView {
+        id: listView
 
-        Material.theme: Material.Dark
-        Material.primary: Material.Blue
-        Material.accent: Material.Blue
-        Material.elevation: 8
-
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.leftMargin: control.Material.elevation * 2
-        anchors.topMargin: (closeButton.height / 2) + (control.Material.elevation * 2)
-
-        implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                                contentWidth + leftPadding + rightPadding,
-                                implicitHeaderWidth,
-                                implicitFooterWidth)
-        implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                                 contentHeight + topPadding + bottomPadding
-                                 + (implicitHeaderHeight > 0 ? implicitHeaderHeight + spacing : 0)
-                                 + (implicitFooterHeight > 0 ? implicitFooterHeight + spacing : 0))
-
-        contentWidth: FluidControls.Units.gu(24)
-
-        Behavior on opacity {
-            NumberAnimation { duration: 150 }
-        }
-
-        background: Rectangle {
-            radius: 2
-            color: control.Material.dialogColor
-
-            layer.enabled: true
-            layer.effect: FluidEffects.Elevation {
-                elevation: control.Material.elevation
-            }
-        }
-
-        ColumnLayout {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: FluidControls.Units.smallSpacing
-
-            spacing: FluidControls.Units.smallSpacing
-
-            RowLayout {
-                spacing: FluidControls.Units.smallSpacing
-
-                Image {
-                    id: imageItem
-
-                    width: FluidControls.Units.iconSizes.large
-                    height: width
-                    sourceSize.width: width
-                    sourceSize.height: height
-                    fillMode: Image.PreserveAspectFit
-                    cache: false
-                    smooth: true
-                    visible: false
-
-                    Layout.alignment: Qt.AlignTop
-                }
-
-                ColumnLayout {
-                    spacing: FluidControls.Units.smallSpacing
-
-                    FluidControls.SubheadingLabel {
-                        id: titleLabel
-
-                        font.weight: Font.Bold
-                        elide: Text.ElideRight
-                        visible: text.length > 0
-                        onLinkActivated: {
-                            Qt.openUrlExternally(link);
-                        }
-                    }
-
-                    FluidControls.BodyLabel {
-                        id: bodyLabel
-
-                        color: Material.secondaryTextColor
-                        wrapMode: Text.Wrap
-                        elide: Text.ElideRight
-                        maximumLineCount: 10
-                        verticalAlignment: Text.AlignTop
-                        visible: text.length > 0
-                        onLinkActivated: {
-                            Qt.openUrlExternally(link);
-                        }
-
-                        Layout.fillWidth: true
-                    }
-                }
-            }
-
-            Item {
-                height: FluidControls.Units.smallSpacing
-            }
-        }
-
-        footer: ColumnLayout {
-            spacing: FluidControls.Units.smallSpacing
-
-            FluidControls.ThinDivider {
-                visible: actionsModel.count > 0
-            }
-
-            RowLayout {
-                id: actionsContainer
-
-                visible: actionsModel.count > 0
-
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-                Layout.bottomMargin: FluidControls.Units.smallSpacing
-
-                Repeater {
-                    id: actionsRepeater
-
-                    model: ListModel {
-                        id: actionsModel
-                    }
-
-                    Button {
-                        text: model.text
-                        flat: true
-                        onClicked: {
-                            notificationWindow.actionInvoked(model.id);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // Do not capture click events, just change opacity when the pointer
-    // is moved. This will make stuff underneath it visible.
-    // Areas with buttons are not sensitive to mouse hover.
-    MouseArea {
         anchors.fill: parent
-        acceptedButtons: Qt.NoButton
-        hoverEnabled: true
+        verticalLayoutDirection: ListView.BottomToTop
+        spacing: FluidControls.Units.smallSpacing
 
-        onPositionChanged: {
-            if (mouse.x >= control.x && mouse.y >= control.y &&
-                    mouse.x <= control.x + control.implicitWidth &&
-                    mouse.y <= control.y + control.implicitHeight - control.implicitFooterHeight)
-                control.opacity = 0.5;
-            else
-                control.opacity = 1.0;
+        model: ListModel {
+            id: notificationsModel
+        }
+
+        delegate: NotificationItem {
+            notificationId: model.notificationId
+            appName: model.appName
+            appIcon: model.appIcon
+            iconUrl: model.iconUrl
+            hasIcon: model.hasIcon
+            summary: model.summary
+            body: model.body
+            isPersistent: model.isPersistent
+            expireTimeout: model.expireTimeout
+            hints: model.hints
+            actions: model.actions
+
+            onClosed: {
+                notificationsModel.remove(index);
+            }
+        }
+
+        add: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+                duration: 220
+            }
+        }
+        remove: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+                duration: 220
+            }
+        }
+        populate: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+                duration: 220
+            }
+        }
+        displaced: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+                duration: 220
+            }
         }
     }
 }

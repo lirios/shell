@@ -15,5 +15,6 @@
         <file>qml/LogoutDialog.qml</file>
         <file>qml/PowerOffDialog.qml</file>
         <file>qml/LockScreenWindow.qml</file>
+        <file>qml/NotificationItem.qml</file>
     </qresource>
 </RCC>

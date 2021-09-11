@@ -7,10 +7,8 @@ import Fluid.Core 1.0 as FluidCore
 import Liri.Notifications 1.0 as Notifications
 
 FluidCore.Object {
-    Component {
-        id: component
-
-        NotificationWindow {}
+    NotificationWindow {
+        id: notificationWindow
     }
 
     Notifications.NotificationsServer {
@@ -33,11 +31,10 @@ FluidCore.Object {
                 "body": body,
                 "isPersistent": isPersistent,
                 "expireTimeout": expireTimeout,
-                "hints": hints
+                "hints": hints,
+                "actions": actions,
             };
-            var notification = component.createObject(null, props);
-            for (var i = 0; i < actions.length; i++)
-                notification.actionsModel.append(actions[i]);
+            notificationWindow.model.append(props);
         }
 
         onNotificationClosed: {
