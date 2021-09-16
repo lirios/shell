@@ -18,8 +18,6 @@ P.WaylandOutput {
     readonly property bool primary: liriCompositor.defaultOutput === this
     property bool locked: false
 
-    property var screen: null
-
     property var viewsBySurface: ({})
 
     property int idleInhibit: 0
@@ -42,27 +40,6 @@ P.WaylandOutput {
 
     sizeFollowsWindow: false
     automaticFrameCallback: screen && screen.enabled && screen.powerState === P.ScreenItem.PowerStateOn
-
-    Connections {
-        target: output.screen
-
-        function onCurrentModeChanged(resolution, refreshRate) {
-            output.setCurrentOutputMode(resolution, refreshRate);
-        }
-    }
-
-    Component.onCompleted: {
-        if (output.screen) {
-            for (var i = 0; i < output.screen.modes.length; i++) {
-                var screenMode = output.screen.modes[i];
-                var isPreferred = output.screen.preferredMode.resolution === screenMode.resolution &&
-                        output.screen.preferredMode.refreshRateRate === screenMode.refreshRate;
-                var isCurrent = output.screen.currentMode.resolution === screenMode.resolution &&
-                        output.screen.currentMode.refreshRate === screenMode.refreshRate;
-                output.addOutputMode(screenMode.resolution, screenMode.refreshRate, isPreferred, isCurrent);
-            }
-        }
-    }
 
     window: Window {
         id: outputWindow

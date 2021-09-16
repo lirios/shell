@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include "logging.h"
 #include "quickoutput.h"
 
 QuickOutput::QuickOutput()
@@ -9,9 +10,52 @@ QuickOutput::QuickOutput()
 {
 }
 
-void QuickOutput::addOutputMode(const QSize &size, int refresh, bool isPreferred, bool isCurrent)
+ScreenItem *QuickOutput::screen() const
 {
-    QWaylandOutputMode wlMode(size, refresh);
+    return m_screen;
+}
+
+void QuickOutput::setScreen(ScreenItem *screen)
+{
+    if (m_screen == screen)
+        return;
+
+    if (m_screen) {
+        if (m_initialized) {
+            qCWarning(lcShell, "Cannot change WaylandOutput::screen after the component is complete");
+            return;
+        } else {
+            disconnect(this, SLOT(handleCurrentModeChanged(QSize,int)));
+        }
+    }
+
+    m_screen = screen;
+    connect(m_screen, SIGNAL(currentModeChanged(QSize,int)),
+            this, SLOT(handleCurrentModeChanged(QSize,int)));
+    addModes();
+    Q_EMIT screenChanged(screen);
+}
+
+void QuickOutput::componentComplete()
+{
+    m_initialized = true;
+    QWaylandQuickOutput::componentComplete();
+}
+
+void QuickOutput::addModes()
+{
+    auto modes = m_screen->modes();
+    for (auto *mode : qAsConst(modes))
+        addScreenMode(mode);
+}
+
+void QuickOutput::addScreenMode(ScreenMode *mode)
+{
+    auto isPreferred = m_screen->preferredMode()->resolution() == mode->resolution() &&
+            m_screen->preferredMode()->refreshRate() == mode->refreshRate();
+    auto isCurrent = m_screen->currentMode()->resolution() == mode->resolution() &&
+            m_screen->currentMode()->refreshRate() == mode->refreshRate();
+    QWaylandOutputMode wlMode(mode->resolution(), mode->refreshRate());
 
     bool alreadyHasMode = false;
     const auto modesList = modes();
@@ -29,8 +73,7 @@ void QuickOutput::addOutputMode(const QSize &size, int refresh, bool isPreferred
         setCurrentMode(wlMode);
 }
 
-void QuickOutput::setCurrentOutputMode(const QSize &size, int refresh)
+void QuickOutput::handleCurrentModeChanged(const QSize &resolution, int refreshRate)
 {
-    QWaylandOutputMode wlMode(size, refresh);
-    setCurrentMode(wlMode);
+    setCurrentMode(QWaylandOutputMode(resolution, refreshRate));
 }

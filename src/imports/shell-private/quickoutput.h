@@ -7,14 +7,33 @@
 
 #include <QWaylandQuickOutput>
 
+#include "screenmodel.h"
+
 class QuickOutput : public QWaylandQuickOutput
 {
     Q_OBJECT
+    Q_PROPERTY(ScreenItem *screen READ screen WRITE setScreen NOTIFY screenChanged)
 public:
     explicit QuickOutput();
 
-    Q_INVOKABLE void addOutputMode(const QSize &size, int refresh, bool isPreferred, bool isCurrent);
-    Q_INVOKABLE void setCurrentOutputMode(const QSize &size, int refresh);
+    ScreenItem *screen() const;
+    void setScreen(ScreenItem *screen);
+
+Q_SIGNALS:
+    void screenChanged(ScreenItem *screen);
+
+protected:
+    void componentComplete() override;
+
+private:
+    bool m_initialized = false;
+    ScreenItem *m_screen = nullptr;
+
+    void addModes();
+    void addScreenMode(ScreenMode *mode);
+
+private Q_SLOTS:
+    void handleCurrentModeChanged(const QSize &resolution, int refreshRate);
 };
 
 #endif // QUICKOUTPUT_H

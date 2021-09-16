@@ -13,19 +13,6 @@ P.WaylandOutput {
 
     readonly property bool primary: liriCompositor.defaultOutput === this
 
-    property var screen: null
-
-    Component.onCompleted: {
-        if (output.screen) {
-            for (var i = 0; i < output.screen.modes.length; i++) {
-                var screenMode = output.screen.modes[i];
-                var isPreferred = output.screen.preferredMode === screenMode;
-                var isCurrent = output.screen.currentMode === screenMode;
-                output.addOutputMode(screenMode.resolution, screenMode.refreshRate, isPreferred, isCurrent);
-            }
-        }
-    }
-
     window: Window {
         id: outputWindow
 
