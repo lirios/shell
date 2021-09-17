@@ -95,14 +95,6 @@
     </message>
 </context>
 <context>
-    <name>LockScreen</name>
-    <message>
-        <location filename="../../src/compositor/qml/screens/LockScreen.qml" line="120"/>
-        <source>Sorry, wrong password. Please try again.</source>
-        <translation>Üzgünüz, yanlış parola. Lütfen yeniden deneyin.</translation>
-    </message>
-</context>
-<context>
     <name>PresentWindowsChrome</name>
     <message>
         <location filename="../../src/compositor/qml/desktop/PresentWindowsChrome.qml" line="70"/>
