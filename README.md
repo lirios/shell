@@ -37,8 +37,8 @@ The following modules and their dependencies are required:
  * [liri-eglfs](https://github.com/lirios/eglfs)
  * [liri-wayland](https://github.com/lirios/wayland)
  * [pam](http://www.linux-pam.org/)
- * [polkit-qt5](http://quickgit.kde.org/?p=polkit-qt-1.git)
- * [solid](http://quickgit.kde.org/?p=solid.git)
+ * [polkit-qt5](https://invent.kde.org/libraries/polkit-qt-1)
+ * [solid](https://invent.kde.org/frameworks/solid)
 
 Optional dependencies:
 
