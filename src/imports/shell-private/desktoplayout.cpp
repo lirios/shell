@@ -18,7 +18,8 @@ DesktopLayout::SurfaceRole DesktopLayout::getSurfaceRole(QQuickItem *item) const
         { QStringLiteral("notifications"), DesktopLayout::NotificationRole },
         { QStringLiteral("osd"), DesktopLayout::OsdRole },
         { QStringLiteral("fullscreen"), DesktopLayout::FullscreenRole },
-        { QStringLiteral("windowswitcher"), DesktopLayout::WindowSwitcherRole },
+        { QStringLiteral("window-switcher"), DesktopLayout::WindowSwitcherRole },
+        { QStringLiteral("modal-overlay"), DesktopLayout::ModalOverlayRole },
         { QStringLiteral("dialog"), DesktopLayout::DialogRole },
         { QStringLiteral("lockscreen"), DesktopLayout::LockscreenRole },
     };
@@ -39,7 +40,7 @@ WaylandSurfaceLayout::Layer DesktopLayout::getLayer(QQuickItem *item) const
 
     if (auto *l = qobject_cast<WaylandWlrLayerSurfaceV1Item *>(item))
         return layerToIndex.value(l->layerSurface()->layer(), WaylandSurfaceLayout::NoLayer);
-    else if (item->objectName() == QStringLiteral("workspace"))
+    else if (item->objectName() == QStringLiteral("workspaces"))
         return WaylandSurfaceLayout::WindowsLayer;
     else if (item->objectName() == QStringLiteral("shell"))
         return WaylandSurfaceLayout::TopLayer;

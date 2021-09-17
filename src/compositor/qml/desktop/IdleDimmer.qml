@@ -10,29 +10,27 @@ import Liri.private.shell 1.0 as P
 Rectangle {
     id: idleDimmer
 
-    property var output
-
     color: "black"
     opacity: 0.0
 
     function fadeIn() {
         if (idleDimmer.opacity > 0.0)
-            return
+            return;
 
         // Make sure the power on timer is stopped
-        idleDimmerTimer.stop()
+        idleDimmerTimer.stop();
 
-        idleDimmerAnimator.from = 0.0
-        idleDimmerAnimator.to = 1.0
-        idleDimmerAnimator.start()
+        idleDimmerAnimator.from = 0.0;
+        idleDimmerAnimator.to = 1.0;
+        idleDimmerAnimator.start();
     }
 
     function fadeOut() {
         if (idleDimmer.opacity < 1.0)
-            return
+            return;
 
         // Use a timer to compensate for power on time
-        idleDimmerTimer.start()
+        idleDimmerTimer.start();
     }
 
     onOpacityChanged: {
@@ -43,6 +41,7 @@ Rectangle {
 
     OpacityAnimator {
         id: idleDimmerAnimator
+
         target: idleDimmer
         easing.type: Easing.OutSine
         duration: FluidControls.Units.longDuration
@@ -50,12 +49,13 @@ Rectangle {
 
     Timer {
         id: idleDimmerTimer
+
         interval: 1000
         repeat: false
         onTriggered: {
-            idleDimmerAnimator.from = 1.0
-            idleDimmerAnimator.to = 0.0
-            idleDimmerAnimator.start()
+            idleDimmerAnimator.from = 1.0;
+            idleDimmerAnimator.to = 0.0;
+            idleDimmerAnimator.start();
         }
     }
 }

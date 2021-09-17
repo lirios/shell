@@ -29,6 +29,8 @@ Row {
 
     Workspace {
         id: defaultWorkspace
+
+        objectName: "workspace"
     }
 
     Repeater {
@@ -36,7 +38,9 @@ Row {
 
         model: swipeView.count - 1
 
-        Workspace {}
+        Workspace {
+            objectName: "workspace"
+        }
     }
 
     Behavior on x {

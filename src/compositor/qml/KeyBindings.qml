@@ -219,8 +219,8 @@ Item {
         context: Qt.ApplicationShortcut
         sequence: wmKeybindings.mainMenu
         onActivated: {
-            var panel = liriCompositor.defaultOutput.desktop.panel
-            panel.launcherIndicator.clicked(null)
+            var panel = liriCompositor.defaultOutput.panel;
+            panel.launcherIndicator.clicked(null);
         }
     }
 

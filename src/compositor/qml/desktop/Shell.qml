@@ -65,7 +65,7 @@ Item {
 
         Material.theme: Material.Dark
 
-        parent: desktop
+        parent: shell
 
         x: output.availableGeometry.x + output.availableGeometry.width - width - FluidControls.Units.smallSpacing
         y: output.availableGeometry.y + output.availableGeometry.height - height - FluidControls.Units.smallSpacing

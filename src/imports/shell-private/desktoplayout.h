@@ -17,6 +17,7 @@ public:
         OsdRole,
         FullscreenRole,
         WindowSwitcherRole,
+        ModalOverlayRole,
         DialogRole,
         LockscreenRole,
     };

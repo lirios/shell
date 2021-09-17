@@ -73,10 +73,10 @@ Rectangle {
     Launcher.LauncherPopOver {
         id: popover
 
+        parent: shell
+
         x: (parent.width - width)/2
         y: (parent.height - height)/2
-
-        parent: desktop
 
         modal: true
 

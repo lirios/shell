@@ -13,7 +13,6 @@ import Liri.WaylandServer 1.0 as WS
 import Liri.Session 1.0 as Session
 import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
-import "base"
 import "desktop"
 import "windows"
 
@@ -22,7 +21,7 @@ P.WaylandCompositor {
 
     property point mousePos: Qt.point(0, 0)
 
-    property int idleInhibit: 0
+    readonly property alias idleInhibit: __private.idleInhibit
 
     readonly property alias settings: settings
 
@@ -60,12 +59,27 @@ P.WaylandCompositor {
         surface.initialize(liriCompositor, client, id, version);
     }
 
-    /*
-     * Window management
-     */
+    Connections {
+        target: Session.SessionManager
+
+        function onSessionLocked() {
+            // Ask the client to show the lock screen
+            lockScreen.requestLock();
+        }
+
+        function onIdleInhibitRequested() {
+            __private.idleInhibit++;
+        }
+
+        function onIdleUninhibitRequested() {
+            __private.idleInhibit--;
+        }
+    }
 
     QtObject {
         id: __private
+
+        property int idleInhibit: 0
 
         property var windows: []
         property int maximizedShellSurfaces: 0
@@ -259,29 +273,11 @@ P.WaylandCompositor {
     WS.WlrLayerShellV1 {
         id: layerShell
 
-        function getModelForLayer(layerSurface, output) {
-            if (layerSurface.nameSpace === "dialog")
-                return output.modalOverlayModel;
-
-            switch (layerSurface.layer) {
-            case WS.WlrLayerShellV1.BackgroundLayer:
-                return output.hardwareLayerSurfaceModel;
-            case WS.WlrLayerShellV1.BottomLayer:
-            case WS.WlrLayerShellV1.TopLayer:
-            case WS.WlrLayerShellV1.OverlayLayer:
-                return output.layerSurfaceModel;
-            default:
-                return undefined;
-            }
-        }
-
         onLayerSurfaceCreated: {
             var output = layerSurface.output;
             if (!output)
                 output = liriCompositor.defaultOutput;
-
-            var model = getModelForLayer(layerSurface, output);
-            model.append({layerSurface: layerSurface, output});
+            output.layerSurfacesModel.append({layerSurface: layerSurface, output});
         }
     }
 

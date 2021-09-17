@@ -1,12 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/base/Keyboard.qml</file>
         <file>qml/components/PagedGrid.qml</file>
         <file>qml/Compositor.qml</file>
-        <file>qml/desktop/Desktop.qml</file>
         <file>qml/desktop/HardwareLayerSurfaceItem.qml</file>
         <file>qml/desktop/HotCorner.qml</file>
         <file>qml/desktop/IdleDimmer.qml</file>
+        <file>qml/desktop/Keyboard.qml</file>
         <file>qml/desktop/LayerSurfaceItem.qml</file>
         <file>qml/desktop/OutputInfo.qml</file>
         <file>qml/desktop/PresentEffect.js</file>
@@ -33,7 +32,6 @@
         <file>qml/launcher/LauncherGridView.qml</file>
         <file>qml/launcher/LauncherMenu.qml</file>
         <file>qml/launcher/LauncherPopOver.qml</file>
-        <file>qml/Output.qml</file>
         <file>qml/overlays/HelpOverlay.qml</file>
         <file>qml/overlays/UnresponsiveOverlay.qml</file>
         <file>qml/panel/IndicatorsRow.qml</file>
@@ -54,5 +52,9 @@
         <file>images/chrome/window-maximize.svg</file>
         <file>images/chrome/window-minimize.svg</file>
         <file>images/chrome/window-restore.svg</file>
+        <file>qml/desktop/Output.qml</file>
+        <file>qml/desktop/OutputWindow.qml</file>
+        <file>qml/desktop/Flash.qml</file>
+        <file>qml/desktop/ModalOverlay.qml</file>
     </qresource>
 </RCC>
