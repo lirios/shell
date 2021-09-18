@@ -15,6 +15,9 @@ import Liri.Shell 1.0
 import Liri.ShellHelper 1.0 as ShellHelper
 
 Window {
+    id: lockScreenWindow
+
+    color: lockSettings.primaryColor
     visible: true
 
     Settings.GSettings {
@@ -35,27 +38,85 @@ Window {
         role: "lockscreen"
     }
 
-    Background {
-        id: background
-
+    Loader {
         anchors.fill: parent
-        mode: lockSettings.mode
-        pictureUrl: lockSettings.pictureUrl
-        primaryColor: lockSettings.primaryColor
-        secondaryColor: lockSettings.secondaryColor
-        fillMode: lockSettings.fillMode
-        blur: true
-        visible: !vignette.visible
+        asynchronous: false
+        sourceComponent: {
+            switch (lockSettings.mode) {
+            case "hgradient":
+            case "vgradient":
+                return gradient
+            case "wallpaper":
+                return wallpaper
+            default:
+                break
+            }
+            return null
+        }
     }
 
-    FluidEffects.Vignette {
-        id: vignette
+    Component {
+        id: gradient
 
-        anchors.fill: parent
-        source: background
-        radius: 4
-        brightness: 0.4
-        visible: background.imageLoaded
+        Rectangle {
+            property bool vertical: lockSettings.mode === "vgradient"
+
+            rotation: vertical ? 270 : 0
+            scale: vertical ? 2 : 1
+            gradient: Gradient {
+                GradientStop {
+                    position: 0
+                    color: lockSettings.primaryColor
+                }
+                GradientStop {
+                    position: 1
+                    color: lockSettings.secondaryColor
+                }
+            }
+        }
+    }
+
+    Component {
+        id: wallpaper
+
+        Item {
+            Image {
+                id: image
+
+                anchors.fill: parent
+                source: lockSettings.pictureUrl
+                sourceSize.width: lockScreenWindow.width
+                sourceSize.height: lockScreenWindow.height
+                fillMode: convertFillMode(lockSettings.fillMode)
+                visible: false
+
+                function convertFillMode(fillMode) {
+                    switch (fillMode) {
+                    case "preserve-aspect-fit":
+                        return Image.PreserveAspectFit;
+                    case "preserve-aspect-crop":
+                        return Image.PreserveAspectCrop;
+                    case "tile":
+                        return Image.Tile;
+                    case "tile-vertically":
+                        return Image.TileVertically;
+                    case "tile-horizontally":
+                        return Image.TileHorizontally;
+                    case "pad":
+                        return Image.Pad;
+                    default:
+                        return Image.Stretch;
+                    }
+                }
+            }
+
+            FluidEffects.Vignette {
+                anchors.fill: parent
+                source: image
+                radius: 4
+                brightness: 0.4
+            }
+        }
     }
 
     LoginGreeter {
