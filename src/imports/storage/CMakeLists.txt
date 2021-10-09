@@ -1,10 +1,12 @@
 find_package(KF5Solid REQUIRED)
 
-liri_add_qml_plugin(storage
+liri_add_qml_plugin(StorageQmlPlugin
     MODULE_PATH
         "Liri/Storage"
     VERSION
         "1.0"
+    OUTPUT_NAME
+        "storageplugin"
     SOURCES
         plugin.cpp
         storagedevice.cpp
@@ -21,3 +23,5 @@ liri_add_qml_plugin(storage
         Qt5::WaylandCompositor
         KF5::Solid
 )
+
+liri_finalize_qml_plugin(StorageQmlPlugin)

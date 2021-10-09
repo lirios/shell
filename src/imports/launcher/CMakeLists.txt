@@ -5,11 +5,13 @@ if(NOT TARGET Liri::Qt5GSettings)
     find_package(Qt5GSettings REQUIRED)
 endif()
 
-liri_add_qml_plugin(launcher
+liri_add_qml_plugin(LauncherQmlPlugin
     MODULE_PATH
         "Liri/Launcher"
     VERSION
         "1.0"
+    OUTPUT_NAME
+        "launcherplugin"
     SOURCES
         application.cpp
         application.h
@@ -44,3 +46,5 @@ liri_add_qml_plugin(launcher
         Liri::Xdg
         Liri::Qt5GSettings
 )
+
+liri_finalize_qml_plugin(LauncherQmlPlugin)

@@ -1,8 +1,10 @@
-liri_add_qml_plugin(mpris2
+liri_add_qml_plugin(MprisQmlPlugin
     MODULE_PATH
         "Liri/Mpris"
     VERSION
         "1.0"
+    OUTPUT_NAME
+        mpris2plugin
     SOURCES
         mpris2engine.cpp
         mpris2engine.h
@@ -23,3 +25,5 @@ liri_add_qml_plugin(mpris2
         Qt5::Core
         Qt5::DBus
 )
+
+liri_finalize_qml_plugin(MprisQmlPlugin)

@@ -1,8 +1,10 @@
-liri_add_qml_plugin(shell
+liri_add_qml_plugin(ShellQmlPlugin
     MODULE_PATH
         "Liri/Shell"
     VERSION
         "1.0"
+    OUTPUT_NAME
+        "shellplugin"
     SOURCES
         multimediakeysclient.cpp
         multimediakeysclient.h
@@ -24,3 +26,5 @@ liri_add_qml_plugin(shell
         Qt5::Core
         Qt5::DBus
 )
+
+liri_finalize_qml_plugin(ShellQmlPlugin)

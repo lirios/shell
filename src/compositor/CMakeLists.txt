@@ -65,7 +65,7 @@ liri_add_executable(LiriShell
         Liri::Logind
         Liri::LocalDevice
         Liri::Xdg
-        shell-privateplugin
+        ShellPrivateQmlPlugin
 )
 
 liri_extend_target("LiriShell"
@@ -80,3 +80,5 @@ liri_extend_target("LiriShell"
     CONDITION LIRI_ENABLE_SYSTEMD
     DEFINES HAVE_SYSTEMD
     LIBRARIES PkgConfig::Libsystemd)
+
+liri_finalize_executable("LiriShell")

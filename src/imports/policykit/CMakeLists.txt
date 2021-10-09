@@ -1,10 +1,12 @@
 find_package(PolkitQt5-1 REQUIRED)
 
-liri_add_qml_plugin(polkit
+liri_add_qml_plugin(PolkitQmlPlugin
     MODULE_PATH
         "Liri/PolicyKit"
     VERSION
         "1.0"
+    OUTPUT_NAME
+        "polkitplugin"
     SOURCES
         listener_p.cpp
         listener_p.h
@@ -22,3 +24,5 @@ liri_add_qml_plugin(polkit
         PolkitQt5-1::Core
         PolkitQt5-1::Agent
 )
+
+liri_finalize_qml_plugin(PolkitQmlPlugin)

@@ -12,11 +12,13 @@ if(NOT TARGET Liri::PlatformHeaders)
     find_package(Liri1PlatformHeaders REQUIRED)
 endif()
 
-liri_add_qml_plugin(shell-private
+liri_add_qml_plugin(ShellPrivateQmlPlugin
     MODULE_PATH
         "Liri/private/shell"
     VERSION
         "1.0"
+    OUTPUT_NAME
+        "shell-privateplugin"
     SOURCES
         abstracttitlebar.cpp abstracttitlebar.h
         appidandicon.cpp
@@ -71,3 +73,5 @@ liri_add_qml_plugin(shell-private
         Liri::PlatformHeaders
     STATIC
 )
+
+liri_finalize_qml_plugin(ShellPrivateQmlPlugin)

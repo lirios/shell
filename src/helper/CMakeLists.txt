@@ -53,3 +53,5 @@ liri_extend_target("LiriShellHelper"
     CONDITION LIRI_ENABLE_SYSTEMD
     DEFINES HAVE_SYSTEMD
     LIBRARIES PkgConfig::Libsystemd)
+
+liri_finalize_executable("LiriShellHelper")

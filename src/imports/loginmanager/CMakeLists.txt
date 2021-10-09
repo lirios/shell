@@ -2,11 +2,13 @@ if(NOT TARGET Liri::Qt5AccountsService)
     find_package(Qt5AccountsService REQUIRED)
 endif()
 
-liri_add_qml_plugin(loginmanager
+liri_add_qml_plugin(LoginManagerQmlPlugin
     MODULE_PATH
         "Liri/LoginManager"
     VERSION
         "1.0"
+    OUTPUT_NAME
+        "loginmanagerplugin"
     SOURCES
         plugin.cpp
         usersmodel.cpp
@@ -20,3 +22,5 @@ liri_add_qml_plugin(loginmanager
         Qt5::Core
         Liri::Qt5AccountsService
 )
+
+liri_finalize_qml_plugin(LoginManagerQmlPlugin)
