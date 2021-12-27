@@ -36,10 +36,6 @@ if(FEATURE_enable_systemd)
     set(INSTALL_SYSTEMDUSERUNITDIR "${INSTALL_LIBDIR}/systemd/user" CACHE PATH "systemd user unit directory [PREFIX/lib/systemd/user]")
 endif()
 
-## Find Wayland:
-find_package(Wayland 1.15 COMPONENTS Client Server)
-set_package_properties(Wayland PROPERTIES TYPE REQUIRED)
-
 ## Find Qt 5:
 find_package(Qt5 "${QT_MIN_VERSION}"
     CONFIG REQUIRED
@@ -55,8 +51,6 @@ find_package(Qt5 "${QT_MIN_VERSION}"
         Qml
         Quick
         QuickControls2
-        WaylandClient
-        WaylandCompositor
         LinguistTools
 )
 
@@ -67,6 +61,7 @@ if(FEATURE_enable_systemd)
 endif()
 add_subdirectory(src/compositor)
 add_subdirectory(src/helper)
+add_subdirectory(src/imports/compositor)
 add_subdirectory(src/imports/launcher)
 add_subdirectory(src/imports/loginmanager)
 add_subdirectory(src/imports/mpris2)

@@ -10,37 +10,37 @@
 #include <QtMath>
 #include <qpa/qplatformscreen.h>
 
-#include <LiriPlatformHeaders/lirieglfsfunctions.h>
+#include <LiriAuroraPlatformHeaders/lirieglfsfunctions.h>
 
 #include "logging.h"
 #include "screenmodel.h"
 
-static ScreenItem::PowerState convertPowerState(Liri::Platform::EglFSFunctions::PowerState powerState)
+static ScreenItem::PowerState convertPowerState(Aurora::PlatformSupport::EglFSFunctions::PowerState powerState)
 {
     switch (powerState) {
-    case Liri::Platform::EglFSFunctions::PowerStateOn:
+    case Aurora::PlatformSupport::EglFSFunctions::PowerStateOn:
         return ScreenItem::PowerStateOn;
-    case Liri::Platform::EglFSFunctions::PowerStateStandby:
+    case Aurora::PlatformSupport::EglFSFunctions::PowerStateStandby:
         return ScreenItem::PowerStateStandby;
-    case Liri::Platform::EglFSFunctions::PowerStateSuspend:
+    case Aurora::PlatformSupport::EglFSFunctions::PowerStateSuspend:
         return ScreenItem::PowerStateSuspend;
-    case Liri::Platform::EglFSFunctions::PowerStateOff:
+    case Aurora::PlatformSupport::EglFSFunctions::PowerStateOff:
         return ScreenItem::PowerStateOff;
     }
     Q_UNREACHABLE();
 }
 
-static Liri::Platform::EglFSFunctions::PowerState convertPowerState(ScreenItem::PowerState powerState)
+static Aurora::PlatformSupport::EglFSFunctions::PowerState convertPowerState(ScreenItem::PowerState powerState)
 {
     switch (powerState) {
     case ScreenItem::PowerStateOn:
-        return Liri::Platform::EglFSFunctions::PowerStateOn;
+        return Aurora::PlatformSupport::EglFSFunctions::PowerStateOn;
     case ScreenItem::PowerStateStandby:
-        return Liri::Platform::EglFSFunctions::PowerStateStandby;
+        return Aurora::PlatformSupport::EglFSFunctions::PowerStateStandby;
     case ScreenItem::PowerStateSuspend:
-        return Liri::Platform::EglFSFunctions::PowerStateSuspend;
+        return Aurora::PlatformSupport::EglFSFunctions::PowerStateSuspend;
     case ScreenItem::PowerStateOff:
-        return Liri::Platform::EglFSFunctions::PowerStateOff;
+        return Aurora::PlatformSupport::EglFSFunctions::PowerStateOff;
     }
     Q_UNREACHABLE();
 }
@@ -135,12 +135,12 @@ qreal ScreenItem::scaleFactor() const
     return m_scaleFactor;
 }
 
-QWaylandOutput::Subpixel ScreenItem::subpixel() const
+WaylandOutput::Subpixel ScreenItem::subpixel() const
 {
     return m_subpixel;
 }
 
-QWaylandOutput::Transform ScreenItem::transform() const
+WaylandOutput::Transform ScreenItem::transform() const
 {
     return m_transform;
 }
@@ -178,7 +178,7 @@ ScreenItem::PowerState ScreenItem::powerState() const
         return ScreenItem::PowerStateOn;
     }
 
-    return convertPowerState(Liri::Platform::EglFSFunctions::getPowerState(m_screen));
+    return convertPowerState(Aurora::PlatformSupport::EglFSFunctions::getPowerState(m_screen));
 }
 
 void ScreenItem::setPowerState(ScreenItem::PowerState state)
@@ -188,13 +188,13 @@ void ScreenItem::setPowerState(ScreenItem::PowerState state)
         return;
     }
 
-    auto oldPowerState = Liri::Platform::EglFSFunctions::getPowerState(m_screen);
+    auto oldPowerState = Aurora::PlatformSupport::EglFSFunctions::getPowerState(m_screen);
     auto newPowerState = convertPowerState(state);
 
     if (oldPowerState == newPowerState)
         return;
 
-    Liri::Platform::EglFSFunctions::setPowerState(m_screen, newPowerState);
+    Aurora::PlatformSupport::EglFSFunctions::setPowerState(m_screen, newPowerState);
 
     Q_EMIT powerStateChanged();
 }
@@ -328,13 +328,13 @@ void ScreenModel::applyConfiguration(WaylandWlrOutputConfigurationV1 *configurat
         return;
     }
 
-    QVector<Liri::Platform::ScreenChange> screenChanges;
+    QVector<Aurora::PlatformSupport::ScreenChange> screenChanges;
 
     const auto changesList = configuration->enabledHeads();
     for (auto *changes : changesList) {
         for (auto *item : qAsConst(m_items)) {
             if (item->name() == changes->head()->name()) {
-                Liri::Platform::ScreenChange screenChange;
+                Aurora::PlatformSupport::ScreenChange screenChange;
                 screenChange.screen = item->screen();
                 screenChange.enabled = true;
                 screenChange.position = changes->position();
@@ -362,7 +362,7 @@ void ScreenModel::applyConfiguration(WaylandWlrOutputConfigurationV1 *configurat
     for (auto *head : heads) {
         for (auto *item : qAsConst(m_items)) {
             if (item->name() == head->name()) {
-                Liri::Platform::ScreenChange screenChange;
+                Aurora::PlatformSupport::ScreenChange screenChange;
                 screenChange.screen = item->screen();
                 screenChange.enabled = false;
                 screenChanges.append(screenChange);
@@ -377,7 +377,7 @@ void ScreenModel::applyConfiguration(WaylandWlrOutputConfigurationV1 *configurat
         }
     }
 
-    bool result = Liri::Platform::EglFSFunctions::applyScreenChanges(screenChanges);
+    bool result = Aurora::PlatformSupport::EglFSFunctions::applyScreenChanges(screenChanges);
 
     // TODO: Send cancelled if a new screen is added or changed meanwhile
 
@@ -522,13 +522,13 @@ void ScreenModel::addFakeScreens()
 
         switch (orientation) {
         case Qt::PortraitOrientation:
-            item->m_transform = QWaylandOutput::Transform90;
+            item->m_transform = WaylandOutput::Transform90;
             break;
         case Qt::InvertedLandscapeOrientation:
-            item->m_transform = QWaylandOutput::Transform180;
+            item->m_transform = WaylandOutput::Transform180;
             break;
         case Qt::InvertedPortraitOrientation:
-            item->m_transform = QWaylandOutput::Transform270;
+            item->m_transform = WaylandOutput::Transform270;
             break;
         default:
             break;
@@ -579,31 +579,31 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
     QPlatformScreen::SubpixelAntialiasingType subpixel = screen->handle()->subpixelAntialiasingTypeHint();
     switch (subpixel) {
     case QPlatformScreen::Subpixel_None:
-        item->m_subpixel = QWaylandOutput::SubpixelNone;
+        item->m_subpixel = WaylandOutput::SubpixelNone;
         break;
     case QPlatformScreen::Subpixel_RGB:
-        item->m_subpixel = QWaylandOutput::SubpixelHorizontalRgb;
+        item->m_subpixel = WaylandOutput::SubpixelHorizontalRgb;
         break;
     case QPlatformScreen::Subpixel_BGR:
-        item->m_subpixel = QWaylandOutput::SubpixelHorizontalBgr;
+        item->m_subpixel = WaylandOutput::SubpixelHorizontalBgr;
         break;
     case QPlatformScreen::Subpixel_VRGB:
-        item->m_subpixel = QWaylandOutput::SubpixelVerticalRgb;
+        item->m_subpixel = WaylandOutput::SubpixelVerticalRgb;
         break;
     case QPlatformScreen::Subpixel_VBGR:
-        item->m_subpixel = QWaylandOutput::SubpixelVerticalBgr;
+        item->m_subpixel = WaylandOutput::SubpixelVerticalBgr;
         break;
     }
 
     switch (screen->orientation()) {
     case Qt::PortraitOrientation:
-        item->m_transform = QWaylandOutput::Transform90;
+        item->m_transform = WaylandOutput::Transform90;
         break;
     case Qt::InvertedLandscapeOrientation:
-        item->m_transform = QWaylandOutput::Transform180;
+        item->m_transform = WaylandOutput::Transform180;
         break;
     case Qt::InvertedPortraitOrientation:
-        item->m_transform = QWaylandOutput::Transform270;
+        item->m_transform = WaylandOutput::Transform270;
         break;
     default:
         break;
@@ -693,13 +693,13 @@ void ScreenModel::handleScreenAdded(QScreen *screen)
         int row = m_items.indexOf(item);
         switch (orientation) {
         case Qt::PortraitOrientation:
-            item->m_transform = QWaylandOutput::Transform90;
+            item->m_transform = WaylandOutput::Transform90;
             break;
         case Qt::InvertedLandscapeOrientation:
-            item->m_transform = QWaylandOutput::Transform180;
+            item->m_transform = WaylandOutput::Transform180;
             break;
         case Qt::InvertedPortraitOrientation:
-            item->m_transform = QWaylandOutput::Transform270;
+            item->m_transform = WaylandOutput::Transform270;
             break;
         default:
             break;

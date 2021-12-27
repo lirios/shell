@@ -5,8 +5,10 @@
 #include "logging.h"
 #include "quickoutput.h"
 
+using namespace Aurora::Compositor;
+
 QuickOutput::QuickOutput()
-    : QWaylandQuickOutput()
+    : WaylandQuickOutput()
 {
 }
 
@@ -39,7 +41,7 @@ void QuickOutput::setScreen(ScreenItem *screen)
 void QuickOutput::componentComplete()
 {
     m_initialized = true;
-    QWaylandQuickOutput::componentComplete();
+    WaylandQuickOutput::componentComplete();
 }
 
 void QuickOutput::addModes()
@@ -55,7 +57,7 @@ void QuickOutput::addScreenMode(ScreenMode *mode)
             m_screen->preferredMode()->refreshRate() == mode->refreshRate();
     auto isCurrent = m_screen->currentMode()->resolution() == mode->resolution() &&
             m_screen->currentMode()->refreshRate() == mode->refreshRate();
-    QWaylandOutputMode wlMode(mode->resolution(), mode->refreshRate());
+    WaylandOutputMode wlMode(mode->resolution(), mode->refreshRate());
 
     bool alreadyHasMode = false;
     const auto modesList = modes();
@@ -75,5 +77,5 @@ void QuickOutput::addScreenMode(ScreenMode *mode)
 
 void QuickOutput::handleCurrentModeChanged(const QSize &resolution, int refreshRate)
 {
-    setCurrentMode(QWaylandOutputMode(resolution, refreshRate));
+    setCurrentMode(WaylandOutputMode(resolution, refreshRate));
 }

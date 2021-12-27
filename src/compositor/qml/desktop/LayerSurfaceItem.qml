@@ -3,10 +3,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
-import Liri.WaylandServer 1.0 as WS
+import Aurora.Compositor 1.0
+import Aurora.Compositor.WlrLayerShell 1.0
 import Fluid.Controls 1.0 as FluidControls
 
-WS.WaylandWlrLayerSurfaceV1Item {
+WlrLayerSurfaceItem {
     id: layerSurfaceItem
 
     signal createAnimationFinished()
@@ -36,7 +37,7 @@ WS.WaylandWlrLayerSurfaceV1Item {
                 createAnimationFinished();
             }
 
-            if (layerSurface.keyboardInteractivity > WS.WlrLayerSurfaceV1.NoKeyboardInteractivity)
+            if (layerSurface.keyboardInteractivity > WlrLayerSurfaceV1.NoKeyboardInteractivity)
                 takeFocus();
         }
     }

@@ -20,7 +20,6 @@ liri_add_qml_plugin(StorageQmlPlugin
         QT_NO_FOREACH
     PUBLIC_LIBRARIES
         Qt5::Core
-        Qt5::WaylandCompositor
         KF5::Solid
 )
 

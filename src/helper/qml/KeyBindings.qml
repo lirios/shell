@@ -5,7 +5,7 @@
 import QtQuick 2.15
 import QtGSettings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
-import Liri.WaylandClient 1.0 as WaylandClient
+import Aurora.Client 1.0 as AuroraClient
 
 FluidCore.Object {
     Settings.GSettings {
@@ -25,7 +25,7 @@ FluidCore.Object {
      * Session Manager
      */
 
-    WaylandClient.LiriShortcut {
+    AuroraClient.LiriShortcutV1 {
         sequence: smKeybindings.powerOff
         onActivated: {
             powerOffDialog.show();
@@ -36,7 +36,7 @@ FluidCore.Object {
      * Desktop
      */
 
-    WaylandClient.LiriShortcut {
+    AuroraClient.LiriShortcutV1 {
         sequence: desktopKeybindings.runCommand
         onActivated: {
             runDialog.show();

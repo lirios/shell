@@ -10,7 +10,7 @@ import QtGSettings 1.0 as Settings
 import QtAccountsService 1.0 as AccountsService
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
-import Liri.WaylandClient 1.0 as WaylandClient
+import Aurora.Client 1.0 as AuroraClient
 import Liri.Shell 1.0
 import Liri.ShellHelper 1.0 as ShellHelper
 
@@ -27,13 +27,13 @@ Window {
         schema.path: "/io/liri/desktop/lockscreen/"
     }
 
-    WaylandClient.WlrLayerSurfaceV1 {
-        layer: WaylandClient.WlrLayerSurfaceV1.OverlayLayer
-        anchors: WaylandClient.WlrLayerSurfaceV1.TopAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.BottomAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.LeftAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.RightAnchor
-        keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
+    AuroraClient.WlrLayerSurfaceV1 {
+        layer: AuroraClient.WlrLayerSurfaceV1.OverlayLayer
+        anchors: AuroraClient.WlrLayerSurfaceV1.TopAnchor |
+                 AuroraClient.WlrLayerSurfaceV1.BottomAnchor |
+                 AuroraClient.WlrLayerSurfaceV1.LeftAnchor |
+                 AuroraClient.WlrLayerSurfaceV1.RightAnchor
+        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
         exclusiveZone: -1
         role: "lockscreen"
     }

@@ -6,17 +6,21 @@
 import QtQml 2.1
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtWayland.Compositor 1.15
+import Aurora.Compositor 1.0
+import Aurora.Compositor.Liri 1.0
+import Aurora.Compositor.Wlroots 1.0
+import Aurora.Compositor.WlrLayerShell 1.0
+import Aurora.Compositor.XdgShell 1.0
+import Aurora.Compositor.XWayland 1.0 as LXW
 import Liri.Launcher 1.0 as Launcher
-import Liri.XWayland 1.0 as LXW
-import Liri.WaylandServer 1.0 as WS
 import Liri.Session 1.0 as Session
+import Liri.Shell.Compositor 1.0
 import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
 import "desktop"
 import "windows"
 
-P.WaylandCompositor {
+WaylandCompositor {
     id: liriCompositor
 
     property point mousePos: Qt.point(0, 0)
@@ -98,13 +102,13 @@ P.WaylandCompositor {
     Component {
         id: outputModeComponent
 
-        WS.WlrOutputModeV1 {}
+        WlrOutputModeV1 {}
     }
 
     Component {
         id: outputConfigComponent
 
-        WS.WlrOutputConfigurationV1 {
+        WlrOutputConfigurationV1 {
             id: configuration
 
             onReadyToTest: {
@@ -117,7 +121,7 @@ P.WaylandCompositor {
         }
     }
 
-    WS.WlrOutputManagerV1 {
+    WlrOutputManagerV1 {
         id: outputManager
 
         onConfigurationRequested: {
@@ -169,7 +173,7 @@ P.WaylandCompositor {
         id: headManager
 
         model: screenModel
-        delegate: WS.WlrOutputHeadV1 {
+        delegate: WlrOutputHeadV1 {
             manager: outputManager
             name: screenItem.name
             description: screenItem.description
@@ -206,7 +210,7 @@ P.WaylandCompositor {
 
     // Liri shell
 
-    WS.LiriShell {
+    LiriShellV1 {
         id: shellHelper
 
         property bool isReady: false
@@ -226,7 +230,7 @@ P.WaylandCompositor {
         }
     }
 
-    WS.LiriModalManager {
+    LiriModalManagerV1 {
         id: liriModal
     }
 
@@ -241,7 +245,7 @@ P.WaylandCompositor {
         }
     }
 
-    WS.LiriOsd {
+    LiriOsdV1 {
         id: liriOsd
     }
 
@@ -249,7 +253,7 @@ P.WaylandCompositor {
         id: shortcutComponent
 
         Shortcut {
-            property WS.LiriShortcut shortcut: null
+            property LiriShortcutV1 shortcut: null
 
             context: Qt.ApplicationShortcut
             sequence: shortcut ? shortcut.sequence : ""
@@ -260,7 +264,7 @@ P.WaylandCompositor {
         }
     }
 
-    WS.LiriLockScreenV1 {
+    LiriLockScreenV1 {
         id: lockScreen
 
         onUnlocked: {
@@ -270,7 +274,7 @@ P.WaylandCompositor {
 
     // Layer shell
 
-    WS.WlrLayerShellV1 {
+    WlrLayerShellV1 {
         id: layerShell
 
         onLayerSurfaceCreated: {
@@ -287,7 +291,7 @@ P.WaylandCompositor {
         preferredMode: settings.ui.clientSideDecoration ? XdgToplevel.ClientSideDecoration : XdgToplevel.ServerSideDecoration
     }
 
-    WS.LiriDecorationManager {
+    FluidDecorationManagerV1 {
         onDecorationCreated: {
             decoration.foregroundColorChanged.connect(function(color) {
                 decoration.surface.foregroundColor = color;
@@ -300,7 +304,7 @@ P.WaylandCompositor {
 
     // Foreign toplevel management
 
-    WS.WlrForeignToplevelManagerV1 {
+    WlrForeignToplevelManagerV1 {
         id: foreignToplevelManager
     }
 
@@ -347,7 +351,7 @@ P.WaylandCompositor {
         }
     }
 
-    WS.WlrExportDmabufManagerV1 {
+    WlrExportDmabufManagerV1 {
         onOutputCaptureRequested: {
             if (frame.output.screen) {
                 frame.output.exportDmabufFrame = frame;
@@ -356,7 +360,7 @@ P.WaylandCompositor {
         }
     }
 
-    WS.WlrScreencopyManagerV1 {
+    WlrScreencopyManagerV1 {
         onCaptureOutputRequested: {
             frame.ready.connect(function() {
                 frame.copy("desktop");
@@ -365,7 +369,7 @@ P.WaylandCompositor {
         }
     }
 
-    WS.LiriColorPickerManager {
+    LiriColorPickerManagerV1 {
         layerName: "desktop"
     }
 
@@ -445,6 +449,7 @@ P.WaylandCompositor {
         enabled: liriCompositor.settings.shell.enableXwayland
         manager: LXW.XWaylandManager {
             id: manager
+
             onShellSurfaceRequested: {
                 var shellSurface = shellSurfaceComponent.createObject(manager);
                 shellSurface.initialize(manager, window, geometry, overrideRedirect, parentShellSurface);
@@ -598,7 +603,7 @@ P.WaylandCompositor {
     }
 
     function quit() {
-        layerShell.closeAllSurfaces();
+        layerShell.closeAllLayerSurfaces();
         shellHelper.sendQuit();
 
         for (var i = 0; i < outputs.length; i++)

@@ -7,7 +7,7 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import Liri.WaylandClient 1.0 as WaylandClient
+import Aurora.Client 1.0 as AuroraClient
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 
@@ -22,12 +22,12 @@ Window {
     width: FluidControls.Units.gu(24) + (48 / 2) + (8 * 4)
     visible: true
 
-    WaylandClient.WlrLayerSurfaceV1 {
-        layer: WaylandClient.WlrLayerSurfaceV1.TopLayer
-        anchors: WaylandClient.WlrLayerSurfaceV1.RightAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.TopAnchor |
-                 WaylandClient.WlrLayerSurfaceV1.BottomAnchor
-        keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
+    AuroraClient.WlrLayerSurfaceV1 {
+        layer: AuroraClient.WlrLayerSurfaceV1.TopLayer
+        anchors: AuroraClient.WlrLayerSurfaceV1.RightAnchor |
+                 AuroraClient.WlrLayerSurfaceV1.TopAnchor |
+                 AuroraClient.WlrLayerSurfaceV1.BottomAnchor
+        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
         leftMargin: FluidControls.Units.smallSpacing
         topMargin: FluidControls.Units.smallSpacing
         rightMargin: FluidControls.Units.smallSpacing

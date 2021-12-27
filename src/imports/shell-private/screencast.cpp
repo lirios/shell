@@ -5,7 +5,7 @@
 #include <QGuiApplication>
 #include <QScreen>
 
-#include <LiriPlatformHeaders/lirieglfsfunctions.h>
+#include <LiriAuroraPlatformHeaders/lirieglfsfunctions.h>
 
 #include "logging.h"
 #include "screencast.h"
@@ -25,7 +25,7 @@ void ScreenCast::enable(QScreen *screen)
         return;
     }
 
-    Liri::Platform::EglFSFunctions::enableScreenCast(screen);
+    Aurora::PlatformSupport::EglFSFunctions::enableScreenCast(screen);
 }
 
 void ScreenCast::disable(QScreen *screen)
@@ -37,21 +37,21 @@ void ScreenCast::disable(QScreen *screen)
         return;
     }
 
-    Liri::Platform::EglFSFunctions::disableScreenCast(screen);
+    Aurora::PlatformSupport::EglFSFunctions::disableScreenCast(screen);
 }
 
 bool ScreenCast::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == Liri::Platform::ScreenCastFrameEvent::registeredType()) {
-        auto *e = static_cast<Liri::Platform::ScreenCastFrameEvent *>(event);
+    if (event->type() == Aurora::PlatformSupport::ScreenCastFrameEvent::registeredType()) {
+        auto *e = static_cast<Aurora::PlatformSupport::ScreenCastFrameEvent *>(event);
         Q_EMIT frameAvailable(e->screen, e->size, e->offset, e->drmFormat, e->modifier, e->numObjects);
         return true;
-    } else if (event->type() == Liri::Platform::ScreenCastObjectEvent::registeredType()) {
-        auto *e = static_cast<Liri::Platform::ScreenCastObjectEvent *>(event);
+    } else if (event->type() == Aurora::PlatformSupport::ScreenCastObjectEvent::registeredType()) {
+        auto *e = static_cast<Aurora::PlatformSupport::ScreenCastObjectEvent *>(event);
         Q_EMIT objectAvailable(e->screen, e->index, e->fd, e->size, e->offset, e->stride, e->planeIndex);
         return true;
-    } else if (event->type() == Liri::Platform::ScreenCastReadyEvent::registeredType()) {
-        auto *e = static_cast<Liri::Platform::ScreenCastReadyEvent *>(event);
+    } else if (event->type() == Aurora::PlatformSupport::ScreenCastReadyEvent::registeredType()) {
+        auto *e = static_cast<Aurora::PlatformSupport::ScreenCastReadyEvent *>(event);
         Q_EMIT captureReady(e->screen, e->tv_sec, e->tv_nsec);
         return true;
     }

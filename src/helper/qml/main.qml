@@ -6,7 +6,7 @@ import QtQml 2.1
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtGSettings 1.0 as Settings
-import Liri.WaylandClient 1.0 as WaylandClient
+import Aurora.Client 1.0 as AuroraClient
 import Liri.PolicyKit 1.0 as Polkit
 
 Item {
@@ -54,7 +54,7 @@ Item {
      * Shell
      */
 
-    WaylandClient.LiriShell {
+    AuroraClient.LiriShellV1 {
         id: shell
 
         onLogoutRequested: {
@@ -70,7 +70,7 @@ Item {
         }
     }
 
-    WaylandClient.LiriLockScreenV1 {
+    AuroraClient.LiriLockScreenV1 {
         id: lockScreen
 
         onLockRequested: {
@@ -84,7 +84,7 @@ Item {
         OsdWindow {}
     }
 
-    WaylandClient.LiriOsd {
+    AuroraClient.LiriOsdV1 {
         property OsdWindow osdWindow: null
 
         onTextRequested: {

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="liri_color_picker_unstable_v1">
+  <copyright><![CDATA[
+    SPDX-FileCopyrightText: 2020-2021 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+
+    SPDX-License-Identifier: MIT
+  ]]></copyright>
+
+  <interface name="zliri_color_picker_manager_v1" version="1">
+    <description summary="color picker manager">
+      This interface allows a client to read the ARGB value of a pixel,
+      effectively pickup up the color at a specific coordinate
+      of an output.
+
+      The compositor implementation should allow only authorized clients to
+      bind to this interface and only one client at a time.
+    </description>
+
+    <enum name="error">
+      <entry name="already_constructed" value="0" summary="a color picker for the same output already exist"/>
+      <entry name="still_in_progress" value="1" summary="another pick_interactive request is still in progress"/>
+    </enum>
+
+    <request name="pick_at_location">
+      <description summary="pick a color at a specific output location">
+        Pick the color of a pixel at specific coordinates within the
+        bounds of the output.
+      </description>
+      <arg name="id" type="new_id" interface="zliri_color_picker_v1"/>
+      <arg name="output" type="object" interface="wl_output"/>
+      <arg name="x" type="uint" summary="x coordinates in output space"/>
+      <arg name="y" type="uint" summary="y coordinates in output space"/>
+    </request>
+
+    <request name="pick_interactively">
+      <description summary="pick a color interactively">
+        Start a pointer-driven pixel selection.
+        The user moves the mouse pointer to their desired location and press
+        a mouse button.
+
+        This request fails if another interactive request is still in progress,
+        regardless of what zliri_color_picker_v1 object originated it and regardless
+        of which output is involved.
+      </description>
+      <arg name="id" type="new_id" interface="zliri_color_picker_v1"/>
+      <arg name="seat" type="object" interface="wl_seat" summary="seat whose pointer is used"/>
+    </request>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy the manager">
+        All objects created by the manager will still remain valid, until their
+        appropriate destroy request has been called.
+      </description>
+    </request>
+  </interface>
+
+  <interface name="zliri_color_picker_v1" version="1">
+    <description summary="color picker">
+      This object is created in response to a color picker request.
+      The picked event is emitted as soon as the operation is completed,
+      and when that happens the client has to destroy the object.
+    </description>
+
+    <event name="picked">
+      <description summary="result of the pick request">
+        The ARGB color of the selected pixel is available.
+      </description>
+      <arg name="value" type="uint" summary="ARGB color value"/>
+    </event>
+
+    <request name="destroy" type="destructor">
+      <description summary="release the object">
+        This destroys the zliri_color_picker_v1 object.
+      </description>
+    </request>
+  </interface>
+</protocol>

@@ -5,8 +5,8 @@ if(FEATURE_enable_systemd)
     find_package(Libsystemd REQUIRED)
 endif()
 
-if(NOT TARGET Liri::WaylandClient)
-    find_package(Liri1WaylandClient REQUIRED)
+if(NOT TARGET Liri::AuroraClient)
+    find_package(Liri1AuroraClient REQUIRED)
 endif()
 
 find_package(PAM REQUIRED)
@@ -34,8 +34,7 @@ liri_add_executable(LiriShellHelper
         Qt5::Gui
         Qt5::GuiPrivate
         Qt5::Qml
-        Qt5::WaylandClient
-        Liri::WaylandClient
+        Liri::AuroraClient
         ${PAM_LIBRARIES}
 )
 

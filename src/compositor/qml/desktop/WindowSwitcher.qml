@@ -6,7 +6,7 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import QtWayland.Compositor 1.15
+import Aurora.Compositor 1.0
 import Fluid.Core 1.0 as FluidCore
 import Fluid.Controls 1.0 as FluidControls
 

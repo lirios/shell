@@ -4,8 +4,7 @@
 
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtWayland.Compositor 1.15
-import Liri.WaylandServer 1.0 as WS
+import Aurora.Compositor 1.0
 import Liri.private.shell 1.0 as P
 
 P.WaylandOutput {

@@ -10,9 +10,11 @@
 #include <QQmlParserStatus>
 #include <QQmlListProperty>
 #include <QScreen>
-#include <QWaylandOutput>
 
-#include <LiriWaylandServer/WaylandWlrOutputManagerV1>
+#include <LiriAuroraCompositor/WaylandOutput>
+#include <LiriAuroraCompositor/WaylandWlrOutputManagerV1>
+
+using namespace Aurora::Compositor;
 
 class ScreenModel : public QAbstractListModel, public QQmlParserStatus
 {
@@ -42,8 +44,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    Q_INVOKABLE bool testConfiguration(WaylandWlrOutputConfigurationV1 *configuration);
-    Q_INVOKABLE void applyConfiguration(WaylandWlrOutputConfigurationV1 *configuration);
+    Q_INVOKABLE bool testConfiguration(Aurora::Compositor::WaylandWlrOutputConfigurationV1 *configuration);
+    Q_INVOKABLE void applyConfiguration(Aurora::Compositor::WaylandWlrOutputConfigurationV1 *configuration);
 
 Q_SIGNALS:
     void fileNameChanged();
@@ -99,8 +101,8 @@ class ScreenItem : public QObject
     Q_PROPERTY(QPoint position READ position NOTIFY positionChanged)
     Q_PROPERTY(QSizeF physicalSize READ physicalSize NOTIFY physicalSizeChanged)
     Q_PROPERTY(qreal scaleFactor READ scaleFactor NOTIFY scaleFactorChanged)
-    Q_PROPERTY(QWaylandOutput::Subpixel subpixel READ subpixel CONSTANT)
-    Q_PROPERTY(QWaylandOutput::Transform transform READ transform NOTIFY transformChanged)
+    Q_PROPERTY(Aurora::Compositor::WaylandOutput::Subpixel subpixel READ subpixel CONSTANT)
+    Q_PROPERTY(Aurora::Compositor::WaylandOutput::Transform transform READ transform NOTIFY transformChanged)
     Q_PROPERTY(QQmlListProperty<ScreenMode> modes READ modesList CONSTANT)
     Q_PROPERTY(ScreenMode *currentMode READ currentMode NOTIFY currentModeChanged)
     Q_PROPERTY(ScreenMode *preferredMode READ preferredMode CONSTANT)
@@ -133,8 +135,8 @@ public:
 
     qreal scaleFactor() const;
 
-    QWaylandOutput::Subpixel subpixel() const;
-    QWaylandOutput::Transform transform() const;
+    Aurora::Compositor::WaylandOutput::Subpixel subpixel() const;
+    Aurora::Compositor::WaylandOutput::Transform transform() const;
 
     QVector<ScreenMode *> modes() const;
     QQmlListProperty<ScreenMode> modesList();
@@ -166,8 +168,8 @@ private:
     QPoint m_position;
     QSizeF m_physicalSize;
     qreal m_scaleFactor = 1.0f;
-    QWaylandOutput::Subpixel m_subpixel = QWaylandOutput::SubpixelUnknown;
-    QWaylandOutput::Transform m_transform = QWaylandOutput::TransformNormal;
+    Aurora::Compositor::WaylandOutput::Subpixel m_subpixel = Aurora::Compositor::WaylandOutput::SubpixelUnknown;
+    Aurora::Compositor::WaylandOutput::Transform m_transform = Aurora::Compositor::WaylandOutput::TransformNormal;
     ScreenMode *m_currentMode = nullptr;
     ScreenMode *m_preferredMode = nullptr;
     QVector<ScreenMode *> m_modes;

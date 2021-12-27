@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
-import QtWayland.Compositor 1.1 as QtWayland
+import Aurora.Compositor 1.0
+import Aurora.Compositor.Wlroots 1.0
+import Aurora.Compositor.XWayland 1.0 as LXW
 import Fluid.Core 1.0 as FluidCore
-import Liri.WaylandServer 1.0 as WS
-import Liri.XWayland 1.0 as LXW
 import Liri.private.shell 1.0 as LS
 
 FluidCore.Object {
@@ -49,7 +49,7 @@ FluidCore.Object {
     readonly property bool maximizable: true
     readonly property bool resizable: !__private.maximized && !__private.fullscreen
 
-    signal showWindowMenu(QtWayland.WaylandSeat seat, point localSurfacePosition)
+    signal showWindowMenu(WaylandSeat seat, point localSurfacePosition)
 
     // Instead of binding shellSurface properties to those of the
     // window API, we have to store them into a private object to avoid issues
@@ -63,8 +63,8 @@ FluidCore.Object {
         property bool registered: false
         property bool mapped: false
 
-        property QtWayland.WaylandSurface surface: null
-        property QtWayland.WaylandSurface parentSurface: null
+        property WaylandSurface surface: null
+        property WaylandSurface parentSurface: null
 
         property int windowType
         property bool decorate
@@ -121,7 +121,7 @@ FluidCore.Object {
         id: appIdAndIcon
     }
 
-    WS.WlrForeignToplevelHandleV1 {
+    WlrForeignToplevelHandleV1 {
         id: toplevelHandle
 
         compositor: liriCompositor

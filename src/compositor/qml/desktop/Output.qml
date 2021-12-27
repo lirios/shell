@@ -6,7 +6,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import QtWayland.Compositor 1.15
+import Aurora.Compositor 1.0
 import Liri.private.shell 1.0 as P
 import Liri.Session 1.0 as Session
 

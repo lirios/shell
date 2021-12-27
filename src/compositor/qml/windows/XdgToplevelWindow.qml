@@ -3,16 +3,17 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
-import QtWayland.Compositor 1.15 as QtWayland
+import Aurora.Compositor 1.0
+import Aurora.Compositor.Wlroots 1.0
+import Aurora.Compositor.XdgShell 1.0
 import Fluid.Core 1.0 as FluidCore
-import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as LS
 
 FluidCore.Object {
     id: window
 
-    property QtWayland.XdgSurface xdgSurface: null
-    property QtWayland.XdgToplevel toplevel: null
+    property XdgSurface xdgSurface: null
+    property XdgToplevel toplevel: null
 
     readonly property alias surface: __private.surface
     readonly property alias parentSurface: __private.parentSurface
@@ -31,14 +32,14 @@ FluidCore.Object {
     readonly property alias resizing: __private.resizing
     readonly property bool decorated: {
         // Set true if it has a titlebar and decorations
-        if (__private.decorationMode === QtWayland.XdgToplevel.ServerSideDecoration)
+        if (__private.decorationMode === XdgToplevel.ServerSideDecoration)
             return !__private.fullscreen;
         else
             return false;
     }
     readonly property bool bordered: {
         // Set true if it has resize handles
-        if (__private.decorationMode === QtWayland.XdgToplevel.ServerSideDecoration)
+        if (__private.decorationMode === XdgToplevel.ServerSideDecoration)
             return !__private.maximized && !__private.fullscreen;
         else
             return false;
@@ -53,7 +54,7 @@ FluidCore.Object {
     }
     readonly property bool resizable: !__private.maximized && !__private.fullscreen
 
-    signal showWindowMenu(QtWayland.WaylandSeat seat, point localSurfacePosition)
+    signal showWindowMenu(WaylandSeat seat, point localSurfacePosition)
 
     // Instead of binding xdgSurface and toplevel properties to those of the
     // window API, we have to store them into a private object to avoid issues
@@ -67,8 +68,8 @@ FluidCore.Object {
         property bool registered: false
         property bool mapped: false
 
-        property QtWayland.WaylandSurface surface: null
-        property QtWayland.WaylandSurface parentSurface: null
+        property WaylandSurface surface: null
+        property WaylandSurface parentSurface: null
 
         property int decorationMode
         property color backgroundColor
@@ -101,10 +102,10 @@ FluidCore.Object {
         }
 
         function updateWindowGeometry() {
-            if (__private.decorationMode === QtWayland.XdgToplevel.ServerSideDecoration)
+            if (__private.decorationMode === XdgToplevel.ServerSideDecoration)
                 __private.windowGeometry = Qt.rect(borderSize, borderSize,
-                                                   xdgSurface.surface.size.width,
-                                                   xdgSurface.surface.size.height + titleBarHeight);
+                                                   xdgSurface.surface.destinationSize.width,
+                                                   xdgSurface.surface.destinationSize.height + titleBarHeight);
             else
                 __private.windowGeometry = xdgSurface.windowGeometry;
         }
@@ -137,7 +138,7 @@ FluidCore.Object {
         id: appIdAndIcon
     }
 
-    WS.WlrForeignToplevelHandleV1 {
+    WlrForeignToplevelHandleV1 {
         id: toplevelHandle
 
         compositor: liriCompositor
@@ -185,7 +186,7 @@ FluidCore.Object {
     Connections {
         target: __private.surface
 
-        function onSizeChanged() {
+        function onDestinationSizeChanged() {
             __private.updateWindowGeometry();
         }
 

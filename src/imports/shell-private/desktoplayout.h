@@ -5,7 +5,9 @@
 #ifndef DESKTOPLAYOUT_H
 #define DESKTOPLAYOUT_H
 
-#include <LiriWaylandServer/WaylandSurfaceLayout>
+#include <LiriAuroraCompositor/WaylandSurfaceLayout>
+
+using namespace Aurora::Compositor;
 
 class DesktopLayout : public WaylandSurfaceLayout
 {

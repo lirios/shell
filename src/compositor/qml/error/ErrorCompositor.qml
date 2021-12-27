@@ -5,13 +5,13 @@
 import QtQml 2.2
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtWayland.Compositor 1.15
+import Aurora.Compositor 1.0
+import Liri.Shell.Compositor 1.0
 import Liri.Session 1.0 as Session
-import Liri.WaylandServer 1.0 as WS
 import Liri.private.shell 1.0 as P
 import ".." as Root
 
-P.WaylandCompositor {
+WaylandCompositor {
     id: liriCompositor
 
     onCreatedChanged: {
@@ -68,7 +68,7 @@ P.WaylandCompositor {
     }
 
     // Shell helper
-    WS.LiriShell {
+    LiriShellV1 {
         id: shellHelper
     }
 
