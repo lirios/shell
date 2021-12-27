@@ -22,8 +22,8 @@ set(QT_MIN_VERSION "5.15.0")
 include(LiriSetup)
 
 ## Only build on the appropriate platforms.
-if(NOT UNIX OR ANDROID)
-    message(NOTICE "Skipping the build as the condition \"UNIX OR ANDROID\" is not met.")
+if(NOT (UNIX OR NOT ANDROID))
+    message(NOTICE "Skipping the build as the condition \"UNIX OR NOT ANDROID\" is not met.")
     return()
 endif()
 
