@@ -28,15 +28,11 @@ if(NOT (UNIX OR NOT ANDROID))
 endif()
 
 ## Features:
-option(LIRI_SHELL_DEVELOPMENT_BUILD "Development build" OFF)
-add_feature_info("Shell::DevelopmentBuild" LIRI_SHELL_DEVELOPMENT_BUILD "Build Liri Shell for development")
-option(LIRI_SHELL_ENABLE_QTQUICK_COMPILER "Build with QtQuick compiler (resulting binaries may not be compatible with future Qt releases without rebuilding them)" OFF)
-add_feature_info("Shell::QtQuickCompiler" LIRI_SHELL_ENABLE_QTQUICK_COMPILER "Build with QtQuick compiler")
-option(LIRI_ENABLE_SYSTEMD "Enable systemd support" ON)
-add_feature_info("Liri::Systemd" LIRI_ENABLE_SYSTEMD "Enable systemd support")
+include(features.cmake)
+feature_summary(WHAT ENABLED_FEATURES DISABLED_FEATURES)
 
 ## Variables:
-if(LIRI_ENABLE_SYSTEMD)
+if(FEATURE_enable_systemd)
     set(INSTALL_SYSTEMDUSERUNITDIR "${INSTALL_LIBDIR}/systemd/user" CACHE PATH "systemd user unit directory [PREFIX/lib/systemd/user]")
 endif()
 
@@ -66,7 +62,7 @@ find_package(Qt5 "${QT_MIN_VERSION}"
 
 ## Add subdirectories:
 add_subdirectory(data/settings)
-if(LIRI_ENABLE_SYSTEMD)
+if(FEATURE_enable_systemd)
     add_subdirectory(data/systemd)
 endif()
 add_subdirectory(src/compositor)

@@ -1,7 +1,7 @@
 include(CheckIncludeFile)
 check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
 
-if(LIRI_ENABLE_SYSTEMD)
+if(FEATURE_enable_systemd)
     find_package(Libsystemd REQUIRED)
 endif()
 
@@ -45,7 +45,7 @@ liri_add_executable(LiriShell
     RESOURCES
         "compositor.qrc"
     QTQUICK_COMPILER
-        ${LIRI_SHELL_ENABLE_QTQUICK_COMPILER}
+        ${FEATURE_shell_enable_qtquick_compiler}
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
@@ -69,7 +69,7 @@ liri_add_executable(LiriShell
 )
 
 liri_extend_target("LiriShell"
-    CONDITION LIRI_SHELL_DEVELOPMENT_BUILD
+    CONDITION FEATURE_liri_development_build
     DEFINES DEVELOPMENT_BUILD)
 
 liri_extend_target("LiriShell"
@@ -77,7 +77,7 @@ liri_extend_target("LiriShell"
     DEFINES HAVE_SYS_PRCTL_H)
 
 liri_extend_target("LiriShell"
-    CONDITION LIRI_ENABLE_SYSTEMD
+    CONDITION FEATURE_enable_systemd
     DEFINES HAVE_SYSTEMD
     LIBRARIES PkgConfig::Libsystemd)
 

@@ -1,7 +1,7 @@
 include(CheckIncludeFile)
 check_include_file("sys/prctl.h" HAVE_SYS_PRCTL_H)
 
-if(LIRI_ENABLE_SYSTEMD)
+if(FEATURE_enable_systemd)
     find_package(Libsystemd REQUIRED)
 endif()
 
@@ -42,7 +42,7 @@ liri_add_executable(LiriShellHelper
 )
 
 liri_extend_target("LiriShellHelper"
-    CONDITION LIRI_SHELL_DEVELOPMENT_BUILD
+    CONDITION FEATURE_liri_development_build
     DEFINES DEVELOPMENT_BUILD)
 
 liri_extend_target("LiriShellHelper"
@@ -50,7 +50,7 @@ liri_extend_target("LiriShellHelper"
     DEFINES HAVE_SYS_PRCTL_H)
 
 liri_extend_target("LiriShellHelper"
-    CONDITION LIRI_ENABLE_SYSTEMD
+    CONDITION FEATURE_enable_systemd
     DEFINES HAVE_SYSTEMD
     LIBRARIES PkgConfig::Libsystemd)
 

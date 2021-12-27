@@ -59,9 +59,10 @@ Default is `/usr/local`.
 
 You can also append the following options to the `cmake` command:
 
- * `-DLIRI_SHELL_DEVELOPMENT_BUILD:BOOL=ON`: Enable feature for development such as the
+ * `-DFEATURE_liri_development_build:BOOL=ON`: Enable feature for development such as the
    ability to load arbitrary QML files.
- * `-DLIRI_ENABLE_SYSTEMD:BOOL=OFF`: Disable systemd support.
+ * `-DFEATURE_enable_systemd:BOOL=OFF`: Disable systemd support.
+ * `-DFEATURE_shell_enable_qtquick_compiler:BOOL=ON`: Build with QtQuick compiler.
  * `-DINSTALL_SYSTEMDUSERUNITDIR=/path/to/systemd/user`: Path to install systemd user units (default: `/usr/local/lib/systemd/user`).
 
 ## Licensing
