@@ -7,7 +7,7 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import Liri.WaylandClient 1.0 as WaylandClient
+import Aurora.Client 1.0 as AuroraClient
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 
@@ -26,9 +26,9 @@ Window {
     color: "transparent"
     visible: true
 
-    WaylandClient.WlrLayerSurfaceV1 {
-        layer: WaylandClient.WlrLayerSurfaceV1.OverlayLayer
-        keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
+    AuroraClient.WlrLayerSurfaceV1 {
+        layer: AuroraClient.WlrLayerSurfaceV1.OverlayLayer
+        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
         role: "osd"
     }
 

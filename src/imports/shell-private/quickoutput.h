@@ -5,11 +5,11 @@
 #ifndef QUICKOUTPUT_H
 #define QUICKOUTPUT_H
 
-#include <QWaylandQuickOutput>
+#include <LiriAuroraCompositor/WaylandQuickOutput>
 
 #include "screenmodel.h"
 
-class QuickOutput : public QWaylandQuickOutput
+class QuickOutput : public Aurora::Compositor::WaylandQuickOutput
 {
     Q_OBJECT
     Q_PROPERTY(ScreenItem *screen READ screen WRITE setScreen NOTIFY screenChanged)

@@ -21,4 +21,4 @@ jobs:
     uses: lirios/.github/.github/workflows/build-linux-qt5.yml@master
     with:
       dependencies: "umockdev-devel libpolkit-qt5-1-devel solid-devel"
-      build_dependencies: "cmake-shared qtaccountsservice qtgsettings qtudev fluid libliri eglfs wayland"
+      build_dependencies: "cmake-shared qtaccountsservice qtgsettings fluid libliri aurora-scanner aurora-client aurora-compositor"

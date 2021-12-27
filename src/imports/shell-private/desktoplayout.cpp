@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <LiriWaylandServer/WaylandWlrLayerShellV1>
-#include <LiriWaylandServer/WaylandWlrLayerSurfaceV1Item>
+#include <LiriAuroraCompositor/WaylandWlrLayerShellV1>
+#include <LiriAuroraCompositor/WaylandWlrLayerSurfaceItem>
 
 #include "desktoplayout.h"
 
@@ -23,7 +23,7 @@ DesktopLayout::SurfaceRole DesktopLayout::getSurfaceRole(QQuickItem *item) const
         { QStringLiteral("dialog"), DesktopLayout::DialogRole },
         { QStringLiteral("lockscreen"), DesktopLayout::LockscreenRole },
     };
-    if (auto *l = qobject_cast<WaylandWlrLayerSurfaceV1Item *>(item))
+    if (auto *l = qobject_cast<WaylandWlrLayerSurfaceItem *>(item))
         return namespaceToRole.value(l->layerSurface()->nameSpace().toLower(), DesktopLayout::NoRole);
     else
         return namespaceToRole.value(item->objectName().toLower(), DesktopLayout::NoRole);
@@ -38,7 +38,7 @@ WaylandSurfaceLayout::Layer DesktopLayout::getLayer(QQuickItem *item) const
         { WaylandWlrLayerShellV1::OverlayLayer, WaylandSurfaceLayout::OverlayLayer },
     };
 
-    if (auto *l = qobject_cast<WaylandWlrLayerSurfaceV1Item *>(item))
+    if (auto *l = qobject_cast<WaylandWlrLayerSurfaceItem *>(item))
         return layerToIndex.value(l->layerSurface()->layer(), WaylandSurfaceLayout::NoLayer);
     else if (item->objectName() == QStringLiteral("workspaces"))
         return WaylandSurfaceLayout::WindowsLayer;

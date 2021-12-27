@@ -6,7 +6,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import QtWayland.Compositor 1.15 as Compositor
+import Aurora.Compositor 1.0 as Compositor
 import Liri.private.shell 1.0 as P
 import Fluid.Controls 1.0 as FluidControls
 

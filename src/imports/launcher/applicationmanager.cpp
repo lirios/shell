@@ -11,8 +11,8 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
 #include <QtGui/QIcon>
-#include <QtWaylandCompositor/QWaylandSurface>
 
+#include <LiriAuroraCompositor/WaylandSurface>
 #include <LiriXdg/DesktopFile>
 #include <LiriXdg/DesktopMenu>
 
@@ -22,6 +22,8 @@
 #include "utils.h"
 
 Q_LOGGING_CATEGORY(APPLICATION_MANAGER, "liri.launcher.applicationmanager")
+
+using namespace Aurora::Compositor;
 
 const QMap<QString, QString> correctAppIds = {
     {QStringLiteral("baobob"), QStringLiteral("org.gnome.baobob")},
@@ -319,7 +321,7 @@ void ApplicationManager::refresh(ApplicationManager *manager)
 
 void ApplicationManager::registerShellSurface(QObject *shellSurface)
 {
-    QWaylandSurface *surface = shellSurface->property("surface").value<QWaylandSurface *>();
+    WaylandSurface *surface = shellSurface->property("surface").value<WaylandSurface *>();
     if (!surface) {
         qCWarning(APPLICATION_MANAGER, "Unable to access surface property");
         return;
@@ -362,7 +364,7 @@ void ApplicationManager::unregisterShellSurface(QObject *shellSurface)
 
 void ApplicationManager::focusShellSurface(QObject *shellSurface)
 {
-    QWaylandSurface *surface = shellSurface->property("surface").value<QWaylandSurface *>();
+    WaylandSurface *surface = shellSurface->property("surface").value<WaylandSurface *>();
     if (!surface) {
         qCWarning(APPLICATION_MANAGER, "Unable to access surface property");
         return;

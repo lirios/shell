@@ -34,15 +34,11 @@ The following modules and their dependencies are required:
  * [qtaccountsservice](https://github.com/lirios/qtaccountsservice) >= 1.2.0
  * [qtgsettings](https://github.com/lirios/qtgsettings) >= 1.1.0
  * [libliri](https://github.com/lirios/libliri)
- * [liri-eglfs](https://github.com/lirios/eglfs)
- * [liri-wayland](https://github.com/lirios/wayland)
+ * [aurora-compositor](https://github.com/lirios/aurora)
+ * [aurora-client](https://github.com/lirios/aurora-client)
  * [pam](http://www.linux-pam.org/)
  * [polkit-qt5](https://invent.kde.org/libraries/polkit-qt-1)
  * [solid](https://invent.kde.org/frameworks/solid)
-
-Optional dependencies:
-
- * [qml-xwayland](https://github.com/lirios/qml-xwayland.git)
 
 ## Installation
 
@@ -92,6 +88,10 @@ to learn how to enable them.
    * **liri.gtkshell:** Gtk shell support
    * **liri.outputmanagement:** Output management
    * **liri.decoration:** Window decorations
+   * **liri.shell.liricolorpickerv1:** LiriColorPickerV1 Wayland protocol
+   * **liri.shell.lirilockscreenv1:** LiriLockScreenV1 Wayland protocol
+   * **liri.shell.lirimodalv1:** LiriModalV1 Wayland protocol
+   * **liri.shell.lirishellv1:** LiriShellV1 Wayland protocol
 
  * Launcher QML plugin:
    * **liri.launcher:** Launcher model and items

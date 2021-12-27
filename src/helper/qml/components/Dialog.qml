@@ -8,7 +8,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import QtQuick.Controls.impl 2.15
-import Liri.WaylandClient 1.0 as WaylandClient
+import Aurora.Client 1.0 as AuroraClient
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 
@@ -60,7 +60,7 @@ Window {
         hide();
     }
 
-    WaylandClient.LiriModal {
+    AuroraClient.LiriModalV1 {
         id: liriModal
 
         onGrabbedChanged: {
@@ -69,11 +69,11 @@ Window {
         }
     }
 
-    WaylandClient.WlrLayerSurfaceV1 {
+    AuroraClient.WlrLayerSurfaceV1 {
         id: layerSurface
 
-        layer: WaylandClient.WlrLayerSurfaceV1.OverlayLayer
-        keyboardInteractivity: WaylandClient.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
+        layer: AuroraClient.WlrLayerSurfaceV1.OverlayLayer
+        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
         role: "dialog"
     }
 

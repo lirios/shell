@@ -6,14 +6,14 @@
 #define CHROMEITEM_H
 
 #include <QQuickItem>
-#include <QWaylandCompositor>
-#include <QWaylandQuickItem>
+#include <LiriAuroraCompositor/WaylandCompositor>
+#include <LiriAuroraCompositor/WaylandQuickItem>
 
 class ChromeItem : public QQuickItem
 {
     Q_OBJECT
-    Q_PROPERTY(QWaylandCompositor *compositor READ compositor NOTIFY compositorChanged)
-    Q_PROPERTY(QWaylandQuickItem *shellSurfaceItem READ shellSurfaceItem WRITE setShellSurfaceItem NOTIFY shellSurfaceItemChanged)
+    Q_PROPERTY(Aurora::Compositor::WaylandCompositor *compositor READ compositor NOTIFY compositorChanged)
+    Q_PROPERTY(Aurora::Compositor::WaylandQuickItem *shellSurfaceItem READ shellSurfaceItem WRITE setShellSurfaceItem NOTIFY shellSurfaceItemChanged)
     Q_PROPERTY(bool primary READ isPrimary NOTIFY primaryChanged)
 public:
     enum ShellSurfaceType {
@@ -24,10 +24,10 @@ public:
 
     ChromeItem(QQuickItem *parent = nullptr);
 
-    QWaylandCompositor *compositor() const;
+    Aurora::Compositor::WaylandCompositor *compositor() const;
 
-    QWaylandQuickItem *shellSurfaceItem() const;
-    void setShellSurfaceItem(QWaylandQuickItem *item);
+    Aurora::Compositor::WaylandQuickItem *shellSurfaceItem() const;
+    void setShellSurfaceItem(Aurora::Compositor::WaylandQuickItem *item);
 
     bool isPrimary() const;
 
@@ -41,11 +41,11 @@ Q_SIGNALS:
 public Q_SLOTS:
     void raise();
     void lower();
-    void takeFocus(QWaylandSeat *device = nullptr);
+    void takeFocus(Aurora::Compositor::WaylandSeat *device = nullptr);
 
 private:
-    QWaylandCompositor *m_compositor = nullptr;
-    QWaylandQuickItem *m_shellSurfaceItem = nullptr;
+    Aurora::Compositor::WaylandCompositor *m_compositor = nullptr;
+    Aurora::Compositor::WaylandQuickItem *m_shellSurfaceItem = nullptr;
     bool m_primary = false;
 
 private Q_SLOTS:

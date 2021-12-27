@@ -12,7 +12,15 @@
 
 #include <LiriXdg/DesktopFile>
 
-class QWaylandClient;
+namespace Aurora {
+
+namespace Compositor {
+
+class WaylandClient;
+
+} // namespace Compositor
+
+} // namespace Aurora
 
 class ApplicationManager;
 
@@ -159,7 +167,7 @@ Q_SIGNALS:
 
 protected:
     QSet<qint64> m_pids;
-    QVector<QWaylandClient *> m_clients;
+    QVector<Aurora::Compositor::WaylandClient *> m_clients;
 
 private:
     QString m_appId;
@@ -172,7 +180,7 @@ private:
     int m_progress = 0;
     State m_state = NotRunning;
 
-    void addClient(QWaylandClient *client);
+    void addClient(Aurora::Compositor::WaylandClient *client);
 };
 
 QML_DECLARE_TYPE(DesktopFileAction)

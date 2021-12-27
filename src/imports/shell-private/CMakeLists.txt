@@ -5,11 +5,11 @@ set(AUTOMOC_MOC_OPTIONS -Muri=Liri.private.shell)
 if(NOT TARGET Liri::Xdg)
     find_package(Liri1Xdg REQUIRED)
 endif()
-if(NOT TARGET Liri::WaylandServer)
-    find_package(Liri1WaylandServer REQUIRED)
+if(NOT TARGET Liri::AuroraPlatformHeaders)
+    find_package(Liri1AuroraPlatformHeaders REQUIRED)
 endif()
-if(NOT TARGET Liri::PlatformHeaders)
-    find_package(Liri1PlatformHeaders REQUIRED)
+if(NOT TARGET Liri::AuroraCompositor)
+    find_package(Liri1AuroraCompositor REQUIRED)
 endif()
 
 liri_add_qml_plugin(ShellPrivateQmlPlugin
@@ -36,8 +36,6 @@ liri_add_qml_plugin(ShellPrivateQmlPlugin
         fpscounter.h
         hotspot.cpp
         hotspot.h
-        inputsettings.cpp
-        inputsettings.h
         keyeventfilter.cpp
         keyeventfilter.h
         logging.cpp
@@ -49,8 +47,6 @@ liri_add_qml_plugin(ShellPrivateQmlPlugin
         screencast.h
         screenmodel.cpp
         screenmodel.h
-        waylandcompositor.cpp
-        waylandcompositor.h
         waylandcursorgrabber.cpp
         waylandcursorgrabber.h
         windowmousetracker.cpp
@@ -67,10 +63,9 @@ liri_add_qml_plugin(ShellPrivateQmlPlugin
         Qt5::GuiPrivate
         Qt5::Qml
         Qt5::Quick
-        Qt5::WaylandCompositor
         Liri::Xdg
-        Liri::WaylandServer
-        Liri::PlatformHeaders
+        Liri::AuroraPlatformHeaders
+        Liri::AuroraCompositor
     STATIC
 )
 

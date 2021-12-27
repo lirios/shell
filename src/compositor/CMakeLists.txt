@@ -8,17 +8,17 @@ endif()
 if(NOT TARGET Liri::Qt5GSettings)
     find_package(Qt5GSettings REQUIRED)
 endif()
-if(NOT TARGET Liri::PlatformHeaders)
-    find_package(Liri1PlatformHeaders REQUIRED)
-endif()
-if(NOT TARGET Liri::Logind)
-    find_package(Liri1Logind REQUIRED)
+if(NOT TARGET Liri::AuroraPlatformHeaders)
+    find_package(Liri1AuroraPlatformHeaders REQUIRED)
 endif()
 if(NOT TARGET Liri::LocalDevice)
     find_package(Liri1LocalDevice REQUIRED)
 endif()
 if(NOT TARGET Liri::Xdg)
     find_package(Liri1Xdg REQUIRED)
+endif()
+if(NOT TARGET Liri::AuroraCompositor)
+    find_package(Liri1AuroraCompositor REQUIRED)
 endif()
 
 include(LiriCreateGitHeadRevisionFile)
@@ -59,12 +59,11 @@ liri_add_executable(LiriShell
         Qt5::Qml
         Qt5::Quick
         Qt5::QuickControls2
-        Qt5::WaylandCompositor
         Liri::Qt5GSettings
-        Liri::PlatformHeaders
-        Liri::Logind
+        Liri::AuroraPlatformHeaders
         Liri::LocalDevice
         Liri::Xdg
+        Liri::AuroraCompositor
         ShellPrivateQmlPlugin
 )
 

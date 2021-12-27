@@ -2,26 +2,28 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <QWaylandDrag>
-#include <QWaylandOutput>
+#include <LiriAuroraCompositor/WaylandDrag>
+#include <LiriAuroraCompositor/WaylandOutput>
 
 #include "logging.h"
 #include "waylandcursorgrabber.h"
 
+using namespace Aurora::Compositor;
+
 WaylandCursorGrabber::WaylandCursorGrabber(QQuickItem *parent)
-    : QWaylandQuickItem(parent)
+    : WaylandQuickItem(parent)
 {
     setEnabled(false);
     setInputEventsEnabled(false);
     setVisible(false);
 }
 
-QWaylandSeat *WaylandCursorGrabber::seat() const
+WaylandSeat *WaylandCursorGrabber::seat() const
 {
     return m_seat;
 }
 
-void WaylandCursorGrabber::setSeat(QWaylandSeat *seat)
+void WaylandCursorGrabber::setSeat(WaylandSeat *seat)
 {
     if (m_seat == seat)
         return;
@@ -31,16 +33,16 @@ void WaylandCursorGrabber::setSeat(QWaylandSeat *seat)
     }
 
     if (m_dragIconGrabber) {
-        disconnect(m_dragIconGrabber, &QWaylandSurfaceGrabber::success,
+        disconnect(m_dragIconGrabber, &WaylandSurfaceGrabber::success,
                    this, &WaylandCursorGrabber::handleGrab);
         m_dragIconGrabber->deleteLater();
         m_dragIconGrabber = nullptr;
     }
 
     if (m_seat) {
-        disconnect(m_seat->drag(), &QWaylandDrag::iconChanged,
+        disconnect(m_seat->drag(), &WaylandDrag::iconChanged,
                    this, &WaylandCursorGrabber::handleDragIconChanged);
-        disconnect(m_seat, &QWaylandSeat::cursorSurfaceRequest,
+        disconnect(m_seat, &WaylandSeat::cursorSurfaceRequested,
                    this, &WaylandCursorGrabber::handleCursorSurfaceRequest);
         m_seat = nullptr;
     }
@@ -48,13 +50,13 @@ void WaylandCursorGrabber::setSeat(QWaylandSeat *seat)
     m_seat = seat;
     Q_EMIT seatChanged(seat);
 
-    connect(m_seat, &QWaylandSeat::cursorSurfaceRequest,
+    connect(m_seat, &WaylandSeat::cursorSurfaceRequested,
             this, &WaylandCursorGrabber::handleCursorSurfaceRequest);
-    connect(m_seat->drag(), &QWaylandDrag::iconChanged,
+    connect(m_seat->drag(), &WaylandDrag::iconChanged,
             this, &WaylandCursorGrabber::handleDragIconChanged);
 
-    m_dragIconGrabber = new QWaylandSurfaceGrabber(m_seat->drag()->icon());
-    connect(m_dragIconGrabber, &QWaylandSurfaceGrabber::success,
+    m_dragIconGrabber = new WaylandSurfaceGrabber(m_seat->drag()->icon());
+    connect(m_dragIconGrabber, &WaylandSurfaceGrabber::success,
             this, &WaylandCursorGrabber::handleGrab);
 }
 
@@ -81,7 +83,7 @@ void WaylandCursorGrabber::setGrab(bool value)
     }
 }
 
-void WaylandCursorGrabber::handleCursorSurfaceRequest(QWaylandSurface *cursorSurface, int hotspotX, int hotspotY)
+void WaylandCursorGrabber::handleCursorSurfaceRequest(WaylandSurface *cursorSurface, int hotspotX, int hotspotY)
 {
     if (m_hotspotX != hotspotX) {
         m_hotspotX = hotspotX;
@@ -97,23 +99,23 @@ void WaylandCursorGrabber::handleCursorSurfaceRequest(QWaylandSurface *cursorSur
         return;
 
     if (m_grabber) {
-        disconnect(m_grabber, &QWaylandSurfaceGrabber::success,
+        disconnect(m_grabber, &WaylandSurfaceGrabber::success,
                    this, &WaylandCursorGrabber::handleGrab);
         m_grabber->deleteLater();
         m_grabber = nullptr;
     }
 
     if (surface())
-        disconnect(surface(), &QWaylandSurface::redraw,
+        disconnect(surface(), &WaylandSurface::redraw,
                    this, &WaylandCursorGrabber::handleRedraw);
 
     if (cursorSurface) {
         setSurface(cursorSurface);
-        connect(cursorSurface, &QWaylandSurface::redraw,
+        connect(cursorSurface, &WaylandSurface::redraw,
                 this, &WaylandCursorGrabber::handleRedraw);
 
-        m_grabber = new QWaylandSurfaceGrabber(cursorSurface, this);
-        connect(m_grabber, &QWaylandSurfaceGrabber::success,
+        m_grabber = new WaylandSurfaceGrabber(cursorSurface, this);
+        connect(m_grabber, &WaylandSurfaceGrabber::success,
                 this, &WaylandCursorGrabber::handleGrab);
     }
 }

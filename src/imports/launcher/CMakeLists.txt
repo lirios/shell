@@ -4,6 +4,9 @@ endif()
 if(NOT TARGET Liri::Qt5GSettings)
     find_package(Qt5GSettings REQUIRED)
 endif()
+if(NOT TARGET Liri::AuroraCompositor)
+    find_package(Liri1AuroraCompositor REQUIRED)
+endif()
 
 liri_add_qml_plugin(LauncherQmlPlugin
     MODULE_PATH
@@ -42,7 +45,7 @@ liri_add_qml_plugin(LauncherQmlPlugin
         Qt5::DBus
         Qt5::Xml
         Qt5::Sql
-        Qt5::WaylandCompositor
+        Liri::AuroraCompositor
         Liri::Xdg
         Liri::Qt5GSettings
 )

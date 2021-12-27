@@ -2,9 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <QWaylandOutput>
+#include <LiriAuroraCompositor/WaylandOutput>
 
 #include "chromeitem.h"
+
+using namespace Aurora::Compositor;
 
 ChromeItem::ChromeItem(QQuickItem *parent)
     : QQuickItem(parent)
@@ -13,17 +15,17 @@ ChromeItem::ChromeItem(QQuickItem *parent)
     connect(this, &ChromeItem::yChanged, this, &ChromeItem::updatePrimary);
 }
 
-QWaylandCompositor *ChromeItem::compositor() const
+WaylandCompositor *ChromeItem::compositor() const
 {
     return m_compositor;
 }
 
-QWaylandQuickItem *ChromeItem::shellSurfaceItem() const
+WaylandQuickItem *ChromeItem::shellSurfaceItem() const
 {
     return m_shellSurfaceItem;
 }
 
-void ChromeItem::setShellSurfaceItem(QWaylandQuickItem *item)
+void ChromeItem::setShellSurfaceItem(WaylandQuickItem *item)
 {
     if (m_shellSurfaceItem == item)
         return;
@@ -52,8 +54,8 @@ QPointF ChromeItem::randomPosition(const QPointF &mousePos) const
     // Find the output where the pointer is located, defaults
     // to the default output
     // TODO: Need something clever for touch?
-    QWaylandOutput *output = m_compositor->defaultOutput();
-    for (QWaylandOutput *curOutput : m_compositor->outputs()) {
+    WaylandOutput *output = m_compositor->defaultOutput();
+    for (WaylandOutput *curOutput : m_compositor->outputs()) {
         if (curOutput->geometry().contains(mousePos.toPoint())) {
             output = curOutput;
             break;
@@ -103,7 +105,7 @@ void ChromeItem::lower()
         stackBefore(bottom);
 }
 
-void ChromeItem::takeFocus(QWaylandSeat *device)
+void ChromeItem::takeFocus(WaylandSeat *device)
 {
     if (m_shellSurfaceItem)
         m_shellSurfaceItem->takeFocus(device);

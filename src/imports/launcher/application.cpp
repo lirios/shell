@@ -11,9 +11,12 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
-#include <QtWaylandCompositor/QWaylandClient>
+
+#include <LiriAuroraCompositor/WaylandClient>
 
 #include "applicationmanager.h"
+
+using namespace Aurora::Compositor;
 
 // Applications have 5 seconds to start up before the start animation ends
 #define MAX_APPLICATION_STARTUP_TIME (5 * 1000)
@@ -159,7 +162,7 @@ bool Application::quit()
     if (!isRunning())
         return false;
 
-    for (QWaylandClient *client : qAsConst(m_clients)) {
+    for (WaylandClient *client : qAsConst(m_clients)) {
         m_pids.remove(client->processId());
         client->close();
     }
@@ -168,9 +171,9 @@ bool Application::quit()
     return true;
 }
 
-void Application::addClient(QWaylandClient *client)
+void Application::addClient(WaylandClient *client)
 {
-    auto it = std::find_if(m_clients.begin(), m_clients.end(), [client](const QWaylandClient *item) {
+    auto it = std::find_if(m_clients.begin(), m_clients.end(), [client](const WaylandClient *item) {
         return item->processId() == client->processId();
     });
 

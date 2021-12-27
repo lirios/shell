@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
-import QtWayland.Compositor 1.15
+import Aurora.Compositor 1.0
 import QtGSettings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
 import Liri.private.shell 1.0 as P
@@ -57,16 +57,22 @@ FluidCore.Object {
      * Keymap
      */
 
-    P.InputSettings {
-        compositor: liriCompositor
-        keyboardRepeatRate: keyboardSettings.repeatRate
-        keyboardRepeatDelay: keyboardSettings.repeatDelay
-    }
-
     Settings.GSettings {
         id: keyboardSettings
         schema.id: "io.liri.desktop.peripherals.keyboard"
         schema.path: "/io/liri/desktop/peripherals/keyboard/"
+    }
+
+    Binding {
+        target: liriCompositor.defaultSeat ? liriCompositor.defaultSeat.keyboard : null
+        property: "repeatRate"
+        value: keyboardSettings.repeatRate
+    }
+
+    Binding {
+        target: liriCompositor.defaultSeat ? liriCompositor.defaultSeat.keyboard : null
+        property: "repeatDelay"
+        value: keyboardSettings.repeatDelay
     }
 
     /*

@@ -17,54 +17,12 @@
 #include "extensionsmodel.h"
 #include "fpscounter.h"
 #include "hotspot.h"
-#include "inputsettings.h"
 #include "keyeventfilter.h"
 #include "quickoutput.h"
 #include "screencast.h"
 #include "screenmodel.h"
-#include "waylandcompositor.h"
 #include "waylandcursorgrabber.h"
 #include "windowmousetracker.h"
-
-#ifndef Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS
-#define Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(className) \
-    class Q_WAYLAND_COMPOSITOR_EXPORT className##QuickParent : public className \
-    { \
-/* qmake ignore Q_OBJECT */ \
-        Q_OBJECT \
-        Q_PROPERTY(QQmlListProperty<QObject> data READ data DESIGNABLE false) \
-        Q_CLASSINFO("DefaultProperty", "data") \
-    public: \
-        QQmlListProperty<QObject> data() \
-        { \
-            return QQmlListProperty<QObject>(this, this, \
-                                             &className##QuickParent::appendFunction, \
-                                             &className##QuickParent::countFunction, \
-                                             &className##QuickParent::atFunction, \
-                                             &className##QuickParent::clearFunction); \
-        } \
-        static void appendFunction(QQmlListProperty<QObject> *list, QObject *object) \
-        { \
-            static_cast<className##QuickParent *>(list->data)->m_children.append(object); \
-        } \
-        static int countFunction(QQmlListProperty<QObject> *list) \
-        { \
-            return static_cast<className##QuickParent *>(list->data)->m_children.size(); \
-        } \
-        static QObject *atFunction(QQmlListProperty<QObject> *list, int index) \
-        { \
-            return static_cast<className##QuickParent *>(list->data)->m_children.at(index); \
-        } \
-        static void clearFunction(QQmlListProperty<QObject> *list) \
-        { \
-            static_cast<className##QuickParent *>(list->data)->m_children.clear(); \
-        } \
-    private: \
-        QVector<QObject *> m_children; \
-    };
-#endif
-
-Q_COMPOSITOR_DECLARE_QUICK_PARENT_CLASS(WaylandCompositor)
 
 class ShellPrivatePlugin : public QQmlExtensionPlugin
 {
@@ -88,7 +46,6 @@ public:
         qmlRegisterType<ExtensionsModel>(uri, versionMajor, versionMinor, "ExtensionsModel");
         qmlRegisterType<FpsCounter>(uri, versionMajor, versionMinor, "FpsCounter");
         qmlRegisterType<HotSpot>(uri, versionMajor, versionMinor, "HotSpot");
-        qmlRegisterType<InputSettings>(uri, versionMajor, versionMinor, "InputSettings");
         qmlRegisterType<KeyEventFilter>(uri, versionMajor, versionMinor, "KeyEventFilter");
         qmlRegisterType<QuickOutput>(uri, versionMajor, versionMinor, "WaylandOutput");
         qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
@@ -97,7 +54,6 @@ public:
                                                QStringLiteral("Cannot create instance of ScreenMode"));
         qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
                                                QStringLiteral("Cannot create instance of ScreenItem"));
-        qmlRegisterType<WaylandCompositorQuickParent>(uri, versionMajor, versionMinor, "WaylandCompositor");
         qmlRegisterType<WaylandCursorGrabber>(uri, versionMajor, versionMinor, "WaylandCursorGrabber");
         qmlRegisterType<WindowMouseTracker>(uri, versionMajor, versionMinor, "WindowMouseTracker");
 

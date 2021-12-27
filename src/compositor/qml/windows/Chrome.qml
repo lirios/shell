@@ -3,11 +3,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
-import QtWayland.Compositor 1.15
+import Aurora.Compositor 1.0
 import QtGraphicalEffects 1.15
 import Fluid.Effects 1.0 as FluidEffects
-import Liri.XWayland 1.0
-import Liri.WaylandServer 1.0 as WS
+import Aurora.Compositor.XWayland 1.0
 import Liri.private.shell 1.0 as P
 
 P.ChromeItem {
