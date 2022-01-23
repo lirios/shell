@@ -144,6 +144,7 @@ void InputRegion::setInputRegion()
         QRegion region;
         for (auto *r : qAsConst(m_rects))
             region += r->rect().toRect();
+        qCDebug(lcShellHelper) << "Set input region to:" << region;
         m_window->setMask(region);
     }
 }
