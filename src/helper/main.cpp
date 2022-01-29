@@ -8,8 +8,6 @@
 
 #include "authenticator.h"
 #include "gitsha1.h"
-#include "inputregion.h"
-#include "shellhelperlogging_p.h"
 
 #if HAVE_SYS_PRCTL_H
 #include <sys/prctl.h>
@@ -21,8 +19,6 @@
 #endif
 
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
-
-Q_LOGGING_CATEGORY(lcShellHelper, "liri.shell.helper", QtInfoMsg)
 
 static void disablePtrace()
 {
@@ -106,8 +102,6 @@ int main(int argc, char *argv[])
                                             [](QQmlEngine *, QJSEngine *) -> QObject * {
         return new Authenticator();
     });
-    qmlRegisterType<InputRegion>("Liri.ShellHelper", 1, 0, "InputRegion");
-    qmlRegisterType<Rect>("Liri.ShellHelper", 1, 0, "Rect");
 
     // Create UI
     QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);

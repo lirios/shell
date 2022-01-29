@@ -8,7 +8,6 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Liri.WaylandClient 1.0 as WaylandClient
-import Liri.ShellHelper 1.0 as ShellHelper
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 
@@ -36,11 +35,14 @@ Window {
         role: "notifications"
     }
 
-    ShellHelper.InputRegion {
-        rects: ShellHelper.Rect {
-            width: listView.count > 0 ? notificationWindow.width : 1
-            height: listView.count > 0 ? notificationWindow.height : 1
-        }
+    FluidControls.InputRegion {
+        id: inputRegion
+    }
+
+    FluidControls.InputArea {
+        region: inputRegion
+        width: listView.count > 0 ? listView.width : 1
+        height: listView.count > 0 ? listView.height : 1
     }
 
     ListView {

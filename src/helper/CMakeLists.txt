@@ -20,8 +20,6 @@ liri_add_executable(LiriShellHelper
     SOURCES
         authenticator.cpp authenticator.h
         main.cpp
-        inputregion.cpp inputregion.h
-        shellhelperlogging_p.h
     RESOURCES
         "helper.qrc"
     DEFINES

@@ -8,7 +8,6 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Liri.WaylandClient 1.0 as WaylandClient
-import Liri.ShellHelper 1.0 as ShellHelper
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 
@@ -33,10 +32,16 @@ Window {
         role: "osd"
     }
 
-    ShellHelper.InputRegion {
+    FluidControls.InputRegion {
+        id: inputRegion
+    }
+
+    FluidControls.InputArea {
         // Apparently a null region is not set by QtWayland, so we have to
         // set a 1x1 rectangle that is so small that is never going to be noticed
-        rects: ShellHelper.Rect { width: 1; height: 1 }
+        region: inputRegion
+        width: 1
+        height: 1
     }
 
     Timer {
