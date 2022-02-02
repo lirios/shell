@@ -13,6 +13,7 @@ WlrLayerSurfaceItem {
     signal createAnimationFinished()
     signal destroyAnimationFinished()
 
+    focusOnClick: layerSurface && layerSurface.keyboardInteractivity === WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
     opacity: 0.0
     visible: layerSurface.mapped && layerSurface.configured
 
@@ -36,9 +37,6 @@ WlrLayerSurfaceItem {
                 opacity = 1.0;
                 createAnimationFinished();
             }
-
-            if (layerSurface.keyboardInteractivity > WlrLayerSurfaceV1.NoKeyboardInteractivity)
-                takeFocus();
         }
     }
 
