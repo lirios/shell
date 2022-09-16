@@ -20,5 +20,5 @@ jobs:
   build:
     uses: lirios/.github/.github/workflows/build-linux.yml@master
     with:
-      dependencies: "umockdev-devel libpolkit-qt5-1-devel"
+      dependencies: "umockdev-devel libpolkit-qt5-1-devel solid-devel"
       build_dependencies: "cmake-shared:qtaccountsservice:qtgsettings:qtudev:fluid:libliri:eglfs:wayland"
