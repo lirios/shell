@@ -18,4 +18,4 @@ jobs:
   build:
     uses: lirios/.github/.github/workflows/build-linux.yml@master
     with:
-      build_dependencies: "cmake-shared;qtaccountsservice;qtgsettings;qtudev;fluid;libliri;eglfs;wayland"
+      build_dependencies: "cmake-shared:qtaccountsservice:qtgsettings:qtudev:fluid:libliri:eglfs:wayland"
