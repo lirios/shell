@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+#
+# SPDX-License-Identifier: CC0-1.0
+
 name: CI
 
 on:
@@ -5,60 +9,16 @@ on:
     branches:
       - master
       - develop
+    tags:
+      - v*
   pull_request:
     branches:
       - master
       - develop
 
-env:
-  CLAZY_CHECKS: "level1"
-
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, 'ci skip')"
-    strategy:
-      matrix:
-        compiler:
-          - gcc
-          - clang
-        container:
-          - suse-qt515
-    runs-on: ubuntu-latest
-    container:
-      image: liridev/${{ matrix.container }}
-    steps:
-      - name: Extract branch name
-        id: extract_branch
-        shell: bash
-        run: |
-          if [ -n "${{ github.base_ref }}" ]; then
-            echo "##[set-output name=branch;]${{ github.base_ref }}"
-          else
-            github_ref=${{ github.ref }}
-            echo "##[set-output name=branch;]${github_ref##*/}"
-          fi
-      - name: Qt version identifier
-        id: qt_version
-        shell: bash
-        run: |
-          qtverid=`echo "${{ matrix.container }}" | sed -e 's,suse-qt,,g'`
-          echo "##[set-output name=id;]${qtverid}"
-      - uses: actions/checkout@v2
-      - name: Build dependencies
-        run: |
-          set -x
-          ./.github/workflows/scripts/build-deps ${{ steps.extract_branch.outputs.branch }}
-      - name: Build
-        run: |
-          set -x
-          mkdir -p build
-          cd build
-          if [ "${{ matrix.compiler }}" == "clang" ]; then
-            export CC=clang
-            export CXX=clang++
-            cmake .. -DLIRI_ENABLE_CLAZY:BOOL=ON -DCMAKE_INSTALL_PREFIX=/usr
-          else
-            cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-          fi
-          make -j $(getconf _NPROCESSORS_ONLN)
-          sudo make install
+    uses: lirios/.github/.github/workflows/build-linux.yml@master
+    with:
+      dependencies: "umockdev-devel libpolkit-qt5-1-devel solid-devel"
+      build_dependencies: "cmake-shared:qtaccountsservice:qtgsettings:qtudev:fluid:libliri:eglfs:wayland"
