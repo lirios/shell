@@ -42,7 +42,7 @@ P.ChromeItem {
     width: shellSurfaceWidth + frameMarginLeft + frameMarginRight
     height: shellSurfaceHeight + frameMarginTop + frameMarginBottom
 
-    enabled: !chrome.output.locked && !liriCompositor.showModalOverlay
+    enabled: !liriCompositor.showModalOverlay
 
     transform: [
         Scale {

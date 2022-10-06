@@ -10,32 +10,35 @@ import Fluid.Controls 1.0 as FluidControls
 WlrLayerSurfaceItem {
     id: layerSurfaceItem
 
+    property bool createAnimationEnabled: true
+
     signal createAnimationFinished()
     signal destroyAnimationFinished()
 
     focusOnClick: layerSurface && layerSurface.keyboardInteractivity === WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
     opacity: 0.0
-    visible: layerSurface.mapped && layerSurface.configured
+    //visible: layerSurface.mapped && layerSurface.configured
 
     onSurfaceDestroyed: {
         bufferLocked = true;
         if (layerSurface.nameSpace === "dialog")
             shrinkFadeOutAnimation.start();
-        else if (layerSurface.nameSpace === "lockscreen")
-            lockScreenExitAnimation.start();
         else
             destroyAnimationFinished();
     }
 
-    onVisibleChanged: {
-        if (visible) {
-            if (layerSurface.nameSpace === "dialog")
-                growFadeInAnimation.start();
-            else if (layerSurface.nameSpace === "lockscreen")
-                lockScreenEnterAnimation.start();
-            else {
-                opacity = 1.0;
-                createAnimationFinished();
+    Connections {
+        target: shellSurface.surface
+
+        function onHasContentChanged() {
+            // Animate create the first time the surface is mapped
+            if (shellSurface.surface.hasContent && createAnimationEnabled) {
+                if (layerSurface.nameSpace === "dialog")
+                    growFadeInAnimation.start();
+                else {
+                    opacity = 1.0;
+                    createAnimationFinished();
+                }
             }
         }
     }
@@ -82,6 +85,9 @@ WlrLayerSurfaceItem {
 
         ScriptAction {
             script: {
+                // Never show the creation animation again
+                createAnimationEnabled = false;
+
                 createAnimationFinished();
             }
         }
@@ -113,74 +119,6 @@ WlrLayerSurfaceItem {
 
         ScriptAction {
             script: {
-                destroyAnimationFinished();
-            }
-        }
-    }
-
-    SequentialAnimation {
-        id: lockScreenEnterAnimation
-
-        alwaysRunToEnd: true
-
-        SequentialAnimation {
-            PauseAnimation { duration: 80 }
-
-            ParallelAnimation {
-                NumberAnimation {
-                    target: layerSurfaceItem
-                    property: "opacity"
-                    from: 0.0
-                    to: 1.0
-                    easing.type: Easing.Linear
-                    duration: 153
-                }
-                NumberAnimation {
-                    target: layerSurfaceItem
-                    property: "y"
-                    from: -height + (height * 1.05)
-                    to: 0
-                    easing.type: Easing.Bezier
-                    easing.bezierCurve: [0.4,0,0.2,1,1,1]
-                    duration: 153
-                }
-            }
-        }
-
-        ScriptAction {
-            script: {
-                createAnimationFinished();
-            }
-        }
-    }
-
-    SequentialAnimation {
-        id: lockScreenExitAnimation
-
-        alwaysRunToEnd: true
-
-        ParallelAnimation {
-            NumberAnimation {
-                target: layerSurfaceItem
-                property: "scale"
-                from: 1.0
-                to: 1.1
-                easing.type: Easing.InQuint
-                duration: FluidControls.Units.shortDuration
-            }
-            NumberAnimation {
-                target: layerSurfaceItem
-                property: "opacity"
-                from: 1.0
-                to: 0.0
-                easing.type: Easing.InQuad
-                duration: FluidControls.Units.shortDuration
-            }
-        }
-
-        ScriptAction {
-            script: {
-                layerSurface.close();
                 destroyAnimationFinished();
             }
         }

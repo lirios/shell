@@ -14,13 +14,14 @@ find_package(PAM REQUIRED)
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
-liri_add_executable(LiriShellHelper
+liri_add_executable(LiriShellLockscreen
     OUTPUT_NAME
-        "liri-shell-helper"
+        "liri-shell-lockscreen"
     SOURCES
+        authenticator.cpp authenticator.h
         main.cpp
     RESOURCES
-        "helper.qrc"
+        "lockscreen.qrc"
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
@@ -37,17 +38,17 @@ liri_add_executable(LiriShellHelper
         ${PAM_LIBRARIES}
 )
 
-liri_extend_target("LiriShellHelper"
+liri_extend_target("LiriShellLockscreen"
     CONDITION FEATURE_liri_development_build
     DEFINES DEVELOPMENT_BUILD)
 
-liri_extend_target("LiriShellHelper"
+liri_extend_target("LiriShellLockscreen"
     CONDITION HAVE_SYS_PRCTL_H
     DEFINES HAVE_SYS_PRCTL_H)
 
-liri_extend_target("LiriShellHelper"
+liri_extend_target("LiriShellLockscreen"
     CONDITION FEATURE_enable_systemd
     DEFINES HAVE_SYSTEMD
     LIBRARIES PkgConfig::Libsystemd)
 
-liri_finalize_executable("LiriShellHelper")
+liri_finalize_executable("LiriShellLockscreen")

@@ -13,8 +13,8 @@ import Fluid.Controls 1.0 as FluidControls
 Window {
     id: outputWindow
 
+    readonly property alias lockSurfacesModel: lockSurfacesModel
     readonly property alias layerSurfacesModel: layerSurfacesModel
-
     readonly property alias currentWorkspace: workspacesView.currentWorkspace
 
     readonly property alias splashVisible: splash.visible
@@ -141,6 +141,22 @@ Window {
                 objectName: "workspaces"
             }
 
+            // Lock surfaces
+            Repeater {
+                model: ListModel {
+                    id: lockSurfacesModel
+                }
+
+                LockScreenItem {
+                    objectName: "lockscreen"
+                    shellSurface: model.lockSurface
+
+                    onDestroyAnimationFinished: {
+                        lockSurfacesModel.remove(index);
+                    }
+                }
+            }
+
             // Layer surfaces
             Repeater {
                 model: ListModel {
@@ -150,18 +166,6 @@ Window {
                 LayerSurfaceItem {
                     layerSurface: model.layerSurface
                     output: model.output
-
-                    onCreateAnimationFinished: {
-                        if (layerSurface.nameSpace === "lockscreen") {
-                            // Make sure all surfaces are hidden
-                            output.locked = true;
-
-                            // FIXME: Before suspend we lock the screen, but turning the output off has a side effect:
-                            // when the system is resumed it won't flip so we comment this out but unfortunately
-                            // it means that the lock screen will not turn off the screen
-                            //output.idle();
-                        }
-                    }
 
                     onDestroyAnimationFinished: {
                         layerSurfacesModel.remove(index);
@@ -227,6 +231,12 @@ Window {
         // Bottom-right corner
         HotCorner {
             corner: Qt.BottomRightCorner
+        }
+
+        // Hide the other surfaces, just in case the session locker crashes
+        SessionLocker {
+            anchors.fill: parent
+            visible: sessionLockManager.locked && !sessionLockManager.hasClientConnected
         }
 
         // Idle dimmer

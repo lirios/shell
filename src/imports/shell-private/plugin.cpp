@@ -15,6 +15,7 @@
 #include "chromeitem.h"
 #include "desktoplayout.h"
 #include "fpscounter.h"
+#include "helperlauncher.h"
 #include "hotspot.h"
 #include "keyeventfilter.h"
 #include "quickoutput.h"
@@ -43,6 +44,7 @@ public:
         qmlRegisterType<ChromeItem>(uri, versionMajor, versionMinor, "ChromeItem");
         qmlRegisterType<DesktopLayout>(uri, versionMajor, versionMinor, "DesktopLayout");
         qmlRegisterType<FpsCounter>(uri, versionMajor, versionMinor, "FpsCounter");
+        qmlRegisterType<HelperLauncher>(uri, versionMajor, versionMinor, "HelperLauncher");
         qmlRegisterType<HotSpot>(uri, versionMajor, versionMinor, "HotSpot");
         qmlRegisterType<KeyEventFilter>(uri, versionMajor, versionMinor, "KeyEventFilter");
         qmlRegisterType<QuickOutput>(uri, versionMajor, versionMinor, "WaylandOutput");

@@ -1,3 +1,9 @@
+if(IS_ABSOLUTE "${INSTALL_LIBEXECDIR}")
+    set(LIBEXECDIR "${INSTALL_LIBEXECDIR}")
+else()
+    set(LIBEXECDIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBEXECDIR}")
+endif()
+
 find_package(Wayland REQUIRED)
 
 set(AUTOMOC_MOC_OPTIONS -Muri=Liri.private.shell)
@@ -32,6 +38,7 @@ liri_add_qml_plugin(ShellPrivateQmlPlugin
         desktoplayout.cpp desktoplayout.h
         fpscounter.cpp
         fpscounter.h
+        helperlauncher.cpp helperlauncher.h
         hotspot.cpp
         hotspot.h
         keyeventfilter.cpp
@@ -54,6 +61,7 @@ liri_add_qml_plugin(ShellPrivateQmlPlugin
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
+        LIBEXECDIR="${LIBEXECDIR}"
     PUBLIC_LIBRARIES
         Qt5::Core
         Qt5::DBus

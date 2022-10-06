@@ -17,11 +17,7 @@ DesktopLayout::SurfaceRole DesktopLayout::getSurfaceRole(QQuickItem *item) const
     static const QHash<QString, DesktopLayout::SurfaceRole> namespaceToRole {
         { QStringLiteral("notifications"), DesktopLayout::NotificationRole },
         { QStringLiteral("osd"), DesktopLayout::OsdRole },
-        { QStringLiteral("fullscreen"), DesktopLayout::FullscreenRole },
         { QStringLiteral("window-switcher"), DesktopLayout::WindowSwitcherRole },
-        { QStringLiteral("modal-overlay"), DesktopLayout::ModalOverlayRole },
-        { QStringLiteral("dialog"), DesktopLayout::DialogRole },
-        { QStringLiteral("lockscreen"), DesktopLayout::LockscreenRole },
     };
     if (auto *l = qobject_cast<WaylandWlrLayerSurfaceItem *>(item))
         return namespaceToRole.value(l->layerSurface()->nameSpace().toLower(), DesktopLayout::NoRole);
@@ -29,26 +25,32 @@ DesktopLayout::SurfaceRole DesktopLayout::getSurfaceRole(QQuickItem *item) const
         return namespaceToRole.value(item->objectName().toLower(), DesktopLayout::NoRole);
 }
 
-WaylandSurfaceLayout::Layer DesktopLayout::getLayer(QQuickItem *item) const
+DesktopLayout::Layer DesktopLayout::getLayer(QQuickItem *item) const
 {
-    static const QHash<WaylandWlrLayerShellV1::Layer, WaylandSurfaceLayout::Layer> layerToIndex {
-        { WaylandWlrLayerShellV1::BackgroundLayer, WaylandSurfaceLayout::BackgroundLayer },
-        { WaylandWlrLayerShellV1::BottomLayer, WaylandSurfaceLayout::BottomLayer },
-        { WaylandWlrLayerShellV1::TopLayer, WaylandSurfaceLayout::TopLayer },
-        { WaylandWlrLayerShellV1::OverlayLayer, WaylandSurfaceLayout::OverlayLayer },
+    static const QHash<WaylandWlrLayerShellV1::Layer, DesktopLayout::Layer> layerToIndex {
+        { WaylandWlrLayerShellV1::BackgroundLayer, DesktopLayout::BackgroundLayer },
+        { WaylandWlrLayerShellV1::BottomLayer, DesktopLayout::BottomLayer },
+        { WaylandWlrLayerShellV1::TopLayer, DesktopLayout::TopLayer },
+        { WaylandWlrLayerShellV1::OverlayLayer, DesktopLayout::OverlayLayer },
     };
 
     if (auto *l = qobject_cast<WaylandWlrLayerSurfaceItem *>(item))
-        return layerToIndex.value(l->layerSurface()->layer(), WaylandSurfaceLayout::NoLayer);
+        return layerToIndex.value(l->layerSurface()->layer(), DesktopLayout::NoLayer);
     else if (item->objectName() == QStringLiteral("workspaces"))
-        return WaylandSurfaceLayout::WindowsLayer;
+        return DesktopLayout::WindowsLayer;
     else if (item->objectName() == QStringLiteral("shell"))
-        return WaylandSurfaceLayout::TopLayer;
+        return DesktopLayout::TopLayer;
     else if (item->objectName() == QStringLiteral("fullscreen"))
-        return WaylandSurfaceLayout::OverlayLayer;
-    else if (item->objectName() == QStringLiteral("windowSwitcher"))
-        return WaylandSurfaceLayout::OverlayLayer;
-    return WaylandSurfaceLayout::NoLayer;
+        return DesktopLayout::FullscreenLayer;
+    else if (item->objectName() == QStringLiteral("modal-overlay"))
+        return DesktopLayout::ModalOverlayLayer;
+    else if (item->objectName() == QStringLiteral("dialog"))
+        return DesktopLayout::DialogLayer;
+    else if (item->objectName() == QStringLiteral("lockscreen"))
+        return DesktopLayout::LockScreenLayer;
+    else if (item->objectName() == QStringLiteral("window-switcher"))
+        return DesktopLayout::OverlayLayer;
+    return DesktopLayout::NoLayer;
 }
 
 bool DesktopLayout::sortItems(QQuickItem *left, QQuickItem *right)
