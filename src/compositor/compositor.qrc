@@ -39,5 +39,7 @@
         <file>qml/desktop/OutputWindow.qml</file>
         <file>qml/desktop/Flash.qml</file>
         <file>qml/desktop/ModalOverlay.qml</file>
+        <file>qml/desktop/LockScreenItem.qml</file>
+        <file>qml/desktop/SessionLocker.qml</file>
     </qresource>
 </RCC>

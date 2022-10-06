@@ -7,6 +7,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtGSettings 1.0 as Settings
 import Aurora.Client 1.0 as AuroraClient
+import Liri.Session 1.0 as Session
 import Liri.PolicyKit 1.0 as Polkit
 
 Item {
@@ -64,14 +65,6 @@ Item {
         }
     }
 
-    AuroraClient.LiriLockScreenV1 {
-        id: lockScreen
-
-        onLockRequested: {
-            lockScreenInstantiator.active = true;
-        }
-    }
-
     TopLayerWindow {
         id: topLayerWindow
 
@@ -81,6 +74,7 @@ Item {
             logoutDialog.show();
         }
         onLockRequested: {
+            Session.SessionManager.lock();
         }
         onShutdownRequested: {
             powerOffDialog.show();
@@ -124,17 +118,6 @@ Item {
     }
 
     NotificationsManager {}
-
-    Instantiator {
-        id: lockScreenInstantiator
-
-        active: false
-        model: Qt.application.screens
-
-        LockScreenWindow {
-            screen: modelData
-        }
-    }
 
     /*
      * PolicyKit

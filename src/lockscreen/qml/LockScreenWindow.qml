@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2021 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+// SPDX-FileCopyrightText: 2022 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,12 +10,16 @@ import QtGSettings 1.0 as Settings
 import QtAccountsService 1.0 as AccountsService
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
-import Aurora.Client 1.0 as AuroraClient
 import Liri.Shell 1.0
-import Liri.ShellHelper 1.0 as ShellHelper
+import Liri.Shell.Client 1.0
+import Aurora.Client 1.0 as AuroraClient
 
 Window {
     id: lockScreenWindow
+
+    AuroraClient.ExtSessionLockSurfaceV1 {
+        id: lockSurface
+    }
 
     color: lockSettings.primaryColor
     visible: true
@@ -25,17 +29,6 @@ Window {
 
         schema.id: "io.liri.desktop.lockscreen"
         schema.path: "/io/liri/desktop/lockscreen/"
-    }
-
-    AuroraClient.WlrLayerSurfaceV1 {
-        layer: AuroraClient.WlrLayerSurfaceV1.OverlayLayer
-        anchors: AuroraClient.WlrLayerSurfaceV1.TopAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.BottomAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.LeftAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.RightAnchor
-        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
-        exclusiveZone: -1
-        role: "lockscreen"
     }
 
     Loader {
@@ -144,12 +137,11 @@ Window {
             }
         }
         onLoginRequested: {
-            ShellHelper.Authenticator.authenticate(password, function(succeeded) {
+            Authenticator.authenticate(password, function(succeeded) {
                 if (succeeded) {
                     usersListView.currentItem.busyIndicator.opacity = 0.0;
                     usersListView.loginSucceeded();
-                    lockScreen.unlock();
-                    lockScreenInstantiator.active = false;
+                    lockSurface.unlockRequested();
                 } else {
                     usersListView.currentItem.busyIndicator.opacity = 0.0;
                     usersListView.currentItem.field.text = "";

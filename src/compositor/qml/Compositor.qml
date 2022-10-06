@@ -7,6 +7,7 @@ import QtQml 2.1
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import Aurora.Compositor 1.0
+import Aurora.Compositor.Ext 1.0
 import Aurora.Compositor.Liri 1.0
 import Aurora.Compositor.Wlroots 1.0
 import Aurora.Compositor.WlrLayerShell 1.0
@@ -63,8 +64,8 @@ WaylandCompositor {
         target: Session.SessionManager
 
         function onSessionLocked() {
-            // Ask the client to show the lock screen
-            lockScreen.requestLock();
+            // Run the session locker process
+            sessionLockerProcess.start();
         }
 
         function onIdleInhibitRequested() {
@@ -204,6 +205,21 @@ WaylandCompositor {
 
     // Liri shell
 
+    P.HelperLauncher {
+        id: shellProcess
+
+        helper: P.HelperLauncher.Shell
+        socketName: liriCompositor.socketName
+        running: liriCompositor.created
+    }
+
+    P.HelperLauncher {
+        id: sessionLockerProcess
+
+        helper: P.HelperLauncher.SessionLocker
+        socketName: liriCompositor.socketName
+    }
+
     LiriShellV1 {
         id: shellHelper
 
@@ -258,11 +274,15 @@ WaylandCompositor {
         }
     }
 
-    LiriLockScreenV1 {
-        id: lockScreen
+    // Session lock manager
 
-        onUnlocked: {
-            Session.SessionManager.unlock();
+    ExtSessionLockManagerV1 {
+        id: sessionLockManager
+
+        focusPolicy: ExtSessionLockManagerV1.AutomaticFocus
+
+        onLockSurfaceCreated: {
+            lockSurface.output.lockSurfacesModel.append({lockSurface: lockSurface});
         }
     }
 

@@ -8,7 +8,6 @@
 #include <LiriAuroraCompositor/WaylandQuickExtension>
 
 #include "waylandliricolorpickerv1_p.h"
-#include "waylandlirilockscreenv1.h"
 #include "waylandlirimodalv1.h"
 #include "waylandlirishellv1.h"
 
@@ -17,7 +16,6 @@ namespace Aurora {
 namespace Compositor {
 
 AURORA_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(WaylandLiriColorPickerManagerV1);
-AURORA_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(WaylandLiriLockScreenV1);
 AURORA_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(WaylandLiriModalManagerV1);
 AURORA_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(WaylandLiriShellV1);
 AURORA_COMPOSITOR_DECLARE_QUICK_EXTENSION_CLASS(WaylandLiriOsdV1);
@@ -38,8 +36,6 @@ public:
         qmlRegisterModule(uri, 1, 0);
 
         qmlRegisterType<WaylandLiriColorPickerManagerV1QuickExtension>(uri, 1, 0, "LiriColorPickerManagerV1");
-
-        qmlRegisterType<WaylandLiriLockScreenV1QuickExtension>(uri, 1, 0, "LiriLockScreenV1");
 
         qmlRegisterType<WaylandLiriModalManagerV1QuickExtension>(uri, 1, 0, "LiriModalManagerV1");
 

@@ -14,12 +14,11 @@ P.WaylandOutput {
     id: output
 
     readonly property bool primary: liriCompositor.defaultOutput === this
-    property bool locked: false
 
     property var viewsBySurface: ({})
 
+    readonly property alias lockSurfacesModel: outputWindow.lockSurfacesModel
     readonly property alias layerSurfacesModel: outputWindow.layerSurfacesModel
-
     readonly property alias currentWorkspace: outputWindow.currentWorkspace
 
     property alias showFps: outputWindow.showFps
@@ -38,14 +37,6 @@ P.WaylandOutput {
 
     window: OutputWindow {
         id: outputWindow
-    }
-
-    Connections {
-        target: Session.SessionManager
-
-        function onSessionUnlocked() {
-            output.locked = false;
-        }
     }
 
     /*

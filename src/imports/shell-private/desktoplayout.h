@@ -15,22 +15,32 @@ class DesktopLayout : public WaylandSurfaceLayout
 public:
     enum SurfaceRole {
         NoRole = 0,
-        NotificationRole,
         OsdRole,
-        FullscreenRole,
+        NotificationRole,
         WindowSwitcherRole,
-        ModalOverlayRole,
-        DialogRole,
-        LockscreenRole,
     };
     Q_ENUM(SurfaceRole)
+
+    enum Layer {
+        NoLayer = 0,
+        BackgroundLayer,
+        BottomLayer,
+        WindowsLayer,
+        TopLayer,
+        ModalOverlayLayer,
+        DialogLayer,
+        FullscreenLayer,
+        LockScreenLayer,
+        OverlayLayer
+    };
+    Q_ENUM(Layer);
 
     DesktopLayout(QQuickItem *parent = nullptr);
 
     SurfaceRole getSurfaceRole(QQuickItem *item) const;
 
 protected:
-    WaylandSurfaceLayout::Layer getLayer(QQuickItem *item) const override;
+    Layer getLayer(QQuickItem *item) const;
     bool sortItems(QQuickItem *left, QQuickItem *right) override;
 };
 
