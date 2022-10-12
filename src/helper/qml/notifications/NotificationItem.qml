@@ -21,8 +21,8 @@ Item {
     property alias body: bodyLabel.text
     property bool isPersistent: false
     property alias expireTimeout: timer.interval
-    property var hints: null
-    property var actions: null
+    property var hints: ({})
+    property var actions: []
 
     signal actionInvoked(string actionId)
     signal closed()
@@ -160,19 +160,17 @@ Item {
         }
 
         footer: ColumnLayout {
-            spacing: FluidControls.Units.smallSpacing
-
             FluidControls.ThinDivider {
-                visible: actions && actions.count > 0
+                visible: actions && actions.length > 0
             }
 
             RowLayout {
                 id: actionsContainer
 
-                visible: actions && actions.count > 0
+                visible: actions && actions.length > 0
 
-                Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-                Layout.bottomMargin: FluidControls.Units.smallSpacing
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+                Layout.margins: FluidControls.Units.smallSpacing
 
                 Repeater {
                     id: actionsRepeater
@@ -180,10 +178,12 @@ Item {
                     model: actions
 
                     Button {
-                        text: model.text
+                        text: modelData.text
                         flat: true
+                        highlighted: modelData.id === "default"
                         onClicked: {
                             notification.actionInvoked(model.id);
+                            notification.closed();
                         }
                     }
                 }
