@@ -16,7 +16,6 @@ public:
     enum SurfaceRole {
         NoRole = 0,
         OsdRole,
-        NotificationRole,
         WindowSwitcherRole,
     };
     Q_ENUM(SurfaceRole)

@@ -8,8 +8,10 @@ import QtQuick.Controls 2.15
 import Aurora.Client 1.0 as AuroraClient
 import Fluid.Controls 1.0 as FluidControls
 import Liri.Shell.TaskManager 1.0 as TaskManager
+import Liri.Shell.Notifications 1.0 as NotificationServer
 import "panel" as Panel
 import "launcher" as Launcher
+import "notifications" as Notifications
 
 Window {
     id: topLayerWindow
@@ -45,6 +47,14 @@ Window {
         enabled: !launcher.visible && !panelMenu.visible && !panel.taskBarMenuOpen
     }
 
+    FluidControls.InputArea {
+        region: inputRegion
+        x: notificationsListView.x
+        y: notificationsListView.y
+        width: notificationsListView.width
+        height: notificationsListView.height
+    }
+
     ListModel {
         id: menuExtensionsModel
     }
@@ -63,6 +73,82 @@ Window {
             launcher.close();
         }
     }
+
+    /*
+     * Notifications
+     */
+
+    ListView {
+        id: notificationsListView
+
+        anchors.top: parent.top
+        anchors.bottom: panel.top
+        anchors.right: parent.right
+
+        verticalLayoutDirection: ListView.BottomToTop
+        spacing: FluidControls.Units.smallSpacing
+
+        // width = 24gu + (closeButton.width / 2) + (elevation * 4)
+        width: FluidControls.Units.gu(24) + (48 / 2) + (8 * 4)
+
+        model: NotificationServer.NotificationsModel {
+            id: notificationsModel
+        }
+
+        delegate: Notifications.NotificationItem {
+            notificationId: model.notificationId
+            appName: model.appName
+            appIcon: model.appIcon
+            iconUrl: model.iconUrl
+            hasIcon: model.hasIcon
+            summary: model.summary
+            body: model.body
+            isPersistent: model.isPersistent
+            expireTimeout: model.expireTimeout
+            hints: model.hints
+            actions: model.actions
+
+            onActionInvoked: {
+                notificationsModel.invokeAction(notificationId, actionId);
+            }
+            onClosed: {
+                notificationsModel.closeNotification(notificationId);
+            }
+        }
+
+        add: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+                duration: 220
+            }
+        }
+        remove: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+                duration: 220
+            }
+        }
+        populate: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+                duration: 220
+            }
+        }
+        displaced: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+                duration: 220
+            }
+        }
+    }
+
+    /*
+     * Panel
+     */
 
     Panel.Panel {
         id: panel

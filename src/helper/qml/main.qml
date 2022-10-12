@@ -117,8 +117,6 @@ Item {
         }
     }
 
-    NotificationsManager {}
-
     /*
      * PolicyKit
      */
