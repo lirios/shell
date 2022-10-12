@@ -30,10 +30,6 @@ Item {
     width: control.implicitWidth + (closeButton.width / 2) + (control.Material.elevation * 2)
     height: control.implicitHeight + (closeButton.height / 2) + (control.Material.elevation * 2)
 
-    Behavior on opacity {
-        NumberAnimation { duration: 150 }
-    }
-
     Timer {
         id: timer
 

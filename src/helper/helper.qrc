@@ -8,13 +8,11 @@
         <file>qml/KeyBindings.qml</file>
         <file>qml/main.qml</file>
         <file>qml/OsdWindow.qml</file>
-        <file>qml/NotificationWindow.qml</file>
         <file>qml/components/Dialog.qml</file>
         <file>qml/RunDialog.qml</file>
         <file>qml/AuthDialog.qml</file>
         <file>qml/LogoutDialog.qml</file>
         <file>qml/PowerOffDialog.qml</file>
-        <file>qml/NotificationItem.qml</file>
         <file>qml/TopLayerWindow.qml</file>
         <file>qml/panel/Panel.qml</file>
         <file>qml/panel/PanelButton.qml</file>
@@ -31,5 +29,6 @@
         <file>qml/launcher/AppsLauncher.qml</file>
         <file>qml/launcher/PagedGrid.qml</file>
         <file>qml/panel/StatusMenu.qml</file>
+        <file>qml/notifications/NotificationItem.qml</file>
     </qresource>
 </RCC>

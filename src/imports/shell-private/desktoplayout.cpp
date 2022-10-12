@@ -15,7 +15,6 @@ DesktopLayout::DesktopLayout(QQuickItem *parent)
 DesktopLayout::SurfaceRole DesktopLayout::getSurfaceRole(QQuickItem *item) const
 {
     static const QHash<QString, DesktopLayout::SurfaceRole> namespaceToRole {
-        { QStringLiteral("notifications"), DesktopLayout::NotificationRole },
         { QStringLiteral("osd"), DesktopLayout::OsdRole },
         { QStringLiteral("window-switcher"), DesktopLayout::WindowSwitcherRole },
     };
