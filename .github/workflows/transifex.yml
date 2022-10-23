@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+#
+# SPDX-License-Identifier: CC0-1.0
+
 name: Translations Sync
 
 on:
@@ -9,16 +13,7 @@ on:
 
 jobs:
   update-translations:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Update translations
-        uses: liri-infra/translation-action@master
-        env:
-          TX_TOKEN: ${{ secrets.TX_TOKEN }}
-        with:
-          ssh_key: ${{ secrets.CI_SSH_KEY }}
-          committer_name: Liri CI
-          committer_email: ci@liri.io
-          translations_folder: translations
+    uses: lirios/.github/.github/workflows/transifex.yml@master
+    secrets:
+      TX_TOKEN: ${{ secrets.TX_TOKEN }}
+      CI_SSH_KEY: ${{ secrets.CI_SSH_KEY }}
