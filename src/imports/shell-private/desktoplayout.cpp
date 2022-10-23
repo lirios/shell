@@ -16,6 +16,10 @@ DesktopLayout::SurfaceRole DesktopLayout::getSurfaceRole(QQuickItem *item) const
 {
     static const QHash<QString, DesktopLayout::SurfaceRole> namespaceToRole {
         { QStringLiteral("osd"), DesktopLayout::OsdRole },
+        { QStringLiteral("run-dialog"), DesktopLayout::RunDialogRole },
+        { QStringLiteral("auth-dialog"), DesktopLayout::AuthDialogRole },
+        { QStringLiteral("logout-dialog"), DesktopLayout::LogoutDialogRole },
+        { QStringLiteral("poweroff-dialog"), DesktopLayout::PowerOffDialogRole },
         { QStringLiteral("window-switcher"), DesktopLayout::WindowSwitcherRole },
     };
     if (auto *l = qobject_cast<WaylandWlrLayerSurfaceItem *>(item))
@@ -33,23 +37,22 @@ DesktopLayout::Layer DesktopLayout::getLayer(QQuickItem *item) const
         { WaylandWlrLayerShellV1::OverlayLayer, DesktopLayout::OverlayLayer },
     };
 
+    static const QMultiHash<QString, DesktopLayout::Layer> namespaceToLayer {
+        { QStringLiteral("workspaces"), DesktopLayout::WindowsLayer },
+        { QStringLiteral("toplayer"), DesktopLayout::TopLayer },
+        { QStringLiteral("fullscreen"), DesktopLayout::FullscreenLayer },
+        { QStringLiteral("auth-dialog"), DesktopLayout::DialogLayer },
+        { QStringLiteral("run-dialog"), DesktopLayout::DialogLayer },
+        { QStringLiteral("logout-dialog"), DesktopLayout::DialogLayer },
+        { QStringLiteral("poweroff-dialog"), DesktopLayout::DialogLayer },
+        { QStringLiteral("lockscreen"), DesktopLayout::LockScreenLayer },
+        { QStringLiteral("window-switcher"), DesktopLayout::OverlayLayer },
+    };
+
     if (auto *l = qobject_cast<WaylandWlrLayerSurfaceItem *>(item))
         return layerToIndex.value(l->layerSurface()->layer(), DesktopLayout::NoLayer);
-    else if (item->objectName() == QStringLiteral("workspaces"))
-        return DesktopLayout::WindowsLayer;
-    else if (item->objectName() == QStringLiteral("shell"))
-        return DesktopLayout::TopLayer;
-    else if (item->objectName() == QStringLiteral("fullscreen"))
-        return DesktopLayout::FullscreenLayer;
-    else if (item->objectName() == QStringLiteral("modal-overlay"))
-        return DesktopLayout::ModalOverlayLayer;
-    else if (item->objectName() == QStringLiteral("dialog"))
-        return DesktopLayout::DialogLayer;
-    else if (item->objectName() == QStringLiteral("lockscreen"))
-        return DesktopLayout::LockScreenLayer;
-    else if (item->objectName() == QStringLiteral("window-switcher"))
-        return DesktopLayout::OverlayLayer;
-    return DesktopLayout::NoLayer;
+    else
+        return namespaceToLayer.value(item->objectName(), DesktopLayout::NoLayer);
 }
 
 bool DesktopLayout::sortItems(QQuickItem *left, QQuickItem *right)

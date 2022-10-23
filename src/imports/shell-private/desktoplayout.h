@@ -16,6 +16,10 @@ public:
     enum SurfaceRole {
         NoRole = 0,
         OsdRole,
+        RunDialogRole,
+        AuthDialogRole,
+        LogoutDialogRole,
+        PowerOffDialogRole,
         WindowSwitcherRole,
     };
     Q_ENUM(SurfaceRole)
@@ -26,7 +30,6 @@ public:
         BottomLayer,
         WindowsLayer,
         TopLayer,
-        ModalOverlayLayer,
         DialogLayer,
         FullscreenLayer,
         LockScreenLayer,
