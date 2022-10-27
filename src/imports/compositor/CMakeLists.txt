@@ -2,6 +2,10 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
+if(NOT TARGET Liri::AuroraCompositor)
+    find_package(Liri1AuroraCompositor REQUIRED)
+endif()
+
 liri_add_qml_plugin(LiriShellCompositorQmlPlugin
     MODULE_PATH
         "Liri/Shell/Compositor"
