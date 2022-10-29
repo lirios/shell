@@ -19,6 +19,8 @@ liri_add_qml_plugin(NotificationsServerQmlPlugin
         QT_NO_CAST_FROM_ASCII
         QT_NO_FOREACH
         PROJECT_VERSION="${PROJECT_VERSION}"
+    PUBLIC_LIBRARIES
+        Qt::DBus
 )
 
 liri_finalize_qml_plugin(NotificationsServerQmlPlugin)
