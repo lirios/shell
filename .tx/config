@@ -1,43 +1,43 @@
 [main]
 host = https://www.transifex.com
 
-[liri-shell.compositor]
+[o:lirios:p:liri-shell:r:compositor]
 type = QT
 source_lang = en
 source_file = translations/compositor/compositor.ts
 file_filter = translations/compositor/compositor_<lang>.ts
 
-[liri-shell.statusarea-datetime-metadata]
+[o:lirios:p:liri-shell:r:statusarea-datetime-metadata]
 type = PO
 source_lang = en
 source_file = translations/statusarea/datetime/metadata.pot
 file_filter = translations/statusarea/datetime/<lang>.po
 
-[liri-shell.statusarea-notifications-metadata]
+[o:lirios:p:liri-shell:r:statusarea-notifications-metadata]
 type = PO
 source_lang = en
 source_file = translations/statusarea/notifications/metadata.pot
 file_filter = translations/statusarea/notifications/<lang>.po
 
-[liri-shell.statusarea-storage-metadata]
+[o:lirios:p:liri-shell:r:statusarea-storage-metadata]
 type = PO
 source_lang = en
 source_file = translations/statusarea/storage/metadata.pot
 file_filter = translations/statusarea/storage/<lang>.po
 
-[liri-shell.statusarea-user-metadata]
+[o:lirios:p:liri-shell:r:statusarea-user-metadata]
 type = PO
 source_lang = en
 source_file = translations/statusarea/user/metadata.pot
 file_filter = translations/statusarea/user/<lang>.po
 
-[liri-shell.statusarea-notifications]
+[o:lirios:p:liri-shell:r:statusarea-notifications]
 type = QT
 source_lang = en
 source_file = translations/statusarea/notifications/notifications.ts
 file_filter = translations/statusarea/notifications/notifications_<lang>.ts
 
-[liri-shell.statusarea-storage]
+[o:lirios:p:liri-shell:r:statusarea-storage]
 type = QT
 source_lang = en
 source_file = translations/statusarea/storage/storage.ts
