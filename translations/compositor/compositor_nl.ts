@@ -1,35 +1,35 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="it">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
 <context>
     <name>ChromeMenu</name>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="14"/>
         <source>Minimize</source>
-        <translation>Riduci</translation>
+        <translation>Minimaliseren</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="20"/>
         <source>Restore</source>
-        <translation>Ripristina</translation>
+        <translation>Herstellen</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="27"/>
         <source>Maximize</source>
-        <translation>Ingrandisci</translation>
+        <translation>Maximaliseren</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="36"/>
         <source>Move</source>
-        <translation>Sposta</translation>
+        <translation>Verplaatsen</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="41"/>
         <source>Resize</source>
-        <translation>Ridimensiona</translation>
+        <translation>Grootte wijzigen</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/windows/ChromeMenu.qml" line="47"/>
         <source>Close</source>
-        <translation>Chiudi</translation>
+        <translation>Sluiten</translation>
     </message>
 </context>
 <context>
@@ -37,17 +37,17 @@
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="34"/>
         <source>Oh no!</source>
-        <translation>Oh no!</translation>
+        <translation>O, nee!</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="41"/>
         <source>Something went wrong and the desktop failed to load.</source>
-        <translation>Qualcosa non ha funzionato ed il desktop non è stato caricato.</translation>
+        <translation>Het bureaublad kan niet worden geladen omdat er een fout is opgetreden.</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/error/ErrorScreenView.qml" line="52"/>
         <source>Quit</source>
-        <translation>Esci</translation>
+        <translation>Afsluiten</translation>
     </message>
 </context>
 <context>
@@ -55,7 +55,7 @@
     <message>
         <location filename="../../src/compositor/qml/desktop/PresentWindowsChrome.qml" line="69"/>
         <source>Unknown</source>
-        <translation>Sconosciuto</translation>
+        <translation>Onbekend</translation>
     </message>
 </context>
 <context>
@@ -67,17 +67,16 @@ Refer to your distribution on how to get it, or read
 http://www.freedesktop.org/wiki/Specifications/basedir-spec
 on how to implement it.
 </source>
-        <translation>La variabile d&apos;ambiente XDG_RUNTIME_DIR non è definita.
-Riferirsi alla propria distribuzione su come impostarla, oppure leggere
-http://www.freedesktop.org/wiki/Specifications/basedir-spec
-su come implementarla.
+        <translation>De omgevingsvariabel XDG_RUNTIME_DIR is niet ingesteld.
+Zoek op hoe je distributie hiermee omgaat of lees de instructies op
+http://www.freedesktop.org/wiki/Specifications/basedir-spec.
 </translation>
     </message>
     <message>
         <location filename="../../src/compositor/application.cpp" line="111"/>
         <source>The XDG_RUNTIME_DIR environment variable is set to &quot;%1&quot;, which doesn't exist.
 </source>
-        <translation>La variabile d&apos;ambiente XDG_RUNTIME_DIR è impostata a &quot;%1&quot;, che non esiste.
+        <translation>De omgevingsvariabel ‘XDG_RUNTIME_DIR’ is ingesteld op ‘%1’, welke niet bestaat.
 </translation>
     </message>
     <message>
@@ -86,9 +85,9 @@ su come implementarla.
 Unix access mode must be 0700, but is 0%2.
 It must also be owned by the current user (UID %3), but is owned by UID %4 (&quot;%5&quot;).
 </source>
-        <translation>XDG_RUNTIME_DIR è impostata a &quot;%1&quot; e non è configurata correttamente.
-La modalità di accesso Unix deve essere 0700, ma 0%2.
-Deve anche essere di proprietà dall&apos;utente corrente (UID %3), ma è di proprietà di UID %4 (&quot;%5&quot;).
+        <translation>XDG_RUNTIME_DIR is ingesteld op ‘%1’, maar onjuist ingesteld.
+De Unix-toegangsmodus dient 0700 te zijn, maar is momenteel 0%2.
+Daarnaast dient de huidige gebruiker (UID %3) eigenaar te zijn, maar de huidige eigenaar is UID %4 (‘%5’).
 </translation>
     </message>
 </context>
@@ -115,22 +114,22 @@ Deve anche essere di proprietà dall&apos;utente corrente (UID %3), ma è di pro
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="54"/>
         <source>Application is not responding</source>
-        <translation>L&apos;applicazione non risponde</translation>
+        <translation>Het programma reageert niet</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="64"/>
         <source>This application is unresponsive, you may choose to wait a short while for it to continue or force the application to quit entirely.</source>
-        <translation>L&apos;applicazione non risponde, puoi scegliere di attendere che riprenda a funzionare oppure forzarne la chiusura.</translation>
+        <translation>Het programma reageert niet. Kies voor ‘Wachten’ om de situatie even aan te zien of ‘Geforceerd afsluiten’ om het af te sluiten.</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="76"/>
         <source>Wait</source>
-        <translation>Attendi</translation>
+        <translation>Wachten</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/overlays/UnresponsiveOverlay.qml" line="81"/>
         <source>Force Quit</source>
-        <translation>Forza chiusura</translation>
+        <translation>Geforceerd afsluiten</translation>
     </message>
 </context>
 <context>
@@ -138,7 +137,7 @@ Deve anche essere di proprietà dall&apos;utente corrente (UID %3), ma è di pro
     <message>
         <location filename="../../src/compositor/qml/desktop/WindowSwitcher.qml" line="31"/>
         <source>Untitled</source>
-        <translation>Senza titolo</translation>
+        <translation>Naamloos</translation>
     </message>
 </context>
 </TS>
