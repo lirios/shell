@@ -96,17 +96,17 @@ Daarnaast dient de huidige gebruiker (UID %3) eigenaar te zijn, maar de huidige 
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="29"/>
         <source>Session Locked</source>
-        <translation type="unfinished"/>
+        <translation>Sessie vergrendeld</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="30"/>
         <source>The session has been locked</source>
-        <translation type="unfinished"/>
+        <translation>De sessie is vergrendeld</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="36"/>
         <source>Log Out</source>
-        <translation type="unfinished"/>
+        <translation>Afmelden</translation>
     </message>
 </context>
 <context>
