@@ -97,17 +97,17 @@ Taip pat kintamasis privalo priklausyti dabartiniam naudotojui (UID %3), tačiau
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="29"/>
         <source>Session Locked</source>
-        <translation type="unfinished"/>
+        <translation>Seansas užrakintas</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="30"/>
         <source>The session has been locked</source>
-        <translation type="unfinished"/>
+        <translation>Seansas buvo užrakintas</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="36"/>
         <source>Log Out</source>
-        <translation type="unfinished"/>
+        <translation>Atsijungti</translation>
     </message>
 </context>
 <context>
