@@ -29,7 +29,9 @@ endif()
 
 ## Features:
 include(features.cmake)
-feature_summary(WHAT ENABLED_FEATURES DISABLED_FEATURES)
+if(NOT LIRI_SUPERBUILD)
+    feature_summary(WHAT ENABLED_FEATURES DISABLED_FEATURES)
+endif()
 
 ## Variables:
 if(FEATURE_enable_systemd)
