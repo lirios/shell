@@ -1,0 +1,16 @@
+[SddmGreeterTheme]
+Type=sddm-theme
+Name=Liri OS
+Description=Official theme for Liri OS
+Author=Pier Luigi Fiorini
+Email=pierluigi.fiorini@gmail.com
+Copyright=(C) 2014-2016 Pier Luigi Fiorini
+License=GPLv3
+Version=0.1
+Website=http://liri.io
+Screenshot=screenshot.png
+ConfigFile=theme.conf
+MainScript=Main.qml
+TranslationsDirectory=translations
+Theme-Id=lirios
+Theme-API=2.0
