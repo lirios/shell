@@ -49,6 +49,7 @@ Window {
         bottomPadding: 0
 
         focus: true
+        modal: true
         visible: powerOffDialogWindow.visible
 
         onOpened: {

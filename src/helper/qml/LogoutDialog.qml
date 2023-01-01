@@ -43,6 +43,7 @@ Window {
         title: qsTr("Log out")
 
         focus: true
+        modal: true
         visible: logoutDialogWindow.visible
 
         onOpened: {
