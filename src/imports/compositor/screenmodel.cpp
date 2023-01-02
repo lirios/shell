@@ -12,7 +12,7 @@
 
 #include <LiriAuroraPlatformHeaders/lirieglfsfunctions.h>
 
-#include "logging.h"
+#include "lirishellcompositorlogging.h"
 #include "screenmodel.h"
 
 static ScreenItem::PowerState convertPowerState(Aurora::PlatformSupport::EglFSFunctions::PowerState powerState)
@@ -174,7 +174,7 @@ ScreenMode *ScreenItem::preferredMode() const
 ScreenItem::PowerState ScreenItem::powerState() const
 {
     if (!m_screen) {
-        qCWarning(lcShell) << "ScreenItem cannot get power state if the screen property is not set";
+        qCWarning(lcShellCompositor) << "ScreenItem cannot get power state if the screen property is not set";
         return ScreenItem::PowerStateOn;
     }
 
@@ -184,7 +184,7 @@ ScreenItem::PowerState ScreenItem::powerState() const
 void ScreenItem::setPowerState(ScreenItem::PowerState state)
 {
     if (!m_screen) {
-        qCWarning(lcShell) << "ScreenItem cannot set power state if the screen property is not set";
+        qCWarning(lcShellCompositor) << "ScreenItem cannot set power state if the screen property is not set";
         return;
     }
 
@@ -225,7 +225,7 @@ void ScreenModel::setFileName(const QString &fileName)
 
     // We can feed the model only once
     if (m_initialized) {
-        qCWarning(lcShell, "Screen configuration cannot be changed after initialization");
+        qCWarning(lcShellCompositor, "Screen configuration cannot be changed after initialization");
         return;
     }
 
@@ -280,7 +280,7 @@ QVariant ScreenModel::data(const QModelIndex &index, int role) const
 bool ScreenModel::testConfiguration(WaylandWlrOutputConfigurationV1 *configuration)
 {
     if (!m_fileName.isEmpty()) {
-        qCWarning(lcShell, "Cannot test output configuration when using a fake screen backend");
+        qCWarning(lcShellCompositor, "Cannot test output configuration when using a fake screen backend");
         return false;
     }
 
@@ -309,7 +309,7 @@ bool ScreenModel::testConfiguration(WaylandWlrOutputConfigurationV1 *configurati
                 }
 
                 if (!modeFound) {
-                    qCWarning(lcShell, "Output configuration test failed: mode not found");
+                    qCWarning(lcShellCompositor, "Output configuration test failed: mode not found");
                     return false;
                 }
 
@@ -324,7 +324,7 @@ bool ScreenModel::testConfiguration(WaylandWlrOutputConfigurationV1 *configurati
 void ScreenModel::applyConfiguration(WaylandWlrOutputConfigurationV1 *configuration)
 {
     if (!m_fileName.isEmpty()) {
-        qCWarning(lcShell, "Cannot test or apply output configuration when using a fake screen backend");
+        qCWarning(lcShellCompositor, "Cannot test or apply output configuration when using a fake screen backend");
         return;
     }
 
@@ -429,8 +429,8 @@ void ScreenModel::addFakeScreens()
 {
     QFile file(m_fileName);
     if (!file.open(QFile::ReadOnly)) {
-        qCWarning(lcShell) << "Could not open configuration file"
-                           << m_fileName << "for reading";
+        qCWarning(lcShellCompositor) << "Could not open configuration file"
+                                     << m_fileName << "for reading";
         return;
     }
 
@@ -440,7 +440,7 @@ void ScreenModel::addFakeScreens()
 
     const QJsonDocument doc = QJsonDocument::fromJson(data);
     if (!doc.isObject()) {
-        qCWarning(lcShell, "Error parsing \"%s\": no top-level JSON object",
+        qCWarning(lcShellCompositor, "Error parsing \"%s\": no top-level JSON object",
                   qPrintable(m_fileName));
         return;
     }
@@ -450,7 +450,7 @@ void ScreenModel::addFakeScreens()
 
     for (int i = 0; i < outputs.size(); i++) {
         const QVariantMap outputSettings = outputs.at(i).toObject().toVariantMap();
-        qCDebug(lcShell) << "Output settings:" << outputSettings;
+        qCDebug(lcShellCompositor) << "Output settings:" << outputSettings;
 
         QString name = outputSettings.value(QStringLiteral("name")).toString();
         if (name.isEmpty()) {
@@ -462,7 +462,7 @@ void ScreenModel::addFakeScreens()
                 name = QStringLiteral("UNK-");
             name.append(QString::number(i));
         }
-        qCDebug(lcShell) << "Output name:" << name;
+        qCDebug(lcShellCompositor) << "Output name:" << name;
 
         QString description = outputSettings.value(QStringLiteral("description")).toString();
         if (description.isEmpty()) {
@@ -473,16 +473,16 @@ void ScreenModel::addFakeScreens()
             else
                 description = QStringLiteral("Virtual output");
         }
-        qCDebug(lcShell) << "Output description:" << description;
+        qCDebug(lcShellCompositor) << "Output description:" << description;
 
         int scale = qMax<int>(1, outputSettings.value(QStringLiteral("scale")).toInt());
-        qCDebug(lcShell) << "Scale:" << scale;
+        qCDebug(lcShellCompositor) << "Scale:" << scale;
 
         const QVariantMap posValue = outputSettings.value(QStringLiteral("position")).toMap();
         int x = posValue.value(QStringLiteral("x")).toInt();
         int y = posValue.value(QStringLiteral("y")).toInt();
         QPoint pos(x, y);
-        qCDebug(lcShell) << "Output position:" << pos;
+        qCDebug(lcShellCompositor) << "Output position:" << pos;
 
         const QVariantMap modeValue = outputSettings.value(QStringLiteral("mode")).toMap();
         const QVariantMap sizeValue = modeValue.value(QStringLiteral("size")).toMap();
@@ -490,8 +490,8 @@ void ScreenModel::addFakeScreens()
         int h = sizeValue.value(QStringLiteral("height")).toInt();
         QSize size = QSize(w, h);
         int refreshRate = modeValue.value(QStringLiteral("refreshRate")).toInt();
-        qCDebug(lcShell) << "Output size:" << size;
-        qCDebug(lcShell) << "Output refresh rate:" << refreshRate;
+        qCDebug(lcShellCompositor) << "Output size:" << size;
+        qCDebug(lcShellCompositor) << "Output refresh rate:" << refreshRate;
 
         const QVariantMap physicalSizeValue = outputSettings.value(QStringLiteral("physicalSize")).toMap();
         QSizeF physicalSize;
@@ -501,11 +501,11 @@ void ScreenModel::addFakeScreens()
             physicalSize.setWidth(w * 0.26458);
             physicalSize.setHeight(h * 0.26458);
         }
-        qCDebug(lcShell) << "Physical size millimiters:" << physicalSize;
+        qCDebug(lcShellCompositor) << "Physical size millimiters:" << physicalSize;
 
         Qt::ScreenOrientation orientation =
                 static_cast<Qt::ScreenOrientation>(outputSettings.value(QStringLiteral("orientation")).toInt());
-        qCDebug(lcShell) << "Output orientation:" << orientation;
+        qCDebug(lcShellCompositor) << "Output orientation:" << orientation;
 
         beginInsertRows(QModelIndex(), m_items.count(), m_items.count());
 

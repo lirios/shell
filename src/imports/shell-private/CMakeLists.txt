@@ -26,36 +26,13 @@ liri_add_qml_plugin(ShellPrivateQmlPlugin
     OUTPUT_NAME
         "shell-privateplugin"
     SOURCES
-        abstracttitlebar.cpp abstracttitlebar.h
-        appidandicon.cpp
-        appidandicon.h
         dbus/multimediakeysserver.cpp
         dbus/multimediakeysserver.h
         dbus/osdserver.cpp
         dbus/osdserver.h
-        chromeitem.cpp
-        chromeitem.h
-        desktoplayout.cpp desktoplayout.h
-        fpscounter.cpp
-        fpscounter.h
-        helperlauncher.cpp helperlauncher.h
-        hotspot.cpp
-        hotspot.h
-        keyeventfilter.cpp
-        keyeventfilter.h
         logging.cpp
         logging.h
         plugin.cpp
-        quickoutput.cpp
-        quickoutput.h
-        screencast.cpp
-        screencast.h
-        screenmodel.cpp
-        screenmodel.h
-        waylandcursorgrabber.cpp
-        waylandcursorgrabber.h
-        windowmousetracker.cpp
-        windowmousetracker.h
     QML_FILES
         qmldir
     DEFINES

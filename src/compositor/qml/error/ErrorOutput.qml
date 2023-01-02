@@ -5,9 +5,9 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import Aurora.Compositor 1.0
-import Liri.private.shell 1.0 as P
+import Liri.Shell.Compositor 1.0 as LS
 
-P.WaylandOutput {
+LS.WaylandOutput {
     id: output
 
     readonly property bool primary: liriCompositor.defaultOutput === this
@@ -35,7 +35,7 @@ P.WaylandOutput {
                 anchors.fill: parent
             }
 
-            P.WaylandCursorGrabber {
+            LS.WaylandCursorGrabber {
                 seat: output.compositor.defaultSeat
                 grab: mouseTracker.containsMouse
             }

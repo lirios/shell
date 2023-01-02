@@ -5,7 +5,7 @@
 #include <QtCore/QFileInfo>
 
 #include "helperlauncher.h"
-#include "logging.h"
+#include "lirishellcompositorlogging.h"
 
 HelperLauncher::HelperLauncher(QObject *parent)
     : QObject(parent)
@@ -127,7 +127,7 @@ bool HelperLauncher::startProcess()
     QFileInfo programInfo(m_program);
     m_baseName = programInfo.baseName();
 
-    qCDebug(lcShell, "Running helper: %s", qPrintable(cmd));
+    qCDebug(lcShellCompositor, "Running helper: %s", qPrintable(cmd));
 
     auto env = QProcessEnvironment::systemEnvironment();
     env.remove(QStringLiteral("DISPLAY"));
@@ -148,7 +148,7 @@ bool HelperLauncher::startProcess()
             if (line.isEmpty())
                 continue;
 
-            qCWarning(lcShell, "[%s] %s", qPrintable(m_baseName), line.constData());
+            qCWarning(lcShellCompositor, "[%s] %s", qPrintable(m_baseName), line.constData());
         }
     });
     connect(m_process, &QProcess::readyReadStandardOutput, this, [&] {
@@ -157,26 +157,26 @@ bool HelperLauncher::startProcess()
             if (line.isEmpty())
                 continue;
 
-            qCInfo(lcShell, "[%s] %s", qPrintable(m_baseName), line.constData());
+            qCInfo(lcShellCompositor, "[%s] %s", qPrintable(m_baseName), line.constData());
         }
     });
     connect(m_process, &QProcess::errorOccurred, this, [&](QProcess::ProcessError error) {
         switch (error) {
         case QProcess::FailedToStart:
-            qCWarning(lcShell, "Failed to start \"%s\"", qPrintable(m_baseName));
+            qCWarning(lcShellCompositor, "Failed to start \"%s\"", qPrintable(m_baseName));
             break;
         case QProcess::Crashed:
-            qCWarning(lcShell, "Process \"%s\" crashed", qPrintable(m_baseName));
+            qCWarning(lcShellCompositor, "Process \"%s\" crashed", qPrintable(m_baseName));
             break;
         case QProcess::Timedout:
-            qCWarning(lcShell, "Operation timedout starting \"%s\"", qPrintable(m_baseName));
+            qCWarning(lcShellCompositor, "Operation timedout starting \"%s\"", qPrintable(m_baseName));
             break;
         case QProcess::ReadError:
         case QProcess::WriteError:
-            qCWarning(lcShell, "An error has occurred while communicating with \"%s\"", qPrintable(m_baseName));
+            qCWarning(lcShellCompositor, "An error has occurred while communicating with \"%s\"", qPrintable(m_baseName));
             break;
         case QProcess::UnknownError:
-            qCWarning(lcShell, "Unknown error occurred with \"%s\"", qPrintable(m_baseName));
+            qCWarning(lcShellCompositor, "Unknown error occurred with \"%s\"", qPrintable(m_baseName));
             break;
         }
 
@@ -200,7 +200,7 @@ bool HelperLauncher::startProcess()
 
     m_process->start(m_program, args);
     if (!m_process->waitForStarted(10000)) {
-        qCWarning(lcShell, "Failed to start \"%s\": %s",
+        qCWarning(lcShellCompositor, "Failed to start \"%s\": %s",
                   qPrintable(cmd),
                   qPrintable(m_process->errorString()));
         cleanProcess();

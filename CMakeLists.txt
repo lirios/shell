@@ -38,6 +38,9 @@ if(FEATURE_enable_systemd)
     set(INSTALL_SYSTEMDUSERUNITDIR "${INSTALL_LIBDIR}/systemd/user" CACHE PATH "systemd user unit directory [PREFIX/lib/systemd/user]")
 endif()
 
+## ECM:
+include(ECMQtDeclareLoggingCategory)
+
 ## Find Qt 5:
 find_package(Qt5 "${QT_MIN_VERSION}"
     CONFIG REQUIRED

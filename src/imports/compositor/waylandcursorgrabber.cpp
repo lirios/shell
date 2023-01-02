@@ -5,7 +5,7 @@
 #include <LiriAuroraCompositor/WaylandDrag>
 #include <LiriAuroraCompositor/WaylandOutput>
 
-#include "logging.h"
+#include "lirishellcompositorlogging.h"
 #include "waylandcursorgrabber.h"
 
 using namespace Aurora::Compositor;
@@ -28,7 +28,7 @@ void WaylandCursorGrabber::setSeat(WaylandSeat *seat)
     if (m_seat == seat)
         return;
     if (!seat) {
-        qCWarning(lcShell, "Cannot unset WaylandCursorGrabber::seat");
+        qCWarning(lcShellCompositor, "Cannot unset WaylandCursorGrabber::seat");
         return;
     }
 
@@ -140,10 +140,10 @@ void WaylandCursorGrabber::handleRedraw()
     if (m_seat->drag()->visible())
         return;
 
-   if (m_grab && !m_grabbing && m_grabber) {
-       m_grabbing = true;
-       m_grabber->grab();
-   }
+    if (m_grab && !m_grabbing && m_grabber) {
+        m_grabbing = true;
+        m_grabber->grab();
+    }
 }
 
 void WaylandCursorGrabber::handleGrab(const QImage &image)

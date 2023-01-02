@@ -7,16 +7,16 @@ import Aurora.Compositor 1.0
 import QtGraphicalEffects 1.15
 import Fluid.Effects 1.0 as FluidEffects
 import Aurora.Compositor.XWayland 1.0
-import Liri.private.shell 1.0 as P
+import Liri.Shell.Compositor 1.0 as LS
 
-P.ChromeItem {
+LS.ChromeItem {
     id: chrome
 
     property QtObject window: null
     property QtObject shellSurface: null
     property WaylandOutput output: null
 
-    property int shellSurfaceType: P.ChromeItem.WaylandShellSurface
+    property int shellSurfaceType: LS.ChromeItem.WaylandShellSurface
 
     readonly property alias bufferLocked: __private.bufferLocked
     readonly property bool maximized: window.maximized
@@ -401,7 +401,7 @@ P.ChromeItem {
             anchors.left: parent.left
             anchors.top: titleBar.bottom
 
-            active: shellSurfaceType == P.ChromeItem.WaylandShellSurface
+            active: shellSurfaceType == LS.ChromeItem.WaylandShellSurface
             sourceComponent: ShellSurfaceItem {
                 output: chrome.output
                 shellSurface: chrome.shellSurface
@@ -434,7 +434,7 @@ P.ChromeItem {
             anchors.left: parent.left
             anchors.top: titleBar.bottom
 
-            active: shellSurfaceType == P.ChromeItem.XWaylandShellSurface
+            active: shellSurfaceType == LS.ChromeItem.XWaylandShellSurface
             sourceComponent: XWaylandShellSurfaceItem {
                 output: chrome.output
                 shellSurface: chrome.shellSurface

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick 2.15
-import Liri.private.shell 1.0 as P
+import Liri.Shell.Compositor 1.0 as LS
 import "PresentEffect.js" as PresentEffect
 import "../windows"
 
@@ -99,7 +99,7 @@ Item {
             window: model.window
             shellSurface: model.shellSurface
             output: model.output
-            shellSurfaceType: P.ChromeItem.WaylandShellSurface
+            shellSurfaceType: LS.ChromeItem.WaylandShellSurface
 
             onDestroyAnimationFinished: {
                 // Remove from shell surface model
@@ -122,7 +122,7 @@ Item {
             window: model.window
             shellSurface: model.shellSurface
             output: model.output
-            shellSurfaceType: P.ChromeItem.XWaylandShellSurface
+            shellSurfaceType: LS.ChromeItem.XWaylandShellSurface
 
             onDestroyAnimationFinished: {
                 // Remove from shell surface model

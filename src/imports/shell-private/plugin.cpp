@@ -8,21 +8,8 @@
 #  define QT_WAYLAND_COMPOSITOR_QUICK
 #endif
 
-#include "abstracttitlebar.h"
-#include "appidandicon.h"
 #include "dbus/multimediakeysserver.h"
 #include "dbus/osdserver.h"
-#include "chromeitem.h"
-#include "desktoplayout.h"
-#include "fpscounter.h"
-#include "helperlauncher.h"
-#include "hotspot.h"
-#include "keyeventfilter.h"
-#include "quickoutput.h"
-#include "screencast.h"
-#include "screenmodel.h"
-#include "waylandcursorgrabber.h"
-#include "windowmousetracker.h"
 
 class ShellPrivatePlugin : public QQmlExtensionPlugin
 {
@@ -36,26 +23,6 @@ public:
 
         const int versionMajor = 1;
         const int versionMinor = 0;
-
-        // Components
-
-        qmlRegisterType<AbstractTitleBar>(uri, versionMajor, versionMinor, "AbstractTitleBar");
-        qmlRegisterType<AppIdAndIcon>(uri, versionMajor, versionMinor, "AppIdAndIcon");
-        qmlRegisterType<ChromeItem>(uri, versionMajor, versionMinor, "ChromeItem");
-        qmlRegisterType<DesktopLayout>(uri, versionMajor, versionMinor, "DesktopLayout");
-        qmlRegisterType<FpsCounter>(uri, versionMajor, versionMinor, "FpsCounter");
-        qmlRegisterType<HelperLauncher>(uri, versionMajor, versionMinor, "HelperLauncher");
-        qmlRegisterType<HotSpot>(uri, versionMajor, versionMinor, "HotSpot");
-        qmlRegisterType<KeyEventFilter>(uri, versionMajor, versionMinor, "KeyEventFilter");
-        qmlRegisterType<QuickOutput>(uri, versionMajor, versionMinor, "WaylandOutput");
-        qmlRegisterType<ScreenCast>(uri, versionMajor, versionMinor, "ScreenCast");
-        qmlRegisterType<ScreenModel>(uri, versionMajor, versionMinor, "ScreenModel");
-        qmlRegisterUncreatableType<ScreenMode>(uri, versionMajor, versionMinor, "ScreenMode",
-                                               QStringLiteral("Cannot create instance of ScreenMode"));
-        qmlRegisterUncreatableType<ScreenItem>(uri, versionMajor, versionMinor, "ScreenItem",
-                                               QStringLiteral("Cannot create instance of ScreenItem"));
-        qmlRegisterType<WaylandCursorGrabber>(uri, versionMajor, versionMinor, "WaylandCursorGrabber");
-        qmlRegisterType<WindowMouseTracker>(uri, versionMajor, versionMinor, "WindowMouseTracker");
 
         // D-Bus interfaces
 

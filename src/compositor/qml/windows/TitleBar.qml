@@ -6,9 +6,9 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Fluid.Controls 1.0 as FluidControls
-import Liri.private.shell 1.0 as P
+import Liri.Shell.Compositor 1.0 as LS
 
-P.AbstractTitleBar {
+LS.AbstractTitleBar {
     property alias iconName: icon.name
     property alias title: titleLabel.text
     property color backgroundColor: defaultBackgroundColor

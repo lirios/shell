@@ -14,9 +14,8 @@ import Aurora.Compositor.WlrLayerShell 1.0
 import Aurora.Compositor.XdgShell 1.0
 import Aurora.Compositor.XWayland 1.0 as LXW
 import Liri.Session 1.0 as Session
-import Liri.Shell.Compositor 1.0
-import Liri.Shell 1.0 as LS
 import Liri.private.shell 1.0 as P
+import Liri.Shell.Compositor 1.0 as LS
 import "desktop"
 import "windows"
 
@@ -89,7 +88,7 @@ WaylandCompositor {
      * Output management
      */
 
-    P.ScreenModel {
+    LS.ScreenModel {
         id: screenModel
         fileName: screenConfigurationFileName
     }
@@ -205,22 +204,22 @@ WaylandCompositor {
 
     // Liri shell
 
-    P.HelperLauncher {
+    LS.HelperLauncher {
         id: shellProcess
 
-        helper: P.HelperLauncher.Shell
+        helper: LS.HelperLauncher.Shell
         socketName: liriCompositor.socketName
         running: liriCompositor.created
     }
 
-    P.HelperLauncher {
+    LS.HelperLauncher {
         id: sessionLockerProcess
 
-        helper: P.HelperLauncher.SessionLocker
+        helper: LS.HelperLauncher.SessionLocker
         socketName: liriCompositor.socketName
     }
 
-    LiriShellV1 {
+    LS.LiriShellV1 {
         id: shellHelper
 
         property bool isReady: false
@@ -240,7 +239,7 @@ WaylandCompositor {
         }
     }
 
-    LiriModalManagerV1 {
+    LS.LiriModalManagerV1 {
         id: liriModal
     }
 
@@ -255,7 +254,7 @@ WaylandCompositor {
         }
     }
 
-    LiriOsdV1 {
+    LS.LiriOsdV1 {
         id: liriOsd
     }
 
@@ -263,7 +262,7 @@ WaylandCompositor {
         id: shortcutComponent
 
         Shortcut {
-            property LiriShortcutV1 shortcut: null
+            property LS.LiriShortcutV1 shortcut: null
 
             context: Qt.ApplicationShortcut
             sequence: shortcut ? shortcut.sequence : ""
@@ -324,7 +323,7 @@ WaylandCompositor {
 
     // Screen copy
 
-    P.ScreenCast {
+    LS.ScreenCast {
         id: screenCast
 
         onFrameAvailable: {
@@ -383,7 +382,7 @@ WaylandCompositor {
         }
     }
 
-    LiriColorPickerManagerV1 {
+    LS.LiriColorPickerManagerV1 {
         layerName: "desktop"
     }
 

@@ -6,9 +6,8 @@ import QtQml 2.2
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import Aurora.Compositor 1.0
-import Liri.Shell.Compositor 1.0
+import Liri.Shell.Compositor 1.0 as LS
 import Liri.Session 1.0 as Session
-import Liri.private.shell 1.0 as P
 import ".." as Root
 
 WaylandCompositor {
@@ -34,7 +33,7 @@ WaylandCompositor {
         onActivated: liriCompositor.quit()
     }
 
-    P.ScreenModel {
+    LS.ScreenModel {
         id: screenModel
         fileName: screenConfigurationFileName
     }
@@ -68,7 +67,7 @@ WaylandCompositor {
     }
 
     // Shell helper
-    LiriShellV1 {
+    LS.LiriShellV1 {
         id: shellHelper
     }
 

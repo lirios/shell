@@ -2,13 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "logging.h"
+#include "lirishellcompositorlogging.h"
 #include "quickoutput.h"
 
-using namespace Aurora::Compositor;
-
 QuickOutput::QuickOutput()
-    : WaylandQuickOutput()
+    : Aurora::Compositor::WaylandQuickOutput()
 {
 }
 
@@ -24,7 +22,7 @@ void QuickOutput::setScreen(ScreenItem *screen)
 
     if (m_screen) {
         if (m_initialized) {
-            qCWarning(lcShell, "Cannot change WaylandOutput::screen after the component is complete");
+            qCWarning(lcShellCompositor, "Cannot change WaylandOutput::screen after the component is complete");
             return;
         } else {
             disconnect(this, SLOT(handleCurrentModeChanged(QSize,int)));

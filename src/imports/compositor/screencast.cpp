@@ -7,7 +7,7 @@
 
 #include <LiriAuroraPlatformHeaders/lirieglfsfunctions.h>
 
-#include "logging.h"
+#include "lirishellcompositorlogging.h"
 #include "screencast.h"
 
 ScreenCast::ScreenCast(QObject *parent)
@@ -19,7 +19,7 @@ ScreenCast::ScreenCast(QObject *parent)
 void ScreenCast::enable(QScreen *screen)
 {
     if (QGuiApplication::platformName() != QLatin1String("liri")) {
-        qCWarning(lcShell, "Cannot enable screencast: " \
+        qCWarning(lcShellCompositor, "Cannot enable screencast: " \
                   "unsupported platform \"%s\", please use \"liri\"",
                   qPrintable(QGuiApplication::platformName()));
         return;
@@ -31,7 +31,7 @@ void ScreenCast::enable(QScreen *screen)
 void ScreenCast::disable(QScreen *screen)
 {
     if (QGuiApplication::platformName() != QLatin1String("liri")) {
-        qCWarning(lcShell, "Cannot disable screencast: " \
+        qCWarning(lcShellCompositor, "Cannot disable screencast: " \
                   "unsupported platform \"%s\", please use \"liri\"",
                   qPrintable(QGuiApplication::platformName()));
         return;

@@ -7,7 +7,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Aurora.Compositor 1.0 as Compositor
-import Liri.private.shell 1.0 as P
+import Liri.Shell.Compositor 1.0 as LS
 import Fluid.Controls 1.0 as FluidControls
 
 Window {
@@ -37,7 +37,7 @@ Window {
     visible: output.screen && output.screen.enabled
 
     // Keyboard handling
-    P.KeyEventFilter {
+    LS.KeyEventFilter {
         Keys.onPressed: {
             // Input wakes the output
             liriCompositor.wake();
@@ -122,13 +122,13 @@ Window {
         // TODO: Need to wake up with mouse button pressed, released and wheel
 
         // Grab pointer cursor surface and set a bitmap cursor on this window
-        P.WaylandCursorGrabber {
+        LS.WaylandCursorGrabber {
             seat: liriCompositor.defaultSeat
             grab: mouseTracker.containsMouse
         }
 
         // Layout
-        P.DesktopLayout {
+        LS.DesktopLayout {
             id: desktopLayout
 
             anchors.fill: parent
@@ -307,7 +307,7 @@ Window {
             color: "white"
             visible: false
 
-            P.FpsCounter {
+            LS.FpsCounter {
                 id: fpsCounter
             }
         }

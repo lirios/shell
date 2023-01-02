@@ -7,7 +7,7 @@ import Aurora.Compositor 1.0
 import Aurora.Compositor.Wlroots 1.0
 import Aurora.Compositor.XWayland 1.0 as LXW
 import Fluid.Core 1.0 as FluidCore
-import Liri.private.shell 1.0 as LS
+import Liri.Shell.Compositor 1.0 as LS
 
 FluidCore.Object {
     id: window
