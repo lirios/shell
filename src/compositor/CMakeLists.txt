@@ -75,9 +75,11 @@ liri_extend_target("LiriShell"
     CONDITION HAVE_SYS_PRCTL_H
     DEFINES HAVE_SYS_PRCTL_H)
 
-liri_extend_target("LiriShell"
-    CONDITION FEATURE_enable_systemd
-    DEFINES HAVE_SYSTEMD
-    LIBRARIES PkgConfig::Libsystemd)
+if(FEATURE_enable_systemd)
+    liri_extend_target("LiriShell"
+        CONDITION FEATURE_enable_systemd
+        DEFINES HAVE_SYSTEMD
+        LIBRARIES PkgConfig::Libsystemd)
+endif()
 
 liri_finalize_executable("LiriShell")
