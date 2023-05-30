@@ -97,17 +97,17 @@ Também deve pertencer ao usuário atual (UID %3), mas pertence ao UID %4 (&quot
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="29"/>
         <source>Session Locked</source>
-        <translation type="unfinished"/>
+        <translation>Sessão bloqueada</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="30"/>
         <source>The session has been locked</source>
-        <translation type="unfinished"/>
+        <translation>A sessão foi bloqueada</translation>
     </message>
     <message>
         <location filename="../../src/compositor/qml/desktop/SessionLocker.qml" line="36"/>
         <source>Log Out</source>
-        <translation type="unfinished"/>
+        <translation>Encerrar sessão</translation>
     </message>
 </context>
 <context>
