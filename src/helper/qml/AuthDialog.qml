@@ -47,7 +47,7 @@ Window {
         title: qsTr("Authentication required")
 
         focus: true
-        visible: logoutDialogWindow.visible
+        visible: authDialogWindow.visible
 
         onOpened: {
             // Give focus to the password field
@@ -68,11 +68,11 @@ Window {
 
         onAccepted: {
             policyKitAgent.authenticate(passwordInput.text);
-            logoutDialogWindow.hide();
+            authDialogWindow.hide();
         }
         onRejected: {
             policyKitAgent.abortAuthentication();
-            logoutDialogWindow.hide();
+            authDialogWindow.hide();
         }
 
         ColumnLayout {
