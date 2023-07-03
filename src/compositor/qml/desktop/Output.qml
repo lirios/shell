@@ -24,6 +24,8 @@ LS.WaylandOutput {
     property alias showFps: outputWindow.showFps
     property alias showInformation: outputWindow.showInformation
 
+    property bool ready: false
+
     property var exportDmabufFrame: null
 
     property bool __idle: false
@@ -42,10 +44,6 @@ LS.WaylandOutput {
     /*
      * Methods
      */
-
-    function reveal() {
-        outputWindow.reveal();
-    }
 
     function wake() {
         if (!__idle)

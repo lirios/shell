@@ -222,17 +222,13 @@ WaylandCompositor {
     LS.LiriShellV1 {
         id: shellHelper
 
-        property bool isReady: false
-
         onShortcutBound: {
             shortcutComponent.incubateObject(keyBindings, { shortcut: shortcut });
         }
         onReady: {
-            isReady = true;
-            shellHelperTimer.running = false;
-
-            for (var i = 0; i < outputs.length; i++)
-                outputs[i].reveal();
+            console.log("ready",output);
+            output.ready = true;
+            shellHelper.showPanel(output);
         }
         onTerminateRequested: {
             liriCompositor.quit();
@@ -241,17 +237,6 @@ WaylandCompositor {
 
     LS.LiriModalManagerV1 {
         id: liriModal
-    }
-
-    Timer {
-        id: shellHelperTimer
-
-        interval: 15000
-        running: true
-        onTriggered: {
-            for (var i = 0; i < outputs.length; i++)
-                outputs[i].reveal();
-        }
     }
 
     LS.LiriOsdV1 {
@@ -266,7 +251,7 @@ WaylandCompositor {
 
             context: Qt.ApplicationShortcut
             sequence: shortcut ? shortcut.sequence : ""
-            enabled: shellHelper.isReady
+            //enabled: shellHelper.isReady
             onActivated: {
                 shortcut.activate();
             }

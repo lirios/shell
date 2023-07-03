@@ -7,6 +7,8 @@
 
 #include <QLoggingCategory>
 
+#include <LiriAuroraCompositor/private/aurorawaylandcompositorextension_p.h>
+
 #include "waylandlirishellv1.h"
 #include "aurora-server-liri-shell-unstable-v1.h"
 
@@ -24,7 +26,8 @@
 Q_DECLARE_LOGGING_CATEGORY(gLcLiriShellV1)
 
 class LIRIAURORACOMPOSITOR_EXPORT WaylandLiriShellV1Private
-        : public PrivateServer::zliri_shell_v1
+        : public WaylandCompositorExtensionPrivate
+        , public PrivateServer::zliri_shell_v1
 {
     Q_DECLARE_PUBLIC(WaylandLiriShellV1)
 public:
@@ -33,17 +36,15 @@ public:
     static WaylandLiriShellV1Private *get(WaylandLiriShellV1 *shell);
 
 protected:
-    WaylandLiriShellV1 *q_ptr;
-
-private:
     void zliri_shell_v1_bind_resource(Resource *r) override;
     void zliri_shell_v1_bind_shortcut(Resource *resource, uint32_t id, const QString &sequence) override;
-    void zliri_shell_v1_ready(Resource *resource) override;
+    void zliri_shell_v1_ready(Resource *resource, struct ::wl_resource *outputResource) override;
     void zliri_shell_v1_terminate(Resource *resource) override;
 };
 
 class LIRIAURORACOMPOSITOR_EXPORT WaylandLiriShortcutV1Private
-        : public PrivateServer::zliri_shortcut_v1
+        : public AuroraObjectPrivate
+        , public PrivateServer::zliri_shortcut_v1
 {
     Q_DECLARE_PUBLIC(WaylandLiriShortcutV1)
 public:
@@ -62,14 +63,12 @@ protected:
 };
 
 class LIRIAURORACOMPOSITOR_EXPORT WaylandLiriOsdV1Private
-        : public PrivateServer::zliri_osd_v1
+      : public WaylandCompositorExtensionPrivate
+      , public PrivateServer::zliri_osd_v1
 {
     Q_DECLARE_PUBLIC(WaylandLiriOsdV1)
 public:
     explicit WaylandLiriOsdV1Private(WaylandLiriOsdV1 *self);
-
-protected:
-    WaylandLiriOsdV1 *q_ptr;
 };
 
 #endif // LIRI_SHELL_COMPOSITOR_WAYLANDLIRISHELLV1_P_H

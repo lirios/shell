@@ -8,6 +8,7 @@
 #include <LiriAuroraCompositor/WaylandPointer>
 #include <LiriAuroraCompositor/WaylandSeat>
 #include <LiriAuroraCompositor/WaylandSurface>
+#include <LiriAuroraCompositor/private/aurorawaylandoutput_p.h>
 
 #include "waylandlirishellv1_p.h"
 
@@ -20,8 +21,8 @@ Q_LOGGING_CATEGORY(gLcLiriShellV1, "liri.shell.lirishellv1")
  */
 
 WaylandLiriShellV1Private::WaylandLiriShellV1Private(WaylandLiriShellV1 *qq)
-    : PrivateServer::zliri_shell_v1()
-    , q_ptr(qq)
+    : WaylandCompositorExtensionPrivate(qq)
+    , PrivateServer::zliri_shell_v1()
 {
 }
 
@@ -76,12 +77,16 @@ void WaylandLiriShellV1Private::zliri_shell_v1_bind_shortcut(Resource *resource,
     Q_EMIT q->shortcutBound(shortcut);
 }
 
-void WaylandLiriShellV1Private::zliri_shell_v1_ready(Resource *resource)
+void WaylandLiriShellV1Private::zliri_shell_v1_ready(Resource *resource, struct ::wl_resource *outputResource)
 {
     Q_UNUSED(resource)
 
     Q_Q(WaylandLiriShellV1);
-    emit q->ready();
+
+    auto *output = WaylandOutput::fromResource(outputResource);
+    Q_ASSERT(output);
+    qWarning()<<"@@@@@@@@@@@@@@@@"<<output;
+    emit q->ready(output);
 }
 
 void WaylandLiriShellV1Private::zliri_shell_v1_terminate(Resource *resource)
@@ -97,14 +102,12 @@ void WaylandLiriShellV1Private::zliri_shell_v1_terminate(Resource *resource)
  */
 
 WaylandLiriShellV1::WaylandLiriShellV1()
-    : WaylandCompositorExtensionTemplate<WaylandLiriShellV1>()
-    , d_ptr(new WaylandLiriShellV1Private(this))
+    : WaylandCompositorExtensionTemplate<WaylandLiriShellV1>(*new WaylandLiriShellV1Private(this))
 {
 }
 
 WaylandLiriShellV1::WaylandLiriShellV1(Aurora::Compositor::WaylandCompositor *compositor)
-    : WaylandCompositorExtensionTemplate<WaylandLiriShellV1>(compositor)
-    , d_ptr(new WaylandLiriShellV1Private(this))
+    : WaylandCompositorExtensionTemplate<WaylandLiriShellV1>(compositor, *new WaylandLiriShellV1Private(this))
 {
 }
 
@@ -123,6 +126,17 @@ void WaylandLiriShellV1::initialize()
         return;
     }
     d->init(compositor->display(), 1);
+}
+
+void WaylandLiriShellV1::showPanel(WaylandOutput *output)
+{
+    Q_D(WaylandLiriShellV1);
+
+    auto *outputResource = WaylandOutputPrivate::get(output)->resource()->handle;
+
+    const auto values = d->resourceMap().values();
+    for (auto *resource : values)
+        d->send_show_panel(resource->handle, outputResource);
 }
 
 void WaylandLiriShellV1::requestLogout()
@@ -167,7 +181,8 @@ QByteArray WaylandLiriShellV1::interfaceName()
  */
 
 WaylandLiriShortcutV1Private::WaylandLiriShortcutV1Private(WaylandLiriShortcutV1 *self)
-    : PrivateServer::zliri_shortcut_v1()
+    : AuroraObjectPrivate()
+    , PrivateServer::zliri_shortcut_v1()
     , q_ptr(self)
 {
 }
@@ -190,11 +205,11 @@ void WaylandLiriShortcutV1Private::zliri_shortcut_v1_destroy(Resource *resource)
 WaylandLiriShortcutV1::WaylandLiriShortcutV1(const QString &sequence,
                                              WaylandCompositor *compositor,
                                              QObject *parent)
-    : QObject(parent)
-    , d_ptr(new WaylandLiriShortcutV1Private(this))
+    : AuroraObject(*new WaylandLiriShortcutV1Private(this), parent)
 {
-    d_ptr->compositor = compositor;
-    d_ptr->sequence = sequence;
+    Q_D(WaylandLiriShortcutV1);
+    d->compositor = compositor;
+    d->sequence = sequence;
 }
 
 WaylandLiriShortcutV1::~WaylandLiriShortcutV1()
@@ -223,8 +238,8 @@ void WaylandLiriShortcutV1::activate(WaylandSeat *seat)
  */
 
 WaylandLiriOsdV1Private::WaylandLiriOsdV1Private(WaylandLiriOsdV1 *self)
-    : PrivateServer::zliri_osd_v1()
-    , q_ptr(self)
+    : WaylandCompositorExtensionPrivate(self)
+    , PrivateServer::zliri_osd_v1()
 {
 }
 
@@ -233,14 +248,12 @@ WaylandLiriOsdV1Private::WaylandLiriOsdV1Private(WaylandLiriOsdV1 *self)
  */
 
 WaylandLiriOsdV1::WaylandLiriOsdV1()
-    : WaylandCompositorExtensionTemplate<WaylandLiriOsdV1>()
-    , d_ptr(new WaylandLiriOsdV1Private(this))
+    : WaylandCompositorExtensionTemplate<WaylandLiriOsdV1>(*new WaylandLiriOsdV1Private(this))
 {
 }
 
 WaylandLiriOsdV1::WaylandLiriOsdV1(WaylandCompositor *compositor)
-    : WaylandCompositorExtensionTemplate<WaylandLiriOsdV1>(compositor)
-    , d_ptr(new WaylandLiriOsdV1Private(this))
+    : WaylandCompositorExtensionTemplate<WaylandLiriOsdV1>(compositor, *new WaylandLiriOsdV1Private(this))
 {
 }
 

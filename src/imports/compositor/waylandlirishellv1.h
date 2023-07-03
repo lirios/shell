@@ -13,6 +13,7 @@ namespace Aurora {
 
 namespace Compositor {
 
+class WaylandOutput;
 class WaylandSeat;
 class WaylandSurface;
 
@@ -24,7 +25,7 @@ class WaylandLiriShellV1Private;
 class WaylandLiriShortcutV1Private;
 class WaylandLiriOsdV1Private;
 
-class WaylandLiriShortcutV1 : public QObject
+class WaylandLiriShortcutV1 : public AuroraObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(WaylandLiriShortcutV1)
@@ -38,9 +39,6 @@ public:
     QString sequence() const;
 
     Q_INVOKABLE void activate(Aurora::Compositor::WaylandSeat *seat = nullptr);
-
-private:
-    QScopedPointer<WaylandLiriShortcutV1Private> const d_ptr;
 };
 
 class WaylandLiriShellV1
@@ -55,6 +53,7 @@ public:
 
     void initialize() override;
 
+    Q_INVOKABLE void showPanel(WaylandOutput *output);
     Q_INVOKABLE void requestLogout();
     Q_INVOKABLE void requestShutdown();
     Q_INVOKABLE void sendQuit();
@@ -64,11 +63,8 @@ public:
 
 Q_SIGNALS:
     void shortcutBound(WaylandLiriShortcutV1 *shortcut);
-    void ready();
+    void ready(WaylandOutput *output);
     void terminateRequested();
-
-private:
-    QScopedPointer<WaylandLiriShellV1Private> const d_ptr;
 };
 
 class WaylandLiriOsdV1
@@ -88,9 +84,6 @@ public:
 
     static const struct wl_interface *interface();
     static QByteArray interfaceName();
-
-private:
-    QScopedPointer<WaylandLiriOsdV1Private> const d_ptr;
 };
 
 #endif // LIRI_SHELL_COMPOSITOR_WAYLANDLIRISHELLV1_H

@@ -29,5 +29,6 @@
         <file>qml/launcher/PagedGrid.qml</file>
         <file>qml/panel/StatusMenu.qml</file>
         <file>qml/notifications/NotificationItem.qml</file>
+        <file>qml/SplashWindow.qml</file>
     </qresource>
 </RCC>

@@ -21,6 +21,7 @@ public:
         LogoutDialogRole,
         PowerOffDialogRole,
         WindowSwitcherRole,
+        SplashRole,
     };
     Q_ENUM(SurfaceRole)
 
@@ -33,7 +34,7 @@ public:
         DialogLayer,
         FullscreenLayer,
         LockScreenLayer,
-        OverlayLayer
+        OverlayLayer,
     };
     Q_ENUM(Layer);
 
