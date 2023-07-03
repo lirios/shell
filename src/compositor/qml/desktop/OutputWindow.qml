@@ -17,7 +17,6 @@ Window {
     readonly property alias layerSurfacesModel: layerSurfacesModel
     readonly property alias currentWorkspace: workspacesView.currentWorkspace
 
-    readonly property alias splashVisible: splash.visible
     property alias showFps: fpsIndicator.visible
     property alias showInformation: outputInfo.visible
 
@@ -31,9 +30,7 @@ Window {
     height: output.geometry.height
     flags: Qt.Window | Qt.FramelessWindowHint
     screen: output.screen ? Qt.application.screens[output.screen.screenIndex] : null
-    color: splashVisible
-           ? Material.color(Material.BlueGrey, Material.Shade800)
-           : !splashVisible && shellHelper.isReady ? Material.color(Material.Grey, Material.Shade700) : "black"
+    color: output.ready ? Material.color(Material.Grey, Material.Shade700) : "black"
     visible: output.screen && output.screen.enabled
 
     // Keyboard handling
@@ -252,18 +249,13 @@ Window {
         }
 
         // Splash screen
-        FluidControls.Wave {
-            id: splash
-
+        Rectangle {
             anchors.fill: parent
+            color: "black"
+            visible: !ready
 
-            Rectangle {
-                anchors.fill: parent
-                color: Material.color(Material.BlueGrey, Material.Shade800)
-            }
-
-            Component.onCompleted: {
-                openWave(0, 0);
+            HoverHandler {
+                cursorShape: Qt.BlankCursor
             }
         }
 
@@ -327,10 +319,6 @@ Window {
     /*
      * Methods
      */
-
-    function reveal() {
-        splash.closeWave(splash.width - splash.size, splash.height - splash.size);
-    }
 
     function flash() {
         flash.flash();

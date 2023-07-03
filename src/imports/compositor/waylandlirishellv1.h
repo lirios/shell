@@ -13,6 +13,7 @@ namespace Aurora {
 
 namespace Compositor {
 
+class WaylandOutput;
 class WaylandSeat;
 class WaylandSurface;
 
@@ -55,6 +56,7 @@ public:
 
     void initialize() override;
 
+    Q_INVOKABLE void showPanel(WaylandOutput *output);
     Q_INVOKABLE void requestLogout();
     Q_INVOKABLE void requestShutdown();
     Q_INVOKABLE void sendQuit();
@@ -64,7 +66,7 @@ public:
 
 Q_SIGNALS:
     void shortcutBound(WaylandLiriShortcutV1 *shortcut);
-    void ready();
+    void ready(WaylandOutput *output);
     void terminateRequested();
 
 private:

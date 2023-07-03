@@ -119,6 +119,9 @@ bool HelperLauncher::startProcess()
     case SessionLocker:
         cmd = QString::fromLocal8Bit(LIBEXECDIR "/liri-shell-lockscreen");
         break;
+    case Greeter:
+        cmd = QString::fromLocal8Bit(LIBEXECDIR "/liri-shell-greeter");
+        break;
     }
 
     auto args = QProcess::splitCommand(cmd);

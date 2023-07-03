@@ -28,9 +28,18 @@
       <description summary="shell is ready">
         Tell the compositor that the shell has created all
         the layer surfaces and it can hide the splash screen
-        revealing the desktop.
+        revealing the desktop on the specified output.
       </description>
+      <arg name="output" type="object" interface="wl_output"/>
     </request>
+
+    <event name="show_panel">
+      <description summary="logout dialog is requested">
+        The compositor will emit this event when it wants to show
+        the panel on the specified output.
+      </description>
+      <arg name="output" type="object" interface="wl_output"/>
+    </event>
 
     <request name="terminate">
       <description summary="terminate the compositor">

@@ -8,6 +8,7 @@
 #include <LiriAuroraCompositor/WaylandPointer>
 #include <LiriAuroraCompositor/WaylandSeat>
 #include <LiriAuroraCompositor/WaylandSurface>
+#include <LiriAuroraCompositor/private/aurorawaylandoutput_p.h>
 
 #include "waylandlirishellv1_p.h"
 
@@ -76,12 +77,16 @@ void WaylandLiriShellV1Private::zliri_shell_v1_bind_shortcut(Resource *resource,
     Q_EMIT q->shortcutBound(shortcut);
 }
 
-void WaylandLiriShellV1Private::zliri_shell_v1_ready(Resource *resource)
+void WaylandLiriShellV1Private::zliri_shell_v1_ready(Resource *resource, struct ::wl_resource *outputResource)
 {
     Q_UNUSED(resource)
 
     Q_Q(WaylandLiriShellV1);
-    emit q->ready();
+
+    auto *output = WaylandOutput::fromResource(outputResource);
+    Q_ASSERT(output);
+    qWarning()<<"@@@@@@@@@@@@@@@@"<<output;
+    emit q->ready(output);
 }
 
 void WaylandLiriShellV1Private::zliri_shell_v1_terminate(Resource *resource)
@@ -123,6 +128,17 @@ void WaylandLiriShellV1::initialize()
         return;
     }
     d->init(compositor->display(), 1);
+}
+
+void WaylandLiriShellV1::showPanel(WaylandOutput *output)
+{
+    Q_D(WaylandLiriShellV1);
+
+    auto *outputResource = WaylandOutputPrivate::get(output)->resource()->handle;
+
+    const auto values = d->resourceMap().values();
+    for (auto *resource : values)
+        d->send_show_panel(resource->handle, outputResource);
 }
 
 void WaylandLiriShellV1::requestLogout()

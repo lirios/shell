@@ -3,9 +3,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQml 2.1
+import QtQml.Models 2.15
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtGSettings 1.0 as Settings
+import Fluid.Core 1.0 as FluidCore
 import Aurora.Client 1.0 as AuroraClient
 import Liri.Session 1.0 as Session
 import Liri.PolicyKit 1.0 as Polkit
@@ -15,16 +17,6 @@ Item {
 
     Component.onCompleted: {
         primaryScreen = determinePrimaryScreen();
-    }
-
-    Timer {
-        id: readyTimer
-
-        interval: 250
-        onTriggered: {
-            shell.sendReady();
-            topLayerWindow.show();
-        }
     }
 
     /*
@@ -58,26 +50,48 @@ Item {
 
     AuroraClient.LiriShellV1 {
         id: shell
+    }
 
-        onActiveChanged: {
-            if (active)
-                readyTimer.start();
+    /*
+    Instantiator {
+        model: Qt.application.screens
+        active: !workspaceReady
+
+        SplashWindow {
+            screen: modelData
+        }
+    }
+    */
+
+    Instantiator {
+        model: Qt.application.screens
+        active: shell.active
+
+        BackgroundWindow {
+            screen: modelData
         }
     }
 
-    TopLayerWindow {
-        id: topLayerWindow
+    Instantiator {
+        model: Qt.application.screens
+        active: shell.active
 
-        screen: primaryScreen
+        onObjectAdded: {
+            shell.sendReady(object);
+        }
 
-        onLogoutRequested: {
-            logoutDialog.show();
-        }
-        onLockRequested: {
-            Session.SessionManager.lock();
-        }
-        onShutdownRequested: {
-            powerOffDialog.show();
+        TopLayerWindow {
+            screen: modelData
+
+            onLogoutRequested: {
+                logoutDialog.show();
+            }
+            onLockRequested: {
+                Session.SessionManager.lock();
+            }
+            onShutdownRequested: {
+                powerOffDialog.show();
+            }
         }
     }
 
@@ -106,14 +120,6 @@ Item {
             osdWindow.value = value;
             osdWindow.progressVisible = true;
             osdWindow.showWindow();
-        }
-    }
-
-    Instantiator {
-        model: Qt.application.screens
-
-        BackgroundWindow {
-            screen: modelData
         }
     }
 

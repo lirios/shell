@@ -48,6 +48,7 @@ liri_add_qml_plugin(LiriShellCompositorQmlPlugin
         Qt::GuiPrivate
         Liri::AuroraPlatformHeaders
         Liri::AuroraCompositor
+        Liri::AuroraCompositorPrivate
         Liri::Xdg
 )
 

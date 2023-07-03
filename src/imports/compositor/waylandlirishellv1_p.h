@@ -38,7 +38,7 @@ protected:
 private:
     void zliri_shell_v1_bind_resource(Resource *r) override;
     void zliri_shell_v1_bind_shortcut(Resource *resource, uint32_t id, const QString &sequence) override;
-    void zliri_shell_v1_ready(Resource *resource) override;
+    void zliri_shell_v1_ready(Resource *resource, struct ::wl_resource *outputResource) override;
     void zliri_shell_v1_terminate(Resource *resource) override;
 };
 

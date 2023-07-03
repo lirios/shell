@@ -22,7 +22,8 @@ class HelperLauncher : public QObject, public QQmlParserStatus
 public:
     enum Helper {
         Shell,
-        SessionLocker
+        SessionLocker,
+        Greeter
     };
     Q_ENUM(Helper)
 

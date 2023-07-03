@@ -21,14 +21,7 @@ Window {
     signal shutdownRequested()
 
     color: "transparent"
-    visible: false
-
-    onVisibleChanged: {
-        if (visible)
-            panel.show();
-        else
-            panel.hide();
-    }
+    visible: true
 
     AuroraClient.WlrLayerSurfaceV1 {
         layer: AuroraClient.WlrLayerSurfaceV1.TopLayer
@@ -153,10 +146,15 @@ Window {
     Panel.Panel {
         id: panel
 
+        x: 0
+        y: topLayerWindow.height
+        width: topLayerWindow.width
+
+        /*
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: -height
+        anchors.bottomMargin: workspaceReady ? 0 : -height
 
         Behavior on anchors.bottomMargin {
             NumberAnimation {
@@ -164,13 +162,24 @@ Window {
                 duration: FluidControls.Units.longDuration
             }
         }
+        */
+    }
 
-        function show() {
-            anchors.bottomMargin = 0;
-        }
+    YAnimator {
+        id: panelShowAnimation
 
-        function hide() {
-            anchors.bottomMargin = -height;
+        target: panel
+        from: topLayerWindow.height
+        to: topLayerWindow.height - panel.height
+        easing.type: Easing.InOutCubic
+        duration: FluidControls.Units.longDuration
+    }
+
+    Connections {
+        target: shell
+
+        function onShowPanelRequested() {
+            panelShowAnimation.start();
         }
     }
 

@@ -15,6 +15,7 @@ DesktopLayout::DesktopLayout(QQuickItem *parent)
 DesktopLayout::SurfaceRole DesktopLayout::getSurfaceRole(QQuickItem *item) const
 {
     static const QHash<QString, DesktopLayout::SurfaceRole> namespaceToRole {
+        { QStringLiteral("splash"), DesktopLayout::SplashRole },
         { QStringLiteral("osd"), DesktopLayout::OsdRole },
         { QStringLiteral("run-dialog"), DesktopLayout::RunDialogRole },
         { QStringLiteral("auth-dialog"), DesktopLayout::AuthDialogRole },
