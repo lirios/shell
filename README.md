@@ -34,7 +34,7 @@ The following modules and their dependencies are required:
  * [qtaccountsservice](https://github.com/lirios/qtaccountsservice) >= 1.2.0
  * [qtgsettings](https://github.com/lirios/qtgsettings) >= 1.1.0
  * [libliri](https://github.com/lirios/libliri)
- * [aurora-compositor](https://github.com/lirios/aurora)
+ * [aurora-compositor](https://github.com/lirios/aurora-compositor)
  * [aurora-client](https://github.com/lirios/aurora-client)
  * [pam](http://www.linux-pam.org/)
  * [polkit-qt5](https://invent.kde.org/libraries/polkit-qt-1)
