@@ -71,7 +71,7 @@ ecm_qt_declare_logging_category(
     DEFAULT_SEVERITY "Info"
 )
 
-liri_generate_wayland_protocol_server_sources(LiriShellCompositorQmlPlugin
+aurora_generate_wayland_protocol_server_sources(LiriShellCompositorQmlPlugin
     FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/protocols/liri-color-picker-unstable-v1.xml
         ${CMAKE_CURRENT_SOURCE_DIR}/protocols/liri-shell-unstable-v1.xml

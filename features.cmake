@@ -2,6 +2,9 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
+## Find Aurora Scanner:
+find_package(AuroraScanner REQUIRED)
+
 #### Features
 
 # liri-development-build
