@@ -12,8 +12,6 @@
 #include <QStandardPaths>
 #include <QtPlugin>
 
-#include <LiriAuroraCompositor/WaylandCompositor>
-
 #include "application.h"
 #include "sessionmanager/sessionmanager.h"
 
