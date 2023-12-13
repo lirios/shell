@@ -4,9 +4,6 @@ endif()
 if(NOT TARGET Liri::Xdg)
     find_package(Liri1Xdg REQUIRED)
 endif()
-if(NOT TARGET Liri::AuroraClient)
-    find_package(Liri1AuroraClient REQUIRED)
-endif()
 
 liri_add_qml_plugin(TaskManagerQmlPlugin
     MODULE_PATH
@@ -25,6 +22,7 @@ liri_add_qml_plugin(TaskManagerQmlPlugin
         plugin.cpp
         tasksmodel.cpp tasksmodel.h
         usagetracker.cpp usagetracker.h
+        wlrforeigntoplevelmanagementv1.cpp wlrforeigntoplevelmanagementv1.h wlrforeigntoplevelmanagementv1_p.h
         xdgutils.cpp xdgutils.h
     QML_FILES
         qmldir
@@ -37,10 +35,23 @@ liri_add_qml_plugin(TaskManagerQmlPlugin
         Qt5::DBus
         Qt5::Gui
         Qt5::GuiPrivate
+        Qt5::WaylandClient
         Qt5::Sql
         Liri::Qt5GSettings
         Liri::Xdg
-        Liri::AuroraClient
+)
+
+ecm_qt_declare_logging_category(
+    TaskManagerQmlPlugin
+    HEADER "lirishelltaskmanagerlogging.h"
+    IDENTIFIER "gLcTaskManager"
+    CATEGORY_NAME "liri.shell.taskmanager"
+    DEFAULT_SEVERITY "Info"
+)
+
+aurora_generate_wayland_protocol_client_sources(TaskManagerQmlPlugin
+    FILES
+        wlr-foreign-toplevel-management-unstable-v1.xml
 )
 
 liri_finalize_qml_plugin(TaskManagerQmlPlugin)

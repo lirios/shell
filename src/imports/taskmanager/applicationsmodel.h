@@ -8,7 +8,8 @@
 #include <QAbstractListModel>
 
 #include <Qt5GSettings/QGSettings>
-#include <LiriAuroraClient/WlrForeignToplevelManagerV1>
+
+#include "wlrforeigntoplevelmanagementv1.h"
 
 class Application;
 

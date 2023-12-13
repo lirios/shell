@@ -6,7 +6,7 @@ import QtQml 2.1
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtGSettings 1.0 as Settings
-import Aurora.Client 1.0 as AuroraClient
+import Liri.Shell 1.0 as Shell
 import Liri.Session 1.0 as Session
 import Liri.PolicyKit 1.0 as Polkit
 
@@ -56,7 +56,7 @@ Item {
      * Shell
      */
 
-    AuroraClient.LiriShellV1 {
+    Shell.LiriShellV1 {
         id: shell
 
         onActiveChanged: {
@@ -87,7 +87,7 @@ Item {
         OsdWindow {}
     }
 
-    AuroraClient.LiriOsdV1 {
+    Shell.LiriOsdV1 {
         property OsdWindow osdWindow: null
 
         onTextRequested: {

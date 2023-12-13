@@ -5,7 +5,7 @@
 import QtQuick 2.15
 import QtGSettings 1.0 as Settings
 import Fluid.Core 1.0 as FluidCore
-import Aurora.Client 1.0 as AuroraClient
+import Liri.Shell 1.0 as Shell
 
 FluidCore.Object {
     Settings.GSettings {
@@ -33,7 +33,7 @@ FluidCore.Object {
      * Window Manager
      */
 
-    AuroraClient.LiriShortcutV1 {
+    Shell.LiriShortcutV1 {
         sequence: wmKeybindings.mainMenu
         onActivated: {
             panelWindow;
@@ -44,7 +44,7 @@ FluidCore.Object {
      * Session Manager
      */
 
-    AuroraClient.LiriShortcutV1 {
+    Shell.LiriShortcutV1 {
         sequence: smKeybindings.powerOff
         onActivated: {
             powerOffDialog.show();
@@ -55,7 +55,7 @@ FluidCore.Object {
      * Desktop
      */
 
-    AuroraClient.LiriShortcutV1 {
+    Shell.LiriShortcutV1 {
         sequence: desktopKeybindings.runCommand
         onActivated: {
             runDialog.show();

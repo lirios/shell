@@ -7,6 +7,7 @@
 #include <QtQml/QQmlApplicationEngine>
 
 #include "authenticator.h"
+#include "extsessionlocksurfacev1.h"
 #include "gitsha1.h"
 
 #if HAVE_SYS_PRCTL_H
@@ -66,6 +67,7 @@ int main(int argc, char *argv[])
                                             [](QQmlEngine *, QJSEngine *) -> QObject * {
         return new Authenticator();
     });
+    qmlRegisterType<ExtSessionLockSurfaceV1>("Liri.Shell.Client", 1, 0, "ExtSessionLockSurfaceV1");
 
     // Create UI
     QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);

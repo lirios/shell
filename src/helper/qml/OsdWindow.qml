@@ -7,9 +7,9 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import Aurora.Client 1.0 as AuroraClient
 import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
+import Liri.Shell 1.0 as Shell
 
 Window {
     id: osdWindow
@@ -26,9 +26,9 @@ Window {
     color: "transparent"
     visible: true
 
-    AuroraClient.WlrLayerSurfaceV1 {
-        layer: AuroraClient.WlrLayerSurfaceV1.OverlayLayer
-        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
+    Shell.WlrLayerSurfaceV1 {
+        layer: Shell.WlrLayerSurfaceV1.OverlayLayer
+        keyboardInteractivity: Shell.WlrLayerSurfaceV1.NoKeyboardInteractivity
         role: "osd"
     }
 

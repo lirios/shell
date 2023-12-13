@@ -5,8 +5,8 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-import Aurora.Client 1.0 as AuroraClient
 import Fluid.Controls 1.0 as FluidControls
+import Liri.Shell 1.0 as Shell
 import Liri.Shell.TaskManager 1.0 as TaskManager
 import Liri.Shell.Notifications 1.0 as NotificationServer
 import "panel" as Panel
@@ -30,13 +30,13 @@ Window {
             panel.hide();
     }
 
-    AuroraClient.WlrLayerSurfaceV1 {
-        layer: AuroraClient.WlrLayerSurfaceV1.TopLayer
-        anchors: AuroraClient.WlrLayerSurfaceV1.LeftAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.TopAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.RightAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.BottomAnchor
-        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.OnDemandKeyboardInteractivity
+    Shell.WlrLayerSurfaceV1 {
+        layer: Shell.WlrLayerSurfaceV1.TopLayer
+        anchors: Shell.WlrLayerSurfaceV1.LeftAnchor |
+                 Shell.WlrLayerSurfaceV1.TopAnchor |
+                 Shell.WlrLayerSurfaceV1.RightAnchor |
+                 Shell.WlrLayerSurfaceV1.BottomAnchor
+        keyboardInteractivity: Shell.WlrLayerSurfaceV1.OnDemandKeyboardInteractivity
         exclusiveZone: -1
         role: "toplayer"
     }

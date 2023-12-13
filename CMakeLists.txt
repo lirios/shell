@@ -51,6 +51,7 @@ find_package(Qt5 "${QT_MIN_VERSION}"
         Xml
         Sql
         Gui
+        WaylandClient
         Widgets
         Svg
         Qml

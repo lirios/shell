@@ -5,10 +5,6 @@ if(FEATURE_enable_systemd)
     find_package(Libsystemd REQUIRED)
 endif()
 
-if(NOT TARGET Liri::AuroraClient)
-    find_package(Liri1AuroraClient REQUIRED)
-endif()
-
 find_package(PAM REQUIRED)
 
 include(LiriCreateGitHeadRevisionFile)
@@ -33,7 +29,6 @@ liri_add_executable(LiriShellHelper
         Qt5::Gui
         Qt5::GuiPrivate
         Qt5::Qml
-        Liri::AuroraClient
         ${PAM_LIBRARIES}
 )
 

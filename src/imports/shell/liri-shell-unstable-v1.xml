@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="liri_shell_unstable_v1">
+  <copyright><![CDATA[
+    SPDX-FileCopyrightText: 2018-2021 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
+
+    SPDX-License-Identifier: MIT
+  ]]></copyright>
+
+  <interface name="zliri_shell_v1" version="1">
+    <description summary="create widgets and shell helpers">
+      This interface is bound by a special client called shell helper
+      that is responsible for helping the compositor draw its user interface.
+      It can only be bound once and only shell helper is allowed.
+    </description>
+
+    <request name="bind_shortcut">
+      <description summary="register a shortcut with the compositor">
+        The client calls this request to register a shortcut
+        with the compositor.
+        This will create a zliri_shortcut_v1 object that will emit
+        the activated event.
+      </description>
+      <arg name="id" type="new_id" interface="zliri_shortcut_v1"/>
+      <arg name="sequence" type="string"/>
+    </request>
+
+    <request name="ready">
+      <description summary="shell is ready">
+        Tell the compositor that the shell has created all
+        the layer surfaces and it can hide the splash screen
+        revealing the desktop.
+      </description>
+    </request>
+
+    <request name="terminate">
+      <description summary="terminate the compositor">
+        Ask the compositor to quit.
+        This is usually called from the logout dialog.
+      </description>
+    </request>
+
+    <event name="logout_requested">
+      <description summary="logout dialog is requested">
+        The compositor will emit this event when it wants to show
+        the logout dialog.
+      </description>
+    </event>
+
+    <event name="shutdown_requested">
+      <description summary="shutdown is requested">
+        When the power off or suspend button is pressed, the compositor
+        will throw this event and the client will show the shutdown
+        dialog.
+      </description>
+    </event>
+
+    <event name="quit">
+      <description summary="tell the client to quit">
+        During the shutdown, the compositor emits this event in order
+        to let the client exit cleanly.
+      </description>
+    </event>
+  </interface>
+
+  <interface name="zliri_shortcut_v1" version="1">
+    <description summary="shortcut">
+      The activated event is emitted every time this shortcut is activated
+      by the compositor.
+    </description>
+
+    <event name="activated">
+      <description summary="tell the client the shortcut was triggered">
+        The shortcut was actiavated.
+      </description>
+      <arg name="seat" type="object" interface="wl_seat" allow-null="true"/>
+    </event>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy the shortcut">
+        This request destroys the shortcut.
+      </description>
+    </request>
+  </interface>
+
+  <interface name="zliri_osd_v1" version="1">
+    <description summary="on-screen display">
+      With this interface, the compositor asks the client to display
+      either a text or a progress inside the on-screen display surface.
+    </description>
+
+    <event name="text">
+      <description summary="show text on screen">
+        Show an icon with text on screen.
+      </description>
+      <arg name="icon_name" type="string"/>
+      <arg name="text" type="string"/>
+    </event>
+
+    <event name="progress">
+      <description summary="show progress on screen">
+        Show an icon with a progress bar on screen.
+        The value can be an integer number from 0 to 100.
+      </description>
+      <arg name="icon_name" type="string"/>
+      <arg name="value" type="uint"/>
+    </event>
+  </interface>
+
+  <interface name="zliri_modal_manager_v1" version="1">
+    <description summary="modal interaction">
+      Modal dialogs, in the context of the shell, appear in front of any
+      application window or any other shell surface, and remain on screen
+      until confirmed or dismissed.
+
+      As soon as the shell client creates a modal dialog, it gets a liri_modal
+      object by calling zliri_modal_manager_v1.create. The compositor then
+      shows the modal overlay on top of every other surface.
+
+      When the user clicks or taps on the modal overlay, the compositor sends
+      out the liri_modal.done event and the client dismisses the modal dialog.
+
+      The modal overlay and the dialog itself are created using the
+      wlr_layer_shell_unstable_v1 protocol.
+
+      This interface can only be bound once, by an authorized client.
+    </description>
+
+    <request name="grab">
+      <description summary="initiate modal interaction">
+        Tell the compositor to show the modal overlay and
+        act as an implicit grab.
+      </description>
+
+      <arg name="id" type="new_id" interface="zliri_modal_v1"/>
+      <arg name="seat" type="object" interface="wl_seat"
+           summary="the seat of the user event"/>
+    </request>
+  </interface>
+
+  <interface name="zliri_modal_v1" version="1">
+    <description summary="implicit modal grab">
+      When the user clicks or taps on the modal overlay, the compositor sends
+      out the zliri_modal_v1.done event and the client dismisses the modal dialog.
+    </description>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy the object">
+        This request destroys the zliri_modal_v1 object.
+      </description>
+    </request>
+
+    <event name="done">
+      <description summary="modal interaction is done">
+        This event is sent out when a modal is dismissed by the compositor.
+        The client should destroy the zliri_modal_v1 object at this point.
+      </description>
+    </event>
+  </interface>
+</protocol>

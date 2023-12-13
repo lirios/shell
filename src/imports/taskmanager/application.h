@@ -11,8 +11,9 @@
 #include <QObject>
 #include <QVector>
 
-#include <LiriAuroraClient/WlrForeignToplevelManagerV1>
 #include <LiriXdg/DesktopFile>
+
+#include "wlrforeigntoplevelmanagementv1.h"
 
 Q_DECLARE_LOGGING_CATEGORY(lcTaskManager)
 

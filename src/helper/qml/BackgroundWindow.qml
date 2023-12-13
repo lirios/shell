@@ -8,9 +8,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import QtGSettings 1.0 as Settings
 import Fluid.Effects 1.0 as FluidEffects
-import Aurora.Client 1.0 as AuroraClient
-import Liri.Shell 1.0 as LS
 import Liri.DBusService 1.0 as DBusService
+import Liri.Shell 1.0 as Shell
 
 Window {
     id: bgWindow
@@ -18,13 +17,13 @@ Window {
     color: Material.color(Material.Grey, Material.Shade700)
     visible: true
 
-    AuroraClient.WlrLayerSurfaceV1 {
-        layer: AuroraClient.WlrLayerSurfaceV1.BackgroundLayer
-        anchors: AuroraClient.WlrLayerSurfaceV1.TopAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.BottomAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.LeftAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.RightAnchor
-        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.NoKeyboardInteractivity
+    Shell.WlrLayerSurfaceV1 {
+        layer: Shell.WlrLayerSurfaceV1.BackgroundLayer
+        anchors: Shell.WlrLayerSurfaceV1.TopAnchor |
+                 Shell.WlrLayerSurfaceV1.BottomAnchor |
+                 Shell.WlrLayerSurfaceV1.LeftAnchor |
+                 Shell.WlrLayerSurfaceV1.RightAnchor
+        keyboardInteractivity: Shell.WlrLayerSurfaceV1.NoKeyboardInteractivity
         exclusiveZone: -1
         role: "background"
     }
@@ -64,7 +63,7 @@ Window {
         }
     }
 
-    LS.Background {
+    Shell.Background {
         id: background
 
         anchors.fill: parent

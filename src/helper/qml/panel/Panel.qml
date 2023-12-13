@@ -8,7 +8,6 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
 import Fluid.Controls 1.0 as FluidControls
-import Aurora.Client 1.0 as AuroraClient
 import Liri.Shell 1.0 as Shell
 
 Rectangle {

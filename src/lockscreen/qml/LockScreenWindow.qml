@@ -12,12 +12,11 @@ import Fluid.Controls 1.0 as FluidControls
 import Fluid.Effects 1.0 as FluidEffects
 import Liri.Shell 1.0
 import Liri.Shell.Client 1.0
-import Aurora.Client 1.0 as AuroraClient
 
 Window {
     id: lockScreenWindow
 
-    AuroraClient.ExtSessionLockSurfaceV1 {
+    ExtSessionLockSurfaceV1 {
         id: lockSurface
     }
 

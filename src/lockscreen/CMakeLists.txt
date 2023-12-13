@@ -5,20 +5,17 @@ if(FEATURE_enable_systemd)
     find_package(Libsystemd REQUIRED)
 endif()
 
-if(NOT TARGET Liri::AuroraClient)
-    find_package(Liri1AuroraClient REQUIRED)
-endif()
-
 find_package(PAM REQUIRED)
 
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
-liri_add_executable(LiriShellLockscreen
+liri_add_executable(LiriShellLockScreen
     OUTPUT_NAME
         "liri-shell-lockscreen"
     SOURCES
         authenticator.cpp authenticator.h
+        extsessionlocksurfacev1.cpp extsessionlocksurfacev1.h
         main.cpp
     RESOURCES
         "lockscreen.qrc"
@@ -34,21 +31,28 @@ liri_add_executable(LiriShellLockscreen
         Qt5::Gui
         Qt5::GuiPrivate
         Qt5::Qml
-        Liri::AuroraClient
         ${PAM_LIBRARIES}
 )
 
-liri_extend_target("LiriShellLockscreen"
+ecm_qt_declare_logging_category(
+    LiriShellLockScreen
+    HEADER "lirishelllockscreenlogging.h"
+    IDENTIFIER "gLcLockScreen"
+    CATEGORY_NAME "liri.shell.lockscreen"
+    DEFAULT_SEVERITY "Info"
+)
+
+liri_extend_target("LiriShellLockScreen"
     CONDITION FEATURE_liri_development_build
     DEFINES DEVELOPMENT_BUILD)
 
-liri_extend_target("LiriShellLockscreen"
+liri_extend_target("LiriShellLockScreen"
     CONDITION HAVE_SYS_PRCTL_H
     DEFINES HAVE_SYS_PRCTL_H)
 
-liri_extend_target("LiriShellLockscreen"
+liri_extend_target("LiriShellLockScreen"
     CONDITION FEATURE_enable_systemd
     DEFINES HAVE_SYSTEMD
     LIBRARIES PkgConfig::Libsystemd)
 
-liri_finalize_executable("LiriShellLockscreen")
+liri_finalize_executable("LiriShellLockScreen")

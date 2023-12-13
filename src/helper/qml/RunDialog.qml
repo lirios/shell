@@ -7,8 +7,8 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Material 2.15
-import Aurora.Client 1.0 as AuroraClient
 import Fluid.Controls 1.0 as FluidControls
+import Liri.Shell 1.0 as Shell
 import Liri.Session 1.0 as Session
 
 Window {
@@ -17,13 +17,13 @@ Window {
     color: "transparent"
     visible: false
 
-    AuroraClient.WlrLayerSurfaceV1 {
-        layer: AuroraClient.WlrLayerSurfaceV1.TopLayer
-        anchors: AuroraClient.WlrLayerSurfaceV1.LeftAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.TopAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.RightAnchor |
-                 AuroraClient.WlrLayerSurfaceV1.BottomAnchor
-        keyboardInteractivity: AuroraClient.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
+    Shell.WlrLayerSurfaceV1 {
+        layer: Shell.WlrLayerSurfaceV1.TopLayer
+        anchors: Shell.WlrLayerSurfaceV1.LeftAnchor |
+                 Shell.WlrLayerSurfaceV1.TopAnchor |
+                 Shell.WlrLayerSurfaceV1.RightAnchor |
+                 Shell.WlrLayerSurfaceV1.BottomAnchor
+        keyboardInteractivity: Shell.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
         exclusiveZone: -1
         role: "run-dialog"
     }

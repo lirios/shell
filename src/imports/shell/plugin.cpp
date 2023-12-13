@@ -5,6 +5,7 @@
 #include <QtQml>
 
 #include "extensionsmodel.h"
+#include "lirishellv1.h"
 #include "multimediakeysclient.h"
 #include "osdclient.h"
 
@@ -30,6 +31,10 @@ public:
                                             [](QQmlEngine *, QJSEngine *) -> QObject * {
             return new OsdClient();
         });
+
+        qmlRegisterType<Aurora::Client::LiriShellV1>(uri, versionMajor, versionMinor, "LiriShellV1");
+        qmlRegisterType<Aurora::Client::LiriShortcutV1>(uri, versionMajor, versionMinor, "LiriShortcutV1");
+        qmlRegisterType<Aurora::Client::LiriOsdV1>(uri, versionMajor, versionMinor, "LiriOsdV1");
     }
 };
 
