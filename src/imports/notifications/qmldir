@@ -1,4 +1,0 @@
-module Liri.Shell.Notifications
-plugin lirishellnotificationsplugin
-classname LiriShellNotificationsPlugin
-typeinfo plugins.qmltypes

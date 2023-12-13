@@ -1,3 +1,0 @@
-module Liri.Shell.Compositor
-plugin lirishellcompositorplugin
-classname LiriShellCompositorPlugin

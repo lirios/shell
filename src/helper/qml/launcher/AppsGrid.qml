@@ -3,9 +3,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Fluid.Core 1.0 as FluidCore
-import Fluid.Controls 1.0 as FluidControls
+import QtQuick
+import Fluid.Controls as FluidControls
+import Liri.Shell.Utils as Utils
 
 PagedGrid {
     id: gridView
@@ -24,10 +24,10 @@ PagedGrid {
         appsCategoryProxyModel.filterPattern = category;
     }
 
-    model: FluidCore.SortFilterProxyModel {
+    model: Utils.SortFilterProxyModel {
         id: appsProxyModel
 
-        sourceModel: FluidCore.SortFilterProxyModel {
+        sourceModel: Utils.SortFilterProxyModel {
             id: appsCategoryProxyModel
 
             sourceModel: appsModel

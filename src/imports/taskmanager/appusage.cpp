@@ -22,7 +22,7 @@ void AppUsage::save() const
     QSqlQuery query(m_db);
     query.prepare(QStringLiteral("INSERT OR REPLACE INTO app_usage VALUES (:id, :last_seen, :score)"));
     query.bindValue(QStringLiteral(":id"), appId);
-    query.bindValue(QStringLiteral(":last_seen"), lastSeen.toTime_t());
+    query.bindValue(QStringLiteral(":last_seen"), lastSeen.toSecsSinceEpoch());
     query.bindValue(QStringLiteral(":score"), score);
     query.exec();
 }

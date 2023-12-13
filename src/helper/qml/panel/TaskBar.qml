@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Fluid.Controls 1.0
-import Liri.Shell.TaskManager 1.0 as TaskManager
+import QtQuick
+import Fluid.Controls
+import Liri.Shell.TaskManager as TaskManager
 
 ListView {
     id: taskBar

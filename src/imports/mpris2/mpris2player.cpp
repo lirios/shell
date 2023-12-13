@@ -13,15 +13,37 @@
 #include <QtDBus/QDBusMetaType>
 
 #include "mpris2player.h"
-#include "mediaplayer2_interface.h"
-#include "player_interface.h"
-#include "properties_interface.h"
+#include "mediaplayer2interface.h"
+#include "playerinterface.h"
+#include "propertiesinterface.h"
 
 const QString objectPath(QStringLiteral("/org/mpris/MediaPlayer2"));
 const QString playerInterface(QStringLiteral("org.mpris.MediaPlayer2.Player"));
 const QString mprisInterface(QStringLiteral("org.mpris.MediaPlayer2"));
 
 Q_LOGGING_CATEGORY(MPRIS2_PLAYER, "liri.mpris2.player")
+
+QMap<QString, QMetaType::Type> propertyTypeMap = {
+    {QStringLiteral("Identity"), QMetaType::QString},
+    {QStringLiteral("DesktopEntry"), QMetaType::QString},
+    {QStringLiteral("SupportedUriSchemes"), QMetaType::QStringList},
+    {QStringLiteral("SupportedMimeTypes"), QMetaType::QStringList},
+    {QStringLiteral("Fullscreen"), QMetaType::Bool},
+    {QStringLiteral("PlaybackStatus"), QMetaType::QString},
+    {QStringLiteral("LoopStatus"), QMetaType::QString},
+    {QStringLiteral("Shuffle"), QMetaType::Bool},
+    {QStringLiteral("Rate"), QMetaType::Double},
+    {QStringLiteral("MinimumRate"), QMetaType::Double},
+    {QStringLiteral("MaximumRate"), QMetaType::Double},
+    {QStringLiteral("Volume"), QMetaType::Double},
+    {QStringLiteral("Position"), QMetaType::LongLong},
+    {QStringLiteral("Metadata"), QMetaType::QVariantMap},
+    {QStringLiteral("CanControl"), QMetaType::Bool},
+    {QStringLiteral("CanSeek"), QMetaType::Bool},
+    {QStringLiteral("CanGoNext"), QMetaType::Bool},
+    {QStringLiteral("CanGoPrevious"), QMetaType::Bool},
+    {QStringLiteral("CanRaise"), QMetaType::Bool}
+};
 
 static QVariant::Type propertyType(const QString &name)
 {
@@ -338,7 +360,7 @@ void Mpris2Player::updateFromMap(const QVariantMap &map)
     QMap<QString, QVariant>::const_iterator i = map.constBegin();
     while (i != map.constEnd()) {
         // Properties
-        QVariant::Type type = propertyType(i.key());
+        QMetaType::Type type = propertyTypeMap.value(i.key(), QMetaType::UnknownType);
         if (type != QVariant::Invalid)
             copyProperty(i.key(), i.value(), type);
 
@@ -351,7 +373,7 @@ void Mpris2Player::updateFromMap(const QVariantMap &map)
                 else
                     m_capabilities &= ~capability;
             } else {
-                const char *gotTypeCh = QDBusMetaType::typeToSignature(i.value().userType());
+                const char *gotTypeCh = QDBusMetaType::typeToSignature(i.value().metaType());
                 QString gotType = gotTypeCh ? QString::fromUtf8(gotTypeCh) : QStringLiteral("<unknown>");
 
                 qCWarning(MPRIS2_PLAYER) << m_serviceName << "exports" << i.key()
@@ -376,13 +398,13 @@ void Mpris2Player::updateFromMap(const QVariantMap &map)
 }
 
 void Mpris2Player::copyProperty(const QString &name, const QVariant &value,
-                                const QVariant::Type &expectedType)
+                                const QMetaType::Type &expectedType)
 {
     QVariant tmp = value;
 
     // We protect our users from bogus values
     if (tmp.userType() == qMetaTypeId<QDBusArgument>()) {
-        if (expectedType == QVariant::Map) {
+        if (expectedType == QMetaType::QVariantMap) {
             QDBusArgument arg = tmp.value<QDBusArgument>();
             if (arg.currentType() != QDBusArgument::MapType) {
                 qCWarning(MPRIS2_PLAYER) << m_serviceName << "exports" << name
@@ -404,10 +426,10 @@ void Mpris2Player::copyProperty(const QString &name, const QVariant &value,
             tmp = QVariant(map);
         }
     }
-    if (tmp.type() != expectedType) {
-        const char * gotTypeCh = QDBusMetaType::typeToSignature(tmp.userType());
+    if (tmp.metaType() != QMetaType(expectedType)) {
+        const char * gotTypeCh = QDBusMetaType::typeToSignature(tmp.metaType());
         QString gotType = gotTypeCh ? QString::fromUtf8(gotTypeCh) : QStringLiteral("<unknown>");
-        const char * expTypeCh = QDBusMetaType::typeToSignature(expectedType);
+        const char * expTypeCh = QDBusMetaType::typeToSignature(QMetaType(expectedType));
         QString expType = expTypeCh ? QString::fromUtf8(expTypeCh) : QStringLiteral("<unknown>");
 
         qCWarning(MPRIS2_PLAYER) << m_serviceName << "exports" << name
@@ -484,7 +506,6 @@ void Mpris2Player::copyProperty(const QString &name, const QVariant &value,
         }
     } else if (name == QStringLiteral("DesktopEntry")) {
         QSettings desktopFile(value.toString() + QStringLiteral(".desktop"), QSettings::IniFormat);
-        desktopFile.setIniCodec("UTF-8");
         desktopFile.beginGroup(QStringLiteral("Desktop Entry"));
         QString iconName = desktopFile.value(QStringLiteral("Icon")).toString();
         if (!iconName.isEmpty()) {

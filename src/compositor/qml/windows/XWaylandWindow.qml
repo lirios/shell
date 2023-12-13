@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Aurora.Compositor 1.0
-import Aurora.Compositor.Wlroots 1.0
-import Aurora.Compositor.XWayland 1.0 as LXW
-import Fluid.Core 1.0 as FluidCore
-import Liri.Shell.Compositor 1.0 as LS
+import QtQuick
+import Aurora.Compositor
+import Aurora.Compositor.Wlroots
+import Aurora.Compositor.XWayland as LXW
+import Fluid.Core as FluidCore
+import Liri.Shell.Compositor as LS
 
 FluidCore.Object {
     id: window

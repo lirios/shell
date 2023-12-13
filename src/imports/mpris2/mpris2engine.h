@@ -23,8 +23,8 @@ public:
     ~Mpris2Engine();
 
     QQmlListProperty<Mpris2Player> players();
-    static int playersCount(QQmlListProperty<Mpris2Player> *prop);
-    static Mpris2Player *playersAt(QQmlListProperty<Mpris2Player> *prop, int index);
+    static qsizetype playersCount(QQmlListProperty<Mpris2Player> *prop);
+    static Mpris2Player *playersAt(QQmlListProperty<Mpris2Player> *prop, qsizetype index);
 
 Q_SIGNALS:
     void playersChanged();

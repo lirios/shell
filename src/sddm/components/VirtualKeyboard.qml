@@ -21,8 +21,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.VirtualKeyboard 2.1
+import QtQuick
+import QtQuick.VirtualKeyboard
 
 InputPanel {
     property bool activated: false

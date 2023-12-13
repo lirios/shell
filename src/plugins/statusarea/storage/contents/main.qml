@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.15
-import Fluid.Controls 1.0 as FluidControls
-import Liri.Shell 1.0 as Shell
-import Liri.Storage 1.0 as Storage
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import Fluid.Controls as FluidControls
+import Liri.Shell as Shell
+import Liri.Storage as Storage
 
 Shell.StatusAreaExtension {
     Storage.StorageModel {

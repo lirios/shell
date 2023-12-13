@@ -2,16 +2,16 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Controls.Material 2.15
-import QtGSettings 1.0 as Settings
-import QtAccountsService 1.0 as AccountsService
-import Fluid.Controls 1.0 as FluidControls
-import Fluid.Effects 1.0 as FluidEffects
-import Liri.Shell 1.0
-import Liri.Shell.Client 1.0
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import QtGSettings as Settings
+import QtAccountsService as AccountsService
+import Fluid.Controls as FluidControls
+import Fluid.Effects as FluidEffects
+import Liri.Shell
+import Liri.Shell.Client
 
 Window {
     id: lockScreenWindow

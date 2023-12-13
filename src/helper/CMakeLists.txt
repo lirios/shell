@@ -10,39 +10,45 @@ find_package(PAM REQUIRED)
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
-liri_add_executable(LiriShellHelper
-    OUTPUT_NAME
-        "liri-shell-helper"
-    SOURCES
-        main.cpp
-    RESOURCES
-        "helper.qrc"
-    DEFINES
-        QT_NO_CAST_FROM_ASCII
-        QT_NO_FOREACH
+add_executable(LiriShellHelper main.cpp ${SOURCES})
+
+file(GLOB_RECURSE _qml_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml")
+file(GLOB_RECURSE _image_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/images/*")
+qt6_add_qml_module(LiriShellHelper
+    URI helper
+    QML_FILES ${_qml_files}
+    RESOURCES ${_image_files}
+)
+
+set_target_properties(LiriShellHelper PROPERTIES OUTPUT_NAME "liri-shell-helper")
+
+target_compile_definitions(LiriShellHelper
+    PRIVATE
         LIRISHELL_VERSION="${PROJECT_VERSION}"
-    INSTALL_DIRECTORY
-        "${INSTALL_LIBEXECDIR}"
-    LIBRARIES
-        Qt5::Core
-        Qt5::DBus
-        Qt5::Gui
-        Qt5::GuiPrivate
-        Qt5::Qml
+)
+
+if(LIRI_FEATURE_liri_development_build)
+    target_compile_definitions(LiriShellHelper PRIVATE -DDEVELOPMENT_BUILD)
+endif()
+if(HAVE_SYS_PRCTL_H)
+    target_compile_definitions(LiriShellHelper PRIVATE -DHAVE_SYS_PRCTL_H)
+endif()
+if(FEATURE_shell_enable_systemd)
+    target_compile_definitions(LiriShellHelper PRIVATE -DHAVE_SHAVE_SYSTEMD)
+    target_link_libraries(LiriShellHelper PRIVATE PkgConfig::Libsystemd)
+endif()
+
+target_link_libraries(LiriShellHelper
+    PRIVATE
+        Qt6::Core
+        Qt6::DBus
+        Qt6::Gui
+        Qt6::GuiPrivate
+        Qt6::Qml
+        Qt6::Quick
         ${PAM_LIBRARIES}
 )
 
-liri_extend_target("LiriShellHelper"
-    CONDITION FEATURE_liri_development_build
-    DEFINES DEVELOPMENT_BUILD)
-
-liri_extend_target("LiriShellHelper"
-    CONDITION HAVE_SYS_PRCTL_H
-    DEFINES HAVE_SYS_PRCTL_H)
-
-liri_extend_target("LiriShellHelper"
-    CONDITION FEATURE_enable_systemd
-    DEFINES HAVE_SYSTEMD
-    LIBRARIES PkgConfig::Libsystemd)
-
-liri_finalize_executable("LiriShellHelper")
+install(TARGETS LiriShellHelper
+        DESTINATION ${KDE_INSTALL_LIBEXECDIR}
+)

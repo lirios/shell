@@ -8,14 +8,10 @@ install(
         io.liri.hardware.screens.gschema.xml
         io.liri.system.gschema.xml
     DESTINATION
-        "${INSTALL_DATADIR}/glib-2.0/schemas"
+        "${KDE_INSTALL_DATADIR}/glib-2.0/schemas"
 )
 
-if(IS_ABSOLUTE "${INSTALL_DATADIR}")
-    set(DATADIR "${INSTALL_DATADIR}")
-else()
-    set(DATADIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_DATADIR}")
-endif()
+set(DATADIR "${KDE_INSTALL_FULL_DATADIR}")
 configure_file(
     "io.liri.desktop.background.gschema.xml.in"
     "${CMAKE_CURRENT_BINARY_DIR}/io.liri.desktop.background.gschema.xml"
@@ -31,5 +27,5 @@ install(
         "${CMAKE_CURRENT_BINARY_DIR}/io.liri.desktop.background.gschema.xml"
         "${CMAKE_CURRENT_BINARY_DIR}/io.liri.desktop.lockscreen.gschema.xml"
     DESTINATION
-        "${INSTALL_DATADIR}/glib-2.0/schemas"
+        "${KDE_INSTALL_DATADIR}/glib-2.0/schemas"
 )

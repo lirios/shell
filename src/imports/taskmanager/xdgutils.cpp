@@ -28,7 +28,7 @@ QStringList xdgApplicationsPaths()
         xdgDataDirs = QLatin1String("/usr/local/share/:/usr/share/");
 
     // Split ':' path separator from XDG data directories
-    xdgPaths += xdgDataDirs.split(QLatin1Char(':'), QString::SkipEmptyParts);
+    xdgPaths += xdgDataDirs.split(QLatin1Char(':'), Qt::SkipEmptyParts);
 
     // Append the applications directory to all XDG data directories
     for (const QString &xdgPath : qAsConst(xdgPaths)) {

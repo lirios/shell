@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.15
-import QtQuick.Controls.Material 2.15
-import Liri.Shell 1.0 as Shell
-import Fluid.Controls 1.0 as FluidControls
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import Liri.Shell as Shell
+import Fluid.Controls as FluidControls
 
 Window {
     id: authDialogWindow

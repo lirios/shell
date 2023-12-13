@@ -18,8 +18,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-Q_IMPORT_PLUGIN(ShellPrivatePlugin)
-
 static const QEvent::Type StartupEventType = static_cast<QEvent::Type>(QEvent::registerEventType());
 
 static int convertPermission(const QFileInfo &fileInfo)
@@ -53,9 +51,6 @@ Application::Application(QObject *parent)
     , m_failSafe(false)
     , m_started(false)
 {
-    // Register the static QML plugin
-    qobject_cast<QQmlExtensionPlugin*>(qt_static_plugin_ShellPrivatePlugin().instance())->registerTypes("Liri.private.shell");
-
     // Application engine
     m_appEngine = new QQmlApplicationEngine(this);
     connect(m_appEngine, &QQmlApplicationEngine::objectCreated,
@@ -174,7 +169,7 @@ void Application::objectCreated(QObject *object, const QUrl &)
     } else {
         // Load the error screen in case of error
         m_failSafe = true;
-        m_appEngine->load(QUrl(QStringLiteral("qrc:/qml/error/ErrorCompositor.qml")));
+        m_appEngine->load(QUrl(QStringLiteral("qrc:/qt/qml/compositor/qml/error/ErrorCompositor.qml")));
     }
 }
 

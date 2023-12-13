@@ -21,10 +21,10 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Controls 2.2
-import Fluid.Controls 1.0 as FluidControls
-import Liri.Shell 1.0 as LiriShell
+import QtQuick
+import QtQuick.Controls
+import Fluid.Controls as FluidControls
+import Liri.Shell as LiriShell
 
 LiriShell.Indicator {
     iconSource: FluidControls.Utils.iconUrl("hardware/keyboard")

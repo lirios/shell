@@ -196,7 +196,7 @@ void UsageTracker::loadUsage()
 
     while (query.next()) {
         QDateTime lastSeen;
-        lastSeen.setTime_t(query.value(lastSeenColumn).toUInt());
+        lastSeen.setSecsSinceEpoch(query.value(lastSeenColumn).toUInt());
 
         AppUsage *app = new AppUsage(query.value(idColumn).toString(), this);
         app->lastSeen = lastSeen;

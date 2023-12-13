@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQml 2.1
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtGSettings 1.0 as Settings
-import Liri.Shell 1.0 as Shell
-import Liri.Session 1.0 as Session
-import Liri.PolicyKit 1.0 as Polkit
+import QtQml
+import QtQuick
+import QtQuick.Window
+import QtGSettings as Settings
+import Liri.Shell as Shell
+import Liri.Session as Session
+import Liri.PolicyKit as Polkit
 
 Item {
     property Screen primaryScreen: null

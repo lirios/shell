@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Liri.Shell.TaskManager 1.0 as TaskManager
+import QtQuick
+import Liri.Shell.TaskManager as TaskManager
 
 Item {
     id: pagedGrid
@@ -24,7 +24,7 @@ Item {
     // Scroll through pages using the mouse weel
     WheelHandler {
         acceptedButtons: Qt.NoButton
-        onWheel: {
+        onWheel: (event) => {
             if (event.hasAngleDelta) {
                 if (event.angleDelta.y > 0)
                     pageView.decrementCurrentIndex();

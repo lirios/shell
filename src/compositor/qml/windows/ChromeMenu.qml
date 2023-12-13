@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import Fluid.Controls 1.0
+import QtQuick
+import QtQuick.Controls
+import Fluid.Controls
 
 Menu {
     focus: false

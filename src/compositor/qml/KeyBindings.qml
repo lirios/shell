@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtGSettings 1.0 as Settings
-import Liri.Session 1.0 as Session
+import QtQuick
+import QtGSettings as Settings
+import Liri.Session as Session
 
 Item {
     /*

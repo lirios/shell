@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Controls.Material 2.15
-import Aurora.Compositor 1.0 as Compositor
-import Liri.Shell.Compositor 1.0 as LS
-import Fluid.Controls 1.0 as FluidControls
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import Aurora.Compositor as Compositor
+import Liri.Shell.Compositor as LS
+import Fluid.Controls as FluidControls
 
 Window {
     id: outputWindow
@@ -38,7 +38,7 @@ Window {
 
     // Keyboard handling
     LS.KeyEventFilter {
-        Keys.onPressed: {
+        Keys.onPressed: (event) => {
             // Input wakes the output
             liriCompositor.wake();
 
@@ -75,7 +75,7 @@ Window {
             event.accepted = false;
         }
 
-        Keys.onReleased: {
+        Keys.onReleased: (event) => {
             // Input wakes the output
             liriCompositor.wake();
 

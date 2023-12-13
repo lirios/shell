@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Aurora.Compositor 1.0
-import QtGraphicalEffects 1.15
-import Fluid.Effects 1.0 as FluidEffects
-import Aurora.Compositor.XWayland 1.0
-import Liri.Shell.Compositor 1.0 as LS
+import QtQuick
+import Aurora.Compositor
+import Qt5Compat.GraphicalEffects
+import Fluid.Effects as FluidEffects
+import Aurora.Compositor.XWayland
+import Liri.Shell.Compositor as LS
 
 LS.ChromeItem {
     id: chrome

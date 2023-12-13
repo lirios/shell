@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Fluid.Controls 1.0 as FluidControls
-import QtAccountsService 1.0 as Accounts
-import Liri.Shell 1.0 as Shell
+import QtQuick
+import Fluid.Controls as FluidControls
+import QtAccountsService as Accounts
+import Liri.Shell as Shell
 
 Shell.StatusAreaExtension {
     Accounts.UserAccount {

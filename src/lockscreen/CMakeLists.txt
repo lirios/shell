@@ -10,29 +10,13 @@ find_package(PAM REQUIRED)
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
-liri_add_executable(LiriShellLockScreen
-    OUTPUT_NAME
-        "liri-shell-lockscreen"
-    SOURCES
-        authenticator.cpp authenticator.h
-        extsessionlocksurfacev1.cpp extsessionlocksurfacev1.h
-        main.cpp
-    RESOURCES
-        "lockscreen.qrc"
-    DEFINES
-        QT_NO_CAST_FROM_ASCII
-        QT_NO_FOREACH
-        LIRISHELL_VERSION="${PROJECT_VERSION}"
-    INSTALL_DIRECTORY
-        "${INSTALL_LIBEXECDIR}"
-    LIBRARIES
-        Qt5::Core
-        Qt5::DBus
-        Qt5::Gui
-        Qt5::GuiPrivate
-        Qt5::Qml
-        ${PAM_LIBRARIES}
+set(SOURCES
+    authenticator.cpp authenticator.h
+    extsessionlocksurfacev1.cpp extsessionlocksurfacev1.h
+    main.cpp
 )
+qt6_add_resources(SOURCES lockscreen.qrc)
+add_executable(LiriShellLockScreen ${SOURCES})
 
 ecm_qt_declare_logging_category(
     LiriShellLockScreen
@@ -42,17 +26,34 @@ ecm_qt_declare_logging_category(
     DEFAULT_SEVERITY "Info"
 )
 
-liri_extend_target("LiriShellLockScreen"
-    CONDITION FEATURE_liri_development_build
-    DEFINES DEVELOPMENT_BUILD)
+set_target_properties(LiriShellLockScreen PROPERTIES OUTPUT_NAME "liri-shell-lockscreen")
 
-liri_extend_target("LiriShellLockScreen"
-    CONDITION HAVE_SYS_PRCTL_H
-    DEFINES HAVE_SYS_PRCTL_H)
+target_compile_definitions(LiriShellLockScreen
+    PRIVATE
+        LIRISHELL_VERSION="${PROJECT_VERSION}"
+)
 
-liri_extend_target("LiriShellLockScreen"
-    CONDITION FEATURE_enable_systemd
-    DEFINES HAVE_SYSTEMD
-    LIBRARIES PkgConfig::Libsystemd)
+if(FEATURE_shell_enable_systemd)
+    target_compile_definitions(LiriShellLockScreen PRIVATE DEVELOPMENT_BUILD)
+endif()
+if(HAVE_SYS_PRCTL_H)
+    target_compile_definitions(LiriShellLockScreen PRIVATE HAVE_SYS_PRCTL_H)
+endif()
+if(FEATURE_shell_enable_systemd)
+    target_compile_definitions(LiriShellLockScreen PRIVATE HAVE_SHAVE_SYSTEMD)
+    target_link_libraries(LiriShellLockScreen PRIVATE PkgConfig::Libsystemd)
+endif()
 
-liri_finalize_executable("LiriShellLockScreen")
+target_link_libraries(LiriShellLockScreen
+    PRIVATE
+        Qt6::Core
+        Qt6::DBus
+        Qt6::Gui
+        Qt6::GuiPrivate
+        Qt6::Qml
+        ${PAM_LIBRARIES}
+)
+
+install(TARGETS LiriShellLockScreen
+        DESTINATION ${KDE_INSTALL_LIBEXECDIR}
+)

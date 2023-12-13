@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Fluid.Controls 1.0 as FluidControls
-import Liri.Shell 1.0 as Shell
+import QtQuick
+import Fluid.Controls as FluidControls
+import Liri.Shell as Shell
 
 Shell.Indicator {
     title: qsTr("Shut down")

@@ -12,7 +12,7 @@
 #include <QStandardPaths>
 #include <QTranslator>
 
-#include <Qt5GSettings/QGSettings>
+#include <Qt6GSettings/QGSettings>
 
 #include "gitsha1.h"
 #include "application.h"
@@ -126,18 +126,12 @@ int main(int argc, char *argv[])
     // (see QTBUG-63039 and QTBUG-87597)
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
-    // Automatically support HiDPI
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     // Application
     QGuiApplication app(argc, argv);
     app.setApplicationName(QStringLiteral("Shell"));
     app.setApplicationVersion(QStringLiteral(LIRISHELL_VERSION));
     app.setOrganizationName(QStringLiteral("Liri"));
     app.setOrganizationDomain(QStringLiteral("liri.io"));
-#ifndef QT_NO_SESSIONMANAGER
-    app.setFallbackSessionManagementEnabled(false);
-#endif
     app.setQuitOnLastWindowClosed(false);
 
     // Enable logs
@@ -217,7 +211,7 @@ int main(int argc, char *argv[])
     }
 #endif
     if (!urlAlreadySet)
-        shell->setUrl(QUrl(QStringLiteral("qrc:/qml/Compositor.qml")));
+        shell->setUrl(QUrl(QStringLiteral("qrc:/qt/qml/compositor/qml/Compositor.qml")));
     QCoreApplication::postEvent(shell, new StartupEvent());
 
     return app.exec();

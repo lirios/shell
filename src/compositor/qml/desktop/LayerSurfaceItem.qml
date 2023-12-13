@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Aurora.Compositor 1.0
-import Aurora.Compositor.WlrLayerShell 1.0
-import Fluid.Controls 1.0 as FluidControls
+import QtQuick
+import Aurora.Compositor
+import Aurora.Compositor.WlrLayerShell
+import Fluid.Controls as FluidControls
 
 WlrLayerSurfaceItem {
     id: layerSurfaceItem

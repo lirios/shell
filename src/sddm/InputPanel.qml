@@ -21,7 +21,7 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.5
+import QtQuick
 
 Loader {
     id: inputPanel

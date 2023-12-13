@@ -24,8 +24,8 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.0
-import QtQuick.Controls.Material 2.0
+import QtQuick
+import QtQuick.Controls.Material
 
 Rectangle {
     // TODO: We would show the last screenshot of the desktop, or

@@ -1,4 +1,0 @@
-module Liri.PolicyKit
-plugin polkitplugin
-classname PolicyKitPlugin
-typeinfo plugins.qmltypes

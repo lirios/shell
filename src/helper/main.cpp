@@ -81,9 +81,6 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(QStringLiteral(LIRISHELL_VERSION));
     app.setOrganizationName(QStringLiteral("Liri"));
     app.setOrganizationDomain(QStringLiteral("liri.io"));
-#ifndef QT_NO_SESSIONMANAGER
-    app.setFallbackSessionManagementEnabled(false);
-#endif
     app.setQuitOnLastWindowClosed(false);
 
     // Print version information
@@ -98,7 +95,7 @@ int main(int argc, char *argv[])
 
     // Create UI
     QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);
-    engine->load(QStringLiteral("qrc:/qml/main.qml"));
+    engine->load(QStringLiteral("qrc:/qt/qml/helper/qml/main.qml"));
 
     return app.exec();
 }

@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Controls 2.15
-import Fluid.Controls 1.0 as FluidControls
-import Liri.Shell 1.0 as Shell
-import Liri.Shell.TaskManager 1.0 as TaskManager
-import Liri.Shell.Notifications 1.0 as NotificationServer
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import Fluid.Controls as FluidControls
+import Liri.Shell as Shell
+import Liri.Shell.TaskManager as TaskManager
+import Liri.Shell.Notifications as NotificationServer
 import "panel" as Panel
 import "launcher" as Launcher
 import "notifications" as Notifications

@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtGSettings 1.0 as Settings
-import Fluid.Core 1.0 as FluidCore
-import Liri.Shell 1.0 as Shell
+import QtQuick
+import QtGSettings as Settings
+import Fluid.Core as FluidCore
+import Liri.Shell as Shell
 
 FluidCore.Object {
     Settings.GSettings {

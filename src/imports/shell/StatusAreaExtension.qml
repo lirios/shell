@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Fluid.Core 1.0 as FluidCore
+import QtQuick
+import Fluid.Core as FluidCore
 
 FluidCore.Object {
     property Component indicator

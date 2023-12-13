@@ -5,7 +5,7 @@
 #pragma once
 
 #include <QtCore/QObject>
-#include <Qt5AccountsService/UsersModel>
+#include <Qt6AccountsService/UsersModel>
 
 class UsersModel : public QtAccountsService::UsersModel
 {

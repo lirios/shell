@@ -7,7 +7,7 @@
 
 #include <QAbstractListModel>
 
-#include <Qt5GSettings/QGSettings>
+#include <Qt6GSettings/QGSettings>
 
 #include "wlrforeigntoplevelmanagementv1.h"
 

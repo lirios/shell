@@ -31,7 +31,7 @@ Mpris2Engine::Mpris2Engine(QObject *parent)
     }
 
     m_watcher = new QDBusServiceWatcher(this);
-    connect(m_watcher, &QDBusServiceWatcher::serviceOwnerChanged, [=](const QString &name, const QString &oldOwner, const QString &newOwner) {
+    connect(m_watcher, &QDBusServiceWatcher::serviceOwnerChanged, [this](const QString &name, const QString &oldOwner, const QString &newOwner) {
         if (oldOwner.isEmpty() && name.startsWith(mprisPrefix)) {
             qCDebug(MPRIS2) << "Found new player" << name;
             m_players.append(new Mpris2Player(name));
@@ -59,13 +59,13 @@ QQmlListProperty<Mpris2Player> Mpris2Engine::players()
     return QQmlListProperty<Mpris2Player>(this, nullptr, playersCount, playersAt);
 }
 
-int Mpris2Engine::playersCount(QQmlListProperty<Mpris2Player> *prop)
+qsizetype Mpris2Engine::playersCount(QQmlListProperty<Mpris2Player> *prop)
 {
     Mpris2Engine *engine = static_cast<Mpris2Engine *>(prop->object);
     return engine->m_players.count();
 }
 
-Mpris2Player *Mpris2Engine::playersAt(QQmlListProperty<Mpris2Player> *prop, int index)
+Mpris2Player *Mpris2Engine::playersAt(QQmlListProperty<Mpris2Player> *prop, qsizetype index)
 {
     Mpris2Engine *engine = static_cast<Mpris2Engine *>(prop->object);
     return engine->m_players.at(index);

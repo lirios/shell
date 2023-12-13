@@ -21,15 +21,15 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
-import QtQuick.Layouts 1.0
-import Fluid.Controls 1.0
-import Fluid.Effects 1.0 as FluidEffects
-import Liri.Shell 1.0
-import Liri.LoginManager 1.0
-import SddmComponents 2.0 as SddmComponents
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import QtQuick.Layouts
+import Fluid.Controls
+import Fluid.Effects as FluidEffects
+import Liri.Shel1
+import Liri.LoginManager
+import SddmComponents as SddmComponents
 import "indicators" as Indicators
 
 ColumnLayout {

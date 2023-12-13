@@ -3,19 +3,19 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQml 2.1
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import Aurora.Compositor 1.0
-import Aurora.Compositor.Ext 1.0
-import Aurora.Compositor.Liri 1.0
-import Aurora.Compositor.Wlroots 1.0
-import Aurora.Compositor.WlrLayerShell 1.0
-import Aurora.Compositor.XdgShell 1.0
-import Aurora.Compositor.XWayland 1.0 as LXW
-import Liri.Session 1.0 as Session
-import Liri.private.shell 1.0 as P
-import Liri.Shell.Compositor 1.0 as LS
+import QtQml
+import QtQuick
+import QtQuick.Window
+import Aurora.Compositor
+import Aurora.Compositor.Ext
+import Aurora.Compositor.Liri
+import Aurora.Compositor.Wlroots
+import Aurora.Compositor.WlrLayerShell
+import Aurora.Compositor.XdgShell
+import Aurora.Compositor.XWayland as LXW
+import Liri.Session as Session
+import Liri.private.shell as P
+import Liri.Shell.Compositor as LS
 import "desktop"
 import "windows"
 
@@ -54,7 +54,7 @@ WaylandCompositor {
         }
     }
 
-    onSurfaceRequested: {
+    onSurfaceRequested: (client, id, version) => {
         var surface = surfaceComponent.createObject(liriCompositor, {});
         surface.initialize(liriCompositor, client, id, version);
     }
@@ -224,7 +224,7 @@ WaylandCompositor {
 
         property bool isReady: false
 
-        onShortcutBound: {
+        onShortcutBound: (shortcut) => {
             shortcutComponent.incubateObject(keyBindings, { shortcut: shortcut });
         }
         onReady: {
@@ -290,7 +290,7 @@ WaylandCompositor {
     WlrLayerShellV1 {
         id: layerShell
 
-        onLayerSurfaceCreated: {
+        onLayerSurfaceCreated: (layerSurface) => {
             var output = layerSurface.output;
             if (!output)
                 output = liriCompositor.defaultOutput;
@@ -461,7 +461,7 @@ WaylandCompositor {
                 windows.push(window);
             }
         }
-        onServerStarted: {
+        onServerStarted: (displayName) => {
             console.info("Xwayland server started");
             Session.SessionManager.setEnvironment("DISPLAY", displayName);
         }

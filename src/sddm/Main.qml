@@ -21,12 +21,12 @@
  * $END_LICENSE$
  ***************************************************************************/
 
-import QtQuick 2.5
-import QtQuick.Controls 2.0
-import QtQuick.Controls.Material 2.0
-import Fluid.Controls 1.0
-import Fluid.Effects 1.0
-import Liri.Shell 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import Fluid.Controls
+import Fluid.Effects
+import Liri.Shell
 
 Rectangle {
     id: root

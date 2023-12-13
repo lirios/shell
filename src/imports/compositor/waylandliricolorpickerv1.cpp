@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include <QFile>
 #include <QGuiApplication>
 #include <QQuickItem>
 #include <QQuickItemGrabResult>

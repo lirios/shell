@@ -142,7 +142,7 @@ private Q_SLOTS:
     void propertiesFinished(QDBusPendingCallWatcher *watcher);
     void updateFromMap(const QVariantMap &map);
     void copyProperty(const QString &name, const QVariant &value,
-                      const QVariant::Type &expectedType);
+                      const QMetaType::Type &expectedType);
 };
 
 #endif // LIRI_MPRIS2PLAYER_H

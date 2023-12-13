@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Liri.Shell.Compositor 1.0 as LS
+import QtQuick
+import Liri.Shell.Compositor as LS
 import "PresentEffect.js" as PresentEffect
 import "../windows"
 

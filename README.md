@@ -17,7 +17,7 @@ Compiler requirements:
 * [gcc >= 4.8](https://gcc.gnu.org/gcc-4.8/) or
 * [Clang](http://clang.llvm.org/)
 
-Qt >= 5.15.0 with at least the following modules is required:
+Qt >= 6.6.0 with at least the following modules is required:
 
  * [qtbase](http://code.qt.io/cgit/qt/qtbase.git)
  * [qtdeclarative](http://code.qt.io/cgit/qt/qtdeclarative.git)
@@ -28,16 +28,17 @@ Qt >= 5.15.0 with at least the following modules is required:
 
 The following modules and their dependencies are required:
 
- * [cmake](https://gitlab.kitware.com/cmake/cmake) >= 3.10.0
- * [cmake-shared](https://github.com/lirios/cmake-shared.git) >= 1.0.0
- * [fluid](https://github.com/lirios/fluid) >= 1.0.0
- * [qtaccountsservice](https://github.com/lirios/qtaccountsservice) >= 1.2.0
- * [qtgsettings](https://github.com/lirios/qtgsettings) >= 1.1.0
+ * [cmake](https://gitlab.kitware.com/cmake/cmake) >= 3.19.0
+ * [extra-cmake-modules](https://invent.kde.org/frameworks/extra-cmake-modules) >= 5.245.0
+ * [cmake-shared](https://github.com/lirios/cmake-shared.git) >= 2.0.99
+ * [fluid](https://github.com/lirios/fluid) >= 2.0.0
+ * [qtaccountsservice](https://github.com/lirios/qtaccountsservice) >= 2.0.0
+ * [qtgsettings](https://github.com/lirios/qtgsettings) >= 2.0.0
  * [libliri](https://github.com/lirios/libliri)
  * [aurora-scanner](https://github.com/lirios/aurora-scanner)
  * [aurora-compositor](https://github.com/lirios/aurora-compositor)
  * [pam](http://www.linux-pam.org/)
- * [polkit-qt5](https://invent.kde.org/libraries/polkit-qt-1)
+ * [polkit-qt-1](https://invent.kde.org/libraries/polkit-qt-1)
  * [solid](https://invent.kde.org/frameworks/solid)
 
 ## Installation

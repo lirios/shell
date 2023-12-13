@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Aurora.Compositor 1.0
-import QtGSettings 1.0 as Settings
-import Fluid.Core 1.0 as FluidCore
-import Liri.private.shell 1.0 as P
+import QtQuick
+import Aurora.Compositor
+import QtGSettings as Settings
+import Fluid.Core as FluidCore
+import Liri.private.shell as P
 
 FluidCore.Object {
     readonly property alias outputs: outputsSettings

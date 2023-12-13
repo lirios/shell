@@ -2,14 +2,14 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Controls.Material 2.15
-import QtGSettings 1.0 as Settings
-import Fluid.Effects 1.0 as FluidEffects
-import Liri.DBusService 1.0 as DBusService
-import Liri.Shell 1.0 as Shell
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import QtGSettings as Settings
+import Fluid.Effects as FluidEffects
+import Liri.DBusService as DBusService
+import Liri.Shell as Shell
 
 Window {
     id: bgWindow
@@ -141,7 +141,7 @@ Window {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
-        onClicked: bgMenu.popup(mouse.x, mouse.y)
-        onPressAndHold: bgMenu.popup(mouse.x, mouse.y)
+        onClicked: (mouse) => bgMenu.popup(mouse.x, mouse.y)
+        onPressAndHold: (mouse) => bgMenu.popup(mouse.x, mouse.y)
     }
 }

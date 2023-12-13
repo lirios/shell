@@ -1,5 +1,4 @@
-# SPDX-FileCopyrightText: 2022 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
-#
+# SPDX-FileCopyrightText: 2024 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
 if(NOT TARGET Liri::AuroraPlatformHeaders)
@@ -12,14 +11,16 @@ if(NOT TARGET Liri::Xdg)
     find_package(Liri1Xdg REQUIRED)
 endif()
 
-liri_add_qml_plugin(LiriShellCompositorQmlPlugin
-    MODULE_PATH
-        "Liri/Shell/Compositor"
-    VERSION
-        "1.0"
-    OUTPUT_NAME
-        lirishellcompositorplugin
-    SOURCES
+ecm_add_qml_module(LiriShellCompositorQmlPlugin
+    URI Liri.Shell.Compositor
+    VERSION 1.0
+    CLASS_NAME LiriShellCompositorPlugin
+    NO_GENERATE_PLUGIN_SOURCE
+    DEPENDENCIES QtQuick
+)
+
+target_sources(LiriShellCompositorQmlPlugin
+    PRIVATE
         abstracttitlebar.cpp abstracttitlebar.h
         appidandicon.cpp appidandicon.h
         chromeitem.cpp chromeitem.h
@@ -37,31 +38,7 @@ liri_add_qml_plugin(LiriShellCompositorQmlPlugin
         waylandlirimodalv1.cpp waylandlirimodalv1.h waylandlirimodalv1_p.h
         waylandlirishellv1.cpp waylandlirishellv1.h waylandlirishellv1_p.h
         windowmousetracker.cpp windowmousetracker.h
-    QML_FILES
-        qmldir
-    DEFINES
-        QT_NO_CAST_FROM_ASCII
-        QT_NO_FOREACH
-    LIBRARIES
-        Qt::Core
-        Qt::Gui
-        Qt::GuiPrivate
-        Liri::AuroraPlatformHeaders
-        Liri::AuroraCompositor
-        Liri::Xdg
 )
-
-if(IS_ABSOLUTE "${INSTALL_LIBEXECDIR}")
-    liri_extend_target(
-        LiriShellCompositorQmlPlugin
-        DEFINES LIBEXECDIR="${INSTALL_LIBEXECDIR}"
-    )
-else()
-    liri_extend_target(
-        LiriShellCompositorQmlPlugin
-        DEFINES LIBEXECDIR="${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBEXECDIR}"
-    )
-endif()
 
 ecm_qt_declare_logging_category(
     LiriShellCompositorQmlPlugin
@@ -77,4 +54,18 @@ aurora_generate_wayland_protocol_server_sources(LiriShellCompositorQmlPlugin
         ${CMAKE_CURRENT_SOURCE_DIR}/protocols/liri-shell-unstable-v1.xml
 )
 
-liri_finalize_qml_plugin(LiriShellCompositorQmlPlugin)
+target_compile_definitions(LiriShellCompositorQmlPlugin
+	PRIVATE LIBEXECDIR="${KDE_INSTALL_FULL_LIBEXECDIR}"
+)
+
+target_link_libraries(LiriShellCompositorQmlPlugin
+    PRIVATE
+    Qt6::GuiPrivate
+        Qt6::Qml
+        Qt6::Quick
+        Liri::AuroraPlatformHeaders
+        Liri::AuroraCompositor
+        Liri::Xdg
+)
+
+ecm_finalize_qml_module(LiriShellCompositorQmlPlugin)

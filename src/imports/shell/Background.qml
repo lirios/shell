@@ -3,10 +3,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.0
-import QtGraphicalEffects 1.0
-import Fluid.Core 1.0
-import Fluid.Controls 1.0 as FluidControls
+import QtQuick
+import Qt5Compat.GraphicalEffects
+import Fluid.Core
+import Fluid.Controls as FluidControls
 
 Loader {
     id: background
@@ -23,20 +23,23 @@ Loader {
     readonly property bool loaded: __private.loaded
     readonly property bool imageLoaded: __private.imageLoaded
 
-    sourceComponent: {
-        switch (background.mode) {
-        case "solid":
-            return solid
-        case "hgradient":
-        case "vgradient":
-            return gradient
-        case "wallpaper":
-            return wallpaper
-        default:
-            break
+    states: [
+        State {
+            name: "solid"
+            when: background.mode === "solid"
+            PropertyChanges { background.sourceComponent: solid }
+        },
+        State {
+            name: "gradient"
+            when: background.mode === "hgradient" || background.mode === "vgradient"
+            PropertyChanges { background.sourceComponent: gradient }
+        },
+        State {
+            name: "wallpaper"
+            when: background.mode === "wallpaper"
+            PropertyChanges { background.sourceComponent: wallpaper }
         }
-        return null
-    }
+    ]
 
     QtObject {
         id: __private
@@ -69,7 +72,7 @@ Loader {
         id: gradient
 
         Rectangle {
-            property bool vertical: background.mode === "vgradient"
+            readonly property bool vertical: background.mode === "vgradient"
 
             objectName: "gradient"
             rotation: vertical ? 270 : 0

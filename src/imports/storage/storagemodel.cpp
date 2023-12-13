@@ -81,7 +81,7 @@ QVariant StorageModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case StorageDeviceRole:
-        return qVariantFromValue(storageDevice);
+        return QVariant::fromValue(storageDevice);
     case UdiRole:
         return storageDevice->udi();
     case NameRole:

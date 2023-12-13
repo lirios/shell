@@ -155,7 +155,7 @@ QQmlListProperty<ScreenMode> ScreenItem::modesList()
     auto countFunc = [](QQmlListProperty<ScreenMode> *prop) {
         return static_cast<ScreenItem *>(prop->object)->m_modes.count();
     };
-    auto atFunc = [](QQmlListProperty<ScreenMode> *prop, int index) {
+    auto atFunc = [](QQmlListProperty<ScreenMode> *prop, qsizetype index) {
         return static_cast<ScreenItem *>(prop->object)->m_modes.at(index);
     };
     return QQmlListProperty<ScreenMode>(this, this, countFunc, atFunc);

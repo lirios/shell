@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import Liri.Shell 1.0 as Shell
+import QtQuick
+import Liri.Shell as Shell
 
 Shell.StatusAreaExtension {
     indicator: Shell.Indicator {

@@ -1,3 +1,0 @@
-module Liri.private.shell
-classname ShellPrivatePlugin
-typeinfo plugins.qmltypes

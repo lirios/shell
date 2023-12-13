@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQml 2.2
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import Aurora.Compositor 1.0
-import Liri.Shell.Compositor 1.0 as LS
-import Liri.Session 1.0 as Session
+import QtQml
+import QtQuick
+import QtQuick.Window
+import Aurora.Compositor
+import Liri.Shell.Compositor as LS
+import Liri.Session as Session
 import ".." as Root
 
 WaylandCompositor {

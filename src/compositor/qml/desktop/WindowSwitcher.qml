@@ -2,13 +2,13 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.15
-import QtQuick.Controls.Material 2.15
-import Aurora.Compositor 1.0
-import Fluid.Core 1.0 as FluidCore
-import Fluid.Controls 1.0 as FluidControls
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import Aurora.Compositor
+import Fluid.Controls as FluidControls
+import Liri.Shell.Utils as Utils
 
 Popup {
     readonly property real thumbnailSize: 200
@@ -76,7 +76,7 @@ Popup {
             clip: true
             focus: true
             orientation: ListView.Horizontal
-            model: FluidCore.SortFilterProxyModel {
+            model: Utils.SortFilterProxyModel {
                 sourceModel: liriCompositor.windows
                 filterExpression: modelData.parentSurface === null
             }

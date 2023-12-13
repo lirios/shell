@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import QtQml 2.2
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import Liri.Session 1.0 as Session
+import QtQml
+import QtQuick
+import QtQuick.Controls
+import Liri.Session as Session
 
 Menu {
     id: menu
