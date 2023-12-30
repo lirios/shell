@@ -1,5 +1,4 @@
-// SPDX-FileCopyrightText: 2018 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
-//
+// SPDX-FileCopyrightText: 2018-2024 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import QtQuick
@@ -8,6 +7,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import Liri.Shell as Shell
+import Liri.Shell.LayerShell as LayerShell
 import Fluid.Controls as FluidControls
 
 Window {
@@ -26,16 +26,14 @@ Window {
     color: "transparent"
     visible: false
 
-    Shell.WlrLayerSurfaceV1 {
-        layer: Shell.WlrLayerSurfaceV1.TopLayer
-        anchors: Shell.WlrLayerSurfaceV1.LeftAnchor |
-                 Shell.WlrLayerSurfaceV1.TopAnchor |
-                 Shell.WlrLayerSurfaceV1.RightAnchor |
-                 Shell.WlrLayerSurfaceV1.BottomAnchor
-        keyboardInteractivity: Shell.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
-        exclusiveZone: -1
-        role: "auth-dialog"
-    }
+    LayerShell.Window.layer: LayerShell.Window.LayerTop
+    LayerShell.Window.anchors: LayerShell.Window.AnchorLeft |
+                LayerShell.Window.AnchorTop |
+                LayerShell.Window.AnchorRight |
+                LayerShell.Window.AnchorBottom
+    LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityExclusive
+    LayerShell.Window.exclusionZone: -1
+    LayerShell.Window.scope: "auth-dialog"
 
     Dialog {
         id: authDialog

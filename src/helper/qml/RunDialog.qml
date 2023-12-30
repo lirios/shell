@@ -9,6 +9,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import Fluid.Controls as FluidControls
 import Liri.Shell as Shell
+import Liri.Shell.LayerShell as LayerShell
 import Liri.Session as Session
 
 Window {
@@ -17,16 +18,14 @@ Window {
     color: "transparent"
     visible: false
 
-    Shell.WlrLayerSurfaceV1 {
-        layer: Shell.WlrLayerSurfaceV1.TopLayer
-        anchors: Shell.WlrLayerSurfaceV1.LeftAnchor |
-                 Shell.WlrLayerSurfaceV1.TopAnchor |
-                 Shell.WlrLayerSurfaceV1.RightAnchor |
-                 Shell.WlrLayerSurfaceV1.BottomAnchor
-        keyboardInteractivity: Shell.WlrLayerSurfaceV1.ExclusiveKeyboardInteractivity
-        exclusiveZone: -1
-        role: "run-dialog"
-    }
+    LayerShell.Window.layer: LayerShell.Window.LayerTop
+    LayerShell.Window.anchors: LayerShell.Window.AnchorLeft |
+                LayerShell.Window.AnchorTop |
+                LayerShell.Window.AnchorRight |
+                LayerShell.Window.AnchorBottom
+    LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityExclusive
+    LayerShell.Window.exclusionZone: -1
+    LayerShell.Window.scope: "run-dialog"
 
     Dialog {
         id: runDialog

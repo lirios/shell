@@ -47,6 +47,7 @@ target_link_libraries(LiriShellHelper
         Qt6::Qml
         Qt6::Quick
         ${PAM_LIBRARIES}
+        LayerShellQt::Interface
 )
 
 install(TARGETS LiriShellHelper

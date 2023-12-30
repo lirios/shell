@@ -28,6 +28,9 @@ find_package(Qt6 "6.6.0"
 ## Find Aurora Scanner:
 find_package(AuroraScanner REQUIRED)
 
+## Find LayerShellQt:
+find_package(LayerShellQt "5.91.0" REQUIRED)
+
 #### Features
 
 # liri-development-build

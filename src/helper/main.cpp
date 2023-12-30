@@ -6,6 +6,8 @@
 #include <QtGui/QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include <LayerShellQt/Shell>
+
 #include "gitsha1.h"
 
 #if HAVE_SYS_PRCTL_H
@@ -66,11 +68,13 @@ int main(int argc, char *argv[])
     // Disable ptrace except for gdb
     disablePtrace();
 
+    // Layer Shell
+    LayerShellQt::Shell::useLayerShell();
+
     // Setup the environment
     qputenv("XDG_SESSION_TYPE", QByteArrayLiteral("wayland"));
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("liri"));
-    qputenv("QT_WAYLAND_SHELL_INTEGRATION", "liri-layer-shell");
     qputenv("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT", QByteArrayLiteral("1"));
     qputenv("QT_WAYLAND_DISABLE_DECORATION", "1");
     qunsetenv("QT_WAYLAND_DECORATION");
