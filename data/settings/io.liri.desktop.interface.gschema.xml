@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="liri">
   <schema id="io.liri.desktop.interface" path="/io/liri/desktop/interface/">
+    <key name="cursor-theme" type="s">
+      <default>'Paper'</default>
+      <summary>Mouse Cursor Theme</summary>
+      <description>
+        Theme for mouse pointer.
+      </description>
+    </key>
+    <key name="cursor-size" type="i">
+      <default>24</default>
+      <summary>Mouse Cursor Size</summary>
+      <description>
+        Size for mouse pointer.
+      </description>
+    </key>
     <key name="cursor-blink" type="b">
       <default>true</default>
       <summary>Cursor Blink</summary>
