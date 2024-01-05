@@ -20,5 +20,5 @@ jobs:
   linux-qt6:
     uses: lirios/.github/.github/workflows/build-linux-qt6.yml@master
     with:
-      dependencies: "umockdev-devel polkit-qt6-1-devel kf6-solid-devel"
+      dependencies: "umockdev-devel polkit-qt6-1-devel kf6-solid-devel layer-shell-qt-devel"
       build_dependencies: "cmake-shared qtaccountsservice qtgsettings fluid libliri aurora-scanner aurora-compositor"
