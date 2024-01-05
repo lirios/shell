@@ -29,7 +29,7 @@ ecm_qt_declare_logging_category(
 
 aurora_generate_wayland_protocol_client_sources(ShellQmlPlugin
     FILES
-        liri-shell-unstable-v1.xml
+        ${PROJECT_SOURCE_DIR}/data/protocols/liri-shell-unstable-v1.xml
         wlr-layer-shell-unstable-v1.xml
 )
 

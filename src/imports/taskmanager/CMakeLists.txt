@@ -54,7 +54,7 @@ ecm_qt_declare_logging_category(
 
 aurora_generate_wayland_protocol_client_sources(TaskManagerQmlPlugin
     FILES
-        wlr-foreign-toplevel-management-unstable-v1.xml
+        ${PROJECT_SOURCE_DIR}/data/protocols/wlr-foreign-toplevel-management-unstable-v1.xml
 )
 
 ecm_finalize_qml_module(TaskManagerQmlPlugin)
