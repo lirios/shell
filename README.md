@@ -34,6 +34,7 @@ The following modules and their dependencies are required:
  * [fluid](https://github.com/lirios/fluid) >= 2.0.0
  * [qtaccountsservice](https://github.com/lirios/qtaccountsservice) >= 2.0.0
  * [qtgsettings](https://github.com/lirios/qtgsettings) >= 2.0.0
+ * [qtshellintegration](https://github.com/lirios/qtshellintegration)
  * [libliri](https://github.com/lirios/libliri)
  * [aurora-scanner](https://github.com/lirios/aurora-scanner)
  * [aurora-compositor](https://github.com/lirios/aurora-compositor)
