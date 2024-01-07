@@ -12,11 +12,15 @@ liri_create_git_head_revision_file("gitsha1.h")
 
 set(SOURCES
     authenticator.cpp authenticator.h
-    extsessionlocksurfacev1.cpp extsessionlocksurfacev1.h
     main.cpp
 )
-qt6_add_resources(SOURCES lockscreen.qrc)
 add_executable(LiriShellLockScreen ${SOURCES})
+
+file(GLOB_RECURSE _qml_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml")
+qt6_add_qml_module(LiriShellLockScreen
+    URI lockscreen
+    QML_FILES ${_qml_files}
+)
 
 ecm_qt_declare_logging_category(
     LiriShellLockScreen

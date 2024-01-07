@@ -11,12 +11,13 @@ import QtAccountsService as AccountsService
 import Fluid.Controls as FluidControls
 import Fluid.Effects as FluidEffects
 import Liri.Shell
-import Liri.Shell.Client
+import Liri.Shell.LockScreen
+import Liri.QtShellIntegration
 
 Window {
     id: lockScreenWindow
 
-    ExtSessionLockSurfaceV1 {
+    SessionLockSurfaceV1 {
         id: lockSurface
     }
 

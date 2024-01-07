@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QJSValue>
+#include <QQmlEngine>
 
 extern "C" {
 struct pam_message;
@@ -16,11 +17,15 @@ struct pam_response;
 class Authenticator : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 public:
     Authenticator(QObject *parent = nullptr);
     ~Authenticator();
 
     Q_INVOKABLE void authenticate(const QString &password, const QJSValue &callback);
+
+    static Authenticator *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
 public Q_SLOTS:
 

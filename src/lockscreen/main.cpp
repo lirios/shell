@@ -6,8 +6,6 @@
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 
-#include "authenticator.h"
-#include "extsessionlocksurfacev1.h"
 #include "gitsha1.h"
 
 #if HAVE_SYS_PRCTL_H
@@ -38,7 +36,7 @@ int main(int argc, char *argv[])
     qputenv("XDG_SESSION_TYPE", QByteArrayLiteral("wayland"));
     qputenv("QT_QPA_PLATFORM", QByteArrayLiteral("wayland"));
     qputenv("QT_QPA_PLATFORMTHEME", QByteArrayLiteral("liri"));
-    qputenv("QT_WAYLAND_SHELL_INTEGRATION", "liri-lockscreen");
+    qputenv("QT_WAYLAND_SHELL_INTEGRATION", "liri-ext-session-lock");
     qputenv("QT_WAYLAND_USE_BYPASSWINDOWMANAGERHINT", QByteArrayLiteral("1"));
     qputenv("QT_WAYLAND_DISABLE_DECORATION", "1");
     qunsetenv("QT_WAYLAND_DECORATION");
@@ -59,16 +57,9 @@ int main(int argc, char *argv[])
           "** Build: %s-%s",
           LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
 
-    // Register QML types
-    qmlRegisterSingletonType<Authenticator>("Liri.Shell.Client", 1, 0, "Authenticator",
-                                            [](QQmlEngine *, QJSEngine *) -> QObject * {
-        return new Authenticator();
-    });
-    qmlRegisterType<ExtSessionLockSurfaceV1>("Liri.Shell.Client", 1, 0, "ExtSessionLockSurfaceV1");
-
     // Create UI
     QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);
-    engine->load(QStringLiteral("qrc:/qml/main.qml"));
+    engine->load(QStringLiteral("qrc:/qt/qml/lockscreen/qml/main.qml"));
 
     return app.exec();
 }

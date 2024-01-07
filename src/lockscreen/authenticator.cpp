@@ -27,6 +27,14 @@ void Authenticator::authenticate(const QString &password, const QJSValue &callba
     actualAuthentication(password);
 }
 
+Authenticator *Authenticator::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    Q_UNUSED(qmlEngine);
+    Q_UNUSED(jsEngine);
+
+    return new Authenticator();
+}
+
 void Authenticator::actualAuthentication(const QString &password)
 {
     const pam_conv conversation = { conversationHandler, this };
