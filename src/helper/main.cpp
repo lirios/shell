@@ -6,8 +6,6 @@
 #include <QtGui/QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include <LayerShellQt/Shell>
-
 #include "gitsha1.h"
 
 #if HAVE_SYS_PRCTL_H
@@ -69,7 +67,7 @@ int main(int argc, char *argv[])
     disablePtrace();
 
     // Layer Shell
-    LayerShellQt::Shell::useLayerShell();
+    qputenv("QT_WAYLAND_SHELL_INTEGRATION", "xdg-shell;layer-shell");
 
     // Setup the environment
     qputenv("XDG_SESSION_TYPE", QByteArrayLiteral("wayland"));

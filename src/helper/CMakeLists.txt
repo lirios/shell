@@ -10,7 +10,7 @@ find_package(PAM REQUIRED)
 include(LiriCreateGitHeadRevisionFile)
 liri_create_git_head_revision_file("gitsha1.h")
 
-add_executable(LiriShellHelper main.cpp ${SOURCES})
+add_executable(LiriShellHelper main.cpp)
 
 file(GLOB_RECURSE _qml_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml")
 file(GLOB_RECURSE _image_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/images/*")
@@ -47,7 +47,6 @@ target_link_libraries(LiriShellHelper
         Qt6::Qml
         Qt6::Quick
         ${PAM_LIBRARIES}
-        LayerShellQt::Interface
 )
 
 install(TARGETS LiriShellHelper
