@@ -103,7 +103,7 @@ Window {
 
         anchors.fill: parent
 
-        windowSystemCursorEnabled: mouseTracker.containsMouse
+        windowSystemCursorEnabled: true
 
         onMouseXChanged: {
             // Wake up
