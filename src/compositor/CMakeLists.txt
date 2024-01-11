@@ -8,8 +8,8 @@ if(NOT TARGET Liri::Xdg)
     find_package(Liri1Xdg REQUIRED)
 endif()
 
-include(LiriCreateGitHeadRevisionFile)
-liri_create_git_head_revision_file("gitsha1.h")
+include(LiriSetGitHeadRevision)
+liri_set_git_head_revision(_git_rev)
 
 # Translations
 file(GLOB LiriShell_TRANSLATIONS "${CMAKE_CURRENT_SOURCE_DIR}/../../translations/compositor/*_*.ts")
@@ -33,6 +33,8 @@ qt6_add_qml_module(LiriShell
     QML_FILES ${_qml_files} ${_js_files}
     RESOURCES ${_image_files}
 )
+
+target_compile_definitions(LiriShell PRIVATE GIT_REV="${_git_rev}")
 
 set_target_properties(LiriShell PROPERTIES OUTPUT_NAME "liri-shell")
 

@@ -14,7 +14,6 @@
 
 #include <Qt6GSettings/QGSettings>
 
-#include "gitsha1.h"
 #include "application.h"
 
 #if HAVE_SYS_PRCTL_H

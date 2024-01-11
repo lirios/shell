@@ -7,8 +7,8 @@ endif()
 
 find_package(PAM REQUIRED)
 
-include(LiriCreateGitHeadRevisionFile)
-liri_create_git_head_revision_file("gitsha1.h")
+include(LiriSetGitHeadRevision)
+liri_set_git_head_revision(_git_rev)
 
 add_executable(LiriShellHelper main.cpp)
 
@@ -19,6 +19,8 @@ qt6_add_qml_module(LiriShellHelper
     QML_FILES ${_qml_files}
     RESOURCES ${_image_files}
 )
+
+target_compile_definitions(LiriShellHelper PRIVATE GIT_REV="${_git_rev}")
 
 set_target_properties(LiriShellHelper PROPERTIES OUTPUT_NAME "liri-shell-helper")
 

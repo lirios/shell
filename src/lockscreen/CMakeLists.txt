@@ -7,8 +7,8 @@ endif()
 
 find_package(PAM REQUIRED)
 
-include(LiriCreateGitHeadRevisionFile)
-liri_create_git_head_revision_file("gitsha1.h")
+include(LiriSetGitHeadRevision)
+liri_set_git_head_revision(_git_rev)
 
 set(SOURCES
     authenticator.cpp authenticator.h
@@ -29,6 +29,8 @@ ecm_qt_declare_logging_category(
     CATEGORY_NAME "liri.shell.lockscreen"
     DEFAULT_SEVERITY "Info"
 )
+
+target_compile_definitions(LiriShellLockScreen PRIVATE GIT_REV="${_git_rev}")
 
 set_target_properties(LiriShellLockScreen PROPERTIES OUTPUT_NAME "liri-shell-lockscreen")
 
