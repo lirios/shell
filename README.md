@@ -41,7 +41,6 @@ The following modules and their dependencies are required:
  * [pam](http://www.linux-pam.org/)
  * [polkit-qt-1](https://invent.kde.org/libraries/polkit-qt-1)
  * [solid](https://invent.kde.org/frameworks/solid)
- * [layer-shell-qt](https://invent.kde.org/plasma/layer-shell-qt) >= 5.91.0
 
 ## Installation
 
