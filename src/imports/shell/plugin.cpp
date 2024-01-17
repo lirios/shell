@@ -32,9 +32,9 @@ public:
             return new OsdClient();
         });
 
-        qmlRegisterType<Aurora::Client::LiriShellV1>(uri, versionMajor, versionMinor, "LiriShellV1");
-        qmlRegisterType<Aurora::Client::LiriShortcutV1>(uri, versionMajor, versionMinor, "LiriShortcutV1");
-        qmlRegisterType<Aurora::Client::LiriOsdV1>(uri, versionMajor, versionMinor, "LiriOsdV1");
+        qmlRegisterType<LiriShellV1>(uri, versionMajor, versionMinor, "LiriShellV1");
+        qmlRegisterType<LiriShortcutV1>(uri, versionMajor, versionMinor, "LiriShortcutV1");
+        qmlRegisterType<LiriOsdV1>(uri, versionMajor, versionMinor, "LiriOsdV1");
     }
 };
 

@@ -5,36 +5,26 @@
 #pragma once
 
 #include <QObject>
+#include <QQmlEngine>
 #include <QQmlParserStatus>
 #include <QWaylandClientExtension>
 
-#include <wayland-client.h>
+#include "qwayland-liri-shell-unstable-v1.h"
 
 QT_FORWARD_DECLARE_CLASS(QWindow)
 
-namespace Aurora {
-
-namespace Client {
-
-class LiriShellV1Private;
-class LiriShortcutV1Private;
-class LiriOsdV1Private;
-
-class LiriShellV1 : public QWaylandClientExtensionTemplate<LiriShellV1>
+class LiriShellV1
+        : public QWaylandClientExtensionTemplate<LiriShellV1>
+        , public QtWayland::zliri_shell_v1
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(LiriShellV1)
+    QML_ELEMENT
 public:
     LiriShellV1();
     ~LiriShellV1();
 
-    void init(struct ::wl_registry *registry, int id, int version);
-
     Q_INVOKABLE void sendReady();
-
     Q_INVOKABLE void terminateCompositor();
-
-    static const struct ::wl_interface *interface();
 
 Q_SIGNALS:
     void logoutRequested();
@@ -42,13 +32,18 @@ Q_SIGNALS:
     void quitRequested();
 
 private:
-    QScopedPointer<LiriShellV1Private> const d_ptr;
+    void zliri_shell_v1_logout_requested() override;
+    void zliri_shell_v1_shutdown_requested() override;
+    void zliri_shell_v1_quit() override;
 };
 
-class LiriShortcutV1 : public QWaylandClientExtension, public QQmlParserStatus
+class LiriShortcutV1
+        : public QWaylandClientExtensionTemplate<LiriShortcutV1>
+        , public QtWayland::zliri_shortcut_v1
+        , public QQmlParserStatus
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(LiriShortcutV1)
+    QML_ELEMENT
     Q_PROPERTY(LiriShellV1 *shell READ shell WRITE setShell NOTIFY shellChanged)
     Q_PROPERTY(QString sequence READ sequence WRITE setSequence NOTIFY sequenceChanged)
     Q_INTERFACES(QQmlParserStatus)
@@ -62,15 +57,10 @@ public:
     QString sequence() const;
     void setSequence(const QString &sequence);
 
-    const struct wl_interface *extensionInterface() const override { return interface(); }
-    void bind(struct ::wl_registry *registry, int id, int ver) override;
-
-    static const struct ::wl_interface *interface();
-
 Q_SIGNALS:
     void shellChanged();
     void sequenceChanged();
-    void activated(struct ::wl_seat *seat);
+    void activated();
 
 public Q_SLOTS:
     void bindShortcut();
@@ -80,29 +70,27 @@ protected:
     void componentComplete() override;
 
 private:
-    QScopedPointer<LiriShortcutV1Private> const d_ptr;
+    LiriShellV1 *m_shell = nullptr;
+    QString m_sequence;
+
+    void zliri_shortcut_v1_activated(struct ::wl_seat *seat) override;
 };
 
-class LiriOsdV1 : public QWaylandClientExtensionTemplate<LiriOsdV1>
+class LiriOsdV1
+        : public QWaylandClientExtensionTemplate<LiriOsdV1>
+        , public QtWayland::zliri_osd_v1
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(LiriOsdV1)
+    QML_ELEMENT
 public:
     LiriOsdV1();
     ~LiriOsdV1();
-
-    void init(struct ::wl_registry *registry, int id, int version);
-
-    static const struct ::wl_interface *interface();
 
 Q_SIGNALS:
     void textRequested(const QString &iconName, const QString &text);
     void progressRequested(const QString &iconName, quint32 value);
 
 private:
-    QScopedPointer<LiriOsdV1Private> const d_ptr;
+    void zliri_osd_v1_text(const QString &icon_name, const QString &label) override;
+    void zliri_osd_v1_progress(const QString &icon_name, uint32_t value) override;
 };
-
-} // namespace Client
-
-} // namespace Aurora

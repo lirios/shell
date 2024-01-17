@@ -12,10 +12,15 @@ ecm_add_qml_module(ShellQmlPlugin
 target_sources(ShellQmlPlugin
     PRIVATE
         extensionsmodel.cpp extensionsmodel.h
-        lirishellv1.cpp lirishellv1.h lirishellv1_p.h
+        lirishellv1.cpp lirishellv1.h
         multimediakeysclient.cpp multimediakeysclient.h
         osdclient.cpp osdclient.h
         plugin.cpp
+)
+
+qt6_generate_wayland_protocol_client_sources(ShellQmlPlugin
+    FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../../data/protocols/liri-shell-unstable-v1.xml
 )
 
 ecm_qt_declare_logging_category(
