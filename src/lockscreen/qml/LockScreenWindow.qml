@@ -17,9 +17,7 @@ import Liri.QtShellIntegration
 Window {
     id: lockScreenWindow
 
-    SessionLockSurfaceV1 {
-        id: lockSurface
-    }
+    SessionLockSurface.enabled: true
 
     color: lockSettings.primaryColor
     visible: true
@@ -141,7 +139,7 @@ Window {
                 if (succeeded) {
                     usersListView.currentItem.busyIndicator.opacity = 0.0;
                     usersListView.loginSucceeded();
-                    lockSurface.unlockRequested();
+                    SessionLockSurface.unlockRequested();
                 } else {
                     usersListView.currentItem.busyIndicator.opacity = 0.0;
                     usersListView.currentItem.field.text = "";
