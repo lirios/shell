@@ -9,7 +9,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import Fluid.Controls as FluidControls
 import Liri.Shell as Shell
-import Liri.Shell.LayerShell as LayerShell
+import Liri.QtShellIntegration
 
 Window {
     id: logoutDialogWindow
@@ -21,14 +21,12 @@ Window {
     color: "transparent"
     visible: false
 
-    LayerShell.Window.layer: LayerShell.Window.LayerTop
-    LayerShell.Window.anchors: LayerShell.Window.AnchorLeft |
-                LayerShell.Window.AnchorTop |
-                LayerShell.Window.AnchorRight |
-                LayerShell.Window.AnchorBottom
-    LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityExclusive
-    LayerShell.Window.exclusionZone: -1
-    LayerShell.Window.scope: "logout-dialog"
+    LayerSurface.layer: LayerSurface.TopLayer
+    LayerSurface.anchors: LayerSurface.LeftAnchor | LayerSurface.RightAnchor |
+                LayerSurface.TopAnchor | LayerSurface.BottomAnchor
+    LayerSurface.keyboardInteractivity: LayerSurface.ExclusiveKeyboardInteractivity
+    LayerSurface.exclusiveZone: -1
+    LayerSurface.scope: "logout-dialog"
 
     Dialog {
         id: logoutDialog

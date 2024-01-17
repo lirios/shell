@@ -10,7 +10,7 @@ import QtGSettings as Settings
 import Fluid.Effects as FluidEffects
 import Liri.DBusService as DBusService
 import Liri.Shell as Shell
-import Liri.Shell.LayerShell as LayerShell
+import Liri.QtShellIntegration
 
 Window {
     id: bgWindow
@@ -18,14 +18,12 @@ Window {
     color: Material.color(Material.Grey, Material.Shade700)
     visible: true
 
-    LayerShell.Window.layer: LayerShell.Window.LayerBackground
-    LayerShell.Window.anchors: LayerShell.Window.AnchorTop |
-                LayerShell.Window.AnchorBottom |
-                LayerShell.Window.AnchorLeft |
-                LayerShell.Window.AnchorRight
-    LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityNone
-    LayerShell.Window.exclusionZone: -1
-    LayerShell.Window.scope: "background"
+    LayerSurface.layer: LayerSurface.TopLayer
+    LayerSurface.anchors: LayerSurface.LeftAnchor | LayerSurface.RightAnchor |
+                LayerSurface.TopAnchor | LayerSurface.BottomAnchor
+    LayerSurface.keyboardInteractivity: LayerSurface.NoKeyboardInteractivity
+    LayerSurface.exclusiveZone: -1
+    LayerSurface.scope: "background"
 
     Settings.GSettings {
         id: bgSettings

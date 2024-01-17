@@ -10,7 +10,7 @@ import QtQuick.Controls.Material
 import Fluid.Controls as FluidControls
 import Fluid.Effects as FluidEffects
 import Liri.Shell as Shell
-import Liri.Shell.LayerShell as LayerShell
+import Liri.QtShellIntegration
 
 Window {
     id: osdWindow
@@ -27,9 +27,9 @@ Window {
     color: "transparent"
     visible: true
 
-    LayerShell.Window.layer: LayerShell.Window.LayerOverlay
-    LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityNone
-    LayerShell.Window.scope: "osd"
+    LayerSurface.layer: LayerSurface.OverlayLayer
+    LayerSurface.keyboardInteractivity: LayerSurface.NoKeyboardInteractivity
+    LayerSurface.scope: "osd"
 
     FluidControls.InputRegion {
         id: inputRegion

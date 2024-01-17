@@ -7,7 +7,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import Fluid.Controls as FluidControls
 import Liri.Shell as Shell
-import Liri.Shell.LayerShell as LayerShell
+import Liri.QtShellIntegration
 import Liri.Shell.TaskManager as TaskManager
 import Liri.Shell.Notifications as NotificationServer
 import "panel" as Panel
@@ -31,14 +31,12 @@ Window {
             panel.hide();
     }
 
-    LayerShell.Window.layer: LayerShell.Window.LayerTop
-    LayerShell.Window.anchors: LayerShell.Window.AnchorLeft |
-                LayerShell.Window.AnchorTop |
-                LayerShell.Window.AnchorRight |
-                LayerShell.Window.AnchorBottom
-    LayerShell.Window.keyboardInteractivity: LayerShell.Window.KeyboardInteractivityOnDemand
-    LayerShell.Window.exclusionZone: -1
-    LayerShell.Window.scope: "toplayer"
+    LayerSurface.layer: LayerSurface.TopLayer
+    LayerSurface.anchors: LayerSurface.LeftAnchor | LayerSurface.RightAnchor |
+                LayerSurface.TopAnchor | LayerSurface.BottomAnchor
+    LayerSurface.keyboardInteractivity: LayerSurface.OnDemandKeyboardInteractivity
+    LayerSurface.exclusiveZone: -1
+    LayerSurface.scope: "toplayer"
 
     FluidControls.InputRegion {
         id: inputRegion
