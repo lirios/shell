@@ -16,7 +16,6 @@
 #include "hotspot.h"
 #include "keyeventfilter.h"
 #include "quickoutput.h"
-#include "screencast.h"
 #include "screenmodel.h"
 #include "waylandcursorgrabber.h"
 #include "waylandliricolorpickerv1_p.h"
@@ -65,7 +64,6 @@ public:
         qmlRegisterType<WaylandLiriOsdV1QuickExtension>(uri, 1, 0, "LiriOsdV1");
         qmlRegisterUncreatableType<WaylandLiriShortcutV1>(uri, 1, 0, "LiriShortcutV1", QObject::tr("Cannot create instance of LiriShortcutV1"));
         qmlRegisterType<QuickOutput>(uri, 1, 0, "WaylandOutput");
-        qmlRegisterType<ScreenCast>(uri, 1, 0, "ScreenCast");
         qmlRegisterType<ScreenModel>(uri, 1, 0, "ScreenModel");
         qmlRegisterUncreatableType<ScreenMode>(uri, 1, 0, "ScreenMode",
                                                QObject::tr("Cannot create instance of ScreenMode"));

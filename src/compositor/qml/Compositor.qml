@@ -323,47 +323,6 @@ WaylandCompositor {
 
     // Screen copy
 
-    LS.ScreenCast {
-        id: screenCast
-
-        onFrameAvailable: {
-            for (var i = 0; i < outputs.length; i++) {
-                var output = outputs[i];
-
-                if (output.screen.screen === screen) {
-                    output.exportDmabufFrame.frame(size, offset, 0, 0, drmFormat, modifier, numObjects);
-                    break;
-                }
-            }
-        }
-        onObjectAvailable: {
-            for (var i = 0; i < outputs.length; i++) {
-                var output = outputs[i];
-                if (!output.exportDmabufFrame)
-                    continue;
-
-                if (output.screen.screen === screen) {
-                    output.exportDmabufFrame.object(index, fd, size, offset, stride, planeIndex);
-                    break;
-                }
-            }
-        }
-        onCaptureReady: {
-            for (var i = 0; i < outputs.length; i++) {
-                var output = outputs[i];
-                if (!output.exportDmabufFrame)
-                    continue;
-
-                if (output.screen.screen === screen) {
-                    output.exportDmabufFrame.ready(tv_sec, tv_nsec);
-                    output.exportDmabufFrame = null;
-                    screenCast.disable(screen);
-                    break;
-                }
-            }
-        }
-    }
-
     WlrExportDmabufManagerV1 {
         onOutputCaptureRequested: {
             if (frame.output.screen) {

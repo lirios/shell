@@ -6,9 +6,6 @@ find_package(Wayland REQUIRED)
 if(NOT TARGET Liri::Xdg)
     find_package(Liri1Xdg REQUIRED)
 endif()
-if(NOT TARGET Liri::AuroraPlatformHeaders)
-    find_package(Liri1AuroraPlatformHeaders REQUIRED)
-endif()
 if(NOT TARGET Liri::AuroraCompositor)
     find_package(Liri1AuroraCompositor REQUIRED)
 endif()
@@ -40,7 +37,6 @@ target_link_libraries(ShellPrivateQmlPlugin
         Qt6::Qml
         Qt6::Quick
         Liri::Xdg
-        Liri::AuroraPlatformHeaders
         Liri::AuroraCompositor
 )
 

@@ -1,9 +1,6 @@
 # SPDX-FileCopyrightText: 2024 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-if(NOT TARGET Liri::AuroraPlatformHeaders)
-    find_package(Liri1AuroraPlatformHeaders REQUIRED)
-endif()
 if(NOT TARGET Liri::AuroraCompositor)
     find_package(Liri1AuroraCompositor REQUIRED)
 endif()
@@ -31,7 +28,6 @@ target_sources(LiriShellCompositorQmlPlugin
         keyeventfilter.cpp keyeventfilter.h
         lirishellcompositorplugin.cpp
         quickoutput.cpp quickoutput.h
-        screencast.cpp screencast.h
         screenmodel.cpp screenmodel.h
         waylandcursorgrabber.cpp waylandcursorgrabber.h
         waylandliricolorpickerv1.cpp waylandliricolorpickerv1.h waylandliricolorpickerv1_p.h
@@ -63,7 +59,6 @@ target_link_libraries(LiriShellCompositorQmlPlugin
     Qt6::GuiPrivate
         Qt6::Qml
         Qt6::Quick
-        Liri::AuroraPlatformHeaders
         Liri::AuroraCompositor
         Liri::Xdg
 )

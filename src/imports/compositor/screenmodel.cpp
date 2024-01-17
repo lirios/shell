@@ -10,40 +10,8 @@
 #include <QtMath>
 #include <qpa/qplatformscreen.h>
 
-#include <LiriAuroraPlatformHeaders/lirieglfsfunctions.h>
-
 #include "lirishellcompositorlogging.h"
 #include "screenmodel.h"
-
-static ScreenItem::PowerState convertPowerState(Aurora::PlatformSupport::EglFSFunctions::PowerState powerState)
-{
-    switch (powerState) {
-    case Aurora::PlatformSupport::EglFSFunctions::PowerStateOn:
-        return ScreenItem::PowerStateOn;
-    case Aurora::PlatformSupport::EglFSFunctions::PowerStateStandby:
-        return ScreenItem::PowerStateStandby;
-    case Aurora::PlatformSupport::EglFSFunctions::PowerStateSuspend:
-        return ScreenItem::PowerStateSuspend;
-    case Aurora::PlatformSupport::EglFSFunctions::PowerStateOff:
-        return ScreenItem::PowerStateOff;
-    }
-    Q_UNREACHABLE();
-}
-
-static Aurora::PlatformSupport::EglFSFunctions::PowerState convertPowerState(ScreenItem::PowerState powerState)
-{
-    switch (powerState) {
-    case ScreenItem::PowerStateOn:
-        return Aurora::PlatformSupport::EglFSFunctions::PowerStateOn;
-    case ScreenItem::PowerStateStandby:
-        return Aurora::PlatformSupport::EglFSFunctions::PowerStateStandby;
-    case ScreenItem::PowerStateSuspend:
-        return Aurora::PlatformSupport::EglFSFunctions::PowerStateSuspend;
-    case ScreenItem::PowerStateOff:
-        return Aurora::PlatformSupport::EglFSFunctions::PowerStateOff;
-    }
-    Q_UNREACHABLE();
-}
 
 /*
  * ScreenMode
@@ -178,7 +146,7 @@ ScreenItem::PowerState ScreenItem::powerState() const
         return ScreenItem::PowerStateOn;
     }
 
-    return convertPowerState(Aurora::PlatformSupport::EglFSFunctions::getPowerState(m_screen));
+    return ScreenItem::PowerStateOn;
 }
 
 void ScreenItem::setPowerState(ScreenItem::PowerState state)
@@ -187,16 +155,6 @@ void ScreenItem::setPowerState(ScreenItem::PowerState state)
         qCWarning(lcShellCompositor) << "ScreenItem cannot set power state if the screen property is not set";
         return;
     }
-
-    auto oldPowerState = Aurora::PlatformSupport::EglFSFunctions::getPowerState(m_screen);
-    auto newPowerState = convertPowerState(state);
-
-    if (oldPowerState == newPowerState)
-        return;
-
-    Aurora::PlatformSupport::EglFSFunctions::setPowerState(m_screen, newPowerState);
-
-    Q_EMIT powerStateChanged();
 }
 
 /*
@@ -328,63 +286,7 @@ void ScreenModel::applyConfiguration(WaylandWlrOutputConfigurationV1 *configurat
         return;
     }
 
-    QVector<Aurora::PlatformSupport::ScreenChange> screenChanges;
-
-    const auto changesList = configuration->enabledHeads();
-    for (auto *changes : changesList) {
-        for (auto *item : qAsConst(m_items)) {
-            if (item->name() == changes->head()->name()) {
-                Aurora::PlatformSupport::ScreenChange screenChange;
-                screenChange.screen = item->screen();
-                screenChange.enabled = true;
-                screenChange.position = changes->position();
-                if (changes->customModeSize().isValid() && changes->customModeRefresh() > 0) {
-                    screenChange.resolution = changes->customModeSize();
-                    screenChange.refreshRate = changes->customModeRefresh();
-                } else if (changes->mode()) {
-                    screenChange.resolution = changes->mode()->size();
-                    screenChange.refreshRate = changes->mode()->refresh();
-                }
-                screenChange.scale = changes->scale();
-                screenChanges.append(screenChange);
-
-                if (!item->isEnabled()) {
-                    item->m_enabled = true;
-                    Q_EMIT item->enabledChanged();
-                }
-
-                break;
-            }
-        }
-    }
-
-    const auto heads = configuration->disabledHeads();
-    for (auto *head : heads) {
-        for (auto *item : qAsConst(m_items)) {
-            if (item->name() == head->name()) {
-                Aurora::PlatformSupport::ScreenChange screenChange;
-                screenChange.screen = item->screen();
-                screenChange.enabled = false;
-                screenChanges.append(screenChange);
-
-                if (item->isEnabled()) {
-                    item->m_enabled = false;
-                    Q_EMIT item->enabledChanged();
-                }
-
-                break;
-            }
-        }
-    }
-
-    bool result = Aurora::PlatformSupport::EglFSFunctions::applyScreenChanges(screenChanges);
-
-    // TODO: Send cancelled if a new screen is added or changed meanwhile
-
-    if (result)
-        configuration->sendSucceeded();
-    else
-        configuration->sendFailed();
+    configuration->sendFailed();
 }
 
 void ScreenModel::classBegin()
