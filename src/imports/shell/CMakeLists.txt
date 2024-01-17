@@ -16,7 +16,6 @@ target_sources(ShellQmlPlugin
         multimediakeysclient.cpp multimediakeysclient.h
         osdclient.cpp osdclient.h
         plugin.cpp
-        wlrlayersurfacev1.cpp wlrlayersurfacev1.h wlrlayersurfacev1_p.h
 )
 
 ecm_qt_declare_logging_category(
@@ -25,12 +24,6 @@ ecm_qt_declare_logging_category(
     IDENTIFIER "gLcShellClient"
     CATEGORY_NAME "liri.shell.client"
     DEFAULT_SEVERITY "Info"
-)
-
-aurora_generate_wayland_protocol_client_sources(ShellQmlPlugin
-    FILES
-        ${PROJECT_SOURCE_DIR}/data/protocols/liri-shell-unstable-v1.xml
-        wlr-layer-shell-unstable-v1.xml
 )
 
 ecm_target_qml_sources(ShellQmlPlugin
