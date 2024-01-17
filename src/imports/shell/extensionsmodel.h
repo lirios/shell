@@ -7,6 +7,7 @@
 
 #include <QAbstractListModel>
 #include <QLoggingCategory>
+#include <QQmlEngine>
 #include <QUrl>
 
 Q_DECLARE_LOGGING_CATEGORY(lcExtensions)
@@ -38,6 +39,7 @@ private:
 class ExtensionsModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
 public:
     enum Role {
         NameRole = Qt::UserRole + 1,

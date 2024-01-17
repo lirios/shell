@@ -38,3 +38,10 @@ void OsdClient::showProgress(const QString &iconName, int value)
     msg.setArguments(args);
     QDBusConnection::sessionBus().asyncCall(msg);
 }
+
+OsdClient *OsdClient::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    Q_UNUSED(qmlEngine);
+    Q_UNUSED(jsEngine);
+    return new OsdClient();
+}

@@ -46,3 +46,10 @@ MultimediaKeysClient::MultimediaKeysClient(QObject *parent)
                 QStringLiteral("MediaNext"),
                 this, SIGNAL(mediaNext()));
 }
+
+MultimediaKeysClient *MultimediaKeysClient::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
+{
+    Q_UNUSED(qmlEngine);
+    Q_UNUSED(jsEngine);
+    return new MultimediaKeysClient();
+}

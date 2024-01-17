@@ -4,8 +4,7 @@
 ecm_add_qml_module(ShellQmlPlugin
     URI Liri.Shell
     VERSION 1.0
-    CLASS_NAME ShellPlugin
-    NO_GENERATE_PLUGIN_SOURCE
+    GENERATE_PLUGIN_SOURCE
     DEPENDENCIES QtQuick
 )
 
@@ -15,7 +14,6 @@ target_sources(ShellQmlPlugin
         lirishellv1.cpp lirishellv1.h
         multimediakeysclient.cpp multimediakeysclient.h
         osdclient.cpp osdclient.h
-        plugin.cpp
 )
 
 qt6_generate_wayland_protocol_client_sources(ShellQmlPlugin

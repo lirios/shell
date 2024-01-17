@@ -5,13 +5,18 @@
 #ifndef MULTIMEDIAKEYSCLIENT_H
 #define MULTIMEDIAKEYSCLIENT_H
 
-#include <QtCore/QObject>
+#include <QObject>
+#include <QQmlEngine>
 
 class MultimediaKeysClient : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 public:
     explicit MultimediaKeysClient(QObject *parent = nullptr);
+
+    static MultimediaKeysClient *create(QQmlEngine *qmlEngine, QJSEngine *jsEngine);
 
 Q_SIGNALS:
     void volumeMute();
