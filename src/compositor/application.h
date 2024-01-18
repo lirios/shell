@@ -19,9 +19,6 @@ class Application : public QObject
 public:
     explicit Application(QObject *parent = nullptr);
 
-    QString screenConfigurationFileName() const;
-    void setScreenConfigurationFileName(const QString &fileName);
-
     void setUrl(const QUrl &url);
 
 protected:
@@ -33,7 +30,6 @@ private:
     SessionManager *m_sessionManager;
     bool m_failSafe;
     bool m_started;
-    QString m_screenConfigFileName;
 
     void verifyXdgRuntimeDir();
 

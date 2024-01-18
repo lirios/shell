@@ -13,6 +13,7 @@ import Aurora.Compositor.Wlroots
 import Aurora.Compositor.WlrLayerShell
 import Aurora.Compositor.XdgShell
 import Aurora.Compositor.XWayland as LXW
+import Aurora.Platform
 import Liri.Session as Session
 import Liri.private.shell as P
 import Liri.Shell.Compositor as LS
@@ -88,58 +89,19 @@ WaylandCompositor {
      * Output management
      */
 
-    LS.ScreenModel {
-        id: screenModel
-        fileName: screenConfigurationFileName
-    }
-
-    Component {
-        id: outputModeComponent
-
-        WlrOutputModeV1 {}
-    }
-
-    Component {
-        id: outputConfigComponent
-
-        WlrOutputConfigurationV1 {
-            id: configuration
-
-            onReadyToTest: {
-                if (!screenModel.testConfiguration(configuration))
-                    configuration.sendFailed();
-            }
-            onReadyToApply: {
-                screenModel.applyConfiguration(configuration);
-            }
-        }
-    }
-
-    WlrOutputManagerV1 {
-        id: outputManager
-
-        onConfigurationRequested: {
-            var configuration = outputConfigComponent.createObject(outputManager);
-            configuration.initialize(outputManager, resource);
-        }
+    PlatformOutputsModel {
+        id: platformOutputsModel
     }
 
     Instantiator {
-        model: screenModel
+        model: platformOutputsModel
         delegate: Output {
             compositor: liriCompositor
-            screen: screenItem
-            position: screenItem.position
-            manufacturer: screenItem.manufacturer
-            model: screenItem.model
-            physicalSize: screenItem.physicalSize
-            subpixel: screenItem.subpixel
-            transform: screenItem.transform
-            scaleFactor: screenItem.scaleFactor
+            platformOutput: output
 
             Component.onCompleted: {
                 // Set this as default output if configured
-                if (!liriCompositor.defaultOutput && screenItem.name === settings.outputs.primary)
+                if (!liriCompositor.defaultOutput && output.name === settings.outputs.primary)
                     liriCompositor.defaultOutput = this;
 
                 // Fallback to the first one
@@ -158,36 +120,6 @@ WaylandCompositor {
                 if (view.primary && view.output === object) {
                     view.window.moveItem.x = liriCompositor.defaultOutput.position.x + 20;
                     view.window.moveItem.y = liriCompositor.defaultOutput.position.y + 20;
-                }
-            }
-        }
-    }
-
-    Instantiator {
-        id: headManager
-
-        model: screenModel
-        delegate: WlrOutputHeadV1 {
-            manager: outputManager
-            name: screenItem.name
-            description: screenItem.description
-            physicalSize: screenItem.physicalSize
-            position: screenItem.position
-            transform: screenItem.transform
-            scale: screenItem.scaleFactor
-
-            Component.onCompleted: {
-                for (var i = 0; i < screenItem.modes.length; i++) {
-                    var screenMode = screenItem.modes[i];
-                    var mode = outputModeComponent.createObject(this, {size: screenMode.resolution, refresh: screenMode.refreshRate});
-
-                    addMode(mode);
-
-                    if (screenItem.preferredMode === screenMode)
-                        preferredMode = mode;
-
-                    if (screenItem.currentMode === screenMode)
-                        currentMode = mode;
                 }
             }
         }
@@ -281,7 +213,8 @@ WaylandCompositor {
         focusPolicy: ExtSessionLockManagerV1.AutomaticFocus
 
         onLockSurfaceCreated: {
-            lockSurface.output.lockSurfacesModel.append({lockSurface: lockSurface});
+            if (lockSurface.output)
+                lockSurface.output.lockSurfacesModel.append({lockSurface: lockSurface});
         }
     }
 
@@ -294,7 +227,8 @@ WaylandCompositor {
             var output = layerSurface.output;
             if (!output)
                 output = liriCompositor.defaultOutput;
-            output.layerSurfacesModel.append({layerSurface: layerSurface, output});
+            if (output)
+                output.layerSurfacesModel.append({layerSurface: layerSurface, output});
         }
     }
 

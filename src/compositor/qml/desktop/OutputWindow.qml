@@ -30,11 +30,11 @@ Window {
     width: output.geometry.width
     height: output.geometry.height
     flags: Qt.Window | Qt.FramelessWindowHint
-    screen: output.screen ? Qt.application.screens[output.screen.screenIndex] : null
+    screen: output.platformOutput?.screen || null
     color: splashVisible
            ? Material.color(Material.BlueGrey, Material.Shade800)
            : !splashVisible && shellHelper.isReady ? Material.color(Material.Grey, Material.Shade700) : "black"
-    visible: output.screen && output.screen.enabled
+    visible: output.platformOutput && output.platformOutput.enabled
 
     // Keyboard handling
     LS.KeyEventFilter {

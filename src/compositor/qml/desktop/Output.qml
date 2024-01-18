@@ -7,10 +7,10 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import Aurora.Compositor
-import Liri.Shell.Compositor as LS
+import Aurora.Platform
 import Liri.Session as Session
 
-LS.WaylandOutput {
+WaylandOutput {
     id: output
 
     readonly property bool primary: liriCompositor.defaultOutput === this
@@ -28,10 +28,9 @@ LS.WaylandOutput {
 
     property bool __idle: false
 
-    sizeFollowsWindow: false
     automaticFrameCallback: {
-        if (screen)
-            return screen.enabled && screen.powerState === LS.ScreenItem.PowerStateOn;
+        if (platformOutput)
+            return platformOutput.enabled && platformOutput.powerState === PlatformOutput.PowerState.On;
         return true;
     }
 
@@ -53,7 +52,7 @@ LS.WaylandOutput {
 
         console.debug("Power on output", manufacturer, model);
         idleDimmer.fadeOut();
-        screen.powerState = LS.ScreenItem.PowerStateOn;
+        platformOutput.powerState = PlatformOutput.PowerState.On;
         __idle = false;
     }
 

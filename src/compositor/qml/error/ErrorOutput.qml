@@ -20,9 +20,9 @@ LS.WaylandOutput {
         width: output.geometry.width
         height: output.geometry.height
         flags: Qt.Window | Qt.FramelessWindowHint
-        screen: output.screen ? Qt.application.screens[output.screen.screenIndex] : null
+        screen: output.platformOutput?.screen || null
         color: "black"
-        visible: true
+        visible: output.platformOutput && output.platformOutput.enabled
 
         WaylandMouseTracker {
             id: mouseTracker

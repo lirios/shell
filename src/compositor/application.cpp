@@ -64,16 +64,6 @@ Application::Application(QObject *parent)
             this, &Application::shutdown);
 }
 
-QString Application::screenConfigurationFileName() const
-{
-    return m_screenConfigFileName;
-}
-
-void Application::setScreenConfigurationFileName(const QString &fileName)
-{
-    m_screenConfigFileName = fileName;
-}
-
 void Application::setUrl(const QUrl &url)
 {
     m_url = url;
@@ -130,10 +120,6 @@ void Application::startup()
 
     // Check whether XDG_RUNTIME_DIR is ok or not
     verifyXdgRuntimeDir();
-
-    // Set screen configuration file name
-    m_appEngine->rootContext()->setContextProperty(QStringLiteral("screenConfigurationFileName"),
-                                                   m_screenConfigFileName);
 
     // Session interface
     m_appEngine->rootContext()->setContextProperty(QStringLiteral("SessionInterface"),

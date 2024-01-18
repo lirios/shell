@@ -186,7 +186,6 @@ int main(int argc, char *argv[])
 
     // Application
     Application *shell = new Application();
-    shell->setScreenConfigurationFileName(fakeScreenData);
 
     // Create the compositor and run
     bool urlAlreadySet = false;

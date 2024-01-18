@@ -6,6 +6,7 @@ import QtQml
 import QtQuick
 import QtQuick.Window
 import Aurora.Compositor
+import Aurora.Platform
 import Liri.Shell.Compositor as LS
 import Liri.Session as Session
 import ".." as Root
@@ -33,23 +34,15 @@ WaylandCompositor {
         onActivated: liriCompositor.quit()
     }
 
-    LS.ScreenModel {
-        id: screenModel
-        fileName: screenConfigurationFileName
+    PlatformOutputsModel {
+        id: platformOutputsModel
     }
 
     Instantiator {
-        model: screenModel
+        model: platformOutputsModel
         delegate: ErrorOutput {
             compositor: liriCompositor
-            screen: screenItem
-            position: screenItem.position
-            manufacturer: screenItem.manufacturer
-            model: screenItem.model
-            physicalSize: screenItem.physicalSize
-            subpixel: screenItem.subpixel
-            transform: screenItem.transform
-            scaleFactor: screenItem.scaleFactor
+            platformOutput: output
 
             Component.onCompleted: {
                 // Set default output the first time

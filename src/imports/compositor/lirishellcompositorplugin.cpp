@@ -15,8 +15,6 @@
 #include "helperlauncher.h"
 #include "hotspot.h"
 #include "keyeventfilter.h"
-#include "quickoutput.h"
-#include "screenmodel.h"
 #include "waylandcursorgrabber.h"
 #include "waylandliricolorpickerv1_p.h"
 #include "waylandlirimodalv1.h"
@@ -63,12 +61,6 @@ public:
         qmlRegisterType<WaylandLiriShellV1QuickExtension>(uri, 1, 0, "LiriShellV1");
         qmlRegisterType<WaylandLiriOsdV1QuickExtension>(uri, 1, 0, "LiriOsdV1");
         qmlRegisterUncreatableType<WaylandLiriShortcutV1>(uri, 1, 0, "LiriShortcutV1", QObject::tr("Cannot create instance of LiriShortcutV1"));
-        qmlRegisterType<QuickOutput>(uri, 1, 0, "WaylandOutput");
-        qmlRegisterType<ScreenModel>(uri, 1, 0, "ScreenModel");
-        qmlRegisterUncreatableType<ScreenMode>(uri, 1, 0, "ScreenMode",
-                                               QObject::tr("Cannot create instance of ScreenMode"));
-        qmlRegisterUncreatableType<ScreenItem>(uri, 1, 0, "ScreenItem",
-                                               QObject::tr("Cannot create instance of ScreenItem"));
         qmlRegisterType<WindowMouseTracker>(uri, 1, 0, "WindowMouseTracker");
 
     }

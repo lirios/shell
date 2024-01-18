@@ -27,8 +27,6 @@ target_sources(LiriShellCompositorQmlPlugin
         hotspot.cpp hotspot.h
         keyeventfilter.cpp keyeventfilter.h
         lirishellcompositorplugin.cpp
-        quickoutput.cpp quickoutput.h
-        screenmodel.cpp screenmodel.h
         waylandcursorgrabber.cpp waylandcursorgrabber.h
         waylandliricolorpickerv1.cpp waylandliricolorpickerv1.h waylandliricolorpickerv1_p.h
         waylandlirimodalv1.cpp waylandlirimodalv1.h waylandlirimodalv1_p.h
