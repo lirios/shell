@@ -45,8 +45,10 @@ if(NOT QML_IMPORT_PATH)
 endif()
 
 ## Shared macros and functions:
-find_package(LiriCMakeShared "2.0.99" REQUIRED NO_MODULE)
-list(APPEND CMAKE_MODULE_PATH "${LCS_MODULE_PATH}")
+if(NOT LIRI_LOCAL_ECM)
+    find_package(LiriCMakeShared "2.0.99" REQUIRED NO_MODULE)
+    list(APPEND CMAKE_MODULE_PATH "${LCS_MODULE_PATH}")
+endif()
 
 ## Add some paths to check for CMake modules:
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_CURRENT_SOURCE_DIR}/cmake/3rdparty")

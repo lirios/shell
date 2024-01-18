@@ -25,8 +25,10 @@ find_package(Qt6 "6.6.0"
         LinguistTools
 )
 
-## Find Aurora Scanner:
-find_package(AuroraScanner REQUIRED)
+if(NOT COMMAND aurora_generate_wayland_protocol_client_sources)
+    ## Find Aurora Scanner:
+    find_package(AuroraScanner REQUIRED)
+endif()
 
 #### Features
 
