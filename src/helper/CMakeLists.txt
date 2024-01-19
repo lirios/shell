@@ -5,8 +5,6 @@ if(FEATURE_enable_systemd)
     find_package(Libsystemd REQUIRED)
 endif()
 
-find_package(PAM REQUIRED)
-
 include(LiriSetGitHeadRevision)
 liri_set_git_head_revision(_git_rev)
 
@@ -48,7 +46,6 @@ target_link_libraries(LiriShellHelper
         Qt6::GuiPrivate
         Qt6::Qml
         Qt6::Quick
-        ${PAM_LIBRARIES}
 )
 
 install(TARGETS LiriShellHelper
