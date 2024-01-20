@@ -18,7 +18,7 @@ add_executable(LiriShellLockScreen ${SOURCES})
 
 file(GLOB_RECURSE _qml_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml")
 qt6_add_qml_module(LiriShellLockScreen
-    URI lockscreen
+    URI LiriShellLockscreen
     QML_FILES ${_qml_files}
 )
 

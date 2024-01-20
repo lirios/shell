@@ -56,8 +56,10 @@ int main(int argc, char *argv[])
           LIRISHELL_VERSION, LIRISHELL_VERSION, GIT_REV);
 
     // Create UI
-    QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);
-    engine->load(QStringLiteral("qrc:/qt/qml/lockscreen/qml/main.qml"));
+    QQmlApplicationEngine engine;
+    engine.loadFromModule("LiriShellLockscreen", "Main");
+    if (engine.rootObjects().isEmpty())
+        return 1;
 
     return app.exec();
 }

@@ -58,7 +58,7 @@ Dialog {
                     }
 
                     ToolButton {
-                        icon.source: Qt.resolvedUrl("qrc:/qt/qml/helper/images/logout.svg")
+                        icon.source: Qt.resolvedUrl("qrc:/qt/qml/LiriShellHelper/images/logout.svg")
                         onClicked: {
                             panelMenu.logoutRequested();
                         }

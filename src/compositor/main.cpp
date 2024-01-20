@@ -8,13 +8,12 @@
 #include <QtCore/QStandardPaths>
 #include <QGuiApplication>
 #include <QLibraryInfo>
+#include <QQmlApplicationEngine>
 #include <QQuickStyle>
 #include <QStandardPaths>
 #include <QTranslator>
 
 #include <Qt6GSettings/QGSettings>
-
-#include "application.h"
 
 #if HAVE_SYS_PRCTL_H
 #include <sys/prctl.h>
@@ -24,7 +23,11 @@
 #include <signal.h>
 #include <unistd.h>
 
+#include "sessionmanager/sessionmanager.h"
+
 #define TR(x) QT_TRANSLATE_NOOP("Command line parser", QStringLiteral(x))
+
+using namespace Qt::StringLiterals;
 
 static void disablePtrace()
 {
@@ -184,20 +187,23 @@ int main(int argc, char *argv[])
     // Print OS information
     qInfo("Platform name: %s", qPrintable(QGuiApplication::platformName()));
 
-    // Application
-    Application *shell = new Application();
+    // Session manager
+    auto *sessionManager = new SessionManager();
 
     // Create the compositor and run
+    QQmlApplicationEngine engine;
+    engine.setInitialProperties({ { "SessionInterface"_L1, QVariant::fromValue(sessionManager) } });
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
+                     QCoreApplication::instance(), QCoreApplication::quit, Qt::QueuedConnection);
     bool urlAlreadySet = false;
 #ifdef DEVELOPMENT_BUILD
     if (parser.isSet(qmlOption)) {
         urlAlreadySet = true;
-        shell->setUrl(QUrl::fromLocalFile(parser.value(qmlOption)));
+        engine.load(QUrl::fromLocalFile(parser.value(qmlOption)));
     }
 #endif
     if (!urlAlreadySet)
-        shell->setUrl(QUrl(QStringLiteral("qrc:/qt/qml/compositor/qml/Compositor.qml")));
-    QCoreApplication::postEvent(shell, new StartupEvent());
+        engine.loadFromModule("LiriShell", "Compositor");
 
     return app.exec();
 }

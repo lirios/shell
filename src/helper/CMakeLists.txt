@@ -13,7 +13,7 @@ add_executable(LiriShellHelper main.cpp)
 file(GLOB_RECURSE _qml_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml")
 file(GLOB_RECURSE _image_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/images/*")
 qt6_add_qml_module(LiriShellHelper
-    URI helper
+    URI LiriShellHelper
     QML_FILES ${_qml_files}
     RESOURCES ${_image_files}
 )

@@ -18,7 +18,6 @@ install(FILES ${LiriShell_QM_FILES}
         DESTINATION "${KDE_INSTALL_DATADIR}/liri-shell/translations")
 
 set(SOURCES
-    application.cpp application.h
     main.cpp
     sessionmanager/sessionmanager.cpp sessionmanager/sessionmanager.h
     ${LiriShell_QM_FILES}
@@ -29,7 +28,7 @@ file(GLOB_RECURSE _qml_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIG
 file(GLOB_RECURSE _js_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.js")
 file(GLOB_RECURSE _image_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/images/*")
 qt6_add_qml_module(LiriShell
-    URI compositor
+    URI LiriShell
     QML_FILES ${_qml_files} ${_js_files}
     RESOURCES ${_image_files}
 )

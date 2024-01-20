@@ -120,7 +120,7 @@ Window {
             }
 
             FluidControls.ListItem {
-                icon.source: Qt.resolvedUrl("qrc:/qt/qml/helper/images/sleep.svg")
+                icon.source: Qt.resolvedUrl("qrc:/qt/qml/LiriShellHelper/images/sleep.svg")
                 text: qsTr("Sleep")
                 visible: LiriDevice.LocalDevice.canSuspend
                 onClicked: {
@@ -150,7 +150,7 @@ Window {
             }
 
             FluidControls.ListItem {
-                icon.source: Qt.resolvedUrl("qrc:/qt/qml/helper/images/reload.svg")
+                icon.source: Qt.resolvedUrl("qrc:/qt/qml/LiriShellHelper/images/reload.svg")
                 text: qsTr("Restart")
                 visible: LiriDevice.LocalDevice.canRestart
                 onClicked: {

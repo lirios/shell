@@ -92,8 +92,10 @@ int main(int argc, char *argv[])
     setupSystemd();
 
     // Create UI
-    QSharedPointer<QQmlApplicationEngine> engine(new QQmlApplicationEngine);
-    engine->load(QStringLiteral("qrc:/qt/qml/helper/qml/main.qml"));
+    QQmlApplicationEngine engine;
+    engine.loadFromModule("LiriShellHelper", "Main");
+    if (engine.rootObjects().isEmpty())
+        return 1;
 
     return app.exec();
 }

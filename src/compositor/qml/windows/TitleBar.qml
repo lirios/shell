@@ -70,7 +70,7 @@ LS.AbstractTitleBar {
             spacing: 12
 
             DecorationButton {
-                icon.source: "qrc:/qt/qml/compositor/images/chrome/window-minimize.svg"
+                icon.source: "qrc:/qt/qml/LiriShell/images/chrome/window-minimize.svg"
                 icon.color: chooseColor(foregroundColor, defaultForegroundColor)
                 onClicked: {
                     titleBar.minimizeClicked();
@@ -78,7 +78,7 @@ LS.AbstractTitleBar {
             }
 
             DecorationButton {
-                icon.source: "qrc:/qt/qml/compositor/images/chrome/" + (window.maximized ? "window-restore.svg" : "window-maximize.svg")
+                icon.source: "qrc:/qt/qml/LiriShell/images/chrome/" + (window.maximized ? "window-restore.svg" : "window-maximize.svg")
                 icon.color: chooseColor(foregroundColor, defaultForegroundColor)
                 visible: maximizable
                 onClicked: {
@@ -88,7 +88,7 @@ LS.AbstractTitleBar {
             }
 
             DecorationButton {
-                icon.source: "qrc:/qt/qml/compositor/images/chrome/window-close.svg"
+                icon.source: "qrc:/qt/qml/LiriShell/images/chrome/window-close.svg"
                 icon.color: chooseColor(foregroundColor, defaultForegroundColor)
                 onClicked: {
                     titleBar.closeClicked();

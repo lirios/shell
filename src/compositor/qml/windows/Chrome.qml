@@ -134,7 +134,7 @@ LS.ChromeItem {
         // Always cache the dropshadow
         cache: true
 
-        source: "qrc:/qt/qml/compositor/images/chrome/dropshadow-" + (window.activated ? "24" : "8") + ".png"
+        source: "qrc:/qt/qml/LiriShell/images/chrome/dropshadow-" + (window.activated ? "24" : "8") + ".png"
 
         visible: window.bordered
     }
