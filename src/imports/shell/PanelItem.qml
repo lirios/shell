@@ -45,7 +45,7 @@ Rectangle {
 
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-        onClicked: {
+        onClicked: (mouse) => {
             if (mouse.button === Qt.RightButton)
                 item.rightClicked(mouse.x, mouse.y);
             else

@@ -239,7 +239,7 @@ WaylandCompositor {
     }
 
     FluidDecorationManagerV1 {
-        onDecorationCreated: {
+        onDecorationCreated: (decoration) => {
             decoration.foregroundColorChanged.connect(function(color) {
                 decoration.surface.foregroundColor = color;
             });
@@ -306,7 +306,7 @@ WaylandCompositor {
 
         property var toplevels: ([])
 
-        onToplevelCreated: {
+        onToplevelCreated: (toplevel, xdgSurface) => {
             var window = xdgToplevelComponent.createObject(xdgShell, {xdgSurface: xdgSurface, toplevel: toplevel});
             for (var i = 0; i < outputs.length; i++)
                 outputs[i].currentWorkspace.shellSurfaces.append({shellSurface: xdgSurface, window: window, output: outputs[i]});
