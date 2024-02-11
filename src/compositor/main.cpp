@@ -123,9 +123,6 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain(QStringLiteral("liri.io"));
     app.setQuitOnLastWindowClosed(false);
 
-    // Enable logs
-    QLoggingCategory::setFilterRules(QStringLiteral("qt.scenegraph.general=true"));
-
     // Set style
     QQuickStyle::setStyle(QStringLiteral("Material"));
 
